@@ -16,6 +16,8 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\ContextHandler;
+use Drupal\Core\Plugin\Context\ContextInterface;
+use Drupal\Core\Plugin\Context\ContextRepositoryInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
 use Drupal\Core\Test\TestKernel;
 use Drupal\Core\TypedData\TypedDataManager;
@@ -37,12 +39,20 @@ class ContextHandlerTest extends UnitTestCase {
   protected $contextHandler;
 
   /**
+   * The context repository.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->contextHandler = new ContextHandler();
+    $this->contextRepository = $this->prophesize(ContextRepositoryInterface::class);
+    $this->contextHandler = new ContextHandler($this->contextRepository->reveal());
 
     $namespaces = new \ArrayObject([
       'Drupal\\Core\\TypedData' => $this->root . '/core/lib/Drupal/Core/TypedData',
@@ -543,6 +553,37 @@ class ContextHandlerTest extends UnitTestCase {
     $this->expectException(ContextException::class);
     $this->expectExceptionMessage('Assigned contexts were not satisfied: miss');
     $this->contextHandler->applyContextMapping($plugin, $contexts, ['miss' => 'name']);
+  }
+
+  /**
+   * @covers ::applyRuntimeContext
+   * @covers ::applyContextMapping
+   */
+  public function testApplyRuntimeContext() {
+    $context_data = StringData::createInstance(DataDefinition::create('string'));
+    $context_data->setValue('foo');
+    $context = $this->prophesize(ContextInterface::class);
+    $context->getContextData()->willReturn($context_data);
+    $context->hasContextValue()->willReturn(TRUE);
+
+    $contexts = [
+      'name' => $context->reveal(),
+    ];
+
+    $context_definition = (new ContextDefinition())->setRequired(FALSE);
+
+    $plugin_context = $this->prophesize(ContextInterface::class);
+    $plugin_context->addCacheableDependency($context)->shouldBeCalled();
+
+    $plugin = $this->prophesize(ContextAwarePluginInterface::class);
+    $plugin->getContextMapping()->willReturn(['hit' => 'name']);
+    $plugin->getContextDefinitions()->willReturn(['hit' => $context_definition]);
+    $plugin->getContext('hit')->willReturn($plugin_context->reveal());
+    $plugin->setContextValue('hit', $context_data)->shouldBeCalled();
+
+    $this->contextRepository->getRuntimeContexts(['name'])->willReturn($contexts)->shouldBeCalled();
+
+    $this->contextHandler->applyRuntimeContext($plugin->reveal());
   }
 
 }

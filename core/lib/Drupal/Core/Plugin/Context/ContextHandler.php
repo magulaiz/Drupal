@@ -14,6 +14,23 @@ use Drupal\Core\Plugin\ContextAwarePluginInterface;
 class ContextHandler implements ContextHandlerInterface {
 
   /**
+   * The context repository.
+   *
+   * @var \Drupal\Core\Plugin\Context\ContextRepositoryInterface
+   */
+  protected $contextRepository;
+
+  /**
+   * Constructs a new ContextHandler.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextRepositoryInterface $context_repository
+   *   The context repository.
+   */
+  public function __construct(ContextRepositoryInterface $context_repository) {
+    $this->contextRepository = $context_repository;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function filterPluginDefinitionsByContexts(array $contexts, array $definitions) {
@@ -149,6 +166,14 @@ class ContextHandler implements ContextHandlerInterface {
     if ($missing_value) {
       throw new MissingValueContextException($missing_value);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function applyRuntimeContext(ContextAwarePluginInterface $plugin) {
+    $contexts = $this->contextRepository->getRuntimeContexts(array_values($plugin->getContextMapping()));
+    $this->applyContextMapping($plugin, $contexts);
   }
 
 }
