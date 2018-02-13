@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\SubformStateInterface;
 
 /**
- * @todo.
+ * Builds, validates, and submits plugin subforms.
  */
 class PluginFormManager implements PluginFormManagerInterface {
 
