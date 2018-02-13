@@ -74,6 +74,13 @@ function hook_plugin_filter_TYPE__CONSUMER_alter(array &$definitions, array $ext
  *   The plugin whose form is being altered.
  */
 function hook_plugin_subform_alter(array &$form, \Drupal\Core\Form\SubformStateInterface $form_state, \Drupal\Component\Plugin\PluginInspectionInterface $plugin) {
+  if ($plugin instanceof \Drupal\Core\Block\BlockPluginInterface) {
+    $form['block_id'] = [
+      '#title' => $plugin->label(),
+      '#type' => 'value',
+      '#value' => $plugin->getPluginId(),
+    ];
+  }
 }
 
 /**
