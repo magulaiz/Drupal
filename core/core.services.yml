@@ -711,6 +711,10 @@ services:
     class: Drupal\Core\Entity\EntityAutocompleteMatcher
     arguments: ['@plugin.manager.entity_reference_selection']
   Drupal\Core\Entity\EntityAutocompleteMatcherInterface: '@entity.autocomplete_matcher'
+  plugin_form.manager:
+    class: Drupal\Core\Plugin\PluginFormManager
+    arguments: ['@plugin_form.factory', '@module_handler']
+  Drupal\Core\Plugin\PluginFormManagerInterface: '@plugin_form.manager'
   plugin_form.factory:
     class: Drupal\Core\Plugin\PluginFormFactory
     arguments: ['@class_resolver']

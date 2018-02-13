@@ -64,5 +64,18 @@ function hook_plugin_filter_TYPE__CONSUMER_alter(array &$definitions, array $ext
 }
 
 /**
+ * Perform alterations before a plugin subform is rendered.
+ *
+ * @param array $form
+ *   An associative array containing the structure of the form.
+ * @param \Drupal\Core\Form\SubformStateInterface $form_state
+ *   The current state of the subform.
+ * @param \Drupal\Component\Plugin\PluginInspectionInterface $plugin
+ *   The plugin whose form is being altered.
+ */
+function hook_plugin_subform_alter(array &$form, \Drupal\Core\Form\SubformStateInterface $form_state, \Drupal\Component\Plugin\PluginInspectionInterface $plugin) {
+}
+
+/**
  * @} End of "addtogroup hooks".
  */

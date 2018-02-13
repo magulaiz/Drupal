@@ -7,11 +7,8 @@ use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
-use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Plugin\ContextAwarePluginInterface;
-use Drupal\Core\Plugin\PluginFormFactoryInterface;
-use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Plugin\PluginFormManagerInterface;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
@@ -57,9 +54,9 @@ class ConfigureSectionForm extends FormBase {
   /**
    * The plugin form manager.
    *
-   * @var \Drupal\Core\Plugin\PluginFormFactoryInterface
+   * @var \Drupal\Core\Plugin\PluginFormManagerInterface
    */
-  protected $pluginFormFactory;
+  protected $pluginFormManager;
 
   /**
    * The section storage.
@@ -94,12 +91,12 @@ class ConfigureSectionForm extends FormBase {
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
-   * @param \Drupal\Core\Plugin\PluginFormFactoryInterface $plugin_form_manager
+   * @param \Drupal\Core\Plugin\PluginFormManagerInterface $plugin_form_manager
    *   The plugin form manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, PluginFormFactoryInterface $plugin_form_manager) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, PluginFormManagerInterface $plugin_form_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->pluginFormFactory = $plugin_form_manager;
+    $this->pluginFormManager = $plugin_form_manager;
   }
 
   /**
@@ -108,7 +105,7 @@ class ConfigureSectionForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('layout_builder.tempstore_repository'),
-      $container->get('plugin_form.factory')
+      $container->get('plugin_form.manager')
     );
   }
 
@@ -144,7 +141,7 @@ class ConfigureSectionForm extends FormBase {
     $form['#tree'] = TRUE;
     $form['layout_settings'] = [];
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
-    $form['layout_settings'] = $this->getPluginForm($this->layout)->buildConfigurationForm($form['layout_settings'], $subform_state);
+    $form['layout_settings'] = $this->pluginFormManager->buildForm($form['layout_settings'], $subform_state, $this->layout, 'configure');
 
     $form['actions']['submit'] = [
       '#type' => 'submit',
@@ -176,7 +173,7 @@ class ConfigureSectionForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
-    $this->getPluginForm($this->layout)->validateConfigurationForm($form['layout_settings'], $subform_state);
+    $this->pluginFormManager->validateForm($form['layout_settings'], $subform_state, $this->layout, 'configure');
   }
 
   /**
@@ -185,7 +182,7 @@ class ConfigureSectionForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Call the plugin submit handler.
     $subform_state = SubformState::createForSubform($form['layout_settings'], $form, $form_state);
-    $this->getPluginForm($this->layout)->submitConfigurationForm($form['layout_settings'], $subform_state);
+    $this->pluginFormManager->submitForm($form['layout_settings'], $subform_state, $this->layout, 'configure');
 
     // If this layout is context-aware, set the context mapping.
     if ($this->layout instanceof ContextAwarePluginInterface) {
