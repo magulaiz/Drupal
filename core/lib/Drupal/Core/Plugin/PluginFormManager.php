@@ -52,15 +52,17 @@ class PluginFormManager implements PluginFormManagerInterface {
    *   A plugin form instance.
    */
   protected function getFormObject(PluginInspectionInterface $plugin, $operation, $fallback_operation = NULL) {
-    if ($plugin instanceof PluginFormInterface) {
-      return $plugin;
-    }
-
+    // Consult the plugin first if it provides multiple forms.
     if ($plugin instanceof PluginWithFormsInterface) {
       return $this->pluginFormFactory->createInstance($plugin, $operation, $fallback_operation);
     }
 
-    throw new \InvalidArgumentException('@todo');
+    // Use the plugin itself if it is also a form.
+    if ($plugin instanceof PluginFormInterface) {
+      return $plugin;
+    }
+
+    throw new \InvalidArgumentException(sprintf('The "%s" plugin does not provide a "%s" form', $plugin->getPluginId(), $operation));
   }
 
   /**
