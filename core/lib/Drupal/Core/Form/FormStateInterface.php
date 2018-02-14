@@ -929,6 +929,16 @@ interface FormStateInterface {
   public function setSubmitHandlers(array $submit_handlers);
 
   /**
+   * Adds a submit handler.
+   *
+   * @param mixed $submit_handler
+   *   A submit handler.
+   *
+   * @return $this
+   */
+  public function addSubmitHandler($submit_handler);
+
+  /**
    * Gets the submit handlers.
    *
    * @return array
@@ -1037,6 +1047,16 @@ interface FormStateInterface {
    * @return $this
    */
   public function setValidateHandlers(array $validate_handlers);
+
+  /**
+   * Adds a validate handler.
+   *
+   * @param mixed $validate_handler
+   *   A validate handler.
+   *
+   * @return $this
+   */
+  public function addValidateHandler($validate_handler);
 
   /**
    * Gets the validate handlers.
