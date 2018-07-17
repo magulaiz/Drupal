@@ -284,6 +284,9 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setLabel(t('Authored by'))
       ->setDescription(t('The username of the content author.'))
       ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setDefaultValueCallback('current_user:id')
+      ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
         'type' => 'author',
@@ -361,6 +364,22 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     return $fields;
+  }
+
+  /**
+   * Default value callback for 'uid' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @deprecated The ::getCurrentUserId method is deprecated in 10.1.x and will
+   *   be removed before 11.0.0.
+   *
+   * @return array
+   *   An array of default values.
+   */
+  public static function getCurrentUserId() {
+    @trigger_error('The ::getCurrentUserId method is deprecated in 10.1.x and will be removed before 11.0.0.', E_USER_DEPRECATED);
+    return [\Drupal::currentUser()->id()];
   }
 
 }
