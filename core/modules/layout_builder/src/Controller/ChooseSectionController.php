@@ -4,8 +4,10 @@ namespace Drupal\layout_builder\Controller;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
@@ -53,6 +55,23 @@ class ChooseSectionController implements ContainerInjectionInterface {
   }
 
   /**
+   * Determines if the layout provides a configuration form.
+   *
+   * @param \Drupal\Core\Layout\LayoutInterface $layout
+   *   The layout plugin.
+   *
+   * @return bool
+   *   TRUE if the layout has a configure form, FALSE otherwise.
+   */
+  protected function hasConfigurationForm(LayoutInterface $layout) {
+    if ($layout instanceof PluginWithFormsInterface && $layout->hasFormClass('configure')) {
+      return TRUE;
+    }
+
+    return $layout instanceof PluginFormInterface;
+  }
+
+  /**
    * Choose a layout plugin to add as a section.
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
@@ -78,7 +97,7 @@ class ChooseSectionController implements ContainerInjectionInterface {
           ],
         ],
         '#url' => Url::fromRoute(
-          $layout instanceof PluginFormInterface ? 'layout_builder.configure_section' : 'layout_builder.add_section',
+          $this->hasConfigurationForm($layout) ? 'layout_builder.configure_section' : 'layout_builder.add_section',
           [
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),

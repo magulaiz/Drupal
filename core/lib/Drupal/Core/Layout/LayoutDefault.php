@@ -9,14 +9,17 @@ use Drupal\Core\Plugin\ContextAwarePluginTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
+use Drupal\Core\Plugin\PluginWithFormsInterface;
+use Drupal\Core\Plugin\PluginWithFormsTrait;
 
 /**
  * Provides a default class for Layout plugins.
  */
-class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
+class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PluginWithFormsInterface, PreviewAwarePluginInterface {
 
   use ContextAwarePluginAssignmentTrait;
   use ContextAwarePluginTrait;
+  use PluginWithFormsTrait;
 
   /**
    * Whether the plugin is being rendered in preview mode.
