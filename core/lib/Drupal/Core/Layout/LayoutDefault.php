@@ -132,6 +132,19 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
   /**
    * {@inheritdoc}
    */
+  public function getFormClass($operation) {
+    $forms = $this->getPluginDefinition()->get('forms') ?: [];
+    if (isset($forms[$operation])) {
+      return $forms[$operation];
+    }
+    elseif ($operation === 'configure' && $this instanceof PluginFormInterface) {
+      return static::class;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setInPreview(bool $in_preview): void {
     $this->inPreview = $in_preview;
   }
