@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
+use Drupal\KernelTests\TestTime;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
@@ -35,6 +36,11 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected $entityFieldText;
 
   /**
+   * @var \Drupal\KernelTests\TestTime
+   */
+  protected $time;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -57,6 +63,10 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Install required default configuration for filter module.
     $this->installConfig(['system', 'filter']);
+
+    $this->time = new TestTime();
+    $this->container->set('datetime.time', $this->time);
+    \Drupal::setContainer($this->container);
   }
 
   /**
@@ -229,6 +239,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $this->assertEquals(1, $violations->count());
     $this->assertEqual($violations[0]->getMessage(), 'The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.');
 
+    $this->time->advanceTime();
     $entity = $storage->loadUnchanged($entity->id());
     $translation = $entity->addTranslation('de');
     $entity->save();
