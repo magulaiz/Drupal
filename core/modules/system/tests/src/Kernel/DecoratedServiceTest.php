@@ -6,6 +6,11 @@ namespace Drupal\Tests\system\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 
+/**
+ * Class DecoratedServiceTest
+ *
+ * @group system
+ */
 class DecoratedServiceTest extends KernelTestBase {
 
   protected static $modules = [
