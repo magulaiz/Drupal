@@ -69,13 +69,15 @@ class ImageFieldRSSContentTest extends ImageFieldTestBase {
     // Check that the RSS enclosure appears in the RSS feed.
     $this->drupalGet('rss.xml');
     $uploaded_filename = str_replace('public://', '', $node_file->getFileUri());
-    $selector = sprintf(
-      'enclosure[@url="%s"][@length="%s"][@type="%s"]',
-      file_create_url("public://$uploaded_filename", ['absolute' => TRUE]),
-      $node_file->getSize(),
-      $node_file->getMimeType()
+    $elements = $this->xpath(
+      'enclosure[@url=":url"][@length=":length"][@type=":type"]',
+      [
+        ':url' => file_create_url("public://$uploaded_filename"),
+        ':length' => $node_file->getSize(),
+        ':type' => $node_file->getMimeType(),
+      ]
     );
-    $this->assertNotNull($this->getSession()->getDriver()->find('xpath', $selector), 'Image field RSS enclosure is displayed when viewing the RSS feed.');
+    $this->assertNotEmpty($elements, 'Image field RSS enclosure is displayed when viewing the RSS feed.');
   }
 
 }
