@@ -63,6 +63,14 @@ function image_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
+ * Implements hook_field_formatter_info_alter().
+ */
+function image_field_formatter_info_alter(array &$info) {
+  // Allows using the 'file_rss_enclosure' formatter for the 'image' field type.
+  $info['file_rss_enclosure']['field_types'][] = 'image';
+}
+
+/**
  * Implements hook_theme().
  */
 function image_theme() {
