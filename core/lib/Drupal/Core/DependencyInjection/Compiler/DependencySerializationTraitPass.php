@@ -27,7 +27,7 @@ class DependencySerializationTraitPass implements CompilerPassInterface {
       }
 
       if ($decorated = $definition->getDecoratedService()) {
-        $decorations->insert([$service_id, $definition], array($decorated[2], --$order));
+        $decorations->insert([$service_id, $definition], [$decorated[2], --$order]);
       }
     }
 
