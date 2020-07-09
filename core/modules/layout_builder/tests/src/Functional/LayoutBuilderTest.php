@@ -964,6 +964,29 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests a layout with a custom form.
+   */
+  public function testCustomForm() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser(['configure any layout']));
+
+    LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
+      ->enableLayoutBuilder()
+      ->setOverridable()
+      ->save();
+
+    $this->drupalGet('node/1');
+    $page->clickLink('Layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Custom Form Plugin');
+    $page->selectFieldOption('layout_settings[custom_element]', 'bar');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('bar');
+  }
+
+  /**
    * Tests that extra fields work before and after enabling Layout Builder.
    */
   public function testExtraFields() {
