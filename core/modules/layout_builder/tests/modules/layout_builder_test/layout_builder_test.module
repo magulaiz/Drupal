@@ -139,8 +139,10 @@ function layout_builder_test_module_implements_alter(&$implementations, $hook) {
 function layout_builder_test_layout_alter(&$definitions) {
   /** @var \Drupal\Core\Layout\LayoutDefinition[] $definitions */
   $forms['configure'] = CustomLayoutForm::class;
-  $definitions['layout_test_plugin']->set('forms', $forms);
   $definitions['layout_builder_test_no_form_plugin']->set('forms', $forms);
+  if (isset($definitions['layout_test_plugin'])) {
+    $definitions['layout_test_plugin']->set('forms', $forms);
+  }
 }
 
 /**
