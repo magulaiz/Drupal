@@ -8,14 +8,13 @@ use Drupal\Core\Plugin\ContextAwarePluginAssignmentTrait;
 use Drupal\Core\Plugin\ContextAwarePluginTrait;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\Plugin\PreviewAwarePluginInterface;
-use Drupal\Core\Plugin\PluginWithFormsInterface;
 use Drupal\Core\Plugin\PluginWithFormsTrait;
+use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 
 /**
  * Provides a default class for Layout plugins.
  */
-class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PluginWithFormsInterface, PreviewAwarePluginInterface {
+class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInterface, PreviewAwarePluginInterface {
 
   use ContextAwarePluginAssignmentTrait;
   use ContextAwarePluginTrait;
@@ -133,13 +132,7 @@ class LayoutDefault extends PluginBase implements LayoutInterface, PluginFormInt
    * {@inheritdoc}
    */
   public function getFormClass($operation) {
-    $forms = $this->getPluginDefinition()->get('forms') ?: [];
-    if (isset($forms[$operation])) {
-      return $forms[$operation];
-    }
-    elseif ($operation === 'configure' && $this instanceof PluginFormInterface) {
-      return static::class;
-    }
+    return $this->getPluginDefinition()->get('forms')[$operation] ?? static::class;
   }
 
   /**

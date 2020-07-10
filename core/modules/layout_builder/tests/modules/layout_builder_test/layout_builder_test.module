@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+use Drupal\layout_builder_test\PluginForm\CustomLayoutForm;
 
 /**
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
@@ -129,5 +130,24 @@ function layout_builder_test_module_implements_alter(&$implementations, $hook) {
     $implementations = [
       'layout_builder_test' => $group,
     ] + $implementations;
+  }
+}
+
+/**
+ * Implements hook_layout_alter().
+ */
+function layout_builder_test_layout_alter(&$definitions) {
+  /** @var \Drupal\Core\Layout\LayoutDefinition[] $definitions */
+  $forms['configure'] = CustomLayoutForm::class;
+  $definitions['layout_test_plugin']->set('forms', $forms);
+  $definitions['layout_builder_test_no_form_plugin']->set('forms', $forms);
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for layout templates.
+ */
+function layout_builder_test_preprocess_layout(&$variables) {
+  if (isset($variables['settings']['custom_element'])) {
+    $variables['content']['main']['custom_element']['#markup'] = $variables['settings']['custom_element'];
   }
 }

@@ -20,15 +20,4 @@ use Drupal\Core\Layout\LayoutDefault;
  */
 class LayoutBuilderTestCustomFormPlugin extends LayoutDefault {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function build(array $regions) {
-    $build['layout'] = parent::build($regions);
-    $build['custom_element'] = [
-      '#markup' => $this->configuration['custom_element'],
-    ];
-    return $build;
-  }
-
 }

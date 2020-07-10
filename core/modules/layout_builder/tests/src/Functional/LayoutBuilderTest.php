@@ -979,11 +979,28 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $this->drupalGet('node/1');
     $page->clickLink('Layout');
+
+    // Test a custom plugin form that is specified by the plugin annotation.
     $page->clickLink('Add section');
     $page->clickLink('Layout Builder Test Custom Form Plugin');
-    $page->selectFieldOption('layout_settings[custom_element]', 'bar');
+    $page->fillField('layout_settings[custom_element]', 'This is a custom form specified by the plugin');
     $page->pressButton('Add section');
-    $assert_session->pageTextContains('bar');
+    $assert_session->pageTextContains('This is a custom form specified by the plugin');
+
+    // Test a custom plugin form that is altered onto a plugin that has no form.
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test No Form Plugin');
+    $page->fillField('layout_settings[custom_element]', 'This had no form now it does');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('This had no form now it does');
+
+    // Test a custom plugin form that is altered onto a plugin that has an
+    // existing form.
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test No Form Plugin');
+    $page->fillField('layout_settings[custom_element]', 'This had an existing form now it has more');
+    $page->pressButton('Add section');
+    $assert_session->pageTextContains('This had an existing form now it has more');
   }
 
   /**
