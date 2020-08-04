@@ -205,7 +205,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
     }
 
     // Check to see if the field has any values.
-    if ($field->isEmpty()) {
+    if ($field->isEmpty() && !$field->getFieldDefinition()->getDefaultValue($entity)) {
       return $access->andIf(AccessResult::forbidden());
     }
     return $access;
