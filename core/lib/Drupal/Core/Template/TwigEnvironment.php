@@ -134,7 +134,7 @@ class TwigEnvironment extends Environment {
   /**
    * Invalidates all compiled Twig templates.
    *
-   * @see \drupal_flush_all_caches
+   * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
    */
   public function invalidate() {
     PhpStorageFactory::get('twig')->deleteAll();

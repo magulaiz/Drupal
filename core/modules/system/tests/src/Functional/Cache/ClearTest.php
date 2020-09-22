@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Cache;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\Rebuilder;
 
 /**
  * Tests our clearing is done the proper way.
  *
  * @group Cache
  */
+
 class ClearTest extends CacheTestBase {
 
   /**
@@ -29,9 +31,9 @@ class ClearTest extends CacheTestBase {
   }
 
   /**
-   * Tests drupal_flush_all_caches().
+   * Tests \Drupal\Core\Cache\Rebuilder::rebuildAll().
    */
-  public function testFlushAllCaches(): void {
+  public function testrebuildAll(): void {
     // Create cache entries for each flushed cache bin.
     $bins = Cache::getBins();
     $this->assertNotEmpty($bins, 'Cache::getBins() returned bins to flush.');
@@ -41,7 +43,7 @@ class ClearTest extends CacheTestBase {
     }
 
     // Remove all caches then make sure that they are cleared.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     foreach ($bins as $bin => $cache_backend) {
       $cid = 'test_cid_clear' . $bin;
