@@ -22,9 +22,14 @@ class CommentBookTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'comment'];
+  protected static $modules = ['book', 'comment'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     // Create comment field on book.
@@ -55,7 +60,11 @@ class CommentBookTest extends BrowserTestBase {
     ]);
     $comment->save();
 
-    $commenting_user = $this->drupalCreateUser(['access printer-friendly version', 'access comments', 'post comments']);
+    $commenting_user = $this->drupalCreateUser([
+      'access printer-friendly version',
+      'access comments',
+      'post comments',
+    ]);
     $this->drupalLogin($commenting_user);
 
     $this->drupalGet('node/' . $book_node->id());
@@ -63,7 +72,8 @@ class CommentBookTest extends BrowserTestBase {
     $this->assertText($comment_subject, 'Comment subject found');
     $this->assertText($comment_body, 'Comment body found');
     $this->assertText(t('Add new comment'), 'Comment form found');
-    $this->assertField('subject[0][value]', 'Comment form subject found');
+    // Ensure that the comment form subject field exists.
+    $this->assertSession()->fieldExists('subject[0][value]');
 
     $this->drupalGet('book/export/html/' . $book_node->id());
 
@@ -71,8 +81,9 @@ class CommentBookTest extends BrowserTestBase {
     $this->assertText($comment_subject, 'Comment subject found');
     $this->assertText($comment_body, 'Comment body found');
 
-    $this->assertNoText(t('Add new comment'), 'Comment form not found');
-    $this->assertNoField('subject[0][value]', 'Comment form subject not found');
+    $this->assertNoText('Add new comment', 'Comment form not found');
+    // Verify that the comment form subject field is not found.
+    $this->assertSession()->fieldNotExists('subject[0][value]');
   }
 
 }

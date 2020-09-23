@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Cache;
 
-use Drupal\Core\Cache\Apcu4Backend;
 use Drupal\Core\Cache\ApcuBackend;
 
 /**
@@ -17,18 +16,13 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
    * {@inheritdoc}
    */
   protected function createCacheBackend($bin) {
-    if (version_compare(phpversion('apcu'), '5.0.0', '>=')) {
-      return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
-    }
-    else {
-      return new Apcu4Backend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
-    }
+    return new ApcuBackend($bin, $this->databasePrefix, \Drupal::service('cache_tags.invalidator.checksum'));
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     foreach ($this->cachebackends as $bin => $cachebackend) {
       $this->cachebackends[$bin]->removeBin();
     }

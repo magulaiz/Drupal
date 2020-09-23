@@ -25,7 +25,12 @@ class DisplayTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['contextual'];
+  protected static $modules = ['contextual'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests adding a display.
@@ -50,9 +55,9 @@ class DisplayTest extends UITestBase {
     $view = $this->randomView($view);
 
     $this->clickLink(t('Reorder displays'));
-    $this->assertTrue($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
-    $this->assertTrue($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
+    $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
 
     // Ensure the view displays are in the expected order in configuration.
     $expected_display_order = ['default', 'block_1', 'page_1'];
@@ -83,17 +88,17 @@ class DisplayTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] . '/edit';
 
     $this->drupalGet($path_prefix);
-    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
+    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
 
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is visible.');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is not visible.');
     $this->drupalPostForm(NULL, [], 'Disable Page');
-    $this->assertTrue($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
+    $this->assertNotEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
 
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is not visible.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is visible.');
     $this->drupalPostForm(NULL, [], 'Enable Page');
-    $this->assertFalse($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
+    $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
 
   /**
@@ -154,7 +159,7 @@ class DisplayTest extends UITestBase {
     $this->assertEqual($result[0]->getHtml(), t('None'), 'Make sure that the link option summary shows "None" by default.');
 
     $this->drupalGet($link_display_path);
-    $this->assertFieldChecked('edit-link-display-0');
+    $this->assertSession()->checkboxChecked('edit-link-display-0');
 
     // Test the default radio option on the link display form.
     $this->drupalPostForm($link_display_path, ['link_display' => 'page_1'], t('Apply'));
@@ -168,11 +173,11 @@ class DisplayTest extends UITestBase {
     // The form redirects to the master display.
     $this->drupalGet($path);
 
-    $this->assertLink(t('Custom URL'), 0, 'The link option has custom URL as summary.');
+    $this->assertSession()->linkExists('Custom URL', 0, 'The link option has custom URL as summary.');
 
     // Test the default link_url value for new display
     $this->drupalPostForm(NULL, [], t('Add Block'));
-    $this->assertUrl('admin/structure/views/view/test_display/edit/block_2');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink(t('Custom URL'));
     $this->assertFieldByName('link_url', 'a-custom-url');
   }
@@ -187,14 +192,14 @@ class DisplayTest extends UITestBase {
     // The view should initially have the enabled class on its form wrapper.
     $this->drupalGet('admin/structure/views/view/' . $id);
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'enabled']);
-    $this->assertTrue($elements, 'The enabled class was found on the form wrapper');
+    $this->assertNotEmpty($elements, 'The enabled class was found on the form wrapper');
 
     $view = Views::getView($id);
     $view->storage->disable()->save();
 
     $this->drupalGet('admin/structure/views/view/' . $id);
     $elements = $this->xpath('//div[contains(@class, :edit) and contains(@class, :status)]', [':edit' => 'views-edit-view', ':status' => 'disabled']);
-    $this->assertTrue($elements, 'The disabled class was found on the form wrapper.');
+    $this->assertNotEmpty($elements, 'The disabled class was found on the form wrapper.');
   }
 
   /**
@@ -213,15 +218,15 @@ class DisplayTest extends UITestBase {
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}");
       $escaped = views_ui_truncate($input, 25);
-      $this->assertEscaped($escaped);
+      $this->assertSession()->assertEscaped($escaped);
       $this->assertNoRaw($xss_markup);
 
       $this->drupalGet("admin/structure/views/view/{$view->id()}/edit/page_1");
-      $this->assertEscaped("View $escaped");
+      $this->assertSession()->assertEscaped("View $escaped");
       $this->assertNoRaw("View $xss_markup");
-      $this->assertEscaped("Duplicate $escaped");
+      $this->assertSession()->assertEscaped("Duplicate $escaped");
       $this->assertNoRaw("Duplicate $xss_markup");
-      $this->assertEscaped("Delete $escaped");
+      $this->assertSession()->assertEscaped("Delete $escaped");
       $this->assertNoRaw("Delete $xss_markup");
     }
   }
@@ -238,7 +243,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPostForm($display_title_path, ['display_title' => $display_title], t('Apply'));
 
     // Ensure that the title is escaped as expected.
-    $this->assertEscaped($display_title);
+    $this->assertSession()->assertEscaped($display_title);
     $this->assertNoRaw($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
@@ -253,7 +258,7 @@ class DisplayTest extends UITestBase {
     $this->assertNoFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
 
     // Ensure that the title is escaped as expected.
-    $this->assertEscaped($display_title);
+    $this->assertSession()->assertEscaped($display_title);
     $this->assertNoRaw($display_title);
   }
 

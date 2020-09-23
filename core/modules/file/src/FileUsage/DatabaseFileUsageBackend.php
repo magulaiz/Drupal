@@ -28,18 +28,17 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   /**
    * Construct the DatabaseFileUsageBackend.
    *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to store the file usage
    *   information.
    * @param string $table
    *   (optional) The table to store file usage info. Defaults to 'file_usage'.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   (optional) The config factory.
    */
-  public function __construct(Connection $connection, $table = 'file_usage', ConfigFactoryInterface $config_factory = NULL) {
+  public function __construct(ConfigFactoryInterface $config_factory, Connection $connection, $table = 'file_usage') {
     parent::__construct($config_factory);
     $this->connection = $connection;
-
     $this->tableName = $table;
   }
 

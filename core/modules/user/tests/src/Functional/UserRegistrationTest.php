@@ -22,17 +22,23 @@ class UserRegistrationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_test'];
+  protected static $modules = ['field_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   public function testRegistrationWithEmailVerification() {
     $config = $this->config('user.settings');
     // Require email verification.
     $config->set('verify_mail', TRUE)->save();
 
-    // Set registration to administrator only.
+    // Set registration to administrator only and ensure the user registration
+    // page is inaccessible.
     $config->set('register', UserInterface::REGISTER_ADMINISTRATORS_ONLY)->save();
     $this->drupalGet('user/register');
-    $this->assertResponse(403, 'Registration page is inaccessible when only administrators can create accounts.');
+    $this->assertSession()->statusCodeEquals(403);
 
     // Allow registration by site visitors without administrator approval.
     $config->set('register', UserInterface::REGISTER_VISITORS)->save();
@@ -49,7 +55,7 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
     $resetURL = user_pass_reset_url($new_user);
     $this->drupalGet($resetURL);
-    $this->assertTitle(t('Set password | Drupal'), 'Page title is "Set password".');
+    $this->assertSession()->titleEquals('Set password | Drupal');
 
     // Allow registration by site visitors, but require administrator approval.
     $config->set('register', UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
@@ -163,7 +169,6 @@ class UserRegistrationTest extends BrowserTestBase {
    */
   public function testUuidFormState() {
     \Drupal::service('module_installer')->install(['image']);
-    \Drupal::service('router.builder')->rebuild();
 
     // Add a picture field in order to ensure that no form cache is written,
     // which breaks registration of more than 1 user every 6 hours.
@@ -206,11 +211,11 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Create one account.
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $user_storage = \Drupal::entityTypeManager()->getStorage('user');
 
-    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
+    $this->assertNotEmpty($user_storage->loadByProperties(['name' => $edit['name']]));
     $this->drupalLogout();
 
     // Create a second account.
@@ -219,9 +224,9 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['pass[pass2]'] = $edit['pass[pass1]'] = $this->randomMachineName();
 
     $this->drupalPostForm('user/register', $edit, t('Create new account'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertTrue($user_storage->loadByProperties(['name' => $edit['name']]));
+    $this->assertNotEmpty($user_storage->loadByProperties(['name' => $edit['name']]));
   }
 
   public function testRegistrationDefaultValues() {
@@ -240,7 +245,7 @@ class UserRegistrationTest extends BrowserTestBase {
 
     // Check the presence of expected cache tags.
     $this->drupalGet('user/register');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
     $edit = [];
     $edit['name'] = $name = $this->randomMachineName();
@@ -313,8 +318,8 @@ class UserRegistrationTest extends BrowserTestBase {
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');
     $this->assertNoText($field->label(), 'The field does not appear on user registration form');
-    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
 
     // Have the field appear on the registration form.
     $display_repository->getFormDisplay('user', 'user', 'register')
@@ -333,12 +338,12 @@ class UserRegistrationTest extends BrowserTestBase {
     $edit['test_user_field[0][value]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRegistrationFormCacheTagsWithUserFields();
-    $this->assertRaw(t('@name field is required.', ['@name' => $field->label()]), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('@name field is required.', ['@name' => $field->label()]));
     // Invalid input.
     $edit['test_user_field[0][value]'] = '-1';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRegistrationFormCacheTagsWithUserFields();
-    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $field->label()]), 'Field validation error was correctly reported.');
+    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $field->label()]));
 
     // Submit with valid data.
     $value = rand(1, 255);
@@ -380,10 +385,10 @@ class UserRegistrationTest extends BrowserTestBase {
    * Asserts the presence of cache tags on registration form with user fields.
    */
   protected function assertRegistrationFormCacheTagsWithUserFields() {
-    $this->assertCacheTag('config:core.entity_form_display.user.user.register');
-    $this->assertCacheTag('config:field.field.user.user.test_user_field');
-    $this->assertCacheTag('config:field.storage.user.test_user_field');
-    $this->assertCacheTag('config:user.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:core.entity_form_display.user.user.register');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:field.field.user.user.test_user_field');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:field.storage.user.test_user_field');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.settings');
   }
 
 }

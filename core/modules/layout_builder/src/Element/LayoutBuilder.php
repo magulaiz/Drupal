@@ -3,18 +3,18 @@
 namespace Drupal\layout_builder\Element;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
+use Drupal\layout_builder\Event\PrepareLayoutEvent;
+use Drupal\layout_builder\LayoutBuilderEvents;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
-use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
-use Drupal\layout_builder\OverridesSectionStorageInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a render element for building the Layout Builder UI.
@@ -31,18 +31,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
   use LayoutBuilderHighlightTrait;
 
   /**
-   * The layout tempstore repository.
+   * The event dispatcher.
    *
-   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $layoutTempstoreRepository;
-
-  /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
+  protected $eventDispatcher;
 
   /**
    * Constructs a new LayoutBuilder.
@@ -53,15 +46,24 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
-   *   The layout tempstore repository.
-   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
-   *   The messenger service.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher service.
+   * @param \Drupal\Core\Messenger\MessengerInterface|null $messenger
+   *   The messenger service. This is no longer used and will be removed in
+   *   drupal:10.0.0.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, LayoutTempstoreRepositoryInterface $layout_tempstore_repository, MessengerInterface $messenger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $event_dispatcher, $messenger = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->layoutTempstoreRepository = $layout_tempstore_repository;
-    $this->messenger = $messenger;
+
+    if (!($event_dispatcher instanceof EventDispatcherInterface)) {
+      @trigger_error('The event_dispatcher service should be passed to LayoutBuilder::__construct() instead of the layout_builder.tempstore_repository service since 9.1.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3152690', E_USER_DEPRECATED);
+      $event_dispatcher = \Drupal::service('event_dispatcher');
+    }
+    $this->eventDispatcher = $event_dispatcher;
+
+    if ($messenger) {
+      @trigger_error('Calling LayoutBuilder::__construct() with the $messenger argument is deprecated in drupal:9.1.0 and will be removed in drupal:10.0.0. See https://www.drupal.org/node/3152690', E_USER_DEPRECATED);
+    }
   }
 
   /**
@@ -72,8 +74,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('layout_builder.tempstore_repository'),
-      $container->get('messenger')
+      $container->get('event_dispatcher')
     );
   }
 
@@ -145,19 +146,8 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
    *   The section storage.
    */
   protected function prepareLayout(SectionStorageInterface $section_storage) {
-    // If the layout has pending changes, add a warning.
-    if ($this->layoutTempstoreRepository->has($section_storage)) {
-      $this->messenger->addWarning($this->t('You have unsaved changes.'));
-    }
-    // If the layout is an override that has not yet been overridden, copy the
-    // sections from the corresponding default.
-    elseif ($section_storage instanceof OverridesSectionStorageInterface && !$section_storage->isOverridden()) {
-      $sections = $section_storage->getDefaultSectionStorage()->getSections();
-      foreach ($sections as $section) {
-        $section_storage->appendSection($section);
-      }
-      $this->layoutTempstoreRepository->set($section_storage);
-    }
+    $event = new PrepareLayoutEvent($section_storage);
+    $this->eventDispatcher->dispatch($event, LayoutBuilderEvents::PREPARE_LAYOUT);
   }
 
   /**
@@ -244,6 +234,9 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $section = $section_storage->getSection($delta);
 
     $layout = $section->getLayout();
+    $layout_settings = $section->getLayoutSettings();
+    $section_label = !empty($layout_settings['label']) ? $layout_settings['label'] : $this->t('Section @section', ['@section' => $delta + 1]);
+
     $build = $section->toRenderArray($this->getAvailableContexts($section_storage), TRUE);
     $layout_definition = $layout->getPluginDefinition();
 
@@ -279,7 +272,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['layout_builder_add_block']['link'] = [
         '#type' => 'link',
         // Add one to the current delta since it is zero-indexed.
-        '#title' => $this->t('Add block <span class="visually-hidden">in section @section, @region region</span>', ['@section' => $delta + 1, '@region' => $region_labels[$region]]),
+        '#title' => $this->t('Add block <span class="visually-hidden">in @section, @region region</span>', ['@section' => $section_label, '@region' => $region_labels[$region]]),
         '#url' => Url::fromRoute('layout_builder.choose_block',
           [
             'section_storage_type' => $storage_type,
@@ -310,9 +303,9 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       $build[$region]['#attributes']['class'][] = 'layout-builder__region';
       $build[$region]['#attributes']['class'][] = 'js-layout-builder-region';
       $build[$region]['#attributes']['role'] = 'group';
-      $build[$region]['#attributes']['aria-label'] = $this->t('@region region in section @section', [
+      $build[$region]['#attributes']['aria-label'] = $this->t('@region region in @section', [
         '@region' => $info['label'],
-        '@section' => $delta + 1,
+        '@section' => $section_label,
       ]);
 
       // Get weights of all children for use by the region label.
@@ -349,11 +342,11 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       '#attributes' => [
         'class' => ['layout-builder__section'],
         'role' => 'group',
-        'aria-label' => $this->t('Section @section', ['@section' => $delta + 1]),
+        'aria-label' => $section_label,
       ],
       'remove' => [
         '#type' => 'link',
-        '#title' => $this->t('Remove section <span class="visually-hidden">@section</span>', ['@section' => $delta + 1]),
+        '#title' => $this->t('Remove @section', ['@section' => $section_label]),
         '#url' => Url::fromRoute('layout_builder.remove_section', [
           'section_storage_type' => $storage_type,
           'section_storage' => $storage_id,
@@ -372,16 +365,12 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       // The section label is added to sections without a "Configure section"
       // link, and is only visible when the move block dialog is open.
       'section_label' => [
-        '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">Section @section</span>', ['@section' => $delta + 1]),
+        '#markup' => $this->t('<span class="layout-builder__section-label" aria-hidden="true">@section</span>', ['@section' => $section_label]),
         '#access' => !$layout instanceof PluginFormInterface,
       ],
       'configure' => [
         '#type' => 'link',
-        // There are two instances of @section, the one wrapped in
-        // .visually-hidden is for screen readers. The one wrapped in
-        // .layout-builder__section-label is only visible when the
-        // move block dialog is open and it is not seen by screen readers.
-        '#title' => $this->t('Configure section <span class="visually-hidden">@section</span><span aria-hidden="true" class="layout-builder__section-label">@section</span>', ['@section' => $delta + 1]),
+        '#title' => $this->t('Configure @section', ['@section' => $section_label]),
         '#access' => $layout instanceof PluginFormInterface,
         '#url' => Url::fromRoute('layout_builder.configure_section', [
           'section_storage_type' => $storage_type,

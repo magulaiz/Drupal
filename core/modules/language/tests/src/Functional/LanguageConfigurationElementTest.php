@@ -20,11 +20,26 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'node', 'language', 'language_elements_test', 'field_ui'];
+  protected static $modules = [
+    'taxonomy',
+    'node',
+    'language',
+    'language_elements_test',
+    'field_ui',
+  ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
-    $user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content types']);
+    $user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer languages',
+      'administer content types',
+    ]);
     $this->drupalLogin($user);
   }
 
@@ -42,8 +57,8 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertEqual($lang_conf->getDefaultLangcode(), 'current_interface');
     $this->assertFalse($lang_conf->isLanguageAlterable());
     $this->drupalGet('language-tests/language_configuration_element');
-    $this->assertOptionSelected('edit-lang-configuration-langcode', 'current_interface');
-    $this->assertNoFieldChecked('edit-lang-configuration-language-alterable');
+    $this->assertTrue($this->assertSession()->optionExists('edit-lang-configuration-langcode', 'current_interface')->isSelected());
+    $this->assertSession()->checkboxNotChecked('edit-lang-configuration-language-alterable');
 
     // Reload the page and save again.
     $this->drupalGet('language-tests/language_configuration_element');
@@ -56,8 +71,8 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     $this->assertEqual($lang_conf->getDefaultLangcode(), 'authors_default');
     $this->assertTrue($lang_conf->isLanguageAlterable());
     $this->drupalGet('language-tests/language_configuration_element');
-    $this->assertOptionSelected('edit-lang-configuration-langcode', 'authors_default');
-    $this->assertFieldChecked('edit-lang-configuration-language-alterable');
+    $this->assertTrue($this->assertSession()->optionExists('edit-lang-configuration-langcode', 'authors_default')->isSelected());
+    $this->assertSession()->checkboxChecked('edit-lang-configuration-language-alterable');
 
     // Test if content type settings have been saved.
     $edit = [
@@ -70,8 +85,8 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
 
     // Make sure the settings are saved when creating the content type.
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertOptionSelected('edit-language-configuration-langcode', 'authors_default');
-    $this->assertFieldChecked('edit-language-configuration-language-alterable');
+    $this->assertTrue($this->assertSession()->optionExists('edit-language-configuration-langcode', 'authors_default')->isSelected());
+    $this->assertSession()->checkboxChecked('edit-language-configuration-language-alterable');
 
   }
 
@@ -144,7 +159,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('language-tests/language_configuration_element_test');
-    $this->assertOptionSelected('edit-langcode', 'bb');
+    $this->assertTrue($this->assertSession()->optionExists('edit-langcode', 'bb')->isSelected());
   }
 
   /**
@@ -204,7 +219,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
 
     // Check the language default configuration for articles is present.
     $configuration = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load('node.article');
-    $this->assertTrue($configuration, 'The language configuration is present.');
+    $this->assertNotEmpty($configuration, 'The language configuration is present.');
 
     // Delete 'article' bundle.
     $this->drupalPostForm('admin/structure/types/manage/article/delete', [], t('Delete'));
@@ -212,7 +227,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     // Check that the language configuration has been deleted.
     \Drupal::entityTypeManager()->getStorage('language_content_settings')->resetCache();
     $configuration = \Drupal::entityTypeManager()->getStorage('language_content_settings')->load('node.article');
-    $this->assertFalse($configuration, 'The language configuration was deleted after bundle was deleted.');
+    $this->assertNull($configuration, 'The language configuration was deleted after bundle was deleted.');
   }
 
   /**

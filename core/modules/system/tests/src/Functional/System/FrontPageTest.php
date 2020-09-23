@@ -17,7 +17,12 @@ class FrontPageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'system_test', 'views'];
+  protected static $modules = ['node', 'system_test', 'views'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * The path to a node that is created for testing.
@@ -26,7 +31,7 @@ class FrontPageTest extends BrowserTestBase {
    */
   protected $nodePath;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create admin user, log in admin user, and create one node.
@@ -54,13 +59,13 @@ class FrontPageTest extends BrowserTestBase {
     ];
     $this->drupalCreateNode($settings);
     $this->drupalGet('');
-    $this->assertTitle('Home | Drupal');
+    $this->assertSession()->titleEquals('Home | Drupal');
 
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet($this->nodePath);
-    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
 
     // Change the front page to an invalid path.
     $edit = ['site_frontpage' => '/kittens'];
@@ -80,7 +85,7 @@ class FrontPageTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertText(t('On front page.'), 'Path is the front page.');
     $this->drupalGet('node');
-    $this->assertNoText(t('On front page.'), 'Path is not the front page.');
+    $this->assertNoText('On front page.', 'Path is not the front page.');
     $this->drupalGet($this->nodePath);
     $this->assertText(t('On front page.'), 'Path is the front page.');
   }

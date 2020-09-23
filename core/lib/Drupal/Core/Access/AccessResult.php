@@ -6,8 +6,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
-use Drupal\Core\Config\ConfigBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -32,7 +30,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    * Creates an AccessResultInterface object with isNeutral() === TRUE.
    *
    * @param string|null $reason
-   *   (optional) The reason why access is forbidden. Intended for developers,
+   *   (optional) The reason why access is neutral. Intended for developers,
    *   hence not translatable.
    *
    * @return \Drupal\Core\Access\AccessResultNeutral
@@ -276,36 +274,6 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   public function cachePerUser() {
     $this->addCacheContexts(['user']);
     return $this;
-  }
-
-  /**
-   * Convenience method, adds the entity's cache tag.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity whose cache tag to set on the access result.
-   *
-   * @return $this
-   *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
-   *   ::addCacheableDependency() instead.
-   */
-  public function cacheUntilEntityChanges(EntityInterface $entity) {
-    return $this->addCacheableDependency($entity);
-  }
-
-  /**
-   * Convenience method, adds the configuration object's cache tag.
-   *
-   * @param \Drupal\Core\Config\ConfigBase $configuration
-   *   The configuration object whose cache tag to set on the access result.
-   *
-   * @return $this
-   *
-   * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0. Use
-   *   ::addCacheableDependency() instead.
-   */
-  public function cacheUntilConfigurationChanges(ConfigBase $configuration) {
-    return $this->addCacheableDependency($configuration);
   }
 
   /**

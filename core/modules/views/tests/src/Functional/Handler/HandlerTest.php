@@ -30,9 +30,14 @@ class HandlerTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'comment', 'node'];
+  protected static $modules = ['views_ui', 'comment', 'node'];
 
-  protected function setUp($import_test_views = TRUE) {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
@@ -229,14 +234,15 @@ class HandlerTest extends ViewTestBase {
    *   The type of assertion - examples are "Browser", "PHP".
    *
    * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *   TRUE if the assertion succeeded.
    */
   protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other') {
     if (empty($message)) {
       $message = t('Comparing @first and @second', ['@first' => implode(',', $expected), '@second' => implode(',', $handler->value)]);
     }
 
-    return $this->assert($expected == $handler->value, $message, $group);
+    $this->assertEquals($expected, $handler->value, $message);
+    return TRUE;
   }
 
   /**
@@ -250,7 +256,7 @@ class HandlerTest extends ViewTestBase {
     $handler_options_path = 'admin/structure/views/nojs/handler/test_handler_relationships/default/field/title';
     $view_edit_path = 'admin/structure/views/view/test_handler_relationships/edit';
     $this->drupalGet($view_edit_path);
-    $this->assertLinkByHref($handler_options_path);
+    $this->assertSession()->linkByHrefExists($handler_options_path);
 
     // The test view has a relationship to node_revision so the field should
     // show a relationship selection.
@@ -282,12 +288,12 @@ class HandlerTest extends ViewTestBase {
     $this->drupalPostForm(NULL, [], t('Apply'));
     // Add a content type filter.
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_get_entity_type/default/filter', ['name[node_field_data.type]' => 'node_field_data.type'], t('Add and configure filter criteria'));
-    $this->assertOptionSelected('edit-options-relationship', 'node');
+    $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
     $this->drupalPostForm(NULL, ['options[value][page]' => 'page'], t('Apply'));
     // Check content type filter options.
     $this->drupalGet('admin/structure/views/nojs/handler/test_get_entity_type/default/filter/type');
-    $this->assertOptionSelected('edit-options-relationship', 'node');
-    $this->assertFieldChecked('edit-options-value-page');
+    $this->assertTrue($this->assertSession()->optionExists('edit-options-relationship', 'node')->isSelected());
+    $this->assertSession()->checkboxChecked('edit-options-value-page');
   }
 
   /**
@@ -305,15 +311,15 @@ class HandlerTest extends ViewTestBase {
 
     $field->options['relationship'] = NULL;
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that an empty relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = $this->randomMachineName();
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that a random relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'broken_relationship';
     $field->setRelationship();
-    $this->assertFalse($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
+    $this->assertNull($field->relationship, 'Make sure that a broken relationship does not create a relationship on the field.');
 
     $field->options['relationship'] = 'valid_relationship';
     $field->setRelationship();
@@ -377,7 +383,7 @@ class HandlerTest extends ViewTestBase {
 
     foreach ($views_data['access_callback'] as $type => $info) {
       if (!in_array($type, ['title', 'help'])) {
-        $this->assertTrue($view->field['access_callback'] instanceof HandlerBase, 'Make sure the user got access to the access_callback field ');
+        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback']);
         $this->assertFalse(isset($view->field['access_callback_arguments']), 'Make sure the user got no access to the access_callback_arguments field ');
       }
     }
@@ -392,7 +398,7 @@ class HandlerTest extends ViewTestBase {
     foreach ($views_data['access_callback'] as $type => $info) {
       if (!in_array($type, ['title', 'help'])) {
         $this->assertFalse(isset($view->field['access_callback']), 'Make sure the user got no access to the access_callback field ');
-        $this->assertTrue($view->field['access_callback_arguments'] instanceof HandlerBase, 'Make sure the user got access to the access_callback_arguments field ');
+        $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback_arguments']);
       }
     }
   }

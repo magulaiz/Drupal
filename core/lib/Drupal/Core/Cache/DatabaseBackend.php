@@ -110,7 +110,7 @@ class DatabaseBackend implements CacheBackendInterface {
     // ::select() is a much smaller proportion of the request.
     $result = [];
     try {
-      $result = $this->connection->query('SELECT cid, data, created, expire, serialized, tags, checksum FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE cid IN ( :cids[] ) ORDER BY cid', [':cids[]' => array_keys($cid_mapping)]);
+      $result = $this->connection->query('SELECT [cid], [data], [created], [expire], [serialized], [tags], [checksum] FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE [cid] IN ( :cids[] ) ORDER BY [cid]', [':cids[]' => array_keys($cid_mapping)]);
     }
     catch (\Exception $e) {
       // Nothing to do.
@@ -236,6 +236,11 @@ class DatabaseBackend implements CacheBackendInterface {
         'checksum' => $this->checksumProvider->getCurrentChecksum($item['tags']),
       ];
 
+      // Avoid useless writes.
+      if ($fields['checksum'] === CacheTagsChecksumInterface::INVALID_CHECKSUM_WHILE_IN_TRANSACTION) {
+        continue;
+      }
+
       if (!is_string($item['data'])) {
         $fields['data'] = serialize($item['data']);
         $fields['serialized'] = 1;
@@ -245,6 +250,11 @@ class DatabaseBackend implements CacheBackendInterface {
         $fields['serialized'] = 0;
       }
       $values[] = $fields;
+    }
+
+    // If all $items were useless writes, we may end up with zero writes.
+    if (empty($values)) {
+      return;
     }
 
     // Use an upsert query which is atomic and optimized for multiple-row

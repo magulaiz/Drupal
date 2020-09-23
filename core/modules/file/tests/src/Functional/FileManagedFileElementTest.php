@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\file\Functional;
 
+use Drupal\file\Entity\File;
+
 /**
  * Tests the 'managed_file' element type.
  *
@@ -10,6 +12,11 @@ namespace Drupal\Tests\file\Functional;
  *   that aren't related to fields into it.
  */
 class FileManagedFileElementTest extends FileFieldTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the managed_file element type.
@@ -31,7 +38,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
           // Submit without a file.
           $this->drupalPostForm($path, [], t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [])]), 'Submitted without a file.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [])]));
 
           // Submit with a file, but with an invalid form token. Ensure the file
           // was not saved.
@@ -43,7 +50,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
             $file_field_name => \Drupal::service('file_system')->realpath($test_file->getFileUri()),
           ];
           $this->drupalPostForm(NULL, $edit, t('Save'));
-          $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
+          $this->assertText('The form has become outdated.');
           $last_fid = $this->getLastFileId();
           $this->assertEqual($last_fid_prior, $last_fid, 'File was not saved when uploaded with an invalid form token.');
 
@@ -53,11 +60,11 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->drupalPostForm($path, $edit, t('Save'));
           $last_fid = $this->getLastFileId();
           $this->assertTrue($last_fid > $last_fid_prior, 'New file got saved.');
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
 
           // Submit no new input, but with a default file.
           $this->drupalPostForm($path . '/' . $last_fid, [], t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Empty submission did not change an existing file.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
 
           // Upload, then Submit.
           $last_fid_prior = $this->getLastFileId();
@@ -67,7 +74,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $last_fid = $this->getLastFileId();
           $this->assertTrue($last_fid > $last_fid_prior, 'New file got uploaded.');
           $this->drupalPostForm(NULL, [], t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]), 'Submit handler has correct file info.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', [$last_fid])]));
 
           // Remove, then Submit.
           $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
@@ -79,7 +86,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->drupalGet($path . '/' . $last_fid);
           $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
           $this->drupalPostForm(NULL, [], t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file removal was successful.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']));
 
           // Upload, then Remove, then Submit.
           $this->drupalGet($path);
@@ -93,7 +100,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
           $this->drupalPostForm(NULL, $remove_edit, $remove_button_title);
 
           $this->drupalPostForm(NULL, [], t('Save'));
-          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']), 'Submission after file upload and removal was successful.');
+          $this->assertRaw(t('The file ids are %fids.', ['%fids' => '']));
         }
       }
     }
@@ -117,7 +124,8 @@ class FileManagedFileElementTest extends FileFieldTestBase {
 
     // Save the entire form.
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', $fid_list)]), 'Two files saved into a single multiple file element.');
+    // Check that two files are saved into a single multiple file element.
+    $this->assertRaw(t('The file ids are %fids.', ['%fids' => implode(',', $fid_list)]));
 
     // Delete only the first file.
     $edit = [
@@ -149,6 +157,21 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     // We expect the title 'Managed <em>file & butter</em>' which got escaped
     // via a t() call before.
     $this->assertRaw('The file referenced by the Managed <em>file &amp; butter</em> field does not exist.');
+  }
+
+  /**
+   * Tests file names have leading . removed.
+   */
+  public function testFileNameTrim() {
+    file_put_contents('public://.leading-period.txt', $this->randomString(32));
+    $last_fid_prior = $this->getLastFileId();
+    $this->drupalPostForm('file/test/0/0/0', [
+      'files[file]' => \Drupal::service('file_system')->realpath('public://.leading-period.txt'),
+    ], t('Save'));
+    $next_fid = $this->getLastFileId();
+    $this->assertGreaterThan($last_fid_prior, $next_fid);
+    $file = File::load($next_fid);
+    $this->assertEquals('leading-period.txt', $file->getFilename());
   }
 
   /**

@@ -5,6 +5,8 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
+// cSpell:ignore nextval setval
+
 /**
  * @ingroup database
  * @{
@@ -20,7 +22,7 @@ class Insert extends QueryInsert {
       return NULL;
     }
 
-    $stmt = $this->connection->prepareQuery((string) $this);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions);
 
     // Fetch the list of blobs and sequences used on that table.
     $table_information = $this->connection->schema()->queryTableInformation($this->table);

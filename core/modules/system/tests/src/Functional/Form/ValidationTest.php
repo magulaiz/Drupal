@@ -18,7 +18,12 @@ class ValidationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests #element_validate and #validate.
@@ -69,7 +74,7 @@ class ValidationTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, ['name' => 'validate'], 'Save');
     $this->assertNoFieldByName('name', '#value changed by #validate', 'Form element #value was not altered.');
     $this->assertNoText('Name value: value changed by setValueForElement() in #validate', 'Form element value in $form_state was not altered.');
-    $this->assertText('The form has become outdated. Copy any unsaved work in the form below');
+    $this->assertText('The form has become outdated.');
   }
 
   /**
@@ -115,19 +120,19 @@ class ValidationTest extends BrowserTestBase {
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
     $this->drupalPostForm($path, $edit, t('Partial validate'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
     $this->drupalPostForm($path, $edit, t('Partial validate (numeric index)'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
     $this->drupalPostForm($path, $edit, t('Partial validate (substring)'));
-    $this->assertNoText(t('@name field is required.', ['@name' => 'Title']));
+    $this->assertNoText('Title field is required.');
     $this->assertText('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
@@ -214,15 +219,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertText($form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertText($form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
 
     // Verify that no custom validation error appears with valid values.
     $edit = [
@@ -234,15 +239,15 @@ class ValidationTest extends BrowserTestBase {
 
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertNoText($form[$key]['#required_error']);
       }
       elseif (isset($form[$key]['#form_test_required_error'])) {
-        $this->assertNoText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+        $this->assertNoText($form[$key]['#title'] . ' field is required.');
         $this->assertNoText($form[$key]['#form_test_required_error']);
       }
     }
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 
 }

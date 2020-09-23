@@ -21,7 +21,17 @@ class BookTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['book', 'block', 'node_access_test', 'book_test'];
+  protected static $modules = [
+    'book',
+    'block',
+    'node_access_test',
+    'book_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * A user with permission to view a book and access printer-friendly version.
@@ -47,7 +57,7 @@ class BookTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('page_title_block');
@@ -56,10 +66,32 @@ class BookTest extends BrowserTestBase {
     node_access_rebuild();
 
     // Create users.
-    $this->bookAuthor = $this->drupalCreateUser(['create new books', 'create book content', 'edit own book content', 'add content to books']);
-    $this->webUser = $this->drupalCreateUser(['access printer-friendly version', 'node test view']);
-    $this->webUserWithoutNodeAccess = $this->drupalCreateUser(['access printer-friendly version']);
-    $this->adminUser = $this->drupalCreateUser(['create new books', 'create book content', 'edit any book content', 'delete any book content', 'add content to books', 'administer blocks', 'administer permissions', 'administer book outlines', 'node test view', 'administer content types', 'administer site configuration']);
+    $this->bookAuthor = $this->drupalCreateUser([
+      'create new books',
+      'create book content',
+      'edit own book content',
+      'add content to books',
+    ]);
+    $this->webUser = $this->drupalCreateUser([
+      'access printer-friendly version',
+      'node test view',
+    ]);
+    $this->webUserWithoutNodeAccess = $this->drupalCreateUser([
+      'access printer-friendly version',
+    ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'create new books',
+      'create book content',
+      'edit any book content',
+      'delete any book content',
+      'add content to books',
+      'administer blocks',
+      'administer permissions',
+      'administer book outlines',
+      'node test view',
+      'administer content types',
+      'administer site configuration',
+    ]);
   }
 
   /**
@@ -141,7 +173,7 @@ class BookTest extends BrowserTestBase {
 
     // Check the presence of expected cache tags.
     $this->drupalGet('node/add/book');
-    $this->assertCacheTag('config:book.settings');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:book.settings');
 
     /*
      * Add Node 5 under Node 3.
@@ -199,34 +231,34 @@ class BookTest extends BrowserTestBase {
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
       $this->assertText($node->label(), 'Node title found in printer friendly version.');
-      $this->assertRaw($node->body->processed, 'Node body found in printer friendly version.');
+      $this->assertRaw($node->body->processed);
     }
 
     // Make sure we can't export an unsupported format.
     $this->drupalGet('book/export/foobar/' . $this->book->id());
-    $this->assertResponse('404', 'Unsupported export format returned "not found".');
+    $this->assertSession()->statusCodeEquals(404);
 
-    // Make sure we get a 404 on a not existing book node.
+    // Make sure we get a 404 on a non-existent book node.
     $this->drupalGet('book/export/html/123');
-    $this->assertResponse('404', 'Not existing book node returned "not found".');
+    $this->assertSession()->statusCodeEquals(404);
 
     // Make sure an anonymous user cannot view printer-friendly version.
     $this->drupalLogout();
 
     // Load the book and verify there is no printer-friendly version link.
     $this->drupalGet('node/' . $this->book->id());
-    $this->assertNoLink(t('Printer-friendly version'), 'Anonymous user is not shown link to printer-friendly version.');
+    $this->assertSession()->linkNotExists('Printer-friendly version', 'Anonymous user is not shown link to printer-friendly version.');
 
     // Try getting the URL directly, and verify it fails.
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse('403', 'Anonymous user properly forbidden.');
+    $this->assertSession()->statusCodeEquals(403);
 
     // Now grant anonymous users permission to view the printer-friendly
     // version and verify that node access restrictions still prevent them from
     // seeing it.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access printer-friendly version']);
     $this->drupalGet('book/export/html/' . $this->book->id());
-    $this->assertResponse('403', 'Anonymous user properly forbidden from seeing the printer-friendly version when denied by node access.');
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -285,25 +317,23 @@ class BookTest extends BrowserTestBase {
     $this->drupalGet($nodes[0]->toUrl('edit-form'));
     // Since Node 0 has children 2 levels deep, nodes 10 and 11 should not
     // appear in the selector.
-    $this->assertNoOption('edit-book-pid', $nodes[10]->id());
-    $this->assertNoOption('edit-book-pid', $nodes[11]->id());
+    $this->assertSession()->optionNotExists('edit-book-pid', $nodes[10]->id());
+    $this->assertSession()->optionNotExists('edit-book-pid', $nodes[11]->id());
     // Node 9 should be available as an option.
-    $this->assertOption('edit-book-pid', $nodes[9]->id());
+    $this->assertSession()->optionExists('edit-book-pid', $nodes[9]->id());
 
     // Get a shallow set of options.
     /** @var \Drupal\book\BookManagerInterface $manager */
     $manager = $this->container->get('book.manager');
     $options = $manager->getTableOfContents($book->id(), 3);
+    // Verify that all expected option keys are present.
     $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[3]->id(), $nodes[6]->id(), $nodes[4]->id()];
-    $this->assertEqual(count($options), count($expected_nids));
-    $diff = array_diff($expected_nids, array_keys($options));
-    $this->assertTrue(empty($diff), 'Found all expected option keys');
+    $this->assertEquals($expected_nids, array_keys($options));
     // Exclude Node 3.
     $options = $manager->getTableOfContents($book->id(), 3, [$nodes[3]->id()]);
+    // Verify that expected option keys are present after excluding Node 3.
     $expected_nids = [$book->id(), $nodes[0]->id(), $nodes[1]->id(), $nodes[2]->id(), $nodes[4]->id()];
-    $this->assertEqual(count($options), count($expected_nids));
-    $diff = array_diff($expected_nids, array_keys($options));
-    $this->assertTrue(empty($diff), 'Found all expected option keys after excluding Node 3');
+    $this->assertEquals($expected_nids, array_keys($options));
   }
 
   /**
@@ -346,9 +376,11 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = [];
 
-    // Test access to delete top-level and child book nodes.
+    // Ensure that the top-level book node cannot be deleted.
     $this->drupalGet('node/' . $this->book->id() . '/outline/remove');
-    $this->assertResponse('403', 'Deleting top-level book node properly forbidden.');
+    $this->assertSession()->statusCodeEquals(403);
+
+    // Ensure that a child book node can be deleted.
     $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
     $node_storage->resetCache([$nodes[4]->id()]);
     $node4 = $node_storage->load($nodes[4]->id());
@@ -374,7 +406,7 @@ class BookTest extends BrowserTestBase {
     // Delete parent, and visit a child page.
     $this->drupalPostForm($this->book->toUrl('delete-form'), [], t('Delete'));
     $this->drupalGet($nodes[0]->toUrl());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText($nodes[0]->label());
     // The book parents should be updated.
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
@@ -395,13 +427,14 @@ class BookTest extends BrowserTestBase {
     // Create new node not yet a book.
     $empty_book = $this->drupalCreateNode(['type' => 'book']);
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
-    $this->assertNoLink(t('Book outline'), 'Book Author is not allowed to outline');
+    $this->assertSession()->linkNotExists('Book outline', 'Book Author is not allowed to outline');
 
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $empty_book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
-    $this->assertOptionSelected('edit-book-bid', 0, 'Node does not belong to a book');
-    $this->assertNoLink(t('Remove from book outline'));
+    // Verify that the node does not belong to a book.
+    $this->assertTrue($this->assertSession()->optionExists('edit-book-bid', 0)->isSelected());
+    $this->assertSession()->linkNotExists('Remove from book outline');
 
     $edit = [];
     $edit['book[bid]'] = '1';
@@ -440,7 +473,7 @@ class BookTest extends BrowserTestBase {
 
     // Test the form itself.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertOptionSelected('edit-book-bid', $node->id());
+    $this->assertTrue($this->assertSession()->optionExists('edit-book-bid', $node->id())->isSelected());
   }
 
   /**
@@ -550,7 +583,11 @@ class BookTest extends BrowserTestBase {
     $this->createBook();
 
     // Create administrator user.
-    $administratorUser = $this->drupalCreateUser(['administer blocks', 'administer nodes', 'bypass node access']);
+    $administratorUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($administratorUser);
 
     // Enable the block with "Show block only on book pages" mode.

@@ -13,6 +13,7 @@ use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Plugin implementation of the 'image' field type.
@@ -46,13 +47,6 @@ use Drupal\file\Plugin\Field\FieldType\FileItem;
  * )
  */
 class ImageItem extends FileItem {
-
-  /**
-   * The entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected $entityManager;
 
   /**
    * {@inheritdoc}
@@ -207,10 +201,8 @@ class ImageItem extends FileItem {
     $element['max_resolution'] = [
       '#type' => 'item',
       '#title' => t('Maximum image resolution'),
-      '#element_validate' => [[get_class($this), 'validateResolution']],
+      '#element_validate' => [[static::class, 'validateResolution']],
       '#weight' => 4.1,
-      '#field_prefix' => '<div class="container-inline">',
-      '#field_suffix' => '</div>',
       '#description' => t('The maximum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a larger image is uploaded, it will be resized to reflect the given width and height. Resizing images on upload will cause the loss of <a href="http://wikipedia.org/wiki/Exchangeable_image_file_format">EXIF data</a> in the image.'),
     ];
     $element['max_resolution']['x'] = [
@@ -220,6 +212,7 @@ class ImageItem extends FileItem {
       '#default_value' => $max_resolution[0],
       '#min' => 1,
       '#field_suffix' => ' × ',
+      '#prefix' => '<div class="form--inline clearfix">',
     ];
     $element['max_resolution']['y'] = [
       '#type' => 'number',
@@ -228,16 +221,15 @@ class ImageItem extends FileItem {
       '#default_value' => $max_resolution[1],
       '#min' => 1,
       '#field_suffix' => ' ' . t('pixels'),
+      '#suffix' => '</div>',
     ];
 
     $min_resolution = explode('x', $settings['min_resolution']) + ['', ''];
     $element['min_resolution'] = [
       '#type' => 'item',
       '#title' => t('Minimum image resolution'),
-      '#element_validate' => [[get_class($this), 'validateResolution']],
+      '#element_validate' => [[static::class, 'validateResolution']],
       '#weight' => 4.2,
-      '#field_prefix' => '<div class="container-inline">',
-      '#field_suffix' => '</div>',
       '#description' => t('The minimum allowed image size expressed as WIDTH×HEIGHT (e.g. 640×480). Leave blank for no restriction. If a smaller image is uploaded, it will be rejected.'),
     ];
     $element['min_resolution']['x'] = [
@@ -247,6 +239,7 @@ class ImageItem extends FileItem {
       '#default_value' => $min_resolution[0],
       '#min' => 1,
       '#field_suffix' => ' × ',
+      '#prefix' => '<div class="form--inline clearfix">',
     ];
     $element['min_resolution']['y'] = [
       '#type' => 'number',
@@ -255,6 +248,7 @@ class ImageItem extends FileItem {
       '#default_value' => $min_resolution[1],
       '#min' => 1,
       '#field_suffix' => ' ' . t('pixels'),
+      '#suffix' => '</div>',
     ];
 
     // Remove the description option.
@@ -358,7 +352,14 @@ class ImageItem extends FileItem {
         $image = File::create();
         $image->setFileUri($path);
         $image->setOwnerId(\Drupal::currentUser()->id());
-        $image->setMimeType(\Drupal::service('file.mime_type.guesser')->guess($path));
+        $guesser = \Drupal::service('file.mime_type.guesser');
+        if ($guesser instanceof MimeTypeGuesserInterface) {
+          $image->setMimeType($guesser->guessMimeType($path));
+        }
+        else {
+          $image->setMimeType($guesser->guess($path));
+          @trigger_error('\Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Implement \Symfony\Component\Mime\MimeTypeGuesserInterface instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+        }
         $image->setFileName($file_system->basename($path));
         $destination_dir = static::doGetUploadLocation($settings);
         $file_system->prepareDirectory($destination_dir, FileSystemInterface::CREATE_DIRECTORY);
@@ -435,7 +436,7 @@ class ImageItem extends FileItem {
       '#upload_location' => $settings['uri_scheme'] . '://default_images/',
       '#element_validate' => [
         '\Drupal\file\Element\ManagedFile::validateManagedFile',
-        [get_class($this), 'validateDefaultImageForm'],
+        [static::class, 'validateDefaultImageForm'],
       ],
       '#upload_validators' => $this->getUploadValidators(),
     ];
@@ -497,18 +498,6 @@ class ImageItem extends FileItem {
   public function isDisplayed() {
     // Image items do not have per-item visibility settings.
     return TRUE;
-  }
-
-  /**
-   * Gets the entity manager.
-   *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   */
-  protected function getEntityManager() {
-    if (!isset($this->entityManager)) {
-      $this->entityManager = \Drupal::entityManager();
-    }
-    return $this->entityManager;
   }
 
 }

@@ -78,7 +78,7 @@ class Element {
     $i = 0;
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
-      if ($key === '' || $key[0] !== '#') {
+      if (is_int($key) || $key === '' || $key[0] !== '#') {
         if (is_array($value)) {
           if (isset($value['#weight'])) {
             $weight = $value['#weight'];
@@ -166,9 +166,9 @@ class Element {
    * @param array $map
    *   An associative array whose keys are element property names and whose
    *   values are the HTML attribute names to set on the corresponding
-   *   property; e.g., array('#propertyname' => 'attributename'). If both names
-   *   are identical except for the leading '#', then an attribute name value is
-   *   sufficient and no property name needs to be specified.
+   *   property; e.g., array('#property_name' => 'attribute_name'). If both
+   *   names are identical except for the leading '#', then an attribute name
+   *   value is sufficient and no property name needs to be specified.
    */
   public static function setAttributes(array &$element, array $map) {
     foreach ($map as $property => $attribute) {

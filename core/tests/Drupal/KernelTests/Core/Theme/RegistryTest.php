@@ -4,6 +4,7 @@ namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\Utility\ThemeRegistry;
 use Drupal\KernelTests\KernelTestBase;
@@ -20,7 +21,7 @@ class RegistryTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['theme_test', 'system'];
+  protected static $modules = ['theme_test', 'system'];
 
   protected $profile = 'testing';
 
@@ -39,10 +40,10 @@ class RegistryTest extends KernelTestBase {
     $lock_backend = \Drupal::lock();
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, ['theme_registry'], $this->container->get('module_handler')->isLoaded());
 
-    $this->assertTrue(\Drupal::cache()->get($cid), 'Cache entry was created.');
+    $this->assertNotEmpty(\Drupal::cache()->get($cid), 'Cache entry was created.');
 
     // Trigger a cache miss for an offset.
-    $this->assertTrue($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry.');
+    $this->assertNotEmpty($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry.');
     // This will cause the ThemeRegistry class to write an updated version of
     // the cache entry when it is destroyed, usually at the end of the request.
     // Before that happens, manually delete the cache entry we created earlier
@@ -52,14 +53,14 @@ class RegistryTest extends KernelTestBase {
     // Destroy the class so that it triggers a cache write for the offset.
     $registry->destruct();
 
-    $this->assertTrue(\Drupal::cache()->get($cid), 'Cache entry was created.');
+    $this->assertNotEmpty(\Drupal::cache()->get($cid), 'Cache entry was created.');
 
     // Create a new instance of the class. Confirm that both the offset
     // requested previously, and one that has not yet been requested are both
     // available.
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, ['theme_registry'], $this->container->get('module_handler')->isLoaded());
-    $this->assertTrue($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry');
-    $this->assertTrue($registry->get('theme_test_template_test_2'), 'Offset was returned correctly from the theme registry');
+    $this->assertNotEmpty($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry');
+    $this->assertNotEmpty($registry->get('theme_test_template_test_2'), 'Offset was returned correctly from the theme registry');
   }
 
   /**
@@ -96,12 +97,6 @@ class RegistryTest extends KernelTestBase {
       'template_preprocess',
       'test_basetheme_preprocess_theme_test_template_test',
     ], $preprocess_functions);
-
-    $preprocess_functions = $registry_base_theme->get()['theme_test_function_suggestions']['preprocess functions'];
-    $this->assertSame([
-       'template_preprocess_theme_test_function_suggestions',
-       'test_basetheme_preprocess_theme_test_function_suggestions',
-    ], $preprocess_functions, "Theme functions don't have template_preprocess but do have template_preprocess_HOOK");
   }
 
   /**
@@ -134,9 +129,6 @@ class RegistryTest extends KernelTestBase {
       'test_theme_preprocess_theme_test_preprocess_suggestions',
       'test_theme_preprocess_theme_test_preprocess_suggestions__kitten',
     ];
-
-    $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__meerkat']['preprocess functions'];
-    $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a function correctly inherits preprocess functions.');
 
     $preprocess_functions = $registry_theme->get()['theme_test_preprocess_suggestions__kitten__bearcat']['preprocess functions'];
     $this->assertSame($expected_preprocess_functions, $preprocess_functions, 'Suggestion implemented as a template correctly inherits preprocess functions.');
@@ -190,6 +182,49 @@ class RegistryTest extends KernelTestBase {
       'page__node__1',
       'page__front',
     ], $suggestions, 'Found expected page node suggestions.');
+  }
+
+  /**
+   * Data provider for test40xThemeSuggestions().
+   *
+   * @return array
+   *   An associative array of 40x theme suggestions.
+   */
+  public function provider40xThemeSuggestions() {
+    return [
+      ['system.401', 'page__401'],
+      ['system.403', 'page__403'],
+      ['system.404', 'page__404'],
+    ];
+  }
+
+  /**
+   * Tests page theme suggestions for 40x responses.
+   *
+   * @dataProvider provider40xThemeSuggestions
+   */
+  public function test40xThemeSuggestions($route, $suggestion) {
+    /** @var \Drupal\Core\Path\PathMatcherInterface $path_matcher */
+    $path_matcher = $this->prophesize(PathMatcherInterface::class);
+    $path_matcher->isFrontPage()->willReturn(FALSE);
+    \Drupal::getContainer()->set('path.matcher', $path_matcher->reveal());
+    /** @var \Drupal\Core\Path\CurrentPathStack $path_current */
+    $path_current = $this->prophesize(CurrentPathStack::class);
+    $path_current->getPath()->willReturn('/node/123');
+    \Drupal::getContainer()->set('path.current', $path_current->reveal());
+    /** @var \Drupal\Core\Routing\RouteMatchInterface $route_matcher */
+    $route_matcher = $this->prophesize(RouteMatchInterface::class);
+    $route_matcher->getRouteName()->willReturn($route);
+    \Drupal::getContainer()->set('current_route_match', $route_matcher->reveal());
+
+    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_page', [[]]);
+    $this->assertSame([
+      'page__node',
+      'page__node__%',
+      'page__node__123',
+      'page__4xx',
+      $suggestion,
+    ], $suggestions);
   }
 
   /**

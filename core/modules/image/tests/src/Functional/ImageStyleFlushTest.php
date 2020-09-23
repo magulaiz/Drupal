@@ -19,6 +19,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Given an image style and a wrapper, generate an image.
    */
   public function createSampleImage($style, $wrapper) {
@@ -42,7 +47,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
    * Count the number of images currently created for a style in a wrapper.
    */
   public function getImageCount($style, $wrapper) {
-    return count(file_scan_directory($wrapper . '://styles/' . $style->id(), '/.*/'));
+    $count = 0;
+    if (is_dir($wrapper . '://styles/' . $style->id())) {
+      $count = count(\Drupal::service('file_system')->scanDirectory($wrapper . '://styles/' . $style->id(), '/.*/'));
+    }
+    return $count;
   }
 
   /**
@@ -103,9 +112,9 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
       $uuids[$effect->getPluginId()] = $uuid;
     }
     $this->drupalPostForm($style_path . '/effects/' . $uuids['image_scale'] . '/delete', [], t('Delete'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->drupalPostForm($style_path, [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Post flush, expected 1 image in the 'public' wrapper (sample.png).
     $this->assertEqual($this->getImageCount($style, 'public'), 1, new FormattableMarkup('Image style %style flushed correctly for %wrapper wrapper.', ['%style' => $style->label(), '%wrapper' => 'public']));

@@ -13,12 +13,12 @@ use Drupal\Tests\UnitTestCase;
 class StorageComparerTest extends UnitTestCase {
 
   /**
-   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $sourceStorage;
 
   /**
-   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\StorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $targetStorage;
 
@@ -36,7 +36,7 @@ class StorageComparerTest extends UnitTestCase {
    */
   protected $configData;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->sourceStorage = $this->createMock('Drupal\Core\Config\StorageInterface');
     $this->targetStorage = $this->createMock('Drupal\Core\Config\StorageInterface');
     $this->storageComparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
@@ -236,15 +236,6 @@ class StorageComparerTest extends UnitTestCase {
     $this->assertEquals($expected, $this->storageComparer->getChangelist('update'));
     $this->assertEmpty($this->storageComparer->getChangelist('create'));
     $this->assertEmpty($this->storageComparer->getChangelist('delete'));
-  }
-
-  /**
-   * @expectedDeprecation The storage comparer does not need a config manager. The parameter is deprecated since version 8.7.0 and will be removed in 9.0.0. Omit the third parameter. See https://www.drupal.org/node/2993271.
-   * @group legacy
-   */
-  public function testConfigManagerDeprecation() {
-    $configManager = $this->createMock('Drupal\Core\Config\ConfigManagerInterface');
-    new StorageComparer($this->sourceStorage, $this->targetStorage, $configManager);
   }
 
 }

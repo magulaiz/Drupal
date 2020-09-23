@@ -17,6 +17,11 @@ class CachedDataUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the shared tempstore views data in the UI.
    */
   public function testCacheData() {
@@ -42,7 +47,7 @@ class CachedDataUITest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Cancel'));
     $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'Shared tempstore data has been removed.');
     // Test we are redirected to the view listing page.
-    $this->assertUrl('admin/structure/views', [], 'Redirected back to the view listing page.');
+    $this->assertSession()->addressEquals('admin/structure/views');
 
     // Log in with another user and make sure the view is locked and break.
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/title', [], t('Apply'));
@@ -53,7 +58,7 @@ class CachedDataUITest extends UITestBase {
     $this->assertNoFieldById('edit-actions-submit', t('Save'));
     $this->assertNoFieldById('edit-actions-cancel', t('Cancel'));
     // Test we have the break lock link.
-    $this->assertLinkByHref('admin/structure/views/view/test_view/break-lock');
+    $this->assertSession()->linkByHrefExists('admin/structure/views/view/test_view/break-lock');
     // Break the lock.
     $this->clickLink(t('break this lock'));
     $this->drupalPostForm(NULL, [], t('Break lock'));

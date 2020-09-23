@@ -24,28 +24,28 @@ class ConfigFieldMapperTest extends UnitTestCase {
   /**
    * The field config instance used for testing.
    *
-   * @var \Drupal\field\FieldConfigInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\field\FieldConfigInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $eventDispatcher;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->entity = $this->createMock('Drupal\field\FieldConfigInterface');
 
@@ -111,7 +111,7 @@ class ConfigFieldMapperTest extends UnitTestCase {
 
     // Ensure that the configuration name was added to the mapper.
     $plugin_definition = $this->configFieldMapper->getPluginDefinition();
-    $this->assertTrue(in_array('config_prefix.field_storage_id', $plugin_definition['names']));
+    $this->assertContains('config_prefix.field_storage_id', $plugin_definition['names']);
 
     // Make sure setEntity() returns FALSE when called a second time.
     $result = $this->configFieldMapper->setEntity($this->entity);

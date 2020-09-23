@@ -20,6 +20,11 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected static $format = 'hal_json';
 
   /**
@@ -40,12 +45,12 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['hal', 'dblog'];
+  protected static $modules = ['hal', 'dblog'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $auth = isset(static::$auth) ? [static::$auth] : [];
@@ -59,7 +64,12 @@ class DbLogResourceTest extends ResourceTestBase {
     // Write a log message to the DB.
     $this->container->get('logger.channel.rest')->notice('Test message');
     // Get the ID of the written message.
-    $id = Database::getConnection()->queryRange("SELECT wid FROM {watchdog} WHERE type = :type ORDER BY wid DESC", 0, 1, [':type' => 'rest'])
+    $id = Database::getConnection()->select('watchdog', 'w')
+      ->fields('w', ['wid'])
+      ->condition('type', 'rest')
+      ->orderBy('wid', 'DESC')
+      ->range(0, 1)
+      ->execute()
       ->fetchField();
 
     $this->initAuthentication();
@@ -74,7 +84,7 @@ class DbLogResourceTest extends ResourceTestBase {
     $this->setUpAuthorization('GET');
 
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(200, FALSE, $response, ['config:rest.resource.dblog', 'config:rest.settings', 'http_response'], ['user.permissions'], FALSE, 'MISS');
+    $this->assertResourceResponse(200, FALSE, $response, ['config:rest.resource.dblog', 'http_response'], ['user.permissions'], FALSE, 'MISS');
     $log = Json::decode((string) $response->getBody());
     $this->assertEqual($log['wid'], $id, 'Log ID is correct.');
     $this->assertEqual($log['type'], 'rest', 'Type of log message is correct.');
@@ -83,7 +93,7 @@ class DbLogResourceTest extends ResourceTestBase {
     // Request an unknown log entry.
     $url->setRouteParameter('id', 9999);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(404, 'Log entry with ID 9999 was not found', $response);
+    $this->assertResourceErrorResponse(404, "Log entry with ID '9999' was not found", $response);
 
     // Make a bad request (a true malformed request would never be a route match).
     $url->setRouteParameter('id', 0);
@@ -114,11 +124,6 @@ class DbLogResourceTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessMessage($method) {}
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedBcUnauthorizedAccessMessage($method) {}
 
   /**
    * {@inheritdoc}

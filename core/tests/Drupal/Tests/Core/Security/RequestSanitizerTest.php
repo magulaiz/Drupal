@@ -26,7 +26,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->errors = [];
     set_error_handler([$this, "errorHandler"]);
@@ -61,7 +61,7 @@ class RequestSanitizerTest extends UnitTestCase {
 
     $request = RequestSanitizer::sanitize($request, $whitelist, is_null($expected_errors) ? FALSE : TRUE);
 
-    // Normalise the expected data.
+    // Normalize the expected data.
     $expected += ['cookies' => [], 'query' => [], 'request' => []];
     $expected_query_string = http_build_query($expected['query']);
 
@@ -321,7 +321,7 @@ class RequestSanitizerTest extends UnitTestCase {
     $data[] = ['/example.com'];
     // Internal URL using a colon is allowed.
     $data[] = ['example:test'];
-    // Javascript URL is allowed because it is treated as an internal URL.
+    // JavaScript URL is allowed because it is treated as an internal URL.
     $data[] = ['javascript:alert(0)'];
     return $data;
   }

@@ -21,7 +21,19 @@ class ExposedFormUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'views_ui', 'block', 'taxonomy', 'field_ui', 'datetime'];
+  protected static $modules = [
+    'node',
+    'views_ui',
+    'block',
+    'taxonomy',
+    'field_ui',
+    'datetime',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Array of error message strings raised by the grouped form.
@@ -32,7 +44,7 @@ class ExposedFormUITest extends UITestBase {
    */
   protected $groupFormUiErrors = [];
 
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->drupalCreateContentType(['type' => 'article']);
@@ -57,7 +69,7 @@ class ExposedFormUITest extends UITestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
     // Be sure that the button is called exposed.
-    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose filter'));
+    $this->helperButtonHasLabel('edit-options-expose-button-button', 'Expose filter');
 
     // The first time the filter UI is displayed, the operator and the
     // value forms should be shown.
@@ -69,7 +81,7 @@ class ExposedFormUITest extends UITestBase {
     // Click the Expose filter button.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', $edit, t('Expose filter'));
     // Check the label of the expose button.
-    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide filter'));
+    $this->helperButtonHasLabel('edit-options-expose-button-button', 'Hide filter');
 
     // After exposing the filter, Operator and Value should be still here.
     $this->assertFieldById('edit-options-operator-in', 'in', 'Operator In exists');
@@ -90,7 +102,7 @@ class ExposedFormUITest extends UITestBase {
 
     // Now check the sort criteria.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created');
-    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose sort'));
+    $this->helperButtonHasLabel('edit-options-expose-button-button', 'Expose sort');
     $this->assertNoFieldById('edit-options-expose-label', '', 'Make sure no label field is shown');
 
     // Un-expose the filter.
@@ -107,7 +119,7 @@ class ExposedFormUITest extends UITestBase {
     $edit = [];
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/sort/created', $edit, t('Expose sort'));
     // Check the label of the expose button.
-    $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide sort'));
+    $this->helperButtonHasLabel('edit-options-expose-button-button', 'Hide sort');
     $this->assertFieldById('edit-options-expose-label', 'Authored on', 'Make sure a label field is shown');
 
     // Test adding a new exposed sort criteria.
@@ -142,7 +154,7 @@ class ExposedFormUITest extends UITestBase {
     // Click the Expose filter button.
     $this->drupalPostForm('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type', $edit, t('Expose filter'));
     // Check the label of the grouped filters button.
-    $this->helperButtonHasLabel('edit-options-group-button-button', t('Grouped filters'));
+    $this->helperButtonHasLabel('edit-options-group-button-button', 'Grouped filters');
 
     // Click the Grouped Filters button.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -157,7 +169,7 @@ class ExposedFormUITest extends UITestBase {
 
     // Check that after click on 'Grouped Filters', a new button is shown to
     // add more items to the list.
-    $this->helperButtonHasLabel('edit-options-group-info-add-group', t('Add another item'));
+    $this->helperButtonHasLabel('edit-options-group-info-add-group', 'Add another item');
 
     // Validate a single entry for a grouped filter.
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/type');
@@ -165,7 +177,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][1][title]"] = 'Is Article';
     $edit["options[group_info][group_items][1][value][article]"] = 'article';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Validate multiple entries for grouped filters.
@@ -179,7 +191,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][3][value][article]"] = 'article';
     $edit["options[group_info][group_items][3][value][page]"] = 'page';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'Correct validation of the node type filter.');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Validate an "is empty" filter -- title without value is valid.
@@ -188,7 +200,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][1][title]"] = 'No body';
     $edit["options[group_info][group_items][1][operator]"] = 'empty';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'The "empty" operator validates correctly.');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Ensure the string "0" can be used as a value for numeric filters.
@@ -200,7 +212,7 @@ class ExposedFormUITest extends UITestBase {
     $edit['options[group_info][group_items][1][operator]'] = '>';
     $edit['options[group_info][group_items][1][value][value]'] = '0';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'A string "0" is a valid value.');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
 
     // Ensure "between" filters validate correctly.
@@ -210,7 +222,7 @@ class ExposedFormUITest extends UITestBase {
     $edit['options[group_info][group_items][1][value][min]'] = '0';
     $edit['options[group_info][group_items][1][value][max]'] = '10';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertUrl('admin/structure/views/view/test_exposed_admin_ui/edit/default', [], 'The "between" filter validates correctly.');
+    $this->assertSession()->addressEquals('admin/structure/views/view/test_exposed_admin_ui/edit/default');
     $this->assertNoGroupedFilterErrors();
   }
 
@@ -254,12 +266,8 @@ class ExposedFormUITest extends UITestBase {
    */
   protected function assertNoGroupedFilterErrors($message = '', $group = 'Other') {
     foreach ($this->groupFormUiErrors as $error) {
-      $err_message = $message;
-      if (empty($err_message)) {
-        $err_message = "Verify that '$error' is not in the HTML output.";
-      }
       if (empty($message)) {
-        return $this->assertNoRaw($error, $err_message, $group);
+        return $this->assertNoRaw($error);
       }
     }
     return TRUE;
@@ -287,7 +295,7 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Check that the view is saved without errors.
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Click the Expose filter button.
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_exposed_admin_ui/default/filter', ['name[node_field_data.status]' => 1], t('Add and configure filter criteria'));
@@ -308,13 +316,13 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Check that the view is saved without errors.
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_exposed_admin_ui/default/filter/status');
     // Assert the same settings defined before still are there.
-    $this->assertFieldChecked('edit-options-group-info-group-items-1-value-all');
-    $this->assertFieldChecked('edit-options-group-info-group-items-2-value-1');
-    $this->assertFieldChecked('edit-options-group-info-group-items-3-value-0');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-1-value-all');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-2-value-1');
+    $this->assertSession()->checkboxChecked('edit-options-group-info-group-items-3-value-0');
   }
 
 }

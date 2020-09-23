@@ -66,22 +66,9 @@ trait FieldAPIHandlerTrait {
   }
 
   /**
-   * Returns the entity manager.
-   *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
-   *   The entity manager service.
-   */
-  protected function getEntityManager() {
-    if (!isset($this->entityManager)) {
-      $this->entityManager = \Drupal::entityManager();
-    }
-    return $this->entityManager;
-  }
-
-  /**
    * Returns the entity field manager.
    *
-   * @return \Drupal\Core\Entity\EntityManagerInterface
+   * @return \Drupal\Core\Entity\EntityFieldManagerInterface
    *   The entity field manager.
    */
   protected function getEntityFieldManager() {

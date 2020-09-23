@@ -4,7 +4,6 @@ namespace Drupal\field_ui\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Field\AllowedTagsXssTrait;
 use Drupal\Core\Field\FieldFilteredMarkup;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -18,8 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldConfigEditForm extends EntityForm {
-
-  use AllowedTagsXssTrait;
 
   /**
    * The entity being used by this form.
@@ -131,6 +128,7 @@ class FieldConfigEditForm extends EntityForm {
         '#open' => TRUE,
         '#tree' => TRUE,
         '#description' => $this->t('The default value for this field, used when creating new content.'),
+        '#weight' => 12,
       ]);
 
       $form['default_value'] = $element;

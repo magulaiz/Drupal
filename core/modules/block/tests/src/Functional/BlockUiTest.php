@@ -7,6 +7,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\Tests\BrowserTestBase;
 
+// cspell:ignore scriptalertxsssubjectscript
+
 /**
  * Tests that the block configuration UI exists and stores data correctly.
  *
@@ -19,7 +21,17 @@ class BlockUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_test', 'help', 'condition_test'];
+  protected static $modules = [
+    'block',
+    'block_test',
+    'help',
+    'condition_test',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   protected $regions;
 
@@ -42,7 +54,7 @@ class BlockUiTest extends BrowserTestBase {
    */
   protected $adminUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Create and log in an administrative user.
     $this->adminUser = $this->drupalCreateUser([
@@ -84,13 +96,15 @@ class BlockUiTest extends BrowserTestBase {
     $elements = $this->xpath('//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), :title)]', [':title' => 'Highlighted']);
     $this->assertTrue(!empty($elements), 'Block demo regions are shown.');
 
+    // Ensure that other themes can use the block demo page.
     \Drupal::service('theme_installer')->install(['test_theme']);
     $this->drupalGet('admin/structure/block/demo/test_theme');
-    $this->assertEscaped('<strong>Test theme</strong>');
+    $this->assertSession()->assertEscaped('<strong>Test theme</strong>');
 
+    // Ensure that a hidden theme cannot use the block demo page.
     \Drupal::service('theme_installer')->install(['stable']);
     $this->drupalGet('admin/structure/block/demo/stable');
-    $this->assertResponse(404, 'Hidden themes that are not the default theme are not supported by the block demo screen');
+    $this->assertSession()->statusCodeEquals(404);
   }
 
   /**
@@ -109,27 +123,19 @@ class BlockUiTest extends BrowserTestBase {
       $element = $this->xpath('//*[@id="blocks"]/tbody/tr[' . $values['tr'] . ']/td[1]/text()');
       $this->assertEquals($element[0]->getText(), $label, 'The "' . $label . '" block title is set inside the ' . $values['settings']['region'] . ' region.');
       // Look for a test block region select form element.
-      $this->assertField('blocks[' . $values['settings']['id'] . '][region]', 'The block "' . $values['label'] . '" has a region assignment field.');
+      $this->assertSession()->fieldExists('blocks[' . $values['settings']['id'] . '][region]');
       // Move the test block to the header region.
       $edit['blocks[' . $values['settings']['id'] . '][region]'] = 'header';
       // Look for a test block weight select form element.
-      $this->assertField('blocks[' . $values['settings']['id'] . '][weight]', 'The block "' . $values['label'] . '" has a weight assignment field.');
+      $this->assertSession()->fieldExists('blocks[' . $values['settings']['id'] . '][weight]');
       // Change the test block's weight.
       $edit['blocks[' . $values['settings']['id'] . '][weight]'] = $values['test_weight'];
     }
     $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
     foreach ($this->blockValues as $values) {
       // Check if the region and weight settings changes have persisted.
-      $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id'] . '-region',
-        'header',
-        'The block "' . $label . '" has the correct region assignment (header).'
-      );
-      $this->assertOptionSelected(
-        'edit-blocks-' . $values['settings']['id'] . '-weight',
-        $values['test_weight'],
-        'The block "' . $label . '" has the correct weight assignment (' . $values['test_weight'] . ').'
-      );
+      $this->assertTrue($this->assertSession()->optionExists('edit-blocks-' . $values['settings']['id'] . '-region', 'header')->isSelected());
+      $this->assertTrue($this->assertSession()->optionExists('edit-blocks-' . $values['settings']['id'] . '-weight', $values['test_weight'])->isSelected());
     }
 
     // Add a block with a machine name the same as a region name.
@@ -145,20 +151,23 @@ class BlockUiTest extends BrowserTestBase {
     \Drupal::service('theme_installer')->install(['stable', 'stark']);
     $this->drupalGet('admin/structure/block');
     $theme_handler = \Drupal::service('theme_handler');
-    $this->assertLink($theme_handler->getName('classy'));
-    $this->assertLink($theme_handler->getName('stark'));
-    $this->assertNoLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('classy'));
+    $this->assertSession()->linkExists($theme_handler->getName('stark'));
+    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
 
+    // Ensure that a hidden theme cannot use the block demo page.
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(404, 'Placing blocks through UI is not possible for a hidden base theme.');
+    $this->assertSession()->statusCodeEquals(404);
 
+    // Ensure that a hidden theme set as the admin theme can use the block demo
+    // page.
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
     $this->drupalGet('admin/structure/block');
-    $this->assertLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('stable'));
     $this->drupalGet('admin/structure/block/list/stable');
-    $this->assertResponse(200, 'Placing blocks through UI is possible for a hidden base theme that is the admin theme.');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -326,13 +335,12 @@ class BlockUiTest extends BrowserTestBase {
     // block placement indicator. Click the first 'Place block' link to bring up
     // the list of blocks to place in the first available region.
     $this->clickLink('Place block');
-    // Select the first available block.
+    // Select the first available block, which is the 'test_xss_title' plugin,
+    // with a default machine name 'scriptalertxsssubjectscript' that is used
+    // for the 'block-placement' querystring parameter.
     $this->clickLink('Place block');
-    $block = [];
-    $block['id'] = strtolower($this->randomMachineName());
-    $block['theme'] = 'classy';
     $this->submitForm([], 'Save block');
-    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=' . Html::getClass($block['id']));
+    $this->assertSession()->addressEquals('admin/structure/block/list/classy?block-placement=scriptalertxsssubjectscript');
 
     // Removing a block will remove the block placement indicator.
     $this->clickLink('Remove');
@@ -351,11 +359,11 @@ class BlockUiTest extends BrowserTestBase {
     $arguments = [':message' => 'Only digits are allowed'];
     $pattern = '//div[contains(@class,"messages messages--error")]/div[contains(text()[2],:message)]';
     $elements = $this->xpath($pattern, $arguments);
-    $this->assertTrue($elements, 'Plugin error message found in parent form.');
+    $this->assertNotEmpty($elements, 'Plugin error message found in parent form.');
 
     $error_class_pattern = '//div[contains(@class,"form-item-settings-digits")]/input[contains(@class,"error")]';
     $error_class = $this->xpath($error_class_pattern);
-    $this->assertTrue($error_class, 'Plugin error class found in parent form.');
+    $this->assertNotEmpty($error_class, 'Plugin error class found in parent form.');
   }
 
   /**
@@ -367,9 +375,9 @@ class BlockUiTest extends BrowserTestBase {
     $block = reset($this->blocks);
     // Ensure that the enable and disable routes are protected.
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/disable');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
 }

@@ -26,7 +26,12 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['entity_test', 'entity_test_update', 'user', 'text'];
+  protected static $modules = [
+    'entity_test',
+    'entity_test_update',
+    'user',
+    'text',
+  ];
 
   /**
    * Views used by this test.
@@ -66,7 +71,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     $this->eventDispatcher = $this->container->get('event_dispatcher');
@@ -102,7 +107,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
     $this->assertTrue(isset($views['test_view_entity_test_additional_base_field']));
 
     $event = new EntityTypeEvent($this->entityTypeManager->getDefinition('entity_test_update'));
-    $this->eventDispatcher->dispatch(EntityTypeEvents::DELETE, $event);
+    $this->eventDispatcher->dispatch($event, EntityTypeEvents::DELETE);
 
     // We expect that views which use 'entity_test_update' as base tables are
     // disabled.
@@ -499,6 +504,25 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
       'test_view_entity_test_data',
       'test_view_entity_test_additional_base_field',
     ]);
+  }
+
+  /**
+   * Tests that broken views are handled gracefully.
+   */
+  public function testBrokenView() {
+    $view_id = 'test_view_entity_test';
+    $this->state->set('views_test_config.broken_view', $view_id);
+    $this->updateEntityTypeToTranslatable(TRUE);
+
+    /** @var \Drupal\views\Entity\View $view */
+    $entity_storage = $this->entityTypeManager->getStorage('view');
+    $view = $entity_storage->load($view_id);
+
+    // The broken handler should have been removed.
+    $display = $view->getDisplay('default');
+    $this->assertFalse(isset($display['display_options']['fields']['id_broken']));
+
+    $this->assertUpdatedViews([$view_id]);
   }
 
   /**

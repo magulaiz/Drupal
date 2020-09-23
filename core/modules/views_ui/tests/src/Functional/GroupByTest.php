@@ -17,6 +17,11 @@ class GroupByTest extends UITestBase {
   public static $testViews = ['test_views_groupby_save'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests whether basic saving works.
    *
    * @todo This should check the change of the settings as well.
@@ -25,7 +30,7 @@ class GroupByTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_views_groupby_save/edit');
 
     $edit_groupby_url = 'admin/structure/views/nojs/handler-group/test_views_groupby_save/default/field/id';
-    $this->assertNoLinkByHref($edit_groupby_url, 0, 'No aggregation link found.');
+    $this->assertSession()->linkByHrefNotExists($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
     $edit = [
@@ -33,11 +38,11 @@ class GroupByTest extends UITestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_views_groupby_save/default/group_by', $edit, t('Apply'));
 
-    $this->assertLinkByHref($edit_groupby_url, 0, 'Aggregation link found.');
+    $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
 
     // Change the groupby type in the UI.
     $this->drupalPostForm($edit_groupby_url, ['options[group_type]' => 'count'], t('Apply'));
-    $this->assertLink('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
+    $this->assertSession()->linkExists('COUNT(Views test: ID)', 0, 'The count setting is displayed in the UI');
 
     $this->drupalPostForm(NULL, [], t('Save'));
 

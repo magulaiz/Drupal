@@ -26,9 +26,14 @@ class FieldEntityOperationsTest extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'language', 'views_ui'];
+  protected static $modules = ['node', 'language', 'views_ui'];
 
-  protected function setUp($import_test_views = TRUE) {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     // Create Article content type.
@@ -39,8 +44,8 @@ class FieldEntityOperationsTest extends ViewTestBase {
    * Tests entity operations field.
    */
   public function testEntityOperations() {
-    // Add languages and refresh the container so the entity manager will have
-    // fresh data.
+    // Add languages and refresh the container so the entity type manager will
+    // have fresh data.
     ConfigurableLanguage::createFromLangcode('hu')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
     $this->rebuildContainer();
@@ -61,7 +66,11 @@ class FieldEntityOperationsTest extends ViewTestBase {
       $entities[$i] = $entity;
     }
 
-    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer nodes', 'bypass node access']);
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer nodes',
+      'bypass node access',
+    ]);
     $this->drupalLogin($this->rootUser);
     $this->drupalGet('test-entity-operations');
     /** @var $entity \Drupal\entity_test\Entity\EntityTest */
@@ -77,7 +86,7 @@ class FieldEntityOperationsTest extends ViewTestBase {
           // test would by default point to the frontpage.
           $operation['url']->setOption('query', ['destination' => $expected_destination]);
           $result = $this->xpath('//ul[contains(@class, dropbutton)]/li/a[@href=:path and text()=:title]', [':path' => $operation['url']->toString(), ':title' => (string) $operation['title']]);
-          $this->assertEqual(count($result), 1, t('Found entity @operation link with destination parameter.', ['@operation' => $operation['title']]));
+          $this->assertCount(1, $result, t('Found entity @operation link with destination parameter.', ['@operation' => $operation['title']]));
           // Entities which were created in Hungarian should link to the Hungarian
           // edit form, others to the English one (which has no path prefix here).
           $base_path = \Drupal::request()->getBasePath();
@@ -90,8 +99,8 @@ class FieldEntityOperationsTest extends ViewTestBase {
 
     // Test that we can't enable click sorting on the operation field.
     $this->drupalGet('admin/structure/views/nojs/display/test_entity_operations/page_2/style_options');
-    $this->assertField('style_options[info][title][sortable]');
-    $this->assertNoField('style_options[info][operations][sortable]');
+    $this->assertSession()->fieldExists('style_options[info][title][sortable]');
+    $this->assertSession()->fieldNotExists('style_options[info][operations][sortable]');
   }
 
 }

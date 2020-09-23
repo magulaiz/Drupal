@@ -23,7 +23,12 @@ class DisplayCRUDTest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['contextual'];
+  protected static $modules = ['contextual'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests adding a display.
@@ -40,10 +45,10 @@ class DisplayCRUDTest extends UITestBase {
 
     // Add a new display.
     $this->drupalPostForm(NULL, [], 'Add Page');
-    $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
+    $this->assertSession()->linkByHrefExists($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
-    $this->assertNoLink('Master*', 'Make sure the master display is not marked as changed.');
-    $this->assertLink('Page*', 0, 'Make sure the added display is marked as changed.');
+    $this->assertSession()->linkNotExists('Master*', 'Make sure the master display is not marked as changed.');
+    $this->assertSession()->linkExists('Page*', 0, 'Make sure the added display is marked as changed.');
 
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/path", ['path' => 'test/path'], t('Apply'));
     $this->drupalPostForm(NULL, [], t('Save'));
@@ -80,7 +85,7 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm($path_prefix . '/page_1', [], 'Delete Page');
     $this->drupalPostForm(NULL, [], t('Save'));
 
-    $this->assertNoLinkByHref($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
+    $this->assertSession()->linkByHrefNotExists($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
 
     // Test deleting a display that has a modified machine name.
     $view = $this->randomView();
@@ -89,8 +94,8 @@ class DisplayCRUDTest extends UITestBase {
     $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_1/display_id", ['display_id' => $machine_name], 'Apply');
     $this->drupalPostForm(NULL, [], 'Delete Page');
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertResponse(200);
-    $this->assertNoLinkByHref($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefNotExists($path_prefix . '/new_machine_name', 'Make sure there is no display tab for the deleted display.');
   }
 
   /**
@@ -99,7 +104,7 @@ class DisplayCRUDTest extends UITestBase {
   public function testDefaultDisplay() {
     $this->drupalGet('admin/structure/views/view/test_display');
     $elements = $this->xpath('//*[@id="views-page-1-display-title"]');
-    $this->assertEqual(count($elements), 1, 'The page display is loaded as the default display.');
+    $this->assertCount(1, $elements, 'The page display is loaded as the default display.');
   }
 
   /**
@@ -112,8 +117,9 @@ class DisplayCRUDTest extends UITestBase {
 
     $this->drupalGet($path_prefix);
     $this->drupalPostForm(NULL, [], 'Duplicate Page');
-    $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after duplicating the new display appears in the UI');
-    $this->assertUrl($path_prefix . '/page_2', [], 'The user got redirected to the new display.');
+    // Verify that the user got redirected to the new display.
+    $this->assertSession()->linkByHrefExists($path_prefix . '/page_2', 0, 'Make sure after duplicating the new display appears in the UI');
+    $this->assertSession()->addressEquals($path_prefix . '/page_2');
 
     // Set the title and override the css classes.
     $random_title = $this->randomMachineName();
@@ -123,21 +129,21 @@ class DisplayCRUDTest extends UITestBase {
 
     // Duplicate as a different display type.
     $this->drupalPostForm(NULL, [], 'Duplicate as Block');
-    $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
-    $this->assertUrl($path_prefix . '/block_1', [], 'The user got redirected to the new display.');
+    $this->assertSession()->linkByHrefExists($path_prefix . '/block_1', 0, 'Make sure after duplicating the new display appears in the UI');
+    $this->assertSession()->addressEquals($path_prefix . '/block_1');
     $this->assertText(t('Block settings'));
-    $this->assertNoText(t('Page settings'));
+    $this->assertNoText('Page settings');
 
     $this->drupalPostForm(NULL, [], t('Save'));
     $view = Views::getView($view['id']);
     $view->initDisplay();
 
     $page_2 = $view->displayHandlers->get('page_2');
-    $this->assertTrue($page_2, 'The new page display got saved.');
+    $this->assertNotEmpty($page_2, 'The new page display got saved.');
     $this->assertEqual($page_2->display['display_title'], 'Page');
     $this->assertEqual($page_2->display['display_options']['path'], $path);
     $block_1 = $view->displayHandlers->get('block_1');
-    $this->assertTrue($block_1, 'The new block display got saved.');
+    $this->assertNotEmpty($block_1, 'The new block display got saved.');
     $this->assertEqual($block_1->display['display_plugin'], 'block');
     $this->assertEqual($block_1->display['display_title'], 'Block', 'The new display title got generated as expected.');
     $this->assertFalse(isset($block_1->display['display_options']['path']));

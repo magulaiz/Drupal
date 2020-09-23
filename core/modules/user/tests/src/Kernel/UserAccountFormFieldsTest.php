@@ -18,7 +18,7 @@ class UserAccountFormFieldsTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'user', 'field'];
+  protected static $modules = ['system', 'user', 'field'];
 
   /**
    * Tests the root user account form section in the "Configure site" form.
@@ -72,9 +72,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
   public function testUserEditForm() {
     // Install default configuration; required for AccountFormController.
     $this->installConfig(['user']);
-
-    // Install the router table and then rebuild.
-    \Drupal::service('router.builder')->rebuild();
 
     $form = $this->buildAccountForm('default');
 
@@ -135,9 +132,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)
       ->create($fields);
-    $this->container->get('entity_type.manager')
-      ->getFormObject($entity_type, $operation)
-      ->setEntity($entity);
 
     // @see EntityFormBuilder::getForm()
     return $this->container->get('entity.form_builder')->getForm($entity, $operation);

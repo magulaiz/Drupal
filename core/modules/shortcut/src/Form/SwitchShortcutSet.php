@@ -4,6 +4,7 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\shortcut\Entity\ShortcutSet;
 use Drupal\shortcut\ShortcutSetStorageInterface;
 use Drupal\user\UserInterface;
@@ -89,7 +90,7 @@ class SwitchShortcutSet extends FormBase {
       $form['label'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Label'),
-        '#description' => $this->t('The new set is created by copying items from your default shortcut set.'),
+        '#description' => $this->t('The new set is created by copying links from your default shortcut set.'),
         '#access' => $add_access,
         '#states' => [
           'visible' => [
@@ -119,7 +120,7 @@ class SwitchShortcutSet extends FormBase {
 
       if (!$account_is_user) {
         $default_set = $this->shortcutSetStorage->getDefaultSet($this->user);
-        $form['new']['#description'] = $this->t('The new set is created by copying items from the %default set.', ['%default' => $default_set->label()]);
+        $form['new']['#description'] = $this->t('The new set is created by copying links from the %default set.', ['%default' => $default_set->label()]);
       }
 
       $form['actions'] = ['#type' => 'actions'];
@@ -183,7 +184,7 @@ class SwitchShortcutSet extends FormBase {
       $replacements = [
         '%user' => $this->user->label(),
         '%set_name' => $set->label(),
-        ':switch-url' => $this->url('<current>'),
+        ':switch-url' => Url::fromRoute('<current>')->toString(),
       ];
       if ($account_is_user) {
         // Only administrators can create new shortcut sets, so we know they have

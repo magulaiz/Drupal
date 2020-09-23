@@ -100,6 +100,17 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       ])
       ->setDisplayConfigurable('form', TRUE);
 
+    $fields['parent'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('Parent'))
+      ->setDescription(new TranslatableMarkup('The parent workspace.'))
+      ->setSetting('target_type', 'workspace')
+      ->setReadOnly(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+        'weight' => 10,
+      ]);
+
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(new TranslatableMarkup('Changed'))
       ->setDescription(new TranslatableMarkup('The time that the workspace was last edited.'))
@@ -122,13 +133,6 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * {@inheritdoc}
    */
-  public function isDefaultWorkspace() {
-    return $this->id() === static::DEFAULT_WORKSPACE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
@@ -143,6 +147,29 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasParent() {
+    return !$this->get('parent')->isEmpty();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    $workspace_tree = \Drupal::service('workspaces.repository')->loadTree();
+
+    // Ensure that workspaces that have descendants can not be deleted.
+    foreach ($entities as $entity) {
+      if (!empty($workspace_tree[$entity->id()]['descendants'])) {
+        throw new \InvalidArgumentException("The {$entity->label()} workspace can not be deleted because it has child workspaces.");
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function postDelete(EntityStorageInterface $storage, array $entities) {
     parent::postDelete($storage, $entities);
 
@@ -150,27 +177,12 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
     // be purged on cron.
     $state = \Drupal::state();
     $deleted_workspace_ids = $state->get('workspace.deleted', []);
-    unset($entities[static::DEFAULT_WORKSPACE]);
     $deleted_workspace_ids += array_combine(array_keys($entities), array_keys($entities));
     $state->set('workspace.deleted', $deleted_workspace_ids);
 
     // Trigger a batch purge to allow empty workspaces to be deleted
     // immediately.
     \Drupal::service('workspaces.manager')->purgeDeletedWorkspacesBatch();
-  }
-
-  /**
-   * Default value callback for 'uid' base field definition.
-   *
-   * @deprecated The ::getCurrentUserId method is deprecated in 8.6.x and will
-   *   be removed before 9.0.0.
-   *
-   * @return int[]
-   *   An array containing the ID of the current user.
-   */
-  public static function getCurrentUserId() {
-    @trigger_error('The ::getCurrentUserId method is deprecated in 8.6.x and will be removed before 9.0.0.', E_USER_DEPRECATED);
-    return [\Drupal::currentUser()->id()];
   }
 
 }

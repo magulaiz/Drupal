@@ -13,6 +13,11 @@ use Drupal\Core\Url;
 class MenuTest extends WizardTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the menu functionality.
    */
   public function testMenus() {
@@ -34,9 +39,9 @@ class MenuTest extends WizardTestBase {
     // Make sure there is a link to the view from the front page (where we
     // expect the main menu to display).
     $this->drupalGet('');
-    $this->assertResponse(200);
-    $this->assertLink($view['page[link_properties][title]']);
-    $this->assertLinkByHref(Url::fromUri('base:' . $view['page[path]'])->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkExists($view['page[link_properties][title]']);
+    $this->assertSession()->linkByHrefExists(Url::fromUri('base:' . $view['page[path]'])->toString());
 
     // Make sure the link is associated with the main menu.
     /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */

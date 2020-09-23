@@ -19,14 +19,24 @@ class LocaleContentTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'locale'];
+  protected static $modules = ['node', 'locale'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Verifies that machine name fields are always LTR.
    */
   public function testMachineNameLTR() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'administer content types',
+      'access administration pages',
+      'administer site configuration',
+    ]);
 
     // Log in as admin.
     $this->drupalLogin($admin_user);
@@ -58,9 +68,17 @@ class LocaleContentTest extends BrowserTestBase {
     $type2 = $this->drupalCreateContentType();
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'administer content types',
+      'access administration pages',
+    ]);
     // User to create a node.
-    $web_user = $this->drupalCreateUser(["create {$type1->id()} content", "create {$type2->id()} content", "edit any {$type2->id()} content"]);
+    $web_user = $this->drupalCreateUser([
+      "create {$type1->id()} content",
+      "create {$type2->id()} content",
+      "edit any {$type2->id()} content",
+    ]);
 
     // Add custom language.
     $this->drupalLogin($admin_user);
@@ -113,7 +131,7 @@ class LocaleContentTest extends BrowserTestBase {
     // Edit the content and ensure correct language is selected.
     $path = 'node/' . $node->id() . '/edit';
     $this->drupalGet($path);
-    $this->assertRaw('<option value="' . $langcode . '" selected="selected">' . $name . '</option>', 'Correct language selected.');
+    $this->assertRaw('<option value="' . $langcode . '" selected="selected">' . $name . '</option>');
     // Ensure we can change the node language.
     $edit = [
       'langcode[0][value]' => 'en',
@@ -122,8 +140,10 @@ class LocaleContentTest extends BrowserTestBase {
     $this->assertText(t('@title has been updated.', ['@title' => $node_title]));
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/' . $node->id()]);
-    $this->assert(isset($view_link), 'The message area contains the link to the edited node');
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@data-drupal-messages]//a[contains(@href, :href)]', [
+      ':href' => 'node/' . $node->id(),
+    ]);
+    $this->assertSession()->elementExists('xpath', $xpath);
 
     $this->drupalLogout();
   }
@@ -135,9 +155,16 @@ class LocaleContentTest extends BrowserTestBase {
     $type = $this->drupalCreateContentType();
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'administer content types', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'administer content types',
+      'access administration pages',
+    ]);
     // User to create a node.
-    $web_user = $this->drupalCreateUser(["create {$type->id()} content", "edit own {$type->id()} content"]);
+    $web_user = $this->drupalCreateUser([
+      "create {$type->id()} content",
+      "edit own {$type->id()} content",
+    ]);
 
     // Log in as admin.
     $this->drupalLogin($admin_user);

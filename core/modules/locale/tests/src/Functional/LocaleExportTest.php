@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -16,7 +17,12 @@ class LocaleExportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['locale'];
+  protected static $modules = ['locale'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * A user able to create languages and export translations.
@@ -26,15 +32,19 @@ class LocaleExportTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['administer languages', 'translate interface', 'access administration pages']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer languages',
+      'translate interface',
+      'access administration pages',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Copy test po files to the translations directory.
-    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FILE_EXISTS_REPLACE);
-    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FILE_EXISTS_REPLACE);
+    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.de.po', 'translations://', FileSystemInterface::EXISTS_REPLACE);
+    \Drupal::service('file_system')->copy(__DIR__ . '/../../../tests/test.xx.po', 'translations://', FileSystemInterface::EXISTS_REPLACE);
   }
 
   /**
@@ -58,9 +68,9 @@ class LocaleExportTest extends BrowserTestBase {
     ], t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', 'Exported French translation file.');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure our imported translations exist in the file.
-    $this->assertRaw('msgstr "lundi"', 'French translations present in exported file.');
+    $this->assertRaw('msgstr "lundi"');
 
     // Import some more French translations which will be marked as customized.
     $name = $file_system->tempnam('temporary://', "po2_") . '.po';
@@ -88,11 +98,11 @@ class LocaleExportTest extends BrowserTestBase {
     ], t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', 'Exported French translation file with only customized strings.');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure the customized translations exist in the file.
-    $this->assertRaw('msgstr "janvier"', 'French custom translation present in exported file.');
+    $this->assertRaw('msgstr "janvier"');
     // Ensure no untranslated strings exist in the file.
-    $this->assertNoRaw('msgid "February"', 'Untranslated string not present in exported file.');
+    $this->assertNoRaw('msgid "February"');
 
     // Export only untranslated French translations.
     $this->drupalPostForm('admin/config/regional/translate/export', [
@@ -103,11 +113,11 @@ class LocaleExportTest extends BrowserTestBase {
     ], t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', 'Exported French translation file with only untranslated strings.');
+    $this->assertRaw('# French translation of Drupal');
     // Ensure no customized translations exist in the file.
-    $this->assertNoRaw('msgstr "janvier"', 'French custom translation not present in exported file.');
+    $this->assertNoRaw('msgstr "janvier"');
     // Ensure the untranslated strings exist in the file, and with right quotes.
-    $this->assertRaw($this->getUntranslatedString(), 'Empty string present in exported file.');
+    $this->assertRaw($this->getUntranslatedString());
   }
 
   /**
@@ -121,7 +131,7 @@ class LocaleExportTest extends BrowserTestBase {
     // Get the translation template file.
     $this->drupalPostForm('admin/config/regional/translate/export', [], t('Export'));
     // Ensure we have a translation file.
-    $this->assertRaw('# LANGUAGE translation of PROJECT', 'Exported translation template file.');
+    $this->assertRaw('# LANGUAGE translation of PROJECT');
   }
 
   /**

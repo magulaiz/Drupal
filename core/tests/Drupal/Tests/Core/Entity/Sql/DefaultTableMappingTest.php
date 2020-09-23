@@ -4,7 +4,6 @@ namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageException;
-use Drupal\Core\Entity\Sql\TemporaryTableMapping;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -16,14 +15,14 @@ class DefaultTableMappingTest extends UnitTestCase {
   /**
    * The entity type definition.
    *
-   * @var \Drupal\Core\Entity\ContentEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\ContentEntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityType = $this->createMock('\Drupal\Core\Entity\ContentEntityTypeInterface');
@@ -573,17 +572,6 @@ class DefaultTableMappingTest extends UnitTestCase {
   }
 
   /**
-   * @coversDefaultClass \Drupal\Core\Entity\Sql\TemporaryTableMapping
-   *
-   * @expectedDeprecation Drupal\Core\Entity\Sql\TemporaryTableMapping is deprecated in Drupal 8.7.x and will be removed before Drupal 9.0.0. Use the default table mapping with a prefix instead.
-   * @group legacy
-   */
-  public function testTemporaryTableMapping() {
-    $table_mapping = new TemporaryTableMapping($this->entityType, [], '');
-    $this->assertTrue($table_mapping instanceof DefaultTableMapping);
-  }
-
-  /**
    * Sets up a field storage definition for the test.
    *
    * @param string $name
@@ -591,7 +579,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    * @param array $column_names
    *   An array of column names for the storage definition.
    *
-   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function setUpDefinition($name, array $column_names, $base_field = TRUE) {
     $definition = $this->createMock('Drupal\Tests\Core\Field\TestBaseFieldDefinitionInterface');

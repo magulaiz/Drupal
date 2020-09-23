@@ -14,11 +14,11 @@ class ControllerBaseTest extends UnitTestCase {
   /**
    * The tested controller base class.
    *
-   * @var \Drupal\Core\Controller\ControllerBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerBase;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->controllerBase = $this->getMockForAbstractClass('Drupal\Core\Controller\ControllerBase');
   }
 

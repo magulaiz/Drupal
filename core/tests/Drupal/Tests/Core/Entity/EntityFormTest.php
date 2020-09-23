@@ -21,7 +21,7 @@ class EntityFormTest extends UnitTestCase {
   /**
    * The mocked entity form.
    *
-   * @var \Drupal\Core\Entity\EntityFormInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFormInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityForm;
 
@@ -35,7 +35,7 @@ class EntityFormTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityForm = new EntityForm();

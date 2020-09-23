@@ -36,7 +36,7 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
@@ -50,14 +50,14 @@ class PermissionHandlerTest extends UnitTestCase {
   /**
    * The mocked controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->stringTranslation = new TestTranslationManager();
@@ -76,7 +76,7 @@ class PermissionHandlerTest extends UnitTestCase {
    *   The extension object.
    */
   protected function mockModuleExtension($module, $name) {
-    $extension = new Extension($this->root, $module, "modules/$module");
+    $extension = new Extension('vfs:/', $module, "modules/$module");
     $extension->info['name'] = $name;
     return $extension;
   }
@@ -125,11 +125,6 @@ EOF
 EOF
     );
     $modules = ['module_a', 'module_b', 'module_c'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-      'module_b' => $this->mockModuleExtension('module_b', 'Module b'),
-      'module_c' => $this->mockModuleExtension('module_c', 'Module c'),
-    ];
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
       ->with('permission')
@@ -252,11 +247,6 @@ EOF
     );
 
     $modules = ['module_a', 'module_b', 'module_c'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-      'module_b' => $this->mockModuleExtension('module_b', 'Module b'),
-      'module_c' => $this->mockModuleExtension('module_c', 'Module c'),
-    ];
 
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')
@@ -317,9 +307,6 @@ EOF
     );
 
     $modules = ['module_a'];
-    $extensions = [
-      'module_a' => $this->mockModuleExtension('module_a', 'Module a'),
-    ];
 
     $this->moduleHandler->expects($this->any())
       ->method('getImplementations')

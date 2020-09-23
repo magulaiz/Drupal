@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
+use Drupal\Tests\Traits\PHPUnit8Warnings;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -18,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class UnitTestCase extends TestCase {
 
-  use PhpunitCompatibilityTrait;
+  use PHPUnit8Warnings;
 
   /**
    * The random generator.
@@ -49,7 +50,7 @@ abstract class UnitTestCase extends TestCase {
     // Ensure that FileCacheFactory has a prefix.
     FileCacheFactory::setPrefix('prefix');
 
-    $this->root = dirname(dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))));
+    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
   }
 
   /**
@@ -90,7 +91,7 @@ abstract class UnitTestCase extends TestCase {
   protected function assertArrayEquals(array $expected, array $actual, $message = NULL) {
     ksort($expected);
     ksort($actual);
-    $this->assertEquals($expected, $actual, $message);
+    $this->assertEquals($expected, $actual, !empty($message) ? $message : '');
   }
 
   /**
@@ -104,7 +105,7 @@ abstract class UnitTestCase extends TestCase {
    *   configuration object names and whose values are key => value arrays for
    *   the configuration object in question. Defaults to an empty array.
    *
-   * @return \PHPUnit_Framework_MockObject_MockBuilder
+   * @return \PHPUnit\Framework\MockObject\MockBuilder
    *   A MockBuilder object for the ConfigFactory with the desired return
    *   values.
    */
@@ -186,42 +187,9 @@ abstract class UnitTestCase extends TestCase {
   }
 
   /**
-   * Mocks a block with a block plugin.
-   *
-   * @param string $machine_name
-   *   The machine name of the block plugin.
-   *
-   * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
-   *   The mocked block.
-   *
-   * @deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test
-   *   base classes should not have dependencies on extensions. Set up mocks in
-   *   individual tests.
-   *
-   * @see https://www.drupal.org/node/2896072
-   */
-  protected function getBlockMockWithMachineName($machine_name) {
-    $plugin = $this->getMockBuilder('Drupal\Core\Block\BlockBase')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $plugin->expects($this->any())
-      ->method('getMachineNameSuggestion')
-      ->will($this->returnValue($machine_name));
-
-    $block = $this->getMockBuilder('Drupal\block\Entity\Block')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $block->expects($this->any())
-      ->method('getPlugin')
-      ->will($this->returnValue($plugin));
-    @trigger_error(__METHOD__ . ' is deprecated in Drupal 8.5.x, will be removed before Drupal 9.0.0. Unit test base classes should not have dependencies on extensions. Set up mocks in individual tests.', E_USER_DEPRECATED);
-    return $block;
-  }
-
-  /**
    * Returns a stub translation manager that just returns the passed string.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\StringTranslation\TranslationInterface
+   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\StringTranslation\TranslationInterface
    *   A mock translation object.
    */
   public function getStringTranslationStub() {
@@ -251,7 +219,7 @@ abstract class UnitTestCase extends TestCase {
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_validator
    *   The cache tags invalidator.
    *
-   * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The container with the cache tags invalidator service.
    */
   protected function getContainerWithCacheTagsInvalidator(CacheTagsInvalidatorInterface $cache_tags_validator) {
@@ -268,7 +236,7 @@ abstract class UnitTestCase extends TestCase {
   /**
    * Returns a stub class resolver.
    *
-   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\DependencyInjection\ClassResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    *   The class resolver stub.
    */
   protected function getClassResolverStub() {

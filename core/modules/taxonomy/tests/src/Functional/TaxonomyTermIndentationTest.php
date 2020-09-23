@@ -14,7 +14,12 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy'];
+  protected static $modules = ['taxonomy'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Vocabulary for testing.
@@ -23,9 +28,12 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer taxonomy',
+      'bypass node access',
+    ]));
     $this->vocabulary = $this->createVocabulary();
   }
 
@@ -60,7 +68,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     ];
     // Submit the edited form and check for HTML indentation element presence.
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertPattern('|<div class="js-indentation indentation">&nbsp;</div>|');
+    $this->assertSession()->responseMatches('|<div class="js-indentation indentation">&nbsp;</div>|');
 
     // Check explicitly that term 2's parent is term 1.
     $parents = $taxonomy_storage->loadParents($term2->id());

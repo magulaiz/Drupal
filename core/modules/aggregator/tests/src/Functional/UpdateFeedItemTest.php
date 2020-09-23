@@ -14,6 +14,11 @@ use Drupal\aggregator\Entity\Item;
 class UpdateFeedItemTest extends AggregatorTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests running "update items" from 'admin/config/services/aggregator' page.
    */
   public function testUpdateFeedItem() {
@@ -36,21 +41,20 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     ];
 
     $this->drupalGet($edit['url[0][value]']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $this->drupalPostForm('aggregator/sources/add', $edit, t('Save'));
     $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a feed');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
     $fids = \Drupal::entityQuery('aggregator_feed')->condition('url', $edit['url[0][value]'])->execute();
     $feed = Feed::load(array_values($fids)[0]);
 
     $feed->refreshItems();
-    $iids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
-    $before = Item::load(array_values($iids)[0])->getPostedTime();
+    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $before = Item::load(array_values($item_ids)[0])->getPostedTime();
 
     // Sleep for 3 second.
     sleep(3);
@@ -62,7 +66,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
       ->save();
     $feed->refreshItems();
 
-    $after = Item::load(array_values($iids)[0])->getPostedTime();
+    $after = Item::load(array_values($item_ids)[0])->getPostedTime();
     $this->assertTrue($before === $after, new FormattableMarkup('Publish timestamp of feed item was not updated (@before === @after)', ['@before' => $before, '@after' => $after]));
 
     // Make sure updating items works even after uninstalling a module
@@ -70,7 +74,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     $this->enableTestPlugins();
     $this->container->get('module_installer')->uninstall(['aggregator_test']);
     $this->updateFeedItems($feed);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

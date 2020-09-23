@@ -17,7 +17,7 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'config',
     'config_test',
@@ -26,7 +26,12 @@ class ConfigSingleImportExportTest extends BrowserTestBase {
     'language',
   ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('page_title_block');
@@ -182,8 +187,8 @@ EOD;
       $this->drupalPostForm(NULL, [], t('Confirm'));
       $entity = $storage->load('second');
       $this->assertRaw(t('The configuration was imported successfully.'));
-      $this->assertTrue(is_string($entity->label()), 'Entity label is a string');
-      $this->assertTrue(strpos($entity->label(), 'ObjectSerialization') > 0, 'Label contains serialized object');
+      $this->assertIsString($entity->label());
+      $this->assertStringContainsString('ObjectSerialization', $entity->label(), 'Label contains serialized object');
     }
     else {
       // If the Symfony parser is used there will be an error.
@@ -226,6 +231,10 @@ EOD;
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
     $this->assertText(t('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.'));
 
+    // Try to import without any values.
+    $this->drupalPostForm('admin/config/development/configuration/single/import', [], t('Import'));
+    $this->assertText('Configuration type field is required.');
+    $this->assertText('Paste your configuration here field is required.');
   }
 
   /**
@@ -256,7 +265,7 @@ EOD;
 
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
-    $this->assertEqual(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
+    $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
   }
 
 }

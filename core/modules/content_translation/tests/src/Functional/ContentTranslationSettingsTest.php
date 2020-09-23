@@ -25,9 +25,21 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation', 'node', 'comment', 'field_ui', 'entity_test'];
+  protected static $modules = [
+    'language',
+    'content_translation',
+    'node',
+    'comment',
+    'field_ui',
+    'entity_test',
+  ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  protected function setUp(): void {
     parent::setUp();
 
     // Set up two content types to test fields shared between different
@@ -37,7 +49,17 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->addDefaultCommentField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     $this->addDefaultCommentField('node', 'page', 'comment_page');
 
-    $admin_user = $this->drupalCreateUser(['access administration pages', 'administer languages', 'administer content translation', 'administer content types', 'administer node fields', 'administer comment fields', 'administer comments', 'administer comment types', 'administer account settings']);
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'administer languages',
+      'administer content translation',
+      'administer content types',
+      'administer node fields',
+      'administer comment fields',
+      'administer comments',
+      'administer comment types',
+      'administer account settings',
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -47,7 +69,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   public function testSettingsUI() {
     // Check for the content_translation_menu_links_discovered_alter() changes.
     $this->drupalGet('admin/config');
-    $this->assertLink('Content language and translation');
+    $this->assertSession()->linkExists('Content language and translation');
     $this->assertText('Configure language and translation support for content.');
     // Test that the translation settings are ignored if the bundle is marked
     // translatable but the entity type is not.
@@ -77,7 +99,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     $this->assertSettings('comment', 'comment_article', FALSE, $edit);
     $xpath_err = '//div[contains(@class, "error")]';
-    $this->assertTrue($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
+    $this->assertNotEmpty($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
 
     // Test that the translation settings are not stored if a non-configurable
     // language is set as default and the language selector is hidden.
@@ -89,7 +111,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[comment][comment_article][fields][comment_body]' => TRUE,
     ];
     $this->assertSettings('comment', 'comment_article', FALSE, $edit);
-    $this->assertTrue($this->xpath($xpath_err), 'Enabling translation with a fixed non-configurable language generates a form error.');
+    $this->assertNotEmpty($this->xpath($xpath_err), 'Enabling translation with a fixed non-configurable language generates a form error.');
 
     // Test that a field shared among different bundles can be enabled without
     // needing to make all the related bundles translatable.
@@ -135,8 +157,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Verify language widget appears on comment type form.
     $this->drupalGet('admin/structure/comment/manage/comment_article');
-    $this->assertField('language_configuration[content_translation]');
-    $this->assertFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->fieldExists('language_configuration[content_translation]');
+    $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Verify that translation may be enabled for the article content type.
     $edit = [
@@ -144,11 +166,11 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertField('language_configuration[content_translation]');
-    $this->assertNoFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->fieldExists('language_configuration[content_translation]');
+    $this->assertSession()->checkboxNotChecked('edit-language-configuration-content-translation');
     $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertFieldChecked('edit-language-configuration-content-translation');
+    $this->assertSession()->checkboxChecked('edit-language-configuration-content-translation');
 
     // Test that the title field of nodes is available in the settings form.
     $edit = [
@@ -205,15 +227,15 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
   public function testAccountLanguageSettingsUI() {
     // Make sure the checkbox is available and not checked by default.
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertField('language[content_translation]');
-    $this->assertNoFieldChecked('edit-language-content-translation');
+    $this->assertSession()->fieldExists('language[content_translation]');
+    $this->assertSession()->checkboxNotChecked('edit-language-content-translation');
 
     $edit = [
       'language[content_translation]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertFieldChecked('edit-language-content-translation');
+    $this->assertSession()->checkboxChecked('edit-language-content-translation');
 
     // Make sure account settings can be saved.
     $this->drupalPostForm('admin/config/people/accounts', ['anonymous' => 'Save me please!'], 'Save configuration');
@@ -283,7 +305,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    */
   public function testNonTranslatableTranslationSettingsUI() {
     $this->drupalGet('admin/config/regional/content-language');
-    $this->assertNoField('settings[entity_test][entity_test][translatable]');
+    $this->assertSession()->fieldNotExists('settings[entity_test][entity_test][translatable]');
   }
 
 }

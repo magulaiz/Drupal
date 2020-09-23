@@ -163,7 +163,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
 
     $argument_text = $this->view->display_handler->getArgumentText();
 
-    $form['#pre_render'][] = [get_class($this), 'preRenderMoveArgumentOptions'];
+    $form['#pre_render'][] = [static::class, 'preRenderMoveArgumentOptions'];
 
     $form['description'] = [
       '#markup' => $argument_text['description'],
@@ -1096,6 +1096,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
         $plugin_name = $this->options['default_argument_type'];
         $options_name = 'default_argument_options';
         break;
+
       case 'argument_validator':
         if (!isset($this->options['validate']['type'])) {
           return;
@@ -1103,6 +1104,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
         $plugin_name = $this->options['validate']['type'];
         $options_name = 'validate_options';
         break;
+
       case 'style':
         if (!isset($this->options['summary']['format'])) {
           return;

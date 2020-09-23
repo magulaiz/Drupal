@@ -11,7 +11,12 @@ use Drupal\Core\File\FileSystemInterface;
  */
 class DownloadTest extends FileManagedTestBase {
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
     // Clear out any hook calls.
     file_test_reset();
@@ -67,11 +72,16 @@ class DownloadTest extends FileManagedTestBase {
     $url = file_create_url($file->getFileUri());
 
     // Set file_test access header to allow the download.
+    file_test_reset();
     file_test_set_return('download', ['x-foo' => 'Bar']);
     $this->drupalGet($url);
-    $this->assertEqual($this->drupalGetHeader('x-foo'), 'Bar', 'Found header set by file_test module on private download.');
-    $this->assertFalse($this->drupalGetHeader('x-drupal-cache'), 'Page cache is disabled on private file download.');
-    $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
+    // Verify that header is set by file_test module on private download.
+    $this->assertSession()->responseHeaderEquals('x-foo', 'Bar');
+    // Verify that page cache is disabled on private file download.
+    $this->assertSession()->responseHeaderDoesNotExist('x-drupal-cache');
+    $this->assertSession()->statusCodeEquals(200);
+    // Ensure hook_file_download is fired correctly.
+    $this->assertEquals($file->getFileUri(), \Drupal::state()->get('file_test.results')['download'][0][0]);
 
     // Test that the file transferred correctly.
     $this->assertSame($contents, $this->getSession()->getPage()->getContent(), 'Contents of the file are correct.');
@@ -83,9 +93,19 @@ class DownloadTest extends FileManagedTestBase {
     $this->assertSame(403, $response->getStatusCode(), 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
+    file_test_reset();
     $url = file_create_url('private://' . $this->randomMachineName());
     $response = $http_client->head($url, ['http_errors' => FALSE]);
     $this->assertSame(404, $response->getStatusCode(), 'Correctly returned 404 response for a non-existent file.');
+    // Assert that hook_file_download is not called.
+    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
+
+    // Try requesting the private file url without a file specified.
+    file_test_reset();
+    $this->drupalGet('/system/files');
+    $this->assertSession()->statusCodeEquals(404);
+    // Assert that hook_file_download is not called.
+    $this->assertEquals([], \Drupal::state()->get('file_test.results')['download']);
   }
 
   /**
@@ -97,6 +117,7 @@ class DownloadTest extends FileManagedTestBase {
       // Characters that look like a percent-escaped string.
       "%23%25%26%2B%2F%3F" .
       // Characters from various non-ASCII alphabets.
+      // cSpell:disable-next-line
       "éøïвβ中國書۞";
     $basename_encoded = '%20-._~%21%24%27%22%28%29%2A%40%5B%5D%3F%26%2B%25%23%2C%3B%3D%3A__' .
       '%2523%2525%2526%252B%252F%253F' .
@@ -156,9 +177,8 @@ class DownloadTest extends FileManagedTestBase {
     }
 
     $this->drupalGet($url);
-    if ($this->assertResponse(200) == 'pass') {
-      $this->assertRaw(file_get_contents($file->getFileUri()), 'Contents of the file are correct.');
-    }
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertRaw(file_get_contents($file->getFileUri()));
 
     $file->delete();
   }

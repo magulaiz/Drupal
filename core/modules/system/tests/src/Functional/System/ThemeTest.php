@@ -31,14 +31,25 @@ class ThemeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'block', 'file'];
+  protected static $modules = ['node', 'block', 'file'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'view the administration theme', 'administer themes', 'bypass node access', 'administer blocks']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'view the administration theme',
+      'administer themes',
+      'bypass node access',
+      'administer blocks',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->node = $this->drupalCreateNode();
     $this->drupalPlaceBlock('local_tasks_block');
@@ -48,14 +59,16 @@ class ThemeTest extends BrowserTestBase {
    * Test the theme settings form.
    */
   public function testThemeSettings() {
-    // Ensure invalid theme settings form URLs return a proper 404.
+    // Ensure a disabled theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/bartik');
-    $this->assertResponse(404, 'The theme settings form URL for a uninstalled theme could not be found.');
+    $this->assertSession()->statusCodeEquals(404);
+    // Ensure a non existent theme settings form URL returns 404.
     $this->drupalGet('admin/appearance/settings/' . $this->randomMachineName());
-    $this->assertResponse(404, 'The theme settings form URL for a non-existent theme could not be found.');
+    $this->assertSession()->statusCodeEquals(404);
+    // Ensure a hidden theme settings form URL returns 404.
     $this->assertTrue(\Drupal::service('theme_installer')->install(['stable']));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(404, 'The theme settings form URL for a hidden theme is unavailable.');
+    $this->assertSession()->statusCodeEquals(404);
 
     // Specify a filesystem path to be used for the logo.
     $file = current($this->drupalGetTestFiles('image'));
@@ -178,8 +191,7 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
-    $fields = $this->xpath($this->constructFieldXpath('name', 'logo_path'));
-    $uploaded_filename = 'public://' . $fields[0]->getValue();
+    $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
@@ -195,18 +207,18 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header']);
     $this->drupalGet('admin/appearance/settings');
     $theme_handler = \Drupal::service('theme_handler');
-    $this->assertLink($theme_handler->getName('classy'));
-    $this->assertLink($theme_handler->getName('bartik'));
-    $this->assertNoLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('classy'));
+    $this->assertSession()->linkExists($theme_handler->getName('bartik'));
+    $this->assertSession()->linkNotExists($theme_handler->getName('stable'));
 
     // If a hidden theme is an admin theme it should be viewable.
     \Drupal::configFactory()->getEditable('system.theme')->set('admin', 'stable')->save();
     \Drupal::service('router.builder')->rebuildIfNeeded();
     $this->drupalPlaceBlock('local_tasks_block', ['region' => 'header', 'theme' => 'stable']);
     $this->drupalGet('admin/appearance/settings');
-    $this->assertLink($theme_handler->getName('stable'));
+    $this->assertSession()->linkExists($theme_handler->getName('stable'));
     $this->drupalGet('admin/appearance/settings/stable');
-    $this->assertResponse(200, 'The theme settings form URL for a hidden theme that is the admin theme is available.');
+    $this->assertSession()->statusCodeEquals(200);
 
     // Ensure default logo and favicons are not triggering custom path
     // validation errors if their custom paths are set on the form.
@@ -253,9 +265,9 @@ class ThemeTest extends BrowserTestBase {
     // cleared by installing a theme.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->drupalGet('');
-    $this->assertEquals('HIT', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     $this->drupalLogin($this->adminUser);
     // Save Bartik's theme settings which should invalidate the 'rendered' cache
@@ -263,7 +275,7 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPostForm('admin/appearance/settings/bartik', [], t('Save configuration'));
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertEquals('MISS', $this->getSession()->getResponseHeader('X-Drupal-Cache'));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
   }
 
   /**
@@ -279,17 +291,21 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertRaw('core/themes/seven');
 
+    // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertRaw('core/themes/classy', 'Site default theme used on node page.');
+    $this->assertRaw('core/themes/classy');
 
+    // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on the add content page.');
+    $this->assertRaw('core/themes/seven');
 
+    // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on the edit content page.');
+    $this->assertRaw('core/themes/seven');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -297,32 +313,37 @@ class ThemeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertRaw('core/themes/seven');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
     $this->drupalLogin($normal_user);
+    // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertResponse(403);
-    $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertRaw('core/themes/seven');
     $this->drupalLogin($this->adminUser);
 
+    // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy');
 
     // Reset to the default theme settings.
     $edit = [
-      'admin_theme' => '0',
+      'admin_theme' => '',
       'use_admin_theme' => FALSE,
     ];
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
+    // Check that the site default theme used on administration page.
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on administration page.');
+    $this->assertRaw('core/themes/classy');
 
+    // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy', 'Site default theme used on the add content page.');
+    $this->assertRaw('core/themes/classy');
   }
 
   /**
@@ -334,6 +355,7 @@ class ThemeTest extends BrowserTestBase {
     // First, install Stark and set it as the default theme programmatically.
     $theme_installer->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
+    $this->drupalPlaceBlock('local_tasks_block');
 
     // Install Bartik and set it as the default theme.
     $theme_installer->install(['bartik']);
@@ -367,8 +389,10 @@ class ThemeTest extends BrowserTestBase {
     $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'not_real_test_basetheme']));
     $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'test_invalid_basetheme']));
     $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => 'not_real_engine']));
-    // Check for the error text of a theme with the wrong core version.
-    $this->assertText("This theme is not compatible with Drupal 8.x. Check that the .info.yml file contains the correct 'core' value.");
+    // Check for the error text of a theme with the wrong core version
+    // using 7.x and ^7.
+    $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";
+    $this->assertThemeIncompatibleText('Theme test with invalid semver core version', $incompatible_core_message);
     // Check for the error text of a theme without a content region.
     $this->assertText("This theme is missing a 'content' region.");
   }
@@ -390,12 +414,12 @@ class ThemeTest extends BrowserTestBase {
     $this->clickLink(t('Set as default'));
 
     // Check that seven cannot be uninstalled as it is the admin theme.
-    $this->assertNoRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Seven theme');
     // Check that bartik cannot be uninstalled as it is the default theme.
-    $this->assertNoRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Bartik theme');
     // Check that the classy theme cannot be uninstalled as it is a base theme
     // of seven and bartik.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Install Stark and set it as the default theme.
     \Drupal::service('theme_installer')->install(['stark']);
@@ -407,20 +431,20 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
 
     // Check that seven can be uninstalled now.
-    $this->assertRaw('Uninstall Seven theme', 'A link to uninstall the Seven theme does appear on the theme settings page.');
+    $this->assertRaw('Uninstall Seven theme');
     // Check that the classy theme still cannot be uninstalled as it is a
     // base theme of bartik.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Change the default theme to stark, stark is second in the list.
     $this->clickLink(t('Set as default'), 1);
 
     // Check that bartik can be uninstalled now.
-    $this->assertRaw('Uninstall Bartik theme', 'A link to uninstall the Bartik theme does appear on the theme settings page.');
+    $this->assertRaw('Uninstall Bartik theme');
 
     // Check that the classy theme still can't be uninstalled as neither of its
     // base themes have been.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
 
     // Uninstall each of the three themes starting with Bartik.
     $this->clickLink(t('Uninstall'));
@@ -430,31 +454,36 @@ class ThemeTest extends BrowserTestBase {
     $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
-    $this->assertNoRaw('Uninstall Classy theme', 'A link to uninstall the Classy theme does not appear on the theme settings page.');
+    $this->assertNoRaw('Uninstall Classy theme');
   }
 
   /**
    * Tests installing a theme and setting it as default.
    */
   public function testInstallAndSetAsDefault() {
-    $this->drupalGet('admin/appearance');
-    // Bartik is uninstalled in the test profile and has the third "Install and
-    // set as default" link.
-    $this->clickLink(t('Install and set as default'), 2);
-    // Test the confirmation message.
-    $this->assertText('Bartik is now the default theme.');
-    // Make sure Bartik is now set as the default theme in config.
-    $this->assertEqual($this->config('system.theme')->get('default'), 'bartik');
+    $themes = [
+      'bartik' => 'Bartik',
+      'test_core_semver' => 'Theme test with semver core version',
+    ];
+    foreach ($themes as $theme_machine_name => $theme_name) {
+      $this->drupalGet('admin/appearance');
+      $this->getSession()->getPage()->findLink("Install $theme_name as default theme")->click();
+      // Test the confirmation message.
+      $this->assertText("$theme_name is now the default theme.");
+      // Make sure the theme is now set as the default theme in config.
+      $this->assertEqual($this->config('system.theme')->get('default'), $theme_machine_name);
 
-    // This checks for a regression. See https://www.drupal.org/node/2498691.
-    $this->assertNoText('The bartik theme was not found.');
+      // This checks for a regression. See https://www.drupal.org/node/2498691.
+      $this->assertNoText("The $theme_machine_name theme was not found.");
 
-    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
-    $version = $themes['bartik']->info['version'];
+      $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+      $version = $themes[$theme_machine_name]->info['version'];
 
-    // Confirm Bartik is indicated as the default theme.
-    $out = $this->getSession()->getPage()->getContent();
-    $this->assertTrue((bool) preg_match('/Bartik ' . preg_quote($version) . '\s{2,}\(default theme\)/', $out));
+      // Confirm the theme is indicated as the default theme and administration
+      // theme because the admin theme is the default theme.
+      $out = $this->getSession()->getPage()->getContent();
+      $this->assertTrue((bool) preg_match("/$theme_name " . preg_quote($version) . '\s{2,}\(default theme, administration theme\)/', $out));
+    }
   }
 
   /**
@@ -468,6 +497,18 @@ class ThemeTest extends BrowserTestBase {
     $edit = [];
     $this->drupalPostForm('admin/appearance/settings/test_theme_settings_features', $edit, t('Save configuration'));
     $this->assertText('The configuration options have been saved.');
+  }
+
+  /**
+   * Asserts that expected incompatibility text is displayed for a theme.
+   *
+   * @param string $theme_name
+   *   Theme name to select element on page. This can be a partial name.
+   * @param string $expected_text
+   *   The expected incompatibility text.
+   */
+  private function assertThemeIncompatibleText($theme_name, $expected_text) {
+    $this->assertSession()->elementExists('css', ".theme-info:contains(\"$theme_name\") .incompatible:contains(\"$expected_text\")");
   }
 
 }

@@ -34,7 +34,11 @@ abstract class BlockContentTestBase extends ViewTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'block_content_test_views'];
+  protected static $modules = [
+    'block',
+    'block_content',
+    'block_content_test_views',
+  ];
 
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
@@ -44,7 +48,7 @@ abstract class BlockContentTestBase extends ViewTestBase {
     $this->adminUser = $this->drupalCreateUser($this->permissions);
 
     if ($import_test_views) {
-      ViewTestData::createTestViews(get_class($this), ['block_content_test_views']);
+      ViewTestData::createTestViews(static::class, ['block_content_test_views']);
     }
   }
 

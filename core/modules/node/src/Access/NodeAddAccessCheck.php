@@ -3,7 +3,6 @@
 namespace Drupal\node\Access;
 
 use Drupal\Core\Access\AccessResult;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -15,12 +14,6 @@ use Drupal\node\NodeTypeInterface;
  * @ingroup node_access
  */
 class NodeAddAccessCheck implements AccessInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * The entity type manager.
@@ -48,8 +41,8 @@ class NodeAddAccessCheck implements AccessInterface {
    *   (optional) The node type. If not specified, access is allowed if there
    *   exists at least one node type for which the user may create a node.
    *
-   * @return string
-   *   A \Drupal\Core\Access\AccessInterface constant value.
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
   public function access(AccountInterface $account, NodeTypeInterface $node_type = NULL) {
     $access_control_handler = $this->entityTypeManager->getAccessControlHandler('node');

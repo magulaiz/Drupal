@@ -4,6 +4,7 @@ namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
@@ -44,7 +45,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    * Data provider for testBasics().
    */
   public function providerTestBasics() {
-    $expected_cacheability_full = (new CacheableMetadata())
+    $default_cacheability = (new CacheableMetadata())
       ->setCacheTags([
         '_media_test_filter_access:media:1',
         '_media_test_filter_access:user:2',
@@ -58,14 +59,14 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       ->setCacheMaxAge(Cache::PERMANENT);
 
     return [
-      'data-entity-uuid only ⇒ default view mode "full" used' => [
+      'data-entity-uuid only ⇒ default view mode used' => [
         [
           'data-entity-type' => 'media',
           'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
         ],
-        'full',
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
         [],
-        $expected_cacheability_full,
+        $default_cacheability,
       ],
       'data-entity-uuid + data-view-mode=full ⇒ specified view mode used' => [
         [
@@ -75,7 +76,17 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
         ],
         'full',
         [],
-        $expected_cacheability_full,
+        $default_cacheability,
+      ],
+      'data-entity-uuid + data-view-mode=default ⇒ specified view mode used' => [
+        [
+          'data-entity-type' => 'media',
+          'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
+          'data-view-mode' => EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        ],
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
+        [],
+        $default_cacheability,
       ],
       'data-entity-uuid + data-view-mode=foobar ⇒ specified view mode used' => [
         [
@@ -103,12 +114,12 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
           'data-entity-type' => 'media',
           'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
         ],
-        'full',
+        EntityDisplayRepositoryInterface::DEFAULT_DISPLAY_MODE,
         [
           'data-foo' => 'bar',
           'foo' => 'bar',
         ],
-        $expected_cacheability_full,
+        $default_cacheability,
       ],
     ];
   }
@@ -138,7 +149,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       $this->assertEmpty($this->getRawContent());
     }
     else {
-      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
     $this->assertSame($expected_cacheability->getCacheTags(), $result->getCacheTags());
@@ -214,11 +225,15 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'alt' => 'alt 3',
       'title' => 'title 3',
     ] + $base);
+    $input .= $this->createEmbedCode([
+      'alt' => '""',
+      'title' => 'title 4',
+    ] + $base);
 
     $this->applyFilter($input);
 
     $img_nodes = $this->cssSelect('img');
-    $this->assertCount(4, $img_nodes);
+    $this->assertCount(5, $img_nodes);
     $this->assertHasAttributes($img_nodes[0], [
       'alt' => 'default alt',
       'title' => $expected_title_attributes[0],
@@ -235,6 +250,10 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'alt' => 'alt 3',
       'title' => $expected_title_attributes[3],
     ]);
+    $this->assertHasAttributes($img_nodes[4], [
+      'alt' => '',
+      'title' => $expected_title_attributes[4],
+    ]);
   }
 
   /**
@@ -244,11 +263,11 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     return [
       '`title` field property disabled ⇒ `title` is not overridable' => [
         FALSE,
-        [NULL, NULL, NULL, NULL],
+        [NULL, NULL, NULL, NULL, NULL],
       ],
-      '`title` field property enabled ⇒ `title` is not overridable' => [
+      '`title` field property enabled ⇒ `title` is overridable' => [
         TRUE,
-        [NULL, 'title 1', 'title 2', 'title 3'],
+        [NULL, 'title 1', 'title 2', 'title 3', 'title 4'],
       ],
     ];
   }
@@ -258,30 +277,29 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    *
    * @dataProvider providerMissingEntityIndicator
    */
-  public function testMissingEntityIndicator($uuid) {
+  public function testMissingEntityIndicator($uuid, array $filter_ids, array $additional_attributes) {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => $uuid,
       'data-view-mode' => 'foobar',
-    ]);
+    ] + $additional_attributes);
 
     // If the UUID being used in the embed is that of the sample entity, first
     // assert that it currently results in a functional embed, then delete it.
     if ($uuid === static::EMBEDDED_ENTITY_UUID) {
-      $this->applyFilter($content);
+      $result = $this->processText($content, 'en', $filter_ids);
+      $this->setRawContent($result->getProcessedText());
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
       $this->embeddedEntity->delete();
     }
-
-    $this->applyFilter($content);
+    $result = $this->processText($content, 'en', $filter_ids);
+    $this->setRawContent($result->getProcessedText());
     $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
-    $deleted_embed_warning = $this->cssSelect('img')[0];
-    $this->assertNotEmpty($deleted_embed_warning);
-    $this->assertHasAttributes($deleted_embed_warning, [
-      'alt' => 'Missing media.',
-      'src' => file_url_transform_relative(file_create_url('core/modules/media/images/icons/no-thumbnail.png')),
-      'title' => 'Missing media.',
-    ]);
+    $this->assertCount(1, $this->cssSelect('div.this-error-message-is-themeable'));
+    if (in_array('filter_align', $filter_ids, TRUE) && !empty($additional_attributes['data-align'])) {
+      $this->assertCount(1, $this->cssSelect('div.align-' . $additional_attributes['data-align']));
+    }
+
   }
 
   /**
@@ -289,17 +307,57 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    */
   public function providerMissingEntityIndicator() {
     return [
-      'valid UUID but for a deleted entity' => [
-        static::EMBEDDED_ENTITY_UUID,
+      'invalid UUID' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => [],
       ],
-      'node; invalid UUID' => [
-        'invalidUUID',
+      'valid UUID but for a deleted entity' => [
+        'uuid' => static::EMBEDDED_ENTITY_UUID,
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => [],
+      ],
+      'invalid UUID; data-align attribute without filter_align enabled' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'right'],
+      ],
+      'invalid UUID; data-align attribute with filter_align enabled' => [
+        'uuid' => 'invalidUUID',
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'left'],
+      ],
+      'valid UUID but for a deleted entity; data-align attribute with filter_align enabled' => [
+        'uuid' => static::EMBEDDED_ENTITY_UUID,
+        'filter_ids' => [
+          'filter_align',
+          'filter_caption',
+          'media_embed',
+        ],
+        'additional_attributes' => ['data-align' => 'center'],
       ],
     ];
   }
 
   /**
    * Tests that only <drupal-media> tags are processed.
+   *
+   * @see \Drupal\Tests\media\FunctionalJavascript\CKEditorIntegrationTest::testOnlyDrupalMediaTagProcessed()
    */
   public function testOnlyDrupalMediaTagProcessed() {
     $content = $this->createEmbedCode([
@@ -325,7 +383,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     // Render and verify the presence of the embedded entity 20 times.
     for ($i = 0; $i < 20; $i++) {
       $this->applyFilter($text);
-      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+      $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
     // Render a 21st time, this is exceeding the recursion limit. The entity
@@ -339,7 +397,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
    * @covers \Drupal\filter\Plugin\Filter\FilterCaption
    * @dataProvider providerFilterIntegration
    */
-  public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries, $prefix = '', $suffix = '') {
+  public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], $prefix = '', $suffix = '') {
     $content = $this->createEmbedCode([
       'data-entity-type' => 'media',
       'data-entity-uuid' => static::EMBEDDED_ENTITY_UUID,
@@ -349,7 +407,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     $result = $this->processText($content, 'en', $filter_ids);
     $this->setRawContent($result->getProcessedText());
     $this->assertCount($expected_verification_success ? 1 : 0, $this->cssSelect($verification_selector));
-    $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="full"]'));
+    $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     $this->assertSame([
       '_media_test_filter_access:media:1',
       '_media_test_filter_access:user:2',

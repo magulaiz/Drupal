@@ -17,7 +17,12 @@ class FilterDefaultFormatTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter'];
+  protected static $modules = ['filter'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests if the default text format is accessible to users.
@@ -39,7 +44,10 @@ class FilterDefaultFormatTest extends BrowserTestBase {
     }
     list($first_format, $second_format) = $formats;
     $second_format_permission = $second_format->getPermissionName();
-    $first_user = $this->drupalCreateUser([$first_format->getPermissionName(), $second_format_permission]);
+    $first_user = $this->drupalCreateUser([
+      $first_format->getPermissionName(),
+      $second_format_permission,
+    ]);
     $second_user = $this->drupalCreateUser([$second_format_permission]);
 
     // Adjust the weights so that the first and second formats (in that order)

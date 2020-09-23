@@ -16,12 +16,18 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'text', 'language', 'content_translation', 'menu_ui'];
+  protected static $modules = [
+    'node',
+    'text',
+    'language',
+    'content_translation',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->migrateContentTypes();
@@ -53,7 +59,7 @@ class MigrateLanguageContentSettingsTest extends MigrateDrupal7TestBase {
     $this->assertSame($config->getDefaultLangcode(), 'site_default');
 
     // Make sure there's no migration exceptions.
-    $messages = $this->migration->getIdMap()->getMessageIterator()->fetchAll();
+    $messages = $this->migration->getIdMap()->getMessages()->fetchAll();
     $this->assertEmpty($messages);
 
     // Assert that a content type translatable with entity_translation is still

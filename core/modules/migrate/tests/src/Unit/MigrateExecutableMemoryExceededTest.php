@@ -12,14 +12,14 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * The mocked migration entity.
    *
-   * @var \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\migrate\Plugin\MigrationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $migration;
 
   /**
    * The mocked migrate message.
    *
-   * @var \Drupal\migrate\MigrateMessageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\migrate\MigrateMessageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $message;
 
@@ -49,7 +49,7 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->migration = $this->getMigration();
     $this->message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
@@ -80,10 +80,14 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
     if ($message) {
       $this->executable->message->expects($this->at(0))
         ->method('display')
-        ->with($this->stringContains('reclaiming memory'));
+        ->with($this->callback(function ($subject) {
+            return mb_stripos((string) $subject, 'reclaiming memory') !== FALSE;
+        }));
       $this->executable->message->expects($this->at(1))
         ->method('display')
-        ->with($this->stringContains($message));
+        ->with($this->callback(function ($subject) use ($message) {
+            return mb_stripos((string) $subject, $message) !== FALSE;
+        }));
     }
     else {
       $this->executable->message->expects($this->never())

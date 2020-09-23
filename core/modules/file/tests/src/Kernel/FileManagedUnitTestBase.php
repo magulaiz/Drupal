@@ -19,7 +19,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test', 'file', 'system', 'field', 'user'];
+  protected static $modules = ['file_test', 'file', 'system', 'field', 'user'];
 
   protected function setUp() {
     parent::setUp();
@@ -156,6 +156,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    * @param string $scheme
    *   Optional string indicating the stream scheme to use. Drupal core includes
    *   public, private, and temporary. The public wrapper is the default.
+   *
    * @return \Drupal\file\FileInterface
    *   File entity.
    */
@@ -195,6 +196,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     if (!isset($filepath)) {
       // Prefix with non-latin characters to ensure that all file-related
       // tests work with international filenames.
+      // cSpell:disable-next-line
       $filepath = 'Файл для тестирования ' . $this->randomMachineName();
     }
     if (!isset($scheme)) {
@@ -207,7 +209,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     }
 
     file_put_contents($filepath, $contents);
-    $this->assertTrue(is_file($filepath), t('The test file exists on the disk.'), 'Create test file');
+    $this->assertFileExists($filepath);
     return $filepath;
   }
 

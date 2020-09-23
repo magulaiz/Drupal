@@ -33,42 +33,42 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * The entity under test.
    *
-   * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
   /**
    * An entity with no defined language to test.
    *
-   * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\ContentEntityBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityUnd;
 
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity field manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
 
   /**
    * The entity type bundle manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeBundleInfo;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -82,28 +82,28 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * The typed data manager used for testing.
    *
-   * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\TypedData\TypedDataManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedDataManager;
 
   /**
    * The field type manager used for testing.
    *
-   * @var \Drupal\Core\Field\FieldTypePluginManager|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Field\FieldTypePluginManager|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $fieldTypePluginManager;
 
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuid;
 
@@ -124,7 +124,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->id = 1;
     $values = [
       'id' => $this->id,
@@ -354,7 +354,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testValidate() {
     $validator = $this->createMock(ValidatorInterface::class);
-    /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
+    /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit\Framework\MockObject\MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
       ->getMock();
@@ -372,8 +372,8 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->typedDataManager->expects($this->exactly(2))
       ->method('getValidator')
       ->will($this->returnValue($validator));
-    $this->assertSame(0, count($this->entity->validate()));
-    $this->assertSame(1, count($this->entity->validate()));
+    $this->assertCount(0, $this->entity->validate());
+    $this->assertCount(1, $this->entity->validate());
   }
 
   /**
@@ -387,7 +387,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testRequiredValidation() {
     $validator = $this->createMock(ValidatorInterface::class);
-    /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit_Framework_MockObject_MockObject $empty_violation_list */
+    /** @var \Symfony\Component\Validator\ConstraintViolationList|\PHPUnit\Framework\MockObject\MockObject $empty_violation_list */
     $empty_violation_list = $this->getMockBuilder('\Symfony\Component\Validator\ConstraintViolationList')
       ->setMethods(NULL)
       ->getMock();
@@ -399,7 +399,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
       ->method('getValidator')
       ->will($this->returnValue($validator));
 
-    /** @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject $storage */
+    /** @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject $storage */
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->any())
       ->method('save')
@@ -467,27 +467,6 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $this->assertEquals(AccessResult::allowed(), $this->entity->access($operation, NULL, TRUE));
     $this->assertTrue($this->entity->access('create'));
     $this->assertEquals(AccessResult::allowed(), $this->entity->access('create', NULL, TRUE));
-  }
-
-  /**
-   * @covers ::label
-   *
-   * @group legacy
-   */
-  public function testLabel() {
-    // Make a mock with one method that we use as the entity's label callback.
-    // We check that it is called, and that the entity's label is the callback's
-    // return value.
-    $callback_label = $this->randomMachineName();
-    $callback_container = $this->createMock(get_class());
-    $callback_container->expects($this->once())
-      ->method(__FUNCTION__)
-      ->will($this->returnValue($callback_label));
-    $this->entityType->expects($this->once())
-      ->method('getLabelCallback')
-      ->will($this->returnValue([$callback_container, __FUNCTION__]));
-
-    $this->assertSame($callback_label, $this->entity->label());
   }
 
   /**

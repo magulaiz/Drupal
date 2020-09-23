@@ -2,7 +2,6 @@
 
 namespace Drupal\FunctionalJavascriptTests\Ajax;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -19,12 +18,17 @@ class MultiFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'form_test'];
+  protected static $modules = ['node', 'form_test'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Page']);
@@ -77,13 +81,13 @@ class MultiFormTest extends WebDriverTestBase {
     $session = $this->getSession();
     $page = $session->getPage();
     $fields = $page->findAll('xpath', $form_xpath . $field_xpath);
-    $this->assertEqual(count($fields), 2);
+    $this->assertCount(2, $fields);
     foreach ($fields as $field) {
       $this->assertCount(1, $field->findAll('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items on the initial page.');
       $this->assertFieldsByValue($field->find('xpath', '.' . $button_xpath_suffix), NULL, 'Found the "add more" button on the initial page.');
     }
 
-    $this->assertNoDuplicateIds();
+    $this->assertSession()->pageContainsNoDuplicateId();
 
     // Submit the "add more" button of each form twice. After each corresponding
     // page update, ensure the same as above.
@@ -101,39 +105,11 @@ class MultiFormTest extends WebDriverTestBase {
         // After AJAX request and response page will update.
         $page_updated = $session->getPage();
         $field = $page_updated->findAll('xpath', '.' . $field_xpath);
-        $this->assertEqual(count($field[0]->find('xpath', '.' . $field_items_xpath_suffix)), $i + 2, 'Found the correct number of field items after an AJAX submission.');
+        $this->assertCount($i + 2, $field[0]->find('xpath', '.' . $field_items_xpath_suffix), 'Found the correct number of field items after an AJAX submission.');
         $this->assertFieldsByValue($field[0]->find('xpath', '.' . $button_xpath_suffix), NULL, 'Found the "add more" button after an AJAX submission.');
-        $this->assertNoDuplicateIds();
+        $this->assertSession()->pageContainsNoDuplicateId();
       }
     }
-  }
-
-  /**
-   * Asserts that each HTML ID is used for just a single element on the page.
-   *
-   * @param string $message
-   *   (optional) A message to display with the assertion.
-   */
-  protected function assertNoDuplicateIds($message = '') {
-    $args = ['@url' => $this->getUrl()];
-
-    if (!$elements = $this->xpath('//*[@id]')) {
-      $this->fail(new FormattableMarkup('The page @url contains no HTML IDs.', $args));
-      return;
-    }
-
-    $message = $message ?: new FormattableMarkup('The page @url does not contain duplicate HTML IDs', $args);
-
-    $seen_ids = [];
-    foreach ($elements as $element) {
-      $id = $element->getAttribute('id');
-      if (isset($seen_ids[$id])) {
-        $this->fail($message);
-        return;
-      }
-      $seen_ids[$id] = TRUE;
-    }
-    $this->assertTrue(TRUE, $message);
   }
 
 }

@@ -17,12 +17,12 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['image'];
+  protected static $modules = ['image'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(static::$modules);
     $this->executeMigration('d7_image_styles');
@@ -51,18 +51,18 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
    */
   protected function assertEntity($id, $label, array $expected_effect_plugins, array $expected_effect_config) {
     $style = ImageStyle::load($id);
-    $this->assertTrue($style instanceof ImageStyleInterface);
+    $this->assertInstanceOf(ImageStyleInterface::class, $style);
     /** @var \Drupal\image\ImageStyleInterface $style */
     $this->assertIdentical($id, $style->id());
     $this->assertIdentical($label, $style->label());
 
     // Check the number of effects associated with the style.
     $effects = $style->getEffects();
-    $this->assertIdentical(count($effects), count($expected_effect_plugins));
+    $this->assertSame(count($expected_effect_plugins), count($effects));
 
     $index = 0;
     foreach ($effects as $effect) {
-      $this->assertTrue($effect instanceof ImageEffectBase);
+      $this->assertInstanceOf(ImageEffectBase::class, $effect);
       $this->assertIdentical($expected_effect_plugins[$index], $effect->getPluginId());
       $config = $effect->getConfiguration();
       $this->assertIdentical($expected_effect_config[$index], $config['data']);

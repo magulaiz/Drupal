@@ -38,11 +38,11 @@ class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
   /**
    * The current route match.
    *
-   * @var \Drupal\Core\Routing\RouteMatch|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteMatch|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeMatch;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->routeMatch = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
     $this->policy = new DenyPrivateImageStyleDownload($this->routeMatch);
     $this->response = new Response();

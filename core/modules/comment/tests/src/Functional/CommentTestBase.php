@@ -24,7 +24,14 @@ abstract class CommentTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'comment', 'node', 'history', 'field_ui', 'datetime'];
+  protected static $modules = [
+    'block',
+    'comment',
+    'node',
+    'history',
+    'field_ui',
+    'datetime',
+  ];
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -242,8 +249,6 @@ abstract class CommentTestBase extends BrowserTestBase {
       $form_display->removeComponent('subject');
     }
     $form_display->save();
-    // Display status message.
-    $this->pass('Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -329,8 +334,6 @@ abstract class CommentTestBase extends BrowserTestBase {
     $field = FieldConfig::loadByName('node', 'article', $field_name);
     $field->setSetting($name, $value);
     $field->save();
-    // Display status message.
-    $this->pass($message);
   }
 
   /**
@@ -340,7 +343,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Contact info is available.
    */
   public function commentContactInfoAvailable() {
-    return preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
+    return (bool) preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 
   /**
@@ -361,7 +364,7 @@ abstract class CommentTestBase extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->drupalPostForm(NULL, [], t('Delete'));
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));
+      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
       $this->assertText(t('The update has been performed.'), new FormattableMarkup('Operation "@operation" was performed on comment.', ['@operation' => $operation]));

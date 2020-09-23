@@ -26,7 +26,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $moduleHandler;
 
@@ -46,7 +46,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $container = new ContainerBuilder();
     $config_factory = $this->getConfigFactoryStub([]);
     $container->set('config.factory', $config_factory);
-    $container->set('app.root', $this->root);
+    $container->setParameter('app.root', $this->root);
     \Drupal::setContainer($container);
     $this->container = $container;
   }

@@ -177,7 +177,7 @@ trait UserCreationTrait {
     }
     $edit += [
       'mail' => $edit['name'] . '@example.com',
-      'pass' => user_password(),
+      'pass' => \Drupal::service('password_generator')->generate(),
       'status' => 1,
     ];
     if ($rid) {
@@ -283,12 +283,7 @@ trait UserCreationTrait {
         $this->grantPermissions($role, $permissions);
         $assigned_permissions = Role::load($role->id())->getPermissions();
         $missing_permissions = array_diff($permissions, $assigned_permissions);
-        if (!$missing_permissions) {
-          $this->pass(new FormattableMarkup('Created permissions: @perms', ['@perms' => implode(', ', $permissions)]), 'Role');
-        }
-        else {
-          $this->fail(new FormattableMarkup('Failed to create permissions: @perms', ['@perms' => implode(', ', $missing_permissions)]), 'Role');
-        }
+        $this->assertEmpty($missing_permissions);
       }
       return $role->id();
     }
@@ -322,7 +317,7 @@ trait UserCreationTrait {
    * Grant permissions to a user role.
    *
    * @param \Drupal\user\RoleInterface $role
-   *   The ID of a user role to alter.
+   *   The user role entity to alter.
    * @param array $permissions
    *   (optional) A list of permission names to grant.
    */

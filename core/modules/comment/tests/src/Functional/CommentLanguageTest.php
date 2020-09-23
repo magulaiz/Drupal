@@ -27,15 +27,35 @@ class CommentLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'language', 'language_test', 'comment_test'];
+  protected static $modules = [
+    'node',
+    'language',
+    'language_test',
+    'comment_test',
+  ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create and log in user.
-    $admin_user = $this->drupalCreateUser(['administer site configuration', 'administer languages', 'access administration pages', 'administer content types', 'administer comments', 'create article content', 'access comments', 'post comments', 'skip comment approval']);
+    $admin_user = $this->drupalCreateUser([
+      'administer site configuration',
+      'administer languages',
+      'access administration pages',
+      'administer content types',
+      'administer comments',
+      'create article content',
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Add language.
@@ -98,7 +118,7 @@ class CommentLanguageTest extends BrowserTestBase {
       $this->drupalPostForm("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
 
-      $prefixes = language_negotiation_url_prefixes();
+      $prefixes = $this->config('language.negotiation')->get('url.prefixes');
       foreach ($this->container->get('language_manager')->getLanguages() as $langcode => $language) {
         // Post a comment with content language $langcode.
         $prefix = empty($prefixes[$langcode]) ? '' : $prefixes[$langcode] . '/';

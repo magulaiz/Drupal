@@ -67,13 +67,6 @@ trait TestSetupTrait {
   protected $privateFilesDirectory;
 
   /**
-   * The original installation profile.
-   *
-   * @var string
-   */
-  protected $originalProfile;
-
-  /**
    * Set to TRUE to strict check all configuration saved.
    *
    * @see \Drupal\Core\Config\Testing\ConfigSchemaChecker
@@ -190,7 +183,7 @@ trait TestSetupTrait {
    *   An array of config object names that are excluded from schema checking.
    */
   protected function getConfigSchemaExclusions() {
-    $class = get_class($this);
+    $class = static::class;
     $exceptions = [];
     while ($class) {
       if (property_exists($class, 'configSchemaCheckerExclusions')) {

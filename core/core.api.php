@@ -76,8 +76,8 @@
  * Integrating third-party applications using REST and related operations.
  *
  * @section sec_overview Overview of web services
- * Web services make it possible for applications and web sites to read and
- * update information from other web sites. There are several standard
+ * Web services make it possible for applications and websites to read and
+ * update information from other websites. There are several standard
  * techniques for providing web services, including:
  * - SOAP: http://wikipedia.org/wiki/SOAP
  * - XML-RPC: http://wikipedia.org/wiki/XML-RPC
@@ -152,7 +152,7 @@
  * @ref sec_rest above.
  *
  * @section sec_integrate Integrating data from other sites into Drupal
- * If you want to integrate data from other web sites into Drupal, here are
+ * If you want to integrate data from other websites into Drupal, here are
  * some notes:
  * - There are contributed modules available for integrating many third-party
  *   sites into Drupal. Search on https://www.drupal.org/project/project_module
@@ -477,7 +477,7 @@
  *   class: Drupal\Core\Cache\CacheBackendInterface
  *   tags:
  *     - { name: cache.bin }
- *   factory: cache_factory:get
+ *   factory: ['@cache_factory', 'get']
  *   arguments: [nameofbin]
  * @endcode
  * See the @link container Services topic @endlink for more on defining
@@ -761,9 +761,9 @@
  *
  * A typical service definition in a *.services.yml file looks like this:
  * @code
- * path.alias_manager:
- *   class: Drupal\Core\Path\AliasManager
- *   arguments: ['@path.crud', '@path.alias_whitelist', '@language_manager']
+ * path_alias.manager:
+ *   class: Drupal\path_alias\AliasManager
+ *   arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager']
  * @endcode
  * Some services use other services as factories; a typical service definition
  * is:
@@ -772,7 +772,7 @@
  *     class: Drupal\Core\Cache\CacheBackendInterface
  *     tags:
  *       - { name: cache.bin }
- *     factory: cache_factory:get
+ *     factory: ['@cache_factory', 'get']
  *     arguments: [entity]
  * @endcode
  *
@@ -818,8 +818,8 @@
  *   special methods for accessing commonly-used services, or you can call a
  *   generic method to access any service. Examples:
  *   @code
- *   // Retrieve the entity.manager service object (special method exists).
- *   $manager = \Drupal::entityManager();
+ *   // Retrieve the entity_type.manager service object (special method exists).
+ *   $entity_type_manager = \Drupal::entityTypeManager();
  *   // Retrieve the service object for machine name 'foo.bar'.
  *   $foobar = \Drupal::service('foo.bar');
  *   @endcode
@@ -1118,6 +1118,17 @@
  *   - Namespace: \Drupal\Tests\yourmodule\FunctionalJavascript (or a
  *     subdirectory)
  *   - Directory location: yourmodule/tests/src/FunctionalJavascript (or a
+ *     subdirectory)
+ * - Build tests:
+ *   - Purpose: Test building processes and their outcomes, such as whether a
+ *     live update process actually works, or whether a Composer project
+ *     template actually builds a working site. Provides a temporary build
+ *     workspace and a PHP-native HTTP server to send requests to the site
+ *     you've built.
+ *   - Base class: \Drupal\BuildTests\Framework\BuildTestBase
+ *   - Namespace: \Drupal\Tests\yourmodule\Build (or a
+ *     subdirectory)
+ *   - Directory location: yourmodule/tests/src/Build (or a
  *     subdirectory)
  *
  * Some notes about writing PHP test classes:
@@ -1595,10 +1606,10 @@
  *   files, by defining functions whose name starts with "hook_" (these
  *   files and their functions are never loaded by Drupal -- they exist solely
  *   for documentation). The function should have a documentation header, as
- *   well as a sample function body. For example, in the core file
- *   system.api.php, you can find hooks such as hook_batch_alter(). Also, if
- *   you are viewing this documentation on an API reference site, the Core
- *   hooks will be listed in this topic.
+ *   well as a sample function body. For example, in the core file form.api.php,
+ *   you can find hooks such as hook_batch_alter(). Also, if you are viewing
+ *   this documentation on an API reference site, the Core hooks will be listed
+ *   in this topic.
  * - Copy the function to your module's .module file.
  * - Change the name of the function, substituting your module's short name
  *   (name of the module's directory, and .info.yml file without the extension)
@@ -2498,7 +2509,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * you should normally define as a constant in a separate static class (see
  * \Symfony\Component\HttpKernel\KernelEvents and
  * \Drupal\Core\Config\ConfigEvents for examples). The second argument is a
- * \Symfony\Component\EventDispatcher\Event object; normally you will need to
+ * \Drupal\Component\EventDispatcher\Event object; normally you will need to
  * extend this class, so that your event class can provide data to the event
  * subscribers.
  *
@@ -2594,5 +2605,29 @@ function hook_validation_constraint_alter(array &$definitions) {
  * within contributed and custom code. Reserved attributes include:
  * - uid: The user ID for an authenticated user. The value of this attribute
  *   cannot be modified.
+ *
+ * @section sec_custom_session_bags Custom session bags
+ * Modules can register custom session bags in order to provide type safe
+ * interfaces on module specific session data. A session bag must implement
+ * \Symfony\Component\HttpFoundation\Session\SessionBagInterface. Custom session
+ * bags are registered using a service entry tagged with the session_bag service
+ * tag. Custom session bags can be accessed through the session retrieved from
+ * the request object.
+ *
+ * Example service definition:
+ * @code
+ * session_test.session_bag:
+ *   class: Drupal\session_test\Session\TestSessionBag
+ *   tags:
+ *     - { name: session_bag }
+ * @endcode
+ *
+ * Example of accessing a custom session bag:
+ * @code
+ * $bag = $request->getSession()->getBag(TestSessionBag::BAG_NAME);
+ * $bag->setFlag();
+ * @endcode
+ * Session data must be deleted from custom session bags as soon as it is no
+ * longer needed (see @ref sec_intro above).
  * @}
  */

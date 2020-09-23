@@ -20,6 +20,8 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
 
   /**
    * For offset tests, set a date 1 day in the future.
+   *
+   * @var int
    */
   protected static $date;
 
@@ -33,7 +35,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     static::$date = REQUEST_TIME + 86400;

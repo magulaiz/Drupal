@@ -17,6 +17,11 @@ use Drupal\user\RoleInterface;
 class BlockTest extends BlockTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests block visibility.
    */
   public function testBlockVisibility() {
@@ -37,13 +42,13 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[request_path][negate]'] = TRUE;
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
-    $this->assertFieldChecked('edit-visibility-request-path-negate-0');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->drupalPostForm(NULL, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->clickLink('Configure');
-    $this->assertFieldChecked('edit-visibility-request-path-negate-1');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
 
     $this->drupalGet('');
     $this->assertText($title, 'Block was displayed on the front page.');
@@ -58,7 +63,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that an empty block is not displayed.
     $this->assertNoText('Powered by Drupal', 'Empty block not displayed.');
-    $this->assertNoRaw('sidebar-first', 'Empty sidebar-first region is not displayed.');
+    $this->assertNoRaw('sidebar-first');
   }
 
   /**
@@ -80,14 +85,14 @@ class BlockTest extends BlockTestBase {
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->clickLink('Configure');
-    $this->assertFieldChecked('edit-visibility-user-role-roles-authenticated');
+    $this->assertSession()->checkboxChecked('edit-visibility-user-role-roles-authenticated');
 
     $edit = [
       'visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']' => FALSE,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save block');
     $this->clickLink('Configure');
-    $this->assertNoFieldChecked('edit-visibility-user-role-roles-authenticated');
+    $this->assertSession()->checkboxNotChecked('edit-visibility-user-role-roles-authenticated');
 
     // Ensure that no visibility is configured.
     /** @var \Drupal\block\BlockInterface $block */
@@ -150,7 +155,7 @@ class BlockTest extends BlockTestBase {
         'theme' => $default_theme,
       ]);
       $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
-      $this->assertEqual(1, count($links), 'Found one matching link.');
+      $this->assertCount(1, $links, 'Found one matching link.');
       $this->assertEqual(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
       list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
@@ -218,7 +223,7 @@ class BlockTest extends BlockTestBase {
     $this->assertNoText(t($block['settings[label]']));
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
-    $xpath = $this->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
     $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
 
     // Test deleting the block from the edit form.
@@ -235,7 +240,7 @@ class BlockTest extends BlockTestBase {
     $this->assertRaw(t('Are you sure you want to remove the block @name?', ['@name' => $block->label()]));
     $this->drupalPostForm(NULL, [], t('Remove'));
     $this->assertRaw(t('The block %name has been removed.', ['%name' => $block->label()]));
-    $this->assertUrl('admin');
+    $this->assertSession()->addressEquals('admin');
     $this->assertNoRaw($block->id());
   }
 
@@ -248,7 +253,7 @@ class BlockTest extends BlockTestBase {
     $theme_settings = $this->config('system.theme');
     foreach (['bartik', 'seven', 'stark'] as $theme) {
       $this->drupalGet('admin/structure/block/list/' . $theme);
-      $this->assertTitle(t('Block layout') . ' | Drupal');
+      $this->assertSession()->titleEquals('Block layout | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = [];
       $block['id'] = strtolower($this->randomMachineName());
@@ -256,7 +261,7 @@ class BlockTest extends BlockTestBase {
       $block['region'] = 'content';
       $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
       $this->assertText(t('The block configuration has been saved.'));
-      $this->assertUrl('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
+      $this->assertSession()->addressEquals('admin/structure/block/list/' . $theme . '?block-placement=' . Html::getClass($block['id']));
 
       // Set the default theme and ensure the block is placed.
       $theme_settings->set('default', $theme)->save();
@@ -276,11 +281,10 @@ class BlockTest extends BlockTestBase {
     // Explicitly set the default and admin themes.
     $theme = 'block_test_specialchars_theme';
     \Drupal::service('theme_installer')->install([$theme]);
-    \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('admin/structure/block');
-    $this->assertEscaped('<"Cat" & \'Mouse\'>');
+    $this->assertSession()->assertEscaped('<"Cat" & \'Mouse\'>');
     $this->drupalGet('admin/structure/block/list/block_test_specialchars_theme');
-    $this->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
+    $this->assertSession()->assertEscaped('Demonstrate block regions (<"Cat" & \'Mouse\'>)');
   }
 
   /**
@@ -311,7 +315,7 @@ class BlockTest extends BlockTestBase {
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('admin/structure/block/manage/' . $id);
-    $this->assertFieldChecked('edit-settings-label-display', 'The display_block option has the correct default value on the configuration form.');
+    $this->assertSession()->checkboxChecked('edit-settings-label-display');
 
     $this->drupalGet('user');
     $this->assertText($title, 'Block title was displayed when enabled.');
@@ -344,7 +348,7 @@ class BlockTest extends BlockTestBase {
     $this->assertText(t($block['settings[label]']), 'Block successfully being displayed on the page.');
 
     // Confirm that the custom block was found at the proper region.
-    $xpath = $this->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
+    $xpath = $this->assertSession()->buildXPathQuery('//div[@class=:region-class]//div[@id=:block-id]/*', [
       ':region-class' => 'region region-' . Html::getClass($region),
       ':block-id' => 'block-' . str_replace('_', '-', strtolower($block['id'])),
     ]);
@@ -372,12 +376,12 @@ class BlockTest extends BlockTestBase {
 
     // Prime the page cache.
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags in
     // both the page and block caches.
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $cid_parts = [Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
@@ -405,20 +409,20 @@ class BlockTest extends BlockTestBase {
     $block->setRegion('content');
     $block->save();
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     // Place the "Powered by Drupal" block another time; verify a cache miss.
-    $block_2 = $this->drupalPlaceBlock('system_powered_by_block', ['id' => 'powered-2']);
+    $this->drupalPlaceBlock('system_powered_by_block', ['id' => 'powered-2']);
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
 
     // Verify a cache hit, but also the presence of the correct cache tags.
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $cid_parts = [Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), ''];
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
@@ -454,14 +458,14 @@ class BlockTest extends BlockTestBase {
 
     // Now we should have a cache hit again.
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
 
     // Delete the "Powered by Drupal" blocks; verify a cache miss.
     $block_storage = \Drupal::entityTypeManager()->getStorage('block');
     $block_storage->load('powered')->delete();
     $block_storage->load('powered-2')->delete();
     $this->drupalGet('<front>');
-    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
   }
 
   /**
@@ -477,7 +481,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalLogin($theme_admin);
     $this->drupalGet('admin/appearance');
     $this->assertText('You can place blocks for each theme on the block layout page');
-    $this->assertLinkByHref('admin/structure/block');
+    $this->assertSession()->linkByHrefExists('admin/structure/block');
   }
 
   /**

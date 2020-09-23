@@ -21,14 +21,14 @@ class LibraryDiscoveryTest extends UnitTestCase {
   /**
    * The mocked library discovery cache collector.
    *
-   * @var \Drupal\Core\Cache\CacheCollectorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheCollectorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $libraryDiscoveryCollector;
 
   /**
    * The cache tags invalidator.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheTagsInvalidator;
 
@@ -62,7 +62,7 @@ class LibraryDiscoveryTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->cacheTagsInvalidator = $this->createMock('Drupal\Core\Cache\CacheTagsInvalidatorInterface');

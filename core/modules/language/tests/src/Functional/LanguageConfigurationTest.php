@@ -20,7 +20,12 @@ class LanguageConfigurationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Functional tests for adding, editing and deleting languages.
@@ -31,7 +36,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
     $this->assertEqual(ConfigurableLanguage::load('en')->getWeight(), 0, 'The English language has a weight of 0.');
 
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Check if the Default English language has no path prefix.
@@ -48,7 +56,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Add language');
     $this->assertText('French');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE])->toString(), [], 'Correct page redirection.');
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     // Langcode for Languages is always 'en'.
     $language = $this->config('language.entity.fr')->get();
     $this->assertEqual($language['langcode'], 'en');
@@ -62,7 +70,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
 
     // Check if we can change the default language.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertFieldChecked('edit-site-default-language-en', 'English is the default language.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-en');
 
     // Change the default language.
     $edit = [
@@ -70,8 +78,8 @@ class LanguageConfigurationTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->rebuildContainer();
-    $this->assertFieldChecked('edit-site-default-language-fr', 'Default language updated.');
-    $this->assertUrl(Url::fromRoute('entity.configurable_language.collection', [], ['absolute' => TRUE, 'langcode' => 'fr'])->toString(), [], 'Correct page redirection.');
+    $this->assertSession()->checkboxChecked('edit-site-default-language-fr');
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection', [], ['langcode' => 'fr']));
 
     // Check if a valid language prefix is added after changing the default
     // language.
@@ -93,7 +101,7 @@ class LanguageConfigurationTest extends BrowserTestBase {
       'prefix[fr]' => '',
     ];
     $this->drupalPostForm(NULL, $edit, t('Save configuration'));
-    $this->assertNoText(t('The prefix may only be left blank for the selected detection fallback language.'), 'The path prefix can be removed for the default language');
+    $this->assertNoText('The prefix may only be left blank for the selected detection fallback language.', 'The path prefix can be removed for the default language');
 
     // Change default negotiation language.
     $this->config('language.negotiation')->set('selected_langcode', 'fr')->save();
@@ -152,7 +160,10 @@ class LanguageConfigurationTest extends BrowserTestBase {
    */
   public function testLanguageConfigurationWeight() {
     // User to add and remove language.
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      ]);
     $this->drupalLogin($admin_user);
     $this->checkConfigurableLanguageWeight();
 

@@ -6,6 +6,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\Discovery\YamlDiscoveryDecorator;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
 
 /**
  * Provides the default help_topic manager.
@@ -15,18 +17,39 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * help_topics. The provider is validated to be the extension that provides the
  * help topic.
  *
- * The Twig file must contain a meta tag named 'help_topic:label'. It can also
- * contain meta tags named 'help_topic:top_level' and 'help_topic:related'. For
- * example:
+ * The Twig file must contain YAML front matter with a key named 'label'. It can
+ * also contain keys named 'top_level' and 'related'. For example:
  * @code
- * <!–– The label/title of the topic. -->
- * <meta name="help_topic:label" content="Configuring error responses, including 403/404 pages"/>
+ * ---
+ * label: 'Configuring error responses, including 403/404 pages'
  *
- * <!–– Related help topics in a comma separated help topic ID list. -->
- * <meta name="help_topic:related" content="core.config_basic,core.maintenance"/>
+ * # Related help topics in an array.
+ * related:
+ *   - core.config_basic
+ *   - core.maintenance
  *
- * <!–– If present then the help topic will appear on admin/help. -->
- * <meta name="help_topic:top_level"/>
+ * # If the value is true then the help topic will appear on admin/help.
+ * top_level: true
+ * ---
+ * @endcode
+ *
+ * In addition, modules wishing to add plugins can define them in a
+ * module_name.help_topics.yml file, with the plugin ID as the heading for
+ * each entry, and these properties:
+ * - id: The plugin ID.
+ * - class: The name of your plugin class, implementing
+ *   \Drupal\help_topics\HelpTopicPluginInterface.
+ * - top_level: TRUE if the topic is top-level.
+ * - related: Array of IDs of topics this one is related to.
+ * - Additional properties that your plugin class needs, such as 'label'.
+ *
+ * You can also provide an entry that designates a plugin deriver class in your
+ * help_topics.yml file, with a heading giving a prefix ID for your group of
+ * derived plugins, and a 'deriver' property giving the name of a class
+ * implementing \Drupal\Component\Plugin\Derivative\DeriverInterface. Example:
+ * @code
+ * mymodule_prefix:
+ *   deriver: 'Drupal\mymodule\Plugin\Deriver\HelpTopicDeriver'
  * @endcode
  *
  * @see \Drupal\help_topics\HelpTopicDiscovery
@@ -35,9 +58,11 @@ use Drupal\Core\Plugin\DefaultPluginManager;
  * @see \Drupal\help_topics\HelpTopicPluginInterface
  * @see \Drupal\help_topics\HelpTopicPluginBase
  * @see hook_help_topics_info_alter()
+ * @see plugin_api
+ * @see \Drupal\Component\Plugin\Derivative\DeriverInterface
  *
  * @internal
- *   Help Topic is currently experimental and should only be leveraged by
+ *   Help Topics is currently experimental and should only be leveraged by
  *   experimental modules and development releases of contributed modules.
  *   See https://www.drupal.org/core/experimental for more information.
  */
@@ -69,6 +94,13 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
   protected $themeHandler;
 
   /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * Constructs a new HelpTopicManager object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -77,8 +109,10 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    *   The theme handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
+   * @param string $root
+   *   The app root.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend) {
+  public function __construct(ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, CacheBackendInterface $cache_backend, $root) {
     // Note that the parent construct is not called because this not use
     // annotated class discovery.
     $this->moduleHandler = $module_handler;
@@ -87,6 +121,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
     // Use the 'config:core.extension' cache tag so the plugin cache is
     // invalidated on theme install and uninstall.
     $this->setCacheBackend($cache_backend, 'help_topics', ['config:core.extension']);
+    $this->root = (string) $root;
   }
 
   /**
@@ -94,19 +129,25 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
    */
   protected function getDiscovery() {
     if (!isset($this->discovery)) {
-      // We want to find help topic plugins in core, modules and themes in
-      // a sub-directory called help_topics.
-      $directories = array_merge(
-        ['core'],
-        $this->moduleHandler->getModuleDirectories(),
+      $module_directories = $this->moduleHandler->getModuleDirectories();
+      $all_directories = array_merge(
+        ['core' => $this->root . '/core'],
+        $module_directories,
         $this->themeHandler->getThemeDirectories()
       );
 
-      $directories = array_map(function ($dir) {
+      // Search for Twig help topics in subdirectory help_topics, under
+      // modules/profiles, themes, and the core directory.
+      $all_directories = array_map(function ($dir) {
         return [$dir . '/help_topics'];
-      }, $directories);
+      }, $all_directories);
+      $discovery = new HelpTopicDiscovery($all_directories);
 
-      $this->discovery = new HelpTopicDiscovery($directories);
+      // Also allow modules/profiles to extend help topic discovery to their
+      // own plugins and derivers, in mymodule.help_topics.yml files.
+      $discovery = new YamlDiscoveryDecorator($discovery, 'help_topics', $module_directories);
+      $discovery = new ContainerDerivativeDiscoveryDecorator($discovery);
+      $this->discovery = $discovery;
     }
     return $this->discovery;
   }

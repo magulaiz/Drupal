@@ -19,14 +19,19 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['media_test_oembed'];
+  protected static $modules = ['media_test_oembed'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   use OEmbedTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->lockHttpClientToFixtures();
   }
@@ -96,7 +101,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $display = \Drupal::service('entity_display.repository')->getViewDisplay('media', $media_type_id);
     $this->assertFalse($display->isNew());
     $component = $display->getComponent('field_media_oembed_video');
-    $this->assertInternalType('array', $component);
+    $this->assertIsArray($component);
     $component['settings']['max_width'] = 240;
     $display->setComponent('field_media_oembed_video', $component);
     $this->assertSame(SAVED_UPDATED, $display->save());
@@ -141,8 +146,10 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->assertSame('480', $session->evaluateScript("$inner_frame.getAttribute('width')"));
     $this->assertLessThanOrEqual(240, $session->evaluateScript("$inner_frame.clientWidth"));
 
-    // Make sure the thumbnail is displayed from uploaded image.
-    $assert_session->elementAttributeContains('css', '.image-style-thumbnail', 'src', '/oembed_thumbnails/' . basename($thumbnail));
+    // The oEmbed content iFrame should be visible.
+    $assert_session->elementExists('css', 'iframe.media-oembed-content');
+    // The thumbnail should not be displayed.
+    $assert_session->elementNotExists('css', '.image-style-thumbnail');
 
     // Load the media and check that all fields are properly populated.
     $media = Media::load(1);
@@ -163,13 +170,13 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     // Without a hash should be denied.
     $no_hash_query = array_diff_key($query, ['hash' => '']);
     $this->drupalGet('media/oembed', ['query' => $no_hash_query]);
-    $assert_session->pageTextNotContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
     $assert_session->pageTextContains('Access denied');
 
     // A correct query should be allowed because the anonymous role has the
     // 'view media' permission.
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
     $this->assertRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
     $this->assertNoRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
@@ -177,7 +184,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     \Drupal::service('theme_installer')->install(['stark']);
     $this->config('system.theme')->set('default', 'stark')->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextContains('By the power of Grayskull, Vimeo works!');
     $this->assertNoRaw('core/themes/stable/templates/content/media-oembed-iframe.html.twig');
     $this->assertRaw('core/modules/media/templates/media-oembed-iframe.html.twig');
 
@@ -186,7 +193,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $role->revokePermission('view media');
     $role->save();
     $this->drupalGet('media/oembed', ['query' => $query]);
-    $assert_session->pageTextNotContains('By the power of Greyskull, Vimeo works!');
+    $assert_session->pageTextNotContains('By the power of Grayskull, Vimeo works!');
     $assert_session->pageTextContains('Access denied');
   }
 

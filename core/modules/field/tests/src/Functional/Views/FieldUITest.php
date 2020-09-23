@@ -26,7 +26,12 @@ class FieldUITest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui'];
+  protected static $modules = ['views_ui'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with the 'administer views' permission.
@@ -38,7 +43,7 @@ class FieldUITest extends FieldTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->account = $this->drupalCreateUser(['administer views']);
@@ -67,7 +72,7 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm(NULL, ['options[type]' => 'text_trimmed'], t('Apply'));
 
     $this->drupalGet($url);
-    $this->assertOptionSelected('edit-options-type', 'text_trimmed');
+    $this->assertTrue($this->assertSession()->optionExists('edit-options-type', 'text_trimmed')->isSelected());
 
     $random_number = rand(100, 400);
     $this->drupalPostForm(NULL, ['options[settings][trim_length]' => $random_number], t('Apply'));
@@ -106,7 +111,7 @@ class FieldUITest extends FieldTestBase {
 
     $url = "admin/structure/views/nojs/handler/test_view_fieldapi/default/field/field_name_0";
     $this->drupalGet($url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Test the click sort column options.
     // Tests the available formatter options.
@@ -139,7 +144,7 @@ class FieldUITest extends FieldTestBase {
 
     $url = "admin/structure/views/nojs/add-handler/test_view_fieldapi/default/filter";
     $this->drupalPostForm($url, ['name[node__' . $field_name . '.' . $field_name . '_value]' => TRUE], t('Add and configure @handler', ['@handler' => t('filter criteria')]));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Verify that using a boolean field as a filter also results in using the
     // boolean plugin.
     $option = $this->xpath('//label[@for="edit-options-value-1"]');
@@ -155,7 +160,7 @@ class FieldUITest extends FieldTestBase {
     $this->drupalPostForm(NULL, ['options[value]' => 'All', 'options[expose][required]' => FALSE], 'Apply');
     $this->drupalPostForm(NULL, [], 'Save');
     $this->drupalGet('/admin/structure/views/nojs/handler/test_view_fieldapi/default/filter/field_boolean_value');
-    $this->assertFieldChecked('edit-options-value-all');
+    $this->assertSession()->checkboxChecked('edit-options-value-all');
   }
 
 }

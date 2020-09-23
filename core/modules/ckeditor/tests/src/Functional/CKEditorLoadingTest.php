@@ -18,7 +18,12 @@ class CKEditorLoadingTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'editor', 'ckeditor', 'node'];
+  protected static $modules = ['filter', 'editor', 'ckeditor', 'node'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * An untrusted user with access to only the 'plain_text' format.
@@ -34,7 +39,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
    */
   protected $normalUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create text format, associate CKEditor.
@@ -67,8 +72,16 @@ class CKEditorLoadingTest extends BrowserTestBase {
       'name' => 'Article',
     ]);
 
-    $this->untrustedUser = $this->drupalCreateUser(['create article content', 'edit any article content']);
-    $this->normalUser = $this->drupalCreateUser(['create article content', 'edit any article content', 'use text format filtered_html', 'use text format full_html']);
+    $this->untrustedUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+    ]);
+    $this->normalUser = $this->drupalCreateUser([
+      'create article content',
+      'edit any article content',
+      'use text format filtered_html',
+      'use text format full_html',
+    ]);
   }
 
   /**
@@ -83,15 +96,16 @@ class CKEditorLoadingTest extends BrowserTestBase {
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(0, $format_selector, 'No text format selector exists on the page.');
     $hidden_input = $this->xpath('//input[@type="hidden" and contains(@class, "editor")]');
-    $this->assertTrue(count($hidden_input) === 0, 'A single text format hidden input does not exist on the page.');
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js', 'CKEditor glue JS is absent.');
+    $this->assertCount(0, $hidden_input, 'A single text format hidden input does not exist on the page.');
+    // Verify that CKEditor glue JS is absent.
+    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
 
     // On pages where there would never be a text editor, CKEditor JS is absent.
     $this->drupalGet('user');
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js', 'CKEditor glue JS is absent.');
+    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
 
     // The normal user:
     // - has access to 2 text formats;
@@ -106,20 +120,20 @@ class CKEditorLoadingTest extends BrowserTestBase {
         'filtered_html' => [
           'format' => 'filtered_html',
           'editor' => 'ckeditor',
-          'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
+          'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
           'editorSupportsContentFiltering' => TRUE,
           'isXssSafe' => FALSE,
         ],
       ],
     ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertEquals($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
+    $this->assertCount(1, $body, 'A body field exists.');
+    $this->assertCount(1, $format_selector, 'A single text format selector exists on the page.');
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and @data-editor-for="edit-body-0-value"]');
-    $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
-    $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
+    $this->assertCount(1, $specific_format_selector, 'A single text format selector exists on the page and has a "data-editor-for" attribute with the correct value.');
+    $this->assertContains('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries']), 'CKEditor glue library is present.');
 
     // Enable the ckeditor_test module, customize configuration. In this case,
     // there is additional CSS and JS to be loaded.
@@ -139,16 +153,16 @@ class CKEditorLoadingTest extends BrowserTestBase {
         'filtered_html' => [
           'format' => 'filtered_html',
           'editor' => 'ckeditor',
-          'editorSettings' => $this->castSafeStrings($ckeditor_plugin->getJSSettings($editor)),
+          'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
           'editorSupportsContentFiltering' => TRUE,
           'isXssSafe' => FALSE,
         ],
       ],
     ];
     $this->assertTrue($editor_settings_present, "Text Editor module's JavaScript settings are on the page.");
-    $this->assertIdentical($expected, $this->castSafeStrings($settings['editor']), "Text Editor module's JavaScript settings on the page are correct.");
+    $this->assertEquals($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
-    $this->assertTrue(in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])), 'CKEditor glue library is present.');
+    $this->assertContains('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries']), 'CKEditor glue library is present.');
 
     // Assert that CKEditor uses Drupal's cache-busting query string by
     // comparing the setting sent with the page with the current query string.
@@ -229,6 +243,14 @@ class CKEditorLoadingTest extends BrowserTestBase {
       'core/modules/system/tests/themes/test_ckeditor_stylesheets_relative/css/yokotsoko.css',
     ];
     $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_relative'));
+
+    // Case 4: Install theme which has a Drupal root CSS URL.
+    $theme_installer->install(['test_ckeditor_stylesheets_drupal_root']);
+    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_drupal_root')->save();
+    $expected = [
+      'core/modules/system/tests/themes/test_ckeditor_stylesheets_drupal_root/css/yokotsoko.css',
+    ];
+    $this->assertIdentical($expected, _ckeditor_theme_css('test_ckeditor_stylesheets_drupal_root'));
   }
 
   protected function getThingsToCheck() {

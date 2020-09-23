@@ -18,7 +18,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
   /**
    * The mocked theme access checker.
    *
-   * @var \Drupal\Core\Theme\ThemeAccessCheck|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Theme\ThemeAccessCheck|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeAccessCheck;
 
@@ -46,7 +46,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->themeAccessCheck = $this->getMockBuilder('\Drupal\Core\Theme\ThemeAccessCheck')
       ->disableOriginalConstructor()
       ->getMock();

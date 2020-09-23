@@ -20,28 +20,28 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The mocked DB schema handler.
    *
-   * @var \Drupal\Core\Database\Schema|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Database\Schema|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dbSchemaHandler;
 
   /**
    * The mocked entity type manager used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
   /**
    * The mocked entity field manager used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
 
   /**
    * The mocked entity last installed schema repository used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityLastInstalledSchemaRepository;
 
@@ -55,28 +55,28 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * The mocked SQL storage used in this test.
    *
-   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorage|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storage;
 
   /**
    * The mocked field definitions used in this test.
    *
-   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
    */
   protected $storageDefinitions;
 
   /**
    * The storage schema handler used in this test.
    *
-   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $storageSchema;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->entityTypeManager = $this->createMock(EntityTypeManager::class);
     $this->entityFieldManager = $this->createMock(EntityFieldManager::class);
     $this->entityLastInstalledSchemaRepository = $this->createMock(EntityLastInstalledSchemaRepositoryInterface::class);
@@ -111,7 +111,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::getFieldUniqueKeys
    * @covers ::getFieldForeignKeys
    * @covers ::getFieldSchemaData
-   * @covers ::processBaseTable
    * @covers ::processIdentifierSchema
    */
   public function testGetSchemaBase() {
@@ -405,7 +404,6 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
    * @covers ::initializeRevisionTable
    * @covers ::addTableDefaults
    * @covers ::getEntityIndexName
-   * @covers ::processRevisionTable
    * @covers ::processIdentifierSchema
    */
   public function testGetSchemaRevisionable() {
@@ -426,7 +424,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
 
-    $this->storage->expects($this->exactly(1))
+    $this->storage->expects($this->exactly(9))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -647,7 +645,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
 
-    $this->storage->expects($this->exactly(2))
+    $this->storage->expects($this->exactly(30))
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 

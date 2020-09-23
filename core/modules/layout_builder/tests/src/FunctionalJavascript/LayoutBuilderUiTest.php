@@ -22,7 +22,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
    */
   const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
 
-  public static $modules = [
+  protected static $modules = [
     'layout_builder',
     'block',
     'node',
@@ -34,7 +34,12 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->createContentType(['type' => 'bundle_with_section_field']);
@@ -64,18 +69,18 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
 
     // Remove all of the sections from the page.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
-    $page->clickLink('Remove section');
+    $page->clickLink('Remove Section 1');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
     // Assert that there are no sections on the page.
-    $assert_session->pageTextNotContains('Remove section');
+    $assert_session->pageTextNotContains('Remove Section 1');
     $assert_session->pageTextNotContains('Add block');
 
     // Reload the page.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     // Assert that there are no sections on the page.
-    $assert_session->pageTextNotContains('Remove section');
+    $assert_session->pageTextNotContains('Remove Section 1');
     $assert_session->pageTextNotContains('Add block');
   }
 
@@ -113,6 +118,8 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('You have unsaved changes.');
     $page->clickLink('One column');
+    $assert_session->assertWaitOnAjaxRequest();
+    $page->pressButton('Add section');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContainsOnce('You have unsaved changes.');
 
@@ -190,14 +197,14 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $this->assertHighlightNotExists();
 
     // The highlight is present when the "Configure section" dialog is open.
-    $page->clickLink('Configure section');
+    $page->clickLink('Configure Section 1');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $this->assertHighlightedElement('[data-layout-builder-highlight-id="section-update-0"]');
     $page->pressButton('Close');
     $this->assertHighlightNotExists();
 
-    // The highlight is present when the "Remove section" dialog is open.
-    $page->clickLink('Remove section');
+    // The highlight is present when the "Remove Section" dialog is open.
+    $page->clickLink('Remove Section 1');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertHighlightedElement('[data-layout-builder-highlight-id="section-update-0"]');

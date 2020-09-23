@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 class SelectPagerDefaultTest extends DatabaseTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Confirms that a pager query returns the correct results.
    *
    * Note that we have to make an HTTP request to a test page handler
@@ -25,7 +30,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // information forward to the actual query on the other side of the
     // HTTP request.
     $limit = 2;
-    $count = Database::getConnection()->query('SELECT COUNT(*) FROM {test}')->fetchField();
+    $count = Database::getConnection()->select('test')->countQuery()->execute()->fetchField();
 
     $correct_number = $limit;
     $num_pages = floor($count / $limit);
@@ -59,7 +64,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // information forward to the actual query on the other side of the
     // HTTP request.
     $limit = 2;
-    $count = Database::getConnection()->query('SELECT COUNT(*) FROM {test_task}')->fetchField();
+    $count = Database::getConnection()->select('test_task')->countQuery()->execute()->fetchField();
 
     $correct_number = $limit;
     $num_pages = floor($count / $limit);
@@ -97,6 +102,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     $outer_query = $connection->select($query);
     $outer_query->addField('subquery', 'age');
+    $outer_query->orderBy('age');
 
     $ages = $outer_query
       ->execute()

@@ -24,14 +24,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * The mocked view entity storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityStorageInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewStorage;
 
   /**
    * The mocked executable factory.
    *
-   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewExecutableFactory|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $executableFactory;
 
@@ -45,28 +45,28 @@ class ViewAjaxControllerTest extends UnitTestCase {
   /**
    * The mocked current path.
    *
-   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\CurrentPathStack|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $currentPath;
 
   /**
    * The redirect destination.
    *
-   * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RedirectDestinationInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $redirectDestination;
 
   /**
    * The renderer.
    *
-   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Render\RendererInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $renderer;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->viewStorage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');
     $this->executableFactory = $this->getMockBuilder('Drupal\views\ViewExecutableFactory')
       ->disableOriginalConstructor()
@@ -126,7 +126,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
   }
 
   /**
-   * Tests with view_name and view_display_id but not existing view.
+   * Tests non-existent view with view_name and view_display_id.
    */
   public function testMissingView() {
     $request = new Request();
@@ -194,7 +194,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('/test-page?type=article');
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertSame($response->getView(), $executable);
 
@@ -234,7 +234,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', ['arg1', 'arg2']);
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -255,7 +255,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', $this->identicalTo(['arg1', NULL]));
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -275,7 +275,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->with('page_1', ['arg1 & arg2', 'arg3']);
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $this->assertViewResultCommand($response);
   }
@@ -310,7 +310,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $executable->displayHandlers = $display_collection;
 
     $response = $this->viewAjaxController->ajaxView($request);
-    $this->assertTrue($response instanceof ViewAjaxResponse);
+    $this->assertInstanceOf(ViewAjaxResponse::class, $response);
 
     $commands = $this->getCommands($response);
     $this->assertEquals('viewsScrollTop', $commands[0]['command']);

@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
-use Drupal\user\Entity\User;
 
 /**
  * Tests Drupal 7 upgrade using the migrate UI.
@@ -12,8 +11,6 @@ use Drupal\user\Entity\User;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group migrate_drupal_ui
- *
- * @group legacy
  */
 class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
 
@@ -22,7 +19,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'file',
     'language',
     'config_translation',
@@ -35,15 +32,30 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     'rdf',
     'statistics',
     'migration_provider_test',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
+
+  /**
+   * The entity storage for node.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $nodeStorage;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
+
+    // Delete the existing content made to test the ID Conflict form. Migrations
+    // are to be done on a site without content. The test of the ID Conflict
+    // form is being moved to its own issue which will remove the deletion
+    // of the created nodes.
+    // See https://www.drupal.org/project/drupal/issues/3087061.
+    $this->nodeStorage = $this->container->get('entity_type.manager')
+      ->getStorage('node');
+    $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
+
     $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal7.php');
   }
 
@@ -64,43 +76,44 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'block' => 25,
       'block_content' => 1,
       'block_content_type' => 1,
-      'comment' => 3,
+      'comment' => 4,
       // The 'standard' profile provides the 'comment' comment type, and the
       // migration creates 6 comment types, one per node type.
-      'comment_type' => 7,
+      'comment_type' => 8,
       // Module 'language' comes with 'en', 'und', 'zxx'. Migration adds 'is'
       // and 'fr'.
       'configurable_language' => 5,
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 72,
-      'field_storage_config' => 55,
+      'field_config' => 81,
+      'field_storage_config' => 62,
       'file' => 3,
       'filter_format' => 7,
-      'image_style' => 6,
-      'language_content_settings' => 11,
-      'node' => 6,
-      'node_type' => 6,
+      'image_style' => 7,
+      'language_content_settings' => 21,
+      'node' => 7,
+      'node_type' => 7,
       'rdf_mapping' => 8,
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
       'action' => 19,
-      'menu' => 6,
+      'menu' => 7,
       'taxonomy_term' => 24,
       'taxonomy_vocabulary' => 7,
-      'tour' => 5,
+      'path_alias' => 8,
+      'tour' => 6,
       'user' => 4,
       'user_role' => 3,
       'menu_link_content' => 12,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 17,
+      'entity_form_display' => 22,
       'entity_form_mode' => 1,
-      'entity_view_display' => 28,
+      'entity_view_display' => 33,
       'entity_view_mode' => 14,
-      'base_field_override' => 9,
+      'base_field_override' => 4,
     ];
   }
 
@@ -110,10 +123,10 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getEntityCountsIncremental() {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 2;
-    $counts['comment'] = 4;
+    $counts['comment'] = 5;
     $counts['file'] = 4;
     $counts['menu_link_content'] = 13;
-    $counts['node'] = 7;
+    $counts['node'] = 8;
     $counts['taxonomy_term'] = 25;
     $counts['user'] = 5;
     return $counts;
@@ -124,56 +137,57 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'aggregator',
-      'block',
-      'book',
-      'color',
-      'comment',
-      'contact',
-      'ctools',
-      'date',
-      'dblog',
-      'email',
-      'entity_translation',
-      'entityreference',
-      'field',
-      'field_sql_storage',
-      'file',
-      'filter',
-      'forum',
-      'i18n_block',
-      'i18n_variable',
-      'image',
-      'link',
-      'list',
-      'menu',
-      'node',
-      'number',
-      'options',
-      'path',
-      'phone',
-      'rdf',
-      'search',
-      'shortcut',
-      'statistics',
-      'system',
-      'taxonomy',
-      'text',
-      'title',
-      'user',
+      'Aggregator',
+      'Block languages',
+      'Block',
+      'Book',
+      'Chaos tools',
+      'Color',
+      'Comment',
+      'Contact',
+      'Content translation',
+      'Database logging',
+      'Date',
+      'Email',
+      'Entity Reference',
+      'Entity Translation',
+      'Field SQL storage',
+      'Field',
+      'File',
+      'Filter',
+      'Forum',
+      'Image',
+      'Link',
+      'List',
+      'Menu',
+      'Node',
+      'Number',
+      'Options',
+      'Path',
+      'Phone',
+      'RDF',
+      'Search',
+      'Shortcut',
+      'Statistics',
+      'Synchronize translations',
+      'System',
+      'Taxonomy',
+      'Text',
+      'Title',
+      'User',
+      'Variable translation',
       // Include modules that do not have an upgrade path and are enabled in the
       // source database.
-      'blog',
-      'contextual',
-      'date_api',
-      'entity',
-      'field_ui',
-      'help',
-      'php',
-      'simpletest',
-      'toolbar',
-      'translation',
-      'trigger',
+      'Blog',
+      'Contextual links',
+      'Date API',
+      'Entity API',
+      'Field UI',
+      'Help',
+      'PHP filter',
+      'Testing',
+      'Toolbar',
+      'Trigger',
     ];
   }
 
@@ -182,18 +196,21 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
-      'i18n',
-      'i18n_field',
-      'i18n_string',
-      'locale',
-      'variable',
-      'variable_realm',
-      'variable_store',
+      'Field translation',
+      'Internationalization',
+      'Locale',
+      'Menu translation',
+      'String translation',
+      'Taxonomy translation',
+      'Translation sets',
+      'Variable realm',
+      'Variable store',
+      'Variable',
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
-      'syslog',
-      'tracker',
-      'update',
+      'Syslog',
+      'Tracker',
+      'Update manager',
     ];
   }
 
@@ -203,10 +220,9 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   public function testMigrateUpgradeExecute() {
     parent::testMigrateUpgradeExecute();
 
-    // Ensure migrated users can log in.
-    $user = User::load(2);
-    $user->passRaw = 'a password';
-    $this->drupalLogin($user);
+    // Ensure a migrated user can log in.
+    $this->assertUserLogIn(2, 'a password');
+
     $this->assertFollowUpMigrationResults();
   }
 

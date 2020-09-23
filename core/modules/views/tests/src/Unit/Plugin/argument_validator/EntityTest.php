@@ -28,16 +28,16 @@ class EntityTest extends UnitTestCase {
   protected $display;
 
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \PHPUnit_Framework_MockObject_MockObject|\Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
    * The mocked entity type bundle info used in this test.
    *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeBundleInfo;
 
@@ -51,7 +51,7 @@ class EntityTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
@@ -176,13 +176,19 @@ class EntityTest extends UnitTestCase {
 
     $this->assertTrue($this->argumentValidator->validateArgument(1));
     $this->assertFalse($this->argumentValidator->validateArgument(2));
+
+    $options['bundles'] = NULL;
+    $this->argumentValidator->init($this->executable, $this->display, $options);
+
+    $this->assertTrue($this->argumentValidator->validateArgument(1));
+    $this->assertTrue($this->argumentValidator->validateArgument(2));
   }
 
   /**
    * @covers ::calculateDependencies
    */
   public function testCalculateDependencies() {
-    // Create an entity manager, storage, entity type, and entity to mock the
+    // Create an entity type manager, storage, entity type, and entity to mock the
     // loading of entities providing bundles.
     $entity_type_manager = $this->createMock(EntityTypeManagerInterface::class);
     $storage = $this->createMock('Drupal\Core\Entity\EntityStorageInterface');

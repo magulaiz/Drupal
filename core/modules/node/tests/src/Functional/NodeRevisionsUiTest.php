@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\node\Functional;
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -14,6 +15,11 @@ use Drupal\node\Entity\NodeType;
 class NodeRevisionsUiTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * @var \Drupal\user\Entity\User
    */
   protected $editor;
@@ -21,7 +27,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create users.
@@ -51,7 +57,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Uncheck the create new revision checkbox and save the node.
     $edit = ['revision' => FALSE];
@@ -64,7 +70,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertFieldChecked('edit-revision', "'Create new revision' checkbox is checked");
+    $this->assertSession()->checkboxChecked('edit-revision');
 
     // Submit the form without changing the checkbox.
     $edit = [];
@@ -114,7 +120,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Assert the old revision message.
     $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
     $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
-    $this->assertRaw(\Drupal::l($date, $url) . ' by ' . $editor);
+    $this->assertRaw(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.
     $date = $this->container->get('date.formatter')->format($nodes[1]->revision_timestamp->value, 'short');
@@ -162,22 +168,22 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
-    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/1/revert');
+    $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/1/revert');
     $elements = $this->xpath('//tr[contains(@class, "revision-current")]/td/a[1]');
     // The site may be installed in a subdirectory, so check if the URL is
     // contained in the retrieved one.
-    $this->assertContains('/node/1', current($elements)->getAttribute('href'));
+    $this->assertStringContainsString('/node/1', current($elements)->getAttribute('href'));
 
     // Verify that the default revision can be an older revision than the latest
     // one.
     // Assert that the revisions with translations changes are shown.
-    $this->assertLinkByHref('/node/' . $node_id . '/revisions/4/revert');
+    $this->assertSession()->linkByHrefExists('/node/' . $node_id . '/revisions/4/revert');
 
     // Assert that the revisions without translations changes are filtered out:
     // 2, 3 and 5.
-    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/2/revert');
-    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/3/revert');
-    $this->assertNoLinkByHref('/node/' . $node_id . '/revisions/5/revert');
+    $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/2/revert');
+    $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/3/revert');
+    $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/5/revert');
   }
 
 }

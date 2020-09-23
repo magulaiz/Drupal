@@ -26,9 +26,22 @@ class MenuUiNodeTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['menu_ui', 'test_page_test', 'node', 'block', 'locale', 'language', 'content_translation'];
+  protected static $modules = [
+    'menu_ui',
+    'test_page_test',
+    'node',
+    'block',
+    'locale',
+    'language',
+    'content_translation',
+  ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('system_menu_block:main');
@@ -65,12 +78,12 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Verify that the menu link title has the correct maxlength.
     $title_max_length = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content')['title']->getSetting('max_length');
     $this->drupalGet('node/add/page');
-    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node add form.');
+    $this->assertSession()->responseMatches('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/');
 
     // Verify that the menu link description has the correct maxlength.
     $description_max_length = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions('menu_link_content')['description']->getSetting('max_length');
     $this->drupalGet('node/add/page');
-    $this->assertPattern('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/', 'Menu link description field has correct maxlength in node add form.');
+    $this->assertSession()->responseMatches('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/');
 
     // Disable the default main menu, so that no menus are enabled.
     $edit = [
@@ -81,7 +94,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Verify that no menu settings are displayed and nodes can be created.
     $this->drupalGet('node/add/page');
     $this->assertText(t('Create Basic page'));
-    $this->assertNoText(t('Menu settings'));
+    $this->assertNoText('Menu settings');
     $node_title = $this->randomMachineName();
     $edit = [
       'title[0][value]' => $node_title,
@@ -98,7 +111,7 @@ class MenuUiNodeTest extends BrowserTestBase {
       'menu_parent' => 'main:',
     ];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertText(t('The selected menu item is not under one of the selected menus.'));
+    $this->assertText(t('The selected menu link is not under one of the selected menus.'));
     $this->assertNoRaw(t('The content type %name has been updated.', ['%name' => 'Basic page']));
 
     // Enable Tools menu as available menu.
@@ -128,7 +141,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $node = $this->drupalGetNodeByTitle($node_title);
     // Assert that there is no link for the node.
     $this->drupalGet('test-page');
-    $this->assertNoLink($node_title);
+    $this->assertSession()->linkNotExists($node_title);
 
     // Edit the node, enable the menu link setting, but skip the link title.
     $edit = [
@@ -137,7 +150,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
     $this->drupalGet('test-page');
-    $this->assertNoLink($node_title);
+    $this->assertSession()->linkNotExists($node_title);
 
     // Make sure the menu links only appear when the node is published.
     // These buttons just appear for 'administer nodes' users.
@@ -158,12 +171,12 @@ class MenuUiNodeTest extends BrowserTestBase {
     ];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->drupalGet('test-page');
-    $this->assertNoLink($node_title, 'Found no menu link with the node unpublished');
+    $this->assertSession()->linkNotExists($node_title, 'Found no menu link with the node unpublished');
     // Assert that the link exists if published.
     $edit['status[value]'] = TRUE;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, 'Save');
     $this->drupalGet('test-page');
-    $this->assertLink($node_title, 0, 'Found a menu link with the node published');
+    $this->assertSession()->linkExists($node_title, 0, 'Found a menu link with the node published');
 
     // Log back in as normal user.
     $this->drupalLogin($this->editor);
@@ -176,12 +189,16 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that the link exists.
     $this->drupalGet('test-page');
-    $this->assertLink($node_title);
+    $this->assertSession()->linkExists($node_title);
 
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldById('edit-menu-weight', 17, 'Menu weight correct in edit form');
-    $this->assertPattern('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/', 'Menu link title field has correct maxlength in node edit form.');
-    $this->assertPattern('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/', 'Menu link description field has correct maxlength in node add form.');
+    // Verify that the menu link title field has correct maxlength in node edit
+    // form.
+    $this->assertSession()->responseMatches('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/');
+    // Verify that the menu link description field has correct maxlength in
+    // node add form.
+    $this->assertSession()->responseMatches('/<input .* id="edit-menu-description" .* maxlength="' . $description_max_length . '" .* \/>/');
 
     // Disable the menu link, then edit the node--the link should stay disabled.
     $link_id = menu_ui_get_menu_link_defaults($node)['entity_id'];
@@ -200,7 +217,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     // Assert that there is no link for the node.
     $this->drupalGet('test-page');
-    $this->assertNoLink($node_title);
+    $this->assertSession()->linkNotExists($node_title);
 
     // Add a menu link to the Administration menu.
     $item = MenuLinkContent::create([
@@ -217,7 +234,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Assert that the link is still in the Administration menu after save.
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $link = MenuLinkContent::load($item->id());
-    $this->assertTrue($link, 'Link in not allowed menu still exists after saving node');
+    $this->assertInstanceOf(MenuLinkContent::class, $link);
 
     // Move the menu link back to the Tools menu.
     $item->menu_name->value = 'tools';
@@ -235,10 +252,10 @@ class MenuUiNodeTest extends BrowserTestBase {
     // Edit the first node.
     $this->drupalGet('node/' . $node->id() . '/edit');
     // Assert that it is not possible to set the parent of the first node to itself or the second node.
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:' . $item->getPluginId());
-    $this->assertNoOption('edit-menu-menu-parent', 'tools:' . $child_item->getPluginId());
+    $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $item->getPluginId());
+    $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'tools:' . $child_item->getPluginId());
     // Assert that unallowed Administration menu is not available in options.
-    $this->assertNoOption('edit-menu-menu-parent', 'admin:');
+    $this->assertSession()->optionNotExists('edit-menu-menu-parent', 'admin:');
   }
 
   /**
@@ -322,11 +339,11 @@ class MenuUiNodeTest extends BrowserTestBase {
 
     // Assert that the original link exists in the frontend.
     $this->drupalGet('node/' . $node->id(), ['language' => $languages[$langcodes[0]]]);
-    $this->assertLink($node_title);
+    $this->assertSession()->linkExists($node_title);
 
     // Assert that the translated link exists in the frontend.
     $this->drupalGet('node/' . $node->id(), ['language' => $languages[$langcodes[1]]]);
-    $this->assertLink($translated_node_title);
+    $this->assertSession()->linkExists($translated_node_title);
 
     // Revisit the edit page in original language, check the loaded menu item title and save.
     $options = ['language' => $languages[$langcodes[0]]];

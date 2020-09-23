@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Functional\Entity;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\node\Entity\Node;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -19,11 +20,16 @@ class EntityTranslationFormTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['entity_test', 'language', 'node'];
+  protected static $modules = ['entity_test', 'language', 'node'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   protected $langcodes;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     // Enable translations for the test entity type.
     \Drupal::state()->set('entity_test.translation', TRUE);
@@ -46,7 +52,11 @@ class EntityTranslationFormTest extends BrowserTestBase {
   public function testEntityFormLanguage() {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $web_user = $this->drupalCreateUser(['create page content', 'edit own page content', 'administer content types']);
+    $web_user = $this->drupalCreateUser([
+      'create page content',
+      'edit own page content',
+      'administer content types',
+    ]);
     $this->drupalLogin($web_user);
 
     // Create a node with language LanguageInterface::LANGCODE_NOT_SPECIFIED.
@@ -77,7 +87,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
     $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']), 'Basic page content type has been updated.');
+    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
 
     // Create a node with language.
     $edit = [];
@@ -89,12 +99,11 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $this->assertText(t('Basic page @title has been created.', ['@title' => $edit['title[0][value]']]), 'Basic page created.');
 
     // Verify that the creation message contains a link to a node.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'node/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a node');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
 
     // Check to make sure the node was created.
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertInstanceOf(Node::class, $node);
 
     // Make body translatable.
     $field_storage = FieldStorageConfig::loadByName('node', 'body');

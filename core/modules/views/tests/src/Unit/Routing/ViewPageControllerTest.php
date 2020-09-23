@@ -5,7 +5,7 @@ namespace Drupal\Tests\views\Unit\Routing;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Routing\ViewPageController;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
@@ -35,7 +35,7 @@ class ViewPageControllerTest extends UnitTestCase {
     '#view_display_show_admin_links' => NULL,
   ];
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->pageController = new ViewPageController();
   }
 
@@ -64,7 +64,7 @@ class ViewPageControllerTest extends UnitTestCase {
     $route_match = RouteMatch::createFromRequest($request);
 
     $output = $this->pageController->handle($route_match->getParameter('view_id'), $route_match->getParameter('display_id'), $route_match);
-    $this->assertInternalType('array', $output);
+    $this->assertIsArray($output);
     $this->assertEquals($build, $output);
   }
 

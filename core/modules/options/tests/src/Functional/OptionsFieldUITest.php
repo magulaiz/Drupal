@@ -19,7 +19,18 @@ class OptionsFieldUITest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'options', 'field_test', 'taxonomy', 'field_ui'];
+  protected static $modules = [
+    'node',
+    'options',
+    'field_test',
+    'taxonomy',
+    'field_ui',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * The name of the created content type.
@@ -49,11 +60,21 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   protected $adminPath;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create test user.
-    $admin_user = $this->drupalCreateUser(['access content', 'administer taxonomy', 'access administration pages', 'administer site configuration', 'administer content types', 'administer nodes', 'bypass node access', 'administer node fields', 'administer node display']);
+    $admin_user = $this->drupalCreateUser([
+      'access content',
+      'administer taxonomy',
+      'access administration pages',
+      'administer site configuration',
+      'administer content types',
+      'administer nodes',
+      'bypass node access',
+      'administer node fields',
+      'administer node display',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Create content type, with underscores.
@@ -298,7 +319,8 @@ class OptionsFieldUITest extends FieldTestBase {
   public function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = ['settings[allowed_values]' => $input_string];
     $this->drupalPostForm($this->adminPath, $edit, t('Save field settings'));
-    $this->assertNoRaw('&amp;lt;', 'The page does not have double escaped HTML tags.');
+    // Verify that the page does not have double escaped HTML tags.
+    $this->assertNoRaw('&amp;lt;');
 
     if (is_string($result)) {
       $this->assertText($result, $message);
@@ -352,7 +374,7 @@ class OptionsFieldUITest extends FieldTestBase {
       }
 
       $elements = $this->xpath('//div[text()="' . $output . '"]');
-      $this->assertEqual(count($elements), 1, 'Correct options found.');
+      $this->assertCount(1, $elements, 'Correct options found.');
     }
   }
 

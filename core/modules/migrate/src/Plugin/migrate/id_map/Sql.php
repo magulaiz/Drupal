@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin\migrate\id_map;
 
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
@@ -544,14 +545,6 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function lookupDestinationId(array $source_id_values) {
-    $results = $this->lookupDestinationIds($source_id_values);
-    return $results ? reset($results) : [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function lookupDestinationIds(array $source_id_values) {
     if (empty($source_id_values)) {
       return [];
@@ -599,7 +592,16 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       }
     }
 
-    return $query->execute()->fetchAll(\PDO::FETCH_NUM);
+    try {
+      return $query->execute()->fetchAll(\PDO::FETCH_NUM);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // It's possible that the query will cause an exception to be thrown. For
+      // example, the URL alias migration uses a dummy node ID of 'INVALID_NID'
+      // to cause the lookup to return no results. On PostgreSQL this causes an
+      // exception because 'INVALID_NID' is not the expected type.
+      return [];
+    }
   }
 
   /**
@@ -643,7 +645,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     }
     $keys = [$this::SOURCE_IDS_HASH => $this->getSourceIdsHash($source_id_values)];
     // Notify anyone listening of the map row we're about to save.
-    $this->eventDispatcher->dispatch(MigrateEvents::MAP_SAVE, new MigrateMapSaveEvent($this, $fields));
+    $this->eventDispatcher->dispatch(new MigrateMapSaveEvent($this, $fields), MigrateEvents::MAP_SAVE);
     $this->getDatabase()->merge($this->mapTableName())
       ->key($keys)
       ->fields($fields)
@@ -668,14 +670,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       ->execute();
 
     // Notify anyone listening of the message we've saved.
-    $this->eventDispatcher->dispatch(MigrateEvents::IDMAP_MESSAGE,
-      new MigrateIdMapMessageEvent($this->migration, $source_id_values, $message, $level));
+    $this->eventDispatcher->dispatch(new MigrateIdMapMessageEvent($this->migration, $source_id_values, $message, $level), MigrateEvents::IDMAP_MESSAGE);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
+  public function getMessages(array $source_id_values = [], $level = NULL) {
     $query = $this->getDatabase()->select($this->messageTableName(), 'msg');
     $condition = sprintf('msg.%s = map.%s', $this::SOURCE_IDS_HASH, $this::SOURCE_IDS_HASH);
     $query->addJoin('LEFT', $this->mapTableName(), 'map', $condition);
@@ -783,7 +784,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
       $map_query = $this->getDatabase()->delete($this->mapTableName());
       $map_query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
       // Notify anyone listening of the map row we're about to delete.
-      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
+      $this->eventDispatcher->dispatch(new MigrateMapDeleteEvent($this, $source_id_values), MigrateEvents::MAP_DELETE);
       $map_query->execute();
     }
     $message_query = $this->getDatabase()->delete($this->messageTableName());
@@ -803,7 +804,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
         $map_query->condition($destination_id, $destination_id_values[$field_name]);
       }
       // Notify anyone listening of the map row we're about to delete.
-      $this->eventDispatcher->dispatch(MigrateEvents::MAP_DELETE, new MigrateMapDeleteEvent($this, $source_id_values));
+      $this->eventDispatcher->dispatch(new MigrateMapDeleteEvent($this, $source_id_values), MigrateEvents::MAP_DELETE);
       $map_query->execute();
 
       $message_query->condition($this::SOURCE_IDS_HASH, $this->getSourceIdsHash($source_id_values));
@@ -903,7 +904,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function currentSource() {
     if ($this->valid()) {
@@ -962,14 +963,11 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function getHighestId() {
-    array_filter(
-      $this->migration->getDestinationPlugin()->getIds(),
-      function (array $id) {
-        if ($id['type'] !== 'integer') {
-          throw new \LogicException('Cannot determine the highest migrated ID without an integer ID column');
-        }
-      }
-    );
+    // Ensure that the first ID is an integer.
+    $keys = $this->migration->getDestinationPlugin()->getIds();
+    if (reset($keys)['type'] !== 'integer') {
+      throw new \LogicException('To determine the highest migrated ID the first ID must be an integer');
+    }
 
     // List of mapping tables to look in for the highest ID.
     $map_tables = [

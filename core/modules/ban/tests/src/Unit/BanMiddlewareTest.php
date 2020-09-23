@@ -17,14 +17,14 @@ class BanMiddlewareTest extends UnitTestCase {
   /**
    * The mocked wrapped kernel.
    *
-   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $kernel;
 
   /**
    * The mocked ban IP manager.
    *
-   * @var \Drupal\ban\BanIpManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\ban\BanIpManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $banManager;
 
@@ -38,7 +38,7 @@ class BanMiddlewareTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->kernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');

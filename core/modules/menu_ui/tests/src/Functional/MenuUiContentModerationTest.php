@@ -19,12 +19,23 @@ class MenuUiContentModerationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'content_moderation', 'node', 'menu_ui', 'test_page_test'];
+  protected static $modules = [
+    'block',
+    'content_moderation',
+    'node',
+    'menu_ui',
+    'test_page_test',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('system_menu_block:main');
@@ -88,7 +99,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the menu item weight for the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only change the menu link weight for the published version of this content.');
 
     // Try to change the menu link parent and save a new non-default (draft)
     // revision.
@@ -99,7 +110,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only change the parent menu item for the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only change the parent menu link for the published version of this content.');
 
     // Try to delete the menu link and save a new non-default (draft) revision.
     $edit = [
@@ -109,7 +120,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that the menu settings were not applied.
-    $this->assertSession()->pageTextContains('You can only remove the menu item in the published version of this content.');
+    $this->assertSession()->pageTextContains('You can only remove the menu link in the published version of this content.');
     $this->assertSession()->linkExists('Test menu link');
 
     // Try to change the menu link title and description and save a new

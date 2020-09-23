@@ -19,12 +19,17 @@ class BooleanFieldTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test',
     'field_ui',
     'options',
     'field_test_boolean_access_denied',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * A field to use in this test class.
@@ -43,7 +48,7 @@ class BooleanFieldTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -103,7 +108,7 @@ class BooleanFieldTest extends BrowserTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[value]", '', 'Widget found.');
     $this->assertText($this->field->label(), 'Uses field label by default.');
-    $this->assertNoRaw($on, 'Does not use the "On" label.');
+    $this->assertNoRaw($on);
 
     // Submit and ensure it is accepted.
     $edit = [

@@ -9,7 +9,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\User;
 
 /**
- * Tests node_access and db_select() with node_access tag functionality with
+ * Tests node_access and select queries with node_access tag functionality with
  * multiple languages with a test node access module that is not language-aware.
  *
  * @group node
@@ -24,7 +24,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     node_access_test_add_field(NodeType::load('page'));
@@ -150,7 +150,10 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
     // Creating a private node with langcode Catalan to test that the
     // node_access_test_secret_catalan flag works.
-    $private_ca_user = $this->drupalCreateUser(['access content', 'node test view']);
+    $private_ca_user = $this->drupalCreateUser([
+      'access content',
+      'node test view',
+    ]);
     $node_private_ca = $this->drupalCreateNode(['body' => [[]], 'langcode' => 'ca', 'private' => TRUE]);
     $this->assertTrue($node_private_ca->language()->getId() == 'ca', 'Node created as Catalan.');
 
@@ -175,7 +178,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
   }
 
   /**
-   * Tests db_select() with a 'node_access' tag and langcode metadata.
+   * Tests select queries with a 'node_access' tag and langcode metadata.
    */
   public function testNodeAccessQueryTag() {
     // Create a normal authenticated user.
@@ -214,9 +217,9 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
     // The public node and no language node should be returned. Because no
     // langcode is given it will use the fallback node.
-    $this->assertEqual(count($nids), 2, 'db_select() returns 2 node');
-    $this->assertTrue(array_key_exists($node_public->id(), $nids), 'Returned node ID is public node.');
-    $this->assertTrue(array_key_exists($node_no_language->id(), $nids), 'Returned node ID is no language node.');
+    $this->assertCount(2, $nids, 'Query returns 2 node');
+    $this->assertArrayHasKey($node_public->id(), $nids);
+    $this->assertArrayHasKey($node_no_language->id(), $nids);
 
     // Query the nodes table as the web user with the node access tag and
     // langcode de.
@@ -228,7 +231,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // Because no nodes are created in German, no nodes are returned.
-    $this->assertTrue(empty($nids), 'db_select() returns an empty result.');
+    $this->assertTrue(empty($nids), 'Query returns an empty result.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.
@@ -239,7 +242,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // All nodes are returned.
-    $this->assertEqual(count($nids), 3, 'db_select() returns all three nodes.');
+    $this->assertCount(3, $nids, 'Query returns all three nodes.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and langcode de.
@@ -252,7 +255,7 @@ class NodeAccessLanguageTest extends NodeAccessTestBase {
 
     // All nodes are returned because node access tag is not invoked when the
     // user is user 1.
-    $this->assertEqual(count($nids), 3, 'db_select() returns all three nodes.');
+    $this->assertCount(3, $nids, 'Query returns all three nodes.');
   }
 
 }

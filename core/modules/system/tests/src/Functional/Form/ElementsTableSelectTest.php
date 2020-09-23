@@ -17,7 +17,12 @@ class ElementsTableSelectTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['form_test'];
+  protected static $modules = ['form_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Test the display of checkboxes when #multiple is TRUE.
@@ -26,7 +31,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
 
     $this->drupalGet('form_test/tableselect/multiple-true');
 
-    $this->assertSession()->responseNotContains('Empty text.', 'Empty text should not be displayed.');
+    $this->assertSession()->responseNotContains('Empty text.');
 
     // Test for the presence of the Select all rows tableheader.
     $this->assertNotEmpty($this->xpath('//th[@class="select-all"]'), 'Presence of the "Select all" checkbox.');
@@ -46,7 +51,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Empty text.');
 
     // Test for the absence of the Select all rows tableheader.
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     $rows = ['row1', 'row2', 'row3'];
     foreach ($rows as $row) {
@@ -60,22 +65,23 @@ class ElementsTableSelectTest extends BrowserTestBase {
   public function testTableSelectColSpan() {
     $this->drupalGet('form_test/tableselect/colspan');
 
-    $this->assertSession()->pageTextContains('Three', 'Presence of the third column');
-    $this->assertSession()->pageTextNotContains('Four', 'Absence of a fourth column');
+    // Verify presence of column three and absence of column four.
+    $this->assertSession()->pageTextContains('Three');
+    $this->assertSession()->pageTextNotContains('Four');
 
     // There should be three labeled column headers and 1 for the input.
     $table_head = $this->xpath('//thead/tr/th');
-    $this->assertEquals(count($table_head), 4, 'There are four column headers');
+    $this->assertCount(4, $table_head, 'There are four column headers');
 
     // The first two body rows should each have 5 table cells: One for the
     // radio, one cell in the first column, one cell in the second column,
     // and two cells in the third column which has colspan 2.
     for ($i = 0; $i <= 1; $i++) {
-      $this->assertEquals(count($this->xpath('//tbody/tr[' . ($i + 1) . ']/td')), 5, 'There are five cells in row ' . $i);
+      $this->assertCount(5, $this->xpath('//tbody/tr[' . ($i + 1) . ']/td'), 'There are five cells in row ' . $i);
     }
     // The third row should have 3 cells, one for the radio, one spanning the
     // first and second column, and a third in column 3 (which has colspan 3).
-    $this->assertEquals(count($this->xpath('//tbody/tr[3]/td')), 3, 'There are three cells in row 3.');
+    $this->assertCount(3, $this->xpath('//tbody/tr[3]/td'), 'There are three cells in row 3.');
   }
 
   /**
@@ -83,7 +89,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testEmptyText() {
     $this->drupalGet('form_test/tableselect/empty-text');
-    $this->assertSession()->pageTextContains('Empty text.', 'Empty text should be displayed.');
+    $this->assertSession()->pageTextContains('Empty text.');
   }
 
   /**
@@ -97,18 +103,18 @@ class ElementsTableSelectTest extends BrowserTestBase {
     $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
 
     $assert_session = $this->assertSession();
-    $assert_session->pageTextContains('Submitted: row1 = row1', 'Checked checkbox row1');
-    $assert_session->pageTextContains('Submitted: row2 = 0', 'Unchecked checkbox row2.');
-    $assert_session->pageTextContains('Submitted: row3 = 0', 'Unchecked checkbox row3.');
+    $assert_session->pageTextContains('Submitted: row1 = row1');
+    $assert_session->pageTextContains('Submitted: row2 = 0');
+    $assert_session->pageTextContains('Submitted: row3 = 0');
 
     // Test a submission with multiple checkboxes checked.
     $edit['tableselect[row1]'] = TRUE;
     $edit['tableselect[row3]'] = TRUE;
     $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
 
-    $assert_session->pageTextContains('Submitted: row1 = row1', 'Checked checkbox row1.');
-    $assert_session->pageTextContains('Submitted: row2 = 0', 'Unchecked checkbox row2.');
-    $assert_session->pageTextContains('Submitted: row3 = row3', 'Checked checkbox row3.');
+    $assert_session->pageTextContains('Submitted: row1 = row1');
+    $assert_session->pageTextContains('Submitted: row2 = 0');
+    $assert_session->pageTextContains('Submitted: row3 = row3');
 
   }
 
@@ -118,7 +124,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
   public function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
     $this->drupalPostForm('form_test/tableselect/multiple-false', $edit, 'Submit');
-    $this->assertSession()->pageTextContains('Submitted: row1', 'Selected radio button');
+    $this->assertSession()->pageTextContains('Submitted: row1');
   }
 
   /**
@@ -127,18 +133,18 @@ class ElementsTableSelectTest extends BrowserTestBase {
   public function testAdvancedSelect() {
     // When #multiple = TRUE a Select all checkbox should be displayed by default.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-default');
-    $this->xpath('//th[@class="select-all"]');
+    $this->assertSession()->elementExists('xpath', '//th[@class="select-all"]');
 
     // When #js_select is set to FALSE, a "Select all" checkbox should not be displayed.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-true-no-advanced-select');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     // A "Select all" checkbox never makes sense when #multiple = FALSE, regardless of the value of #js_select.
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-default');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
 
     $this->drupalGet('form_test/tableselect/advanced-select/multiple-false-advanced-select');
-    $this->assertFalse($this->xpath('//th[@class="select-all"]'));
+    $this->assertSession()->elementNotExists('xpath', '//th[@class="select-all"]');
   }
 
   /**

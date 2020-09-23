@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
@@ -27,12 +27,19 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['menu_link_content', 'system', 'link', 'outbound_processing_test', 'url_alter_test', 'user'];
+  protected static $modules = [
+    'menu_link_content',
+    'system',
+    'link',
+    'outbound_processing_test',
+    'url_alter_test',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpCurrentUser(['uid' => 0]);
@@ -47,8 +54,6 @@ class MenuLinkContentCacheabilityBubblingTest extends KernelTestBase {
    * Tests bubbleable metadata of menu links' outbound route/path processing.
    */
   public function testOutboundPathAndRouteProcessing() {
-    \Drupal::service('router.builder')->rebuild();
-
     $request_stack = \Drupal::requestStack();
     /** @var \Symfony\Component\Routing\RequestContext $request_context */
     $request_context = \Drupal::service('router.request_context');

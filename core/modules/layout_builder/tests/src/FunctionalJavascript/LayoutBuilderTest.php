@@ -16,6 +16,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 class LayoutBuilderTest extends WebDriverTestBase {
 
   use ContextualLinkClickTrait;
+  use LayoutBuilderSortTrait;
 
   /**
    * {@inheritdoc}
@@ -27,6 +28,11 @@ class LayoutBuilderTest extends WebDriverTestBase {
     'layout_test',
     'node',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * The node to customize with Layout Builder.
@@ -47,7 +53,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalPlaceBlock('local_tasks_block');
@@ -162,12 +168,13 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->elementTextNotContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Drag the block to a region in different section.
-    $page->find('css', '.layout__region--content .block-system-powered-by-block')->dragTo($page->find('css', '.layout__region--second'));
+    $this->sortableTo('.block-system-powered-by-block', '.layout__region--content', '.layout__region--second');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure the drag succeeded.
     $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
+
     $this->assertPageNotReloaded();
 
     // Ensure the dragged block is still in the correct position after reload.
@@ -224,16 +231,16 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextContains('This is the block content');
 
     // Remove both sections.
-    $assert_session->linkExists('Remove section');
-    $this->clickLink('Remove section');
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_section');
     $assert_session->pageTextContains('Are you sure you want to remove section 1?');
     $assert_session->pageTextContains('This action cannot be undone.');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $assert_session->linkExists('Remove section');
-    $this->clickLink('Remove section');
+    $assert_session->linkExists('Remove Section 1');
+    $this->clickLink('Remove Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_section');
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
@@ -301,8 +308,8 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->linkExists('Add block');
 
     // Configure the existing section.
-    $assert_session->linkExists('Configure section 1');
-    $this->clickLink('Configure section 1');
+    $assert_session->linkExists('Configure Section 1');
+    $this->clickLink('Configure Section 1');
     $this->assertOffCanvasFormAfterWait('layout_builder_configure_section');
     $page->fillField('layout_settings[setting_1]', 'Test setting value');
     $page->pressButton('Update');
@@ -341,6 +348,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     ]));
     $assert_session->linkExists('One column');
     $this->clickLink('One column');
+    $page->pressButton('Add section');
 
     // Add a block.
     $this->drupalGet(Url::fromRoute('layout_builder.add_block', [
@@ -455,23 +463,16 @@ class LayoutBuilderTest extends WebDriverTestBase {
    *
    * @param string $expected_form_id
    *   The expected form ID.
-   * @param int $timeout
-   *   (Optional) Timeout in milliseconds, defaults to 10000.
    */
-  private function assertOffCanvasFormAfterWait($expected_form_id, $timeout = 10000) {
-    $page = $this->getSession()->getPage();
+  private function assertOffCanvasFormAfterWait($expected_form_id) {
     $this->assertSession()->assertWaitOnAjaxRequest();
-    $this->assertNotEmpty($page->waitFor($timeout / 1000, function () use ($page, $expected_form_id) {
-      // Ensure the form ID exists, is visible, and has the correct value.
-      $form_id_element = $page->find('hidden_field_selector', ['hidden_field', 'form_id']);
-
-      // Ensure the off canvas dialog is visible.
-      $off_canvas = $page->find('css', '#drupal-off-canvas');
-      if (!$off_canvas || !$off_canvas->isVisible()) {
-        return NULL;
-      }
-      return $form_id_element;
-    }));
+    $off_canvas = $this->assertSession()->waitForElementVisible('css', '#drupal-off-canvas');
+    $this->assertNotNull($off_canvas);
+    $form_id_element = $off_canvas->find('hidden_field_selector', ['hidden_field', 'form_id']);
+    // Ensure the form ID has the correct value and that the form is visible.
+    $this->assertNotEmpty($form_id_element);
+    $this->assertSame($expected_form_id, $form_id_element->getValue());
+    $this->assertTrue($form_id_element->getParent()->isVisible());
   }
 
   /**

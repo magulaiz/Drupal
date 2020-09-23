@@ -19,7 +19,12 @@ class FeedLanguageTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = ['language'];
+  protected static $modules = ['language'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * List of langcodes.
@@ -31,7 +36,7 @@ class FeedLanguageTest extends AggregatorTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create test languages.
@@ -50,7 +55,13 @@ class FeedLanguageTest extends AggregatorTestBase {
    * Tests creation of feeds with a language.
    */
   public function testFeedLanguage() {
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer news feeds', 'access news feeds', 'create article content']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'administer news feeds',
+      'access news feeds',
+      'create article content',
+    ]);
     $this->drupalLogin($admin_user);
 
     // Enable language selection for feeds.

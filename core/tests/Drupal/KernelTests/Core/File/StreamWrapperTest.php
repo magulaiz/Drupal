@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +20,7 @@ class StreamWrapperTest extends FileTestBase {
    *
    * @var array
    */
-  public static $modules = ['file_test'];
+  protected static $modules = ['file_test'];
 
   /**
    * A stream wrapper scheme to register for the test.
@@ -35,7 +36,7 @@ class StreamWrapperTest extends FileTestBase {
    */
   protected $classname = 'Drupal\file_test\StreamWrapper\DummyStreamWrapper';
 
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     // Add file_private_path setting.
@@ -84,24 +85,25 @@ class StreamWrapperTest extends FileTestBase {
     $this->assertEqual($stream_wrapper_manager::getTarget('public://foo/bar.txt'), 'foo/bar.txt', 'Got a valid stream target from public://foo/bar.txt.');
     $this->assertEqual($stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), 'image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', t('Got a valid stream target from a data URI.'));
     $this->assertFalse($stream_wrapper_manager::getTarget('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');
-    $this->assertFalse($stream_wrapper_manager::getTarget('public://'), 'public:// has no target.');
-    $this->assertFalse($stream_wrapper_manager::getTarget('data:'), 'data: has no target.');
+    $this->assertSame($stream_wrapper_manager::getTarget('public://'), '');
+    $this->assertSame($stream_wrapper_manager::getTarget('data:'), '');
 
     // Test file_build_uri() and
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', 'Expected scheme was added.');
     $this->assertEqual($stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), PublicStream::basePath(), 'Expected default directory path was returned.');
-    $this->assertEqual($stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
+    $file_system = \Drupal::service('file_system');
+    assert($file_system instanceof FileSystemInterface);
+    $this->assertEqual($stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), $file_system->getTempDirectory(), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');
 
     // Test file_create_url()
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs
     // route information to work.
-    $this->container->get('router.builder')->rebuild();
-    $this->assertTrue(strpos(file_create_url('temporary://test.txt'), 'system/temporary?file=test.txt'), 'Temporary external URL correctly built.');
-    $this->assertTrue(strpos(file_create_url('public://test.txt'), Settings::get('file_public_path') . '/test.txt'), 'Public external URL correctly built.');
-    $this->assertTrue(strpos(file_create_url('private://test.txt'), 'system/files/test.txt'), 'Private external URL correctly built.');
+    $this->assertStringContainsString('system/temporary?file=test.txt', file_create_url('temporary://test.txt'), 'Temporary external URL correctly built.');
+    $this->assertStringContainsString(Settings::get('file_public_path') . '/test.txt', file_create_url('public://test.txt'), 'Public external URL correctly built.');
+    $this->assertStringContainsString('system/files/test.txt', file_create_url('private://test.txt'), 'Private external URL correctly built.');
   }
 
   /**
@@ -113,7 +115,7 @@ class StreamWrapperTest extends FileTestBase {
 
     // Open for rw and place pointer at beginning of file so select will return.
     $handle = fopen($filename, 'c+');
-    $this->assertTrue($handle, 'Able to open a file for appending, reading and writing.');
+    $this->assertNotFalse($handle, 'Able to open a file for appending, reading and writing.');
 
     // Attempt to change options on the file stream: should all fail.
     $this->assertFalse(@stream_set_blocking($handle, 0), 'Unable to set to non blocking using a local stream wrapper.');

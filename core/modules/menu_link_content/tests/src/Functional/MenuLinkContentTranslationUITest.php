@@ -22,7 +22,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'menu_link_content',
@@ -32,7 +32,12 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     $this->entityTypeId = 'menu_link_content';
     $this->bundle = 'menu_link_content';
     parent::setUp();
@@ -68,7 +73,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
    */
   public function testTranslationLinkOnMenuEditForm() {
     $this->drupalGet('admin/structure/menu/manage/tools');
-    $this->assertNoLink(t('Translate'));
+    $this->assertSession()->linkNotExists('Translate');
 
     $menu_link_content = MenuLinkContent::create([
       'menu_name' => 'tools',
@@ -77,7 +82,7 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     ]);
     $menu_link_content->save();
     $this->drupalGet('admin/structure/menu/manage/tools');
-    $this->assertLink(t('Translate'));
+    $this->assertSession()->linkExists('Translate');
   }
 
   /**
@@ -92,10 +97,12 @@ class MenuLinkContentTranslationUITest extends ContentTranslationUITestBase {
     $edit = [];
     $edit['admin_theme'] = 'seven';
     $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
+    // Check that edit uses the admin theme.
     $this->drupalGet('admin/structure/menu/item/' . $entityId . '/edit');
-    $this->assertRaw('core/themes/seven/css/base/elements.css', 'Edit uses admin theme.');
+    $this->assertRaw('core/themes/seven/css/base/elements.css');
+    // Check that translation uses admin theme as well.
     $this->drupalGet('admin/structure/menu/item/' . $entityId . '/edit/translations');
-    $this->assertRaw('core/themes/seven/css/base/elements.css', 'Translation uses admin theme as well.');
+    $this->assertRaw('core/themes/seven/css/base/elements.css');
   }
 
   /**

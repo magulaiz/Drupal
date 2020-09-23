@@ -15,7 +15,12 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['workflows', 'workflow_type_test'];
+  protected static $modules = ['workflows', 'workflow_type_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -47,7 +52,7 @@ class WorkflowTest extends ResourceTestBase {
   protected function createEntity() {
     $workflow = Workflow::create([
       'id' => 'rest_workflow',
-      'label' => 'REST Worklow',
+      'label' => 'REST Workflow',
       'type' => 'workflow_type_complex_test',
     ]);
     $workflow
@@ -91,7 +96,7 @@ class WorkflowTest extends ResourceTestBase {
               'workflow_type_test',
             ],
           ],
-          'label' => 'REST Worklow',
+          'label' => 'REST Workflow',
           'langcode' => 'en',
           'status' => TRUE,
           'workflow_type' => 'workflow_type_complex_test',

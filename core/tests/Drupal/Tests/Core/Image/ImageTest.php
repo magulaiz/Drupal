@@ -46,7 +46,7 @@ class ImageTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     // Use the Druplicon image.
     $this->source = __DIR__ . '/../../../../../misc/druplicon.png';
   }
@@ -57,7 +57,7 @@ class ImageTest extends UnitTestCase {
    * @param array $stubs
    *   (optional) Array containing methods to be replaced with stubs.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
   protected function getToolkitMock(array $stubs = []) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\GDToolkit');
@@ -76,7 +76,7 @@ class ImageTest extends UnitTestCase {
    * @param \Drupal\Core\Image\ImageToolkitInterface $toolkit
    *   The image toolkit object.
    *
-   * @return \PHPUnit_Framework_MockObject_MockObject
+   * @return \PHPUnit\Framework\MockObject\MockObject
    */
   protected function getToolkitOperationMock($class_name, ImageToolkitInterface $toolkit) {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
@@ -188,7 +188,7 @@ class ImageTest extends UnitTestCase {
   public function testIsValid() {
     $this->getTestImage(FALSE);
     $this->assertTrue($this->image->isValid());
-    $this->assertTrue(is_readable($this->image->getSource()));
+    $this->assertFileIsReadable($this->image->getSource());
   }
 
   /**

@@ -29,8 +29,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * of an iframe.
  *
  * @internal
- *   This is an internal part of the oEmbed system and should only be used by
- *   oEmbed-related code in Drupal core.
+ *   This is an internal part of the media system in Drupal core and may be
+ *   subject to change in minor releases. This class should not be
+ *   instantiated or extended by external code.
  */
 class OEmbedIframeController implements ContainerInjectionInterface {
 
@@ -145,6 +146,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
       // metadata of the rendered HTML will be captured correctly.
       $element = [
         '#theme' => 'media_oembed_iframe',
+        '#resource' => $resource,
         // Even though the resource HTML is untrusted, IFrameMarkup::create()
         // will create a trusted string. The only reason this is okay is
         // because we are serving it in an iframe, which will mitigate the

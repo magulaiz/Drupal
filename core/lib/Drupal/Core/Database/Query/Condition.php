@@ -61,6 +61,8 @@ class Condition implements ConditionInterface, \Countable {
 
   /**
    * The identifier of the query placeholder this condition has been compiled against.
+   *
+   * @var string
    */
   protected $queryPlaceholderIdentifier;
 
@@ -76,8 +78,19 @@ class Condition implements ConditionInterface, \Countable {
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
+   * @param bool $trigger_deprecation
+   *   If TRUE then trigger the deprecation warning.
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Creating an
+   *   instance of this class is deprecated.
+   *
+   * @see https://www.drupal.org/node/3159568
    */
-  public function __construct($conjunction) {
+  public function __construct($conjunction, $trigger_deprecation = TRUE) {
+    if ($trigger_deprecation) {
+      @trigger_error('Creating an instance of this class is deprecated in drupal:9.1.0 and is removed in drupal:10.0.0. Use Database::getConnection()->condition() instead. See https://www.drupal.org/node/3159568', E_USER_DEPRECATED);
+    }
+
     $this->conditions['#conjunction'] = $conjunction;
   }
 
@@ -397,7 +410,7 @@ class Condition implements ConditionInterface, \Countable {
    * {@inheritdoc}
    */
   public function conditionGroupFactory($conjunction = 'AND') {
-    return new Condition($conjunction);
+    return new static($conjunction);
   }
 
   /**

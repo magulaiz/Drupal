@@ -11,10 +11,12 @@ use Drupal\Core\Entity\DynamicallyFieldableEntityStorageInterface;
 use Drupal\field\ConfigImporterFieldPurger;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\EntityDisplayRebuilder;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /*
@@ -111,7 +113,7 @@ function field_help($route_name, RouteMatchInterface $route_match) {
         if (isset($modules[$provider])) {
           $display = \Drupal::moduleHandler()->getName($provider);
           if (\Drupal::moduleHandler()->implementsHook($provider, 'help')) {
-            $items[] = \Drupal::l($display, new Url('help.page', ['name' => $provider]));
+            $items[] = Link::fromTextAndUrl($display, Url::fromRoute('help.page', ['name' => $provider]))->toRenderable();
           }
           else {
             $items[] = $display;
@@ -299,7 +301,7 @@ function field_config_import_steps_alter(&$sync_steps, ConfigImporter $config_im
     // to purge field data where the module that provides the field is being
     // uninstalled.
     array_unshift($sync_steps, ['\Drupal\field\ConfigImporterFieldPurger', 'process']);
-  };
+  }
 }
 
 /**
@@ -332,6 +334,22 @@ function field_form_config_admin_import_form_alter(&$form, FormStateInterface $f
       ));
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for 'field_config'.
+ */
+function field_field_config_insert(FieldConfigInterface $field) {
+  if ($field->isSyncing()) {
+    // Don't change anything during a configuration sync.
+    return;
+  }
+
+  // Allow other view modes to update their configuration for the new field.
+  // Otherwise, configuration for view modes won't get updated until the mode
+  // is used for the first time, creating noise in config diffs.
+  \Drupal::classResolver(EntityDisplayRebuilder::class)
+    ->rebuildEntityTypeDisplays($field->getTargetEntityTypeId(), $field->getTargetBundle());
 }
 
 /**

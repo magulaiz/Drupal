@@ -6,6 +6,7 @@ use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests installation of configuration objects in installation functionality.
@@ -18,12 +19,12 @@ class ConfigInstallTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system'];
+  protected static $modules = ['system'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Ensure the global variable being asserted by this test does not exist;
@@ -40,9 +41,9 @@ class ConfigInstallTest extends KernelTestBase {
 
     // Verify that default module config does not exist before installation yet.
     $config = $this->config($default_config);
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
     $config = $this->config($default_configuration_entity);
-    $this->assertIdentical($config->isNew(), TRUE);
+    $this->assertTrue($config->isNew());
 
     // Ensure that schema provided by modules that are not installed is not
     // available.
@@ -55,9 +56,9 @@ class ConfigInstallTest extends KernelTestBase {
     \Drupal::configFactory()->reset($default_config);
     \Drupal::configFactory()->reset($default_configuration_entity);
     $config = $this->config($default_config);
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
     $config = $this->config($default_configuration_entity);
-    $this->assertIdentical($config->isNew(), FALSE);
+    $this->assertFalse($config->isNew());
 
     // Verify that config_test API hooks were invoked for the dynamic default
     // configuration entity.
@@ -224,7 +225,7 @@ class ConfigInstallTest extends KernelTestBase {
     $this->installModules(['config_other_module_config_test']);
     $this->installModules(['config_install_dependency_test']);
     $entity = \Drupal::entityTypeManager()->getStorage('config_test')->load('other_module_test_with_dependency');
-    $this->assertTrue($entity, 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
+    $this->assertNotEmpty($entity, 'The config_test.dynamic.other_module_test_with_dependency configuration has been created during install.');
     // Ensure that dependencies can be added during module installation by
     // hooks.
     $this->assertSame('config_install_dependency_test', $entity->getDependencies()['module'][0]);
@@ -257,7 +258,7 @@ class ConfigInstallTest extends KernelTestBase {
    * Tests installing configuration where the filename and ID do not match.
    */
   public function testIdMisMatch() {
-    $this->expectException(\PHPUnit_Framework_Error_Warning::class);
+    $this->expectException(Warning::class);
     $this->expectExceptionMessage('The configuration name "config_test.dynamic.no_id_match" does not match the ID "does_not_match"');
     $this->installModules(['config_test_id_mismatch']);
   }

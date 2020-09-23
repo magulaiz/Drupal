@@ -15,7 +15,7 @@ class FileTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['file', 'migrate_drupal'];
+  protected static $modules = ['file', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}
@@ -117,6 +117,7 @@ class FileTest extends MigrateSqlSourceTestBase {
         'filesize' => '3620',
         'status' => '1',
         'timestamp' => '1421727515',
+        'filepath' => 'sites/default/files/cube.jpeg',
       ],
     ];
     // Do an automatic count.
@@ -143,6 +144,7 @@ class FileTest extends MigrateSqlSourceTestBase {
         'filesize' => '3620',
         'status' => '1',
         'timestamp' => '1421727515',
+        'filepath' => 'sites/default/files/cube.jpeg',
       ],
     ];
     // Do an automatic count.

@@ -22,9 +22,17 @@ class ExperimentalModuleTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer modules',
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 
@@ -126,7 +134,9 @@ class ExperimentalModuleTest extends BrowserTestBase {
     $edit = [];
     $edit["modules[experimental_module_requirements_test][enable]"] = TRUE;
     $this->drupalPostForm('admin/modules', $edit, 'Install');
-    $this->assertUrl('admin/modules', [], 'If the module can not be installed we are not taken to the confirm form.');
+    // Verify that if the module can not be installed, we are not taken to the
+    // confirm form.
+    $this->assertSession()->addressEquals('admin/modules');
     $this->assertText('The Experimental Test Requirements module can not be installed.');
   }
 

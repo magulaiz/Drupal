@@ -4,8 +4,21 @@ namespace Drupal\Tests\Core\EventSubscriber;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\EventSubscriber\ActiveLinkResponseFilter;
+use Drupal\Core\Language\LanguageDefault;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Path\CurrentPathStack;
+use Drupal\Core\Path\PathMatcherInterface;
+use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Template\Attribute;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\EventSubscriber\ActiveLinkResponseFilter
@@ -35,6 +48,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       // https://www.drupal.org/comment/7938201#comment-7938201.
       1 => ['prefix' => '<div><p>', 'suffix' => '</p>' . $edge_case_html5 . '</div>'],
       // Multi-byte content *before* the HTML that needs the "is-active" class.
+      // cSpell:disable-next-line
       2 => ['prefix' => '<div><p>αβγδεζηθικλμνξοσὠ</p><p>', 'suffix' => '</p></div>'],
     ];
     $tags = [
@@ -51,6 +65,7 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       // Mix of UTF-8 and HTML entities, both must be retained.
       '☆ 3 × 4 = €12 and 4 &times; 3 = &euro;12 &#9734',
       // Multi-byte content.
+      // cSpell:disable-next-line
       'ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΣὨ',
       // Text that closely approximates an important attribute, but should be
       // ignored.
@@ -69,7 +84,6 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
       'query' => [],
     ];
     // Nothing to do.
-    $markup = '<foo>bar</foo>';
     $situations[] = ['context' => $context, 'is active' => FALSE, 'attributes' => []];
     // Matching path, plus all matching variations.
     $attributes = [
@@ -395,6 +409,92 @@ class ActiveLinkResponseFilterTest extends UnitTestCase {
    */
   public function testSetLinkActiveClass($html_markup, $current_path, $is_front, $url_language, array $query, $expected_html_markup) {
     $this->assertSame($expected_html_markup, ActiveLinkResponseFilter::setLinkActiveClass($html_markup, $current_path, $is_front, $url_language, $query));
+  }
+
+  /**
+   * Tests ActiveLinkResponseFilter only affects HTML responses.
+   *
+   * @covers ::onResponse
+   */
+  public function testOnlyHtml() {
+    $session = new AnonymousUserSession();
+    $language_manager = new LanguageManager(new LanguageDefault([]));
+    $request_stack = new RequestStack();
+    $request_stack->push(new Request());
+    $current_path_stack = new CurrentPathStack($request_stack);
+
+    // Make sure path matcher isn't called and we didn't get to the link logic.
+    $path_matcher = $this->prophesize(PathMatcherInterface::class);
+    $path_matcher->isFrontPage()->shouldNotBeCalled();
+
+    $subscriber = new ActiveLinkResponseFilter(
+      $session,
+      $current_path_stack,
+      $path_matcher->reveal(),
+      $language_manager
+    );
+
+    // A link that might otherwise be set 'active'.
+    $content = '<a data-drupal-link-system-path="otherpage">Other page</a>';
+
+    // Assert response with non-html content type gets ignored.
+    $response = new Response();
+    $response->setContent($content);
+    $response->headers->get('Content-Type', 'application/json');
+    $subscriber->onResponse(new ResponseEvent(
+      $this->prophesize(KernelInterface::class)->reveal(),
+      $request_stack->getCurrentRequest(),
+      HttpKernelInterface::MASTER_REQUEST,
+      $response
+    ));
+    $this->assertSame($response->getContent(), $content);
+  }
+
+  /**
+   * Tests certain response types ignored by the ActiveLinkResponseFilter.
+   *
+   * @covers ::onResponse
+   */
+  public function testSkipCertainResponseTypes() {
+    $session = new AnonymousUserSession();
+    $language_manager = new LanguageManager(new LanguageDefault([]));
+    $request_stack = new RequestStack();
+    $request_stack->push(new Request());
+    $current_path_stack = new CurrentPathStack($request_stack);
+
+    // Ensure path matcher is not called. This also tests that the
+    // ActiveLinkResponseFilter ignores the response.
+    $path_matcher = $this->prophesize(PathMatcherInterface::class);
+    $path_matcher->isFrontPage()->shouldNotBeCalled();
+
+    $subscriber = new ActiveLinkResponseFilter(
+      $session,
+      $current_path_stack,
+      $path_matcher->reveal(),
+      $language_manager
+    );
+
+    // Test BinaryFileResponse is ignored. Calling setContent() would throw a
+    // logic exception.
+    $response = new BinaryFileResponse(__FILE__, 200, ['Content-Type' => 'text/html']);
+    $subscriber->onResponse(new ResponseEvent(
+      $this->prophesize(KernelInterface::class)->reveal(),
+      $request_stack->getCurrentRequest(),
+      HttpKernelInterface::MASTER_REQUEST,
+      $response
+    ));
+
+    // Test StreamedResponse is ignored. Calling setContent() would throw a
+    // logic exception.
+    $response = new StreamedResponse(function () {
+      echo 'Success!';
+    }, 200, ['Content-Type' => 'text/html']);
+    $subscriber->onResponse(new ResponseEvent(
+      $this->prophesize(KernelInterface::class)->reveal(),
+      $request_stack->getCurrentRequest(),
+      HttpKernelInterface::MASTER_REQUEST,
+      $response
+    ));
   }
 
 }

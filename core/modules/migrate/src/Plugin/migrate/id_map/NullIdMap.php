@@ -55,13 +55,6 @@ class NullIdMap extends PluginBase implements MigrateIdMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function lookupDestinationId(array $source_id_values) {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function lookupDestinationIds(array $source_id_values) {
     return [];
   }
@@ -83,7 +76,7 @@ class NullIdMap extends PluginBase implements MigrateIdMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMessageIterator(array $source_id_values = [], $level = NULL) {
+  public function getMessages(array $source_id_values = [], $level = NULL) {
     return new \ArrayIterator([]);
   }
 

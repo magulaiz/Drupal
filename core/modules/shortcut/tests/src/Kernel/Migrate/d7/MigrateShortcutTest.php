@@ -18,7 +18,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'link',
     'field',
     'shortcut',
@@ -28,11 +28,10 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('shortcut');
     $this->installEntitySchema('menu_link_content');
-    \Drupal::service('router.builder')->rebuild();
     $this->executeMigration('d7_shortcut_set');
     $this->executeMigration('d7_menu');
     $this->executeMigration('d7_menu_links');
@@ -53,7 +52,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
    */
   protected function assertEntity($id, $title, $weight, $url) {
     $shortcut = Shortcut::load($id);
-    $this->assertTrue($shortcut instanceof ShortcutInterface);
+    $this->assertInstanceOf(ShortcutInterface::class, $shortcut);
     /** @var \Drupal\shortcut\ShortcutInterface $shortcut */
     $this->assertIdentical($title, $shortcut->getTitle());
     $this->assertIdentical($weight, $shortcut->getWeight());

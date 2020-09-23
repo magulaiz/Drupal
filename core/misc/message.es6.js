@@ -22,7 +22,11 @@
    */
   Drupal.Message = class {
     constructor(messageWrapper = null) {
-      this.messageWrapper = messageWrapper;
+      if (!messageWrapper) {
+        this.messageWrapper = Drupal.Message.defaultWrapper();
+      } else {
+        this.messageWrapper = messageWrapper;
+      }
     }
 
     /**
@@ -38,7 +42,7 @@
         wrapper = document.querySelector('[data-drupal-messages-fallback]');
         wrapper.removeAttribute('data-drupal-messages-fallback');
         wrapper.setAttribute('data-drupal-messages', '');
-        wrapper.removeAttribute('class');
+        wrapper.classList.remove('hidden');
       }
       return wrapper.innerHTML === ''
         ? Drupal.Message.messageInternalWrapper(wrapper)
@@ -76,7 +80,7 @@
      *   Message type, can be either 'status', 'error' or 'warning'.
      * @param {string} [options.announce]
      *   Screen-reader version of the message if necessary. To prevent a message
-     *   being sent to Drupal.announce() this should be an emptry string.
+     *   being sent to Drupal.announce() this should be an empty string.
      * @param {string} [options.priority]
      *   Priority of the message for Drupal.announce().
      *
@@ -84,9 +88,6 @@
      *   ID of message.
      */
     add(message, options = {}) {
-      if (!this.messageWrapper) {
-        this.messageWrapper = Drupal.Message.defaultWrapper();
-      }
       if (!options.hasOwnProperty('type')) {
         options.type = 'status';
       }
@@ -109,10 +110,9 @@
 
       // Throw an error if an unexpected message type is used.
       if (!Drupal.Message.getMessageTypeLabels().hasOwnProperty(options.type)) {
+        const { type } = options;
         throw new Error(
-          `The message type, ${
-            options.type
-          }, is not present in Drupal.Message.getMessageTypeLabels().`,
+          `The message type, ${type}, is not present in Drupal.Message.getMessageTypeLabels().`,
         );
       }
 

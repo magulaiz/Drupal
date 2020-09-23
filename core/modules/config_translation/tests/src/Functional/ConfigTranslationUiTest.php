@@ -29,7 +29,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'config_translation',
     'config_translation_test',
@@ -45,6 +45,11 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     'views',
     'views_ui',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Languages to enable.
@@ -74,7 +79,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected $localeStorage;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $translator_permissions = [
       'translate configuration',
@@ -140,7 +145,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     $this->drupalGet('admin/config/system/site-information');
     // Check translation tab exist.
-    $this->assertLinkByHref($translation_base_url);
+    $this->assertSession()->linkByHrefExists($translation_base_url);
 
     $this->drupalGet($translation_base_url);
 
@@ -149,10 +154,10 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink(t('Edit'));
     // Also check that saving the form leads back to the translation overview.
     $this->drupalPostForm(NULL, [], t('Save configuration'));
-    $this->assertUrl($translation_base_url);
+    $this->assertSession()->addressEquals($translation_base_url);
 
     // Check 'Add' link of French to visit add page.
-    $this->assertLinkByHref("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
     $this->clickLink(t('Add'));
 
     // Make sure original text is present on this page.
@@ -169,9 +174,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
-    $this->assertNoLinkByHref("$translation_base_url/fr/add");
-    $this->assertLinkByHref("$translation_base_url/fr/edit");
-    $this->assertLinkByHref("$translation_base_url/fr/delete");
+    $this->assertSession()->linkByHrefNotExists("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/edit");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/delete");
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
@@ -289,15 +294,15 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->translatorUser);
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
     $this->drupalGet($translation_base_url);
-    $this->assertNoLink(t('Edit'));
+    $this->assertSession()->linkNotExists('Edit');
 
     // Check 'Add' link for French.
-    $this->assertLinkByHref("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
   }
 
   /**
@@ -309,7 +314,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/contact');
 
     // Check for default contact form configuration entity from Contact module.
-    $this->assertLinkByHref('admin/structure/contact/manage/feedback');
+    $this->assertSession()->linkByHrefExists('admin/structure/contact/manage/feedback');
 
     // Save default language configuration.
     $label = 'Send your feedback';
@@ -322,11 +327,11 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Ensure translation link is present.
     $translation_base_url = 'admin/structure/contact/manage/feedback/translate';
-    $this->assertLinkByHref($translation_base_url);
+    $this->assertSession()->linkByHrefExists($translation_base_url);
 
     // Make sure translate tab is present.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertLink(t('Translate @type', ['@type' => 'contact form']));
+    $this->assertSession()->linkExists('Translate contact form');
 
     // Visit the form to confirm the changes.
     $this->drupalGet('contact/feedback');
@@ -334,11 +339,11 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($translation_base_url);
-      $this->assertLink(t('Translate @type', ['@type' => 'contact form']));
+      $this->assertSession()->linkExists('Translate contact form');
 
       // 'Add' link should be present for $langcode translation.
       $translation_page_url = "$translation_base_url/$langcode/add";
-      $this->assertLinkByHref($translation_page_url);
+      $this->assertSession()->linkByHrefExists($translation_page_url);
 
       // Make sure original text is present on this page.
       $this->drupalGet($translation_page_url);
@@ -362,9 +367,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->assertEqual($expected, $override->get());
 
       // Check for edit, delete links (and no 'add' link) for $langcode.
-      $this->assertNoLinkByHref("$translation_base_url/$langcode/add");
-      $this->assertLinkByHref("$translation_base_url/$langcode/edit");
-      $this->assertLinkByHref("$translation_base_url/$langcode/delete");
+      $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/add");
+      $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/edit");
+      $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/delete");
 
       // Visit language specific version of form to check label.
       $this->drupalGet($langcode . '/contact/feedback');
@@ -408,13 +413,13 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $this->drupalGet("$translation_base_url/$langcode/delete");
       $this->assertRaw(t('Are you sure you want to delete the @language translation of %label?', $replacements));
       // Assert link back to list page to cancel delete is present.
-      $this->assertLinkByHref($translation_base_url);
+      $this->assertSession()->linkByHrefExists($translation_base_url);
 
       $this->drupalPostForm(NULL, [], t('Delete'));
       $this->assertRaw(t('@language translation of %label was deleted', $replacements));
-      $this->assertLinkByHref("$translation_base_url/$langcode/add");
-      $this->assertNoLinkByHref("translation_base_url/$langcode/edit");
-      $this->assertNoLinkByHref("$translation_base_url/$langcode/delete");
+      $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/add");
+      $this->assertSession()->linkByHrefNotExists("translation_base_url/$langcode/edit");
+      $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/delete");
 
       // Expect no language specific file present anymore.
       $override = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'contact.form.feedback');
@@ -425,15 +430,15 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->translatorUser);
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // While translator can access the translation page, the edit link is not
     // present due to lack of permissions.
     $this->drupalGet($translation_base_url);
-    $this->assertNoLink(t('Edit'));
+    $this->assertSession()->linkNotExists('Edit');
 
     // Check 'Add' link for French.
-    $this->assertLinkByHref("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
   }
 
   /**
@@ -445,7 +450,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/date-time');
 
     // Check for medium format.
-    $this->assertLinkByHref('admin/config/regional/date-time/formats/manage/medium');
+    $this->assertSession()->linkByHrefExists('admin/config/regional/date-time/formats/manage/medium');
 
     // Save default language configuration for a new format.
     $edit = [
@@ -467,7 +472,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
       // 'Add' link should be present for French translation.
       $translation_page_url = "$translation_base_url/fr/add";
-      $this->assertLinkByHref($translation_page_url);
+      $this->assertSession()->linkByHrefExists($translation_page_url);
 
       // Make sure original text is present on this page.
       $this->drupalGet($translation_page_url);
@@ -511,11 +516,11 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
 
     $this->drupalGet('admin/config/people/accounts');
-    $this->assertLink(t('Translate @type', ['@type' => 'account settings']));
+    $this->assertSession()->linkExists('Translate account settings');
 
     $this->drupalGet('admin/config/people/accounts/translate');
-    $this->assertLink(t('Translate @type', ['@type' => 'account settings']));
-    $this->assertLinkByHref('admin/config/people/accounts/translate/fr/add');
+    $this->assertSession()->linkExists('Translate account settings');
+    $this->assertSession()->linkByHrefExists('admin/config/people/accounts/translate/fr/add');
 
     // Update account settings fields for French.
     $edit = [
@@ -547,28 +552,28 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Loading translation page for not-specified language (und)
     // should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/und/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Check the source language doesn't have 'Add' or 'Delete' link and
     // make sure source language edit goes to original configuration page
     // not the translation specific edit page.
     $this->drupalGet('admin/config/system/site-information/translate');
-    $this->assertNoLinkByHref('admin/config/system/site-information/translate/en/edit');
-    $this->assertNoLinkByHref('admin/config/system/site-information/translate/en/add');
-    $this->assertNoLinkByHref('admin/config/system/site-information/translate/en/delete');
-    $this->assertLinkByHref('admin/config/system/site-information');
+    $this->assertSession()->linkByHrefNotExists('admin/config/system/site-information/translate/en/edit');
+    $this->assertSession()->linkByHrefNotExists('admin/config/system/site-information/translate/en/add');
+    $this->assertSession()->linkByHrefNotExists('admin/config/system/site-information/translate/en/delete');
+    $this->assertSession()->linkByHrefExists('admin/config/system/site-information');
 
     // Translation addition to source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/add');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Translation editing in source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/edit');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Translation deletion in source language should return 403.
     $this->drupalGet('admin/config/system/site-information/translate/en/delete');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Set default language of site information to not-specified language (und).
     $this->config('system.site')
@@ -577,11 +582,11 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // Make sure translation tab does not exist on the configuration page.
     $this->drupalGet('admin/config/system/site-information');
-    $this->assertNoLinkByHref('admin/config/system/site-information/translate');
+    $this->assertSession()->linkByHrefNotExists('admin/config/system/site-information/translate');
 
     // If source language is not specified, translation page should be 403.
     $this->drupalGet('admin/config/system/site-information/translate');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -599,7 +604,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->drupalGet($translation_base_url);
 
     // Check 'Add' link of French to visit add page.
-    $this->assertLinkByHref("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
     $this->clickLink(t('Add'));
 
     // Make sure original text is present on this page.
@@ -617,9 +622,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->assertRaw(t('Successfully saved @language translation.', ['@language' => 'French']));
 
     // Check for edit, delete links (and no 'add' link) for French language.
-    $this->assertNoLinkByHref("$translation_base_url/fr/add");
-    $this->assertLinkByHref("$translation_base_url/fr/edit");
-    $this->assertLinkByHref("$translation_base_url/fr/delete");
+    $this->assertSession()->linkByHrefNotExists("$translation_base_url/fr/add");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/edit");
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/delete");
 
     // Check translation saved proper.
     $this->drupalGet("$translation_base_url/fr/edit");
@@ -754,9 +759,9 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->clickLink('Add');
 
     $this->assertText('Translatable field setting');
-    $this->assertEscaped($translatable_field_setting);
+    $this->assertSession()->assertEscaped($translatable_field_setting);
     $this->assertText('Translatable storage setting');
-    $this->assertEscaped($translatable_storage_setting);
+    $this->assertSession()->assertEscaped($translatable_storage_setting);
   }
 
   /**
@@ -795,8 +800,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     $this->assertText(Html::escape(strip_tags($on_label)) . ' Boolean settings');
 
     // Checks that the correct on and off labels appear on the form.
-    $this->assertEscaped($on_label);
-    $this->assertEscaped($off_label);
+    $this->assertSession()->assertEscaped($on_label);
+    $this->assertSession()->assertEscaped($off_label);
   }
 
   /**
@@ -872,7 +877,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Visit account setting translation page, this should not
     // throw any notices.
     $this->drupalGet('admin/config/people/accounts/translate');
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -892,8 +897,8 @@ class ConfigTranslationUiTest extends BrowserTestBase {
     // Check if the translation page does not have the altered out settings.
     $this->drupalGet('admin/config/people/accounts/translate/fr/add');
     $this->assertText(t('Name'));
-    $this->assertNoText(t('Account cancellation confirmation'));
-    $this->assertNoText(t('Password recovery'));
+    $this->assertNoText('Account cancellation confirmation');
+    $this->assertNoText('Password recovery');
   }
 
   /**
@@ -958,7 +963,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
 
     // 'Add' link should be present for French translation.
     $translation_page_url = "$translation_base_url/fr/add";
-    $this->assertLinkByHref($translation_page_url);
+    $this->assertSession()->linkByHrefExists($translation_page_url);
 
     $this->drupalGet($translation_page_url);
 
@@ -1151,19 +1156,15 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       ':id' => $id,
     ]);
     $textarea = reset($textarea);
-    $this->assertTrue($textarea instanceof NodeElement, new FormattableMarkup('Disabled field @id exists.', [
-      '@id' => $id,
-    ]));
+    $this->assertInstanceOf(NodeElement::class, $textarea);
     $expected = 'This field has been disabled because you do not have sufficient permissions to edit it.';
     $this->assertEqual($textarea->getText(), $expected, new FormattableMarkup('Disabled textarea @id hides text in an inaccessible text format.', [
       '@id' => $id,
     ]));
     // Make sure the text format select is not shown.
     $select_id = str_replace('value', 'format--2', $id);
-    $select = $this->xpath('//select[@id=:id]', [':id' => $select_id]);
-    return $this->assertFalse($select, new FormattableMarkup('Field @id does not exist.', [
-      '@id' => $id,
-    ]));
+    $xpath = $this->assertSession()->buildXPathQuery('//select[@id=:id]', [':id' => $select_id]);
+    $this->assertSession()->elementNotExists('xpath', $xpath);
   }
 
   /**

@@ -16,13 +16,20 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['config_test'];
+  protected static $modules = ['config_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests status operations.
    */
   public function testCRUD() {
-    $this->drupalLogin($this->drupalCreateUser(['administer site configuration']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+    ]));
 
     $id = strtolower($this->randomMachineName());
     $edit = [
@@ -35,17 +42,17 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
 
     // Disable an entity.
     $disable_url = $entity->toUrl('disable');
-    $this->assertLinkByHref($disable_url->toString());
+    $this->assertSession()->linkByHrefExists($disable_url->toString());
     $this->drupalGet($disable_url);
-    $this->assertResponse(200);
-    $this->assertNoLinkByHref($disable_url->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefNotExists($disable_url->toString());
 
     // Enable an entity.
     $enable_url = $entity->toUrl('enable');
-    $this->assertLinkByHref($enable_url->toString());
+    $this->assertSession()->linkByHrefExists($enable_url->toString());
     $this->drupalGet($enable_url);
-    $this->assertResponse(200);
-    $this->assertNoLinkByHref($enable_url->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefNotExists($enable_url->toString());
   }
 
 }

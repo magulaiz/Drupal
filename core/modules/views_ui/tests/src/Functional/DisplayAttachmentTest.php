@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\views\Views;
 
 /**
@@ -22,6 +21,11 @@ class DisplayAttachmentTest extends UITestBase {
   public static $testViews = ['test_attachment_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests the attachment UI.
    */
   public function testAttachmentUI() {
@@ -31,16 +35,15 @@ class DisplayAttachmentTest extends UITestBase {
     $attachment_display_url = 'admin/structure/views/nojs/display/test_attachment_ui/attachment_1/displays';
     $this->drupalGet($attachment_display_url);
     // Display labels should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
 
-    foreach (['default', 'page-1'] as $display_id) {
-      $this->assertNoFieldChecked("edit-displays-$display_id", new FormattableMarkup('Make sure the @display_id can be marked as attached', ['@display_id' => $display_id]));
-    }
+    $this->assertSession()->checkboxNotChecked("edit-displays-default");
+    $this->assertSession()->checkboxNotChecked("edit-displays-page-1");
 
     // Save the attachments and test the value on the view.
     $this->drupalPostForm($attachment_display_url, ['displays[page_1]' => 1], t('Apply'));
     // Options summary should be escaped.
-    $this->assertEscaped('<em>Page</em>');
+    $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
     $result = $this->xpath('//a[@id = :id]', [':id' => 'views-attachment-1-displays']);
     $this->assertEqual($result[0]->getAttribute('title'), t('Page'));

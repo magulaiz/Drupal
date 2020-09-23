@@ -16,13 +16,24 @@ class ForumIndexTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['taxonomy', 'comment', 'forum'];
+  protected static $modules = ['taxonomy', 'comment', 'forum'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a test user.
-    $web_user = $this->drupalCreateUser(['create forum content', 'edit own forum content', 'edit any forum content', 'administer nodes', 'administer forums']);
+    $web_user = $this->drupalCreateUser([
+      'create forum content',
+      'edit own forum content',
+      'edit any forum content',
+      'administer nodes',
+      'administer forums',
+    ]);
     $this->drupalLogin($web_user);
   }
 
@@ -43,7 +54,7 @@ class ForumIndexTest extends BrowserTestBase {
     // Create the forum topic, preselecting the forum ID via a URL parameter.
     $this->drupalGet("forum/$tid");
     $this->clickLink(t('Add new @node_type', ['@node_type' => 'Forum topic']));
-    $this->assertUrl('node/add/forum', ['query' => ['forum_id' => $tid]]);
+    $this->assertSession()->addressEquals("node/add/forum?forum_id=$tid");
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Check that the node exists in the database.
@@ -57,19 +68,19 @@ class ForumIndexTest extends BrowserTestBase {
       'parent[0]' => $tid,
     ];
     $this->drupalPostForm('admin/structure/forum/add/forum', $edit, t('Save'));
-    $this->assertSession()->linkExists(t('edit forum'));
+    $this->assertSession()->linkExists('edit forum');
 
     $tid_child = $tid + 1;
 
     // Verify that the node appears on the index.
     $this->drupalGet('forum/' . $tid);
     $this->assertText($title, 'Published forum topic appears on index.');
-    $this->assertCacheTag('node_list');
-    $this->assertCacheTag('config:node.type.forum');
-    $this->assertCacheTag('comment_list');
-    $this->assertCacheTag('node:' . $node->id());
-    $this->assertCacheTag('taxonomy_term:' . $tid);
-    $this->assertCacheTag('taxonomy_term:' . $tid_child);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:node.type.forum');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'comment_list');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'node:' . $node->id());
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'taxonomy_term:' . $tid);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'taxonomy_term:' . $tid_child);
 
     // Unpublish the node.
     $edit = ['status[value]' => FALSE];

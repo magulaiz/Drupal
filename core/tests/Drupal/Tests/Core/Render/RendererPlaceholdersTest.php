@@ -25,7 +25,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     // Disable the required cache contexts, so that this test can test just the
     // placeholder replacement behavior.
     $this->rendererConfig['required_cache_contexts'] = [];
@@ -1118,7 +1118,7 @@ HTML;
   }
 
   /**
-   * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit_Framework_MockObject_Builder_InvocationMocker
+   * @return \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\Builder\InvocationMocker
    */
   protected function setupThemeManagerForDetails() {
     return $this->themeManager->expects($this->any())

@@ -11,10 +11,19 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LanguageBlockSettingsVisibilityTest extends BrowserTestBase {
 
-  public static $modules = ['block', 'language'];
+  protected static $modules = ['block', 'language'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   public function testUnnecessaryLanguageSettingsVisibility() {
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer blocks']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'administer blocks',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'hu'], t('Add language'));
     $this->drupalGet('admin/structure/block/add/system_menu_block:admin/stark');

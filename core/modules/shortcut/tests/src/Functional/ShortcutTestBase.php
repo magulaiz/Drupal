@@ -17,7 +17,7 @@ abstract class ShortcutTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'toolbar', 'shortcut'];
+  protected static $modules = ['node', 'toolbar', 'shortcut'];
 
   /**
    * User with permission to administer shortcuts.
@@ -78,8 +78,23 @@ abstract class ShortcutTestBase extends BrowserTestBase {
     }
 
     // Create users.
-    $this->adminUser = $this->drupalCreateUser(['access toolbar', 'administer shortcuts', 'view the administration theme', 'create article content', 'create page content', 'access content overview', 'administer users', 'link to any page', 'edit any article content']);
-    $this->shortcutUser = $this->drupalCreateUser(['customize shortcut links', 'switch shortcut sets', 'access shortcuts', 'access content']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access toolbar',
+      'administer shortcuts',
+      'view the administration theme',
+      'create article content',
+      'create page content',
+      'access content overview',
+      'administer users',
+      'link to any page',
+      'edit any article content',
+    ]);
+    $this->shortcutUser = $this->drupalCreateUser([
+      'customize shortcut links',
+      'switch shortcut sets',
+      'access shortcuts',
+      'access content',
+    ]);
 
     // Create a node.
     $this->node = $this->drupalCreateNode(['type' => 'article']);

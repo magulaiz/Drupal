@@ -19,14 +19,24 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['language', 'content_translation'];
+  protected static $modules = ['language', 'content_translation'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'view the administration theme', 'administer modules']);
+    $admin_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'view the administration theme',
+      'administer modules',
+    ]);
     $this->drupalLogin($admin_user);
     $this->drupalPostForm('admin/config/regional/language/add', ['predefined_langcode' => 'it'], t('Add language'));
   }
@@ -80,7 +90,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     $type = LanguageInterface::TYPE_CONTENT;
     $language_types = $this->languageManager()->getLanguageTypes();
-    $this->assertTrue(in_array($type, $language_types), 'Content language type is configurable.');
+    $this->assertContains($type, $language_types, 'Content language type is configurable.');
 
     // Enable some core and custom language negotiation methods. The test
     // language type is supposed to be configurable.
@@ -136,7 +146,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
 
     // Check that only the core language types are available.
     foreach ($this->languageManager()->getDefinedLanguageTypes() as $type) {
-      $this->assertTrue(strpos($type, 'test') === FALSE, new FormattableMarkup('The %type language is still available', ['%type' => $type]));
+      $this->assertStringNotContainsString('test', $type, new FormattableMarkup('The %type language is still available', ['%type' => $type]));
     }
 
     // Check that fixed language types are properly configured, even those
@@ -149,8 +159,8 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
     $this->assertFalse(isset($negotiation[$test_method_id]), 'The disabled test language negotiation method is not part of the content language negotiation settings.');
 
     // Check that configuration page presents the correct options and settings.
-    $this->assertNoRaw(t('Test language detection'), 'No test language type configuration available.');
-    $this->assertNoRaw(t('This is a test language negotiation method'), 'No test language negotiation method available.');
+    $this->assertNoRaw(t('Test language detection'));
+    $this->assertNoRaw(t('This is a test language negotiation method'));
   }
 
   /**

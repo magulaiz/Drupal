@@ -13,6 +13,11 @@ use Drupal\node\Entity\Node;
 class InlineBlockTest extends InlineBlockTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Tests adding and editing of inline blocks.
    */
   public function testInlineBlocks() {
@@ -136,7 +141,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The block body');
     $blocks = $this->blockStorage->loadMultiple();
-    $this->assertEquals(count($blocks), 1);
+    $this->assertCount(1, $blocks);
     /* @var \Drupal\Core\Entity\ContentEntityBase $block */
     $block = array_pop($blocks);
     $revision_id = $block->getRevisionId();
@@ -158,7 +163,7 @@ class InlineBlockTest extends InlineBlockTestBase {
       // When discarding the original block body should appear.
       $assert_session->pageTextContains('The block body');
 
-      $this->assertEquals(count($blocks), 1);
+      $this->assertCount(1, $blocks);
       $block = array_pop($blocks);
       $this->assertEquals($block->getRevisionId(), $revision_id);
       $this->assertEquals($block->get('body')->getValue()[0]['value'], 'The block body');
@@ -256,6 +261,92 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet('node/1');
     $assert_session->pageTextContains('The DEFAULT block body');
     $assert_session->pageTextNotContains('The NEW block body');
+  }
+
+  /**
+   * Tests entity blocks revisioning.
+   */
+  public function testInlineBlocksRevisioningIntegrity() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+      'view all revisions',
+      'access content',
+      'create and edit custom blocks',
+    ]));
+    $this->drupalPostForm(
+      static::FIELD_UI_PREFIX . '/display/default',
+      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
+      'Save'
+    );
+
+    $block_1_locator = static::INLINE_BLOCK_LOCATOR;
+    $block_2_locator = sprintf('%s + %s', static::INLINE_BLOCK_LOCATOR, static::INLINE_BLOCK_LOCATOR);
+
+    // Add two blocks to the page and assert the content in each.
+    $this->drupalGet('node/1/layout');
+    $this->addInlineBlockToLayout('Block 1', 'Block 1 original');
+    $this->addInlineBlockToLayout('Block 2', 'Block 2 original');
+    $this->assertSaveLayout();
+    $this->assertNodeRevisionContent(3, ['Block 1 original', 'Block 2 original']);
+    $this->assertBlockRevisionCountByTitle('Block 1', 1);
+    $this->assertBlockRevisionCountByTitle('Block 2', 1);
+
+    // Update the contents of one of the blocks and assert the updated content
+    // appears on the next revision.
+    $this->drupalGet('node/1/layout');
+    $this->configureInlineBlock('Block 2 original', 'Block 2 updated', $block_2_locator);
+    $this->assertSaveLayout();
+    $this->assertNodeRevisionContent(4, ['Block 1 original', 'Block 2 updated']);
+    $this->assertBlockRevisionCountByTitle('Block 1', 1);
+    $this->assertBlockRevisionCountByTitle('Block 2', 2);
+
+    // Update block 1 without creating a new revision of the parent.
+    $this->drupalGet('node/1/layout');
+    $this->configureInlineBlock('Block 1 original', 'Block 1 updated', $block_1_locator);
+    $this->getSession()->getPage()->uncheckField('revision');
+    $this->getSession()->getPage()->pressButton('Save layout');
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', '.messages--status'));
+    $this->assertNodeRevisionContent(4, ['Block 1 updated', 'Block 2 updated']);
+    $this->assertBlockRevisionCountByTitle('Block 1', 2);
+    $this->assertBlockRevisionCountByTitle('Block 2', 2);
+
+    // Reassert all of the parent revisions contain the correct block content
+    // and the integrity of the revisions was preserved.
+    $this->assertNodeRevisionContent(3, ['Block 1 original', 'Block 2 original']);
+  }
+
+  /**
+   * Assert the contents of a node revision.
+   *
+   * @param int $revision_id
+   *   The revision ID to assert.
+   * @param array $content
+   *   The content items to assert on the page.
+   */
+  protected function assertNodeRevisionContent($revision_id, array $content) {
+    $this->drupalGet("node/1/revisions/$revision_id/view");
+    foreach ($content as $content_item) {
+      $this->assertSession()->pageTextContains($content_item);
+    }
+  }
+
+  /**
+   * Assert the number of block content revisions by the block title.
+   *
+   * @param string $block_title
+   *   The block title.
+   * @param int $expected_revision_count
+   *   The revision count.
+   */
+  protected function assertBlockRevisionCountByTitle($block_title, $expected_revision_count) {
+    $actual_revision_count = $this->blockStorage->getQuery()
+      ->condition('info', $block_title)
+      ->allRevisions()
+      ->count()
+      ->execute();
+    $this->assertEquals($actual_revision_count, $expected_revision_count);
   }
 
   /**
@@ -542,7 +633,6 @@ class InlineBlockTest extends InlineBlockTestBase {
    * Tests 'create and edit custom blocks' permission to edit an existing block.
    */
   public function testEditInlineBlocksPermission() {
-    $assert_session = $this->assertSession();
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()

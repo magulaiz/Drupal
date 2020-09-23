@@ -2,15 +2,17 @@
 
 namespace Drupal\migrate\Plugin\migrate\destination;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\migrate\Audit\HighestIdInterface;
+use Drupal\migrate\Exception\EntityValidationException;
+use Drupal\migrate\Plugin\MigrateValidatableEntityInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -26,6 +28,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - overwrite_properties: (optional) A list of properties that will be
  *   overwritten if an entity with the same ID already exists. Any properties
  *   that are not listed will not be overwritten.
+ * - validate: (optional) Boolean, indicates whether an entity should be
+ *   validated, defaults to FALSE.
  *
  * Example:
  *
@@ -75,17 +79,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   overwrite_properties:
  *     - title
  *     - body
+ *   # Run entity and fields validation before saving an entity.
+ *   # @see \Drupal\Core\Entity\FieldableEntityInterface::validate()
+ *   validate: true
  * @endcode
  *
  * @see \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  */
-class EntityContentBase extends Entity implements HighestIdInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
+class EntityContentBase extends Entity implements HighestIdInterface, MigrateValidatableEntityInterface {
 
   /**
    * Entity field manager.
@@ -146,6 +147,11 @@ class EntityContentBase extends Entity implements HighestIdInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * @throws \Drupal\migrate\MigrateException
+   *   When an entity cannot be looked up.
+   * @throws \Drupal\migrate\Exception\EntityValidationException
+   *   When an entity validation hasn't been passed.
    */
   public function import(Row $row, array $old_destination_id_values = []) {
     $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
@@ -153,12 +159,36 @@ class EntityContentBase extends Entity implements HighestIdInterface {
     if (!$entity) {
       throw new MigrateException('Unable to get entity');
     }
-
+    assert($entity instanceof ContentEntityInterface);
+    if ($this->isEntityValidationRequired($entity)) {
+      $this->validateEntity($entity);
+    }
     $ids = $this->save($entity, $old_destination_id_values);
     if ($this->isTranslationDestination()) {
       $ids[] = $entity->language()->getId();
     }
     return $ids;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEntityValidationRequired(FieldableEntityInterface $entity) {
+    // Prioritize the entity method over migration config because it won't be
+    // possible to save that entity unvalidated.
+    /* @see \Drupal\Core\Entity\ContentEntityBase::preSave() */
+    return $entity->isValidationRequired() || !empty($this->configuration['validate']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateEntity(FieldableEntityInterface $entity) {
+    $violations = $entity->validate();
+
+    if (count($violations) > 0) {
+      throw new EntityValidationException($violations);
+    }
   }
 
   /**
@@ -288,8 +318,6 @@ class EntityContentBase extends Entity implements HighestIdInterface {
           $values = $default_value;
         }
         else {
-          // Otherwise, ask the field type to generate a sample value.
-          $field_type = $field_definition->getType();
           /** @var \Drupal\Core\Field\FieldItemInterface $field_type_class */
           $field_type_class = $this->fieldTypeManager
             ->getPluginClass($field_definition->getType());
@@ -331,34 +359,6 @@ class EntityContentBase extends Entity implements HighestIdInterface {
     else {
       parent::rollback($destination_identifier);
     }
-  }
-
-  /**
-   * Gets the field definition from a specific entity base field.
-   *
-   * The method takes the field ID as an argument and returns the field storage
-   * definition to be used in getIds() by querying the destination entity base
-   * field definition.
-   *
-   * @param string $key
-   *   The field ID key.
-   *
-   * @return array
-   *   An associative array with a structure that contains the field type, keyed
-   *   as 'type', together with field storage settings as they are returned by
-   *   FieldStorageDefinitionInterface::getSettings().
-   *
-   * @see \Drupal\Core\Field\FieldStorageDefinitionInterface::getSettings()
-   */
-  protected function getDefinitionFromEntity($key) {
-    $entity_type_id = static::getEntityTypeId($this->getPluginId());
-    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $definitions */
-    $definitions = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
-    $field_definition = $definitions[$key];
-
-    return [
-      'type' => $field_definition->getType(),
-    ] + $field_definition->getSettings();
   }
 
   /**

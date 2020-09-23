@@ -6,9 +6,12 @@ use Drupal\comment\Entity\Comment;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\TranslatableInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -36,14 +39,19 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'basic_auth',
   ];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Ensure filtering on relationships works with bundle-specific target types.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2953207
+   * @see https://www.drupal.org/project/drupal/issues/2953207
    */
   public function testBundleSpecificTargetEntityTypeFromIssue2953207() {
     // Set up data model.
@@ -79,7 +87,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure deep nested include works on multi target entity type field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2973681
+   * @see https://www.drupal.org/project/drupal/issues/2973681
    */
   public function testDeepNestedIncludeMultiTargetEntityTypeFieldFromIssue2973681() {
     // Set up data model.
@@ -143,7 +151,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure POST and PATCH works for bundle-less relationship routes.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2976371
+   * @see https://www.drupal.org/project/drupal/issues/2976371
    */
   public function testBundlelessRelationshipMutationFromIssue2973681() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -194,7 +202,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures GETting terms works when multiple vocabularies exist.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2977879
+   * @see https://www.drupal.org/project/drupal/issues/2977879
    */
   public function testGetTermWhenMultipleVocabulariesExistFromIssue2977879() {
     // Set up data model.
@@ -230,7 +238,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Cannot PATCH an entity with dangling references in an ER field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2968972
+   * @see https://www.drupal.org/project/drupal/issues/2968972
    */
   public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2968972() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -301,7 +309,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures GETting node collection + hook_node_grants() implementations works.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984964
+   * @see https://www.drupal.org/project/drupal/issues/2984964
    */
   public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964() {
     // Set up data model.
@@ -326,13 +334,13 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       ],
     ]);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertTrue(in_array('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]), TRUE));
+    $this->assertContains('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
   }
 
   /**
    * Cannot GET an entity with dangling references in an ER field.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984647
+   * @see https://www.drupal.org/project/drupal/issues/2984647
    */
   public function testDanglingReferencesInAnEntityReferenceFieldFromIssue2984647() {
     // Set up data model.
@@ -462,7 +470,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
    * Adding a new relationship field should cause new routes to be immediately
    * regenerated. The site builder should not need to manually rebuild caches.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2984886
+   * @see https://www.drupal.org/project/drupal/issues/2984886
    */
   public function testThatRoutesAreRebuiltAfterDataModelChangesFromIssue2984886() {
     $user = $this->drupalCreateUser(['access content']);
@@ -518,7 +526,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures denormalizing relationships with aliased field names works.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3007113
+   * @see https://www.drupal.org/project/drupal/issues/3007113
    * @see https://www.drupal.org/project/jsonapi_extras/issues/3004582#comment-12817261
    */
   public function testDenormalizeAliasedRelationshipFromIssue2953207() {
@@ -576,7 +584,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures that Drupal's page cache is effective.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3009596
+   * @see https://www.drupal.org/project/drupal/issues/3009596
    */
   public function testPageCacheFromIssue3009596() {
     $anonymous_role = Role::load(RoleInterface::ANONYMOUS_ID);
@@ -611,7 +619,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures that filtering by a sequential internal ID named 'id' is possible.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3015759
+   * @see https://www.drupal.org/project/drupal/issues/3015759
    */
   public function testFilterByIdFromIssue3015759() {
     // Set up data model.
@@ -651,7 +659,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures datetime fields are normalized using the correct timezone.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/2999438
+   * @see https://www.drupal.org/project/drupal/issues/2999438
    */
   public function testPatchingDateTimeNormalizedWrongTimeZoneIssue3021194() {
     // Set up data model.
@@ -700,7 +708,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensures PATCHing datetime (both date-only & date+time) fields is possible.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3021194
+   * @see https://www.drupal.org/project/drupal/issues/3021194
    */
   public function testPatchingDateTimeFieldsFromIssue3021194() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -783,7 +791,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure includes are respected even when POSTing.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   * @see https://www.drupal.org/project/drupal/issues/3026030
    */
   public function testPostToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -820,7 +828,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure includes are respected even when PATCHing.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3026030
+   * @see https://www.drupal.org/project/drupal/issues/3026030
    */
   public function testPatchToIncludeUrlDoesNotReturnIncludeFromIssue3026030() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -866,25 +874,30 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   /**
    * Ensure `@FieldType=map` fields are normalized correctly.
    *
-   * @see https://www.drupal.org/project/jsonapi/issues/3040590
+   * @see https://www.drupal.org/project/drupal/issues/3040590
    */
   public function testMapFieldTypeNormalizationFromIssue3040590() {
     $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
 
     // Create data.
-    $entity = EntityTestMapField::create([
+    $entity_a = EntityTestMapField::create([
+      'name' => 'A',
       'data' => [
         'foo' => 'bar',
         'baz' => 'qux',
       ],
     ]);
-    $entity->save();
+    $entity_a->save();
+    $entity_b = EntityTestMapField::create([
+      'name' => 'B',
+    ]);
+    $entity_b->save();
     $user = $this->drupalCreateUser([
       'administer entity_test content',
     ]);
 
     // Test.
-    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field', $entity->uuid()));
+    $url = Url::fromUri('internal:/jsonapi/entity_test_map_field/entity_test_map_field?sort=drupal_internal__id');
     $request_options = [
       RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
@@ -895,13 +908,70 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       'foo' => 'bar',
       'baz' => 'qux',
     ], $data['data'][0]['attributes']['data']);
-    $entity->set('data', [
+    $this->assertNull($data['data'][1]['attributes']['data']);
+    $entity_a->set('data', [
       'foo' => 'bar',
     ])->save();
     $response = $this->request('GET', $url, $request_options);
     $this->assertSame(200, $response->getStatusCode());
     $data = Json::decode((string) $response->getBody());
     $this->assertSame(['foo' => 'bar'], $data['data'][0]['attributes']['data']);
+  }
+
+  /**
+   * Ensure filtering for entities with empty entity reference fields works.
+   *
+   * @see https://www.drupal.org/project/jsonapi/issues/3025372
+   */
+  public function testEmptyRelationshipFilteringFromIssue3025372() {
+    // Set up data model.
+    $this->drupalCreateContentType(['type' => 'folder']);
+    $this->createEntityReferenceField(
+      'node',
+      'folder',
+      'field_parent_folder',
+      NULL,
+      'node',
+      'default',
+      [
+        'target_bundles' => ['folder'],
+      ],
+      FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
+    );
+    $this->rebuildAll();
+
+    // Create data.
+    $node = Node::create([
+      'title' => 'root folder',
+      'type' => 'folder',
+    ]);
+    $node->save();
+
+    // Test.
+    $user = $this->drupalCreateUser(['access content']);
+    $url = Url::fromRoute('jsonapi.node--folder.collection');
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertSame($node->uuid(), Json::decode((string) $response->getBody())['data'][0]['id']);
+    $response = $this->request('GET', $url->setOption('query', [
+      'filter[test][condition][path]' => 'field_parent_folder',
+      'filter[test][condition][operator]' => 'IS NULL',
+    ]), $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertSame($node->uuid(), Json::decode((string) $response->getBody())['data'][0]['id']);
+    $response = $this->request('GET', $url->setOption('query', [
+      'filter[test][condition][path]' => 'field_parent_folder',
+      'filter[test][condition][operator]' => 'IS NOT NULL',
+    ]), $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $this->assertEmpty(Json::decode((string) $response->getBody())['data']);
   }
 
   /**
@@ -987,6 +1057,309 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     // Requesting the comment collection should succeed.
     $response = $this->request('GET', Url::fromUri('internal:/jsonapi/comment/comment'), $request_options);
     $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Ensure non-translatable entities can be PATCHed with an alternate language.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3043168
+   */
+  public function testNonTranslatableEntityUpdatesFromIssue3043168() {
+    // Enable write-mode.
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    // Set the site language to Russian.
+    $this->config('system.site')->set('langcode', 'ru')->set('default_langcode', 'ru')->save(TRUE);
+    // Install a "custom" entity type that is not translatable.
+    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+    // Clear and rebuild caches and routes.
+    $this->rebuildAll();
+    // Create a test entity.
+    // @see \Drupal\language\DefaultLanguageItem
+    $entity = EntityTest::create([
+      'name' => 'Alexander',
+      'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
+    ]);
+    $entity->save();
+    // Ensure it is an instance of TranslatableInterface and that it is *not*
+    // translatable.
+    $this->assertInstanceOf(TranslatableInterface::class, $entity);
+    $this->assertFalse($entity->isTranslatable());
+    // Set up a test user with permission to view and update the test entity.
+    $user = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]);
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    $request_options[RequestOptions::AUTH] = [
+      $user->getAccountName(),
+      $user->pass_raw,
+    ];
+    // GET the test entity via JSON:API.
+    $entity_url = Url::fromUri('internal:/jsonapi/entity_test/entity_test/' . $entity->uuid());
+    $response = $this->request('GET', $entity_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $response_document = Json::decode($response->getBody());
+    // Ensure that the entity's langcode attribute is 'und'.
+    $this->assertSame(LanguageInterface::LANGCODE_NOT_SPECIFIED, $response_document['data']['attributes']['langcode']);
+    // Prepare to PATCH the entity via JSON:API.
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
+    $request_options[RequestOptions::JSON] = [
+      'data' => [
+        'type' => 'entity_test--entity_test',
+        'id' => $entity->uuid(),
+        'attributes' => [
+          'name' => 'Constantine',
+        ],
+      ],
+    ];
+    // Issue the PATCH request and verify that the test entity was successfully
+    // updated.
+    $response = $this->request('PATCH', $entity_url, $request_options);
+    $this->assertSame(200, $response->getStatusCode(), (string) $response->getBody());
+    $response_document = Json::decode($response->getBody());
+    // Ensure that the entity's langcode attribute is still 'und' and the name
+    // was successfully updated.
+    $this->assertSame(LanguageInterface::LANGCODE_NOT_SPECIFIED, $response_document['data']['attributes']['langcode']);
+    $this->assertSame('Constantine', $response_document['data']['attributes']['name']);
+  }
+
+  /**
+   * Ensure POSTing invalid data results in a 422 response, not a PHP error.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3052954
+   */
+  public function testInvalidDataTriggersUnprocessableEntityErrorFromIssue3052954() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $user = $this->drupalCreateUser(['bypass node access']);
+
+    // Test.
+    $request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'article',
+          'attributes' => [
+            'title' => 'foobar',
+            'created' => 'not_a_date',
+          ],
+        ],
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $response = $this->request('POST', Url::fromUri('internal:/jsonapi/node/article'), $request_options);
+    $this->assertSame(422, $response->getStatusCode());
+  }
+
+  /**
+   * Ensure optional `@FieldType=map` fields are denormalized correctly.
+   */
+  public function testEmptyMapFieldTypeDenormalization() {
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // Set up data model.
+    $this->assertTrue($this->container->get('module_installer')->install(['entity_test'], TRUE), 'Installed modules.');
+
+    // Create data.
+    $entity = EntityTestMapField::create([
+      'name' => 'foo',
+    ]);
+    $entity->save();
+    $user = $this->drupalCreateUser([
+      'administer entity_test content',
+    ]);
+
+    // Test.
+    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field/%s', $entity->uuid()));
+    $request_options = [
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    // Retrieve the current representation of the entity.
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $doc = Json::decode((string) $response->getBody());
+    // Modify the title. The @FieldType=map normalization is not changed. (The
+    // name of this field is confusingly also 'data'.)
+    $doc['data']['attributes']['name'] = 'bar';
+    $request_options[RequestOptions::HEADERS] = [
+      'Content-Type' => 'application/vnd.api+json',
+      'Accept' => 'application/vnd.api+json',
+    ];
+    $request_options[RequestOptions::BODY] = Json::encode($doc);
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertSame($doc['data']['attributes']['data'], Json::decode((string) $response->getBody())['data']['attributes']['data']);
+  }
+
+  /**
+   * Ensure EntityAccessDeniedHttpException cacheability is taken into account.
+   */
+  public function testLeakCacheMetadataInOmitted() {
+    $term = Term::create([
+      'name' => 'Llama term',
+      'vid' => 'tags',
+    ]);
+    $term->setUnpublished();
+    $term->save();
+
+    $node = Node::create([
+      'type' => 'article',
+      'title' => 'Llama node',
+      'field_tags' => ['target_id' => $term->id()],
+    ]);
+    $node->save();
+
+    $user = $this->drupalCreateUser([
+      'access content',
+    ]);
+    $request_options = [
+      RequestOptions::AUTH => [
+        $user->getAccountName(),
+        $user->pass_raw,
+      ],
+    ];
+
+    // Request with unpublished term. At this point it would include the term
+    // into "omitted" part of the response. The point here is that we
+    // purposefully warm up the cache where it is excluded from response and
+    // on the next run we will assure merely publishing term is enough to make
+    // it visible, i.e. that the 1st response was invalidated in Drupal cache.
+    $url = Url::fromUri('internal:/jsonapi/' . $node->getEntityTypeId() . '/' . $node->bundle(), [
+      'query' => ['include' => 'field_tags'],
+    ]);
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+
+    $response = Json::decode((string) $response->getBody());
+    $this->assertArrayNotHasKey('included', $response, 'JSON API response does not contain "included" taxonomy term as the latter is not published, i.e not accessible.');
+
+    $omitted = $response['meta']['omitted']['links'];
+    unset($omitted['help']);
+    $omitted = reset($omitted);
+    $expected_url = Url::fromUri('internal:/jsonapi/' . $term->getEntityTypeId() . '/' . $term->bundle() . '/' . $term->uuid());
+    $expected_url->setAbsolute();
+    $this->assertSame($expected_url->toString(), $omitted['href'], 'Entity that is excluded due to access constraints is correctly reported in the "Omitted" section of the JSON API response.');
+
+    $term->setPublished();
+    $term->save();
+    $response = $this->request('GET', $url, $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+    $this->assertEquals($term->uuid(), Json::decode((string) $response->getBody())['included'][0]['id'], 'JSON API response contains "included" taxonomy term as it became published, i.e accessible.');
+  }
+
+  /**
+   * Tests that "virtual/missing" resources can exist for renamed fields.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3034786
+   * @see https://www.drupal.org/project/drupal/issues/3035544
+   */
+  public function testAliasedFieldsWithVirtualRelationships() {
+    // Set up the data model.
+    $this->assertTrue($this->container->get('module_installer')->install([
+      'taxonomy',
+      'jsonapi_test_resource_type_building',
+    ], TRUE), 'Installed modules.');
+    \Drupal::state()->set('jsonapi_test_resource_type_builder.resource_type_field_aliases', [
+      'node--article' => [
+        'field_tags' => 'field_aliased',
+      ],
+    ]);
+    $this->rebuildAll();
+
+    $tag_term = Term::create([
+      'vid' => 'tags',
+      'name' => 'test_tag',
+    ]);
+    $tag_term->save();
+
+    $article_node = Node::create([
+      'type' => 'article',
+      'title' => 'test_article',
+      'field_tags' => ['target_id' => $tag_term->id()],
+    ]);
+    $article_node->save();
+
+    // Make a broken reference.
+    $tag_term->delete();
+
+    // Make sure that accessing a node that references a deleted term does not
+    // cause an error.
+    $user = $this->drupalCreateUser(['bypass node access']);
+    $request_options = [
+      RequestOptions::AUTH => [
+        $user->getAccountName(),
+        $user->pass_raw,
+      ],
+    ];
+    $response = $this->request('GET', Url::fromUri('internal:/jsonapi/node/article/' . $article_node->uuid()), $request_options);
+    $this->assertSame(200, $response->getStatusCode());
+  }
+
+  /**
+   * Tests that caching isn't happening for non-cacheable methods.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3072076
+   */
+  public function testNonCacheableMethods() {
+    $this->container->get('module_installer')->install([
+      'jsonapi_test_non_cacheable_methods',
+    ], TRUE);
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    $node = Node::create([
+      'type' => 'article',
+      'title' => 'Llama non-cacheable',
+    ]);
+    $node->save();
+
+    $user = $this->drupalCreateUser([
+      'access content',
+      'create article content',
+      'edit any article content',
+      'delete any article content',
+    ]);
+    $base_request_options = [
+      RequestOptions::HEADERS => [
+        'Content-Type' => 'application/vnd.api+json',
+        'Accept' => 'application/vnd.api+json',
+      ],
+      RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
+    ];
+    $methods = [
+      'HEAD',
+      'GET',
+      'PATCH',
+      'DELETE',
+    ];
+    $non_post_request_options = $base_request_options + [
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--article',
+          'id' => $node->uuid(),
+        ],
+      ],
+    ];
+    foreach ($methods as $method) {
+      $response = $this->request($method, Url::fromUri('internal:/jsonapi/node/article/' . $node->uuid()), $non_post_request_options);
+      $this->assertSame($method === 'DELETE' ? 204 : 200, $response->getStatusCode());
+    }
+
+    $post_request_options = $base_request_options + [
+      RequestOptions::JSON => [
+        'data' => [
+          'type' => 'node--article',
+          'attributes' => [
+            'title' => 'Llama non-cacheable',
+          ],
+        ],
+      ],
+    ];
+    $response = $this->request('POST', Url::fromUri('internal:/jsonapi/node/article'), $post_request_options);
+    $this->assertSame(201, $response->getStatusCode());
   }
 
 }

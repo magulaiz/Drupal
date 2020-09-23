@@ -17,6 +17,11 @@ class SearchEmbedFormTest extends BrowserTestBase {
   protected static $modules = ['node', 'search', 'search_embedded_form'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Node used for testing.
    *
    * @var \Drupal\node\NodeInterface
@@ -30,19 +35,22 @@ class SearchEmbedFormTest extends BrowserTestBase {
    */
   protected $submitCount = 0;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     // Create a user and a node, and update the search index.
-    $test_user = $this->drupalCreateUser(['access content', 'search content', 'administer nodes']);
+    $test_user = $this->drupalCreateUser([
+      'access content',
+      'search content',
+      'administer nodes',
+    ]);
     $this->drupalLogin($test_user);
 
     $this->node = $this->drupalCreateNode();
 
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
-    search_update_totals();
 
     // Set up a dummy initial count of times the form has been submitted.
     $this->submitCount = \Drupal::state()->get('search_embedded_form.submit_count');
@@ -78,7 +86,7 @@ class SearchEmbedFormTest extends BrowserTestBase {
     $this->drupalPostForm('search',
       ['keys' => 'foo'],
       t('Search'));
-    $this->assertNoText(t('Test form was submitted'), 'Form message does not appear');
+    $this->assertNoText('Test form was submitted', 'Form message does not appear');
     $count = \Drupal::state()->get('search_embedded_form.submit_count');
     $this->assertEqual($this->submitCount, $count, 'Form submission count is correct');
     $this->submitCount = $count;

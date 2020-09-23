@@ -13,6 +13,11 @@ use Drupal\user\Entity\User;
 class NodeEditFormTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A normal logged in user.
    *
    * @var \Drupal\user\UserInterface
@@ -38,13 +43,19 @@ class NodeEditFormTest extends NodeTestBase {
    *
    * @var string[]
    */
-  public static $modules = ['block', 'node', 'datetime'];
+  protected static $modules = ['block', 'node', 'datetime'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->webUser = $this->drupalCreateUser(['edit own page content', 'create page content']);
-    $this->adminUser = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
+    $this->webUser = $this->drupalCreateUser([
+      'edit own page content',
+      'create page content',
+    ]);
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
+      'administer nodes',
+    ]);
     $this->drupalPlaceBlock('local_tasks_block');
 
     $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
@@ -66,15 +77,15 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, 'Node found in database.');
+    $this->assertNotEmpty($node, 'Node found in database.');
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $this->assertUrl($node->toUrl('edit-form', ['absolute' => TRUE])->toString());
+    $this->assertSession()->addressEquals($node->toUrl('edit-form'));
 
     // Check that the title and body fields are displayed with the correct values.
     // @todo Ideally assertLink would support HTML, but it doesn't.
-    $this->assertRaw('Edit<span class="visually-hidden">(active tab)</span>', 'Edit tab found and marked active.');
+    $this->assertRaw('Edit<span class="visually-hidden">(active tab)</span>');
     $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
     $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
 
@@ -90,7 +101,10 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertText($edit[$body_key], 'Body displayed.');
 
     // Log in as a second administrator user.
-    $second_web_user = $this->drupalCreateUser(['administer nodes', 'edit any page content']);
+    $second_web_user = $this->drupalCreateUser([
+      'administer nodes',
+      'edit any page content',
+    ]);
     $this->drupalLogin($second_web_user);
     // Edit the same node, creating a new revision.
     $this->drupalGet("node/" . $node->id() . "/edit");
@@ -129,7 +143,7 @@ class NodeEditFormTest extends NodeTestBase {
     $this->assertRaw('<details class="node-form-author js-form-wrapper form-wrapper" data-drupal-selector="edit-author" id="edit-author" open="open">');
     // Only one extra details element should now be open.
     $open_details_elements++;
-    $this->assertEqual(count($this->cssSelect('details[open="open"]')), $open_details_elements, 'Exactly one extra open &lt;details&gt; element found.');
+    $this->assertCount($open_details_elements, $this->cssSelect('details[open="open"]'), 'Exactly one extra open &lt;details&gt; element found.');
 
     // Edit the same node, save it and verify it's unpublished after unchecking
     // the 'Published' boolean_checkbox and clicking 'Save'.

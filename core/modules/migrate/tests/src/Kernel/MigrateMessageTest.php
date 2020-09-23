@@ -22,7 +22,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    *
    * @var array
    */
-  public static $modules = ['migrate', 'system'];
+  protected static $modules = ['migrate', 'system'];
 
   /**
    * Migration to run.
@@ -41,7 +41,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installConfig(['system']);
@@ -81,7 +81,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     // We don't ask for messages to be teed, so don't expect any.
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
-    $this->assertIdentical(count($this->messages), 0);
+    $this->assertCount(0, $this->messages);
   }
 
   /**
@@ -93,17 +93,17 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
       [$this, 'mapMessageRecorder']);
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
-    $this->assertIdentical(count($this->messages), 1);
+    $this->assertCount(1, $this->messages);
     $this->assertIdentical(reset($this->messages), "source_message: 'a message' is not an array");
   }
 
   /**
-   * Tests the return value of getMessageIterator().
+   * Tests the return value of getMessages().
    *
    * This method returns an iterator of StdClass objects. Check that these
    * objects have the expected keys.
    */
-  public function testGetMessageIterator() {
+  public function testGetMessages() {
     $expected_message = (object) [
       'src_name' => 'source_message',
       'dest_config_name' => NULL,
@@ -115,7 +115,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
     $count = 0;
-    foreach ($this->migration->getIdMap()->getMessageIterator() as $message) {
+    foreach ($this->migration->getIdMap()->getMessages() as $message) {
       ++$count;
       $this->assertEqual($message, $expected_message);
     }

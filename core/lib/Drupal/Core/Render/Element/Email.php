@@ -15,14 +15,14 @@ use Drupal\Core\Render\Element;
  *
  * Example usage:
  * @code
- * $form['email'] = array(
+ * $form['email'] = [
  *   '#type' => 'email',
  *   '#title' => $this->t('Email'),
  *   '#pattern' => '*@example.com',
- * );
- * @end
+ * ];
+ * @endcode
  *
- * @see \Drupal\Core\Render\Element\Render\Textfield
+ * @see \Drupal\Core\Render\Element\Textfield
  *
  * @FormElement("email")
  */
@@ -44,7 +44,7 @@ class Email extends FormElement {
    * {@inheritdoc}
    */
   public function getInfo() {
-    $class = get_class($this);
+    $class = static::class;
     return [
       '#input' => TRUE,
       '#size' => 60,

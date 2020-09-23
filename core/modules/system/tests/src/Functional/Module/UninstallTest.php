@@ -21,7 +21,12 @@ class UninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['module_test', 'user', 'views', 'node'];
+  protected static $modules = ['module_test', 'user', 'views', 'node'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the hook_modules_uninstalled() of the user module.
@@ -32,7 +37,7 @@ class UninstallTest extends BrowserTestBase {
     $this->container->get('module_installer')->uninstall(['module_test']);
 
     // Are the perms defined by module_test removed?
-    $this->assertFalse(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
+    $this->assertEmpty(user_roles(FALSE, 'module_test perm'), 'Permissions were all removed.');
   }
 
   /**
@@ -55,7 +60,7 @@ class UninstallTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertTitle(t('Uninstall') . ' | Drupal');
+    $this->assertSession()->titleEquals('Uninstall | Drupal');
 
     foreach (\Drupal::service('extension.list.module')->getAllInstalledInfo() as $module => $info) {
       $field_name = "uninstall[$module]";
@@ -118,7 +123,8 @@ class UninstallTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-    $this->assertNoRaw('&lt;label', 'The page does not have double escaped HTML tags.');
+    // Check that the page does not have double escaped HTML tags.
+    $this->assertNoRaw('&lt;label');
 
     // Make sure our unique cache entry is gone.
     $cached = \Drupal::cache()->get('uninstall_test');
@@ -130,8 +136,8 @@ class UninstallTest extends BrowserTestBase {
 
     // Make sure confirmation page is accessible only during uninstall process.
     $this->drupalGet('admin/modules/uninstall/confirm');
-    $this->assertUrl('admin/modules/uninstall');
-    $this->assertTitle(t('Uninstall') . ' | Drupal');
+    $this->assertSession()->addressEquals('admin/modules/uninstall');
+    $this->assertSession()->titleEquals('Uninstall | Drupal');
 
     // Make sure the correct error is shown when no modules are selected.
     $edit = [];
@@ -152,7 +158,7 @@ class UninstallTest extends BrowserTestBase {
       $this->fail($message);
     }
     catch (EntityMalformedException $e) {
-      $this->pass($message);
+      // Expected exception; just continue testing.
     }
 
     // Even though the module failed to install properly, its configuration

@@ -14,7 +14,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['action', 'file', 'system'];
+  protected static $modules = ['action', 'file', 'system'];
 
   protected $expectedConfig = [
     'system.cron' => [
@@ -47,9 +47,6 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'allow_insecure_uploads' => TRUE,
       // default_scheme is not handled by the migration.
       'default_scheme' => 'public',
-      'path' => [
-        'temporary' => 'files/temp',
-      ],
       // temporary_maximum_age is not handled by the migration.
       'temporary_maximum_age' => 21600,
     ],
@@ -127,7 +124,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $migrations = [

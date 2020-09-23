@@ -28,6 +28,11 @@ class DateTimeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getTestFieldType() {
     return 'datetime';
   }
@@ -122,7 +127,7 @@ class DateTimeFieldTest extends DateTestBase {
               $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', DateTimeItemInterface::STORAGE_TIMEZONE);
               $output = $this->renderTestEntity($id);
               $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
-              $this->assertContains($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
+              $this->assertStringContainsString($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute in %timezone.', [
                 '%value' => $new_value,
                 '%expected' => $expected,
                 '%expected_iso' => $expected_iso,
@@ -142,7 +147,7 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = $date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT);
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected in %timezone.', [
         '%expected' => $expected,
         '%timezone' => $timezone,
       ]));
@@ -156,7 +161,7 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = $date->format($this->displayOptions['settings']['date_format']);
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected in %timezone.', [
         '%expected' => $expected,
         '%timezone' => $timezone,
       ]));
@@ -169,7 +174,7 @@ class DateTimeFieldTest extends DateTestBase {
         ->save();
       $expected = '<strong>' . $date->format('m/d/Y') . '</strong>alert(String.fromCharCode(88,83,83))';
       $output = $this->renderTestEntity($id);
-      $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using daterange_custom format displayed as %expected in %timezone.', [
         '%expected' => $expected,
         '%timezone' => $timezone,
       ]));
@@ -199,7 +204,7 @@ class DateTimeFieldTest extends DateTestBase {
         '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
       ]);
       $output = $this->renderTestEntity($id);
-      $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
         '%expected' => $expected,
         '%timezone' => $timezone,
       ]));
@@ -223,7 +228,7 @@ class DateTimeFieldTest extends DateTestBase {
         '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
       ]);
       $output = $this->renderTestEntity($id);
-      $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
+      $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected in %timezone.', [
         '%expected' => $expected,
         '%timezone' => $timezone,
       ]));
@@ -253,7 +258,7 @@ class DateTimeFieldTest extends DateTestBase {
     $date = new DrupalDateTime($value, 'UTC');
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(drupal_get_user_timezone()));
+    $date->setTimezone(timezone_open(date_default_timezone_get()));
 
     // Submit a valid date and ensure it is accepted.
     $date_format = DateFormat::load('html_date')->getPattern();
@@ -294,7 +299,7 @@ class DateTimeFieldTest extends DateTestBase {
             $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d\TH:i:s\Z', 'UTC');
             $output = $this->renderTestEntity($id);
             $expected_markup = '<time datetime="' . $expected_iso . '" class="datetime">' . $expected . '</time>';
-            $this->assertContains($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
+            $this->assertStringContainsString($expected_markup, $output, new FormattableMarkup('Formatted date field using %value format displayed as %expected with %expected_iso attribute.', ['%value' => $new_value, '%expected' => $expected, '%expected_iso' => $expected_iso]));
             break;
         }
       }
@@ -309,7 +314,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->save();
     $expected = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT);
     $output = $this->renderTestEntity($id);
-    $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
+    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using plain format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_custom' formatter works.
     $this->displayOptions['type'] = 'datetime_custom';
@@ -319,7 +324,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format']);
     $output = $this->renderTestEntity($id);
-    $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'timezone_override' setting works.
     $this->displayOptions['type'] = 'datetime_custom';
@@ -329,7 +334,7 @@ class DateTimeFieldTest extends DateTestBase {
       ->save();
     $expected = $date->format($this->displayOptions['settings']['date_format'], ['timezone' => 'America/New_York']);
     $output = $this->renderTestEntity($id);
-    $this->assertContains($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
+    $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field using datetime_custom format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // past.  First update the test entity so that the date difference always
@@ -356,7 +361,7 @@ class DateTimeFieldTest extends DateTestBase {
       '@interval' => $this->dateFormatter->formatTimeDiffSince($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
     ]);
     $output = $this->renderTestEntity($id);
-    $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+    $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
 
     // Verify that the 'datetime_time_ago' formatter works for intervals in the
     // future.  First update the test entity so that the date difference always
@@ -378,7 +383,7 @@ class DateTimeFieldTest extends DateTestBase {
       '@interval' => $this->dateFormatter->formatTimeDiffUntil($timestamp, ['granularity' => $this->displayOptions['settings']['granularity']]),
     ]);
     $output = $this->renderTestEntity($id);
-    $this->assertContains((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+    $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
   }
 
   /**
@@ -454,24 +459,24 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
 
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-year\"]", NULL, 'Year element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '', 'No year selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-year", t('Year'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-year", 'Year');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-month\"]", NULL, 'Month element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '', 'No month selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-month", t('Month'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-month", 'Month');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-day\"]", NULL, 'Day element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '', 'No day selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-day", t('Day'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-day", 'Day');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-hour", t('Hour'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-hour", 'Hour');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '', 'No minute selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-minute", t('Minute'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-minute", 'Minute');
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-second\"]", NULL, 'Second element not found.');
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-ampm", '', 'No ampm selected.');
-    $this->assertOptionByText("edit-$field_name-0-value-ampm", t('AM/PM'));
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", '')->isSelected());
+    $this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'AM/PM');
 
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15];
@@ -488,12 +493,12 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '5', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '5')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-ampm", 'am')->isSelected());
 
     // Test the widget using increment other than 1 and 24 hour mode.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -513,9 +518,8 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Other elements are unaffected by the changed settings.
     $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '')->isSelected());
     $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element not found.');
-
     // Submit a valid date and ensure it is accepted.
     $date_value = ['year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 17, 'minute' => 15];
 
@@ -529,11 +533,11 @@ class DateTimeFieldTest extends DateTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
 
-    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-hour", '17', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-year", '2012')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-month", '12')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-day", '31')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-hour", '17')->isSelected());
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '15')->isSelected());
 
     // Test the widget for partial completion of fields.
     $display_repository->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
@@ -562,7 +566,7 @@ class DateTimeFieldTest extends DateTestBase {
       }
 
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertResponse(200);
+      $this->assertSession()->statusCodeEquals(200);
       foreach ($expected as $expected_text) {
         $this->assertText(t($expected_text));
       }
@@ -578,7 +582,7 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
@@ -593,8 +597,8 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertResponse(200);
-    $this->assertOptionSelected("edit-$field_name-0-value-minute", '0', 'Correct minute selected.');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertTrue($this->assertSession()->optionExists("edit-$field_name-0-value-minute", '0')->isSelected());
   }
 
   /**
@@ -692,7 +696,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'now', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
       // Check if default_date has been stored successfully.
@@ -708,7 +712,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('now', drupal_get_user_timezone());
+      $expected_date = new DrupalDateTime('now', date_default_timezone_get());
       $this->assertEqual($new_node->get($field_name)
         ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
 
@@ -730,7 +734,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', 'relative', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '+90 days', 'The relative default value is displayed in instance settings page');
 
       // Check if default_date has been stored successfully.
@@ -747,7 +751,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is +90
       // days.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('+90 days', drupal_get_user_timezone());
+      $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
       $this->assertEqual($new_node->get($field_name)
         ->offsetGet(0)->value, $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
 
@@ -759,7 +763,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Check that default value is selected in default value form.
       $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-      $this->assertOptionSelected('edit-default-value-input-default-date-type', '', 'The default value is selected in instance settings page');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
       $this->assertFieldByName('default_value_input[default_date]', '', 'The relative default value is empty in instance settings page');
 
       // Check if default_date has been stored successfully.
@@ -900,7 +904,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalPostForm('node/add/date_content', $edit, t('Save'));
     $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name . '/storage');
     $result = $this->xpath("//*[@id='edit-settings-datetime-type' and contains(@disabled, 'disabled')]");
-    $this->assertEqual(count($result), 1, "Changing datetime setting is disabled.");
+    $this->assertCount(1, $result, "Changing datetime setting is disabled.");
     $this->assertText('There is data for this field in the database. The field settings can no longer be changed.');
   }
 

@@ -28,10 +28,21 @@ class UserPermissionsTest extends BrowserTestBase {
    */
   protected $rid;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer account settings']);
+    $this->adminUser = $this->drupalCreateUser([
+      'administer permissions',
+      'access user profiles',
+      'administer site configuration',
+      'administer modules',
+      'administer account settings',
+    ]);
 
     // Find the new role ID.
     $all_rids = $this->adminUser->getRoles();
@@ -98,7 +109,7 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->drupalGet('admin/config/people/accounts');
 
     // Verify that the administration role is none by default.
-    $this->assertOptionSelected('edit-user-admin-role', '', 'Administration role defaults to none.');
+    $this->assertTrue($this->assertSession()->optionExists('edit-user-admin-role', '')->isSelected());
 
     $this->assertFalse(Role::load($this->rid)->isAdmin());
 

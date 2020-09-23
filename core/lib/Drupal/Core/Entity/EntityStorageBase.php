@@ -85,21 +85,16 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface|null $memory_cache
+   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
    *   The memory cache.
    */
-  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->idKey = $this->entityType->getKey('id');
     $this->uuidKey = $this->entityType->getKey('uuid');
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->entityClass = $this->entityType->getClass();
-
-    if (!isset($memory_cache)) {
-      @trigger_error('The $memory_cache parameter was added in Drupal 8.6.x and will be required in 9.0.0. See https://www.drupal.org/node/2973262', E_USER_DEPRECATED);
-      $memory_cache = \Drupal::service('entity.memory_cache');
-    }
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
   }
@@ -246,7 +241,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function load($id) {
-    assert(!is_null($id), 'Cannot load a NULL ID.');
+    assert(!is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $entities = $this->loadMultiple([$id]);
     return isset($entities[$id]) ? $entities[$id] : NULL;
   }
@@ -256,6 +251,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   public function loadMultiple(array $ids = NULL) {
     $entities = [];
+    $preloaded_entities = [];
 
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
@@ -271,15 +267,22 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
       $ids = array_keys(array_diff_key($flipped_ids, $entities));
     }
 
-    // Gather entities from a 'preload' method. This method can invoke a hook to
-    // be used by modules that need, for example, to swap the default revision
-    // of an entity with a different one. Even though the base entity storage
-    // class does not actually invoke any preload hooks, we need to call the
-    // method here so we can add the pre-loaded entity objects to the static
-    // cache below.
-    $preloaded_entities = $this->preLoad($ids);
+    // Try to gather any remaining entities from a 'preload' method. This method
+    // can invoke a hook to be used by modules that need, for example, to swap
+    // the default revision of an entity with a different one. Even though the
+    // base entity storage class does not actually invoke any preload hooks, we
+    // need to call the method here so we can add the pre-loaded entity objects
+    // to the static cache below. If all the entities were fetched from the
+    // static cache, skip this step.
+    if ($ids === NULL || $ids) {
+      $preloaded_entities = $this->preLoad($ids);
+    }
     if (!empty($preloaded_entities)) {
       $entities += $preloaded_entities;
+
+      // If any entities were pre-loaded, remove them from the IDs still to
+      // load.
+      $ids = array_keys(array_diff_key($flipped_ids, $entities));
 
       // Add pre-loaded entities to the cache.
       $this->setStaticCache($preloaded_entities);
@@ -538,10 +541,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function restore(EntityInterface $entity) {
-    // Allow code to run before saving.
-    $entity->preSave($this);
-
-    // The restore process does not invoke any post-save operations.
+    // The restore process does not invoke any pre or post-save operations.
     $this->doSave($entity->id(), $entity);
   }
 
@@ -587,8 +587,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function getQuery($conjunction = 'AND') {
-    // Access the service directly rather than entity.query factory so the
-    // storage's current entity type is used.
     return \Drupal::service($this->getQueryServiceName())->get($this->entityType, $conjunction);
   }
 
@@ -596,8 +594,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function getAggregateQuery($conjunction = 'AND') {
-    // Access the service directly rather than entity.query factory so the
-    // storage's current entity type is used.
     return \Drupal::service($this->getQueryServiceName())->getAggregate($this->entityType, $conjunction);
   }
 

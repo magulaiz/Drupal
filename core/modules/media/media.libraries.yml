@@ -31,3 +31,10 @@ filter.caption:
       css/filter.caption.css: {}
   dependencies:
     - filter/caption
+
+media_embed_ckeditor_theme:
+  version: VERSION
+  js:
+    js/media_embed_ckeditor.theme.js: {}
+  dependencies:
+    - core/drupal

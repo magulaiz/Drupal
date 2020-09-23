@@ -39,8 +39,11 @@ class ConnectionFailureTest extends KernelTestBase {
     // Re-establish the default database connection.
     $database = Database::getConnection();
 
-    $wid = $database->query("SELECT MAX(wid) FROM {watchdog} WHERE message = 'testConnectionFailureLogging'")->fetchField();
-    $this->assertTrue($wid);
+    $query = $database->select('watchdog')
+      ->condition('message', 'testConnectionFailureLogging');
+    $query->addExpression('MAX(wid)');
+    $wid = $query->execute()->fetchField();
+    $this->assertNotEmpty($wid, 'Watchdog entry has been stored in database.');
   }
 
 }

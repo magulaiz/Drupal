@@ -118,13 +118,18 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'language',
     'content_translation',
     'node',
   ];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     $this->labelOfNotTranslatedReference = $this->randomMachineName();
@@ -142,7 +147,9 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     $this->setUpEntityReferenceField();
     $this->createContent();
 
-    $this->webUser = $this->drupalCreateUser(['edit any ' . $this->referrerType->id() . ' content']);
+    $this->webUser = $this->drupalCreateUser([
+      'edit any ' . $this->referrerType->id() . ' content',
+    ]);
   }
 
   /**
@@ -222,8 +229,6 @@ class EntityReferenceFieldTranslatedReferenceViewTest extends BrowserTestBase {
     // up.
     \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referrerType->id(), TRUE);
     \Drupal::service('content_translation.manager')->setEnabled($this->testEntityTypeName, $this->referencedType->id(), TRUE);
-
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

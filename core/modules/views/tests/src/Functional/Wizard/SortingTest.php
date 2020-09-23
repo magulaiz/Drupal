@@ -9,7 +9,12 @@ namespace Drupal\Tests\views\Functional\Wizard;
  */
 class SortingTest extends WizardTestBase {
 
-  protected function setUp($import_test_views = TRUE) {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->drupalPlaceBlock('page_title_block');
@@ -37,10 +42,10 @@ class SortingTest extends WizardTestBase {
     $view1['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view1, t('Save and edit'));
     $this->drupalGet($view1['page[path]']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure the view shows the nodes in the expected order.
-    $this->assertUrl($view1['page[path]']);
+    $this->assertSession()->addressEquals($view1['page[path]']);
     $this->assertText($view1['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
     $this->assertText($node1->label());
@@ -62,10 +67,10 @@ class SortingTest extends WizardTestBase {
     $view2['page[path]'] = $this->randomMachineName(16);
     $this->drupalPostForm('admin/structure/views/add', $view2, t('Save and edit'));
     $this->drupalGet($view2['page[path]']);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Make sure the view shows the nodes in the expected order.
-    $this->assertUrl($view2['page[path]']);
+    $this->assertSession()->addressEquals($view2['page[path]']);
     $this->assertText($view2['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
     $this->assertText($node3->label());

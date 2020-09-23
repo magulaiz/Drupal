@@ -8,6 +8,7 @@ use Drupal\Core\Config\DatabaseStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 use Drupal\user\Entity\User;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Reference;
@@ -19,10 +20,22 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class DbDumpTest extends KernelTestBase {
 
+  use PathAliasTestTrait;
+
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['system', 'config', 'dblog', 'menu_link_content', 'link', 'block_content', 'file', 'user'];
+  protected static $modules = [
+    'system',
+    'config',
+    'dblog',
+    'menu_link_content',
+    'link',
+    'block_content',
+    'file',
+    'path_alias',
+    'user',
+  ];
 
   /**
    * Test data to write into config.
@@ -30,15 +43,6 @@ class DbDumpTest extends KernelTestBase {
    * @var array
    */
   protected $data;
-
-  /**
-   * Flag to skip these tests, which are database-backend dependent (MySQL).
-   *
-   * @see \Drupal\Core\Command\DbDumpCommand
-   *
-   * @var bool
-   */
-  protected $skipTests = FALSE;
 
   /**
    * An array of original table schemas.
@@ -77,22 +81,21 @@ class DbDumpTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    // Determine what database backend is running, and set the skip flag.
-    $this->skipTests = Database::getConnection()->databaseType() !== 'mysql';
+    if (Database::getConnection()->databaseType() !== 'mysql') {
+      $this->markTestSkipped("Skipping test since the DbDumpCommand is currently only compatible with MySql");
+    }
 
     // Create some schemas so our export contains tables.
-    $this->installSchema('system', [
-      'key_value_expire',
-      'sessions',
-    ]);
+    $this->installSchema('system', ['sessions']);
     $this->installSchema('dblog', ['watchdog']);
     $this->installEntitySchema('block_content');
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installEntitySchema('menu_link_content');
+    $this->installEntitySchema('path_alias');
     $this->installSchema('system', 'sequences');
 
     // Place some sample config to test for in the export.
@@ -104,11 +107,12 @@ class DbDumpTest extends KernelTestBase {
     $storage->write('test_config', $this->data);
 
     // Create user account with some potential syntax issues.
+    // cspell:disable-next-line
     $account = User::create(['mail' => 'q\'uote$dollar@example.com', 'name' => '$dollar']);
     $account->save();
 
-    // Create url_alias (this will create 'url_alias').
-    $this->container->get('path.alias_storage')->save('/user/' . $account->id(), '/user/example');
+    // Create a path alias.
+    $this->createPathAlias('/user/' . $account->id(), '/user/example');
 
     // Create a cache table (this will create 'cache_discovery').
     \Drupal::cache('discovery')->set('test', $this->data);
@@ -127,14 +131,14 @@ class DbDumpTest extends KernelTestBase {
       'cache_discovery',
       'cache_entity',
       'file_managed',
-      'key_value_expire',
       'menu_link_content',
       'menu_link_content_data',
       'menu_link_content_revision',
       'menu_link_content_field_revision',
       'sequences',
       'sessions',
-      'url_alias',
+      'path_alias',
+      'path_alias_revision',
       'user__roles',
       'users',
       'users_field_data',
@@ -146,11 +150,6 @@ class DbDumpTest extends KernelTestBase {
    * Test the command directly.
    */
   public function testDbDumpCommand() {
-    if ($this->skipTests) {
-      $this->pass("Skipping test since the DbDumpCommand is currently only compatible with MySql");
-      return;
-    }
-
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
     $command_tester = new CommandTester($command);
@@ -158,32 +157,28 @@ class DbDumpTest extends KernelTestBase {
 
     // Tables that are schema-only should not have data exported.
     $pattern = preg_quote("\$connection->insert('sessions')");
-    $this->assertFalse(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Tables defined as schema-only do not have data exported to the script.');
+    $this->assertNotRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Tables defined as schema-only do not have data exported to the script.');
 
     // Table data is exported.
     $pattern = preg_quote("\$connection->insert('config')");
-    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Table data is properly exported to the script.');
+    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Table data is properly exported to the script.');
 
     // The test data are in the dump (serialized).
     $pattern = preg_quote(serialize($this->data));
-    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'Generated data is found in the exported script.');
+    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'Generated data is found in the exported script.');
 
     // Check that the user account name and email address was properly escaped.
+    // cspell:disable-next-line
     $pattern = preg_quote('"q\'uote\$dollar@example.com"');
-    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'The user account email address was properly escaped in the exported script.');
+    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account email address was properly escaped in the exported script.');
     $pattern = preg_quote('\'$dollar\'');
-    $this->assertTrue(preg_match('/' . $pattern . '/', $command_tester->getDisplay()), 'The user account name was properly escaped in the exported script.');
+    $this->assertRegExp('/' . $pattern . '/', $command_tester->getDisplay(), 'The user account name was properly escaped in the exported script.');
   }
 
   /**
    * Test loading the script back into the database.
    */
   public function testScriptLoad() {
-    if ($this->skipTests) {
-      $this->pass("Skipping test since the DbDumpCommand is currently only compatible with MySql");
-      return;
-    }
-
     // Generate the script.
     $application = new DbDumpApplication();
     $command = $application->find('dump-database-d8-mysql');
@@ -214,7 +209,7 @@ class DbDumpTest extends KernelTestBase {
     }
 
     // Ensure the test config has been replaced.
-    $config = unserialize($connection->query("SELECT data FROM {config} WHERE name = 'test_config'")->fetchField());
+    $config = unserialize($connection->select('config', 'c')->fields('c', ['data'])->condition('name', 'test_config')->execute()->fetchField());
     $this->assertIdentical($config, $this->data, 'Script has properly restored the config table data.');
 
     // Ensure the cache data was not exported.

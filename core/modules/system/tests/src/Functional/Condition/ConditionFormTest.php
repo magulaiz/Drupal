@@ -16,7 +16,12 @@ use Drupal\Tests\BrowserTestBase;
  */
 class ConditionFormTest extends BrowserTestBase {
 
-  public static $modules = ['node', 'condition_test'];
+  protected static $modules = ['node', 'condition_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Submit the condition_node_type_test_form to test condition forms.
@@ -32,8 +37,8 @@ class ConditionFormTest extends BrowserTestBase {
     $article->save();
 
     $this->drupalGet('condition_test');
-    $this->assertField('bundles[article]', 'There is an article bundle selector.');
-    $this->assertField('bundles[page]', 'There is a page bundle selector.');
+    $this->assertSession()->fieldExists('bundles[article]');
+    $this->assertSession()->fieldExists('bundles[page]');
     $this->drupalPostForm(NULL, ['bundles[page]' => 'page', 'bundles[article]' => 'article'], t('Submit'));
     // @see \Drupal\condition_test\FormController::submitForm()
     $this->assertText('Bundle: page');

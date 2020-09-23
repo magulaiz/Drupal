@@ -20,6 +20,11 @@ use Drupal\Component\Serialization\Json;
 class NodeRevisionsTest extends NodeTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of node revisions.
    *
    * @var \Drupal\node\NodeInterface[]
@@ -36,12 +41,18 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node', 'contextual', 'datetime', 'language', 'content_translation'];
+  protected static $modules = [
+    'node',
+    'contextual',
+    'datetime',
+    'language',
+    'content_translation',
+  ];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Enable additional languages.
@@ -165,7 +176,7 @@ class NodeRevisionsTest extends NodeTestBase {
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
       '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
-    ]), 'Revision reverted.');
+    ]));
     $node_storage->resetCache([$node->id()]);
     $reverted_node = $node_storage->load($node->id());
     $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
@@ -184,10 +195,15 @@ class NodeRevisionsTest extends NodeTestBase {
       '%revision-date' => $this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime()),
       '@type' => 'Basic page',
       '%title' => $nodes[1]->label(),
-    ]), 'Revision deleted.');
+    ]));
     $connection = Database::getConnection();
-    $this->assertTrue($connection->query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Revision not found.');
-    $this->assertTrue($connection->query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid', [':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()])->fetchField() == 0, 'Field revision not found.');
+    $nids = \Drupal::entityQuery('node')
+      ->accessCheck(FALSE)
+      ->allRevisions()
+      ->condition('nid', $node->id())
+      ->condition('vid', $nodes[1]->getRevisionId())
+      ->execute();
+    $this->assertCount(0, $nids);
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
@@ -240,17 +256,17 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $this->drupalGet("node/" . $node->id() . "/revisions");
     // Verify revisions is accessible since the type has revisions enabled.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check initial revision is shown on the node revisions overview page.
     $this->assertText('Simple revision message (EN)');
 
     // Verify that delete operation is inaccessible for the default revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/delete");
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Verify that revert operation is inaccessible for the default revision.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/revert");
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Create a new revision and new log message.
     $node = Node::load($node->id());
@@ -273,7 +289,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     $this->drupalGet("node/" . $node->id() . "/revisions");
     // Verify revisions is accessible since the type has revisions enabled.
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     // Check initial revision is shown on the node revisions overview page.
     $this->assertText('Simple revision message (EN)');
 

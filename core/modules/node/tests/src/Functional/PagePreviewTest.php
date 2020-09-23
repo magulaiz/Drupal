@@ -32,7 +32,21 @@ class PagePreviewTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'taxonomy', 'comment', 'image', 'file', 'text', 'node_test', 'menu_ui'];
+  protected static $modules = [
+    'node',
+    'taxonomy',
+    'comment',
+    'image',
+    'file',
+    'text',
+    'node_test',
+    'menu_ui',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * The name of the created field.
@@ -41,11 +55,15 @@ class PagePreviewTest extends NodeTestBase {
    */
   protected $fieldName;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->addDefaultCommentField('node', 'page');
 
-    $web_user = $this->drupalCreateUser(['edit own page content', 'create page content', 'administer menu']);
+    $web_user = $this->drupalCreateUser([
+      'edit own page content',
+      'create page content',
+      'administer menu',
+    ]);
     $this->drupalLogin($web_user);
 
     // Add a vocabulary so we can test different view modes.
@@ -186,10 +204,10 @@ class PagePreviewTest extends NodeTestBase {
     // Check that the preview is displaying the title, body and term.
     $expected_title = $edit[$title_key] . ' | Drupal';
     $this->assertSession()->titleEquals($expected_title);
-    $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
+    $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertLink(t('Back to content editing'));
+    $this->assertSession()->linkExists('Back to content editing');
 
     // Check that we see the class of the node type on the body element.
     $body_class_element = $this->xpath("//body[contains(@class, 'page-node-type-page')]");
@@ -209,7 +227,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $view_mode_edit = ['view_mode' => 'teaser'];
     $this->drupalPostForm('node/preview/' . $uuid . '/full', $view_mode_edit, t('Switch'));
-    $this->assertRaw('view-mode-teaser', 'View mode teaser class found.');
+    $this->assertRaw('view-mode-teaser');
     $this->assertNoText($edit[$body_key], 'Body not displayed.');
 
     // Check that the title, body and term fields are displayed with the
@@ -226,10 +244,10 @@ class PagePreviewTest extends NodeTestBase {
     // Return to page preview to check everything is as expected.
     $this->drupalPostForm(NULL, [], t('Preview'));
     $this->assertSession()->titleEquals($expected_title);
-    $this->assertEscaped($edit[$title_key], 'Title displayed and escaped.');
+    $this->assertSession()->assertEscaped($edit[$title_key]);
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
-    $this->assertLink(t('Back to content editing'));
+    $this->assertSession()->linkExists('Back to content editing');
 
     // Assert the content is kept when reloading the page.
     $this->drupalGet('node/add/page', ['query' => ['uuid' => $uuid]]);
@@ -257,12 +275,12 @@ class PagePreviewTest extends NodeTestBase {
     $newterm2 = $this->randomMachineName(8);
     $edit[$term_key] = $this->term->getName() . ', ' . $newterm1 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
-    $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
-    $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
+    $this->assertRaw('>' . $newterm1 . '<');
+    $this->assertRaw('>' . $newterm2 . '<');
     // The first term should be displayed as link, the others not.
-    $this->assertLink($this->term->getName());
-    $this->assertNoLink($newterm1);
-    $this->assertNoLink($newterm2);
+    $this->assertSession()->linkExists($this->term->getName());
+    $this->assertSession()->linkNotExists($newterm1);
+    $this->assertSession()->linkNotExists($newterm2);
 
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
@@ -272,13 +290,13 @@ class PagePreviewTest extends NodeTestBase {
     $newterm3 = $this->randomMachineName(8);
     $edit[$term_key] = $newterm1 . ', ' . $newterm3 . ', ' . $newterm2;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Preview'));
-    $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
-    $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
-    $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');
+    $this->assertRaw('>' . $newterm1 . '<');
+    $this->assertRaw('>' . $newterm2 . '<');
+    $this->assertRaw('>' . $newterm3 . '<');
     $this->assertNoText($this->term->getName());
-    $this->assertLink($newterm1);
-    $this->assertLink($newterm2);
-    $this->assertNoLink($newterm3);
+    $this->assertSession()->linkExists($newterm1);
+    $this->assertSession()->linkExists($newterm2);
+    $this->assertSession()->linkNotExists($newterm3);
 
     // Check that editing an existing node after it has been previewed and not
     // saved doesn't remember the previous changes.
@@ -312,21 +330,21 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'), ['query' => ['destination' => $destination]]);
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
     $options = ['absolute' => TRUE, 'query' => ['destination' => $destination]];
-    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, $options));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters, $options));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
     $this->clickLink(t('Back to content editing'));
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertUrl($destination);
+    $this->assertSession()->addressEquals($destination);
 
     // Check that preview page works as expected without a destination set.
     $this->drupalPostForm($node->toUrl('edit-form'), [], t('Preview'));
     $parameters = ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'];
-    $this->assertUrl(Url::fromRoute('entity.node.preview', $parameters, ['absolute' => TRUE]));
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', $parameters));
     $this->drupalPostForm(NULL, ['view_mode' => 'teaser'], t('Switch'));
     $this->clickLink(t('Back to content editing'));
     $this->drupalPostForm(NULL, [], t('Save'));
-    $this->assertUrl($node->toUrl());
-    $this->assertResponse(200);
+    $this->assertSession()->addressEquals($node->toUrl());
+    $this->assertSession()->statusCodeEquals(200);
 
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
@@ -390,7 +408,7 @@ class PagePreviewTest extends NodeTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->clickLink(t('Back to content editing'));
-    $this->assertFieldChecked('edit-menu-enabled', 'Menu option is still checked');
+    $this->assertSession()->checkboxChecked('edit-menu-enabled');
     $this->assertFieldByName('menu[title]', 'Changed title', 'Menu link title is correct after preview');
 
     // Save, change the title while saving and make sure that it is correctly
@@ -426,7 +444,7 @@ class PagePreviewTest extends NodeTestBase {
     $this->drupalPostForm('node/add/page', $edit, t('Preview'));
 
     // Check that the preview is displaying the title, body and term.
-    $this->assertTitle(t('@title | Drupal', ['@title' => $edit[$title_key]]), 'Basic page title is preview.');
+    $this->assertSession()->titleEquals($edit[$title_key] . ' | Drupal');
     $this->assertText($edit[$title_key], 'Title displayed.');
     $this->assertText($edit[$body_key], 'Body displayed.');
     $this->assertText($edit[$term_key], 'Term displayed.');
@@ -477,7 +495,7 @@ class PagePreviewTest extends NodeTestBase {
 
     $edit2 = [$title_key => 'Another page title'];
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit2, t('Preview'));
-    $this->assertUrl(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full'], ['absolute' => TRUE])->toString());
+    $this->assertSession()->addressEquals(Url::fromRoute('entity.node.preview', ['node_preview' => $node->uuid(), 'view_mode_id' => 'full']));
     $this->assertText($edit2[$title_key]);
   }
 

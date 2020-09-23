@@ -13,6 +13,11 @@ use Drupal\Tests\BrowserTestBase;
 class UserEditTest extends BrowserTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test user edit page.
    */
   public function testUserEdit() {
@@ -89,11 +94,11 @@ class UserEditTest extends BrowserTestBase {
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertRaw(t('Password strength:'), 'The password strength indicator is displayed.');
+    $this->assertRaw(t('Password strength:'));
 
     $config->set('password_strength', FALSE)->save();
     $this->drupalPostForm("user/" . $user1->id() . "/edit", $edit, t('Save'));
-    $this->assertNoRaw(t('Password strength:'), 'The password strength indicator is not displayed.');
+    $this->assertNoRaw(t('Password strength:'));
 
     // Check that the user status field has the correct value and that it is
     // properly displayed.
@@ -101,20 +106,20 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('user/' . $user1->id() . '/edit');
-    $this->assertNoFieldChecked('edit-status-0');
-    $this->assertFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxNotChecked('edit-status-0');
+    $this->assertSession()->checkboxChecked('edit-status-1');
 
     $edit = ['status' => 0];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'));
-    $this->assertFieldChecked('edit-status-0');
-    $this->assertNoFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxChecked('edit-status-0');
+    $this->assertSession()->checkboxNotChecked('edit-status-1');
 
     $edit = ['status' => 1];
     $this->drupalPostForm('user/' . $user1->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'));
-    $this->assertNoFieldChecked('edit-status-0');
-    $this->assertFieldChecked('edit-status-1');
+    $this->assertSession()->checkboxNotChecked('edit-status-0');
+    $this->assertSession()->checkboxChecked('edit-status-1');
   }
 
   /**
@@ -167,6 +172,55 @@ class UserEditTest extends BrowserTestBase {
   public function testUserWellKnownChangePasswordAnon() {
     $this->drupalGet('.well-known/change-password');
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests that a user is able to change site language.
+   */
+  public function testUserChangeSiteLanguage() {
+    // Install these modules here as these aren't needed for other test methods.
+    \Drupal::service('module_installer')->install([
+      'content_translation',
+      'language',
+    ]);
+    // Create and login as an admin user to add a new language and enable
+    // translation for user accounts.
+    $adminUser = $this->drupalCreateUser([
+      'administer account settings',
+      'administer languages',
+      'administer content translation',
+      'administer users',
+      'translate any entity',
+    ]);
+    $this->drupalLogin($adminUser);
+
+    // Add a new language into the system.
+    $edit = [
+      'predefined_langcode' => 'fr',
+    ];
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->assertSession()->pageTextContains('French');
+
+    // Enable translation for user accounts.
+    $edit = [
+      'language[content_translation]' => 1,
+    ];
+    $this->drupalPostForm('admin/config/people/accounts', $edit, 'Save configuration');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+
+    // Create a regular user for whom translation will be enabled.
+    $webUser = $this->drupalCreateUser();
+
+    // Create a translation for a regular user account.
+    $this->drupalPostForm('user/' . $webUser->id() . '/translations/add/en/fr', [], 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+
+    // Update the site language of the user account.
+    $edit = [
+      'preferred_langcode' => 'fr',
+    ];
+    $this->drupalPostForm('user/' . $webUser->id() . '/edit', $edit, 'Save');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }

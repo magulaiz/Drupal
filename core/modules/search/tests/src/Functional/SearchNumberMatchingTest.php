@@ -22,6 +22,11 @@ class SearchNumberMatchingTest extends BrowserTestBase {
   protected static $modules = ['dblog', 'node', 'search'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * A user with permission to administer nodes.
    *
    * @var \Drupal\user\UserInterface
@@ -55,12 +60,17 @@ class SearchNumberMatchingTest extends BrowserTestBase {
    */
   protected $nodes;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
-    $this->testUser = $this->drupalCreateUser(['search content', 'access content', 'administer nodes', 'access site reports']);
+    $this->testUser = $this->drupalCreateUser([
+      'search content',
+      'access content',
+      'administer nodes',
+      'access site reports',
+    ]);
     $this->drupalLogin($this->testUser);
 
     foreach ($this->numbers as $num) {

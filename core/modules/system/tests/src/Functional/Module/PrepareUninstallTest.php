@@ -15,6 +15,11 @@ class PrepareUninstallTest extends BrowserTestBase {
   use TaxonomyTestTrait;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of node objects.
    *
    * @var \Drupal\node\NodeInterface[]
@@ -33,12 +38,12 @@ class PrepareUninstallTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'taxonomy', 'entity_test'];
+  protected static $modules = ['node', 'taxonomy', 'entity_test'];
 
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
 
     $admin_user = $this->drupalCreateUser(['administer modules']);
@@ -68,7 +73,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check that Taxonomy cannot be uninstalled yet.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Remove content items');
-    $this->assertLinkByHref('admin/modules/uninstall/entity/taxonomy_term');
+    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Delete Taxonomy term data.
     $this->drupalGet('admin/modules/uninstall/entity/taxonomy_term');
@@ -84,13 +89,13 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Check that we are redirected to the uninstall page and data has been
     // removed.
-    $this->assertUrl('admin/modules/uninstall', []);
+    $this->assertSession()->addressEquals('admin/modules/uninstall');
     $this->assertText('All taxonomy terms have been deleted.');
 
     // Check that there is no more data to be deleted, Taxonomy is ready to be
     // uninstalled.
     $this->assertText('Enables the categorization of content.');
-    $this->assertNoLinkByHref('admin/modules/uninstall/entity/taxonomy_term');
+    $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/taxonomy_term');
 
     // Uninstall the Taxonomy module.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[taxonomy]' => TRUE], t('Uninstall'));
@@ -101,7 +106,7 @@ class PrepareUninstallTest extends BrowserTestBase {
     // Check Node cannot be uninstalled yet, there is content to be removed.
     $this->drupalGet('admin/modules/uninstall');
     $this->assertText('Remove content items');
-    $this->assertLinkByHref('admin/modules/uninstall/entity/node');
+    $this->assertSession()->linkByHrefExists('admin/modules/uninstall/entity/node');
 
     // Delete Node data.
     $this->drupalGet('admin/modules/uninstall/entity/node');
@@ -132,13 +137,13 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->drupalPostForm(NULL, [], t('Delete all content items'));
 
     // Check we are redirected to the uninstall page and data has been removed.
-    $this->assertUrl('admin/modules/uninstall', []);
+    $this->assertSession()->addressEquals('admin/modules/uninstall');
     $this->assertText('All content items have been deleted.');
 
     // Check there is no more data to be deleted, Node is ready to be
     // uninstalled.
     $this->assertText('Allows content to be submitted to the site and displayed on pages.');
-    $this->assertNoLinkByHref('admin/modules/uninstall/entity/node');
+    $this->assertSession()->linkByHrefNotExists('admin/modules/uninstall/entity/node');
 
     // Uninstall Node module.
     $this->drupalPostForm('admin/modules/uninstall', ['uninstall[node]' => TRUE], t('Uninstall'));
@@ -146,9 +151,9 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->assertText('The selected modules have been uninstalled.');
     $this->assertNoText('Allows content to be submitted to the site and displayed on pages.');
 
-    // Ensure the proper response when accessing a non-existent entity type.
+    // Ensure a 404 is returned when accessing a non-existent entity type.
     $this->drupalGet('admin/modules/uninstall/entity/node');
-    $this->assertResponse(404, 'Entity types that do not exist result in a 404.');
+    $this->assertSession()->statusCodeEquals(404);
 
     // Test an entity type which does not have any existing entities.
     $this->drupalGet('admin/modules/uninstall/entity/entity_test_no_label');

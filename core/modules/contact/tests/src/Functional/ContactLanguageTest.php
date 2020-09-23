@@ -20,7 +20,7 @@ class ContactLanguageTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'contact',
     'language',
     'contact_test',
@@ -29,7 +29,12 @@ class ContactLanguageTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Create and log in administrative user.
@@ -46,8 +51,8 @@ class ContactLanguageTest extends BrowserTestBase {
   public function testContactLanguage() {
     // Ensure that contact form by default does not show the language select.
     $this->drupalGet('contact');
-    $this->assertResponse(200, 'The page exists');
-    $this->assertNoField('edit-langcode-0-value');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->fieldNotExists('edit-langcode-0-value');
 
     // Enable language select from content language settings page.
     $settings_path = 'admin/config/regional/content-language';
@@ -57,8 +62,8 @@ class ContactLanguageTest extends BrowserTestBase {
 
     // Ensure that contact form now shows the language select.
     $this->drupalGet('contact');
-    $this->assertResponse(200, 'The page exists');
-    $this->assertField('edit-langcode-0-value');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->fieldExists('edit-langcode-0-value');
   }
 
 }

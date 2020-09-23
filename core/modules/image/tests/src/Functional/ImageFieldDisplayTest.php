@@ -32,7 +32,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui'];
+  protected static $modules = ['field_ui'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Test image formatters on node display for public files.
@@ -66,7 +71,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test for existence of link to image styles configuration.
     $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
-    $this->assertLinkByHref(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('entity.image_style.collection')->toString(), 0, 'Link to image styles configuration is found');
 
     // Remove 'administer image styles' permission from testing admin user.
     $admin_user_roles = $this->adminUser->getRoles(TRUE);
@@ -77,7 +82,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test for absence of link to image styles configuration.
     $this->drupalPostForm(NULL, [], "{$field_name}_settings_edit");
-    $this->assertNoLinkByHref(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
+    $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
     user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => TRUE]);
@@ -112,7 +117,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     // Test the image linked to file formatter.
     $display_options = [
@@ -133,24 +138,24 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $default_output = '<a href="' . file_create_url($image_uri) . '">' . $renderer->renderRoot($image) . '</a>';
     $this->drupalGet('node/' . $nid);
-    $this->assertCacheTag($file->getCacheTags()[0]);
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // @todo Remove in https://www.drupal.org/node/2646744.
     $this->assertCacheContext('url.site');
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
-    $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
+    $this->assertRaw($default_output);
     // Verify that the image can be downloaded.
     $this->assertEqual(file_get_contents($test_image->uri), $this->drupalGet(file_create_url($image_uri)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
-      $this->assertEqual($this->drupalGetHeader('Content-Type'), 'image/png', 'Content-Type header was sent.');
-      $this->assertTrue(strstr($this->drupalGetHeader('Cache-Control'), 'private') !== FALSE, 'Cache-Control header was sent.');
+      $this->assertSession()->responseHeaderEquals('Content-Type', 'image/png');
+      $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
 
-      // Log out and try to access the file.
+      // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(file_create_url($image_uri));
-      $this->assertResponse('403', 'Access denied to original image as anonymous user.');
+      $this->assertSession()->statusCodeEquals(403);
 
       // Log in again.
       $this->drupalLogin($this->adminUser);
@@ -167,9 +172,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
     ];
     $this->drupalGet('node/' . $nid);
-    $this->assertCacheTag($file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $elements = $this->xpath(
       '//a[@href=:path]/img[@src=:url and @alt=:alt and @width=:width and @height=:height]',
       [
@@ -180,7 +185,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
         ':alt' => $alt,
       ]
     );
-    $this->assertEqual(count($elements), 1, 'Image linked to content formatter displaying correctly on full node view.');
+    $this->assertCount(1, $elements, 'Image linked to content formatter displaying correctly on full node view.');
 
     // Test the image style 'thumbnail' formatter.
     $display_options['settings']['image_link'] = '';
@@ -202,14 +207,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $default_output = $renderer->renderRoot($image_style);
     $this->drupalGet('node/' . $nid);
     $image_style = ImageStyle::load('thumbnail');
-    $this->assertCacheTag($image_style->getCacheTags()[0]);
-    $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $image_style->getCacheTags()[0]);
+    $this->assertRaw($default_output);
 
     if ($scheme == 'private') {
-      // Log out and try to access the file.
+      // Log out and ensure the file cannot be accessed.
       $this->drupalLogout();
       $this->drupalGet(ImageStyle::load('thumbnail')->buildUrl($image_uri));
-      $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
+      $this->assertSession()->statusCodeEquals(403);
     }
 
     // Test the image URL formatter without an image style.
@@ -282,7 +287,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $file = $node->{$field_name}->entity;
 
     $url = file_url_transform_relative(ImageStyle::load('medium')->buildUrl($file->getFileUri()));
-    $this->assertTrue($this->cssSelect('img[width=40][height=20][class=image-style-medium][src="' . $url . '"]'));
+    $this->assertSession()->elementExists('css', 'img[width=40][height=20][class=image-style-medium][src="' . $url . '"]');
 
     // Add alt/title fields to the image and verify that they are displayed.
     $image = [
@@ -299,7 +304,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
-    $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
+    $this->assertRaw($default_output);
 
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
@@ -362,9 +367,9 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $node->id());
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
-    $this->assertSession()->responseNotMatches('<div class="(.*?)field--name-' . strtr($field_name, '_', '-') . '(.*?)">', 'No image displayed when no image is attached and no default image specified.');
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
+    $this->assertSession()->responseNotMatches('<div class="(.*?)field--name-' . strtr($field_name, '_', '-') . '(.*?)">');
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
 
     // Add a default image to the public image field.
     $images = $this->drupalGetTestFiles('image');
@@ -393,10 +398,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
-    $this->assertCacheTag($file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
-    $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
+    $this->assertRaw($default_output);
 
     // Create a node with an image attached and ensure that the default image
     // is not displayed.
@@ -418,11 +423,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $image_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
-    $this->assertCacheTag($file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
-    $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
-    $this->assertRaw($image_output, 'User supplied image is displayed.');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
+    // Default image should not be displayed.
+    $this->assertNoRaw($default_output);
+    // User supplied image should be displayed.
+    $this->assertRaw($image_output);
 
     // Remove default image from the field and make sure it is no longer used.
     // Can't use fillField cause Mink can't fill hidden fields.
@@ -434,7 +441,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     $default_image = $field_storage->getSetting('default_image');
-    $this->assertFalse($default_image['uuid'], 'Default image removed from field.');
+    $this->assertEmpty($default_image['uuid'], 'Default image removed from field.');
     // Create an image field that uses the private:// scheme and test that the
     // default image works as expected.
     $private_field_name = strtolower($this->randomMachineName());
@@ -469,10 +476,12 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $default_output = str_replace("\n", NULL, $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
-    $this->assertCacheTag($file->getCacheTags()[0]);
-    $cache_tags_header = $this->drupalGetHeader('X-Drupal-Cache-Tags');
-    $this->assertTrue(!preg_match('/ image_style\:/', $cache_tags_header), 'No image style cache tag found.');
-    $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
+    // Verify that no image style cache tags are found.
+    $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
+    // Default private image should be displayed when no user supplied image
+    // is present.
+    $this->assertRaw($default_output);
   }
 
 }

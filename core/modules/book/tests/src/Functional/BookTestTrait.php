@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\book\Functional;
 
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\EntityInterface;
@@ -94,10 +95,7 @@ trait BookTestTrait {
 
     // Check outline structure.
     if ($nodes !== NULL) {
-      $this->assertPattern($this->generateOutlinePattern($nodes), new FormattableMarkup('Node @number outline confirmed.', ['@number' => $number]));
-    }
-    else {
-      $this->pass(new FormattableMarkup('Node %number does not have outline.', ['%number' => $number]));
+      $this->assertSession()->responseMatches($this->generateOutlinePattern($nodes));
     }
 
     // Check previous, up, and next links.
@@ -106,14 +104,14 @@ trait BookTestTrait {
       $url = $previous->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['prev'], 'title' => t('Go to previous page')]]);
       $text = new FormattableMarkup('<b>‹</b> @label', ['@label' => $previous->label()]);
-      $this->assertRaw(\Drupal::l($text, $url), 'Previous page link found.');
+      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     if ($up) {
       /** @var \Drupal\Core\Url $url */
       $url = $up->toUrl();
       $url->setOptions(['attributes' => ['title' => t('Go to parent page')]]);
-      $this->assertRaw(\Drupal::l('Up', $url), 'Up page link found.');
+      $this->assertRaw(Link::fromTextAndUrl('Up', $url)->toString());
     }
 
     if ($next) {
@@ -121,7 +119,7 @@ trait BookTestTrait {
       $url = $next->toUrl();
       $url->setOptions(['attributes' => ['rel' => ['next'], 'title' => t('Go to next page')]]);
       $text = new FormattableMarkup('@label <b>›</b>', ['@label' => $next->label()]);
-      $this->assertRaw(\Drupal::l($text, $url), 'Next page link found.');
+      $this->assertRaw(Link::fromTextAndUrl($text, $url)->toString());
     }
 
     // Compute the expected breadcrumb.
@@ -144,7 +142,7 @@ trait BookTestTrait {
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
     $this->assertText($node->label(), 'Printer friendly title found.');
-    $this->assertRaw($node->body->processed, 'Printer friendly body found.');
+    $this->assertRaw($node->body->processed);
 
     $number++;
   }

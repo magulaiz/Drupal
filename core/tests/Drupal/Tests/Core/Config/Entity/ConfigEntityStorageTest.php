@@ -103,7 +103,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    *
    * @covers ::__construct
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeId = 'test_entity_type';
@@ -564,7 +564,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->assertSame('foo', $entity->id());
 
     $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessage('Cannot load a NULL ID.');
+    $this->expectExceptionMessage(sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $this->entityStorage->load(NULL);
   }
 
@@ -720,7 +720,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @param array $methods
    *   (optional) The methods to mock.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   public function getMockEntity(array $values = [], $methods = []) {
     return $this->getMockForAbstractClass(ConfigEntityBase::class, [$values, 'test_entity_type'], '', TRUE, TRUE, TRUE, $methods);

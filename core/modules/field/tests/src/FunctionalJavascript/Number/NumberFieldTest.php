@@ -22,7 +22,12 @@ class NumberFieldTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalLogin($this->drupalCreateUser([
@@ -146,7 +151,7 @@ class NumberFieldTest extends WebDriverTestBase {
     // Check number_decimal and number_unformatted formatters behavior.
     $this->drupalGet('node/' . $node->id());
     $float_formatted = number_format($random_float, $scale, $decimal_separator, $thousand_separator);
-    $this->assertRaw("$prefix$float_formatted$suffix", 'Prefix and suffix added');
+    $this->assertRaw("$prefix$float_formatted$suffix");
     $this->assertRaw((string) $random_integer);
 
     // Configure the number_decimal formatter.
@@ -177,7 +182,7 @@ class NumberFieldTest extends WebDriverTestBase {
     $this->drupalGet('node/' . $node->id());
 
     $integer_formatted = number_format($random_integer, 0, '', $thousand_separator);
-    $this->assertRaw($integer_formatted, 'Random integer formatted');
+    $this->assertRaw($integer_formatted);
   }
 
 }

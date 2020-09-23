@@ -16,13 +16,22 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'language', 'path'];
+  protected static $modules = ['block', 'language', 'path'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     // Create and log in user.
-    $web_user = $this->drupalCreateUser(['administer languages', 'access administration pages', 'administer site configuration']);
+    $web_user = $this->drupalCreateUser([
+      'administer languages',
+      'access administration pages',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($web_user);
 
     // Enable French language.
@@ -62,11 +71,11 @@ class LanguagePathMonolingualTest extends BrowserTestBase {
     $this->drupalGet('admin/config');
 
     // Verify that links in this page do not have a 'fr/' prefix.
-    $this->assertNoLinkByHref('/fr/', 'Links do not contain language prefix');
+    $this->assertSession()->linkByHrefNotExists('/fr/', 'Links do not contain language prefix');
 
     // Verify that links in this page can be followed and work.
     $this->clickLink(t('Languages'));
-    $this->assertResponse(200, 'Clicked link results in a valid page');
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Add language'), 'Page contains the add language text');
   }
 

@@ -9,6 +9,8 @@ finished:
       - menu_link_content
     locale: content_translation
     menu: content_translation
+  # Node revision translations.
+    node: content_translation
     statistics: statistics
     taxonomy: content_translation
   7:
@@ -20,7 +22,8 @@ finished:
     locale: content_translation
     menu: content_translation
     statistics: statistics
-
+    # Node revision translations.
+    node: content_translation
 not_finished:
   # Also D6 and D7 node revision translations.
   6:
@@ -33,7 +36,9 @@ not_finished:
     # @TODO: Move to finished when remaining Drupal 7 i18n issues are resolved.
     # See https://www.drupal.org/project/drupal/issues/2208401
     i18n: content_translation
-    # menu links.
+    # Menu links.
+    # See https://www.drupal.org/project/drupal/issues/3008028
     i18n_menu: content_translation
-    # localized.
+    # @TODO: Remove when taxonomy term field translations are migrated.
+    # See https://www.drupal.org/project/drupal/issues/3073050
     i18n_taxonomy: content_translation

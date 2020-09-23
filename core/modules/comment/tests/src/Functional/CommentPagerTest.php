@@ -14,6 +14,11 @@ use Drupal\node\Entity\Node;
 class CommentPagerTest extends CommentTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Confirms comment paging works correctly with flat and threaded comments.
    */
   public function testCommentPaging() {
@@ -40,7 +45,7 @@ class CommentPagerTest extends CommentTestBase {
     // Check the first page of the node, and confirm the correct comments are
     // shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw(t('next'), 'Paging links found.');
+    $this->assertRaw(t('next'));
     $this->assertTrue($this->commentExists($comments[0]), 'Comment 1 appears on page 1.');
     $this->assertFalse($this->commentExists($comments[1]), 'Comment 2 does not appear on page 1.');
     $this->assertFalse($this->commentExists($comments[2]), 'Comment 3 does not appear on page 1.');
@@ -338,8 +343,8 @@ class CommentPagerTest extends CommentTestBase {
     $account = $this->drupalCreateUser(['administer node display']);
     $this->drupalLogin($account);
     $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
-    $this->assertText(t('Pager ID: @id', ['@id' => 1]));
+    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
+    $this->assertText('Pager ID: 1');
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     // Change default pager to 2.
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 2], t('Save'));
@@ -347,7 +352,7 @@ class CommentPagerTest extends CommentTestBase {
     // Revert the changes.
     $this->drupalPostForm(NULL, [], 'comment_settings_edit');
     $this->drupalPostForm(NULL, ['fields[comment][settings_edit_form][settings][pager_id]' => 0], t('Save'));
-    $this->assertNoText(t('Pager ID: @id', ['@id' => 0]), 'No summary for standard pager');
+    $this->assertNoText('Pager ID: 0', 'No summary for standard pager');
 
     $this->drupalLogin($this->adminUser);
 
@@ -375,7 +380,7 @@ class CommentPagerTest extends CommentTestBase {
     // Check the first page of the node, and confirm the correct comments are
     // shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw(t('next'), 'Paging links found.');
+    $this->assertRaw(t('next'));
     $this->assertRaw('Comment 1 on field comment');
     $this->assertRaw('Comment 1 on field comment_2');
     // Navigate to next page of field 1.
@@ -424,7 +429,6 @@ class CommentPagerTest extends CommentTestBase {
     $urls = $this->xpath($xpath, $arguments);
     if (isset($urls[$index])) {
       $url_target = $this->getAbsoluteUrl($urls[$index]->getAttribute('href'));
-      $this->pass(new FormattableMarkup('Clicked link %label (@url_target) from @url_before', ['%label' => $xpath, '@url_target' => $url_target, '@url_before' => $url_before]), 'Browser');
       return $this->drupalGet($url_target);
     }
     $this->fail(new FormattableMarkup('Link %label does not exist on @url_before', ['%label' => $xpath, '@url_before' => $url_before]), 'Browser');

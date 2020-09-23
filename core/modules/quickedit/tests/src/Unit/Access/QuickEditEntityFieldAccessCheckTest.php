@@ -26,7 +26,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->editAccessCheck = new QuickEditEntityFieldAccessCheck();
 
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
@@ -123,7 +123,7 @@ class QuickEditEntityFieldAccessCheckTest extends UnitTestCase {
   /**
    * Returns a mock entity.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function createMockEntity() {
     $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTest')

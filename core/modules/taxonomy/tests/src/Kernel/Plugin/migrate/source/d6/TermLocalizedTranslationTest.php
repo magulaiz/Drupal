@@ -15,7 +15,7 @@ class TermLocalizedTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['taxonomy', 'migrate_drupal'];
+  protected static $modules = ['taxonomy', 'migrate_drupal'];
 
   /**
    * {@inheritdoc}
@@ -99,6 +99,14 @@ class TermLocalizedTranslationTest extends MigrateSqlSourceTestBase {
         'type' => 'term',
         'property' => 'name',
         'objectindex' => '3',
+        'format' => 0,
+      ],
+      [
+        'lid' => 9,
+        'objectid' => 4,
+        'type' => 'term',
+        'property' => 'description',
+        'objectindex' => '4',
         'format' => 0,
       ],
     ];

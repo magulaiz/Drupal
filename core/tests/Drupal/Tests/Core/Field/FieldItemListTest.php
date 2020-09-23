@@ -135,6 +135,25 @@ class FieldItemListTest extends UnitTestCase {
     // not exist ('3').
     $datasets[] = [TRUE, $field_item_h, $field_item_i];
 
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_j */
+    $field_item_j = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_j->setValue(['0' => 1]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_k */
+    $field_item_k = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_k->setValue(['0' => 1, '1' => NULL]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_l */
+    $field_item_l = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_l->setValue(['0' => 1, '1' => FALSE]);
+    /** @var \Drupal\Core\Field\FieldItemBase  $field_item_m */
+    $field_item_m = $this->getMockForAbstractClass('Drupal\Core\Field\FieldItemBase', [], '', FALSE);
+    $field_item_m->setValue(['0' => 1, '1' => '']);
+
+    // Tests filter properties with a NULL value. Empty strings or other false-y
+    // values are not filtered.
+    $datasets[] = [TRUE, $field_item_j, $field_item_k];
+    $datasets[] = [FALSE, $field_item_j, $field_item_l];
+    $datasets[] = [FALSE, $field_item_j, $field_item_m];
+
     return $datasets;
   }
 
@@ -275,7 +294,7 @@ class FieldItemListTest extends UnitTestCase {
     $field_definition->expects($this->any())
       ->method('getType')
       ->willReturn('field_type');
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget'])
       ->setConstructorArgs([$field_definition])
@@ -296,7 +315,7 @@ class FieldItemListTest extends UnitTestCase {
    */
   public function testDefaultValuesFormValidate() {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget', 'validate'])
       ->setConstructorArgs([$field_definition])
@@ -317,7 +336,7 @@ class FieldItemListTest extends UnitTestCase {
    */
   public function testDefaultValuesFormSubmit() {
     $field_definition = $this->createMock(FieldDefinitionInterface::class);
-    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit_Framework_MockObject_MockObject $field_list */
+    /** @var \Drupal\Core\Field\FieldItemList|\PHPUnit\Framework\MockObject\MockObject $field_list */
     $field_list = $this->getMockBuilder(FieldItemList::class)
       ->setMethods(['defaultValueWidget', 'getValue'])
       ->setConstructorArgs([$field_definition])
@@ -330,7 +349,7 @@ class FieldItemListTest extends UnitTestCase {
     $field_list->expects($this->never())
       ->method('getValue');
 
-    $this->assertNull($field_list->defaultValuesFormSubmit([], $form, $form_state));
+    $this->assertArrayEquals([], $field_list->defaultValuesFormSubmit([], $form, $form_state));
   }
 
 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\views\EventSubscriber;
 
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeEventSubscriberTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeListenerInterface;
@@ -19,12 +18,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventSubscriberInterface {
 
   use EntityTypeEventSubscriberTrait;
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * Indicates that a base table got renamed.
@@ -98,12 +91,8 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, LoggerInterface $logger) {
     $this->entityTypeManager = $entity_type_manager;
-    if (!$logger) {
-      @trigger_error('Calling ViewsEntitySchemaSubscriber::__construct() with the $logger argument is supported in drupal:8.7.1 and will be required before drupal:9.0.0. See https://www.drupal.org/project/drupal/issues/3052492.', E_USER_DEPRECATED);
-      $logger = \Drupal::service('logger.channel.default');
-    }
     $this->logger = $logger;
   }
 
@@ -180,30 +169,39 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
         case static::BASE_TABLE_RENAME:
           $this->baseTableRename($all_views, $entity_type->id(), $original->getBaseTable(), $entity_type->getBaseTable());
           break;
+
         case static::DATA_TABLE_RENAME:
           $this->dataTableRename($all_views, $entity_type->id(), $original->getDataTable(), $entity_type->getDataTable());
           break;
+
         case static::DATA_TABLE_ADDITION:
           $this->dataTableAddition($all_views, $entity_type, $entity_type->getDataTable(), $entity_type->getBaseTable());
           break;
+
         case static::DATA_TABLE_REMOVAL:
           $this->dataTableRemoval($all_views, $entity_type->id(), $original->getDataTable(), $entity_type->getBaseTable());
           break;
+
         case static::REVISION_TABLE_RENAME:
           $this->baseTableRename($all_views, $entity_type->id(), $original->getRevisionTable(), $entity_type->getRevisionTable());
           break;
+
         case static::REVISION_TABLE_ADDITION:
           // If we add revision support we don't have to do anything.
           break;
+
         case static::REVISION_TABLE_REMOVAL:
           $this->revisionRemoval($all_views, $original);
           break;
+
         case static::REVISION_DATA_TABLE_RENAME:
           $this->dataTableRename($all_views, $entity_type->id(), $original->getRevisionDataTable(), $entity_type->getRevisionDataTable());
           break;
+
         case static::REVISION_DATA_TABLE_ADDITION:
           $this->dataTableAddition($all_views, $entity_type, $entity_type->getRevisionDataTable(), $entity_type->getRevisionTable());
           break;
+
         case static::REVISION_DATA_TABLE_REMOVAL:
           $this->dataTableRemoval($all_views, $entity_type->id(), $original->getRevisionDataTable(), $entity_type->getRevisionTable());
           break;
@@ -306,7 +304,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
       }
     }
 
-    $this->processHandlers($all_views, function (array &$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_base_table, $new_base_table) {
+    $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_base_table, $new_base_table) {
       if (isset($handler_config['entity_type']) && $handler_config['entity_type'] == $entity_type_id && $handler_config['table'] == $old_base_table) {
         $handler_config['table'] = $new_base_table;
         $view->set('_updated', TRUE);
@@ -334,7 +332,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
       }
     }
 
-    $this->processHandlers($all_views, function (array &$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_data_table, $new_data_table) {
+    $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_data_table, $new_data_table) {
       if (isset($handler_config['entity_type']) && $handler_config['entity_type'] == $entity_type_id && $handler_config['table'] == $old_data_table) {
         $handler_config['table'] = $new_data_table;
         $view->set('_updated', TRUE);
@@ -365,7 +363,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
 
     $data_table = $new_data_table;
 
-    $this->processHandlers($all_views, function (array &$handler_config, ViewEntityInterface $view) use ($entity_type_id, $base_table, $data_table, $base_table_fields, $data_table_fields) {
+    $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $base_table, $data_table, $base_table_fields, $data_table_fields) {
       if (isset($handler_config['entity_type']) && isset($handler_config['entity_field']) && $handler_config['entity_type'] == $entity_type_id) {
         // Move all fields which just exists on the data table.
         if ($handler_config['table'] == $base_table && in_array($handler_config['entity_field'], $data_table_fields) && !in_array($handler_config['entity_field'], $base_table_fields)) {
@@ -390,7 +388,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
    */
   protected function dataTableRemoval($all_views, $entity_type_id, $old_data_table, $base_table) {
     // We move back the data table back to the base table.
-    $this->processHandlers($all_views, function (array &$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_data_table, $base_table) {
+    $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $old_data_table, $base_table) {
       if (isset($handler_config['entity_type']) && $handler_config['entity_type'] == $entity_type_id) {
         if ($handler_config['table'] == $old_data_table) {
           $handler_config['table'] = $base_table;

@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Timer;
 use Drupal\Core\EventSubscriber\AjaxResponseSubscriber;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\TempStore\Lock;
 use Drupal\views\Views;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -15,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,9 +51,6 @@ class ViewUI implements ViewEntityInterface {
    *
    * If this view is locked it will contain the result of
    * \Drupal\Core\TempStore\SharedTempStore::getMetadata().
-   *
-   * For backwards compatibility, public access to this property is provided by
-   * ::__set() and ::__get().
    *
    * @var \Drupal\Core\TempStore\Lock|null
    */
@@ -613,7 +611,7 @@ class ViewUI implements ViewEntityInterface {
 
       // Prepare the query information and statistics to show either above or
       // below the view preview.
-      // Initialise the empty rows arrays so we can safely merge them later.
+      // Initialize the empty rows arrays so we can safely merge them later.
       $rows['query'] = [];
       $rows['statistics'] = [];
       if ($show_info || $show_query || $show_stats) {
@@ -699,7 +697,7 @@ class ViewUI implements ViewEntityInterface {
             if (isset($path)) {
               // @todo Views should expect and store a leading /. See:
               //   https://www.drupal.org/node/2423913
-              $path = \Drupal::l($path->toString(), $path);
+              $path = Link::fromTextAndUrl($path->toString(), $path)->toString();
             }
             else {
               $path = t('This display has no path.');
@@ -996,22 +994,8 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function urlInfo($rel = 'edit-form', array $options = []) {
-    return $this->storage->toUrl($rel, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function toUrl($rel = 'edit-form', array $options = []) {
     return $this->storage->toUrl($rel, $options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function link($text = NULL, $rel = 'edit-form', array $options = []) {
-    return $this->storage->link($text, $rel, $options);
   }
 
   /**
@@ -1169,13 +1153,6 @@ class ViewUI implements ViewEntityInterface {
    */
   public function referencedEntities() {
     return $this->storage->referencedEntities();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function url($rel = 'edit-form', $options = []) {
-    return $this->storage->url($rel, $options);
   }
 
   /**
@@ -1386,32 +1363,6 @@ class ViewUI implements ViewEntityInterface {
   public function unsetLock() {
     $this->lock = NULL;
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __set($name, $value) {
-    if ($name === 'lock') {
-      @trigger_error('Using the "lock" public property of a View is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\views_ui\ViewUI::setLock() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      if ($value instanceof \stdClass && property_exists($value, 'owner') && property_exists($value, 'updated')) {
-        $value = new Lock($value->owner, $value->updated);
-      }
-      $this->setLock($value);
-    }
-    else {
-      $this->{$name} = $value;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function __get($name) {
-    if ($name === 'lock') {
-      @trigger_error('Using the "lock" public property of a View is deprecated in Drupal 8.7.0 and will not be allowed in Drupal 9.0.0. Use \Drupal\views_ui\ViewUI::getLock() instead. See https://www.drupal.org/node/3025869.', E_USER_DEPRECATED);
-      return $this->getLock();
-    }
   }
 
 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\editor\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Serialization\Json;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -23,6 +22,11 @@ class EditorSecurityTest extends BrowserTestBase {
   protected static $sampleContent = '<p style="color: red">Hello, Dumbo Octopus!</p><script>alert(0)</script><embed type="image/svg+xml" src="image.svg" />';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The secured sample content to use in most tests.
    *
    * @var string
@@ -41,7 +45,7 @@ class EditorSecurityTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['filter', 'editor', 'editor_test', 'node'];
+  protected static $modules = ['filter', 'editor', 'editor_test', 'node'];
 
   /**
    * User with access to Restricted HTML text format without text editor.
@@ -72,7 +76,7 @@ class EditorSecurityTest extends BrowserTestBase {
    */
   protected $privilegedUser;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create 5 text formats, to cover all potential use cases:
@@ -277,10 +281,6 @@ class EditorSecurityTest extends BrowserTestBase {
     // Log in as each user that may edit the content, and assert the value.
     foreach ($expected as $case) {
       foreach ($case['users'] as $account) {
-        $this->pass(new FormattableMarkup('Scenario: sample %sample_id, %format.', [
-          '%sample_id' => $case['node_id'],
-          '%format' => $case['format'],
-        ]));
         $this->drupalLogin($account);
         $this->drupalGet('node/' . $case['node_id'] . '/edit');
         $dom_node = $this->xpath('//textarea[@id="edit-body-0-value"]');
@@ -402,12 +402,6 @@ class EditorSecurityTest extends BrowserTestBase {
 
       // Switch to every other text format/editor and verify the results.
       foreach ($case['switch_to'] as $format => $expected_filtered_value) {
-        $this->pass(new FormattableMarkup('Scenario: sample %sample_id, switch from %original_format to %format.', [
-          '%sample_id' => $case['node_id'],
-          '%original_format' => $case['format'],
-          '%format' => $format,
-        ]));
-
         $post = [
           'value' => self::$sampleContent,
           'original_format_id' => $case['format'],

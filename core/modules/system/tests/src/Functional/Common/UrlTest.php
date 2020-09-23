@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Link;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -21,23 +22,30 @@ use Drupal\Tests\BrowserTestBase;
  */
 class UrlTest extends BrowserTestBase {
 
-  public static $modules = ['common_test', 'url_alter_test'];
+  protected static $modules = ['common_test', 'url_alter_test'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
    */
   public function testLinkXSS() {
-    // Test \Drupal::l().
+    // Test link generator.
     $text = $this->randomMachineName();
     $path = "<SCRIPT>alert('XSS')</SCRIPT>";
     $encoded_path = "3CSCRIPT%3Ealert%28%27XSS%27%29%3C/SCRIPT%3E";
 
-    $link = \Drupal::l($text, Url::fromUserInput('/' . $path));
-    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
+    $link = Link::fromTextAndUrl($text, Url::fromUserInput('/' . $path))->toString();
+    $this->assertStringContainsString($encoded_path, $link, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
+    $this->assertStringNotContainsString($path, $link, new FormattableMarkup('XSS attack @path was filtered by \Drupal\Core\Utility\LinkGeneratorInterface::generate().', ['@path' => $path]));
 
     // Test \Drupal\Core\Url.
     $link = Url::fromUri('base:' . $path)->toString();
-    $this->assertTrue(strpos($link, $encoded_path) !== FALSE && strpos($link, $path) === FALSE, new FormattableMarkup('XSS attack @path was filtered by #theme', ['@path' => $path]));
+    $this->assertStringContainsString($encoded_path, $link, new FormattableMarkup('XSS attack @path was filtered by #theme', ['@path' => $path]));
+    $this->assertStringNotContainsString($path, $link, new FormattableMarkup('XSS attack @path was filtered by #theme', ['@path' => $path]));
   }
 
   /**
@@ -63,7 +71,6 @@ class UrlTest extends BrowserTestBase {
         '#url' => Url::fromUri($uri),
       ];
       \Drupal::service('renderer')->renderRoot($link);
-      $this->pass($title);
       $this->assertEqual($expected_cacheability, $link['#cache']);
       $this->assertEqual($expected_attachments, $link['#attached']);
     }
@@ -139,8 +146,8 @@ class UrlTest extends BrowserTestBase {
     // \Drupal\Core\Utility\LinkGeneratorInterface::generate() and #type 'link'.
     // Test the link generator.
     $class_l = $this->randomMachineName();
-    $link_l = \Drupal::l($this->randomMachineName(), new Url('<current>', [], ['attributes' => ['class' => [$class_l]]]));
-    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), new FormattableMarkup('Custom class @class is present on link when requested by l()', ['@class' => $class_l]));
+    $link_l = Link::fromTextAndUrl($this->randomMachineName(), Url::fromRoute('<current>', [], ['attributes' => ['class' => [$class_l]]]))->toString();
+    $this->assertTrue($this->hasAttribute('class', $link_l, $class_l), new FormattableMarkup('Custom class @class is present on link when requested by Link::toString()', ['@class' => $class_l]));
 
     // Test #type.
     $class_theme = $this->randomMachineName();
@@ -166,12 +173,12 @@ class UrlTest extends BrowserTestBase {
     $renderer = $this->container->get('renderer');
 
     // Build a link with the link generator for reference.
-    $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
+    $l = Link::fromTextAndUrl('foo', Url::fromUri('https://www.drupal.org'))->toString();
 
     // Test a renderable array passed to the link generator.
     $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, $l) {
       $renderable_text = ['#markup' => 'foo'];
-      $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
+      $l_renderable_text = \Drupal::service('link_generator')->generate($renderable_text, Url::fromUri('https://www.drupal.org'));
       $this->assertEqual($l_renderable_text, $l);
     });
 
@@ -206,7 +213,7 @@ class UrlTest extends BrowserTestBase {
    *   TRUE if the class is found, FALSE otherwise.
    */
   private function hasAttribute($attribute, $link, $class) {
-    return preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
+    return (bool) preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
   }
 
   /**
@@ -302,6 +309,11 @@ class UrlTest extends BrowserTestBase {
 
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';
+    $result = Url::fromUri($url)->toString();
+    $this->assertEqual($url, $result);
+
+    // Verify external URL can contain a query string with an integer key.
+    $url = $test_url . '?120=1';
     $result = Url::fromUri($url)->toString();
     $this->assertEqual($url, $result);
 

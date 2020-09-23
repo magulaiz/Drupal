@@ -23,7 +23,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_moderation',
     'workflows',
@@ -37,7 +37,12 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp(FALSE);
 
     NodeType::create([
@@ -61,7 +66,10 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
     $new_workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example_c');
     $new_workflow->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['administer workflows', 'administer views']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer workflows',
+      'administer views',
+    ]));
 
     $this->container->get('module_installer')->install(['content_moderation_test_views']);
 
@@ -216,7 +224,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
   }
 
   /**
-   * Execute a view and asssert the expected results.
+   * Execute a view and assert the expected results.
    *
    * @param \Drupal\views\ViewEntityInterface $view_entity
    *   A view configuration entity.

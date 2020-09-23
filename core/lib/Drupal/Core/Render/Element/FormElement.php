@@ -60,7 +60,7 @@ use Drupal\Core\Url;
  * - #required: (bool) Whether or not input is required on the element.
  * - #states: (array) Information about JavaScript states, such as when to
  *   hide or show the element based on input on other elements.
- *   See drupal_process_states() for documentation.
+ *   See \Drupal\Core\Form\FormHelper::processStates() for documentation.
  * - #title: (string) Title of the form element. Should be translated.
  * - #title_display: (string) Where and how to display the #title. Possible
  *   values:
@@ -108,7 +108,7 @@ abstract class FormElement extends RenderElement implements FormElementInterface
   public static function processPattern(&$element, FormStateInterface $form_state, &$complete_form) {
     if (isset($element['#pattern']) && !isset($element['#attributes']['pattern'])) {
       $element['#attributes']['pattern'] = $element['#pattern'];
-      $element['#element_validate'][] = [get_called_class(), 'validatePattern'];
+      $element['#element_validate'][] = [static::class, 'validatePattern'];
     }
 
     return $element;

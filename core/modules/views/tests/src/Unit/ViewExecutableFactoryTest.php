@@ -16,7 +16,7 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   /**
    * The mock user object.
    *
-   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Session\AccountInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $user;
 
@@ -30,7 +30,7 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   /**
    * The mock view entity.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $view;
 
@@ -44,21 +44,21 @@ class ViewExecutableFactoryTest extends UnitTestCase {
   /**
    * The mocked views data.
    *
-   * @var \Drupal\views\ViewsData|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\views\ViewsData|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $viewsData;
 
   /**
    * The mocked route provider.
    *
-   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\RouteProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $routeProvider;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->user = $this->createMock('Drupal\Core\Session\AccountInterface');

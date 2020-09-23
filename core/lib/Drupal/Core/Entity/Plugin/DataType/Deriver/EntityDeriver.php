@@ -3,7 +3,6 @@
 namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter;
@@ -15,12 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides data type plugins for each existing entity type and bundle.
  */
 class EntityDeriver implements ContainerDeriverInterface {
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = ['entityManager' => 'entity.manager'];
 
   /**
    * List of derivative definitions.
@@ -105,11 +98,12 @@ class EntityDeriver implements ContainerDeriverInterface {
       ] + $base_plugin_definition;
 
       // Incorporate the bundles as entity:$entity_type:$bundle, if any.
-      foreach ($this->bundleInfoService->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
-        if ($bundle !== $entity_type_id) {
+      $bundle_info = $this->bundleInfoService->getBundleInfo($entity_type_id);
+      if (count($bundle_info) > 1 || $entity_type->getKey('bundle')) {
+        foreach ($bundle_info as $bundle => $info) {
           $this->derivatives[$entity_type_id . ':' . $bundle] = [
             'class' => $class,
-            'label' => $bundle_info['label'],
+            'label' => $info['label'],
             'constraints' => $this->derivatives[$entity_type_id]['constraints'],
           ] + $base_plugin_definition;
         }

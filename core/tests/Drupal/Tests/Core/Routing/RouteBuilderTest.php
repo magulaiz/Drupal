@@ -33,28 +33,28 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The mocked matcher dumper.
    *
-   * @var \Drupal\Core\Routing\MatcherDumperInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\MatcherDumperInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dumper;
 
   /**
    * The mocked lock backend.
    *
-   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Lock\LockBackendInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $lock;
 
   /**
    * The mocked event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $dispatcher;
 
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $yamlDiscovery;
 
@@ -68,16 +68,16 @@ class RouteBuilderTest extends UnitTestCase {
   /**
    * The controller resolver.
    *
-   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Controller\ControllerResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $controllerResolver;
 
   /**
-   * @var \Drupal\Core\Access\CheckProviderInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Access\CheckProviderInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $checkProvider;
 
-  protected function setUp() {
+  protected function setUp(): void {
     $this->dumper = $this->createMock('Drupal\Core\Routing\MatcherDumperInterface');
     $this->lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $this->dispatcher = $this->createMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
@@ -161,11 +161,11 @@ class RouteBuilderTest extends UnitTestCase {
     // Ensure that the alter routes events are fired.
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->dispatcher->expects($this->at(1))
       ->method('dispatch')
-      ->with(RoutingEvents::ALTER, $route_build_event);
+      ->with($route_build_event, RoutingEvents::ALTER);
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -231,11 +231,11 @@ class RouteBuilderTest extends UnitTestCase {
     // Ensure that the alter routes events are fired.
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->dispatcher->expects($this->at(1))
       ->method('dispatch')
-      ->with(RoutingEvents::ALTER, $route_build_event);
+      ->with($route_build_event, RoutingEvents::ALTER);
 
     // Ensure that access checks are set.
     $this->checkProvider->expects($this->once())
@@ -314,7 +314,7 @@ class RouteBuilderTest extends UnitTestCase {
     $route_build_event = new RouteBuildEvent($route_collection_filled);
     $this->dispatcher->expects($this->at(0))
       ->method('dispatch')
-      ->with(RoutingEvents::DYNAMIC, $route_build_event);
+      ->with($route_build_event, RoutingEvents::DYNAMIC);
 
     $this->assertTrue($this->routeBuilder->rebuild());
   }
@@ -329,7 +329,7 @@ class TestRouteBuilder extends RouteBuilder {
   /**
    * The mocked YAML discovery.
    *
-   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Discovery\YamlDiscovery|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $yamlDiscovery;
 

@@ -16,6 +16,11 @@ use Drupal\file\Entity\File;
 class FileTokenReplaceTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Creates a file, then tests the tokens generated from it.
    */
   public function testFileTokenReplacement() {
@@ -32,6 +37,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
 
     $test_file = $this->getTestFile('text');
     // Coping a file to test uploads with non-latin filenames.
+    // cSpell:disable-next-line
     $filename = \Drupal::service('file_system')->dirname($test_file->getFileUri()) . '/текстовый файл.txt';
     $test_file = file_copy($test_file, $filename);
 
@@ -77,7 +83,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $metadata_tests['[file:owner:uid]'] = $bubbleable_metadata;
 
     // Test to make sure that we generated something for each token.
-    $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
+    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
       $bubbleable_metadata = new BubbleableMetadata();

@@ -19,7 +19,12 @@ class HandlerTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['node_test_views'];
+  protected static $modules = ['node_test_views'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Views used by this test.
@@ -31,11 +36,11 @@ class HandlerTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
 
     $this->placeBlock('page_title_block');
-    ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+    ViewTestData::createTestViews(static::class, ['node_test_views']);
   }
 
   /**
@@ -113,13 +118,15 @@ class HandlerTest extends UITestBase {
         $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/$type/$id";
       }
 
-      $this->assertUrl($edit_handler_url, [], 'The user got redirected to the handler edit form.');
+      // Verify that the user got redirected to the handler edit form.
+      $this->assertSession()->addressEquals($edit_handler_url);
       $random_label = $this->randomMachineName();
       $this->drupalPostForm(NULL, ['options[admin_label]' => $random_label], t('Apply'));
 
-      $this->assertUrl('admin/structure/views/view/test_view_empty/edit/default', [], 'The user got redirected to the views edit form.');
+      // Verify that the user got redirected to the views edit form.
+      $this->assertSession()->addressEquals('admin/structure/views/view/test_view_empty/edit/default');
 
-      $this->assertLinkByHref($edit_handler_url, 0, 'The handler edit link appears in the UI.');
+      $this->assertSession()->linkByHrefExists($edit_handler_url, 0, 'The handler edit link appears in the UI.');
       $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', [':label' => $random_label]);
       $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
 
@@ -131,7 +138,7 @@ class HandlerTest extends UITestBase {
 
       // Remove the item and check that it's removed
       $this->drupalPostForm($edit_handler_url, [], t('Remove'));
-      $this->assertNoLinkByHref($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
+      $this->assertSession()->linkByHrefNotExists($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
       $this->drupalPostForm(NULL, [], t('Save'));
       $view = $this->container->get('entity_type.manager')->getStorage('view')->load('test_view_empty');
@@ -150,7 +157,8 @@ class HandlerTest extends UITestBase {
     $id = 'name';
     $edit_handler_url = "admin/structure/views/nojs/handler/test_view_empty/default/field/$id";
 
-    $this->assertUrl($edit_handler_url, [], 'The user got redirected to the handler edit form.');
+    // Verify that the user got redirected to the handler edit form.
+    $this->assertSession()->addressEquals($edit_handler_url);
     $this->assertFieldByName('options[relationship]', 'uid', 'Ensure the relationship select is filled with the UID relationship.');
     $this->drupalPostForm(NULL, [], t('Apply'));
 
@@ -191,8 +199,8 @@ class HandlerTest extends UITestBase {
     ])->save();
 
     $this->drupalGet('admin/structure/views/nojs/add-handler/content/default/field');
-    $this->assertEscaped('The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
-    $this->assertEscaped('Appears in: page, article. Also known as: Content: The giraffe" label');
+    $this->assertSession()->assertEscaped('The <em>giraffe"</em> label <script>alert("the return of the xss")</script>');
+    $this->assertSession()->assertEscaped('Appears in: page, article. Also known as: Content: The giraffe" label');
   }
 
   /**
@@ -206,7 +214,7 @@ class HandlerTest extends UITestBase {
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
 
       $result = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
-      $this->assertEqual(count($result), 1, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
+      $this->assertCount(1, $result, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
 
       $text = 'Broken/missing handler';
 
@@ -214,7 +222,7 @@ class HandlerTest extends UITestBase {
 
       $this->drupalGet($href);
       $result = $this->xpath('//h1[@class="page-title"]');
-      $this->assertContains($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
+      $this->assertStringContainsString($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
 
       $original_configuration = [
         'field' => 'id_broken',
@@ -261,7 +269,7 @@ class HandlerTest extends UITestBase {
     // description field is shown instead.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_node_view/default/field');
     $this->assertNoText('Error: missing help');
-    $this->assertRaw('<td class="description"></td>', 'Empty description found');
+    $this->assertRaw('<td class="description"></td>');
 
     // Test that no error message is shown for other fields.
     $this->drupalGet('admin/structure/views/nojs/add-handler/test_view_empty/default/field');
@@ -278,7 +286,7 @@ class HandlerTest extends UITestBase {
    */
   public function assertNoDuplicateField($field_name, $entity_type) {
     $elements = $this->xpath('//td[.=:entity_type]/preceding-sibling::td[@class="title" and .=:title]', [':title' => $field_name, ':entity_type' => $entity_type]);
-    $this->assertEqual(1, count($elements), $field_name . ' appears just once in ' . $entity_type . '.');
+    $this->assertCount(1, $elements, $field_name . ' appears just once in ' . $entity_type . '.');
   }
 
 }

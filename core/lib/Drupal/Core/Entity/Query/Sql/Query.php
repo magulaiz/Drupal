@@ -86,7 +86,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Prepares the basic query with proper metadata/tags and base fields.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
@@ -132,7 +132,7 @@ class Query extends QueryBase implements QueryInterface {
     // Add a self-join to the base revision table if we're querying only the
     // latest revisions.
     if ($this->latestRevision && $revision_field) {
-      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "base_table.$id_field = base_table_2.$id_field AND base_table.$revision_field < base_table_2.$revision_field");
+      $this->sqlQuery->leftJoin($base_table, 'base_table_2', "[base_table].[$id_field] = [base_table_2].[$id_field] AND [base_table].[$revision_field] < [base_table_2].[$revision_field]");
       $this->sqlQuery->isNull("base_table_2.$id_field");
     }
 
@@ -165,7 +165,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Compiles the conditions.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function compile() {
@@ -176,7 +176,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Adds the sort to the build query.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function addSort() {
@@ -234,7 +234,7 @@ class Query extends QueryBase implements QueryInterface {
   /**
    * Finish the query by adding fields, GROUP BY and range.
    *
-   * @return \Drupal\Core\Entity\Query\Sql\Query
+   * @return $this
    *   Returns the called object.
    */
   protected function finish() {
@@ -324,6 +324,31 @@ class Query extends QueryBase implements QueryInterface {
   public function getTables(SelectInterface $sql_query) {
     $class = static::getClass($this->namespaces, 'Tables');
     return new $class($sql_query);
+  }
+
+  /**
+   * Implements the magic __toString method.
+   */
+  public function __toString() {
+    // Clone the query so the prepare and compile doesn't get repeated.
+    $clone = clone($this);
+
+    $clone->prepare()
+      ->compile()
+      ->addSort()
+      ->finish();
+
+    // Quote arguments so query is able to be run.
+    $quoted = [];
+    foreach ($clone->sqlQuery->getArguments() as $key => $value) {
+      $quoted[$key] = is_null($value) ? 'NULL' : $this->connection->quote($value);
+    }
+
+    // Replace table name brackets.
+    $sql = $clone->connection->prefixTables((string) $clone->sqlQuery);
+    $sql = $clone->connection->quoteIdentifiers($sql);
+
+    return strtr($sql, $quoted);
   }
 
 }

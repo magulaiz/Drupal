@@ -23,11 +23,20 @@ class UpdateUploadTest extends UpdateTestBase {
    *
    * @var array
    */
-  public static $modules = ['update', 'update_test'];
+  protected static $modules = ['update', 'update_test'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
-    $admin_user = $this->drupalCreateUser(['administer modules', 'administer software updates', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer modules',
+      'administer software updates',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -51,7 +60,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
     $extensions = \Drupal::service('plugin.manager.archiver')->getExtensions();
     $this->assertSession()->pageTextContains(t('Only files with the following extensions are allowed: @archive_extensions.', ['@archive_extensions' => $extensions]));
-    $this->assertUrl('admin/modules/install');
+    $this->assertSession()->addressEquals('admin/modules/install');
 
     // Check to ensure an existing module can't be reinstalled. Also checks that
     // the archive was extracted since we can't know if the module is already
@@ -62,44 +71,44 @@ class UpdateUploadTest extends UpdateTestBase {
     ];
     $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
     $this->assertText(t('@module_name is already installed.', ['@module_name' => 'AAA Update test']), 'Existing module was extracted and not reinstalled.');
-    $this->assertUrl('admin/modules/install');
+    $this->assertSession()->addressEquals('admin/modules/install');
 
     // Ensure that a new module can be extracted and installed.
     $updaters = drupal_get_updaters();
     $moduleUpdater = $updaters['module']['class'];
     $installedInfoFilePath = $this->container->get('update.root') . '/' . $moduleUpdater::getRootDirectoryRelativePath() . '/update_test_new_module/update_test_new_module.info.yml';
-    $this->assertFalse(file_exists($installedInfoFilePath), 'The new module does not exist in the filesystem before it is installed with the Update Manager.');
+    $this->assertFileNotExists($installedInfoFilePath);
     $validArchiveFile = __DIR__ . '/../../update_test_new_module/8.x-1.0/update_test_new_module.tar.gz';
     $edit = [
       'files[project_upload]' => $validArchiveFile,
     ];
     $this->drupalPostForm('admin/modules/install', $edit, t('Install'));
     // Check that submitting the form takes the user to authorize.php.
-    $this->assertUrl('core/authorize.php');
-    $this->assertTitle('Update manager | Drupal');
+    $this->assertSession()->addressEquals('core/authorize.php');
+    $this->assertSession()->titleEquals('Update manager | Drupal');
     // Check for a success message on the page, and check that the installed
     // module now exists in the expected place in the filesystem.
     $this->assertRaw(t('Installed %project_name successfully', ['%project_name' => 'update_test_new_module']));
-    $this->assertTrue(file_exists($installedInfoFilePath), 'The new module exists in the filesystem after it is installed with the Update Manager.');
+    $this->assertFileExists($installedInfoFilePath);
     // Ensure the links are relative to the site root and not
     // core/authorize.php.
-    $this->assertLink(t('Install another module'));
-    $this->assertLinkByHref(Url::fromRoute('update.module_install')->toString());
-    $this->assertLink(t('Enable newly added modules'));
-    $this->assertLinkByHref(Url::fromRoute('system.modules_list')->toString());
-    $this->assertLink(t('Administration pages'));
-    $this->assertLinkByHref(Url::fromRoute('system.admin')->toString());
+    $this->assertSession()->linkExists('Install another module');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('update.module_install')->toString());
+    $this->assertSession()->linkExists('Enable newly added modules');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('system.modules_list')->toString());
+    $this->assertSession()->linkExists('Administration pages');
+    $this->assertSession()->linkByHrefExists(Url::fromRoute('system.admin')->toString());
     // Ensure we can reach the "Install another module" link.
     $this->clickLink(t('Install another module'));
-    $this->assertResponse(200);
-    $this->assertUrl('admin/modules/install');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->addressEquals('admin/modules/install');
 
     // Check that the module has the correct version before trying to update
     // it. Since the module is installed in sites/simpletest, which only the
     // child site has access to, standard module API functions won't find it
     // when called here. To get the version, the info file must be parsed
     // directly instead.
-    $info_parser = new InfoParserDynamic();
+    $info_parser = new InfoParserDynamic(DRUPAL_ROOT);
     $info = $info_parser->parse($installedInfoFilePath);
     $this->assertEqual($info['version'], '8.x-1.0');
 
@@ -138,9 +147,9 @@ class UpdateUploadTest extends UpdateTestBase {
   public function testFileNameExtensionMerging() {
     $this->drupalGet('admin/modules/install');
     // Make sure the bogus extension supported by update_test.module is there.
-    $this->assertPattern('/file extensions are supported:.*update-test-extension/', "Found 'update-test-extension' extension.");
+    $this->assertSession()->responseMatches('/file extensions are supported:.*update-test-extension/');
     // Make sure it didn't clobber the first option from core.
-    $this->assertPattern('/file extensions are supported:.*tar/', "Found 'tar' extension.");
+    $this->assertSession()->responseMatches('/file extensions are supported:.*tar/');
   }
 
   /**
@@ -166,25 +175,25 @@ class UpdateUploadTest extends UpdateTestBase {
     // about core missing a security update.
 
     $this->drupalGet('admin/modules/install');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/modules/update');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/appearance/install');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/appearance/update');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/reports/updates/install');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/reports/updates/update');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
 
     $this->drupalGet('admin/update/ready');
-    $this->assertNoText(t('There is a security update available for your version of Drupal.'));
+    $this->assertNoText('There is a security update available for your version of Drupal.');
   }
 
   /**

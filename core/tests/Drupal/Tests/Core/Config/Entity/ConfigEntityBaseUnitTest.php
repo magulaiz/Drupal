@@ -28,21 +28,21 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The entity under test.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityBase|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityBase|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entity;
 
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
 
   /**
    * The entity type manager used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityTypeManager;
 
@@ -56,7 +56,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The UUID generator used for testing.
    *
-   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $uuid;
 
@@ -70,7 +70,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The language manager.
    *
-   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Language\LanguageManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $languageManager;
 
@@ -84,14 +84,14 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * The mocked cache backend.
    *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $cacheTagsInvalidator;
 
   /**
    * The mocked typed config manager.
    *
-   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $typedConfigManager;
 
@@ -112,7 +112,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->id = $this->randomMachineName();
     $values = [
       'id' => $this->id,
@@ -175,8 +175,8 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
     // dependencies.
     $this->entity->set('dependencies', ['module' => ['node'], 'enforced' => ['module' => 'views']]);
     $dependencies = $this->entity->calculateDependencies()->getDependencies();
-    $this->assertContains('views', $dependencies['module']);
-    $this->assertNotContains('node', $dependencies['module']);
+    $this->assertStringContainsString('views', $dependencies['module']);
+    $this->assertStringNotContainsString('node', $dependencies['module']);
   }
 
   /**
@@ -564,7 +564,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getPropertiesToExport')
       ->willReturn(['id' => 'configId', 'dependencies' => 'dependencies']);
     $properties = $this->entity->toArray();
-    $this->assertInternalType('array', $properties);
+    $this->assertIsArray($properties);
     $this->assertEquals(['configId' => $this->entity->id(), 'dependencies' => []], $properties);
   }
 
@@ -590,7 +590,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->with('id')
       ->willReturn('id');
     $properties = $entity->toArray();
-    $this->assertInternalType('array', $properties);
+    $this->assertIsArray($properties);
     $this->assertEquals(['configId' => $entity->id(), 'dependencies' => []], $properties);
   }
 
@@ -636,7 +636,7 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       ->method('getPropertiesToExport')
       ->willReturn(NULL);
     $this->expectException(SchemaIncompleteException::class);
-    $this->expectExceptionMessage('Incomplete or missing schema for test_provider.');
+    $this->expectExceptionMessageMatches("/Entity type 'Mock_ConfigEntityTypeInterface_[^']*' is missing 'config_export' definition in its annotation/");
     $this->entity->toArray();
   }
 

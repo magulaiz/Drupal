@@ -18,9 +18,14 @@ class EarlyDateTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'datetime'];
+  protected static $modules = ['node', 'datetime'];
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a tags vocabulary for the 'article' content type.
@@ -46,7 +51,11 @@ class EarlyDateTest extends TaxonomyTestBase {
       ])
       ->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'administer nodes', 'bypass node access']));
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer taxonomy',
+      'administer nodes',
+      'bypass node access',
+    ]));
   }
 
   /**

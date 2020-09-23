@@ -33,13 +33,18 @@ class QuickEditLoadingTest extends WebDriverTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'contextual',
     'quickedit',
     'filter',
     'node',
     'image',
   ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * An user with permissions to create and edit articles.
@@ -65,7 +70,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create a text format.
@@ -123,8 +128,8 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     $this->drupalGet('node/1');
 
     // Library and in-place editors.
-    $this->assertNoRaw('core/modules/quickedit/js/quickedit.js', 'Quick Edit library not loaded.');
-    $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js', "'form' in-place editor not loaded.");
+    $this->assertNoRaw('core/modules/quickedit/js/quickedit.js');
+    $this->assertNoRaw('core/modules/quickedit/js/editors/formEditor.js');
 
     // HTML annotation and title class does not exist for users without
     // permission to in-place edit.
@@ -253,7 +258,7 @@ class QuickEditLoadingTest extends WebDriverTestBase {
     ];
     $build = $node->body->view($display_settings);
     $output = \Drupal::service('renderer')->renderRoot($build);
-    $this->assertFalse(strpos($output, 'data-quickedit-field-id'), 'data-quickedit-field-id attribute not added when rendering field using dynamic display options.');
+    $this->assertStringNotContainsString('data-quickedit-field-id', $output, 'data-quickedit-field-id attribute not added when rendering field using dynamic display options.');
   }
 
   /**

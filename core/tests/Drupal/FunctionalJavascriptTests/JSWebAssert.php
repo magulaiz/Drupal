@@ -72,6 +72,32 @@ JS;
   }
 
   /**
+   * Looks for the specified selector and returns TRUE when it is unavailable.
+   *
+   * @param string $selector
+   *   The selector engine name. See ElementInterface::findAll() for the
+   *   supported selectors.
+   * @param string|array $locator
+   *   The selector locator.
+   * @param int $timeout
+   *   (Optional) Timeout in milliseconds, defaults to 10000.
+   *
+   * @return bool
+   *   TRUE if not found, FALSE if found.
+   *
+   * @see \Behat\Mink\Element\ElementInterface::findAll()
+   */
+  public function waitForElementRemoved($selector, $locator, $timeout = 10000) {
+    $page = $this->session->getPage();
+
+    $result = $page->waitFor($timeout / 1000, function () use ($page, $selector, $locator) {
+      return !$page->find($selector, $locator);
+    });
+
+    return $result;
+  }
+
+  /**
    * Waits for the specified selector and returns it when available and visible.
    *
    * @param string $selector
@@ -195,9 +221,9 @@ JS;
   /**
    * Test that a node, or its specific corner, is visible in the viewport.
    *
-   * Note: Always set the viewport size. This can be done with a PhantomJS
-   * startup parameter or in your test with \Behat\Mink\Session->resizeWindow().
-   * Drupal CI Javascript tests by default use a viewport of 1024x768px.
+   * Note: Always set the viewport size. This can be done in your test with
+   * \Behat\Mink\Session->resizeWindow(). Drupal CI JavaScript tests by default
+   * use a viewport of 1024x768px.
    *
    * @param string $selector_type
    *   The element selector type (CSS, XPath).
@@ -293,7 +319,7 @@ JS;
   private function checkNodeVisibilityInViewport(NodeElement $node, $corner = FALSE) {
     $xpath = $node->getXpath();
 
-    // Build the Javascript to test if the complete element or a specific corner
+    // Build the JavaScript to test if the complete element or a specific corner
     // is in the viewport.
     switch ($corner) {
       case 'topLeft':
@@ -366,7 +392,7 @@ JS;
         throw new UnsupportedDriverActionException($corner, $this->session->getDriver());
     }
 
-    // Build the full Javascript test. The shared logic gets the corner
+    // Build the full JavaScript test. The shared logic gets the corner
     // specific test logic injected.
     $full_javascript_visibility_test = <<<JS
       (function(t){
@@ -382,9 +408,54 @@ JS;
       }($test_javascript_function));
 JS;
 
-    // Check the visibility by injecting and executing the full Javascript test
+    // Check the visibility by injecting and executing the full JavaScript test
     // script in the page.
     return $this->session->evaluateScript($full_javascript_visibility_test);
+  }
+
+  /**
+   * Passes if the raw text IS NOT found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertNoEscaped($raw) {
+    $this->responseNotContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Passes if the raw text IS found escaped on the loaded page.
+   *
+   * Raw text refers to the raw HTML that the page generated.
+   *
+   * @param string $raw
+   *   Raw (HTML) string to look for.
+   */
+  public function assertEscaped($raw) {
+    $this->responseContains($this->escapeHtml($raw));
+  }
+
+  /**
+   * Escapes HTML for testing.
+   *
+   * Drupal's Html::escape() uses the ENT_QUOTES flag with htmlspecialchars() to
+   * escape both single and double quotes. With WebDriverTestBase testing the
+   * browser is automatically converting &quot; and &#039; to double and single
+   * quotes respectively therefore we can not escape them when testing for
+   * escaped HTML.
+   *
+   * @param $raw
+   *   The raw string to escape.
+   *
+   * @return string
+   *   The string with escaped HTML.
+   *
+   * @see Drupal\Component\Utility\Html::escape()
+   */
+  protected function escapeHtml($raw) {
+    return htmlspecialchars($raw, ENT_NOQUOTES | ENT_SUBSTITUTE, 'UTF-8');
   }
 
   /**

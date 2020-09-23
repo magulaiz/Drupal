@@ -23,7 +23,12 @@ class CommentAdminTest extends CommentBrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
     \Drupal::service('module_installer')->install(['views']);
     $view = Views::getView('comment');
@@ -51,9 +56,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertText(t('No comments available.'));
 
     // Assert the expose filters on the admin page.
-    $this->assertField('subject');
-    $this->assertField('author_name');
-    $this->assertField('langcode');
+    $this->assertSession()->fieldExists('subject');
+    $this->assertSession()->fieldExists('author_name');
+    $this->assertSession()->fieldExists('langcode');
 
     $this->drupalLogout();
 
@@ -105,9 +110,9 @@ class CommentAdminTest extends CommentBrowserTestBase {
     $this->assertText(t('Unapproved comments (@count)', ['@count' => 2]), 'Two unapproved comments waiting for approval.');
 
     // Assert the expose filters on the admin page.
-    $this->assertField('subject');
-    $this->assertField('author_name');
-    $this->assertField('langcode');
+    $this->assertSession()->fieldExists('subject');
+    $this->assertSession()->fieldExists('author_name');
+    $this->assertSession()->fieldExists('langcode');
 
     $edit = [
       "action" => 'comment_publish_action',

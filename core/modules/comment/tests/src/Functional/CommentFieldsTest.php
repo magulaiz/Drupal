@@ -20,7 +20,12 @@ class CommentFieldsTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $modules = ['field_ui'];
+  protected static $modules = ['field_ui'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Tests that the default 'comment_body' field is correctly added.
@@ -40,7 +45,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field is not deleted since it is persisted
     // even if it has no fields.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $this->assertTrue($field_storage, 'The comment_body field storage was not deleted');
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
 
     // Create a new content type.
     $type_name = 'test_node_type_2';
@@ -50,7 +55,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
     $field_storage = FieldStorageConfig::loadByName('comment', 'comment_body');
-    $this->assertTrue($field_storage, 'The comment_body field exists');
+    $this->assertInstanceOf(FieldStorageConfig::class, $field_storage);
     $field = FieldConfig::loadByName('comment', 'comment', 'comment_body');
     $this->assertTrue(isset($field), new FormattableMarkup('The comment_body field is present for comments on type @type', ['@type' => $type_name]));
 
@@ -81,13 +86,13 @@ class CommentFieldsTest extends CommentTestBase {
 
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field--type-comment');
-    $this->assertEqual(2, count($elements), 'There are two comment fields on the node.');
+    $this->assertCount(2, $elements, 'There are two comment fields on the node.');
 
     // Delete the first comment field.
     FieldStorageConfig::loadByName('node', 'comment')->delete();
     $this->drupalGet('node/' . $node->nid->value);
     $elements = $this->cssSelect('.field--type-comment');
-    $this->assertEqual(1, count($elements), 'There is one comment field on the node.');
+    $this->assertCount(1, $elements, 'There is one comment field on the node.');
   }
 
   /**
@@ -129,9 +134,6 @@ class CommentFieldsTest extends CommentTestBase {
     // \Drupal\comment\CommentLinkBuilder::buildCommentedEntityLinks. Therefore
     // we need a node listing, let's use views for that.
     $this->container->get('module_installer')->install(['views'], TRUE);
-    // We also need a router rebuild, as the router is lazily rebuild in the
-    // module installer.
-    \Drupal::service('router.builder')->rebuild();
     $this->drupalGet('node');
 
     $link_info = $this->getDrupalSettings()['comment']['newCommentsLinks']['node']['comment2']['2'];
@@ -178,7 +180,7 @@ class CommentFieldsTest extends CommentTestBase {
     ];
     $this->drupalPostForm('admin/config/people/accounts/fields/user.user.field_user_comment/storage', $edit, t('Save field settings'));
     // We shouldn't get an error message.
-    $this->assertNoText(t('An illegal choice has been detected. Please contact the site administrator.'));
+    $this->assertNoText('An illegal choice has been detected. Please contact the site administrator.');
   }
 
   /**
@@ -186,7 +188,10 @@ class CommentFieldsTest extends CommentTestBase {
    */
   public function testCommentInstallAfterContentModule() {
     // Create a user to do module administration.
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer modules']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer modules',
+    ]);
     $this->drupalLogin($this->adminUser);
 
     // Drop default comment field added in CommentTestBase::setup().
@@ -228,7 +233,12 @@ class CommentFieldsTest extends CommentTestBase {
     // Try to post a comment on each node. A failure will be triggered if the
     // comment body is missing on one of these forms, due to postComment()
     // asserting that the body is actually posted correctly.
-    $this->webUser = $this->drupalCreateUser(['access content', 'access comments', 'post comments', 'skip comment approval']);
+    $this->webUser = $this->drupalCreateUser([
+      'access content',
+      'access comments',
+      'post comments',
+      'skip comment approval',
+    ]);
     $this->drupalLogin($this->webUser);
     $this->postComment($book_node, $this->randomMachineName(), $this->randomMachineName());
   }

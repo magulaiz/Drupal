@@ -27,7 +27,13 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'node', 'aggregator', 'aggregator_test', 'views'];
+  protected static $modules = [
+    'block',
+    'node',
+    'aggregator',
+    'aggregator_test',
+    'views',
+  ];
 
   /**
    * {@inheritdoc}
@@ -40,7 +46,12 @@ abstract class AggregatorTestBase extends BrowserTestBase {
       $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
     }
 
-    $this->adminUser = $this->drupalCreateUser(['access administration pages', 'administer news feeds', 'access news feeds', 'create article content']);
+    $this->adminUser = $this->drupalCreateUser([
+      'access administration pages',
+      'administer news feeds',
+      'access news feeds',
+      'create article content',
+    ]);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('local_tasks_block');
   }
@@ -67,8 +78,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $this->assertText(t('The feed @name has been added.', ['@name' => $edit['title[0][value]']]), new FormattableMarkup('The feed @name has been added.', ['@name' => $edit['title[0][value]']]));
 
     // Verify that the creation message contains a link to a feed.
-    $view_link = $this->xpath('//div[@class="messages"]//a[contains(@href, :href)]', [':href' => 'aggregator/sources/']);
-    $this->assert(isset($view_link), 'The message area contains a link to a feed');
+    $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "aggregator/sources/")]');
 
     $fids = \Drupal::entityQuery('aggregator_feed')->condition('title', $edit['title[0][value]'])->condition('url', $edit['url[0][value]'])->execute();
     $this->assertNotEmpty($fids, 'The feed found in database.');
@@ -83,7 +93,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    */
   public function deleteFeed(FeedInterface $feed) {
     $this->drupalPostForm('aggregator/sources/' . $feed->id() . '/delete', [], t('Delete'));
-    $this->assertRaw(t('The feed %title has been deleted.', ['%title' => $feed->label()]), 'Feed deleted successfully.');
+    $this->assertRaw(t('The feed %title has been deleted.', ['%title' => $feed->label()]));
   }
 
   /**
@@ -175,22 +185,19 @@ abstract class AggregatorTestBase extends BrowserTestBase {
   public function updateFeedItems(FeedInterface $feed, $expected_count = NULL) {
     // First, let's ensure we can get to the rss xml.
     $this->drupalGet($feed->getUrl());
-    $this->assertResponse(200, new FormattableMarkup(':url is reachable.', [':url' => $feed->getUrl()]));
+    $this->assertSession()->statusCodeEquals(200);
 
     // Attempt to access the update link directly without an access token.
     $this->drupalGet('admin/config/services/aggregator/update/' . $feed->id());
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Refresh the feed (simulated link click).
     $this->drupalGet('admin/config/services/aggregator');
     $this->clickLink('Update items');
 
     // Ensure we have the right number of items.
-    $iids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
-    $feed->items = [];
-    foreach ($iids as $iid) {
-      $feed->items[] = $iid;
-    }
+    $item_ids = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->execute();
+    $feed->items = array_values($item_ids);
 
     if ($expected_count !== NULL) {
       $feed->item_count = count($feed->items);
@@ -206,7 +213,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
    */
   public function deleteFeedItems(FeedInterface $feed) {
     $this->drupalPostForm('admin/config/services/aggregator/delete/' . $feed->id(), [], t('Delete items'));
-    $this->assertRaw(t('The news items from %title have been deleted.', ['%title' => $feed->label()]), 'Feed items deleted.');
+    $this->assertRaw(t('The news items from %title have been deleted.', ['%title' => $feed->label()]));
   }
 
   /**
@@ -221,10 +228,10 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $count_query = \Drupal::entityQuery('aggregator_item')->condition('fid', $feed->id())->count();
     $this->updateFeedItems($feed, $expected_count);
     $count = $count_query->execute();
-    $this->assertTrue($count);
+    $this->assertGreaterThan(0, $count);
     $this->deleteFeedItems($feed);
     $count = $count_query->execute();
-    $this->assertTrue($count == 0);
+    $this->assertEquals(0, $count);
   }
 
   /**

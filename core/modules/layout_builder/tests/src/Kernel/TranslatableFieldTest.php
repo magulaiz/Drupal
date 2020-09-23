@@ -35,10 +35,9 @@ class TranslatableFieldTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['key_value_expire']);
     $this->installEntitySchema('entity_test');
 
     // Create a translation.
@@ -67,7 +66,7 @@ class TranslatableFieldTest extends KernelTestBase {
    */
   public function testSectionsClearedOnCreateTranslation() {
     $section_data = [
-      new Section('layout_default', [], [
+      new Section('layout_onecol', [], [
         'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
       ]),
     ];

@@ -21,7 +21,12 @@ class BlockContentRedirectTest extends BlockContentTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'block_content', 'views'];
+  protected static $modules = ['block', 'block_content', 'views'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests the redirect destination when editing block content.
@@ -44,7 +49,7 @@ class BlockContentRedirectTest extends BlockContentTestBase {
     // Edit the created block and save.
     $this->clickLink('Edit');
     $this->drupalPostForm(NULL, [], 'Save');
-    $this->assertUrl('admin/content/redirect_destination');
+    $this->assertSession()->addressEquals('admin/content/redirect_destination');
   }
 
 }

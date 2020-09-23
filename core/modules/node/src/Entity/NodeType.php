@@ -124,13 +124,6 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
   /**
    * {@inheritdoc}
    */
-  public function isNewRevision() {
-    return $this->new_revision;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setNewRevision($new_revision) {
     $this->new_revision = $new_revision;
   }
@@ -216,7 +209,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    * {@inheritdoc}
    */
   public function shouldCreateNewRevision() {
-    return $this->isNewRevision();
+    return $this->new_revision;
   }
 
 }

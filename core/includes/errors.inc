@@ -7,6 +7,7 @@
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\Error;
@@ -73,7 +74,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
     _drupal_log_error([
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
-      // are HTML. We mimick this behavior here.
+      // are HTML. We mimic this behavior here.
       '@message' => Markup::create(Xss::filterAdmin($message)),
       '%function' => $caller['function'],
       '%file' => $caller['file'],
@@ -86,15 +87,21 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line, $c
   // If the site is a test site then fail for user deprecations so they can be
   // caught by the deprecation error handler.
   elseif (DRUPAL_TEST_IN_CHILD_SITE && $error_level === E_USER_DEPRECATED) {
-    $backtrace = debug_backtrace();
-    $caller = Error::getLastCaller($backtrace);
-    _drupal_error_header(
-      Markup::create(Xss::filterAdmin($message)),
-      'User deprecated function',
-      $caller['function'],
-      $caller['file'],
-      $caller['line']
-    );
+    static $seen = [];
+    if (array_search($message, $seen, TRUE) === FALSE) {
+      // Only report each deprecation once. Too many headers can break some
+      // Chrome and web driver testing.
+      $seen[] = $message;
+      $backtrace = debug_backtrace();
+      $caller = Error::getLastCaller($backtrace);
+      _drupal_error_header(
+        Markup::create(Xss::filterAdmin($message)),
+        'User deprecated function',
+        $caller['function'],
+        $caller['file'],
+        $caller['line']
+      );
+    }
   }
 }
 
@@ -140,7 +147,11 @@ function error_displayable($error = NULL) {
  *   Non-recoverable fatal errors cannot be logged by Drupal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  $is_installer = drupal_installation_attempted();
+  $is_installer = InstallerKernel::installationAttempted();
+
+  // Remove 'severity_level' as is not a valid replacement for t().
+  $severity = $error['severity_level'];
+  unset($error['severity_level']);
 
   // Backtrace array is not a valid replacement value for t().
   $backtrace = $error['backtrace'];
@@ -159,8 +170,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // installer.
   if (\Drupal::hasService('logger.factory')) {
     try {
-      // Provide the PHP backtrace to logger implementations.
-      \Drupal::logger('php')->log($error['severity_level'], '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace]);
+      // Provide the PHP backtrace to logger implementations. Add
+      // 'severity_level' to the context to maintain BC and allow logging
+      // implementations to use it.
+      \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'severity_level' => $severity]);
     }
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
@@ -213,7 +226,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
       // in the message. This does not happen for (false) security.
-      if (\Drupal::hasService('app.root')) {
+      if (\Drupal::hasService('kernel')) {
         $root_length = strlen(\Drupal::root());
         if (substr($error['%file'], 0, $root_length) == \Drupal::root()) {
           $error['%file'] = substr($error['%file'], $root_length + 1);
@@ -301,7 +314,7 @@ function _drupal_get_error_level() {
   // 'config.factory' service, which reads the default 'error_level' value from
   // System module's default configuration and the default value is not verbose.
   // @see error_displayable()
-  if (drupal_installation_attempted()) {
+  if (InstallerKernel::installationAttempted()) {
     return ERROR_REPORTING_DISPLAY_VERBOSE;
   }
   $error_level = NULL;

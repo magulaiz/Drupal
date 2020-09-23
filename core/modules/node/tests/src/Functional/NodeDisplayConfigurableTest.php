@@ -16,7 +16,12 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @var array
    */
-  public static $modules = ['quickedit', 'rdf'];
+  protected static $modules = ['quickedit', 'rdf'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
 
   /**
    * Sets base fields to configurable display and check settings are respected.
@@ -27,7 +32,10 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $node_type->setDisplaySubmitted(TRUE);
     $node_type->save();
 
-    $user = $this->drupalCreateUser(['access in-place editing', 'administer nodes']);
+    $user = $this->drupalCreateUser([
+      'access in-place editing',
+      'administer nodes',
+    ]);
     $this->drupalLogin($user);
     $node = $this->drupalCreateNode(['uid' => $user->id()]);
     $assert = $this->assertSession();

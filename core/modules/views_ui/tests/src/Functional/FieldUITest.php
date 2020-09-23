@@ -14,6 +14,11 @@ use Drupal\views\Views;
 class FieldUITest extends UITestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * Views used by this test.
    *
    * @var array
@@ -59,7 +64,7 @@ class FieldUITest extends UITestBase {
 
     // Ensure that dialog titles are not escaped.
     $edit_groupby_url = 'admin/structure/views/nojs/handler/test_view/default/field/name';
-    $this->assertNoLinkByHref($edit_groupby_url, 0, 'No aggregation link found.');
+    $this->assertSession()->linkByHrefNotExists($edit_groupby_url, 0, 'No aggregation link found.');
 
     // Enable aggregation on the view.
     $edit = [
@@ -67,7 +72,7 @@ class FieldUITest extends UITestBase {
     ];
     $this->drupalPostForm('/admin/structure/views/nojs/display/test_view/default/group_by', $edit, t('Apply'));
 
-    $this->assertLinkByHref($edit_groupby_url, 0, 'Aggregation link found.');
+    $this->assertSession()->linkByHrefExists($edit_groupby_url, 0, 'Aggregation link found.');
 
     $edit_handler_url = '/admin/structure/views/ajax/handler-group/test_view/default/field/name';
     $this->drupalGet($edit_handler_url);

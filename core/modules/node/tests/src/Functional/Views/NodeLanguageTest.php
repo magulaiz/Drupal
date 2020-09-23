@@ -19,7 +19,12 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['language', 'node_test_views'];
+  protected static $modules = ['language', 'node_test_views'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Views used by this test.
@@ -38,13 +43,13 @@ class NodeLanguageTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp(FALSE);
 
     // Create Page content type.
     if ($this->profile != 'standard') {
       $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
-      ViewTestData::createTestViews(get_class($this), ['node_test_views']);
+      ViewTestData::createTestViews(static::class, ['node_test_views']);
     }
 
     // Add two new languages.
@@ -96,9 +101,10 @@ class NodeLanguageTest extends NodeTestBase {
       $node->save();
     }
 
-    $this->container->get('router.builder')->rebuild();
-
-    $user = $this->drupalCreateUser(['access content overview', 'access content']);
+    $user = $this->drupalCreateUser([
+      'access content overview',
+      'access content',
+    ]);
     $this->drupalLogin($user);
   }
 

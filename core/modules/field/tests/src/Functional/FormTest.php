@@ -25,7 +25,18 @@ class FormTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'field_test', 'options', 'entity_test', 'locale'];
+  protected static $modules = [
+    'node',
+    'field_test',
+    'options',
+    'entity_test',
+    'locale',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * An array of values defining a field single.
@@ -55,10 +66,13 @@ class FormTest extends FieldTestBase {
    */
   protected $field;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(['view test entity', 'administer entity_test content']);
+    $web_user = $this->drupalCreateUser([
+      'view test entity',
+      'administer entity_test content',
+    ]);
     $this->drupalLogin($web_user);
 
     $this->fieldStorageSingle = [
@@ -109,7 +123,8 @@ class FormTest extends FieldTestBase {
     $token_description = Html::escape($this->config('system.site')->get('name')) . '_description';
     $this->assertText($token_description, 'Token replacement for description is displayed');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
 
     // Check that hook_field_widget_form_alter() does not believe this is the
     // default value form.
@@ -123,7 +138,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => -1,
     ];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]), 'Field validation fails with invalid input.');
+    $this->assertRaw(t('%name does not accept the value -1.', ['%name' => $this->field['label']]));
     // TODO : check that the correct field is flagged for error.
 
     // Create an entity
@@ -141,7 +156,8 @@ class FormTest extends FieldTestBase {
     // Display edit form.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
     $this->assertFieldByName("{$field_name}[0][value]", $value, 'Widget is displayed with the correct default value');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
 
     // Update the entity.
     $value = mt_rand(1, 127);
@@ -214,7 +230,7 @@ class FormTest extends FieldTestBase {
     // Submit with missing required value.
     $edit = [];
     $this->drupalPostForm('entity_test/add', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
 
     // Create an entity
     $value = mt_rand(1, 127);
@@ -234,7 +250,7 @@ class FormTest extends FieldTestBase {
       "{$field_name}[0][value]" => $value,
     ];
     $this->drupalPostForm('entity_test/manage/' . $id . '/edit', $edit, t('Save'));
-    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]), 'Required field with no value fails validation');
+    $this->assertRaw(t('@name field is required.', ['@name' => $this->field['label']]));
   }
 
   public function testFieldFormUnlimited() {
@@ -251,17 +267,19 @@ class FormTest extends FieldTestBase {
     // Display creation form -> 1 widget.
     $this->drupalGet('entity_test/add');
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
-    $this->assertNoField("{$field_name}[1][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[1][value]");
 
     // Check if aria-describedby attribute is placed on multiple value widgets.
     $elements = $this->xpath('//table[@id="field-unlimited-values" and @aria-describedby="edit-field-unlimited--description"]');
-    $this->assertTrue(isset($elements[0]), t('aria-describedby attribute is properly placed on multiple value widgets.'));
+    $this->assertTrue(isset($elements[0]), 'aria-describedby attribute is properly placed on multiple value widgets.');
 
     // Press 'add more' button -> 2 widgets.
     $this->drupalPostForm(NULL, [], t('Add another item'));
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
-    $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[2][value]");
     // TODO : check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
@@ -297,10 +315,12 @@ class FormTest extends FieldTestBase {
     }
     ksort($pattern);
     $pattern = implode('.*', array_values($pattern));
-    $this->assertPattern("|$pattern|s", 'Widgets are displayed in the correct order');
+    // Verify that the widgets are displayed in the correct order.
+    $this->assertSession()->responseMatches("|$pattern|s");
     $this->assertFieldByName("{$field_name}[$delta][value]", '', "New widget is displayed");
     $this->assertFieldByName("{$field_name}[$delta][_weight]", $delta, "New widget has the right weight");
-    $this->assertNoField("{$field_name}[" . ($delta + 1) . '][value]', 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[" . ($delta + 1) . '][value]');
 
     // Submit the form and create the entity.
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -397,7 +417,8 @@ class FormTest extends FieldTestBase {
     // Verify that the widget is added.
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
-    $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
+    // Verify that no extraneous widget is displayed.
+    $this->assertSession()->fieldNotExists("{$field_name}[2][value]");
   }
 
   /**
@@ -441,7 +462,7 @@ class FormTest extends FieldTestBase {
     // Submit the form with more values than the field accepts.
     $edit = [$field_name => '1, 2, 3, 4, 5'];
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    $this->assertRaw('this field cannot hold more than 4 values', 'Form validation failed.');
+    $this->assertRaw('this field cannot hold more than 4 values');
     // Check that the field values were not submitted.
     $this->assertFieldValues($entity_init, $field_name, [1, 2, 3]);
 
@@ -574,7 +595,7 @@ class FormTest extends FieldTestBase {
 
     // Create an entity and test that the default value is assigned correctly to
     // the field that uses the hidden widget.
-    $this->assertNoField("{$field_name}[0][value]", 'The field does not appear in the form');
+    $this->assertSession()->fieldNotExists("{$field_name}[0][value]");
     $this->drupalPostForm(NULL, [], t('Save'));
     preg_match('|' . $entity_type . '/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
@@ -655,10 +676,10 @@ class FormTest extends FieldTestBase {
     $entity->save();
 
     $this->drupalGet('entity_test_base_field_display/manage/' . $entity->id());
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText('A field with multiple values');
     // Test if labels were XSS filtered.
-    $this->assertEscaped("<script>alert('a configurable field');</script>");
+    $this->assertSession()->assertEscaped("<script>alert('a configurable field');</script>");
   }
 
   /**
@@ -713,8 +734,12 @@ class FormTest extends FieldTestBase {
       ])
       ->save();
 
+    // We need to rebuild hook information after setting the component through
+    // the API.
+    $this->rebuildAll();
+
     $this->drupalGet('entity_test/add');
-    $this->assertUniqueText("From $hook(): prefix on $field_name parent element.");
+    $this->assertSession()->pageTextMatchesCount(1, '/From ' . $hook . '.* prefix on ' . $field_name . ' parent element\./');
     if ($widget === 'test_field_widget_multiple_single_value') {
       $suffix_text = "From $hook(): suffix on $field_name child element.";
       $this->assertEqual($field_storage['cardinality'], substr_count($this->getTextContent(), $suffix_text), "'$suffix_text' was found {$field_storage['cardinality']} times  using widget $widget");

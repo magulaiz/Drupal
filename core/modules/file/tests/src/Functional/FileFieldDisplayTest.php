@@ -15,6 +15,11 @@ use Drupal\node\Entity\Node;
 class FileFieldDisplayTest extends FileFieldTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests normal formatter display on node display.
    */
   public function testNodeDisplay() {
@@ -74,13 +79,13 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       '#file' => $node_file,
     ];
     $default_output = \Drupal::service('renderer')->renderRoot($file_link);
-    $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
+    $this->assertRaw($default_output);
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = [$field_name . '[0][display]' => FALSE];
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save'));
 
-    $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
+    $this->assertNoRaw($default_output);
 
     // Add a description and make sure that it is displayed.
     $description = $this->randomMachineName();
@@ -105,12 +110,14 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit[$field_name . '[1][display]'] = FALSE;
     $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->clickLink(t('Back to content editing'));
-    $this->assertRaw($field_name . '[0][display]', 'First file appears as expected.');
-    $this->assertRaw($field_name . '[1][display]', 'Second file appears as expected.');
-    $this->assertSession()->responseContains($field_name . '[1][description]', 'Description of second file appears as expected.');
+    // First file.
+    $this->assertRaw($field_name . '[0][display]');
+    // Second file.
+    $this->assertRaw($field_name . '[1][display]');
+    $this->assertSession()->responseContains($field_name . '[1][description]');
 
     // Check that the file fields don't contain duplicate HTML IDs.
-    $this->assertNoDuplicateIds();
+    $this->assertSession()->pageContainsNoDuplicateId();
   }
 
   /**
@@ -222,34 +229,6 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     $this->drupalGet('node/' . $nid);
     $this->assertFieldByXPath('//a[@href="' . $node->{$field_name}->entity->createFileUrl(FALSE) . '"]', $description);
-  }
-
-  /**
-   * Asserts that each HTML ID is used for just a single element on the page.
-   *
-   * @param string $message
-   *   (optional) A message to display with the assertion.
-   */
-  protected function assertNoDuplicateIds($message = '') {
-    $args = ['@url' => $this->getUrl()];
-
-    if (!$elements = $this->xpath('//*[@id]')) {
-      $this->fail(new FormattableMarkup('The page @url contains no HTML IDs.', $args));
-      return;
-    }
-
-    $message = $message ?: new FormattableMarkup('The page @url does not contain duplicate HTML IDs', $args);
-
-    $seen_ids = [];
-    foreach ($elements as $element) {
-      $id = $element->getAttribute('id');
-      if (isset($seen_ids[$id])) {
-        $this->fail($message);
-        return;
-      }
-      $seen_ids[$id] = TRUE;
-    }
-    $this->assertTrue(TRUE, $message);
   }
 
 }

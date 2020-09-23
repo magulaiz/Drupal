@@ -19,7 +19,16 @@ class CronRunTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = ['common_test', 'common_test_cron_helper', 'automated_cron'];
+  protected static $modules = [
+    'common_test',
+    'common_test_cron_helper',
+    'automated_cron',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * Test cron runs.
@@ -27,17 +36,17 @@ class CronRunTest extends BrowserTestBase {
   public function testCronRun() {
     // Run cron anonymously without any cron key.
     $this->drupalGet('cron');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     // Run cron anonymously with a random cron key.
     $key = $this->randomMachineName(16);
     $this->drupalGet('cron/' . $key);
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Run cron anonymously with the valid cron key.
     $key = \Drupal::state()->get('system.cron_key');
     $this->drupalGet('cron/' . $key);
-    $this->assertResponse(204);
+    $this->assertSession()->statusCodeEquals(204);
   }
 
   /**
@@ -113,7 +122,7 @@ class CronRunTest extends BrowserTestBase {
 
     $this->drupalPostForm(NULL, [], 'Save configuration');
     $this->assertText('The configuration options have been saved.');
-    $this->assertUrl('admin/config/system/cron');
+    $this->assertSession()->addressEquals('admin/config/system/cron');
 
     // Check that cron does not run when saving the configuration form.
     $this->assertEqual($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
@@ -131,11 +140,11 @@ class CronRunTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/reports/status/run-cron');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Run cron'));
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertText(t('Cron ran successfully.'));
   }
 

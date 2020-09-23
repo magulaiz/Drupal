@@ -2,7 +2,6 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Access\AccessManagerInterface;
@@ -18,6 +17,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\Core\Url;
+use Drupal\system\ModuleDependencyMessageTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,6 +31,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class ModulesListForm extends FormBase {
+
+  use ModuleDependencyMessageTrait;
 
   /**
    * The current user.
@@ -73,6 +75,13 @@ class ModulesListForm extends FormBase {
    * @var \Drupal\Core\Extension\ModuleExtensionList
    */
   protected $moduleExtensionList;
+
+  /**
+   * The access manager.
+   *
+   * @var \Drupal\Core\Access\AccessManagerInterface
+   */
+  protected $accessManager;
 
   /**
    * {@inheritdoc}
@@ -169,11 +178,19 @@ class ModulesListForm extends FormBase {
 
     // Iterate over each of the modules.
     $form['modules']['#tree'] = TRUE;
+    $incompatible_installed = FALSE;
     foreach ($modules as $filename => $module) {
       if (empty($module->info['hidden'])) {
         $package = $module->info['package'];
         $form['modules'][$package][$filename] = $this->buildRow($modules, $module, $distribution);
         $form['modules'][$package][$filename]['#parents'] = ['modules', $filename];
+      }
+      if (!$incompatible_installed && $module->status && $module->info['core_incompatible']) {
+        $incompatible_installed = TRUE;
+        $this->messenger()->addWarning($this->t(
+          'There are errors with some installed modules. Visit the <a href=":link">status report page</a> for more information.',
+          [':link' => Url::fromRoute('system.status')->toString()]
+        ));
       }
     }
 
@@ -295,10 +312,14 @@ class ModulesListForm extends FormBase {
     $reasons = [];
 
     // Check the core compatibility.
-    if ($module->info['core'] != \Drupal::CORE_COMPATIBILITY) {
+    if ($module->info['core_incompatible']) {
       $compatible = FALSE;
       $reasons[] = $this->t('This version is not compatible with Drupal @core_version and should be replaced.', [
-        '@core_version' => \Drupal::CORE_COMPATIBILITY,
+        '@core_version' => \Drupal::VERSION,
+      ]);
+      $row['#requires']['core'] = $this->t('Drupal Core (@core_requirement) (<span class="admin-missing">incompatible with</span> version @core_version)', [
+        '@core_requirement' => isset($module->info['core_version_requirement']) ? $module->info['core_version_requirement'] : $module->info['core'],
+        '@core_version' => \Drupal::VERSION,
       ]);
     }
 
@@ -323,38 +344,16 @@ class ModulesListForm extends FormBase {
     // If this module requires other modules, add them to the array.
     /** @var \Drupal\Core\Extension\Dependency $dependency_object */
     foreach ($module->requires as $dependency => $dependency_object) {
-      if (!isset($modules[$dependency])) {
-        $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">missing</span>)', ['@module' => Unicode::ucfirst($dependency)]);
+      // @todo Add logic for not displaying hidden modules in
+      //   https://drupal.org/node/3117829.
+      if ($incompatible = $this->checkDependencyMessage($modules, $dependency, $dependency_object)) {
+        $row['#requires'][$dependency] = $incompatible;
         $row['enable']['#disabled'] = TRUE;
+        continue;
       }
-      // Only display visible modules.
-      elseif (empty($modules[$dependency]->hidden)) {
-        $name = $modules[$dependency]->info['name'];
-        // Disable the module's checkbox if it is incompatible with the
-        // dependency's version.
-        if (!$dependency_object->isCompatible(str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
-          $row['#requires'][$dependency] = $this->t('@module (@constraint) (<span class="admin-missing">incompatible with</span> version @version)', [
-            '@module' => $name,
-            '@constraint' => $dependency_object->getConstraintString(),
-            '@version' => $modules[$dependency]->info['version'],
-          ]);
-          $row['enable']['#disabled'] = TRUE;
-        }
-        // Disable the checkbox if the dependency is incompatible with this
-        // version of Drupal core.
-        elseif ($modules[$dependency]->info['core'] != \Drupal::CORE_COMPATIBILITY) {
-          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', [
-            '@module' => $name,
-          ]);
-          $row['enable']['#disabled'] = TRUE;
-        }
-        elseif ($modules[$dependency]->status) {
-          $row['#requires'][$dependency] = $this->t('@module', ['@module' => $name]);
-        }
-        else {
-          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-disabled">disabled</span>)', ['@module' => $name]);
-        }
-      }
+
+      $name = $modules[$dependency]->info['name'];
+      $row['#requires'][$dependency] = $modules[$dependency]->status ? $this->t('@module', ['@module' => $name]) : $this->t('@module (<span class="admin-disabled">disabled</span>)', ['@module' => $name]);
     }
 
     // If this module is required by other modules, list those, and then make it

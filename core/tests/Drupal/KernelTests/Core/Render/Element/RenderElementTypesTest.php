@@ -18,12 +18,11 @@ class RenderElementTypesTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['system', 'router_test'];
+  protected static $modules = ['system', 'router_test'];
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->installConfig(['system']);
-    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -190,7 +189,7 @@ class RenderElementTypesTest extends KernelTestBase {
     foreach ($elements as $element) {
       $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
-      $this->assertTrue($result, '"' . $element['name'] . '" input rendered correctly by drupal_render().');
+      $this->assertNotEmpty($result, '"' . $element['name'] . '" input rendered correctly by drupal_render().');
     }
   }
 
@@ -221,7 +220,7 @@ class RenderElementTypesTest extends KernelTestBase {
     foreach ($elements as $element) {
       $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
       $result = $xml->xpath($element['expected']);
-      $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
+      $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
     }
 
     // Set admin compact mode on for additional tests.
@@ -237,7 +236,7 @@ class RenderElementTypesTest extends KernelTestBase {
 
     $xml = new \SimpleXMLElement(\Drupal::service('renderer')->renderRoot($element['value']));
     $result = $xml->xpath($element['expected']);
-    $this->assertTrue($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
+    $this->assertNotEmpty($result, '"' . $element['name'] . '" is rendered correctly by drupal_render().');
   }
 
 }

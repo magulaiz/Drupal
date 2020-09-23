@@ -25,7 +25,12 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'classy';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Enable Layout Builder for one content type.
@@ -184,7 +189,12 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
     $this->drupalGet('user/' . $non_editable_user->id() . '/layout');
     $this->assertExpectedAccess($non_editable_access);
 
-    $non_viewable_user = $this->drupalCreateUser([], 'bad person', FALSE, ['status' => 0]);
+    $non_viewable_user = $this->drupalCreateUser(
+      [],
+      'bad person',
+      FALSE,
+      ['status' => 0]
+    );
     $this->drupalGet($non_viewable_user->toUrl());
     $this->assertExpectedAccess(FALSE);
     $this->drupalGet($non_viewable_user->toUrl('edit-form'));

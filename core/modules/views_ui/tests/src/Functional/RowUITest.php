@@ -21,6 +21,11 @@ class RowUITest extends UITestBase {
   public static $testViews = ['test_view'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Tests changing the row plugin and changing some options of a row.
    */
   public function testRowUI() {
@@ -47,7 +52,7 @@ class RowUITest extends UITestBase {
     $this->assertFieldByName('row_options[test_option]', $random_name, 'Make sure the custom settings form field has the expected value stored.');
 
     $this->drupalPostForm($view_edit_url, [], t('Save'));
-    $this->assertLink(t('Test row plugin'), 0, 'Make sure the test row plugin is shown in the UI');
+    $this->assertSession()->linkExists('Test row plugin', 0, 'Make sure the test row plugin is shown in the UI');
 
     $view = Views::getView($view_name);
     $view->initDisplay();
@@ -57,7 +62,7 @@ class RowUITest extends UITestBase {
 
     $this->drupalPostForm($row_plugin_url, ['row[type]' => 'fields'], 'Apply');
     $this->drupalGet($row_plugin_url);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertFieldByName('row[type]', 'fields', 'Make sure that the fields got saved as used row plugin.');
 
     // Ensure that entity row plugins appear.
@@ -68,7 +73,7 @@ class RowUITest extends UITestBase {
     $this->drupalGet($row_plugin_url);
     $this->assertFieldByName('row[type]', 'entity:node');
     $this->drupalPostForm(NULL, ['row[type]' => 'entity:node'], t('Apply'));
-    $this->assertUrl($row_options_url);
+    $this->assertSession()->addressEquals($row_options_url);
     $this->assertFieldByName('row_options[view_mode]', 'teaser');
 
     // Change the teaser label to have markup so we can test escaping.
@@ -76,7 +81,7 @@ class RowUITest extends UITestBase {
     $teaser->set('label', 'Teaser <em>markup</em>');
     $teaser->save();
     $this->drupalGet('admin/structure/views/view/frontpage/edit/default');
-    $this->assertEscaped('Teaser <em>markup</em>');
+    $this->assertSession()->assertEscaped('Teaser <em>markup</em>');
   }
 
 }

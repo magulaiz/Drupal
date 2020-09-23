@@ -14,7 +14,7 @@ use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
@@ -35,21 +35,21 @@ class UrlTest extends UnitTestCase {
   /**
    * The URL generator
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $urlGenerator;
 
   /**
    * The path alias manager.
    *
-   * @var \Drupal\Core\Path\AliasManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\path_alias\AliasManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathAliasManager;
 
   /**
    * The router.
    *
-   * @var \Drupal\Tests\Core\Routing\TestRouterInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Tests\Core\Routing\TestRouterInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $router;
 
@@ -63,14 +63,14 @@ class UrlTest extends UnitTestCase {
   /**
    * The mocked path validator.
    *
-   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Path\PathValidatorInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $pathValidator;
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $map = [];
@@ -101,7 +101,7 @@ class UrlTest extends UnitTestCase {
       ->method('generateFromRoute')
       ->will($this->returnValueMap($generate_from_route_map));
 
-    $this->pathAliasManager = $this->createMock('Drupal\Core\Path\AliasManagerInterface');
+    $this->pathAliasManager = $this->createMock('Drupal\path_alias\AliasManagerInterface');
     $this->pathAliasManager->expects($this->any())
       ->method('getPathByAlias')
       ->will($this->returnValueMap($alias_map));
@@ -112,7 +112,7 @@ class UrlTest extends UnitTestCase {
     $this->container = new ContainerBuilder();
     $this->container->set('router.no_access_checks', $this->router);
     $this->container->set('url_generator', $this->urlGenerator);
-    $this->container->set('path.alias_manager', $this->pathAliasManager);
+    $this->container->set('path_alias.manager', $this->pathAliasManager);
     $this->container->set('path.validator', $this->pathValidator);
     \Drupal::setContainer($this->container);
   }
@@ -160,7 +160,7 @@ class UrlTest extends UnitTestCase {
    * @param string $path
    *   The path.
    *
-   * @return \PHPUnit_Framework_Constraint_Callback
+   * @return \PHPUnit\Framework\Constraint\Callback
    *   The constraint checks whether a Request object has the right path.
    */
   protected function getRequestConstraint($path) {
@@ -191,7 +191,7 @@ class UrlTest extends UnitTestCase {
 
     $this->assertInstanceOf('Drupal\Core\Url', $url);
     $this->assertFalse($url->isRouted());
-    $this->assertEquals(0, strpos($uri, 'base:'));
+    $this->assertStringStartsWith('base:', $uri);
 
     $parts = UrlHelper::parse($path);
     $options = $url->getOptions();
@@ -233,7 +233,7 @@ class UrlTest extends UnitTestCase {
       ->with('invalid-path')
       ->willReturn(FALSE);
     $url = Url::fromUri('internal:/invalid-path');
-    $this->assertSame(FALSE, $url->isRouted());
+    $this->assertFalse($url->isRouted());
     $this->assertSame('base:invalid-path', $url->getUri());
   }
 
@@ -838,7 +838,7 @@ class UrlTest extends UnitTestCase {
    * @param bool $access
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *
-   * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getMockAccessManager($access, $account = NULL) {
     $access_manager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');

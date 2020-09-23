@@ -16,15 +16,25 @@ class ImportOpmlTest extends AggregatorTestBase {
    *
    * @var array
    */
-  public static $modules = ['block', 'help'];
+  protected static $modules = ['block', 'help'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
-    $admin_user = $this->drupalCreateUser(['administer news feeds', 'access news feeds', 'create article content', 'administer blocks']);
+    $admin_user = $this->drupalCreateUser([
+      'administer news feeds',
+      'access news feeds',
+      'create article content',
+      'administer blocks',
+    ]);
     $this->drupalLogin($admin_user);
   }
 
@@ -37,9 +47,10 @@ class ImportOpmlTest extends AggregatorTestBase {
 
     $this->drupalGet('admin/config/services/aggregator/add/opml');
     $this->assertText('A single OPML document may contain many feeds.', 'Found OPML help text.');
-    $this->assertField('files[upload]', 'Found file upload field.');
-    $this->assertField('remote', 'Found Remote URL field.');
-    $this->assertField('refresh', '', 'Found Refresh field.');
+    // Ensure that the file upload, remote URL, and refresh fields exist.
+    $this->assertSession()->fieldExists('files[upload]');
+    $this->assertSession()->fieldExists('remote');
+    $this->assertSession()->fieldExists('refresh');
   }
 
   /**
@@ -51,7 +62,7 @@ class ImportOpmlTest extends AggregatorTestBase {
 
     $edit = [];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'), 'Error if no fields are filled.');
+    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $path = $this->getEmptyOpml();
     $edit = [
@@ -59,7 +70,7 @@ class ImportOpmlTest extends AggregatorTestBase {
       'remote' => file_create_url($path),
     ];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'), 'Error if both fields are filled.');
+    $this->assertRaw(t('<em>Either</em> upload a file or enter a URL.'));
 
     $edit = ['remote' => 'invalidUrl://empty'];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
@@ -99,8 +110,10 @@ class ImportOpmlTest extends AggregatorTestBase {
       'refresh'       => '900',
     ];
     $this->drupalPostForm('admin/config/services/aggregator/add/opml', $edit, t('Import'));
-    $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]), 'Verifying that a duplicate URL was identified');
-    $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]), 'Verifying that a duplicate title was identified');
+    // Verify that a duplicate URL was identified.
+    $this->assertRaw(t('A feed with the URL %url already exists.', ['%url' => $feeds[0]['url[0][value]']]));
+    // Verify that a duplicate title was identified.
+    $this->assertRaw(t('A feed named %title already exists.', ['%title' => $feeds[1]['title[0][value]']]));
 
     $after = $count_query->execute();
     $this->assertEqual($after, 2, 'Verifying that two distinct feeds were added.');

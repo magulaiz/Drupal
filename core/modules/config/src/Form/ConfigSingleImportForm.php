@@ -8,10 +8,10 @@ use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Importer\ConfigImporterBatch;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
-use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -32,15 +32,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @internal
  */
 class ConfigSingleImportForm extends ConfirmFormBase {
-
-  use DeprecatedServicePropertyTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $deprecatedProperties = [
-    'entityManager' => 'entity.manager',
-  ];
 
   /**
    * The entity type manager.
@@ -219,7 +210,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     else {
       $definition = $this->entityTypeManager->getDefinition($this->data['config_type']);
       $name = $this->data['import'][$definition->getKey('id')];
-      $type = $definition->getLowercaseLabel();
+      $type = $definition->getSingularLabel();
     }
 
     $args = [
@@ -316,7 +307,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
     }
 
     // Validate for config entities.
-    if ($form_state->getValue('config_type') !== 'system.simple') {
+    if ($form_state->getValue('config_type') && $form_state->getValue('config_type') !== 'system.simple') {
       $definition = $this->entityTypeManager->getDefinition($form_state->getValue('config_type'));
       $id_key = $definition->getKey('id');
 
@@ -363,7 +354,8 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       $source_storage->replaceData($config_name, $data);
       $storage_comparer = new StorageComparer($source_storage, $this->configStorage);
 
-      if (!$storage_comparer->createChangelist()->hasChanges()) {
+      $storage_comparer->createChangelist();
+      if (!$storage_comparer->hasChanges()) {
         $form_state->setErrorByName('import', $this->t('There are no changes to import.'));
       }
       else {
@@ -421,14 +413,14 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         $sync_steps = $config_importer->initialize();
         $batch = [
           'operations' => [],
-          'finished' => [ConfigSync::class, 'finishBatch'],
+          'finished' => [ConfigImporterBatch::class, 'finish'],
           'title' => $this->t('Importing configuration'),
           'init_message' => $this->t('Starting configuration import.'),
           'progress_message' => $this->t('Completed @current step of @total.'),
           'error_message' => $this->t('Configuration import has encountered an error.'),
         ];
         foreach ($sync_steps as $sync_step) {
-          $batch['operations'][] = [[ConfigSync::class, 'processBatch'], [$config_importer, $sync_step]];
+          $batch['operations'][] = [[ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]];
         }
 
         batch_set($batch);

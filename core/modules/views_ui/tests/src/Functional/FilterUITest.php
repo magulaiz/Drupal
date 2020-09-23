@@ -22,12 +22,17 @@ class FilterUITest extends UITestBase {
    *
    * @var array
    */
-  public static $modules = ['views_ui', 'node'];
+  protected static $modules = ['views_ui', 'node'];
 
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->drupalCreateContentType(['type' => 'page']);
   }
@@ -36,7 +41,10 @@ class FilterUITest extends UITestBase {
    * Tests that an option for a filter is saved as expected from the UI.
    */
   public function testFilterInOperatorUi() {
-    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
 
     $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
@@ -59,16 +67,19 @@ class FilterUITest extends UITestBase {
    * Tests the filters from the UI.
    */
   public function testFiltersUI() {
-    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/structure/views/view/test_filter_groups');
 
-    $this->assertLink('Content: ID (= 1)', 0, 'Content: ID (= 1) link appears correctly.');
+    $this->assertSession()->linkExists('Content: ID (= 1)', 0, 'Content: ID (= 1) link appears correctly.');
 
     // Tests that we can create a new filter group from UI.
     $this->drupalGet('admin/structure/views/nojs/rearrange-filter/test_filter_groups/page');
-    $this->assertNoRaw('<span>Group 3</span>', 'Group 3 has not been added yet.');
+    $this->assertNoRaw('<span>Group 3</span>');
 
     // Create 2 new groups.
     $this->drupalPostForm(NULL, [], t('Create new filter group'));
@@ -78,20 +89,23 @@ class FilterUITest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Remove group 3'));
 
     // Verify that the group 4 is now named as 3.
-    $this->assertRaw('<span>Group 3</span>', 'Group 3 still exists.');
+    $this->assertRaw('<span>Group 3</span>');
 
     // Remove the group 3 again.
     $this->drupalPostForm(NULL, [], t('Remove group 3'));
 
     // Group 3 now does not exist.
-    $this->assertNoRaw('<span>Group 3</span>', 'Group 3 has not been added yet.');
+    $this->assertNoRaw('<span>Group 3</span>');
   }
 
   /**
    * Tests the identifier settings and restrictions.
    */
   public function testFilterIdentifier() {
-    $admin_user = $this->drupalCreateUser(['administer views', 'administer site configuration']);
+    $admin_user = $this->drupalCreateUser([
+      'administer views',
+      'administer site configuration',
+    ]);
     $this->drupalLogin($admin_user);
     $path = 'admin/structure/views/nojs/handler/test_filter_in_operator_ui/default/filter/type';
 

@@ -111,9 +111,9 @@
     /**
      * Used to determine up or down direction from last mouse move.
      *
-     * @type {number}
+     * @type {?number}
      */
-    this.oldY = 0;
+    this.oldY = null;
 
     /**
      * Whether anything in the entire table has changed.
@@ -172,6 +172,11 @@
     this.windowHeight = 0;
 
     /**
+     * @type {?jQuery}
+     */
+    this.$toggleWeightButton = null;
+
+    /**
      * Check this table's settings for parent relationships.
      *
      * For efficiency, large sections of code can be skipped if we don't need to
@@ -202,10 +207,10 @@
       // manually append 2 indentations in the first draggable row, measure
       // the offset, then remove.
       const indent = Drupal.theme('tableDragIndentation');
-      const testRow = $('<tr/>')
+      const testRow = $('<tr></tr>')
         .addClass('draggable')
         .appendTo(table);
-      const testCell = $('<td/>')
+      const testCell = $('<td></td>')
         .appendTo(testRow)
         .prepend(indent)
         .prepend(indent);
@@ -226,19 +231,18 @@
       self.makeDraggable(this);
     });
 
-    // Add a link before the table for users to show or hide weight columns.
-    $table.before(
-      $('<button type="button" class="link tabledrag-toggle-weight"></button>')
-        .on(
-          'click',
-          $.proxy(function(e) {
-            e.preventDefault();
-            this.toggleColumns();
-          }, this),
-        )
-        .wrap('<div class="tabledrag-toggle-weight-wrapper"></div>')
-        .parent(),
+    const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
+    this.$toggleWeightButton = $toggleWeightWrapper.find(
+      '[data-drupal-selector="tabledrag-toggle-weight"]',
     );
+    this.$toggleWeightButton.on(
+      'click',
+      $.proxy(function(e) {
+        e.preventDefault();
+        this.toggleColumns();
+      }, this),
+    );
+    $table.before($toggleWeightWrapper);
 
     // Initialize the specified columns (for example, weight or parent columns)
     // to show or hide according to user preference. This aids accessibility
@@ -368,6 +372,11 @@
     else {
       this.hideColumns();
     }
+
+    this.$toggleWeightButton.html(
+      Drupal.theme('toggleButtonContent', displayWeight),
+    );
+
     // Trigger an event to allow other scripts to react to this display change.
     // Force the extra parameter as a bool.
     $('table')
@@ -405,10 +414,8 @@
     $tables.find('.tabledrag-handle').css('display', '');
     // Reduce the colspan of any effected multi-span columns.
     $tables.find('.tabledrag-has-colspan').each(function() {
-      this.colSpan = this.colSpan - 1;
+      this.colSpan -= 1;
     });
-    // Change link text.
-    $('.tabledrag-toggle-weight').text(Drupal.t('Show row weights'));
   };
 
   /**
@@ -424,10 +431,8 @@
     $tables.find('.tabledrag-handle').css('display', 'none');
     // Increase the colspan for any columns where it was previously reduced.
     $tables.find('.tabledrag-has-colspan').each(function() {
-      this.colSpan = this.colSpan + 1;
+      this.colSpan += 1;
     });
-    // Change link text.
-    $('.tabledrag-toggle-weight').text(Drupal.t('Hide row weights'));
   };
 
   /**
@@ -475,16 +480,14 @@
       .find('a')
       .addClass('menu-item__link');
     // Create the handle.
-    const handle = $(
-      '<a href="#" class="tabledrag-handle"><div class="handle">&nbsp;</div></a>',
-    ).attr('title', Drupal.t('Drag to re-order'));
+    const $handle = $(Drupal.theme('tableDragHandle'));
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
       .find('td:first-of-type')
       .find('.js-indentation')
       .eq(-1);
     if ($indentationLast.length) {
-      $indentationLast.after(handle);
+      $indentationLast.after($handle);
       // Update the total width of indentation in this entire table.
       self.indentCount = Math.max(
         $item.find('.js-indentation').length,
@@ -494,10 +497,10 @@
       $item
         .find('td')
         .eq(0)
-        .prepend(handle);
+        .prepend($handle);
     }
 
-    handle.on('mousedown touchstart pointerdown', event => {
+    $handle.on('mousedown touchstart pointerdown', event => {
       event.preventDefault();
       if (event.originalEvent.type === 'touchstart') {
         event = event.originalEvent.touches[0];
@@ -506,25 +509,25 @@
     });
 
     // Prevent the anchor tag from jumping us to the top of the page.
-    handle.on('click', e => {
+    $handle.on('click', e => {
       e.preventDefault();
     });
 
     // Set blur cleanup when a handle is focused.
-    handle.on('focus', () => {
+    $handle.on('focus', () => {
       self.safeBlur = true;
     });
 
     // On blur, fire the same function as a touchend/mouseup. This is used to
     // update values after a row has been moved through the keyboard support.
-    handle.on('blur', event => {
+    $handle.on('blur', event => {
       if (self.rowObject && self.safeBlur) {
         self.dropRow(event, self);
       }
     });
 
     // Add arrow-key support to the handle.
-    handle.on('keydown', event => {
+    $handle.on('keydown', event => {
       // If a rowObject doesn't yet exist and this isn't the tab key.
       if (event.keyCode !== 9 && !self.rowObject) {
         self.rowObject = new self.row(
@@ -602,7 +605,7 @@
               window.scrollBy(0, -parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            handle.trigger('focus');
+            $handle.trigger('focus');
           }
           break;
         }
@@ -664,7 +667,7 @@
               window.scrollBy(0, parseInt(item.offsetHeight, 10));
             }
             // Regain focus after the DOM manipulation.
-            handle.trigger('focus');
+            $handle.trigger('focus');
           }
           break;
         }
@@ -694,7 +697,7 @@
     // scrolling. IE and Safari will suppress scrolling on keydown, but all
     // other browsers need to return false on keypress.
     // http://www.quirksmode.org/js/keys.html
-    handle.on('keypress', event => {
+    $handle.on('keypress', event => {
       /* eslint-disable no-fallthrough */
 
       switch (event.keyCode) {
@@ -721,7 +724,7 @@
    * @param {Drupal.tableDrag} self
    *   The drag handle.
    * @param {HTMLElement} item
-   *   The item that that is being dragged.
+   *   The item that is being dragged.
    */
   Drupal.tableDrag.prototype.dragStart = function(event, self, item) {
     // Create a new dragObject recording the pointer information.
@@ -760,6 +763,10 @@
     if (self.oldRowElement) {
       $(self.oldRowElement).removeClass('drag-previous');
     }
+
+    // Set the initial y coordinate so the direction can be calculated in
+    // dragRow().
+    self.oldY = self.pointerCoords(event).y;
   };
 
   /**
@@ -1702,6 +1709,38 @@
         return `<div class="tabledrag-changed-warning messages messages--warning" role="alert">${Drupal.theme(
           'tableDragChangedMarker',
         )} ${Drupal.t('You have unsaved changes.')}</div>`;
+      },
+
+      /**
+       * The button for toggling table row weight visibility.
+       *
+       * @return {string}
+       *   HTML markup for the weight toggle button and its container.
+       */
+      tableDragToggle: () =>
+        `<div class="tabledrag-toggle-weight-wrapper" data-drupal-selector="tabledrag-toggle-weight-wrapper">
+            <button type="button" class="link tabledrag-toggle-weight" data-drupal-selector="tabledrag-toggle-weight"></button>
+            </div>`,
+
+      /**
+       * The contents of the toggle weight button.
+       *
+       * @param {boolean} show
+       *   If the table weights are currently displayed.
+       *
+       * @return {string}
+       *  HTML markup for the weight toggle button content.s
+       */
+      toggleButtonContent: show =>
+        show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights'),
+
+      /**
+       * @return {string}
+       *   HTML markup for a tableDrag handle.
+       */
+      tableDragHandle() {
+        return `<a href="#" title="${Drupal.t('Drag to re-order')}"
+        class="tabledrag-handle"><div class="handle">&nbsp;</div></a>`;
       },
     },
   );
