@@ -2,6 +2,7 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\entity_test\Entity\EntityTestMulRevChanged;
 use Drupal\KernelTests\TestTime;
@@ -63,12 +64,17 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
     $this->installEntitySchema('entity_test_mul_changed');
     $this->installEntitySchema('entity_test_mulrev_changed');
 
-    $this->time = new TestTime();
-    $this->container->set('datetime.time', $this->time);
-    \Drupal::setContainer($this->container);
-
     $this->mulChangedStorage = $this->entityTypeManager->getStorage('entity_test_mul_changed');
     $this->mulRevChangedStorage = $this->entityTypeManager->getStorage('entity_test_mulrev_changed');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function register(ContainerBuilder $container) {
+    parent::register($container);
+    $container->register('datetime.time', TestTime::class);
+    $this->time = $container->get('datetime.time');
   }
 
   /**
