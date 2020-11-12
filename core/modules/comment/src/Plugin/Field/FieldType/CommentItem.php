@@ -45,7 +45,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
     return [
       'default_mode' => CommentManagerInterface::COMMENT_MODE_THREADED,
       'thread_limit' => [
-        'depth' => 1,
+        'depth' => 2,
         'mode' => CommentItemInterface::THREAD_DEPTH_REPLY_MODE_ALLOW,
       ],
       'per_page' => 50,
@@ -142,7 +142,9 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#title' => $this->t('Thread depth limit'),
       '#default_value' => $settings['thread_limit']['depth'],
       '#description' => $this->t('Define comment thread depth.'),
-      '#min' => 1,
+      // The maximum thread deep cannot be less than 2 as it doesn't makes sense
+      // to have threaded comments with only one level.
+      '#min' => 2,
     ];
     $element['thread_limit']['mode'] = [
       '#type' => 'radios',
