@@ -218,7 +218,7 @@ SH;
     exec('git --help', $output, $status);
     $this->assertEquals(127, $status);
     // Run the scaffold command.
-    $output = $this->mustExec('composer drupal:scaffold 2>&1', NULL);
+    $output = $this->mustExec('vendor/bin/composer drupal:scaffold 2>&1', NULL);
 
     putenv('PATH=' . $oldPath . ':' . getenv('PATH'));
 

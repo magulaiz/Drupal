@@ -52,7 +52,7 @@ class ScaffoldUpgradeTest extends TestCase {
    * Tests upgrading the Composer Scaffold plugin.
    */
   public function testScaffoldUpgrade() {
-    $composerVersionLine = exec('composer --version');
+    $composerVersionLine = exec('vendor/bin/composer --version');
     if (str_contains($composerVersionLine, 'Composer version 2')) {
       $this->markTestSkipped('We cannot run the scaffold upgrade test with Composer 2 until we have a stable version of drupal/core-composer-scaffold to start from that we can install with Composer 2.x.');
     }
