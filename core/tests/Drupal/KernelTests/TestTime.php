@@ -2,21 +2,19 @@
 
 namespace Drupal\KernelTests;
 
-use Drupal\Component\Datetime\Time;
+use Drupal\Component\Datetime\TimeInterface;
 
 /**
  * Provides a dummy time service that can be used for testing.
  *
  * Time can be advanced manually for testing purposes.
  */
-class TestTime extends Time {
+class TestTime implements TimeInterface {
 
   /**
    * The request micro time to return.
    *
    * @var float
-   *
-   * @see \Drupal\Component\Datetime\Time::getRequestMicroTime()
    */
   protected $requestMicroTime;
 
@@ -24,8 +22,6 @@ class TestTime extends Time {
    * The request time to return.
    *
    * @var int
-   *
-   * @see \Drupal\Component\Datetime\Time::getRequestTime()
    */
   protected $requestTime;
 
@@ -77,6 +73,20 @@ class TestTime extends Time {
   public function advanceTime($seconds = 1) {
     $this->requestTime += $seconds;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrentTime() {
+    return time();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCurrentMicroTime() {
+    return microtime(TRUE);
   }
 
 }
