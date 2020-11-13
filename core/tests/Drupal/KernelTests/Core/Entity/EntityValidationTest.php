@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\Plugin\Validation\Constraint\CompositeConstraintBase;
 use Drupal\KernelTests\TestTime;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -37,8 +36,6 @@ class EntityValidationTest extends EntityKernelTestBase {
   protected $entityFieldText;
 
   /**
-   * The test time service.
-   *
    * @var \Drupal\KernelTests\TestTime
    */
   protected $time;
@@ -66,15 +63,10 @@ class EntityValidationTest extends EntityKernelTestBase {
 
     // Install required default configuration for filter module.
     $this->installConfig(['system', 'filter']);
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    parent::register($container);
-    $container->register('datetime.time', TestTime::class);
-    $this->time = $container->get('datetime.time');
+    $this->time = new TestTime();
+    $this->container->set('datetime.time', $this->time);
+    \Drupal::setContainer($this->container);
   }
 
   /**

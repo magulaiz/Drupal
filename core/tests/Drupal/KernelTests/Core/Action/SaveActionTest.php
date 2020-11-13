@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Action;
 
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\KernelTests\TestTime;
@@ -15,8 +14,6 @@ use Drupal\system\Entity\Action;
 class SaveActionTest extends KernelTestBase {
 
   /**
-   * The test time service.
-   *
    * @var \Drupal\KernelTests\TestTime
    */
   protected $time;
@@ -32,15 +29,10 @@ class SaveActionTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('entity_test_mul_changed');
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function register(ContainerBuilder $container) {
-    parent::register($container);
-    $container->register('datetime.time', TestTime::class);
-    $this->time = $container->get('datetime.time');
+    $this->time = new TestTime();
+    $this->container->set('datetime.time', $this->time);
+    \Drupal::setContainer($this->container);
   }
 
   /**
