@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\block_content\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\block_content\Entity\BlockContent;
 
 /**
@@ -44,8 +43,8 @@ class PageEditTest extends BlockContentTestBase {
 
     // Load the edit page.
     $this->drupalGet('block/' . $block->id());
-    $this->assertFieldByName($title_key, $edit[$title_key], 'Title field displayed.');
-    $this->assertFieldByName($body_key, $edit[$body_key], 'Body field displayed.');
+    $this->assertSession()->fieldValueEquals($title_key, $edit[$title_key]);
+    $this->assertSession()->fieldValueEquals($body_key, $edit[$body_key]);
 
     // Edit the content of the block.
     $edit = [];
@@ -70,7 +69,7 @@ class PageEditTest extends BlockContentTestBase {
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
     $this->clickLink(t('Delete'));
-    $this->assertText(new FormattableMarkup('Are you sure you want to delete the custom block @label?', ['@label' => $revised_block->label()]));
+    $this->assertText('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
   }
 
 }

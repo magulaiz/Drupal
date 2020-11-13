@@ -86,7 +86,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
       $this->assertSession()->linkExists($title);
 
       // Look for a test shortcut weight select form element.
-      $this->assertFieldByName('shortcuts[links][' . $shortcut->id() . '][weight]');
+      $this->assertSession()->fieldExists('shortcuts[links][' . $shortcut->id() . '][weight]');
 
       // Change the weight of the shortcut.
       $edit['shortcuts[links][' . $shortcut->id() . '][weight]'] = $weight;
@@ -148,10 +148,11 @@ class ShortcutSetsTest extends ShortcutTestBase {
   public function testShortcutSetSwitchNoSetName() {
     $edit = ['set' => 'new'];
     $this->drupalPostForm('user/' . $this->adminUser->id() . '/shortcuts', $edit, t('Change set'));
-    $this->assertText(t('The new set label is required.'));
+    $this->assertText('The new set label is required.');
     $current_set = shortcut_current_displayed_set($this->adminUser);
     $this->assertEqual($current_set->id(), $this->set->id(), 'Attempting to switch to a new shortcut set without providing a set name does not succeed.');
-    $this->assertFieldByXPath("//input[@name='label' and contains(concat(' ', normalize-space(@class), ' '), ' error ')]", NULL, 'The new set label field has the error class');
+    $field = $this->assertSession()->fieldExists('label');
+    $this->assertTrue($field->hasClass('error'));
   }
 
   /**

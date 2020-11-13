@@ -270,29 +270,31 @@ class BlockUiTest extends BrowserTestBase {
     // Tests that conditions with missing context are not displayed.
     $this->drupalGet('admin/structure/block/manage/testcontextawareblock');
     $this->assertNoRaw('No existing type');
-    $this->assertNoFieldByXPath('//*[@name="visibility[condition_test_no_existing_type][negate]"]');
+    $this->assertSession()->elementNotExists('xpath', '//*[@name="visibility[condition_test_no_existing_type][negate]"]');
   }
 
   /**
    * Tests that the BlockForm populates machine name correctly.
    */
   public function testMachineNameSuggestion() {
+    // Check the form uses the raw machine name suggestion when no instance
+    // already exists.
     $url = 'admin/structure/block/add/test_block_instantiation/classy';
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage');
     $edit = ['region' => 'content'];
     $this->drupalPostForm($url, $edit, 'Save block');
     $this->assertText('The block configuration has been saved.');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage_2');
     $this->drupalPostForm($url, $edit, 'Save block');
     $this->assertText('The block configuration has been saved.');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);
-    $this->assertFieldByName('id', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
+    $this->assertSession()->fieldValueEquals('id', 'displaymessage_3');
   }
 
   /**
@@ -378,6 +380,37 @@ class BlockUiTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/structure/block/manage/' . $block->id() . '/enable');
     $this->assertSession()->statusCodeEquals(403);
+  }
+
+  /**
+   * Tests that users without permission are not able to view broken blocks.
+   */
+  public function testBrokenBlockVisibility() {
+    $assert_session = $this->assertSession();
+
+    $this->drupalPlaceBlock('broken');
+
+    // Login as an admin user to the site.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user can view the Broken Block message.
+    $assert_session->pageTextContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+    $this->drupalLogout();
+
+    // Visit the same page as anonymous.
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user cannot view the Broken Block message.
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
+
+    // Visit same page as an authorized user that does not have access to
+    // administer blocks.
+    $this->drupalLogin($this->drupalCreateUser(['access administration pages']));
+    $this->drupalGet('');
+    $assert_session->statusCodeEquals(200);
+    // Check that this user cannot view the Broken Block message.
+    $assert_session->pageTextNotContains('This block is broken or missing. You may be missing content or you might need to enable the original module.');
   }
 
 }

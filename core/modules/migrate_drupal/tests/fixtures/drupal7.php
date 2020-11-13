@@ -19707,6 +19707,46 @@ $connection->insert('i18n_string')
   'objectindex' => '0',
   'format' => '',
 ))
+->values(array(
+  'lid' => '797',
+  'textgroup' => 'taxonomy',
+  'context' => 'term:25:name',
+  'objectid' => '25',
+  'type' => 'term',
+  'property' => 'name',
+  'objectindex' => '25',
+  'format' => '',
+))
+->values(array(
+  'lid' => '798',
+  'textgroup' => 'taxonomy',
+  'context' => 'term:25:description',
+  'objectid' => '25',
+  'type' => 'term',
+  'property' => 'description',
+  'objectindex' => '25',
+  'format' => '',
+))
+  ->values(array(
+  'lid' => '803',
+  'textgroup' => 'menu',
+  'context' => 'item:467:title',
+  'objectid' => '467',
+  'type' => 'item',
+  'property' => 'title',
+  'objectindex' => '467',
+  'format' => '',
+))
+->values(array(
+  'lid' => '804',
+  'textgroup' => 'menu',
+  'context' => 'item:467:description',
+  'objectid' => '467',
+  'type' => 'item',
+  'property' => 'description',
+  'objectindex' => '467',
+  'format' => '',
+))
 ->execute();
 $connection->schema()->createTable('i18n_translation_set', array(
   'fields' => array(
@@ -21310,6 +21350,38 @@ $connection->insert('locales_target')
 ->values(array(
   'lid' => '802',
   'translation' => 'fr - Test menu description',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '797',
+  'translation' => 'fr - Emissary',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '798',
+  'translation' => 'fr - Pilot episode',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '803',
+  'translation' => 'fr - Google',
+  'language' => 'fr',
+  'plid' => '0',
+  'plural' => '0',
+  'i18n_status' => '0',
+))
+->values(array(
+  'lid' => '804',
+  'translation' => 'fr - Google description',
   'language' => 'fr',
   'plid' => '0',
   'plural' => '0',
@@ -32441,7 +32513,7 @@ $connection->insert('menu_links')
   'link_path' => 'http://yahoo.com',
   'router_path' => '',
   'link_title' => 'Yahoo',
-  'options' => 'a:1:{s:10:"attributes";a:1:{s:5:"title";s:5:"Yahoo";}}',
+  'options' => 'a:2:{s:10:"attributes";a:1:{s:5:"title";s:19:"english description";}s:5:"alter";b:1;}',
   'module' => 'menu',
   'hidden' => '0',
   'external' => '1',
@@ -32460,8 +32532,8 @@ $connection->insert('menu_links')
   'p8' => '0',
   'p9' => '0',
   'updated' => '0',
-  'language' => 'und',
-  'i18n_tsid' => '0',
+  'language' => 'en',
+  'i18n_tsid' => '1',
 ))
 ->values(array(
   'menu_name' => 'menu-test-menu',
@@ -32957,33 +33029,62 @@ $connection->insert('menu_links')
   'i18n_tsid' => '0',
 ))
 ->values(array(
-  'menu_name' => 'management',
-  'mlid' => '535',
-  'plid' => '44',
-  'link_path' => 'admin/structure/menu/manage/menu-fixedlang',
-  'router_path' => 'admin/structure/menu/manage/%',
-  'link_title' => 'FixedLang',
-  'options' => 'a:0:{}',
+  'menu_name' => 'menu-test-menu',
+  'mlid' => '700',
+  'plid' => '0',
+  'link_path' => 'http://yahoo.com',
+  'router_path' => '',
+  'link_title' => 'fr - Yahoo',
+  'options' => 'a:2:{s:10:"attributes";a:1:{s:5:"title";s:16:"fr - description";}s:5:"alter";b:1;}',
   'module' => 'menu',
   'hidden' => '0',
-  'external' => '0',
+  'external' => '1',
   'has_children' => '0',
   'expanded' => '0',
   'weight' => '0',
-  'depth' => '4',
-  'customized' => '0',
-  'p1' => '1',
-  'p2' => '20',
-  'p3' => '44',
-  'p4' => '535',
+  'depth' => '1',
+  'customized' => '1',
+  'p1' => '468',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
   'p5' => '0',
   'p6' => '0',
   'p7' => '0',
   'p8' => '0',
   'p9' => '0',
   'updated' => '0',
-  'language' => 'und',
-  'i18n_tsid' => '0',
+  'language' => 'fr',
+  'i18n_tsid' => '1',
+))
+->values(array(
+  'menu_name' => 'menu-test-menu',
+  'mlid' => '701',
+  'plid' => '0',
+  'link_path' => 'http://yahoo.com',
+  'router_path' => '',
+  'link_title' => 'is - Yahoo',
+  'options' => 'a:2:{s:10:"attributes";a:1:{s:5:"title";s:16:"is - description";}s:5:"alter";b:1;}',
+  'module' => 'menu',
+  'hidden' => '0',
+  'external' => '1',
+  'has_children' => '0',
+  'expanded' => '0',
+  'weight' => '0',
+  'depth' => '1',
+  'customized' => '1',
+  'p1' => '468',
+  'p2' => '0',
+  'p3' => '0',
+  'p4' => '0',
+  'p5' => '0',
+  'p6' => '0',
+  'p7' => '0',
+  'p8' => '0',
+  'p9' => '0',
+  'updated' => '0',
+  'language' => 'is',
+  'i18n_tsid' => '1',
 ))
 ->execute();
 $connection->schema()->createTable('menu_router', array(
@@ -56789,6 +56890,16 @@ $connection->insert('taxonomy_term_data')
   'language' => 'fr',
   'i18n_tsid' => '0',
 ))
+->values(array(
+  'tid' => '25',
+  'vid' => '8',
+  'name' => 'Emissary',
+  'description' => 'Pilot episode',
+  'format' => 'filtered_html',
+  'weight' => '0',
+  'language' => 'und',
+  'i18n_tsid' => '0',
+))
 ->execute();
 $connection->schema()->createTable('taxonomy_term_hierarchy', array(
   'fields' => array(
@@ -56914,6 +57025,10 @@ $connection->insert('taxonomy_term_hierarchy')
 ->values(array(
   'tid' => '8',
   'parent' => '6',
+))
+->values(array(
+  'tid' => '25',
+  'parent' => '0',
 ))
 ->execute();
 $connection->schema()->createTable('taxonomy_vocabulary', array(
@@ -57068,6 +57183,17 @@ $connection->insert('taxonomy_vocabulary')
   'weight' => '0',
   'language' => 'fr',
   'i18n_mode' => '2',
+))
+->values(array(
+  'vid' => '8',
+  'name' => 'VocabLocalized2',
+  'machine_name' => 'vocablocalized2',
+  'description' => '',
+  'hierarchy' => '0',
+  'module' => 'taxonomy',
+  'weight' => '0',
+  'language' => 'und',
+  'i18n_mode' => '1',
 ))
 ->execute();
 $connection->schema()->createTable('tracker_node', array(

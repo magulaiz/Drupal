@@ -4,6 +4,7 @@ namespace Drupal\Tests\contact\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -25,7 +26,7 @@ class ContactPersonalTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['contact', 'dblog'];
+  protected static $modules = ['contact', 'dblog', 'mail_html_test'];
 
   /**
    * {@inheritdoc}
@@ -116,6 +117,20 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->assertRaw(new FormattableMarkup('@sender_name (@sender_email) sent @recipient_name an email.', $placeholders));
     // Ensure an unescaped version of the email does not exist anywhere.
     $this->assertNoRaw($this->webUser->getEmail());
+
+    // Test HTML mails.
+    $mail_config = $this->config('system.mail');
+    $mail_config->set('interface.default', 'test_html_mail_collector');
+    $mail_config->save();
+
+    $this->drupalLogin($this->webUser);
+    $message['message[0][value]'] = 'This <i>is</i> a more <b>specific</b> <sup>test</sup>, the emails are formatted now.';
+    $message = $this->submitPersonalContact($this->contactUser, $message);
+
+    // Assert mail content.
+    $this->assertMailString('body', 'Hello ' . $variables['@recipient-name'], 1);
+    $this->assertMailString('body', $this->webUser->getDisplayName(), 1);
+    $this->assertMailString('body', Html::Escape($message['message[0][value]']), 1);
   }
 
   /**
@@ -188,7 +203,7 @@ class ContactPersonalTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $edit = ['contact_default_status' => FALSE];
     $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Setting successfully saved.');
+    $this->assertText('The configuration options have been saved.', 'Setting successfully saved.');
     $this->drupalLogout();
 
     // Re-create our contacted user with personal contact forms disabled by
@@ -250,7 +265,7 @@ class ContactPersonalTest extends BrowserTestBase {
     // Submit contact form with correct values and check flood interval.
     for ($i = 0; $i < $flood_limit; $i++) {
       $this->submitPersonalContact($this->contactUser);
-      $this->assertText(t('Your message has been sent.'), 'Message sent.');
+      $this->assertText('Your message has been sent.', 'Message sent.');
     }
 
     // Submit contact form one over limit.
@@ -327,8 +342,8 @@ class ContactPersonalTest extends BrowserTestBase {
    */
   protected function submitPersonalContact(AccountInterface $account, array $message = []) {
     $message += [
-      'subject[0][value]' => $this->randomMachineName(16),
-      'message[0][value]' => $this->randomMachineName(64),
+      'subject[0][value]' => $this->randomMachineName(16) . '< " =+ >',
+      'message[0][value]' => $this->randomMachineName(64) . '< " =+ >',
     ];
     $this->drupalPostForm('user/' . $account->id() . '/contact', $message, t('Send message'));
     return $message;

@@ -68,7 +68,7 @@ EOD;
     ];
     // Attempt an import with a missing ID.
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('Missing ID key "@id_key" for this @entity_type import.', ['@id_key' => 'id', '@entity_type' => 'Test configuration']));
+    $this->assertText('Missing ID key "id" for this Test configuration import.');
 
     // Perform an import with no specified UUID and a unique ID.
     $this->assertNull($storage->load('first'));
@@ -84,12 +84,12 @@ EOD;
 
     // Attempt an import with an existing ID but missing UUID.
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('An entity with this machine name already exists but the import did not specify a UUID.'));
+    $this->assertText('An entity with this machine name already exists but the import did not specify a UUID.');
 
     // Attempt an import with a mismatched UUID and existing ID.
     $edit['import'] .= "\nuuid: " . $uuid->generate();
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('An entity with this machine name already exists but the UUID does not match.'));
+    $this->assertText('An entity with this machine name already exists but the UUID does not match.');
 
     // Attempt an import with a custom ID.
     $edit['custom_entity_id'] = 'custom_id';
@@ -229,7 +229,7 @@ EOD;
       'import' => Yaml::encode($config_data),
     ];
     $this->drupalPostForm('admin/config/development/configuration/single/import', $edit, t('Import'));
-    $this->assertText(t('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.'));
+    $this->assertText('Can not uninstall the Configuration module as part of a configuration synchronization through the user interface.');
 
     // Try to import without any values.
     $this->drupalPostForm('admin/config/development/configuration/single/import', [], t('Import'));
@@ -243,8 +243,11 @@ EOD;
   public function testExport() {
     $this->drupalLogin($this->drupalCreateUser(['export configuration']));
 
+    // Verify that the simple configuration option is selected when specified
+    // in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Simple configuration'), 'The simple configuration option is selected when specified in the URL.');
+    $option_node = $this->assertSession()->optionExists("config_type", 'Simple configuration');
+    $this->assertTrue($option_node->isSelected());
     // Spot check several known simple configuration files.
     $element = $this->xpath('//select[@name="config_name"]')[0];
     $options = $element->findAll('css', 'option');
@@ -257,12 +260,17 @@ EOD;
     $this->drupalGet('admin/config/development/configuration/single/export/system.simple/system.image');
     $this->assertEquals("toolkit: gd\n_core:\n  default_config_hash: durWHaKeBaq4d9Wpi4RqwADj1OufDepcnJuhVLmKN24\n", $this->xpath('//textarea[@name="export"]')[0]->getValue(), 'The expected system configuration is displayed.');
 
+    // Verify that the date format entity type is selected when specified in
+    // the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format');
-    $this->assertFieldByXPath('//select[@name="config_type"]//option[@selected="selected"]', t('Date format'), 'The date format entity type is selected when specified in the URL.');
+    $option_node = $this->assertSession()->optionExists("config_type", 'Date format');
+    $this->assertTrue($option_node->isSelected());
 
+    // Verify that the fallback date format config entity is selected when
+    // specified in the URL.
     $this->drupalGet('admin/config/development/configuration/single/export/date_format/fallback');
-    $this->assertFieldByXPath('//select[@name="config_name"]//option[@selected="selected"]', t('Fallback date format (fallback)'), 'The fallback date format config entity is selected when specified in the URL.');
-
+    $option_node = $this->assertSession()->optionExists("config_name", 'Fallback date format (fallback)');
+    $this->assertTrue($option_node->isSelected());
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->xpath('//textarea[@name="export"]')[0]->getValue();
     $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');

@@ -35,7 +35,7 @@ class BulkFormTest extends BrowserTestBase {
     // First, test an empty bulk form with the default style plugin to make sure
     // the empty region is rendered correctly.
     $this->drupalGet('test_bulk_form_empty');
-    $this->assertText(t('This view is empty.'), 'Empty text found on empty bulk form.');
+    $this->assertText('This view is empty.', 'Empty text found on empty bulk form.');
 
     $nodes = [];
     for ($i = 0; $i < 10; $i++) {
@@ -56,12 +56,12 @@ class BulkFormTest extends BrowserTestBase {
     $first_form_element = $this->xpath('//form/div[1][@id = :id]', [':id' => 'edit-header']);
     $this->assertNotEmpty($first_form_element, 'The views form edit header appears first.');
 
-    $this->assertFieldById('edit-action', NULL, 'The action select field appears.');
+    $this->assertSession()->fieldExists('edit-action');
 
     // Make sure a checkbox appears on all rows.
     $edit = [];
     for ($i = 0; $i < 10; $i++) {
-      $this->assertFieldById('edit-node-bulk-form-' . $i, NULL, new FormattableMarkup('The checkbox on row @row appears.', ['@row' => $i]));
+      $this->assertSession()->fieldExists('edit-node-bulk-form-' . $i);
       $edit["node_bulk_form[$i]"] = TRUE;
     }
 
@@ -159,7 +159,7 @@ class BulkFormTest extends BrowserTestBase {
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertEmpty($errors, 'No action message shown.');
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('Deleted 5 content items.'));
+    $this->assertText('Deleted 5 content items.');
     // Check if we got redirected to the original page.
     $this->assertSession()->addressEquals('test_bulk_form');
 
@@ -197,7 +197,7 @@ class BulkFormTest extends BrowserTestBase {
     $errors = $this->xpath('//div[contains(@class, "messages--status")]');
     $this->assertEmpty($errors, 'No action message shown.');
     $this->drupalPostForm(NULL, [], t('Delete'));
-    $this->assertText(t('Deleted 1 content item.'));
+    $this->assertText('Deleted 1 content item.');
 
     // Test that the bulk form works when multiple nodes are selected
     // but all of the selected nodes are already deleted

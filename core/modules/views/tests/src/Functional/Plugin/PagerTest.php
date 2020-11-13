@@ -66,26 +66,55 @@ class PagerTest extends ViewTestBase {
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
 
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 10, '"Items per page" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
+    $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
+    $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
+    $this->assertSame('number', $items_per_page->getAttribute('type'));
+    $this->assertEquals(0, $items_per_page->getAttribute('min'));
+
+    $offset = $this->assertSession()->fieldExists("pager_options[offset]");
+    $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
+    $this->assertSame('number', $offset->getAttribute('type'));
+    $this->assertEquals(0, $offset->getAttribute('min'));
 
     $edit = [
       'pager[type]' => 'none',
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
 
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
+    $offset = $this->assertSession()->fieldExists("pager_options[offset]");
+    $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
+    $this->assertSame('number', $offset->getAttribute('type'));
+    $this->assertEquals(0, $offset->getAttribute('min'));
 
     $edit = [
       'pager[type]' => 'full',
     ];
     $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
 
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 10, '"Items to display" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[id]" and @type="number" and @min="0"]', 0, '"Pager ID" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[total_pages]" and @type="number" and @min="0"]', '', '"Number of pages" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[quantity]" and @type="number" and @min="0"]', 9, '"Number of pager links" field was found.');
+    $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
+    $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 10);
+    $this->assertSame('number', $items_per_page->getAttribute('type'));
+    $this->assertEquals(0, $items_per_page->getAttribute('min'));
+
+    $offset = $this->assertSession()->fieldExists("pager_options[offset]");
+    $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
+    $this->assertSame('number', $offset->getAttribute('type'));
+    $this->assertEquals(0, $offset->getAttribute('min'));
+
+    $id = $this->assertSession()->fieldExists("pager_options[id]");
+    $this->assertSession()->fieldValueEquals("pager_options[id]", 0);
+    $this->assertSame('number', $id->getAttribute('type'));
+    $this->assertEquals(0, $id->getAttribute('min'));
+
+    $total_pages = $this->assertSession()->fieldExists("pager_options[total_pages]");
+    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", '');
+    $this->assertSame('number', $total_pages->getAttribute('type'));
+    $this->assertEquals(0, $total_pages->getAttribute('min'));
+
+    $quantity = $this->assertSession()->fieldExists("pager_options[quantity]");
+    $this->assertSession()->fieldValueEquals("pager_options[quantity]", 9);
+    $this->assertSame('number', $quantity->getAttribute('type'));
+    $this->assertEquals(0, $quantity->getAttribute('min'));
 
     $edit = [
       'pager_options[items_per_page]' => 20,
@@ -148,14 +177,29 @@ class PagerTest extends ViewTestBase {
 
     // Test that the override element is only displayed on pager plugin selection form.
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager');
-    $this->assertFieldByName('override[dropdown]', 'page_1', 'The override element is displayed on plugin selection form.');
+    $this->assertSession()->fieldValueEquals('override[dropdown]', 'page_1');
     $this->drupalGet('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager_options');
-    $this->assertNoFieldByName('override[dropdown]', NULL, 'The override element is not displayed on plugin settings form.');
+    $this->assertSession()->fieldNotExists('override[dropdown]');
 
-    $this->assertFieldByXPath('//input[@name="pager_options[items_per_page]" and @type="number" and @min="0"]', 20, '"Items per page" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[offset]" and @type="number" and @min="0"]', 0, '"Offset" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[id]" and @type="number" and @min="0"]', 0, '"Pager ID" field was found.');
-    $this->assertFieldByXPath('//input[@name="pager_options[total_pages]" and @type="number" and @min="0"]', '', '"Number of pages" field was found.');
+    $items_per_page = $this->assertSession()->fieldExists("pager_options[items_per_page]");
+    $this->assertSession()->fieldValueEquals("pager_options[items_per_page]", 20);
+    $this->assertSame('number', $items_per_page->getAttribute('type'));
+    $this->assertEquals(0, $items_per_page->getAttribute('min'));
+
+    $offset = $this->assertSession()->fieldExists("pager_options[offset]");
+    $this->assertSession()->fieldValueEquals("pager_options[offset]", 0);
+    $this->assertSame('number', $offset->getAttribute('type'));
+    $this->assertEquals(0, $offset->getAttribute('min'));
+
+    $id = $this->assertSession()->fieldExists("pager_options[id]");
+    $this->assertSession()->fieldValueEquals("pager_options[id]", 0);
+    $this->assertSame('number', $id->getAttribute('type'));
+    $this->assertEquals(0, $id->getAttribute('min'));
+
+    $total_pages = $this->assertSession()->fieldExists("pager_options[total_pages]");
+    $this->assertSession()->fieldValueEquals("pager_options[total_pages]", '');
+    $this->assertSame('number', $total_pages->getAttribute('type'));
+    $this->assertEquals(0, $total_pages->getAttribute('min'));
   }
 
   /**

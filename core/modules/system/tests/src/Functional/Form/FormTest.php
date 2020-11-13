@@ -212,7 +212,7 @@ class FormTest extends BrowserTestBase {
     }
 
     // Verify that input elements are still empty.
-    $this->assertFieldByName('textfield', '');
+    $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
@@ -232,7 +232,9 @@ class FormTest extends BrowserTestBase {
       'radios' => 'bar',
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed when all required fields are filled.');
+    // Verify that no error message is displayed when all required fields are
+    // filled.
+    $this->assertSession()->elementNotExists('xpath', '//div[contains(@class, "error")]');
     $this->assertRaw("The form_test_validate_required_form form was submitted successfully.");
   }
 
@@ -259,7 +261,9 @@ class FormTest extends BrowserTestBase {
       'radios' => 'foo',
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
+    // Verify that error message is displayed with invalid token even when
+    // required fields are filled.
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
 
     $assert = $this->assertSession();
     $element = $assert->fieldExists('textfield');
@@ -267,7 +271,7 @@ class FormTest extends BrowserTestBase {
     $assert->responseNotContains($random_string);
     $this->assertText('The form has become outdated.');
     // Ensure that we don't use the posted values.
-    $this->assertFieldByName('textfield', '');
+    $this->assertSession()->fieldValueEquals('textfield', '');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-foo');
     $this->assertSession()->checkboxNotChecked('edit-checkboxes-bar');
     $this->assertTrue($this->assertSession()->optionExists('edit-select', '')->isSelected());
@@ -283,10 +287,12 @@ class FormTest extends BrowserTestBase {
       'textarea' => $this->randomString() . "\n",
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
+    // Verify that the error message is displayed with invalid token even when
+    // required fields are filled.
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
     $this->assertText('The form has become outdated.');
-    $this->assertFieldByName('textfield', '');
-    $this->assertFieldByName('textarea', '');
+    $this->assertSession()->fieldValueEquals('textfield', '');
+    $this->assertSession()->fieldValueEquals('textarea', '');
 
     // Check another form that has a number input.
     $this->drupalGet(Url::fromRoute('form_test.number'));
@@ -299,9 +305,11 @@ class FormTest extends BrowserTestBase {
       'integer_step' => mt_rand(6, 100),
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
+    // Verify that the error message is displayed with invalid token even when
+    // required fields are filled.'
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
     $this->assertText('The form has become outdated.');
-    $this->assertFieldByName('integer_step', 5);
+    $this->assertSession()->fieldValueEquals('integer_step', 5);
 
     // Check a form with a Url field
     $this->drupalGet(Url::fromRoute('form_test.url'));
@@ -312,9 +320,11 @@ class FormTest extends BrowserTestBase {
       'url' => $this->randomString(),
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertFieldByXpath('//div[contains(@class, "error")]', NULL, 'Error message is displayed with invalid token even when required fields are filled.');
+    // Verify that the error message is displayed with invalid token even when
+    // required fields are filled.
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "error")]');
     $this->assertText('The form has become outdated.');
-    $this->assertFieldByName('url', '');
+    $this->assertSession()->fieldValueEquals('url', '');
   }
 
   /**
@@ -346,10 +356,10 @@ class FormTest extends BrowserTestBase {
     $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
 
     // Check the page for the error class on the textfield.
-    $this->assertFieldByXPath('//input[contains(@class, "error")]', FALSE, 'Error input form element class found.');
+    $this->assertSession()->elementExists('xpath', '//input[contains(@class, "error")]');
 
     // Check the page for the aria-invalid attribute on the textfield.
-    $this->assertFieldByXPath('//input[contains(@aria-invalid, "true")]', FALSE, 'Aria invalid attribute found.');
+    $this->assertSession()->elementExists('xpath', '//input[contains(@aria-invalid, "true")]');
 
     // Submit again with required fields set and verify that there are no
     // error messages.
@@ -357,7 +367,8 @@ class FormTest extends BrowserTestBase {
       'textfield' => $this->randomString(),
     ];
     $this->drupalPostForm(NULL, $edit, 'Submit');
-    $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
+    // Verify that no error input form element class is present.
+    $this->assertSession()->elementNotExists('xpath', '//input[contains(@class, "error")]');
     $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.");
   }
 
@@ -429,7 +440,7 @@ class FormTest extends BrowserTestBase {
         'multiple_no_default_required',
     ];
     foreach ($expected_errors as $key) {
-      $this->assertText(t('@name field is required.', ['@name' => $form[$key]['#title']]));
+      $this->assertText($form[$key]['#title'] . ' field is required.');
     }
 
     // Post values for required fields.
@@ -474,8 +485,8 @@ class FormTest extends BrowserTestBase {
    */
   public function testEmptySelect() {
     $this->drupalGet('form-test/empty-select');
-    $this->assertFieldByXPath("//select[1]", NULL, 'Select element found.');
-    $this->assertNoFieldByXPath("//select[1]/option", NULL, 'No option element found.');
+    $this->assertSession()->elementExists('xpath', "//select[1]");
+    $this->assertSession()->elementNotExists('xpath', "//select[1]/option");
   }
 
   /**
@@ -674,7 +685,8 @@ class FormTest extends BrowserTestBase {
     $this->assertEqual($values->offset, 6.9);
 
     $this->drupalPostForm('form-test/range/invalid', [], 'Submit');
-    $this->assertFieldByXPath('//input[@type="range" and contains(@class, "error")]', NULL, 'Range element has the error class.');
+    // Verify that the 'range' element has the error class.
+    $this->assertSession()->elementExists('xpath', '//input[@type="range" and contains(@class, "error")]');
   }
 
   /**

@@ -103,7 +103,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'name[node_field_data.nid]' => 1,
     ];
     $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, t('Add and configure sort criteria'));
-    $this->drupalPostForm(NULL, NULL, t('Apply'));
+    $this->drupalPostForm(NULL, [], t('Apply'));
 
     $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], t('Save'));
     $this->clickLink(t('Settings'));
@@ -172,7 +172,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm('node/add/' . $this->type, $edit, t('Save'));
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertText(t('There are no entities matching "@entity"', ['@entity' => 'Test']));
+    $this->assertText('There are no entities matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -182,10 +182,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertText(t('Multiple entities match this reference;'));
-    $this->assertText(t("@node1", ['@node1' => $node1->getTitle() . ' (' . $node1->id() . ')']));
-    $this->assertText(t("@node2", ['@node2' => $node2->getTitle() . ' (' . $node2->id() . ')']));
-    $this->assertText(t('Specify the one you want by appending the id in parentheses, like "@example".', ['@example' => $node2->getTitle() . ' (' . $node2->id() . ')']));
+    $this->assertText('Multiple entities match this reference;');
+    $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
+    $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
+    $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
 
     $edit = [
       'title[0][value]' => 'Test',
@@ -314,7 +314,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalGet($path);
 
     // Expect that there's no 'auto_create_bundle' selected.
-    $this->assertNoFieldByName('settings[handler_settings][auto_create_bundle]');
+    $this->assertSession()->fieldNotExists('settings[handler_settings][auto_create_bundle]');
 
     $edit = [
       'settings[handler_settings][target_bundles][' . $vocabularies[1]->id() . ']' => TRUE,
@@ -323,8 +323,8 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalPostForm($path, $edit, 'Save settings');
     $this->drupalGet($path);
     // Expect a select element with the two vocabularies as options.
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[0]->id() . "']");
-    $this->assertFieldByXPath("//select[@name='settings[handler_settings][auto_create_bundle]']/option[@value='" . $vocabularies[1]->id() . "']");
+    $this->assertSession()->optionExists('settings[handler_settings][auto_create_bundle]', $vocabularies[0]->id());
+    $this->assertSession()->optionExists('settings[handler_settings][auto_create_bundle]', $vocabularies[1]->id());
 
     $edit = [
       'settings[handler_settings][auto_create]' => TRUE,

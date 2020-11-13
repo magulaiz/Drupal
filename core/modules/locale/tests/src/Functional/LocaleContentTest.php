@@ -43,7 +43,8 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Verify that the machine name field is LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');
-    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when no additional language is configured.');
+    $type = $this->assertSession()->fieldExists('type');
+    $this->assertSame('ltr', $type->getAttribute('dir'));
 
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = [];
@@ -57,7 +58,8 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Verify that the machine name field is still LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');
-    $this->assertFieldByXpath('//input[@name="type" and @dir="ltr"]', NULL, 'The machine name field is LTR when the default language is RTL.');
+    $type = $this->assertSession()->fieldExists('type');
+    $this->assertSame('ltr', $type->getAttribute('dir'));
   }
 
   /**
@@ -96,7 +98,7 @@ class LocaleContentTest extends BrowserTestBase {
 
     // Set the content type to use multilingual support.
     $this->drupalGet("admin/structure/types/manage/{$type2->id()}");
-    $this->assertText(t('Language settings'), 'Multilingual support widget present on content type configuration form.');
+    $this->assertText('Language settings', 'Multilingual support widget present on content type configuration form.');
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
@@ -109,12 +111,12 @@ class LocaleContentTest extends BrowserTestBase {
     $this->drupalLogin($web_user);
     $this->drupalGet("node/add/{$type1->id()}");
     // Verify language select list is not present.
-    $this->assertNoFieldByName('langcode[0][value]', NULL, 'Language select not present on the node add form.');
+    $this->assertSession()->fieldNotExists('langcode[0][value]');
 
     // Verify language selection appears on the node add form.
     $this->drupalGet("node/add/{$type2->id()}");
     // Verify language select list is present.
-    $this->assertFieldByName('langcode[0][value]', NULL, 'Language select present on the node add form.');
+    $this->assertSession()->fieldExists('langcode[0][value]');
     // Ensure language appears.
     $this->assertText($name, 'Language present.');
 
@@ -137,7 +139,7 @@ class LocaleContentTest extends BrowserTestBase {
       'langcode[0][value]' => 'en',
     ];
     $this->drupalPostForm($path, $edit, t('Save'));
-    $this->assertText(t('@title has been updated.', ['@title' => $node_title]));
+    $this->assertText($node_title . ' has been updated.');
 
     // Verify that the creation message contains a link to a node.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@data-drupal-messages]//a[contains(@href, :href)]', [

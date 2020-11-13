@@ -18,8 +18,9 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\ConfigTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
-use Drupal\Tests\Traits\PHPUnit8Warnings;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +30,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Route;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Base class for functional integration tests.
@@ -78,7 +80,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use RandomGeneratorTrait;
   use ConfigTestTrait;
   use TestRequirementsTrait;
-  use PHPUnit8Warnings;
+  use PhpUnitWarnings;
+  use PhpUnitCompatibilityTrait;
+  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
@@ -253,8 +257,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     \Drupal::unsetContainer();
 
     $this->classLoader = require $this->root . '/autoload.php';
-
-    require_once $this->root . '/core/includes/bootstrap.inc';
 
     // Set up virtual filesystem.
     Database::addConnectionInfo('default', 'test-runner', $this->getDatabaseConnectionInfo()['default']);
@@ -955,7 +957,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Modules have been collected in reverse class hierarchy order; modules
     // defined by base classes should be sorted first. Then, merge the results
     // together.
-    $modules = array_reverse($modules);
+    $modules = array_values(array_reverse($modules));
     return call_user_func_array('array_merge_recursive', $modules);
   }
 

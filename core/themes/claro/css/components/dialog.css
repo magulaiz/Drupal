@@ -15,22 +15,12 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  box-shadow: 0
-0
-1rem
--0.25rem
-#222330;
+  box-shadow: 0 0 1rem -0.25rem #222330;
 }
 
 .ui-dialog:focus {
-  outline: 2px
-dotted
-transparent;
-  box-shadow: 0
-0
-0
-3px
-#26a769;
+  outline: 2px dotted transparent;
+  box-shadow: 0 0 0 3px #26a769;
 }
 
 @media all and (max-width: 48em) { /* 768px */
@@ -89,9 +79,7 @@ transparent;
 
 .ui-dialog .ui-dialog-titlebar-close:focus {
   border-color: #26a769;
-  outline: 2px
-dotted
-transparent;
+  outline: 2px dotted transparent;
   box-shadow: none;
 }
 
@@ -105,20 +93,9 @@ transparent;
 
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
+  padding: 1rem 1.5rem;
   color: #222330;
   background: #fff;
-}
-
-/**
- * @todo it should not be necessary to specify not(.views-ui-dialog) after
- *   https://drupal.org/node/3066006
- */
-
-.ui-dialog:not(.views-ui-dialog) > .ui-dialog-content {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
 }
 
 .ui-dialog > .ui-dialog-buttonpane {

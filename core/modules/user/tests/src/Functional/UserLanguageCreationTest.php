@@ -46,7 +46,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => TRUE,
     ];
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
-    $this->assertText(t('Language detection configuration saved.'), 'Set language negotiation.');
+    $this->assertText('Language detection configuration saved.', 'Set language negotiation.');
 
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
@@ -73,7 +73,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
     $this->drupalLogout();
 
     $this->drupalGet($langcode . '/user/register');
-    $this->assertNoFieldByName('language[fr]', 'Language selector is not accessible.');
+    $this->assertSession()->fieldNotExists('language[fr]');
 
     $username = $this->randomMachineName(10);
     $edit = [

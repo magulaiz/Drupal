@@ -7,11 +7,12 @@ use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Mink;
 use Behat\Mink\Session;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
-use Drupal\Tests\Traits\PHPUnit8Warnings;
+use Drupal\Tests\PhpUnitCompatibilityTrait;
+use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Lock\Factory;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -52,7 +53,8 @@ use Symfony\Component\Process\Process;
 abstract class BuildTestBase extends TestCase {
 
   use ExternalCommandRequirementsTrait;
-  use PHPUnit8Warnings;
+  use PhpUnitWarnings;
+  use PhpUnitCompatibilityTrait;
 
   /**
    * The working directory where this test will manipulate files.
@@ -457,7 +459,7 @@ abstract class BuildTestBase extends TestCase {
    */
   protected function findAvailablePort() {
     $store = new FlockStore(DrupalFilesystem::getOsTemporaryDirectory());
-    $lock_factory = new Factory($store);
+    $lock_factory = new LockFactory($store);
 
     $counter = 100;
     while ($counter--) {

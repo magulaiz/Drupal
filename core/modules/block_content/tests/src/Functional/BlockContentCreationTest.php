@@ -65,7 +65,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     ]));
 
     // Check that the view mode setting is hidden because only one exists.
-    $this->assertNoFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting hidden because only one exists');
+    $this->assertSession()->fieldNotExists('settings[view_mode]');
 
     // Check that the block exists in the database.
     $blocks = \Drupal::entityTypeManager()
@@ -140,7 +140,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Check that the view mode setting is shown because more than one exists.
     $this->drupalGet('admin/structure/block/manage/testblock');
-    $this->assertFieldByXPath('//select[@name="settings[view_mode]"]', NULL, 'View mode setting shown because multiple exist');
+    $this->assertSession()->fieldExists('settings[view_mode]');
 
     // Change the view mode.
     $view_mode['region'] = 'content';
@@ -149,7 +149,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Go to the configure page and verify the view mode has changed.
     $this->drupalGet('admin/structure/block/manage/testblock');
-    $this->assertFieldByXPath('//select[@name="settings[view_mode]"]/option[@selected="selected"]', 'test_view_mode', 'View mode changed to Test View Mode');
+    $this->assertSession()->fieldValueEquals('settings[view_mode]', 'test_view_mode');
 
     // Check that the block exists in the database.
     $blocks = \Drupal::entityTypeManager()
@@ -252,7 +252,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Delete the block.
     $this->drupalGet('block/1/delete');
-    $this->assertText(\Drupal::translation()->formatPlural(1, 'This will also remove 1 placed block instance.', 'This will also remove @count placed block instance.'));
+    $this->assertText('This will also remove 1 placed block instance.');
 
     $this->drupalPostForm(NULL, [], 'Delete');
     $this->assertRaw(t('The custom block %name has been deleted.', ['%name' => $edit['info[0][value]']]));

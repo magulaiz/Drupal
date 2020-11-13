@@ -90,13 +90,13 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path_prefix);
     $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appear after initial adding of a view.');
 
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is visible.');
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is not visible.');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
+    $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
     $this->drupalPostForm(NULL, [], 'Disable Page');
     $this->assertNotEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class appears once the display is marked as such.');
 
-    $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', NULL, 'Make sure the disable button is not visible.');
-    $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', NULL, 'Make sure the enable button is visible.');
+    $this->assertSession()->buttonNotExists('edit-displays-settings-settings-content-tab-content-details-top-actions-disable');
+    $this->assertSession()->buttonExists('edit-displays-settings-settings-content-tab-content-details-top-actions-enable');
     $this->drupalPostForm(NULL, [], 'Enable Page');
     $this->assertEmpty($this->xpath('//div[contains(@class, :class)]', [':class' => 'views-display-disabled']), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
@@ -179,7 +179,7 @@ class DisplayTest extends UITestBase {
     $this->drupalPostForm(NULL, [], t('Add Block'));
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
     $this->clickLink(t('Custom URL'));
-    $this->assertFieldByName('link_url', 'a-custom-url');
+    $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
   }
 
   /**
@@ -247,15 +247,15 @@ class DisplayTest extends UITestBase {
     $this->assertNoRaw($display_title);
 
     // Ensure that the dropdown buttons are displayed correctly.
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Duplicate ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Delete ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
-    $this->assertNoFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
+    $this->assertSession()->buttonExists('Duplicate ' . $display_title);
+    $this->assertSession()->buttonExists('Delete ' . $display_title);
+    $this->assertSession()->buttonExists('Disable ' . $display_title);
+    $this->assertSession()->buttonNotExists('Enable ' . $display_title);
 
     // Disable the display so we can test the rendering of the "Enable" button.
-    $this->drupalPostForm(NULL, NULL, 'Disable ' . $display_title);
-    $this->assertFieldByXpath('//input[@type="submit"]', 'Enable ' . $display_title);
-    $this->assertNoFieldByXpath('//input[@type="submit"]', 'Disable ' . $display_title);
+    $this->drupalPostForm(NULL, [], 'Disable ' . $display_title);
+    $this->assertSession()->buttonExists('Enable ' . $display_title);
+    $this->assertSession()->buttonNotExists('Disable ' . $display_title);
 
     // Ensure that the title is escaped as expected.
     $this->assertSession()->assertEscaped($display_title);

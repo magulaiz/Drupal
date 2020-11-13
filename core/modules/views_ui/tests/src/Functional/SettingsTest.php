@@ -43,7 +43,7 @@ class SettingsTest extends UITestBase {
 
     // Test the confirmation message.
     $this->drupalPostForm('admin/structure/views/settings', [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
 
     // Configure to always show the master display.
     $edit = [
@@ -89,7 +89,7 @@ class SettingsTest extends UITestBase {
 
     $view['id'] = strtolower($this->randomMachineName());
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertFieldById('edit-displays-top-add-display-embed', NULL);
+    $this->assertSession()->buttonExists('edit-displays-top-add-display-embed');
 
     $edit = [
       'ui_show_display_embed' => FALSE,
@@ -97,7 +97,7 @@ class SettingsTest extends UITestBase {
     $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
-    $this->assertNoFieldById('edit-displays-top-add-display-embed');
+    $this->assertSession()->buttonNotExists('edit-displays-top-add-display-embed');
 
     // Configure to hide/show the sql at the preview.
     $edit = [
@@ -130,7 +130,7 @@ class SettingsTest extends UITestBase {
 
     // Test the confirmation message.
     $this->drupalPostForm('admin/structure/views/settings/advanced', [], t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertText('The configuration options have been saved.');
 
     $edit = [
       'skip_cache' => TRUE,
@@ -143,7 +143,7 @@ class SettingsTest extends UITestBase {
 
     // Test the "Clear Views' cache" button.
     $this->drupalPostForm('admin/structure/views/settings/advanced', [], t("Clear Views' cache"));
-    $this->assertText(t('The cache has been cleared.'));
+    $this->assertText('The cache has been cleared.');
   }
 
 }

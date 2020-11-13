@@ -109,7 +109,7 @@ class ThemeTest extends BrowserTestBase {
       ];
       $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
       $this->assertNoText('The custom logo path is invalid.');
-      $this->assertFieldByName('logo_path', $expected['form']);
+      $this->assertSession()->fieldValueEquals('logo_path', $expected['form']);
 
       // Verify logo path examples.
       $elements = $this->xpath('//div[contains(@class, :item)]/div[@class=:description]/code', [
@@ -245,8 +245,8 @@ class ThemeTest extends BrowserTestBase {
       'logo_path' => 'core/misc/druplicon.png',
     ];
     $this->drupalPostForm('admin/appearance/settings/bartik', $edit, t('Save configuration'));
-    $this->assertFieldByName('default_logo', FALSE);
-    $this->assertFieldByName('logo_path', 'core/misc/druplicon.png');
+    $this->assertSession()->fieldValueEquals('default_logo', FALSE);
+    $this->assertSession()->fieldValueEquals('logo_path', 'core/misc/druplicon.png');
 
     // Make sure the logo and favicon settings are not available when the file
     // module is not enabled.
@@ -386,9 +386,9 @@ class ThemeTest extends BrowserTestBase {
     // Clear the system_list() and theme listing cache to pick up the change.
     $this->container->get('theme_handler')->reset();
     $this->drupalGet('admin/appearance');
-    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'not_real_test_basetheme']));
-    $this->assertText(t('This theme requires the base theme @base_theme to operate correctly.', ['@base_theme' => 'test_invalid_basetheme']));
-    $this->assertText(t('This theme requires the theme engine @theme_engine to operate correctly.', ['@theme_engine' => 'not_real_engine']));
+    $this->assertText('This theme requires the base theme not_real_test_basetheme to operate correctly.');
+    $this->assertText('This theme requires the base theme test_invalid_basetheme to operate correctly.');
+    $this->assertText('This theme requires the theme engine not_real_engine to operate correctly.');
     // Check for the error text of a theme with the wrong core version
     // using 7.x and ^7.
     $incompatible_core_message = 'This theme is not compatible with Drupal ' . \Drupal::VERSION . ". Check that the .info.yml file contains a compatible 'core' or 'core_version_requirement' value.";

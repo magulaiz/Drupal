@@ -38,7 +38,7 @@ class PreviewTest extends UITestBase {
     $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
 
     // Test that area text and exposed filters are present and rendered.
-    $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
+    $this->assertSession()->fieldExists('id');
     $this->assertText('Test header text', 'Rendered header text found');
     $this->assertText('Test footer text', 'Rendered footer text found.');
     $this->assertText('Test empty text', 'Rendered empty text found.');
@@ -69,7 +69,7 @@ class PreviewTest extends UITestBase {
     $this->assertCount(0, $elements);
 
     // Test that area text and exposed filters are present and rendered.
-    $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
+    $this->assertSession()->fieldExists('id');
     $this->assertText('Test header text', 'Rendered header text found');
     $this->assertText('Test footer text', 'Rendered footer text found.');
     $this->assertText('Test empty text', 'Rendered empty text found.');
@@ -95,17 +95,17 @@ class PreviewTest extends UITestBase {
     $settings->set('ui.show.performance_statistics', TRUE)->save();
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
-    $this->assertText(t('Query build time'));
-    $this->assertText(t('Query execute time'));
-    $this->assertText(t('View render time'));
+    $this->assertText('Query build time');
+    $this->assertText('Query execute time');
+    $this->assertText('View render time');
     $this->assertNoRaw('<strong>Query</strong>');
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();
     $this->drupalPostForm(NULL, $edit = ['view_args' => '100'], t('Update preview'));
-    $this->assertText(t('Query build time'));
-    $this->assertText(t('Query execute time'));
-    $this->assertText(t('View render time'));
+    $this->assertText('Query build time');
+    $this->assertText('Query execute time');
+    $this->assertText('View render time');
     $this->assertRaw('<strong>Query</strong>');
     $query_string = <<<SQL
 SELECT "views_test_data"."name" AS "views_test_data_name"

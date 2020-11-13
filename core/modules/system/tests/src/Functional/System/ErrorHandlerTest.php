@@ -31,13 +31,13 @@ class ErrorHandlerTest extends BrowserTestBase {
     $config = $this->config('system.logging');
     $error_notice = [
       '%type' => 'Notice',
-      '@message' => 'Undefined offset: 1',
+      '@message' => 'Object of class stdClass could not be converted to int',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     ];
     $error_warning = [
       '%type' => 'Warning',
-      '@message' => 'Division by zero',
+      '@message' => 'var_export does not handle circular references',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     ];

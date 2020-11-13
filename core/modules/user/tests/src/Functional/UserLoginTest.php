@@ -172,9 +172,9 @@ class UserLoginTest extends BrowserTestBase {
       'pass' => $account->passRaw,
     ];
     $this->drupalPostForm('user/login', $edit, t('Log in'));
-    $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       $this->assertSession()->statusCodeEquals(403);
+      $this->assertSession()->fieldNotExists('pass');
       $last_log = $database->select('watchdog', 'w')
         ->fields('w', ['message'])
         ->condition('type', 'user')
@@ -194,7 +194,8 @@ class UserLoginTest extends BrowserTestBase {
     }
     else {
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertText(t('Unrecognized username or password. Forgot your password?'));
+      $this->assertSession()->fieldValueEquals('pass', '');
+      $this->assertText('Unrecognized username or password. Forgot your password?');
     }
   }
 

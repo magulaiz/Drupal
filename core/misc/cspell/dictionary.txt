@@ -109,13 +109,14 @@ autoloader
 autoloaders
 autoloading
 autop
+autoplace
 autoplay
 autoreply
+autorow
 autosave
 autosubmit
 autowire
 autowired
-autowiring
 backend's
 backlink
 backlinks
@@ -143,7 +144,6 @@ bazinga
 bazqux
 bazs
 beatle
-becalled
 beforeclose
 beforecreate
 beforeend
@@ -240,7 +240,6 @@ cfield
 chainable
 chainedfast
 changelist
-charcodes
 checkbox's
 checkboxified
 checkboxifier
@@ -300,7 +299,6 @@ configentity
 configtranslation
 configurability
 configurator
-confirm's
 conformant
 conneg
 contaynz
@@ -325,6 +323,7 @@ createkey
 createrole
 createuser
 crema
+crossorigin
 crossout
 crudui
 crypted
@@ -332,8 +331,8 @@ cscript
 csrf
 csrftoken
 cssidentifier
-csslint
 csslintrc
+csstools
 ctags
 ctes
 ctools
@@ -352,7 +351,6 @@ data's
 databasefilename
 databasename
 datapoint
-dataprovider
 datas
 datatypes
 datefield
@@ -435,6 +433,7 @@ discoverability
 displaymessage
 displayname
 distincted
+distro
 ditka
 divs
 dnumber
@@ -443,6 +442,7 @@ docroot
 docroots
 docx
 dolore
+dotenv
 doubleclick
 downcasting
 downlevel
@@ -524,7 +524,6 @@ enim
 enoki
 enregistrer
 entit
-entitiesto
 entitynodeedit
 entityreference
 entitytype
@@ -576,7 +575,6 @@ fieldable
 fieldapi
 fieldblock
 fieldbody
-fieldby
 fieldgroups
 fielditem
 fieldlinks
@@ -630,7 +628,6 @@ fourcol
 fourthcolumn
 fozzie
 fqcn
-fqdn
 francais
 français
 fraîche
@@ -736,7 +733,6 @@ httpkernel
 httponly
 httpoxy
 huhuu
-humfrey
 hurlant
 hustlin
 hwldf
@@ -774,7 +770,6 @@ installable
 instantiator
 internal's
 introspectable
-invalidateby
 invalidators
 invalididentifier
 invokable
@@ -784,7 +779,6 @@ isam
 isdst
 isid
 isinstallable
-isnew
 items's
 itoa
 itok
@@ -815,7 +809,6 @@ jssdk
 jumplinks
 juni
 junidecode
-junit
 justifyblock
 justifycenter
 justifyleft
@@ -858,11 +851,11 @@ libc
 libellé
 libicu
 libmysqlclient
-librariesby
 libyaml
 licious
 lified
 lightbulb
+lightdiamond
 lightninggreen
 linebreak
 linebreaks
@@ -951,8 +944,8 @@ mikey
 milli
 mimeheaders
 mimetypes
-minifiers
 minifyzombies
+minimatch
 minimise
 minipager
 minky
@@ -1015,37 +1008,10 @@ muuh
 muun
 muuuh
 myclabs
-myclass
-mydistro
-mydriver
-myeditor
-myeditoroverride
-myfragment
-myfrontpage
-myfunctions
-mymenu
 mymodule
-mynewpassword
-myothermenu
-mypath
-myprimarykey
-myprofile
-myproject
-myrootuser
-myroute
-myselect
-myservice
-mysetting
 mysite
 mysqladmin
 mysqldump
-mystring
-mytab
-mytable
-mytheme
-mytype
-myvalue
-myvar
 myverylongurl
 myverylongurlexample
 műveletek
@@ -1053,6 +1019,7 @@ nalias
 nameofbin
 namespacing
 narf
+navs
 nbaz
 nbchoices
 nblocks
@@ -1113,9 +1080,6 @@ noschema
 noslash
 nosniff
 nostart
-nosuchcolumn
-nosuchindex
-nosuchtable
 notag
 notawordenglish
 notawordgerman
@@ -1143,6 +1107,8 @@ objectindex
 oembed
 officedocument
 oldsilver
+olivero
+olivero's
 omitscript
 omittable
 ondemand
@@ -1166,11 +1132,6 @@ orgchart
 origdir
 oring
 ossp
-otherfield
-otherjob
-othername
-otherpage
-otherprofile
 otsikko
 outdata
 outdent
@@ -1248,6 +1209,7 @@ porterstemmer
 português
 postbar
 postcondition
+postcss
 postfields
 postfoo
 postgres
@@ -1308,7 +1270,6 @@ prophesizing
 protossl
 proxied
 proxying
-pseudocode
 pseudotag
 ptablenode
 pterm
@@ -1486,6 +1447,7 @@ simpletest's
 singlebyte
 sioc
 sioct
+sirbrillig
 sisko
 sitename
 sitewide
@@ -1501,7 +1463,6 @@ sloopal
 smacss
 smalldatetime
 smallint
-smtp
 someclass
 somecompany
 somefieldname
@@ -1575,6 +1536,7 @@ subjectkeyword
 subkey
 subkeys
 submenu
+submenus
 subparse
 subpath
 subpatterns
@@ -1615,6 +1577,7 @@ svgz
 svibanj
 swcf
 symfony's
+symlinked
 symlinking
 symlinks
 synchronizable
@@ -1681,7 +1644,6 @@ testkey
 testlist
 testload
 testname
-testnoschema
 testproject
 testproperty
 testservice
@@ -1893,7 +1855,6 @@ uri's
 url's
 urlalias
 urldecoding
-urlto
 usecase
 userid
 userinfo
@@ -1902,7 +1863,6 @@ users's
 userspace
 usuario
 uuid's
-uuids
 validatable
 valign
 vals

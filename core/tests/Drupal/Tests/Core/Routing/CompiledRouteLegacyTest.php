@@ -53,11 +53,17 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    * Tests for deprecated message and no PHP error.
    *
    * @covers ::getOptions
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getOptions() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testOptionsDeprecated() {
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getOptions() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getOptions();
   }
 
@@ -65,9 +71,9 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    * Tests to make sure we get an array when dynamically setting.
    *
    * @covers ::getOptions
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getOptions() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testOptionsDynamicallySet() {
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getOptions() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
     $this->compiled_route->route = $this->mocked_route;
     $this->compiled_route->getOptions();
   }
@@ -76,11 +82,17 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    * Tests for deprecated message and no PHP error.
    *
    * @covers ::getDefaults
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getDefaults() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testDefaultsDeprecated() {
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getDefaults() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getDefaults();
   }
 
@@ -88,20 +100,26 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    * Tests to make sure we get an array when dynamically setting.
    *
    * @covers ::getDefaults
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getDefaults() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testDefaultsDynamicallySet() {
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getDefaults() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
     $this->compiled_route->route = $this->mocked_route;
     $this->compiled_route->getDefaults();
   }
 
   /**
    * @covers ::getRequirements
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getRequirements() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testRequirementsDeprecated() {
-    $this->expectNotice();
-    $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getRequirements() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
+    if (PHP_VERSION_ID >= 80000) {
+      $this->expectWarning();
+      $this->expectWarningMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
+    else {
+      $this->expectNotice();
+      $this->expectNoticeMessage('Undefined property: Drupal\Core\Routing\CompiledRoute::$route');
+    }
     $this->compiled_route->getRequirements();
   }
 
@@ -109,9 +127,9 @@ class CompiledRouteLegacyTest extends UnitTestCase {
    * Tests to make sure we get an array when dynamically setting.
    *
    * @covers ::getRequirements
-   * @expectedDeprecation Drupal\Core\Routing\CompiledRoute::getRequirements() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706
    */
   public function testRequirementsDynamicallySet() {
+    $this->expectDeprecation('Drupal\Core\Routing\CompiledRoute::getRequirements() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3159706');
     $this->compiled_route->route = $this->mocked_route;
     $this->compiled_route->getRequirements();
   }

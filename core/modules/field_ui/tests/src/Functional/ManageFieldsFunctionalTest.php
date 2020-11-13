@@ -233,7 +233,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_setting]' => $string,
     ];
-    $this->assertText(t('Default value'), 'Default value heading is shown');
+    $this->assertText('Default value', 'Default value heading is shown');
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
     // Assert the field settings are correct.
@@ -287,8 +287,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='cardinality']", 'number');
-    $this->assertFieldByXPath("//input[@name='cardinality_number']", 6);
+    $this->assertSession()->fieldValueEquals('cardinality', 'number');
+    $this->assertSession()->fieldValueEquals('cardinality_number', 6);
 
     // Check that tabs displayed.
     $this->assertSession()->linkExists('Edit');
@@ -320,8 +320,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
-    $this->assertFieldByXPath("//select[@name='cardinality']", FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->assertFieldByXPath("//input[@name='cardinality_number']", 1);
+    $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    $this->assertSession()->fieldValueEquals('cardinality_number', 1);
 
     // Assert that you can't set the cardinality to a lower number then the
     // highest delta of this field but can set it to the same.
@@ -426,7 +426,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/node.' . $this->contentType . '.' . $field_prefix . $this->fieldNameInput);
-    $this->assertText(new FormattableMarkup('@label settings for @type', ['@label' => $this->fieldLabel, '@type' => $this->contentType]));
+    $this->assertSession()->pageTextContains($this->fieldLabel . ' settings for ' . $this->contentType);
   }
 
   /**
@@ -458,7 +458,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $element_id = "edit-default-value-input-$field_name-0-value";
     $element_name = "default_value_input[{$field_name}][0][value]";
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', 'The default value widget was empty.');
+    $this->assertSession()->fieldValueEquals($element_id, '');
 
     // Check that invalid default values are rejected.
     $edit = [$element_name => '-1'];
@@ -474,7 +474,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '1', 'The default value widget was displayed with the correct value.');
+    $this->assertSession()->fieldValueEquals($element_id, '1');
 
     // Check that the default value can be emptied.
     $edit = [$element_name => ''];
@@ -506,7 +506,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       ->removeComponent($field_name)
       ->save();
     $this->drupalGet($admin_path);
-    $this->assertFieldById($element_id, '', 'The default value widget was displayed when field is hidden.');
+    $this->assertSession()->fieldValueEquals($element_id, '');
   }
 
   /**
@@ -560,13 +560,13 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
     $this->drupalPostForm("$bundle_path/fields/add-field", $edit, t('Save and continue'));
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -635,7 +635,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that the newly added field appears on the 'Manage Fields'
     // screen.
     $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields');
-    $this->assertFieldByXPath('//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label'], 'Field was created and appears in the overview page.');
+    $this->assertSession()->elementTextContains('xpath', '//table[@id="field-overview"]//tr[@id="hidden-test-field"]//td[1]', $field['label']);
 
     // Check that the field does not appear in the 're-use existing field' row
     // on other bundles.
@@ -669,7 +669,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
     $this->drupalPostForm($url, $edit, t('Save and continue'));
 
-    $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
     $this->assertSession()->addressEquals($url);
   }
 

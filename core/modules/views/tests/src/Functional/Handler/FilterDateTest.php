@@ -196,7 +196,7 @@ class FilterDateTest extends ViewTestBase {
     // Generate a definitive wrong value, which should be checked by validation.
     $edit['options[value][value]'] = $this->randomString() . '-------';
     $this->drupalPostForm(NULL, $edit, t('Apply'));
-    $this->assertText(t('Invalid date format.'), 'Make sure that validation is run and the invalidate date format is identified.');
+    $this->assertText('Invalid date format.', 'Make sure that validation is run and the invalidate date format is identified.');
   }
 
   /**
@@ -227,7 +227,7 @@ class FilterDateTest extends ViewTestBase {
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     foreach ($edit as $name => $value) {
-      $this->assertFieldByName($name, $value);
+      $this->assertSession()->fieldValueEquals($name, $value);
       if (strpos($name, '[value][type]')) {
         $radio = $this->cssSelect('input[name="' . $name . '"][checked="checked"][type="radio"]');
         $this->assertEqual($radio[0]->getAttribute('value'), $value);

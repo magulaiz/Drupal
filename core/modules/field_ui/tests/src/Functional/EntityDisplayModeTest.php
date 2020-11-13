@@ -52,7 +52,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/view');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Add view mode'));
+    $this->assertText('Add view mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/view/add/entity_test');
 
@@ -93,7 +93,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test deleting the view mode.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the view mode %label?', ['%label' => $edit['label']]));
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('The view mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 
@@ -107,7 +107,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser(['administer display modes']));
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText(t('Add form mode'));
+    $this->assertText('Add form mode');
     $this->assertSession()->linkByHrefExists('admin/structure/display-modes/form/add');
 
     $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');
@@ -147,7 +147,7 @@ class EntityDisplayModeTest extends BrowserTestBase {
     // Test deleting the form mode.
     $this->clickLink(t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the form mode %label?', ['%label' => $edit['label']]));
-    $this->drupalPostForm(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, [], t('Delete'));
     $this->assertRaw(t('The form mode %label has been deleted.', ['%label' => $edit['label']]));
   }
 

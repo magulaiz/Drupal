@@ -163,8 +163,6 @@ trait UiHelperTrait {
    *   $edit = array();
    *   $edit['name[]'] = array('value1', 'value2');
    *   @endcode
-   *   @todo change $edit to disallow NULL as a value for Drupal 9.
-   *     https://www.drupal.org/node/2802401
    * @param string $submit
    *   The id, name, label or value of the submit button which is to be clicked.
    *   For example, 'Save'. The first element matched by
@@ -188,13 +186,20 @@ trait UiHelperTrait {
    *   just use the webAssert object for your assertions.
    *
    * @see \Drupal\Tests\WebAssert::buttonExists()
+   *
+   * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+   *   $this->submitForm() instead.
+   *
+   * @see https://www.drupal.org/node/3168858
    */
   protected function drupalPostForm($path, $edit, $submit, array $options = [], $form_html_id = NULL) {
+    @trigger_error('UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
     if (is_object($submit)) {
       // Cast MarkupInterface objects to string.
       $submit = (string) $submit;
     }
     if ($edit === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
       $edit = [];
     }
 

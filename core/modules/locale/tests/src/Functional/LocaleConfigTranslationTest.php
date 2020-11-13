@@ -139,7 +139,9 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
     $string = $this->storage->findString(['source' => 'Medium (220×220)', 'context' => '', 'type' => 'configuration']);
     $this->assertNotEmpty($string, 'Configuration strings have been created upon installation.');
     $locations = $string->getLocations();
-    $this->assertTrue(isset($locations['configuration']) && isset($locations['configuration']['image.style.medium']), 'Configuration string has been created with the right location');
+    // Check the configuration string has been created with the right location.
+    $this->assertArrayHasKey('configuration', $locations);
+    $this->assertArrayHasKey('image.style.medium', $locations['configuration']);
 
     // Check the string is unique and has no translation yet.
     $translations = $this->storage->getTranslations(['language' => $this->langcode, 'type' => 'configuration', 'name' => 'image.style.medium']);
@@ -205,7 +207,7 @@ class LocaleConfigTranslationTest extends BrowserTestBase {
 
     // Check if the UI does not show the translated String.
     $this->drupalGet('admin/structure/contact/manage/feedback');
-    $this->assertFieldById('edit-label', 'Website feedback', 'Translation is not loaded for Edit Form.');
+    $this->assertSession()->fieldValueEquals('edit-label', 'Website feedback');
   }
 
   /**

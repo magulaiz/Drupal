@@ -148,7 +148,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $field_override = BaseFieldOverride::loadByName('entity_test_mul', 'entity_test_mul', 'name');
     $this->assertTrue($field_override->isTranslatable(), 'Base fields can be overridden with a base field bundle override entity.');
     $definitions = $entity_field_manager->getFieldDefinitions('entity_test_mul', 'entity_test_mul');
-    $this->assertTrue($definitions['name']->isTranslatable() && !$definitions['user_id']->isTranslatable(), 'Base field bundle overrides were correctly altered.');
+    $this->assertTrue($definitions['name']->isTranslatable());
+    $this->assertFalse($definitions['user_id']->isTranslatable());
 
     // Test that language settings are correctly stored.
     $language_configuration = ContentLanguageSettings::loadByEntityTypeBundle('comment', 'comment_article');
@@ -239,7 +240,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
 
     // Make sure account settings can be saved.
     $this->drupalPostForm('admin/config/people/accounts', ['anonymous' => 'Save me please!'], 'Save configuration');
-    $this->assertFieldByName('anonymous', 'Save me please!', 'Anonymous name has been changed.');
+    $this->assertSession()->fieldValueEquals('anonymous', 'Save me please!');
     $this->assertText('The configuration options have been saved.');
   }
 
@@ -283,7 +284,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // translatable.
     $path = 'admin/structure/types/manage/article/fields/node.article.field_article_text';
     $this->drupalGet($path);
-    $this->assertFieldByXPath('//input[@id="edit-translatable" and @disabled="disabled"]');
+    $this->assertSession()->fieldDisabled('edit-translatable');
     $this->assertText('To configure translation for this field, enable language support for this type.', 'No translatable setting for field.');
 
     // Tests that field has translatable setting if bundle is translatable.
@@ -296,7 +297,8 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     ];
     $this->assertSettings('node', 'article', TRUE, $edit);
     $this->drupalGet($path);
-    $this->assertFieldByXPath('//input[@id="edit-translatable" and not(@disabled) and @checked="checked"]');
+    $this->assertSession()->fieldEnabled('edit-translatable');
+    $this->assertSession()->checkboxChecked('edit-translatable');
     $this->assertNoText('To enable translation of this field, enable language support for this type.', 'Translatable setting for field available.');
   }
 
