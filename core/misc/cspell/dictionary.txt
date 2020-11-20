@@ -371,6 +371,7 @@ drupalhtmlbuilder
 drupalimage
 drupalimage's
 drupalimagecaption
+drupalimagestyle
 drupalin
 drupalism
 drupalisms
