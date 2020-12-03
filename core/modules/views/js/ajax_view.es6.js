@@ -100,10 +100,7 @@
 
     // Add the ajax to exposed forms.
     this.$exposed_form = $(
-      `form#views-exposed-form-${settings.view_name.replace(
-        /_/g,
-        '-',
-      )}-${settings.view_display_id.replace(/_/g, '-')}`,
+      `form.views-exposed-form[data-drupal-target-view="${settings.view_dom_id}"], form.views-exposed-form[data-drupal-target-view="${settings.view_name}-${settings.view_display_id}"]`
     );
     once('exposed-form', this.$exposed_form).forEach(
       $.proxy(this.attachExposedFormAjax, this),
