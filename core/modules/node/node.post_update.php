@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
+use Drupal\node\Entity\NodeType;
 use Drupal\views\Entity\View;
 
 /**
@@ -46,6 +47,19 @@ function node_post_update_glossary_view_published() {
       ];
       $view->save();
     }
+}
+
+/**
+ * Add plural label variants to node-type entities.
+ */
+function node_post_update_plural_variants() {
+  /** @var \Drupal\node\NodeTypeInterface $node_type */
+  foreach (NodeType::loadMultiple() as $node_type) {
+    $node_type
+      ->set('label_singular', NULL)
+      ->set('label_plural', NULL)
+      ->set('label_count', NULL)
+      ->save();
   }
 }
 
