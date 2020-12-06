@@ -7,7 +7,6 @@
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\node\NodeTypeInterface;
 use Drupal\views\Entity\View;
 
 /**
