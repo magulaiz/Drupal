@@ -81,23 +81,38 @@ class ProviderRepository implements ProviderRepositoryInterface {
    * {@inheritdoc}
    */
   public function getAll() {
-    $cache_id = 'media:oembed_providers';
-
-    $cached = $this->cacheGet($cache_id);
-    if ($cached) {
-      return $cached->data;
+    $current_time = $this->time->getCurrentTime();
+    // We use key-value here instead of a cache backend because in the event
+    // that oembed.com is down or having issues, using stale data is better than
+    // throwing an exception. If we were to use a cache backend, once the data
+    // has expired, we have no way to retrieve it in the event of oembed.com
+    // being down.
+    if (($stored = $this->keyValue->get('providers')) && $stored['expires'] > $current_time) {
+      return $stored['data'];
     }
 
     try {
       $response = $this->httpClient->request('GET', $this->providersUrl);
     }
     catch (TransferException $e) {
+      if (isset($stored['data'])) {
+        // Use the expired data.
+        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        return $stored['data'];
+      }
+      // We have no previous data and the request failed.
       throw new ProviderException("Could not retrieve the oEmbed provider database from $this->providersUrl", NULL, $e);
     }
 
     $providers = Json::decode((string) $response->getBody());
 
     if (!is_array($providers) || empty($providers)) {
+      if (isset($stored['data'])) {
+        // Use the expired data.
+        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        return $stored['data'];
+      }
+      // We have no previous data and the current data is corrupt.
       throw new ProviderException('Remote oEmbed providers database returned invalid or empty list.');
     }
 
