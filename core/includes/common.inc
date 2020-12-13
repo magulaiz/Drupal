@@ -411,8 +411,8 @@ function show(&$element) {
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
  *
- *  @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
- *  \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
+ * @deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use
+ * \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
  *
  *  @see https://www.drupal.org/node/3014783
  *  @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
