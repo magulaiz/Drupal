@@ -852,6 +852,7 @@ function hook_entity_view_mode_info_alter(&$view_modes) {
  *     will be thrown.
  *
  * @see \Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
+ * @see \Drupal\Core\Entity\EntityInterface::bundleFieldDefinitions()
  * @see hook_entity_bundle_info_alter()
  */
 function hook_entity_bundle_info() {
@@ -866,6 +867,7 @@ function hook_entity_bundle_info() {
  *   An array of bundles, keyed first by entity type, then by bundle name.
  *
  * @see Drupal\Core\Entity\EntityTypeBundleInfo::getBundleInfo()
+ * @see \Drupal\Core\Entity\EntityInterface::bundleFieldDefinitions()
  * @see hook_entity_bundle_info()
  */
 function hook_entity_bundle_info_alter(&$bundles) {
