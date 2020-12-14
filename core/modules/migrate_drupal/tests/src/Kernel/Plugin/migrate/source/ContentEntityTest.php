@@ -337,13 +337,20 @@ class ContentEntityTest extends KernelTestBase {
    *
    * @dataProvider migrationConfigurationProvider
    */
-  public function testNodeSource(array $configuration) {
-    $configuration += ['bundle' => $this->bundle];
-    $migration = $this->migrationPluginManager
-      ->createStubMigration($this->migrationDefinition('content_entity:node', $configuration));
-    $node_source = $migration->getSourcePlugin();
+  public function testNodeSource() {
+    $configuration = [
+      'bundle' => $this->bundle,
+      'include_translations' => TRUE,
+    ];
+    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
+    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
     $this->assertSame('content items', $node_source->__toString());
-    $this->assertIds($node_source, $configuration);
+    // Ensure the `count()` returns an actual number of nodes
+    // when the `include_translations` is set to `TRUE`.
+    static::assertSame(2, $node_source->count());
+    $ids = $node_source->getIds();
+    $this->assertArrayHasKey('langcode', $ids);
+    $this->assertArrayHasKey('nid', $ids);
     $fields = $node_source->fields();
     $this->assertArrayHasKey('nid', $fields);
     $this->assertArrayHasKey('vid', $fields);
