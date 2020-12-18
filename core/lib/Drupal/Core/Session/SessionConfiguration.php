@@ -44,7 +44,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
     $options = $this->options;
 
     // Generate / validate the cookie domain.
-    $options['cookie_domain'] = $this->getCookieDomain($request) ?: '';
+    $options['cookie_domain'] = $this->getCookieDomain($request);
 
     // If the site is accessed via SSL, ensure that the session cookie is
     // issued with the secure flag.
@@ -122,10 +122,11 @@ class SessionConfiguration implements SessionConfigurationInterface {
    *   The session cookie domain, or NULL if the calculated value is invalid.
    */
   protected function getCookieDomain(Request $request) {
+    $cookie_domain = '';
     if (isset($this->options['cookie_domain'])) {
       $cookie_domain = $this->options['cookie_domain'];
     }
-    else {
+    elseif (isset($this->options['cookie_domain_bc_mode']) && $this->options['cookie_domain_bc_mode'] === TRUE) {
       $host = $request->getHost();
       // To maximize compatibility and normalize the behavior across user
       // agents, the cookie domain should start with a dot.
@@ -137,9 +138,10 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // for top-level domains. Also IP addresses may not be used in the domain
     // attribute of a Set-Cookie header. IPv6 addresses will not pass the first
     // test, so it's acceptable to bias the second test to IPv4.
-    if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+    if ($cookie_domain !== '' && count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
       return $cookie_domain;
-    }
+    };
+
   }
 
   /**
