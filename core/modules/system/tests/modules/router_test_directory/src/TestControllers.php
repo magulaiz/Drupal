@@ -118,6 +118,10 @@ class TestControllers {
     ];
   }
 
+  public function rejectsQueryStrings(Request $request) {
+    return new Response('', $request->query->keys() ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK);
+  }
+
   /**
    * Throws an exception.
    *
