@@ -593,6 +593,7 @@ function hook_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormSta
  *       invoked.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
+ *     - theme_suggestions: (array) An array of theme hook suggestions.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
@@ -636,6 +637,7 @@ function hook_preprocess(array &$variables, $hook, array $info) {
  *       invoked.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
+ *     - theme_suggestions: (array) An array of theme hook suggestions.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The name of the theme hook.
@@ -680,6 +682,8 @@ function hook_preprocess_HOOK(array &$variables, $hook, array $info) {
  *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
  *     - Any additional context that was passed from the render array.
  *
  * @return array
@@ -739,6 +743,8 @@ function hook_theme_suggestions_HOOK(array $variables) {
  *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
@@ -788,6 +794,8 @@ function hook_theme_suggestions_alter(array &$suggestions, array $variables, $ho
  *       theme suggestions.
  *     - theme_base_hook: (string) The base hook of the theme hook currently
  *       being invoked.
+ *     - theme_suggestions: (array) The list of theme hook suggestions derived
+ *       from the #theme property of the render array.
  *     - Any additional context that was passed from the render array.
  * @param string $hook
  *   The base hook name. For example, if '#theme' => 'node__article' is called,
@@ -871,7 +879,7 @@ function hook_extension() {
  *     invoked.
  *   - theme_base_hook: (string) The base hook of the theme hook currently
  *     being invoked.
- *   - suggestions: (array) An array of theme hook suggestions.
+ *   - theme_suggestions: (array) An array of theme hook suggestions.
  *   - Any additional context that was passed from the render array.
  *
  * @return string
