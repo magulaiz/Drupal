@@ -1186,6 +1186,7 @@ function template_preprocess_item_list(&$variables) {
       'attributes' => new Attribute($attributes),
     ];
   }
+  $variables['list_style'] = isset($variables['context']['list_style']) ? $variables['context']['list_style'] : '';
 }
 
 /**
