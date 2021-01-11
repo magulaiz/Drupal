@@ -8,8 +8,10 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
+use Drupal\migrate\Plugin\migrate\source\MapJoinTrait;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -36,6 +38,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - batch_size: (optional) Number of entities to fetch from the database during
  *   each batch. If omitted, all records are fetched in a single query. It is
  *   highly recommended to set this for large sources.
+ * - ignore_map: (optional) Source data is joined to the map table by default to
+ *   improve migration performance. If set to TRUE, the map table will not be
+ *   joined.
  *
  * Examples:
  *
@@ -73,6 +78,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
   use EntityFieldDefinitionTrait;
+  use MapJoinTrait;
 
   /**
    * The entity type manager.
@@ -210,7 +216,18 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
         // memory.
         $query->range($current_batch * $this->batchSize, $this->batchSize);
       }
-      $ids = $query->execute();
+
+      if ($this->mapJoinable()) {
+        // Get the underlying SQL query from the entity query.
+        $sql_query = $query->toSqlQuery();
+
+        $this->addMapJoin($sql_query);
+
+        $ids = $sql_query->execute()->fetchCol();
+      }
+      else {
+        $ids = $query->execute();
+      }
 
       // End the loop when we run out of source entities.
       if (empty($ids)) {
@@ -305,6 +322,28 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   }
 
   /**
+   * Checks if we can join against the map table.
+   *
+   * @return bool
+   *   TRUE if we can join against the map table; FALSE otherwise.
+   */
+  protected function mapJoinable() {
+    // Do not join map if explicitly configured not to.
+    if (isset($this->configuration['ignore_map']) && $this->configuration['ignore_map']) {
+      return FALSE;
+    }
+
+    // The query can only be joined to the map table if the source entity's
+    // storage uses SQL, as for the join we need to convert the entity query to
+    // an SQL query.
+    if (!is_a($this->entityType->getStorageClass(), SqlContentEntityStorage::class, TRUE)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function fields() {
@@ -329,6 +368,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
+    $ids[$id_key]['alias'] = 'base_table';
+
     if ($this->configuration['add_revision_id'] && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
