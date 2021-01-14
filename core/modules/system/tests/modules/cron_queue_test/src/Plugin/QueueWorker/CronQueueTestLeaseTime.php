@@ -8,7 +8,10 @@ use Drupal\Core\Queue\QueueWorkerBase;
  * @QueueWorker(
  *   id = "cron_queue_test_lease_time",
  *   title = @Translation("Lease time test"),
- *   cron = {"time" = 100}
+ *   cron = {
+ *     "time" = 5,
+ *     "lease_time" = 2,
+ *   }
  * )
  */
 class CronQueueTestLeaseTime extends QueueWorkerBase {
