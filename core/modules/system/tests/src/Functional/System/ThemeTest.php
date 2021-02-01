@@ -190,9 +190,12 @@ class ThemeTest extends BrowserTestBase {
       $this->drupalGet('admin/appearance/settings');
       $this->submitForm($edit, 'Save configuration');
 
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
-    $this->drupalGet('');
-    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
+      $uploaded_filename = 'public://' . $this->getSession()->getPage()->findField('logo_path')->getValue();
+
+      $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
+      $this->drupalGet('');
+      $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
+    }
 
     $this->container->get('theme_installer')->install(['bartik']);
 
