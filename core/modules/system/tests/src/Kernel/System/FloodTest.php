@@ -50,13 +50,19 @@ class FloodTest extends KernelTestBase {
    * Tests flood control memory backend.
    */
   public function testMemoryBackend() {
-    $threshold = 1;
+    $threshold = 2;
     $window_expired = -1;
     $name = 'flood_test_cleanup';
 
     $request_stack = \Drupal::service('request_stack');
     $flood = new MemoryBackend($request_stack);
     $this->assertTrue($flood->isAllowed($name, $threshold));
+    // Register expired event.
+    $flood->register($name, $window_expired);
+    // Verify event is allowed.
+    $this->assertTrue($flood->isAllowed($name, $threshold));
+    // Sleep for a while.
+    usleep(100);
     // Register expired event.
     $flood->register($name, $window_expired);
     // Verify event is not allowed.
@@ -66,6 +72,11 @@ class FloodTest extends KernelTestBase {
     $this->assertTrue($flood->isAllowed($name, $threshold));
 
     // Register unexpired event.
+    $flood->register($name);
+    // Verify event is allowed.
+    $this->assertTrue($flood->isAllowed($name, $threshold));
+    // Sleep for a while.
+    usleep(100);
     $flood->register($name);
     // Verify event is not allowed.
     $this->assertFalse($flood->isAllowed($name, $threshold));
