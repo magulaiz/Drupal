@@ -300,6 +300,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
           '_field_ui' => TRUE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_key.discard_changes' => new Route(
@@ -321,6 +322,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_key.disable' => new Route(
@@ -340,6 +342,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           'parameters' => [
             'section_storage' => ['layout_builder_tempstore' => TRUE],
           ],
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.view' => new Route(
@@ -361,6 +364,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.discard_changes' => new Route(
@@ -381,6 +385,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           ],
           '_layout_builder' => TRUE,
           '_admin_route' => FALSE,
+          'no_cache' => TRUE,
         ]
       ),
       'layout_builder.defaults.with_bundle_parameter.disable' => new Route(
@@ -399,6 +404,7 @@ class DefaultsSectionStorageTest extends UnitTestCase {
           'parameters' => [
             'section_storage' => ['layout_builder_tempstore' => TRUE],
           ],
+          'no_cache' => TRUE,
         ]
       ),
     ];
