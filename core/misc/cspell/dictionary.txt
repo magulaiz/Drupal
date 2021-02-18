@@ -1296,6 +1296,8 @@ roly
 routable
 routeable
 routename
+rowgroup
+rowgroups
 rowspans
 rowtest
 rpos

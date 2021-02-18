@@ -308,4 +308,53 @@ class TableTest extends KernelTestBase {
     $this->assertRaw('Update my favorite fruit is <strong>bananas</strong>');
   }
 
+  /**
+   * Tests tables with multiple bodies.
+   */
+  public function testMultipleBodies() {
+    $header = ['one', 'two', 'three'];
+    $rowgroups = [
+      [
+        'rows' => [
+            [
+            '1-one',
+            [
+              'data' => '1-two',
+            ],
+            '1-three',
+          ],
+        ],
+      ],
+      [
+        'attributes' => ['class' => 'group-two'],
+        'rows' => [
+          [
+            [
+              'data' => [
+                '#markup' => '2-one',
+              ],
+            ],
+            '2-two',
+            [
+              'data' => [
+                '#type' => 'html_tag',
+                '#tag' => 'b',
+                '#value' => '2-three',
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+    $table = [
+      '#type' => 'table',
+      '#header' => $header,
+      '#rowgroups' => $rowgroups,
+      '#responsive' => FALSE,
+    ];
+    $this->render($table);
+    $this->removeWhiteSpace();
+    $this->assertRaw('<tbody><tr><td>1-one</td><td>1-two</td><td>1-three</td></tr></tbody><tbody class="group-two"><tr><td>2-one</td><td>2-two</td><td><b>2-three</b></td></tr></tbody>', 'Both table bodies found.');
+  }
+
 }
