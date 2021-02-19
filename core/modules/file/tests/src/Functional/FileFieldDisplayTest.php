@@ -168,7 +168,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit = [
       'new_storage_type' => $field_type,
       'field_name' => $field_name,
-      'label' => $this->randomString(),
+      'label' => $field_label = $this->randomString(),
     ];
     $this->drupalGet('/admin/structure/types/manage/' . $type_name . '/fields/add-field');
     $this->submitForm($edit, 'Save and continue');
@@ -200,7 +200,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // description is now required.
     $this->drupalGet($node->toUrl('edit-form'));
     $this->submitForm([], 'Save');
-    $this->assertSession()->pageTextContains('Description field is required.');
+    $this->assertSession()->pageTextContains("The {$field_label} field description is required.");
   }
 
   /**
