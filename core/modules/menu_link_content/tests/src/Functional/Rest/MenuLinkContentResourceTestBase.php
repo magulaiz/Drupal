@@ -40,6 +40,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
+    $this->grantPermissionsToTestedRole(['access user profiles']);
     switch ($method) {
       case 'GET':
       case 'POST':
@@ -59,7 +60,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       'title' => 'Llama Gabilondo',
       'description' => 'Llama Gabilondo',
       'link' => [
-        'uri' => 'https://nl.wikipedia.org/wiki/Llama',
+        'uri' => 'entity:user/1',
         'options' => [
           'fragment' => 'a-fragment',
           'attributes' => [
@@ -131,7 +132,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       ],
       'link' => [
         [
-          'uri' => 'https://nl.wikipedia.org/wiki/Llama',
+          'uri' => 'entity:user/1',
           'title' => NULL,
           'options' => [
             'fragment' => 'a-fragment',
