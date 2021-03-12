@@ -932,3 +932,11 @@ drupal.fieldListKeyboardNavigation:
   dependencies:
     - core/drupal
     - core/tabbable
+
+modelview:
+  version: VERSION
+  js:
+    misc/modelview.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings

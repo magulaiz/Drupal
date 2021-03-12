@@ -14,7 +14,6 @@
       },
     },
   );
-
   // Clear the cached contextual links whenever the current user's set of
   // permissions changes.
   const cachedPermissionsHash = storage.getItem(
@@ -107,12 +106,14 @@
       const glue = url.includes('?') ? '&' : '?';
       this.setAttribute('href', url + glue + destination);
     });
-
     let title = '';
     const $regionHeading = $region.find('h2');
     if ($regionHeading.length) {
       title = $regionHeading[0].textContent.trim();
     }
+    options.title = $region.find('h2').eq(0).text().trim();
+    const contextualModelView = new Drupal.contextual.ContextualModelView($contextual, $region, options);
+    contextual.instances.push(contextualModelView);
     // Create a model and the appropriate views.
     const model = new contextual.StateModel({
       title,
@@ -274,19 +275,15 @@
      *  replacement.
      */
     regionViews: [],
+    instances: new Proxy([], {
+      set: function set(obj, prop, value) {
+        obj[prop] = value;
+        window.dispatchEvent(new Event('contextual-instances-added'));
+        return true;
+      }
+    }),
+    ContextualModelView: {}
   };
-
-  /**
-   * A Backbone.Collection of {@link Drupal.contextual.StateModel} instances.
-   *
-   * @type {Backbone.Collection}
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:12.0.0. There is no
-   *  replacement.
-   */
-  Drupal.contextual.collection = new Backbone.Collection([], {
-    model: Drupal.contextual.StateModel,
-  });
 
   /**
    * A trigger is an interactive element often bound to a click handler.
