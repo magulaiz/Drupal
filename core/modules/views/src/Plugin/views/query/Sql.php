@@ -782,7 +782,7 @@ class Sql extends QueryPluginBase {
       }
 
       // First, if this is our link point/anchor table, just use the
-      // relationship
+      // relationship.
       if ($join->leftTable == $this->relationships[$relationship]['table']) {
         $join->leftTable = $relationship;
       }
@@ -889,7 +889,7 @@ class Sql extends QueryPluginBase {
     // https://www.drupal.org/node/571548.
 
     // We limit the length of the original alias up to 60 characters
-    // to get a unique alias later if its have duplicates
+    // to get a unique alias later if its have duplicates.
     $alias = strtolower(substr($alias, 0, 60));
 
     // Create a field info array.

@@ -138,7 +138,7 @@ class UserAdminTest extends BrowserTestBase {
     $account = $user_storage->load($user_c->id());
     $this->assertTrue($account->isBlocked(), 'User C blocked');
 
-    // Test filtering on admin page for blocked users
+    // Test filtering on admin page for blocked users.
     $this->drupalGet('admin/people', ['query' => ['status' => 2]]);
     $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_a));
     $this->assertSession()->elementNotExists('xpath', static::getLinkSelectorForUser($user_b));
