@@ -5,6 +5,9 @@ namespace Drupal\Tests\hal\Functional\aggregator;
 use Drupal\Tests\aggregator\Functional\Rest\FeedResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 
+/**
+ * {@inheritdoc}
+ */
 abstract class FeedHalJsonTestBase extends FeedResourceTestBase {
 
   use HalEntityNormalizationTrait;
