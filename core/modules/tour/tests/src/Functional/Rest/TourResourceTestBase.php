@@ -5,6 +5,9 @@ namespace Drupal\Tests\tour\Functional\Rest;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\tour\Entity\Tour;
 
+/**
+ * ResourceTestBase for Tour entity.
+ */
 abstract class TourResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**

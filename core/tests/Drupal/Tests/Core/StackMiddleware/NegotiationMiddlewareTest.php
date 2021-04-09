@@ -149,6 +149,9 @@ class NegotiationMiddlewareTest extends UnitTestCase {
 
 }
 
+/**
+ * Stub class for testing NegotiationMiddleware.
+ */
 class StubNegotiationMiddleware extends NegotiationMiddleware {
 
   public function getContentType(Request $request) {

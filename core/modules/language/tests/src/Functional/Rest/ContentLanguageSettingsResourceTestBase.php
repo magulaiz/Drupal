@@ -6,6 +6,9 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
+/**
+ * ResourceTestBase for ContentLanguageSettings entity.
+ */
 abstract class ContentLanguageSettingsResourceTestBase extends ConfigEntityResourceTestBase {
 
   /**
