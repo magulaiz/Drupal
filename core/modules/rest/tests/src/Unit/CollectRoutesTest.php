@@ -28,7 +28,7 @@ class CollectRoutesTest extends UnitTestCase {
   /**
    * The RouteCollection.
    *
-   * @varg array
+   * @var array
    */
   protected $routes;
 
