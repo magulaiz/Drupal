@@ -40,6 +40,8 @@ class HtmlTag extends RenderElementBase {
    *
    * @see https://www.w3.org/TR/html5/syntax.html#syntax-start-tag
    * @see https://www.w3.org/TR/html5/syntax.html#void-elements
+   *
+   * @var string[]
    */
   protected static $voidElements = [
     'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
