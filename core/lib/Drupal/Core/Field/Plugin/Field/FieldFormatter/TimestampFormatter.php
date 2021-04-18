@@ -27,6 +27,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * )
  */
 class TimestampFormatter extends FormatterBase {
+
   /**
    * The date formatter service.
    *
