@@ -334,7 +334,7 @@ class Section implements ThirdPartySettingsInterface {
    * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
    *   The event dispatcher.
    */
-  protected function eventDispatcher() {
+  protected function eventDispatcher(): EventDispatcherInterface {
     return \Drupal::service('event_dispatcher');
   }
 
