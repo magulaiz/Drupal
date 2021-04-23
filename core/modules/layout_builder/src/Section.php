@@ -5,6 +5,7 @@ namespace Drupal\layout_builder;
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
 use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides a domain object for layout sections.
