@@ -4,6 +4,7 @@ namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
+use Drupal\layout_builder\Event\SectionBuildRenderArrayEvent;
 
 /**
  * Provides a domain object for layout sections.
@@ -82,12 +83,10 @@ class Section implements ThirdPartySettingsInterface {
    *   A renderable array representing the content of the section.
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
-    $regions = [];
-    foreach ($this->getComponents() as $component) {
-      if ($output = $component->toRenderArray($contexts, $in_preview)) {
-        $regions[$component->getRegion()][$component->getUuid()] = $output;
-      }
-    }
+    $event = new SectionBuildRenderArrayEvent($this, $contexts, $in_preview);
+    $this->eventDispatcher()->dispatch($event);
+    $regions = $event->getRegions();
+    $event->getCacheableMetadata()->applyTo($regions);
 
     $layout = $this->getLayout($contexts);
     if ($layout instanceof PreviewAwarePluginInterface) {
@@ -326,6 +325,16 @@ class Section implements ThirdPartySettingsInterface {
       $component->setWeight($weight++);
     }
     return $this;
+  }
+
+  /**
+   * Wraps the event dispatcher.
+   *
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   *   The event dispatcher.
+   */
+  protected function eventDispatcher() {
+    return \Drupal::service('event_dispatcher');
   }
 
   /**
