@@ -125,7 +125,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
       try {
         $item = $this->connection->queryRange('SELECT [data], [created], [item_id] FROM {' . static::TABLE_NAME . '} q WHERE (([expire] = 0) OR (:now > [expire])) AND [name] = :name ORDER BY [created], [item_id] ASC', 0, 1, [
           ':name' => $this->name,
-          ':now' => time(),
+          ':now' => \Drupal::time()->getCurrentTime(),
         ])->fetchObject();
       }
       catch (\Exception $e) {
