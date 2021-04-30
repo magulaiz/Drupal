@@ -171,6 +171,11 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
+   * Whether to preserve the site DB tables and directory when the test is done.
+   */
+  protected $preserveSiteInTearDown = FALSE;
+
+  /**
    * The base URL.
    *
    * @var string
@@ -448,7 +453,9 @@ abstract class BrowserTestBase extends TestCase {
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
-      $this->cleanupEnvironment();
+      if (!$this->preserveSiteInTearDown) {
+        $this->cleanupEnvironment();
+      }
       $this->kernel->shutdown();
     }
 
