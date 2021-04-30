@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Kernel\System;
 
+use Drupal\Core\CronInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
@@ -60,8 +61,8 @@ class CronQueueTest extends KernelTestBase {
     $time->getCurrentTime()->willReturn($this->currentTime);
     $time->getRequestTime()->willReturn($this->currentTime);
     \Drupal::getContainer()->set('datetime.time', $time->reveal());
-    $this->assertEquals($this->currentTime, \Drupal::time()->getCurrentTime());
-    $this->assertEquals($this->currentTime, \Drupal::time()->getRequestTime());
+    static::assertEquals($this->currentTime, \Drupal::time()->getCurrentTime());
+    static::assertEquals($this->currentTime, \Drupal::time()->getRequestTime());
 
     $realQueueFactory = $this->container->get('queue');
     $queue_factory = $this->prophesize(get_class($realQueueFactory));
@@ -84,15 +85,16 @@ class CronQueueTest extends KernelTestBase {
     $memory = $this->container->get('queue')->get('cron_queue_test_memory_delay_exception');
 
     // Ensure that the queues are of the correct type for this test.
-    $this->assertInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $database);
-    $this->assertNotInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $memory);
+    static::assertInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $database);
+    static::assertNotInstanceOf('Drupal\Core\Queue\DelayableQueueInterface', $memory);
 
     // Get the queue worker plugin manager.
     $manager = $this->container->get('plugin.manager.queue_worker');
     $definitions = $manager->getDefinitions();
-    $this->assertNotEmpty($database_lease_time = $definitions['cron_queue_test_database_delay_exception']['cron']['time']);
-    $this->assertNotEmpty($memory_lease_time = $definitions['cron_queue_test_memory_delay_exception']['cron']['time']);
-
+    static::assertNotEmpty($database_lease_time = $definitions['cron_queue_test_database_delay_exception']['cron']['lease_time']);
+    static::assertArrayNotHasKey('lease_time', $definitions['cron_queue_test_memory_delay_exception']['cron']);
+    // Test queue worker without a default lease time.
+    $memory_lease_time = CronInterface::DEFAULT_QUEUE_CRON_LEASE_TIME;
     // Create the necessary test data and run cron.
     $database->createItem('test');
     $memory->createItem('test');
@@ -109,16 +111,16 @@ class CronQueueTest extends KernelTestBase {
     // allows us to assume that (if updated) the new expiry time will be greater
     // than the initial expiry time. We can then also assume that the new expiry
     // time offset will be identical to the delay interval.
-    $this->assertGreaterThan($database_lease_time, CronQueueTestDatabaseDelayException::DELAY_INTERVAL);
-    $this->assertGreaterThan($this->currentTime + $database_lease_time, $expire);
-    $this->assertEquals(CronQueueTestDatabaseDelayException::DELAY_INTERVAL, $expire - $this->currentTime);
+    static::assertGreaterThan($database_lease_time, CronQueueTestDatabaseDelayException::DELAY_INTERVAL);
+    static::assertGreaterThan($this->currentTime + $database_lease_time, $expire);
+    static::assertEquals(CronQueueTestDatabaseDelayException::DELAY_INTERVAL, $expire - $this->currentTime);
 
     // Ensure that the memory queue expiry time is unchanged after the
     // DelayedRequeueException has been thrown.
     $property = (new \ReflectionClass($memory))->getProperty('queue');
     $property->setAccessible(TRUE);
     $memory_queue_internal = $property->getValue($memory);
-    $this->assertEquals($this->currentTime + $memory_lease_time, reset($memory_queue_internal)->expire);
+    static::assertEquals($this->currentTime + $memory_lease_time, reset($memory_queue_internal)->expire);
   }
 
   /**
@@ -164,10 +166,10 @@ class CronQueueTest extends KernelTestBase {
     // Run cron; the worker for this queue should throw an exception and handle
     // it.
     $this->cron->run();
-    $this->assertEquals(1, \Drupal::state()->get('cron_queue_test_exception'));
+    static::assertEquals(1, \Drupal::state()->get('cron_queue_test_exception'));
 
     // The item should be left in the queue.
-    $this->assertEquals(1, $queue->numberOfItems(), 'Failing item still in the queue after throwing an exception.');
+    static::assertEquals(1, $queue->numberOfItems(), 'Failing item still in the queue after throwing an exception.');
 
     // Expire the queue item manually. system_cron() relies in REQUEST_TIME to
     // find queue items whose expire field needs to be reset to 0. This is a
@@ -179,8 +181,8 @@ class CronQueueTest extends KernelTestBase {
       ->fields(['expire' => \Drupal::time()->getRequestTime() - 1])
       ->execute();
     $this->cron->run();
-    $this->assertEquals(2, \Drupal::state()->get('cron_queue_test_exception'));
-    $this->assertEquals(0, $queue->numberOfItems(), 'Item was processed and removed from the queue.');
+    static::assertEquals(2, \Drupal::state()->get('cron_queue_test_exception'));
+    static::assertEquals(0, $queue->numberOfItems(), 'Item was processed and removed from the queue.');
 
     // Get the queue to test the specific SuspendQueueException.
     $queue = $this->container->get('queue')->get('cron_queue_test_broken_queue');
@@ -195,22 +197,22 @@ class CronQueueTest extends KernelTestBase {
     $this->cron->run();
 
     // Only one item should have been processed.
-    $this->assertEquals(2, $queue->numberOfItems(), 'Failing queue stopped processing at the failing item.');
+    static::assertEquals(2, $queue->numberOfItems(), 'Failing queue stopped processing at the failing item.');
 
     // Check the items remaining in the queue. The item that throws the
     // exception gets released by cron, so we can claim it again to check it.
     $item = $queue->claimItem();
-    $this->assertEquals('crash', $item->data, 'Failing item remains in the queue.');
+    static::assertEquals('crash', $item->data, 'Failing item remains in the queue.');
     $item = $queue->claimItem();
-    $this->assertEquals('ignored', $item->data, 'Item beyond the failing item remains in the queue.');
+    static::assertEquals('ignored', $item->data, 'Item beyond the failing item remains in the queue.');
 
     // Test the requeueing functionality.
     $queue = $this->container->get('queue')->get('cron_queue_test_requeue_exception');
     $queue->createItem([]);
     $this->cron->run();
 
-    $this->assertEquals(2, \Drupal::state()->get('cron_queue_test_requeue_exception'));
-    $this->assertEquals(0, $queue->numberOfItems());
+    static::assertEquals(2, \Drupal::state()->get('cron_queue_test_requeue_exception'));
+    static::assertEquals(0, $queue->numberOfItems());
   }
 
   /**
