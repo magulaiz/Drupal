@@ -6,7 +6,7 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\user\Entity\Role;
 
 /**
- * ResourceTestBase for Role entity.
+ * Resource test base for the user_role entity.
  */
 abstract class RoleResourceTestBase extends ConfigEntityResourceTestBase {
 

@@ -6,7 +6,7 @@ use Drupal\media\Entity\MediaType;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
- * ResourceTestBase for MediaType entity.
+ * Resource test base for the media_type entity.
  */
 abstract class MediaTypeResourceTestBase extends ConfigEntityResourceTestBase {
 

@@ -8,7 +8,7 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
- * ResourceTestBase for ConfigurableLanguage entity.
+ * Resource test base for ConfigurableLanguage entity.
  */
 abstract class ConfigurableLanguageResourceTestBase extends ConfigEntityResourceTestBase {
 
