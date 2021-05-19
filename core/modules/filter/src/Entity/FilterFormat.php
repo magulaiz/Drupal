@@ -474,7 +474,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
    * @return \Psr\Log\LoggerInterface
    *   The 'filter' channel logger.
    */
-  protected function getLogger() {
+  private function getLogger() {
     return \Drupal::logger('filter');
   }
 
