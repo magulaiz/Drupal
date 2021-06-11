@@ -30,6 +30,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     'layout_test',
     'node',
     'off_canvas_test',
+    'block',
   ];
 
   /**
