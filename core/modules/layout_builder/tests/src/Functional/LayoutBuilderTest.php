@@ -28,6 +28,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'contextual',
     'node',
     'layout_builder_test',
+    'block',
   ];
 
   /**
