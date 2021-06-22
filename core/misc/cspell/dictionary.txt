@@ -801,6 +801,7 @@ mimetypes
 minifyzombies
 minimatch
 minimise
+minimumred
 minipager
 minky
 minusthick
