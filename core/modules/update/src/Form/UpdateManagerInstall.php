@@ -209,9 +209,6 @@ class UpdateManagerInstall extends FormBase {
       return;
     }
 
-    // Make sure the Updater registry is loaded.
-    drupal_get_updaters();
-
     $project_location = $directory . '/' . $project;
     try {
       $updater = Updater::factory($project_location, $this->root);

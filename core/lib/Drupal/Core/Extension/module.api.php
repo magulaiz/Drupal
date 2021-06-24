@@ -929,7 +929,7 @@ function hook_update_last_removed() {
  *
  * @ingroup update_api
  *
- * @see drupal_get_updaters()
+ * @see \Drupal\Core\Updater\Updater::getUpdaterRegistry()
  * @see hook_updater_info_alter()
  */
 function hook_updater_info() {
@@ -960,7 +960,7 @@ function hook_updater_info() {
  *
  * @ingroup update_api
  *
- * @see drupal_get_updaters()
+ * @see \Drupal\Core\Updater\Updater::getUpdaterRegistry()
  * @see hook_updater_info()
  */
 function hook_updater_info_alter(&$updaters) {
