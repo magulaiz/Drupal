@@ -47,7 +47,11 @@
       }
 
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        initTableDrag($(once('tabledrag', `[data-drupal-tabledrag-id="${base}"]`, context)), base);
+        initTableDrag($(once(
+          'tabledrag',
+          `[data-drupal-tabledrag-id="${base}"]`,
+          context
+        )), base);
       });
     },
   };
