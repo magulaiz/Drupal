@@ -376,6 +376,10 @@ class ConfigSync extends FormBase {
       $this->moduleExtensionList,
       $this->themeExtensionList
     );
+
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     if ($config_importer->alreadyImporting()) {
       $this->messenger()->addStatus($this->t('Another request may be synchronizing configuration already.'));
     }
@@ -392,7 +396,7 @@ class ConfigSync extends FormBase {
           $batch_builder->addOperation([ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]);
         }
 
-        batch_set($batch_builder->toArray());
+        $batch_processor->queue($batch_builder->toArray());
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.
