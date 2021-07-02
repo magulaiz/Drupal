@@ -455,7 +455,7 @@ class BatchProcessor implements BatchProcessorInterface {
         // If possible, estimate remaining processing time.
         '@estimate'   => ($current > 0) ? $this->dateFormatter->formatInterval(($elapsed * ($total - $current) / $current) / 1000) : '-',
       ];
-      $message = strtr($progress_message, $values);
+      $message    = strtr($progress_message, $values);
       if (!empty($task_message)) {
         $label = $task_message;
       }
