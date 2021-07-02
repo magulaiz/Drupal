@@ -421,6 +421,9 @@ class ConfigSingleImportForm extends ConfirmFormBase {
       return;
     }
 
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
+
     /** @var \Drupal\Core\Config\ConfigImporter $config_importer */
     $config_importer = $form_state->get('config_importer');
     if ($config_importer->alreadyImporting()) {
@@ -438,7 +441,7 @@ class ConfigSingleImportForm extends ConfirmFormBase {
         foreach ($sync_steps as $sync_step) {
           $batch_builder->addOperation([ConfigImporterBatch::class, 'process'], [$config_importer, $sync_step]);
         }
-        batch_set($batch_builder->toArray());
+        $batch_processor->queue($batch_builder->toArray());
       }
       catch (ConfigImporterException $e) {
         // There are validation errors.

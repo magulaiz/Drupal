@@ -81,23 +81,11 @@ class BatchController implements ContainerInjectionInterface {
    * @return string
    *   The page title.
    */
-  public function batchPageTitle(Request $request) {
-    $batch = &batch_get();
+  public function batchPageTitle() {
+    /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+    $batch_processor = \Drupal::service('batch.processor');
 
-    if (!($request_id = $request->query->get('id'))) {
-      return '';
-    }
-
-    // Retrieve the current state of the batch.
-    if (!$batch) {
-      $batch = $this->batchStorage->load($request_id);
-    }
-
-    if (!$batch) {
-      return '';
-    }
-
-    $current_set = _batch_current_set();
+    $current_set = $batch_processor->getCurrentSet();
     return !empty($current_set['title']) ? $current_set['title'] : '';
   }
 
