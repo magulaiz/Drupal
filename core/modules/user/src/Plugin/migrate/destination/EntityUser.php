@@ -119,8 +119,7 @@ class EntityUser extends EntityContentBase {
       $container->get('entity_field.manager'),
       $container->get('plugin.manager.field.field_type'),
       $container->get('password'),
-      $container->get('account_switcher'),
-      $container->get('entity_field.manager')
+      $container->get('account_switcher')
     );
   }
 
