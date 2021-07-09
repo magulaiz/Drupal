@@ -73,7 +73,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions() {
-    return array_merge(parent::getTranslatorPermissions(), ['administer taxonomy']);
+    return array_merge(parent::getTranslatorPermissions(), ['administer taxonomy', 'access content']);
   }
 
   /**
@@ -126,7 +126,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
    * Tests translate link on vocabulary term list.
    */
   public function testTranslateLinkVocabularyAdminPage() {
-    $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
+    $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy', 'access content'])));
 
     $values = [
       'name' => $this->randomMachineName(),
