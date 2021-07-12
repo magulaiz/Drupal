@@ -237,6 +237,12 @@ class BlockForm extends EntityForm {
         continue;
       }
 
+      // Don't display the deprecated node type condition unless it has existing
+      // settings.
+      if (isset($definition['deprecation_message']) && !isset($visibility[$condition_id])) {
+        continue;
+      }
+
       /** @var \Drupal\Core\Condition\ConditionInterface $condition */
       $condition = $this->manager->createInstance($condition_id, $visibility[$condition_id] ?? []);
       $form_state->set(['conditions', $condition_id], $condition);
