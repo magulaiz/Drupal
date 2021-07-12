@@ -122,6 +122,9 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
     //   without expanding plugins is removed.
     foreach ($instances as $migration) {
       $migration->set('migration_dependencies', $migration->getMigrationDependencies(TRUE));
+      if ($migration->isDeprecated()) {
+        @trigger_error($migration->getDeprecationMessage(), E_USER_DEPRECATED);
+      }
     }
 
     // Sort the migrations based on their dependencies.
