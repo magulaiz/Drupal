@@ -8,7 +8,6 @@ use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
-use PHPUnit\Framework\Assert;
 use WebDriver\Exception\CurlExec;
 
 /**
@@ -70,7 +69,9 @@ JS;
     $element = $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return $page->find($selector, $locator);
     });
-    Assert::assertInstanceOf(NodeElement::class, $element);
+    if (empty($element)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
     return $element;
   }
 
@@ -94,7 +95,9 @@ JS;
     $not_found = (bool) $this->waitForHelper($timeout, function (Element $page) use ($selector, $locator) {
       return !$page->find($selector, $locator);
     });
-    Assert::assertTrue($not_found);
+    if (empty($not_found)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10; use JsWebAssert::assertNoElementAfterWait() instead.', E_USER_DEPRECATED);
+    }
     return $not_found;
   }
 
@@ -122,7 +125,9 @@ JS;
       }
       return NULL;
     });
-    Assert::assertInstanceOf(NodeElement::class, $element);
+    if (empty($element)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
     return $element;
   }
 
@@ -143,7 +148,9 @@ JS;
       $regex = '/' . preg_quote($text, '/') . '/ui';
       return (bool) preg_match($regex, $actual);
     });
-    Assert::assertTrue($text_exists, "The text '$text' was not found on the page.");
+    if (empty($text_exists)) {
+      @trigger_error('Allowing ' . __METHOD__ . '() to time out is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. This will cause the test to fail in Drupal 10.', E_USER_DEPRECATED);
+    }
     return $text_exists;
   }
 
