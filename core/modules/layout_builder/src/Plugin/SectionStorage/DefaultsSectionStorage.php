@@ -224,6 +224,9 @@ class DefaultsSectionStorage extends SectionStorageBase implements ContainerFact
     $entity = $this->sampleEntityGenerator->get($display->getTargetEntityTypeId(), $display->getTargetBundle());
 
     $contexts['layout_builder.entity'] = EntityContext::fromEntity($entity);
+
+    $allow_sample = TRUE;
+    \Drupal::moduleHandler()->alter('layout_builder_view_context', $contexts, $this, $allow_sample);
     return $contexts;
   }
 

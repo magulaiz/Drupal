@@ -335,11 +335,22 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
    */
   protected function getContextsForEntity(FieldableEntityInterface $entity) {
     $available_context_ids = array_keys($this->contextRepository()->getAvailableContexts());
-    return [
+    $contexts = [
       'view_mode' => new Context(ContextDefinition::create('string'), $this->getMode()),
       'entity' => EntityContext::fromEntity($entity),
       'display' => EntityContext::fromEntity($this),
     ] + $this->contextRepository()->getRuntimeContexts($available_context_ids);
+
+    // Get section storage to pass to contexts hook.
+    $cacheability = new CacheableMetadata();
+    $storage = $this->sectionStorageManager()->findByContext($contexts, $cacheability);
+
+    // Allow modules to alter the contexts available. Pass the section storage
+    // as context so that DefaultsSectionStorage's thirdPartySettings can be
+    // used to influence contexts.
+    \Drupal::moduleHandler()->alter('layout_builder_view_context', $contexts, $storage);
+
+    return $contexts;
   }
 
   /**
