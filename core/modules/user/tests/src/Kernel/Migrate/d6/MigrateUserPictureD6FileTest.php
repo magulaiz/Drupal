@@ -48,7 +48,7 @@ class MigrateUserPictureD6FileTest extends MigrateDrupal6TestBase {
     $file = array_shift($files);
     $this->assertSame('image-test.png', $file->getFilename());
     $this->assertSame('public://image-test.png', $file->getFileUri());
-    $this->assertSame('8', $file->getOwnerId());
+    $this->assertSame(8, $file->getOwnerId());
     $this->assertEmpty($files);
 
     // Tests the D6 user pictures migration in combination with D6 file.
