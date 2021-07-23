@@ -22,7 +22,7 @@ class CommentEditTest extends CommentBrowserTestBase {
   public function testCommentEdit() {
     $this->drupalLogin($this->adminUser);
     // Post a comment to node.
-    $node_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $node_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post comment');
     $this->drupalGet('admin/content/comment');
     $this->assertSession()->pageTextContains($this->adminUser->label());
     $this->drupalGet($node_comment->toUrl('edit-form'));
