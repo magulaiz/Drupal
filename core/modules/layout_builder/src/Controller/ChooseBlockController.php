@@ -25,6 +25,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
+  use LayoutRebuildTrait;
   use StringTranslationTrait;
 
   /**
@@ -94,22 +95,28 @@ class ChooseBlockController implements ContainerInjectionInterface {
         $type = reset($types);
         $plugin_id = 'inline_block:' . $type->id();
         if ($this->blockManager->hasDefinition($plugin_id)) {
-          $url = Url::fromRoute('layout_builder.add_block', [
+          $url = Url::fromRoute('layout_builder.add_block',
+            [
+              'section_storage_type' => $section_storage->getStorageType(),
+              'section_storage' => $section_storage->getStorageId(),
+              'delta' => $delta,
+              'region' => $region,
+              'plugin_id' => $plugin_id,
+            ],
+            $this->getOverviewOptions()
+          );
+        }
+      }
+      else {
+        $url = Url::fromRoute('layout_builder.choose_inline_block',
+          [
             'section_storage_type' => $section_storage->getStorageType(),
             'section_storage' => $section_storage->getStorageId(),
             'delta' => $delta,
             'region' => $region,
-            'plugin_id' => $plugin_id,
-          ]);
-        }
-      }
-      else {
-        $url = Url::fromRoute('layout_builder.choose_inline_block', [
-          'section_storage_type' => $section_storage->getStorageType(),
-          'section_storage' => $section_storage->getStorageId(),
-          'delta' => $delta,
-          'region' => $region,
-        ]);
+          ],
+          $this->getOverviewOptions()
+        );
       }
       if (isset($url)) {
         $build['add_block'] = [
@@ -234,7 +241,8 @@ class ChooseBlockController implements ContainerInjectionInterface {
             'delta' => $delta,
             'region' => $region,
             'plugin_id' => $block_id,
-          ]
+          ],
+          $this->getOverviewOptions()
         ),
         'attributes' => $attributes,
       ];

@@ -118,6 +118,23 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
         '#type' => 'status_messages',
       ];
     }
+    $output['overview'] = [
+      '#type' => 'link',
+      '#url' => Url::fromRoute(
+        'layout_builder.sections_overview',
+        [
+          'section_storage_type' => $section_storage->getStorageType(),
+          'section_storage' => $section_storage->getStorageId(),
+        ]
+      ),
+      '#title' => $this->t('Layout overview'),
+      '#attributes' => [
+        'class' => ['use-ajax'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-renderer' => 'off_canvas',
+        'data-dialog-options' => json_encode(['width' => 350]),
+      ],
+    ];
     $count = 0;
     for ($i = 0; $i < $section_storage->count(); $i++) {
       $output[] = $this->buildAddSectionLink($section_storage, $count);
