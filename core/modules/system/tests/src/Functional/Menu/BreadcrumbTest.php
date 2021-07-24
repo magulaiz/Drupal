@@ -55,10 +55,14 @@ class BreadcrumbTest extends BrowserTestBase {
 
     // This test puts menu links in the Tools menu and then tests for their
     // presence on the page, so we need to ensure that the Tools block will be
-    // displayed in the admin theme.
+    // displayed in both the front and the admin theme.
     $this->drupalPlaceBlock('system_menu_block:tools', [
       'region' => 'content',
       'theme' => $this->config('system.theme')->get('admin'),
+    ]);
+    $this->drupalPlaceBlock('system_menu_block:tools', [
+      'region' => 'sidebar',
+      'theme' => $this->config('system.theme')->get('default'),
     ]);
   }
 
@@ -298,8 +302,8 @@ class BreadcrumbTest extends BrowserTestBase {
       // untranslated menu links automatically generated from menu router items
       // ('taxonomy/term/%') should never be translated and appear in any menu
       // other than the breadcrumb trail.
-      $elements = $this->xpath('//nav[@id=:menu]/descendant::a[@href=:href]', [
-        ':menu' => 'block-bartik-tools',
+      $elements = $this->xpath('//nav[contains(@class, :class)]/descendant::a[@href=:href]', [
+        ':class' => 'menu--tools',
         ':href' => Url::fromUri('base:' . $link_path)->toString(),
       ]);
       $this->assertCount(1, $elements, "Link to {$link_path} appears only once.");

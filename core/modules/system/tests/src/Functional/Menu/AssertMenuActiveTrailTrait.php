@@ -26,13 +26,14 @@ trait AssertMenuActiveTrailTrait {
     $active_link_path = key($tree);
     $active_link_title = array_pop($tree);
     $xpath = '';
+    $class_trail = (\Drupal::theme()->getActiveTheme()->getName() === 'olivero') ? 'menu__item--active-trail' : 'menu-item--active-trail';
     if ($tree) {
       $i = 0;
       foreach ($tree as $link_path => $link_title) {
         $part_xpath = (!$i ? '//' : '/following-sibling::ul/descendant::');
         $part_xpath .= 'li[contains(@class, :class)]/a[contains(@href, :href) and contains(text(), :title)]';
         $part_args = [
-          ':class' => 'menu-item--active-trail',
+          ':class' => $class_trail,
           ':href' => Url::fromUri('base:' . $link_path)->toString(),
           ':title' => $link_title,
         ];
@@ -50,14 +51,12 @@ trait AssertMenuActiveTrailTrait {
     }
     $xpath_last_active = ($last_active ? 'and contains(@class, :class-active)' : '');
     $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
-    $class_trail = (\Drupal::theme()->getActiveTheme()->getName() === 'olivero') ? 'menu__item--active-trail' : 'menu-item--active-trail';
     $args = [
       ':class-trail' => $class_trail,
       ':class-active' => 'is-active',
       ':href' => Url::fromUri('base:' . $active_link_path)->toString(),
       ':title' => $active_link_title,
     ];
-    // @todo This is still not there.
     $elements = $this->xpath($xpath, $args);
     $this->assertTrue(!empty($elements), new FormattableMarkup('Active link %title was found in menu tree, including active trail links %tree.', [
       '%title' => $active_link_title,
