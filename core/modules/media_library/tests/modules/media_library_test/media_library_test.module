@@ -16,7 +16,9 @@ use Drupal\media_library_test\Form\TestNodeFormOverride;
  */
 function media_library_test_media_create_access(AccountInterface $account, array $context, $entity_bundle) {
   if (isset($context['media_library_state'])) {
-    return AccessResult::forbiddenIf($entity_bundle === 'deny_access');
+    /** @var \Drupal\media_library\MediaLibraryState $state */
+    $state = $context['media_library_state'];
+    return AccessResult::forbiddenIf($state->getSelectedTypeId() === 'deny_access');
   }
   return AccessResult::neutral();
 }

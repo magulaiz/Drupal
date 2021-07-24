@@ -371,12 +371,12 @@ class MediaLibraryAccessTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the media library UI builder respects arbitrary access.
+   * Tests that the media library respects arbitrary access to the add form.
    */
   public function testAddFormAccess(): void {
     // Access is denied if the media library is trying to create media whose
-    // type name is 'deny_access'. Also created a second media type that we
-    // *can* add, so we can be certain that the add form is otherwise visible.
+    // type name is 'deny_access'. Also create a second media type that we *can*
+    // add, so we can be certain that the add form is otherwise visible.
     // @see media_library_test_media_create_access()
     $media_types = [
       $this->createMediaType('image', ['id' => 'deny_access'])->id(),
