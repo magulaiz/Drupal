@@ -59,6 +59,9 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
 
     // Place a block, but only make it visible on full node page 2.
     $block = $this->drupalPlaceBlock('views_block:comments_recent-block_1', [
+      // Olivero doesn't have the 'sidebar_first' region that this method
+      // defaults to.
+      'region' => 'sidebar',
       'visibility' => [
         'request_path' => [
           'pages' => '/node/' . $node_2->id(),
