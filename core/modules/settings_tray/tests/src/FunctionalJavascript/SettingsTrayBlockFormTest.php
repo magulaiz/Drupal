@@ -68,7 +68,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->enableTheme($theme);
-    $block = $this->placeBlock($block_plugin);
+    $settings = [];
+    if ($theme === 'olivero') {
+      // Olivero doesn't have the 'sidebar_first' region that this method
+      // defaults to.
+      $settings['region'] = 'sidebar';
+    }
+    $block = $this->placeBlock($block_plugin, $settings);
     $block_selector = $this->getBlockSelector($block);
     $block_id = $block->id();
     $this->drupalGet('user');

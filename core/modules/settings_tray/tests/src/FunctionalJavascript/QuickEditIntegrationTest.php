@@ -76,8 +76,13 @@ class QuickEditIntegrationTest extends SettingsTrayTestBase {
     foreach ($this->getTestThemes() as $theme) {
 
       $this->enableTheme($theme);
-
-      $block = $this->placeBlock($block_plugin);
+      $settings = [];
+      if ($theme === 'olivero') {
+        // Olivero doesn't have the 'sidebar_first' region that this method
+        // defaults to.
+        $settings['region'] = 'sidebar';
+      }
+      $block = $this->placeBlock($block_plugin, $settings);
       $block_selector = $this->getBlockSelector($block);
       // Load the same page twice.
       foreach ([1, 2] as $page_load_times) {
