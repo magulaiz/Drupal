@@ -50,12 +50,14 @@ trait AssertMenuActiveTrailTrait {
     }
     $xpath_last_active = ($last_active ? 'and contains(@class, :class-active)' : '');
     $xpath .= 'li[contains(@class, :class-trail)]/a[contains(@href, :href) ' . $xpath_last_active . 'and contains(text(), :title)]';
+    $class_trail = (\Drupal::theme()->getActiveTheme()->getName() === 'olivero') ? 'menu__item--active-trail' : 'menu-item--active-trail';
     $args = [
-      ':class-trail' => 'menu-item--active-trail',
+      ':class-trail' => $class_trail,
       ':class-active' => 'is-active',
       ':href' => Url::fromUri('base:' . $active_link_path)->toString(),
       ':title' => $active_link_title,
     ];
+    // @todo This is still not there.
     $elements = $this->xpath($xpath, $args);
     $this->assertTrue(!empty($elements), new FormattableMarkup('Active link %title was found in menu tree, including active trail links %tree.', [
       '%title' => $active_link_title,
