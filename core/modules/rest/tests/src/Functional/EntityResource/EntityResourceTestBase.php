@@ -558,7 +558,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $expected = $this->getExpectedNormalizedEntity();
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
-    $actual = static::castToString($actual);
     static::recursiveKSort($actual);
     $this->assertEqualsCanonicalizing($expected, $actual);
 
@@ -1422,8 +1421,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           // as strings in PHP memory.
           $expected_stored_data = static::castToString($expected_stored_data);
         }
-        $expected_field_normalization = static::castToString($field_normalization);
-        $this->assertEntityArraySubset($expected_field_normalization, static::castToString($this->serializer->normalize($modified_entity->get($field_name)->getValue())));
+        $this->assertEntityArraySubset($expected_stored_data, $modified_entity->get($field_name)->getValue());
       }
     }
   }
