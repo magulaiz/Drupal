@@ -86,6 +86,7 @@ class ImageItem extends FileItem {
     ] + parent::defaultFieldSettings();
 
     unset($settings['description_field']);
+    unset($settings['description_field_required']);
     return $settings;
   }
 
@@ -252,8 +253,9 @@ class ImageItem extends FileItem {
       '#suffix' => '</div>',
     ];
 
-    // Remove the description option.
+    // Remove the description options.
     unset($element['description_field']);
+    unset($element['description_field_required']);
 
     // Add title and alt configuration options.
     $element['alt_field'] = [
