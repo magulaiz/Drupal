@@ -307,7 +307,6 @@ class ConfigManager implements ConfigManagerInterface {
     return $this->findConfigEntityDependencies($type, $names, $dependency_manager);
   }
 
-
   /**
    * {@inheritdoc}
    */

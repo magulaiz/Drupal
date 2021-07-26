@@ -149,6 +149,7 @@ interface ConfigManagerInterface {
    * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
    *   Instead you should use
    *   ConfigManagerInterface::findConfigEntityDependencies().
+   * @see https://www.drupal.org/node/3225357
    */
   public function findConfigEntityDependents($type, array $names);
 
@@ -169,6 +170,7 @@ interface ConfigManagerInterface {
    * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
    *   Instead you should use
    *   ConfigManagerInterface::findConfigEntityDependenciesAsEntities().
+   * @see https://www.drupal.org/node/3225357
    */
   public function findConfigEntityDependentsAsEntities($type, array $names);
 
