@@ -290,10 +290,10 @@
     once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
       const $linkElement = $(ajaxLink);
 
-        let progress = 'throbber';
-        if (typeof $linkElement.data('ajax-progress') !== 'undefined') {
-          progress = $linkElement.data('ajax-progress');
-        }
+        const progress =
+          typeof $linkElement.data('ajax-progress') !== 'undefined'
+            ? $linkElement.data('ajax-progress')
+            : 'throbber';
 
         const elementSettings = {
           wrapper: $linkElement.data('ajax-wrapper') || null,
@@ -1012,7 +1012,7 @@
       }
     });
 
-    // If the focus hasn't be changed by the ajax commands, check if the
+    // If the focus hasn't been changed by the AJAX commands, check if the
     // triggering element has a 'data-ajax-focus' attribute that specifies a
     // selector which should get focus. If not, try to refocus the triggering
     // element or one of its parents if that element does not exist anymore.

@@ -141,12 +141,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   Drupal.ajax.bindAjaxLinks = function (element) {
     once('ajax', '.use-ajax', element).forEach(function (ajaxLink) {
       var $linkElement = $(ajaxLink);
-      var progress = 'throbber';
-
-      if (typeof $linkElement.data('ajax-progress') !== 'undefined') {
-        progress = $linkElement.data('ajax-progress');
-      }
-
+      var progress = typeof $linkElement.data('ajax-progress') !== 'undefined' ? $linkElement.data('ajax-progress') : 'throbber';
       var elementSettings = {
         wrapper: $linkElement.data('ajax-wrapper') || null,
         progress: {
