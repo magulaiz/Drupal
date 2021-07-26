@@ -275,7 +275,7 @@ class RendererBubblingTest extends RendererTestBase {
           // The keys + contexts this redirects to.
           'keys' => ['parent'],
           'contexts' => ['bar', 'foo'],
-          'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'tags' => ['yar', 'har', 'fiddle', 'dee'],
           'bin' => 'render',
           'max-age' => Cache::PERMANENT,
         ],
@@ -284,7 +284,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => [],
         '#cache' => [
           'contexts' => ['bar', 'foo'],
-          'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'tags' => ['yar', 'har', 'fiddle', 'dee'],
           'max-age' => Cache::PERMANENT,
         ],
         '#markup' => 'parent',
@@ -320,7 +320,7 @@ class RendererBubblingTest extends RendererTestBase {
         '#attached' => ['library' => ['foo/bar']],
         '#cache' => [
           'contexts' => ['foo'],
-          'tags' => ['dee', 'fiddle', 'har', 'yar'],
+          'tags' => ['yar', 'har', 'fiddle', 'dee'],
           'max-age' => Cache::PERMANENT,
         ],
         '#markup' => 'parent',

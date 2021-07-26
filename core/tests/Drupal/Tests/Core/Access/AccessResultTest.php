@@ -505,7 +505,7 @@ class AccessResultTest extends UnitTestCase {
       ->addCacheTags(['bar:qux'])
       ->addCacheTags(['foo:baz'])
       ->addCacheTags(['bar:baz']);
-    $verify($access, ['bar:baz', 'bar:qux', 'foo:bar', 'foo:baz']);
+    $verify($access, ['foo:bar', 'bar:qux', 'foo:baz', 'bar:baz']);
 
     // ::addCacheableDependency() convenience method.
     $node = $this->createMock('\Drupal\node\NodeInterface');

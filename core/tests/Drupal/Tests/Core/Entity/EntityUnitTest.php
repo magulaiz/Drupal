@@ -406,10 +406,10 @@ class EntityUnitTest extends UnitTestCase {
       ],
       [
         [
-          // Own cache tag.
-          $this->entityTypeId . ':' . $this->values['id'],
           // List cache tag.
           $this->entityTypeId . '_list',
+          // Own cache tag.
+          $this->entityTypeId . ':' . $this->values['id'],
         ],
       ]);
 
@@ -438,11 +438,11 @@ class EntityUnitTest extends UnitTestCase {
       ],
       [
         [
-          // Own cache tag.
-          $this->entityTypeId . ':' . $this->values['id'],
           // List cache tag.
           $this->entityTypeId . '_list',
           $this->entityTypeId . '_list:' . $this->entity->bundle(),
+          // Own cache tag.
+          $this->entityTypeId . ':' . $this->values['id'],
         ],
       ]);
 
@@ -500,8 +500,8 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with([
-        $this->entityTypeId . ':' . $this->values['id'],
         $this->entityTypeId . '_list',
+        $this->entityTypeId . ':' . $this->values['id'],
       ]);
     $storage = $this->createMock('\Drupal\Core\Entity\EntityStorageInterface');
     $storage->expects($this->once())
@@ -519,8 +519,8 @@ class EntityUnitTest extends UnitTestCase {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with([
-        $this->entityTypeId . ':' . $this->values['id'],
         $this->entityTypeId . '_list',
+        $this->entityTypeId . ':' . $this->values['id'],
         $this->entityTypeId . '_list:' . $this->entity->bundle(),
       ]);
     $this->entityType->expects($this->atLeastOnce())
@@ -570,8 +570,7 @@ class EntityUnitTest extends UnitTestCase {
 
     // EntityTypeId is random so it can shift order. We need to duplicate the
     // sort from \Drupal\Core\Cache\Cache::mergeTags().
-    $tags = ['additional_cache_tag', $this->entityTypeId . ':' . 1];
-    sort($tags);
+    $tags = [$this->entityTypeId . ':' . 1, 'additional_cache_tag'];
     $this->assertEquals($tags, $this->entity->getCacheTags());
     $this->assertEquals([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
   }

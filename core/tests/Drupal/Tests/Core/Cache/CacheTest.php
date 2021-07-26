@@ -52,11 +52,11 @@ class CacheTest extends UnitTestCase {
     return [
       [[], [], []],
       [['bar', 'foo'], ['bar'], ['foo']],
-      [['bar', 'foo'], ['foo'], ['bar']],
-      [['bar', 'foo'], ['foo'], ['bar', 'foo']],
-      [['bar', 'foo'], ['foo'], ['foo', 'bar']],
+      [['foo', 'bar'], ['foo'], ['bar']],
+      [['foo', 'bar'], ['foo'], ['bar', 'foo']],
+      [['foo', 'bar'], ['foo'], ['foo', 'bar']],
       [['bar', 'foo'], ['bar', 'foo'], ['foo', 'bar']],
-      [['bar', 'foo'], ['foo', 'bar'], ['foo', 'bar']],
+      [['foo', 'bar'], ['foo', 'bar'], ['foo', 'bar']],
       [['bar', 'foo', 'llama'], ['bar', 'foo'], ['foo', 'bar'], ['llama', 'foo']],
     ];
   }

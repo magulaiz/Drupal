@@ -51,9 +51,8 @@ class Cache {
    *   The merged array of cache tags.
    */
   public static function mergeTags(array ...$cache_tags) {
-    $cache_tags = array_unique(array_merge(...$cache_tags));
+    $cache_tags = array_values(array_unique(array_merge(...$cache_tags)));
     assert(Inspector::assertAllStrings($cache_tags), 'Cache tags must be valid strings');
-    sort($cache_tags);
     return $cache_tags;
   }
 
