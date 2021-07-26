@@ -17,6 +17,11 @@ class LinkTest extends WebDriverTestBase {
   protected static $modules = ['ajax_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * Test links that use the 'use-ajax' class.
    */
   public function testLinks() {
