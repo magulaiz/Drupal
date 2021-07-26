@@ -144,6 +144,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var progress = typeof $linkElement.data('ajax-progress') !== 'undefined' ? $linkElement.data('ajax-progress') : 'throbber';
       var elementSettings = {
         wrapper: $linkElement.data('ajax-wrapper') || null,
+        method: $linkElement.data('ajax-method') || 'replaceWith',
         progress: {
           type: progress
         },

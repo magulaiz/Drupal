@@ -297,6 +297,7 @@
 
         const elementSettings = {
           wrapper: $linkElement.data('ajax-wrapper') || null,
+          method: $linkElement.data('ajax-method') || 'replaceWith',
           progress: { type: progress },
           dialogType: $linkElement.data('dialog-type'),
           dialog: $linkElement.data('dialog-options'),
