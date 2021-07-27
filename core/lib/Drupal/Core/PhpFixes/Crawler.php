@@ -16,6 +16,7 @@ namespace Drupal\Core\PhpFixes;
 
 use Masterminds\HTML5;
 use Symfony\Component\CssSelector\CssSelectorConverter;
+use Symfony\Component\DomCrawler\Link;
 
 /**
  * Crawler eases navigation of a list of \DOMNode objects.

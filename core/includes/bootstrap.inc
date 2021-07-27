@@ -142,10 +142,21 @@ class_alias('Drupal\Core\PhpFixes\Session', 'Symfony\Component\HttpFoundation\Se
 class_alias('Drupal\Core\PhpFixes\GenericEvent', 'Symfony\Component\EventDispatcher\GenericEvent', TRUE);
 class_alias('Drupal\Core\PhpFixes\ConstraintViolationList', 'Symfony\Component\Validator\ConstraintViolationList', TRUE);
 class_alias('Drupal\Core\PhpFixes\RouteCollection', 'Symfony\Component\Routing\RouteCollection', TRUE);
-class_alias('Drupal\Core\PhpFixes\Crawler', 'Symfony\Component\DomCrawler\Crawler', TRUE);
-class_alias('Drupal\Core\PhpFixes\Form', 'Symfony\Component\DomCrawler\Form', TRUE);
+if (class_exists('Symfony\Component\DomCrawler\Link')) {
+  class_alias('Drupal\Core\PhpFixes\Crawler', 'Symfony\Component\DomCrawler\Crawler', TRUE);
+  class_alias('Drupal\Core\PhpFixes\Form', 'Symfony\Component\DomCrawler\Form', TRUE);
+}
 class_alias('Drupal\Core\PhpFixes\CookieJar', 'GuzzleHttp\Cookie\CookieJar', TRUE);
 class_alias('Drupal\Core\PhpFixes\MockHandler', 'GuzzleHttp\Handler\MockHandler', TRUE);
+class_alias('Drupal\Core\PhpFixes\Node', 'Twig\Node\Node', TRUE);
+if (class_exists('\Symfony\Component\Finder\Glob')) {
+  class_alias('Drupal\Core\PhpFixes\FileTypeFilterIterator', 'Symfony\Component\Finder\Iterator\FileTypeFilterIterator', TRUE);
+  class_alias('Drupal\Core\PhpFixes\PathFilterIterator', 'Symfony\Component\Finder\Iterator\PathFilterIterator', TRUE);
+  class_alias('Drupal\Core\PhpFixes\Finder', 'Symfony\Component\Finder\Finder', TRUE);
+}
+if (class_exists('\Symfony\Component\Process\ProcessUtils')) {
+  class_alias('Drupal\Core\PhpFixes\Process', 'Symfony\Component\Process\Process', TRUE);
+}
 
 /**
  * Returns and optionally sets the filename for a system resource.
@@ -415,7 +426,7 @@ function drupal_valid_test_ua($new_prefix = NULL) {
   $http_user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : NULL;
   $user_agent = isset($_COOKIE['SIMPLETEST_USER_AGENT']) ? $_COOKIE['SIMPLETEST_USER_AGENT'] : $http_user_agent;
   if (isset($user_agent) && preg_match("/^simple(\w+\d+):(.+):(.+):(.+)$/", $user_agent, $matches)) {
-    list(, $prefix, $time, $salt, $hmac) = $matches;
+    [, $prefix, $time, $salt, $hmac] = $matches;
     $check_string = $prefix . ':' . $time . ':' . $salt;
     // Read the hash salt prepared by drupal_generate_test_ua().
     // This function is called before settings.php is read and Drupal's error
