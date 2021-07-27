@@ -46,6 +46,20 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $time;
 
   /**
+   * The key-value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $keyValue;
+
+  /**
+   * Logger.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a ProviderRepository instance.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
