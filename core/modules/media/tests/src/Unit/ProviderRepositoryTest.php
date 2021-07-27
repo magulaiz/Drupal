@@ -120,31 +120,29 @@ END;
    * @param int $expiration_offset
    *   An offset to add to the current time to determine when the primed data,
    *   if any, expires.
-   * @param bool $primed
-   *   If TRUE, there will be data already stored in key-value, which should be
-   *   returned. Otherwise, we expect an exception.
    *
    * @dataProvider providerInvalidResponse
    */
-  public function testInvalidResponse(int $expiration_offset, bool $primed): void {
+  public function testInvalidResponse(int $expiration_offset): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();
 
-    if ($primed) {
-      $this->keyValue->set('oembed_providers', [
-        'data' => [
-          'YouTube' => $provider,
-        ],
-        'expires' => $this->currentTime + $expiration_offset,
-      ]);
-    }
-    else {
-      $this->expectException(ProviderException::class);
-    }
+    // This stored data should be returned, irrespective of whether it's fresh.
+    $this->keyValue->set('oembed_providers', [
+      'data' => [
+        'YouTube' => $provider,
+      ],
+      'expires' => $this->currentTime + $expiration_offset,
+    ]);
 
     $response = new Response(200, [], "This certainly isn't valid JSON.");
-    $this->responses->append($response);
+    $this->responses->append($response, $response);
     $this->assertSame($provider, $this->repository->get('YouTube'));
+
+    // When there is no stored data, we should get an exception.
+    $this->keyValue->delete('oembed_providers');
+    $this->expectException(ProviderException::class);
+    $this->repository->get('YouTube');
   }
 
   /**
@@ -155,71 +153,38 @@ END;
    */
   public function providerInvalidResponse(): array {
     return [
-      'expired, primed' => [
+      'expired' => [
         -86400,
-        TRUE,
       ],
-      'expired, not primed' => [
-        -86400,
-        FALSE,
-      ],
-      'fresh, primed' => [
+      'fresh' => [
         86400,
-        TRUE,
-      ],
-      'fresh, not primed' => [
-        86400,
-        FALSE,
       ],
     ];
   }
 
   /**
    * Tests handling of exceptions when fetching the provider database.
-   *
-   * @param bool $primed
-   *   If TRUE, there will be data already stored in key-value, which should be
-   *   returned. Otherwise, we expect an exception.
-   *
-   * @dataProvider providerRequestException
    */
-  public function testRequestException(bool $primed): void {
+  public function testRequestException(): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();
 
-    if ($primed) {
-      // This data is expired (stale), but it should be returned anyway.
-      $this->keyValue->set('oembed_providers', [
-        'data' => [
-          'YouTube' => $provider,
-        ],
-        'expires' => $this->currentTime - 86400,
-      ]);
-    }
-    else {
-      $this->expectException(ProviderException::class);
-    }
+    // This data is expired (stale), but it should be returned anyway.
+    $this->keyValue->set('oembed_providers', [
+      'data' => [
+        'YouTube' => $provider,
+      ],
+      'expires' => $this->currentTime - 86400,
+    ]);
 
     $response = new Response(503);
-    $this->responses->append($response);
+    $this->responses->append($response, $response);
     $this->assertSame($provider, $this->repository->get('YouTube'));
-  }
 
-  /**
-   * Data provider for ::testRequestException().
-   *
-   * @return array[]
-   *   Sets of arguments to pass to the test method.
-   */
-  public function providerRequestException(): array {
-    return [
-      'primed' => [
-        TRUE,
-      ],
-      'not primed' => [
-        FALSE,
-      ],
-    ];
+    // When there is no stored data, we should get an exception.
+    $this->keyValue->delete('oembed_providers');
+    $this->expectException(ProviderException::class);
+    $this->repository->get('YouTube');
   }
 
   /**
