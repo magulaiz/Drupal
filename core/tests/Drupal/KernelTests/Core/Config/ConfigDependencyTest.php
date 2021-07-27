@@ -32,7 +32,7 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $dependents = $config_manager->findConfigEntityDependencies('module', ['system']);
     $this->assertTrue(isset($dependents['system.site']), 'Simple configuration system.site has a UUID key even though it is not a configuration entity and therefore is found when looking for dependencies of the System module.');
     // Ensure that calling
-    // \Drupal\Core\Config\ConfigManager::findConfigEntityDependentsAsEntities()
+    // \Drupal\Core\Config\ConfigManager::findConfigEntityDependenciesAsEntities()
     // does not try to load system.site as an entity.
     $config_manager->findConfigEntityDependenciesAsEntities('module', ['system']);
   }
