@@ -26,18 +26,19 @@ class ComputedFileUrlTest extends KernelTestBase {
    * @covers ::getValue
    */
   public function testGetValue() {
-    $entity = $this->prophesize(FileInterface::class);
-    $entity->getFileUri()
+    $entity = $this->createMock(FileInterface::class);
+    $entity->expects($this->any())
+      ->method('getFileUri')
       ->willReturn($this->testUrl);
 
-    $parent = $this->prophesize(FieldItemInterface::class);
-    $parent->getEntity()
-      ->shouldBeCalledTimes(2)
-      ->willReturn($entity->reveal());
+    $parent = $this->createMock(FieldItemInterface::class);
+    $parent->expects($this->exactly(2))
+      ->method('getEntity')
+      ->willReturn($entity);
 
     $definition = $this->prophesize(DataDefinitionInterface::class);
 
-    $typed_data = new ComputedFileUrl($definition->reveal(), $this->randomMachineName(), $parent->reveal());
+    $typed_data = new ComputedFileUrl($definition->reveal(), $this->randomMachineName(), $parent);
 
     $expected = base_path() . $this->siteDirectory . '/files/druplicon.txt';
 
@@ -52,12 +53,13 @@ class ComputedFileUrlTest extends KernelTestBase {
    */
   public function testSetValue() {
     $name = $this->randomMachineName();
-    $parent = $this->prophesize(FieldItemInterface::class);
-    $parent->onChange($name)
-      ->shouldBeCalled();
+    $parent = $this->createMock(FieldItemInterface::class);
+    $parent->expects($this->atLeastOnce())
+      ->method('onChange')
+      ->with($name);
 
     $definition = $this->prophesize(DataDefinitionInterface::class);
-    $typed_data = new ComputedFileUrl($definition->reveal(), $name, $parent->reveal());
+    $typed_data = new ComputedFileUrl($definition->reveal(), $name, $parent);
 
     // Setting the value explicitly should mean the parent entity is never
     // called into.
@@ -74,12 +76,13 @@ class ComputedFileUrlTest extends KernelTestBase {
    */
   public function testSetValueNoNotify() {
     $name = $this->randomMachineName();
-    $parent = $this->prophesize(FieldItemInterface::class);
-    $parent->onChange($name)
-      ->shouldNotBeCalled();
+    $parent = $this->createMock(FieldItemInterface::class);
+    $parent->expects($this->never())
+      ->method('onChange')
+      ->with($name);
 
     $definition = $this->prophesize(DataDefinitionInterface::class);
-    $typed_data = new ComputedFileUrl($definition->reveal(), $name, $parent->reveal());
+    $typed_data = new ComputedFileUrl($definition->reveal(), $name, $parent);
 
     // Setting the value should explicitly should mean the parent entity is
     // never called into.
