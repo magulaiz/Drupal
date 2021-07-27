@@ -58,6 +58,7 @@ trait MarkupTrait {
    * @return int
    *   The length of the string.
    */
+  #[\ReturnTypeWillChange]
   public function count() {
     return mb_strlen($this->string);
   }
