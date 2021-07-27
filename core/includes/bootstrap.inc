@@ -145,6 +145,7 @@ class_alias('Drupal\Core\PhpFixes\RouteCollection', 'Symfony\Component\Routing\R
 class_alias('Drupal\Core\PhpFixes\Crawler', 'Symfony\Component\DomCrawler\Crawler', TRUE);
 class_alias('Drupal\Core\PhpFixes\Form', 'Symfony\Component\DomCrawler\Form', TRUE);
 class_alias('Drupal\Core\PhpFixes\CookieJar', 'GuzzleHttp\Cookie\CookieJar', TRUE);
+class_alias('Drupal\Core\PhpFixes\MockHandler', 'GuzzleHttp\Handler\MockHandler', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
