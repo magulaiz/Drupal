@@ -82,11 +82,11 @@ class ProviderRepository implements ProviderRepositoryInterface {
     $this->time = $time;
     $this->maxAge = $max_age;
     if (!($key_value_factory instanceof KeyValueFactoryInterface)) {
-      @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0, and will will be required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $key_value_factory = \Drupal::service('keyvalue');
     }
     if (empty($logger_factory)) {
-      @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0, and will be required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $logger_factory = \Drupal::service('logger.factory');
     }
     $this->keyValue = $key_value_factory->get('media');

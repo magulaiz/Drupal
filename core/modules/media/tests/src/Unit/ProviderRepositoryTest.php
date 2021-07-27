@@ -24,7 +24,7 @@ class ProviderRepositoryTest extends UnitTestCase {
    *
    * @var \Drupal\media\OEmbed\ProviderRepository
    */
-  private $providerRepository;
+  private $repository;
 
   /**
    * The HTTP client handler which will serve responses.
@@ -34,11 +34,11 @@ class ProviderRepositoryTest extends UnitTestCase {
   private $responses;
 
   /**
-   * The key-value store factory.
+   * The key-value store.
    *
-   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  private $keyValueFactory;
+  private $keyValue;
 
   /**
    * The time that the current test began.
@@ -58,7 +58,10 @@ class ProviderRepositoryTest extends UnitTestCase {
         'oembed_providers_url' => 'https://oembed.com/providers.json',
       ],
     ]);
-    $this->keyValueFactory = new KeyValueMemoryFactory();
+
+    $key_value_factory = new KeyValueMemoryFactory();
+    $this->keyValue = $key_value_factory->get('media');
+
     $this->currentTime = time();
     $time = $this->prophesize('\Drupal\Component\Datetime\TimeInterface');
     $time->getCurrentTime()->willReturn($this->currentTime);
@@ -67,11 +70,11 @@ class ProviderRepositoryTest extends UnitTestCase {
     $client = new Client([
       'handler' => HandlerStack::create($this->responses),
     ]);
-    $this->providerRepository = new ProviderRepository(
+    $this->repository = new ProviderRepository(
       $client,
       $config_factory,
       $time->reveal(),
-      $this->keyValueFactory,
+      $key_value_factory,
       new LoggerChannelFactory()
     );
   }
@@ -102,36 +105,52 @@ END;
     $response = new Response(200, [], $body);
     $this->responses->append($response);
 
-    $provider = $this->providerRepository->get('YouTube');
+    $provider = $this->repository->get('YouTube');
     $stored_data = [
       'data' => [
         'YouTube' => $provider,
       ],
       'expires' => $this->currentTime + 604800,
     ];
-    $this->assertSame($stored_data, $this->keyValueFactory->get('media')->get('oembed_providers'));
+    $this->assertSame($stored_data, $this->keyValue->get('oembed_providers'));
   }
 
   /**
    * Tests that an invalid response returns the data stored in key-value.
    *
-   * @dataProvider providerExpired
+   * @dataProvider providerInvalidResponse
    */
   public function testInvalidResponse(int $expiration_offset): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();
 
-    $this->keyValueFactory->get('media')
-      ->set('oembed_providers', [
-        'data' => [
-          'YouTube' => $provider,
-        ],
-        'expires' => $this->currentTime + $expiration_offset,
-      ]);
+    $this->keyValue->set('oembed_providers', [
+      'data' => [
+        'YouTube' => $provider,
+      ],
+      'expires' => $this->currentTime + $expiration_offset,
+    ]);
 
     $response = new Response(200, [], "This certainly isn't valid JSON.");
     $this->responses->append($response);
-    $this->assertSame($provider, $this->providerRepository->get('YouTube'));
+    $this->assertSame($provider, $this->repository->get('YouTube'));
+  }
+
+  /**
+   * Data provider for ::testInvalidResponse().
+   *
+   * @return array[]
+   *   Sets of arguments to pass to the test method.
+   */
+  public function providerInvalidResponse(): array {
+    return [
+      'expired' => [
+        -86400,
+      ],
+      'fresh' => [
+        86400,
+      ],
+    ];
   }
 
   /**
@@ -141,7 +160,7 @@ END;
     $response = new Response(200, [], "Most definitely an invalid response.");
     $this->responses->append($response);
     $this->expectException(ProviderException::class);
-    $this->providerRepository->get('YouTube');
+    $this->repository->get('YouTube');
   }
 
   /**
@@ -152,17 +171,16 @@ END;
       ->reveal();
 
     // This data is expired (stale), but it should be returned anyway.
-    $this->keyValueFactory->get('media')
-      ->set('oembed_providers', [
-        'data' => [
-          'YouTube' => $provider,
-        ],
-        'expires' => $this->currentTime - 86400,
-      ]);
+    $this->keyValue->set('oembed_providers', [
+      'data' => [
+        'YouTube' => $provider,
+      ],
+      'expires' => $this->currentTime - 86400,
+    ]);
 
     $response = new Response(503);
     $this->responses->append($response);
-    $this->assertSame($provider, $this->providerRepository->get('YouTube'));
+    $this->assertSame($provider, $this->repository->get('YouTube'));
   }
 
   /**
@@ -172,7 +190,7 @@ END;
     $response = new Response(418);
     $this->responses->append($response);
     $this->expectException(ProviderException::class);
-    $this->providerRepository->get('YouTube');
+    $this->repository->get('YouTube');
   }
 
   /**
@@ -206,7 +224,7 @@ END;
     $response = new Response(200, [], $body);
     $this->responses->append($response);
 
-    $youtube = $this->providerRepository->get('YouTube');
+    $youtube = $this->repository->get('YouTube');
     // The corrupt provider should not be stored.
     $stored_data = [
       'data' => [
@@ -214,23 +232,10 @@ END;
       ],
       'expires' => $this->currentTime + 604800,
     ];
-    $this->assertSame($stored_data, $this->keyValueFactory->get('media')->get('oembed_providers'));
+    $this->assertSame($stored_data, $this->keyValue->get('oembed_providers'));
 
     $this->expectException('InvalidArgumentException');
-    $this->providerRepository->get("Uncle Rico's football videos");
-  }
-
-  /**
-   * Data provider.
-   *
-   * @return array
-   *   Test cases.
-   */
-  public function providerExpired() : array {
-    return [
-      'expired' => [-86400],
-      'fresh' => [86400],
-    ];
+    $this->repository->get("Uncle Rico's football videos");
   }
 
 }
