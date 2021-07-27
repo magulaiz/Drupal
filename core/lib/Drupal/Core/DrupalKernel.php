@@ -1032,13 +1032,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         // Simpletest's internal browser.
         define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
-        if (!class_exists('JsonSchema\Constraints\BaseConstraint', FALSE)) {
-          // PHP 8.1 workarounds not final fixes.
-          // @see https://www.drupal.org/project/drupal/issues/3220021
-          class_alias('Drupal\Core\PhpFixes\BaseConstraint', 'JsonSchema\Constraints\BaseConstraint', TRUE);
-          class_alias('Drupal\Core\PhpFixes\Constraint', 'JsonSchema\Constraints\Constraint', TRUE);
-        }
-
         // Web tests are to be conducted with runtime assertions active.
         assert_options(ASSERT_ACTIVE, TRUE);
         Handle::register();

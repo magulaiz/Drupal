@@ -135,8 +135,6 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
 if (PHP_VERSION_ID >= 80100) {
   class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Reflection\StaticReflectionClass', TRUE);
 }
-class_alias('Drupal\Core\PhpFixes\Inline', 'Symfony\Component\Yaml\Inline', TRUE);
-class_alias('Drupal\Core\PhpFixes\FileBag', 'Symfony\Component\HttpFoundation\FileBag', TRUE);
 
 /**
  * Returns and optionally sets the filename for a system resource.
