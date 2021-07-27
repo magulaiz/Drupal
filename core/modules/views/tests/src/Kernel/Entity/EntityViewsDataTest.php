@@ -636,8 +636,6 @@ class EntityViewsDataTest extends KernelTestBase {
    *   The views data to check.
    * @param string $field_name
    *   The entity field name.
-   *
-   * @todo Rename this so it doesn't clash with AssertContentTrait.
    */
   protected function assertViewsDataField($data, $field_name) {
     $this->assertEquals($field_name, $data['entity field']);
