@@ -232,7 +232,16 @@ class ResourceFetcher implements ResourceFetcherInterface {
     // Convert XML to JSON so that the parsed resource has a consistent array
     // structure, regardless of any XML attributes or quirks of the XML parser.
     $data = Json::encode($content);
-    return Json::decode($data);
+    $data = Json::decode($data);
+
+    // Normalize the array keys so that any dashes are converted to underscores
+    // (e.g. 'thumbnail-url' to 'thumbnail_url').
+    foreach ($data as $key => $value) {
+      unset($data[$key]);
+      $key = str_replace('-', '_', $key);
+      $data[$key] = $value;
+    }
+    return $data;
   }
 
 }
