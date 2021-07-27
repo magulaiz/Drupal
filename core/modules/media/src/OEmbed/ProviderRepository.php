@@ -111,7 +111,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
     catch (TransferException $e) {
       if (isset($stored['data'])) {
         // Use the expired data.
-        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        $this->logger->warning('Remote oEmbed providers database returned invalid or empty list. Using previously stored data. This may contain out of date information.');
         return $stored['data'];
       }
       // We have no previous data and the request failed.
