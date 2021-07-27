@@ -67,7 +67,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
     // Calling code can override these prophecies later and set up different
     // behaviors.
     $this->migration->getIdMap()->willReturn(
-      $this->prophesize(MigrateIdMapInterface::class)->reveal()
+      $this->createMock(MigrateIdMapInterface::class)
     );
     $this->migration->getDestinationIds()->willReturn([]);
   }
