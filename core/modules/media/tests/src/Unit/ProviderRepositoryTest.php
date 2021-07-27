@@ -92,7 +92,7 @@ class ProviderRepositoryTest extends UnitTestCase {
       {
         "schemes": [
           "https:\/\/*.youtube.com\/watch*",
-          "https:\/\/*.youtube.com\/v\/*",
+          "https:\/\/*.youtube.com\/v\/*"
         ],
         "url": "https:\/\/www.youtube.com\/oembed",
         "discovery": true
@@ -205,7 +205,7 @@ END;
       {
         "schemes": [
           "https:\/\/*.youtube.com\/watch*",
-          "https:\/\/*.youtube.com\/v\/*",
+          "https:\/\/*.youtube.com\/v\/*"
         ],
         "url": "https:\/\/www.youtube.com\/oembed",
         "discovery": true
