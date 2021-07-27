@@ -135,11 +135,15 @@ class FieldBlockTest extends EntityKernelTestBase {
     $account = $this->prophesize(AccountInterface::class);
     $entity->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
     $entity->hasField('the_field_name')->willReturn(TRUE);
-    $field = $this->prophesize(FieldItemListInterface::class);
-    $entity->get('the_field_name')->willReturn($field->reveal());
+    $field = $this->createMock(FieldItemListInterface::class);
+    $entity->get('the_field_name')->willReturn($field);
 
-    $field->access('view', $account->reveal(), TRUE)->willReturn($field_access);
-    $field->isEmpty()->shouldNotBeCalled();
+    $field->expects($this->any())
+      ->method('access')
+      ->with('view', $account->reveal(), TRUE)
+      ->willReturn($field_access);
+    $field->expects($this->never())
+      ->method('isEmpty');
 
     $access = $block->access($account->reveal(), TRUE);
     $this->assertSame($expected, $access->isAllowed());
