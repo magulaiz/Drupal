@@ -4,9 +4,10 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 
@@ -68,26 +69,27 @@ class ProviderRepository implements ProviderRepositoryInterface {
    *   The config factory service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
-   *   (optional) The cache backend.
+   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
+   *   The key-value store factory.
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
+   *   The logger channel factory.
    * @param int $max_age
    *   (optional) How long the cache data should be kept. Defaults to a week.
    */
-  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, CacheBackendInterface $cache_backend = NULL, $max_age = 604800) {
+  public function __construct(ClientInterface $http_client, ConfigFactoryInterface $config_factory, TimeInterface $time, $key_value_factory = NULL, LoggerChannelFactoryInterface $logger_factory = NULL, int $max_age = 604800) {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
-    $this->cacheBackend = $cache_backend;
-    $this->maxAge = (int) $max_age;
-    if (!($key_value instanceof KeyValueFactoryInterface)) {
-      @trigger_error('The keyvalue service should be passed to ProviderRepository::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
-      $key_value = \Drupal::service('keyvalue');
+    $this->maxAge = $max_age;
+    if (!($key_value_factory instanceof KeyValueFactoryInterface)) {
+      @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0, and will will be required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      $key_value_factory = \Drupal::service('keyvalue');
     }
-    if (is_null($logger_factory)) {
-      @trigger_error('The logger.factory service should be passed to ProviderRepository::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+    if (empty($logger_factory)) {
+      @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0, and will be required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $logger_factory = \Drupal::service('logger.factory');
     }
-    $this->keyValue = $key_value->get('media.oembed');
+    $this->keyValue = $key_value_factory->get('media');
     $this->logger = $logger_factory->get('media');
   }
 
@@ -96,12 +98,13 @@ class ProviderRepository implements ProviderRepositoryInterface {
    */
   public function getAll() {
     $current_time = $this->time->getCurrentTime();
-    // We use key-value here instead of a cache backend because in the event
-    // that oembed.com is down or having issues, using stale data is better than
-    // throwing an exception. If we were to use a cache backend, once the data
-    // has expired, we have no way to retrieve it in the event of oembed.com
-    // being down.
-    if (($stored = $this->keyValue->get('providers')) && $stored['expires'] > $current_time) {
+    $stored = $this->keyValue->get('oembed_providers');
+    // If we have stored data that hasn't yet expired, return that. We need to
+    // store the data in a key-value store because, if the remote provider
+    // database is unavailable, we'd rather return stale data than throw an
+    // exception. This means we cannot use a normal cache backend or expirable
+    // key-value store, since those could delete the stale data at any time.
+    if ($stored && $stored['expires'] > $current_time) {
       return $stored['data'];
     }
 
@@ -110,8 +113,11 @@ class ProviderRepository implements ProviderRepositoryInterface {
     }
     catch (TransferException $e) {
       if (isset($stored['data'])) {
-        // Use the expired data.
-        $this->logger->warning('Remote oEmbed providers database returned invalid or empty list. Using previously stored data. This may contain out of date information.');
+        // Use the stale data to fall back gracefully, but warn site
+        // administrators that we used stale data.
+        $this->logger->warning('Remote oEmbed providers could not be retrieved due to error: @error. Using previously stored data. This may contain out of date information.', [
+          '@error' => $e->getMessage(),
+        ]);
         return $stored['data'];
       }
       // We have no previous data and the request failed.
@@ -122,8 +128,9 @@ class ProviderRepository implements ProviderRepositoryInterface {
 
     if (!is_array($providers) || empty($providers)) {
       if (isset($stored['data'])) {
-        // Use the expired data.
-        $this->logger->error('Remote oEmbed providers database returned invalid or empty list, using previous - this may contain out of date information');
+        // Use the stale data to fall back gracefully, but as above, warn site
+        // administrators that we used stale data.
+        $this->logger->warning('Remote oEmbed providers database returned invalid or empty list. Using previously stored data. This may contain out of date information.');
         return $stored['data'];
       }
       // We have no previous data and the current data is corrupt.
@@ -142,7 +149,10 @@ class ProviderRepository implements ProviderRepositoryInterface {
       }
     }
 
-    $this->cacheSet($cache_id, $keyed_providers, $this->time->getCurrentTime() + $this->maxAge);
+    $this->keyValue->set('oembed_providers', [
+      'data' => $keyed_providers,
+      'expires' => $current_time + $this->maxAge,
+    ]);
     return $keyed_providers;
   }
 

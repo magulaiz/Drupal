@@ -2,235 +2,222 @@
 
 namespace Drupal\Tests\media\Unit;
 
-use Drupal\Component\Datetime\Time;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Logger\LoggerChannelFactory;
-use Drupal\media\OEmbed\Provider;
 use Drupal\media\OEmbed\ProviderException;
 use Drupal\media\OEmbed\ProviderRepository;
-use Drupal\media\OEmbed\ProviderRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 /**
- * Defines a class for testing provider repository functionality.
+ * @coversDefaultClass \Drupal\media\OEmbed\ProviderRepository
  *
  * @group media
  */
 class ProviderRepositoryTest extends UnitTestCase {
 
   /**
-   * Mocks the http-client.
+   * The provider repository under test.
    *
-   * @param array $history
-   *   History array.
-   * @param int $current_time
-   *   Current time.
-   * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value
-   *   Key value store.
-   * @param \GuzzleHttp\Psr7\Response $responses
-   *   Responses to use.
-   *
-   * @return \Drupal\media\OEmbed\ProviderRepositoryInterface
-   *   Test repository.
+   * @var \Drupal\media\OEmbed\ProviderRepository
    */
-  protected function getTestRepository(array &$history, int $current_time, KeyValueFactoryInterface $key_value, Response ...$responses) : ProviderRepositoryInterface {
-    // Create a mock and queue the responses.
-    $mock = new MockHandler($responses);
+  private $providerRepository;
 
-    $handler_stack = HandlerStack::create($mock);
-    $handler_stack->push(Middleware::history($history));
-    $client = new Client(['handler' => $handler_stack]);
-    return new ProviderRepository(
+  /**
+   * The HTTP client handler which will serve responses.
+   *
+   * @var \GuzzleHttp\Handler\MockHandler
+   */
+  private $responses;
+
+  /**
+   * The key-value store factory.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueMemoryFactory
+   */
+  private $keyValueFactory;
+
+  /**
+   * The time that the current test began.
+   *
+   * @var int
+   */
+  private $currentTime;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $config_factory = $this->getConfigFactoryStub([
+      'media.settings' => [
+        'oembed_providers_url' => 'https://oembed.com/providers.json',
+      ],
+    ]);
+    $this->keyValueFactory = new KeyValueMemoryFactory();
+    $this->currentTime = time();
+    $time = $this->prophesize('\Drupal\Component\Datetime\TimeInterface');
+    $time->getCurrentTime()->willReturn($this->currentTime);
+
+    $this->responses = new MockHandler();
+    $client = new Client([
+      'handler' => HandlerStack::create($this->responses),
+    ]);
+    $this->providerRepository = new ProviderRepository(
       $client,
-      $this->getConfigFactoryStub(['media.settings' => ['oembed_providers_url' => 'https://oembed.com/providers.json']]),
-      new MockTime($current_time),
-      $key_value,
-      604800,
+      $config_factory,
+      $time->reveal(),
+      $this->keyValueFactory,
       new LoggerChannelFactory()
     );
   }
 
   /**
-   * Tests a successful fetch.
+   * Tests that a successful fetch stores the provider database in key-value.
    */
-  public function testThatASuccessfulFetchIsStoredInKeyValue() {
-    $history = [];
-    $time = time();
-    $key_value = new KeyValueMemoryFactory();
-    $repo = $this->getTestRepository($history, $time, $key_value, new Response(200, [], '[{
-          "provider_name": "YouTube",
-          "provider_url": "https:\/\/www.youtube.com\/",
-          "endpoints": [
-              {
-                  "schemes": [
-                      "https:\/\/*.youtube.com\/watch*",
-                      "https:\/\/*.youtube.com\/v\/*",
-                      "https:\/\/youtu.be\/*"
-                  ],
-                  "url": "https:\/\/www.youtube.com\/oembed",
-                  "discovery": true
-              }
-          ]
-      }]'));
-    $youtube = new Provider('YouTube', 'https://www.youtube.com/', [
-      [
-        'schemes' => [
-          'https://*.youtube.com/watch*',
-          'https://*.youtube.com/v/*',
-          'https://youtu.be/*',
+  public function testSuccessfulFetch(): void {
+    $body = <<<END
+[
+  {
+    "provider_name": "YouTube",
+    "provider_url": "https:\/\/www.youtube.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https:\/\/*.youtube.com\/watch*",
+          "https:\/\/*.youtube.com\/v\/*",
+          "https:\/\/youtu.be\/*"
         ],
-        'url' => 'https://www.youtube.com/oembed',
-        'discovery' => TRUE,
+        "url": "https:\/\/www.youtube.com\/oembed",
+        "discovery": true
+      }
+    ]
+  }
+]
+END;
+    $response = new Response(200, [], $body);
+    $this->responses->append($response);
+
+    $provider = $this->providerRepository->get('YouTube');
+    $stored_data = [
+      'data' => [
+        'YouTube' => $provider,
       ],
-    ]);
-    $this->assertEquals($youtube, $repo->get('YouTube'));
-    $this->assertEquals(['data' => ['YouTube' => $youtube], 'expires' => $time + 604800], $key_value->get('media.oembed')->get('providers'));
+      'expires' => $this->currentTime + 604800,
+    ];
+    $this->assertSame($stored_data, $this->keyValueFactory->get('media')->get('oembed_providers'));
   }
 
   /**
-   * Tests that a corrupt response serves from the fallback.
+   * Tests that an invalid response returns the data stored in key-value.
    *
    * @dataProvider providerExpired
    */
-  public function testThatACorruptJsonResponseServesFromTheFallback($expired = FALSE) {
-    $youtube = new Provider('YouTube', 'https://www.youtube.com/', [
-      [
-        'schemes' => [
-          'https://*.youtube.com/watch*',
-          'https://*.youtube.com/v/*',
-          'https://youtu.be/*',
+  public function testInvalidResponse(int $expiration_offset): void {
+    $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
+      ->reveal();
+
+    $this->keyValueFactory->get('media')
+      ->set('oembed_providers', [
+        'data' => [
+          'YouTube' => $provider,
         ],
-        'url' => 'https://www.youtube.com/oembed',
-        'discovery' => TRUE,
-      ],
-    ]);
-    $key_value = new KeyValueMemoryFactory();
-    $key_value->get('media.oembed')->set('providers', [
-      'data' => [
-        'YouTube' => $youtube,
-      ],
-      'expires' => time() + ($expired ? -86400 : 86400),
-    ]);
-    $history = [];
-    $oembed_repository = $this->getTestRepository(
-      $history,
-      time(),
-      $key_value,
-      new Response(200, [], 'this is certainly not json')
-    );
-    $this->assertEquals($youtube, $oembed_repository->get('YouTube'));
+        'expires' => $this->currentTime + $expiration_offset,
+      ]);
+
+    $response = new Response(200, [], "This certainly isn't valid JSON.");
+    $this->responses->append($response);
+    $this->assertSame($provider, $this->providerRepository->get('YouTube'));
   }
 
   /**
-   * Tests that a request exception serves from the fallback.
+   * Tests that an invalid response throws if there is no data in key-value.
    */
-  public function testThatARequestExceptionServesFromTheFallback() {
-    $youtube = new Provider('YouTube', 'https://www.youtube.com/', [
-      [
-        'schemes' => [
-          'https://*.youtube.com/watch*',
-          'https://*.youtube.com/v/*',
-          'https://youtu.be/*',
+  public function testInvalidResponseWithoutStoredData(): void {
+    $response = new Response(200, [], "Most definitely an invalid response.");
+    $this->responses->append($response);
+    $this->expectException(ProviderException::class);
+    $this->providerRepository->get('YouTube');
+  }
+
+  /**
+   * Tests that a request exception returns the data stored in key-value.
+   */
+  public function testRequestException(): void {
+    $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
+      ->reveal();
+
+    // This data is expired (stale), but it should be returned anyway.
+    $this->keyValueFactory->get('media')
+      ->set('oembed_providers', [
+        'data' => [
+          'YouTube' => $provider,
         ],
-        'url' => 'https://www.youtube.com/oembed',
-        'discovery' => TRUE,
-      ],
-    ]);
-    $key_value = new KeyValueMemoryFactory();
-    $key_value->get('media.oembed')->set('providers', [
-      'data' => [
-        'YouTube' => $youtube,
-      ],
-      // This is out of date.
-      'expires' => time() - 86400,
-    ]);
-    $history = [];
-    $oembed_repository = $this->getTestRepository(
-      $history,
-      time(),
-      $key_value,
-      new Response(503, [], "There's a new Sheriff in town")
-    );
-    $this->assertEquals($youtube, $oembed_repository->get('YouTube'));
+        'expires' => $this->currentTime - 86400,
+      ]);
+
+    $response = new Response(503);
+    $this->responses->append($response);
+    $this->assertSame($provider, $this->providerRepository->get('YouTube'));
   }
 
   /**
-   * Tests that a request exception without primed data is re-thrown.
+   * Tests that an exception is thrown if there is no data in key-value.
    */
-  public function testThatARequestExceptionWithAnEmptyKeyValueIsReThrown() {
-    $history = [];
-    $oembed_repository = $this->getTestRepository(
-      $history,
-      time(),
-      new KeyValueMemoryFactory(),
-      new Response(418, [], "J'adore une tasse de thé")
-    );
+  public function testRequestExceptionWithoutStoredData(): void {
+    $response = new Response(418);
+    $this->responses->append($response);
     $this->expectException(ProviderException::class);
-    $oembed_repository->get('YouTube');
-  }
-
-  /**
-   * Tests that invalid values without primed data throws an exception.
-   */
-  public function testThatAnEmptyKeyValueAndInvalidResponseThrowsAnException() {
-    $history = [];
-    $oembed_repository = $this->getTestRepository(
-      $history,
-      time(),
-      new KeyValueMemoryFactory(),
-      new Response(200, [], 'this is not json')
-    );
-    $this->expectException(ProviderException::class);
-    $oembed_repository->get('YouTube');
+    $this->providerRepository->get('YouTube');
   }
 
   /**
    * Tests a successful fetch but with a single corrupt item.
    */
-  public function testThatCorrupItemsAreIgnored() {
-    $history = [];
-    $time = time();
-    $key_value = new KeyValueMemoryFactory();
-    $repo = $this->getTestRepository($history, $time, $key_value, new Response(200, [], '[{
-          "provider_name": "YouTube",
-          "provider_url": "https:\/\/www.youtube.com\/",
-          "endpoints": [
-              {
-                  "schemes": [
-                      "https:\/\/*.youtube.com\/watch*",
-                      "https:\/\/*.youtube.com\/v\/*",
-                      "https:\/\/youtu.be\/*"
-                  ],
-                  "url": "https:\/\/www.youtube.com\/oembed",
-                  "discovery": true
-              }
-          ]
-      },{
-          "provider_name": "Uncle Daryl\'s videos",
-          "provider_url": "not a real url",
-          "endpoints": []
-      }]'));
-    $youtube = new Provider('YouTube', 'https://www.youtube.com/', [
-      [
-        'schemes' => [
-          'https://*.youtube.com/watch*',
-          'https://*.youtube.com/v/*',
-          'https://youtu.be/*',
+  public function testCorruptProviderIgnored(): void {
+    $body = <<<END
+[
+  {
+    "provider_name": "YouTube",
+    "provider_url": "https:\/\/www.youtube.com\/",
+    "endpoints": [
+      {
+        "schemes": [
+          "https:\/\/*.youtube.com\/watch*",
+          "https:\/\/*.youtube.com\/v\/*",
+          "https:\/\/youtu.be\/*"
         ],
-        'url' => 'https://www.youtube.com/oembed',
-        'discovery' => TRUE,
+        "url": "https:\/\/www.youtube.com\/oembed",
+        "discovery": true
+      }
+    ]
+  },
+  {
+    "provider_name": "Uncle Rico's football videos",
+    "provider_url": "not a real url",
+    "endpoints": []
+  }
+]
+END;
+    $response = new Response(200, [], $body);
+    $this->responses->append($response);
+
+    $youtube = $this->providerRepository->get('YouTube');
+    // The corrupt provider should not be stored.
+    $stored_data = [
+      'data' => [
+        'YouTube' => $youtube,
       ],
-    ]);
-    $this->assertEquals($youtube, $repo->get('YouTube'));
-    $this->assertEquals(['data' => ['YouTube' => $youtube], 'expires' => $time + 604800], $key_value->get('media.oembed')->get('providers'));
-    $this->expectException(\InvalidArgumentException::class);
-    $repo->get("Uncle Daryl's videos");
+      'expires' => $this->currentTime + 604800,
+    ];
+    $this->assertSame($stored_data, $this->keyValueFactory->get('media')->get('oembed_providers'));
+
+    $this->expectException('InvalidArgumentException');
+    $this->providerRepository->get("Uncle Rico's football videos");
   }
 
   /**
@@ -241,40 +228,9 @@ class ProviderRepositoryTest extends UnitTestCase {
    */
   public function providerExpired() : array {
     return [
-      'expired' => [TRUE],
-      'fresh' => [],
+      'expired' => [-86400],
+      'fresh' => [86400],
     ];
-  }
-
-}
-
-/**
- * Defines a mock time class with a fixed timestamp.
- */
-class MockTime extends Time {
-
-  /**
-   * Mock time.
-   *
-   * @var int
-   */
-  private $timestamp;
-
-  /**
-   * Constructs a new MockTime.
-   *
-   * @param int $timestamp
-   *   Fixed timestamp.
-   */
-  public function __construct(int $timestamp) {
-    $this->timestamp = $timestamp;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCurrentTime() {
-    return $this->timestamp;
   }
 
 }
