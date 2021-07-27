@@ -4,7 +4,6 @@ namespace Drupal\media\OEmbed;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -15,8 +14,6 @@ use GuzzleHttp\Exception\TransferException;
  * Retrieves and caches information about oEmbed providers.
  */
 class ProviderRepository implements ProviderRepositoryInterface {
-
-  use UseCacheBackendTrait;
 
   /**
    * How long the provider data should be cached, in seconds.
