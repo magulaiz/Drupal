@@ -115,20 +115,32 @@ END;
   }
 
   /**
-   * Tests that an invalid response returns the data stored in key-value.
+   * Tests handling of invalid JSON when fetching the provider database.
+   *
+   * @param int $expiration_offset
+   *   An offset to add to the current time to determine when the primed data,
+   *   if any, expires.
+   * @param bool $primed
+   *   If TRUE, there will be data already stored in key-value, which should be
+   *   returned. Otherwise, we expect an exception.
    *
    * @dataProvider providerInvalidResponse
    */
-  public function testInvalidResponse(int $expiration_offset): void {
+  public function testInvalidResponse(int $expiration_offset, bool $primed): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();
 
-    $this->keyValue->set('oembed_providers', [
-      'data' => [
-        'YouTube' => $provider,
-      ],
-      'expires' => $this->currentTime + $expiration_offset,
-    ]);
+    if ($primed) {
+      $this->keyValue->set('oembed_providers', [
+        'data' => [
+          'YouTube' => $provider,
+        ],
+        'expires' => $this->currentTime + $expiration_offset,
+      ]);
+    }
+    else {
+      $this->expectException(ProviderException::class);
+    }
 
     $response = new Response(200, [], "This certainly isn't valid JSON.");
     $this->responses->append($response);
@@ -143,39 +155,50 @@ END;
    */
   public function providerInvalidResponse(): array {
     return [
-      'expired' => [
+      'expired, primed' => [
         -86400,
+        TRUE,
       ],
-      'fresh' => [
+      'expired, not primed' => [
+        -86400,
+        FALSE,
+      ],
+      'fresh, primed' => [
         86400,
+        TRUE,
+      ],
+      'fresh, not primed' => [
+        86400,
+        FALSE,
       ],
     ];
   }
 
   /**
-   * Tests that an invalid response throws if there is no data in key-value.
+   * Tests handling of exceptions when fetching the provider database.
+   *
+   * @param bool $primed
+   *   If TRUE, there will be data already stored in key-value, which should be
+   *   returned. Otherwise, we expect an exception.
+   *
+   * @dataProvider providerRequestException
    */
-  public function testInvalidResponseWithoutStoredData(): void {
-    $response = new Response(200, [], "Most definitely an invalid response.");
-    $this->responses->append($response);
-    $this->expectException(ProviderException::class);
-    $this->repository->get('YouTube');
-  }
-
-  /**
-   * Tests that a request exception returns the data stored in key-value.
-   */
-  public function testRequestException(): void {
+  public function testRequestException(bool $primed): void {
     $provider = $this->prophesize('\Drupal\media\OEmbed\Provider')
       ->reveal();
 
-    // This data is expired (stale), but it should be returned anyway.
-    $this->keyValue->set('oembed_providers', [
-      'data' => [
-        'YouTube' => $provider,
-      ],
-      'expires' => $this->currentTime - 86400,
-    ]);
+    if ($primed) {
+      // This data is expired (stale), but it should be returned anyway.
+      $this->keyValue->set('oembed_providers', [
+        'data' => [
+          'YouTube' => $provider,
+        ],
+        'expires' => $this->currentTime - 86400,
+      ]);
+    }
+    else {
+      $this->expectException(ProviderException::class);
+    }
 
     $response = new Response(503);
     $this->responses->append($response);
@@ -183,13 +206,20 @@ END;
   }
 
   /**
-   * Tests that an exception is thrown if there is no data in key-value.
+   * Data provider for ::testRequestException().
+   *
+   * @return array[]
+   *   Sets of arguments to pass to the test method.
    */
-  public function testRequestExceptionWithoutStoredData(): void {
-    $response = new Response(418);
-    $this->responses->append($response);
-    $this->expectException(ProviderException::class);
-    $this->repository->get('YouTube');
+  public function providerRequestException(): array {
+    return [
+      'primed' => [
+        TRUE,
+      ],
+      'not primed' => [
+        FALSE,
+      ],
+    ];
   }
 
   /**
