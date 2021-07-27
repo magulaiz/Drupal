@@ -53,7 +53,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $keyValue;
 
   /**
-   * Logger.
+   * The logger channel.
    *
    * @var \Drupal\Core\Logger\LoggerChannelInterface
    */
