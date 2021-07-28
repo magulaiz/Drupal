@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
@@ -152,7 +153,7 @@ class EntityViewsDataTest extends KernelTestBase {
     $definitions = $this->entityTypeManager->getDefinitions();
     $definitions[$definition->id()] = $definition;
 
-    $cache_backend = $this->prophesize(\Drupal\Core\Cache\CacheBackendInterface::class);
+    $cache_backend = $this->prophesize(CacheBackendInterface::class);
     $cache_data = new \StdClass();
     $cache_data->data = $definitions;
     $cache_backend->get('entity_type')->willReturn($cache_data);
