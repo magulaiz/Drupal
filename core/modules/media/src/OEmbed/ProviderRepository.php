@@ -44,6 +44,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
   protected $time;
 
   /**
+<<<<<<< HEAD
    * The key-value store.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
