@@ -67,8 +67,8 @@ class LayoutSectionItemListTest extends SectionListTestBase {
    * @covers ::equals
    */
   public function testEqualsNonSection() {
-    $list = $this->prophesize(FieldItemListInterface::class);
-    $this->assertFalse($this->sectionList->equals($list->reveal()));
+    $list = $this->createMock(FieldItemListInterface::class);
+    $this->assertFalse($this->sectionList->equals($list));
   }
 
 }
