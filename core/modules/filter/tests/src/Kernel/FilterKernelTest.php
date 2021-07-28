@@ -953,9 +953,8 @@ www.example.com with a newline in comments -->
     $f = Html::normalize('<div id="d">content');
     $this->assertEquals('<div id="d">content</div>', $f, 'HTML corrector -- unclosed tag with attribute.');
 
-    // XHTML slash for empty elements.
     $f = Html::normalize('<hr><br>');
-    $this->assertEquals('<hr><br>', $f, 'HTML corrector -- self-closing element.');
+    $this->assertEquals('<hr><br>', $f, 'HTML corrector -- void element.');
 
     $f = Html::normalize('<P>test</P>');
     $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
@@ -964,13 +963,13 @@ www.example.com with a newline in comments -->
     $this->assertEquals('<p>test</p>', $f, 'HTML corrector -- Convert uppercased tags to proper lowercased ones.');
 
     $f = Html::normalize('test<hr />');
-    $this->assertEquals('test<hr>', $f, 'HTML corrector -- Let proper HTML5 pass through.');
+    $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element to HTML5 void element.');
 
     $f = Html::normalize('test<hr/>');
-    $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element to HTML5.');
+    $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element to HTML5 void element.');
 
     $f = Html::normalize('test<hr    />');
-    $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element with multiple spaces to HTML5.');
+    $this->assertEquals('test<hr>', $f, 'HTML corrector -- convert self-closing element with multiple spaces to HTML5 void element.');
 
     $f = Html::normalize('<span class="test" />');
     $this->assertEquals('<span class="test"></span>', $f, 'HTML corrector -- Convert XHTML that is properly formed but that would not be compatible with typical HTML user agents.');
