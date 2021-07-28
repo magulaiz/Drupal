@@ -58,11 +58,11 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
    * @covers ::normalize
    */
   public function testNormalizeFieldItemWithoutProperties(): void {
-    $item = $this->prophesize(FieldItemInterface::class);
-    $item->getProperties(TRUE)->willReturn([]);
-    $item->getValue()->willReturn('Direct call to getValue');
+    $item = $this->createMock(FieldItemInterface::class);
+    $item->expects($this->any())->method('getProperties')->with(TRUE)->willReturn([]);
+    $item->expects($this->any())->method('getValue')->willReturn('Direct call to getValue');
 
-    $result = $this->normalizer->normalize($item->reveal(), 'api_json');
+    $result = $this->normalizer->normalize($item, 'api_json');
     assert($result instanceof CacheableNormalization);
     $this->assertSame('Direct call to getValue', $result->getNormalization());
   }
