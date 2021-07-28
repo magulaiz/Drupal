@@ -17,8 +17,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
 use Prophecy\Argument;
-use Prophecy\Promise\PromiseInterface;
-use Prophecy\Promise\ReturnPromise;
 use Prophecy\Promise\ThrowPromise;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Log\LoggerInterface;
@@ -163,11 +161,11 @@ class FieldBlockTest extends EntityKernelTestBase {
     $account = $this->prophesize(AccountInterface::class);
     $entity->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
     $entity->hasField('the_field_name')->willReturn(TRUE);
-    $field = $this->prophesize(FieldItemListInterface::class);
-    $entity->get('the_field_name')->willReturn($field->reveal());
+    $field = $this->createMock(FieldItemListInterface::class);
+    $entity->get('the_field_name')->willReturn($field);
 
-    $field->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
-    $field->isEmpty()->willReturn($is_empty)->shouldBeCalled();
+    $field->expects($this->atLeastOnce())->method('access')->with('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
+    $field->expects($this->atLeastOnce())->method('isEmpty')->willReturn($is_empty);
 
     $access = $block->access($account->reveal(), TRUE);
     $this->assertSame($expected, $access->isAllowed());
@@ -239,11 +237,11 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBuild
    */
-  public function testBuild(PromiseInterface $promise, $expected_markup, $log_message = '', $log_arguments = []) {
+  public function testBuild(array $view_return, $expected_markup, $log_message = '', $log_arguments = []) {
     $entity = $this->prophesize(FieldableEntityInterface::class);
-    $field = $this->prophesize(FieldItemListInterface::class);
-    $entity->get('the_field_name')->willReturn($field->reveal());
-    $field->view(Argument::type('array'))->will($promise);
+    $field = $this->createMock(FieldItemListInterface::class);
+    $entity->get('the_field_name')->willReturn($field);
+    $field->expects($this->atLeastOnce())->method('view')->willReturn($view_return);
 
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $field_definition->getLabel()->willReturn('The Field Label');
@@ -278,11 +276,11 @@ class FieldBlockTest extends EntityKernelTestBase {
   public function providerTestBuild() {
     $data = [];
     $data['array'] = [
-      new ReturnPromise([['content' => ['#markup' => 'The field value']]]),
+      ['content' => ['#markup' => 'The field value']],
       'The field value',
     ];
     $data['empty array'] = [
-      new ReturnPromise([[]]),
+      [],
       '',
     ];
     return $data;
