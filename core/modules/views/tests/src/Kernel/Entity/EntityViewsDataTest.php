@@ -143,7 +143,7 @@ class EntityViewsDataTest extends KernelTestBase {
    *   for its baseFieldsDefinitions() method to use.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $definition
-   *   An entity type defininition to add to the entity type manager.
+   *   An entity type definition to add to the entity type manager.
    * @param \Drupal\Core\Field\BaseFieldDefinition[] $base_fields
    *   An array of base field definitions
    */
