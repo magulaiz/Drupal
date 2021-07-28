@@ -85,15 +85,15 @@ class EntityConstraintViolationListTest extends UnitTestCase {
    *   A fieldable entity.
    */
   protected function setupEntity(AccountInterface $account) {
-    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
-    $prophecy->access('edit', $account)
+    $name_field_item_list = $this->createMock('\Drupal\Core\Field\FieldItemListInterface');
+    $name_field_item_list->expects($this->any())
+      ->method('access')->with('edit', $account)
       ->willReturn(FALSE);
-    $name_field_item_list = $prophecy->reveal();
 
-    $prophecy = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
-    $prophecy->access('edit', $account)
+    $type_field_item_list = $this->createMock('\Drupal\Core\Field\FieldItemListInterface');
+    $type_field_item_list->expects($this->any())
+      ->method('access')->with('edit', $account)
       ->willReturn(TRUE);
-    $type_field_item_list = $prophecy->reveal();
 
     $prophecy = $this->prophesize('\Drupal\Core\Entity\FieldableEntityInterface');
     $prophecy->hasField('name')
