@@ -122,7 +122,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Set test_view_mode as a custom display to be available on the list.
     $this->drupalGet('admin/structure/block/block-content');
     $this->drupalGet('admin/structure/block/block-content/types');
-    $this->clickLink(t('Manage display'));
+    $this->clickLink('Manage display');
     $this->drupalGet('admin/structure/block/block-content/manage/basic/display');
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
@@ -305,7 +305,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet($url);
     $this->submitForm($instance, 'Save block');
 
-    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('content', [$block->getConfigDependencyName()]);
+    $dependencies = \Drupal::service('config.manager')->findConfigEntityDependenciesAsEntities('content', [$block->getConfigDependencyName()]);
     $block_placement = reset($dependencies);
     $this->assertEquals($block_placement_id, $block_placement->id(), "The block placement config entity has a dependency on the block content entity.");
   }
