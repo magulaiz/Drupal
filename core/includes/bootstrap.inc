@@ -149,6 +149,7 @@ if (class_exists('Symfony\Component\DomCrawler\Link')) {
 class_alias('Drupal\Core\PhpFixes\CookieJar', 'GuzzleHttp\Cookie\CookieJar', TRUE);
 class_alias('Drupal\Core\PhpFixes\MockHandler', 'GuzzleHttp\Handler\MockHandler', TRUE);
 class_alias('Drupal\Core\PhpFixes\Node', 'Twig\Node\Node', TRUE);
+class_alias('Drupal\Core\PhpFixes\Markup', 'Twig\Markup', TRUE);
 if (class_exists('\Symfony\Component\Finder\Glob')) {
   class_alias('Drupal\Core\PhpFixes\FileTypeFilterIterator', 'Symfony\Component\Finder\Iterator\FileTypeFilterIterator', TRUE);
   class_alias('Drupal\Core\PhpFixes\PathFilterIterator', 'Symfony\Component\Finder\Iterator\PathFilterIterator', TRUE);
