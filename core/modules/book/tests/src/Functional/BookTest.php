@@ -251,7 +251,7 @@ class BookTest extends BrowserTestBase {
     // Log in as web user and view printer-friendly version.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->book->id());
-    $this->clickLink(t('Printer-friendly version'));
+    $this->clickLink('Printer-friendly version');
 
     // Make sure each part of the book is there.
     foreach ($nodes as $node) {
@@ -310,7 +310,7 @@ class BookTest extends BrowserTestBase {
     // Link to book root.
     $this->assertSession()->pageTextContains($this->book->label());
     // No links to individual book pages.
-    $this->assertNoText($nodes[0]->label());
+    $this->assertSession()->pageTextNotContains($nodes[0]->label());
 
     // Ensure that an unpublished node does not appear in the navigation for a
     // user without access. By unpublishing a parent page, child pages should
@@ -419,7 +419,7 @@ class BookTest extends BrowserTestBase {
 
     // Test the 'book pages' block_mode setting.
     $this->drupalGet('<front>');
-    $this->assertNoText($block->label());
+    $this->assertSession()->pageTextNotContains($block->label());
   }
 
   /**
@@ -513,7 +513,7 @@ class BookTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $book->id() . '/outline');
     $this->assertRaw(t('Book outline'));
-    $this->clickLink(t('Remove from book outline'));
+    $this->clickLink('Remove from book outline');
     $this->assertRaw(t('Are you sure you want to remove %title from the book hierarchy?', ['%title' => $book->label()]));
 
     // Create a new node and set the book after the node was created.

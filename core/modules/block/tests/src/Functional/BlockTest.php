@@ -56,15 +56,15 @@ class BlockTest extends BlockTestBase {
     // Confirm that the block is not displayed according to block visibility
     // rules.
     $this->drupalGet('user');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
 
     // Confirm that an empty block is not displayed.
-    $this->assertNoText('Powered by Drupal');
+    $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->assertNoRaw('sidebar-first');
   }
 
@@ -129,17 +129,17 @@ class BlockTest extends BlockTestBase {
     // Confirm that block was not displayed according to block visibility
     // rules.
     $this->drupalGet('user');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
 
     // Confirm that block was not displayed according to block visibility
     // rules regardless of path case.
     $this->drupalGet('USER');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
 
     // Confirm that the block is not displayed to anonymous users.
     $this->drupalLogout();
     $this->drupalGet('');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
   }
 
   /**
@@ -235,7 +235,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that the block instance title and markup are not displayed.
     $this->drupalGet('node');
-    $this->assertNoText($block['settings[label]']);
+    $this->assertSession()->pageTextNotContains($block['settings[label]']);
     // Check for <div id="block-my-block-instance-name"> if the machine name
     // is my_block_instance_name.
     $xpath = $this->assertSession()->buildXPathQuery('//div[@id=:id]/*', [':id' => 'block-' . str_replace('_', '-', strtolower($block['id']))]);
@@ -243,7 +243,7 @@ class BlockTest extends BlockTestBase {
 
     // Test deleting the block from the edit form.
     $this->drupalGet('admin/structure/block/manage/' . $block['id']);
-    $this->clickLink(t('Remove block'));
+    $this->clickLink('Remove block');
     $this->assertRaw(t('Are you sure you want to remove the block @name from the @region region?', ['@name' => $block['settings[label]'], '@region' => 'Footer']));
     $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed from the %region region.', ['%name' => $block['settings[label]'], '%region' => 'Footer']));
@@ -251,7 +251,7 @@ class BlockTest extends BlockTestBase {
     // Test deleting a block via "Configure block" link.
     $block = $this->drupalPlaceBlock('system_powered_by_block');
     $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
-    $this->clickLink(t('Remove block'));
+    $this->clickLink('Remove block');
     $this->assertRaw(t('Are you sure you want to remove the block @name from the @region region?', ['@name' => $block->label(), '@region' => 'Left sidebar']));
     $this->submitForm([], 'Remove');
     $this->assertRaw(t('The block %name has been removed from the %region region.', ['%name' => $block->label(), '%region' => 'Left sidebar']));
@@ -324,7 +324,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that the block is not displayed by default.
     $this->drupalGet('user');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
 
     $edit = [
       'settings[label_display]' => TRUE,
@@ -532,7 +532,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalPlaceBlock('test_access', ['region' => 'help']);
 
     $this->drupalGet('<front>');
-    $this->assertNoText('Hello test world');
+    $this->assertSession()->pageTextNotContains('Hello test world');
 
     \Drupal::state()->set('test_block_access', TRUE);
     $this->drupalGet('<front>');

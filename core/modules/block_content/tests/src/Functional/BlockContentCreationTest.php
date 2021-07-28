@@ -122,7 +122,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Set test_view_mode as a custom display to be available on the list.
     $this->drupalGet('admin/structure/block/block-content');
     $this->drupalGet('admin/structure/block/block-content/types');
-    $this->clickLink(t('Manage display'));
+    $this->clickLink('Manage display');
     $this->drupalGet('admin/structure/block/block-content/manage/basic/display');
     $custom_view_mode = [
       'display_modes_custom[test_view_mode]' => 1,
@@ -285,7 +285,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
 
     // Show the delete confirm form.
     $this->drupalGet('block/3/delete');
-    $this->assertNoText('This will also remove');
+    $this->assertSession()->pageTextNotContains('This will also remove');
   }
 
   /**

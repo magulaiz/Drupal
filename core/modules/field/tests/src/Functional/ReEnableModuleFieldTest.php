@@ -130,8 +130,8 @@ class ReEnableModuleFieldTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Fields pending deletion');
     $this->cronRun();
     $this->drupalGet('admin/modules/uninstall');
-    $this->assertNoText("The Telephone number field type is used in the following field: node.field_telephone");
-    $this->assertNoText('Fields pending deletion');
+    $this->assertSession()->pageTextNotContains("The Telephone number field type is used in the following field: node.field_telephone");
+    $this->assertSession()->pageTextNotContains('Fields pending deletion');
   }
 
 }
