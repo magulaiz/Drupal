@@ -197,8 +197,8 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $section_storage_manager->load('')->willReturn(NULL);
     $storages = [
-      'default' => $this->prophesize(DefaultsSectionStorageInterface::class)->reveal(),
-      'override' => $this->prophesize(OverridesSectionStorageInterface::class)->reveal(),
+      'default' => $this->createMock(DefaultsSectionStorageInterface::class),
+      'override' => $this->createMock(OverridesSectionStorageInterface::class),
     ];
 
     $section_storage_manager->findByContext(Argument::cetera())->will(function ($arguments) use ($storages, $entity_storages) {
@@ -222,15 +222,15 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
     $entity = EntityTest::create(['name' => 'updated']);
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $section_storage_manager->load('')->willReturn(NULL);
-    $section_storage = $this->prophesize(SectionStorageInterface::class);
+    $section_storage = $this->createMock(SectionStorageInterface::class);
     $sections = [
       new Section('layout_onecol'),
     ];
     $this->assertCount(1, $sections);
-    $section_storage->getSections()->willReturn($sections);
-    $section_storage->count()->willReturn(1);
+    $section_storage->expects($this->any())->method('getSections')->willReturn($sections);
+    $section_storage->expects($this->any())->method('count')->willReturn(1);
 
-    $section_storage_manager->findByContext(Argument::cetera())->willReturn($section_storage->reveal());
+    $section_storage_manager->findByContext(Argument::cetera())->willReturn($section_storage);
     $this->container->set('plugin.manager.layout_builder.section_storage', $section_storage_manager->reveal());
     $class = new TestLayoutEntityHelperTrait();
     // Ensure that if the entity has a section storage the sections will be
