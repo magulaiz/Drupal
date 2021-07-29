@@ -296,8 +296,8 @@ class BlockViewBuilderTest extends KernelTestBase {
     // - the built render array;
     $build = $this->getBlockRenderArray();
     $this->assertSame($expected_keys, $build['#cache']['keys']);
-    $this->assertSame($expected_contexts, $build['#cache']['contexts']);
-    $this->assertSame($expected_tags, $build['#cache']['tags']);
+    $this->assertEqualsCanonicalizing($expected_contexts, $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing($expected_tags, $build['#cache']['tags']);
     $this->assertSame($expected_max_age, $build['#cache']['max-age']);
     $this->assertFalse(isset($build['#create_placeholder']));
     // - the rendered render array;
