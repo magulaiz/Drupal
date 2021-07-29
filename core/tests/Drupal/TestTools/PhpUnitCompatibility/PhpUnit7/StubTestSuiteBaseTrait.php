@@ -10,7 +10,7 @@ trait StubTestSuiteBaseTrait {
   /**
    * {@inheritdoc}
    */
-  public function addTestFiles($filenames): void {
+  public function addTestFiles($filenames) {
     // We stub addTestFiles() because the parent implementation can't deal with
     // vfsStream-based filesystems due to an error in
     // stream_resolve_include_path(). See

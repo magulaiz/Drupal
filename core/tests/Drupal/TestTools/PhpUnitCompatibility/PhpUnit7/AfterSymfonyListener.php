@@ -17,7 +17,7 @@ class AfterSymfonyListener implements TestListener {
   /**
    * {@inheritdoc}
    */
-  public function endTest(Test $test, float $time): void {
+  public function endTest(Test $test, float $time) {
     restore_error_handler();
   }
 

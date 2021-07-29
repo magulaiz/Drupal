@@ -10,7 +10,7 @@ class SimpletestUiPrinter extends HtmlOutputPrinter {
   /**
    * {@inheritdoc}
    */
-  public function write(string $buffer): void {
+  public function write(string $buffer) {
     $this->simpletestUiWrite($buffer);
   }
 

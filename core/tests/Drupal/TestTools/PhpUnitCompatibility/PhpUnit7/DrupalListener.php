@@ -24,14 +24,14 @@ class DrupalListener implements TestListener {
   /**
    * {@inheritdoc}
    */
-  public function startTest(Test $test): void {
+  public function startTest(Test $test) {
     $this->deprecationStartTest($test);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function endTest(Test $test, float $time): void {
+  public function endTest(Test $test, float $time) {
     $this->deprecationEndTest($test, $time);
     $this->componentEndTest($test, $time);
     $this->standardsEndTest($test, $time);

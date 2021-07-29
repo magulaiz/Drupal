@@ -18,7 +18,7 @@ class HtmlOutputPrinter extends ResultPrinter {
   /**
    * {@inheritdoc}
    */
-  public function printResult(TestResult $result): void {
+  public function printResult(TestResult $result) {
     parent::printResult($result);
 
     $this->printHtmlOutput();
