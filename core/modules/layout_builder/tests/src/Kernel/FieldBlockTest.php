@@ -17,7 +17,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\layout_builder\Plugin\Block\FieldBlock;
 use Prophecy\Argument;
-use Prophecy\Promise\ThrowPromise;
 use Prophecy\Prophecy\ProphecyInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -237,11 +236,20 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBuild
    */
-  public function testBuild(array $view_return, $expected_markup, $log_message = '', $log_arguments = []) {
+  public function testBuild($view_return, $expected_markup, $log_message = '', $log_arguments = []) {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $field = $this->createMock(FieldItemListInterface::class);
     $entity->get('the_field_name')->willReturn($field);
-    $field->expects($this->atLeastOnce())->method('view')->willReturn($view_return);
+    if ($view_return instanceof \Exception) {
+      $field->expects($this->atLeastOnce())
+        ->method('view')
+        ->willThrowException($view_return);
+    }
+    else {
+      $field->expects($this->atLeastOnce())
+        ->method('view')
+        ->willReturn($view_return);
+    }
 
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $field_definition->getLabel()->willReturn('The Field Label');
@@ -292,9 +300,8 @@ class FieldBlockTest extends EntityKernelTestBase {
   public function testBuildException() {
     // In PHP 7.4 ReflectionClass cannot be serialized so this cannot be part of
     // providerTestBuild().
-    $promise = new ThrowPromise(new \Exception('The exception message'));
     $this->testBuild(
-      $promise,
+      new \Exception('The exception message'),
       '',
       'The field "%field" failed to render with the error of "%error".',
       ['%field' => 'the_field_name', '%error' => 'The exception message']
