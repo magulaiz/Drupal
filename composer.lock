@@ -4427,12 +4427,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "feeaba3fea01ca2e8125600421c9b207c735c83e"
+                "reference": "5bfe5cce202de789914c1c01833ee268d85583a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/feeaba3fea01ca2e8125600421c9b207c735c83e",
-                "reference": "feeaba3fea01ca2e8125600421c9b207c735c83e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/5bfe5cce202de789914c1c01833ee268d85583a2",
+                "reference": "5bfe5cce202de789914c1c01833ee268d85583a2",
                 "shasum": ""
             },
             "require": {
@@ -4498,7 +4498,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-07-08T11:01:04+00:00"
+            "time": "2021-07-29T06:54:21+00:00"
         },
         {
             "name": "typo3/phar-stream-wrapper",
