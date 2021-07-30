@@ -45,7 +45,7 @@ class XmlDecoder implements DecoderInterface {
    * {@inheritdoc}
    */
   public function supportsDecoding($format) {
-    return $format === 'xml';
+    return strstr($format, 'text/xml') || strstr($format, 'application/xml');
   }
 
 }

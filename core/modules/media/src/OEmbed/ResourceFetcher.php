@@ -48,7 +48,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
    *   The HTTP client.
    * @param \Drupal\media\OEmbed\ProviderRepositoryInterface $providers
    *   The oEmbed provider repository service.
-   * @param \Drupal\Core\Cache\CacheBackendInterface|null $cache_backend
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
    * @param \Symfony\Component\Serializer\Encoder\DecoderInterface $xml_decoder
    *   (optional) The XML decoder.
@@ -85,10 +85,8 @@ class ResourceFetcher implements ResourceFetcherInterface {
     list($format) = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
-    if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
-      $data = $this->xmlDecoder->decode($content, 'xml', [
-        'url' => $url,
-      ]);
+    if ($this->xmlDecoder->supportsDecoding($format)) {
+      $data = $this->xmlDecoder->decode($content, $format, ['url' => $url]);
     }
     // By default, try to parse the resource data as JSON.
     else {
