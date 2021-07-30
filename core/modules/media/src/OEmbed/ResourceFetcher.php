@@ -229,14 +229,14 @@ class ResourceFetcher implements ResourceFetcherInterface {
    * @throws \Drupal\media\OEmbed\ResourceException
    *   If the resource data could not be parsed.
    *
-   * @deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Call
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Call
    *   decode() on the injected
    *   Symfony\Component\Serializer\Encoder\DecoderInterface object instead.
    *
    * @see https://www.drupal.org/project/drupal/issues/3007955
    */
   protected function parseResourceXml($data, $url) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Call Symfony\Component\Serializer\Encoder\DecoderInterface::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Call Symfony\Component\Serializer\Encoder\DecoderInterface::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955', E_USER_DEPRECATED);
     return $this->xmlDecoder->decode($data, 'text/xml', [
       'url' => $url,
     ]);
