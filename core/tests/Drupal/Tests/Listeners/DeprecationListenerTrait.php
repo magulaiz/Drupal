@@ -83,6 +83,16 @@ trait DeprecationListenerTrait {
       '%Return type of Double\\\\PDO.*%',
       '%Return type of Mock_StubPDO.*%',
       '%Return type of Double\\\\Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubPDO.*%',
+      // Skip Symfony deprecations for PHP 8.1 - fixed by
+      // https://github.com/symfony/symfony/pull/42260.
+      '%Return type of Symfony\\\\Component\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Skip Laminas deprecations for PHP 8.1 - @todo create upstream PR.
+      '%Return type of Laminas\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
+      // https://github.com/guzzle/guzzle/pull/2918.
+      '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Skip VFS deprecations for PHP 8.1 - @todo create upstream PR.
+      '%Return type of org\\\\bovigo\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
