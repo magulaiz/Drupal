@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 /**
  * @group media
@@ -18,6 +19,37 @@ use GuzzleHttp\Psr7\Response;
  * @coversDefaultClass \Drupal\media\OEmbed\ResourceFetcher
  */
 class ResourceFetcherTest extends UnitTestCase {
+
+  /**
+   * Tests deprecation messages.
+   *
+   * @group legacy
+   */
+  public function testDeprecations(): void {
+    $xml = 'A fake XML resource!';
+    $url = 'http://example.com/oembed?url=test.xml';
+
+    $client = new Client();
+    $providers = $this->createMock('\Drupal\media\OEmbed\ProviderRepositoryInterface');
+    $cache_backend = new NullBackend('test');
+    $xml_decoder = $this->prophesize(DecoderInterface::class);
+    $xml_decoder->decode($xml, 'text/xml', ['url' => $url])->shouldBeCalled();
+
+    // Create an anonymous version of the resource fetcher to expose the
+    // protected parseResourceXml() method.
+    $fetcher = new class ($client, $providers, $cache_backend, $xml_decoder->reveal()) extends ResourceFetcher {
+
+      /**
+       * {@inheritdoc}
+       */
+      public function parseResourceXml($data, $url) {
+        return parent::parseResourceXml($data, $url);
+      }
+
+    };
+    $this->expectDeprecation('Drupal\media\OEmbed\ResourceFetcher::parseResourceXml() is deprecated in drupal:9.3.0 and removed in drupal:10.0.0. Call ' . DecoderInterface::class . '::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955');
+    $fetcher->parseResourceXml($xml, $url);
+  }
 
   /**
    * Tests how the resource fetcher handles unknown Content-Type headers.
