@@ -145,7 +145,7 @@ class CacheTest extends UnitTestCase {
     $container = $this->prophesize(Container::class);
     $container->get('cache_contexts_manager')->willReturn($cache_contexts_manager->reveal());
     \Drupal::setContainer($container->reveal());
-    $this->assertSame($expected, Cache::mergeContexts(...$contexts));
+    $this->assertEqualsCanonicalizing($expected, Cache::mergeContexts(...$contexts));
   }
 
   /**
