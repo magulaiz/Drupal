@@ -27,9 +27,8 @@ class Cache {
    *   The merged array of cache contexts.
    */
   public static function mergeContexts(array ...$cache_contexts) {
-    $cache_contexts = array_unique(array_merge(...$cache_contexts));
+    $cache_contexts = array_values(array_unique(array_merge(...$cache_contexts)));
     assert(\Drupal::service('cache_contexts_manager')->assertValidTokens($cache_contexts));
-    sort($cache_contexts);
     return $cache_contexts;
   }
 
