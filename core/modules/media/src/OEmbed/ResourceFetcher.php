@@ -2,7 +2,6 @@
 
 namespace Drupal\media\OEmbed;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
@@ -42,6 +41,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $xmlDecoder;
 
   /**
+   * The JSON decoder.
+   *
+   * @var \Symfony\Component\Serializer\Encoder\DecoderInterface
+   */
+  protected $jsonDecoder;
+
+  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -50,10 +56,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
    *   The oEmbed provider repository service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
-   * @param \Symfony\Component\Serializer\Encoder\DecoderInterface $xml_decoder
+   * @param \Symfony\Component\Serializer\Encoder\DecoderInterface|null $xml_decoder
    *   (optional) The XML decoder.
+   * @param \Symfony\Component\Serializer\Encoder\DecoderInterface|null $json_decoder
+   *   (optional) The JSON decoder.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL, DecoderInterface $xml_decoder = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL, DecoderInterface $xml_decoder = NULL, DecoderInterface $json_decoder = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     if (empty($cache_backend)) {
@@ -62,6 +70,7 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
     $this->cacheBackend = $cache_backend;
     $this->xmlDecoder = $xml_decoder ?: new XmlDecoder();
+    $this->jsonDecoder = $json_decoder ?: new JsonDecoder();
   }
 
   /**
@@ -85,16 +94,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
     list($format) = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
+    $context = ['url' => $url];
     if ($this->xmlDecoder->supportsDecoding($format)) {
-      $data = $this->xmlDecoder->decode($content, $format, ['url' => $url]);
+      $data = $this->xmlDecoder->decode($content, $format, $context);
     }
     // By default, try to parse the resource data as JSON.
     else {
-      $data = Json::decode($content);
-
-      if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new ResourceException('Error decoding oEmbed resource: ' . json_last_error_msg(), $url);
-      }
+      $data = $this->jsonDecoder->decode($content, $format, $context);
     }
     if (empty($data) || !is_array($data)) {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
