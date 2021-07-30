@@ -35,7 +35,7 @@ class CacheableMetadataTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->assertEquals($expected, $a->merge($b));
+    $this->assertEqualsCanonicalizing($expected, $a->merge($b));
   }
 
   /**
@@ -58,7 +58,7 @@ class CacheableMetadataTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->assertEquals($expected, $a->addCacheableDependency($b));
+    $this->assertEqualsCanonicalizing($expected, $a->addCacheableDependency($b));
   }
 
   /**
