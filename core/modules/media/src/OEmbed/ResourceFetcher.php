@@ -215,4 +215,25 @@ class ResourceFetcher implements ResourceFetcherInterface {
     }
   }
 
+  /**
+   * Parses XML resource data.
+   *
+   * @param string $data
+   *   The raw XML for the resource.
+   * @param string $url
+   *   The resource URL.
+   *
+   * @return array
+   *   The parsed resource data.
+   *
+   * @throws \Drupal\media\OEmbed\ResourceException
+   *   If the resource data could not be parsed.
+   */
+  protected function parseResourceXml($data, $url) {
+    // @todo Deprecate this method.
+    return $this->xmlDecoder->decode($data, 'text/xml', [
+      'url' => $url,
+    ]);
+  }
+
 }
