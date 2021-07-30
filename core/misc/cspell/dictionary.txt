@@ -617,7 +617,6 @@ getview
 gids
 giggabyte
 gloop
-gnomovision
 gnumeric
 goldfinger
 gonner
@@ -1825,7 +1824,6 @@ yourbackend
 yourmodule
 youtube
 yowser
-yoyodyne
 yygroup
 zartan
 zendframework
