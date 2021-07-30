@@ -35,15 +35,16 @@ class UniqueFieldValueValidator extends ConstraintValidator {
       $query->condition($id_key, $entity_id, '<>');
     }
 
+    $main_property = $item->getDataDefinition()->getMainPropertyName();
     $value_taken = (bool) $query
-      ->condition($field_name, $item->value)
+      ->condition($field_name, $item->{$main_property})
       ->range(0, 1)
       ->count()
       ->execute();
 
     if ($value_taken) {
       $this->context->addViolation($constraint->message, [
-        '%value' => $item->value,
+        '%value' => $item->{$main_property},
         '@entity_type' => $entity->getEntityType()->getSingularLabel(),
         '@field_name' => mb_strtolower($items->getFieldDefinition()->getLabel()),
       ]);
