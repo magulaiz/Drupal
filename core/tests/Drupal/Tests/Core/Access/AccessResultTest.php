@@ -404,8 +404,8 @@ class AccessResultTest extends UnitTestCase {
       $this->assertFalse($access->isForbidden());
       $this->assertTrue($access->isNeutral());
       $this->assertSame(Cache::PERMANENT, $access->getCacheMaxAge());
-      $this->assertSame($contexts, $access->getCacheContexts());
-      $this->assertSame([], $access->getCacheTags());
+      $this->assertEqualsCanonicalizing($contexts, $access->getCacheContexts());
+      $this->assertEqualsCanonicalizing([], $access->getCacheTags());
     };
 
     $access = AccessResult::neutral()->addCacheContexts(['foo']);
