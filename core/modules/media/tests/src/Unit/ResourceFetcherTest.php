@@ -47,7 +47,7 @@ class ResourceFetcherTest extends UnitTestCase {
       }
 
     };
-    $this->expectDeprecation('Drupal\media\OEmbed\ResourceFetcher::parseResourceXml() is deprecated in drupal:9.3.0 is removed from drupal:10.0.0. Call ' . DecoderInterface::class . '::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955');
+    $this->expectDeprecation('Drupal\media\OEmbed\ResourceFetcher::parseResourceXml() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Call ' . DecoderInterface::class . '::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955');
     $fetcher->parseResourceXml($xml, $url);
   }
 
