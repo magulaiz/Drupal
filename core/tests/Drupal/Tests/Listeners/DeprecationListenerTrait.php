@@ -76,6 +76,9 @@ trait DeprecationListenerTrait {
       // issues and thus were not addressed in time for the 9.0.0 release.
       '%The entity link url update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2857891.%',
       '%The operator defaults update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2869168.%',
+      // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
+      // https://github.com/guzzle/guzzle/pull/2918.
+      '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
       // PHP 8.1 is not compatible with itself :)
       // @todo Fix somehow - this feels like we need an upstream fix in
       //   phpspec/prophecy. These fix fails in Drupal\Tests\Core\Database
@@ -86,13 +89,6 @@ trait DeprecationListenerTrait {
       // Skip Symfony deprecations for PHP 8.1 - fixed by
       // https://github.com/symfony/symfony/pull/42260.
       '%Return type of Symfony\\\\Component\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
-      // Skip Laminas deprecations for PHP 8.1 - @todo create upstream PR.
-      '%Return type of Laminas\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
-      // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
-      // https://github.com/guzzle/guzzle/pull/2918.
-      '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
-      // Skip VFS deprecations for PHP 8.1 - @todo create upstream PR.
-      '%Return type of org\\\\bovigo\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }

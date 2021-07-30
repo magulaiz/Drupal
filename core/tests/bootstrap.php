@@ -10,6 +10,12 @@
 use Drupal\Component\Assertion\Handle;
 use Drupal\TestTools\PhpUnitCompatibility\PhpUnit8\ClassWriter;
 
+// PHP 8.1 fixes.
+class_alias('Drupal\Core\PhpFixes\vfsStreamAbstractContent', 'org\bovigo\vfs\vfsStreamAbstractContent', TRUE);
+class_alias('Drupal\Core\PhpFixes\vfsStreamContent', '\org\bovigo\vfs\vfsStreamContent', TRUE);
+class_alias('Drupal\Core\PhpFixes\vfsStreamDirectory', 'org\bovigo\vfs\vfsStreamDirectory', TRUE);
+class_alias('Drupal\Core\PhpFixes\vfsStreamContainerIterator', 'org\bovigo\vfs\vfsStreamContainerIterator', TRUE);
+
 /**
  * Finds all valid extension directories recursively within a given directory.
  *
