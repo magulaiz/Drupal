@@ -75,7 +75,7 @@ class RouterTest extends BrowserTestBase {
     $this->drupalGet('router_test/test19');
     $expected_cache_contexts = Cache::mergeContexts($renderer_required_cache_contexts, [
       'url',
-      'user.roles'
+      'user.roles',
     ]);
     sort($expected_cache_contexts);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
