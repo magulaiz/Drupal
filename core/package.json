@@ -41,7 +41,7 @@
     "chokidar": "^3.3.1",
     "chromedriver": "^87.0.0",
     "cross-env": "^7.0.2",
-    "cspell": "^4.0.63",
+    "cspell": "^5.0.0",
     "css.escape": "^1.5.1",
     "dotenv-safe": "^8.2.0",
     "es6-promise": "^4.2.8",
