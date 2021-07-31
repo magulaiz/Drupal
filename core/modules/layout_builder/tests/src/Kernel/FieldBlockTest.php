@@ -314,11 +314,11 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @todo Remove in https://www.drupal.org/project/drupal/issues/2367555.
    */
   public function testBuildWithFormException() {
-    $field = $this->prophesize(FieldItemListInterface::class);
-    $field->view(Argument::type('array'))->willThrow(new EnforcedResponseException(new Response()));
+    $field = $this->createMock(FieldItemListInterface::class);
+    $field->expects($this->any())->method('view')->willThrowException(new EnforcedResponseException(new Response()));
 
     $entity = $this->prophesize(FieldableEntityInterface::class);
-    $entity->get('the_field_name')->willReturn($field->reveal());
+    $entity->get('the_field_name')->willReturn($field);
 
     $block = $this->getTestBlock($entity);
     $this->expectException(EnforcedResponseException::class);
