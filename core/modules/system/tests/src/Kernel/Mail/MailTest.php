@@ -153,6 +153,15 @@ class MailTest extends KernelTestBase {
     // Errors-to header must not be set, it is deprecated.
     $this->assertFalse(isset($sent_message['headers']['Errors-To']));
 
+    // Test that From names containing commas work as expected.
+    $this->config('system.site')->set('name', 'Foo, Bar, and Baz')->save();
+    // Send an email and check that the From-header contains the site name.
+    \Drupal::service('plugin.manager.mail')->mail('mail_cancel_test', 'from_test', 'from_test@example.com', $language);
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector');
+    $sent_message = end($captured_emails);
+    // From header contains the quoted site name with commas.
+    $this->assertEquals('"Foo, Bar, and Baz" <mailtest@example.com>', $sent_message['headers']['From']);
+
     // Test RFC-2822 rules are respected for 'display-name' component of
     // 'From:' header. Specials characters are not allowed, so randomly add one
     // of them to the site name and check the string is wrapped in quotes. Also
