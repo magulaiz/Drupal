@@ -94,12 +94,12 @@ class ModerationInformationTest extends UnitTestCase {
       'bundle_entity_type' => 'entity_test_bundle',
       'handlers' => ['moderation' => ModerationHandler::class],
     ]);
-    $entity = $this->prophesize(ContentEntityInterface::class);
-    $entity->getEntityType()->willReturn($entity_type);
-    $entity->getEntityTypeId()->willReturn($entity_type->id());
-    $entity->bundle()->willReturn('test_bundle');
+    $entity = $this->createMock(ContentEntityInterface::class);
+    $entity->expects($this->any())->method('getEntityType')->willReturn($entity_type);
+    $entity->expects($this->any())->method('getEntityTypeId')->willReturn($entity_type->id());
+    $entity->expects($this->atLeastOnce())->method('bundle')->willReturn('test_bundle');
 
-    $this->assertEquals($expected, $moderation_information->isModeratedEntity($entity->reveal()));
+    $this->assertEquals($expected, $moderation_information->isModeratedEntity($entity));
   }
 
   /**
@@ -118,11 +118,11 @@ class ModerationInformationTest extends UnitTestCase {
       $workflow_entity = NULL;
     }
     $moderation_information = new ModerationInformation($entity_type_manager->reveal(), $this->setupModerationBundleInfo('test_bundle', $workflow));
-    $entity = $this->prophesize(ContentEntityInterface::class);
-    $entity->getEntityTypeId()->willReturn('test_entity_type');
-    $entity->bundle()->willReturn('test_bundle');
+    $entity = $this->createMock(ContentEntityInterface::class);
+    $entity->expects($this->atLeastOnce())->method('getEntityTypeId')->willReturn('test_entity_type');
+    $entity->expects($this->atLeastOnce())->method('bundle')->willReturn('test_bundle');
 
-    $this->assertEquals($workflow_entity, $moderation_information->getWorkflowForEntity($entity->reveal()));
+    $this->assertEquals($workflow_entity, $moderation_information->getWorkflowForEntity($entity));
   }
 
   /**

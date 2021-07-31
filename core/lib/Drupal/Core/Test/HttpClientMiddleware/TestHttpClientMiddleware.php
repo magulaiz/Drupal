@@ -3,6 +3,7 @@
 namespace Drupal\Core\Test\HttpClientMiddleware;
 
 use Drupal\Core\Utility\Error;
+use Drupal\Tests\Listeners\DeprecationListenerTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -10,6 +11,7 @@ use Psr\Http\Message\ResponseInterface;
  * Overrides the User-Agent HTTP header for outbound HTTP requests.
  */
 class TestHttpClientMiddleware {
+  use DeprecationListenerTrait;
 
   /**
    * {@inheritdoc}
