@@ -57,7 +57,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $this->submitForm($edit, 'Save');
       $this->drupalGet('node/' . $node->id());
       // Verify that the field label is hidden when no file is attached.
-      $this->assertNoText($field_name);
+      $this->assertSession()->pageTextNotContains($field_name);
     }
 
     $this->generateFile('escaped-&-text', 64, 10, 'text');
@@ -113,7 +113,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $edit[$field_name . '[0][display]'] = FALSE;
     $edit[$field_name . '[1][display]'] = FALSE;
     $this->submitForm($edit, 'Preview');
-    $this->clickLink(t('Back to content editing'));
+    $this->clickLink('Back to content editing');
     // First file.
     $this->assertRaw($field_name . '[0][display]');
     // Second file.

@@ -291,18 +291,18 @@ class MenuUiTest extends BrowserTestBase {
     // Test the 'Add link' local action.
     $this->drupalGet(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
 
-    $this->clickLink(t('Add link'));
+    $this->clickLink('Add link');
     $link_title = $this->randomString();
     $this->submitForm(['link[0][uri]' => '/', 'title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Edit' operation.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->fieldValueEquals('title[0][value]', $link_title);
     $link_title = $this->randomString();
     $this->submitForm(['title[0][value]' => $link_title], 'Save');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
     // Test the 'Delete' operation.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the custom menu link %item?', ['%item' => $link_title]));
     $this->submitForm([], 'Delete');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.menu.edit_form', ['menu' => $menu_name]));
@@ -615,7 +615,7 @@ class MenuUiTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('admin/structure/menu/manage/' . $item->getMenuName());
-    $this->assertNoText($item->getTitle());
+    $this->assertSession()->pageTextNotContains($item->getTitle());
     // The cache contexts associated with the (in)accessible menu links are
     // bubbled. See DefaultMenuLinkTreeManipulators::menuLinkCheckAccess().
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Contexts', 'user.permissions');
@@ -850,7 +850,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify deletion.
     $this->drupalGet('');
-    $this->assertNoText($title);
+    $this->assertSession()->pageTextNotContains($title);
   }
 
   /**
@@ -864,7 +864,7 @@ class MenuUiTest extends BrowserTestBase {
 
     // Verify menu link is absent.
     $this->drupalGet('');
-    $this->assertNoText($item->getTitle());
+    $this->assertSession()->pageTextNotContains($item->getTitle());
     $this->enableMenuLink($item);
 
     // Verify menu link is displayed.

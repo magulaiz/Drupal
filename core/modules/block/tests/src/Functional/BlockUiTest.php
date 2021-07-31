@@ -92,7 +92,7 @@ class BlockUiTest extends BrowserTestBase {
   public function testBlockDemoUiPage() {
     $this->drupalPlaceBlock('help_block', ['region' => 'help']);
     $this->drupalGet('admin/structure/block');
-    $this->clickLink(t('Demonstrate block regions (@theme)', ['@theme' => 'Classy']));
+    $this->clickLink('Demonstrate block regions (Classy)');
     $this->assertSession()->elementExists('xpath', '//div[contains(@class, "region-highlighted")]/div[contains(@class, "block-region") and contains(text(), "Highlighted")]');
 
     // Ensure that other themes can use the block demo page.
@@ -216,7 +216,7 @@ class BlockUiTest extends BrowserTestBase {
   public function testContextAwareBlocks() {
     $expected_text = '<div id="test_context_aware--username">' . \Drupal::currentUser()->getAccountName() . '</div>';
     $this->drupalGet('');
-    $this->assertNoText('Test context-aware block');
+    $this->assertSession()->pageTextNotContains('Test context-aware block');
     $this->assertNoRaw($expected_text);
 
     $block_url = 'admin/structure/block/add/test_context_aware/classy';
@@ -260,7 +260,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save block');
     $this->drupalGet('');
     $this->assertSession()->pageTextContains('No context mapping selected.');
-    $this->assertNoText('User context found.');
+    $this->assertSession()->pageTextNotContains('User context found.');
 
     // Tests that conditions with missing context are not displayed.
     $this->drupalGet('admin/structure/block/manage/testcontextawareblock');

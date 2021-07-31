@@ -214,7 +214,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $this->drupalLogout();
     $this->drupalGet('contact');
     $this->assertSession()->pageTextContains('Your email address');
-    $this->assertNoText('Form');
+    $this->assertSession()->pageTextNotContains('Form');
     $this->drupalLogin($admin_user);
 
     // Add more forms.
@@ -226,7 +226,7 @@ class ContactSitewideTest extends BrowserTestBase {
 
     // Try adding a form that already exists.
     $this->addContactForm($name, $label, '', '', FALSE);
-    $this->assertNoText("Contact form $label has been added.");
+    $this->assertSession()->pageTextNotContains("Contact form $label has been added.");
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'));
 
     $this->drupalLogout();
@@ -289,7 +289,7 @@ class ContactSitewideTest extends BrowserTestBase {
     $contact_form = mb_strtolower($this->randomMachineName(16));
     $this->addContactForm($contact_form, $label, $recipients, '', FALSE);
     $this->drupalGet('admin/structure/contact');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->fieldValueEquals('label', $label);
 
@@ -315,7 +315,7 @@ class ContactSitewideTest extends BrowserTestBase {
     }
 
     $this->assertSession()->statusCodeEquals(200);
-    $this->clickLink(t('Add field'));
+    $this->clickLink('Add field');
     $this->assertSession()->statusCodeEquals(200);
 
     // Create a simple textfield.
@@ -489,7 +489,7 @@ class ContactSitewideTest extends BrowserTestBase {
       ->removeComponent('mail')
       ->save();
     $this->submitContact($this->randomMachineName(16), $email, $this->randomString(64), 'foo', $this->randomString(128));
-    $this->assertNoText('Unable to send email. Contact the site administrator if the problem persists.');
+    $this->assertSession()->pageTextNotContains('Unable to send email. Contact the site administrator if the problem persists.');
     $captured_emails = $this->getMails(['id' => 'contact_page_autoreply', 'to' => $email]);
     $this->assertCount(0, $captured_emails);
     $this->drupalLogin($admin_user);
