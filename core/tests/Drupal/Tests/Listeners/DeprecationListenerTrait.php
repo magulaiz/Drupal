@@ -143,6 +143,9 @@ trait DeprecationListenerTrait {
       //   one is triggered by
       //   \Drupal\Tests\Core\TempStore\SharedTempStoreTest::testSerialization().
       "The Serializable interface is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary)",
+      // Caused by \JsonSchema\Constraints\BaseConstraint::addError(). The fix
+      // unlikely to be ported to 5.x.x.
+      'Optional parameter $path declared before required parameter $message is implicitly treated as a required parameter',
     ];
   }
 
