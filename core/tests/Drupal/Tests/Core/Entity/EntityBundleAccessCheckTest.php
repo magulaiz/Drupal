@@ -77,12 +77,13 @@ class EntityBundleAccessCheckTest extends UnitTestCase {
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = $this->prophesize(AccountInterface::class)->reveal();
 
-    /** @var \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node */
-    $node = $this->createMock(NodeInterface::class);
-    $node->expects($this->atLeastOnce())->method('bundle')->willReturn($bundle);
-    $node->expects($this->any())->method('getCacheContexts')->willReturn([]);
-    $node->expects($this->any())->method('getCacheTags')->willReturn([]);
-    $node->expects($this->any())->method('getCacheMaxAge')->willReturn(-1);
+    /** @var \Drupal\node\NodeInterface|\Prophecy\Prophecy\ObjectProphecy $node */
+    $node = $this->prophesize(NodeInterface::class);
+    $node->bundle()->willReturn($bundle);
+    $node->getCacheContexts()->willReturn([]);
+    $node->getCacheTags()->willReturn([]);
+    $node->getCacheMaxAge()->willReturn(-1);
+    $node = $node->reveal();
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
     $route_match = $this->prophesize(RouteMatchInterface::class);

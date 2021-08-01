@@ -35,7 +35,7 @@ class EntityContentBaseTest extends EntityTestBase {
       $bundles,
       $this->entityFieldManager->reveal(),
       $this->prophesize(FieldTypePluginManagerInterface::class)->reveal());
-    $entity = $this->prophesize(ContentEntityInterface::class)->willImplement(\IteratorAggregate::class);
+    $entity = $this->prophesize(ContentEntityInterface::class);
     $entity->isValidationRequired()
       ->shouldBeCalledTimes(1);
     // Assert that save is called.

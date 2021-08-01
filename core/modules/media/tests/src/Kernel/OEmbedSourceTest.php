@@ -3,7 +3,6 @@
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\media\Entity\Media;
 use Drupal\media\OEmbed\Resource;
@@ -37,16 +36,11 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     $plugin = OEmbed::create($this->container, $configuration, 'oembed', []);
 
     // Test that NULL is returned for a media item with no source value.
-    $media = $this->createMock('\Drupal\media\MediaInterface');
-    $field_items = $this->createMock(FieldItemListInterface::class);
-    $field_items->expects($this->any())
-      ->method('isEmpty')
-      ->willReturn(TRUE);
-    $media->expects($this->any())
-      ->method('get')
-      ->with($configuration['source_field'])
-      ->willReturn($field_items);
-    $this->assertNull($plugin->getMetadata($media, 'type'));
+    $media = $this->prophesize('\Drupal\media\MediaInterface');
+    $field_items = $this->prophesize('\Drupal\Core\Field\FieldItemListInterface');
+    $field_items->isEmpty()->willReturn(TRUE);
+    $media->get($configuration['source_field'])->willReturn($field_items->reveal());
+    $this->assertNull($plugin->getMetadata($media->reveal(), 'type'));
   }
 
   /**

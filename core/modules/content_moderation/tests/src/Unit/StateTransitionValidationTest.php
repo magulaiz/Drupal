@@ -74,7 +74,8 @@ class StateTransitionValidationTest extends UnitTestCase {
     $user->hasPermission($permission)->willReturn($allowed);
     $user->hasPermission(Argument::type('string'))->willReturn(FALSE);
 
-    $entity = $this->createMock(ContentEntityInterface::class);
+    $entity = $this->prophesize(ContentEntityInterface::class);
+    $entity = $entity->reveal();
     $entity->moderation_state = new \stdClass();
     $entity->moderation_state->value = $from_id;
 

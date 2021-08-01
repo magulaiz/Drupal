@@ -48,7 +48,7 @@ class QueryBatchTest extends KernelTestBase {
     // Calling code can override these prophecies later and set up different
     // behaviors.
     $this->migration->getIdMap()->willReturn(
-      $this->createMock(MigrateIdMapInterface::class)
+      $this->prophesize(MigrateIdMapInterface::class)->reveal()
     );
     $this->migration->getDestinationIds()->willReturn([]);
   }

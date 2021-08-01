@@ -43,9 +43,10 @@ class EntityAccessCheckTest extends UnitTestCase {
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = $this->prophesize(AccountInterface::class)->reveal();
 
-    /** @var \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node */
-    $node = $this->createMock(NodeInterface::class);
-    $node->expects($this->atLeastOnce())->method('access')->with('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    /** @var \Drupal\node\NodeInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
+    $node = $this->prophesize(NodeInterface::class);
+    $node->access('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    $node = $node->reveal();
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
     $route_match = $this->prophesize(RouteMatchInterface::class);
@@ -65,9 +66,10 @@ class EntityAccessCheckTest extends UnitTestCase {
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = $this->prophesize(AccountInterface::class)->reveal();
 
-    /** @var \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node */
-    $node = $this->createMock(NodeInterface::class);
-    $node->expects($this->atLeastOnce())->method('access')->with('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    /** @var \Drupal\node\NodeInterface|\Prophecy\Prophecy\ObjectProphecy $node */
+    $node = $this->prophesize(NodeInterface::class);
+    $node->access('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    $node = $node->reveal();
 
     /** @var \Drupal\Core\Routing\RouteMatchInterface|\Prophecy\Prophecy\ObjectProphecy $route_match */
     $route_match = $this->createRouteMatchForObject($node);
@@ -91,10 +93,10 @@ class EntityAccessCheckTest extends UnitTestCase {
     $access_check = new EntityAccessCheck();
 
     // Confirm an EntityInterface route parameter's ::access() is called.
-    /** @var \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node */
-    $node = $this->createMock(EntityInterface::class);
-    $node->expects($this->atLeastOnce())->method('access')->with('update', $account, TRUE)->willReturn(AccessResult::allowed());
-    $route_match = $this->createRouteMatchForObject($node);
+    /** @var \Drupal\Core\Entity\EntityInterface|\Prophecy\Prophecy\ObjectProphecy $node */
+    $node = $this->prophesize(EntityInterface::class);
+    $node->access('update', $account, TRUE)->willReturn(AccessResult::allowed());
+    $route_match = $this->createRouteMatchForObject($node->reveal());
     $this->assertEquals(AccessResult::allowed(), $access_check->access($route, $route_match, $account));
 
     // AccessibleInterface is not entity-like: ::access() should not be called.
@@ -109,12 +111,12 @@ class EntityAccessCheckTest extends UnitTestCase {
    * Wrap any object with a route match, and return that.
    *
    * @param object $object
-   *   Any object, including mocks based on interfaces.
+   *   Any object, including prophesized mocks based on interfaces.
    *
    * @return \Drupal\Core\Routing\RouteMatchInterface
    *   A prophesized RouteMatchInterface.
    */
-  private function createRouteMatchForObject($object) {
+  private function createRouteMatchForObject(\stdClass $object) {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $route_match->getRawParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => 1]));
     $route_match->getParameters()->willReturn(new ParameterBag(['entity_type' => 'node', 'var_name' => $object]));

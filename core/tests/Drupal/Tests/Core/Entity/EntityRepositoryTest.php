@@ -80,22 +80,19 @@ class EntityRepositoryTest extends UnitTestCase {
       })
       ->shouldBeCalledTimes(1);
 
-    $translated_entity = $this->createMock(ContentEntityInterface::class);
+    $translated_entity = $this->prophesize(ContentEntityInterface::class);
 
-    $entity = $this->createMock(ContentEntityInterface::class);
-    $entity->expects($this->atLeastOnce())->method('getUntranslated')->willReturn($entity);
-    $entity->expects($this->atLeastOnce())->method('language')->willReturn($language);
-    $entity->expects($this->atLeastOnce())->method('hasTranslation')->willReturnMap(
-      [['LanguageInterface::LANGCODE_DEFAULT', FALSE], ['custom_langcode', TRUE]]
-    );
-    $entity->expects($this->atLeastOnce())->method('getTranslation')->with('custom_langcode')->willReturn($translated_entity);
-    $entity->expects($this->atLeastOnce())->method('getTranslationLanguages')->willReturn(
-      [new Language(['id' => 'en']), new Language(['id' => 'custom_langcode'])]
-    );
-    $entity->expects($this->atLeastOnce())->method('addCacheContexts')->with(['languages:language_content']);
+    $entity = $this->prophesize(ContentEntityInterface::class);
+    $entity->getUntranslated()->willReturn($entity);
+    $entity->language()->willReturn($language);
+    $entity->hasTranslation(LanguageInterface::LANGCODE_DEFAULT)->willReturn(FALSE);
+    $entity->hasTranslation('custom_langcode')->willReturn(TRUE);
+    $entity->getTranslation('custom_langcode')->willReturn($translated_entity->reveal());
+    $entity->getTranslationLanguages()->willReturn([new Language(['id' => 'en']), new Language(['id' => 'custom_langcode'])]);
+    $entity->addCacheContexts(['languages:language_content'])->shouldBeCalled();
 
-    $this->assertSame($entity, $this->entityRepository->getTranslationFromContext($entity));
-    $this->assertSame($translated_entity, $this->entityRepository->getTranslationFromContext($entity, 'custom_langcode'));
+    $this->assertSame($entity->reveal(), $this->entityRepository->getTranslationFromContext($entity->reveal()));
+    $this->assertSame($translated_entity->reveal(), $this->entityRepository->getTranslationFromContext($entity->reveal(), 'custom_langcode'));
   }
 
 }
