@@ -10,6 +10,7 @@
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
       "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
+      "lib/Drupal/Core/PhpFixes/prophecy.patch",
       "**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
       "modules/color/preview.html",
