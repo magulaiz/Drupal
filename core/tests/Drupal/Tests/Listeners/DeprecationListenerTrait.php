@@ -79,13 +79,6 @@ trait DeprecationListenerTrait {
       // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
       // https://github.com/guzzle/guzzle/pull/2918.
       '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
-      // PHP 8.1 is not compatible with itself :)
-      // @todo Fix somehow - this feels like we need an upstream fix in
-      //   phpspec/prophecy. These fix fails in Drupal\Tests\Core\Database
-      //   tests.
-      '%Return type of Double\\\\PDO.*%',
-      '%Return type of Mock_StubPDO.*%',
-      '%Return type of Double\\\\Drupal\\\\Tests\\\\Core\\\\Database\\\\Stub\\\\StubPDO.*%',
       // Skip Symfony deprecations for PHP 8.1 - fixed by
       // https://github.com/symfony/symfony/pull/42260.
       '%Return type of Symfony\\\\Component\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
@@ -139,10 +132,6 @@ trait DeprecationListenerTrait {
       // PHPUnit 9.
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
       // PHP 8.1.
-      // @todo work out how to avoid deprecations triggered by Prophecy. This
-      //   one is triggered by
-      //   \Drupal\Tests\Core\TempStore\SharedTempStoreTest::testSerialization().
-      "The Serializable interface is deprecated. Implement __serialize() and __unserialize() instead (or in addition, if support for old PHP versions is necessary)",
       // Caused by \JsonSchema\Constraints\BaseConstraint::addError(). The fix
       // unlikely to be ported to 5.x.x.
       'Optional parameter $path declared before required parameter $message is implicitly treated as a required parameter',
