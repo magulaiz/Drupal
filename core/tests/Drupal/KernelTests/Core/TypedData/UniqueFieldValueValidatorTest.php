@@ -20,7 +20,7 @@ class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = [
+  protected static $modules = [
     'entity_test_constraints',
     'link',
     'telephone',
