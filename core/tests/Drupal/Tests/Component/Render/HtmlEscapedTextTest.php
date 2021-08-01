@@ -4,7 +4,6 @@ namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Component\Render\MarkupTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,14 +38,15 @@ class HtmlEscapedTextTest extends TestCase {
     $tests[] = ["Foo ÿñ", "Foo ÿñ", 'Does not escape valid sequence "Foo ÿñ"'];
 
     // Checks that special characters are escaped.
-    $markup = new class() implements MarkupInterface {
-      use MarkupTrait;
-    };
-    $script_tag = $markup::create('<script>');
+    $script_tag = $this->prophesize(MarkupInterface::class);
+    $script_tag->__toString()->willReturn('<script>');
+    $script_tag = $script_tag->reveal();
     $tests[] = [$script_tag, '&lt;script&gt;', 'Escapes &lt;script&gt; even inside an object that implements MarkupInterface.'];
     $tests[] = ["<script>", '&lt;script&gt;', 'Escapes &lt;script&gt;'];
     $tests[] = ['<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters.'];
-    $specialchars = $markup::create('<>&"\'');
+    $specialchars = $this->prophesize(MarkupInterface::class);
+    $specialchars->__toString()->willReturn('<>&"\'');
+    $specialchars = $specialchars->reveal();
     $tests[] = [$specialchars, '&lt;&gt;&amp;&quot;&#039;', 'Escapes reserved HTML characters even inside an object that implements MarkupInterface.'];
 
     return $tests;
