@@ -7,7 +7,7 @@ use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -515,9 +515,8 @@ class EntityTypeTest extends UnitTestCase {
   public function testIsSerializable() {
     $entity_type = $this->setUpEntityType([]);
 
-    $translation = $this->prophesize(TranslationInterface::class);
-    $translation->willImplement(\Serializable::class);
-    $translation->serialize()->willThrow(\Exception::class);
+    $translation = $this->prophesize(UnserializableTranslationManager::class);
+    $translation->__serialize()->willThrow(\Exception::class);
     $translation_service = $translation->reveal();
     $translation_service->_serviceId = 'string_translation';
 
@@ -525,6 +524,20 @@ class EntityTypeTest extends UnitTestCase {
     $entity_type = unserialize(serialize($entity_type));
 
     $this->assertEquals('example_entity_type', $entity_type->id());
+  }
+
+}
+
+/**
+ * Test class.
+ */
+class UnserializableTranslationManager extends TranslationManager {
+
+  /**
+   * @return array
+   */
+  public function __serialize(): array {
+    throw new \Exception();
   }
 
 }
