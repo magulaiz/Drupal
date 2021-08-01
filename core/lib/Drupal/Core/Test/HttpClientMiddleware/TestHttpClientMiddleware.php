@@ -3,7 +3,6 @@
 namespace Drupal\Core\Test\HttpClientMiddleware;
 
 use Drupal\Core\Utility\Error;
-use Drupal\Tests\Listeners\DeprecationListenerTrait;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -11,7 +10,6 @@ use Psr\Http\Message\ResponseInterface;
  * Overrides the User-Agent HTTP header for outbound HTTP requests.
  */
 class TestHttpClientMiddleware {
-  use DeprecationListenerTrait;
 
   /**
    * {@inheritdoc}
@@ -47,8 +45,11 @@ class TestHttpClientMiddleware {
                       // \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::collectDeprecations().
                       @trigger_error((string) $parameters[0], E_USER_DEPRECATED);
                     }
-                    elseif ($parameters[1] === 'Deprecated function' && static::isDeprecationSkipped((string) $parameters[0])) {
-                      // A skipped PHP deprecation.
+                    elseif ($parameters[1] === 'Deprecated function') {
+                      // Fire the same deprecation message to allow it to be
+                      // skipped by
+                      // \Drupal\Tests\Listeners\DeprecationListenerTrait::isDeprecationSkipped().
+                      trigger_error((string) $parameters[0], E_DEPRECATED);
                     }
                     else {
                       throw new \Exception($parameters[1] . ': ' . $parameters[0] . "\n" . Error::formatBacktrace([$parameters[2]]));
