@@ -430,7 +430,7 @@ class EntityReferenceFieldItemNormalizerTest extends UnitTestCase {
    */
   protected function assertDenormalize(array $data) {
     $this->fieldItem->getParent()
-      ->willReturn($this->prophesize(FieldItemListInterface::class)->reveal());
+      ->willReturn($this->prophesize(FieldItemListInterface::class)->willImplement(\IteratorAggregate::class)->reveal());
     $this->fieldItem->getFieldDefinition()->willReturn($this->fieldDefinition->reveal());
     if (!empty($data['target_uuid'])) {
       $this->fieldDefinition

@@ -130,7 +130,7 @@ class ContentEntityNormalizerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setMethods(['getTypedData'])
       ->getMockForAbstractClass();
-    $typed_data = $this->prophesize(ComplexDataInterface::class);
+    $typed_data = $this->prophesize(ComplexDataInterface::class)->willImplement(\IteratorAggregate::class);
     $typed_data->getProperties(TRUE)
       ->willReturn($definitions)
       ->shouldBeCalled();
