@@ -19,7 +19,6 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
    */
   protected static $modules = [
     'field',
-    'migrate_destination_test',
     'node',
     'system',
     'user',
@@ -56,7 +55,8 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
       id: node_no_fields
       label: Migrate to no bundle specified destination
       source:
-        plugin: migrate_destination_test
+        plugin: embedded_data
+        data_rows: {}
         constants:
           type: test_node_type_no_fields
       process:
@@ -79,7 +79,8 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
       id: node_with_fields
       label: Migrate to bundle specified destination
       source:
-        plugin: migrate_destination_test
+        plugin: embedded_data
+        data_rows: {}
         constants:
           type: test_node_type_with_fields
       process:
@@ -121,7 +122,8 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
       id: user_with_fields
       label: Migrate to bundle specified destination
       source:
-        plugin: migrate_destination_test
+        plugin: embedded_data
+        data_rows: {}
         constants:
           type: test_user_with_fields
       process:
