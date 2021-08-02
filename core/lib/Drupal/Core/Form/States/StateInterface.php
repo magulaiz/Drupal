@@ -19,7 +19,7 @@ interface StateInterface extends WeaklySupportedStatesInterface, CheckedStatesIn
   const ENABLED = 'enabled';
 
   /**
-   * State defines disabled posibility to input value to the form element.
+   * State defines disabled possibility to input value to the form element.
    */
   const DISABLED = 'disabled';
 
