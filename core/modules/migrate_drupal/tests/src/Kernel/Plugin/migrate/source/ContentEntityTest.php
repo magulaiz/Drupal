@@ -335,17 +335,17 @@ class ContentEntityTest extends KernelTestBase {
   /**
    * Tests node source plugin.
    *
-   * @dataProvider dataTestNodeSource
+   * @dataProvider migrationConfigurationProvider
    */
-  public function testNodeSource($configuration, $count) {
-    $migration = $this->migrationPluginManager->createStubMigration($this->migrationDefinition('content_entity:node'));
-    $node_source = $this->sourcePluginManager->createInstance('content_entity:node', $configuration, $migration);
+  public function testNodeSource(array $configuration) {
+    $configuration += ['bundle' => $this->bundle];
+    $migration = $this->migrationPluginManager
+      ->createStubMigration($this->migrationDefinition('content_entity:node', $configuration));
+    $node_source = $migration->getSourcePlugin();
+    // Ensure `count()` returns the actual number of nodes.
+    $this->assertSame($configuration['include_translations'] ? 2 : 1, $node_source->count());
     $this->assertSame('content items', $node_source->__toString());
-    // Ensure the `count()` returns an actual number of nodes.
-    static::assertSame($count, $node_source->count());
-    $ids = $node_source->getIds();
-    $this->assertArrayHasKey('langcode', $ids);
-    $this->assertArrayHasKey('nid', $ids);
+    $this->assertIds($node_source, $configuration);
     $fields = $node_source->fields();
     $this->assertArrayHasKey('nid', $fields);
     $this->assertArrayHasKey('vid', $fields);
@@ -367,42 +367,23 @@ class ContentEntityTest extends KernelTestBase {
     $this->assertEquals('Apples', $values['title'][0]['value']);
     $this->assertEquals(1, $values['default_langcode'][0]['value']);
     $this->assertEquals(1, $values['field_entity_reference'][0]['target_id']);
-    if ($count > 1) {
+    if ($configuration['include_translations']) {
+      $node_source->next();
+      $values = $node_source->current()->getSource();
+      $this->assertEquals($this->bundle, $values['type'][0]['target_id']);
+      $this->assertEquals(1, $values['nid']);
       if ($configuration['add_revision_id']) {
         $this->assertEquals(1, $values['vid']);
       }
       else {
         $this->assertEquals([0 => ['value' => 1]], $values['vid']);
       }
-      $this->assertEquals(1, $values['vid']);
       $this->assertEquals('fr', $values['langcode']);
       $this->assertEquals(1, $values['status'][0]['value']);
       $this->assertEquals('Pommes', $values['title'][0]['value']);
       $this->assertEquals(0, $values['default_langcode'][0]['value']);
       $this->assertEquals(1, $values['field_entity_reference'][0]['target_id']);
     }
-  }
-
-  /**
-   * Data provider for testNodeSource.
-   */
-  public function dataTestNodeSource() {
-    return [
-      [
-        [
-          'bundle' => $this->bundle,
-          'include_translations' => FALSE,
-        ],
-        1,
-      ],
-      [
-        [
-          'bundle' => $this->bundle,
-          'include_translations' => TRUE,
-        ],
-        2,
-      ],
-    ];
   }
 
   /**
