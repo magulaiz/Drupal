@@ -81,6 +81,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * @dataProvider userMailsProvider
    */
   public function testUserMailsSent($op, array $mail_keys) {
+    $this->config('system.site')->set('mail', 'test@example.com')->save();
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertTrue($return);
@@ -172,6 +173,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     // Recovery email should respect user preferred langcode by default if
     // langcode not set.
+    $this->config('system.site')->set('mail', 'test@example.com')->save();
     $params['account'] = $user;
     $default_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), $preferredLangcode, $params);
     $this->assertTrue($default_email['result']);
