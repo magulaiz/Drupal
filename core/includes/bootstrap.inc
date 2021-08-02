@@ -132,9 +132,6 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
 
 // PHP 8.1 workarounds not final fixes.
 // @see https://www.drupal.org/project/drupal/issues/3220021
-if (PHP_VERSION_ID >= 80100) {
-  class_alias('Drupal\Core\PhpFixes\StaticReflectionClass', 'Doctrine\Common\Reflection\StaticReflectionClass', TRUE);
-}
 class_alias('Drupal\Core\PhpFixes\ParameterBag', 'Symfony\Component\HttpFoundation\ParameterBag', TRUE);
 class_alias('Drupal\Core\PhpFixes\HeaderBag', 'Symfony\Component\HttpFoundation\HeaderBag', TRUE);
 class_alias('Drupal\Core\PhpFixes\AttributeBag', 'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag', TRUE);
