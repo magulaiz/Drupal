@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\Core\Serialization\Yaml;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\NodeType;
@@ -35,7 +36,7 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
     $this->installEntitySchema('node');
 
     NodeType::create([
-      'type' => 'test_node_type_no_field',
+      'type' => 'test_node_type_no_fields',
       'name' => 'Test node type without fields',
     ])->save();
 
@@ -49,19 +50,52 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
    * Test destination fields() method.
    */
   public function testDestinationField() {
-    // Test with a migration with a default bundle that has fields.
-    $node_with_fields = $this->getMigration('node_with_fields');
-    $destination_fields = $node_with_fields->getDestinationPlugin();
-
     // Test with a migration with a default bundle that does not have fields.
-    $node_no_fields = $this->getMigration('node_no_fields');
-    $destination_no_fields = $node_no_fields->getDestinationPlugin();
+    $node_no_fields_definition = Yaml::decode(
+      <<<EOT
+      id: node_no_fields
+      label: Migrate to no bundle specified destination
+      source:
+        plugin: migrate_destination_test
+        constants:
+          type: test_node_type_no_fields
+      process:
+        type: constants/type
+        title: title
+      destination:
+        plugin: entity:node
+        default_bundle: test_node_type_no_fields
+      EOT
+    );
 
-    $this->assertTrue(in_array('nid', array_keys($destination_fields->fields())));
-    $this->assertFalse(in_array('field_text', array_keys($destination_fields->fields())));
+    $node_no_fields_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($node_no_fields_definition);
+    $node_no_fields_destination = $node_no_fields_migration->getDestinationPlugin();
+    $this->assertArrayHasKey('nid', $node_no_fields_destination->fields());
+    $this->assertArrayNotHasKey('field_text', $node_no_fields_destination->fields());
 
-    $this->assertTrue(in_array('nid', array_keys($destination_no_fields->fields())));
-    $this->assertFalse(in_array('field_text', array_keys($destination_no_fields->fields())));
+    // Test with a migration with a default bundle that has fields.
+    $node_with_fields_definition = Yaml::decode(
+      <<<EOT
+      id: node_with_fields
+      label: Migrate to bundle specified destination
+      source:
+        plugin: migrate_destination_test
+        constants:
+          type: test_node_type_with_fields
+      process:
+        type: constants/type
+        title: title
+      destination:
+        plugin: entity:node
+        default_bundle: test_node_type_with_fields
+      EOT
+    );
+
+    $node_with_fields_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($node_with_fields_definition);
+    $node_with_fields_destination = $node_with_fields_migration->getDestinationPlugin();
+
+    $this->assertArrayHasKey('nid', $node_with_fields_destination->fields());
+    $this->assertArrayNotHasKey('field_text', $node_with_fields_destination->fields());
 
     // Create a text field attached to 'test_node_type_with_fields' node type.
     FieldStorageConfig::create([
@@ -76,17 +110,33 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
       'field_name' => 'field_text',
     ])->save();
 
-    $this->assertTrue(in_array('field_text', array_keys($destination_fields->fields())));
+    $this->assertArrayHasKey('field_text', $node_with_fields_destination->fields());
     // The destination_bundle_entity migration has default bundle of
     // test_node_type so it shouldn't show the fields on other node types.
-    $this->assertFalse(in_array('field_text', array_keys($destination_no_fields->fields())));
+    $this->assertArrayNotHasKey('field_text', $node_no_fields_destination->fields());
 
-    // Test with a user entity.
-    $user_with_fields = $this->getMigration('user_with_fields');
-    $destination_fields = $user_with_fields->getDestinationPlugin();
+    // Test with a user entity
+    $user_with_fields_definition = Yaml::decode(
+      <<<EOT
+      id: user_with_fields
+      label: Migrate to bundle specified destination
+      source:
+        plugin: migrate_destination_test
+        constants:
+          type: test_user_with_fields
+      process:
+        type: constants/type
+        title: title
+      destination:
+        plugin: entity:user
+      EOT
+    );
 
-    $this->assertTrue(in_array('uid', array_keys($destination_fields->fields())));
-    $this->assertFalse(in_array('field_text', array_keys($destination_fields->fields())));
+    $user_with_fields_migration = \Drupal::service('plugin.manager.migration')->createStubMigration($user_with_fields_definition);
+    $user_with_fields_destination = $user_with_fields_migration->getDestinationPlugin();
+
+    $this->assertArrayHasKey('uid', $user_with_fields_destination->fields());
+    $this->assertArrayNotHasKey('field_text', $user_with_fields_destination->fields());
 
     // Create a text field attached to the user entity.
     FieldStorageConfig::create([
@@ -101,7 +151,7 @@ class MigrateEntityDestinationTest extends MigrateTestBase {
       'field_name' => 'field_text',
     ])->save();
 
-    $this->assertTrue(in_array('field_text', array_keys($destination_fields->fields())));
+    $this->assertArrayHasKey('field_text', $user_with_fields_destination->fields());
   }
 
 }
