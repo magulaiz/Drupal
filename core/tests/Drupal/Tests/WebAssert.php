@@ -309,6 +309,9 @@ class WebAssert extends MinkWebAssert {
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
@@ -316,6 +319,8 @@ class WebAssert extends MinkWebAssert {
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
     $this->assert(!empty($links[$index]), $message);
+
+    return $links[$index];
   }
 
   /**
@@ -332,6 +337,9 @@ class WebAssert extends MinkWebAssert {
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
    *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
@@ -339,6 +347,8 @@ class WebAssert extends MinkWebAssert {
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
     $this->assert(!empty($links[$index]), $message);
+
+    return $links[$index];
   }
 
   /**
@@ -396,6 +406,9 @@ class WebAssert extends MinkWebAssert {
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
    *
+   * @return \Behat\Mink\Element\NodeElement
+   *   The matching element.
+   *
    * @throws \Behat\Mink\Exception\ExpectationException
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
@@ -404,6 +417,8 @@ class WebAssert extends MinkWebAssert {
     $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(!empty($links[$index]), $message);
+
+    return $links[$index];
   }
 
   /**
