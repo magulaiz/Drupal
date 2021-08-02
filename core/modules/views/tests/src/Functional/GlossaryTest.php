@@ -116,12 +116,11 @@ class GlossaryTest extends ViewTestBase {
       $label = mb_strtoupper($char);
       // Get the summary link for a certain character. Filter by label and href
       // to ensure that both of them are correct.
-      $result = $this->xpath('//a[contains(@href, :href) and normalize-space(text())=:label]/..', [':href' => $href, ':label' => $label]);
-      $this->assertNotEmpty(count($result));
-      // The rendered output looks like "<a href=''>X</a> | (count)" so let's
-      // figure out the int.
-      $result_count = explode(' ', trim(str_replace(['|', '(', ')'], '', $result[0]->getText())))[1];
-      $this->assertEquals($count, $result_count, 'The expected number got rendered.');
+      $link = $this->assertSession()->linkExistsExact($label);
+      // Ensure that the URL is correct.
+      $this->assertStringContainsString($href, $link->getAttribute('href'));
+      // The rendered output looks like "<a href=''>X</a> (count)".
+      $this->assertStringContainsString("$label ($count)", $link->getParent()->getText(), 'The expected number got rendered.');
     }
   }
 

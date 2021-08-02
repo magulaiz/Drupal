@@ -136,8 +136,7 @@ class HandlerTest extends UITestBase {
       $this->assertSession()->addressEquals('admin/structure/views/view/test_view_empty/edit/default');
 
       $this->assertSession()->linkByHrefExists($edit_handler_url, 0, 'The handler edit link appears in the UI.');
-      $links = $this->xpath('//a[starts-with(normalize-space(text()), :label)]', [':label' => $random_label]);
-      $this->assertTrue(isset($links[0]), 'The handler edit link has the right label');
+      $this->assertSession()->linkExists($random_label);
 
       // Save the view and have a look whether the handler was added as expected.
       $this->submitForm([], 'Save');
@@ -228,17 +227,13 @@ class HandlerTest extends UITestBase {
       $this->drupalGet('admin/structure/views/view/test_view_broken/edit');
 
       $href = "admin/structure/views/nojs/handler/test_view_broken/default/$type/id_broken";
-
-      $result = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
-      $this->assertCount(1, $result, new FormattableMarkup('Handler (%type) edit link found.', ['%type' => $type]));
-
       $text = 'Broken/missing handler';
 
-      $this->assertSame($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
-
+      // Ensure the broken handler link and text is found.
+      $link = $this->assertSession()->linkByHrefExists($href);
+      $this->assertSame($text, $link->getText());
       $this->drupalGet($href);
-      $result = $this->xpath('//h1[@class="page-title"]');
-      $this->assertStringContainsString($text, $result[0]->getText(), 'Ensure the broken handler text was found.');
+      $this->assertSession()->elementContains('xpath', '//h1[@class="page-title"]', $text);
 
       $original_configuration = [
         'field' => 'id_broken',
