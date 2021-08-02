@@ -96,7 +96,8 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
       [],
       $this->container->get('entity_field.manager'),
       $this->container->get('plugin.manager.field.field_type'),
-      $this->container->get('account_switcher')
+      $this->container->get('account_switcher'),
+      $this->container->get('entity_type.bundle.info')
     );
   }
 
