@@ -458,7 +458,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
 
     if (isset($bundle)) {
       // If we have a bundle, get all the fields.
-      $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
+      $field_definitions = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
     }
     else {
       // Without a bundle, we can only get the base fields.
