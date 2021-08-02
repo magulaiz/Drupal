@@ -40,6 +40,12 @@ class MailTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
+
+    // Set required site configuration.
+    $this->config('system.site')
+      ->set('mail', 'mailtest@example.com')
+      ->set('name', 'Drupal')
+      ->save();
   }
 
   /**
@@ -114,12 +120,6 @@ class MailTest extends KernelTestBase {
    */
   public function testFromAndReplyToHeader() {
     $language = \Drupal::languageManager()->getCurrentLanguage();
-
-    // Set required site configuration.
-    $this->config('system.site')
-      ->set('mail', 'mailtest@example.com')
-      ->set('name', 'Drupal')
-      ->save();
 
     // Reset the state variable that holds sent messages.
     \Drupal::state()->set('system.test_mail_collector', []);
