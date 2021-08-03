@@ -122,7 +122,7 @@ class FilterHtmlTest extends UnitTestCase {
         'allowed' => [
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
 
     yield '<p> <br>' => [
@@ -133,7 +133,7 @@ class FilterHtmlTest extends UnitTestCase {
           'br' => FALSE,
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
 
     yield '<p class> <br>' => [
@@ -146,7 +146,7 @@ class FilterHtmlTest extends UnitTestCase {
           'br' => FALSE,
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
 
     yield '<p class="foo bar"> <br>' => [
@@ -162,7 +162,7 @@ class FilterHtmlTest extends UnitTestCase {
           'br' => FALSE,
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
 
     yield '<p class="foo bar" data-*> <br>' => [
@@ -179,7 +179,7 @@ class FilterHtmlTest extends UnitTestCase {
           'br' => FALSE,
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
   }
 
