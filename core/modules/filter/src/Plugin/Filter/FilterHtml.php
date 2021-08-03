@@ -76,7 +76,7 @@ class FilterHtml extends FilterBase {
   public function validateNoWildcardTag(array $element, FormStateInterface $form_state) : void {
     $allowed_html_value = $form_state->getValue($element['#parents']);
     if (strpos($allowed_html_value, '<*') !== FALSE) {
-      $form_state->setError($element, $this->t('The wildcard tag <code><*></code> is not supported.'));
+      $form_state->setError($element, $this->t('The wildcard tag <code>&lt;*&gt;</code> is not supported.'));
     }
   }
 

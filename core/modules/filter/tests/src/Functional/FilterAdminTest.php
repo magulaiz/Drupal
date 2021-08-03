@@ -407,7 +407,7 @@ class FilterAdminTest extends BrowserTestBase {
     // Assert validation error when trying to allow `<*>`.
     $page->fillField($selector, $original_value . ' <*>');
     $page->findButton('Save')->click();
-    $this->assertSame('Error message The wildcard tag *> is not supported.', $page->find('css', '.messages')->getText());
+    $this->assertSame('Error message The wildcard tag <*> is not supported.', $page->find('css', '.messages')->getText());
   }
 
   /**
