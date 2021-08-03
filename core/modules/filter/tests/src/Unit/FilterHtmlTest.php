@@ -189,7 +189,7 @@ class FilterHtmlTest extends UnitTestCase {
           'br' => FALSE,
           '*' => $hardcoded_asterisk_restrictions,
         ],
-      ]
+      ],
     ];
   }
 
