@@ -266,6 +266,10 @@ class FilterHtml extends FilterBase {
         continue;
       }
       $tag = $node->tagName;
+      if ($tag === $star_protector) {
+        // Skip the <*> tag — such wildcard restrictions are not allowed.
+        continue;
+      }
       if ($node->hasAttributes()) {
         // Mark the tag as allowed, assigning TRUE for each attribute name if
         // all values are allowed, or an array of specific allowed values.
