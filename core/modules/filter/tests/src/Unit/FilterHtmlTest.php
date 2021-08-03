@@ -191,6 +191,16 @@ class FilterHtmlTest extends UnitTestCase {
         ],
       ],
     ];
+
+    yield '<h* class="foo bar"> <br>' => [
+      '<h* class="foo bar"> <br>',
+      [
+        'allowed' => [
+          'br' => FALSE,
+          '*' => $hardcoded_asterisk_restrictions,
+        ],
+      ],
+    ];
   }
 
 }
