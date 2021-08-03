@@ -292,8 +292,10 @@ class FilterHtml extends FilterBase {
         continue;
       }
       $tag = $node->tagName;
-      if ($tag === $star_protector) {
-        // Skip the <*> tag — such wildcard restrictions are not allowed.
+      // Skip wildcard tags: those are not allowed. Config cannot be trusted to
+      // have been validated.
+      // @see ::validateNoWildcardTag()
+      if (strpos($tag, $star_protector) !== FALSE) {
         continue;
       }
       if ($node->hasAttributes()) {
