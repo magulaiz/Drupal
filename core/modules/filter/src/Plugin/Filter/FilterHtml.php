@@ -50,6 +50,7 @@ class FilterHtml extends FilterBase {
           'filter/drupal.filter.filter_html.admin',
         ],
       ],
+      '#element_validate' => [[$this, 'validateNoWildcardTag']],
     ];
     $form['filter_html_help'] = [
       '#type' => 'checkbox',
@@ -62,6 +63,21 @@ class FilterHtml extends FilterBase {
       '#default_value' => $this->settings['filter_html_nofollow'],
     ];
     return $form;
+  }
+
+  /**
+   * Validation callback for the allowed_html form element: <*> is not allowed.
+   *
+   * @param array $element
+   *   The form element whose value is being validated.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function validateNoWildcardTag(array $element, FormStateInterface $form_state) : void {
+    $allowed_html_value = $form_state->getValue($element['#parents']);
+    if (strpos($allowed_html_value, '<*') !== FALSE) {
+      $form_state->setError($element, $this->t('The wildcard tag <code><*></code> is not supported.'));
+    }
   }
 
   /**
