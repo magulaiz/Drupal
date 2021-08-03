@@ -111,7 +111,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/search/pages');
     $this->submitForm($edit, 'Save configuration');
-    $this->assertNoText('The configuration options have been saved.');
+    $this->assertSession()->pageTextNotContains('The configuration options have been saved.');
 
     // Test logging setting. It should be off by default.
     $text = $this->randomMachineName(5);
@@ -137,7 +137,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   public function testSearchModuleSettingsPage() {
     $this->drupalGet('admin/config/search/pages');
-    $this->clickLink(t('Edit'), 1);
+    $this->clickLink('Edit', 1);
 
     // Ensure that the default setting was picked up from the default config
     $this->assertTrue($this->assertSession()->optionExists('edit-extra-type-settings-boost', 'bi')->isSelected());
@@ -190,14 +190,14 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
       $info = $plugin_info[$entity_id];
       $this->drupalGet('search/' . $entity->getPath(), ['query' => ['keys' => $info['keys']]]);
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertNoText('no results');
+      $this->assertSession()->pageTextNotContains('no results');
       $this->assertSession()->pageTextContains($info['text']);
 
       // Verify that other plugin search tab labels are not visible.
       foreach ($plugins as $other) {
         if ($other != $entity_id) {
-          $label = $entities[$other]->label();
-          $this->assertNoText($label);
+          $path = 'search/' . $entities[$other]->getPath();
+          $this->assertSession()->elementNotExists('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]');
         }
       }
 
@@ -236,8 +236,9 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     foreach ($paths as $item) {
       $this->drupalGet($item['path'], $item['options']);
       foreach ($plugins as $entity_id) {
+        $path = 'search/' . $entities[$entity_id]->getPath();
         $label = $entities[$entity_id]->label();
-        $this->assertSession()->pageTextContains($label);
+        $this->assertSession()->elementTextContains('xpath', '//ul[@class="tabs primary"]/li/a[@data-drupal-link-system-path="' . $path . '"]', $label);
       }
     }
   }
@@ -324,26 +325,26 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
     $this->verifySearchPageOperations($second_id, TRUE, TRUE, TRUE, FALSE);
 
     // Change the default search page.
-    $this->clickLink(t('Set as default'));
+    $this->clickLink('Set as default');
     $this->assertRaw(t('The default search page is now %label. Be sure to check the ordering of your search pages.', ['%label' => $second['label']]));
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
 
     // Disable the first search page.
-    $this->clickLink(t('Disable'));
+    $this->clickLink('Disable');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkNotExists('Disable');
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, FALSE, TRUE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
 
     // Enable the first search page.
-    $this->clickLink(t('Enable'));
+    $this->clickLink('Enable');
     $this->assertSession()->statusCodeEquals(200);
     $this->verifySearchPageOperations($first_id, TRUE, TRUE, TRUE, FALSE);
     $this->verifySearchPageOperations($second_id, TRUE, FALSE, FALSE, FALSE);
 
     // Test deleting.
-    $this->clickLink(t('Delete'));
+    $this->clickLink('Delete');
     $this->assertRaw(t('Are you sure you want to delete the search page %label?', ['%label' => $first['label']]));
     $this->submitForm([], 'Delete');
     $this->assertRaw(t('The search page %label has been deleted.', ['%label' => $first['label']]));

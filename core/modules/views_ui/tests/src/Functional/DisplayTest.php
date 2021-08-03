@@ -36,12 +36,14 @@ class DisplayTest extends UITestBase {
    */
   public function testAddDisplay() {
     $view = $this->randomView();
-    $this->assertNoText('Block');
-    $this->assertNoText('Block 2');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(0, '/Block name:/');
 
     $this->submitForm([], 'Add Block');
-    $this->assertSession()->pageTextContains('Block');
-    $this->assertNoText('Block 2');
+    $this->assertSession()->elementTextContains('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-1"]', 'Block*');
+    $this->assertSession()->elementNotExists('xpath', '//li[@data-drupal-selector="edit-displays-top-tabs-block-2"]');
+    $this->assertSession()->pageTextMatchesCount(1, '/Block name:/');
   }
 
   /**
@@ -53,7 +55,7 @@ class DisplayTest extends UITestBase {
     ];
     $view = $this->randomView($view);
 
-    $this->clickLink(t('Reorder displays'));
+    $this->clickLink('Reorder displays');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-default"]'), 'Make sure the default display appears on the reorder listing');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-page_1"]'), 'Make sure the page display appears on the reorder listing');
     $this->assertNotEmpty($this->xpath('//tr[@id="display-row-block_1"]'), 'Make sure the block display appears on the reorder listing');
@@ -187,7 +189,7 @@ class DisplayTest extends UITestBase {
     // Test the default link_url value for new display
     $this->submitForm([], 'Add Block');
     $this->assertSession()->addressEquals('admin/structure/views/view/test_display/edit/block_2');
-    $this->clickLink(t('Custom URL'));
+    $this->clickLink('Custom URL');
     $this->assertSession()->fieldValueEquals('link_url', 'a-custom-url');
   }
 
@@ -285,7 +287,7 @@ class DisplayTest extends UITestBase {
     $this->submitForm([], 'Save');
 
     $this->drupalGet('admin/structure/views/nojs/handler/test_display/page_1/field/title');
-    $this->assertNoText('All displays');
+    $this->assertSession()->pageTextNotContains('All displays');
 
     // Test that the override option is shown when default display is on.
     \Drupal::configFactory()->getEditable('views.settings')->set('ui.show.default_display', TRUE)->save();

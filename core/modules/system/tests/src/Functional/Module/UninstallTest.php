@@ -87,7 +87,7 @@ class UninstallTest extends BrowserTestBase {
     $edit['uninstall[module_test]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
-    $this->assertNoText('Configuration deletions');
+    $this->assertSession()->pageTextNotContains('Configuration deletions');
     $this->assertSession()->pageTextContains('Configuration updates');
     $this->assertSession()->pageTextContains($node_type->label());
     $this->submitForm([], 'Uninstall');
@@ -95,13 +95,13 @@ class UninstallTest extends BrowserTestBase {
 
     // Uninstall node testing that the configuration that will be deleted is
     // listed.
-    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependentsAsEntities('module', ['node']);
+    $node_dependencies = \Drupal::service('config.manager')->findConfigEntityDependenciesAsEntities('module', ['node']);
     $edit = [];
     $edit['uninstall[node]'] = TRUE;
     $this->drupalGet('admin/modules/uninstall');
     $this->submitForm($edit, 'Uninstall');
     $this->assertSession()->pageTextContains('Configuration deletions');
-    $this->assertNoText('Configuration updates');
+    $this->assertSession()->pageTextNotContains('Configuration updates');
 
     $entity_types = [];
     foreach ($node_dependencies as $entity) {
@@ -173,7 +173,7 @@ class UninstallTest extends BrowserTestBase {
     $this->submitForm($edit, 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $this->assertSession()->pageTextContains('The selected modules have been uninstalled.');
-    $this->assertNoText('Module installer config test');
+    $this->assertSession()->pageTextNotContains('Module installer config test');
   }
 
 }

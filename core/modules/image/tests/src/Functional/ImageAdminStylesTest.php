@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\image\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\image\ImageStyleInterface;
 use Drupal\node\Entity\Node;
-use Drupal\file\Entity\File;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -343,8 +343,11 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $original_uri = File::load($fid)->getFileUri();
 
     // Test that image is displayed using newly created style.
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($style->buildUrl($original_uri)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomMachineName(10));
@@ -360,7 +363,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Reload the image style using the new name.
     $style = ImageStyle::load($new_style_name);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($style->buildUrl($original_uri)));
 
     // Delete the style and choose a replacement style.
     $edit = [
@@ -373,7 +376,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     $replacement_style = ImageStyle::load('thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($replacement_style->buildUrl($original_uri)));
+    $this->assertSession()->responseContains($file_url_generator->transformRelative($replacement_style->buildUrl($original_uri)));
   }
 
   /**
@@ -389,12 +392,12 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertSession()->pageTextContains('Scale and crop 300×200');
 
     // There should normally be only one edit link on this page initially.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->submitForm(['data[width]' => '360', 'data[height]' => '240'], 'Update effect');
     $this->assertSession()->pageTextContains('Scale and crop 360×240');
 
     // Check that the previous effect is replaced.
-    $this->assertNoText('Scale and crop 300×200');
+    $this->assertSession()->pageTextNotContains('Scale and crop 300×200');
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
@@ -403,7 +406,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->submitForm(['data[width]' => '12', 'data[height]' => '19'], 'Add effect');
 
     // Edit the scale effect that was just added.
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->submitForm(['data[width]' => '24', 'data[height]' => '19'], 'Update effect');
 
     // Add another scale effect and make sure both exist. Click through from
@@ -493,7 +496,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(file_url_transform_relative($style->buildUrl($original_uri)));
+    $this->assertRaw(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');
@@ -519,7 +522,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $style->save();
 
     $this->drupalGet('admin/config/media/image-styles');
-    $this->clickLink(t('Edit'));
+    $this->clickLink('Edit');
     $this->assertRaw(t('Select a new effect'));
   }
 

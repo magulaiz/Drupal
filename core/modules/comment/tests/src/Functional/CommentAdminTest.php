@@ -116,7 +116,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->assertSession()->pageTextContains(Html::escape($this->node->label()));
     $this->node->setUnpublished()->save();
     $this->drupalGet('admin/content/comment');
-    $this->assertNoText(Html::escape($this->node->label()));
+    $this->assertSession()->pageTextNotContains(Html::escape($this->node->label()));
   }
 
   /**
@@ -167,7 +167,7 @@ class CommentAdminTest extends CommentTestBase {
     $this->drupalGet('comment/1/edit');
     $this->assertSession()->checkboxChecked('edit-status-0');
     $this->drupalGet('node/' . $this->node->id());
-    $this->clickLink(t('Approve'));
+    $this->clickLink('Approve');
     $this->drupalLogout();
 
     $this->drupalGet('node/' . $this->node->id());
