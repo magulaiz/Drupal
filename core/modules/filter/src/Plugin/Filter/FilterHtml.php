@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Component\Render\HtmlEscapedText;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Component\Utility\Html;
@@ -66,7 +67,7 @@ class FilterHtml extends FilterBase {
   }
 
   /**
-   * Validation callback for the allowed_html form element: <*> is not allowed.
+   * Validation callback for allowed_html: no wildcard tags allowed.
    *
    * @param array $element
    *   The form element whose value is being validated.
@@ -75,8 +76,17 @@ class FilterHtml extends FilterBase {
    */
   public function validateNoWildcardTag(array $element, FormStateInterface $form_state) : void {
     $allowed_html_value = $form_state->getValue($element['#parents']);
-    if (strpos($allowed_html_value, '<*') !== FALSE) {
-      $form_state->setError($element, $this->t('The wildcard tag <code>&lt;*&gt;</code> is not supported.'));
+    $matches = [];
+    if (preg_match_all('/\<([a-z0-9]?\*)/', $allowed_html_value, $matches, PREG_SET_ORDER) > 0) {
+      $wildcard_tags = array_column($matches, 1);
+      array_walk($wildcard_tags, function (string &$tag_name) : void {
+        $tag_name = "<$tag_name>";
+      });
+      $form_state->setError($element, $this->formatPlural(
+        count($matches),
+        $this->t('The wildcard tag <code>@allowed_tag_name</code> is not supported.', ['@allowed_tag_name' => new HtmlEscapedText(reset($wildcard_tags))]),
+        $this->t('The wildcard tags <code>@allowed_tag_names</code> are not supported.', ['@allowed_tag_names' => new HtmlEscapedText(implode(' ', $wildcard_tags))])
+      ));
     }
   }
 
