@@ -22,7 +22,6 @@ use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
@@ -900,7 +899,7 @@ class EntityResource {
       foreach ($sort->fields() as $field) {
         $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type, $field[Sort::PATH_KEY]);
         $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
-        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
+        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : $this->languageManager->getCurrentLanguage()->getId();
         $query->sort($path, $direction, $langcode);
       }
     }
