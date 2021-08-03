@@ -17,41 +17,41 @@ interface WeaklySupportedStatesInterface {
   /**
    * State defines if element is relevant.
    */
-  const RELEVANT = 'relevant';
+  public const RELEVANT = 'relevant';
 
   /**
    * State defines if element is irrelevant.
    */
-  const IRRELEVANT = 'irrelevant';
+  public const IRRELEVANT = 'irrelevant';
 
   /**
    * States defines if element is valid.
    */
-  const VALID = 'valid';
+  public const VALID = 'valid';
 
   /**
    * States defines if element is invalid.
    */
-  const INVALID = 'invalid';
+  public const INVALID = 'invalid';
 
   /**
    * States defines if element is touched.
    */
-  const TOUCHED = 'touched';
+  public const TOUCHED = 'touched';
 
   /**
    * States defines if element is untouched.
    */
-  const UNTOUCHED = 'untouched';
+  public const UNTOUCHED = 'untouched';
 
   /**
    * States defines if element is readwrite.
    */
-  const READWRITE = 'readwrite';
+  public const READWRITE = 'readwrite';
 
   /**
    * States defines if element is readonly.
    */
-  const READONLY = 'readonly';
+  public const READONLY = 'readonly';
 
 }

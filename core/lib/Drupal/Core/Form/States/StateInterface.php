@@ -16,31 +16,31 @@ interface StateInterface extends WeaklySupportedStatesInterface, CheckedStatesIn
   /**
    * State defines enabled possibility to input value to the form element.
    */
-  const ENABLED = 'enabled';
+  public const ENABLED = 'enabled';
 
   /**
    * State defines disabled possibility to input value to the form element.
    */
-  const DISABLED = 'disabled';
+  public const DISABLED = 'disabled';
 
   /**
    * State defines that element is required.
    */
-  const REQUIRED = 'required';
+  public const REQUIRED = 'required';
 
   /**
    * State defines that element is not required.
    */
-  const OPTIONAL = 'optional';
+  public const OPTIONAL = 'optional';
 
   /**
    * State defines that element is visible.
    */
-  const VISIBLE = 'visible';
+  public const VISIBLE = 'visible';
 
   /**
    * State defines that element is invisible.
    */
-  const INVISIBLE = 'invisible';
+  public const INVISIBLE = 'invisible';
 
 }
