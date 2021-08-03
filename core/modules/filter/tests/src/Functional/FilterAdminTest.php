@@ -408,6 +408,16 @@ class FilterAdminTest extends BrowserTestBase {
     $page->fillField($selector, $original_value . ' <*>');
     $page->findButton('Save')->click();
     $this->assertSame('Error message The wildcard tag <*> is not supported.', $page->find('css', '.messages')->getText());
+
+    // Assert validation error when trying to allow `<*> <h*>`.
+    $page->fillField($selector, $original_value . ' <*> <h*>');
+    $page->findButton('Save')->click();
+    $this->assertSame('Error message The wildcard tags <*> <h*> are not supported.', $page->find('css', '.messages')->getText());
+
+    // Assert validation error does no trip over wildcard attributes.
+    $page->fillField($selector, $original_value . ' <*> <h*> <div data-*>');
+    $page->findButton('Save')->click();
+    $this->assertSame('Error message The wildcard tags <*> <h*> are not supported.', $page->find('css', '.messages')->getText());
   }
 
   /**
