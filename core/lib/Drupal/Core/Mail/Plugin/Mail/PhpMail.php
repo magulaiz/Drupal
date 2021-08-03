@@ -24,7 +24,7 @@ class PhpMail implements MailInterface {
    *
    * @see \Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
    */
-  private const MAILBOX_LIST_HEADERS = ['from', 'to', 'reply-to', 'cc', 'bcc'];
+  private const MAILBOX_LIST_HEADERS = ['to', 'reply-to', 'cc', 'bcc'];
 
   /**
    * The configuration factory.
@@ -86,7 +86,11 @@ class PhpMail implements MailInterface {
 
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
-      if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
+      $name = strtolower($name);
+      if ($name === 'from') {
+        $value = [$value];
+      }
+      elseif (in_array($name, self::MAILBOX_LIST_HEADERS, TRUE)) {
         $value = explode(',', $value);
       }
       $headers->addHeader($name, $value);
