@@ -395,6 +395,22 @@ class FilterAdminTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the HTML filter settings form is properly validated.
+   */
+  public function testHtmlFilterAdmin() {
+    $selector = 'filters[filter_html][settings][allowed_html]';
+
+    $this->drupalGet('admin/config/content/formats/manage/basic_html');
+    $page = $this->getSession()->getPage();
+    $original_value = $page->findField($selector)->getValue();
+
+    // Assert validation error when trying to allow `<*>`.
+    $page->fillField($selector, $original_value . ' <*>');
+    $page->findButton('Save')->click();
+    $this->assertSame('Error message The wildcard tag *> is not supported.', $page->find('css', '.messages')->getText());
+  }
+
+  /**
    * Tests whether filter tips page is not HTML escaped.
    */
   public function testFilterTipHtmlEscape() {
