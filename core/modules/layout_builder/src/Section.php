@@ -82,9 +82,12 @@ class Section implements ThirdPartySettingsInterface {
    */
   public function toRenderArray(array $contexts = [], $in_preview = FALSE) {
     $regions = [];
-    foreach ($this->getComponents() as $component) {
-      if ($output = $component->toRenderArray($contexts, $in_preview)) {
-        $regions[$component->getRegion()][$component->getUuid()] = $output;
+    $layout_definition = $this->getLayout()->getPluginDefinition();
+    foreach ($layout_definition->getRegionNames() as $region) {
+      foreach ($this->getComponentsByRegion($region) as $component) {
+        if ($output = $component->toRenderArray($contexts, $in_preview)) {
+          $regions[$component->getRegion()][$component->getUuid()] = $output;
+        }
       }
     }
 
