@@ -22,7 +22,6 @@ use Drupal\Core\Url;
 use Drupal\field_ui\FieldUI;
 use Drupal\media\Entity\Media;
 use Drupal\media_library\MediaLibraryState;
-use Drupal\media_library\MediaLibraryUiBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
