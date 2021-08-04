@@ -19,7 +19,7 @@ interface ContentEntityStorageInterface extends EntityStorageInterface, Translat
    *   A fieldable content entity.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
-   *   Thrown if the bundle does not exist or was needed but not specified.
+   *   Thrown if an unknown bundle was specified.
    */
   public function createWithSampleValues($bundle = FALSE, array $values = []);
 
