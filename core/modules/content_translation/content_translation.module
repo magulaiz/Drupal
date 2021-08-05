@@ -659,6 +659,7 @@ function content_translation_preprocess_language_content_settings_table(&$variab
 function content_translation_page_attachments(&$page) {
   $cache = CacheableMetadata::createFromRenderArray($page);
   $route_match = \Drupal::routeMatch();
+  $request = \Drupal::request();
 
   // If the current route has no parameters, return.
   if (!($route = $route_match->getRouteObject()) || !($parameters = $route->getOption('parameters'))) {
@@ -686,14 +687,17 @@ function content_translation_page_attachments(&$page) {
           ->setOption('language', $language)
           ->setAbsolute()
           ->toString();
-        $page['#attached']['html_head_link'][] = [
-          [
-            'rel' => 'alternate',
-            'hreflang' => $language->getId(),
-            'href' => $url,
-          ],
-          TRUE,
-        ];
+        // Add alternate hreflang only if we're on the canonical page.
+        if ($url === $request->getUri()) {
+          $page['#attached']['html_head_link'][] = [
+            [
+              'rel' => 'alternate',
+              'hreflang' => $language->getId(),
+              'href' => $url,
+            ],
+            TRUE,
+          ];
+        }
       }
     }
     // Since entity was found, no need to iterate further.
