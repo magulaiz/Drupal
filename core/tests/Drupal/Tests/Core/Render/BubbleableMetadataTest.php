@@ -167,10 +167,22 @@ class BubbleableMetadataTest extends UnitTestCase {
         'tags' => [],
         'max-age' => Cache::PERMANENT,
       ],
-      '#attached' => [],
     ];
+    $expected_when_empty_metadata_with_attached = [
+      '#cache' => [
+        'contexts' => [],
+        'tags' => [],
+        'max-age' => Cache::PERMANENT,
+      ],
+      '#attached' => [
+        'library' => [
+          'core/jquery',
+        ],
+      ],
+    ];
+
     $data[] = [$empty_metadata, $empty_render_array, $expected_when_empty_metadata];
-    $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata];
+    $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata_with_attached];
     $expected_when_nonempty_metadata = [
       '#cache' => [
         'contexts' => ['qux'],
@@ -183,8 +195,24 @@ class BubbleableMetadataTest extends UnitTestCase {
         ],
       ],
     ];
+    $expected_when_nonempty_metadata_with_attached = [
+      '#cache' => [
+        'contexts' => ['qux'],
+        'tags' => ['foo:bar'],
+        'max-age' => Cache::PERMANENT,
+      ],
+      '#attached' => [
+        'settings' => [
+          'foo' => 'bar',
+        ],
+        'library' => [
+          'core/jquery',
+        ],
+      ],
+    ];
+
     $data[] = [$nonempty_metadata, $empty_render_array, $expected_when_nonempty_metadata];
-    $data[] = [$nonempty_metadata, $nonempty_render_array, $expected_when_nonempty_metadata];
+    $data[] = [$nonempty_metadata, $nonempty_render_array, $expected_when_nonempty_metadata_with_attached];
 
     return $data;
   }
