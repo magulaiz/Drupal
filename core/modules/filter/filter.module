@@ -697,44 +697,10 @@ function _filter_html_escape($text) {
  * Process callback for local image filter.
  */
 function _filter_html_image_secure_process($text) {
-  // Find the path (e.g. '/') to Drupal root.
-  $base_path = base_path();
-  $base_path_length = mb_strlen($base_path);
-
-  // Find the directory on the server where index.php resides.
-  $local_dir = \Drupal::root() . '/';
-
-  $html_dom = Html::load($text);
-  $images = $html_dom->getElementsByTagName('img');
-
-  /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
-  $file_url_generator = \Drupal::service('file_url_generator');
-  foreach ($images as $image) {
-    $src = $image->getAttribute('src');
-    // Transform absolute image URLs to relative image URLs: prevent problems on
-    // multisite set-ups and prevent mixed content errors.
-    $image->setAttribute('src', $file_url_generator->transformRelative($src));
-
-    // Verify that $src starts with $base_path.
-    // This also ensures that external images cannot be referenced.
-    $src = $image->getAttribute('src');
-    if (mb_substr($src, 0, $base_path_length) === $base_path) {
-      // Remove the $base_path to get the path relative to the Drupal root.
-      // Ensure the path refers to an actual image by prefixing the image source
-      // with the Drupal root and running getimagesize() on it.
-      $local_image_path = $local_dir . mb_substr($src, $base_path_length);
-      $local_image_path = rawurldecode($local_image_path);
-      if (@getimagesize($local_image_path)) {
-        // The image has the right path. Erroneous images are dealt with below.
-        continue;
-      }
-    }
-    // Allow modules and themes to replace an invalid image with an error
-    // indicator. See filter_filter_secure_image_alter().
-    \Drupal::moduleHandler()->alter('filter_secure_image', $image);
-  }
-  $text = Html::serialize($html_dom);
-  return $text;
+  return \Drupal::service('plugin.manager.filter')
+    ->createInstance('filter_html_image_secure')
+    ->process($text, LanguageInterface::LANGCODE_NOT_SPECIFIED)
+    ->getProcessedText();
 }
 
 /**
@@ -742,7 +708,7 @@ function _filter_html_image_secure_process($text) {
  *
  * Formats an image DOM element that has an invalid source.
  *
- * @see _filter_html_image_secure_process()
+ * @see \Drupal\filter\Plugin\Filter\FilterHtmlImageSecure::process()
  */
 function filter_filter_secure_image_alter(&$image) {
   // Turn an invalid image into an error indicator.
