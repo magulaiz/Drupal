@@ -50,6 +50,8 @@
     icons: 'drupalimage',
     hidpi: true,
     beforeInit: function beforeInit(editor) {
+      var _this = this;
+
       editor.on('widgetDefinition', function (event) {
         var widgetDefinition = event.data;
 
@@ -193,6 +195,15 @@
           return;
         }
 
+        widget.on('data', function (event) {
+          if (_this.data.link) {
+            _this.focus();
+
+            if (editor.plugins.drupallink) {
+              editor.getCommand('drupalunlink').refresh(editor, editor.elementPath(_this.element));
+            }
+          }
+        });
         widget.on('edit', function (event) {
           event.cancel();
           editor.execCommand('editdrupalimage', {

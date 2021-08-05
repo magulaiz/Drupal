@@ -325,6 +325,19 @@
           return;
         }
 
+        widget.on('data', (event) => {
+          // If a link has been set, move the caret from the previous location
+          // to select the image.
+          if (this.data.link) {
+            this.focus();
+            // Adding a link through setData('link') may affect the unlink
+            // button, so refresh the button state to enable/disable it.
+            if (editor.plugins.drupallink) {
+              editor.getCommand('drupalunlink').refresh(editor, editor.elementPath(this.element));
+            }
+          }
+        });
+
         widget.on('edit', (event) => {
           // Cancel edit event to break image2's dialog binding
           // (and also to prevent automatic insertion before opening dialog).
