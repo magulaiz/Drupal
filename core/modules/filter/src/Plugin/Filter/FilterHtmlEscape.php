@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Component\Utility\Html;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 
@@ -21,7 +22,7 @@ class FilterHtmlEscape extends FilterBase {
    * {@inheritdoc}
    */
   public function process($text, $langcode) {
-    return new FilterProcessResult(_filter_html_escape($text));
+    return new FilterProcessResult(trim(Html::escape($text)));
   }
 
   /**
