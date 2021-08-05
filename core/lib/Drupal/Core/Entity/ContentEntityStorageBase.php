@@ -133,7 +133,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     }
     if ($bundle_key = $this->entityType->getKey('bundle')) {
       if ($bundle) {
-        if (!array_key_exists($bundle, $this->entityManager->getBundleInfo($this->entityTypeId))) {
+        if (!array_key_exists($bundle, $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId))) {
           throw new EntityStorageException(sprintf("Missing entity bundle. The \"%s\" bundle does not exist", $bundle));
         }
         $values[$bundle_key] = $bundle;
