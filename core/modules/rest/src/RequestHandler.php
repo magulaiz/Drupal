@@ -260,7 +260,7 @@ class RequestHandler implements ContainerInjectionInterface {
       }
     }
 
-    if (in_array($request->getMethod(), ['PATCH', 'POST'], TRUE)) {
+    if (in_array($request->getMethod(), ['PATCH', 'POST', 'PUT', 'DELETE'], TRUE)) {
       if (is_object($unserialized)) {
         $upcasted_route_arguments['entity'] = $unserialized;
         $upcasted_route_arguments['data'] = $unserialized;
