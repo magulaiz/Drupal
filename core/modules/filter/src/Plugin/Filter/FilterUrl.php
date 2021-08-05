@@ -2,6 +2,7 @@
 
 namespace Drupal\filter\Plugin\Filter;
 
+use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\filter\FilterProcessResult;
@@ -44,7 +45,7 @@ class FilterUrl extends FilterBase {
     $ignore_tags = 'a|script|style|code|pre';
 
     // Pass length to regexp callback.
-    _filter_url_trim(NULL, $this->settings['filter_url_length']);
+    $this->trimUrl(NULL, $this->settings['filter_url_length']);
 
     // Create an array which contains the regexps for each type of link.
     // The key to the regexp is the name of a function that is used as
@@ -93,17 +94,17 @@ class FilterUrl extends FilterBase {
     // Match absolute URLs.
     $url_pattern = "(?:$auth)?(?:$domain|$ip)/?(?:$trail)?";
     $pattern = "`((?:$protocols)(?:$url_pattern))`u";
-    $tasks['_filter_url_parse_full_links'] = $pattern;
+    $tasks['parseFullLinks'] = $pattern;
 
     // Match email addresses.
     $url_pattern = "[\p{L}\p{M}\p{N}._+-]{1,254}@(?:$domain)";
     $pattern = "`($url_pattern)`u";
-    $tasks['_filter_url_parse_email_links'] = $pattern;
+    $tasks['parseEmailLinks'] = $pattern;
 
     // Match www domains.
     $url_pattern = "www\.(?:$domain)/?(?:$trail)?";
     $pattern = "`($url_pattern)`u";
-    $tasks['_filter_url_parse_partial_links'] = $pattern;
+    $tasks['parsePartialLinks'] = $pattern;
 
     // Each type of URL needs to be processed separately. The text is joined and
     // re-split after each task, since all injected HTML tags must be correctly
@@ -112,8 +113,8 @@ class FilterUrl extends FilterBase {
       // HTML comments need to be handled separately, as they may contain HTML
       // markup, especially a '>'. Therefore, remove all comment contents and add
       // them back later.
-      _filter_url_escape_comments('', TRUE);
-      $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
+      $this->escapeComments('', TRUE);
+      $text = preg_replace_callback('`<!--(.*?)-->`s', [$this, 'escapeComments'], $text);
 
       // Split at all tags; ensures that no tags or attributes are processed.
       $chunks = preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -132,7 +133,7 @@ class FilterUrl extends FilterBase {
           if ($open_tag == '') {
             // If there is a match, inject a link into this chunk via the callback
             // function contained in $task.
-            $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
+            $chunks[$i] = preg_replace_callback($pattern, [$this, $task], $chunks[$i]);
           }
           // Text chunk is done, so next chunk must be a tag.
           $chunk_type = 'tag';
@@ -158,11 +159,112 @@ class FilterUrl extends FilterBase {
 
       $text = implode($chunks);
       // Revert to the original comment contents
-      _filter_url_escape_comments('', FALSE);
-      $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
+      $this->escapeComments('', FALSE);
+      $text = preg_replace_callback('`<!--(.*?)-->`', [$this, 'escapeComments'], $text);
     }
 
     return new FilterProcessResult($text);
+  }
+
+  /**
+   * Makes links out of absolute URLs.
+   *
+   * Callback for preg_replace_callback() within ::process().
+   */
+  public function parseFullLinks($match) {
+    // The $i:th parenthesis in the regexp contains the URL.
+    $i = 1;
+
+    $match[$i] = Html::decodeEntities($match[$i]);
+    $caption = Html::escape($this->trimUrl($match[$i]));
+    $match[$i] = Html::escape($match[$i]);
+    return '<a href="' . $match[$i] . '">' . $caption . '</a>';
+  }
+
+  /**
+   * Makes links out of email addresses.
+   *
+   * Callback for preg_replace_callback() within ::process().
+   */
+  public function parseEmailLinks($match) {
+    // The $i:th parenthesis in the regexp contains the URL.
+    $i = 0;
+
+    $match[$i] = Html::decodeEntities($match[$i]);
+    $caption = Html::escape($this->trimUrl($match[$i]));
+    $match[$i] = Html::escape($match[$i]);
+    return '<a href="mailto:' . $match[$i] . '">' . $caption . '</a>';
+  }
+
+  /**
+   * Makes links out of domain names starting with "www.".
+   *
+   * Callback for preg_replace_callback() within ::process().
+   */
+  public function parsePartialLinks($match) {
+    // The $i:th parenthesis in the regexp contains the URL.
+    $i = 1;
+
+    $match[$i] = Html::decodeEntities($match[$i]);
+    $caption = Html::escape($this->trimUrl($match[$i]));
+    $match[$i] = Html::escape($match[$i]);
+    return '<a href="http://' . $match[$i] . '">' . $caption . '</a>';
+  }
+
+  /**
+   * Escapes the contents of HTML comments.
+   *
+   * Callback for preg_replace_callback() within ::process().
+   *
+   * @param array $match
+   *   An array containing matches to replace from preg_replace_callback(),
+   *   whereas $match[1] is expected to contain the content to be filtered.
+   * @param bool|null $escape
+   *   (optional) A Boolean indicating whether to escape (TRUE) or unescape
+   *   comments (FALSE). Defaults to NULL, indicating neither. If TRUE, statically
+   *   cached $comments are reset.
+   */
+  public function escapeComments($match, $escape = NULL) {
+    static $mode, $comments = [];
+
+    if (isset($escape)) {
+      $mode = $escape;
+      if ($escape) {
+        $comments = [];
+      }
+      return;
+    }
+
+    // Replace all HTML comments with a '<!-- [hash] -->' placeholder.
+    if ($mode) {
+      $content = $match[1];
+      $hash = hash('sha256', $content);
+      $comments[$hash] = $content;
+      return "<!-- $hash -->";
+    }
+    // Or replace placeholders with actual comment contents.
+    else {
+      $hash = $match[1];
+      $hash = trim($hash);
+      $content = $comments[$hash];
+      return "<!--$content-->";
+    }
+  }
+
+  /**
+   * Shortens a long URL to a given length ending with an ellipsis.
+   */
+  public function trimUrl($text, $length = NULL) {
+    static $_length;
+    if ($length !== NULL) {
+      $_length = $length;
+    }
+
+    if (isset($_length)) {
+      $text = Unicode::truncate($text, $_length, FALSE, TRUE);
+    }
+
+    return $text;
   }
 
   /**
