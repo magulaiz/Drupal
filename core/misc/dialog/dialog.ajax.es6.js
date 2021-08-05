@@ -126,7 +126,11 @@
     ajax.commands.insert(ajax, response, status);
 
     // Move the buttons to the jQuery UI dialog buttons area, if not disabled:
-    if (!response.dialogOptions.buttons && response.dialogOptions.drupalAutoButtons !== false) {
+    // The renderer may have passed `false` as a string.
+    if (!response.dialogOptions.drupalAutoButtons) {
+      response.dialogOptions.drupalAutoButtons = true;
+    }
+    if (response.dialogOptions.drupalAutoButtons && response.dialogOptions.drupalAutoButtons !== 'false') {
       response.dialogOptions.drupalAutoButtons = true;
       response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons(
         $dialog,
