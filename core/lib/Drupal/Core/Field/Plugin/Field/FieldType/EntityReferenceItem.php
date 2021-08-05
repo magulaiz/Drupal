@@ -261,7 +261,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public function preSave() {
-    if ($this->hasNewEntity()) {
+    if ($this->hasNewEntity() && !$this->getFieldDefinition()->isComputed()) {
       // Save the entity if it has not already been saved by some other code.
       if ($this->entity->isNew()) {
         $this->entity->save();
