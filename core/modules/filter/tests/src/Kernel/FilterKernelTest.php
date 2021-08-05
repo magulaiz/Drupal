@@ -923,10 +923,12 @@ www.example.com with a newline in comments -->
     ]);
     $path = __DIR__ . '/../..';
 
-    $input = file_get_contents($path . '/filter.url-input.txt');
-    $expected = file_get_contents($path . '/filter.url-output.txt');
-    $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+    $tests = [
+      file_get_contents($path . '/filter.url-input.txt') => [
+        file_get_contents($path . '/filter.url-output.txt') => TRUE,
+      ]
+    ];
+    $this->assertFilteredString($filter, $tests);
   }
 
   /**
