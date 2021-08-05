@@ -46,6 +46,7 @@ use Drupal\user\UserInterface;
  *     "delete-form" = "/entity_test/delete/entity_test/{entity_test}",
  *   },
  *   field_ui_base_route = "entity.entity_test.admin_form",
+ *   storage_schema_version = 2,
  * )
  *
  * Note that this entity type annotation intentionally omits the "create" link

@@ -25,6 +25,7 @@ use Drupal\entity_test\Plugin\Field\ComputedTestFieldItemList;
  *   links = {
  *     "add-form" = "/entity_test_computed_field/add",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestComputedField extends EntityTest {

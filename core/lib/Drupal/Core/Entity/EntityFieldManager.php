@@ -241,6 +241,9 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           ->setTranslatable(TRUE)
           ->setRevisionable(TRUE)
           ->setDefaultValue(TRUE);
+        if ($entity_type->get('storage_schema_version') >= 2) {
+          $base_field_definitions[$keys['default_langcode']]->setStorageRequired(TRUE);
+        }
       }
     }
 

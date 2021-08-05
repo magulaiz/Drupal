@@ -15,7 +15,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "id" = "id",
  *     "uuid" = "uuid",
  *     "bundle" = "type"
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestFieldOverride extends EntityTest {

@@ -19,6 +19,7 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -40,6 +41,13 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\ContentEntityTypeInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityType;
+
+  /**
+   * An array of property definitions used for this test, keyed by property name.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]|\PHPUnit_Framework_MockObject_MockObject[]
+   */
+  protected $propertyDefinitions = [];
 
   /**
    * An array of field definitions used for this test, keyed by field name.
@@ -361,12 +369,17 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::onEntityTypeCreate
    * @covers ::getTableMapping
    */
-  public function testOnEntityTypeCreate() {
+  public function testOnEntityTypeCreateWithStorageSchemaVersion1() {
     $columns = [
       'value' => [
         'type' => 'int',
       ],
     ];
+
+    $this->propertyDefinitions['value'] = $this->createMock(DataDefinition::class);
+    $this->propertyDefinitions['value']->expects($this->any())
+      ->method('isRequired')
+      ->will($this->returnValue(TRUE));
 
     $this->fieldDefinitions = $this->mockFieldDefinitions(['id']);
     $this->fieldDefinitions['id']->expects($this->any())
@@ -375,6 +388,9 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->fieldDefinitions['id']->expects($this->once())
       ->method('getSchema')
       ->will($this->returnValue(['columns' => $columns]));
+    $this->fieldDefinitions['id']->expects($this->any())
+      ->method('getPropertyDefinitions')
+      ->will($this->returnValue($this->propertyDefinitions));
 
     $this->entityType->expects($this->once())
       ->method('getKeys')
@@ -434,6 +450,138 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
     $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
       ->setConstructorArgs([$this->entityTypeManager, $this->entityType, $storage, $this->connection, $this->entityFieldManager])
+      ->setMethods(['installedStorageSchema', 'createSharedTableSchema'])
+      ->getMock();
+    $schema_handler
+      ->expects($this->any())
+      ->method('installedStorageSchema')
+      ->will($this->returnValue($key_value));
+
+    $storage
+      ->expects($this->any())
+      ->method('getStorageSchema')
+      ->will($this->returnValue($schema_handler));
+
+    $storage->onEntityTypeCreate($this->entityType);
+  }
+
+  /**
+   * Tests ContentEntityDatabaseStorage::onEntityTypeCreate().
+   *
+   * @covers ::__construct
+   * @covers ::onEntityTypeCreate
+   * @covers ::getTableMapping
+   */
+  public function testOnEntityTypeCreateWithStorageSchemaVersion2() {
+    $columns = [
+      'value' => [
+        'type' => 'int',
+      ],
+    ];
+
+    $this->propertyDefinitions['value'] = $this->createMock(DataDefinition::class);
+    $this->propertyDefinitions['value']->expects($this->any())
+      ->method('isRequired')
+      ->will($this->returnValue(TRUE));
+
+    $this->fieldDefinitions = $this->mockFieldDefinitions(['id']);
+    $this->fieldDefinitions['id']->expects($this->any())
+      ->method('getColumns')
+      ->will($this->returnValue($columns));
+    $this->fieldDefinitions['id']->expects($this->once())
+      ->method('getSchema')
+      ->will($this->returnValue(['columns' => $columns]));
+    $this->fieldDefinitions['id']->expects($this->any())
+      ->method('getPropertyDefinitions')
+      ->will($this->returnValue($this->propertyDefinitions));
+    $this->fieldDefinitions['id']->expects($this->any())
+      ->method('isStorageRequired')
+      ->will($this->returnValue(TRUE));
+
+    $this->entityType->expects($this->any())
+      ->method('get')
+      ->with('storage_schema_version')
+      ->willReturn(2);
+    $this->entityType->expects($this->any())
+      ->method('hasKey')
+      ->will($this->returnValueMap([
+        // SqlContentEntityStorageSchema::initializeBaseTable()
+        ['revision', FALSE],
+        // SqlContentEntityStorageSchema::processBaseTable()
+        ['id', TRUE],
+      ]));
+    $this->entityType->expects($this->any())
+      ->method('hasKey')
+      ->will($this->returnValueMap([
+        // SqlContentEntityStorageSchema::initializeBaseTable()
+        ['revision', FALSE],
+        // SqlContentEntityStorageSchema::processBaseTable()
+        ['id', TRUE],
+      ]));
+    $this->entityType->expects($this->any())
+      ->method('getKey')
+      ->will($this->returnValueMap([
+        // EntityStorageBase::__construct()
+        ['id', 'id'],
+        // ContentEntityStorageBase::__construct()
+        ['uuid', NULL],
+        ['bundle', NULL],
+        // SqlContentEntityStorageSchema::initializeBaseTable()
+        ['id' => 'id'],
+        // SqlContentEntityStorageSchema::processBaseTable()
+        ['id' => 'id'],
+      ]));
+
+    $this->setUpEntityStorage();
+
+    $expected = [
+      'description' => 'The base table for entity_test entities.',
+      'fields' => [
+        'id' => [
+          'type' => 'serial',
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => ['id'],
+      'unique keys' => [],
+      'indexes' => [],
+      'foreign keys' => [],
+    ];
+
+    $schema_handler = $this->getMockBuilder('Drupal\Core\Database\Schema')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $schema_handler->expects($this->any())
+      ->method('createTable')
+      ->with($this->equalTo('entity_test'), $this->equalTo($expected));
+
+    $this->connection->expects($this->once())
+      ->method('schema')
+      ->will($this->returnValue($schema_handler));
+
+    $storage = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorage')
+      ->setConstructorArgs([
+        $this->entityType,
+        $this->connection,
+        $this->entityFieldManager,
+        $this->cache,
+        $this->languageManager,
+        new MemoryCache(),
+        $this->entityTypeBundleInfo,
+        $this->entityTypeManager,
+      ])
+      ->setMethods(['getStorageSchema'])
+      ->getMock();
+
+    $key_value = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+    $schema_handler = $this->getMockBuilder('Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema')
+      ->setConstructorArgs([
+        $this->entityTypeManager,
+        $this->entityType,
+        $storage,
+        $this->connection,
+        $this->entityFieldManager,
+      ])
       ->setMethods(['installedStorageSchema', 'createSharedTableSchema'])
       ->getMock();
     $schema_handler

@@ -29,6 +29,18 @@ function entity_test_update_entity_base_field_info(EntityTypeInterface $entity_t
 }
 
 /**
+ * Implements hook_entity_base_field_info_alter().
+ */
+function entity_test_update_entity_base_field_info_alter(&$fields, EntityTypeInterface $entity_type) {
+  if ($entity_type->id() === 'entity_test_update') {
+    $field_names = \Drupal::state()->get('entity_test_update.required_field_storage_definitions', []);
+    foreach ($field_names as $field_name) {
+      $fields[$field_name]->setStorageRequired(TRUE);
+    }
+  }
+}
+
+/**
  * Implements hook_entity_field_storage_info().
  */
 function entity_test_update_entity_field_storage_info(EntityTypeInterface $entity_type) {

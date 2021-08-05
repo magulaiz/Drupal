@@ -48,7 +48,8 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "delete-multiple-form" = "/entity_test/delete",
  *     "edit-form" = "/entity_test_mulrevpub/manage/{entity_test_mulrevpub}/edit",
  *     "revision" = "/entity_test_mulrevpub/{entity_test_mulrevpub}/revision/{entity_test_mulrevpub_revision}/view",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestMulRevPub extends EntityTestMulRev implements EntityPublishedInterface {

@@ -44,7 +44,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "delete-multiple-form" = "/entity_test_rev/delete_multiple",
  *     "edit-form" = "/entity_test_rev/manage/{entity_test_rev}/edit",
  *     "revision" = "/entity_test_rev/{entity_test_rev}/revision/{entity_test_rev_revision}/view",
- *   }
+ *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestRev extends EntityTest {

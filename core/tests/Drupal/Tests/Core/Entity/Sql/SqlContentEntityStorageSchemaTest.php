@@ -94,6 +94,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'int',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -424,7 +425,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->will($this->returnValue([]));
 
-    $this->storage->expects($this->exactly(9))
+    $this->storage->expects($this->atLeastOnce())
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -528,6 +529,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'varchar',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -537,6 +539,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'value' => [
           'type' => 'int',
           'size' => 'tiny',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -645,7 +648,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ->method('isTranslatable')
       ->will($this->returnValue(TRUE));
 
-    $this->storage->expects($this->exactly(30))
+    $this->storage->expects($this->atLeastOnce())
       ->method('getRevisionTable')
       ->will($this->returnValue('entity_test_revision'));
 
@@ -653,6 +656,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'int',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -660,6 +664,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => [
         'value' => [
           'type' => 'varchar',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -668,6 +673,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'value' => [
           'type' => 'int',
           'size' => 'tiny',
+          'not null' => TRUE,
         ],
       ],
     ]);
@@ -1455,6 +1461,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->storageDefinitions[$field_name]->expects($this->any())
       ->method('getColumns')
       ->will($this->returnValue($schema['columns']));
+    $this->storageDefinitions[$field_name]->expects($this->any())
+      ->method('isStorageRequired')
+      ->will($this->returnValue(TRUE));
     // Add property definitions.
     if (!empty($schema['columns'])) {
       $property_definitions = [];

@@ -34,6 +34,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "edit-form" = "/entity_test_string_id/manage/{entity_test_string_id}",
  *   },
  *   field_ui_base_route = "entity.entity_test_string_id.admin_form",
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestStringId extends EntityTest {

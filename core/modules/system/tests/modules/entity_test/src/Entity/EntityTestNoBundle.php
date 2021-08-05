@@ -20,6 +20,7 @@ namespace Drupal\entity_test\Entity;
  *   links = {
  *     "add-form" = "/entity_test_no_bundle/add",
  *   },
+ *   storage_schema_version = 2,
  * )
  */
 class EntityTestNoBundle extends EntityTest {
