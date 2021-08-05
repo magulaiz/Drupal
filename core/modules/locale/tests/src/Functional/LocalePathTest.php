@@ -138,10 +138,10 @@ class LocalePathTest extends BrowserTestBase {
     // Test that both node titles link to our path alias.
     $this->drupalGet('admin/content');
     $custom_path_url = Url::fromUserInput('/' . $custom_path)->toString();
-    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', [':href' => $custom_path_url, ':title' => $first_node->label()]);
-    $this->assertTrue(!empty($elements), 'First node links to the path alias.');
-    $elements = $this->xpath('//a[@href=:href and normalize-space(text())=:title]', [':href' => $custom_path_url, ':title' => $second_node->label()]);
-    $this->assertTrue(!empty($elements), 'Second node links to the path alias.');
+    $link = $this->assertSession()->linkExistsExact($first_node->label());
+    $this->assertSame($custom_path_url, $link->getAttribute('href'));
+    $link = $this->assertSession()->linkExistsExact($second_node->label());
+    $this->assertSame($custom_path_url, $link->getAttribute('href'));
 
     // Confirm that the custom path leads to the first node.
     $this->drupalGet($custom_path);
