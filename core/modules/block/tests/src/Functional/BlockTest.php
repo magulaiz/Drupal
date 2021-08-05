@@ -162,10 +162,11 @@ class BlockTest extends BlockTestBase {
         'plugin_id' => $block_name,
         'theme' => $default_theme,
       ]);
-      $link = $this->assertSession()->linkByHrefExists($add_url->toString());
-      $this->assertSame('Place block', $link->getText());
+      $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
+      $this->assertCount(1, $links, 'Found one matching link.');
+      $this->assertEquals(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
-      list($path, $query_string) = explode('?', $link->getAttribute('href'), 2);
+      list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
@@ -177,7 +178,7 @@ class BlockTest extends BlockTestBase {
         'settings[label]' => $title,
       ];
       // Create the block using the link parsed from the library page.
-      $this->drupalGet($this->getAbsoluteUrl($link->getAttribute('href')));
+      $this->drupalGet($this->getAbsoluteUrl($links[0]->getAttribute('href')));
       $this->submitForm($edit, 'Save block');
 
       // Ensure that the block was created with the expected weight.
