@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
@@ -212,6 +213,35 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    * Tests using DrupalMediaLibrary button to embed media into CKEditor.
    */
   public function testButton() {
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_2',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2',
+    ])->save();
+
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          'view_mode_2' => 'view_mode_2',
+        ],
+        'default_view_mode_9301' => 'view_mode_2',
+      ],
+    ])->save();
+
     $this->drupalGet('/node/add/blog');
     $this->waitForEditor();
     $this->pressEditorButton('drupalmedialibrary');
@@ -244,6 +274,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $expected_attributes = [
       'data-entity-type' => 'media',
       'data-entity-uuid' => $this->media->uuid(),
+      'data-view-mode' => 'view_mode_1',
       'data-align' => 'center',
     ];
     foreach ($expected_attributes as $name => $expected) {

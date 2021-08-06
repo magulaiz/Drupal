@@ -124,3 +124,6 @@ filter_settings.media_embed:
       sequence:
         type: string
         label: 'Media type'
+    default_view_mode_9301:
+      type: string
+      label: 'The default view mode when media_update_9301() was executed'

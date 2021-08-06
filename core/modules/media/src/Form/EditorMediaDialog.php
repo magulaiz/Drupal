@@ -188,11 +188,6 @@ class EditorMediaDialog extends FormBase {
       '#access' => count($view_mode_options) >= 2,
     ];
 
-    // Store the default from the MediaEmbed filter, so that if the selected
-    // view mode matches the default, we can drop the 'data-view-mode'
-    // attribute.
-    $form_state->set('filter_default_view_mode', $media_embed_filter->settings['default_view_mode']);
-
     if ((empty($form['alt']) || $form['alt']['#access'] === FALSE) && $form['align']['#access'] === FALSE && $form['caption']['#access'] === FALSE && $form['view_mode']['#access'] === FALSE) {
       $format = $editor->getFilterFormat();
       $warning = $this->t('There is nothing to configure for this media.');
@@ -248,12 +243,6 @@ class EditorMediaDialog extends FormBase {
       $form_state->setValue(['attributes', 'alt'], FALSE);
     }
 
-    // If the selected view mode matches the default on the filter, remove the
-    // attribute.
-    if (!empty($form_state->get('filter_default_view_mode')) && $form_state->getValue(['attributes', 'data-view-mode']) === $form_state->get('filter_default_view_mode')) {
-      $form_state->setValue(['attributes', 'data-view-mode'], FALSE);
-    }
-
     if ($form_state->getErrors()) {
       unset($form['#prefix'], $form['#suffix']);
       $form['status_messages'] = [
@@ -295,7 +284,7 @@ class EditorMediaDialog extends FormBase {
       return NULL;
     }
 
-    $filter_default_view_mode = $media_embed_filter->settings['default_view_mode'];
+    $filter_default_view_mode = $media_embed_filter->settings['default_view_mode_9301'];
 
     // If the current media embed ($media_embed_element) has a set view mode,
     // we want to use that as the default in the select form element,

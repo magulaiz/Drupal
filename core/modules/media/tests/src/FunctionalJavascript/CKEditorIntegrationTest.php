@@ -150,7 +150,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'type' => 'blog',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>',
+        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '" data-view-mode="default"></drupal-media>',
         'format' => 'test_format',
       ],
     ]);
@@ -1189,6 +1189,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 3',
     ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_4',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 4',
+    ])->save();
 
     // Only enable view mode 1 & 2 for Image.
     EntityViewDisplay::create([
@@ -1217,6 +1224,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
           '22222' => '22222',
           'view_mode_3' => 'view_mode_3',
         ],
+        'default_view_mode_9301' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1226,6 +1234,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
+      'core.entity_view_mode.media.view_mode_4',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
@@ -1273,13 +1282,17 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
         ],
+        'default_view_mode_9301' => 'view_mode_2',
       ],
     ])->save();
 
     // Test that the dependencies change when the allowed_view_modes change.
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
-    $this->assertSame(['core.entity_view_mode.media.view_mode_1'], $dependencies['config']);
+    $this->assertSame([
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.view_mode_2',
+    ], $dependencies['config']);
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
     $page->pressButton('Edit media');
@@ -1299,6 +1312,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
         ],
+        'default_view_mode_9301' => 'view_mode_4',
       ],
     ])->save();
 
@@ -1306,12 +1320,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_4',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
     $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
 
-    // Test that setting the view mode back to the default removes the
+    // Test that setting the view mode back to the default does not remove the
     // `data-view-mode` attribute.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
     $page->pressButton('Edit media');
@@ -1324,7 +1339,18 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1'));
     $this->pressEditorButton('source');
     $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
-    $this->assertFalse($drupal_media->hasAttribute('data-view-mode'));
+    $this->assertTrue($drupal_media->hasAttribute('data-view-mode'));
+
+    // Test that <drupal-media> element with missing 'data-view-mode' attribute
+    // is rendered with default_view_mode_9301 view mode.
+    $original_value = $this->host->body->value;
+    $this->host->body->value = str_replace('data-view-mode="default"', '', $original_value);
+    $this->host->save();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-4'));
 
     // Test that changing the view mode with an empty editable caption
     // preserves the empty editable caption when the preview reloads.
@@ -1335,8 +1361,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->waitForEditor();
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
-    // Wait for preview to load with default view mode.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1'));
+    // Wait for preview to load with designated view mode.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-4'));
   }
 
   /**

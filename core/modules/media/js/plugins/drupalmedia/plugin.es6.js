@@ -107,6 +107,7 @@
             attributes: {
               '!data-entity-type': true,
               '!data-entity-uuid': true,
+              'data-view-mode': true,
               'data-align': true,
               'data-caption': true,
               alt: true,
