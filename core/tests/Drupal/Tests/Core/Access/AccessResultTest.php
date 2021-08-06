@@ -480,8 +480,8 @@ class AccessResultTest extends UnitTestCase {
       $this->assertFalse($access->isForbidden());
       $this->assertTrue($access->isNeutral());
       $this->assertSame($max_age, $access->getCacheMaxAge());
-      $this->assertSame($contexts, $access->getCacheContexts());
-      $this->assertSame($tags, $access->getCacheTags());
+      $this->assertEqualsCanonicalizing($contexts, $access->getCacheContexts());
+      $this->assertEqualsCanonicalizing($tags, $access->getCacheTags());
     };
 
     $access = AccessResult::neutral()->addCacheTags(['foo:bar']);
@@ -505,7 +505,7 @@ class AccessResultTest extends UnitTestCase {
       ->addCacheTags(['bar:qux'])
       ->addCacheTags(['foo:baz'])
       ->addCacheTags(['bar:baz']);
-    $verify($access, ['foo:bar', 'bar:qux', 'foo:baz', 'bar:baz']);
+    $verify($access, ['bar:baz', 'bar:qux', 'foo:bar', 'foo:baz']);
 
     // ::addCacheableDependency() convenience method.
     $node = $this->createMock('\Drupal\node\NodeInterface');
