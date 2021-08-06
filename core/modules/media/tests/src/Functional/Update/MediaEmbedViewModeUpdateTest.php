@@ -21,6 +21,7 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/drupal-9.2.0.standard.media-installed.php.gz',
     ];
   }
 
@@ -28,12 +29,6 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
    * Tests media_update_9301() upgrade path.
    */
   public function testMediaEmbedViewModeUpdate() {
-    /** @var \Drupal\Core\Extension\ModuleInstallerInterface */
-    $module_installer = $this->container
-      ->get('module_installer');
-    $module_installer
-      ->install(['media']);
-
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'Test format',
@@ -87,7 +82,7 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
       ],
     ])->save();
 
-    media_update_9301();
+    $this->runUpdates();
 
     $filter_format = FilterFormat::load('test_format');
     $settings = $filter_format->get('filters')['media_embed']['settings'];
