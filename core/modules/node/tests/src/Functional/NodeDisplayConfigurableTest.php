@@ -18,7 +18,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @var array
    */
-  protected static $modules = ['quickedit', 'rdf', 'block'];
+  protected static $modules = ['rdf', 'block'];
 
   /**
    * {@inheritdoc}
@@ -61,7 +61,6 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $node_type->save();
 
     $user = $this->drupalCreateUser([
-      'access in-place editing',
       'administer nodes',
     ], $this->randomMachineName(14));
     $this->drupalLogin($user);
@@ -96,8 +95,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
       ->save();
 
     $this->drupalGet($node->toUrl());
-    $assert->elementNotExists('css', 'div[data-quickedit-field-id="node/1/uid/en/full"]');
-    $assert->elementTextNotContains('css', 'article[data-quickedit-entity-id="node/1"]', $user->getAccountName());
+    $assert->elementTextNotContains('css', 'article', $user->getAccountName());
   }
 
   /**
@@ -117,9 +115,9 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
   protected function assertNodeHtml(NodeInterface $node, UserInterface $user, string $html_element, string $metadata_region, bool $field_classes) {
     $assert = $this->assertSession();
 
-    $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '') . '[data-quickedit-field-id="node/1/title/en/full"]';
-    $created_selector = 'article[data-quickedit-entity-id="node/1"] ' . $html_element . ($field_classes ? '.field--name-created' : '') . '[data-quickedit-field-id="node/1/created/en/full"]';
-    $uid_selector = 'article[data-quickedit-entity-id="node/1"] ' . $html_element . ($field_classes ? '.field--name-uid' : '') . '[data-quickedit-field-id="node/1/uid/en/full"]';
+    $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '');
+    $created_selector = 'article ' . $html_element . ($field_classes ? '.field--name-created' : '');
+    $uid_selector = 'article ' . $html_element . ($field_classes ? '.field--name-uid' : '');
 
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
     $assert->elementTextContains('css', $created_selector, \Drupal::service('date.formatter')->format($node->getCreatedTime()));
@@ -131,7 +129,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     }
     else {
       $assert->elementTextContains('css', $uid_selector . ' a[property="schema:name"]', $user->getAccountName());
-      $assert->elementTextContains('css', 'article[data-quickedit-entity-id="node/1"] ' . $metadata_region, 'Submitted by');
+      $assert->elementTextContains('css', 'article ' . $metadata_region, 'Submitted by');
     }
   }
 
