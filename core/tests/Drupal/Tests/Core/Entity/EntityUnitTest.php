@@ -561,8 +561,8 @@ class EntityUnitTest extends UnitTestCase {
    */
   public function testCacheTags() {
     // Ensure that both methods return the same by default.
-    $this->assertEquals([$this->entityTypeId . ':' . 1], $this->entity->getCacheTags());
-    $this->assertEquals([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
+    $this->assertEqualsCanonicalizing([$this->entityTypeId . ':' . 1], $this->entity->getCacheTags());
+    $this->assertEqualsCanonicalizing([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
 
     // Add an additional cache tag and make sure only getCacheTags() returns
     // that.
@@ -571,8 +571,8 @@ class EntityUnitTest extends UnitTestCase {
     // EntityTypeId is random so it can shift order. We need to duplicate the
     // sort from \Drupal\Core\Cache\Cache::mergeTags().
     $tags = [$this->entityTypeId . ':' . 1, 'additional_cache_tag'];
-    $this->assertEquals($tags, $this->entity->getCacheTags());
-    $this->assertEquals([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
+    $this->assertEqualsCanonicalizing($tags, $this->entity->getCacheTags());
+    $this->assertEqualsCanonicalizing([$this->entityTypeId . ':' . 1], $this->entity->getCacheTagsToInvalidate());
   }
 
   /**
@@ -590,11 +590,11 @@ class EntityUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
 
     // There are no cache contexts by default.
-    $this->assertEquals([], $this->entity->getCacheContexts());
+    $this->assertEqualsCanonicalizing([], $this->entity->getCacheContexts());
 
     // Add an additional cache context.
     $this->entity->addCacheContexts(['user']);
-    $this->assertEquals(['user'], $this->entity->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['user'], $this->entity->getCacheContexts());
   }
 
   /**
