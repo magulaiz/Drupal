@@ -77,15 +77,11 @@ class FilterHtml extends FilterBase {
   public function validateNoWildcardTag(array $element, FormStateInterface $form_state) : void {
     $allowed_html_value = $form_state->getValue($element['#parents']);
     $matches = [];
-    if (preg_match_all('/\<([a-z0-9]?\*)/', $allowed_html_value, $matches, PREG_SET_ORDER) > 0) {
-      $wildcard_tags = array_column($matches, 1);
-      array_walk($wildcard_tags, function (string &$tag_name) : void {
-        $tag_name = "<$tag_name>";
-      });
+    if (preg_match_all('/<[^\s>]*\*[^\s>]*>/', $allowed_html_value, $matches)) {
       $form_state->setError($element, $this->formatPlural(
-        count($matches),
-        $this->t('The wildcard tag <code>@allowed_tag_name</code> is not supported.', ['@allowed_tag_name' => new HtmlEscapedText(reset($wildcard_tags))]),
-        $this->t('The wildcard tags <code>@allowed_tag_names</code> are not supported.', ['@allowed_tag_names' => new HtmlEscapedText(implode(' ', $wildcard_tags))])
+        count($matches[0]),
+        $this->t('The wildcard tag <code>@allowed_tag_name</code> is not supported.', ['@allowed_tag_name' => new HtmlEscapedText(reset($matches[0]))]),
+        $this->t('The wildcard tags <code>@allowed_tag_names</code> are not supported.', ['@allowed_tag_names' => new HtmlEscapedText(implode(' ', $matches[0]))])
       ));
     }
   }
