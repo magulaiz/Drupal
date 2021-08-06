@@ -179,3 +179,24 @@ function media_requirements($phase) {
 function media_update_last_removed() {
   return 8700;
 }
+
+/**
+ * Set default_view_mode_9301 value for media_embed plugin instances.
+ */
+function media_update_9301() {
+  // For each filter format with media_embed plugin config, set a
+  // default_view_mode_9301 value for the plugin's settings equal to its
+  // default_view_mode value. For <drupal-media> elements without a
+  // 'data-view-mode' attribute, this value will be used.
+  // @see https://www.drupal.org/project/drupal/issues/3109289
+  $filter_formats = filter_formats();
+
+  foreach ($filter_formats as $filter_format) {
+    $filters = $filter_format->get('filters');
+    if (isset($filters['media_embed'])) {
+      $filters['media_embed']['settings']['default_view_mode_9301'] = $filters['media_embed']['settings']['default_view_mode'];
+      $filter_format->set('filters', $filters);
+      $filter_format->save();
+    }
+  }
+}
