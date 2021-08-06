@@ -239,7 +239,7 @@ class CommentNonNodeTest extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
+      $this->assertSession()->pageTextContains('Deleted 1 comment.');
     }
     else {
       $this->assertSession()->pageTextContains('The update has been performed.');
@@ -324,7 +324,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Delete the comment.
     $this->performCommentOperation($comment1, 'delete');
     $this->drupalGet('admin/content/comment');
-    $this->assertNoRaw('comments[' . $comment1->id() . ']');
+    $this->assertSession()->responseNotContains('comments[' . $comment1->id() . ']');
 
     // Post another comment.
     $comment1 = $this->postComment($this->entity, $this->randomMachineName(), $this->randomMachineName());

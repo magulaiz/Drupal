@@ -120,7 +120,7 @@ class GlossaryTest extends ViewTestBase {
       // Ensure that the URL is correct.
       $this->assertStringContainsString($href, $link->getAttribute('href'));
       // The rendered output looks like "<a href=''>X</a> (count)".
-      $this->assertStringContainsString("$label ($count)", $link->getParent()->getText(), 'The expected number got rendered.');
+      $this->assertStringContainsString("$label ($count)", $link->getParent()->getText());
     }
   }
 
