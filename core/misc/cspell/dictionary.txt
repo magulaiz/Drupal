@@ -643,7 +643,6 @@ goldfinger
 gonner
 googleapis
 gotit
-goutte
 grandgrandchild
 grandgrandchild's
 granularities
@@ -1408,6 +1407,7 @@ someschema
 sometext
 somethinggeneric
 soofy
+sortablejs
 sortby
 sorteren
 sourcearea

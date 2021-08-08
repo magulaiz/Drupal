@@ -80,7 +80,7 @@ class PreviewTest extends UITestBase {
     $view['page[feed_properties][path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view, 'Save and edit');
-    $this->clickLink(t('Feed'));
+    $this->clickLink('Feed');
     $this->submitForm([], 'Update preview');
     $this->assertSession()->elementTextContains('xpath', '//div[@id="views-live-preview"]/pre', '<title>' . $view['page[title]'] . '</title>');
 
@@ -93,7 +93,7 @@ class PreviewTest extends UITestBase {
     $this->assertSession()->pageTextContains('Query build time');
     $this->assertSession()->pageTextContains('Query execute time');
     $this->assertSession()->pageTextContains('View render time');
-    $this->assertNoRaw('<strong>Query</strong>');
+    $this->assertSession()->responseNotContains('<strong>Query</strong>');
 
     // Statistics and query.
     $settings->set('ui.show.sql_query.enabled', TRUE)->save();
