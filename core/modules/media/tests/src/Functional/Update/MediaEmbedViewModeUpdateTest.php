@@ -18,6 +18,13 @@ class MediaEmbedViewModeUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    'filter',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.0.0.bare.standard.php.gz',
