@@ -181,6 +181,9 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#element_validate' => [[static::class, 'validateOptions']],
     ];
 
+    // This is a fallback view mode that cannot be changed, it is only used in
+    // content authored prior to media_update_9301 to avoid issues with missing
+    // view mode data attributes.
     $form['default_view_mode_9301'] = [
       '#type' => 'value',
       '#value' => $this->settings['default_view_mode_9301'],
@@ -293,6 +296,8 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     foreach ($xpath->query('//drupal-media[@data-entity-type="media" and normalize-space(@data-entity-uuid)!=""]') as $node) {
       /** @var \DOMElement $node */
       $uuid = $node->getAttribute('data-entity-uuid');
+      // Fallback to default_view_mode_9301 because default_view_mode can be
+      // changed and using it could lead to unintended changes in display.
       $view_mode_id = $node->getAttribute('data-view-mode') ?: $this->settings['default_view_mode_9301'];
 
       // Delete the consumed attributes.
