@@ -41,9 +41,9 @@
 }
 
 .skip-link:hover {
-  color: #fff;
-  text-decoration: underline;
-}
+    color: #fff;
+    text-decoration: underline;
+  }
 
 .skip-link:after {
     content: "\0020	➔";
