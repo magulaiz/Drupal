@@ -56,9 +56,9 @@ filters:
     weight: 100
     settings:
       default_view_mode: responsive_3x2
-      default_view_mode_9301: responsive_3x2
       allowed_view_modes:
         responsive_3x2: responsive_3x2
       allowed_media_types:
         image: image
         remote_video: remote_video
+      default_view_mode_9301: responsive_3x2
