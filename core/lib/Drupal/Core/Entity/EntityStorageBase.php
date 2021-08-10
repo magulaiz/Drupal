@@ -253,6 +253,14 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $entities = [];
     $preloaded_entities = [];
 
+    if ($ids) {
+      if ($invalid_ids = array_filter($ids, function ($id) {
+        return (!is_int($id) && !is_string($id));
+      })) {
+        throw new \InvalidArgumentException("Array of IDs passed to loadMultiple() must contain only strings or integers, found " . print_r($invalid_ids, TRUE));
+      }
+    }
+
     // Create a new variable which is either a prepared version of the $ids
     // array for later comparison with the entity cache, or FALSE if no $ids
     // were passed. The $ids array is reduced as items are loaded from cache,
@@ -262,16 +270,9 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // Try to load entities from the static cache, if the entity type supports
     // static caching.
     if ($ids) {
-      if ($invalid_ids = array_filter($ids, function ($id) {
-        return (!is_int($id) && !is_string($id));
-      })) {
-        throw new \InvalidArgumentException("Array of IDs passed to loadMultiple() must contain only strings or integers, found " . print_r($invalid_ids, TRUE));
-      }
-      else {
-        $entities += $this->getFromStaticCache($ids);
-        // If any entities were loaded, remove them from the IDs still to load.
-        $ids = array_keys(array_diff_key($flipped_ids, $entities));
-      }
+      $entities += $this->getFromStaticCache($ids);
+      // If any entities were loaded, remove them from the IDs still to load.
+      $ids = array_keys(array_diff_key($flipped_ids, $entities));
     }
 
     // Try to gather any remaining entities from a 'preload' method. This method
