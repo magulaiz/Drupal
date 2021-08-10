@@ -20,6 +20,10 @@
   --tabs--hover-bg-color: #e6ecf8;
 }
 
+.block-local-tasks-block {
+  margin-left: calc(var(--space-m) * -2);
+}
+
 .tabs-wrapper > nav {
   width: 100%;
 }
@@ -186,8 +190,8 @@
 
   .is-horizontal .tabs--secondary {
     overflow: hidden;
-    margin: calc(calc(var(--tabs--focus-height) + 3px) * -1) calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
-    padding: calc(var(--tabs--focus-height) + 3px) calc(var(--tabs--focus-height) + 3px) 0;
+    margin: calc(calc(var(--tabs--focus-height) + 3px) * -1) calc(calc(var(--tabs--focus-height) + 3px) * -1) 0 calc(calc(var(--tabs--focus-height) + 3px) * -2);
+    padding: calc(var(--tabs--focus-height) + 3px) calc(var(--tabs--focus-height) + 3px) 0 0;
     border-radius: 0;
   }
 
