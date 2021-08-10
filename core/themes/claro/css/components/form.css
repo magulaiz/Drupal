@@ -33,6 +33,10 @@
   margin-bottom: 1.5rem;
 }
 
+.views-form .form-item {
+  margin-left: 1.5rem;
+}
+
 /**
  * When a table row or a container-inline has a single form item, prevent it
  * from adding unnecessary extra spacing.
@@ -170,6 +174,10 @@ tr .form-item,
 .form-actions .ajax-progress--throbber {
   -ms-grid-row-align: center;
   align-self: center;
+}
+
+.views-form .form-actions {
+  margin-left: 1.5rem;
 }
 
 /**

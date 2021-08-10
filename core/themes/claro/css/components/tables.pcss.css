@@ -41,7 +41,7 @@ th {
  */
 /* Table head cell containing sort link. */
 .sortable-heading {
-  padding: 0 var(--space-m);
+  padding: 0 var(--space-m) 0 var(--space-l);
 }
 /* The actual sort link. */
 .sortable-heading > a {
@@ -157,7 +157,7 @@ tr.color-error:focus {
 td {
   box-sizing: border-box;
   height: 4rem;
-  padding: var(--space-xs) var(--space-m);
+  padding: var(--space-xs) var(--space-l);
   text-align: left; /* LTR */
 }
 [dir="rtl"] td {
