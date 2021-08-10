@@ -33,6 +33,13 @@ class ProviderRepositoryTest extends KernelTestBase {
     );
     $this->expectDeprecation('The property cacheBackend (cache.default service) is deprecated in Drupal\media\OEmbed\ProviderRepository and will be removed before Drupal 10.0.0.');
     $this->assertInstanceOf(CacheBackendInterface::class, $providers->cacheBackend);
+
+    // Ensure that the $max_age was properly set, even though it was passed in
+    // the logger factory's position.
+    $reflector = new \ReflectionClass($providers);
+    $property = $reflector->getProperty('maxAge');
+    $property->setAccessible(TRUE);
+    $this->assertSame(86400, $property->getValue($providers));
   }
 
 }

@@ -89,15 +89,20 @@ class ProviderRepository implements ProviderRepositoryInterface {
     $this->httpClient = $http_client;
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
-    $this->maxAge = $max_age;
     if (!($key_value_factory instanceof KeyValueFactoryInterface)) {
       @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $key_value_factory = \Drupal::service('keyvalue');
     }
     if (!($logger_factory instanceof LoggerChannelFactoryInterface)) {
+      // If $max_age was passed in $logger_factory's position, ensure that we
+      // use the correct value.
+      if (is_numeric($logger_factory)) {
+        $max_age = $logger_factory;
+      }
       @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $logger_factory = \Drupal::service('logger.factory');
     }
+    $this->maxAge = $max_age;
     $this->keyValue = $key_value_factory->get('media');
     $this->logger = $logger_factory->get('media');
   }
