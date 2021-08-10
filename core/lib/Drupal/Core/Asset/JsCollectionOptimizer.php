@@ -169,7 +169,10 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 // if there are not sourcemap create one to avoid problems when
                 // setting breakpoints. This happens when core js has not been
                 // generated with yarn build:js-dev
-                // Still needs work.
+                // We're just doing a 1-1 mapping, this makes it so that the
+                // code it will show up in the correct module/folder. Makes it
+                // possible to associate a piece of code with a individual js
+                // file.
                 else {
                   $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
                   $gen_map = new SourceMap();
