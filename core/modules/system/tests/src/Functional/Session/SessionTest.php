@@ -72,8 +72,7 @@ class SessionTest extends BrowserTestBase {
     $this->drupalGet('user/login');
     $this->submitForm($edit, 'Log in');
     $this->drupalGet('user');
-    $pass = $this->assertSession()->pageTextContains($user->getAccountName());
-    $this->_logged_in = $pass;
+    $this->assertSession()->pageTextContains($user->getAccountName());
 
     $this->drupalGet('session-test/id');
     $matches = [];
@@ -317,7 +316,7 @@ class SessionTest extends BrowserTestBase {
     $this->mink->resetSessions();
     $this->drupalGet('session-test/id-from-cookie');
     // Verify that session ID is blank as sent from cookie header.
-    $this->assertRaw("session_id:\n");
+    $this->assertSession()->responseContains("session_id:\n");
     // Assert that we have an anonymous session now.
     $this->drupalGet('session-test/is-logged-in');
     $this->assertSession()->statusCodeEquals(403);
