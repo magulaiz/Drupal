@@ -69,12 +69,12 @@ class UpdateContribTest extends UpdateTestBase {
     // Cannot use $this->standardTests() because we need to check for the
     // 'No available releases found' string.
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('Drupal', Url::fromUri('http://example.com/project/drupal'))->toString());
     $this->assertSession()->pageTextContains('Up to date');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextNotContains('Update available');
     $this->assertSession()->pageTextContains('No available releases found');
-    $this->assertSession()->responseNotContains(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
+    $this->assertSession()->responseNotContains(Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     $available = update_get_available();
     $this->assertFalse(isset($available['aaa_update_test']['fetch_status']), 'Results are cached even if no releases are available.');
@@ -84,7 +84,7 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests the basic functionality of a contrib module on the status report.
    */
   public function testUpdateContribBasic() {
-    $project_link = Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString();
+    $project_link = Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString();
     $system_info = [
       '#all' => [
         'version' => '8.0.0',
@@ -190,10 +190,10 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->pageTextContains('CCC Update test');
     // We want aaa_update_test included in the ccc_update_test project, not as
     // its own project on the report.
-    $this->assertSession()->responseNotContains(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
+    $this->assertSession()->responseNotContains(Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
     // The other two should be listed as projects.
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('BBB Update test'), Url::fromUri('http://example.com/project/bbb_update_test'))->toString());
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('CCC Update test'), Url::fromUri('http://example.com/project/ccc_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('BBB Update test', Url::fromUri('http://example.com/project/bbb_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('CCC Update test', Url::fromUri('http://example.com/project/ccc_update_test'))->toString());
 
     // We want to make sure we see the BBB project before the CCC project.
     // Instead of just searching for 'BBB Update test' or something, we want
@@ -496,9 +496,9 @@ class UpdateContribTest extends UpdateTestBase {
     $this->assertSession()->pageTextContainsOnce('Failed to get available update data for one project.');
 
     // The other two should be listed as projects.
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
-    $this->assertSession()->responseNotContains(Link::fromTextAndUrl(t('BBB Update test'), Url::fromUri('http://example.com/project/bbb_update_test'))->toString());
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('CCC Update test'), Url::fromUri('http://example.com/project/ccc_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
+    $this->assertSession()->responseNotContains(Link::fromTextAndUrl('BBB Update test', Url::fromUri('http://example.com/project/bbb_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('CCC Update test', Url::fromUri('http://example.com/project/ccc_update_test'))->toString());
   }
 
   /**
@@ -543,7 +543,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextContains('Security update required!');
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     // Visit the reports page again without the altering and make sure the
     // status is back to normal.
@@ -551,7 +551,7 @@ class UpdateContribTest extends UpdateTestBase {
     $this->drupalGet('admin/reports/updates');
     $this->assertSession()->responseContains('<h3>Modules</h3>');
     $this->assertSession()->pageTextNotContains('Security update required!');
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('AAA Update test'), Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl('AAA Update test', Url::fromUri('http://example.com/project/aaa_update_test'))->toString());
 
     // Turn the altering back on and visit the Update manager UI.
     $update_test_config->set('update_status', $update_status)->save();
