@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Asset;
 
+use axy\sourcemap\SourceMap;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -153,38 +154,54 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                     }
                   }
                 }
-                // if there are not sourcemap create one to avoid problems when
-                // setting breakpoints. This happens when core js has not been
-                // generated with yarn build:js-dev
-                // Still needs work.
-                if (!$js_map) {
-                  $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
-                  $sourcemap['sections'][] = [
-                    'offset' => [
-                      'line' => substr_count($data, "\n"),
-                      'column' => 0,
-                    ],
-                    'map' => [
-                      'version' => 3,
-                      'file' => $file,
-                      'sourceRoot' => file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME)),
-                      'sources' => [$file],
-                      'sourcesContent' => [$file_content],
-                      'names' => [],
-                      'mappings' => ',',// str_repeat(',', substr_count($file_content, "\n")),
-                    ]
-                  ];
-                }
+                $sourcesRoot = file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
                 if ($js_map) {
                   // Make sure the source shows up in the right place.
-                  $js_map->sourceRoot = file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
-                  $sourcemap['sections'][] = [
+                  $js_map->sourceRoot = $sourcesRoot;
+                  $section = [
                     'offset' => [
                       'line' => substr_count($data, "\n"),
                       'column' => 0,
                     ],
                     'map' => $js_map,
                   ];
+                }
+                // if there are not sourcemap create one to avoid problems when
+                // setting breakpoints. This happens when core js has not been
+                // generated with yarn build:js-dev
+                // Still needs work.
+                else {
+                  $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
+                  $gen_map = new SourceMap();
+                  $gen_map->file = $file;
+                  $gen_map->sourceRoot = $sourcesRoot;
+                  $fileName = ['fileName' => $file];
+                  // 1-1 mapping of the file in the sourcemap, there is no
+                  // transformations going on.
+                  foreach (explode("\n", $file_content) as $line => $content) {
+                    $pos = ['line' => $line, 'column' => 0];
+                    $gen_map->addPosition([
+                      'generated' => $pos,
+                      'source' => $fileName + $pos,
+                    ]);
+                    if (strlen($content)) {
+                      $pos = ['line' => $line, 'column' => strlen($content)];
+                      $gen_map->addPosition([
+                        'generated' => $pos,
+                        'source' => $fileName + $pos,
+                      ]);
+                    }
+                  }
+                  $section = [
+                    'offset' => [
+                      'line' => substr_count($data, "\n"),
+                      'column' => 0,
+                    ],
+                    'map' => $gen_map->getData(),
+                  ];
+                }
+                if ($section) {
+                  $sourcemap['sections'][] = $section;
                 }
                 $file_content = $this->optimizer->clean($file_content);
                 // Append a ';' and a newline after each JS file to prevent them
