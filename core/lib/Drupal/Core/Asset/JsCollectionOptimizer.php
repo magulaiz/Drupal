@@ -134,9 +134,9 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 $js_map = FALSE;
                 // pick up map files automatically, even if they're not declared
                 // in the source (looking at you jquery)
-                $candidtate_map_file = str_replace('.js', '.map', $js_asset['data']);
-                if (file_exists($candidtate_map_file)) {
-                  $js_map = json_decode(file_get_contents($candidtate_map_file));
+                $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
+                if (file_exists($candidate_map_file)) {
+                  $js_map = json_decode(file_get_contents($candidate_map_file));
                 }
                 // for underscore even if the sourcemap is useless.
                 elseif (file_exists($js_asset['data'] . '.map')) {
