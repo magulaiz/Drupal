@@ -3,7 +3,6 @@
 namespace Drupal\Tests\dblog\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Logger\RfcLogLevel;
