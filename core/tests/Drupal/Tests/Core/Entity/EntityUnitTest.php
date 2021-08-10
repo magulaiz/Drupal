@@ -518,11 +518,16 @@ class EntityUnitTest extends UnitTestCase {
   public function testPostDeleteBundle() {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
-      ->with([
-        $this->entityTypeId . '_list',
-        $this->entityTypeId . ':' . $this->values['id'],
-        $this->entityTypeId . '_list:' . $this->entity->bundle(),
-      ]);
+      // with() also asserts on the order of array values and array keys that
+      // is something we should avoid here.
+      ->willReturnCallback(function (array $tags) {
+        self::assertEqualsCanonicalizing([
+          $this->entityTypeId . '_list',
+          $this->entityTypeId . ':' . $this->values['id'],
+          $this->entityTypeId . '_list:' . $this->entity->bundle(),
+        ], $tags);
+        return NULL;
+      });
     $this->entityType->expects($this->atLeastOnce())
       ->method('hasKey')
       ->with('bundle')

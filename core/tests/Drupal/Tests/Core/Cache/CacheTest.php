@@ -67,7 +67,7 @@ class CacheTest extends UnitTestCase {
    * @dataProvider mergeTagsProvider
    */
   public function testMergeTags(array $expected, ...$cache_tags) {
-    $this->assertEquals($expected, Cache::mergeTags(...$cache_tags));
+    $this->assertEqualsCanonicalizing($expected, Cache::mergeTags(...$cache_tags));
   }
 
   /**
