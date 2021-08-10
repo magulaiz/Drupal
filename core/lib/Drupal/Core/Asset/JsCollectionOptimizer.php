@@ -203,13 +203,12 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 if ($section) {
                   $sourcemap['sections'][] = $section;
                 }
+                // Remove unwanted JS code that cause issues.
                 $file_content = $this->optimizer->clean($file_content);
                 // Append a ';' and a newline after each JS file to prevent them
                 // from running together.
                 $data .= $file_content . ";\n";
               }
-              // Remove unwanted JS code that cause issues.
-              //$data = $this->optimizer->clean($data);
               if (count($sourcemap['sections'])) {
                 $source_uri = $this->dumper->dump(json_encode($sourcemap), 'map');
                 $data .= "\n//# sourceMappingURL=" . file_create_url($source_uri);
