@@ -117,20 +117,86 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
             if (empty($uri) || !file_exists($uri)) {
               // Concatenate each asset within the group.
               $data = '';
+              $sourcemap = [
+                'version' => 3,
+                'sections' => [],
+              ];
               foreach ($js_group['items'] as $js_asset) {
                 // Optimize this JS file, but only if it's not yet minified.
                 if (isset($js_asset['minified']) && $js_asset['minified']) {
-                  $data .= file_get_contents($js_asset['data']);
+                  $file_content = file_get_contents($js_asset['data']);
                 }
                 else {
-                  $data .= $this->optimizer->optimize($js_asset);
+                  $file_content = $this->optimizer->optimize($js_asset);
                 }
+
+                $js_map = FALSE;
+                // pick up map files automatically, even if they're not declared
+                // in the source (looking at you jquery)
+                $candidtate_map_file = str_replace('.js', '.map', $js_asset['data']);
+                if (file_exists($candidtate_map_file)) {
+                  $js_map = json_decode(file_get_contents($candidtate_map_file));
+                }
+                // for underscore even if the sourcemap is useless.
+                elseif (file_exists($js_asset['data'] . '.map')) {
+                  $js_map = json_decode(file_get_contents($js_asset['data'] . '.map'));
+                }
+                elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
+                  if (str_contains($matches[1], 'data:application/json;')) {
+                    $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
+                    $js_map = json_decode(base64_decode($base64));
+                  }
+                  else {
+                    $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
+                    if (file_exists($map_file)) {
+                      $js_map = json_decode(file_get_contents($map_file));
+                    }
+                  }
+                }
+                // if there are not sourcemap create one to avoid problems when
+                // setting breakpoints. This happens when core js has not been
+                // generated with yarn build:js-dev
+                // Still needs work.
+                if (!$js_map) {
+                  $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
+                  $sourcemap['sections'][] = [
+                    'offset' => [
+                      'line' => substr_count($data, "\n"),
+                      'column' => 0,
+                    ],
+                    'map' => [
+                      'version' => 3,
+                      'file' => $file,
+                      'sourceRoot' => file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME)),
+                      'sources' => [$file],
+                      'sourcesContent' => [$file_content],
+                      'names' => [],
+                      'mappings' => ',',// str_repeat(',', substr_count($file_content, "\n")),
+                    ]
+                  ];
+                }
+                if ($js_map) {
+                  // Make sure the source shows up in the right place.
+                  $js_map->sourceRoot = file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
+                  $sourcemap['sections'][] = [
+                    'offset' => [
+                      'line' => substr_count($data, "\n"),
+                      'column' => 0,
+                    ],
+                    'map' => $js_map,
+                  ];
+                }
+                $file_content = $this->optimizer->clean($file_content);
                 // Append a ';' and a newline after each JS file to prevent them
                 // from running together.
-                $data .= ";\n";
+                $data .= $file_content . ";\n";
               }
               // Remove unwanted JS code that cause issues.
-              $data = $this->optimizer->clean($data);
+              //$data = $this->optimizer->clean($data);
+              if (count($sourcemap['sections'])) {
+                $source_uri = $this->dumper->dump(json_encode($sourcemap), 'map');
+                $data .= "\n//# sourceMappingURL=" . file_create_url($source_uri);
+              }
               // Dump the optimized JS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'js');
               // Set the URI for this group's aggregate file.
