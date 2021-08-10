@@ -154,7 +154,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                     }
                   }
                 }
-                $sourcesRoot = file_create_url(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
+                $sourcesRoot = \Drupal::service('file_url_generator')->generateAbsoluteString(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
                 if ($js_map) {
                   // Make sure the source shows up in the right place.
                   $js_map->sourceRoot = $sourcesRoot;
@@ -214,7 +214,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
               }
               if (count($sourcemap['sections'])) {
                 $source_uri = $this->dumper->dump(json_encode($sourcemap), 'map');
-                $data .= "\n//# sourceMappingURL=" . file_create_url($source_uri);
+                $data .= "\n//# sourceMappingURL=" . \Drupal::service('file_url_generator')->generateAbsoluteString($source_uri);
               }
               // Dump the optimized JS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'js');
