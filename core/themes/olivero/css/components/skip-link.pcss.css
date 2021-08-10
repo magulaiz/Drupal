@@ -20,8 +20,8 @@
   background-color: var(--color--gray-0);
 
   &:hover {
-    color: var(--color--white);
     text-decoration: underline;
+    color: var(--color--white);
   }
 
   &:after {
