@@ -828,11 +828,6 @@ trait AssertContentTrait {
    *
    * @return bool
    *   TRUE on pass.
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
-   *   replacement.
-   *
-   * @see https://www.drupal.org/node/1234567
    */
   protected function assertFieldsByValue($fields, $value = NULL, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
