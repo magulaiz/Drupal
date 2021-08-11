@@ -640,6 +640,8 @@ class ConfigEntityStorageTest extends UnitTestCase {
   /**
    * Tests that the Entity storage throws an exception for badly-formed IDs.
    *
+   * @covers ::loadMultiple
+   *
    * @param mixed $bad_id
    *   A badly-formed entity ID.
    *

@@ -1454,6 +1454,8 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @param mixed $bad_id
    *   A badly-formed entity ID.
    *
+   * @covers ::loadMultiple
+   *
    * @dataProvider providerTestLoadMultipleException
    */
   public function testLoadMultipleException($bad_id) {
