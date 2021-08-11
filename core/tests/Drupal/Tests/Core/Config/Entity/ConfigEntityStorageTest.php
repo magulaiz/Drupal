@@ -638,6 +638,34 @@ class ConfigEntityStorageTest extends UnitTestCase {
   }
 
   /**
+   * Tests that the Entity storage throws an exception for badly-formed IDs.
+   *
+   * @param mixed $bad_id
+   *   A badly-formed entity ID.
+   *
+   * @dataProvider providerTestLoadMultipleException
+   */
+  public function testLoadMultipleException($bad_id) {
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("Array of IDs passed to loadMultiple() must contain only strings or integers, found");
+
+    $this->entityStorage->loadMultiple([$bad_id]);
+  }
+
+  /**
+   * Provides test data for testLoadMultipleException().
+   */
+  public function providerTestLoadMultipleException() {
+    return [
+      [[]],
+      [(new \StdClass())],
+      [0.5],
+      [FALSE],
+      [TRUE],
+    ];
+  }
+
+  /**
    * @covers ::loadRevision
    */
   public function testLoadRevision() {
