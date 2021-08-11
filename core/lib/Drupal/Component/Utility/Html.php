@@ -286,6 +286,8 @@ EOD;
     // newlines before injecting the actual HTML body to be processed.
     $document = strtr($document, ["\n" => '', '!html' => $html]);
 
+    // Instantiate the HTML5 parser, but without the HTML5 namespace being
+    // added to the DOM document.
     $html5 = new HTML5(['disable_html_ns' => TRUE]);
     return $html5->loadHTML($document);
   }
@@ -315,6 +317,9 @@ EOD;
       foreach ($body_node->getElementsByTagName('style') as $node) {
         static::escapeCdataElement($node, '/*', '*/');
       }
+
+      // Instantiate the HTML5 parser, but without the HTML5 namespace being
+      // added to the DOM document.
       $html5 = new HTML5(['disable_html_ns' => TRUE]);
       foreach ($body_node->childNodes as $node) {
         $html .= $html5->saveHTML($node);
