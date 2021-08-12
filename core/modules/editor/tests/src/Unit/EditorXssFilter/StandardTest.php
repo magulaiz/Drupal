@@ -352,7 +352,7 @@ class StandardTest extends UnitTestCase {
 
     // Remote style sheet part 3.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Remote_style_sheet_part_3
-    $data[] = ['<META HTTP-EQUIV="Link" Content="<http://ha.ckers.org/xss.css>; REL=stylesheet">', '<META http-equiv="Link">; REL=stylesheet"&gt;'];
+    $data[] = ['<META HTTP-EQUIV="Link" Content="<http://ha.ckers.org/xss.css>; REL=stylesheet">', '<META http-equiv="Link" content="//ha.ckers.org/xss.css&gt;; REL=stylesheet">'];
 
     // Remote style sheet part 4.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Remote_style_sheet_part_4
@@ -473,7 +473,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
 
     // XML data island with CDATA obfuscation.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#XML_data_island_with_CDATA_obfuscation
-    $data[] = ['<XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert(\'XSS\')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>', '<XML id="xss"><I><B><IMG>cript:alert(\'XSS\')"&gt;</B></I></XML><SPAN datasrc="#xss" datafld="B" dataformatas="HTML"></SPAN>'];
+    $data[] = ['<XML ID="xss"><I><B><IMG SRC="javas<!-- -->cript:alert(\'XSS\')"></B></I></XML><SPAN DATASRC="#xss" DATAFLD="B" DATAFORMATAS="HTML"></SPAN>', '<XML id="xss"><I><B><IMG src="alert(&#039;XSS&#039;)"></B></I></XML><SPAN datasrc="#xss" datafld="B" dataformatas="HTML"></SPAN>'];
 
     // Locally hosted XML with embedded JavaScript that is generated using an XML data island.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Locally_hosted_XML_with_embedded_JavaScript_that_is_generated_using_an_XML_data_island
@@ -482,7 +482,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
 
     // HTML+TIME in XML.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#HTML.2BTIME_in_XML
-    $data[] = ['<?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert("XSS")</SCRIPT>">', '&lt;?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"&gt;&lt;?import namespace="t" implementation="#default#time2"&gt;<t set attributename="innerHTML">alert("XSS")"&gt;'];
+    $data[] = ['<?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<SCRIPT DEFER>alert("XSS")</SCRIPT>">', '&lt;?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"&gt;&lt;?import namespace="t" implementation="#default#time2"&gt;<t set attributename="innerHTML">'];
 
     // Assuming you can only fit in a few characters and it filters against ".js".
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Assuming_you_can_only_fit_in_a_few_characters_and_it_filters_against_.22.js.22
@@ -495,7 +495,7 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
 
     // Cookie manipulation.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#Cookie_manipulation
-    $data[] = ['<META HTTP-EQUIV="Set-Cookie" Content="USERID=<SCRIPT>alert(\'XSS\')</SCRIPT>">', '<META http-equiv="Set-Cookie">alert(\'XSS\')"&gt;'];
+    $data[] = ['<META HTTP-EQUIV="Set-Cookie" Content="USERID=<SCRIPT>alert(\'XSS\')</SCRIPT>">', '<META http-equiv="Set-Cookie" content="USERID=&lt;SCRIPT&gt;alert(&#039;XSS&#039;)&lt;/SCRIPT&gt;">'];
 
     // UTF-7 encoding.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#UTF-7_encoding
@@ -503,13 +503,13 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
 
     // XSS using HTML quote encapsulation.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#XSS_using_HTML_quote_encapsulation
-    $data[] = ['<SCRIPT a=">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '" SRC="http://ha.ckers.org/xss.js"&gt;'];
-    $data[] = ['<SCRIPT =">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '" SRC="http://ha.ckers.org/xss.js"&gt;'];
-    $data[] = ['<SCRIPT a=">" \'\' SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '" \'\' SRC="http://ha.ckers.org/xss.js"&gt;'];
-    $data[] = ['<SCRIPT "a=\'>\'" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '\'" SRC="http://ha.ckers.org/xss.js"&gt;'];
+    $data[] = ['<SCRIPT a=">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
+    $data[] = ['<SCRIPT =">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
+    $data[] = ['<SCRIPT a=">" \'\' SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
+    $data[] = ['<SCRIPT "a=\'>\'" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
     $data[] = ['<SCRIPT a=`>` SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '` SRC="http://ha.ckers.org/xss.js"&gt;'];
-    $data[] = ['<SCRIPT a=">\'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', '\'&gt;" SRC="http://ha.ckers.org/xss.js"&gt;'];
-    $data[] = ['<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="http://ha.ckers.org/xss.js"></SCRIPT>', 'document.write("<SCRI>PT SRC="http://ha.ckers.org/xss.js"&gt;'];
+    $data[] = ['<SCRIPT a=">\'>" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''];
+    $data[] = ['<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="http://ha.ckers.org/xss.js"></SCRIPT>', 'document.write("<SCRI");PT SRC="http://ha.ckers.org/xss.js"&gt;'];
 
     // URL string evasion.
     // @see https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet#URL_string_evasion
@@ -520,9 +520,11 @@ xss:ex/*XSS*//*/*/pression(alert("XSS"))\'>',
     // Test XSS filtering on data-attributes.
     // @see \Drupal\editor\EditorXssFilter::filterXssDataAttributes()
 
-    // The following two test cases verify that XSS attack vectors are filtered.
+    // The following four test cases verify that XSS attack vectors are filtered.
     $data[] = ['<img src="butterfly.jpg" data-caption="&lt;script&gt;alert();&lt;/script&gt;" />', '<img src="butterfly.jpg" data-caption="alert();" />'];
+    $data[] = ['<img src="butterfly.jpg" data-caption="<script>alert();</script>" />', '<img src="butterfly.jpg" data-caption="alert();" />'];
     $data[] = ['<img src="butterfly.jpg" data-caption="&lt;EMBED SRC=&quot;http://ha.ckers.org/xss.swf&quot; AllowScriptAccess=&quot;always&quot;&gt;&lt;/EMBED&gt;" />', '<img src="butterfly.jpg" data-caption="" />'];
+    $data[] = ['<img src="butterfly.jpg" data-caption="<EMBED SRC=&quot;http://ha.ckers.org/xss.swf&quot; AllowScriptAccess=&quot;always&quot;></EMBED>" />', '<img src="butterfly.jpg" data-caption="" />'];
 
     // When including HTML-tags as visible content, they are double-escaped.
     // This test case ensures that we leave that content unchanged.
