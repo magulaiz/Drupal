@@ -92,7 +92,13 @@ class Xss {
       |                 # or
       <!--.*?-->        # a comment
       |                 # or
-      <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
+      <(?:              # a string that starts with <, containing
+        "[^"]*"[\'"]*     # a double quoted attribute
+        |                 # or
+        \'[^\']*\'[\'"]*  # a single quoted attribute
+        |                 # or
+        [^\'">]           # anything that is not a quote or a >
+      )*(>|$)           # up until the > or the end of the string
       |                 # or
       >                 # just a >
       )%x', $splitter, $string);
@@ -150,7 +156,23 @@ class Xss {
       return '&lt;';
     }
 
-    if (!preg_match('%^<\s*(/\s*)?([a-zA-Z0-9\-]+)\s*([^>]*)>?|(<!--.*?-->)$%', $string, $matches)) {
+    if (!preg_match('%^
+      <                # an opening <
+      \s*              # optional whitespace
+      (/\s*)?          # an optional / and whitespace
+      ([a-zA-Z0-9\-]+) # any valid tag characters
+      \s*              # optional whitespace
+      ((?:             # a group of attributes containing:
+        "[^"]*"[\'"]*     # a double quoted attribute
+        |                 # or
+        \'[^\']*\'[\'"]*  # a single quoted attribute
+        |                 # or
+        [^\'">]           # anything that is not a quote or a >
+      )*)              # any number of times
+      >?               # an optional closing tag
+      |                # or
+      (<!--.*?-->)     # a comment
+      $%x', $string, $matches)) {
       // Seriously malformed.
       return '';
     }
@@ -184,7 +206,6 @@ class Xss {
 
     // Clean up attributes.
     $attr2 = implode(' ', $class::attributes($attributes));
-    $attr2 = preg_replace('/[<>]/', '', $attr2);
     $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
 
     return "<$elem$attr2$xhtml_slash>";
