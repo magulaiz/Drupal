@@ -157,7 +157,9 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
 
-    // HTML in data-caption attribute, which is allowed by the HTML5 spec.
+    // HTML (not encoded as HTML entities) in data-caption attribute, which is
+    // not allowed by the HTML spec, but may happen when people manually write
+    // HTML, so we explicitly support it.
     $input = '<img src="llama.jpg" data-caption="<em>Loquacious llama!</em>" />';
     $expected = '<figure role="group">
 <img src="llama.jpg">
@@ -227,7 +229,7 @@ class FilterKernelTest extends KernelTestBase {
     $html_filter = $this->filters['filter_html'];
     $html_filter->setConfiguration([
       'settings' => [
-        'allowed_html' => '<img src data-align data-caption> <em>',
+        'allowed_html' => '<img src data-align data-caption>',
         'filter_html_help' => 1,
         'filter_html_nofollow' => 0,
       ],
@@ -319,17 +321,6 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($expected, $test_with_html_filter($input));
     $expected_xss_filtered = '<img data-caption="This is an <a href=&quot;alert();&quot;>evil</a> test…" src="llama.jpg">';
     $this->assertSame($expected_xss_filtered, $test_editor_xss_filter($input));
-
-    // HTML in data-caption attribute, which is allowed by the HTML5 spec.
-    $input = '<img src="llama.jpg" data-caption="<em>Loquacious llama!</em>" />';
-    $expected = '<figure role="group">
-<img src="llama.jpg">
-<figcaption><em>Loquacious llama!</em></figcaption>
-</figure>
-';
-    $output = $test_with_html_filter($input);
-    $this->assertSame($expected, $output->getProcessedText());
-    $this->assertSame($attached_library, $output->getAttachments());
   }
 
   /**
