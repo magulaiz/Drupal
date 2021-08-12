@@ -113,11 +113,6 @@ class XssTest extends TestCase {
         'Custom element with dashes in tag name.',
         ['test-element'],
       ],
-      [
-        '<a href="/" title="5 > 1 and 1 < 5">Link</a>',
-        '<a href="/" title="5 > 1 and 1 < 5">Link</a>',
-        'HTML attribute with greater-than and less-than signs',
-      ],
     ];
   }
 
