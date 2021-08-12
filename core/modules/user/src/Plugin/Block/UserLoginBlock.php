@@ -126,16 +126,19 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
         ]),
       ];
     }
-    $items['request_password'] = [
-      '#type' => 'link',
-      '#title' => $this->t('Reset your password'),
-      '#url' => Url::fromRoute('user.pass', [], [
-        'attributes' => [
-          'title' => $this->t('Send password reset instructions via email.'),
-          'class' => ['request-password-link'],
-        ],
-      ]),
-    ];
+    $url = Url::fromRoute('user.pass', [], [
+      'attributes' => [
+        'title' => $this->t('Send password reset instructions via email.'),
+        'class' => ['request-password-link'],
+      ]
+    ]);
+    if ($url->access()) {
+      $items['request_password'] = [
+        '#type' => 'link',
+        '#title' => $this->t('Reset your password'),
+        '#url' => $url,
+      ];
+    }
     return [
       'user_login_form' => $form,
       'user_links' => [
