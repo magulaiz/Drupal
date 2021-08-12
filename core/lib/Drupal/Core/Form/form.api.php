@@ -181,7 +181,7 @@ function hook_ajax_render_alter(array &$data) {
  * for module A, then all for module B, etc., followed by all for any base
  * theme(s), and finally for the theme itself. The module order is determined
  * by system weight, then by module name (the hook order can further be altered
- * by hook_module_implements_alter()) i.e. hook_module_implements_alter()
+ * by hook_module_implements_alter()) that is; hook_module_implements_alter()
  * doesn't change module weight.
  *
  * Within each module, form alter hooks are called in the following order:
@@ -192,14 +192,14 @@ function hook_ajax_render_alter(array &$data) {
  * For some use cases, form alter hooks may not provide an adequate glimpse at
  * the form array. Forms are built in phases and the form alter hooks are some
  * of the earliest places to alter the form. Your desired change may require
- * later changes to already be in place for them to work properly. For example,
+ * later changes to already be in place for them to work properly. For example;
  * each element #type has default properties that are added during rendering;
  * see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo().
  *
  * After all form_alter hooks are run, here are the later-stage ways forms
  * can be altered during the form build process:
  * - A form element's #process property contains an array of functions. These
- *   functions allow for elements to expand to multiple elements, for example,
+ *   functions allow for elements to expand to multiple elements, for example;
  *   radios, checkboxes and files.
  * - The form's or form element's #after_build property contains an array of
  *   functions. These functions allow the form to be altered before the form
