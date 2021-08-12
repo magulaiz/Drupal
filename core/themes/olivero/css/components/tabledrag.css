@@ -76,3 +76,34 @@ a.tabledrag-handle .handle {
 .touchevents .draggable .menu-item__link {
   padding: 0;
 }
+
+@media screen and (-ms-high-contrast: active) {
+  a.tabledrag-handle .handle {
+    position: relative;
+    background: none;
+    font-weight: normal
+  }
+
+    a.tabledrag-handle .handle::before,
+    a.tabledrag-handle .handle::after {
+      position: absolute;
+      top: 0.25rem;
+      left: 0.5625rem;
+      transform: rotate(45deg);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    a.tabledrag-handle .handle::before {
+      content: "⤩";
+    }
+
+    a.tabledrag-handle .handle::after {
+      content: "⤧";
+    }
+
+  a.tabledrag-handle:hover .handle,
+  a.tabledrag-handle:focus .handle {
+    background-image: none;
+  }
+}
