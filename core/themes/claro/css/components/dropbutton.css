@@ -234,7 +234,7 @@
 .dropbutton__item:first-of-type > * {
   display: inline-block;
   margin: 0;
-  padding: calc(1rem - 1px) calc(1.5rem - 1px);
+  padding: calc(3rem - 1px) calc(1.5rem - 1px);
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -252,8 +252,8 @@
 }
 
 .dropbutton--multiple .dropbutton__item:first-of-type > * {
-  padding-right: calc(1rem - 1px);
-  padding-left: calc(1rem - 1px);
+  padding-right: calc(3rem - 1px);
+  padding-left: calc(3rem - 1px);
 }
 
 /* Variants */
@@ -355,7 +355,7 @@
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
   position: relative;
-  padding: calc(1rem - 1px);
+  padding: calc(3rem - 1px);
   text-decoration: none;
   color: #545560;
   border: 1px solid transparent !important; /* 1 */
