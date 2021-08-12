@@ -92,10 +92,10 @@ class Xss {
       |                 # or
       <!--.*?-->        # a comment
       |                 # or
-      <(?:              # a string that starts with <, containing
-        "[^"]*"[\'"]*     # a double quoted attribute
+      <(?:              # a string that starts with <, containing:
+        "[^"]*"[\'"]*     # a double quoted string
         |                 # or
-        \'[^\']*\'[\'"]*  # a single quoted attribute
+        \'[^\']*\'[\'"]*  # a single quoted string
         |                 # or
         [^\'">]           # anything that is not a quote or a >
       )*(>|$)           # up until the > or the end of the string
@@ -163,9 +163,9 @@ class Xss {
       ([a-zA-Z0-9\-]+) # any valid tag characters
       \s*              # optional whitespace
       ((?:             # a group of attributes containing:
-        "[^"]*"[\'"]*     # a double quoted attribute
+        "[^"]*"[\'"]*     # a double quoted string
         |                 # or
-        \'[^\']*\'[\'"]*  # a single quoted attribute
+        \'[^\']*\'[\'"]*  # a single quoted string
         |                 # or
         [^\'">]           # anything that is not a quote or a >
       )*)              # any number of times
