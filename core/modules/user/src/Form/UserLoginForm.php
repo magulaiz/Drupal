@@ -245,7 +245,6 @@ class UserLoginForm extends FormBase {
         // $form_state->getValue() may have been modified by validation
         // handlers that ran earlier than this one.
         $user_input = $form_state->getUserInput();
-        $query = isset($user_input['name']) ? ['name' => $user_input['name']] : [];
         $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Forgot your password?</a>', [':password' => Url::fromRoute('user.pass')->toString()]));
         $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
         if (!empty($accounts)) {
