@@ -259,7 +259,8 @@ class FilterKernelTest extends KernelTestBase {
     $input = '<img src="llama.jpg" data-caption="<em>Loquacious llama!</em>" />';
     $expected = '<figure role="group"><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
     $this->assertSame($expected, $test_with_html_filter($input));
-    $this->assertSame($input, $test_editor_xss_filter($input));
+    $expected_xss_filtered = '<img src="llama.jpg" data-caption="&lt;em&gt;Loquacious llama!&lt;/em&gt;" />';
+    $this->assertSame($expected_xss_filtered, $test_editor_xss_filter($input));
   }
 
   /**
