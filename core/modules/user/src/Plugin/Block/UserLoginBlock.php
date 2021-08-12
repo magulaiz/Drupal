@@ -130,7 +130,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
       'attributes' => [
         'title' => $this->t('Send password reset instructions via email.'),
         'class' => ['request-password-link'],
-      ]
+      ],
     ]);
     if ($url->access()) {
       $items['request_password'] = [
