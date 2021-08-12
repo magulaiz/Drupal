@@ -93,6 +93,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
     // grouping, optimizing and dumping, but change the strategy that is used to
     // determine when the aggregate should be rebuilt (e.g. mtime, HTTPS …).
     $map = $this->state->get('system.js_cache_files', []);
+
+    $generate_sourcemaps = \Drupal::config('system.performance')->get('js.sourcemaps');
     $js_assets = [];
     foreach ($js_groups as $order => $js_group) {
       // We have to return a single asset, not a group of assets. It is now up
@@ -130,81 +132,83 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 else {
                   $file_content = $this->optimizer->optimize($js_asset);
                 }
-
-                $js_map = FALSE;
-                // pick up map files automatically, even if they're not declared
-                // in the source (looking at you jquery)
-                $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
-                if (file_exists($candidate_map_file)) {
-                  $js_map = json_decode(file_get_contents($candidate_map_file));
-                }
-                // for underscore even if the sourcemap is useless.
-                elseif (file_exists($js_asset['data'] . '.map')) {
-                  $js_map = json_decode(file_get_contents($js_asset['data'] . '.map'));
-                }
-                elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
-                  if (str_contains($matches[1], 'data:application/json;')) {
-                    $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
-                    $js_map = json_decode(base64_decode($base64));
+                if ($generate_sourcemaps) {
+                  $js_map = FALSE;
+                  // pick up map files automatically, even if they're not declared
+                  // in the source (looking at you jquery)
+                  $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
+                  if (file_exists($candidate_map_file)) {
+                    $js_map = json_decode(file_get_contents($candidate_map_file));
                   }
-                  else {
-                    $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
-                    if (file_exists($map_file)) {
-                      $js_map = json_decode(file_get_contents($map_file));
+                  // for underscore even if the sourcemap is useless.
+                  elseif (file_exists($js_asset['data'] . '.map')) {
+                    $js_map = json_decode(file_get_contents($js_asset['data'] . '.map'));
+                  }
+                  elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
+                    if (str_contains($matches[1], 'data:application/json;')) {
+                      $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
+                      $js_map = json_decode(base64_decode($base64));
+                    }
+                    else {
+                      $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
+                      if (file_exists($map_file)) {
+                        $js_map = json_decode(file_get_contents($map_file));
+                      }
                     }
                   }
-                }
-                $sourcesRoot = \Drupal::service('file_url_generator')->generateAbsoluteString(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
-                if ($js_map) {
-                  // Make sure the source shows up in the right place.
-                  $js_map->sourceRoot = $sourcesRoot;
-                  $section = [
-                    'offset' => [
-                      'line' => substr_count($data, "\n"),
-                      'column' => 0,
-                    ],
-                    'map' => $js_map,
-                  ];
-                }
-                // if there are not sourcemap create one to avoid problems when
-                // setting breakpoints. This happens when core js has not been
-                // generated with yarn build:js-dev
-                // We're just doing a 1-1 mapping, this makes it so that the
-                // code it will show up in the correct module/folder. Makes it
-                // possible to associate a piece of code with a individual js
-                // file.
-                else {
-                  $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
-                  $gen_map = new SourceMap();
-                  $gen_map->file = $file;
-                  $gen_map->sourceRoot = $sourcesRoot;
-                  $fileName = ['fileName' => $file];
-                  // 1-1 mapping of the file in the sourcemap, there is no
-                  // transformations going on.
-                  foreach (explode("\n", $file_content) as $line => $content) {
-                    $pos = ['line' => $line, 'column' => 0];
-                    $gen_map->addPosition([
-                      'generated' => $pos,
-                      'source' => $fileName + $pos,
-                    ]);
-                    if (strlen($content)) {
-                      $pos = ['line' => $line, 'column' => strlen($content)];
+                  $sourcesRoot = \Drupal::service('file_url_generator')
+                    ->generateAbsoluteString(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
+                  if ($js_map) {
+                    // Make sure the source shows up in the right place.
+                    $js_map->sourceRoot = $sourcesRoot;
+                    $section = [
+                      'offset' => [
+                        'line' => substr_count($data, "\n"),
+                        'column' => 0,
+                      ],
+                      'map' => $js_map,
+                    ];
+                  }
+                  // if there are not sourcemap create one to avoid problems when
+                  // setting breakpoints. This happens when core js has not been
+                  // generated with yarn build:js-dev
+                  // We're just doing a 1-1 mapping, this makes it so that the
+                  // code it will show up in the correct module/folder. Makes it
+                  // possible to associate a piece of code with a individual js
+                  // file.
+                  else {
+                    $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
+                    $gen_map = new SourceMap();
+                    $gen_map->file = $file;
+                    $gen_map->sourceRoot = $sourcesRoot;
+                    $fileName = ['fileName' => $file];
+                    // 1-1 mapping of the file in the sourcemap, there is no
+                    // transformations going on.
+                    foreach (explode("\n", $file_content) as $line => $content) {
+                      $pos = ['line' => $line, 'column' => 0];
                       $gen_map->addPosition([
                         'generated' => $pos,
                         'source' => $fileName + $pos,
                       ]);
+                      if (strlen($content)) {
+                        $pos = ['line' => $line, 'column' => strlen($content)];
+                        $gen_map->addPosition([
+                          'generated' => $pos,
+                          'source' => $fileName + $pos,
+                        ]);
+                      }
                     }
+                    $section = [
+                      'offset' => [
+                        'line' => substr_count($data, "\n"),
+                        'column' => 0,
+                      ],
+                      'map' => $gen_map->getData(),
+                    ];
                   }
-                  $section = [
-                    'offset' => [
-                      'line' => substr_count($data, "\n"),
-                      'column' => 0,
-                    ],
-                    'map' => $gen_map->getData(),
-                  ];
-                }
-                if ($section) {
-                  $sourcemap['sections'][] = $section;
+                  if ($section) {
+                    $sourcemap['sections'][] = $section;
+                  }
                 }
                 // Remove unwanted JS code that cause issues.
                 $file_content = $this->optimizer->clean($file_content);

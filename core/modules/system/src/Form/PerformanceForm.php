@@ -165,6 +165,17 @@ class PerformanceForm extends ConfigFormBase {
       '#default_value' => $config->get('js.preprocess'),
       '#disabled' => $disabled,
     ];
+    $form['bandwidth_optimization']['sourcemaps_js'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Generate sourcemaps for JavaScript aggregates'),
+      '#default_value' => $config->get('js.sourcemaps'),
+      '#disabled' => $disabled,
+      '#states' => [
+        'invisible' => [
+          '[name="preprocess_js"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -180,6 +191,7 @@ class PerformanceForm extends ConfigFormBase {
       ->set('cache.page.max_age', $form_state->getValue('page_cache_maximum_age'))
       ->set('css.preprocess', $form_state->getValue('preprocess_css'))
       ->set('js.preprocess', $form_state->getValue('preprocess_js'))
+      ->set('js.sourcemaps', $form_state->getValue('sourcemaps_js'))
       ->save();
 
     parent::submitForm($form, $form_state);
