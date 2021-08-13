@@ -2,10 +2,10 @@
 
 namespace Drupal\media\OEmbed;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 
 /**
  * Fetches and caches oEmbed resources.
@@ -34,6 +34,20 @@ class ResourceFetcher implements ResourceFetcherInterface {
   protected $cacheBackend;
 
   /**
+   * The XML decoder.
+   *
+   * @var \Symfony\Component\Serializer\Encoder\DecoderInterface
+   */
+  protected $xmlDecoder;
+
+  /**
+   * The JSON decoder.
+   *
+   * @var \Symfony\Component\Serializer\Encoder\DecoderInterface
+   */
+  protected $jsonDecoder;
+
+  /**
    * Constructs a ResourceFetcher object.
    *
    * @param \GuzzleHttp\ClientInterface $http_client
@@ -42,8 +56,12 @@ class ResourceFetcher implements ResourceFetcherInterface {
    *   The oEmbed provider repository service.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   The cache backend.
+   * @param \Symfony\Component\Serializer\Encoder\DecoderInterface|null $xml_decoder
+   *   (optional) The XML decoder.
+   * @param \Symfony\Component\Serializer\Encoder\DecoderInterface|null $json_decoder
+   *   (optional) The JSON decoder.
    */
-  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL) {
+  public function __construct(ClientInterface $http_client, ProviderRepositoryInterface $providers, CacheBackendInterface $cache_backend = NULL, DecoderInterface $xml_decoder = NULL, DecoderInterface $json_decoder = NULL) {
     $this->httpClient = $http_client;
     $this->providers = $providers;
     if (empty($cache_backend)) {
@@ -51,6 +69,8 @@ class ResourceFetcher implements ResourceFetcherInterface {
       @trigger_error('Passing NULL as the $cache_backend parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3223594', E_USER_DEPRECATED);
     }
     $this->cacheBackend = $cache_backend;
+    $this->xmlDecoder = $xml_decoder ?: new XmlDecoder();
+    $this->jsonDecoder = $json_decoder ?: new JsonDecoder();
   }
 
   /**
@@ -74,16 +94,13 @@ class ResourceFetcher implements ResourceFetcherInterface {
     list($format) = $response->getHeader('Content-Type');
     $content = (string) $response->getBody();
 
-    if (strstr($format, 'text/xml') || strstr($format, 'application/xml')) {
-      $data = $this->parseResourceXml($content, $url);
+    $context = ['url' => $url];
+    if ($this->xmlDecoder->supportsDecoding($format)) {
+      $data = $this->xmlDecoder->decode($content, $format, $context);
     }
     // By default, try to parse the resource data as JSON.
     else {
-      $data = Json::decode($content);
-
-      if (json_last_error() !== JSON_ERROR_NONE) {
-        throw new ResourceException('Error decoding oEmbed resource: ' . json_last_error_msg(), $url);
-      }
+      $data = $this->jsonDecoder->decode($content, $format, $context);
     }
     if (empty($data) || !is_array($data)) {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
@@ -217,29 +234,18 @@ class ResourceFetcher implements ResourceFetcherInterface {
    *
    * @throws \Drupal\media\OEmbed\ResourceException
    *   If the resource data could not be parsed.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Call
+   *   decode() on the injected
+   *   Symfony\Component\Serializer\Encoder\DecoderInterface object instead.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3007955
    */
   protected function parseResourceXml($data, $url) {
-    // Enable userspace error handling.
-    $was_using_internal_errors = libxml_use_internal_errors(TRUE);
-    libxml_clear_errors();
-
-    $content = simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-    // Restore the previous error handling behavior.
-    libxml_use_internal_errors($was_using_internal_errors);
-
-    $error = libxml_get_last_error();
-    if ($error) {
-      libxml_clear_errors();
-      throw new ResourceException($error->message, $url);
-    }
-    elseif ($content === FALSE) {
-      throw new ResourceException('The fetched resource could not be parsed.', $url);
-    }
-
-    // Convert XML to JSON so that the parsed resource has a consistent array
-    // structure, regardless of any XML attributes or quirks of the XML parser.
-    $data = Json::encode($content);
-    return Json::decode($data);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Call Symfony\Component\Serializer\Encoder\DecoderInterface::decode() instead. See https://www.drupal.org/project/drupal/issues/3007955', E_USER_DEPRECATED);
+    return $this->xmlDecoder->decode($data, 'text/xml', [
+      'url' => $url,
+    ]);
   }
 
 }
