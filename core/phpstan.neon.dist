@@ -21,6 +21,7 @@ parameters:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
     - 'modules/migrate_drupal/tests/fixtures/*.php'
+    - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
@@ -75,9 +76,6 @@ parameters:
     -
       message: '#Function container_test_file_service_test_service_function not found.#'
       path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
-    -
-      message: '#Class.*\Drupal\Tests\Listeners\ResultPrinterBase#'
-      path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
 
 parametersSchema:
   drupal: structure([
