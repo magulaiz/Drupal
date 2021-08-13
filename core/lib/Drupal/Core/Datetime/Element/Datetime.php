@@ -70,6 +70,7 @@ class Datetime extends DateElementBase {
       '#date_time_callbacks' => [],
       '#date_year_range' => '1900:2050',
       '#date_increment' => 1,
+      '#expose_timezone' => FALSE,
     ];
   }
 
@@ -84,6 +85,11 @@ class Datetime extends DateElementBase {
       $time_input = $element['#date_time_element'] != 'none' && !empty($input['time']) ? $input['time'] : '';
       $date_format = $element['#date_date_element'] != 'none' ? static::getHtml5DateFormat($element) : '';
       $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
+
+      // Time zone.
+      if (!empty($element['#expose_timezone']) && $input['timezone']) {
+        $element['#date_timezone'] = $input['timezone'];
+      }
 
       // Seconds will be omitted in a post in case there's no entry.
       if (!empty($time_input) && strlen($time_input) == 5) {
@@ -101,6 +107,7 @@ class Datetime extends DateElementBase {
       $input = [
         'date'   => $date_input,
         'time'   => $time_input,
+        'timezone' => $element['#date_timezone'],
         'object' => $date,
       ];
     }
@@ -111,6 +118,7 @@ class Datetime extends DateElementBase {
         $input = [
           'date'   => $date->format($element['#date_date_format']),
           'time'   => $date->format($element['#date_time_format']),
+          'timezone' => $date->getTimezone()->getName(),
           'object' => $date,
         ];
       }
@@ -118,6 +126,7 @@ class Datetime extends DateElementBase {
         $input = [
           'date'   => '',
           'time'   => '',
+          'timezone' => '',
           'object' => NULL,
         ];
       }
@@ -199,6 +208,8 @@ class Datetime extends DateElementBase {
    *   - #date_timezone: The Time Zone Identifier (TZID) to use when displaying
    *     or interpreting dates, i.e: 'Asia/Kolkata'. Defaults to the value
    *     returned by date_default_timezone_get().
+   *   - #expose_timezone: a boolean that if TRUE, will expose a time zone
+   *     select list. Defaults to FALSE.
    *
    * Example usage:
    * @code
@@ -327,6 +338,18 @@ class Datetime extends DateElementBase {
       if (isset($element['time'])) {
         $element['time']['#ajax'] = $element['#ajax'];
       }
+    }
+
+    // Expose a time zone selector.
+    if (!empty($element['#expose_timezone']) && $element['#expose_timezone']) {
+
+      $element['timezone'] = [
+        '#type' => 'select',
+        '#options' => system_time_zones(FALSE, TRUE),
+        // Default to user's time zone.
+        '#default_value' => $element['#date_timezone'],
+        '#required' => $element['#required'],
+      ];
     }
 
     return $element;

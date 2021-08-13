@@ -36,6 +36,13 @@ abstract class DateTestBase extends BrowserTestBase {
   protected $displayOptions;
 
   /**
+   * An entity storage to use in this test class.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $entityStorage;
+
+  /**
    * A field storage to use in this test class.
    *
    * @var \Drupal\field\Entity\FieldStorageConfig
@@ -100,6 +107,8 @@ abstract class DateTestBase extends BrowserTestBase {
       'administer node fields',
     ]);
     $this->drupalLogin($web_user);
+
+    $this->entityStorage = $this->container->get('entity_type.manager')->getStorage('entity_test');
 
     // Create a field with settings to validate.
     $this->createField();

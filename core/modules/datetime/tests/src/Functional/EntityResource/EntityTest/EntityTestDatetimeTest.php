@@ -33,6 +33,20 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The time zone string to use throughout the test.
+   *
+   * @var string
+   */
+  protected static $timezone = NULL;
+
+  /**
+   * Boolean indicating whether or not to use time zone storage.
+   *
+   * @var boolean
+   */
+  protected static $timezoneStorage = FALSE;
+
+  /**
    * Datetime test field name.
    *
    * @var string
@@ -55,7 +69,10 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
       'field_name' => static::$fieldName,
       'type' => 'datetime',
       'entity_type' => static::$entityTypeId,
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => [
+        'datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME,
+        'timezone_storage' => static::$timezoneStorage,
+      ],
     ])
       ->save();
 
@@ -69,7 +86,10 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
 
     // Reload entity so that it has the new field.
     $this->entity = $this->entityStorage->load($this->entity->id());
-    $this->entity->set(static::$fieldName, ['value' => static::$dateString]);
+    $this->entity->set(static::$fieldName, [
+      'value' => static::$dateString,
+      'timezone' => static::$timezone,
+    ]);
     $this->entity->save();
   }
 
@@ -96,6 +116,7 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
       static::$fieldName => [
         [
           'value' => '2017-03-02T07:02:00+11:00',
+          'timezone' => static::$timezone,
         ],
       ],
     ];
@@ -109,6 +130,7 @@ class EntityTestDatetimeTest extends EntityTestResourceTestBase {
       static::$fieldName => [
         [
           'value' => static::$dateString . '+00:00',
+          'timezone' => static::$timezone,
         ],
       ],
     ];

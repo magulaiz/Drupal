@@ -96,6 +96,7 @@ class EntityTestDateonlyTest extends EntityTestResourceTestBase {
       static::$fieldName => [
         [
           'value' => $this->entity->get(static::$fieldName)->value,
+          'timezone' => $this->entity->get(static::$fieldName)->value_timezone,
         ],
       ],
     ];

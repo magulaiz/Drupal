@@ -3,6 +3,7 @@
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeFormatterBase;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -161,7 +162,12 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected, $component);
 
     // Test date field.
-    $defaults = ['format_type' => 'fallback', 'timezone_override' => ''];
+    $defaults = [
+      'format_type' => 'fallback',
+      'timezone_override' => '',
+      'timezone_default' => DateTimeFormatterBase::TIMEZONE_USER,
+      'timezone_per_date' => FALSE,
+    ];
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
     $expected['settings'] = ['format_type' => 'fallback'] + $defaults;

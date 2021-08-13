@@ -2,6 +2,7 @@
 
 namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -32,8 +33,12 @@ class DateRangeDefaultWidget extends DateRangeWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityStorageInterface $date_storage) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityStorageInterface $date_storage, ConfigFactoryInterface $config_factory = NULL) {
+    if (!$config_factory) {
+      @trigger_error('The config.factory service must be passed to DateRangeDefaultWidget::__construct(), it is required before Drupal 9.0.0. See https://www.drupal.org/node/2632040.', E_USER_DEPRECATED);
+      $config_factory = \Drupal::service('config.factory');
+    }
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $config_factory);
 
     $this->dateStorage = $date_storage;
   }
@@ -48,7 +53,8 @@ class DateRangeDefaultWidget extends DateRangeWidgetBase {
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('entity_type.manager')->getStorage('date_format')
+      $container->get('entity_type.manager')->getStorage('date_format'),
+      $container->get('config.factory')
     );
   }
 

@@ -53,13 +53,13 @@ class DateRangeCustomFormatter extends DateTimeCustomFormatter {
 
         if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
           $elements[$delta] = [
-            'start_date' => $this->buildDate($start_date),
+            'start_date' => $this->buildDate($start_date, $item->timezone),
             'separator' => ['#plain_text' => ' ' . $separator . ' '],
-            'end_date' => $this->buildDate($end_date),
+            'end_date' => $this->buildDate($end_date, $item->timezone),
           ];
         }
         else {
-          $elements[$delta] = $this->buildDate($start_date);
+          $elements[$delta] = $this->buildDate($start_date, $item->timezone);
         }
       }
     }

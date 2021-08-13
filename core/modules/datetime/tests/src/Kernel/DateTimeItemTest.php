@@ -48,7 +48,10 @@ class DateTimeItemTest extends FieldKernelTestBase {
       'field_name' => 'field_datetime',
       'type' => 'datetime',
       'entity_type' => 'entity_test',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'settings' => [
+        'datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME,
+        'timezone_storage' => FALSE,
+      ],
     ]);
     $this->fieldStorage->save();
     $this->field = FieldConfig::create([
@@ -348,6 +351,30 @@ class DateTimeItemTest extends FieldKernelTestBase {
       // Wrong input type.
       [['2014', '01', '01']],
     ];
+  }
+
+  /**
+   * Tests DateTimeItem with per-date time zone storage.
+   */
+  public function testTimezoneDate() {
+    /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
+    $field_storage = FieldStorageConfig::load('entity_test.field_datetime');
+    $field_storage->setSetting('timezone_storage', TRUE);
+    $field_storage->save();
+
+    // Use a non-UTC time zone.
+    $timezone = 'America/Yellowknife';
+
+    $entity = EntityTest::create();
+    $value = '2014-01-01T20:00:00Z';
+
+    $entity->set('field_datetime', ['value' => $value, 'timezone' => $timezone]);
+    $entity->save();
+
+    // Load the entity.
+    $id = $entity->id();
+    $entity = EntityTest::load($id);
+    $this->assertEqual($timezone, $entity->field_datetime[0]->timezone, '"time zone" property can be set.');
   }
 
 }
