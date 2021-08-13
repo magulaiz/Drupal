@@ -16,6 +16,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Tests\ConfigTestTrait;
+use Drupal\Tests\ExtensionListTestTrait;
 use Drupal\Tests\RandomGeneratorTrait;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
 use Drupal\Tests\TestRequirementsTrait;
@@ -25,6 +26,7 @@ use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
@@ -84,6 +86,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use AssertContentTrait;
   use RandomGeneratorTrait;
   use ConfigTestTrait;
+  use ExtensionListTestTrait;
   use TestRequirementsTrait;
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
@@ -483,7 +486,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // Provide a default configuration, if not set.
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
-      //  https://www.drupal.org/node/2447753.
+      //   https://www.drupal.org/node/2447753.
       if (function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
       }
@@ -575,7 +578,22 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       $container->getDefinition('password')
         ->setArguments([1]);
     }
-    TestServiceProvider::addRouteProvider($container);
+
+    // Add the on demand rebuild route provider service.
+    $route_provider_service_name = 'router.route_provider';
+    // While $container->get() does a recursive resolve, getDefinition() does
+    // not, so do it ourselves.
+    $id = $route_provider_service_name;
+    while ($container->hasAlias($id)) {
+      $id = (string) $container->getAlias($id);
+    }
+    $definition = $container->getDefinition($id);
+    $definition->clearTag('needs_destruction');
+    $container->setDefinition("simpletest.$route_provider_service_name", $definition);
+
+    $route_provider_definition = new Definition(RouteProvider::class);
+    $route_provider_definition->setPublic(TRUE);
+    $container->setDefinition($id, $route_provider_definition);
   }
 
   /**

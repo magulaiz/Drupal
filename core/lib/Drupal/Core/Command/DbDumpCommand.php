@@ -334,13 +334,18 @@ class DbDumpCommand extends DbCommandBase {
    * @param string $type
    *   The MySQL field type.
    *
-   * @return string
+   * @return string|null
    *   The Drupal schema field size.
    */
   protected function fieldSizeMap(Connection $connection, $type) {
     // Convert everything to lowercase.
     $map = array_map('strtolower', $connection->schema()->getFieldTypeMap());
     $map = array_flip($map);
+
+    // Do nothing if the field type is not defined.
+    if (!isset($map[$type])) {
+      return NULL;
+    }
 
     $schema_type = explode(':', $map[$type])[0];
     // Only specify size on these types.
@@ -394,7 +399,7 @@ class DbDumpCommand extends DbCommandBase {
     // irrelevant.
     $script = <<<'ENDOFSCRIPT'
 <?php
-// @codingStandardsIgnoreFile
+// phpcs:ignoreFile
 /**
  * @file
  * A database agnostic dump for testing purposes.
@@ -405,9 +410,15 @@ class DbDumpCommand extends DbCommandBase {
 use Drupal\Core\Database\Database;
 
 $connection = Database::getConnection();
+// Ensure any tables with a serial column with a value of 0 are created as
+// expected.
+$sql_mode = $connection->query("SELECT @@sql_mode;")->fetchField();
+$connection->query("SET sql_mode = '$sql_mode,NO_AUTO_VALUE_ON_ZERO'");
 
 {{TABLES}}
 
+// Reset the SQL mode.
+$connection->query("SET sql_mode = '$sql_mode'");
 ENDOFSCRIPT;
     return $script;
   }

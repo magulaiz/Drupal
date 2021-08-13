@@ -150,6 +150,11 @@ class Connection extends DatabaseConnection {
       \PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Limit SQL to a single statement like mysqli.
       \PDO::MYSQL_ATTR_MULTI_STATEMENTS => FALSE,
+      // Convert numeric values to strings when fetching. In PHP 8.1,
+      // \PDO::ATTR_EMULATE_PREPARES now behaves the same way as non emulated
+      // prepares and returns integers. See https://externals.io/message/113294
+      // for further discussion.
+      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     ];
 
     try {
@@ -203,19 +208,6 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function serialize() {
-    // Cleanup the connection, much like __destruct() does it as well.
-    if ($this->needsCleanup) {
-      $this->nextIdDelete();
-    }
-    $this->needsCleanup = FALSE;
-
-    return parent::serialize();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function __destruct() {
     if ($this->needsCleanup) {
       $this->nextIdDelete();
@@ -227,7 +219,11 @@ class Connection extends DatabaseConnection {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function queryTemporary($query, array $args = [], array $options = []) {
+    @trigger_error('Connection::queryTemporary() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3211781', E_USER_DEPRECATED);
     $tablename = $this->generateTemporaryTableName();
     $this->query('CREATE TEMPORARY TABLE {' . $tablename . '} Engine=MEMORY ' . $query, $args, $options);
     return $tablename;
