@@ -25,11 +25,59 @@ parameters:
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static#"
+
     # Ignore common errors for now.
     - "#^Access to an undefined property#"
     - "#^Call to an undefined method#"
     - "#^Cannot unset offset#"
     - "#should return .* but return statement is missing#"
+
+    # Things we should fix.
+    -
+      message: '#Call to method get(Sorted)?Definitions\(\) on an unknown class Drupal\\Core\\Plugin\\CategorizingPluginManagerTrait.#'
+      path: lib/Drupal/Core/Plugin/CategorizingPluginManagerTrait.php
+    -
+      message: '#Access to an undefined static property static\(.*\)::\$entityTypeId.#'
+      paths:
+        - modules/hal/tests/src/Functional/EntityResource/HalEntityNormalizationTrait.php
+        - modules/rest/tests/src/Functional/CookieResourceTestTrait.php
+    -
+      message: '#Call to an undefined static method PHPUnit\\Util\\ErrorHandler::handleError\(\).#'
+      path: tests/Drupal/Tests/Listeners/DrupalStandardsListenerTrait.php
+
+    # Various compatibility shims or optional extensions.
+    -
+      message: '#Class Symfony\\Component\\HttpFoundation\\InputBag not found.#'
+      paths:
+        - includes/bootstrap.inc
+        - lib/Drupal/Core/Http/TrustedHostsRequestFactory.php
+    -
+      message: '#Call to an undefined static method Symfony\\Component\\HttpFoundation\\RequestStack::getMainRequest#'
+      path: lib/Drupal/Core/Http/RequestStack.php
+    -
+      message: '#Function twig_escape_filter not found.#'
+      path: lib/Drupal/Core/Template/TwigExtension.php
+    -
+      message: '#Class Drupal\\simpletest\\TestBase not found.#'
+      path: lib/Drupal/Core/Test/RunTests/TestFileParser.php
+    -
+      message: '#Function uploadprogress_get_info not found.#'
+      path: modules/file/src/Controller/FileWidgetAjaxController.php
+    -
+      message: '#Call to an undefined static method static\(Drupal\\Tests\\migrate\\Kernel\\MigrateTestBase\)::migrateDumpAlter#'
+      path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
+    -
+      message: '#Instantiated class EasyRdf_.* not found.#'
+      path: modules/rdf/tests/src/Traits/RdfParsingTrait.php
+    -
+      message: '#Class Drupal\\non_installed_module\\Plugin\\plugin_test\\fruit\\YummyFruit not found.#'
+      path: modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
+    -
+      message: '#Function container_test_file_service_test_service_function not found.#'
+      path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
+    -
+      message: '#Class.*\Drupal\Tests\Listeners\ResultPrinterBase#'
+      path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
 
 parametersSchema:
   drupal: structure([
