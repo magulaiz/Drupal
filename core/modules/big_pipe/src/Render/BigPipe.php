@@ -11,7 +11,7 @@ use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\RendererInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -194,7 +194,7 @@ class BigPipe {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -216,7 +216,7 @@ class BigPipe {
    *   The request stack.
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $http_kernel
    *   The HTTP kernel.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
@@ -361,7 +361,7 @@ class BigPipe {
       // KernelEvents::RESPONSE event. This results in the attachments for the
       // HTML response being processed by HtmlResponseAttachmentsProcessor and
       // hence the HTML to load the bottom JavaScript can be rendered.
-      $fake_request = $this->requestStack->getMasterRequest()->duplicate();
+      $fake_request = $this->requestStack->getMainRequest()->duplicate();
       $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
       $scripts_bottom = $html_response->getContent();
     }
@@ -464,7 +464,7 @@ class BigPipe {
       // hence:
       // - the HTML to load the CSS can be rendered.
       // - the HTML to load the JS (at the top) can be rendered.
-      $fake_request = $this->requestStack->getMasterRequest()->duplicate();
+      $fake_request = $this->requestStack->getMainRequest()->duplicate();
       $fake_request->request->set('ajax_page_state', ['libraries' => implode(',', $cumulative_assets->getAlreadyLoadedLibraries())]);
       try {
         $html_response = $this->filterEmbeddedResponse($fake_request, $html_response);
@@ -528,12 +528,12 @@ class BigPipe {
 
     // A BigPipe response consists of an HTML response plus multiple embedded
     // AJAX responses. To process the attachments of those AJAX responses, we
-    // need a fake request that is identical to the master request, but with
+    // need a fake request that is identical to the main request, but with
     // one change: it must have the right Accept header, otherwise the work-
     // around for a bug in IE9 will cause not JSON, but <textarea>-wrapped JSON
     // to be returned.
     // @see \Drupal\Core\EventSubscriber\AjaxResponseSubscriber::onResponse()
-    $fake_request = $this->requestStack->getMasterRequest()->duplicate();
+    $fake_request = $this->requestStack->getMainRequest()->duplicate();
     $fake_request->headers->set('Accept', 'application/vnd.drupal-ajax');
 
     foreach ($placeholder_order as $placeholder_id) {

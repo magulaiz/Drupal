@@ -17,15 +17,13 @@ class Composer {
 
   protected static $packageToCleanup = [
     'behat/mink' => ['tests', 'driver-testsuite'],
-    'behat/mink-browserkit-driver' => ['tests'],
-    'behat/mink-goutte-driver' => ['tests'],
     'behat/mink-selenium2-driver' => ['tests'],
     'composer/composer' => ['bin'],
     'drupal/coder' => ['coder_sniffer/Drupal/Test', 'coder_sniffer/DrupalPractice/Test'],
     'doctrine/instantiator' => ['tests'],
     'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
-    'fabpot/goutte' => ['Goutte/Tests'],
+    'friends-of-behat/mink-browserkit-driver' => ['tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
     'instaclick/php-webdriver' => ['doc', 'test'],

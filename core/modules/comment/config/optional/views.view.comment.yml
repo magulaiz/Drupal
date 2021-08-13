@@ -15,7 +15,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -806,6 +806,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: changed
           granularity: second
           entity_type: comment
           entity_field: changed

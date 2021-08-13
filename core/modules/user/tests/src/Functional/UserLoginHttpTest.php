@@ -351,7 +351,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Test the per-user login flood control.
+   * Tests the per-user login flood control.
    *
    * @see \Drupal\user\Tests\UserLoginTest::testPerUserLoginFloodControl
    * @see \Drupal\basic_auth\Tests\Authentication\BasicAuthTest::testPerUserLoginFloodControl
@@ -452,7 +452,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Test csrf protection of User Logout route.
+   * Tests csrf protection of User Logout route.
    */
   public function testLogoutCsrfProtection() {
     $client = \Drupal::httpClient();
@@ -563,7 +563,7 @@ class UserLoginHttpTest extends BrowserTestBase {
     preg_match('#.+user/reset/.+#', $email['body'], $urls);
     $resetURL = $urls[0];
     $this->drupalGet($resetURL);
-    $this->drupalPostForm(NULL, [], 'Log in');
+    $this->submitForm([], 'Log in');
   }
 
 }
