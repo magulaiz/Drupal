@@ -32,17 +32,3 @@
 .open > .contextual__trigger::after {
   content: url(../../images/icons/ffffff/pencil.svg);
 }
-
-@media screen and (-ms-high-contrast: active) {
-  .contextual__trigger::after {
-    content: url(../../images/icons/ffffff/pencil.svg);
-  }
-  .contextual__trigger:active,
-  .open > .contextual__trigger {
-    background-color: var(--color-white);
-  }
-  .contextual__trigger:active::after,
-  .open > .contextual__trigger::after {
-    content: url(../../images/icons/000000/pencil.svg);
-  }
-}
