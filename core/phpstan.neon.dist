@@ -29,7 +29,7 @@ parameters:
     - "#^Access to an undefined property#"
     - "#^Call to an undefined method#"
     - "#^Cannot unset offset#"
-    - "#^Method .* should return .* but return statement is missing#"
+    - "#should return .* but return statement is missing#"
 
 parametersSchema:
   drupal: structure([
