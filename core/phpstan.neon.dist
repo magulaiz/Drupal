@@ -21,6 +21,7 @@ parameters:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
     - 'modules/migrate_drupal/tests/fixtures/*.php'
+    - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
   reportUnmatchedIgnoredErrors: false
   ignoreErrors:
@@ -70,9 +71,6 @@ parameters:
     -
       message: '#Instantiated class EasyRdf_.* not found.#'
       path: modules/rdf/tests/src/Traits/RdfParsingTrait.php
-    -
-      message: '#Class Drupal\\non_installed_module\\Plugin\\plugin_test\\fruit\\YummyFruit not found.#'
-      path: modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     -
       message: '#Function container_test_file_service_test_service_function not found.#'
       path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
