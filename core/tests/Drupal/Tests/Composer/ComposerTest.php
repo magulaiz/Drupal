@@ -18,7 +18,8 @@ class ComposerTest extends UnitTestCase {
    */
   public function testEnsureComposerVersion() {
     try {
-      $this->assertNull(Composer::ensureComposerVersion());
+      Composer::ensureComposerVersion();
+      $this->expectNotToPerformAssertions();
     }
     catch (\RuntimeException $e) {
       $this->assertMatchesRegularExpression('/Drupal core development requires Composer 1.9.0, but Composer /', $e->getMessage());
