@@ -190,6 +190,14 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       library: 'ckeditor5.alignment',
     },
     {
+      pack: '@ckeditor/ckeditor5-autoformat',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/autoformat.js', to: 'autoformat.js' }
+      ],
+      library: 'ckeditor5.autoformat',
+    },
+    {
       pack: '@ckeditor/ckeditor5-basic-styles',
       folder: 'ckeditor5',
       files: [

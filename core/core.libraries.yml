@@ -1,5 +1,7 @@
 # All libraries are defined in alphabetical order.
 
+# cspell:ignore imageupload autoformat
+
 backbone:
   remote: https://github.com/jashkenas/backbone
   version: "1.4.0"
@@ -249,6 +251,18 @@ ckeditor5.language:
     assets/vendor/ckeditor5/language.js: { preprocess: false, minified: true }
   dependencies:
     - core/ckeditor5
+
+ckeditor5.autoformat:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/autoformat.js: { preprocess: false, minified: true }
+  dependencies:
+    - ckeditor5/ckeditor5
 
 css.escape:
   remote: https://github.com/mathiasbynens/CSS.escape

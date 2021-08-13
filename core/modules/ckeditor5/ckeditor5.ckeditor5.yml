@@ -2,6 +2,8 @@
 # @see this module's README.md for details on defining CKEditor 5 plugins in
 # Drupal.
 
+# cspell:ignore autoformat
+
 ckeditor5_essentials:
   ckeditor5:
     plugins:
@@ -366,6 +368,15 @@ ckeditor5_alignment.justify:
     elements:
       - <$block class="text-align-justify">
     <<: *alignment_drupal_section
+
+ckeditor5_autoformat:
+  ckeditor5:
+    plugins:
+      - autoformat.Autoformat
+  drupal:
+    label: Autoformat
+    library: core/ckeditor5.autoformat
+    elements: false
 
 ckeditor5_removeFormat:
   ckeditor5:
