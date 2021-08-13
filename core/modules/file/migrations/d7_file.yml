@@ -14,7 +14,21 @@ source:
     # represents the fully qualified path relative to which URIs in the files
     # table are specified. This can be a local file directory containing the
     # source site, e.g. /var/www/docroot, or the site address,
-    # e.g. http://example.com. See the configuration for the source_full_path
+    # e.g. https://example.com. This value is supposed to be be concatenated
+    # with file path (i.e. sites/default/files) and used as a source location
+    # for the files.
+    #
+    # In this example the source files have been moved by other means to
+    # location on the destination site.
+    # Source site:
+    #   Location of files: /var/www/html/legacy/sites/default/files.
+    #   Public scheme: sites/default/files
+    # In this example, source_base_path value should be: '/var/www/html/legacy'
+    #
+    # If the source site is available via URL (i.e. https://example.com), then
+    # source_base_path value can be 'https://example.com'.
+    #
+    # See the configuration for the source_full_path
     # property in the process section below.
     source_base_path: ''
 process:
