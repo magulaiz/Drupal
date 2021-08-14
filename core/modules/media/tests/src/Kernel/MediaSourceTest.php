@@ -493,7 +493,8 @@ class MediaSourceTest extends MediaKernelTestBase {
     $this->assertEquals('Test source with constraints', $field->label(), 'Incorrect label is used.');
     $this->assertSame('test_constraints_type', $field->getTargetBundle(), 'Field is not targeting correct bundle.');
 
-    // Test that new source fields respect the configured field prefix.
+    // Test that new source fields respect the configured field prefix, no
+    // prefix at all if that's what's configured.
     $this->installConfig('field_ui');
     $this->config('field_ui.settings')
       ->set('field_prefix', 'prefix_')
@@ -504,6 +505,11 @@ class MediaSourceTest extends MediaKernelTestBase {
       'source' => 'test',
     ]);
     $this->assertSame('prefix_media_test', $type->getSource()->createSourceField($type)->getName());
+
+    $this->config('field_ui.settings')
+      ->set('field_prefix', '')
+      ->save();
+    $this->assertSame('media_test', $type->getSource()->createSourceField($type)->getName());
   }
 
   /**
