@@ -111,7 +111,7 @@ class UserSession implements AccountInterface {
    * @todo in Drupal 10, add method to Drupal\Core\Session\AccountInterface.
    * @see https://www.drupal.org/node/3228209
    */
-  public function hasRole($rid) {
+  public function hasRole(string $rid): bool {
     return in_array($rid, $this->getRoles());
   }
 
