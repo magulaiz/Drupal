@@ -99,7 +99,16 @@ class AccountProxy implements AccountProxyInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Whether a user has a certain role.
+   *
+   * @param string $rid
+   *   The role ID to check.
+   *
+   * @return bool
+   *   Returns TRUE if the user has the role, otherwise FALSE.
+   *
+   * @todo in Drupal 10, add method to Drupal\Core\Session\AccountInterface.
+   * @see https://www.drupal.org/node/3228209
    */
   public function hasRole($rid) {
     return $this->getAccount()->hasRole($rid);
