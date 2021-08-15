@@ -102,6 +102,13 @@ class UserSession implements AccountInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasRole($rid) {
+    return in_array($rid, $this->getRoles());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasPermission($permission) {
     // User #1 has all privileges.
     if ((int) $this->id() === 1) {

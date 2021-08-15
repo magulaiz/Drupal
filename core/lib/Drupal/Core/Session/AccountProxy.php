@@ -101,6 +101,13 @@ class AccountProxy implements AccountProxyInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasRole($rid) {
+    return $this->getAccount()->hasRole($rid);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function hasPermission($permission) {
     return $this->getAccount()->hasPermission($permission);
   }
