@@ -114,7 +114,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           // If entity type bundles are not supported and
           // hook_entity_bundle_info() has not already set up bundle
           // information, use the entity type name and label.
-          elseif (!isset($this->bundleInfo[$type])) {
+          elseif (empty($this->bundleInfo[$type])) {
             $this->bundleInfo[$type][$type]['label'] = $entity_type->getLabel();
           }
         }
