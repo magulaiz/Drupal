@@ -112,7 +112,7 @@ class UserSession implements AccountInterface {
    * @see https://www.drupal.org/node/3228209
    */
   public function hasRole(string $rid): bool {
-    return in_array($rid, $this->getRoles());
+    return in_array($rid, $this->getRoles(), TRUE);
   }
 
   /**
