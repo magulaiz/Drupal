@@ -17,7 +17,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function ($, window, Drupal, drupalSettings, _ref) {
+(function ($, window, Drupal, drupalSettings, loadjs, _ref) {
   var isFocusable = _ref.isFocusable,
       tabbable = _ref.tabbable;
   Drupal.behaviors.AJAX = {
@@ -669,6 +669,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
 
       messages.add(response.message, response.messageOptions);
+    },
+    add_js: function add_js(ajax, response, status) {
+      var deferred = $.Deferred();
+      var parentEl = document.querySelector(response.selector || 'body');
+      var settings = ajax.settings || drupalSettings;
+      var scriptsSrc = response.data.map(function (script) {
+        var uniqueBundleID = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleID, {
+          async: !!script.async,
+          before: function before(path, scriptEl) {
+            if (script.defer) {
+              scriptEl.defer = true;
+            }
+
+            parentEl.appendChild(scriptEl);
+            return false;
+          }
+        });
+        return uniqueBundleID;
+      });
+      loadjs.ready(scriptsSrc, {
+        success: function success() {
+          Drupal.attachBehaviors(parentEl, settings);
+          deferred.resolve();
+        }
+      });
+      return deferred.promise();
     }
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);

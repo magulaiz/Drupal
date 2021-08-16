@@ -11,7 +11,14 @@
  * included to provide Ajax capabilities.
  */
 
-(function ($, window, Drupal, drupalSettings, { isFocusable, tabbable }) {
+(function (
+  $,
+  window,
+  Drupal,
+  drupalSettings,
+  loadjs,
+  { isFocusable, tabbable },
+) {
   /**
    * Attaches the Ajax behavior to each Ajax form element.
    *
@@ -1616,5 +1623,55 @@
       }
       messages.add(response.message, response.messageOptions);
     },
+
+    /**
+     * Command to add JS.
+     *
+     * @param {Drupal.Ajax} [ajax]
+     *   {@link Drupal.Ajax} object created by {@link Drupal.ajax}.
+     * @param {object} response
+     *   The response from the Ajax request.
+     * @param {Array} response.data
+     *   A string that contains the JS files to be added.
+     * @param {number} [status]
+     *   The XMLHttpRequest status.
+     */
+    add_js(ajax, response, status) {
+      const deferred = $.Deferred();
+      const parentEl = document.querySelector(response.selector || 'body');
+      const settings = ajax.settings || drupalSettings;
+      const scriptsSrc = response.data.map((script) => {
+        // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
+        // guaranteed to be unique.
+        // @see Drupal.behaviors.AJAX.detach
+        const uniqueBundleID = script.src + ajax.instanceIndex;
+        loadjs(script.src, uniqueBundleID, {
+          async: !!script.async,
+          before(path, scriptEl) {
+            if (script.defer) {
+              scriptEl.defer = true;
+            }
+            // To avoid synchronous XMLHttpRequest on the main thread and break
+            // load dependency, it should not use jQuery.
+            parentEl.appendChild(scriptEl);
+            // Return `false` to bypass loadjs' default DOM insertion mechanism.
+            return false;
+          },
+        });
+        return uniqueBundleID;
+      });
+      loadjs.ready(scriptsSrc, {
+        success() {
+          Drupal.attachBehaviors(parentEl, settings);
+          // All JS files were loaded and new and old behaviors have
+          // been attached, resolve the promise and let the rest of the commands
+          // execute.
+          deferred.resolve();
+        },
+      });
+      // Returns the promise so that the next commands waits on the completion
+      // of this one to execute, ensuring the JS is loaded before executing.
+      return deferred.promise();
+    },
   };
-})(jQuery, window, Drupal, drupalSettings, window.tabbable);
+})(jQuery, window, Drupal, drupalSettings, loadjs, window.tabbable);
