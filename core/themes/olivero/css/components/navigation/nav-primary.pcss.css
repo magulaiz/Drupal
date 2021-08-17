@@ -176,6 +176,10 @@
   line-height: var(--sp);
 }
 
+.primary-nav__menu-item--level-2 {
+  padding-block: var(--sp0-5);
+}
+
 html:not(.js) {
   & .primary-nav__menu--level-2 {
     visibility: visible;
