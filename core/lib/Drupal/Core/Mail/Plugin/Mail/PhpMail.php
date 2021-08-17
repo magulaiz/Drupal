@@ -87,7 +87,7 @@ class PhpMail implements MailInterface {
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
       if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
-        $value = explode(',', $value);
+        $value = str_getcsv($value, ',');
       }
       $headers->addHeader($name, $value);
     }
