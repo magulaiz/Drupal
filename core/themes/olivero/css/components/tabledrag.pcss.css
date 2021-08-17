@@ -53,28 +53,19 @@ a.tabledrag-handle .handle {
   padding: 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   a.tabledrag-handle .handle {
     position: relative;
     background: none;
     font-weight: normal;
 
-    &::before,
-    &::after {
+    &::before {
       position: absolute;
       top: 0.25rem;
       left: 0.5625rem;
-      transform: rotate(45deg);
+      content: "≡";
       font-size: 1.25rem;
       line-height: 1;
-    }
-
-    &::before {
-      content: "⤩";
-    }
-
-    &::after {
-      content: "⤧";
     }
   }
 
