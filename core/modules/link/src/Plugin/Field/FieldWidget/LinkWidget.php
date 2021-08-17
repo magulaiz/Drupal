@@ -191,7 +191,7 @@ class LinkWidget extends WidgetBase {
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\link\LinkItemInterface $item */
     $item = $items[$delta];
-    $entity = $item->getEntity();
+
     $element['uri'] = [
       '#type' => 'url',
       '#title' => $this->t('URL'),
