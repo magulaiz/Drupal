@@ -183,11 +183,23 @@ trait SqlFieldableEntityTypeListenerTrait {
     $temporary_storage->setFieldStorageDefinitions($field_storage_definitions);
     $temporary_storage->setTableMapping($sandbox['temporary_table_mapping']);
 
+    // Entities that start with id 0 (e.g. user) need to start revision ids with 1
+    if (!isset($sandbox['minimal_entity_id'])) {
+      $minimal_ids = $this->database->select($table_name, 't')
+        ->fields('t', [$identifier_field])
+        ->orderBy($identifier_field, 'ASC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchCol();
+      $sandbox['minimal_entity_id'] = $minimal_ids ? $minimal_ids[0] : 1;
+    }
+    $revision_id_insert_offset = $sandbox['minimal_entity_id'] == 0 ? 1 : 0;
+
     foreach ($entities as $identifier => $entity) {
       try {
         if (!$original->isRevisionable() && $entity_type->isRevisionable()) {
           // Set the revision ID to be same as the entity ID.
-          $entity->set($revision_id_key, $entity->id());
+          $entity->set($revision_id_key, $entity->id() + $revision_id_insert_offset);
 
           // We had no revisions so far, so the existing data belongs to the
           // default revision now.
