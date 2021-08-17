@@ -414,7 +414,7 @@ class LinkWidget extends WidgetBase {
 
       $value += ['options' => []];
       $value['options']['context'] = [
-        $entity->getEntityTypeId() => $entity,
+        $entity->getEntityTypeId() => $entity->id(),
       ];
     }
     return $values;
