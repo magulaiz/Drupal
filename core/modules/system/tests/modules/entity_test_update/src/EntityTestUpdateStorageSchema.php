@@ -36,4 +36,14 @@ class EntityTestUpdateStorageSchema extends SqlContentEntityStorageSchema {
     return $schema;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function processIdentifierSchema(&$schema, $key) {
+    // The "entity_test_update" table does not use serial identifiers.
+    if ($key != $this->entityType->getKey('id')) {
+      parent::processIdentifierSchema($schema, $key);
+    }
+  }
+
 }
