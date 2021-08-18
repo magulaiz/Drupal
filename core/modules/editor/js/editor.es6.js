@@ -162,7 +162,7 @@
           },
         ],
         // Prevent this modal from being closed without the user making a choice
-        // as per http://stackoverflow.com/a/5438771.
+        // as per https://stackoverflow.com/a/5438771.
         closeOnEscape: false,
         create() {
           $(this).parent().find('.ui-dialog-titlebar-close').remove();
