@@ -358,36 +358,36 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testTypedData() {
     $entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
-    $entityTypeBundleInfo->expects($this->at(0))
+    $entityTypeBundleInfo->expects($this->once())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
       ->will($this->returnValue([
         $this->randomMachineName() => TRUE,
         $this->randomMachineName() => TRUE,
       ]));
-    $entityTypeBundleInfo->expects($this->at(1))
+    $entityTypeBundleInfo->expects($this->once())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
       ->will($this->returnValue([]));
-    $entityTypeBundleInfo->expects($this->at(2))
+    $entityTypeBundleInfo->expects($this->once())
       ->method('getBundleInfo')
       ->with($this->entityTypeId)
       ->will($this->returnValue([]));
 
     $typedDataManager = $this->createMock(TypedDataManagerInterface::class);
-    $typedDataManager->expects($this->at(0))
+    $typedDataManager->expects($this->once())
       ->method('getDefinition')
       ->with("entity:{$this->entityTypeId}:{$this->bundle}")
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
-    $typedDataManager->expects($this->at(1))
+    $typedDataManager->expects($this->once())
       ->method('getDefinition')
       ->with("entity:{$this->entityTypeId}")
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
-    $typedDataManager->expects($this->at(2))
+    $typedDataManager->expects($this->once())
       ->method('getDefinition')
       ->with("entity:{$this->entityTypeId}")
       ->will($this->returnValue(NULL));
-    $typedDataManager->expects($this->at(3))
+    $typedDataManager->expects($this->once())
       ->method('getDefinition')
       ->with("entity")
       ->will($this->returnValue(['class' => '\Drupal\Core\Entity\Plugin\DataType\EntityAdapter']));
