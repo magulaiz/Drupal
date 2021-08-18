@@ -108,7 +108,7 @@
         // format that image2 uses for both to formats that are better suited
         // for extending, so that both this basic drupalimage plugin and Drupal
         // modules can easily extend it.
-        // @see http://docs.ckeditor.com/#!/api/CKEDITOR.filter.allowedContentRules
+        // @see https://docs.ckeditor.com/#!/api/CKEDITOR.filter.allowedContentRules
         // Mapped from image2's allowedContent. Unlike image2, we don't allow
         // <figure>, <figcaption>, <div> or <p>  in our downcast, so we omit
         // those. For the <img> tag, we list all attributes it lists, but omit
@@ -186,12 +186,12 @@
         // Overrides default implementation. Used to populate the "classes"
         // property of the widget's "data" property, which is used for the
         // "widget styles" functionality
-        // (http://docs.ckeditor.com/#!/guide/dev_styles-section-widget-styles).
+        // (https://docs.ckeditor.com/#!/guide/dev_styles-section-widget-styles).
         // Is applied to whatever the main element of the widget is (<figure> or
         // <img>). The classes in image2_captionedClass are always added due to
         // a bug in CKEditor. In the case of drupalimage, we don't ever want to
         // add that class, because the widget template already contains it.
-        // @see http://dev.ckeditor.com/ticket/13888
+        // @see https://dev.ckeditor.com/ticket/13888
         // @see https://www.drupal.org/node/2268941
         const originalGetClasses = widgetDefinition.getClasses;
         widgetDefinition.getClasses = function () {

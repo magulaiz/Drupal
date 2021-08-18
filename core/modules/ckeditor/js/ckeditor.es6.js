@@ -88,7 +88,7 @@
 
         // A temporary workaround to control scrollbar appearance when using
         // autoGrow event to control editor's height.
-        // @todo Remove when http://dev.ckeditor.com/ticket/12120 is fixed.
+        // @todo Remove when https://dev.ckeditor.com/ticket/12120 is fixed.
         editor.on('mode', () => {
           const editable = editor.editable();
           if (!editable.isInline()) {
@@ -366,7 +366,7 @@
      * @param {number} [status]
      *   The XMLHttpRequest status.
      *
-     * @see http://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
+     * @see https://docs.ckeditor.com/#!/api/CKEDITOR.dom.document
      */
     AjaxCommands.prototype.ckeditor_add_stylesheet = function (
       ajax,

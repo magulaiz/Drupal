@@ -355,7 +355,7 @@
 
   // Expose an API for other plugins to interact with drupallink widgets.
   // (Compatible with the official CKEditor link plugin's API:
-  // http://dev.ckeditor.com/ticket/13885.)
+  // https://dev.ckeditor.com/ticket/13885.)
   CKEDITOR.plugins.drupallink = {
     parseLinkAttributes: parseAttributes,
     getLinkAttributes: getAttributes,

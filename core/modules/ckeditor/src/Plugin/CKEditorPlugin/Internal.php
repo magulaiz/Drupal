@@ -391,7 +391,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
    *
    * This ensures that CKEditor obeys the HTML restrictions defined by Drupal's
    * filter system, by enabling CKEditor's Advanced Content Filter (ACF)
-   * functionality: http://ckeditor.com/blog/CKEditor-4.1-RC-Released.
+   * functionality: https://ckeditor.com/blog/CKEditor-4.1-RC-Released.
    *
    * @see getConfig()
    *
