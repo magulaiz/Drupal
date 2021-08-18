@@ -64,7 +64,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
 
     $config_translation = $language_manager->getLanguageConfigOverride('fr', 'field.field.user.user.profile_blog');
     $this->assertSame('fr - Blog', $config_translation->get('label'));
-    $this->assertSame('fr - Paste the full URL, including http://, of your personal blog.', $config_translation->get('description'));
+    $this->assertSame('fr - Paste the full URL, including https://, of your personal blog.', $config_translation->get('description'));
   }
 
 }
