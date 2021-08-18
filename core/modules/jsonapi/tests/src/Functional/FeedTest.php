@@ -76,13 +76,13 @@ class FeedTest extends ResourceTestBase {
     $feed = Feed::create();
     $feed->set('fid', 1)
       ->setTitle('Feed')
-      ->setUrl('http://example.com/rss.xml')
+      ->setUrl('https://example.com/rss.xml')
       ->setDescription('Feed Resource Test 1')
       ->setRefreshRate(900)
       ->setLastCheckedTime(123456789)
       ->setQueuedTime(123456789)
-      ->setWebsiteUrl('http://example.com')
-      ->setImage('http://example.com/feed_logo')
+      ->setWebsiteUrl('https://example.com')
+      ->setImage('https://example.com/feed_logo')
       ->setHash('abcdefg')
       ->setEtag('hijklmn')
       ->setLastModified(123456789)
@@ -98,7 +98,7 @@ class FeedTest extends ResourceTestBase {
     /** @var \Drupal\aggregator\FeedInterface $duplicate */
     $duplicate = $this->getEntityDuplicate($this->entity, $key);
     $duplicate->set('field_rest_test', 'Duplicate feed entity');
-    $duplicate->setUrl("http://example.com/$key.xml");
+    $duplicate->setUrl("https://example.com/$key.xml");
     $duplicate->save();
     return $duplicate;
   }
@@ -112,7 +112,7 @@ class FeedTest extends ResourceTestBase {
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
+            'self' => ['href' => 'https://jsonapi.org/format/1.0/'],
           ],
         ],
         'version' => '1.0',
@@ -127,14 +127,14 @@ class FeedTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'url' => 'http://example.com/rss.xml',
+          'url' => 'https://example.com/rss.xml',
           'title' => 'Feed',
           'refresh' => 900,
           'checked' => '1973-11-29T21:33:09+00:00',
           'queued' => '1973-11-29T21:33:09+00:00',
-          'link' => 'http://example.com',
+          'link' => 'https://example.com',
           'description' => 'Feed Resource Test 1',
-          'image' => 'http://example.com/feed_logo',
+          'image' => 'https://example.com/feed_logo',
           'hash' => 'abcdefg',
           'etag' => 'hijklmn',
           'modified' => '1973-11-29T21:33:09+00:00',
@@ -154,7 +154,7 @@ class FeedTest extends ResourceTestBase {
         'type' => 'aggregator_feed--aggregator_feed',
         'attributes' => [
           'title' => 'Feed Resource Post Test',
-          'url' => 'http://example.com/feed',
+          'url' => 'https://example.com/feed',
           'refresh' => 900,
           'description' => 'Feed Resource Post Test Description',
         ],

@@ -91,7 +91,7 @@ class BlockTest extends ResourceTestBase {
       'jsonapi' => [
         'meta' => [
           'links' => [
-            'self' => ['href' => 'http://jsonapi.org/format/1.0/'],
+            'self' => ['href' => 'https://jsonapi.org/format/1.0/'],
           ],
         ],
         'version' => '1.0',

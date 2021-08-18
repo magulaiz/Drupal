@@ -23,7 +23,7 @@ class HttpExceptionNormalizerTest extends UnitTestCase {
    */
   public function testNormalize() {
     $request_stack = $this->prophesize(RequestStack::class);
-    $request_stack->getCurrentRequest()->willReturn(Request::create('http://localhost/'));
+    $request_stack->getCurrentRequest()->willReturn(Request::create('https://localhost/'));
     $container = $this->prophesize(ContainerInterface::class);
     $container->get('request_stack')->willReturn($request_stack->reveal());
     \Drupal::setContainer($container->reveal());

@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  *
- * @see http://jsonapi.org/format/#error-objects
+ * @see https://jsonapi.org/format/#error-objects
  */
 class HttpExceptionNormalizer extends NormalizerBase {
 
@@ -118,7 +118,7 @@ class HttpExceptionNormalizer extends NormalizerBase {
    */
   public static function getInfoUrl($status_code) {
     // Depending on the error code we'll return a different URL.
-    $url = 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
+    $url = 'https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html';
     $sections = [
       '100' => '#sec10.1.1',
       '101' => '#sec10.1.2',

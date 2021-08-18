@@ -99,7 +99,7 @@ class MessageTest extends ResourceTestBase {
         'type' => 'contact_message--camelids',
         'attributes' => [
           'subject' => 'Dramallama',
-          'message' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
+          'message' => 'https://www.urbandictionary.com/define.php?term=drama%20llama',
         ],
       ],
     ];
