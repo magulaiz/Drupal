@@ -65,8 +65,8 @@ class LinkUriTest extends KernelTestBase {
   public function providerTestRouted() {
     $tests = [];
 
-    $value = 'http://example.com';
-    $expected = 'http://example.com';
+    $value = 'https://example.com';
+    $expected = 'https://example.com';
     $tests['with_scheme'] = [$value, $expected];
 
     $value = '<front>';

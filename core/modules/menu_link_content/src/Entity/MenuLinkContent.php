@@ -339,7 +339,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
 
     $fields['external'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('External'))
-      ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like http:// (1 = external, 0 = internal).'))
+      ->setDescription(t('A flag to indicate if the link points to a full URL starting with a protocol, like https:// (1 = external, 0 = internal).'))
       ->setDefaultValue(FALSE)
       ->setRevisionable(TRUE);
 
