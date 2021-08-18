@@ -92,7 +92,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
-          'placeholder_url' => 'http://example.com',
+          'placeholder_url' => 'https://example.com',
         ],
       ])
       ->save();
@@ -105,7 +105,7 @@ class LinkFieldTest extends BrowserTestBase {
     // Display creation form.
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-    $this->assertSession()->responseContains('placeholder="http://example.com"');
+    $this->assertSession()->responseContains('placeholder="https://example.com"');
 
     // Create a path alias.
     $this->createPathAlias('/admin', '/a/path/alias');
@@ -118,11 +118,11 @@ class LinkFieldTest extends BrowserTestBase {
     // Define some valid URLs (keys are the entered values, values are the
     // strings displayed to the user).
     $valid_external_entries = [
-      'http://www.example.com/' => 'http://www.example.com/',
+      'https://www.example.com/' => 'https://www.example.com/',
       // Strings within parenthesis without leading space char.
-      'http://www.example.com/strings_(string_within_parenthesis)' => 'http://www.example.com/strings_(string_within_parenthesis)',
+      'https://www.example.com/strings_(string_within_parenthesis)' => 'https://www.example.com/strings_(string_within_parenthesis)',
       // Numbers within parenthesis without leading space char.
-      'http://www.example.com/numbers_(9999)' => 'http://www.example.com/numbers_(9999)',
+      'https://www.example.com/numbers_(9999)' => 'https://www.example.com/numbers_(9999)',
     ];
     $valid_internal_entries = [
       '/entity_test/add' => '/entity_test/add',
@@ -170,7 +170,7 @@ class LinkFieldTest extends BrowserTestBase {
       // Invalid protocol
       'invalid://not-a-valid-protocol' => $validation_error_1,
       // Missing host name
-      'http://' => $validation_error_1,
+      'https://' => $validation_error_1,
     ];
     $invalid_internal_entries = [
       'no-leading-slash' => $validation_error_2,
@@ -273,7 +273,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->setComponent($field_name, [
         'type' => 'link_default',
         'settings' => [
-          'placeholder_url' => 'http://example.com',
+          'placeholder_url' => 'https://example.com',
           'placeholder_title' => 'Enter the text for this link',
         ],
       ])
@@ -296,7 +296,7 @@ class LinkFieldTest extends BrowserTestBase {
       // Assert label is shown.
       $this->assertSession()->pageTextContains('Read more about this entity');
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
-      $this->assertSession()->responseContains('placeholder="http://example.com"');
+      $this->assertSession()->responseContains('placeholder="https://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
@@ -317,7 +317,7 @@ class LinkFieldTest extends BrowserTestBase {
         if ($title_setting === DRUPAL_REQUIRED) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = [
-            "{$field_name}[0][uri]" => 'http://www.example.com',
+            "{$field_name}[0][uri]" => 'https://www.example.com',
           ];
           $this->submitForm($edit, 'Save');
           $this->assertSession()->pageTextContains('Link text field is required if there is URL input.');
@@ -332,7 +332,7 @@ class LinkFieldTest extends BrowserTestBase {
           // Verify that a URL and link text meets requirements.
           $this->drupalGet('entity_test/add');
           $edit = [
-            "{$field_name}[0][uri]" => 'http://www.example.com',
+            "{$field_name}[0][uri]" => 'https://www.example.com',
             "{$field_name}[0][title]" => 'Example',
           ];
           $this->submitForm($edit, 'Save');
@@ -342,7 +342,7 @@ class LinkFieldTest extends BrowserTestBase {
     }
 
     // Verify that a link without link text is rendered using the URL as text.
-    $value = 'http://www.example.com/';
+    $value = 'https://www.example.com/';
     $edit = [
       "{$field_name}[0][uri]" => $value,
       "{$field_name}[0][title]" => '',
@@ -414,8 +414,8 @@ class LinkFieldTest extends BrowserTestBase {
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('entity_test/add');
-    $url1 = 'http://www.example.com/content/articles/archive?author=John&year=2012#com';
-    $url2 = 'http://www.example.org/content/articles/archive?author=John&year=2012#org';
+    $url1 = 'https://www.example.com/content/articles/archive?author=John&year=2012#com';
+    $url2 = 'https://www.example.org/content/articles/archive?author=John&year=2012#org';
     $url3 = '#net';
     $title1 = $url1;
     // Intentionally contains an ampersand that needs sanitization on output.
@@ -570,8 +570,8 @@ class LinkFieldTest extends BrowserTestBase {
     // For consistency in assertion code below, the URL is assigned to the title
     // variable for the first field.
     $this->drupalGet('entity_test/add');
-    $url1 = 'http://www.example.com/content/articles/archive?author=John&year=2012#com';
-    $url2 = 'http://www.example.org/content/articles/archive?author=John&year=2012#org';
+    $url1 = 'https://www.example.com/content/articles/archive?author=John&year=2012#com';
+    $url2 = 'https://www.example.org/content/articles/archive?author=John&year=2012#org';
     $url3 = '#net';
     // Intentionally contains an ampersand that needs sanitization on output.
     $title2 = 'A very long & strange example title that could break the nice layout of the site';

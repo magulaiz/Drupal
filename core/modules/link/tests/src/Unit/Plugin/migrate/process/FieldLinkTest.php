@@ -54,12 +54,12 @@ class FieldLinkTest extends UnitTestCase {
         'scheme:test',
       ],
       'Absolute URL with protocol prefix' => [
-        'http://www.google.com',
-        'http://www.google.com',
+        'https://www.google.com',
+        'https://www.google.com',
       ],
       'Absolute URL without protocol prefix' => [
         'www.yahoo.com',
-        'http://www.yahoo.com',
+        'https://www.yahoo.com',
       ],
       'Absolute URL without protocol prefix nor www' => [
         'yahoo.com',
@@ -67,24 +67,24 @@ class FieldLinkTest extends UnitTestCase {
         ['uri_scheme' => 'https://'],
       ],
       'Absolute URL with non-standard characters' => [
-        'http://www.ßÀÑÐ¥ƒå¢ë.com',
-        'http://www.ßÀÑÐ¥ƒå¢ë.com',
+        'https://www.ßÀÑÐ¥ƒå¢ë.com',
+        'https://www.ßÀÑÐ¥ƒå¢ë.com',
       ],
       'Absolute URL with non-standard characters, without protocol prefix' => [
         'www.ÐØÑ¢åþë.com',
-        'http://www.ÐØÑ¢åþë.com',
+        'https://www.ÐØÑ¢åþë.com',
       ],
       'Absolute URL with non-standard top level domain' => [
-        'http://www.example.xxx',
-        'http://www.example.xxx',
+        'https://www.example.xxx',
+        'https://www.example.xxx',
       ],
       'Internal link with fragment' => [
         '/node/10#top',
         'internal:/node/10#top',
       ],
       'External link with fragment' => [
-        'http://www.example.com/page#links',
-        'http://www.example.com/page#links',
+        'https://www.example.com/page#links',
+        'https://www.example.com/page#links',
       ],
       'empty' => [
         '',
