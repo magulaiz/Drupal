@@ -84,7 +84,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
       ],
       'message' => [
         [
-          'value' => 'http://www.urbandictionary.com/define.php?term=drama%20llama',
+          'value' => 'https://www.urbandictionary.com/define.php?term=drama%20llama',
         ],
       ],
     ];
