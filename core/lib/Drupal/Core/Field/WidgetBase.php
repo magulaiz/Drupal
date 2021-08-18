@@ -5,6 +5,7 @@ namespace Drupal\Core\Field;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\Element;
@@ -393,13 +394,17 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
       // Let the widget massage the submitted values.
       $values = $this->massageFormValues($values, $form, $form_state);
+      $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
 
       // Assign the values and remove the empty ones.
-      $items->setValue($values);
-      $items->filterEmptyItems();
+      $widget = NestedArray::getValue($form, $field_state['array_parents']);
+      $access = $widget['#access'] ?? TRUE;
+      if ($access !== FALSE && (!$access instanceof AccessResultInterface || $access->isAllowed())) {
+        $items->setValue($values);
+        $items->filterEmptyItems();
+      }
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
-      $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
       foreach ($items as $delta => $item) {
         $field_state['original_deltas'][$delta] = $item->_original_delta ?? $delta;
         unset($item->_original_delta, $item->_weight);
