@@ -65,6 +65,15 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
+    // Create a new user and login.
+    $user = $this->drupalCreateUser([
+      'view any workspace',
+      'edit any workspace',
+      'access toolbar',
+      'access administration pages',
+    ]);
+    $this->drupalLogin($user);
+
     // Wait for toolbar to appear.
     $this->getSession()->resizeWindow(1200, 600);
     $this->drupalGet('admin');
@@ -85,6 +94,11 @@ class WorkspaceToolbarIntegrationTest extends OffCanvasTestBase {
     // Make sure we stay on same page after switch.
     $assert_session->responseContains('<em class="placeholder">Stage</em> is now the active workspace.');
     $assert_session->addressEquals('admin');
+
+    // Check if 'Publish content' link is not displayed.
+    $page->clickLink('Switch workspace');
+    $this->waitForOffCanvasToOpen('top');
+    $assert_session->pageTextNotContains('Publish content');
   }
 
 }
