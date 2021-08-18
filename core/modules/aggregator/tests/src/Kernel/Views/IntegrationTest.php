@@ -92,7 +92,7 @@ class IntegrationTest extends ViewsKernelTestBase {
       $values['title'] = $this->randomMachineName();
       $values['description'] = $this->randomMachineName();
       // Add an image to ensure that the sanitizing can be tested below.
-      $values['author'] = $this->randomMachineName() . '<img src="http://example.com/example.png" \>"';
+      $values['author'] = $this->randomMachineName() . '<img src="https://example.com/example.png" \>"';
       $values['link'] = 'https://www.drupal.org/node/' . mt_rand(1000, 10000);
       $values['guid'] = $this->randomString();
 

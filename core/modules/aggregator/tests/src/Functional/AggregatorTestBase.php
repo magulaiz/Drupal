@@ -296,7 +296,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
 
     <!-- Test for duplicate URL and title. -->
     <outline xmlurl="{$feeds[0]['url[0][value]']}" text="Duplicate URL"/>
-    <outline xmlurl="http://duplicate.title" text="{$feeds[1]['title[0][value]']}"/>
+    <outline xmlurl="https://duplicate.title" text="{$feeds[1]['title[0][value]']}"/>
 
     <!-- Test that feeds are only added with required attributes. -->
     <outline text="{$feeds[2]['title[0][value]']}" />

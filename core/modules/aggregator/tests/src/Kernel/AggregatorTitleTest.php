@@ -53,7 +53,7 @@ class AggregatorTitleTest extends KernelTestBase {
     // Create an aggregator feed.
     $aggregator_feed = Feed::create([
       'title' => 'testing title',
-      'url' => 'http://www.example.com',
+      'url' => 'https://www.example.com',
     ]);
     $aggregator_feed->save();
 
@@ -61,7 +61,7 @@ class AggregatorTitleTest extends KernelTestBase {
     $aggregator_item = Item::create([
       'title' => 'test title',
       'fid' => $aggregator_feed->id(),
-      'link' => 'http://www.example.com',
+      'link' => 'https://www.example.com',
       ]);
     $aggregator_item->save();
 
