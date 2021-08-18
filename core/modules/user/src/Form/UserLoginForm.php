@@ -240,11 +240,6 @@ class UserLoginForm extends FormBase {
         $form_state->setResponse(new Response($message, 403));
       }
       else {
-        // Use $form_state->getUserInput() in the error message to guarantee
-        // that we send exactly what the user typed in. The value from
-        // $form_state->getValue() may have been modified by validation
-        // handlers that ran earlier than this one.
-        $user_input = $form_state->getUserInput();
         $form_state->setErrorByName('name', $this->t('Unrecognized username or password. <a href=":password">Forgot your password?</a>', [':password' => Url::fromRoute('user.pass')->toString()]));
         $accounts = $this->userStorage->loadByProperties(['name' => $form_state->getValue('name')]);
         if (!empty($accounts)) {
