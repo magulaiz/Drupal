@@ -926,7 +926,7 @@ class BookManager implements BookManagerInterface {
       // The order of expressions must be reversed so the new values don't
       // overwrite the old ones before they can be used because "Single-table
       // UPDATE assignments are generally evaluated from left to right".
-      // @see http://dev.mysql.com/doc/refman/5.0/en/update.html
+      // @see https://dev.mysql.com/doc/refman/5.0/en/update.html
       $expressions = array_reverse($expressions);
     }
 
