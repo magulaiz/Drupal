@@ -11,7 +11,7 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
-# - Eslint checks JavaScript files.
+# - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
 # - Checks .pcss.css and .css files are equivalent.
@@ -107,10 +107,17 @@ fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
 
+# This variable will be set to one when the file core/phpcs.xml.dist is changed.
+PHPCS_XML_DIST_FILE_CHANGED=0
+
 # Build up a list of absolute file names.
 ABS_FILES=
 for FILE in $FILES; do
   ABS_FILES="$ABS_FILES $TOP_LEVEL/$FILE"
+
+  if [[ $FILE == "core/phpcs.xml.dist" ]]; then
+    PHPCS_XML_DIST_FILE_CHANGED=1;
+  fi;
 done
 
 # Exit early if there are no files.
@@ -123,8 +130,31 @@ fi;
 # run and all dependencies are updated.
 FINAL_STATUS=0
 
-# Check all files for spelling in one go for better performance.
+DEPENDENCIES_NEED_INSTALLING=0
+# Ensure PHP development dependencies are installed.
+# @todo https://github.com/composer/composer/issues/4497 Improve this to
+#  determine if dependencies in the lock file match the installed versions.
+#  Using composer install --dry-run is not valid because it would depend on
+#  user-facing strings in Composer.
+if ! [[ -f 'vendor/bin/phpcs' ]]; then
+  printf "Drupal's PHP development dependencies are not installed. Run 'composer install' from the root directory.\n"
+  DEPENDENCIES_NEED_INSTALLING=1;
+fi
+
 cd "$TOP_LEVEL/core"
+
+# Ensure JavaScript development dependencies are installed.
+yarn check -s 2>/dev/null
+if [ "$?" -ne "0" ]; then
+  printf "Drupal's JavaScript development dependencies are not installed. Run 'yarn install' inside the core directory.\n"
+  DEPENDENCIES_NEED_INSTALLING=1;
+fi
+
+if [ $DEPENDENCIES_NEED_INSTALLING -ne 0 ]; then
+  exit 1;
+fi
+
+# Check all files for spelling in one go for better performance.
 yarn run -s spellcheck -c $TOP_LEVEL/core/.cspell.json $ABS_FILES
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
@@ -139,6 +169,20 @@ cd "$TOP_LEVEL"
 printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
+
+# When the file core/phpcs.xml.dist has been changed, then PHPCS must check all files.
+if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
+  # Test all files with phpcs rules.
+  vendor/bin/phpcs -ps --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  PHPCS=$?
+  if [ "$PHPCS" -ne "0" ]; then
+    # If there are failures set the status to a number other than 0.
+    FINAL_STATUS=1
+    printf "\nPHPCS: ${red}failed${reset}\n"
+  else
+    printf "\nPHPCS: ${green}passed${reset}\n"
+  fi
+fi
 
 for FILE in $FILES; do
   STATUS=0;
@@ -176,7 +220,7 @@ for FILE in $FILES; do
   ############################################################################
   ### PHP AND YAML FILES
   ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]]; then
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]]; then
     # Test files with phpcs rules.
     vendor/bin/phpcs "$TOP_LEVEL/$FILE" --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
     PHPCS=$?
@@ -186,6 +230,23 @@ for FILE in $FILES; do
     else
       printf "PHPCS: $FILE ${green}passed${reset}\n"
     fi
+  fi
+
+  ############################################################################
+  ### YAML FILES
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then
+    # Test files with ESLint.
+    cd "$TOP_LEVEL/core"
+    node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . "$TOP_LEVEL/$FILE"
+    YAMLLINT=$?
+    if [ "$YAMLLINT" -ne "0" ]; then
+      # If there are failures set the status to a number other than 0.
+      STATUS=1
+    else
+      printf "ESLint: $FILE ${green}passed${reset}\n"
+    fi
+    cd $TOP_LEVEL
   fi
 
   ############################################################################
