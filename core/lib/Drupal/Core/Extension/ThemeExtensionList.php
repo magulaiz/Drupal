@@ -265,6 +265,10 @@ class ThemeExtensionList extends ExtensionList {
   protected function createExtensionInfo(Extension $extension) {
     $info = parent::createExtensionInfo($extension);
 
+    if (!is_string($info['description'])) {
+      throw new InfoParserException(sprintf('Key "description" must be a string in %s/%s', $extension->getPath(), $extension->getFilename()));
+    }
+
     if (!isset($info['base theme'])) {
       throw new InfoParserException(sprintf('Missing required key ("base theme") in %s/%s, see https://www.drupal.org/node/3066038', $extension->getExtensionPathname(), $extension->getExtensionFilename()));
     }
