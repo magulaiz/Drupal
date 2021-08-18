@@ -333,28 +333,30 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   }
 
   /**
+   * Tests each condition in EntityBase::getTypedData().
+   *
+   * The following will be tested in order:
+   *
+   * 1. entity:$entity_type:$bundle
+   * 2. entity:$entity_type
+   * 3. entity
+   *
+   * To accomplish this, the first calls to bundle info and typed data should
+   * return more than one bundle and a valid typed data plugin definition,
+   * respectively.
+   *
+   * The second calls to each of these should return an empty bundle list and
+   * a valid typed data plugin definition to cause only an entity type
+   * derivative to be valid.
+   *
+   * The third calls to each of these should return an empty bundle list and
+   * NULL respectively to result in the default EntityAdapter.
+   *
+   * A fourth call can be expected to typed data for the base data type.
+   *
    * @covers ::getTypedData
    */
   public function testTypedData() {
-    // The goal of this test is to cover each condition in
-    // EntityBase::getTypedData(). The following will be tested in order:
-    //
-    // 1. entity:$entity_type:$bundle
-    // 2. entity:$entity_type
-    // 3. entity
-    //
-    // To accomplish this, the first calls to bundle info and typed data should
-    // return more than one bundle and a valid typed data plugin definition,
-    // respectively.
-    //
-    // The second calls to each of these should return an empty bundle list and
-    // a valid typed data plugin definition to cause only an entity type
-    // derivative to be valid.
-    //
-    // The third calls to each of these should return an empty bundle list and
-    // NULL respectively to result in the default EntityAdapter.
-    //
-    // A fourth call can be expected to typed data for the base data type.
     $entityTypeBundleInfo = $this->createMock(EntityTypeBundleInfoInterface::class);
     $entityTypeBundleInfo->expects($this->at(0))
       ->method('getBundleInfo')
