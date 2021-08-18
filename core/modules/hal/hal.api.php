@@ -29,7 +29,7 @@
 function hook_hal_type_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('hal.settings')->get('link_domain');
-    $uri = str_replace($base, 'http://mymodule.domain', $uri);
+    $uri = str_replace($base, 'https://mymodule.domain', $uri);
   }
 }
 
@@ -52,7 +52,7 @@ function hook_hal_type_uri_alter(&$uri, $context = []) {
 function hook_hal_relation_uri_alter(&$uri, $context = []) {
   if ($context['mymodule'] == TRUE) {
     $base = \Drupal::config('hal.settings')->get('link_domain');
-    $uri = str_replace($base, 'http://mymodule.domain', $uri);
+    $uri = str_replace($base, 'https://mymodule.domain', $uri);
   }
 }
 

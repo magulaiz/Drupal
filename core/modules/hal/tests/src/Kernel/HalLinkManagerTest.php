@@ -113,19 +113,19 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
       'configured URL' => [
-        'link_domain' => 'http://llamas-rock.com/for-real/',
+        'link_domain' => 'https://llamas-rock.com/for-real/',
         'entity_type' => 'node',
         'bundle' => 'page',
         'context' => [],
-        'expected return' => 'http://llamas-rock.com/for-real/rest/type/node/page',
+        'expected return' => 'https://llamas-rock.com/for-real/rest/type/node/page',
         'expected context' => [],
       ],
       'configured URL, with optional context to collect cacheability metadata' => [
-        'link_domain' => 'http://llamas-rock.com/for-real/',
+        'link_domain' => 'https://llamas-rock.com/for-real/',
         'entity_type' => 'node',
         'bundle' => 'page',
         'context' => $serialization_context_collecting_cacheability,
-        'expected return' => 'http://llamas-rock.com/for-real/rest/type/node/page',
+        'expected return' => 'https://llamas-rock.com/for-real/rest/type/node/page',
         'expected context' => [
           CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
@@ -196,21 +196,21 @@ class HalLinkManagerTest extends KernelTestBase {
         'expected context' => ['hal_test' => TRUE] + $serialization_context_collecting_cacheability,
       ],
       'configured URL' => [
-        'link_domain' => 'http://llamas-rock.com/for-real/',
+        'link_domain' => 'https://llamas-rock.com/for-real/',
         'entity_type' => 'node',
         'bundle' => 'page',
         'field_name' => $field_name,
         'context' => [],
-        'expected return' => 'http://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
+        'expected return' => 'https://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
         'expected context' => [],
       ],
       'configured URL, with optional context to collect cacheability metadata' => [
-        'link_domain' => 'http://llamas-rock.com/for-real/',
+        'link_domain' => 'https://llamas-rock.com/for-real/',
         'entity_type' => 'node',
         'bundle' => 'page',
         'field_name' => $field_name,
         'context' => $serialization_context_collecting_cacheability,
-        'expected return' => 'http://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
+        'expected return' => 'https://llamas-rock.com/for-real/rest/relation/node/page/' . $field_name,
         'expected context' => [
           CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY => (new CacheableMetadata())->setCacheTags(['config:hal.settings']),
         ],
@@ -244,12 +244,12 @@ class HalLinkManagerTest extends KernelTestBase {
 
     /** @var \Drupal\hal\LinkManager\LinkManager $link_manager */
     $link_manager = \Drupal::service('hal.link_manager');
-    $link_manager->setLinkDomain('http://example.com/');
+    $link_manager->setLinkDomain('https://example.com/');
     $link = $link_manager->getTypeUri('node', 'page', $serialization_context);
-    $this->assertEquals('http://example.com/rest/type/node/page', $link);
+    $this->assertEquals('https://example.com/rest/type/node/page', $link);
     $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
     $link = $link_manager->getRelationUri('node', 'page', 'field_ref', $serialization_context);
-    $this->assertEquals('http://example.com/rest/relation/node/page/field_ref', $link);
+    $this->assertEquals('https://example.com/rest/relation/node/page/field_ref', $link);
     $this->assertEquals($serialization_context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY], new CacheableMetadata());
   }
 
