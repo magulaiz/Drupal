@@ -936,7 +936,7 @@ function _file_save_upload_single(\SplFileInfo $file_info, $form_field_name, $va
   $original_file_name = $file_info->getClientOriginalName();
   // Check for file upload errors and return FALSE for this file if a lower
   // level system error occurred. For a complete list of errors:
-  // See http://php.net/manual/features.file-upload.errors.php.
+  // See https://php.net/manual/features.file-upload.errors.php.
   switch ($file_info->getError()) {
     case UPLOAD_ERR_INI_SIZE:
     case UPLOAD_ERR_FORM_SIZE:

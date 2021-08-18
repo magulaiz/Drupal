@@ -15,7 +15,7 @@ class FileUrlTest extends FileManagedUnitTestBase {
    * Tests public files with a different host name from settings.
    */
   public function testFilesUrlWithDifferentHostName() {
-    $test_base_url = 'http://www.example.com/cdn';
+    $test_base_url = 'https://www.example.com/cdn';
     $this->setSetting('file_public_base_url', $test_base_url);
     $filepath = \Drupal::service('file_system')->createFilename('test.txt', '');
     $directory_uri = 'public://' . dirname($filepath);
