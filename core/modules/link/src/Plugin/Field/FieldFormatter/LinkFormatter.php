@@ -254,7 +254,7 @@ class LinkFormatter extends FormatterBase {
     if (!empty($settings['target'])) {
       $options['attributes']['target'] = $settings['target'];
     }
-    $options['attributes']['target'] = 'custom_uri';
+
     $url->setOptions($options);
 
     return $url;
