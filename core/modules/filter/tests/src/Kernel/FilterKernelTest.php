@@ -181,8 +181,8 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Ensure the caption filter works for linked images.
-    $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" /></a>';
-    $expected = '<figure role="group"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
+    $input = '<a href="https://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" /></a>';
+    $expected = '<figure role="group"><a href="https://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -306,8 +306,8 @@ class FilterKernelTest extends KernelTestBase {
     $this->assertSame($attached_library, $output->getAttachments());
 
     // Ensure both filters together work for linked images.
-    $input = '<a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" /></a>';
-    $expected = '<figure role="group" class="align-center"><a href="http://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
+    $input = '<a href="https://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" data-caption="Loquacious llama!" data-align="center" /></a>';
+    $expected = '<figure role="group" class="align-center"><a href="https://example.com/llamas/are/awesome/but/kittens/are/cool/too"><img src="llama.jpg" /></a>' . "\n" . '<figcaption>Loquacious llama!</figcaption></figure>';
     $output = $test($input);
     $this->assertSame($expected, $output->getProcessedText());
     $this->assertSame($attached_library, $output->getAttachments());
@@ -509,19 +509,19 @@ class FilterKernelTest extends KernelTestBase {
 
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
-    $f = (string) $filter->process('<a href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<a href="https://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent -- no evasion.');
 
-    $f = (string) $filter->process('<A href="http://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<A href="https://www.example.com/">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- capital A.');
 
-    $f = (string) $filter->process("<a/href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process("<a/href=\"https://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- non whitespace character after tag name.');
 
-    $f = (string) $filter->process("<\0a\0 href=\"http://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process("<\0a\0 href=\"https://www.example.com/\">text</a>", Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- some nulls.');
 
-    $f = (string) $filter->process('<a href="http://www.example.com/" rel="follow">text</a>', Language::LANGCODE_NOT_SPECIFIED);
+    $f = (string) $filter->process('<a href="https://www.example.com/" rel="follow">text</a>', Language::LANGCODE_NOT_SPECIFIED);
     $this->assertNoNormalized($f, 'rel="follow"', 'Spam deterrent evasion -- with rel set - rel="follow" removed.');
     $this->assertNormalized($f, 'rel="nofollow"', 'Spam deterrent evasion -- with rel set - rel="nofollow" added.');
   }
@@ -568,10 +568,10 @@ class FilterKernelTest extends KernelTestBase {
     $tests = [
       // HTTP URLs.
       '
-http://example.com or www.example.com
+https://example.com or www.example.com
 ' => [
-        '<a href="http://example.com">http://example.com</a>' => TRUE,
-        '<a href="http://www.example.com">www.example.com</a>' => TRUE,
+        '<a href="https://example.com">https://example.com</a>' => TRUE,
+        '<a href="https://www.example.com">www.example.com</a>' => TRUE,
       ],
       // MAILTO URLs.
       '
@@ -585,58 +585,58 @@ person@example.com or mailto:person2@example.com or ' . $email_with_plus_sign . 
       ],
       // URI parts and special characters.
       '
-http://trailingslash.com/ or www.trailingslash.com/
-http://host.com/some/path?query=foo&bar[baz]=beer#fragment or www.host.com/some/path?query=foo&bar[baz]=beer#fragment
-http://twitter.com/#!/example/status/22376963142324226
-http://example.com/@user/
+https://trailingslash.com/ or www.trailingslash.com/
+https://host.com/some/path?query=foo&bar[baz]=beer#fragment or www.host.com/some/path?query=foo&bar[baz]=beer#fragment
+https://twitter.com/#!/example/status/22376963142324226
+https://example.com/@user/
 ftp://user:pass@ftp.example.com/~home/dir1
 sftp://user@nonstandardport:222/dir
 ssh://192.168.0.100/srv/git/drupal.git
 ' => [
-        '<a href="http://trailingslash.com/">http://trailingslash.com/</a>' => TRUE,
-        '<a href="http://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
-        '<a href="http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">http://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
-        '<a href="http://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
-        '<a href="http://twitter.com/#!/example/status/22376963142324226">http://twitter.com/#!/example/status/22376963142324226</a>' => TRUE,
-        '<a href="http://example.com/@user/">http://example.com/@user/</a>' => TRUE,
+        '<a href="https://trailingslash.com/">https://trailingslash.com/</a>' => TRUE,
+        '<a href="https://www.trailingslash.com/">www.trailingslash.com/</a>' => TRUE,
+        '<a href="https://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">https://host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
+        '<a href="https://www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment">www.host.com/some/path?query=foo&amp;bar[baz]=beer#fragment</a>' => TRUE,
+        '<a href="https://twitter.com/#!/example/status/22376963142324226">https://twitter.com/#!/example/status/22376963142324226</a>' => TRUE,
+        '<a href="https://example.com/@user/">https://example.com/@user/</a>' => TRUE,
         '<a href="ftp://user:pass@ftp.example.com/~home/dir1">ftp://user:pass@ftp.example.com/~home/dir1</a>' => TRUE,
         '<a href="sftp://user@nonstandardport:222/dir">sftp://user@nonstandardport:222/dir</a>' => TRUE,
         '<a href="ssh://192.168.0.100/srv/git/drupal.git">ssh://192.168.0.100/srv/git/drupal.git</a>' => TRUE,
       ],
       // International Unicode characters.
       '
-http://пример.испытание/
-http://مثال.إختبار/
-http://例子.測試/
-http://12345.中国/
-http://例え.テスト/
-http://dréißig-bücher.de/
-http://méxico-mañana.es/
+https://пример.испытание/
+https://مثال.إختبار/
+https://例子.測試/
+https://12345.中国/
+https://例え.テスト/
+https://dréißig-bücher.de/
+https://méxico-mañana.es/
 ' => [
-        '<a href="http://пример.испытание/">http://пример.испытание/</a>' => TRUE,
-        '<a href="http://مثال.إختبار/">http://مثال.إختبار/</a>' => TRUE,
-        '<a href="http://例子.測試/">http://例子.測試/</a>' => TRUE,
-        '<a href="http://12345.中国/">http://12345.中国/</a>' => TRUE,
-        '<a href="http://例え.テスト/">http://例え.テスト/</a>' => TRUE,
-        '<a href="http://dréißig-bücher.de/">http://dréißig-bücher.de/</a>' => TRUE,
-        '<a href="http://méxico-mañana.es/">http://méxico-mañana.es/</a>' => TRUE,
+        '<a href="https://пример.испытание/">https://пример.испытание/</a>' => TRUE,
+        '<a href="https://مثال.إختبار/">https://مثال.إختبار/</a>' => TRUE,
+        '<a href="https://例子.測試/">https://例子.測試/</a>' => TRUE,
+        '<a href="https://12345.中国/">https://12345.中国/</a>' => TRUE,
+        '<a href="https://例え.テスト/">https://例え.テスト/</a>' => TRUE,
+        '<a href="https://dréißig-bücher.de/">https://dréißig-bücher.de/</a>' => TRUE,
+        '<a href="https://méxico-mañana.es/">https://méxico-mañana.es/</a>' => TRUE,
       ],
       // Encoding.
       '
-http://ampersand.com/?a=1&b=2
-http://encoded.com/?a=1&amp;b=2
+https://ampersand.com/?a=1&b=2
+https://encoded.com/?a=1&amp;b=2
 ' => [
-        '<a href="http://ampersand.com/?a=1&amp;b=2">http://ampersand.com/?a=1&amp;b=2</a>' => TRUE,
-        '<a href="http://encoded.com/?a=1&amp;b=2">http://encoded.com/?a=1&amp;b=2</a>' => TRUE,
+        '<a href="https://ampersand.com/?a=1&amp;b=2">https://ampersand.com/?a=1&amp;b=2</a>' => TRUE,
+        '<a href="https://encoded.com/?a=1&amp;b=2">https://encoded.com/?a=1&amp;b=2</a>' => TRUE,
       ],
       // Domain name length.
       '
 www.ex.ex or www.example.example or www.toolongdomainexampledomainexampledomainexampledomainexampledomain or
 me@me.tv
 ' => [
-        '<a href="http://www.ex.ex">www.ex.ex</a>' => TRUE,
-        '<a href="http://www.example.example">www.example.example</a>' => TRUE,
-        'http://www.toolong' => FALSE,
+        '<a href="https://www.ex.ex">www.ex.ex</a>' => TRUE,
+        '<a href="https://www.example.example">www.example.example</a>' => TRUE,
+        'https://www.toolong' => FALSE,
         '<a href="mailto:me@me.tv">me@me.tv</a>' => TRUE,
       ],
       // Absolute URL protocols.
@@ -674,31 +674,31 @@ not foo://disallowed.com.
       '
 Partial URL with trailing period www.partial.com.
 Email with trailing comma person@example.com,
-Absolute URL with trailing question http://www.absolute.com?
+Absolute URL with trailing question https://www.absolute.com?
 Query string with trailing exclamation www.query.com/index.php?a=!
 Partial URL with 3 trailing www.partial.periods...
 Email with 3 trailing exclamations@example.com!!!
-Absolute URL and query string with 2 different punctuation characters (http://www.example.com/q=abc).
+Absolute URL and query string with 2 different punctuation characters (https://www.example.com/q=abc).
 Partial URL with brackets in the URL as well as surrounded brackets (www.foo.com/more_(than)_one_(parens)).
 Absolute URL with square brackets in the URL as well as surrounded brackets [https://www.drupal.org/?class[]=1]
 Absolute URL with quotes "https://www.drupal.org/sample"
 
 ' => [
-        'period <a href="http://www.partial.com">www.partial.com</a>.' => TRUE,
+        'period <a href="https://www.partial.com">www.partial.com</a>.' => TRUE,
         'comma <a href="mailto:person@example.com">person@example.com</a>,' => TRUE,
-        'question <a href="http://www.absolute.com">http://www.absolute.com</a>?' => TRUE,
-        'exclamation <a href="http://www.query.com/index.php?a=">www.query.com/index.php?a=</a>!' => TRUE,
-        'trailing <a href="http://www.partial.periods">www.partial.periods</a>...' => TRUE,
+        'question <a href="https://www.absolute.com">https://www.absolute.com</a>?' => TRUE,
+        'exclamation <a href="https://www.query.com/index.php?a=">www.query.com/index.php?a=</a>!' => TRUE,
+        'trailing <a href="https://www.partial.periods">www.partial.periods</a>...' => TRUE,
         'trailing <a href="mailto:exclamations@example.com">exclamations@example.com</a>!!!' => TRUE,
-        'characters (<a href="http://www.example.com/q=abc">http://www.example.com/q=abc</a>).' => TRUE,
-        'brackets (<a href="http://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
+        'characters (<a href="https://www.example.com/q=abc">https://www.example.com/q=abc</a>).' => TRUE,
+        'brackets (<a href="https://www.foo.com/more_(than)_one_(parens)">www.foo.com/more_(than)_one_(parens)</a>).' => TRUE,
         'brackets [<a href="https://www.drupal.org/?class[]=1">https://www.drupal.org/?class[]=1</a>]' => TRUE,
         'quotes "<a href="https://www.drupal.org/sample">https://www.drupal.org/sample</a>"' => TRUE,
       ],
       '
 (www.parenthesis.com/dir?a=1&b=2#a)
 ' => [
-        '(<a href="http://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
+        '(<a href="https://www.parenthesis.com/dir?a=1&amp;b=2#a">www.parenthesis.com/dir?a=1&amp;b=2#a</a>)' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -707,25 +707,25 @@ Absolute URL with quotes "https://www.drupal.org/sample"
     $tests = [
       '
 <p xmlns="www.namespace.com" />
-<p xmlns="http://namespace.com">
-An <a href="http://example.com" title="Read more at www.example.info...">anchor</a>.
+<p xmlns="https://namespace.com">
+An <a href="https://example.com" title="Read more at www.example.info...">anchor</a>.
 </p>
 ' => [
         '<p xmlns="www.namespace.com" />' => TRUE,
-        '<p xmlns="http://namespace.com">' => TRUE,
-        'href="http://www.namespace.com"' => FALSE,
-        'href="http://namespace.com"' => FALSE,
-        'An <a href="http://example.com" title="Read more at www.example.info...">anchor</a>.' => TRUE,
+        '<p xmlns="https://namespace.com">' => TRUE,
+        'href="https://www.namespace.com"' => FALSE,
+        'href="https://namespace.com"' => FALSE,
+        'An <a href="https://example.com" title="Read more at www.example.info...">anchor</a>.' => TRUE,
       ],
       '
-Not <a href="foo">www.relative.com</a> or <a href="http://absolute.com">www.absolute.com</a>
-but <strong>http://www.strong.net</strong> or <em>www.emphasis.info</em>
+Not <a href="foo">www.relative.com</a> or <a href="https://absolute.com">www.absolute.com</a>
+but <strong>https://www.strong.net</strong> or <em>www.emphasis.info</em>
 ' => [
         '<a href="foo">www.relative.com</a>' => TRUE,
-        'href="http://www.relative.com"' => FALSE,
-        '<a href="http://absolute.com">www.absolute.com</a>' => TRUE,
-        '<strong><a href="http://www.strong.net">http://www.strong.net</a></strong>' => TRUE,
-        '<em><a href="http://www.emphasis.info">www.emphasis.info</a></em>' => TRUE,
+        'href="https://www.relative.com"' => FALSE,
+        '<a href="https://absolute.com">www.absolute.com</a>' => TRUE,
+        '<strong><a href="https://www.strong.net">https://www.strong.net</a></strong>' => TRUE,
+        '<em><a href="https://www.emphasis.info">www.emphasis.info</a></em>' => TRUE,
       ],
       '
 Test <code>using www.example.com the code tag</code>.
@@ -736,61 +736,61 @@ Test <code>using www.example.com the code tag</code>.
       '
 Intro.
 <blockquote>
-Quoted text linking to www.example.com, written by person@example.com, originating from http://origin.example.com. <code>@see www.usage.example.com or <em>www.example.info</em> bla bla</code>.
+Quoted text linking to www.example.com, written by person@example.com, originating from https://origin.example.com. <code>@see www.usage.example.com or <em>www.example.info</em> bla bla</code>.
 </blockquote>
 
 Outro.
 ' => [
-        'href="http://www.example.com"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
-        'href="http://origin.example.com"' => TRUE,
-        'http://www.usage.example.com' => FALSE,
-        'http://www.example.info' => FALSE,
+        'href="https://origin.example.com"' => TRUE,
+        'https://www.usage.example.com' => FALSE,
+        'https://www.example.info' => FALSE,
         'Intro.' => TRUE,
         'Outro.' => TRUE,
       ],
       '
 Unknown tag <x>containing x and www.example.com</x>? And a tag <pooh>beginning with p and containing www.example.pooh with p?</pooh>
 ' => [
-        'href="http://www.example.com"' => TRUE,
-        'href="http://www.example.pooh"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
+        'href="https://www.example.pooh"' => TRUE,
       ],
       '
-<p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various http://www.example18.com tags. *<br/>
- It is important www.example19.com to *<br/>test different URLs and http://www.example20.com in the same paragraph. *<br>
-HTML www.example21.com soup by person@example22.com can litererally http://www.example23.com contain *img*<img> anything. Just a www.example24.com with http://www.example25.com thrown in. www.example26.com from person@example27.com with extra http://www.example28.com.
+<p>Test &lt;br/&gt;: This is a www.example17.com example <strong>with</strong> various https://www.example18.com tags. *<br/>
+ It is important www.example19.com to *<br/>test different URLs and https://www.example20.com in the same paragraph. *<br>
+HTML www.example21.com soup by person@example22.com can litererally https://www.example23.com contain *img*<img> anything. Just a www.example24.com with https://www.example25.com thrown in. www.example26.com from person@example27.com with extra https://www.example28.com.
 ' => [
-        'href="http://www.example17.com"' => TRUE,
-        'href="http://www.example18.com"' => TRUE,
-        'href="http://www.example19.com"' => TRUE,
-        'href="http://www.example20.com"' => TRUE,
-        'href="http://www.example21.com"' => TRUE,
+        'href="https://www.example17.com"' => TRUE,
+        'href="https://www.example18.com"' => TRUE,
+        'href="https://www.example19.com"' => TRUE,
+        'href="https://www.example20.com"' => TRUE,
+        'href="https://www.example21.com"' => TRUE,
         'href="mailto:person@example22.com"' => TRUE,
-        'href="http://www.example23.com"' => TRUE,
-        'href="http://www.example24.com"' => TRUE,
-        'href="http://www.example25.com"' => TRUE,
-        'href="http://www.example26.com"' => TRUE,
+        'href="https://www.example23.com"' => TRUE,
+        'href="https://www.example24.com"' => TRUE,
+        'href="https://www.example25.com"' => TRUE,
+        'href="https://www.example26.com"' => TRUE,
         'href="mailto:person@example27.com"' => TRUE,
-        'href="http://www.example28.com"' => TRUE,
+        'href="https://www.example28.com"' => TRUE,
       ],
       '
 <script>
 <!--
   // @see www.example.com
-  var exampleurl = "http://example.net";
+  var exampleurl = "https://example.net";
 -->
 <!--//--><![CDATA[//><!--
   // @see www.example.com
-  var exampleurl = "http://example.net";
+  var exampleurl = "https://example.net";
 //--><!]]>
 </script>
 ' => [
-        'href="http://www.example.com"' => FALSE,
-        'href="http://example.net"' => FALSE,
+        'href="https://www.example.com"' => FALSE,
+        'href="https://example.net"' => FALSE,
       ],
       '
 <style>body {
-  background: url(http://example.com/pixel.gif);
+  background: url(https://example.com/pixel.gif);
 }</style>
 ' => [
         'href' => FALSE,
@@ -807,36 +807,36 @@ www.example.com with a newline in comments -->
         'href' => FALSE,
       ],
       '
-<!-- Skip any URLs like www.comment.com in comments. <p>Also ignore http://commented.out/markup.</p> -->
+<!-- Skip any URLs like www.comment.com in comments. <p>Also ignore https://commented.out/markup.</p> -->
 ' => [
         'href' => FALSE,
       ],
       '
 <dl>
 <dt>www.example.com</dt>
-<dd>http://example.com</dd>
+<dd>https://example.com</dd>
 <dd>person@example.com</dd>
 <dt>Check www.example.net</dt>
-<dd>Some text around http://www.example.info by person@example.info?</dd>
+<dd>Some text around https://www.example.info by person@example.info?</dd>
 </dl>
 ' => [
-        'href="http://www.example.com"' => TRUE,
-        'href="http://example.com"' => TRUE,
+        'href="https://www.example.com"' => TRUE,
+        'href="https://example.com"' => TRUE,
         'href="mailto:person@example.com"' => TRUE,
-        'href="http://www.example.net"' => TRUE,
-        'href="http://www.example.info"' => TRUE,
+        'href="https://www.example.net"' => TRUE,
+        'href="https://www.example.info"' => TRUE,
         'href="mailto:person@example.info"' => TRUE,
       ],
       '
 <div>www.div.com</div>
 <ul>
-<li>http://listitem.com</li>
+<li>https://listitem.com</li>
 <li class="odd">www.class.listitem.com</li>
 </ul>
 ' => [
-        '<div><a href="http://www.div.com">www.div.com</a></div>' => TRUE,
-        '<li><a href="http://listitem.com">http://listitem.com</a></li>' => TRUE,
-        '<li class="odd"><a href="http://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
+        '<div><a href="https://www.div.com">www.div.com</a></div>' => TRUE,
+        '<li><a href="https://listitem.com">https://listitem.com</a></li>' => TRUE,
+        '<li class="odd"><a href="https://www.class.listitem.com">www.class.listitem.com</a></li>' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -849,7 +849,7 @@ www.example.com with a newline in comments -->
     ]);
     $tests = [
       'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => [
-        '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
+        '<a href="https://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/f…</a>' => TRUE,
       ],
     ];
     $this->assertFilteredString($filter, $tests);
@@ -979,8 +979,8 @@ www.example.com with a newline in comments -->
     $f = Html::normalize('line1<HR>line2');
     $this->assertEquals('line1<hr />line2', $f, 'HTML corrector -- Automatically close single tags.');
 
-    $f = Html::normalize('<img src="http://example.com/test.jpg">test</img>');
-    $this->assertEquals('<img src="http://example.com/test.jpg" />test', $f, 'HTML corrector -- Automatically close single tags.');
+    $f = Html::normalize('<img src="https://example.com/test.jpg">test</img>');
+    $this->assertEquals('<img src="https://example.com/test.jpg" />test', $f, 'HTML corrector -- Automatically close single tags.');
 
     $f = Html::normalize('<br></br>');
     $this->assertEquals('<br />', $f, "HTML corrector -- Transform empty tags to a single closed tag if the tag's content model is EMPTY.");
