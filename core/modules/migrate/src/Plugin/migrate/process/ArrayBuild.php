@@ -34,13 +34,13 @@ use Drupal\migrate\Row;
  *     (
  *       [language] => en
  * ...
- *       [domain] => http://example.com
+ *       [domain] => https://example.com
  *     )
  *   [1] => Array
  *     (
  *       [language] => fr
  * ...
- *       [domain] => http://fr.example.com
+ *       [domain] => https://fr.example.com
  *     )
  * ...
  * @endcode
@@ -51,8 +51,8 @@ use Drupal\migrate\Row;
  * @code
  * domains: Array
  * (
- *   [en] => http://example.com
- *   [fr] => http://fr.example.com
+ *   [en] => https://example.com
+ *   [fr] => https://fr.example.com
  * ...
  * @endcode
  *

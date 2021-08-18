@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Downloads a file from a HTTP(S) remote location into the local file system.
  *
  * The source value is an array of two values:
- * - source URL, e.g. 'http://www.example.com/img/foo.img'
+ * - source URL, e.g. 'https://www.example.com/img/foo.img'
  * - destination URI, e.g. 'public://images/foo.img'
  *
  * Available configuration keys:
@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     unique.
  *   - 'use existing' - Do nothing and return FALSE.
  * - guzzle_options: (optional)
- *   @link http://docs.guzzlephp.org/en/latest/request-options.html Array of request options for Guzzle. @endlink
+ *   @link https://docs.guzzlephp.org/en/latest/request-options.html Array of request options for Guzzle. @endlink
  *
  * Examples:
  *
