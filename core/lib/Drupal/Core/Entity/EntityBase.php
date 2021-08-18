@@ -587,7 +587,7 @@ abstract class EntityBase implements EntityInterface {
    */
   public function getTypedData() {
     if (!isset($this->typedData)) {
-      /* @var \Drupal\Core\TypedData\TypedDataManagerInterface */
+      /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
       $typed_data = \Drupal::typedDataManager();
 
       // At a minimum, check for a data type derivative specific to this entity
