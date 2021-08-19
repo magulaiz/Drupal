@@ -17,6 +17,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
     createUser as drupalCreateUser;
+    setUpCurrentUser as setUpCurrentUser;
   }
 
   /**
@@ -42,8 +43,8 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('menu');
-    $this->installEntitySchema('user');
     $this->installSchema('system', 'sequences');
+    $this->setUpCurrentUser([], [], TRUE);
     $this->accessControlHandler = $this->container->get('entity_type.manager')->getAccessControlHandler('menu');
   }
 

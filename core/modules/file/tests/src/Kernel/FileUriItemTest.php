@@ -22,7 +22,7 @@ class FileUriItemTest extends FileManagedUnitTestBase {
 
     // Create a new file entity.
     $file = File::create([
-      'uid' => 1,
+      'uid' => $this->user->id(),
       'filename' => 'druplicon.txt',
       'uri' => $uri,
       'filemime' => 'text/plain',

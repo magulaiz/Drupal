@@ -109,11 +109,11 @@ class UserUpdateUserOneAdminTest extends UpdatePathTestBase {
     $role = Role::load('administrator');
     $this->assertFalse($role->isAdmin());
 
-    $role = Role::load('auto_generated_admin_9_2_0');
+    $role = Role::load('admin_auto_generated_fallback_9_3_0');
     $this->assertTrue($role->isAdmin());
 
     $user = User::load(1);
-    $this->assertTrue(in_array('auto_generated_admin_9_2_0', $user->getRoles()));
+    $this->assertTrue(in_array('admin_auto_generated_fallback_9_3_0', $user->getRoles()));
   }
 
   /**

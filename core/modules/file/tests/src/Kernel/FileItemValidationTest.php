@@ -7,7 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\User;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -16,6 +16,8 @@ use org\bovigo\vfs\vfsStream;
  * @group file
  */
 class FileItemValidationTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -48,11 +50,7 @@ class FileItemValidationTest extends KernelTestBase {
     $this->installSchema('file', 'file_usage');
     $this->installSchema('system', 'sequences');
 
-    $this->user = User::create([
-      'name' => 'username',
-      'status' => 1,
-    ]);
-    $this->user->save();
+    $this->user = $this->createUser([], 'admin_user', TRUE);
     $this->container->get('current_user')->setAccount($this->user);
   }
 

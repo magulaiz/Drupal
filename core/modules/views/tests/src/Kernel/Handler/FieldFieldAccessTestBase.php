@@ -5,6 +5,7 @@ namespace Drupal\Tests\views\Kernel\Handler;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\views\Entity\View;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -12,6 +13,8 @@ use Drupal\views\Views;
  * Provides a base class for base field access in views.
  */
 abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Stores a user entity with access to fields.
@@ -38,7 +41,7 @@ abstract class FieldFieldAccessTestBase extends ViewsKernelTestBase {
   protected function setUp($import_test_views = TRUE) {
     parent::setUp($import_test_views);
 
-    $this->installEntitySchema('user');
+    $this->setUpCurrentUser([], [], TRUE);
 
     $role_with_access = Role::create([
       'id' => 'with_access',

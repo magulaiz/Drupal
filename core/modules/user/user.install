@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 // Fallback name and label for auto-generated role in
 // user_post_update_user_1_with_admin_role(). These are picked to be especially
 // easy to find via search engine.
-const USER_UPDATE_FALLBACK_ADMIN_ROLE_ID = 'admin_auto_generated_fallback_9_2_0';
+const USER_UPDATE_FALLBACK_ADMIN_ROLE_ID = 'admin_auto_generated_fallback_9_3_0';
 const USER_UPDATE_FALLBACK_ADMIN_ROLE_LABEL = 'Admin (introduced by update process)';
 
 /**
