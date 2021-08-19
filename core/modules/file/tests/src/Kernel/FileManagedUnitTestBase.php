@@ -6,7 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\user\Entity\User;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Base class for file unit tests that use the file_test module to test uploads and
@@ -14,12 +14,21 @@ use Drupal\user\Entity\User;
  */
 abstract class FileManagedUnitTestBase extends KernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * Modules to enable.
    *
    * @var array
    */
   protected static $modules = ['file_test', 'file', 'system', 'field', 'user'];
+
+  /**
+   * A user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user;
 
   protected function setUp() {
     parent::setUp();
@@ -31,12 +40,9 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('file', ['file_usage']);
 
-    // Make sure that a user with uid 1 exists, self::createFile() relies on
-    // it.
-    $user = User::create(['uid' => 1, 'name' => $this->randomMachineName()]);
-    $user->enforceIsNew();
-    $user->save();
-    \Drupal::currentUser()->setAccount($user);
+    // Make sure that an admin user exists, self::createFile() relies on it.
+    $this->user = $this->createUser([], 'admin_user', TRUE);
+    \Drupal::currentUser()->setAccount($this->user);
   }
 
   /**
@@ -165,7 +171,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
     \Drupal::state()->set('file_test.count_hook_invocations', FALSE);
     $file = File::create([
       'uri' => $this->createUri($filepath, $contents, $scheme),
-      'uid' => 1,
+      'uid' => $this->user->id(),
     ]);
     $file->save();
     // Write the record directly rather than using the API so we don't invoke

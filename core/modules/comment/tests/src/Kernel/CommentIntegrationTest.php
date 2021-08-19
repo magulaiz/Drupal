@@ -155,7 +155,7 @@ class CommentIntegrationTest extends KernelTestBase {
     ]);
     $this->assertEquals(0, $comment->getOwnerId());
 
-    $user = $this->createUser();
+    $user = $this->createUser([], 'admin_user', TRUE);
     $this->container->get('current_user')->setAccount($user);
     $comment = Comment::create([
       'comment_type' => 'comment',

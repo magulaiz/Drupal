@@ -15,15 +15,18 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $user1 = $this->createUser();
+    $user2 = $this->createUser();
+
     // Create records for a couple of users with different sizes.
-    $this->createFileWithSize('public://example1.txt', 50, 2);
-    $this->createFileWithSize('public://example2.txt', 20, 2);
-    $this->createFileWithSize('public://example3.txt', 100, 3);
-    $this->createFileWithSize('public://example4.txt', 200, 3);
+    $this->createFileWithSize('public://example1.txt', 50, $user1->id());
+    $this->createFileWithSize('public://example2.txt', 20, $user1->id());
+    $this->createFileWithSize('public://example3.txt', 100, $user2->id());
+    $this->createFileWithSize('public://example4.txt', 200, $user2->id());
 
     // Now create some non-permanent files.
-    $this->createFileWithSize('public://example5.txt', 1, 2, 0);
-    $this->createFileWithSize('public://example6.txt', 3, 3, 0);
+    $this->createFileWithSize('public://example5.txt', 1, $user1->id(), 0);
+    $this->createFileWithSize('public://example6.txt', 3, $user2->id(), 0);
   }
 
   /**

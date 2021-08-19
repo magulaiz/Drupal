@@ -14,7 +14,7 @@ class SaveTest extends FileManagedUnitTestBase {
   public function testFileSave() {
     // Create a new file entity.
     $file = File::create([
-      'uid' => 1,
+      'uid' => $this->user->id(),
       'filename' => 'druplicon.txt',
       'uri' => 'public://druplicon.txt',
       'filemime' => 'text/plain',
@@ -57,7 +57,7 @@ class SaveTest extends FileManagedUnitTestBase {
     // Try to insert a second file with the same name apart from case insensitivity
     // to ensure the 'uri' index allows for filenames with different cases.
     $uppercase_values = [
-      'uid' => 1,
+      'uid' => $this->user->id(),
       'filename' => 'DRUPLICON.txt',
       'uri' => 'public://DRUPLICON.txt',
       'filemime' => 'text/plain',
@@ -86,7 +86,7 @@ class SaveTest extends FileManagedUnitTestBase {
 
     // Save a file with zero bytes.
     $file = File::create([
-      'uid' => 1,
+      'uid' => $this->user->id(),
       'filename' => 'no-druplicon.txt',
       'uri' => 'public://no-druplicon.txt',
       'filemime' => 'text/plain',
