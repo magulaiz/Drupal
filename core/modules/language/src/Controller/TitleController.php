@@ -20,7 +20,7 @@ class TitleController extends ControllerBase {
       return t('Content language and translation');
     }
     else {
-      return t('Content language'); 
+      return t('Content language');
     }
   }
 
