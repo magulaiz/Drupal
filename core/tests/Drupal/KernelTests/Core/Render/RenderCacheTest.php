@@ -40,7 +40,7 @@ class RenderCacheTest extends KernelTestBase {
 
   /**
    * Check the render cache for the user.roles context.
-    */
+   */
   public function testRolesContext() {
     $this->doTestWithContexts(['user.roles']);
   }
@@ -51,7 +51,7 @@ class RenderCacheTest extends KernelTestBase {
    * @param string[] $contexts
    *   List of cache contexts to use.
    */
-  protected function doTestWithContexts($contexts) {
+  protected function doTestWithContexts(array $contexts) {
     // Set up two authenticated users and an admin user so we can test the
     // output of the render cache for them.
     $first_authenticated_user = $this->createUser();
