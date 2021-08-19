@@ -298,6 +298,25 @@ class FilePrivateTest extends FileFieldTestBase {
     $access = $node_old_revision_file->access('download', $account, TRUE);
     $this->assertFalse($access->isAllowed(), 'Confirmed that access is denied for the file from an old revision without view all revisions permission.');
 
+    // Test that files related to both a published and later un-published revision
+    // of the same entity are still accessible to a public user.
+    $account = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
+    $this->drupalLogin($account);
+    $test_file_multiple_revisions = $this->getTestFile('text');
+    $nid = $this->uploadNodeFile($test_file_multiple_revisions, $field_name, $type_name);
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$nid]);
+    \Drupal::entityTypeManager()->getAccessControlHandler('node')->resetCache();
+    $node = $node_storage->load($nid);
+    $node_file_multiple_revisions = File::load($node->{$field_name}->target_id);
+
+    // Save a new non-published revision, otherwise identical
+    $node->setNewRevision(TRUE);
+    $node->isDefaultRevision(FALSE);
+    $node->setUnpublished();
+    $node->save();
+    // Check access as an anonymous user.
+    $this->drupalLogout();
+    $this->assertTrue($node_file_multiple_revisions->access('download'), 'File is accessible to an anonymous user when referenced by a published and later un-published revision of the same entity.');
   }
 
 }
