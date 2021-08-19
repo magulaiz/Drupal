@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
@@ -1759,7 +1760,16 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
           foreach ($entity->getTranslationLanguages() as $langcode => $language) {
             foreach ($entity->getTranslation($langcode)->get($field_name) as $item) {
               if ($file->id() == $item->{$field_column}) {
-                $references[$file->id()][$age][$field_name][$entity_type_id][$entity->id()] = $entity;
+                // Revisionable entities will be returned keyed by revision ID
+                // if FIELD_LOAD_REVISION was specified, otherwise the returned
+                // entities will be keyed by entity ID.
+                if ($age === EntityStorageInterface::FIELD_LOAD_REVISION && $entity instanceof RevisionableInterface) {
+                  $reference_id = $entity->getRevisionId();
+                }
+                else {
+                  $reference_id = $entity->id();
+                }
+                $references[$file->id()][$age][$field_name][$entity_type_id][$reference_id] = $entity;
                 break;
               }
             }
