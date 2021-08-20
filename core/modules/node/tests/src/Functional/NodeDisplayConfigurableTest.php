@@ -116,15 +116,29 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     $assert = $this->assertSession();
 
     $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '');
-    $created_selector = 'article ' . $html_element . ($field_classes ? '.field--name-created' : '');
-    $uid_selector = 'article ' . $html_element . ($field_classes ? '.field--name-uid' : '');
-
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
-    $assert->elementTextContains('css', $created_selector, \Drupal::service('date.formatter')->format($node->getCreatedTime()));
+
+    // With field classes, we can be very specific.
+    if ($field_classes) {
+      $created_selector = 'article ' . $html_element . '.field--name-created';
+      $assert->elementTextContains('css', $created_selector, \Drupal::service('date.formatter')->format($node->getCreatedTime()));
+    }
+    // Without field classes, we cannot target specific elements.
+    else {
+      // We can only verify that the date appears somewhere in the response.
+      $assert->responseContains(\Drupal::service('date.formatter')->format($node->getCreatedTime()));
+    }
+
+    $uid_selector = 'article ' . $html_element . ($field_classes ? '.field--name-uid' : '');
     if ($html_element === 'div') {
+      if ($field_classes) {
+        $assert->elementTextContains('css', "$uid_selector $html_element", 'Authored by');
+      }
+      else {
+        $assert->responseContains('Authored by');
+      }
       $assert->elementTextContains('css', "$uid_selector $html_element" . '[rel="schema:author"]', $user->getAccountName());
       $assert->elementNotExists('css', "$uid_selector a");
-      $assert->elementTextContains('css', "$uid_selector $html_element", 'Authored by');
       $assert->elementExists('css', 'span[property="schema:dateCreated"]');
     }
     else {
