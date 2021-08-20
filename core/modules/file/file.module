@@ -1699,8 +1699,11 @@ function file_icon_map($mime_type) {
  *   returned. Defaults to 'file'.
  *
  * @return array
- *   A multidimensional array. The keys are field_name, entity_type,
- *   entity_id and the value is an entity referencing this file.
+ *   A multidimensional array. Keyed by field_name, entity_type then either
+ *   entity_id or revision_id, the value is an entity referencing this file.
+ *   Returned entities are keyed by revision_id if $age is set to
+ *   EntityStorageInterface::FIELD_LOAD_REVISION (the default), and the
+ *   entity type is revisionable.
  *
  * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
  *   Thrown if the entity type doesn't exist.
