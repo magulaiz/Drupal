@@ -133,7 +133,7 @@ textarea.form-textarea {
   border: 1px solid #ccc;
 }
 input.form-autocomplete {
-  width: 100%;
+  max-width: 100%;
 }
 input.form-submit:hover,
 input.form-submit:focus {
