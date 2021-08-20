@@ -6,8 +6,8 @@
 @import "../base/variables.pcss.css";
 
 .entity-moderation-form {
-  max-width: 100%;
   flex-direction: column;
+  max-width: 100%;
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
   border: 1px solid var(--color--gray-80);
