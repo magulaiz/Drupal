@@ -612,9 +612,6 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
 function install_run_task($task, &$install_state) {
   $function = $task['function'];
 
-  /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
-  $batch_processor = \Drupal::service('batch.processor');
-
   if ($task['type'] == 'form') {
     return install_get_form($function, $install_state);
   }
@@ -623,6 +620,8 @@ function install_run_task($task, &$install_state) {
     // already.
     $current_batch = \Drupal::state()->get('install_current_batch');
     if (!$install_state['interactive'] || !$current_batch) {
+      /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
+      $batch_processor = \Drupal::service('batch.processor');
       $batches = $function($install_state);
       if (empty($batches)) {
         // If the task did some processing and decided no batch was necessary,
