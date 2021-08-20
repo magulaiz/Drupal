@@ -6,6 +6,7 @@
 @import "../base/variables.pcss.css";
 
 .entity-moderation-form {
+  max-width: 100%;
   flex-direction: column;
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
