@@ -517,19 +517,9 @@ function user_user_logout(AccountInterface $account) {
  *   they can change their password.
  */
 function user_pass_reset_url($account, $options = []) {
-  $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
-  return Url::fromRoute('user.reset',
-    [
-      'uid' => $account->id(),
-      'timestamp' => $timestamp,
-      'hash' => user_pass_rehash($account, $timestamp),
-    ],
-    [
-      'absolute' => TRUE,
-      'language' => \Drupal::languageManager()->getLanguage($langcode),
-    ]
-  )->toString();
+  /** @var \Drupal\user\UserActionUrl $actionUrl */
+  $actionUrl = \Drupal::service('user.reset');
+  return $actionUrl->fromRoute('user.cancel_confirm')->toString();
 }
 
 /**
@@ -550,14 +540,9 @@ function user_pass_reset_url($account, $options = []) {
  * @see \Drupal\user\Controller\UserController::confirmCancel()
  */
 function user_cancel_url(UserInterface $account, $options = []) {
-  $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
-  $url_options = ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode)];
-  return Url::fromRoute('user.cancel_confirm', [
-    'user' => $account->id(),
-    'timestamp' => $timestamp,
-    'hashed_pass' => user_pass_rehash($account, $timestamp),
-  ], $url_options)->toString();
+  /** @var \Drupal\user\UserActionUrl $actionUrl */
+  $actionUrl = \Drupal::service('user.action_url');
+  return $actionUrl->fromRoute('user.cancel_confirm')->toString();
 }
 
 /**

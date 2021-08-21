@@ -46,6 +46,9 @@ services:
     arguments: ['@current_user', '@config.factory', '@entity_type.manager', '@router.admin_context']
     tags:
       - { name: theme_negotiator, priority: -40 }
+  user.action_url:
+    class: Drupal\user\UserActionUrl
+    arguments: ['@current_user']
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity_type.manager', '@password']
