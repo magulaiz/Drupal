@@ -64,7 +64,8 @@ Example: Permit scaffolding from the project `upstream/project`
 Allowing a package to scaffold files also permits it to delegate permission to
 scaffold to any project that it requires itself. This allows a package to
 organize its scaffold assets as it sees fit. For example, if `upstream/project`
-stores its assets in a subproject `upstream/assets`, `upstream/assets` would implicitly be allowed to scaffold files.
+stores its assets in a subproject `upstream/assets`, `upstream/assets` would
+implicitly be allowed to scaffold files.
 
 It is possible for a project to obtain scaffold files from multiple projects.
 For example, a Drupal project using a distribution, and installing on a specific
