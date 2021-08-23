@@ -108,11 +108,11 @@ _core_config_info:
 config_object:
   type: mapping
   mapping:
+    _core:
+      type: _core_config_info
     langcode:
       type: string
       label: 'Language code'
-    _core:
-      type: _core_config_info
 
 # Mail text with subject and body parts.
 mail:
