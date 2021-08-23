@@ -34,7 +34,7 @@
  * Hidden horizontal toolbar handle icon.
  */
 
-.toolbar-tray-horizontal .toolbar-menu .toolbar-handle {
+.toolbar-tray-horizontal .toolbar-menu .toolbar-icon.toolbar-handle {
   display: none;
 }
 
