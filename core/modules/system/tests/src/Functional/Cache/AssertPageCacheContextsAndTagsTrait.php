@@ -88,7 +88,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     $cid = implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
     sort($cache_entry->tags);
-    $this->assertEqual($expected_tags, $cache_entry->tags);
+    $this->assertEquals($expected_tags, $cache_entry->tags);
   }
 
   /**
@@ -125,7 +125,7 @@ trait AssertPageCacheContextsAndTagsTrait {
    *   (optional) Whether the default contexts should automatically be included.
    *
    * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
+   *   Always returns TRUE.
    */
   protected function assertCacheContexts(array $expected_contexts, $message = NULL, $include_default_contexts = TRUE) {
     if ($include_default_contexts) {
@@ -142,7 +142,7 @@ trait AssertPageCacheContextsAndTagsTrait {
     sort($expected_contexts);
     sort($actual_contexts);
     $this->assertSame($expected_contexts, $actual_contexts, $message ?? '');
-    return $actual_contexts === $expected_contexts;
+    return TRUE;
   }
 
   /**

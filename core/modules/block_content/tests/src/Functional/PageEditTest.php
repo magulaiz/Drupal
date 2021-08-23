@@ -34,7 +34,8 @@ class PageEditTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = mb_strtolower($this->randomMachineName(8));
     $edit[$body_key] = $this->randomMachineName(16);
-    $this->drupalPostForm('block/add/basic', $edit, 'Save');
+    $this->drupalGet('block/add/basic');
+    $this->submitForm($edit, 'Save');
 
     // Check that the block exists in the database.
     $blocks = \Drupal::entityQuery('block_content')
@@ -71,8 +72,8 @@ class PageEditTest extends BlockContentTestBase {
 
     // Test deleting the block.
     $this->drupalGet("block/" . $revised_block->id());
-    $this->clickLink(t('Delete'));
-    $this->assertText('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
+    $this->clickLink('Delete');
+    $this->assertSession()->pageTextContains('Are you sure you want to delete the custom block ' . $revised_block->label() . '?');
   }
 
 }
