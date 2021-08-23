@@ -2,7 +2,9 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 
@@ -22,6 +24,31 @@ use Drupal\Core\Url;
 class UserActionUrl {
 
   /**
+   * Time service.
+   *
+   * @var \Drupal\Component\Datetime\Time
+   */
+  protected $time;
+
+  /**
+   * LanguageManager service.
+   *
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
+   * UserActionUrl constructor.
+   *
+   * @param \Drupal\Component\Datetime\Time $time
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
+   */
+  public function __construct(Time $time, LanguageManagerInterface $languageManager) {
+    $this->time = $time;
+    $this->languageManager = $languageManager;
+  }
+
+  /**
    * Get a user action url using the related route.
    *
    * @param string $route
@@ -31,13 +58,13 @@ class UserActionUrl {
    * @return \Drupal\Core\Url
    */
   public function fromRoute(string $route, UserInterface $user, array $options = []): Url {
-    $timestamp = \Drupal::time()->getRequestTime();
+    $timestamp = $this->time->getRequestTime();
     $langcode = isset($options['langcode']) ? $options['langcode'] : $user->getPreferredLangcode();
     $hash = $this->hashUserPassword($user, $timestamp);
 
     $url_options = [
       'absolute' => TRUE,
-      'language' => \Drupal::languageManager()->getLanguage($langcode),
+      'language' => $this->languageManager->getLanguage($langcode),
     ];
 
     // @todo: Standardize parameter names for user action routes.
