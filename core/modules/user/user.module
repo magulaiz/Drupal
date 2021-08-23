@@ -518,8 +518,8 @@ function user_user_logout(AccountInterface $account) {
  */
 function user_pass_reset_url($account, $options = []) {
   /** @var \Drupal\user\UserActionUrl $actionUrl */
-  $actionUrl = \Drupal::service('user.reset');
-  return $actionUrl->fromRoute('user.cancel_confirm')->toString();
+  $actionUrl = \Drupal::service('user.action_url');
+  return $actionUrl->fromRoute('user.reset', $account, $options)->toString();
 }
 
 /**
@@ -542,7 +542,7 @@ function user_pass_reset_url($account, $options = []) {
 function user_cancel_url(UserInterface $account, $options = []) {
   /** @var \Drupal\user\UserActionUrl $actionUrl */
   $actionUrl = \Drupal::service('user.action_url');
-  return $actionUrl->fromRoute('user.cancel_confirm')->toString();
+  return $actionUrl->fromRoute('user.cancel_confirm', $account, $options)->toString();
 }
 
 /**
