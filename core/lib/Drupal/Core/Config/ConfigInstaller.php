@@ -358,7 +358,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
           $config_to_create[$name] = [
             '_core' => [
               'default_config_hash' => Crypt::hashBase64(serialize($config_to_create[$name])),
-            ]
+            ],
           ] + $config_to_create[$name];
         }
         $new_config->setData($config_to_create[$name]);
