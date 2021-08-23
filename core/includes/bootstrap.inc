@@ -6,11 +6,14 @@
  */
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Http\InputBag;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Test\TestDatabase;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\InputBag as SymfonyInputBag;
 
 /**
  * Minimum allowed version of PHP for Drupal to be bootstrapped.
@@ -152,6 +155,23 @@ if (class_exists('\Symfony\Component\Finder\Glob')) {
 if (class_exists('\Symfony\Component\Process\ProcessUtils')) {
   class_alias('Drupal\Core\PhpFixes\Process', 'Symfony\Component\Process\Process', TRUE);
 }
+
+/**
+ * Set up the Symfony Request factory for forward compatibility with Symfony 5.
+ *
+ * @todo Remove this when Symfony 4 is no longer supported.
+ */
+Request::setFactory(
+  function ($query, $request, $attributes, $cookies, $files, $server, $content) {
+    $request = new Request($query, $request, $attributes, $cookies, $files, $server, $content);
+    foreach (['request', 'query', 'cookies'] as $bag) {
+      if (!($bag instanceof SymfonyInputBag)) {
+        $request->$bag = new InputBag($request->$bag->all());
+      }
+    }
+    return $request;
+  }
+);
 
 /**
  * Returns and optionally sets the filename for a system resource.

@@ -2,18 +2,15 @@
 
 namespace Drupal\syslog\Logger;
 
-use Drupal\Core\Config\ConfigCrudEvent;
-use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Redirects logging messages to syslog.
  */
-class SysLog implements LoggerInterface, EventSubscriberInterface {
+class SysLog implements LoggerInterface {
   use RfcLoggerTrait;
 
   /**
@@ -67,8 +64,9 @@ class SysLog implements LoggerInterface, EventSubscriberInterface {
     global $base_url;
 
     $format = $this->config->get('format');
-
-    // If the format is empty nothing will be logged.
+    // If no format is configured then a message will not be written to syslog
+    // so return early. This occurs during installation of the syslog module
+    // before configuration has been written.
     if (empty($format)) {
       return;
     }
@@ -106,27 +104,6 @@ class SysLog implements LoggerInterface, EventSubscriberInterface {
    */
   protected function syslogWrapper($level, $entry) {
     syslog($level, $entry);
-  }
-
-  /**
-   * Updates the configuration so it is correct after module install.
-   *
-   * @param \Drupal\Core\Config\ConfigCrudEvent $event
-   *   The configuration event.
-   */
-  public function onConfigSave(ConfigCrudEvent $event) {
-    $saved_config = $event->getConfig();
-    if ($saved_config->getName() == 'syslog.settings') {
-      $this->config = $saved_config;
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getSubscribedEvents() {
-    $events[ConfigEvents::SAVE][] = ['onConfigSave', 0];
-    return $events;
   }
 
 }
