@@ -42,13 +42,14 @@ class UserActionUrl {
 
     // @todo: Standardize parameter names for user action routes.
     if ($route === 'user.cancel_confirm') {
-      $parameters =  [
+      $parameters = [
         'user' => $user->id(),
         'timestamp' => $timestamp,
         'hashed_pass' => $hash,
       ];
-    } else {
-      $parameters =  [
+    }
+    else {
+      $parameters = [
         'uid' => $user->id(),
         'timestamp' => $timestamp,
         'hash' => $hash,
@@ -83,7 +84,7 @@ class UserActionUrl {
    * contains the time stamp, the user's last login time, the numeric user ID,
    * and the user's email address.
    *
-   * @param \Drupal\user\UserInterface $User
+   * @param \Drupal\user\UserInterface $user
    *   An object containing the user account.
    * @param int $timestamp
    *   A UNIX timestamp, typically REQUEST_TIME.
@@ -93,11 +94,12 @@ class UserActionUrl {
    *
    * @internal
    */
-  private function hashUserPassword(UserInterface $User, $timestamp) {
+  private function hashUserPassword(UserInterface $user, $timestamp) {
     $data = $timestamp;
-    $data .= $User->getLastLoginTime();
-    $data .= $User->id();
-    $data .= $User->getEmail();
-    return Crypt::hmacBase64($data, Settings::getHashSalt() . $User->getPassword());
+    $data .= $user->getLastLoginTime();
+    $data .= $user->id();
+    $data .= $user->getEmail();
+    return Crypt::hmacBase64($data, Settings::getHashSalt() . $user->getPassword());
   }
+
 }
