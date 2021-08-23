@@ -3,6 +3,7 @@
 namespace Drupal\Core\Asset;
 
 use axy\sourcemap\SourceMap;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\State\StateInterface;
 
@@ -138,21 +139,21 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                   // in the source (looking at you jquery)
                   $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
                   if (file_exists($candidate_map_file)) {
-                    $js_map = json_decode(file_get_contents($candidate_map_file));
+                    $js_map = JSON::decode(file_get_contents($candidate_map_file));
                   }
                   // for underscore even if the sourcemap is useless.
                   elseif (file_exists($js_asset['data'] . '.map')) {
-                    $js_map = json_decode(file_get_contents($js_asset['data'] . '.map'));
+                    $js_map = JSON::decode(file_get_contents($js_asset['data'] . '.map'));
                   }
                   elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
                     if (mb_strpos($matches[1], 'data:application/json;') !== FALSE) {
                       $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
-                      $js_map = json_decode(base64_decode($base64));
+                      $js_map = JSON::decode(base64_decode($base64));
                     }
                     else {
                       $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
                       if (file_exists($map_file)) {
-                        $js_map = json_decode(file_get_contents($map_file));
+                        $js_map = JSON::decode(file_get_contents($map_file));
                       }
                     }
                   }
@@ -217,7 +218,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                 $data .= $file_content . ";\n";
               }
               if (count($sourcemap['sections'])) {
-                $source_uri = $this->dumper->dump(json_encode($sourcemap), 'map');
+                $source_uri = $this->dumper->dump(JSON::encode($sourcemap), 'map');
                 $data .= "\n//# sourceMappingURL=" . \Drupal::service('file_url_generator')->generateAbsoluteString($source_uri);
               }
               // Dump the optimized JS for this group into an aggregate file.
