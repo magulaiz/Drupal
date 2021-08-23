@@ -116,7 +116,7 @@ class UserActionUrl {
    *   An object containing the user account.
    * @param int $timestamp
    *   A UNIX timestamp, typically the time of the hash's generation.
-   * @param array|null $payload
+   * @param array|NULL $payload
    *   An optional associative array containing additional data requiring
    *   validation.
    *
@@ -140,7 +140,7 @@ class UserActionUrl {
    *   An object containing the user account.
    * @param int $timestamp
    *   A UNIX timestamp, typically the time of the hash's generation.
-   * @param array|null $payload
+   * @param array|NULL $payload
    *   An optional associative array containing additional data requiring
    *   validation.
    *
@@ -154,7 +154,7 @@ class UserActionUrl {
     $data .= $user->getLastLoginTime();
     $data .= $user->id();
     $data .= $user->getEmail();
-    if ($payload !== null) {
+    if ($payload !== NULL) {
       $data .= implode(':', $payload);
     }
     return Crypt::hmacBase64($data, Settings::getHashSalt() . $user->getPassword());
