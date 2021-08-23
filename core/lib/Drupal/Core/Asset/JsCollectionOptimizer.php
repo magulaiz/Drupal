@@ -134,80 +134,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                   $file_content = $this->optimizer->optimize($js_asset);
                 }
                 if ($generate_sourcemaps) {
-                  $js_map = FALSE;
-                  // pick up map files automatically, even if they're not declared
-                  // in the source (looking at you jquery)
-                  $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
-                  if (file_exists($candidate_map_file)) {
-                    $js_map = JSON::decode(file_get_contents($candidate_map_file));
-                  }
-                  // for underscore even if the sourcemap is useless.
-                  elseif (file_exists($js_asset['data'] . '.map')) {
-                    $js_map = JSON::decode(file_get_contents($js_asset['data'] . '.map'));
-                  }
-                  elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
-                    if (mb_strpos($matches[1], 'data:application/json;') !== FALSE) {
-                      $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
-                      $js_map = JSON::decode(base64_decode($base64));
-                    }
-                    else {
-                      $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
-                      if (file_exists($map_file)) {
-                        $js_map = JSON::decode(file_get_contents($map_file));
-                      }
-                    }
-                  }
-                  $sourcesRoot = \Drupal::service('file_url_generator')
-                    ->generateAbsoluteString(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
-                  if ($js_map) {
-                    // Make sure the source shows up in the right place.
-                    $js_map->sourceRoot = $sourcesRoot;
-                    $section = [
-                      'offset' => [
-                        'line' => substr_count($data, "\n"),
-                        'column' => 0,
-                      ],
-                      'map' => $js_map,
-                    ];
-                  }
-                  // if there are not sourcemap create one to avoid problems when
-                  // setting breakpoints. This happens when core js has not been
-                  // generated with yarn build:js-dev
-                  // We're just doing a 1:1 mapping, this makes it so that the
-                  // code it will show up in the correct relative path. Makes it
-                  // possible to associate a piece of code with a individual js
-                  // file.
-                  else {
-                    $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
-                    $gen_map = new SourceMap();
-                    $gen_map->file = $file;
-                    $gen_map->sourceRoot = $sourcesRoot;
-                    $fileName = ['fileName' => $file];
-                    // 1-1 mapping of the file in the sourcemap, there is no
-                    // transformations going on.
-                    foreach (explode("\n", $file_content) as $line => $content) {
-                      $pos = ['line' => $line, 'column' => 0];
-                      $gen_map->addPosition([
-                        'generated' => $pos,
-                        'source' => $fileName + $pos,
-                      ]);
-                      if (strlen($content)) {
-                        $pos = ['line' => $line, 'column' => strlen($content)];
-                        $gen_map->addPosition([
-                          'generated' => $pos,
-                          'source' => $fileName + $pos,
-                        ]);
-                      }
-                    }
-                    $section = [
-                      'offset' => [
-                        'line' => substr_count($data, "\n"),
-                        'column' => 0,
-                      ],
-                      'map' => $gen_map->getData(),
-                    ];
-                  }
-                  if ($section) {
+                  if ($section = $this->sourcemap($js_asset, $file_content, substr_count($data, "\n"))){
                     $sourcemap['sections'][] = $section;
                   }
                 }
@@ -247,6 +174,89 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
     }
 
     return $js_assets;
+  }
+
+  /**
+   * Returns the map file of the asset.
+   *
+   * @param array $js_asset
+   * @param string $file_content
+   *
+   * @return array
+   *   The sourcemap informations.
+   */
+  protected function sourcemap($js_asset, $file_content, $line_offset) {
+    $section = FALSE;
+    $js_map = FALSE;
+    // pick up map files automatically, even if they're not declared
+    // in the source (looking at you jquery)
+    $candidate_map_file = str_replace('.js', '.map', $js_asset['data']);
+    if (file_exists($candidate_map_file)) {
+      $js_map = JSON::decode(file_get_contents($candidate_map_file));
+    }
+    elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
+      if (mb_strpos($matches[1], 'data:application/json;') !== FALSE) {
+        $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
+        $js_map = JSON::decode(base64_decode($base64));
+      }
+      else {
+        $map_file = pathinfo($js_asset['data'], PATHINFO_DIRNAME) . '/' . $matches[1];
+        if (file_exists($map_file)) {
+          $js_map = JSON::decode(file_get_contents($map_file));
+        }
+      }
+    }
+    $sourcesRoot = \Drupal::service('file_url_generator')
+      ->generateAbsoluteString(pathinfo($js_asset['data'], PATHINFO_DIRNAME));
+    if ($js_map) {
+      // Make sure the source shows up in the right place.
+      $js_map->sourceRoot = $sourcesRoot;
+      $section = [
+        'offset' => [
+          'line' => $line_offset,
+          'column' => 0,
+        ],
+        'map' => $js_map,
+      ];
+    }
+    // if there are not sourcemap create one to avoid problems when
+    // setting breakpoints. This happens when core js has not been
+    // generated with yarn build:js-dev
+    // We're just doing a 1:1 mapping, this makes it so that the
+    // code it will show up in the correct relative path. Makes it
+    // possible to associate a piece of code with a individual js
+    // file.
+    else {
+      $file = pathinfo($js_asset['data'], PATHINFO_BASENAME);
+      $gen_map = new SourceMap();
+      $gen_map->file = $file;
+      $gen_map->sourceRoot = $sourcesRoot;
+      $fileName = ['fileName' => $file];
+      // 1:1 mapping of the file in the sourcemap, there is no
+      // transformations going on.
+      foreach (explode("\n", $file_content) as $line => $content) {
+        $pos = ['line' => $line, 'column' => 0];
+        $gen_map->addPosition([
+          'generated' => $pos,
+          'source' => $fileName + $pos,
+        ]);
+        if (strlen($content)) {
+          $pos = ['line' => $line, 'column' => strlen($content)];
+          $gen_map->addPosition([
+            'generated' => $pos,
+            'source' => $fileName + $pos,
+          ]);
+        }
+      }
+      $section = [
+        'offset' => [
+          'line' => $line_offset,
+          'column' => 0,
+        ],
+        'map' => $gen_map->getData(),
+      ];
+    }
+    return $section;
   }
 
   /**
