@@ -68,6 +68,13 @@ class TextProcessed extends TypedData implements CacheableDependencyInterface {
   /**
    * {@inheritdoc}
    */
+  public function setValue($value, $notify = TRUE) {
+    // Disabled in https://www.drupal.org/i/2972988
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCacheTags() {
     $this->getValue();
     return $this->processed->getCacheTags();
