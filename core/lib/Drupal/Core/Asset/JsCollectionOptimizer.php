@@ -145,7 +145,7 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                     $js_map = json_decode(file_get_contents($js_asset['data'] . '.map'));
                   }
                   elseif (preg_match('~//[#@]\s(?:source(?:Mapping)?URL)=\s*(\S+)\s*~', $file_content, $matches)) {
-                    if (str_contains($matches[1], 'data:application/json;')) {
+                    if (mb_strpos($matches[1], 'data:application/json;') !== FALSE) {
                       $base64 = str_replace('data:application/json;charset=utf-8;base64,', '', $matches[1]);
                       $js_map = json_decode(base64_decode($base64));
                     }
@@ -172,8 +172,8 @@ class JsCollectionOptimizer implements AssetCollectionOptimizerInterface {
                   // if there are not sourcemap create one to avoid problems when
                   // setting breakpoints. This happens when core js has not been
                   // generated with yarn build:js-dev
-                  // We're just doing a 1-1 mapping, this makes it so that the
-                  // code it will show up in the correct module/folder. Makes it
+                  // We're just doing a 1:1 mapping, this makes it so that the
+                  // code it will show up in the correct relative path. Makes it
                   // possible to associate a piece of code with a individual js
                   // file.
                   else {

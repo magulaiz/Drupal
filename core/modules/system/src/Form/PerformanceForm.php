@@ -167,7 +167,7 @@ class PerformanceForm extends ConfigFormBase {
     ];
     $form['bandwidth_optimization']['sourcemaps_js'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Generate sourcemaps for JavaScript aggregates'),
+      '#title' => $this->t('Generate source maps for JavaScript aggregates'),
       '#default_value' => $config->get('js.sourcemaps'),
       '#disabled' => $disabled,
       '#states' => [
