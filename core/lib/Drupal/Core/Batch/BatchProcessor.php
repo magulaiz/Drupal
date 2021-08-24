@@ -5,6 +5,7 @@ namespace Drupal\Core\Batch;
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormState;
@@ -118,27 +119,37 @@ class BatchProcessor implements BatchProcessorInterface {
    *   The request stack.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The path validator service.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The connection to the database.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
    *   The theme manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
+   * @param \Drupal\Core\Database\Connection|null $database
+   *   The connection to the database.
    */
-  public function __construct($root, BatchStorageInterface $batch_storage, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, PathValidatorInterface $path_validator, Connection $database, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
+  public function __construct($root, BatchStorageInterface $batch_storage, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, PathValidatorInterface $path_validator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match, Connection $database = NULL) {
     $this->root = $root;
     $this->batchStorage = $batch_storage;
     $this->dateFormatter = $date_formatter;
     $this->formSubmitter = $form_submitter;
     $this->requestStack = $request_stack;
     $this->pathValidator = $path_validator;
-    $this->connection = $database;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->routeMatch = $route_match;
+    $this->connection = $database;
     $this->batch = [];
+  }
+
+  /**
+   * Getter for the connection to the database.
+   *
+   * @return \Drupal\Core\Database\Connection
+   *   The connection to the database.
+   */
+  protected function getConnection() {
+    return $this->connection ?? Database::getConnection();
   }
 
   /**
@@ -238,7 +249,7 @@ class BatchProcessor implements BatchProcessorInterface {
       $class = $batch_set['queue']['class'];
 
       if (!isset($queues[$class][$name])) {
-        $queues[$class][$name] = new $class($name, $this->connection);
+        $queues[$class][$name] = new $class($name, $this->getConnection());
       }
       return $queues[$class][$name];
     }
@@ -270,7 +281,7 @@ class BatchProcessor implements BatchProcessorInterface {
 
       // Assign an arbitrary id: don't rely on a serial column in the 'batch'
       // table, since non-progressive batches skip database storage completely.
-      $batch['id'] = $this->connection->nextId();
+      $batch['id'] = $this->getConnection()->nextId();
 
       // Move operations to a job queue. Non-progressive batches will use a
       // memory-based queue.
