@@ -680,26 +680,36 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   public function loadByRoute($route_name, array $route_parameters = [], $menu_name = NULL) {
     // Sort the route parameters so that the query string will be the same.
     asort($route_parameters);
-    // Since this will be urlencoded, it's safe to store and match against a
-    // text field.
-    // @todo Standardize an efficient way to load by route name and parameters
-    //   in place of system path. https://www.drupal.org/node/2302139
-    $param_key = $route_parameters ? UrlHelper::buildQuery($route_parameters) : '';
-    $query = $this->connection->select($this->table, NULL, $this->options);
-    $query->fields($this->table, $this->definitionFields());
-    $query->condition('route_name', $route_name);
-    $query->condition('route_param_key', $param_key);
-    if ($menu_name) {
-      $query->condition('menu_name', $menu_name);
+    // Generate a cache ID (cid) specific for this $route_name,
+    // $route_parameters and $menu_name.
+    $cid = 'menu_tree-loaded_by_route:' . $route_name . ':' . serialize($route_parameters) . ':' . $menu_name;
+    $cache = $this->menuCacheBackend->get($cid);
+    if ($cache && isset($cache->data)) {
+      $loaded = $cache->data;
     }
-    // Make the ordering deterministic.
-    $query->orderBy('depth');
-    $query->orderBy('weight');
-    $query->orderBy('id');
-    $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
-    foreach ($loaded as $id => $link) {
-      $loaded[$id] = $this->prepareLink($link);
+    else {
+      // Since this will be urlencoded, it's safe to store and match against a
+      // text field.
+      $param_key = $route_parameters ? UrlHelper::buildQuery($route_parameters) : '';
+      $query = $this->connection->select($this->table, $this->options);
+      $query->fields($this->table, $this->definitionFields());
+      $query->condition('route_name', $route_name);
+      $query->condition('route_param_key', $param_key);
+      if ($menu_name) {
+        $query->condition('menu_name', $menu_name);
+      }
+      // Make the ordering deterministic.
+      $query->orderBy('depth');
+      $query->orderBy('weight');
+      $query->orderBy('id');
+      $loaded = $this->safeExecuteSelect($query)->fetchAllAssoc('id', \PDO::FETCH_ASSOC);
+      foreach ($loaded as $id => $link) {
+        $loaded[$id] = $this->prepareLink($link);
+      }
+      // Build the tree using the parameters; the resulting tree will be cached.
+      $this->menuCacheBackend->set($cid, $loaded, Cache::PERMANENT, ['config:system.menu.' . $menu_name]);
     }
+
     return $loaded;
   }
 
