@@ -11,7 +11,7 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
-# - Eslint checks JavaScript files.
+# - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
 # - Checks .pcss.css and .css files are equivalent.
@@ -107,10 +107,17 @@ fi
 
 TOP_LEVEL=$(git rev-parse --show-toplevel)
 
+# This variable will be set to one when the file core/phpcs.xml.dist is changed.
+PHPCS_XML_DIST_FILE_CHANGED=0
+
 # Build up a list of absolute file names.
 ABS_FILES=
 for FILE in $FILES; do
   ABS_FILES="$ABS_FILES $TOP_LEVEL/$FILE"
+
+  if [[ $FILE == "core/phpcs.xml.dist" ]]; then
+    PHPCS_XML_DIST_FILE_CHANGED=1;
+  fi;
 done
 
 # Exit early if there are no files.
@@ -163,6 +170,20 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
+# When the file core/phpcs.xml.dist has been changed, then PHPCS must check all files.
+if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
+  # Test all files with phpcs rules.
+  vendor/bin/phpcs -ps --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
+  PHPCS=$?
+  if [ "$PHPCS" -ne "0" ]; then
+    # If there are failures set the status to a number other than 0.
+    FINAL_STATUS=1
+    printf "\nPHPCS: ${red}failed${reset}\n"
+  else
+    printf "\nPHPCS: ${green}passed${reset}\n"
+  fi
+fi
+
 for FILE in $FILES; do
   STATUS=0;
   # Print a line to separate spellcheck output from per file output.
@@ -199,7 +220,7 @@ for FILE in $FILES; do
   ############################################################################
   ### PHP AND YAML FILES
   ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]]; then
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]]; then
     # Test files with phpcs rules.
     vendor/bin/phpcs "$TOP_LEVEL/$FILE" --runtime-set installed_paths "$TOP_LEVEL/vendor/drupal/coder/coder_sniffer" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
     PHPCS=$?
@@ -209,6 +230,23 @@ for FILE in $FILES; do
     else
       printf "PHPCS: $FILE ${green}passed${reset}\n"
     fi
+  fi
+
+  ############################################################################
+  ### YAML FILES
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then
+    # Test files with ESLint.
+    cd "$TOP_LEVEL/core"
+    node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . "$TOP_LEVEL/$FILE"
+    YAMLLINT=$?
+    if [ "$YAMLLINT" -ne "0" ]; then
+      # If there are failures set the status to a number other than 0.
+      STATUS=1
+    else
+      printf "ESLint: $FILE ${green}passed${reset}\n"
+    fi
+    cd $TOP_LEVEL
   fi
 
   ############################################################################

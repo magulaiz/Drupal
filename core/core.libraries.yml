@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.16.1"
+  version: "4.16.2"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.16.2/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -95,7 +95,7 @@ drupal.ajax:
     - core/drupal
     - core/drupalSettings
     - core/drupal.progress
-    - core/jquery.once
+    - core/once
     - core/tabbable
 
 drupal.announce:
@@ -165,7 +165,7 @@ drupal.batch:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.progress
-    - core/jquery.once
+    - core/once
 
 drupal.checkbox:
   version: VERSION
@@ -185,7 +185,7 @@ drupal.collapse:
     - core/modernizr
     - core/drupal
     - core/drupal.form
-    - core/jquery.once
+    - core/once
 
 drupal.date:
   version: VERSION
@@ -293,7 +293,7 @@ drupal.dropbutton:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.element.closest:
   version: VERSION
@@ -322,7 +322,7 @@ drupal.form:
     - core/jquery
     - core/drupal
     - core/drupal.debounce
-    - core/jquery.once
+    - core/once
 
 drupal.machine-name:
   version: VERSION
@@ -330,7 +330,7 @@ drupal.machine-name:
     misc/machine-name.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
@@ -370,7 +370,7 @@ drupal.states:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.string.includes:
   version: VERSION
@@ -394,7 +394,7 @@ drupal.tabledrag:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
 
 drupal.tableheader:
   version: VERSION
@@ -404,7 +404,7 @@ drupal.tableheader:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/jquery.once
+    - core/once
     - core/drupal.displace
 
 drupal.tableresponsive:
@@ -414,7 +414,7 @@ drupal.tableresponsive:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
 
 drupal.tableselect:
   version: VERSION
@@ -424,7 +424,7 @@ drupal.tableselect:
     - core/drupal
     - core/drupal.checkbox
     - core/jquery
-    - core/jquery.once
+    - core/once
 
 drupal.timezone:
   version: VERSION
@@ -432,7 +432,7 @@ drupal.timezone:
     misc/timezone.js: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
 
 drupal.vertical-tabs:
@@ -445,7 +445,7 @@ drupal.vertical-tabs:
       misc/vertical-tabs.css: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
+    - core/once
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
@@ -546,6 +546,17 @@ jquery.once:
     assets/vendor/jquery-once/jquery.once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/jquery
+    - core/jquery.once.bc
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256
+
+jquery.once.bc:
+  version: VERSION
+  js:
+    misc/jquery.once.bc.js: { weight: -19 }
+  dependencies:
+    - core/jquery
+    - core/once
+    - core/drupal.object.assign
 
 jquery.ui:
   version: &jquery_ui_version 1.12.1
@@ -857,6 +868,7 @@ drupal.dialog.off_canvas:
       misc/dialog/off-canvas.layout.css: {}
   dependencies:
     - core/jquery
+    - core/once
     - core/drupal
     - core/drupal.ajax
     - core/drupal.announce
@@ -865,7 +877,7 @@ drupal.dialog.off_canvas:
 
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
-  version: "v3.0.0-rc0"
+  version: "3.0.0-rc.0"
   license:
     name: MIT
     url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.0-rc.0/LICENSE

@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Customization of search.
+ */
+
 ((Drupal) => {
   const searchWideButton = document.querySelector(
     '[data-drupal-selector="block-search-wide-button"]',
@@ -6,11 +11,20 @@
     '[data-drupal-selector="block-search-wide-wrapper"]',
   );
 
+  /**
+   * Determine if search is visible.
+   *
+   * @return {boolean}
+   *   True if the search wrapper contains "is-active" class, false if not.
+   */
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
   }
   Drupal.olivero.searchIsVisible = searchIsVisible;
 
+  /**
+   * Set focus for the search input element.
+   */
   function handleFocus() {
     if (searchIsVisible()) {
       searchWideWrapper.querySelector('input[type="search"]').focus();
@@ -19,6 +33,12 @@
     }
   }
 
+  /**
+   * Toggle search functionality visibility.
+   *
+   * @param {boolean} visibility
+   *   True if we want to show the form, false if we want to hide it.
+   */
   function toggleSearchVisibility(visibility) {
     searchWideButton.setAttribute('aria-expanded', visibility === true);
     searchWideWrapper.addEventListener('transitionend', handleFocus, {
@@ -57,4 +77,25 @@
       toggleSearchVisibility(false);
     }
   });
+
+  /**
+   * Initializes the search wide button.
+   *
+   * @type {Drupal~behavior}
+   *
+   * @prop {Drupal~behaviorAttach} attach
+   *  Adds aria-expanded attribute to the search wide button.
+   */
+  Drupal.behaviors.searchWide = {
+    attach(context) {
+      const searchWideButton = once(
+        'search-wide',
+        '[data-drupal-selector="block-search-wide-button"]',
+        context,
+      ).shift();
+      if (searchWideButton) {
+        searchWideButton.setAttribute('aria-expanded', 'false');
+      }
+    },
+  };
 })(Drupal);
