@@ -23,7 +23,7 @@
         "instaclick/php-webdriver": "^1.4.1",
         "mikey179/vfsstream": "v1.6.10-alpha.0",
         "phpunit/phpunit": "^8.5.14 || ^9",
-        "phpspec/prophecy": "^1.12",
+        "phpspec/prophecy": "dev-master",
         "symfony/css-selector": "^4.4",
         "symfony/phpunit-bridge": "^5.3.0",
         "symfony/var-dumper": "5.3.x-dev",
@@ -99,8 +99,7 @@
         "drupal-phpunit-upgrade-check": "Drupal\\Core\\Composer\\Composer::upgradePHPUnit",
         "drupal-phpunit-upgrade": [
             "@composer update phpunit/phpunit --with-dependencies --no-progress",
-            "@composer require phpspec/prophecy-phpunit:^2 --no-progress --no-suggest",
-            "patch -p1 --directory=vendor/phpspec/prophecy < core/lib/Drupal/Core/PhpFixes/prophecy.patch"
+            "@composer require phpspec/prophecy-phpunit:^2 --no-progress --no-suggest"
         ],
         "post-update-cmd": [
             "Drupal\\Composer\\Composer::generateMetapackages"

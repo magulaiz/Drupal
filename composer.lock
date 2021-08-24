@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3778e91edb0d179cc32117fa2b54a46b",
+    "content-hash": "ca69e7a02c67550bd681103b07475725",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5836,29 +5836,30 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "1.13.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea"
+                "reference": "205203958c6ade3752823e6a7b428ce8b9556628"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/be1996ed8adc35c3fd795488a653f4b518be70ea",
-                "reference": "be1996ed8adc35c3fd795488a653f4b518be70ea",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/205203958c6ade3752823e6a7b428ce8b9556628",
+                "reference": "205203958c6ade3752823e6a7b428ce8b9556628",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.2",
-                "php": "^7.2 || ~8.0, <8.1",
+                "php": "^7.2 || ~8.0, <8.2",
                 "phpdocumentor/reflection-docblock": "^5.2",
                 "sebastian/comparator": "^3.0 || ^4.0",
                 "sebastian/recursion-context": "^3.0 || ^4.0"
             },
             "require-dev": {
-                "phpspec/phpspec": "^6.0",
+                "phpspec/phpspec": "^6.0 || ^7.0",
                 "phpunit/phpunit": "^8.0 || ^9.0"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -5897,9 +5898,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/1.13.0"
+                "source": "https://github.com/phpspec/prophecy/tree/master"
             },
-            "time": "2021-03-17T13:42:18+00:00"
+            "time": "2021-08-10T10:23:26+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7908,6 +7909,7 @@
         "drupal/core": 20,
         "drupal/core-project-message": 20,
         "drupal/core-vendor-hardening": 20,
+        "phpspec/prophecy": 20,
         "symfony/var-dumper": 20,
         "symfony/finder": 20,
         "symfony/dom-crawler": 20
