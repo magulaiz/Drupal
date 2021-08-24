@@ -360,14 +360,36 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The table to be altered.
    * @param $fields
-   *   Fields for the primary key.
+   *   Fields for the primary key. Partial column lenght specifications are not
+   *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a primary key.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified fields fail validation.
    */
   abstract public function addPrimaryKey($table, $fields);
+
+  /**
+   * Validates a primary key schema definition.
+   *
+   * @param string $table
+   *   The table to be altered.
+   * @param array $fields
+   *   An array of fields.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified fields fail validation.
+   */
+  protected function validatePrimaryKeySchema(string $table, array $fields): void {
+    foreach ($fields as $field) {
+      if (is_array($field) && isset($field['length'])) {
+        @trigger_error('Specification of unique keys with column lenght is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      }
+    }
+  }
 
   /**
    * Drop the primary key.
@@ -409,14 +431,38 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the key.
    * @param $fields
-   *   An array of field names.
+   *   An array of field names. Partial column lenght specifications are not
+   *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a key by that name.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified fields fail validation.
    */
   abstract public function addUniqueKey($table, $name, $fields);
+
+  /**
+   * Validates a unique key schema definition.
+   *
+   * @param string $table
+   *   The table to be altered.
+   * @param string $name
+   *   The name of the key.
+   * @param array $fields
+   *   An array of fields.
+   *
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified fields fail validation.
+   */
+  protected function validateUniqueKeySchema(string $table, string $name, array $fields): void {
+    foreach ($fields as $field) {
+      if (is_array($field) && isset($field['length'])) {
+        @trigger_error('Specification of unique keys with column lenght is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      }
+    }
+  }
 
   /**
    * Drop a unique key.
@@ -608,6 +654,8 @@ abstract class Schema implements PlaceholderInterface {
    *
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already exists.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the table definition fails validation.
    */
   public function createTable($name, $table) {
     if ($this->tableExists($name)) {

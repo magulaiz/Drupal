@@ -309,10 +309,12 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     'numeric' columns must specify 'precision' and 'scale', and type
  *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': An array of one or more key column specifiers (see below)
- *    that form the primary key.
+ *    that form the primary key. Primary keys do not allow partial column lenght
+ *    specifications.
  *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
+ *    Unique keys do not allow partial column length specifications.
  *  - 'foreign keys': An associative array of relations ('my_relation' =>
  *    specification). Each specification is an array containing the name of
  *    the referenced table ('table'), and an array of column mappings
@@ -326,6 +328,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
+ * Partial column length for a column can only be specified for indexes.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
  * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
