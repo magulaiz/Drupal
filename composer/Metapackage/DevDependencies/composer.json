@@ -15,17 +15,17 @@
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mikey179/vfsstream": "^1.6.8",
+        "mikey179/vfsstream": "v1.6.10-alpha.0",
         "phpspec/prophecy": "^1.12",
         "phpunit/phpunit": "^8.5.14 || ^9",
         "symfony/browser-kit": "^4.4",
         "symfony/css-selector": "^4.4",
-        "symfony/dom-crawler": "^4.4 !=4.4.5",
+        "symfony/dom-crawler": "4.4.x-dev",
         "symfony/error-handler": "^4.4",
         "symfony/filesystem": "^4.4",
-        "symfony/finder": "^4.4",
+        "symfony/finder": "4.4.x-dev",
         "symfony/lock": "^4.4",
         "symfony/phpunit-bridge": "^5.3.0",
-        "symfony/var-dumper": "^5.3.0"
+        "symfony/var-dumper": "5.3.x-dev"
     }
 }

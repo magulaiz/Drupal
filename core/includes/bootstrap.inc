@@ -135,26 +135,7 @@ class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\
 
 // PHP 8.1 workarounds not final fixes.
 // @see https://www.drupal.org/project/drupal/issues/3220021
-class_alias('Drupal\Core\PhpFixes\ParameterBag', 'Symfony\Component\HttpFoundation\ParameterBag', TRUE);
-class_alias('Drupal\Core\PhpFixes\HeaderBag', 'Symfony\Component\HttpFoundation\HeaderBag', TRUE);
-class_alias('Drupal\Core\PhpFixes\AttributeBag', 'Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag', TRUE);
-class_alias('Drupal\Core\PhpFixes\Session', 'Symfony\Component\HttpFoundation\Session\Session', TRUE);
-class_alias('Drupal\Core\PhpFixes\GenericEvent', 'Symfony\Component\EventDispatcher\GenericEvent', TRUE);
-class_alias('Drupal\Core\PhpFixes\ConstraintViolationList', 'Symfony\Component\Validator\ConstraintViolationList', TRUE);
-class_alias('Drupal\Core\PhpFixes\RouteCollection', 'Symfony\Component\Routing\RouteCollection', TRUE);
-if (class_exists('Symfony\Component\DomCrawler\Link')) {
-  class_alias('Drupal\Core\PhpFixes\Crawler', 'Symfony\Component\DomCrawler\Crawler', TRUE);
-  class_alias('Drupal\Core\PhpFixes\Form', 'Symfony\Component\DomCrawler\Form', TRUE);
-}
 class_alias('Drupal\Core\PhpFixes\AbstractFeed', '\Laminas\Feed\Reader\Feed\AbstractFeed', TRUE);
-if (class_exists('\Symfony\Component\Finder\Glob')) {
-  class_alias('Drupal\Core\PhpFixes\FileTypeFilterIterator', 'Symfony\Component\Finder\Iterator\FileTypeFilterIterator', TRUE);
-  class_alias('Drupal\Core\PhpFixes\PathFilterIterator', 'Symfony\Component\Finder\Iterator\PathFilterIterator', TRUE);
-  class_alias('Drupal\Core\PhpFixes\Finder', 'Symfony\Component\Finder\Finder', TRUE);
-}
-if (class_exists('\Symfony\Component\Process\ProcessUtils')) {
-  class_alias('Drupal\Core\PhpFixes\Process', 'Symfony\Component\Process\Process', TRUE);
-}
 
 /**
  * Set up the Symfony Request factory for forward compatibility with Symfony 5.
