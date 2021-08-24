@@ -68,7 +68,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
   }
 
   /**
-   * Test loading of untransformed text when a user doesn't have access to it.
+   * Tests loading of untransformed text when a user doesn't have access to it.
    */
   public function testUsersWithoutPermission() {
     // Create 3 users, each with insufficient permissions, i.e. without either
@@ -87,7 +87,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
       $this->drupalGet('node/1');
 
       // Ensure the text is transformed.
-      $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+      $this->assertSession()->responseContains('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
       $client = $this->getHttpClient();
 
@@ -117,7 +117,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
   }
 
   /**
-   * Test loading of untransformed text when a user does have access to it.
+   * Tests loading of untransformed text when a user does have access to it.
    */
   public function testUserWithPermission() {
     $user = $this->drupalCreateUser(array_merge(static::$basicPermissions, ['edit any article content', 'access in-place editing']));
@@ -125,7 +125,7 @@ class QuickEditIntegrationLoadingTest extends BrowserTestBase {
     $this->drupalGet('node/1');
 
     // Ensure the text is transformed.
-    $this->assertRaw('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
+    $this->assertSession()->responseContains('<p>Do you also love Drupal?</p><figure role="group" class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
     $client = $this->getHttpClient();
     $response = $client->post($this->buildUrl('editor/node/1/body/en/full'), [
       'query' => http_build_query([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']),

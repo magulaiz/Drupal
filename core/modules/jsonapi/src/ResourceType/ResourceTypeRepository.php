@@ -150,6 +150,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   A JSON:API resource type.
    */
   protected function createResourceType(EntityTypeInterface $entity_type, $bundle) {
+    $type_name = NULL;
     $raw_fields = $this->getAllFieldNames($entity_type, $bundle);
     $internalize_resource_type = $entity_type->isInternal();
     $fields = static::getFields($raw_fields, $entity_type, $bundle);
@@ -158,6 +159,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       $this->eventDispatcher->dispatch($event, ResourceTypeBuildEvents::BUILD);
       $internalize_resource_type = $event->resourceTypeShouldBeDisabled();
       $fields = $event->getFields();
+      $type_name = $event->getResourceTypeName();
     }
     return new ResourceType(
       $entity_type->id(),
@@ -167,7 +169,8 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       static::isLocatableResourceType($entity_type, $bundle),
       static::isMutableResourceType($entity_type, $bundle),
       static::isVersionableResourceType($entity_type),
-      $fields
+      $fields,
+      $type_name
     );
   }
 
@@ -180,7 +183,17 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       throw new PreconditionFailedHttpException('Server error. The current route is malformed.');
     }
 
-    return static::lookupResourceType($this->all(), $entity_type_id, $bundle);
+    $map_id = sprintf('jsonapi.resource_type.%s.%s', $entity_type_id, $bundle);
+    $cached = $this->cache->get($map_id);
+
+    if ($cached) {
+      return $cached->data;
+    }
+
+    $resource_type = static::lookupResourceType($this->all(), $entity_type_id, $bundle);
+    $this->cache->set($map_id, $resource_type, Cache::PERMANENT, $this->cacheTags);
+
+    return $resource_type;
   }
 
   /**
@@ -268,9 +281,9 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     // With all fields now aliased, detect any conflicts caused by the
     // automatically generated aliases above.
     foreach (array_intersect($reserved_field_names, array_keys($fields)) as $reserved_field_name) {
-      /* @var \Drupal\jsonapi\ResourceType\ResourceTypeField $aliased_reserved_field */
+      /** @var \Drupal\jsonapi\ResourceType\ResourceTypeField $aliased_reserved_field */
       $aliased_reserved_field = $fields[$reserved_field_name];
-      /* @var \Drupal\jsonapi\ResourceType\ResourceTypeField $field */
+      /** @var \Drupal\jsonapi\ResourceType\ResourceTypeField $field */
       foreach (array_diff_key($fields, array_flip([$reserved_field_name])) as $field) {
         if ($aliased_reserved_field->getPublicName() === $field->getPublicName()) {
           throw new \LogicException("The generated alias '{$aliased_reserved_field->getPublicName()}' for field name '{$aliased_reserved_field->getInternalName()}' conflicts with an existing field. Please report this in the JSON:API issue queue!");
@@ -471,7 +484,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
       return $field_type_is_reference[$field_definition->getType()];
     }
 
-    /* @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
+    /** @var \Drupal\Core\Field\TypedData\FieldItemDataDefinition $item_definition */
     $item_definition = $field_definition->getItemDefinition();
     $main_property = $item_definition->getMainPropertyName();
     $property_definition = $item_definition->getPropertyDefinition($main_property);
@@ -508,8 +521,8 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   The resource type or NULL if one cannot be found.
    */
   protected static function lookupResourceType(array $resource_types, $entity_type_id, $bundle) {
-    if (isset($resource_types["$entity_type_id--$bundle"])) {
-      return $resource_types["$entity_type_id--$bundle"];
+    if (isset($resource_types[$entity_type_id . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle])) {
+      return $resource_types[$entity_type_id . ResourceType::TYPE_NAME_URI_PATH_SEPARATOR . $bundle];
     }
 
     foreach ($resource_types as $resource_type) {

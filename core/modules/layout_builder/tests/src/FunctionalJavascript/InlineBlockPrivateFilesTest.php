@@ -58,7 +58,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   }
 
   /**
-   * Test access to private files added via inline blocks in the layout builder.
+   * Tests access to private files added to inline blocks in the layout builder.
    */
   public function testPrivateFiles() {
     $assert_session = $this->assertSession();
@@ -71,11 +71,11 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     ]));
 
     // Enable layout builder and overrides.
-    $this->drupalPostForm(
-      static::FIELD_UI_PREFIX . '/display/default',
-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
     $this->drupalLogout();
 
     // Log in as user you can only configure layouts and access content.
@@ -228,8 +228,8 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
       'filename' => $file_name,
       'uri' => "private://$file_name",
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), $this->getFileSecret($file));
     $file->save();
     return $file;
