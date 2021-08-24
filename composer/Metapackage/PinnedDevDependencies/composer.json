@@ -8,8 +8,8 @@
     },
     "require": {
         "drupal/core": "9.3.x-dev",
-        "behat/mink": "v1.8.1",
-        "behat/mink-selenium2-driver": "v1.4.0",
+        "behat/mink": "dev-master",
+        "behat/mink-selenium2-driver": "dev-master",
         "composer/ca-bundle": "1.2.10",
         "composer/composer": "2.1.6",
         "composer/metadata-minifier": "1.0.0",
