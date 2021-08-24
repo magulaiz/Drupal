@@ -41,7 +41,7 @@ class AddJsCommand implements CommandInterface {
    * @param string|null $selector
    *   A CSS selector.
    */
-  public function __construct(array $scripts, $selector = 'body') {
+  public function __construct(array $scripts, string $selector = 'body') {
     $this->scripts = $scripts;
     $this->selector = $selector;
   }

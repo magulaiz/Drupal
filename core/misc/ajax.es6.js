@@ -1669,7 +1669,7 @@
           deferred.resolve();
         },
       });
-      // Returns the promise so that the next commands waits on the completion
+      // Returns the promise so that the next AJAX command waits on the completion
       // of this one to execute, ensuring the JS is loaded before executing.
       return deferred.promise();
     },
