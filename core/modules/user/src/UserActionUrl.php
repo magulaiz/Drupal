@@ -116,7 +116,7 @@ class UserActionUrl {
    *   An object containing the user account.
    * @param int $timestamp
    *   A UNIX timestamp, typically the time of the hash's generation.
-   * @param array|NULL $payload
+   * @param array|null $payload
    *   An optional associative array containing additional data requiring
    *   validation.
    *
@@ -140,7 +140,7 @@ class UserActionUrl {
    *   An object containing the user account.
    * @param int $timestamp
    *   A UNIX timestamp, typically the time of the hash's generation.
-   * @param array|NULL $payload
+   * @param array|null $payload
    *   An optional associative array containing additional data requiring
    *   validation.
    *
