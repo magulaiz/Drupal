@@ -54,7 +54,6 @@ global-styling:
       css/components/text-content.css: {}
       css/components/tabledrag.css: {}
       css/components/wide-image.css: {}
-      css/components/ui-dialog.css: {}
 
   js:
     js/checkbox.js: {}
@@ -118,6 +117,12 @@ dropbutton:
   css:
     component:
       css/components/dropbutton.css: {}
+
+drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/ui-dialog.css: {}
 
 drupal.node.preview:
   version: VERSION
