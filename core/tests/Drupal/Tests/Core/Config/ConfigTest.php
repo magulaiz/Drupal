@@ -7,6 +7,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigValueException;
+use Drupal\TestTools\PhpUnitCompatibility\RunnerVersion;
 
 /**
  * Tests the Config.
@@ -269,7 +270,7 @@ class ConfigTest extends UnitTestCase {
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
-    if (PHP_VERSION_ID >= 80100) {
+    if (RunnerVersion::getMajor() >= 9) {
       $this->expectException(\Error::class);
     }
     elseif (PHP_VERSION_ID >= 80000) {
