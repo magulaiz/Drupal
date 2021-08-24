@@ -92,9 +92,9 @@ class BasicTest extends WizardTestBase {
     $this->assertEquals('2.0', $this->getSession()->getDriver()->getAttribute('//rss', 'version'));
     // The feed should have the same title and nodes as the page.
     $this->assertSession()->responseContains($view2['page[title]']);
-    $this->assertRaw($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
+    $this->assertSession()->responseContains($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertSession()->responseContains($node1->label());
-    $this->assertRaw($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
+    $this->assertSession()->responseContains($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertSession()->responseContains($node2->label());
 
     // Go back to the views page and check if this view is there.
@@ -170,7 +170,7 @@ class BasicTest extends WizardTestBase {
     $view4['rest_export[path]'] = $this->randomMachineName(16);
     $this->drupalGet('admin/structure/views/add');
     $this->submitForm($view4, 'Save and edit');
-    $this->assertRaw(t('The view %view has been saved.', ['%view' => $view4['label']]));
+    $this->assertSession()->pageTextContains("The view {$view4['label']} has been saved.");
 
     // Check that the REST export path works. JSON will work, as all core
     // formats will be allowed. JSON and XML by default.

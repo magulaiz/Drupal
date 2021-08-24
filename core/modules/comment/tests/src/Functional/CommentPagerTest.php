@@ -45,7 +45,7 @@ class CommentPagerTest extends CommentTestBase {
     // Check the first page of the node, and confirm the correct comments are
     // shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw(t('next'));
+    $this->assertSession()->pageTextContains('next');
     $this->assertTrue($this->commentExists($comments[0]), 'Comment 1 appears on page 1.');
     $this->assertFalse($this->commentExists($comments[1]), 'Comment 2 does not appear on page 1.');
     $this->assertFalse($this->commentExists($comments[2]), 'Comment 3 does not appear on page 1.');
@@ -382,26 +382,26 @@ class CommentPagerTest extends CommentTestBase {
     // Check the first page of the node, and confirm the correct comments are
     // shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw(t('next'));
-    $this->assertRaw('Comment 1 on field comment');
-    $this->assertRaw('Comment 1 on field comment_2');
+    $this->assertSession()->pageTextContains('next');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment_2');
     // Navigate to next page of field 1.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 2 on field comment');
-    $this->assertRaw('Comment 1 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment_2');
     // Return to page 1.
     $this->drupalGet('node/' . $node->id());
     // Navigate to next page of field 2.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment_2']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 1 on field comment');
-    $this->assertRaw('Comment 2 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 1 on field comment');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment_2');
     // Navigate to next page of field 1.
     $this->clickLinkWithXPath('//h3/a[normalize-space(text())=:label]/ancestor::section[1]//a[@rel="next"]', [':label' => 'Comment 1 on field comment']);
     // Check only one pager updated.
-    $this->assertRaw('Comment 2 on field comment');
-    $this->assertRaw('Comment 2 on field comment_2');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment');
+    $this->assertSession()->pageTextContains('Comment 2 on field comment_2');
   }
 
   /**
