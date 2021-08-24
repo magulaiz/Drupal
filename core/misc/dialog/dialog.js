@@ -19,7 +19,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-(function ($, Drupal, drupalSettings, Popper, displace, dialogPolyfill) {
+(function ($, Drupal, drupalSettings, displace, dialogPolyfill) {
   Element.prototype.dialogObject = {};
 
   Element.prototype.dialog = function () {
@@ -124,7 +124,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         this.dialogOptions.disabled = false;
       }
 
-      this.popper = null;
       this.create();
       this.init();
     }
@@ -132,82 +131,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     _createClass(_class, [{
       key: "processPosition",
       value: function processPosition() {
-        var _this2 = this;
-
-        var placement = 'top';
-        var centered = this.dialogOptions.position.at === 'center';
-        var isTop = this.dialogOptions.hasOwnProperty('drupalOffCanvasPosition') && this.dialogOptions.drupalOffCanvasPosition === 'top';
-
-        if (centered) {
-          var centerDialog = function centerDialog() {
-            var top = (window.innerHeight - displace.offsets.top) / 2 - _this2.uiDialog.height() / 2;
-
-            _this2.uiDialog.css({
-              position: 'fixed',
-              top: "".concat(top, "px"),
-              margin: '0 auto',
-              overflow: 'hidden'
-            });
-          };
-
-          centerDialog();
-
-          if (typeof ResizeObserver !== 'undefined') {
-            var ro = new ResizeObserver(function () {
-              centerDialog();
-            });
-            ro.observe(this.uiDialog[0]);
-          } else {}
-        } else if (!isTop) {
-          var additionalTopOffset = 0;
-
-          if (this.dialogOptions.position.at.includes('top+')) {
-            var numIndex = this.dialogOptions.position.at.indexOf('top+') + 4;
-            additionalTopOffset = parseInt(this.dialogOptions.position.at.substr(numIndex), 10);
-          } else if (this.dialogOptions.position.at.includes('top-') > 0) {
-            var _numIndex = this.dialogOptions.position.at.indexOf('top-') + 4;
-
-            additionalTopOffset = parseInt(this.dialogOptions.position.at.substr(_numIndex), 10) * -1;
-          }
-
-          var maxHeight = this.dialogOptions.maxHeight;
-          var yCenterModifier = {
-            name: 'yCenterModifier',
-            enabled: true,
-            phase: 'main',
-            fn: function fn(_ref) {
-              var state = _ref.state;
-              var maxHeightPx = typeof maxHeight === 'string' ? window.innerHeight * parseInt(maxHeight.replace('%', ''), 10) / 100 : maxHeight;
-              var popperHeight = Math.min(state.elements.popper.offsetHeight, maxHeightPx);
-              var centerOffset = centered ? (window.innerHeight - displace.offsets.top) / 2 - popperHeight / 2 : 0;
-              state.modifiersData.popperOffsets.y = centerOffset + additionalTopOffset;
-            }
-          };
-          var modifiers = [yCenterModifier];
-          var rightModifier = {
-            name: 'rightModifier',
-            enabled: true,
-            phase: 'main',
-            fn: function fn(_ref2) {
-              var state = _ref2.state;
-
-              if (state.placement === 'top') {
-                state.modifiersData.popperOffsets.x = window.innerWidth - state.elements.popper.offsetWidth;
-              }
-            }
-          };
-
-          if (this.dialogOptions.position.at.includes('right')) {
-            modifiers.push(rightModifier);
-          }
-
-          var positionAround = this.dialogOptions.position.of === window ? document.querySelector('body') : this.dialogOptions.position.of;
-          this.popper = Popper.createPopper(positionAround, this.widget().get(0), {
-            placement: placement,
-            modifiers: modifiers,
-            strategy: 'fixed'
-          });
-        }
+        this.uiDialog.position(this.dialogOptions.position);
       }
     }, {
       key: "init",
@@ -219,7 +143,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "options",
       value: function options() {
-        var _this3 = this;
+        var _this2 = this;
 
         for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           args[_key2] = arguments[_key2];
@@ -231,9 +155,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (option) {
-            _this3[option] = args[0][option];
+            _this2[option] = args[0][option];
 
-            _this3.setOption(option, args[0][option]);
+            _this2.setOption(option, args[0][option]);
           });
           return this.$element;
         }
@@ -459,7 +383,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "createTitlebar",
       value: function createTitlebar() {
-        var _this4 = this;
+        var _this3 = this;
 
         this.uiDialogTitlebar = $('<div>');
         this.uiDialogTitlebar.addClass('ui-dialog-titlebar ui-widget-header ui-helper-clearfix');
@@ -472,7 +396,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         this.uiDialogTitlebarClose.on('click', function (event) {
           event.preventDefault();
 
-          _this4.close(event);
+          _this3.close(event);
         });
         this.uiDialogTitle = $('<span id="">').prependTo(this.uiDialogTitlebar);
         this.uiDialogTitle.addClass('ui-dialog-title');
@@ -536,7 +460,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }, {
       key: "createWrapper",
       value: function createWrapper() {
-        var _this5 = this;
+        var _this4 = this;
 
         var id = this.$element.attr('id');
         var existingWrapper = {};
@@ -576,10 +500,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         this.uiDialog.addClass(this.dialogOptions.classes['ui-dialog']);
         this.uiDialog.addClass('ui-dialog ui-widget ui-widget-content ui-front');
         this.uiDialog.on('keydown', function (event) {
-          if (_this5.dialogOptions.closeOnEscape && !event.isDefaultPrevented() && event.keyCode && event.keyCode === _this5.keyCodes.ESCAPE) {
+          if (_this4.dialogOptions.closeOnEscape && !event.isDefaultPrevented() && event.keyCode && event.keyCode === _this4.keyCodes.ESCAPE) {
             event.preventDefault();
 
-            _this5.close(event);
+            _this4.close(event);
           }
         });
       }
@@ -691,7 +615,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           position: {
             my: 'center',
             at: 'center',
-            of: document.querySelector('body')
+            of: null
           },
           resizable: true,
           show: null,
@@ -767,4 +691,4 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     dialog.close = closeDialog;
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings, Popper, Drupal.displace, dialogPolyfill);
+})(jQuery, Drupal, drupalSettings, Drupal.displace, dialogPolyfill);

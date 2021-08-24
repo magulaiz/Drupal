@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function ($, Drupal, drupalSettings, Popper, displace, dialogPolyfill) {
+(function ($, Drupal, drupalSettings, displace, dialogPolyfill) {
   Element.prototype.dialogObject = {};
 
   Element.prototype.dialog = function (...args) {
@@ -99,7 +99,6 @@
         this.dialogOptions.disabled = false;
       }
 
-      this.popper = null;
       this.create();
       this.init();
     }
@@ -129,7 +128,7 @@
         position: {
           my: 'center',
           at: 'center',
-          of: document.querySelector('body'),
+          of: null,
         },
         resizable: true,
         show: null,
@@ -149,113 +148,7 @@
     }
 
     processPosition() {
-      const placement = 'top';
-      const centered = this.dialogOptions.position.at === 'center';
-
-      // @todo this is looking for a drupal property, which is counter to
-      // making this a general-use library.
-      const isTop =
-        this.dialogOptions.hasOwnProperty('drupalOffCanvasPosition') &&
-        this.dialogOptions.drupalOffCanvasPosition === 'top';
-
-      if (centered) {
-        const centerDialog = () => {
-          const top =
-            (window.innerHeight - displace.offsets.top) / 2 -
-            this.uiDialog.height() / 2;
-
-          this.uiDialog.css({
-            position: 'fixed',
-            top: `${top}px`,
-            margin: '0 auto',
-            overflow: 'hidden',
-          });
-        };
-        centerDialog();
-
-        // IE11 does not support resizeObserver
-        if (typeof ResizeObserver !== 'undefined') {
-          const ro = new ResizeObserver(() => {
-            centerDialog();
-          });
-          ro.observe(this.uiDialog[0]);
-        } else {
-          // @todo implement IE11 alternative if this somehow lands before IE11
-          //  support ends.
-        }
-      } else if (!isTop) {
-        let additionalTopOffset = 0;
-        if (this.dialogOptions.position.at.includes('top+')) {
-          const numIndex = this.dialogOptions.position.at.indexOf('top+') + 4;
-          additionalTopOffset = parseInt(
-            this.dialogOptions.position.at.substr(numIndex),
-            10,
-          );
-        } else if (this.dialogOptions.position.at.includes('top-') > 0) {
-          const numIndex = this.dialogOptions.position.at.indexOf('top-') + 4;
-          additionalTopOffset =
-            parseInt(this.dialogOptions.position.at.substr(numIndex), 10) * -1;
-        }
-
-        const { maxHeight } = this.dialogOptions;
-
-        const yCenterModifier = {
-          name: 'yCenterModifier',
-          enabled: true,
-          phase: 'main',
-          fn({ state }) {
-            const maxHeightPx =
-              typeof maxHeight === 'string'
-                ? (window.innerHeight *
-                    parseInt(maxHeight.replace('%', ''), 10)) /
-                  100
-                : maxHeight;
-            const popperHeight = Math.min(
-              state.elements.popper.offsetHeight,
-              maxHeightPx,
-            );
-            const centerOffset = centered
-              ? (window.innerHeight - displace.offsets.top) / 2 -
-                popperHeight / 2
-              : 0;
-            state.modifiersData.popperOffsets.y =
-              centerOffset + additionalTopOffset;
-          },
-        };
-
-        const modifiers = [yCenterModifier];
-
-        const rightModifier = {
-          name: 'rightModifier',
-          enabled: true,
-          phase: 'main',
-          fn({ state }) {
-            if (state.placement === 'top') {
-              state.modifiersData.popperOffsets.x =
-                window.innerWidth - state.elements.popper.offsetWidth;
-            }
-          },
-        };
-
-        if (this.dialogOptions.position.at.includes('right')) {
-          modifiers.push(rightModifier);
-        }
-
-        const positionAround =
-          this.dialogOptions.position.of === window
-            ? document.querySelector('body')
-            : this.dialogOptions.position.of;
-
-        this.popper = Popper.createPopper(
-          positionAround,
-          this.widget().get(0),
-          {
-            placement,
-            modifiers,
-            strategy: 'fixed',
-          },
-        );
-      }
+      this.uiDialog.position(this.dialogOptions.position);
     }
 
     init() {
@@ -879,4 +772,4 @@
 
     return dialog;
   };
-})(jQuery, Drupal, drupalSettings, Popper, Drupal.displace, dialogPolyfill);
+})(jQuery, Drupal, drupalSettings, Drupal.displace, dialogPolyfill);

@@ -216,26 +216,7 @@ drupal.dialog:
     # DIALOG PROTOTYPE: all of these can be removed if its determined resizable
     # is not needed. Many of these can probably be removed even if resizable is
     # present, but that can happen when we've moved beyond prototyping.
-    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   # All CSS assets previously came from core/jquery.ui, a deprecated library.
   # @todo replace with solution found in https://drupal.org/node/2158943
   css:
@@ -257,7 +238,6 @@ drupal.dialog:
     - core/tabbable.jquery.shim
     - core/tabbable
     - core/dialog.polyfill
-    - core/popperjs
     - core/drupal.string.includes
     - core/drupal.jquery.position
 
