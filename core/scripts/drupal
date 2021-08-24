@@ -22,5 +22,6 @@ $application = new Application('drupal', \Drupal::VERSION);
 $application->add(new QuickStartCommand());
 $application->add(new InstallCommand($classloader));
 $application->add(new ServerCommand($classloader));
+$application->add(new GenerateTheme());
 
 $application->run();
