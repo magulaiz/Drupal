@@ -469,6 +469,7 @@ dublincorerendererentry
 dublincorerendererfeed
 défaut
 détruire
+eacute
 easyrdf
 ecmascript
 editables
@@ -557,6 +558,7 @@ fielditem
 fieldlayout
 fieldlinks
 fieldnames
+fieldnid
 fieldsets
 filecount
 filefield
