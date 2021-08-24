@@ -560,8 +560,8 @@ function file_save_data($data, $destination = NULL, $replace = FileSystemInterfa
     $file = File::create([
       'uri' => $uri,
       'uid' => $user->id(),
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     // If we are replacing an existing file re-use its database record.
     // @todo Do not create a new entity in order to update it. See
     //   https://www.drupal.org/node/2241865.
@@ -709,7 +709,7 @@ function file_cron() {
   if ($age) {
     $fids = Drupal::entityQuery('file')
       ->accessCheck(FALSE)
-      ->condition('status', FILE_STATUS_PERMANENT, '<>')
+      ->condition('status', FileInterface::STATUS_PERMANENT, '<>')
       ->condition('changed', REQUEST_TIME - $age, '<')
       ->range(0, 100)
       ->execute();
@@ -774,7 +774,7 @@ function file_cron() {
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
   // Get all errors set before calling this method. This will also clear them
-  // from $_SESSION.
+  // from the messenger service.
   $errors_before = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
 
   $upload_location = isset($element['#upload_location']) ? $element['#upload_location'] : FALSE;
@@ -784,7 +784,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
   $result = file_save_upload($upload_name, $upload_validators, $upload_location, $delta, $replace);
 
   // Get new errors that are generated while trying to save the upload. This
-  // will also clear them from $_SESSION.
+  // will also clear them from the messenger service.
   $errors_new = \Drupal::messenger()->deleteByType(MessengerInterface::TYPE_ERROR);
   if (!empty($errors_new)) {
 
@@ -1778,11 +1778,17 @@ function file_get_file_references(FileInterface $file, FieldDefinitionInterface 
  *
  * @return \Drupal\Core\StringTranslation\TranslatableMarkup|\Drupal\Core\StringTranslation\TranslatableMarkup[]
  *   An array of file statuses or a specified status if $choice is set.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+ *   There is no replacement.
+ *
+ * @see https://www.drupal.org/node/3227228
  */
 function _views_file_status($choice = NULL) {
+  @trigger_error('_views_file_status() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/3227228', E_USER_DEPRECATED);
   $status = [
     0 => t('Temporary'),
-    FILE_STATUS_PERMANENT => t('Permanent'),
+    FileInterface::STATUS_PERMANENT => t('Permanent'),
   ];
 
   if (isset($choice)) {

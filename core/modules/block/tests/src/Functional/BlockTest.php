@@ -65,7 +65,7 @@ class BlockTest extends BlockTestBase {
 
     // Confirm that an empty block is not displayed.
     $this->assertSession()->pageTextNotContains('Powered by Drupal');
-    $this->assertNoRaw('sidebar-first');
+    $this->assertSession()->responseNotContains('sidebar-first');
   }
 
   /**
@@ -162,11 +162,14 @@ class BlockTest extends BlockTestBase {
         'plugin_id' => $block_name,
         'theme' => $default_theme,
       ]);
-      $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
-      $this->assertCount(1, $links, 'Found one matching link.');
-      $this->assertEquals(t('Place block'), $links[0]->getText(), 'Found the expected link text.');
 
-      list($path, $query_string) = explode('?', $links[0]->getAttribute('href'), 2);
+      // Verify that one link is found, with the the expected link text.
+      $xpath = $this->assertSession()->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $add_url->toString()]);
+      $this->assertSession()->elementsCount('xpath', $xpath, 1);
+      $this->assertSession()->elementTextEquals('xpath', $xpath, 'Place block');
+
+      $link = $this->getSession()->getPage()->find('xpath', $xpath);
+      list($path, $query_string) = explode('?', $link->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
@@ -178,7 +181,7 @@ class BlockTest extends BlockTestBase {
         'settings[label]' => $title,
       ];
       // Create the block using the link parsed from the library page.
-      $this->drupalGet($this->getAbsoluteUrl($links[0]->getAttribute('href')));
+      $this->drupalGet($this->getAbsoluteUrl($link->getAttribute('href')));
       $this->submitForm($edit, 'Save block');
 
       // Ensure that the block was created with the expected weight.
@@ -244,19 +247,19 @@ class BlockTest extends BlockTestBase {
     // Test deleting the block from the edit form.
     $this->drupalGet('admin/structure/block/manage/' . $block['id']);
     $this->clickLink('Remove block');
-    $this->assertRaw(t('Are you sure you want to remove the block @name from the @region region?', ['@name' => $block['settings[label]'], '@region' => 'Footer']));
+    $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block['settings[label]'] . ' from the Footer region?');
     $this->submitForm([], 'Remove');
-    $this->assertRaw(t('The block %name has been removed from the %region region.', ['%name' => $block['settings[label]'], '%region' => 'Footer']));
+    $this->assertSession()->pageTextContains('The block ' . $block['settings[label]'] . ' has been removed from the Footer region.');
 
     // Test deleting a block via "Configure block" link.
     $block = $this->drupalPlaceBlock('system_powered_by_block');
     $this->drupalGet('admin/structure/block/manage/' . $block->id(), ['query' => ['destination' => 'admin']]);
     $this->clickLink('Remove block');
-    $this->assertRaw(t('Are you sure you want to remove the block @name from the @region region?', ['@name' => $block->label(), '@region' => 'Left sidebar']));
+    $this->assertSession()->pageTextContains('Are you sure you want to remove the block ' . $block->label() . ' from the Left sidebar region?');
     $this->submitForm([], 'Remove');
-    $this->assertRaw(t('The block %name has been removed from the %region region.', ['%name' => $block->label(), '%region' => 'Left sidebar']));
+    $this->assertSession()->pageTextContains('The block ' . $block->label() . ' has been removed from the Left sidebar region.');
     $this->assertSession()->addressEquals('admin');
-    $this->assertNoRaw($block->id());
+    $this->assertSession()->responseNotContains($block->id());
   }
 
   /**

@@ -233,7 +233,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the custom block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseContains('<strong>Custom</strong> titlealert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -243,7 +243,7 @@ class ExposedFormTest extends ViewTestBase {
     // Assert that the only occurrence of `$view->getTitle()` is the title tag
     // now that label has been removed.
     $this->drupalGet('test_exposed_block');
-    $this->assertNoRaw('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseNotContains('<strong>Custom</strong> titlealert("hacked!");');
     $this->assertSession()->elementContains('css', 'title', $view->getTitle());
     $this->assertSession()->pageTextMatchesCount(1, '/' . $view->getTitle() . '/');
 
@@ -395,11 +395,11 @@ class ExposedFormTest extends ViewTestBase {
     $escape_1 = Html::escape($expected_label);
     $escape_2 = Html::escape($escape_1);
     // Make sure we see the single-escaped string in the raw output.
-    $this->assertRaw($escape_1);
+    $this->assertSession()->responseContains($escape_1);
     // But no double-escaped string.
-    $this->assertNoRaw($escape_2);
+    $this->assertSession()->responseNotContains($escape_2);
     // And not the raw label, either.
-    $this->assertNoRaw($expected_label);
+    $this->assertSession()->responseNotContains($expected_label);
 
     // Check that the custom field identifier is used in the URL query string.
     $this->submitForm(['sort_order' => 'DESC'], 'Apply');
@@ -447,16 +447,16 @@ class ExposedFormTest extends ViewTestBase {
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered before submitting the normal form.
-    $this->assertRaw(t('Apply'));
-    $this->assertRaw('<div class="views-row">');
+    $this->assertSession()->responseContains("Apply");
+    $this->assertSession()->responseContains('<div class="views-row">');
 
     $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
     $form = $this->cssSelect('form.views-exposed-form');
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered after submitting the normal form.
-    $this->assertRaw(t('Apply'));
-    $this->assertRaw('<div class="views-row">');
+    $this->assertSession()->responseContains("Apply");
+    $this->assertSession()->responseContains('<div class="views-row">');
   }
 
   /**
