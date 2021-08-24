@@ -16,7 +16,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -206,6 +206,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: created
           plugin_id: date
           entity_type: comment
           entity_field: created
@@ -218,6 +219,9 @@ display:
           admin_label: ''
           order: DESC
           exposed: false
+          expose:
+            label: ''
+            field_identifier: cid
           plugin_id: field
           entity_type: comment
           entity_field: cid

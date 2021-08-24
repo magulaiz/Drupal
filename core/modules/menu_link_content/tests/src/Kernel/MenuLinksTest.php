@@ -75,8 +75,8 @@ class MenuLinksTest extends KernelTestBase {
     // Then create a simple link hierarchy:
     // - parent
     //   - child-1
-    //      - child-1-1
-    //      - child-1-2
+    //     - child-1-1
+    //     - child-1-2
     //   - child-2
     $base_options = [
       'title' => 'Menu link test',
@@ -131,11 +131,11 @@ class MenuLinksTest extends KernelTestBase {
    */
   public function assertMenuLinkParents($links, $expected_hierarchy) {
     foreach ($expected_hierarchy as $id => $parent) {
-      /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
+      /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
       $menu_link_plugin = $this->menuLinkManager->createInstance($links[$id]);
       $expected_parent = isset($links[$parent]) ? $links[$parent] : '';
 
-      $this->assertEqual($menu_link_plugin->getParent(), $expected_parent, new FormattableMarkup('Menu link %id has parent of %parent, expected %expected_parent.', ['%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent]));
+      $this->assertEquals($expected_parent, $menu_link_plugin->getParent(), new FormattableMarkup('Menu link %id has parent of %parent, expected %expected_parent.', ['%id' => $id, '%parent' => $menu_link_plugin->getParent(), '%expected_parent' => $expected_parent]));
     }
   }
 
@@ -152,7 +152,7 @@ class MenuLinksTest extends KernelTestBase {
     $link = MenuLinkContent::create($options);
     $link->save();
     // Make sure the changed timestamp is set.
-    $this->assertEqual($link->getChangedTime(), $this->time->getRequestTime(), 'Creating a menu link sets the "changed" timestamp.');
+    $this->assertEquals($link->getChangedTime(), $this->time->getRequestTime(), 'Creating a menu link sets the "changed" timestamp.');
     $options = [
       'title' => 'Test Link',
     ];
@@ -160,7 +160,7 @@ class MenuLinksTest extends KernelTestBase {
     $link->changed->value = 0;
     $link->save();
     // Make sure the changed timestamp is updated.
-    $this->assertEqual($link->getChangedTime(), $this->time->getRequestTime(), 'Changing a menu link sets "changed" timestamp.');
+    $this->assertEquals($link->getChangedTime(), $this->time->getRequestTime(), 'Changing a menu link sets "changed" timestamp.');
   }
 
   /**
@@ -213,7 +213,7 @@ class MenuLinksTest extends KernelTestBase {
   }
 
   /**
-   * Test automatic reparenting of menu links.
+   * Tests automatic reparenting of menu links.
    */
   public function testMenuLinkReparenting($module = 'menu_test') {
     // Check the initial hierarchy.
@@ -231,12 +231,12 @@ class MenuLinksTest extends KernelTestBase {
     // Start over, and move child-1 under child-2, and check that all the
     // children of child-1 have been moved too.
     $links = $this->createLinkHierarchy($module);
-    /* @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
     $this->menuLinkManager->updateDefinition($links['child-1'], ['parent' => $links['child-2']]);
     // Verify that the entity was updated too.
+    /** @var \Drupal\Core\Menu\MenuLinkInterface $menu_link_plugin  */
     $menu_link_plugin = $this->menuLinkManager->createInstance($links['child-1']);
     $entity = \Drupal::service('entity.repository')->loadEntityByUuid('menu_link_content', $menu_link_plugin->getDerivativeId());
-    $this->assertEqual($entity->getParentId(), $links['child-2']);
+    $this->assertEquals($links['child-2'], $entity->getParentId());
 
     $expected_hierarchy = [
       'parent' => '',
@@ -321,7 +321,7 @@ class MenuLinksTest extends KernelTestBase {
     $menu_links = $this->menuLinkManager->loadLinksByRoute('menu_test.menu_test');
     $this->assertCount(1, $menu_links);
     $menu_link = reset($menu_links);
-    $this->assertEqual($menu_link->getPluginId(), 'menu_test');
+    $this->assertEquals('menu_test', $menu_link->getPluginId());
 
     // Uninstall the module and ensure the menu link got removed.
     \Drupal::service('module_installer')->uninstall(['menu_test']);

@@ -34,7 +34,7 @@ class ViewsExposedForm extends FormBase {
   protected $currentPathStack;
 
   /**
-   * Constructs a new ViewsExposedForm
+   * Constructs a new ViewsExposedForm.
    *
    * @param \Drupal\views\ExposedFormCache $exposed_form_cache
    *   The exposed form cache.
@@ -208,7 +208,7 @@ class ViewsExposedForm extends FormBase {
       if (!empty($key) && !in_array($key, $exclude)) {
         if (is_array($value)) {
           // Handle checkboxes, we only want to include the checked options.
-          // @todo: revisit the need for this when
+          // @todo revisit the need for this when
           //   https://www.drupal.org/node/342316 is resolved.
           $checked = Checkboxes::getCheckedCheckboxes($value);
           foreach ($checked as $option_id) {

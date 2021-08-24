@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\Core\Test;
 
+use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\BrowserTestBase;
-use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Session;
-use Goutte\Client;
 
 /**
  * @coversDefaultClass \Drupal\Tests\BrowserTestBase
@@ -19,7 +19,7 @@ class BrowserTestBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setMethods(['getDriver'])
       ->getMock();
-    $session->expects($this->once())
+    $session->expects($this->any())
       ->method('getDriver')
       ->willReturn($driver);
 
@@ -27,7 +27,7 @@ class BrowserTestBaseTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->setMethods(['getSession'])
       ->getMockForAbstractClass();
-    $btb->expects($this->once())
+    $btb->expects($this->any())
       ->method('getSession')
       ->willReturn($session);
 
@@ -41,21 +41,15 @@ class BrowserTestBaseTest extends UnitTestCase {
     // Our stand-in for the Guzzle client object.
     $expected = new \stdClass();
 
-    $browserkit_client = $this->getMockBuilder(Client::class)
+    $browserkit_client = $this->getMockBuilder(DrupalTestBrowser::class)
       ->setMethods(['getClient'])
       ->getMockForAbstractClass();
     $browserkit_client->expects($this->once())
       ->method('getClient')
       ->willReturn($expected);
 
-    // Because the driver is a GoutteDriver, we'll get back a client.
-    $driver = $this->getMockBuilder(GoutteDriver::class)
-      ->setMethods(['getClient'])
-      ->getMock();
-    $driver->expects($this->once())
-      ->method('getClient')
-      ->willReturn($browserkit_client);
-
+    // Because the driver is a BrowserKitDriver, we'll get back a client.
+    $driver = new BrowserKitDriver($browserkit_client);
     $btb = $this->mockBrowserTestBaseWithDriver($driver);
 
     $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
@@ -68,7 +62,7 @@ class BrowserTestBaseTest extends UnitTestCase {
    * @covers ::getHttpClient
    */
   public function testGetHttpClientException() {
-    // A driver type that isn't GoutteDriver. This should cause a
+    // A driver type that isn't BrowserKitDriver. This should cause a
     // RuntimeException.
     $btb = $this->mockBrowserTestBaseWithDriver(new \stdClass());
 
@@ -81,7 +75,7 @@ class BrowserTestBaseTest extends UnitTestCase {
   }
 
   /**
-   * Test that tearDown doesn't call cleanupEnvironment if setUp is not called.
+   * Tests that tearDown doesn't call cleanupEnvironment if setUp is not called.
    *
    * @covers ::tearDown
    */

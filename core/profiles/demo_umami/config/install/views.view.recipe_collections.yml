@@ -17,7 +17,7 @@ display:
   default:
     display_plugin: default
     id: default
-    display_title: Master
+    display_title: Default
     position: 0
     display_options:
       access:
@@ -178,6 +178,7 @@ display:
           exposed: false
           expose:
             label: ''
+            field_identifier: name
           entity_type: taxonomy_term
           entity_field: name
           plugin_id: standard

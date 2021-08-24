@@ -11,7 +11,7 @@ user.logout:
   defaults:
     _controller: '\Drupal\user\Controller\UserController::logout'
   requirements:
-    _access: 'TRUE'
+    _user_is_logged_in: 'TRUE'
 
 user.admin_index:
   path: '/admin/config/people'
@@ -28,6 +28,14 @@ entity.user.admin_form:
     _title: 'Account settings'
   requirements:
     _permission: 'administer account settings'
+
+user.role.settings:
+  path: '/admin/people/role-settings'
+  defaults:
+    _form: '\Drupal\user\Form\RoleSettingsForm'
+    _title: 'Role settings'
+  requirements:
+    _permission: 'administer permissions'
 
 entity.user.collection:
   path: '/admin/people'

@@ -35,12 +35,12 @@ class UserLoginTest extends BrowserTestBase {
     $user = $this->drupalCreateUser([]);
     $this->drupalGet('user/login', ['query' => ['destination' => 'foo']]);
     $edit = ['name' => $user->getAccountName(), 'pass' => $user->passRaw];
-    $this->drupalPostForm(NULL, $edit, t('Log in'));
+    $this->submitForm($edit, 'Log in');
     $this->assertSession()->addressEquals('foo');
   }
 
   /**
-   * Test the global login flood control.
+   * Tests the global login flood control.
    */
   public function testGlobalLoginFloodControl() {
     $this->config('user.flood')
@@ -77,7 +77,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Test the per-user login flood control.
+   * Tests the per-user login flood control.
    */
   public function testPerUserLoginFloodControl() {
     $this->config('user.flood')
@@ -117,7 +117,7 @@ class UserLoginTest extends BrowserTestBase {
   }
 
   /**
-   * Test that user password is re-hashed upon login after changing $count_log2.
+   * Tests user password is re-hashed upon login after changing $count_log2.
    */
   public function testPasswordRehashOnLogin() {
     // Determine default log2 for phpass hashing algorithm
@@ -134,7 +134,7 @@ class UserLoginTest extends BrowserTestBase {
     // Load the stored user. The password hash should reflect $default_count_log2.
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
     $account = User::load($account->id());
-    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $default_count_log2);
+    $this->assertSame($default_count_log2, $password_hasher->getCountLog2($account->getPassword()));
 
     // Change the required number of iterations by loading a test-module
     // containing the necessary container builder code and then verify that the
@@ -148,8 +148,39 @@ class UserLoginTest extends BrowserTestBase {
     // Load the stored user, which should have a different password hash now.
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
-    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
+    $this->assertSame($overridden_count_log2, $password_hasher->getCountLog2($account->getPassword()));
     $this->assertTrue($password_hasher->check($password, $account->getPassword()));
+  }
+
+  /**
+   * Tests with a browser that denies cookies.
+   */
+  public function testCookiesNotAccepted() {
+    $this->drupalGet('user/login');
+    $form_build_id = $this->getSession()->getPage()->findField('form_build_id');
+
+    $account = $this->drupalCreateUser([]);
+    $post = [
+      'form_id' => 'user_login_form',
+      'form_build_id' => $form_build_id,
+      'name' => $account->getAccountName(),
+      'pass' => $account->passRaw,
+      'op' => 'Log in',
+    ];
+    $url = $this->buildUrl(Url::fromRoute('user.login'));
+
+    /** @var \Psr\Http\Message\ResponseInterface $response */
+    $response = $this->getHttpClient()->post($url, [
+      'form_params' => $post,
+      'http_errors' => FALSE,
+      'cookies' => FALSE,
+      'allow_redirects' => FALSE,
+    ]);
+
+    // Follow the location header.
+    $this->drupalGet($response->getHeader('location')[0]);
+    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->pageTextContains('To log in to this site, your browser must accept cookies from the domain');
   }
 
   /**
@@ -171,7 +202,8 @@ class UserLoginTest extends BrowserTestBase {
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
     ];
-    $this->drupalPostForm('user/login', $edit, t('Log in'));
+    $this->drupalGet('user/login');
+    $this->submitForm($edit, 'Log in');
     if (isset($flood_trigger)) {
       $this->assertSession()->statusCodeEquals(403);
       $this->assertSession()->fieldNotExists('pass');
@@ -183,19 +215,23 @@ class UserLoginTest extends BrowserTestBase {
         ->execute()
         ->fetchField();
       if ($flood_trigger == 'user') {
-        $this->assertRaw(\Drupal::translation()->formatPlural($this->config('user.flood')->get('user_limit'), 'There has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', 'There have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]));
+        $this->assertSession()->pageTextMatches("/There (has|have) been more than \w+ failed login attempt.* for this account. It is temporarily blocked. Try again later or request a new password./");
+        $this->assertSession()->linkExists("request a new password");
+        $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass')->toString());
         $this->assertEquals('Flood control blocked login attempt for uid %uid from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per user.');
       }
       else {
         // No uid, so the limit is IP-based.
-        $this->assertRaw(t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]));
+        $this->assertSession()->pageTextContains("Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or request a new password.");
+        $this->assertSession()->linkExists("request a new password");
+        $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass')->toString());
         $this->assertEquals('Flood control blocked login attempt from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per IP.');
       }
     }
     else {
       $this->assertSession()->statusCodeEquals(200);
       $this->assertSession()->fieldValueEquals('pass', '');
-      $this->assertText('Unrecognized username or password. Forgot your password?');
+      $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
     }
   }
 
