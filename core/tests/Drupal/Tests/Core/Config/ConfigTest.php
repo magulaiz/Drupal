@@ -270,11 +270,13 @@ class ConfigTest extends UnitTestCase {
     $this->config->set('testData', 1);
 
     // Attempt to treat the single value as a nested item.
-    if (RunnerVersion::getMajor() >= 9) {
-      $this->expectException(\Error::class);
-    }
-    elseif (PHP_VERSION_ID >= 80000) {
-      $this->expectError();
+    if (PHP_VERSION_ID >= 80000) {
+      if (RunnerVersion::getMajor() >= 9) {
+        $this->expectException(\Error::class);
+      }
+      else {
+        $this->expectError();
+      }
     }
     else {
       $this->expectWarning();
