@@ -152,7 +152,7 @@
 }
 
 #drupal-off-canvas {
-& .form-type--boolean {
+  & .form-type--boolean {
     margin-left: 0;
   }
 }
