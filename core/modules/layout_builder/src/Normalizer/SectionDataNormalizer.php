@@ -5,12 +5,11 @@ namespace Drupal\layout_builder\Normalizer;
 use Drupal\layout_builder\Plugin\DataType\SectionData;
 use Drupal\layout_builder\Section;
 use Drupal\serialization\Normalizer\TypedDataNormalizer;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
  * Normalizes section data.
  */
-class SectionDataNormalizer extends TypedDataNormalizer implements DenormalizerInterface {
+class SectionDataNormalizer extends TypedDataNormalizer {
 
   /**
    * {@inheritdoc}
@@ -21,7 +20,8 @@ class SectionDataNormalizer extends TypedDataNormalizer implements DenormalizerI
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    return $object->getValue()->toArray();
+    $value = parent::normalize($object, $format, $context);
+    return $value->toArray();
   }
 
   /**
