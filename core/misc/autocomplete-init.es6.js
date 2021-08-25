@@ -11,21 +11,9 @@
   //   attribute.
   // 3 - The options object provided to the constructor.
   Drupal.Autocomplete.defaultOptions = {
-    // Add jQuery UI classes so the autocomplete is styled the same as its
-    // jQuery UI predecessor.
-    inputClass: 'ui-autocomplete-input',
-    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-    loadingClass: 'ui-autocomplete-loading',
-    // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
-    // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
-    // items in`<a>` tags, so this class is moved to the `<li>` which provides
-    // a visually identical autocomplete experience to the previous jQuery UI
-    // autocomplete.
-    itemClass: 'ui-menu-item-wrapper',
     // Do not create an autocomplete-specific live region since
     // #drupal-live-announce will be used.
     createLiveRegion: false,
-    displayLabels: false,
     // The assistive hint overrides intentionally use placeholders without
     // having them populated in the Drupal.t() call. These placeholders are
     // replaced with their expected values in A11yAutocomplete, which uses
@@ -33,12 +21,12 @@
     minCharAssistiveHint: Drupal.t(
       'Type @count or more characters for results',
     ),
-    noResults: Drupal.t('No results found'),
-    moreThanMaxResults: Drupal.t(
+    noResultsAssistiveHint: Drupal.t('No results found'),
+    moreThanMaxResultsAssistiveHint: Drupal.t(
       'There are at least @count results available. Type additional characters to refine your search.',
     ),
-    someResults: Drupal.t('There are @count results available.'),
-    oneResult: Drupal.t('There is one result available.'),
+    someResultsAssistiveHint: Drupal.t('There are @count results available.'),
+    oneResultAssistiveHint: Drupal.t('There is one result available.'),
     inputAssistiveHint: Drupal.t(
       'When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.',
     ),
@@ -74,7 +62,7 @@
       autocompleteInput,
       options,
     );
-    const instance = Drupal.Autocomplete.instances[id];
+    const instance = Drupal.Autocomplete.instances[id]._internal_object;
 
     /**
      * Sends a message to assistive technology.
@@ -94,7 +82,7 @@
 
     instance.input.addEventListener('autocomplete-destroy', (e) => {
       delete Drupal.Autocomplete.instances[
-        e.detail.autocomplete.input.getAttribute('id')
+        e.detail.autocomplete._internal_object.input.getAttribute('id')
       ];
     });
   };
@@ -142,10 +130,12 @@
     },
     detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        context.querySelectorAll('input.form-autocomplete').forEach((input) => {
-          const id = input.getAttribute('id');
-          Drupal.Autocomplete.instances[id].destroy();
-        });
+        once
+          .remove('autocomplete-init', 'input.form-autocomplete', context)
+          .forEach((input) => {
+            const id = input.getAttribute('id');
+            Drupal.Autocomplete.instances[id].destroy();
+          });
       }
     },
   };

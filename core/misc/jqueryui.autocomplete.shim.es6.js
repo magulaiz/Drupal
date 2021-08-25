@@ -28,6 +28,21 @@
     }
   };
 
+  Drupal.Autocomplete.defaultShimOptions = {
+    // Add jQuery UI classes so the autocomplete is styled the same as its
+    // jQuery UI predecessor.
+    inputClass: 'ui-autocomplete-input',
+    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
+    loadingClass: 'ui-autocomplete-loading',
+    // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
+    // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
+    // items in`<a>` tags, so this class is moved to the `<li>` which provides
+    // a visually identical autocomplete experience to the previous jQuery UI
+    // autocomplete.
+    itemClass: 'ui-menu-item-wrapper',
+    displayLabels: false,
+  };
+
   /**
    * Provides overrides needed for jQuery UIs backwards compatibility.
    *
@@ -38,8 +53,17 @@
    */
   Drupal.Autocomplete.jqueryUiShimInit = (autocompleteInput) => {
     const id = autocompleteInput.getAttribute('id');
-    const instance = Drupal.Autocomplete.instances[id];
+    const instance = Drupal.Autocomplete.instances[id]._internal_object;
     const isContentEditable = instance.input.hasAttribute('contenteditable');
+
+    // Bypass option filtering.
+    instance.options = Object.assign(
+      instance.options,
+      Drupal.Autocomplete.defaultShimOptions,
+    );
+    // Apply class changes.
+    instance.implementInput();
+    instance.implementList();
 
     instance.liveRegion = document.querySelector('#drupal-live-announce');
 
@@ -455,7 +479,7 @@
       // initialized and the string represents a method the autocomplete should
       // execute.
       if (typeof args[0] === 'string') {
-        const instance = Drupal.Autocomplete.instances[id];
+        const instance = Drupal.Autocomplete.instances[id]._internal_object;
         const method = args[0];
 
         switch (method) {

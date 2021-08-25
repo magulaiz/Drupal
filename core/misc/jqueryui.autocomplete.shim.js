@@ -36,10 +36,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   };
 
+  Drupal.Autocomplete.defaultShimOptions = {
+    inputClass: 'ui-autocomplete-input',
+    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
+    loadingClass: 'ui-autocomplete-loading',
+    itemClass: 'ui-menu-item-wrapper',
+    displayLabels: false
+  };
+
   Drupal.Autocomplete.jqueryUiShimInit = function (autocompleteInput) {
     var id = autocompleteInput.getAttribute('id');
-    var instance = Drupal.Autocomplete.instances[id];
+    var instance = Drupal.Autocomplete.instances[id]._internal_object;
     var isContentEditable = instance.input.hasAttribute('contenteditable');
+    instance.options = Object.assign(instance.options, Drupal.Autocomplete.defaultShimOptions);
+    instance.implementInput();
+    instance.implementList();
     instance.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
     instance.options.itemClass = 'ui-menu-item';
@@ -278,7 +289,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
 
       if (typeof args[0] === 'string') {
-        var instance = Drupal.Autocomplete.instances[id];
+        var instance = Drupal.Autocomplete.instances[id]._internal_object;
         var method = args[0];
 
         switch (method) {

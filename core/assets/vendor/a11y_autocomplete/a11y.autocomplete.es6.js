@@ -1,4 +1,10 @@
 /**
+ * @module
+ */
+
+
+
+/**
  * A standalone autocomplete, optimized for accessibility and querying remote
  * sources.
  *
@@ -8,12 +14,12 @@
  * const input = document.querySelector('#an-input');
  *
  * // Initialize the autocomplete with a fixed list of items
- * const autocompleteInstanceFixedList = new A11y_Autocomplete(input, {
+ * const autocompleteInstanceFixedList = A11yAutocomplete(input, {
  *   list: ['first item', 'second item', 'third item'],
  * });
  *
  * // Or initialize the autocomplete to query items from an endpoint
- * const autocompleteInstanceFixedList = new A11y_Autocomplete(input, {
+ * const autocompleteInstanceFixedList = A11yAutocomplete(input, {
  *   path: 'https://url.with.query.results',
  * });
  *
@@ -40,7 +46,7 @@
  * <input data-autocomplete-max-items="10" data-autocomplete-path="http://path-to-results" />
  *
  * // 3. Via the options argument when initializing a new instance
- * new A11y_Autocomplete(input, {maxItems: 10, , path:'http://path-to-results'})
+ * A11yAutocomplete(input, {maxItems: 10, , path:'http://path-to-results'})
  *
  * @param {HTMLElement} input
  *   The element to be used as an autocomplete.
@@ -131,7 +137,7 @@
  * @fires A11yAutocomplete#autocomplete-select
  * @fires A11yAutocomplete#autocomplete-selection-added
  */
-class A11yAutocomplete {
+class _A11yAutocomplete {
   /**
    * Construct a new A11yAutocomplete class.
    */
@@ -156,26 +162,61 @@ class A11yAutocomplete {
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = `autocomplete-listbox-${this.count}`;
 
+    this.supportedOptions = [
+      'path',
+      'list',
+      'cardinality',
+      'minChars',
+      'separatorChar',
+      // Try to remove.
+      'createLiveRegion',
+      'autoFocus',
+      // Will be removed probably.
+      'allowRepeatValues',
+      // messages.
+      'minCharAssistiveHint',
+      'inputAssistiveHint',
+      'noResultsAssistiveHint',
+      'moreThanMaxResultsAssistiveHint',
+      'someResultsAssistiveHint',
+      'oneResultAssistiveHint',
+      'highlightedAssistiveHint',
+    ];
+
     const defaultOptions = {
+      // from jquery ui
       autoFocus: false,
+      // remove and use separatorChar
       firstCharacterDenylist: ',',
       minChars: 1,
+      // new feature
       maxItems: 20,
+      // API already sort results
       sort: false,
       path: '',
+      // shim
       displayLabels: true,
+      // shim
       disabled: false,
       list: [],
       cardinality: 1,
+      // shim
       inputClass: '',
+      // shim
       ulClass: '',
+      // shim
       itemClass: '',
+      // shim
       loadingClass: '',
       separatorChar: ',',
+      // for drupal
       createLiveRegion: true,
+      // shim
       listZindex: 100,
+      // to pass jquery ui tests
       allowRepeatValues: null,
       searchDelay: 300,
+      // to nest later.
       minCharAssistiveHint: 'Type @count or more characters for results',
       inputAssistiveHint:
         'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
@@ -187,11 +228,12 @@ class A11yAutocomplete {
       highlightedAssistiveHint:
         '@selectedItem @position of @count is highlighted',
     };
+    defaultOptions.firstCharacterDenylist = defaultOptions.separatorChar;
 
     this.options = {
       ...defaultOptions,
-      ...options,
-      ...this.attributesToOptions(),
+      ...this.filterOptions(options),
+      ...this.filterOptions(this.attributesToOptions()),
     };
 
     // Preset lists provided as strings should be converted to options.
@@ -204,7 +246,6 @@ class A11yAutocomplete {
     this.isOpened = false;
     this.cache = [];
     this.suggestionItems = [];
-    this.hasAnnouncedOnce = false;
     this.announceTimeOutId = null;
     this.searchTimeOutId = null;
     this.totalSuggestions = 0;
@@ -262,6 +303,31 @@ class A11yAutocomplete {
   }
 
   /**
+   * Only accept a subset of supported options.
+   *
+   * @param options
+   */
+  filterOptions(options) {
+    const filteredOptions = {};
+    const rejectedOptions = {};
+    // Later loop on the supported options array instead,
+    // need to see rejected options to help debug jquery shim for now.
+    Object.keys(options).forEach((key) => {
+      if (this.supportedOptions.includes(key)) {
+        filteredOptions[key] = options[key];
+      }
+      else {
+        rejectedOptions[key] = options[key];
+      }
+    })
+    // Temporary to help debug the shim.
+    if (Object.keys(rejectedOptions).length) {
+      console.warn('Rejected autocomplete options: ', rejectedOptions);
+    }
+    return filteredOptions;
+  }
+
+  /**
    * Sets attributes to the wrapper and inserts it in the DOM.
    */
   implementWrapper() {
@@ -282,6 +348,8 @@ class A11yAutocomplete {
     this.input.setAttribute('role', 'combobox');
     this.input.setAttribute('aria-expanded', 'false');
     if (this.options.inputClass.length > 0) {
+      // should have a helper method for this and explain it's because of IE
+      // we do the forEach. Also it fails when the class is an empty string.
       this.options.inputClass
         .split(' ')
         .forEach((className) => this.input.classList.add(className));
@@ -663,8 +731,8 @@ class A11yAutocomplete {
      *
      * @event A11yAutocomplete#autocomplete-select
      * @property {Class} autocomplete - The autocomplete instance.
-     * @property {Object} toSelect - The item selected, as an object with 'label'
-     *  and 'value' properties.
+     * @property {Object} toSelect - The item selected, as an object with
+     *   'label' and 'value' properties.
      */
     let selected = this.triggerEvent(
       'autocomplete-select',
@@ -724,7 +792,7 @@ class A11yAutocomplete {
     const { cardinality } = this.options;
     const numItems = this.splitValues().length - 1;
     return numItems < parseInt(cardinality, 10) ||
-      parseInt(cardinality, 10) <= 0
+    parseInt(cardinality, 10) <= 0
       ? this.options.separatorChar
       : '';
   }
@@ -739,6 +807,7 @@ class A11yAutocomplete {
    *   The string of existing values in the input.
    */
   previousItems(separator) {
+    // Needs some explanations for the regex here.
     const escapedSeparator = separator.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const regex = new RegExp(`^.+${escapedSeparator}\\s*|`);
     const match = this.inputValue().match(regex)[0];
@@ -770,6 +839,7 @@ class A11yAutocomplete {
     if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
       return;
     }
+    // we should have an explicit method to clear the cache.
     if (!(inputId in this.cache)) {
       this.cache[inputId] = {};
     }
@@ -781,13 +851,13 @@ class A11yAutocomplete {
         this.suggestionItems = this.cache[inputId][searchTerm];
         this.displayResults();
       } else if (this.options.list.length === 0 && this.options.path.length) {
-        this.options.loadingClass
+        this.options.loadingClass && this.options.loadingClass
           .split(' ')
           .forEach((className) => this.input.classList.add(className));
         fetch(this.queryUrl(searchTerm))
           .then((response) => response.json())
           .then((results) => {
-            this.options.loadingClass
+            this.options.loadingClass && this.options.loadingClass
               .split(' ')
               .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
@@ -993,6 +1063,7 @@ class A11yAutocomplete {
      *
      * @event A11yAutocomplete#autocomplete-open
      * @property {Class} autocomplete - The autocomplete instance.
+     * // should add the result list in the event maybe?
      */
     this.triggerEvent('autocomplete-open');
     if (this.options.autoFocus) {
@@ -1130,7 +1201,7 @@ class A11yAutocomplete {
    */
   resultsMessage(count) {
     const { maxItems } = this.options;
-    let message = '';
+    let message;
     if (count === 0) {
       message = this.options.noResultsAssistiveHint;
     } else if (parseInt(maxItems, 10) === this.totalSuggestions) {
@@ -1200,8 +1271,11 @@ class A11yAutocomplete {
    */
   triggerEvent(type, additionalData = {}, cancelable = false, originalEvent) {
     const event = new CustomEvent(type, {
+      // we should probably set that to allow use of delegated events.
+      bubbles: true,
       detail: {
-        autocomplete: this,
+        // Only exposed the "supported" set of methods/options.
+        autocomplete: this.api,
         ...additionalData,
       },
       cancelable,
@@ -1215,4 +1289,21 @@ class A11yAutocomplete {
   }
 }
 
-window.A11yAutocomplete = A11yAutocomplete;
+// Wrap the class in factory so we're not reliant on class syntax in future.
+const A11yAutocompleteFactory = (input, options = {}) => {
+  const autocomplete = new _A11yAutocomplete(input, options);
+  const api = {
+    destroy: autocomplete.destroy.bind(autocomplete),
+    /**
+     * Do not use! only for jquery shim.
+     *
+     * @deprecated
+     */
+    _internal_object: autocomplete,
+  };
+  // Reference it in the object to be able to send it during events.
+  autocomplete.api = api;
+  return api;
+};
+
+window.A11yAutocomplete = A11yAutocompleteFactory;

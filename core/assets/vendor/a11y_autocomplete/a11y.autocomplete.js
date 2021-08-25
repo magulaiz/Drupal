@@ -17,13 +17,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var A11yAutocomplete = function () {
-  function A11yAutocomplete(input) {
+var _A11yAutocomplete = function () {
+  function _A11yAutocomplete(input) {
     var _this = this;
 
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    _classCallCheck(this, A11yAutocomplete);
+    _classCallCheck(this, _A11yAutocomplete);
 
     this.keyCode = Object.freeze({
       TAB: 9,
@@ -42,6 +42,7 @@ var A11yAutocomplete = function () {
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-listbox-".concat(this.count);
+    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'separatorChar', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
       firstCharacterDenylist: ',',
@@ -70,7 +71,8 @@ var A11yAutocomplete = function () {
       oneResultAssistiveHint: 'There is one result available.',
       highlightedAssistiveHint: '@selectedItem @position of @count is highlighted'
     };
-    this.options = _objectSpread(_objectSpread(_objectSpread({}, defaultOptions), options), this.attributesToOptions());
+    defaultOptions.firstCharacterDenylist = defaultOptions.separatorChar;
+    this.options = _objectSpread(_objectSpread(_objectSpread({}, defaultOptions), this.filterOptions(options)), this.filterOptions(this.attributesToOptions()));
 
     if (typeof this.options.list === 'string') {
       this.options.list = JSON.parse(this.options.list);
@@ -81,7 +83,6 @@ var A11yAutocomplete = function () {
     this.isOpened = false;
     this.cache = [];
     this.suggestionItems = [];
-    this.hasAnnouncedOnce = false;
     this.announceTimeOutId = null;
     this.searchTimeOutId = null;
     this.totalSuggestions = 0;
@@ -133,7 +134,28 @@ var A11yAutocomplete = function () {
     this.triggerEvent('autocomplete-created');
   }
 
-  _createClass(A11yAutocomplete, [{
+  _createClass(_A11yAutocomplete, [{
+    key: "filterOptions",
+    value: function filterOptions(options) {
+      var _this2 = this;
+
+      var filteredOptions = {};
+      var rejectedOptions = {};
+      Object.keys(options).forEach(function (key) {
+        if (_this2.supportedOptions.includes(key)) {
+          filteredOptions[key] = options[key];
+        } else {
+          rejectedOptions[key] = options[key];
+        }
+      });
+
+      if (Object.keys(rejectedOptions).length) {
+        console.warn('Rejected autocomplete options: ', rejectedOptions);
+      }
+
+      return filteredOptions;
+    }
+  }, {
     key: "implementWrapper",
     value: function implementWrapper() {
       this.wrapper.setAttribute('data-autocomplete-wrapper', '');
@@ -143,7 +165,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "implementInput",
     value: function implementInput() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.input.setAttribute('aria-autocomplete', 'list');
       this.input.setAttribute('autocomplete', 'off');
@@ -154,7 +176,7 @@ var A11yAutocomplete = function () {
 
       if (this.options.inputClass.length > 0) {
         this.options.inputClass.split(' ').forEach(function (className) {
-          return _this2.input.classList.add(className);
+          return _this3.input.classList.add(className);
         });
       }
 
@@ -183,7 +205,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "implementList",
     value: function implementList() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.ul.setAttribute('role', 'listbox');
       this.ul.setAttribute('data-autocomplete-item-list', '');
@@ -192,7 +214,7 @@ var A11yAutocomplete = function () {
 
       if (this.options.ulClass.length > 0) {
         this.options.ulClass.split(' ').forEach(function (className) {
-          return _this3.ul.classList.add(className);
+          return _this4.ul.classList.add(className);
         });
       }
     }
@@ -344,11 +366,11 @@ var A11yAutocomplete = function () {
   }, {
     key: "announceHighlight",
     value: function announceHighlight(item) {
-      var _this4 = this;
+      var _this5 = this;
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this4.sendToLiveRegion(_this4.highlightMessage(item));
+        return _this5.sendToLiveRegion(_this5.highlightMessage(item));
       }, 500);
     }
   }, {
@@ -436,7 +458,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "doSearch",
     value: function doSearch(e) {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.options.disabled) {
         return;
@@ -462,21 +484,20 @@ var A11yAutocomplete = function () {
           this.suggestionItems = this.cache[inputId][searchTerm];
           this.displayResults();
         } else if (this.options.list.length === 0 && this.options.path.length) {
-          this.options.loadingClass.split(' ').forEach(function (className) {
-            return _this5.input.classList.add(className);
+          this.options.loadingClass && this.options.loadingClass.split(' ').forEach(function (className) {
+            return _this6.input.classList.add(className);
           });
           fetch(this.queryUrl(searchTerm)).then(function (response) {
             return response.json();
           }).then(function (results) {
-            _this5.options.loadingClass.split(' ').forEach(function (className) {
-              return _this5.input.classList.remove(className);
+            _this6.options.loadingClass && _this6.options.loadingClass.split(' ').forEach(function (className) {
+              return _this6.input.classList.remove(className);
             });
+            _this6.suggestionItems = results;
 
-            _this5.suggestionItems = results;
+            _this6.displayResults();
 
-            _this5.displayResults();
-
-            _this5.cache[inputId][searchTerm] = results;
+            _this6.cache[inputId][searchTerm] = results;
           });
         } else {
           this.suggestionItems = this.options.list;
@@ -490,13 +511,13 @@ var A11yAutocomplete = function () {
   }, {
     key: "inputListener",
     value: function inputListener(e) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (!this.searchTimeOutId || this.options.searchDelay === 0) {
         this.searchTimeOutId = setTimeout(function () {
-          _this6.doSearch(e);
+          _this7.doSearch(e);
 
-          _this6.searchTimeOutId = null;
+          _this7.searchTimeOutId = null;
         }, this.options.searchDelay);
       }
     }
@@ -532,13 +553,13 @@ var A11yAutocomplete = function () {
   }, {
     key: "prepareSuggestionList",
     value: function prepareSuggestionList(typed) {
-      var _this7 = this;
+      var _this8 = this;
 
       this.normalizeSuggestionItems();
 
       if (typed) {
         this.suggestions = this.suggestionItems.filter(function (item) {
-          return _this7.filterResults(item, typed);
+          return _this8.filterResults(item, typed);
         });
       } else {
         this.suggestions = this.suggestionItems;
@@ -554,13 +575,13 @@ var A11yAutocomplete = function () {
         list: this.suggestions
       });
       this.suggestions.forEach(function (suggestion, index) {
-        _this7.ul.appendChild(_this7.suggestionItem(suggestion, index));
+        _this8.ul.appendChild(_this8.suggestionItem(suggestion, index));
       });
     }
   }, {
     key: "displayResults",
     value: function displayResults() {
-      var _this8 = this;
+      var _this9 = this;
 
       var typed = this.extractLastInputValue();
       this.ul.innerHTML = '';
@@ -577,7 +598,7 @@ var A11yAutocomplete = function () {
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this8.sendToLiveRegion(_this8.resultsMessage(_this8.ul.children.length));
+        return _this9.sendToLiveRegion(_this9.resultsMessage(_this9.ul.children.length));
       }, 1400);
     }
   }, {
@@ -590,7 +611,7 @@ var A11yAutocomplete = function () {
   }, {
     key: "suggestionItem",
     value: function suggestionItem(suggestion, itemIndex) {
-      var _this9 = this;
+      var _this10 = this;
 
       var li = document.createElement('li');
       li.innerHTML = this.formatSuggestionItem(suggestion, li);
@@ -609,7 +630,7 @@ var A11yAutocomplete = function () {
       li.setAttribute('aria-selected', 'false');
 
       li.onblur = function (e) {
-        return _this9.blurHandler(e);
+        return _this10.blurHandler(e);
       };
 
       return li;
@@ -710,7 +731,7 @@ var A11yAutocomplete = function () {
     key: "resultsMessage",
     value: function resultsMessage(count) {
       var maxItems = this.options.maxItems;
-      var message = '';
+      var message;
 
       if (count === 0) {
         message = this.options.noResultsAssistiveHint;
@@ -736,11 +757,11 @@ var A11yAutocomplete = function () {
   }, {
     key: "destroy",
     value: function destroy() {
-      var _this10 = this;
+      var _this11 = this;
 
       Object.keys(this.events).forEach(function (elementName) {
-        Object.keys(_this10.events[elementName]).forEach(function (eventName) {
-          _this10[elementName].removeEventListener(eventName, _this10.events[elementName][eventName]);
+        Object.keys(_this11.events[elementName]).forEach(function (eventName) {
+          _this11[elementName].removeEventListener(eventName, _this11.events[elementName][eventName]);
         });
       });
       this.ul.remove();
@@ -753,8 +774,9 @@ var A11yAutocomplete = function () {
       var cancelable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var originalEvent = arguments.length > 3 ? arguments[3] : undefined;
       var event = new CustomEvent(type, {
+        bubbles: true,
         detail: _objectSpread({
-          autocomplete: this
+          autocomplete: this.api
         }, additionalData),
         cancelable: cancelable,
         originalEvent: originalEvent
@@ -768,7 +790,18 @@ var A11yAutocomplete = function () {
     }
   }]);
 
-  return A11yAutocomplete;
+  return _A11yAutocomplete;
 }();
 
-window.A11yAutocomplete = A11yAutocomplete;
+var A11yAutocompleteFactory = function A11yAutocompleteFactory(input) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var autocomplete = new _A11yAutocomplete(input, options);
+  var api = {
+    destroy: autocomplete.destroy.bind(autocomplete),
+    _internal_object: autocomplete
+  };
+  autocomplete.api = api;
+  return api;
+};
+
+window.A11yAutocomplete = A11yAutocompleteFactory;

@@ -9,17 +9,12 @@
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
-    inputClass: 'ui-autocomplete-input',
-    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-    loadingClass: 'ui-autocomplete-loading',
-    itemClass: 'ui-menu-item-wrapper',
     createLiveRegion: false,
-    displayLabels: false,
     minCharAssistiveHint: Drupal.t('Type @count or more characters for results'),
-    noResults: Drupal.t('No results found'),
-    moreThanMaxResults: Drupal.t('There are at least @count results available. Type additional characters to refine your search.'),
-    someResults: Drupal.t('There are @count results available.'),
-    oneResult: Drupal.t('There is one result available.'),
+    noResultsAssistiveHint: Drupal.t('No results found'),
+    moreThanMaxResultsAssistiveHint: Drupal.t('There are at least @count results available. Type additional characters to refine your search.'),
+    someResultsAssistiveHint: Drupal.t('There are @count results available.'),
+    oneResultAssistiveHint: Drupal.t('There is one result available.'),
     inputAssistiveHint: Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.'),
     highlightedAssistiveHint: Drupal.t('@selectedItem @position of @count is highlighted')
   };
@@ -36,7 +31,7 @@
     }
 
     Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
-    var instance = Drupal.Autocomplete.instances[id];
+    var instance = Drupal.Autocomplete.instances[id]._internal_object;
 
     function autocompleteSendToLiveRegion(message) {
       Drupal.announce(message, 'assertive');
@@ -44,7 +39,7 @@
 
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
     instance.input.addEventListener('autocomplete-destroy', function (e) {
-      delete Drupal.Autocomplete.instances[e.detail.autocomplete.input.getAttribute('id')];
+      delete Drupal.Autocomplete.instances[e.detail.autocomplete._internal_object.input.getAttribute('id')];
     });
   };
 
@@ -64,7 +59,7 @@
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        context.querySelectorAll('input.form-autocomplete').forEach(function (input) {
+        once.remove('autocomplete-init', 'input.form-autocomplete', context).forEach(function (input) {
           var id = input.getAttribute('id');
           Drupal.Autocomplete.instances[id].destroy();
         });
