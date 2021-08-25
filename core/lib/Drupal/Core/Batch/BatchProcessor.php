@@ -4,13 +4,11 @@ namespace Drupal\Core\Batch;
 
 use Drupal\Component\Utility\Timer;
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormSubmitterInterface;
-use Drupal\Core\Path\PathValidatorInterface;
 use Drupal\Core\Queue\Batch;
 use Drupal\Core\Queue\BatchMemory;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -109,16 +107,12 @@ class BatchProcessor implements BatchProcessorInterface {
    *
    * @param string $root
    *   The app root.
-   * @param \Drupal\Core\Batch\BatchStorageInterface $batch_storage
-   *   The batch storage.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter used to calculate the needed time for the batch.
    * @param \Drupal\Core\Form\FormSubmitterInterface $form_submitter
    *   The form submitter used to redirect at the end of the batch.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
-   *   The path validator service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
@@ -126,17 +120,41 @@ class BatchProcessor implements BatchProcessorInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
    */
-  public function __construct($root, BatchStorageInterface $batch_storage, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, PathValidatorInterface $path_validator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
+  public function __construct($root, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
     $this->root = $root;
-    $this->batchStorage = $batch_storage;
     $this->dateFormatter = $date_formatter;
     $this->formSubmitter = $form_submitter;
     $this->requestStack = $request_stack;
-    $this->pathValidator = $path_validator;
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->routeMatch = $route_match;
     $this->batch = [];
+  }
+
+  /**
+   * Getter for the path validator service.
+   *
+   * @return \Drupal\Core\Path\PathValidatorInterface|null
+   *   The path validator service.
+   */
+  protected function getPathValidator() {
+    if (!$this->pathValidator) {
+      $this->pathValidator = \Drupal::service('path.validator');
+    }
+    return $this->pathValidator;
+  }
+
+  /**
+   * Getter for the batch storage.
+   *
+   * @return \Drupal\Core\Batch\BatchStorageInterface|null
+   *   The batch storage.
+   */
+  protected function getBatchStorage() {
+    if (!$this->batchStorage) {
+      $this->batchStorage = \Drupal::service('batch.storage');
+    }
+    return $this->batchStorage;
   }
 
   /**
@@ -313,7 +331,7 @@ class BatchProcessor implements BatchProcessorInterface {
         }
 
         // Store the batch.
-        $this->batchStorage->create($batch);
+        $this->getBatchStorage()->create($batch);
 
         // Set the batch number in the session to guarantee that it will stay
         // alive.
@@ -541,7 +559,7 @@ class BatchProcessor implements BatchProcessorInterface {
 
     // Clean up the batch table and unset the static $batch variable.
     if ($batch['progressive']) {
-      $this->batchStorage->delete($batch['id']);
+      $this->getBatchStorage()->delete($batch['id']);
       foreach ($batch['sets'] as $batch_set) {
         if ($queue = $this->getQueue($batch_set)) {
           $queue->deleteQueue();
@@ -583,7 +601,7 @@ class BatchProcessor implements BatchProcessorInterface {
             $redirect = Url::fromUri($options['path'], $options);
           }
           else {
-            $redirect = $this->pathValidator->getUrlIfValid($options['path']);
+            $redirect = $this->getPathValidator()->getUrlIfValid($options['path']);
             if (!$redirect) {
               // Stay on the same page if the redirect was invalid.
               $redirect = Url::fromRoute('<current>');
@@ -631,7 +649,7 @@ class BatchProcessor implements BatchProcessorInterface {
    */
   public function shutdown() {
     if (($batch = $this->getCurrentBatch()) && _batch_needs_update()) {
-      $this->batchStorage->update($batch);
+      $this->getBatchStorage()->update($batch);
     }
   }
 
