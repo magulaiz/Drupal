@@ -479,6 +479,8 @@ function hook_system_breadcrumb_alter(\Drupal\Core\Breadcrumb\Breadcrumb &$bread
  *       must be a string; other elements are more flexible, as they just need
  *       to work as an argument for the constructor of the class
  *       Drupal\Core\Template\Attribute($options['attributes']).
+ *   - cache: Cacheable metadata. Hook implementations are able to add
+ *     additional cache contexts, cache tags or to alter the cache max age.
  *
  * @see \Drupal\Core\Utility\UnroutedUrlAssembler::assemble()
  * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()
@@ -490,6 +492,12 @@ function hook_link_alter(&$variables) {
   if ($url->isRouted() && strpos($url->getRouteName(), 'admin') !== FALSE) {
     $variables['text'] = t('@text (Warning!)', ['@text' => $variables['text']]);
   }
+  /** @var \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheable_metadata */
+  $cacheable_metadata = &$variables['cache'];
+  $cacheable_metadata
+    ->addCacheContexts(['url', 'languages'])
+    ->addCacheTags(['foo'])
+    ->mergeCacheMaxAge(3600);
 }
 
 /**

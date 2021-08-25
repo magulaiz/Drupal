@@ -17,5 +17,13 @@ function link_generation_test_link_alter(&$variables) {
     else {
       $variables['text'] .= ' <strong>Test!</strong>';
     }
+
+    /** @var \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheable_metadata */
+    $cacheable_metadata = &$variables['cache'];
+    // Add cacheable metadata.
+    $cacheable_metadata
+      ->addCacheContexts(['url', 'languages'])
+      ->addCacheTags(['foo', 'bar'])
+      ->mergeCacheMaxAge(3600);
   }
 }
