@@ -309,7 +309,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     'numeric' columns must specify 'precision' and 'scale', and type
  *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': An array of one or more key column specifiers (see below)
- *    that form the primary key. Primary keys do not allow partial column lenght
+ *    that form the primary key. Primary keys do not allow partial column length
  *    specifications.
  *  - 'unique keys': An associative array of unique keys ('keyname' =>
  *    specification). Each specification is an array of one or more
