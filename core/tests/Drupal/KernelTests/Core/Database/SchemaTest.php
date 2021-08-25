@@ -986,7 +986,7 @@ class SchemaTest extends KernelTestBase {
   public function testInvalidUniqueKeyColumnsOnTableCreation(): void {
     $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
     // Test with partial column length.
-    $this->schema->createTable('table_with_invalid_unique key', [
+    $this->schema->createTable('table_with_invalid_unique_key', [
       'description' => 'Table with partial column length unique key.',
       'fields' => [
         'test_field_1'  => [
@@ -1008,7 +1008,7 @@ class SchemaTest extends KernelTestBase {
   public function testInvalidUniqueKeyColumnsOnAddUniqueKey(): void {
     $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
     // Test with partial column length.
-    $this->schema->createTable('table_with_invalid_unique key', [
+    $this->schema->createTable('table_with_invalid_unique_key', [
       'description' => 'Table with partial column length unique key.',
       'fields' => [
         'test_field_1'  => [
@@ -1018,7 +1018,7 @@ class SchemaTest extends KernelTestBase {
         ],
       ],
     ]);
-    $this->schema->addUniqueKey('table_with_invalid_pk', 'test_unique_key', [['test_field_1', 10]]);
+    $this->schema->addUniqueKey('table_with_invalid_unique_key', 'test_unique_key', [['test_field_1', 10]]);
   }
 
   /**
