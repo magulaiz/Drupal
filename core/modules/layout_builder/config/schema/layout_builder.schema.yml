@@ -70,7 +70,7 @@ inline_block:
       type: string
       label: 'Block type'
     uuid:
-      type: string
+      type: uuid
       label: 'Block UUID'
 
 block.settings.inline_block:*:
