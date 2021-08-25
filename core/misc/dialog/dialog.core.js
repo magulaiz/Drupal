@@ -20,38 +20,37 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function ($, Drupal, dialogPolyfill) {
-  Element.prototype.dialogObject = {};
-
-  Element.prototype.dialog = function () {
+  function jQueryDrupalDialogBridge() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
     if (_typeof(args[0]) === 'object') {
-      this.dialogObject = new Drupal.CoreDialog(this, args[0]);
+      this.data('dialogObject', new Drupal.CoreDialog(this, args[0]));
+      return this.data('dialogObject');
     }
 
     if (typeof args[0] === 'string') {
+      var dialogObject = this.data('dialogObject');
+
       if (typeof args[1] !== 'undefined') {
         if (args[0] === 'option' && typeof args[2] !== 'undefined') {
           var option = {};
           option[args[1]] = args[2];
-          return this.dialogObject[args[0]](option);
+          return dialogObject[args[0]](option);
         }
 
-        return this.dialogObject[args[0]](args[1]);
+        return dialogObject[args[0]](args[1]);
       }
 
-      return this.dialogObject[args[0]]();
+      return dialogObject[args[0]]();
     }
-  };
+  }
 
   $.fn.extend({
     dialog: function dialog() {
-      var _this$;
-
-      var itReturned = (_this$ = this[0]).dialog.apply(_this$, arguments);
-
+      var dialogBridge = jQueryDrupalDialogBridge.bind(this);
+      var itReturned = dialogBridge.apply(void 0, arguments);
       return itReturned || this;
     }
   });

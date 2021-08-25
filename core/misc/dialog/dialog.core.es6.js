@@ -6,30 +6,41 @@
  */
 
 (function ($, Drupal, dialogPolyfill) {
-  Element.prototype.dialogObject = {};
-
-  Element.prototype.dialog = function (...args) {
+  /**
+   * Bridges calls to jQuery UI dialog to Drupal core dialog.
+   *
+   * @param args
+   *   The args provided to the dialog call.
+   * @return {*}
+   *   Return value based on args.
+   *   It will match what a call to jQuery.ui.dialog(args) would return.
+   */
+  function jQueryDrupalDialogBridge(...args) {
     // eslint-disable-next-line prefer-rest-params
     if (typeof args[0] === 'object') {
-      this.dialogObject = new Drupal.CoreDialog(this, args[0]);
+      this.data('dialogObject', new Drupal.CoreDialog(this, args[0]));
+      return this.data('dialogObject');
     }
     if (typeof args[0] === 'string') {
+      const dialogObject = this.data('dialogObject');
       if (typeof args[1] !== 'undefined') {
         if (args[0] === 'option' && typeof args[2] !== 'undefined') {
           const option = {};
           option[args[1]] = args[2];
-          return this.dialogObject[args[0]](option);
+          return dialogObject[args[0]](option);
         }
-        return this.dialogObject[args[0]](args[1]);
+        return dialogObject[args[0]](args[1]);
       }
 
-      return this.dialogObject[args[0]]();
+      return dialogObject[args[0]]();
     }
-  };
+  }
 
+  // Calls to jQuery.ui.dialog will call the Drupal core dialog.
   $.fn.extend({
     dialog(...args) {
-      const itReturned = this[0].dialog(...args);
+      const dialogBridge = jQueryDrupalDialogBridge.bind(this);
+      const itReturned = dialogBridge(...args);
       return itReturned || this;
     },
   });
