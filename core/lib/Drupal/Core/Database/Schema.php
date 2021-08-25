@@ -389,7 +389,7 @@ abstract class Schema implements PlaceholderInterface {
     $fixed_key_fields = [];
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
-        @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+        @trigger_error('Specification of primary key with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
         $fixed_key_fields[] = $key_field[0];
       }
       else {

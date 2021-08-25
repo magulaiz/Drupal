@@ -944,7 +944,7 @@ class SchemaTest extends KernelTestBase {
    * @group legacy
    */
   public function testInvalidPrimaryKeyColumnsOnTableCreation() {
-    $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
+    $this->expectDeprecation("Specification of primary key with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
     // Test with partial column length.
     $this->schema->createTable('table_with_invalid_pk', [
       'description' => 'Table with partial column length primary key.',
@@ -956,6 +956,28 @@ class SchemaTest extends KernelTestBase {
         ],
       ],
       'primary key' => [['test_field_1', 10]],
+    ]);
+  }
+
+  /**
+   * @covers ::validateUniqueKeySchema
+   * @group legacy
+   */
+  public function testInvalidUniqueKeyColumnsOnTableCreation() {
+    $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_unique key', [
+      'description' => 'Table with partial column length unique key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+      'unique keys' => [
+        ['test_unique_key', [['test_field_1', 10]]],
+      ],
     ]);
   }
 
