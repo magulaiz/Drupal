@@ -326,7 +326,7 @@ class Schema extends DatabaseSchema {
     if ($this->fieldExists($table, $field)) {
       throw new SchemaObjectExistsException("Cannot add field '$table.$field': field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE)) {
+    if (isset($keys_new['primary key']) && in_array($field, $this->fieldNames($keys_new['primary key']), TRUE)) {
       $this->validatePrimaryKeySchema($keys_new['primary key'], [$field => $specification]);
     }
     if (!empty($keys_new['unique keys'])) {
@@ -603,7 +603,7 @@ class Schema extends DatabaseSchema {
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
+    if (isset($keys_new['primary key']) && in_array($field_new, $this->fieldNames($keys_new['primary key']), TRUE)) {
       $this->validatePrimaryKeySchema($keys_new['primary key'], [$field_new => $spec]);
     }
     if (!empty($keys_new['unique keys'])) {

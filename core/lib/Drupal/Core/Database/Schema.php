@@ -324,6 +324,8 @@ abstract class Schema implements PlaceholderInterface {
    *   If the specified table doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a field by that name.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified keys fail validation.
    */
   abstract public function addField($table, $field, $spec, $keys_new = []);
 
@@ -368,7 +370,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a primary key.
    * @throws \Drupal\Core\Database\SchemaException
-   *   If the specified fields fail validation.
+   *   If the specified key fails validation.
    */
   abstract public function addPrimaryKey($table, $fields);
 
@@ -455,7 +457,7 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified table already has a key by that name.
    * @throws \Drupal\Core\Database\SchemaException
-   *   If the specified fields fail validation.
+   *   If the specified key fails validation.
    */
   abstract public function addUniqueKey($table, $name, $fields);
 
@@ -656,6 +658,8 @@ abstract class Schema implements PlaceholderInterface {
    *   If the specified table or source field doesn't exist.
    * @throws \Drupal\Core\Database\SchemaObjectExistsException
    *   If the specified destination field already exists.
+   * @throws \Drupal\Core\Database\SchemaException
+   *   If the specified keys fail validation.
    */
   abstract public function changeField($table, $field, $field_new, $spec, $keys_new = []);
 
