@@ -23,7 +23,7 @@ class LayoutEntityDisplayNormalizer extends ConfigEntityNormalizer {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    $data = static::getDataWithoutInternals($object->toArray());
+    $data = parent::normalize($object, $format, $context);
     if (!empty($data['third_party_settings']['layout_builder']['sections'])) {
       $sections = &$data['third_party_settings']['layout_builder']['sections'];
       $sections = array_map(static function (Section $section) {
@@ -48,7 +48,7 @@ class LayoutEntityDisplayNormalizer extends ConfigEntityNormalizer {
       $sections = &$data['third_party_settings']['layout_builder']['sections'];
       $sections = array_map([Section::class, 'fromArray'], $sections);
     }
-    return parent::denormalize(static::getDataWithoutInternals($data), $class, $format, $context);
+    return parent::denormalize($data, $class, $format, $context);
   }
 
 }
