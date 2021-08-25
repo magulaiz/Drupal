@@ -58,7 +58,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
       ->willReturn($data);
     $section_data->getValue()
       ->willReturn($section);
-    $this->assertArrayEquals($data, $this->normalizer->normalize($section_data->reveal()));
+    $this->assertSame($data, $this->normalizer->normalize($section_data->reveal()));
   }
 
   /**
