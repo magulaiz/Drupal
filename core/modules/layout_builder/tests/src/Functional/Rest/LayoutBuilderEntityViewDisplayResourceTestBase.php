@@ -50,7 +50,7 @@ abstract class LayoutBuilderEntityViewDisplayResourceTestBase extends EntityView
             'label' => '',
           ],
           'components' => [
-            [
+            $component->getUuid() => [
               'uuid' => $component->getUuid(),
               'region' => 'content',
               'configuration' => [
