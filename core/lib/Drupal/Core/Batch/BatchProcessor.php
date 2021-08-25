@@ -125,10 +125,8 @@ class BatchProcessor implements BatchProcessorInterface {
    *   The theme manager service.
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match service.
-   * @param \Drupal\Core\Database\Connection|null $database
-   *   The connection to the database.
    */
-  public function __construct($root, BatchStorageInterface $batch_storage, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, PathValidatorInterface $path_validator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match, Connection $database = NULL) {
+  public function __construct($root, BatchStorageInterface $batch_storage, DateFormatterInterface $date_formatter, FormSubmitterInterface $form_submitter, RequestStack $request_stack, PathValidatorInterface $path_validator, ModuleHandlerInterface $module_handler, ThemeManagerInterface $theme_manager, RouteMatchInterface $route_match) {
     $this->root = $root;
     $this->batchStorage = $batch_storage;
     $this->dateFormatter = $date_formatter;
@@ -138,7 +136,6 @@ class BatchProcessor implements BatchProcessorInterface {
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->routeMatch = $route_match;
-    $this->connection = $database;
     $this->batch = [];
   }
 
@@ -149,7 +146,10 @@ class BatchProcessor implements BatchProcessorInterface {
    *   The connection to the database.
    */
   protected function getConnection() {
-    return $this->connection ?? Database::getConnection();
+    if (!$this->connection) {
+      $this->connection = Database::getConnection();
+    }
+    return $this->connection;
   }
 
   /**
