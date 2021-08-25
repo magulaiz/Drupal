@@ -891,9 +891,8 @@ module.exports = {
               ui.content.splice(0, 1);
             },
             open() {
-              toReturn[settings.type].menuOpenOnOpen = toReturn[
-                settings.type
-              ].menu.is(':visible');
+              toReturn[settings.type].menuOpenOnOpen =
+                toReturn[settings.type].menu.is(':visible');
             },
             focus(event, ui) {
               toReturn[settings.type].focusOriginalEvent =
@@ -904,9 +903,8 @@ module.exports = {
             close(event) {
               toReturn[settings.type].closeOriginalEvent =
                 event.originalEvent.type === 'menuselect';
-              toReturn[settings.type].menuClosedOnClosed = toReturn[
-                settings.type
-              ].menu.is(':hidden');
+              toReturn[settings.type].menuClosedOnClosed =
+                toReturn[settings.type].menu.is(':hidden');
             },
             select(event, ui) {
               toReturn[settings.type].selectOriginalEvent =
@@ -917,14 +915,12 @@ module.exports = {
               toReturn[settings.type].changeOriginalEvent =
                 event.originalEvent.type === 'blur';
               toReturn[settings.type].changeUiItem = ui.item;
-              toReturn[settings.type].menuClosedOnChange = toReturn[
-                settings.type
-              ].menu.is(':hidden');
+              toReturn[settings.type].menuClosedOnChange =
+                toReturn[settings.type].menu.is(':hidden');
             },
           });
-          toReturn[settings.type].menu = toReturn[
-            settings.type
-          ].element.autocomplete('widget');
+          toReturn[settings.type].menu =
+            toReturn[settings.type].element.autocomplete('widget');
 
           // With Drupal autocomplete, triggering a search does not
           // happen with keydown.
@@ -939,9 +935,8 @@ module.exports = {
           }
 
           setTimeout(() => {
-            toReturn[settings.type].menuVisibleAfterDelay = toReturn[
-              settings.type
-            ].menu.is(':visible');
+            toReturn[settings.type].menuVisibleAfterDelay =
+              toReturn[settings.type].menu.is(':visible');
             toReturn[settings.type].element[0].dispatchEvent(
               new KeyboardEvent('keydown', {
                 keyCode: jQuery.ui.keyCode.DOWN,
@@ -2121,11 +2116,10 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
     Drupal.hasOwnProperty('Autocomplete') &&
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
-    Drupal.Autocomplete.instances[
-      element.attr('id')
-    ].highlightItem = function () {
-      didMove = true;
-    };
+    Drupal.Autocomplete.instances[element.attr('id')].highlightItem =
+      function () {
+        didMove = true;
+      };
   } else {
     element.autocomplete('instance')._move = () => {
       didMove = true;
@@ -2150,11 +2144,10 @@ function arrowsMoveFocus(id, isKeyUp) {
     Drupal.hasOwnProperty('Autocomplete') &&
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
-    Drupal.Autocomplete.instances[
-      element.attr('id')
-    ].highlightItem = function () {
-      didMove = true;
-    };
+    Drupal.Autocomplete.instances[element.attr('id')].highlightItem =
+      function () {
+        didMove = true;
+      };
   } else {
     element.autocomplete('instance')._move = () => {
       didMove = true;
