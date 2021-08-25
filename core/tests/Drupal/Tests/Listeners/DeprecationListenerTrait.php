@@ -82,6 +82,9 @@ trait DeprecationListenerTrait {
       // Skip Symfony deprecations for PHP 8.1 - fixed by
       // https://github.com/symfony/symfony/pull/42260.
       '%Return type of Symfony\\\\Component\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Skip EasyRdf deprecations for PHP 8.1 - fixed by
+      // https://github.com/easyrdf/easyrdf/pull/384.
+      '%Return type of EasyRdf\\\\.* should either be compatible with .*, or the #\[ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
