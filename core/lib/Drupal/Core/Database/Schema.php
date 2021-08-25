@@ -386,15 +386,20 @@ abstract class Schema implements PlaceholderInterface {
    */
   protected function validatePrimaryKeySchema(array $key_fields, array $fields = []): void {
     // Ensure no partial column length specified.
+    $fixed_key_fields = [];
     foreach ($key_fields as $key_field) {
       if (is_array($key_field)) {
         @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+        $fixed_key_fields[] = $key_field[0];
+      }
+      else {
+        $fixed_key_fields[] = $key_field;
       }
     }
 
     // Ensure primary key is not null.
     if (!empty($fields)) {
-      foreach (array_intersect($key_fields, array_keys($fields)) as $field_name) {
+      foreach (array_intersect($fixed_key_fields, array_keys($fields)) as $field_name) {
         if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
           throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
         }

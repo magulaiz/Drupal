@@ -943,6 +943,7 @@ class SchemaTest extends KernelTestBase {
    * @covers ::validatePrimaryKeySchema
    */
   public function testInvalidPrimaryKeyColumnsOnTableCreation() {
+    $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
     // Test with partial column length.
     $this->schema->createTable('table_with_invalid_pk', [
       'description' => 'Table with partial column length primary key.',
