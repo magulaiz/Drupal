@@ -941,6 +941,7 @@ class SchemaTest extends KernelTestBase {
 
   /**
    * @covers ::validatePrimaryKeySchema
+   * @group legacy
    */
   public function testInvalidPrimaryKeyColumnsOnTableCreation() {
     $this->expectDeprecation("Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567");
