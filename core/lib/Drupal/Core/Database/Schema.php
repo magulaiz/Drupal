@@ -360,7 +360,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $table
    *   The table to be altered.
    * @param $fields
-   *   Fields for the primary key. Partial column lenght specifications are not
+   *   Fields for the primary key. Partial column length specifications are not
    *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -375,18 +375,29 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a primary key schema definition.
    *
-   * @param string $table
-   *   The table to be altered.
+   * @param array $key_fields
+   *   An array containing the fields that will form the primary key.
    * @param array $fields
-   *   An array of fields.
+   *   (Optional) An array containing the field specifications of the table,
+   *   as per the schema data structure format.
    *
    * @throws \Drupal\Core\Database\SchemaException
    *   If the specified fields fail validation.
    */
-  protected function validatePrimaryKeySchema(string $table, array $fields): void {
-    foreach ($fields as $field) {
-      if (is_array($field) && isset($field['length'])) {
-        @trigger_error('Specification of unique keys with column lenght is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+  protected function validatePrimaryKeySchema(array $key_fields, array $fields = []): void {
+    // Ensure no partial column length specified.
+    foreach ($key_fields as $key_field) {
+      if (is_array($key_field) && isset($key_field['length'])) {
+        @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+      }
+    }
+
+    // Ensure primary key is not null.
+    if (!empty($fields)) {
+      foreach (array_intersect($key_fields, array_keys($fields)) as $field_name) {
+        if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
+          throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
+        }
       }
     }
   }
@@ -431,7 +442,7 @@ abstract class Schema implements PlaceholderInterface {
    * @param $name
    *   The name of the key.
    * @param $fields
-   *   An array of field names. Partial column lenght specifications are not
+   *   An array of field names. Partial column length specifications are not
    *   allowed.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -446,20 +457,19 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Validates a unique key schema definition.
    *
-   * @param string $table
-   *   The table to be altered.
-   * @param string $name
-   *   The name of the key.
+   * @param array $key_fields
+   *   An array containing the fields that will form the unique key.
    * @param array $fields
-   *   An array of fields.
+   *   (Optional) An array containing the field specifications of the table,
+   *   as per the schema data structure format.
    *
    * @throws \Drupal\Core\Database\SchemaException
-   *   If the specified fields fail validation.
+   *   If the specified key fails validation.
    */
-  protected function validateUniqueKeySchema(string $table, string $name, array $fields): void {
-    foreach ($fields as $field) {
-      if (is_array($field) && isset($field['length'])) {
-        @trigger_error('Specification of unique keys with column lenght is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+  protected function validateUniqueKeySchema(array $key_fields, array $fields = []): void {
+    foreach ($key_fields as $key_field) {
+      if (is_array($key_field) && isset($key_field['length'])) {
+        @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
       }
     }
   }
@@ -738,8 +748,14 @@ abstract class Schema implements PlaceholderInterface {
    * @throws \Drupal\Core\Database\SchemaException
    *   Thrown if any primary key field specification does not exist or if they
    *   do not define 'not null' as TRUE.
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+   *   ::validatePrimaryKeySchema() instead.
+   *
+   * @see https://www.drupal.org/node/1234567
    */
   protected function ensureNotNullPrimaryKey(array $primary_key, array $fields) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use ::validatePrimaryKeySchema() instead. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
     foreach (array_intersect($primary_key, array_keys($fields)) as $field_name) {
       if (!isset($fields[$field_name]['not null']) || $fields[$field_name]['not null'] !== TRUE) {
         throw new SchemaException("The '$field_name' field specification does not define 'not null' as TRUE.");
