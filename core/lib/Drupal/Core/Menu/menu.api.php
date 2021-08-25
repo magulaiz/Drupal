@@ -493,7 +493,7 @@ function hook_link_alter(&$variables) {
     $variables['text'] = t('@text (Warning!)', ['@text' => $variables['text']]);
   }
   /** @var \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheable_metadata */
-  $cacheable_metadata = &$variables['cache'];
+  $cacheable_metadata = $variables['cache'];
   $cacheable_metadata
     ->addCacheContexts(['url', 'languages'])
     ->addCacheTags(['foo'])

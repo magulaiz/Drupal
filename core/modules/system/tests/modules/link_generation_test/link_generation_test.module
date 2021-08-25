@@ -19,7 +19,7 @@ function link_generation_test_link_alter(&$variables) {
     }
 
     /** @var \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheable_metadata */
-    $cacheable_metadata = &$variables['cache'];
+    $cacheable_metadata = $variables['cache'];
     // Add cacheable metadata.
     $cacheable_metadata
       ->addCacheContexts(['url', 'languages'])
