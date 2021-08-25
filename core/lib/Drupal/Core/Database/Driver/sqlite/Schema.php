@@ -505,7 +505,11 @@ class Schema extends DatabaseSchema {
           'type' => $type,
           'size' => $size,
           'not null' => !empty($row->notnull) || $row->pk !== "0",
-          'default' => trim($row->dflt_value, "'"),
+          // @todo decide whether this more correct change is better than ?? ''.
+          //   The problem with the current code is that an empty string as a
+          //   default value is not the same as a NULL but we current make it
+          //   the same thing.
+          'default' => $row->dflt_value !== NULL ? trim($row->dflt_value, "'") : NULL,
         ];
         if ($length) {
           $schema['fields'][$row->name]['length'] = $length;
