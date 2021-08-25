@@ -940,6 +940,24 @@ class SchemaTest extends KernelTestBase {
   }
 
   /**
+   * @covers ::validatePrimaryKeySchema
+   */
+  public function testInvalidPrimaryKeyColumnsOnTableCreation() {
+    // Test with partial column length.
+    $this->schema->createTable('table_with_invalid_pk', [
+      'description' => 'Table with partial column length primary key.',
+      'fields' => [
+        'test_field_1'  => [
+          'type' => 'varchar',
+          'length' => 50,
+          'not null' => TRUE,
+        ],
+      ],
+      'primary key' => [['test_field_1', 10]],
+    ]);
+  }
+
+  /**
    * Tests changing the primary key with an invalid field specification.
    */
   public function testInvalidPrimaryKeyChange() {

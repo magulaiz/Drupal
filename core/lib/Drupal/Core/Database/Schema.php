@@ -387,7 +387,7 @@ abstract class Schema implements PlaceholderInterface {
   protected function validatePrimaryKeySchema(array $key_fields, array $fields = []): void {
     // Ensure no partial column length specified.
     foreach ($key_fields as $key_field) {
-      if (is_array($key_field) && isset($key_field['length'])) {
+      if (is_array($key_field)) {
         @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
       }
     }
@@ -468,7 +468,7 @@ abstract class Schema implements PlaceholderInterface {
    */
   protected function validateUniqueKeySchema(array $key_fields, array $fields = []): void {
     foreach ($key_fields as $key_field) {
-      if (is_array($key_field) && isset($key_field['length'])) {
+      if (is_array($key_field)) {
         @trigger_error('Specification of unique keys with column length is deprecated in drupal:9.3.0 and is throwing a SchemaException from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
       }
     }
