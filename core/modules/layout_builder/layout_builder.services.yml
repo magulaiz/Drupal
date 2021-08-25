@@ -49,6 +49,17 @@ services:
   inline_block.usage:
     class: Drupal\layout_builder\InlineBlockUsage
     arguments: ['@database']
+  layout_builder.normalizer.entity_display:
+    class: Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer
+    tags:
+      # Priority must be higher than serializer.normalizer.config_entity.
+      - { name: normalizer, priority: 1 }
+    arguments: ['@entity_type.manager', '@entity_type.repository', '@entity_field.manager']
+  layout_builder.normalizer.section_data:
+    class: Drupal\layout_builder\Normalizer\SectionDataNormalizer
+    tags:
+      # Priority must be higher than serializer.normalizer.typed_data.
+      - { name: normalizer, priority: 1 }
   layout_builder.controller.entity_form:
     # Override the entity form controller to handle the entity layout_builder
     # operation.

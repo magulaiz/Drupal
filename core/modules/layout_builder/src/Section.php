@@ -344,9 +344,9 @@ class Section implements ThirdPartySettingsInterface {
     return [
       'layout_id' => $this->getLayoutId(),
       'layout_settings' => $this->getLayoutSettings(),
-      'components' => array_map(function (SectionComponent $component) {
+      'components' => array_values(array_map(function (SectionComponent $component) {
         return $component->toArray();
-      }, $this->getComponents()),
+      }, $this->getComponents())),
       'third_party_settings' => $this->thirdPartySettings,
     ];
   }
