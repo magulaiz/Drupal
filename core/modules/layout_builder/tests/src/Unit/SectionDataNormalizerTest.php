@@ -54,10 +54,8 @@ class SectionDataNormalizerTest extends UnitTestCase {
     $data = ['foo'];
     $section_data = $this->prophesize(SectionData::class);
     $section = $this->prophesize(Section::class);
-    $section->toArray()
-      ->willReturn($data);
-    $section_data->getValue()
-      ->willReturn($section);
+    $section->toArray()->willReturn($data);
+    $section_data->getValue()->willReturn($section);
     $this->assertSame($data, $this->normalizer->normalize($section_data->reveal()));
   }
 
@@ -76,8 +74,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
       'third_party_settings' => [],
     ];
     $target_instance = $this->prophesize(FieldItemInterface::class);
-    $target_instance->getDataDefinition()
-      ->willReturn($this->prophesize(DataDefinitionInterface::class));
+    $target_instance->getDataDefinition()->willReturn($this->prophesize(DataDefinitionInterface::class));
     $context = [
       'target_instance' => [
         $target_instance,
