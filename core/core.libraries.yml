@@ -209,6 +209,8 @@ drupal.dialog:
   js:
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
+    misc/dialog/dialog.core.js: {}
+
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
     # All weights are based on on the requirements defined within each file.
