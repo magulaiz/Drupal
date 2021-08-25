@@ -274,9 +274,9 @@ class ConfigCRUDTest extends KernelTestBase {
     $data = [
       'array' => [],
       'boolean' => TRUE,
+      'exp' => 1.2e+34,
       'float' => 3.14159,
       'float_as_integer' => (float) 1,
-      'exp' => 1.2e+34,
       'hex' => 0xC,
       'int' => 99,
       // Symfony 5.1's YAML parser issues a deprecation when reading octal with

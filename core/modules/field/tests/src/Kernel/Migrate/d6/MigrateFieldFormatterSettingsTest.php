@@ -48,11 +48,11 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $field_name = "field_test";
     $expected = [
       'type' => 'text_trimmed',
-      'weight' => 1,
-      'region' => 'content',
       'label' => 'above',
       'settings' => ['trim_length' => 600],
       'third_party_settings' => [],
+      'weight' => 1,
+      'region' => 'content',
     ];
 
     // Can we load any entity display.

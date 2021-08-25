@@ -378,23 +378,23 @@ class ConfigSchemaTest extends KernelTestBase {
     $untyped_to_typed = $untyped_values;
 
     $typed_values = [
-      'string' => '1',
-      'empty_string' => '',
-      'null_string' => NULL,
+      'config_schema_test_integer' => 1,
+      'config_schema_test_integer_empty_string' => NULL,
       'integer' => 100,
       'null_integer' => NULL,
+      'float' => 3.14,
+      'null_float' => NULL,
+      'string' => '1',
+      'null_string' => NULL,
+      'empty_string' => '',
       'boolean' => TRUE,
       'no_type' => 1,
       'mapping' => [
         'string' => '1',
       ],
-      'float' => 3.14,
-      'null_float' => NULL,
       'sequence' => [TRUE, FALSE, TRUE],
       'sequence_bc' => [TRUE, FALSE, TRUE],
       'not_present_in_schema' => TRUE,
-      'config_schema_test_integer' => 1,
-      'config_schema_test_integer_empty_string' => NULL,
     ];
 
     // Save config which has a schema that enforces types.
