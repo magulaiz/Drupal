@@ -19,7 +19,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-(function ($, Drupal, dialogPolyfill) {
+(function ($, Drupal, dialogPolyfill, _ref) {
+  var tabbable = _ref.tabbable,
+      isTabbable = _ref.isTabbable;
+
   function jQueryDrupalDialogBridge() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
@@ -207,6 +210,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       value: function open() {
         if (this.isOpen) {
           if (this.moveToTop()) {
+            this.focusTabbable();
             console.log('@todo: constrain focus to this open dialog that previously was not focusable because another dialog was prioritized.');
           }
 
@@ -225,6 +229,45 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         }
 
         this.dialogTrigger('open');
+        this.focusTabbable();
+      }
+    }, {
+      key: "focusTabbable",
+      value: function focusTabbable() {
+        var hasFocus = $.contains(this.element, document.activeElement) ? document.activeElement : null;
+
+        if (!hasFocus) {
+          hasFocus = this.element.find('[autofocus]').get(0);
+        }
+
+        if (!hasFocus) {
+          var $elements = [this.element, this.uiDialogButtonPane];
+
+          for (var i = 0; i < $elements.length; i++) {
+            var element = $elements[i].get(0);
+
+            if (element) {
+              var elementTabbable = tabbable(element);
+              hasFocus = elementTabbable.length ? elementTabbable[0] : null;
+            }
+
+            if (hasFocus) {
+              break;
+            }
+          }
+        }
+
+        if (!hasFocus) {
+          var closeBtn = this.uiDialogTitlebarClose.get(0);
+          hasFocus = closeBtn && isTabbable(closeBtn) ? closeBtn : null;
+        }
+
+        if (!hasFocus) {
+          this.uiDialog.attr('tabindex', 0);
+          hasFocus = this.uiDialog.get(0);
+        }
+
+        $(hasFocus).eq(0).trigger('focus');
       }
     }, {
       key: "setPosition",
@@ -614,7 +657,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           position: {
             my: 'center',
             at: 'center',
-            of: null
+            of: window,
+            collision: "fit"
           },
           resizable: true,
           show: null,
@@ -635,4 +679,4 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     return _class;
   }();
-})(jQuery, Drupal, dialogPolyfill);
+})(jQuery, Drupal, dialogPolyfill, window.tabbable);

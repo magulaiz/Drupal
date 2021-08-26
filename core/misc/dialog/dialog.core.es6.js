@@ -5,7 +5,7 @@
  * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/commands.html#the-dialog-element
  */
 
-(function ($, Drupal, dialogPolyfill) {
+(function ($, Drupal, dialogPolyfill, { tabbable, isTabbable }) {
   /**
    * Bridges calls to jQuery UI dialog to Drupal core dialog.
    *
@@ -139,7 +139,8 @@
         position: {
           my: 'center',
           at: 'center',
-          of: null,
+          of: window,
+          collision: "fit",
         },
         resizable: true,
         show: null,
@@ -219,6 +220,7 @@
     open() {
       if (this.isOpen) {
         if (this.moveToTop()) {
+          this.focusTabbable();
           console.log(
             '@todo: constrain focus to this open dialog that previously was not focusable because another dialog was prioritized.',
           );
@@ -239,7 +241,50 @@
 
       // @todo the dialog is open, so now focus needs to be constrained.
       this.dialogTrigger('open');
+      this.focusTabbable();
     }
+
+    focusTabbable() {
+      // Set focus to the first match:
+      // 1. An element that was focused previously.
+      let hasFocus = $.contains(this.element, document.activeElement) ? document.activeElement : null;
+
+      // 2. First element inside the dialog matching [autofocus].
+      if (!hasFocus) {
+        hasFocus = this.element.find('[autofocus]').get(0);
+      }
+
+      // 3. Tabbable element inside the content element.
+      // 4. Tabbable element inside the buttonpane.
+      if (!hasFocus) {
+        const $elements = [this.element, this.uiDialogButtonPane];
+        for (let i = 0; i < $elements.length; i++) {
+          const element = $elements[i].get(0);
+          if (element) {
+            const elementTabbable = tabbable(element);
+            hasFocus = elementTabbable.length ? elementTabbable[0] : null;
+          }
+          if (hasFocus) {
+            break;
+          }
+        }
+      }
+
+      // 5. The close button.
+      if (!hasFocus) {
+        const closeBtn = this.uiDialogTitlebarClose.get(0);
+        hasFocus = closeBtn && isTabbable(closeBtn) ? closeBtn : null;
+      }
+
+      // 6. The dialog itself.
+      if (!hasFocus) {
+        this.uiDialog.attr('tabindex', 0);
+        hasFocus = this.uiDialog.get(0);
+      }
+
+      $(hasFocus).eq(0).trigger('focus');
+    }
+
 
     setPosition() {
       // Need to show the dialog to get offsets.
@@ -683,4 +728,4 @@
       return typeof HTMLDialogElement === 'function';
     }
   };
-})(jQuery, Drupal, dialogPolyfill);
+})(jQuery, Drupal, dialogPolyfill, window.tabbable);

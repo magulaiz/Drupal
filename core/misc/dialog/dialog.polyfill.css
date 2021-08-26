@@ -1,0 +1,8 @@
+/**
+ * @file styles for the dialog polyfill.
+ */
+
+/* Reset margins as positioning is handled by core/drupal.jquery.position. */
+dialog {
+  margin: 0;
+}

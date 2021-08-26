@@ -42,6 +42,7 @@ dialog.polyfill:
   css:
     component:
       assets/vendor/google-chrome/dialog-polyfill/dialog-polyfill.css: {}
+      misc/dialog/dialog.polyfill.css: {}
 
 drupal:
   version: VERSION
