@@ -125,7 +125,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#base_plugin_id' => $block->getBaseId(),
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#weight' => $event->getComponent()->getWeight(),
-        '#attributes' => isset($content['#attributes']) ? $content['#attributes'] : [],
+        '#attributes' => $content['#attributes'] ?? [],
       ];
 
       // Place the $content returned by the block plugin into a 'content' child
