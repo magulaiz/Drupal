@@ -92,9 +92,13 @@ class JqueryUiDialogTestController extends ControllerBase {
           'id' => 'wrap2',
         ],
       ],
-      '#attached' => ['library' => ['core/jquery.ui.dialog']],
+      '#attached' => [
+        'library' => [
+          'core/jquery.ui.dialog',
+          'jquery_simulate/jquery.simulate',
+        ],
+      ],
     ];
-
   }
 
 }
