@@ -8,6 +8,21 @@
     overrides: {},
   };
 
+  document.addEventListener('autocomplete-created', (e) => {
+    const instance = e.detail.autocomplete._internal_object;
+    // By default, autocomplete inputs are processed with a backwards
+    // compatible shim that provides jQuery UI autocomplete markup
+    // structure and API surface. If the input has the
+    // 'data-drupal-10-autocomplete' attribute, this shim is not invoked.
+    // Without the shim, the markup and API will be what is provided in
+    // Drupal 10.
+    // @todo remove this conditional and its contents, in
+    //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
+    if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
+      Drupal.autocompleteShim.jqueryUiShimInit(instance);
+    }
+  });
+
   /**
    * Apply overrides to specific widget properties and functions.
    *
@@ -28,7 +43,7 @@
     }
   };
 
-  Drupal.Autocomplete.defaultShimOptions = {
+  Drupal.autocompleteShim.defaultOptions = {
     // Add jQuery UI classes so the autocomplete is styled the same as its
     // jQuery UI predecessor.
     inputClass: 'ui-autocomplete-input',
@@ -48,18 +63,16 @@
    *
    * These overrides can only be applied after autocomplete initializes.
    *
-   * @param {Element} autocompleteInput
+   * @param {_A11yAutocomplete} instance
    *   The initialized autocomplete input.
    */
-  Drupal.Autocomplete.jqueryUiShimInit = (autocompleteInput) => {
-    const id = autocompleteInput.getAttribute('id');
-    const instance = Drupal.Autocomplete.instances[id]._internal_object;
+  Drupal.autocompleteShim.jqueryUiShimInit = (instance) => {
     const isContentEditable = instance.input.hasAttribute('contenteditable');
 
     // Bypass option filtering.
     instance.options = Object.assign(
       instance.options,
-      Drupal.Autocomplete.defaultShimOptions,
+      Drupal.autocompleteShim.defaultOptions,
     );
     // Apply class changes.
     instance.implementInput();
@@ -88,7 +101,7 @@
     // appended to match jQuery UI markup.
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
       const listBoxId = instance.ul.getAttribute('id');
-      const uiFront = $(autocompleteInput).closest('.ui-front, dialog');
+      const uiFront = $(instance.input).closest('.ui-front, dialog');
 
       // If the autocomplete is contained by an element with the class
       // 'ui-front' or a dialog, append the class to that element. Otherwise
@@ -790,7 +803,6 @@
         // This condition means argument 1 was not a string. This means a new
         // autocomplete instance should be initialized.
         Drupal.Autocomplete.initialize(this[0]);
-        Drupal.Autocomplete.jqueryUiShimInit(this[0]);
 
         // If argument 1 is an object, they are options that should be set on
         // the newly created autocomplete.
@@ -803,7 +815,7 @@
               const { widgetOverrides } = args[0];
               Object.keys(widgetOverrides).forEach((propertyToOverride) => {
                 const overrideWith = widgetOverrides[propertyToOverride];
-                const instance = Drupal.Autocomplete.instances[this.attr('id')];
+                const instance = Drupal.Autocomplete.instances[this.attr('id')]._internal_object;
                 applyWidgetOverrides(
                   instance,
                   propertyToOverride,

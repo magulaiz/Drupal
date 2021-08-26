@@ -29,6 +29,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   Drupal.autocompleteShim = {
     overrides: {}
   };
+  document.addEventListener('autocomplete-created', function (e) {
+    var instance = e.detail.autocomplete._internal_object;
+
+    if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
+      Drupal.autocompleteShim.jqueryUiShimInit(instance);
+    }
+  });
 
   var applyWidgetOverrides = function applyWidgetOverrides(instance, propertyToOverride, overrideWith) {
     if (propertyToOverride.substr(0, 1) === '_') {
@@ -36,7 +43,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   };
 
-  Drupal.Autocomplete.defaultShimOptions = {
+  Drupal.autocompleteShim.defaultOptions = {
     inputClass: 'ui-autocomplete-input',
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
@@ -44,11 +51,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     displayLabels: false
   };
 
-  Drupal.Autocomplete.jqueryUiShimInit = function (autocompleteInput) {
-    var id = autocompleteInput.getAttribute('id');
-    var instance = Drupal.Autocomplete.instances[id]._internal_object;
+  Drupal.autocompleteShim.jqueryUiShimInit = function (instance) {
     var isContentEditable = instance.input.hasAttribute('contenteditable');
-    instance.options = Object.assign(instance.options, Drupal.Autocomplete.defaultShimOptions);
+    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions);
     instance.implementInput();
     instance.implementList();
     instance.liveRegion = document.querySelector('#drupal-live-announce');
@@ -61,7 +66,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
       var listBoxId = instance.ul.getAttribute('id');
-      var uiFront = $(autocompleteInput).closest('.ui-front, dialog');
+      var uiFront = $(instance.input).closest('.ui-front, dialog');
       var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
       appendTo.appendChild(instance.ul);
       instance.ul = document.querySelector("#".concat(listBoxId));
@@ -492,7 +497,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       } else {
         Drupal.Autocomplete.initialize(this[0]);
-        Drupal.Autocomplete.jqueryUiShimInit(this[0]);
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
@@ -501,7 +505,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
                 var overrideWith = widgetOverrides[propertyToOverride];
 
-                var instance = Drupal.Autocomplete.instances[_this3.attr('id')];
+                var instance = Drupal.Autocomplete.instances[_this3.attr('id')]._internal_object;
 
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
