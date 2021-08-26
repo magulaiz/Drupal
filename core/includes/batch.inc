@@ -328,10 +328,8 @@ function _batch_finished() {
  * @see drupal_register_shutdown_function()
  */
 function _batch_shutdown() {
+  @trigger_error('_batch_shutdown() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Batch\BatchProcessorInterface::shutdown() instead. See https://www.drupal.org/node/3229844', E_USER_DEPRECATED);
   /** @var \Drupal\Core\Batch\BatchProcessorInterface $batch_processor */
   $batch_processor = \Drupal::service('batch.processor');
-
-  if (($batch = $batch_processor->getCurrentBatch()) && _batch_needs_update()) {
-    \Drupal::service('batch.storage')->update($batch);
-  }
+  $batch_processor->shutdown();
 }
