@@ -1,3 +1,4 @@
+// eslint-disable no-use-before-define
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -205,7 +206,6 @@ module.exports = {
       },
       [],
       (result) => {
-        console.log('returned', result.value);
         const expectedTrue = {
           roleIsDialog: 'dialog role',
           labelledById: 'labelledby matches ID',
@@ -279,8 +279,6 @@ module.exports = {
                 .trigger('blur');
               setTimeout(function () {
                 element.dialog('instance')._focusTabbable();
-                //assert.equal( document.activeElement, input[ 0 ],
-                // 					"1. an element that was focused previously." );
                 toReturn.step1Previous = input[0].isEqualNode(
                   document.activeElement,
                 );
@@ -299,8 +297,6 @@ module.exports = {
               toReturn.step2FirstElementInside = element
                 .find('input')[1]
                 .isEqualNode(document.activeElement);
-              // assert.equal( document.activeElement, element.find( "input" )[ 1 ],
-              //   "2. first element inside the dialog matching [autofocus]" );
               complete();
             },
             step3,
@@ -315,8 +311,6 @@ module.exports = {
               toReturn.step3InsideContentElement = element
                 .find('input')[0]
                 .isEqualNode(document.activeElement);
-              // assert.equal( document.activeElement, element.find( "input" )[ 0 ],
-              //   "3. tabbable element inside the content element" );
               complete();
             },
             step4,
@@ -332,9 +326,6 @@ module.exports = {
                 .dialog('widget')
                 .find('.ui-dialog-buttonpane button')[0]
                 .isEqualNode(document.activeElement);
-              // assert.equal( document.activeElement,
-              //   element.dialog( "widget" ).find( ".ui-dialog-buttonpane button" )[ 0 ],
-              //   "4. tabbable element inside the buttonpane" );
               complete();
             },
             step5,
@@ -350,9 +341,6 @@ module.exports = {
                 .dialog('widget')
                 .find('.ui-dialog-titlebar .ui-dialog-titlebar-close')[0]
                 .isEqualNode(document.activeElement);
-              // assert.equal( document.activeElement,
-              //   element.dialog( "widget" ).find( ".ui-dialog-titlebar .ui-dialog-titlebar-close" )[ 0 ],
-              //   "5. the close button" );
               complete();
             },
             step6,
@@ -389,20 +377,15 @@ module.exports = {
               },
             },
             function (complete) {
-              var inputs = element.find('input');
+              const inputs = element.find('input');
               toReturn.step7FocusStartsOnSecond = inputs[1].isEqualNode(
                 document.activeElement,
               );
-              // assert.equal
-              // ( document.activeElement, inputs[ 1 ],  "Focus starts on second input" );
               inputs.last().simulate('keydown', { keyCode: $.ui.keyCode.TAB });
               setTimeout(function () {
                 toReturn.step7HonorPreventDefault = inputs[0].isEqualNode(
                   document.activeElement,
                 );
-
-                // assert.equal( document.activeElement, inputs[ 0 ],
-                //   "Honor preventDefault, allowing custom focus management" );
                 complete();
               }, 50);
             },
@@ -413,7 +396,115 @@ module.exports = {
       },
       [],
       (result) => {
-        console.log('whole buncha...', result);
+        const expectedTrue = {
+          step1Previous: '1. an element that was focused previously.',
+          step2FirstElementInside:
+            '2. first element inside the dialog matching [autofocus]',
+          step3InsideContentElement:
+            '3. tabbable element inside the content element',
+          step4inButtonpane: '4. tabbable element inside the buttonpane',
+          step5CloseButton: '5. the close button',
+          step6TheDialogItself: '6. the dialog itself',
+          step7FocusStartsOnSecond: 'Focus starts on second input',
+          step7HonorPreventDefault:
+            'Honor preventDefault, allowing custom focus management',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  '#7960: resizable handles below modal overlays': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $ = jQuery;
+        const resizable = $('<div>').resizable();
+        const dialog = $('<div>').dialog({ modal: true });
+        const resizableZindex = parseInt(
+          resizable.find('.ui-resizable-handle').css('zIndex'),
+          10,
+        );
+        const overlayZindex = parseInt(
+          $('.ui-widget-overlay').css('zIndex'),
+          10,
+        );
+        return resizableZindex < overlayZindex;
+      },
+      [],
+      (result) => {
+        browser.assert.ok(
+          result.value,
+          'Resizable handles have lower z-index than modal overlay',
+        );
+      },
+    );
+  },
+  'Prevent tabbing out of dialogs': (browser) => {
+    browser.executeAsync(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $(
+          "<div><input name='0'><input name='1'></div>",
+        ).dialog();
+        const inputs = element.find('input');
+
+        // Remove close button to test focus on just the two buttons
+        element.dialog('widget').find('.ui-button').remove();
+
+        function checkTab() {
+          toReturn.tabFocusInModal = inputs[0].isEqualNode(
+            document.activeElement,
+          );
+
+          // Check shift tab
+          $(document.activeElement).simulate('keydown', {
+            keyCode: $.ui.keyCode.TAB,
+            shiftKey: true,
+          });
+          setTimeout(checkShiftTab);
+        }
+
+        function checkShiftTab() {
+          toReturn.shiftTabMoveFocusBack = inputs[1].isEqualNode(
+            document.activeElement,
+          );
+          element.remove();
+          setTimeout(done(toReturn));
+        }
+
+        inputs[1].focus();
+        setTimeout(function () {
+          toReturn.focusSetOnSecondInput = inputs[1].isEqualNode(
+            document.activeElement,
+          );
+          inputs.eq(1).simulate('keydown', { keyCode: $.ui.keyCode.TAB });
+
+          setTimeout(checkTab);
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          tabFocusInModal: 'Tab key event moved focus within the modal',
+          shiftTabMoveFocusBack:
+            'Shift-Tab key event moved focus back to second input',
+          focusSetOnSecondInput: 'Focus set on second input',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
       },
     );
   },
