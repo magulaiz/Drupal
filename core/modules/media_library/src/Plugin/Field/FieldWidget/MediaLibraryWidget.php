@@ -412,6 +412,17 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
           // Prevent errors in other widgets from preventing removal.
           '#limit_validation_errors' => $limit_validation_errors,
         ],
+        'edit_button' => [
+          '#type' => 'button',
+          '#value' => $this->t('Edit'),
+          '#attributes' => [
+            'type' => 'button',
+            'class' => ['edit-media', 'use-ajax'],
+            'href' => Url::fromRoute('entity.media.edit_form', ['media' => $media_item->id()])->toString(),
+            'data-dialog-type' => 'modal',
+            'data-dialog-options' => '{"width":"80%"}',
+          ],
+        ],
         // @todo Make the view mode configurable in https://www.drupal.org/project/drupal/issues/2971209
         'rendered_entity' => $view_builder->view($media_item, 'media_library'),
         'target_id' => [
