@@ -43,7 +43,15 @@
    */
   Drupal.Autocomplete.initialize = (autocompleteInput) => {
     const options = Drupal.Autocomplete.defaultOptions || {};
-    const id = autocompleteInput.getAttribute('id');
+    // The default cardinality of A11yAutocomplete is 1. Fields in Drupal
+    // without explicitly set cardinality should be set to -1, which
+    // provides unlimited cardinality. This setting is applied via the
+    // data-autocomplete-cardinality attribute as it the highest
+    // precedence way to set an option.
+    if (!autocompleteInput.hasAttribute('data-autocomplete-cardinality')) {
+      autocompleteInput.setAttribute('data-autocomplete-cardinality', '-1');
+    }
+
     if (
       autocompleteInput.hasAttribute(
         'data-autocomplete-first-character-blacklist',
@@ -58,11 +66,8 @@
       });
     }
 
-    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(
-      autocompleteInput,
-      options,
-    );
-    const instance = Drupal.Autocomplete.instances[id]._internal_object;
+    const autocomplete = A11yAutocomplete(autocompleteInput, options);
+    const instance = autocomplete._internal_object;
 
     /**
      * Sends a message to assistive technology.
@@ -77,12 +82,8 @@
     function autocompleteSendToLiveRegion(message) {
       Drupal.announce(message, 'assertive');
     }
-
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
-
-    window.addEventListener('autocomplete-destroy', (e) => {
-      delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
-    });
+    return autocomplete;
   };
 
   /**
@@ -95,35 +96,17 @@
    */
   Drupal.behaviors.autocomplete = {
     attach() {
+      if (once('autocomplete-lifecycle', 'body').length) {
+        document.addEventListener('autocomplete-destroy', (e) => {
+          delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
+        });
+        document.addEventListener('autocomplete-created', (e) => {
+          Drupal.Autocomplete.instances[e.detail.autocomplete.id] =
+            e.detail.autocomplete;
+        });
+      }
       once('autocomplete-init', 'input.form-autocomplete').forEach(
-        (autocompleteInput) => {
-          // The default cardinality of A11yAutocomplete is 1. Fields in Drupal
-          // without explicitly set cardinality should be set to -1, which
-          // provides unlimited cardinality. This setting is applied via the
-          // data-autocomplete-cardinality attribute as it the highest
-          // precedence way to set an option.
-          if (
-            !autocompleteInput.hasAttribute('data-autocomplete-cardinality')
-          ) {
-            autocompleteInput.setAttribute(
-              'data-autocomplete-cardinality',
-              '-1',
-            );
-          }
-          Drupal.Autocomplete.initialize(autocompleteInput);
-
-          // By default, autocomplete inputs are processed with a backwards
-          // compatible shim that provides jQuery UI autocomplete markup
-          // structure and API surface. If the input has the
-          // 'data-drupal-10-autocomplete' attribute, this shim is not invoked.
-          // Without the shim, the markup and API will be what is provided in
-          // Drupal 10.
-          // @todo remove this conditional and its contents, in
-          //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
-          if (!autocompleteInput.hasAttribute('data-drupal-10-autocomplete')) {
-            Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
-          }
-        },
+        Drupal.Autocomplete.initialize,
       );
     },
     detach(context, settings, trigger) {
@@ -131,8 +114,9 @@
         once
           .remove('autocomplete-init', 'input.form-autocomplete', context)
           .forEach((input) => {
-            const id = input.getAttribute('id');
-            Drupal.Autocomplete.instances[id].destroy();
+            if (input.id in Drupal.Autocomplete.instances) {
+              Drupal.Autocomplete.instances[input.id].destroy();
+            }
           });
       }
     },

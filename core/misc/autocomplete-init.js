@@ -21,7 +21,10 @@
 
   Drupal.Autocomplete.initialize = function (autocompleteInput) {
     var options = Drupal.Autocomplete.defaultOptions || {};
-    var id = autocompleteInput.getAttribute('id');
+
+    if (!autocompleteInput.hasAttribute('data-autocomplete-cardinality')) {
+      autocompleteInput.setAttribute('data-autocomplete-cardinality', '-1');
+    }
 
     if (autocompleteInput.hasAttribute('data-autocomplete-first-character-blacklist')) {
       options.firstCharacterDenylist = autocompleteInput.getAttribute('data-autocomplete-first-character-blacklist');
@@ -30,38 +33,36 @@
       });
     }
 
-    Drupal.Autocomplete.instances[id] = new A11yAutocomplete(autocompleteInput, options);
-    var instance = Drupal.Autocomplete.instances[id]._internal_object;
+    var autocomplete = A11yAutocomplete(autocompleteInput, options);
+    var instance = autocomplete._internal_object;
 
     function autocompleteSendToLiveRegion(message) {
       Drupal.announce(message, 'assertive');
     }
 
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
-    window.addEventListener('autocomplete-destroy', function (e) {
-      delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
-    });
+    return autocomplete;
   };
 
   Drupal.behaviors.autocomplete = {
     attach: function attach() {
-      once('autocomplete-init', 'input.form-autocomplete').forEach(function (autocompleteInput) {
-        if (!autocompleteInput.hasAttribute('data-autocomplete-cardinality')) {
-          autocompleteInput.setAttribute('data-autocomplete-cardinality', '-1');
-        }
+      if (once('autocomplete-lifecycle', 'body').length) {
+        document.addEventListener('autocomplete-destroy', function (e) {
+          delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
+        });
+        document.addEventListener('autocomplete-created', function (e) {
+          Drupal.Autocomplete.instances[e.detail.autocomplete.id] = e.detail.autocomplete;
+        });
+      }
 
-        Drupal.Autocomplete.initialize(autocompleteInput);
-
-        if (!autocompleteInput.hasAttribute('data-drupal-10-autocomplete')) {
-          Drupal.Autocomplete.jqueryUiShimInit(autocompleteInput);
-        }
-      });
+      once('autocomplete-init', 'input.form-autocomplete').forEach(Drupal.Autocomplete.initialize);
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
         once.remove('autocomplete-init', 'input.form-autocomplete', context).forEach(function (input) {
-          var id = input.getAttribute('id');
-          Drupal.Autocomplete.instances[id].destroy();
+          if (input.id in Drupal.Autocomplete.instances) {
+            Drupal.Autocomplete.instances[input.id].destroy();
+          }
         });
       }
     }
