@@ -56,9 +56,8 @@ class AutocompleteShimTestController extends ControllerBase {
       ],
       '#attached' => [
         'library' => [
-          'core/jquery.ui.autocomplete',
+          'core/autocomplete.jqueryui.shim',
           'core/jquery.simulate',
-          'core/jquery.ui',
         ],
       ],
     ];
