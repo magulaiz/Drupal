@@ -215,6 +215,9 @@ abstract class FormElement extends RenderElement implements FormElementInterface
           // backwards compatible shim.
           $element['#attributes']['data-drupal-10-autocomplete'] = $element['#use-drupal-10-autocomplete'];
         }
+        if (empty($element['#use-drupal-10-autocomplete']) || !empty($element['#attributes']['data-drupal-10-autocomplete']) && !$element['#attributes']['data-drupal-10-autocomplete']) {
+          $metadata->addAttachments(['library' => ['core/autocomplete.jqueryui.shim']]);
+        }
       }
       $metadata
         ->merge(BubbleableMetadata::createFromObject($access))
