@@ -102,6 +102,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $block_content = [
       '#markup' => 'The block content.',
       '#cache' => ['tags' => ['build-tag']],
+      '#attributes' => [
+        'class' => [
+          'class-from-block-content',
+        ],
+      ],
     ];
     $block->build()->willReturn($block_content);
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn($block->reveal());
@@ -119,7 +124,11 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      '#attributes' => [],
+      '#attributes' => [
+        'class' => [
+          'class-from-block-content',
+        ],
+      ],
       'content' => $block_content,
     ];
 
