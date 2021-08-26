@@ -295,7 +295,7 @@ EOD;
     if (isset($table['unique keys']) && is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
         $this->validateUniqueKeySchema($key, $table['fields']);
-        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
+        $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $this->fieldNames($key)) . ')';
       }
     }
 
@@ -772,6 +772,7 @@ EOD;
    * {@inheritdoc}
    */
   public function addPrimaryKey($table, $fields) {
+    $this->validatePrimaryKeySchema($fields);
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add primary key to table '$table': table doesn't exist.");
     }
@@ -810,6 +811,7 @@ EOD;
    * {@inheritdoc}
    */
   public function addUniqueKey($table, $name, $fields) {
+    $this->validateUniqueKeySchema($fields);
     if (!$this->tableExists($table)) {
       throw new SchemaObjectDoesNotExistException("Cannot add unique key '$name' to table '$table': table doesn't exist.");
     }
@@ -817,7 +819,7 @@ EOD;
       throw new SchemaObjectExistsException("Cannot add unique key '$name' to table '$table': unique key already exists.");
     }
 
-    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $fields) . ')');
+    $this->connection->query('ALTER TABLE {' . $table . '} ADD CONSTRAINT ' . $this->ensureIdentifiersLength($table, $name, 'key') . ' UNIQUE (' . implode(',', $this->fieldNames($fields)) . ')');
     $this->resetTableInformation($table);
   }
 
