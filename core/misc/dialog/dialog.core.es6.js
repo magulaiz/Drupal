@@ -140,7 +140,7 @@
           my: 'center',
           at: 'center',
           of: window,
-          collision: "fit",
+          collision: 'fit',
         },
         resizable: true,
         show: null,
@@ -247,7 +247,9 @@
     focusTabbable() {
       // Set focus to the first match:
       // 1. An element that was focused previously.
-      let hasFocus = $.contains(this.element, document.activeElement) ? document.activeElement : null;
+      let hasFocus = $.contains(this.element, document.activeElement)
+        ? document.activeElement
+        : null;
 
       // 2. First element inside the dialog matching [autofocus].
       if (!hasFocus) {
@@ -284,7 +286,6 @@
 
       $(hasFocus).eq(0).trigger('focus');
     }
-
 
     setPosition() {
       // Need to show the dialog to get offsets.
