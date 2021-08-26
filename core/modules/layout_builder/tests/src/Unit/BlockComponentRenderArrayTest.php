@@ -119,6 +119,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
+      '#attributes' => [],
       'content' => $block_content,
     ];
 
@@ -194,6 +195,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
+      '#attributes' => [],
       'content' => $block_content,
     ];
 
