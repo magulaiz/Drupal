@@ -108,7 +108,7 @@
     // Drupal autocomplete events.
     if (autocompleteEventsToShim.length) {
       const id = that.attr('id');
-      const instance = Drupal.Autocomplete.instances[id];
+      const instance = Drupal.Autocomplete.instances[id]._internal_object;
       const config = {};
       if (one === 1) {
         config.once = true;

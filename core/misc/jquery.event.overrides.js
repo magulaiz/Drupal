@@ -65,7 +65,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     if (autocompleteEventsToShim.length) {
       var id = that.attr('id');
-      var instance = Drupal.Autocomplete.instances[id];
+      var instance = Drupal.Autocomplete.instances[id]._internal_object;
       var config = {};
 
       if (one === 1) {

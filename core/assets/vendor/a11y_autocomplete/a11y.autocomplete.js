@@ -800,6 +800,11 @@ var A11yAutocompleteFactory = function A11yAutocompleteFactory(input) {
     destroy: autocomplete.destroy.bind(autocomplete),
     _internal_object: autocomplete
   };
+
+  if (input.id) {
+    api.id = input.id;
+  }
+
   autocomplete.api = api;
   return api;
 };

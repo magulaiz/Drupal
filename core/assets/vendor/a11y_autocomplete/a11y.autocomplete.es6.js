@@ -1301,6 +1301,9 @@ const A11yAutocompleteFactory = (input, options = {}) => {
      */
     _internal_object: autocomplete,
   };
+  if (input.id) {
+    api.id = input.id;
+  }
   // Reference it in the object to be able to send it during events.
   autocomplete.api = api;
   return api;

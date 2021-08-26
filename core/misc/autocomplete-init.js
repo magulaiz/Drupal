@@ -38,8 +38,8 @@
     }
 
     instance.sendToLiveRegion = autocompleteSendToLiveRegion;
-    instance.input.addEventListener('autocomplete-destroy', function (e) {
-      delete Drupal.Autocomplete.instances[e.detail.autocomplete._internal_object.input.getAttribute('id')];
+    window.addEventListener('autocomplete-destroy', function (e) {
+      delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
     });
   };
 
