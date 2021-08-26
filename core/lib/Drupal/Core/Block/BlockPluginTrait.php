@@ -75,21 +75,6 @@ trait BlockPluginTrait {
       $this->defaultConfiguration(),
       $configuration
     );
-    // Sort the settings the way it is defined in the block_settings schema.
-    $mapping = [
-      'id',
-      'label',
-      'label_display',
-      'status',
-      'info',
-      'view_mode',
-      'provider',
-      'context_mapping',
-    ];
-    // Use only keys that exist in $this->configuration.
-    $mapping = array_intersect($mapping, array_keys($this->configuration));
-    // Use the values of $this->configuration with the order of $mapping.
-    $this->configuration = array_replace(array_combine($mapping, $mapping), $this->configuration);
   }
 
   /**
