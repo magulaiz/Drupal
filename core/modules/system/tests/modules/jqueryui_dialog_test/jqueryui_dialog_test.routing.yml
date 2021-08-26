@@ -1,0 +1,7 @@
+jqueryui_dialog_test_page:
+  path: '/jqueryui-dialog-test'
+  defaults:
+    _controller: '\Drupal\jqueryui_dialog_test\Controller\JqueryUiDialogTestController::build'
+    _title: 'dialog testing'
+  requirements:
+    _access: 'TRUE'
