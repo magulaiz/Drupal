@@ -815,7 +815,9 @@
               const { widgetOverrides } = args[0];
               Object.keys(widgetOverrides).forEach((propertyToOverride) => {
                 const overrideWith = widgetOverrides[propertyToOverride];
-                const instance = Drupal.Autocomplete.instances[this.attr('id')]._internal_object;
+                const instance =
+                  Drupal.Autocomplete.instances[this.attr('id')]
+                    ._internal_object;
                 applyWidgetOverrides(
                   instance,
                   propertyToOverride,
