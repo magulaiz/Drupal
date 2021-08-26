@@ -12,7 +12,7 @@ class InlineBlockQuickeditEnabledTest extends InlineBlockTest {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['quickedit'];
+  protected static $modules = ['quickedit'];
 
   /**
    * {@inheritdoc}
