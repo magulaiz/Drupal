@@ -312,6 +312,9 @@ block_settings:
     view_mode:
       type: string
       label: 'View mode'
+    provider:
+      type: string
+      label: 'Provider'
     context_mapping:
       type: sequence
       label: 'Context assignments'
