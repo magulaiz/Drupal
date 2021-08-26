@@ -94,6 +94,7 @@ class JqueryUiDialogTestController extends ControllerBase {
       ],
       '#attached' => [
         'library' => [
+          'core/jquery',
           'core/jquery.ui.dialog',
           'jquery_simulate/jquery.simulate',
         ],

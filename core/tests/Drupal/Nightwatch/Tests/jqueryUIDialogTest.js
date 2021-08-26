@@ -4,6 +4,14 @@ module.exports = {
     browser.drupalInstall().drupalLoginAsAdmin(() => {
       browser
         .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'jQuery Simulate')
+        .waitForElementVisible(
+          'input[name="modules[jquery_simulate][enable]"]',
+          1000,
+        )
+        .click('input[name="modules[jquery_simulate][enable]"]')
+        .click('input[type="submit"]')
+        .drupalRelativeURL('/admin/modules')
         .setValue('input[type="search"]', 'jQuery UI Dialog Test')
         .waitForElementVisible(
           'input[name="modules[jqueryui_dialog_test][enable]"]',
@@ -220,8 +228,8 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
-        const dialog = $( "<div>" ).appendTo( "#dialog-container" ).dialog();
-        return dialog.parent()[ 0 ].isEqualNode(dialog.dialog( "widget" )[ 0 ]);
+        const dialog = $('<div>').appendTo('#dialog-container').dialog();
+        return dialog.parent()[0].isEqualNode(dialog.dialog('widget')[0]);
       },
       [],
       (result) => {
@@ -238,114 +246,167 @@ module.exports = {
         let element = {};
 
         let options = {
-          buttons: [ {
-            text: "Ok",
-            click: $.noop
-          } ]
+          buttons: [
+            {
+              text: 'Ok',
+              click: $.noop,
+            },
+          ],
         };
 
-        function checkFocus( markup, options, testFn, next ) {
-          element = $( markup ).dialog( options );
-          setTimeout( function() {
-            testFn( function proceed() {
+        function checkFocus(markup, options, testFn, next) {
+          element = $(markup).dialog(options);
+          setTimeout(function () {
+            testFn(function proceed() {
               element.remove();
               if (next === 'completed') {
                 done(toReturn);
               } else {
-                setTimeout( next );
+                setTimeout(next);
               }
-            } );
-          } );
+            });
+          });
         }
 
         function step1() {
-          checkFocus( "<div><input><input></div>", options, function( complete ) {
-            const input = element.find( "input:last" ).trigger( "focus" ).trigger( "blur" );
-            setTimeout( function() {
-              element.dialog( "instance" )._focusTabbable();
-              //assert.equal( document.activeElement, input[ 0 ],
-              // 					"1. an element that was focused previously." );
-              toReturn.step1Previous = input[ 0 ].isEqualNode(document.activeElement);
-              complete();
-            } );
-          }, step2 );
+          checkFocus(
+            '<div><input><input></div>',
+            options,
+            function (complete) {
+              const input = element
+                .find('input:last')
+                .trigger('focus')
+                .trigger('blur');
+              setTimeout(function () {
+                element.dialog('instance')._focusTabbable();
+                //assert.equal( document.activeElement, input[ 0 ],
+                // 					"1. an element that was focused previously." );
+                toReturn.step1Previous = input[0].isEqualNode(
+                  document.activeElement,
+                );
+                complete();
+              });
+            },
+            step2,
+          );
         }
 
         function step2() {
-          checkFocus( "<div><input><input autofocus></div>", options, function( complete ) {
-            toReturn.step2FirstElementInside = element.find( "input" )[ 1 ].isEqualNode(document.activeElement);
-            // assert.equal( document.activeElement, element.find( "input" )[ 1 ],
-            //   "2. first element inside the dialog matching [autofocus]" );
-            complete();
-          }, step3 );
+          checkFocus(
+            '<div><input><input autofocus></div>',
+            options,
+            function (complete) {
+              toReturn.step2FirstElementInside = element
+                .find('input')[1]
+                .isEqualNode(document.activeElement);
+              // assert.equal( document.activeElement, element.find( "input" )[ 1 ],
+              //   "2. first element inside the dialog matching [autofocus]" );
+              complete();
+            },
+            step3,
+          );
         }
 
         function step3() {
-          checkFocus( "<div><input><input></div>", options, function( complete ) {
-            toReturn.step3InsideContentElement = element.find( "input" )[ 0 ].isEqualNode(document.activeElement);
-            // assert.equal( document.activeElement, element.find( "input" )[ 0 ],
-            //   "3. tabbable element inside the content element" );
-            complete();
-          }, step4 );
+          checkFocus(
+            '<div><input><input></div>',
+            options,
+            function (complete) {
+              toReturn.step3InsideContentElement = element
+                .find('input')[0]
+                .isEqualNode(document.activeElement);
+              // assert.equal( document.activeElement, element.find( "input" )[ 0 ],
+              //   "3. tabbable element inside the content element" );
+              complete();
+            },
+            step4,
+          );
         }
 
         function step4() {
-          checkFocus( "<div>text</div>", options, function( complete ) {
-            toReturn.step4inButtonpane = element.dialog( "widget" ).find( ".ui-dialog-buttonpane button" )[ 0 ].isEqualNode(document.activeElement);
-            // assert.equal( document.activeElement,
-            //   element.dialog( "widget" ).find( ".ui-dialog-buttonpane button" )[ 0 ],
-            //   "4. tabbable element inside the buttonpane" );
-            complete();
-          }, step5 );
+          checkFocus(
+            '<div>text</div>',
+            options,
+            function (complete) {
+              toReturn.step4inButtonpane = element
+                .dialog('widget')
+                .find('.ui-dialog-buttonpane button')[0]
+                .isEqualNode(document.activeElement);
+              // assert.equal( document.activeElement,
+              //   element.dialog( "widget" ).find( ".ui-dialog-buttonpane button" )[ 0 ],
+              //   "4. tabbable element inside the buttonpane" );
+              complete();
+            },
+            step5,
+          );
         }
 
         function step5() {
-          checkFocus( "<div>text</div>", {}, function( complete ) {
-            toReturn.step5CloseButton =  element.dialog( "widget" ).find( ".ui-dialog-titlebar .ui-dialog-titlebar-close" )[ 0 ].isEqualNode(document.activeElement);
-            // assert.equal( document.activeElement,
-            //   element.dialog( "widget" ).find( ".ui-dialog-titlebar .ui-dialog-titlebar-close" )[ 0 ],
-            //   "5. the close button" );
-            complete();
-          }, step6 );
+          checkFocus(
+            '<div>text</div>',
+            {},
+            function (complete) {
+              toReturn.step5CloseButton = element
+                .dialog('widget')
+                .find('.ui-dialog-titlebar .ui-dialog-titlebar-close')[0]
+                .isEqualNode(document.activeElement);
+              // assert.equal( document.activeElement,
+              //   element.dialog( "widget" ).find( ".ui-dialog-titlebar .ui-dialog-titlebar-close" )[ 0 ],
+              //   "5. the close button" );
+              complete();
+            },
+            step6,
+          );
         }
 
         function step6() {
-          checkFocus( "<div>text</div>", { autoOpen: false }, function( complete ) {
-            element.dialog( "widget" ).find( ".ui-dialog-titlebar-close" ).hide();
-            element.dialog( "open" );
-            setTimeout( function() {
-              toReturn.step6TheDialogItself = element.parent()[ 0 ].isEqualNode(document.activeElement);
-              complete();
-            } );
-          }, step7 );
+          checkFocus(
+            '<div>text</div>',
+            { autoOpen: false },
+            function (complete) {
+              element.dialog('widget').find('.ui-dialog-titlebar-close').hide();
+              element.dialog('open');
+              setTimeout(function () {
+                toReturn.step6TheDialogItself = element
+                  .parent()[0]
+                  .isEqualNode(document.activeElement);
+                complete();
+              });
+            },
+            step7,
+          );
         }
         function step7() {
           checkFocus(
-            "<div><input><input autofocus></div>",
+            '<div><input><input autofocus></div>',
             {
               open: function () {
-                const inputs = $(this).find("input");
-                inputs.last().on("keydown", function (event) {
+                const inputs = $(this).find('input');
+                inputs.last().on('keydown', function (event) {
                   event.preventDefault();
-                  inputs.first().trigger("focus");
+                  inputs.first().trigger('focus');
                 });
-              }
+              },
             },
             function (complete) {
-              var inputs = element.find("input");
-              toReturn.step7FocusStartsOnSecond = inputs[1].isEqualNode(document.activeElement);
+              var inputs = element.find('input');
+              toReturn.step7FocusStartsOnSecond = inputs[1].isEqualNode(
+                document.activeElement,
+              );
               // assert.equal
               // ( document.activeElement, inputs[ 1 ],  "Focus starts on second input" );
-              inputs.last().simulate("keydown", {keyCode: $.ui.keyCode.TAB});
+              inputs.last().simulate('keydown', { keyCode: $.ui.keyCode.TAB });
               setTimeout(function () {
-                toReturn.step7HonorPreventDefault = inputs[0].isEqualNode(document.activeElement);
+                toReturn.step7HonorPreventDefault = inputs[0].isEqualNode(
+                  document.activeElement,
+                );
 
                 // assert.equal( document.activeElement, inputs[ 0 ],
                 //   "Honor preventDefault, allowing custom focus management" );
                 complete();
               }, 50);
             },
-            'completed'
+            'completed',
           );
         }
         step1();
