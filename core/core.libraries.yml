@@ -6,21 +6,35 @@ a11y_autocomplete:
   css:
     component:
       assets/vendor/a11y_autocomplete/a11y.autocomplete.css: {}
-  dependencies:
-    - core/drupal.customevent
-    - core/drupal.fetch
-    - core/drupal.array.includes
-    - core/drupal.string.includes
 
 autocomplete.jqueryui.shim:
   version: VERSION
   js:
-    misc/jqueryui.autocomplete.shim.js: { }
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+
+    misc/jqueryui.widget.overrides.js: {}
+    misc/jquery.event.overrides.js: {}
+    misc/jqueryui.autocomplete.shim.js: {}
   dependencies:
     - core/drupal
     - core/jquery
+    - core/drupal.autocomplete
     - core/drupal.jquery.position
-    - core/jquery.ui.widget.overrides
 
 backbone:
   remote: https://github.com/jashkenas/backbone
@@ -120,19 +134,21 @@ drupal.announce:
 drupal.autocomplete:
   version: VERSION
   js:
-    # Weight is -1 so this loads before the jQuery UI shim.
-    misc/autocomplete-init.js: { weight: -1 }
+    misc/autocomplete-init.js: {}
   css:
     component:
       misc/autocomplete.css: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
-    - core/drupal.jquery.position
     - core/a11y_autocomplete
     - core/drupal.announce
     - core/once
-    - core/autocomplete.jqueryui.shim
+    - core/drupal.customevent
+    - core/drupal.fetch
+    - core/drupal.array.includes
+    - core/drupal.string.includes
+
 
 drupal.array.find:
   version: VERSION
@@ -471,10 +487,6 @@ jquery:
     gpl-compatible: true
   js:
     assets/vendor/jquery/jquery.min.js: { minified: true, weight: -20 }
-    # weighted at 16 so Drupal is available.
-    misc/jquery.event.overrides.js: { weight: -16 }
-  dependencies:
-    - core/drupal
 
 jquery.cookie:
   version: VERSION
@@ -610,13 +622,17 @@ jquery.ui:
 jquery.ui.autocomplete:
   version: *jquery_ui_version
   license: *jquery_ui_license
+  js:
+    assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
   css:
     component:
       assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
   dependencies:
-    - core/drupal.autocomplete
-    - core/jquery.simulate
-  deprecated: The "%library_id%" asset library is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3083715
+    - core/jquery.ui
+    - core/jquery.ui.widget
+    - core/jquery.ui.position
+    - core/jquery.ui.menu
+  deprecated: *jquery_ui_unused_deprecated
 
 jquery.ui.button:
   version: *jquery_ui_version
@@ -756,27 +772,6 @@ jquery.ui.widget:
   dependencies:
     - core/jquery.ui
   deprecated: *jquery_ui_unused_deprecated
-
-jquery.ui.widget.overrides:
-  version: VERSION
-  js:
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
-    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
-    misc/jqueryui.widget.overrides.js: { weight: -11.7 }
 
 modernizr:
   # Block the page from being loaded until Modernizr is initialized.
