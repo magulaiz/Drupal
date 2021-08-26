@@ -257,6 +257,7 @@ class _A11yAutocomplete {
     this.inputDescribedBy = this.input.getAttribute('aria-describedby');
     this.inputHintRead = false;
     this.implementInput();
+    this.implementDescription();
 
     // Create the list that will display suggestions.
     this.ul = document.createElement('ul');
@@ -357,7 +358,12 @@ class _A11yAutocomplete {
     if (!this.input.hasAttribute('id')) {
       this.input.setAttribute('id', `autocomplete-input-${this.count}`);
     }
+  }
 
+  /**
+   * Add assistive hints.
+   */
+  implementDescription() {
     const description = document.createElement('span');
     description.textContent =
       this.minCharsMessage() + this.options.inputAssistiveHint;

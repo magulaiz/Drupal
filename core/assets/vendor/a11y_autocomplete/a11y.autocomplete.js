@@ -91,6 +91,7 @@ var _A11yAutocomplete = function () {
     this.inputDescribedBy = this.input.getAttribute('aria-describedby');
     this.inputHintRead = false;
     this.implementInput();
+    this.implementDescription();
     this.ul = document.createElement('ul');
     this.implementList();
     this.appendList();
@@ -183,7 +184,10 @@ var _A11yAutocomplete = function () {
       if (!this.input.hasAttribute('id')) {
         this.input.setAttribute('id', "autocomplete-input-".concat(this.count));
       }
-
+    }
+  }, {
+    key: "implementDescription",
+    value: function implementDescription() {
       var description = document.createElement('span');
       description.textContent = this.minCharsMessage() + this.options.inputAssistiveHint;
       description.classList.add('visually-hidden');
