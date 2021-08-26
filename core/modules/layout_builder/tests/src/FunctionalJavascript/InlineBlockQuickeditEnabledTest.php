@@ -22,3 +22,4 @@ class InlineBlockQuickeditEnabledTest extends InlineBlockTest {
     return parent::drupalCreateUser($permissions, $name, $admin, $values);
   }
 
+}
