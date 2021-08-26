@@ -294,6 +294,20 @@ class _A11yAutocomplete {
       });
     });
 
+    // Set the public API
+    this.api = {
+      destroy: this.destroy.bind(this),
+      /**
+       * Do not use! only for jquery shim.
+       *
+       * @deprecated
+       */
+      _internal_object: this,
+    };
+    if (input.id) {
+      this.api.id = input.id;
+    }
+
     /**
      * Fires after initialization and markup additions.
      *
@@ -1298,21 +1312,7 @@ class _A11yAutocomplete {
 // Wrap the class in factory so we're not reliant on class syntax in future.
 const A11yAutocompleteFactory = (input, options = {}) => {
   const autocomplete = new _A11yAutocomplete(input, options);
-  const api = {
-    destroy: autocomplete.destroy.bind(autocomplete),
-    /**
-     * Do not use! only for jquery shim.
-     *
-     * @deprecated
-     */
-    _internal_object: autocomplete,
-  };
-  if (input.id) {
-    api.id = input.id;
-  }
-  // Reference it in the object to be able to send it during events.
-  autocomplete.api = api;
-  return api;
+  return autocomplete.api;
 };
 
 window.A11yAutocomplete = A11yAutocompleteFactory;

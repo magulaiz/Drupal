@@ -132,6 +132,15 @@ var _A11yAutocomplete = function () {
         _this[elementName].addEventListener(eventName, _this.events[elementName][eventName]);
       });
     });
+    this.api = {
+      destroy: this.destroy.bind(this),
+      _internal_object: this
+    };
+
+    if (input.id) {
+      this.api.id = input.id;
+    }
+
     this.triggerEvent('autocomplete-created');
   }
 
@@ -800,17 +809,7 @@ var _A11yAutocomplete = function () {
 var A11yAutocompleteFactory = function A11yAutocompleteFactory(input) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var autocomplete = new _A11yAutocomplete(input, options);
-  var api = {
-    destroy: autocomplete.destroy.bind(autocomplete),
-    _internal_object: autocomplete
-  };
-
-  if (input.id) {
-    api.id = input.id;
-  }
-
-  autocomplete.api = api;
-  return api;
+  return autocomplete.api;
 };
 
 window.A11yAutocomplete = A11yAutocompleteFactory;
