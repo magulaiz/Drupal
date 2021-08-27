@@ -188,6 +188,8 @@ services:
       - '@jsonapi.serializer'
       - '@datetime.time'
       - '@current_user'
+      - '@module_handler'
+      - '@config.factory'
   jsonapi.file_upload:
     class: Drupal\jsonapi\Controller\FileUpload
     arguments:

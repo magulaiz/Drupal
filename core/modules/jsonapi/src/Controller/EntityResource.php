@@ -7,6 +7,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\CacheableResponseInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -20,6 +21,7 @@ use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\RevisionLogInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Render\RenderContext;
@@ -152,6 +154,20 @@ class EntityResource {
   protected $user;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  private $configFactory;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  private $moduleHandler;
+
+  /**
    * Instantiates an EntityResource object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -176,8 +192,22 @@ class EntityResource {
    *   The time service.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, ModuleHandlerInterface $module_handler = NULL, ConfigFactoryInterface $config_factory = NULL) {
+    if ($module_handler === NULL) {
+      @trigger_error('Not defining the $moduleHandler argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.x and will throw an error in drupal:10.0.0.', E_USER_DEPRECATED);
+      $module_handler = \Drupal::service('module_handler');
+    }
+
+    if ($config_factory === NULL) {
+      @trigger_error('Not defining the $configFactory argument to ' . __METHOD__ . ' is deprecated in drupal:9.2.x and will throw an error in drupal:10.0.0.', E_USER_DEPRECATED);
+      $config_factory = \Drupal::service('config.factory');
+    }
+
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -189,6 +219,8 @@ class EntityResource {
     $this->serializer = $serializer;
     $this->time = $time;
     $this->user = $user;
+    $this->configFactory = $config_factory;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -369,7 +401,27 @@ class EntityResource {
    *   The response.
    */
   public function deleteIndividual(EntityInterface $entity) {
-    $entity->delete();
+    if ($entity->getEntityTypeId() === 'user') {
+      $cancel_method = $this->configFactory->get('user.settings')->get('cancel_method');
+
+      // Allow other modules to act.
+      if ($cancel_method !== 'user_cancel_delete') {
+        $this->moduleHandler->invokeAll(
+          'user_cancel', [
+            [],
+            $entity,
+            $cancel_method,
+          ]
+        );
+      }
+
+      // Actually cancel the account.
+      _user_cancel([], $entity, $cancel_method);
+    }
+    else {
+      $entity->delete();
+    }
+
     return new ResourceResponse(NULL, 204);
   }
 
