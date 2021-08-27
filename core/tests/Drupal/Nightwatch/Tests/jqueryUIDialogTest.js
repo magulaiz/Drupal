@@ -95,6 +95,7 @@ module.exports = {
           oneButtonSet: 'Buttonpane has exactly one buttonset',
           oneButtons: 'Buttonset contains exactly 1 button when created with 1',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -148,6 +149,7 @@ module.exports = {
           elementHasClasses:
             'Element has "ui-dialog-content ui-widget-content" classes',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -210,6 +212,7 @@ module.exports = {
           noNewDescriptionAdded:
             'no aria-describedby added, as already present in markup',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -404,6 +407,7 @@ module.exports = {
           step7HonorPreventDefault:
             'Honor preventDefault, allowing custom focus management',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -491,6 +495,7 @@ module.exports = {
             'Shift-Tab key event moved focus back to second input',
           focusSetOnSecondInput: 'Focus set on second input',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -580,6 +585,7 @@ module.exports = {
           secondInputFocused: 'Second input focused',
           firstInputFocused: 'Last active dialog input focused',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -646,6 +652,7 @@ module.exports = {
           contextOfCallbackEvent: 'context of callback in event',
           uiHashInCallbackEvent: 'ui hash in event',
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -733,6 +740,7 @@ module.exports = {
               ? 'no repeat events'
               : `${result.noRepeatEvents} and should not have`,
         };
+        browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -744,6 +752,443 @@ module.exports = {
     );
   },
   dragStart: (browser) => {
-    browser.executeAsync(function (done) {});
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+
+        const element = $('<div></div>')
+          .dialog({
+            dragStart(ev, ui) {
+              toReturn.draggingFiresDragStartCallback = true;
+              toReturn.contextOfCallback = element[0].isEqualNode(this);
+              toReturn.eventTypeInCallback = ev.type === 'dialogdragstart';
+              toReturn.uiPositionInCallback = ui.position !== undefined;
+              toReturn.uiOffsetInCallback = ui.offset !== undefined;
+            },
+          })
+          .on('dialogdragstart', function (ev, ui) {
+            toReturn.draggingFiresDragStartEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiOffsetInEvent = ui.offset !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-dialog-titlebar', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresDragStartCallback: 'dragging fires dragStart callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiOffsetInCallback: 'ui.offset in callback',
+          draggingFiresDragStartEvent: 'dragging fires dialogdragstart event',
+          contextOfEvent: 'context of event',
+          uiPositionInEvent: 'ui.position in event',
+          uiOffsetInEvent: 'ui.offset in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
   },
+  drag: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        let hasDragged = false;
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+
+        const element = $('<div></div>')
+          .dialog({
+            drag(ev, ui) {
+              if (!hasDragged) {
+                toReturn.draggingFiresDragCallback = true;
+                toReturn.contextOfCallback = element[0].isEqualNode(this);
+                toReturn.eventTypeInCallback = ev.type === 'dialogdrag';
+                toReturn.uiPositionInCallback = ui.position !== undefined;
+                toReturn.uiOffsetInCallback = ui.offset !== undefined;
+                hasDragged = true;
+              }
+            },
+          })
+          .one('dialogdrag', function (ev, ui) {
+            toReturn.draggingFiresDialogDragEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiOffsetInEvent = ui.offset !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-dialog-titlebar', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresDragCallback: 'dragging fires drag callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiOffsetInCallback: 'ui.offset in callback',
+          draggingFiresDialogDragEvent: 'dragging fires dialogdrag event',
+          contextOfEvent: 'context of event',
+          uiPositionInEvent: 'ui.position in event',
+          uiOffsetInEvent: 'ui.offset in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  dragStop: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+
+        const element = $('<div></div>')
+          .dialog({
+            dragStop(ev, ui) {
+              toReturn.draggingFiresDragStopCallback = true;
+              toReturn.contextOfCallback = element[0].isEqualNode(this);
+              toReturn.eventTypeInCallback = ev.type === 'dialogdragstop';
+              toReturn.uiPositionInCallback = ui.position !== undefined;
+              toReturn.uiOffsetInCallback = ui.offset !== undefined;
+            },
+          })
+          .on('dialogdragstop', function (ev, ui) {
+            toReturn.draggingFiresDialogDragStopEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiOffsetInEvent = ui.offset !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-dialog-titlebar', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresDragStopCallback: 'dragging fires dragStop callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiOffsetInCallback: 'ui.offset in callback',
+          draggingFiresDialogDragStopEvent:
+            'dragging fires dialogdragstop event',
+          contextOfEvent: 'context of event',
+          uiPositionInEvent: 'ui.position in event',
+          uiOffsetInEvent: 'ui.offset in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  resizeStart: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+
+        const element = $('<div></div>')
+          .dialog({
+            resizeStart(ev, ui) {
+              toReturn.draggingFiresResizeStartCallback = true;
+              toReturn.contextOfCallback = element[0].isEqualNode(this);
+              toReturn.eventTypeInCallback = ev.type === 'dialogresizestart';
+              toReturn.uiOriginalPositionInCallback =
+                ui.originalPosition !== undefined;
+              toReturn.uiOriginalSizeInCallback = ui.originalSize !== undefined;
+              toReturn.uiPositionInCallback = ui.position !== undefined;
+              toReturn.uiSizeInCallback = ui.size !== undefined;
+            },
+          })
+          .on('dialogresizestart', function (ev, ui) {
+            toReturn.draggingFiresDialogResizeStartEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiOriginalPositionInEvent =
+              ui.originalPosition !== undefined;
+            toReturn.uiOriginalSizeInEvent = ui.originalSize !== undefined;
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiSizeInEvent = ui.size !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-resizable-se', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresResizeStartCallback:
+            'dragging fires resizeStart callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiOriginalPositionInCallback: 'original ui.position in callback',
+          uiOriginalSizeInCallback: 'original ui.size in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiSizeInCallback: 'ui.size in callback',
+          draggingFiresDialogResizeStartEvent:
+            'dragging fires dialogresizestart event',
+          contextOfEvent: 'context of event',
+          uiOriginalPositionInEvent: 'original ui.position in event',
+          uiOriginalSizeInEvent: 'original ui.size in event',
+          uiPositionInEvent: 'ui.position in event',
+          uiSizeInEvent: 'ui.size in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  resize: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+        let hasResized = false;
+        const element = $('<div></div>')
+          .dialog({
+            resize(ev, ui) {
+              if (!hasResized) {
+                toReturn.draggingFiresResizeCallback = true;
+                toReturn.contextOfCallback = element[0].isEqualNode(this);
+                toReturn.eventTypeInCallback = ev.type === 'dialogresize';
+                toReturn.uiOriginalPositionInCallback =
+                  ui.originalPosition !== undefined;
+                toReturn.uiOriginalSizeInCallback =
+                  ui.originalSize !== undefined;
+                toReturn.uiPositionInCallback = ui.position !== undefined;
+                toReturn.uiSizeInCallback = ui.size !== undefined;
+              }
+            },
+          })
+          .on('dialogresize', function (ev, ui) {
+            toReturn.draggingFiresDialogResizeEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiOriginalPositionInEvent =
+              ui.originalPosition !== undefined;
+            toReturn.uiOriginalSizeInEvent = ui.originalSize !== undefined;
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiSizeInEvent = ui.size !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-resizable-se', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresResizeCallback: 'dragging fires resize callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiOriginalPositionInCallback: 'original ui.position in callback',
+          uiOriginalSizeInCallback: 'original ui.size in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiSizeInCallback: 'ui.size in callback',
+          draggingFiresDialogResizeEvent: 'dragging fires dialogresize event',
+          contextOfEvent: 'context of event',
+          uiOriginalPositionInEvent: 'original ui.position in event',
+          uiOriginalSizeInEvent: 'original ui.size in event',
+          uiPositionInEvent: 'ui.position in event',
+          uiSizeInEvent: 'ui.size in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  resizeStop: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const drag = function (element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx: dx,
+            dy: dy,
+          });
+        };
+
+        const element = $('<div></div>')
+          .dialog({
+            resizeStop(ev, ui) {
+              toReturn.draggingFiresResizeStopCallback = true;
+              toReturn.contextOfCallback = element[0].isEqualNode(this);
+              toReturn.eventTypeInCallback = ev.type === 'dialogresizestop';
+              toReturn.uiOriginalPositionInCallback =
+                ui.originalPosition !== undefined;
+              toReturn.uiOriginalSizeInCallback = ui.originalSize !== undefined;
+              toReturn.uiPositionInCallback = ui.position !== undefined;
+              toReturn.uiSizeInCallback = ui.size !== undefined;
+            },
+          })
+          .on('dialogresizestop', function (ev, ui) {
+            toReturn.draggingFiresDialogResizeStopEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiOriginalPositionInEvent =
+              ui.originalPosition !== undefined;
+            toReturn.uiOriginalSizeInEvent = ui.originalSize !== undefined;
+            toReturn.uiPositionInEvent = ui.position !== undefined;
+            toReturn.uiSizeInEvent = ui.size !== undefined;
+            done(toReturn);
+          });
+
+        const handle = $('.ui-resizable-se', element.dialog('widget'));
+        drag(element, handle, 50, 50);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          draggingFiresResizeStopCallback: 'dragging fires resizeStop callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiOriginalPositionInCallback: 'original ui.position in callback',
+          uiOriginalSizeInCallback: 'original ui.size in callback',
+          uiPositionInCallback: 'ui.position in callback',
+          uiSizeInCallback: 'ui.size in callback',
+          draggingFiresDialogResizeStopEvent:
+            'dragging fires dialogresizestop event',
+          contextOfEvent: 'context of event',
+          uiOriginalPositionInEvent: 'original ui.position in event',
+          uiOriginalSizeInEvent: 'original ui.size in event',
+          uiPositionInEvent: 'ui.position in event',
+          uiSizeInEvent: 'ui.size in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  close: (browser) => {
+
+  },
+  beforeClose: (browser) => {
+
+  },
+  'ensure dialog container does not scroll on resize and focus': (browser) => {
+
+  },
+  '#5184: isOpen in dialogclose event is true': (browser) => {
+
+  },
+  'ensure dialog keeps focus when clicking modal overlay': (browser) => {
+    browser.executeAsync(
+      function(done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $( "<div></div>" ).dialog( {
+          modal: true
+        } );
+        toReturn.focusInDialog = $( document.activeElement ).closest( ".ui-dialog" ).length === 1;
+        // assert.equal( $( document.activeElement ).closest( ".ui-dialog" ).length, 1, "focus is in dialog" );
+        $( ".ui-widget-overlay" ).simulate( "mousedown" );
+        setTimeout(() => {
+          toReturn.focusStillInDialog = $( document.activeElement ).closest( ".ui-dialog" ).length === 1;
+          done(toReturn);
+        });
+      },
+      [],
+      (result) => {
+        expectedTrue = {
+          focusInDialog: 'focus in dialog',
+          focusStillInDialog: 'focus still in dialog',
+        }
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      }
+    )
+  }
 };
