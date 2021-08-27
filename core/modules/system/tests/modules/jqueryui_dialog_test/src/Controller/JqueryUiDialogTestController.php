@@ -4,6 +4,8 @@ namespace Drupal\jqueryui_dialog_test\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 
+// cSpell:ignore qunit
+
 /**
  * Reproduces the HTML used by jQuery UI dialog qunit tests.
  */

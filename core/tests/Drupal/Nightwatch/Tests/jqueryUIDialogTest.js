@@ -1,4 +1,5 @@
-// eslint-disable no-use-before-define
+/* eslint-disable no-use-before-define, func-names, prefer-arrow-callback */
+// cSpell:ignore Zindex dialogopen dialogfocus
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -32,7 +33,6 @@ module.exports = {
   },
   'markup structure': (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const toReturn = {};
@@ -107,7 +107,6 @@ module.exports = {
   },
   'markup structure - no buttons': (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const toReturn = {};
@@ -161,7 +160,6 @@ module.exports = {
   },
   'title id': (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const element = $('<div>').dialog();
@@ -180,7 +178,6 @@ module.exports = {
   },
   aria: (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const toReturn = {};
@@ -225,7 +222,6 @@ module.exports = {
   },
   'widget method': (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const dialog = $('<div>').appendTo('#dialog-container').dialog();
@@ -239,13 +235,12 @@ module.exports = {
   },
   'focus tabbable': (browser) => {
     browser.executeAsync(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const $ = jQuery;
         const toReturn = {};
         let element = {};
 
-        let options = {
+        const options = {
           buttons: [
             {
               text: 'Ok',
@@ -368,7 +363,7 @@ module.exports = {
           checkFocus(
             '<div><input><input autofocus></div>',
             {
-              open: function () {
+              open() {
                 const inputs = $(this).find('input');
                 inputs.last().on('keydown', function (event) {
                   event.preventDefault();
@@ -421,7 +416,6 @@ module.exports = {
   },
   '#7960: resizable handles below modal overlays': (browser) => {
     browser.execute(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
         const resizable = $('<div>').resizable();
@@ -447,7 +441,6 @@ module.exports = {
   },
   'Prevent tabbing out of dialogs': (browser) => {
     browser.executeAsync(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const $ = jQuery;
         const toReturn = {};
@@ -507,5 +500,250 @@ module.exports = {
         });
       },
     );
+  },
+  '#9048: multiple modal dialogs opened and closed in different order': (
+    browser,
+  ) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        $('#dialog1, #dialog2').dialog({ autoOpen: false, modal: true });
+        $('#dialog1').dialog('open');
+        $('#dialog2').dialog('open');
+        $('#dialog1').dialog('close');
+        setTimeout(function () {
+          $('#dialog2').dialog('close');
+          $('#favorite-animal').trigger('focus');
+          done(true);
+        });
+      },
+      [],
+      (result) => {
+        browser.assert.ok(
+          result,
+          'event handlers cleaned up (no errors thrown)',
+        );
+      },
+    );
+  },
+  'interaction between overlay and other dialogs': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        $.widget('ui.testWidget', $.ui.dialog, {
+          options: {
+            modal: true,
+            autoOpen: false,
+          },
+        });
+
+        const first = $("<div><input id='input-1'></div>").dialog({
+          modal: true,
+        });
+        const firstInput = first.find('input');
+        const second = $("<div><input id='input-2'></div>").testWidget();
+        const secondInput = second.find('input');
+
+        // Wait for the modal to init
+        setTimeout(function () {
+          second.testWidget('open');
+
+          // Simulate user tabbing from address bar to an element outside the dialog
+          $('#favorite-animal').trigger('focus');
+          setTimeout(function () {
+            toReturn.secondInputFocused = secondInput[0].isEqualNode(
+              document.activeElement,
+            );
+
+            // Last active dialog must receive focus
+            firstInput.trigger('focus');
+            $('#favorite-animal').trigger('focus');
+            setTimeout(function () {
+              toReturn.firstInputFocused = firstInput[0].isEqualNode(
+                document.activeElement,
+              );
+
+              // Cleanup
+              first.remove();
+              second.remove();
+              delete $.ui.testWidget;
+              delete $.fn.testWidget;
+              done(toReturn);
+            });
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          secondInputFocused: 'Second input focused',
+          firstInputFocused: 'Last active dialog input focused',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  open: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $('<div></div>');
+        element.dialog({
+          open(ev, ui) {
+            toReturn.internalOpenFlagSet = element.dialog('instance')._isOpen;
+            toReturn.autoOpenFiresCallback = true;
+            toReturn.contextOfCallback = element[0].isEqualNode(this);
+            toReturn.eventTypeInCallback = ev.type === 'dialogopen';
+            toReturn.uiHashInCallback = JSON.stringify(ui) === '{}';
+            // assert.deepEqual( ui, {}, "ui hash in callback" );
+          },
+        });
+        element.remove();
+
+        const element2 = $('<div></div>');
+        element2
+          .dialog({
+            autoOpen: false,
+            open(ev, ui) {
+              toReturn.contextOfCallback2 = element2[0].isEqualNode(this);
+              toReturn.eventTypeInCallback2 = ev.type === 'dialogopen';
+              toReturn.uiHashInCallback2 = JSON.stringify(ui) === '{}';
+              toReturn.firesOpenCallback = true;
+            },
+          })
+          .on('dialogopen', function (ev, ui) {
+            toReturn.internalIsOpenInEvent =
+              element2.dialog('instance')._isOpen;
+            toReturn.dialogOpenFiresOpenEvent = true;
+            toReturn.contextOfCallbackEvent = element2[0].isEqualNode(this);
+            toReturn.uiHashInCallbackEvent = JSON.stringify(ui) === '{}';
+            done(toReturn);
+          });
+        element2.dialog('open');
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          internalOpenFlagSet: 'internal _isOpen flag is set',
+          autoOpenFiresCallback: 'autoOpen: true fires open callback',
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiHashInCallback: 'ui hash in callback',
+          firesOpenCallback: ".dialog('open') fires open callback",
+          contextOfCallback2: 'context of callback 2',
+          eventTypeInCallback2: 'event type in callback 2',
+          uiHashInCallback2: 'ui hash in callback 2',
+          internalIsOpenInEvent: 'internal _isOpen flag is set in event',
+          dialogOpenFiresOpenEvent: "dialog('open') fires open event",
+          contextOfCallbackEvent: 'context of callback in event',
+          uiHashInCallbackEvent: 'ui hash in event',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  focus: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        toReturn.noRepeatEvents = true;
+        const element = $('#dialog1').dialog({
+          autoOpen: false,
+        });
+        const other = $('#dialog2').dialog({
+          autoOpen: false,
+        });
+
+        element.one('dialogopen', function () {
+          if (toReturn.hasOwnProperty('openJustOnce')) {
+            toReturn.noRepeatEvents = 'repeated openJustOnce';
+          }
+          toReturn.openJustOnce = true;
+        });
+        element.one('dialogfocus', function () {
+          if (toReturn.hasOwnProperty('focusOnOpen')) {
+            toReturn.noRepeatEvents = 'repeated focusOnOpen';
+          }
+          toReturn.focusOnOpen = true;
+        });
+        other.dialog('open');
+
+        element.one('dialogfocus', function () {
+          if (toReturn.hasOwnProperty('whenOpeningNotOnTop')) {
+            toReturn.noRepeatEvents = 'repeated whenOpeningNotOnTop';
+          }
+          toReturn.whenOpeningNotOnTop = true;
+        });
+        other.dialog('open');
+        element.dialog('open');
+
+        element.one('dialogfocus', function () {
+          if (toReturn.hasOwnProperty('moveToTopButNotOnTop')) {
+            toReturn.noRepeatEvents = 'repeated moveToTopButNotOnTop';
+          }
+          toReturn.moveToTopButNotOnTop = true;
+        });
+        other.dialog('moveToTop');
+        element.dialog('moveToTop');
+
+        element.on('dialogfocus', function () {
+          if (toReturn.hasOwnProperty('mouseDownNotOnTop')) {
+            toReturn.noRepeatEvents = 'repeated mouseDownNotOnTop';
+          }
+          toReturn.mouseDownNotOnTop = true;
+        });
+        other.dialog('moveToTop');
+        element.trigger('mousedown');
+
+        // Triggers just once when already on top
+        element.dialog('open');
+        element.dialog('moveToTop');
+        element.trigger('mousedown');
+        setTimeout(() => {
+          done(toReturn);
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          openJustOnce: 'open, just once',
+          focusOnOpen: 'focus on open',
+          whenOpeningNotOnTop:
+            "when opening and already open and wasn't on top",
+          moveToTopButNotOnTop: "when calling moveToTop and wasn't on top",
+          mouseDownNotOnTop:
+            "when mousedown anywhere on the dialog and it wasn't on top",
+          noRepeatEvents:
+            result.value.noRepeatEvents === true
+              ? 'no repeat events'
+              : `${result.noRepeatEvents} and should not have`,
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  dragStart: (browser) => {
+    browser.executeAsync(function (done) {});
   },
 };
