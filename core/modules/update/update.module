@@ -67,8 +67,9 @@ function update_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
-  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    $route_name = \Drupal::routeMatch()->getRouteName();
+  $currentUser = \Drupal::currentUser();
+  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && $currentUser->hasPermission('administer site configuration')) {
+    $route_name = $route_match->getRouteName();
     switch ($route_name) {
       // These pages don't need additional nagging.
       case 'update.theme_update':
@@ -88,7 +89,7 @@ function update_page_top() {
       // of the update status.
       case 'system.themes_page':
       case 'system.modules_list':
-        $verbose = TRUE;
+        $verbose = $currentUser->hasPermission('updates notifications');
         break;
 
     }

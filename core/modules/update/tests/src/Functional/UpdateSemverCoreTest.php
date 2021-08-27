@@ -364,6 +364,15 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
+
+    // Test missing "updates notification" permission for the user.
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+    ]));
+    $this->drupalGet('admin/modules');
+    $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
   }
 
   /**
