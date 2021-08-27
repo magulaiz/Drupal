@@ -91,4 +91,16 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
     $this->assertSame($name_translation, $option->getText());
   }
 
+  /**
+   * Tests that correct title is displayed for content translation page.
+   */
+  public function testContentTranslationPageTitle() {
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->assertSession()->pageTextContains('Content language and translation');
+
+    \Drupal::service('module_installer')->uninstall(['content_translation']);
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->assertSession()->pageTextContains('Content language');
+  }
+
 }
