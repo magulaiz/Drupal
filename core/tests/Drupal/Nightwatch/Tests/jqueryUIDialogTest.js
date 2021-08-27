@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define, func-names, prefer-arrow-callback */
-// cSpell:ignore Zindex dialogopen dialogfocus
+// cSpell:ignore Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -760,8 +760,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
 
@@ -820,8 +820,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
 
@@ -882,8 +882,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
 
@@ -942,8 +942,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
 
@@ -1013,8 +1013,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
         let hasResized = false;
@@ -1031,6 +1031,7 @@ module.exports = {
                   ui.originalSize !== undefined;
                 toReturn.uiPositionInCallback = ui.position !== undefined;
                 toReturn.uiSizeInCallback = ui.size !== undefined;
+                hasResized = true;
               }
             },
           })
@@ -1085,8 +1086,8 @@ module.exports = {
           const d = element.dialog('widget');
 
           $(handle, d).simulate('mouseover').simulate('drag', {
-            dx: dx,
-            dy: dy,
+            dx,
+            dy,
           });
         };
 
@@ -1147,39 +1148,37 @@ module.exports = {
     );
   },
   close: (browser) => {
-
+    // @todo write test.
   },
   beforeClose: (browser) => {
-
+    // @todo write test.
   },
   'ensure dialog container does not scroll on resize and focus': (browser) => {
-
-  },
-  '#5184: isOpen in dialogclose event is true': (browser) => {
-
-  },
-  'ensure dialog keeps focus when clicking modal overlay': (browser) => {
     browser.executeAsync(
-      function(done) {
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
-        const element = $( "<div></div>" ).dialog( {
-          modal: true
-        } );
-        toReturn.focusInDialog = $( document.activeElement ).closest( ".ui-dialog" ).length === 1;
-        // assert.equal( $( document.activeElement ).closest( ".ui-dialog" ).length, 1, "focus is in dialog" );
-        $( ".ui-widget-overlay" ).simulate( "mousedown" );
-        setTimeout(() => {
-          toReturn.focusStillInDialog = $( document.activeElement ).closest( ".ui-dialog" ).length === 1;
+        const element = $('#dialog1').dialog();
+        const initialScroll = $(window).scrollTop();
+        element.dialog('option', 'height', 600);
+        toReturn.scrollNotChangeAfterHeightChange =
+          $(window).scrollTop() === initialScroll;
+        setTimeout(function () {
+          $('.ui-dialog-titlebar-close').simulate('mousedown');
+          toReturn.scrollNotMoveAfterFocusMoveToDialog =
+            $(window).scrollTop() === initialScroll;
+          element.dialog('destroy');
           done(toReturn);
         });
       },
       [],
       (result) => {
         const expectedTrue = {
-          focusInDialog: 'focus in dialog',
-          focusStillInDialog: 'focus still in dialog',
-        }
+          scrollNotChangeAfterHeightChange:
+            "scroll hasn't moved after height change",
+          scrollNotMoveAfterFocusMoveToDialog:
+            "scroll hasn't moved after focus moved to dialog",
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -1188,7 +1187,78 @@ module.exports = {
             expectedTrue[property],
           );
         });
-      }
-    )
-  }
+      },
+    );
+  },
+  '#5184: isOpen in dialogclose event is true': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $('<div></div>').dialog({
+          close() {
+            toReturn.dialogNotOpenDuringClose = !element.dialog('isOpen');
+          },
+        });
+        setTimeout(() => {
+          toReturn.dialogOpenAfterInit = element.dialog('isOpen');
+          element.dialog('close');
+          setTimeout(() => {
+            toReturn.dialogNotOpenAfterClose = !element.dialog('isOpen');
+            done(toReturn);
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          dialogNotOpenDuringClose: 'dialog is not open during close',
+          dialogOpenAfterInit: 'dialog is open after init',
+          dialogNotOpenAfterClose: 'dialog is not open after close',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  'ensure dialog keeps focus when clicking modal overlay': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $('<div></div>').dialog({
+          modal: true,
+        });
+        toReturn.focusInDialog =
+          $(document.activeElement).closest('.ui-dialog').length === 1;
+        $('.ui-widget-overlay').simulate('mousedown');
+        setTimeout(() => {
+          toReturn.focusStillInDialog =
+            $(document.activeElement).closest('.ui-dialog').length === 1;
+          done(toReturn);
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          focusInDialog: 'focus in dialog',
+          focusStillInDialog: 'focus still in dialog',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
 };
