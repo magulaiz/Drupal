@@ -89,7 +89,7 @@ function update_page_top() {
       // of the update status.
       case 'system.themes_page':
       case 'system.modules_list':
-        $verbose = $currentUser->hasPermission('updates notifications');
+        $verbose = $currentUser->hasPermission('see update notifications');
         break;
 
     }
