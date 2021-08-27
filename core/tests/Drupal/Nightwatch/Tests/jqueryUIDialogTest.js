@@ -1176,7 +1176,7 @@ module.exports = {
       },
       [],
       (result) => {
-        expectedTrue = {
+        const expectedTrue = {
           focusInDialog: 'focus in dialog',
           focusStillInDialog: 'focus still in dialog',
         }
