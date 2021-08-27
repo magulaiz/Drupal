@@ -361,9 +361,8 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    *   https://www.drupal.org/project/drupal/issues/3087227.
    */
   protected function pressInsertSelected($expected_announcement = NULL) {
-    $this->assertSession()
-      ->elementExists('css', '.ui-dialog-buttonpane')
-      ->pressButton('Insert selected');
+    $buttonpane = $this->assertSession()->waitForElementVisible('css', '.ui-dialog-buttonpane');
+    $buttonpane->pressButton('Insert selected');
     $this->waitForNoText('Add or select media');
 
     if ($expected_announcement) {
