@@ -1,11 +1,13 @@
 <?php
 
-namespace Drupal\Tests\layout_builder\FunctionalJavascript;
+namespace Drupal\Tests\quickedit\FunctionalJavascript;
+
+use Drupal\Tests\layout_builder\FunctionalJavascript\InlineBlockTest;
 
 /**
  * Tests inline block with a user that has access to Quickedit functionality.
  *
- * @group layout_builder
+ * @group quickedit
  */
 class InlineBlockQuickeditEnabledTest extends InlineBlockTest {
 
