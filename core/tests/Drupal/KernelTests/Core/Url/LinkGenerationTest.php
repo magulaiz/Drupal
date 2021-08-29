@@ -53,8 +53,8 @@ class LinkGenerationTest extends KernelTestBase {
     // Check that cacheable metadata has been altered by hook_link_alter().
     // @see link_generation_test_link_alter()
     $this->assertInstanceOf(RefinableCacheableDependencyInterface::class, $link);
-    $this->assertSame(['languages', 'url'], $link->getCacheContexts());
-    $this->assertSame(['bar', 'foo'], $link->getCacheTags());
+    $this->assertSame(['url', 'languages'], $link->getCacheContexts());
+    $this->assertSame(['foo', 'bar'], $link->getCacheTags());
     $this->assertSame(3600, $link->getCacheMaxAge());
 
     // Test passing a safe string to t().
