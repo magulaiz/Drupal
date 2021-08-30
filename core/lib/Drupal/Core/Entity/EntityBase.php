@@ -590,32 +590,27 @@ abstract class EntityBase implements EntityInterface {
       /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
       $typed_data = \Drupal::typedDataManager();
 
-      // At a minimum, check for a data type derivative specific to this entity
-      // type, then fall back to the generic "entity" data type ID.
-      $data_type_ids = ['entity', "entity:{$this->getEntityTypeId()}"];
-
-      // Incorporate the bundle as "entity:$entity_type:$bundle", if applicable.
-      // (This condition is copied directly from the entity data type deriver.)
-      //
-      // @see \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver::getDerivativeDefinitions()
-      $bundles = $this->entityTypeBundleInfo()->getBundleInfo($this->getEntityTypeId());
-      if (count($bundles) > 1 || $this->getEntityType()->getKey('bundle')) {
-        $data_type_ids[] = "entity:{$this->getEntityTypeId()}:{$this->bundle()}";
-      }
-
-      do {
-        // Continually process each data type ID until a data type class name is
-        // found, or all data type IDs have been exhausted.
-        $data_type_id = array_pop($data_type_ids);
-
-        // Check if a data type definition exists for this ID.
-        if ($definition = $typed_data->getDefinition($data_type_id, FALSE)) {
-          $class = $definition['class'];
+      // Fetch a list of data types that could apply to this entity.
+      $definitions = array_filter(array_map(function ($type) use ($typed_data) {
+        if ($definition = $typed_data->getDefinition($type, FALSE)) {
+          return $definition['class'];
         }
-      } while (!isset($class) && $data_type_ids);
+
+        return NULL;
+      }, [
+        "entity:{$this->getEntityTypeId()}:{$this->bundle()}",
+        "entity:{$this->getEntityTypeId()}",
+        'entity',
+      ]));
+
+      // Ensure that at least one data type is available for use.
+      if (($class = reset($definitions)) === FALSE) {
+        throw new \RuntimeException('No available data type definition');
+      }
 
       $this->typedData = $class::createFromEntity($this);
     }
+
     return $this->typedData;
   }
 
