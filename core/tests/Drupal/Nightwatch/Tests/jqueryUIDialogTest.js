@@ -252,8 +252,8 @@ module.exports = {
           ],
         };
 
-        function checkFocus(markup, options, testFn, next) {
-          element = $(markup).dialog(options);
+        function checkFocus(markup, dialogOptions, testFn, next) {
+          element = $(markup).dialog(dialogOptions);
           setTimeout(function () {
             testFn(function proceed() {
               element.remove();
@@ -1148,10 +1148,172 @@ module.exports = {
     );
   },
   close: (browser) => {
-    // @todo write test.
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $('<div></div>')
+          .dialog({
+            close(ev, ui) {
+              toReturn.dialogCloseFiresCloseCallback = true;
+              toReturn.contextOfCallback = element[0].isEqualNode(this);
+              toReturn.eventTypeInCallback = ev.type === 'dialogclose';
+              toReturn.uiHashInCallback = JSON.stringify(ui) === '{}';
+            },
+          })
+          .on('dialogclose', function (ev, ui) {
+            toReturn.dialogCloseFiresDialogCloseEvent = true;
+            toReturn.contextOfEvent = element[0].isEqualNode(this);
+            toReturn.uiHashInEvent = JSON.stringify(ui) === '{}';
+          });
+        element.dialog('close');
+        element.remove();
+
+        // Close event with an effect
+        const element2 = $('<div></div>')
+          .dialog({
+            hide: 10,
+            close(ev, ui) {
+              toReturn.dialogCloseFiresCloseCallbackHasEffect = true;
+              toReturn.contextOfCallbackHasEffect =
+                element2[0].isEqualNode(this);
+              toReturn.eventTypeInCallbackHasEffect = ev.type === 'dialogclose';
+              toReturn.uiHashInCallbackHasEffect = JSON.stringify(ui) === '{}';
+              done(toReturn);
+            },
+          })
+          .on('dialogclose', function (ev, ui) {
+            toReturn.dialogCloseFiresDialogCloseEventHasEffect = true;
+            toReturn.contextOfEventHasEffect = element2[0].isEqualNode(this);
+            toReturn.uiHashInEventHasEffect = JSON.stringify(ui) === '{}';
+          });
+        element2.dialog('close');
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          dialogCloseFiresCloseCallback:
+            ".dialog('close') fires close callback",
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiHashInCallback: 'ui hash in callback',
+          dialogCloseFiresDialogCloseEvent:
+            ".dialog('close') fires dialogclose event",
+          contextOfEvent: 'context of event',
+          uiHashInEvent: 'ui hash in event',
+          dialogCloseFiresCloseCallbackHasEffect:
+            ".dialog('close') fires close callback",
+          contextOfCallbackHasEffect: 'context of callback',
+          eventTypeInCallbackHasEffect: 'event type in callback',
+          uiHashInCallbackHasEffect: 'ui hash in callback',
+          dialogCloseFiresDialogCloseEventHasEffect:
+            ".dialog('close') fires dialogclose event",
+          contextOfEventHasEffect: 'context of event',
+          uiHashInEventHasEffect: 'ui hash in event',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
   },
   beforeClose: (browser) => {
-    // @todo write test.
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        let element = {};
+        element = $('<div></div>').dialog({
+          beforeClose(ev, ui) {
+            toReturn.dialogCloseFiresBeforeCloseCallback = true;
+            toReturn.contextOfCallback = element[0].isEqualNode(this);
+            toReturn.eventTypeInCallback = ev.type === 'dialogbeforeclose';
+            toReturn.uiHashInCallback = JSON.stringify(ui) === '{}';
+            return false;
+          },
+        });
+        element.dialog('close');
+        setTimeout(() => {
+          toReturn.beforeCloseShouldPreventDialogClose = element
+            .dialog('widget')
+            .is(':visible');
+          element.remove();
+
+          element = $('<div></div>').dialog();
+          element.dialog('option', 'beforeClose', function (ev, ui) {
+            toReturn.dialogCloseFiresBeforeCloseCallbackAsOption = true;
+            toReturn.contextOfCallbackAsOption = element[0].isEqualNode(this);
+            toReturn.eventTypeInCallbackAsOption =
+              ev.type === 'dialogbeforeclose';
+            toReturn.uiHashInCallbackAsOption = JSON.stringify(ui) === '{}';
+            return false;
+          });
+          element.dialog('close');
+
+          setTimeout(() => {
+            toReturn.beforeCloseAsOptionShouldPreventDialogClose = element
+              .dialog('widget')
+              .is(':visible');
+            element.remove();
+
+            element = $('<div></div>')
+              .dialog()
+              .on('dialogbeforeclose', function (ev, ui) {
+                toReturn.dialogCloseTriggersDialogBeforeCloseEvent = true;
+                toReturn.contextOfCallbackEvent = element[0].isEqualNode(this);
+                toReturn.uiHashInCallbackEvent = JSON.stringify(ui) === '{}';
+                toReturn.uiHashInEvent = JSON.stringify(ui) === '{}';
+                return false;
+              });
+            element.dialog('close');
+            setTimeout(() => {
+              toReturn.dialogBeforeCloseEventPreventDialogClosing = element
+                .dialog('widget')
+                .is(':visible');
+              done(toReturn);
+            });
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          dialogCloseFiresBeforeCloseCallback:
+            ".dialog('close') fires beforeclose callback",
+          contextOfCallback: 'context of callback',
+          eventTypeInCallback: 'event type in callback',
+          uiHashInCallback: 'ui hash in callback',
+          beforeCloseShouldPreventDialogClose:
+            'beforeClose callback should prevent dialog from closing',
+          dialogCloseFiresBeforeCloseCallbackAsOption:
+            ".dialog('close') fires beforeClose callback as option",
+          contextOfCallbackAsOption: 'context of callback as option',
+          eventTypeInCallbackAsOption: 'event type in callback as option',
+          uiHashInCallbackAsOption: 'ui hash in callback as option',
+          beforeCloseAsOptionShouldPreventDialogClose:
+            'beforeClose callback as option should prevent dialog from closing',
+          dialogCloseTriggersDialogBeforeCloseEvent:
+            ".dialog('close') triggers dialogbeforeclose event",
+          contextOfCallbackEvent: 'context of event',
+          uiHashInEvent: 'ui hash in event',
+          dialogBeforeCloseEventPreventDialogClosing:
+            'dialogbeforeclose event should prevent dialog from closing',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
   },
   'ensure dialog container does not scroll on resize and focus': (browser) => {
     browser.executeAsync(
@@ -1249,6 +1411,115 @@ module.exports = {
         const expectedTrue = {
           focusInDialog: 'focus in dialog',
           focusStillInDialog: 'focus still in dialog',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  init: (browser) => {
+    browser.execute(
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        $( "<div></div>" ).appendTo( "body" ).dialog().remove();
+        toReturn.dialogCalledOnElement = true;
+
+        $( [] ).dialog().remove();
+        toReturn.dialogCalledOnEmptyCollection = true;
+
+        $( "<div></div>" ).dialog().remove();
+        toReturn.dialogCalledOnDisconnectedDOM = true;
+
+        $( "<div></div>" ).appendTo( "body" ).remove().dialog().remove();
+        toReturn.dialogCalledOnDisconnectedRemovedDOM = true;
+
+        const element = $( "<div></div>" ).dialog();
+        element.dialog( "option", "foo" );
+        element.remove();
+        toReturn.arbitraryOptionGetterAfterInit = true;
+
+        $( "<div></div>" ).dialog().dialog( "option", "foo", "bar" ).remove();
+        toReturn.arbitraryOptionSetterAfterInit = true;
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          dialogCalledOnElement: '.dialog() called on element',
+          dialogCalledOnEmptyCollection: '.dialog() called on empty collection',
+          dialogCalledOnDisconnectedDOM: '.dialog() called on disconnected DOMElement - never connected',
+          dialogCalledOnDisconnectedRemovedDOM: '.dialog() called on disconnected DOMElement - removed',
+          arbitraryOptionGetterAfterInit: 'arbitrary option getter after init',
+          arbitraryOptionSetterAfterInit: 'arbitrary option setter after init',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  destroy: (browser) => {
+    browser.execute(
+      function() {
+        const $ = jQuery;
+        const toReturn = {};
+        $( "#dialog1, #form-dialog" ).hide();
+        assert.domEqual( "#dialog1", function() {
+          var dialog = $( "#dialog1" ).dialog().dialog( "destroy" );
+          assert.equal( dialog.parent()[ 0 ], $( "#dialog-container" )[ 0 ] );
+          assert.equal( dialog.index(), 0 );
+        } );
+        assert.domEqual( "#form-dialog", function() {
+          var dialog = $( "#form-dialog" ).dialog().dialog( "destroy" );
+          assert.equal( dialog.parent()[ 0 ], $( "#dialog-container" )[ 0 ] );
+          assert.equal( dialog.index(), 2 );
+        } );
+
+        // Ensure dimensions are restored (#8119)
+        $( "#dialog1" ).show().css( {
+          width: "400px",
+          minHeight: "100px",
+          height: "200px"
+        } );
+        assert.domEqual( "#dialog1", function() {
+          $( "#dialog1" ).dialog().dialog( "destroy" );
+        } );
+
+        // Don't throw errors when destroying a never opened modal dialog (#9004)
+        $( "#dialog1" ).dialog( { autoOpen: false, modal: true } ).dialog( "destroy" );
+        assert.equal( $( ".ui-widget-overlay" ).length, 0, "overlay does not exist" );
+        assert.equal( $( document ).data( "ui-dialog-overlays" ), undefined, "ui-dialog-overlays equals the number of open overlays" );
+
+        const element = $( "#dialog1" ).dialog( { modal: true } ),
+        const element2 = $( "#dialog2" ).dialog( { modal: true } );
+        assert.equal( $( ".ui-widget-overlay" ).length, 2, "overlays created when dialogs are open" );
+        assert.equal( $( document ).data( "ui-dialog-overlays" ), 2, "ui-dialog-overlays equals the number of open overlays" );
+        element.dialog( "close" );
+        assert.equal( $( ".ui-widget-overlay" ).length, 1, "overlay remains after closing one dialog" );
+        assert.equal( $( document ).data( "ui-dialog-overlays" ), 1, "ui-dialog-overlays equals the number of open overlays" );
+        element.dialog( "destroy" );
+        assert.equal( $( ".ui-widget-overlay" ).length, 1, "overlay remains after destroying one dialog" );
+        assert.equal( $( document ).data( "ui-dialog-overlays" ), 1, "ui-dialog-overlays equals the number of open overlays" );
+        element2.dialog( "destroy" );
+        assert.equal( $( ".ui-widget-overlay" ).length, 0, "overlays removed when all dialogs are destoryed" );
+        assert.equal( $( document ).data( "ui-dialog-overlays" ), undefined, "ui-dialog-overlays equals the number of open overlays" );
+      },
+      [],
+      (result) => {
+        // Should have 17 assertions.
+        const expectedTrue = {
+
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
