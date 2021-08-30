@@ -587,31 +587,36 @@ abstract class EntityBase implements EntityInterface {
    */
   public function getTypedData() {
     if (!isset($this->typedData)) {
-      /** @var \Drupal\Core\TypedData\TypedDataManagerInterface $typed_data */
-      $typed_data = \Drupal::typedDataManager();
-
-      // Fetch a list of data types that could apply to this entity.
-      $definitions = array_filter(array_map(function ($type) use ($typed_data) {
-        if ($definition = $typed_data->getDefinition($type, FALSE)) {
-          return $definition['class'];
-        }
-
-        return NULL;
-      }, [
-        "entity:{$this->getEntityTypeId()}:{$this->bundle()}",
-        "entity:{$this->getEntityTypeId()}",
-        'entity',
-      ]));
-
-      // Ensure that at least one data type is available for use.
-      if (($class = reset($definitions)) === FALSE) {
-        throw new \RuntimeException('No available data type definition');
-      }
-
+      $class = $this->getClass();
       $this->typedData = $class::createFromEntity($this);
     }
-
     return $this->typedData;
+  }
+
+  /**
+   * Returns the typed data class name for this entity.
+   *
+   * @return string
+   *   The string representing the typed data class name.
+   *
+   * @see \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
+   */
+  private function getClass(): string {
+    $typed_data_manager = \Drupal::typedDataManager();
+
+    // Check more specific data types that could apply to this entity.
+    $candidate_data_types = [
+      "entity:{$this->getEntityTypeId()}:{$this->bundle()}",
+      "entity:{$this->getEntityTypeId()}",
+    ];
+    foreach ($candidate_data_types as $candidate_data_type) {
+      if ($typed_data_manager->hasDefinition($candidate_data_type)) {
+        return $typed_data_manager->getDefinition($candidate_data_type)['class'];
+      }
+    }
+
+    // Fall back to the generic entity definition.
+    return $typed_data_manager->getDefinition('entity')['class'];
   }
 
   /**
