@@ -364,7 +364,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
     $expected = '\\Drupal\\Core\\Entity\\Plugin\\DataType\\EntityAdapter';
 
     $typedDataManager = $this->createMock(TypedDataManagerInterface::class);
-    $typedDataManager->expects($this->exactly(3))
+    $typedDataManager->expects($this->once())
       ->method('getDefinition')
       ->willReturnMap([
         [
@@ -376,7 +376,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
           $entity_type_typed_data_definition ? ['class' => $expected] : NULL,
         ],
         [
-          'entity', FALSE,
+          'entity', TRUE,
           ['class' => $expected],
         ],
       ]);
