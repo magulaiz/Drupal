@@ -421,10 +421,10 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
     }
 
-    // Test the firstCharDenylist option.
+    // Test the firstCharacterIgnoreList option.
     foreach ([
-      'edit-denylist-data-autocomplete',
-      'edit-denylist-separate-data-attributes',
+      'edit-ignore-list-data-autocomplete',
+      'edit-ignore-list-separate-data-attributes',
     ] as $id) {
       $input = $page->findById($id);
       $list = $this->getList($input);

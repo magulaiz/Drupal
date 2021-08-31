@@ -42,10 +42,10 @@ var _A11yAutocomplete = function () {
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-listbox-".concat(this.count);
-    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'separatorChar', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
+    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
-      firstCharacterDenylist: ',',
+      firstCharacterIgnoreList: ',',
       minChars: 1,
       maxItems: 20,
       sort: false,
@@ -71,7 +71,6 @@ var _A11yAutocomplete = function () {
       oneResultAssistiveHint: 'There is one result available.',
       highlightedAssistiveHint: '@selectedItem @position of @count is highlighted'
     };
-    defaultOptions.firstCharacterDenylist = defaultOptions.separatorChar;
     this.options = _objectSpread(_objectSpread(_objectSpread({}, defaultOptions), this.filterOptions(options)), this.filterOptions(this.attributesToOptions()));
 
     if (typeof this.options.list === 'string') {
@@ -722,12 +721,12 @@ var _A11yAutocomplete = function () {
     key: "filterResults",
     value: function filterResults(suggestion, typed) {
       var _this$options = this.options,
-          firstCharacterDenylist = _this$options.firstCharacterDenylist,
+          firstCharacterIgnoreList = _this$options.firstCharacterIgnoreList,
           cardinality = _this$options.cardinality;
       var suggestionValue = suggestion.value;
       var currentValues = this.splitValues();
 
-      if (firstCharacterDenylist.indexOf(typed[0]) !== -1 || cardinality > 0 && currentValues.length > cardinality || currentValues.indexOf(suggestionValue) !== -1 && !this.options.allowRepeatValues) {
+      if (firstCharacterIgnoreList.indexOf(typed[0]) !== -1 || cardinality > 0 && currentValues.length > cardinality || currentValues.indexOf(suggestionValue) !== -1 && !this.options.allowRepeatValues) {
         return false;
       }
 

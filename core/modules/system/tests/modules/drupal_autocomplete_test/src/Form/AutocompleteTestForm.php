@@ -57,27 +57,27 @@ class AutocompleteTestForm extends FormBase {
       ],
     ];
 
-    // Inputs with the first character denylist option.
-    $form['denylist_data_autocomplete'] = [
+    // Inputs with the first character ignore list option.
+    $form['ignore_list_data_autocomplete'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Denylist "u" data-autocomplete'),
+      '#title' => $this->t('Ignore list "u" data-autocomplete'),
       '#default_value' => '',
       '#description' => $this->t('This also tests appending default screenreader hints to descriptions'),
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete' => JSON::encode([
-          'firstCharacterDenylist' => 'u',
+          'firstCharacterIgnoreList' => 'u',
         ]),
       ],
     ];
-    $form['denylist_separate_data_attributes'] = [
+    $form['ignore_list_separate_data_attributes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Denylist "u" separate data attributes'),
+      '#title' => $this->t('Ignore list "u" separate data attributes'),
       '#default_value' => '',
       '#description' => $this->t('This also tests appending default screenreader hints to descriptions'),
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
-        'data-autocomplete-first-character-denylist' => 'u',
+        'data-autocomplete-first-character-ignore-list' => 'u',
       ],
     ];
 
@@ -121,7 +121,7 @@ class AutocompleteTestForm extends FormBase {
         'data-autocomplete' => JSON::encode([
           'cardinality' => '2',
           'separatorChar' => '|',
-          'firstCharacterDenylist' => '|',
+          'firstCharacterIgnoreList' => '|',
           'allowRepeatValues' => FALSE,
         ]),
       ],

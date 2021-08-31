@@ -67,7 +67,7 @@
  *  focused as soon as a list of results becomes visible.
  * @param {string} [options.separatorChar=','] - The character used to separate
  *  multiple values in the same form.
- * @param {string} [options.firstCharacterDenylist=','] - Any characters in this
+ * @param {string} [options.firstCharacterIgnoreList=','] - Any characters in this
  *  string will not be incorporated in a search as the first character of a
  *  query. Typically, this string should at least include the value of
  *  `separatorChar`.
@@ -168,6 +168,7 @@ class _A11yAutocomplete {
       'cardinality',
       'minChars',
       'separatorChar',
+      'firstCharacterIgnoreList',
       // Try to remove.
       'createLiveRegion',
       'autoFocus',
@@ -187,7 +188,7 @@ class _A11yAutocomplete {
       // from jquery ui
       autoFocus: false,
       // remove and use separatorChar
-      firstCharacterDenylist: ',',
+      firstCharacterIgnoreList: ',',
       minChars: 1,
       // new feature
       maxItems: 20,
@@ -228,7 +229,6 @@ class _A11yAutocomplete {
       highlightedAssistiveHint:
         '@selectedItem @position of @count is highlighted',
     };
-    defaultOptions.firstCharacterDenylist = defaultOptions.separatorChar;
 
     this.options = {
       ...defaultOptions,
@@ -375,7 +375,7 @@ class _A11yAutocomplete {
   }
 
   /**
-   * Add assistive hints.
+   * Adds assistive hints.
    */
   implementDescription() {
     const description = document.createElement('span');
@@ -1174,15 +1174,15 @@ class _A11yAutocomplete {
    *   If the suggestion should be displayed in the results.
    */
   filterResults(suggestion, typed) {
-    const { firstCharacterDenylist, cardinality } = this.options;
+    const { firstCharacterIgnoreList, cardinality } = this.options;
     const suggestionValue = suggestion.value;
     const currentValues = this.splitValues();
 
-    // Prevent suggestions if the first input character is in the denylist, if
-    // the suggestion has already been added to the field, or if the maximum
+    // Prevent suggestions if the first input character is in the ignore list,
+    // if the suggestion has already been added to the field, or if the maximum
     // number of items have been reached.
     if (
-      firstCharacterDenylist.indexOf(typed[0]) !== -1 ||
+      firstCharacterIgnoreList.indexOf(typed[0]) !== -1 ||
       (cardinality > 0 && currentValues.length > cardinality) ||
       (currentValues.indexOf(suggestionValue) !== -1 &&
         !this.options.allowRepeatValues)
