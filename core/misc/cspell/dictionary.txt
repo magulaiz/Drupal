@@ -386,7 +386,6 @@ denormalizers
 denormalizes
 denormalizing
 denyall
-denylist
 dependee
 dependee's
 dependees
@@ -405,12 +404,9 @@ deserialization
 deserializes
 destid
 destructable
-<<<<<<< HEAD
 destructure
 destructured
 desynchronized
-=======
->>>>>>> origin/9.3.x
 deutsch
 deutscher
 devel
