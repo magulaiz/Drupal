@@ -471,7 +471,9 @@ class _A11yAutocomplete {
     for (let i = 0; i < this.input.attributes.length; i++) {
       if (
         this.input.attributes[i].nodeName.includes('data-autocomplete') &&
-        this.input.attributes[i].nodeName !== 'data-autocomplete'
+        this.input.attributes[i].nodeName !== 'data-autocomplete' &&
+        // Unwanted side effect.
+        this.input.attributes[i].nodeName !== 'data-autocomplete-input'
       ) {
         // Convert the data attribute name to camel case for use in the options
         // object.

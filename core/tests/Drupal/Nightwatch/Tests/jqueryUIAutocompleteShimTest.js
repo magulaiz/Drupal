@@ -2116,10 +2116,11 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
     Drupal.hasOwnProperty('Autocomplete') &&
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
-    Drupal.Autocomplete.instances[element.attr('id')].highlightItem =
-      function () {
-        didMove = true;
-      };
+    Drupal.Autocomplete.instances[
+      element.attr('id')
+    ]._internal_object.highlightItem = function () {
+      didMove = true;
+    };
   } else {
     element.autocomplete('instance')._move = () => {
       didMove = true;
@@ -2144,10 +2145,11 @@ function arrowsMoveFocus(id, isKeyUp) {
     Drupal.hasOwnProperty('Autocomplete') &&
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
-    Drupal.Autocomplete.instances[element.attr('id')].highlightItem =
-      function () {
-        didMove = true;
-      };
+    Drupal.Autocomplete.instances[
+      element.attr('id')
+    ]._internal_object.highlightItem = function () {
+      didMove = true;
+    };
   } else {
     element.autocomplete('instance')._move = () => {
       didMove = true;

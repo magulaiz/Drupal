@@ -251,7 +251,7 @@ var _A11yAutocomplete = function () {
       var dataAutocompleteAttributeOptions = this.input.getAttribute('data-autocomplete') ? JSON.parse(this.input.getAttribute('data-autocomplete')) : {};
 
       for (var i = 0; i < this.input.attributes.length; i++) {
-        if (this.input.attributes[i].nodeName.includes('data-autocomplete') && this.input.attributes[i].nodeName !== 'data-autocomplete') {
+        if (this.input.attributes[i].nodeName.includes('data-autocomplete') && this.input.attributes[i].nodeName !== 'data-autocomplete' && this.input.attributes[i].nodeName !== 'data-autocomplete-input') {
           var optionName = this.input.attributes[i].nodeName.replace('data-autocomplete-', '').split('-').map(function (w) {
             return w.charAt(0).toUpperCase() + w.slice(1);
           }).join('');
