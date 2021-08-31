@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
@@ -361,7 +362,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @dataProvider providerTestTypedData
    */
   public function testTypedData(bool $bundle_typed_data_definition, bool $entity_type_typed_data_definition) {
-    $expected = '\\Drupal\\Core\\Entity\\Plugin\\DataType\\EntityAdapter';
+    $expected = EntityAdapter::class;
 
     $typedDataManager = $this->createMock(TypedDataManagerInterface::class);
     $typedDataManager->expects($this->once())
