@@ -6,6 +6,7 @@ use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
 use WebDriver\Exception\CurlExec;
@@ -45,7 +46,7 @@ class JSWebAssert extends WebAssert {
 JS;
     $result = $this->session->wait($timeout, $condition);
     if (!$result) {
-      throw new \RuntimeException($message);
+      throw new ExpectationException($message, $this->session->getDriver());
     }
   }
 
