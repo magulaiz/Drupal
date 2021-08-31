@@ -1,5 +1,115 @@
 /* eslint-disable no-use-before-define, func-names, prefer-arrow-callback */
 // cSpell:ignore Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
+
+const domEquals = function (selector, modifier, message) {
+  function getElementStyles(elem) {
+    const $ = jQuery;
+    const styles = {};
+    const style = elem.ownerDocument.defaultView
+      ? elem.ownerDocument.defaultView.getComputedStyle(elem, null)
+      : elem.currentStyle;
+    let key = null;
+    let len = null;
+
+    if (style && style.length && style[0] && style[style[0]]) {
+      len = style.length;
+      // eslint-disable-next-line no-plusplus
+      while (len--) {
+        key = style[len];
+        if (typeof style[key] === 'string') {
+          styles[$.camelCase(key)] = style[key];
+        }
+      }
+
+      // Support: Opera, IE <9
+    } else {
+      // eslint-disable-next-line no-restricted-syntax
+      for (key in style) {
+        if (typeof style[key] === 'string') {
+          styles[key] = style[key];
+        }
+      }
+    }
+
+    return styles;
+  }
+
+  function extract(theSelector, theMessage) {
+    const properties = ['disabled', 'readOnly'];
+    const attributes = [
+      'autocomplete',
+      'aria-activedescendant',
+      'aria-controls',
+      'aria-describedby',
+      'aria-disabled',
+      'aria-expanded',
+      'aria-haspopup',
+      'aria-hidden',
+      'aria-labelledby',
+      'aria-pressed',
+      'aria-selected',
+      'aria-valuemax',
+      'aria-valuemin',
+      'aria-valuenow',
+      'class',
+      'href',
+      'id',
+      'nodeName',
+      'role',
+      'tabIndex',
+      'title',
+    ];
+    const $ = jQuery;
+    const elem = $(theSelector);
+    if (!elem.length) {
+      throw new Error(
+        `domEqual failed, can't extract ${theSelector}, message was: ${theMessage}`,
+      );
+    }
+
+    const result = {};
+    let children = {};
+    $.each(properties, function (index, attr) {
+      const value = elem.prop(attr);
+      result[attr] = value != null ? value : '';
+    });
+    $.each(attributes, function (index, attr) {
+      const value = elem.attr(attr);
+      result[attr] = value != null ? value : '';
+    });
+    result.style = getElementStyles(elem[0]);
+    result.data = $.extend({}, elem.data());
+    delete result.data[$.expando];
+    children = elem.children();
+    if (children.length) {
+      result.children = elem
+        .children()
+        .map(function () {
+          return extract($(this));
+        })
+        .get();
+    } else {
+      result.text = elem.text();
+    }
+    return result;
+  }
+
+  // Get current state prior to modifier
+  const expected = extract(selector, message);
+
+  function done() {
+    const actual = extract(selector, message);
+    return [actual, expected];
+  }
+
+  // Run modifier (async or sync), then compare state via done()
+  if (modifier.length) {
+    return modifier(done);
+  }
+  modifier();
+  return done();
+};
+
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -609,7 +719,6 @@ module.exports = {
             toReturn.contextOfCallback = element[0].isEqualNode(this);
             toReturn.eventTypeInCallback = ev.type === 'dialogopen';
             toReturn.uiHashInCallback = JSON.stringify(ui) === '{}';
-            // assert.deepEqual( ui, {}, "ui hash in callback" );
           },
         });
         element.remove();
@@ -1428,33 +1537,36 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        $( "<div></div>" ).appendTo( "body" ).dialog().remove();
+        $('<div></div>').appendTo('body').dialog().remove();
         toReturn.dialogCalledOnElement = true;
 
-        $( [] ).dialog().remove();
+        $([]).dialog().remove();
         toReturn.dialogCalledOnEmptyCollection = true;
 
-        $( "<div></div>" ).dialog().remove();
+        $('<div></div>').dialog().remove();
         toReturn.dialogCalledOnDisconnectedDOM = true;
 
-        $( "<div></div>" ).appendTo( "body" ).remove().dialog().remove();
+        $('<div></div>').appendTo('body').remove().dialog().remove();
         toReturn.dialogCalledOnDisconnectedRemovedDOM = true;
 
-        const element = $( "<div></div>" ).dialog();
-        element.dialog( "option", "foo" );
+        const element = $('<div></div>').dialog();
+        element.dialog('option', 'foo');
         element.remove();
         toReturn.arbitraryOptionGetterAfterInit = true;
 
-        $( "<div></div>" ).dialog().dialog( "option", "foo", "bar" ).remove();
+        $('<div></div>').dialog().dialog('option', 'foo', 'bar').remove();
         toReturn.arbitraryOptionSetterAfterInit = true;
+        return toReturn;
       },
       [],
       (result) => {
         const expectedTrue = {
           dialogCalledOnElement: '.dialog() called on element',
           dialogCalledOnEmptyCollection: '.dialog() called on empty collection',
-          dialogCalledOnDisconnectedDOM: '.dialog() called on disconnected DOMElement - never connected',
-          dialogCalledOnDisconnectedRemovedDOM: '.dialog() called on disconnected DOMElement - removed',
+          dialogCalledOnDisconnectedDOM:
+            '.dialog() called on disconnected DOMElement - never connected',
+          dialogCalledOnDisconnectedRemovedDOM:
+            '.dialog() called on disconnected DOMElement - removed',
           arbitraryOptionGetterAfterInit: 'arbitrary option getter after init',
           arbitraryOptionSetterAfterInit: 'arbitrary option setter after init',
         };
@@ -1471,55 +1583,470 @@ module.exports = {
   },
   destroy: (browser) => {
     browser.execute(
-      function() {
+      function (domEqualString) {
         const $ = jQuery;
         const toReturn = {};
-        $( "#dialog1, #form-dialog" ).hide();
-        assert.domEqual( "#dialog1", function() {
-          var dialog = $( "#dialog1" ).dialog().dialog( "destroy" );
-          assert.equal( dialog.parent()[ 0 ], $( "#dialog-container" )[ 0 ] );
-          assert.equal( dialog.index(), 0 );
-        } );
-        assert.domEqual( "#form-dialog", function() {
-          var dialog = $( "#form-dialog" ).dialog().dialog( "destroy" );
-          assert.equal( dialog.parent()[ 0 ], $( "#dialog-container" )[ 0 ] );
-          assert.equal( dialog.index(), 2 );
-        } );
+        toReturn.mustMatch = {};
+        // eslint-disable-next-line no-new-func
+        const domEqual = new Function(`return ${domEqualString}`)();
+
+        $('#dialog1, #form-dialog').hide();
+        toReturn.mustMatch.dialog1 = domEqual('#dialog1', function () {
+          const dialog = $('#dialog1').dialog().dialog('destroy');
+          if (!dialog.parent()[0].isEqualNode($('#dialog-container')[0])) {
+            throw new Error('Dialog parent is not dialog container');
+          }
+          if (dialog.index() !== 0) {
+            throw new Error('Dialog index is not 0');
+          }
+        });
+
+        toReturn.mustMatch.formDialog = domEqual('#form-dialog', function () {
+          const dialog = $('#form-dialog').dialog().dialog('destroy');
+          if (!dialog.parent()[0].isEqualNode($('#dialog-container')[0])) {
+            throw new Error('Dialog parent is not dialog container');
+          }
+          if (dialog.index() !== 2) {
+            throw new Error('Dialog index is not 2');
+          }
+        });
 
         // Ensure dimensions are restored (#8119)
-        $( "#dialog1" ).show().css( {
-          width: "400px",
-          minHeight: "100px",
-          height: "200px"
-        } );
-        assert.domEqual( "#dialog1", function() {
-          $( "#dialog1" ).dialog().dialog( "destroy" );
-        } );
+        $('#dialog1').show().css({
+          width: '400px',
+          minHeight: '100px',
+          height: '200px',
+        });
+        toReturn.mustMatch.dimensionsRestores = domEqual(
+          '#dialog1',
+          function () {
+            $('#dialog1').dialog().dialog('destroy');
+          },
+        );
 
         // Don't throw errors when destroying a never opened modal dialog (#9004)
-        $( "#dialog1" ).dialog( { autoOpen: false, modal: true } ).dialog( "destroy" );
-        assert.equal( $( ".ui-widget-overlay" ).length, 0, "overlay does not exist" );
-        assert.equal( $( document ).data( "ui-dialog-overlays" ), undefined, "ui-dialog-overlays equals the number of open overlays" );
+        $('#dialog1')
+          .dialog({ autoOpen: false, modal: true })
+          .dialog('destroy');
+        toReturn.overlayDoesNotExist = $('.ui-widget-overlay').length === 0;
+        toReturn.dialogOverlaysEqualsNumberOpen =
+          typeof $(document).data('ui-dialog-overlays') === 'undefined';
 
-        const element = $( "#dialog1" ).dialog( { modal: true } ),
-        const element2 = $( "#dialog2" ).dialog( { modal: true } );
-        assert.equal( $( ".ui-widget-overlay" ).length, 2, "overlays created when dialogs are open" );
-        assert.equal( $( document ).data( "ui-dialog-overlays" ), 2, "ui-dialog-overlays equals the number of open overlays" );
-        element.dialog( "close" );
-        assert.equal( $( ".ui-widget-overlay" ).length, 1, "overlay remains after closing one dialog" );
-        assert.equal( $( document ).data( "ui-dialog-overlays" ), 1, "ui-dialog-overlays equals the number of open overlays" );
-        element.dialog( "destroy" );
-        assert.equal( $( ".ui-widget-overlay" ).length, 1, "overlay remains after destroying one dialog" );
-        assert.equal( $( document ).data( "ui-dialog-overlays" ), 1, "ui-dialog-overlays equals the number of open overlays" );
-        element2.dialog( "destroy" );
-        assert.equal( $( ".ui-widget-overlay" ).length, 0, "overlays removed when all dialogs are destoryed" );
-        assert.equal( $( document ).data( "ui-dialog-overlays" ), undefined, "ui-dialog-overlays equals the number of open overlays" );
+        const element = $('#dialog1').dialog({ modal: true });
+        const element2 = $('#dialog2').dialog({ modal: true });
+        toReturn.overlaysCreatedWhenDialogsAreOpen =
+          $('.ui-widget-overlay').length === 2;
+        toReturn.dialogOverlayesEqualsNumberOfOpenOverlays =
+          $(document).data('ui-dialog-overlays') === 2;
+        element.dialog('close');
+        toReturn.overlayRemainsAfterClosingOneDialog =
+          $('.ui-widget-overlay').length === 1;
+        toReturn.uiDialogOverlaysEqualsNumberOpenOverlays =
+          $(document).data('ui-dialog-overlays') === 1;
+        element.dialog('destroy');
+        toReturn.overlayRemainsAfterDestroyingOneDialog =
+          $('.ui-widget-overlay').length === 1;
+        toReturn.uiDialogOverlaysEqualsNumberOpenOverlaysAfterDestroy =
+          $(document).data('ui-dialog-overlays') === 1;
+        element2.dialog('destroy');
+        toReturn.overlaysRemoveWhenAllDialogsDestroyed =
+          $('.ui-widget-overlay').length === 0;
+        toReturn.uiDialogOverlaysEqualsNumberOpenOverlaysAfterAllGone =
+          typeof $(document).data('ui-dialog-overlays') === 'undefined';
+
+        return toReturn;
+      },
+      [domEquals.toString()],
+      (result) => {
+        // Should have 17 assertions.
+        const { mustMatch } = result.value;
+        delete result.value.mustMatch;
+        const expectedTrue = {
+          overlayDoesNotExist: 'overlay does not exist',
+          dialogOverlaysEqualsNumberOpen:
+            'ui-dialog-overlays equals the number of open overlays',
+          overlaysCreatedWhenDialogsAreOpen:
+            'overlays created when dialogs are open',
+          dialogOverlayesEqualsNumberOfOpenOverlays:
+            'ui-dialog-overlays equals the number of open overlays',
+          overlayRemainsAfterClosingOneDialog:
+            'overlay remains after closing one dialog',
+          uiDialogOverlaysEqualsNumberOpenOverlays:
+            'ui-dialog-overlays equals the number of open overlays',
+          overlayRemainsAfterDestroyingOneDialog:
+            'overlay remains after destroying one dialog',
+          uiDialogOverlaysEqualsNumberOpenOverlaysAfterDestroy:
+            'ui-dialog-overlays equals the number of open overlays',
+          overlaysRemoveWhenAllDialogsDestroyed:
+            'overlays removed when all dialogs are destroyed',
+          uiDialogOverlaysEqualsNumberOpenOverlaysAfterAllGone:
+            'ui-dialog-overlays equals the number of open overlays',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+
+        Object.keys(mustMatch).forEach((property) => {
+          browser.assert.deepEqual(
+            mustMatch[property][0],
+            mustMatch[property][1],
+            `${property} are equivalent`,
+          );
+        });
+      },
+    );
+  },
+  '#9000: Dialog leaves broken event handler after close/destroy in certain cases':
+    (browser) => {
+      browser.executeAsync(
+        function (done) {
+          const $ = jQuery;
+          $('#dialog1')
+            .dialog({ modal: true })
+            .dialog('close')
+            .dialog('destroy');
+          setTimeout(function () {
+            $('#favorite-animal').trigger('focus');
+            done(true);
+          });
+        },
+        [],
+        (result) => {
+          browser.assert.equal(
+            result.value,
+            true,
+            'close and destroy modal dialog before its really opened',
+          );
+        },
+      );
+    },
+  '#4980: Destroy should place element back in original DOM position': (
+    browser,
+  ) => {
+    browser.execute(
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const container = $(
+          "<div id='container'><div id='modal'>Content</div></div>",
+        );
+        const modal = container.find('#modal');
+        modal.dialog();
+        toReturn.dialogShouldMoveModalToOutsideContainer = !$.contains(
+          container[0],
+          modal[0],
+        );
+        modal.dialog('destroy');
+        toReturn.dialogShouldPlaceElementBackInOriginalDom = $.contains(
+          container[0],
+          modal[0],
+        );
+        return toReturn;
       },
       [],
       (result) => {
-        // Should have 17 assertions.
         const expectedTrue = {
+          dialogShouldMoveModalToOutsideContainer:
+            'dialog should move modal element to outside container element',
+          dialogShouldPlaceElementBackInOriginalDom:
+            'dialog should place element back into dom',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  'enable/disable disabled': (browser) => {
+    browser.execute(
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        const element = $('<div></div>').dialog();
+        element.dialog('disable');
+        toReturn.disableDoesNotDoAnything = !element.dialog(
+          'option',
+          'disabled',
+        );
+        toReturn.disableDoesNotAddClasses =
+          !element.hasClass('ui-dialog-disabled') &&
+          !element.hasClass('ui-state-disabled');
+        toReturn.disableDoesNotAddAriaDisabled = !element
+          .dialog('widget')
+          .attr('aria-disabled');
+        return toReturn;
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          disableDoesNotDoAnything: "disable method doesn't do anything",
+          disableDoesNotAddClasses: "disable method doesn't add classes",
+          disableDoesNotAddAriaDisabled:
+            "disable method doesn't add aria-disabled",
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  closeMethod: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const expected = $('<div></div>').dialog();
+        const actual = expected.dialog('close');
+        toReturn.closeIsChainable = actual === expected;
 
+        const element = $('<div></div>').dialog();
+        toReturn.dialogVisibleBeforeClose =
+          element.dialog('widget').is(':visible') &&
+          !element.dialog('widget').is(':hidden');
+        element.dialog('close');
+        setTimeout(() => {
+          toReturn.dialogHiddenAfterClose =
+            element.dialog('widget').is(':hidden') &&
+            !element.dialog('widget').is(':visible');
+          done(toReturn);
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          closeIsChainable: 'close is chainable',
+          dialogVisibleBeforeClose: 'dialog visible before close method called',
+          dialogHiddenAfterClose: 'dialog hidden after close method called',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  isOpen: (browser) => {
+    browser.execute(
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        let element = {};
+        element = $('<div></div>').dialog();
+        toReturn.dialogOpenAfterInit = element.dialog('isOpen');
+        element.dialog('close');
+        toReturn.dialogIsClosed = !element.dialog('isOpen');
+        element.remove();
+        element = $('<div></div>').dialog({ autoOpen: false });
+        toReturn.autoDialogCloseAfterInit = !element.dialog('isOpen');
+        element.dialog('open');
+        toReturn.autoDialogOpen = element.dialog('isOpen');
+        element.remove();
+        return toReturn;
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          dialogOpenAfterInit: 'dialog is open after init',
+          dialogIsClosed: 'dialog is closed',
+          autoDialogCloseAfterInit: 'autoOpen dialog is open after init',
+          autoDialogOpen: 'autoOpen dialog open',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  moveToTop: (browser) => {
+    browser.execute(
+      function () {
+        const $ = jQuery;
+        const toReturn = {};
+        toReturn.mustMatch = {};
+        function order() {
+          const actual = $('.ui-dialog')
+            .map(function () {
+              return +$(this).css('z-index');
+            })
+            .get();
+          // eslint-disable-next-line prefer-rest-params
+          const makeArgumentArray = $.makeArray(arguments);
+          // eslint-disable-next-line prefer-rest-params
+          toReturn.mustMatch[`${arguments[0]}`] = [actual, makeArgumentArray];
+        }
+
+        let focusOn = 'dialog1';
+        const dialog1 = $('#dialog1').dialog({
+          focus() {
+            toReturn.dialogOneFocused = focusOn === 'dialog1';
+          },
+        });
+        focusOn = 'dialog2';
+        const dialog2 = $('#dialog2').dialog({
+          focus() {
+            toReturn.dialogTwoFocused = focusOn === 'dialog2';
+          },
+        });
+        order(100, 101);
+        focusOn = 'dialog1';
+        dialog1.dialog('moveToTop');
+        order(102, 101);
+        return toReturn;
+      },
+      [],
+      (result) => {
+        const { mustMatch } = result.value;
+        delete result.value.mustMatch;
+        const expectedTrue = {
+          dialogOneFocused: 'dialog 1 focused',
+          dialogTwoFocused: 'dialog 2 focused',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+
+        Object.keys(mustMatch).forEach((property) => {
+          browser.assert.deepEqual(
+            mustMatch[property][0],
+            mustMatch[property][1],
+            `${property} are equivalent`,
+          );
+        });
+      },
+    );
+  },
+  'moveToTop: content scroll stays intact': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const otherDialog = $('#dialog1').dialog();
+        const scrollDialog = $('#form-dialog').dialog({
+          height: 200,
+        });
+        scrollDialog.scrollTop(50);
+        setTimeout(() => {
+          toReturn.scrollNoChangeFirst = scrollDialog.scrollTop() === 50;
+          otherDialog.dialog('moveToTop');
+          setTimeout(() => {
+            toReturn.scrollNoChangeSecond = scrollDialog.scrollTop() === 50;
+            done(toReturn);
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          scrollNoChangeFirst: 'scroll top first',
+          scrollNoChangeSecond: 'scroll top second',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  openMethod: (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const expected = $('<div></div>').dialog();
+        const actual = expected.dialog('open');
+        setTimeout(() => {
+          toReturn.openIsChainable = actual === expected;
+          const element = $('<div></div>').dialog({ autoOpen: false });
+          setTimeout(() => {
+            toReturn.dialogHiddenBeforeOpenCalled =
+              element.dialog('widget').is(':hidden') &&
+              !element.dialog('widget').is(':visible');
+            element.dialog('open');
+            setTimeout(() => {
+              toReturn.dialogVisisbleAfterOpenCalled =
+                element.dialog('widget').is(':visible') &&
+                !element.dialog('widget').is(':hidden');
+              done(toReturn);
+            });
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          openIsChainable: 'open is chainable',
+          dialogHiddenBeforeOpenCalled:
+            'dialog hidden before open method called',
+          dialogVisisbleAfterOpenCalled:
+            'dialog visible after open method called',
+        };
+        browser.assert.equal(expectedTrue.length, result.value.length);
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  'Ensure form elements do not reset when opening a dialog': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $ = jQuery;
+        const toReturn = {};
+        const d1 = $( "<form><input type='radio' name='radio' id='a' value='a' checked='checked'></input>" +
+          "<input type='radio' name='radio' id='b' value='b'>b</input></form>" ).appendTo( "body" ).dialog( { autoOpen: false } );
+
+        d1.find( "#b" ).prop( "checked", true );
+        setTimeout(() => {
+          toReturn.checkboxChecked1 = d1.find( "input:checked" ).val() === 'b';
+          d1.dialog( "open" );
+          setTimeout(() => {
+            toReturn.checkboxChecked2 = d1.find( "input:checked" ).val() === 'b';
+            done(toReturn);
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          checkboxChecked1: 'checkbox b is checked 1',
+          checkboxChecked2: 'checkbox b is checked 2',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
