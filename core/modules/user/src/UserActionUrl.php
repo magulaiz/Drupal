@@ -89,9 +89,16 @@ class UserActionUrl {
         'hashed_pass' => $hash,
       ];
     }
-    else {
+    elseif ($route === 'user.reset') {
       $parameters = [
         'uid' => $user->id(),
+        'timestamp' => $timestamp,
+        'hash' => $hash,
+      ];
+    }
+    else { // The preferred defaults.
+      $parameters = [
+        'user' => $user->id(),
         'timestamp' => $timestamp,
         'hash' => $hash,
       ];
