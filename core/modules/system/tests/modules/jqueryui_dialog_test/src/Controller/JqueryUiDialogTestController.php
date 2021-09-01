@@ -83,14 +83,16 @@ class JqueryUiDialogTestController extends ControllerBase {
         ],
       ],
       'wrap1' => [
+        '#type' => 'container',
         '#attributes' => [
-          'class' => 'wrap',
+          'class' => ['wrap'],
           'id' => 'wrap1',
         ],
       ],
       'wrap2' => [
+        '#type' => 'container',
         '#attributes' => [
-          'class' => 'wrap',
+          'class' => ['wrap'],
           'id' => 'wrap2',
         ],
       ],
