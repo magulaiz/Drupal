@@ -48,7 +48,7 @@ services:
       - { name: theme_negotiator, priority: -40 }
   user.action_url:
     class: Drupal\user\UserActionUrl
-    arguments: ['@datetime.time', 'language_manager']
+    arguments: ['@datetime.time', '@language_manager']
   user.auth:
     class: Drupal\user\UserAuth
     arguments: ['@entity_type.manager', '@password']
