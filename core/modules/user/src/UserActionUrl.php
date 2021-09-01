@@ -73,7 +73,7 @@ class UserActionUrl {
   public function fromRoute(string $route, UserInterface $user, array $options = []): Url {
     $timestamp = $this->time->getRequestTime();
     $langcode = $options['langcode'] ?? $user->getPreferredLangcode();
-    $payload = $options['payload'] ?? null;
+    $payload = $options['payload'] ?? NULL;
     $hash = $this->hashUserPassword($user, $timestamp, $payload);
 
     $url_options = [
@@ -81,28 +81,11 @@ class UserActionUrl {
       'language' => $this->languageManager->getLanguage($langcode),
     ];
 
-    // @todo: Standardize parameter names for user action routes.
-    if ($route === 'user.cancel_confirm') {
-      $parameters = [
-        'user' => $user->id(),
-        'timestamp' => $timestamp,
-        'hashed_pass' => $hash,
-      ];
-    }
-    elseif ($route === 'user.reset') {
-      $parameters = [
-        'uid' => $user->id(),
-        'timestamp' => $timestamp,
-        'hash' => $hash,
-      ];
-    }
-    else { // The preferred defaults.
-      $parameters = [
-        'user' => $user->id(),
-        'timestamp' => $timestamp,
-        'hash' => $hash,
-      ];
-    }
+    $parameters = [
+      'user' => $user->id(),
+      'timestamp' => $timestamp,
+      'hash' => $hash,
+    ];
 
     if (isset($options['extra_parameters'])) {
       // Extra parameters must not override the ones we generate in this method
