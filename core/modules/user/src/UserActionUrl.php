@@ -72,8 +72,9 @@ class UserActionUrl {
    */
   public function fromRoute(string $route, UserInterface $user, array $options = []): Url {
     $timestamp = $this->time->getRequestTime();
-    $langcode = isset($options['langcode']) ? $options['langcode'] : $user->getPreferredLangcode();
-    $hash = $this->hashUserPassword($user, $timestamp, $options['payload']);
+    $langcode = $options['langcode'] ?? $user->getPreferredLangcode();
+    $payload = $options['payload'] ?? null;
+    $hash = $this->hashUserPassword($user, $timestamp, $payload);
 
     $url_options = [
       'absolute' => TRUE,
