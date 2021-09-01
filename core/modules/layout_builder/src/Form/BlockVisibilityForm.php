@@ -3,8 +3,6 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenOffCanvasDialogCommand;
 use Drupal\Core\Executable\ExecutableManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormBuilderInterface;
