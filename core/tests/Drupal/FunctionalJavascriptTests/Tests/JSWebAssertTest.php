@@ -127,8 +127,8 @@ class JSWebAssertTest extends WebDriverTestBase {
     $this->drupalGet('js_webassert_test_form');
     $page->findButton('Test assertWaitOnAjaxRequest')->click();
     try {
-      // Wait for less time than the default to cause a failure.
-      $assert_session->assertWaitOnAjaxRequest(1);
+      // Set the wait duration to 0 to immediately trigger a failure.
+      $assert_session->assertWaitOnAjaxRequest(0);
       $this->fail('The AJAX request did not fail as expected');
     }
     catch (ExpectationException $e) {
