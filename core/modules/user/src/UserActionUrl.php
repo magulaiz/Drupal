@@ -124,7 +124,7 @@ class UserActionUrl {
    * the user by email for purposes such as resetting the user's password. In
    * order to validate the URL, the same hash can be generated again, from the
    * same information, and compared to the hash value from the URL. The hash
-   * contains the time stamp, the user's last login time, the numeric user ID,
+   * contains the time stamp, the user's last changed time, the numeric user ID,
    * and the user's email address.
    *
    * @param \Drupal\user\UserInterface $user
@@ -142,7 +142,7 @@ class UserActionUrl {
    */
   private function hashUserPassword(UserInterface $user, int $timestamp, ?array $payload): string {
     $data = $timestamp;
-    $data .= $user->getLastLoginTime();
+    $data .= $user->getChangedTime();
     $data .= $user->id();
     $data .= $user->getEmail();
     if ($payload !== NULL) {
