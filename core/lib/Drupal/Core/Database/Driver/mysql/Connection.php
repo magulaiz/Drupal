@@ -3,6 +3,7 @@
 namespace Drupal\Core\Database\Driver\mysql;
 
 use Drupal\Core\Database\DatabaseAccessDeniedException;
+use Drupal\Core\Database\DatabaseHostLookupException;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\StatementInterface;
@@ -32,6 +33,11 @@ class Connection extends DatabaseConnection {
    * Error code for "Access denied" error.
    */
   const ACCESS_DENIED = 1045;
+
+  /**
+   * Error code for "Name or service not found" error.
+   */
+  const HOST_LOOKUP_FAILED = 2002;
 
   /**
    * Error code for "Can't initialize character set" error.
@@ -196,6 +202,10 @@ class Connection extends DatabaseConnection {
       if ($e->getCode() == static::ACCESS_DENIED) {
         throw new DatabaseAccessDeniedException($e->getMessage(), $e->getCode(), $e);
       }
+      if ($e->getCode() == static::HOST_LOOKUP_FAILED) {
+        throw new DatabaseHostLookupException($e->getMessage(), $e->getCode(), $e);
+      }
+
       throw $e;
     }
 
