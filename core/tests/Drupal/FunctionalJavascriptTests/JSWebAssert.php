@@ -24,7 +24,7 @@ class JSWebAssert extends WebAssert {
    * @param string $message
    *   (optional) A message for exception.
    *
-   * @throws \RuntimeException
+   * @throws \Behat\Mink\Exception\ExpectationException
    *   When the request is not completed. If left blank, a default message will
    *   be displayed.
    */
