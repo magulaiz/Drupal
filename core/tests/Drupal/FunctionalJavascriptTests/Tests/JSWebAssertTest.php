@@ -4,10 +4,13 @@ namespace Drupal\FunctionalJavascriptTests\Tests;
 
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementHtmlException;
+use Behat\Mink\Exception\ExpectationException;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests for the JSWebAssert class.
+ *
+ * @coversDefaultClass \Drupal\FunctionalJavascriptTests\JSWebAssert
  *
  * @group javascript
  */
@@ -112,6 +115,25 @@ class JSWebAssertTest extends WebDriverTestBase {
     $this->assertSame('test_text', $result->getAttribute('id'));
     // Ensure that the javascript has replaced the element 1100 times.
     $assert_session->pageTextContains('New Text!! 1100');
+  }
+
+  /**
+   * @covers ::assertWaitOnAjaxRequest
+   */
+  public function testAssertWaitOnAjaxRequest() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->drupalGet('js_webassert_test_form');
+    $page->findButton('Test assertWaitOnAjaxRequest')->click();
+    try {
+      // Wait for less time than the default to cause a failure.
+      $assert_session->assertWaitOnAjaxRequest(1);
+      $this->fail('The AJAX request did not fail as expected');
+    }
+    catch (ExpectationException $e) {
+      // Expected exception.
+    }
   }
 
 }
