@@ -97,10 +97,12 @@ class LanguageSelectorTranslatableTest extends BrowserTestBase {
   public function testContentTranslationPageTitle() {
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertSession()->pageTextContains('Content language and translation');
+    $this->assertSession()->pageTextNotMatches('#Content language$#');
 
     \Drupal::service('module_installer')->uninstall(['content_translation']);
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertSession()->pageTextContains('Content language');
+    $this->assertSession()->pageTextNotContains('Content language and translation');
   }
 
 }
