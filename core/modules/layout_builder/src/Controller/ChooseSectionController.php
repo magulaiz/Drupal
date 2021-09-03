@@ -65,7 +65,7 @@ class ChooseSectionController implements ContainerInjectionInterface {
    */
   public function build(SectionStorageInterface $section_storage, int $delta) {
     $items = [];
-    $definitions = $this->layoutManager->getFilteredDefinitions('layout_builder', $this->getAvailableContexts($section_storage, $delta), [
+    $definitions = $this->layoutManager->getFilteredDefinitions('layout_builder', $this->getPopulatedContexts($section_storage, $delta), [
       'section_storage' => $section_storage,
     ]);
     foreach ($definitions as $plugin_id => $definition) {

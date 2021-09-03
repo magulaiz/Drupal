@@ -49,9 +49,9 @@ trait LayoutBuilderContextTrait {
    *
    * @see https://www.drupal.org/node/3195121
    */
-  protected function getAvailableContexts(SectionStorageInterface $section_storage) {
+  protected function getAvailableContexts(SectionStorageInterface $section_storage, int $delta = NULL) {
     @trigger_error('\Drupal\layout_builder\Context\LayoutBuilderContextTrait::getAvailableContexts() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\layout_builder\Context\LayoutBuilderContextTrait::getPopulatedContexts() instead. See https://www.drupal.org/node/3195121', E_USER_DEPRECATED);
-    return self::getPopulatedContexts($section_storage);
+    return self::getPopulatedContexts($section_storage, $delta);
   }
 
   /**
@@ -59,6 +59,8 @@ trait LayoutBuilderContextTrait {
    *
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
+   * @param int $delta
+   *   The section delta.
    *
    * @return \Drupal\Core\Plugin\Context\ContextInterface[]
    *   The array of context objects.
@@ -78,7 +80,7 @@ trait LayoutBuilderContextTrait {
       $contexts['section_delta'] = new Context(new ContextDefinition('integer'), $delta);
     }
     else {
-      @trigger_error('Calling LayoutBuilderContextTrait::getAvailableContexts() without the $delta argument is deprecated in drupal:9.3.0 and the $delta argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3210520', E_USER_DEPRECATED);
+      @trigger_error('Calling LayoutBuilderContextTrait::getPopulatedContexts() without the $delta argument is deprecated in drupal:9.3.0 and the $delta argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3210520', E_USER_DEPRECATED);
     }
 
     return $contexts;
