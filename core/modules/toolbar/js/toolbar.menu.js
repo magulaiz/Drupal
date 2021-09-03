@@ -44,14 +44,14 @@
         action: ui.handleOpen,
         text: ''
       };
-      $menu.find('li > a').wrap('<div class="toolbar-box">');
+      $menu.find('li > a, li > span').wrap('<div class="toolbar-box">');
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
 
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text()
+            '@label': $box.find('a, span').text()
           });
           $item.children('.toolbar-box').append(Drupal.theme('toolbarMenuItemToggle', options));
         }
@@ -87,7 +87,7 @@
 
       if (menu.length) {
         var $menu = $(menu);
-        $menu.on('click.toolbar', '.toolbar-box', toggleClickHandler).on('click.toolbar', '.toolbar-box a', linkClickHandler);
+        $menu.on('click.toolbar', '.toolbar-box', toggleClickHandler).on('click.toolbar', '.toolbar-box a, .toolbar-box span', linkClickHandler);
         $menu.addClass('root');
         initItems($menu);
         markListLevels($menu);

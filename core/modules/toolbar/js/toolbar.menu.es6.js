@@ -101,14 +101,14 @@
         text: '',
       };
       // Initialize items and their links.
-      $menu.find('li > a').wrap('<div class="toolbar-box">');
+      $menu.find('li > a, li > span').wrap('<div class="toolbar-box">');
       // Add a handle to each list item if it has a menu.
       $menu.find('li').each((index, element) => {
         const $item = $(element);
         if ($item.children('ul.toolbar-menu').length) {
           const $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text(),
+            '@label': $box.find('a, span').text(),
           });
           $item
             .children('.toolbar-box')
@@ -171,7 +171,7 @@
         // Bind event handlers.
         $menu
           .on('click.toolbar', '.toolbar-box', toggleClickHandler)
-          .on('click.toolbar', '.toolbar-box a', linkClickHandler);
+          .on('click.toolbar', '.toolbar-box a, .toolbar-box span', linkClickHandler);
 
         $menu.addClass('root');
         initItems($menu);
