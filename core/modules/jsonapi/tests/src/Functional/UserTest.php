@@ -122,6 +122,15 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  public function testDeleteIndividual() {
+    $this->config('user.settings')->set('cancel_method', 'user_cancel_delete')->save(TRUE);
+
+    parent::testDeleteIndividual();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getExpectedDocument() {
     $self_url = Url::fromUri('base:/jsonapi/user/user/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
