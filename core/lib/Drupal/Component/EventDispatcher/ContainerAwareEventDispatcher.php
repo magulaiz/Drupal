@@ -88,7 +88,7 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
   /**
    * {@inheritdoc}
    */
-  public function dispatch($event/*, string $event_name = NULL*/) {
+  public function dispatch(object $event, ?string $eventName = NULL): object {
     $event_name = 1 < \func_num_args() ? func_get_arg(1) : NULL;
     if (\is_object($event)) {
       $class_name = get_class($event);
