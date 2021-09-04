@@ -4,11 +4,11 @@ namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
-use Drupal\layout_builder\SectionStorage\SectionStorageTrait;
+use Drupal\layout_builder\SectionListTrait;
 
 class TestSectionList implements SectionListInterface {
 
-  use SectionStorageTrait {
+  use SectionListTrait {
     addBlankSection as public;
   }
 
