@@ -81,8 +81,7 @@ class PrivateTempStoreFactory {
    * @return \Drupal\Core\TempStore\PrivateTempStore
    *   An instance of the key/value store.
    */
-  public function get($collection, $expire = NULL)
-  {
+  public function get($collection, $expire = NULL) {
     // Allow expire to be set per collection, use default if not provided.
     if (!isset($expire)) {
       $expire = $this->expire;
