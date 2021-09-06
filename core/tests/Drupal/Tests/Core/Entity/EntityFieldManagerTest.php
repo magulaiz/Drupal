@@ -684,7 +684,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $processed_hook_bundle_extra_fields[$entity_type_id][$bundle] += [
       'display' => [],
     ];
-    $cache_id = 'entity_extra_fields:' . $language_code;
+    $cache_id = 'entity_extra_field_info:' . $language_code;
 
     $language = new Language(['id' => $language_code]);
     $this->languageManager->getCurrentLanguage()
