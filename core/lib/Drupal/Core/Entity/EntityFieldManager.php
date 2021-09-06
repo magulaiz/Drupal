@@ -644,8 +644,13 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    */
   public function getExtraFields($entity_type_id, $bundle) {
     // Read from the "static" cache.
-    if (isset($this->extraFields[$entity_type_id][$bundle])) {
-      return $this->extraFields[$entity_type_id][$bundle];
+    if (!empty($this->extraFields)) {
+      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
+      $info += [
+        'form' => [],
+        'display' => [],
+      ];
+      return $info;
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
