@@ -672,9 +672,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Store in the 'static' cache.
     $this->extraFields[$entity_type_id][$bundle] = $info;
 
-    $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
-
-    return $info + $default;
+    return $this->extraFields[$entity_type_id][$bundle];
   }
 
 }
