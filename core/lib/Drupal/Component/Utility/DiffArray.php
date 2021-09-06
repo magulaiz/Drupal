@@ -40,6 +40,9 @@ class DiffArray {
         }
       }
       elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
+        if (is_object($value) && get_class($value) === 'Drupal\layout_builder\Section') {
+          $value = $value->toArray();
+        }
         $difference[$key] = $value;
       }
     }
