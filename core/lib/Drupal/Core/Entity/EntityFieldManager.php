@@ -643,35 +643,34 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getExtraFields($entity_type_id, $bundle) {
-    $default = [
-      'form' => [],
-      'display' => [],
-    ];
-
     // Read from the "static" cache.
-    if (!empty($this->extraFields)) {
-      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
-      return $info + $default;
+    if (isset($this->extraFields[$entity_type_id][$bundle])) {
+      return $this->extraFields[$entity_type_id][$bundle];
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
-    $cache_id = 'entity_bundle_extra_fields:' . $this->languageManager->getCurrentLanguage()->getId();
+    $cache_id = 'entity_extra_fields:' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheGet($cache_id);
-    if ($cached) {
+    if (!$cached) {
+      $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
+      $this->moduleHandler->alter('entity_extra_field_info', $extra);
+
       $this->extraFields = $cached->data;
-      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
-      return $info + $default;
+      $this->cacheSet($cache_id, $info, Cache::PERMANENT, [
+        'entity_field_info',
+      ]);
     }
 
-    // Store in the 'static' and persistent caches.
-    $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
-    $this->moduleHandler->alter('entity_extra_field_info', $extra);
-    $this->extraFields = $extra;
-    $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
-      'entity_field_info',
-    ]);
+    $info = isset($this->extraFields[$entity_type_id][$bundle]) ? $this->extraFields[$entity_type_id][$bundle] : [];
+    $info += [
+      'form' => [],
+      'display' => [],
+    ];
+
+    // Store in the 'static' cache.
+    $this->extraFields[$entity_type_id][$bundle] = $info;
 
     $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
 
