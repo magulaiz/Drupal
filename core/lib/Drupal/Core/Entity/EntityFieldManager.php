@@ -644,13 +644,20 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    */
   public function getExtraFields($entity_type_id, $bundle) {
     // Read from the "static" cache.
-    if (!empty($this->extraFields)) {
-      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
-      $info += [
-        'form' => [],
-        'display' => [],
-      ];
-      return $info;
+    if (isset($this->extraFields[$entity_type_id][$bundle])) {
+      return $this->extraFields[$entity_type_id][$bundle];
+    }
+
+    $defaults = [
+      'form' => [],
+      'display' => [],
+    ];
+
+    // Populate the static cache in case we have cached data but this bundle
+    // does not have extra fields.
+    if (count($this->extraFields) > 0) {
+      $this->extraFields[$entity_type_id][$bundle] = $defaults;
+      return $this->extraFields[$entity_type_id][$bundle];
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
@@ -665,17 +672,21 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
       $this->moduleHandler->alter('entity_extra_field_info', $extra);
 
+      // Apply default values to each bundle.
+      foreach ($extra as $entity_type_id => $bundles) {
+        foreach ($bundles as $bundle => $info) {
+          $info += $defaults;
+          $extra[$entity_type_id][$bundle] = $info;
+        }
+      }
+
       $this->extraFields = $extra;
       $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
         'entity_field_info',
       ]);
     }
 
-    $info = isset($this->extraFields[$entity_type_id][$bundle]) ? $this->extraFields[$entity_type_id][$bundle] : [];
-    $info += [
-      'form' => [],
-      'display' => [],
-    ];
+    $info = $this->extraFields[$entity_type_id][$bundle] ?? $defaults;
 
     // Store in the 'static' cache.
     $this->extraFields[$entity_type_id][$bundle] = $info;

@@ -696,7 +696,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->moduleHandler->invokeAll('entity_extra_field_info')->willReturn($hook_bundle_extra_fields);
     $this->moduleHandler->alter('entity_extra_field_info', $hook_bundle_extra_fields)->shouldBeCalled();
 
-    $this->cacheBackend->set($cache_id, $processed_hook_bundle_extra_fields[$entity_type_id][$bundle], Cache::PERMANENT, ['entity_field_info'])->shouldBeCalled();
+    $this->cacheBackend->set($cache_id, $processed_hook_bundle_extra_fields, Cache::PERMANENT, ['entity_field_info'])->shouldBeCalled();
 
     $this->assertSame($processed_hook_bundle_extra_fields[$entity_type_id][$bundle], $this->entityFieldManager->getExtraFields($entity_type_id, $bundle));
   }
