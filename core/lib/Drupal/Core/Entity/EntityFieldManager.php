@@ -673,10 +673,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->moduleHandler->alter('entity_extra_field_info', $extra);
 
       // Apply default values to each bundle.
-      foreach ($extra as $etid => $bundle_info) {
+      foreach ($extra as $entity_type_machine_name => $bundle_info) {
         foreach ($bundle_info as $bundle_name => $info) {
           $info += $defaults;
-          $extra[$etid][$bundle_name] = $info;
+          $extra[$entity_type_machine_name][$bundle_name] = $info;
         }
       }
 
