@@ -663,7 +663,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
-    $cache_id = 'entity_extra_fields:' . $this->languageManager->getCurrentLanguage()->getId();
+    $cache_id = 'entity_extra_field_info:' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheGet($cache_id);
     if ($cached) {
       $this->extraFields = $cached->data;
@@ -673,10 +673,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->moduleHandler->alter('entity_extra_field_info', $extra);
 
       // Apply default values to each bundle.
-      foreach ($extra as $entity_type_id => $bundles) {
-        foreach ($bundles as $bundle => $info) {
+      foreach ($extra as $etid => $bundle_info) {
+        foreach ($bundle_info as $bundle_name => $info) {
           $info += $defaults;
-          $extra[$entity_type_id][$bundle] = $info;
+          $extra[$etid][$bundle_name] = $info;
         }
       }
 
