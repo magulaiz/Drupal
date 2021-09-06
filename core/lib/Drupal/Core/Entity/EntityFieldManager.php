@@ -650,31 +650,32 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Read from the "static" cache.
     if (!empty($this->extraFields)) {
-      return $this->extraFields[$entity_type_id][$bundle] ?? $default;
+      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
+      return $info + $default;
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
     // hook_entity_extra_field_info_alter() might contain t() calls, we cache
     // per language.
-    $cache_id = 'entity_bundle_extra_fields:' . $entity_type_id . ':' . $bundle . ':' . $this->languageManager->getCurrentLanguage()->getId();
+    $cache_id = 'entity_bundle_extra_fields:' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheGet($cache_id);
     if ($cached) {
-      $this->extraFields[$entity_type_id][$bundle] = $cached->data;
-      return $this->extraFields[$entity_type_id][$bundle];
+      $this->extraFields = $cached->data;
+      $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
+      return $info + $default;
     }
 
+    // Store in the 'static' and persistent caches.
     $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
     $this->moduleHandler->alter('entity_extra_field_info', $extra);
-    $info = $extra[$entity_type_id][$bundle] ?? [];
-    $info += $default;
-
-    // Store in the 'static' and persistent caches.
-    $this->extraFields[$entity_type_id][$bundle] = $info;
-    $this->cacheSet($cache_id, $info, Cache::PERMANENT, [
+    $this->extraFields = $extra;
+    $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
       'entity_field_info',
     ]);
 
-    return $this->extraFields[$entity_type_id][$bundle];
+    $info = $this->extraFields[$entity_type_id][$bundle] ?? [];
+
+    return $info + $default;
   }
 
 }
