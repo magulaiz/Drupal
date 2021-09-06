@@ -653,12 +653,15 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // per language.
     $cache_id = 'entity_extra_fields:' . $this->languageManager->getCurrentLanguage()->getId();
     $cached = $this->cacheGet($cache_id);
-    if (!$cached) {
+    if ($cached) {
+      $this->extraFields = $cached->data;
+    }
+    else {
       $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
       $this->moduleHandler->alter('entity_extra_field_info', $extra);
 
-      $this->extraFields = $cached->data;
-      $this->cacheSet($cache_id, $info, Cache::PERMANENT, [
+      $this->extraFields = $extra;
+      $this->cacheSet($cache_id, $extra, Cache::PERMANENT, [
         'entity_field_info',
       ]);
     }
