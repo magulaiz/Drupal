@@ -643,9 +643,14 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * {@inheritdoc}
    */
   public function getExtraFields($entity_type_id, $bundle) {
+    $default = [
+      'form' => [],
+      'display' => [],
+    ];
+
     // Read from the "static" cache.
-    if (isset($this->extraFields[$entity_type_id][$bundle])) {
-      return $this->extraFields[$entity_type_id][$bundle];
+    if (!empty($this->extraFields)) {
+      return $this->extraFields[$entity_type_id][$bundle] ?? $default;
     }
 
     // Read from the persistent cache. Since hook_entity_extra_field_info() and
@@ -661,10 +666,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $extra = $this->moduleHandler->invokeAll('entity_extra_field_info');
     $this->moduleHandler->alter('entity_extra_field_info', $extra);
     $info = $extra[$entity_type_id][$bundle] ?? [];
-    $info += [
-      'form' => [],
-      'display' => [],
-    ];
+    $info += $default;
 
     // Store in the 'static' and persistent caches.
     $this->extraFields[$entity_type_id][$bundle] = $info;
