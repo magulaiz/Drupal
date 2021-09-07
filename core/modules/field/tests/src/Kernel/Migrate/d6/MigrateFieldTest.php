@@ -73,8 +73,6 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     // Decimal field with radio buttons.
     $field_storage = FieldStorageConfig::load('node.field_test_decimal_radio_buttons');
     $this->assertSame("list_float", $field_storage->getType());
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['1.2']);
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['2.1']);
     $this->assertSame('1.2', $field_storage->getSetting('allowed_values')['1.2']);
     $this->assertSame('2.1', $field_storage->getSetting('allowed_values')['2.1']);
 
@@ -89,10 +87,6 @@ class MigrateFieldTest extends MigrateDrupal6TestBase {
     // Integer field with a select list.
     $field_storage = FieldStorageConfig::load('node.field_test_integer_selectlist');
     $this->assertSame("list_integer", $field_storage->getType());
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['1234']);
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['2341']);
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['3412']);
-    $this->assertNotNull($field_storage->getSetting('allowed_values')['4123']);
     $this->assertSame('1234', $field_storage->getSetting('allowed_values')['1234']);
     $this->assertSame('2341', $field_storage->getSetting('allowed_values')['2341']);
     $this->assertSame('3412', $field_storage->getSetting('allowed_values')['3412']);

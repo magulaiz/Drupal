@@ -417,12 +417,12 @@ class ConfigTranslationUiTest extends BrowserTestBase {
       $language = \Drupal::languageManager()->getLanguage($langcode)->getName();
 
       $this->drupalGet("$translation_base_url/$langcode/delete");
-      $this->assertSession()->pageTextContains("Are you sure you want to delete the $language translation of $label Contact form?");
+      $this->assertSession()->pageTextContains("Are you sure you want to delete the $language translation of $label contact form?");
       // Assert link back to list page to cancel delete is present.
       $this->assertSession()->linkByHrefExists($translation_base_url);
 
       $this->submitForm([], 'Delete');
-      $this->assertSession()->pageTextContains("$language translation of $label Contact form was deleted");
+      $this->assertSession()->pageTextContains("$language translation of $label contact form was deleted");
       $this->assertSession()->linkByHrefExists("$translation_base_url/$langcode/add");
       $this->assertSession()->linkByHrefNotExists("translation_base_url/$langcode/edit");
       $this->assertSession()->linkByHrefNotExists("$translation_base_url/$langcode/delete");
