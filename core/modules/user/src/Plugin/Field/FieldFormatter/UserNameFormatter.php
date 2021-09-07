@@ -2,6 +2,7 @@
 
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -51,6 +52,7 @@ class UserNameFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    $cacheability = CacheableMetadata::createFromRenderArray($elements);
 
     foreach ($items as $delta => $item) {
       /** @var \Drupal\user\UserInterface $user */
@@ -66,15 +68,20 @@ class UserNameFormatter extends FormatterBase {
           ];
         }
         else {
-          $elements[$delta] = [
-            '#markup' => $user->getDisplayName(),
-            '#cache' => [
-              'tags' => $user->getCacheTags(),
-            ],
-          ];
+          $access = $user->access('view label', NULL, TRUE);
+          if ($access->isAllowed()) {
+            $elements[$delta] = [
+              '#markup' => $user->getDisplayName(),
+              '#cache' => [
+                'tags' => $user->getCacheTags(),
+              ],
+            ];
+          }
         }
       }
     }
+
+    $cacheability->applyTo($elements);
 
     return $elements;
   }

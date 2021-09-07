@@ -5,8 +5,9 @@ namespace Drupal\user;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultNeutral;
 use Drupal\Core\Access\AccessResultReasonInterface;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityAccessControlHandler;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -31,11 +32,9 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     /** @var \Drupal\user\UserInterface $entity*/
 
-    // We don't treat the user label as privileged information, so this check
-    // has to be the first one in order to allow labels for all users to be
-    // viewed, including the special anonymous user.
+    // The anonymous user's username can be viewed always.
     if ($operation === 'view label') {
-      return AccessResult::allowed();
+      return $this->canViewUserName($account, $entity);
     }
 
     // The anonymous user's profile can neither be viewed, updated nor deleted.
@@ -96,22 +95,36 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
     }
 
     // Flag to indicate if this user entity is the own user account.
-    $is_own_account = $items ? $items->getEntity()->id() == $account->id() : FALSE;
+    /** @var \Drupal\user\UserInterface|null $other */
+    $other = NULL;
+    $is_own_account = FALSE;
+    // A stub user is not a valid user.
+    if ($items && $items->getEntity()->id() !== NULL) {
+      $other = $items->getEntity();
+      $is_own_account = $other->id() == $account->id();
+    }
     switch ($field_definition->getName()) {
       case 'name':
-        // Allow view access to anyone with access to the entity.
-        // The username field is editable during the registration process.
-        if ($operation == 'view' || ($items && $items->getEntity()->isAnonymous())) {
+        if ($other) {
+          if ($operation == 'view') {
+            return $this->canViewUserName($account, $other);
+          }
+
+          if ($operation == 'edit') {
+            // Allow edit access for the own username if the permission is
+            // satisfied.
+            if ($is_own_account && $account->hasPermission('change own username')) {
+              return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
+            }
+          }
+        }
+        // BC layer which probably should be removed later, if the other entity
+        // is not defined, let's return allowed.
+        if ($other === NULL && in_array($operation, ['view', 'edit'], TRUE)) {
           return AccessResult::allowed()->cachePerPermissions();
         }
-        // Allow edit access for the own user name if the permission is
-        // satisfied.
-        if ($is_own_account && $account->hasPermission('change own username')) {
-          return AccessResult::allowed()->cachePerPermissions()->cachePerUser();
-        }
-        else {
-          return AccessResult::neutral();
-        }
+
+        return AccessResult::neutral();
 
       case 'mail':
         // Only check for the 'view user email addresses' permission and a view
@@ -147,6 +160,44 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
     }
 
     return parent::checkFieldAccess($operation, $field_definition, $account, $items);
+  }
+
+  /**
+   * Checks if the current user can view a username.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\user\UserInterface $other
+   *   The other user.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   An access result.
+   */
+  final protected function canViewUserName(AccountInterface $current_user, UserInterface $other) {
+    // Username of anonymous is always visible to everyone.
+    if ($other->isAnonymous()) {
+      return AccessResult::allowed()->setCacheMaxAge(CacheBackendInterface::CACHE_PERMANENT);
+    }
+
+    // Users with this permission can always access.
+    if ($current_user->hasPermission('administer users')) {
+      return AccessResult::allowed()->cachePerPermissions();
+    }
+
+    // Users can always see their own usernames, but we must avoid having
+    // a result that varies per user.
+    if ($other->id() == $current_user->id()) {
+      return AccessResult::allowed()->cachePerUser()->setCacheMaxAge(CacheBackendInterface::CACHE_PERMANENT);
+    }
+
+    // Users with this permission can always see other user's username.
+    if ($current_user->hasPermission('view usernames')) {
+      return AccessResult::allowed()->addCacheableDependency($other)->cachePerPermissions();
+    }
+
+    // No opinion but the above used cache dependencies must be applied on this
+    // to ensure proper cache invalidation.
+    return AccessResult::neutral()->addCacheableDependency($other)->cachePerPermissions();
   }
 
 }
