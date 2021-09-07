@@ -97,12 +97,7 @@ class LocaleUpdateInterfaceTest extends LocaleUpdateBase {
     $this->assertSession()->linkByHrefExists(Url::fromRoute('locale.translate_status')->toString());
     $this->drupalGet('admin/reports/translations');
     $this->assertSession()->pageTextContains('Missing translations for one project');
-    $release_details = new FormattableMarkup('@module (@version). @info', [
-      '@module' => 'Locale test translate',
-      '@version' => '1.3-dev',
-      '@info' => t('File not found at %local_path', ['%local_path' => 'core/modules/locale/tests/test.de.po']),
-    ]);
-    $this->assertSession()->responseContains($release_details->__toString());
+    $this->assertSession()->pageTextContains('Locale test translate (1.3-dev). File not found at core/modules/locale/tests/test.de.po');
 
     // Override Drupal core translation status as 'no translations found'.
     $status = locale_translation_get_status();
