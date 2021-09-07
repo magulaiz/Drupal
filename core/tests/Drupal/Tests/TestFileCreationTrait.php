@@ -48,7 +48,7 @@ trait TestFileCreationTrait {
    *   (optional) File size in bytes to match. Defaults to NULL, which will not
    *   filter the returned list by size.
    *
-   * @return array[]
+   * @return object[]
    *   List of files in public:// that match the filter(s).
    */
   protected function getTestFiles($type, $size = NULL) {
