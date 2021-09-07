@@ -3,7 +3,6 @@
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Core\Url;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Tests for the user interface of project interface translations.
