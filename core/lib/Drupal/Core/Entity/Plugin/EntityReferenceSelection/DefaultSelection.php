@@ -222,7 +222,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
             }
           }
           else {
-            $fields[$field_name] = $this->t('@label', ['@label' => $field_definition->getLabel()]);
+            $fields[$field_name] = $field_definition->getLabel();
           }
         }
       }

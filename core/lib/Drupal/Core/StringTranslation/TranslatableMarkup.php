@@ -131,6 +131,10 @@ class TranslatableMarkup extends FormattableMarkup {
       $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
       throw new \InvalidArgumentException($message);
     }
+    if (count($arguments) == 1 && array_keys($arguments)[0] === $string) {
+      $message = '$string ("' . $string . '") consists of only a placeholder.';
+      throw new \InvalidArgumentException($message);
+    }
     parent::__construct($string, $arguments);
     $this->options = $options;
     $this->stringTranslation = $string_translation;

@@ -101,4 +101,13 @@ class TranslatableMarkupTest extends UnitTestCase {
     new TranslatableMarkup($formattable_string);
   }
 
+  /**
+   * @covers ::__construct
+   */
+  public function testPlaceholderOnlyAssertion() {
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('$string ("@foo") consists of only a placeholder.');
+    new TranslatableMarkup('@foo', ['@foo' => 'foo']);
+  }
+
 }

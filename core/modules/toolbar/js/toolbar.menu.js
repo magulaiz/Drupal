@@ -50,9 +50,7 @@
 
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
-          options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text()
-          });
+          options.text = $box.find('a').text();
           $item.children('.toolbar-box').append(Drupal.theme('toolbarMenuItemToggle', options));
         }
       });
