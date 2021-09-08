@@ -65,9 +65,7 @@ class MultiFormTest extends WebDriverTestBase {
 
     $form_xpath = '//form[starts-with(@id, "node-page-form")]';
     $field_xpath = '//div[contains(@class, "field--name-field-ajax-test")]';
-    $button_name = $field_name . '_add_more';
-    $button_value = t('Add another item');
-    $button_xpath_suffix = '//input[@name="' . $button_name . '"]';
+    $button_xpath_suffix = '//input[@name="Add another item"]';
     $field_items_xpath_suffix = '//input[@type="text"]';
 
     // Ensure the initial page contains both node forms and the correct number
@@ -95,7 +93,7 @@ class MultiFormTest extends WebDriverTestBase {
     for ($i = 0; $i < 2; $i++) {
       $forms = $page->find('xpath', $form_xpath);
       foreach ($forms as $offset => $form) {
-        $button = $form->findButton($button_value);
+        $button = $form->findButton('Add another item');
         $this->assertNotNull($button, 'Add Another Item button exists');
         $button->press();
 

@@ -237,10 +237,6 @@ class HandlerTest extends ViewTestBase {
    *   TRUE if the assertion succeeded.
    */
   protected function assertEqualValue($expected, $handler, $message = '', $group = 'Other') {
-    if (empty($message)) {
-      $message = t('Comparing @first and @second', ['@first' => implode(',', $expected), '@second' => implode(',', $handler->value)]);
-    }
-
     $this->assertEquals($expected, $handler->value, $message);
     return TRUE;
   }
