@@ -65,7 +65,8 @@ class MultiFormTest extends WebDriverTestBase {
 
     $form_xpath = '//form[starts-with(@id, "node-page-form")]';
     $field_xpath = '//div[contains(@class, "field--name-field-ajax-test")]';
-    $button_xpath_suffix = '//input[@name="Add another item"]';
+    $button_name = $field_name . '_add_more';
+    $button_xpath_suffix = '//input[@name="' . $button_name . '"]';
     $field_items_xpath_suffix = '//input[@type="text"]';
 
     // Ensure the initial page contains both node forms and the correct number
