@@ -42,9 +42,10 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
           $uri_is_valid = FALSE;
         }
       }
+
+      // The link URL could be empty when the default link text has been set, so
+      // we just check that it is valid when the it is not empty.
       if (isset($url) && !$uri_is_valid) {
-        // The link URL could be empty when the default link text has been set, so
-        // we just check that it is valid when the it is not empty.
         $this->context->addViolation($constraint->message, ['@uri' => $link_item->uri]);
       }
     }
