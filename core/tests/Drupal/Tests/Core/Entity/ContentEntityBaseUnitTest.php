@@ -349,9 +349,18 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function providerTestTypedData(): array {
     return [
-      [TRUE, TRUE],
-      [FALSE, TRUE],
-      [FALSE, FALSE],
+      'Entity data definition derivative with entity type and bundle' => [
+        TRUE,
+        TRUE,
+      ],
+      'Entity data definition derivative with entity type' => [
+        FALSE,
+        TRUE,
+      ],
+      'Entity data definition' => [
+        FALSE,
+        FALSE,
+      ],
     ];
   }
 
