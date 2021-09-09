@@ -671,6 +671,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $rc = new \ReflectionClass($this);
     foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED) as $property) {
       if (!$property->isStatic() && !isset($blacklist[$property->name])) {
+        if (version_compare(PHP_VERSION, '7.4', '>=')) {
+          $type = $property->getType();
+          if ($type && !$type->allowsNull()) {
+            unset($this->{$property->name});
+            continue;
+          }
+        }
+
         $this->{$property->name} = NULL;
       }
     }
