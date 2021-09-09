@@ -29,7 +29,7 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: var(--color--blue-50);
+    color: var(--color--blue-10);
     border-color: var(--color--blue-50);
   }
 

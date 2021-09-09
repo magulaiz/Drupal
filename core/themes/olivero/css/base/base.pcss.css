@@ -41,7 +41,7 @@ a {
   color: var(--color--blue-20);
 
   &:hover {
-    color: var(--color--blue-50);
+    color: var(--color--blue-10);
   }
 
   &:focus {
