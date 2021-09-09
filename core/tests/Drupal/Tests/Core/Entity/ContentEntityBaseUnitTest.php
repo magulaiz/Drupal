@@ -336,11 +336,16 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
   /**
    * Data provider for the ::getTypedData() test.
    *
-   * The following will be tested in order:
+   * The following entity data definitions, the first two being derivatives of
+   * the last definition, will be tested in order:
    *
    * 1. entity:$entity_type:$bundle
    * 2. entity:$entity_type
    * 3. entity
+   *
+   * @see \Drupal\Core\Entity\EntityBase::getTypedData()
+   * @see \Drupal\Core\Entity\EntityBase::getTypedDataClass()
+   * @see \Drupal\Core\Entity\Plugin\DataType\Deriver\EntityDeriver
    *
    * @return array
    *   Array of arrays with the following elements:
