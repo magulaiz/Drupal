@@ -159,7 +159,8 @@ class TemporaryJsonapiFileFieldUploader {
    */
   public function handleFileUploadForField(FieldDefinitionInterface $field_definition, $filename, AccountInterface $owner) {
     assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
-    $destination = $this->getUploadLocation($field_definition->getSettings());
+    $settings = $field_definition->getSettings();
+    $destination = $this->getUploadLocation($settings);
 
     // Check the destination file path is writable.
     if (!$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
@@ -171,7 +172,10 @@ class TemporaryJsonapiFileFieldUploader {
     $prepared_filename = $this->prepareFilename($filename, $validators);
 
     // Create the file.
-    $file_uri = parse_url($destination) ? "{$destination}/{$prepared_filename}" : "{$destination}{$prepared_filename}";
+    $file_uri = "{$destination}/{$prepared_filename}";
+    if ($destination === $settings['uri_scheme'] . '://') {
+      $file_uri = "{$destination}{$prepared_filename}";
+    }
 
     $temp_file_path = $this->streamUploadData();
 
