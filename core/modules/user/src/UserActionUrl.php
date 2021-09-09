@@ -96,7 +96,7 @@ class UserActionUrl {
   }
 
   /**
-   * Check user password hash validity.
+   * Check hash validity.
    *
    * Test whether the received hash matches one generated using the same
    * intended inputs.
@@ -146,7 +146,7 @@ class UserActionUrl {
     $data .= $user->id();
     $data .= $user->getEmail();
     if ($payload !== NULL) {
-      $data .= implode(':', $payload);
+      $data .= json_encode($payload);
     }
     return Crypt::hmacBase64($data, Settings::getHashSalt() . $user->getPassword());
   }
