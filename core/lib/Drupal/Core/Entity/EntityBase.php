@@ -587,7 +587,7 @@ abstract class EntityBase implements EntityInterface {
    */
   public function getTypedData() {
     if (!isset($this->typedData)) {
-      $class = $this->getClass();
+      $class = $this->getTypedDataClass();
       $this->typedData = $class::createFromEntity($this);
     }
     return $this->typedData;
@@ -601,7 +601,7 @@ abstract class EntityBase implements EntityInterface {
    *
    * @see \Drupal\Core\Entity\Plugin\DataType\EntityAdapter
    */
-  private function getClass(): string {
+  private function getTypedDataClass(): string {
     $typed_data_manager = \Drupal::typedDataManager();
 
     // Check more specific data types that could apply to this entity.
