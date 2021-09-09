@@ -347,7 +347,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    *   - A bool whether to provide a bundle-specific definition.
    *   - A bool whether to provide an entity type-specific definition.
    */
-  public function providerTestTypedData() {
+  public function providerTestTypedData(): array {
     return [
       [TRUE, TRUE],
       [FALSE, TRUE],
@@ -361,7 +361,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    * @covers ::getTypedData
    * @dataProvider providerTestTypedData
    */
-  public function testTypedData(bool $bundle_typed_data_definition, bool $entity_type_typed_data_definition) {
+  public function testTypedData(bool $bundle_typed_data_definition, bool $entity_type_typed_data_definition): void {
     $expected = EntityAdapter::class;
 
     $typedDataManager = $this->createMock(TypedDataManagerInterface::class);
