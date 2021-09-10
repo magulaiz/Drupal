@@ -111,8 +111,13 @@ class Connection extends DatabaseConnection {
       $connection_options['password'] = str_replace('\\', '\\\\', $connection_options['password']);
     }
 
+    // An empty 'host' will create a socket connection instead of a TCP connection.
+    $host_string = '';
+    if (!empty($connection_options['host'])) {
+      $host_string = 'host=' . $connection_options['host'];
+    }
     $connection_options['database'] = (!empty($connection_options['database']) ? $connection_options['database'] : 'template1');
-    $dsn = 'pgsql:host=' . $connection_options['host'] . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
+    $dsn = 'pgsql:' . $host_string . ' dbname=' . $connection_options['database'] . ' port=' . $connection_options['port'];
 
     // Allow PDO options to be overridden.
     $connection_options += [
