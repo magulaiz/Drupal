@@ -5,6 +5,7 @@ namespace Drupal\ckeditor_test\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\Entity\Editor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -34,6 +35,8 @@ class Llama extends PluginBase implements CKEditorPluginInterface, ContainerFact
    * @var \Drupal\Core\Extension\ModuleExtensionList
    */
   protected $moduleList;
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}

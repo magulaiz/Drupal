@@ -89,23 +89,23 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
 
     $element['link_type'] = [
       '#type' => 'radios',
-      '#title' => t('Allowed link type'),
+      '#title' => $this->t('Allowed link type'),
       '#default_value' => $this->getSetting('link_type'),
       '#options' => [
-        static::LINK_INTERNAL => t('Internal links only'),
-        static::LINK_EXTERNAL => t('External links only'),
-        static::LINK_GENERIC => t('Both internal and external links'),
+        static::LINK_INTERNAL => $this->t('Internal links only'),
+        static::LINK_EXTERNAL => $this->t('External links only'),
+        static::LINK_GENERIC => $this->t('Both internal and external links'),
       ],
     ];
 
     $element['title'] = [
       '#type' => 'radios',
-      '#title' => t('Allow link text'),
+      '#title' => $this->t('Allow link text'),
       '#default_value' => $this->getSetting('title'),
       '#options' => [
-        DRUPAL_DISABLED => t('Disabled'),
-        DRUPAL_OPTIONAL => t('Optional'),
-        DRUPAL_REQUIRED => t('Required'),
+        DRUPAL_DISABLED => $this->t('Disabled'),
+        DRUPAL_OPTIONAL => $this->t('Optional'),
+        DRUPAL_REQUIRED => $this->t('Required'),
       ],
     ];
 

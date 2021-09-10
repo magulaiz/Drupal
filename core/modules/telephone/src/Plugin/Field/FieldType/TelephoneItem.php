@@ -66,7 +66,7 @@ class TelephoneItem extends FieldItemBase {
       'value' => [
         'Length' => [
           'max' => $max_length,
-          'maxMessage' => t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
+          'maxMessage' => $this->t('%name: the telephone number may not be longer than @max characters.', ['%name' => $this->getFieldDefinition()->getLabel(), '@max' => $max_length]),
         ],
       ],
     ]);
