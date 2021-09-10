@@ -369,6 +369,7 @@ class EntityResource {
    *   The response.
    */
   public function deleteIndividual(EntityInterface $entity) {
+    // @todo Replace with entity handlers in: https://www.drupal.org/project/drupal/issues/3230434
     if ($entity->getEntityTypeId() === 'user') {
       $cancel_method = \Drupal::service('config.factory')->get('user.settings')->get('cancel_method');
 
