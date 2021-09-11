@@ -20,31 +20,36 @@ trait StorageCopyTrait {
    *   The configuration storage to copy to.
    */
   protected static function replaceStorageContents(StorageInterface $source, StorageInterface &$target) {
-
+    // Remove all collections from the target which are not in the source.
+    foreach (array_diff($target->getAllCollectionNames(), $source->getAllCollectionNames()) as $collection) {
+      // We do this first so we don't have to loop over the added collections.
+      $target->createCollection($collection)->deleteAll();
+    }
     // Copy all the configuration from all the collections.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $source->getAllCollectionNames()) as $collection) {
       $source_collection = $source->createCollection($collection);
       $target_collection = $target->createCollection($collection);
-      $sourceAll = $source_collection->listAll();
-      foreach ($sourceAll as $name) {
-        $data = $source_collection->read($name);
-        $currentContents = $target_collection->read($name);
-        if ($currentContents == $data) {
-          continue;
+      $names = $source_collection->listAll();
+      // First we delete all the config which shouldn't be in the target.
+      $flipped = array_flip($names);
+      foreach ($target_collection->listAll() as $name) {
+        if (!isset($flipped[$name])) {
+          $target_collection->delete($name);
         }
+      }
+      // Then we loop over the
+      foreach ($names as $name) {
+        $data = $source_collection->read($name);
         if ($data !== FALSE) {
-          $target_collection->write($name, $data);
+          if ($target_collection->read($name) !== $data) {
+            $target_collection->write($name, $data);
+          }
         }
         else {
+          $target_collection->delete($name);
           \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
             '%config' => $name,
           ]);
-        }
-      }
-      $source_collection_values = array_flip($sourceAll);
-      foreach ($target_collection->listAll() as $name) {
-        if (!isset($source_collection_values[$name])) {
-          $target_collection->delete($name);
         }
       }
     }
