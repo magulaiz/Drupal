@@ -4,7 +4,7 @@
  */
 
 /**
- * Essentials, based on http://stackoverflow.com/a/13363408.
+ * Essentials, based on https://stackoverflow.com/a/13363408.
  */
 .caption {
   display: table;
@@ -22,7 +22,7 @@
 /**
  * While editing and whenever the caption is empty, show a placeholder.
  *
- * Based on http://codepen.io/flesler/pen/AEIFc.
+ * Based on https://codepen.io/flesler/pen/AEIFc.
  */
 .caption > figcaption[contenteditable=true]:empty:before {
   content: attr(data-placeholder);
