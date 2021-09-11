@@ -20,17 +20,18 @@ trait StorageCopyTrait {
    *   The configuration storage to copy to.
    */
   protected static function replaceStorageContents(StorageInterface $source, StorageInterface &$target) {
-    // Make sure there is no stale configuration in the target storage.
-    foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $target->getAllCollectionNames()) as $collection) {
-      $target->createCollection($collection)->deleteAll();
-    }
 
     // Copy all the configuration from all the collections.
     foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $source->getAllCollectionNames()) as $collection) {
       $source_collection = $source->createCollection($collection);
       $target_collection = $target->createCollection($collection);
-      foreach ($source_collection->listAll() as $name) {
+      $sourceAll = $source_collection->listAll();
+      foreach ($sourceAll as $name) {
         $data = $source_collection->read($name);
+        $currentContents = $target_collection->read($name);
+        if ($currentContents == $data) {
+          continue;
+        }
         if ($data !== FALSE) {
           $target_collection->write($name, $data);
         }
@@ -38,6 +39,12 @@ trait StorageCopyTrait {
           \Drupal::logger('config')->notice('Missing required data for configuration: %config', [
             '%config' => $name,
           ]);
+        }
+      }
+      $source_collection_values = array_flip($sourceAll);
+      foreach ($target_collection->listAll() as $name) {
+        if (!isset($source_collection_values[$name])) {
+          $target_collection->delete($name);
         }
       }
     }
