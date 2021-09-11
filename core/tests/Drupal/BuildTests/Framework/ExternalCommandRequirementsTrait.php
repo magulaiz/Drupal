@@ -72,7 +72,7 @@ trait ExternalCommandRequirementsTrait {
     // Figure out which commands are not available.
     $unavailable = [];
     foreach ($required_commands as $required_command) {
-      if (!in_array($required_command, self::$existingCommands)) {
+      if (!\in_array($required_command, self::$existingCommands)) {
         if (static::externalCommandIsAvailable($required_command)) {
           // Cache existing commands so we don't have to ask again.
           self::$existingCommands[] = $required_command;

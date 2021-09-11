@@ -46,7 +46,7 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       // Viewing the label of the 'entity_test_label' entity type is allowed.
       return AccessResult::allowed();
     }
-    elseif (in_array($operation, ['view', 'view label'])) {
+    elseif (\in_array($operation, ['view', 'view label'])) {
       if (!$entity->isDefaultTranslation()) {
         if ($entity instanceof EntityPublishedInterface && !$entity->isPublished()) {
           return AccessResult::allowedIfHasPermission($account, 'view unpublished test entity translations');
@@ -57,7 +57,7 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       }
       return AccessResult::allowedIfHasPermission($account, 'view test entity');
     }
-    elseif (in_array($operation, ['update', 'delete'])) {
+    elseif (\in_array($operation, ['update', 'delete'])) {
       $access = AccessResult::allowedIfHasPermission($account, 'administer entity_test content');
       if (!$access->isAllowed() && $operation === 'update' && $account->hasPermission('edit own entity_test content')) {
         $access = $access->orIf(AccessResult::allowedIf($entity->getOwnerId() === $account->id()))->cachePerUser()->addCacheableDependency($entity);

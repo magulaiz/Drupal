@@ -296,7 +296,7 @@ class EntityForm extends FormBase implements EntityFormInterface {
     // properties.
     if (isset($form['#entity_builders'])) {
       foreach ($form['#entity_builders'] as $function) {
-        call_user_func_array($form_state->prepareCallback($function), [$entity->getEntityTypeId(), $entity, &$form, &$form_state]);
+        \call_user_func_array($form_state->prepareCallback($function), [$entity->getEntityTypeId(), $entity, &$form, &$form_state]);
       }
     }
 
@@ -390,11 +390,11 @@ class EntityForm extends FormBase implements EntityFormInterface {
     $implementations = $this->moduleHandler->getImplementations($hook);
     foreach ($implementations as $module) {
       $function = $module . '_' . $hook;
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         // Ensure we pass an updated translation object and form display at
         // each invocation, since they depend on form state which is alterable.
         $args = [$this->entity, $this->operation, &$form_state];
-        call_user_func_array($function, $args);
+        \call_user_func_array($function, $args);
       }
     }
   }

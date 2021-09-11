@@ -62,10 +62,10 @@ final class RelationshipRouteAccessCheck implements AccessInterface {
    */
   public function access(Route $route, RouteMatchInterface $route_match, AccountInterface $account = NULL) {
     [$relationship_field_name, $field_operation] = explode('.', $route->getRequirement(static::ROUTE_REQUIREMENT_KEY));
-    assert(in_array($field_operation, ['view', 'edit'], TRUE));
+    \assert(\in_array($field_operation, ['view', 'edit'], TRUE));
     $entity_operation = $field_operation === 'view' ? 'view' : 'update';
     if ($resource_type = $route_match->getParameter(Routes::RESOURCE_TYPE_KEY)) {
-      assert($resource_type instanceof ResourceType);
+      \assert($resource_type instanceof ResourceType);
       $entity = $route_match->getParameter('entity');
       $internal_name = $resource_type->getInternalName($relationship_field_name);
       if ($entity instanceof FieldableEntityInterface && $entity->hasField($internal_name)) {

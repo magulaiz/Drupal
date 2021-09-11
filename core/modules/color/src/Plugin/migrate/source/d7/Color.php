@@ -83,7 +83,7 @@ class Color extends VariableMultiRow {
     $name = explode('_', $row->getSourceProperty('name'));
 
     // Set theme_installed if this source theme is installed.
-    if (in_array($name[1], $themes_installed)) {
+    if (\in_array($name[1], $themes_installed)) {
       $row->setSourceProperty('theme_installed', TRUE);
     }
 

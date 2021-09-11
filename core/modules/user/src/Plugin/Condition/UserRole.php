@@ -55,7 +55,7 @@ class UserRole extends ConditionPluginBase {
   public function summary() {
     // Use the role labels. They will be sanitized below.
     $roles = array_intersect_key(user_role_names(), $this->configuration['roles']);
-    if (count($roles) > 1) {
+    if (\count($roles) > 1) {
       $roles = implode(', ', $roles);
     }
     else {

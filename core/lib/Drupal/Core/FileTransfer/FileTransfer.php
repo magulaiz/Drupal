@@ -208,7 +208,7 @@ abstract class FileTransfer {
   final protected function checkPath($path) {
     $full_jail = $this->chroot . $this->jail;
     $full_path = \Drupal::service('file_system')
-      ->realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
+      ->realpath(substr($this->chroot . $path, 0, \strlen($full_jail)));
     $full_path = $this->fixRemotePath($full_path, FALSE);
     if ($full_jail !== $full_path) {
       throw new FileTransferException('@directory is outside of the @jail', 0, ['@directory' => $path, '@jail' => $this->jail]);
@@ -236,7 +236,7 @@ abstract class FileTransfer {
     $path = preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
       if ($this->chroot && strpos($path, $this->chroot) === 0) {
-        $path = ($path == $this->chroot) ? '' : substr($path, strlen($this->chroot));
+        $path = ($path == $this->chroot) ? '' : substr($path, \strlen($this->chroot));
       }
     }
     return $path;
@@ -276,7 +276,7 @@ abstract class FileTransfer {
     }
     $this->createDirectory($destination);
     foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
-      $relative_path = substr($filename, strlen($source));
+      $relative_path = substr($filename, \strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);
       }
@@ -362,7 +362,7 @@ abstract class FileTransfer {
     $path = $this->fixRemotePath($path, FALSE);
     $parts = explode('/', $path);
     $chroot = '';
-    while (count($parts)) {
+    while (\count($parts)) {
       $check = implode('/', $parts);
       if ($this->isFile($check . '/' . \Drupal::service('file_system')->basename(__FILE__))) {
         // Remove the trailing slash.

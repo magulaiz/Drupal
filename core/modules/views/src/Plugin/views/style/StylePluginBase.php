@@ -282,20 +282,20 @@ abstract class StylePluginBase extends PluginBase {
       $field_labels = $this->displayHandler->getFieldLabels(TRUE);
       $options += $field_labels;
       // If there are no fields, we can't group on them.
-      if (count($options) > 1) {
+      if (\count($options) > 1) {
         // This is for backward compatibility, when there was just a single
         // select form.
-        if (is_string($this->options['grouping'])) {
+        if (\is_string($this->options['grouping'])) {
           $grouping = $this->options['grouping'];
           $this->options['grouping'] = [];
           $this->options['grouping'][0]['field'] = $grouping;
         }
-        if (isset($this->options['group_rendered']) && is_string($this->options['group_rendered'])) {
+        if (isset($this->options['group_rendered']) && \is_string($this->options['group_rendered'])) {
           $this->options['grouping'][0]['rendered'] = $this->options['group_rendered'];
           unset($this->options['group_rendered']);
         }
 
-        $c = count($this->options['grouping']);
+        $c = \count($this->options['grouping']);
         // Add a form for every grouping, plus one.
         for ($i = 0; $i <= $c; $i++) {
           $grouping = !empty($this->options['grouping'][$i]) ? $this->options['grouping'][$i] : [];
@@ -502,7 +502,7 @@ abstract class StylePluginBase extends PluginBase {
 
       $row = reset($set['rows']);
       // Render as a grouping set.
-      if (is_array($row) && isset($row['group'])) {
+      if (\is_array($row) && isset($row['group'])) {
         $single_output = [
           '#theme' => $theme_functions,
           '#view' => $this->view,
@@ -575,7 +575,7 @@ abstract class StylePluginBase extends PluginBase {
   public function renderGrouping($records, $groupings = [], $group_rendered = NULL) {
     // This is for backward compatibility, when $groupings was a string
     // containing the ID of a single field.
-    if (is_string($groupings)) {
+    if (\is_string($groupings)) {
       $rendered = $group_rendered === NULL ? TRUE : $group_rendered;
       $groupings = [['field' => $groupings, 'rendered' => $rendered]];
     }
@@ -829,7 +829,7 @@ abstract class StylePluginBase extends PluginBase {
       }
       else {
         $result = $plugin->validate();
-        if (!empty($result) && is_array($result)) {
+        if (!empty($result) && \is_array($result)) {
           $errors = array_merge($errors, $result);
         }
       }

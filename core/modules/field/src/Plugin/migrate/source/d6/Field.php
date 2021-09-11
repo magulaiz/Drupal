@@ -78,7 +78,7 @@ class Field extends DrupalSqlBase {
     // Arbitrarily use the first widget_type - if there are multiples, let the
     // migrator know.
     $row->setSourceProperty('widget_type', $widget_types[0]);
-    if (count($widget_types) > 1) {
+    if (\count($widget_types) > 1) {
       $this->migration->getIdMap()->saveMessage(
         ['field_name' => $row->getSourceProperty('field_name')],
         $this->t('Widget types @types are used in Drupal 6 field instances: widget type @selected_type applied to the Drupal 8 base field', [

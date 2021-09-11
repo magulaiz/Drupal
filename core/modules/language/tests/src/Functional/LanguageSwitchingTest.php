@@ -157,7 +157,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     foreach ($language_switchers as $list_item) {
       $classes = explode(" ", $list_item->getAttribute('class'));
       list($langcode) = array_intersect($classes, ['en', 'fr']);
-      if (in_array('is-active', $classes)) {
+      if (\in_array('is-active', $classes)) {
         $links['active'][] = $langcode;
       }
       else {
@@ -166,7 +166,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
 
       $link = $list_item->find('xpath', 'a');
       $anchor_classes = explode(" ", $link->getAttribute('class'));
-      if (in_array('is-active', $anchor_classes)) {
+      if (\in_array('is-active', $anchor_classes)) {
         $anchors['active'][] = $langcode;
       }
       else {

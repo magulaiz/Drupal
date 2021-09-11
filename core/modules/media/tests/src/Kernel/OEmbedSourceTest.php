@@ -128,7 +128,7 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     // If the file extension cannot be derived from the URL, a single HEAD
     // request should be made to try and determine its type from the
     // Content-Type HTTP header.
-    if (is_array($thumbnail_headers)) {
+    if (\is_array($thumbnail_headers)) {
       $response = new Response(200, $thumbnail_headers);
       $http_client->request('HEAD', $thumbnail_url)
         ->willReturn($response)

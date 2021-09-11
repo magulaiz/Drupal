@@ -103,7 +103,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    *   The database connection.
    */
   protected function getDatabase(array $database_contents, $connection_options = []) {
-    if (extension_loaded('pdo_sqlite')) {
+    if (\extension_loaded('pdo_sqlite')) {
       $connection_options['database'] = ':memory:';
       $pdo = Connection::open($connection_options);
       $connection = new Connection($pdo, $connection_options);
@@ -166,7 +166,7 @@ abstract class MigrateTestCase extends UnitTestCase {
         $this->retrievalAssertHelper($expected_value, $this->getValue($data_row, $key), sprintf('Value matches for key "%s"', $key));
       }
     }
-    $this->assertSame(count($expected_results), $count);
+    $this->assertSame(\count($expected_results), $count);
   }
 
   /**
@@ -195,7 +195,7 @@ abstract class MigrateTestCase extends UnitTestCase {
    *   The tested result as a formatted string.
    */
   protected function retrievalAssertHelper($expected_value, $actual_value, $message) {
-    if (is_array($expected_value)) {
+    if (\is_array($expected_value)) {
       // If the expected and actual values are empty, no need to array compare.
       if (empty($expected_value && $actual_value)) {
         return;

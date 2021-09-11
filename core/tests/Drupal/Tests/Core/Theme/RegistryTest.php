@@ -507,5 +507,5 @@ use Drupal\Tests\Core\Theme\RegistryTest;
  * Overrides get_defined_functions() with a configurable mock.
  */
 function get_defined_functions() {
-  return RegistryTest::$functions ?: \get_defined_functions();
+  return RegistryTest::$functions ?: get_defined_functions();
 }

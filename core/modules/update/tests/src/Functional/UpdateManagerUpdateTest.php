@@ -198,7 +198,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
 
     if ($compatible) {
       // Verify the number of rows in the table.
-      $assert_session->elementsCount('css', "$compatible_table_locator tbody tr", count($compatible));
+      $assert_session->elementsCount('css', "$compatible_table_locator tbody tr", \count($compatible));
       // We never want to see a compatibility range in the compatible table.
       $assert_session->elementTextNotContains('css', $compatible_table_locator, 'Requires Drupal core');
       foreach ($compatible as $module => $version) {
@@ -217,7 +217,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
 
     if ($incompatible) {
       // Verify the number of rows in the table.
-      $assert_session->elementsCount('css', "$incompatible_table_locator tbody tr", count($incompatible));
+      $assert_session->elementsCount('css', "$incompatible_table_locator tbody tr", \count($incompatible));
       foreach ($incompatible as $module => $data) {
         $incompatible_row = "$incompatible_table_locator tbody tr:contains('$module Update test')";
         $assert_session->elementTextContains('css', "$incompatible_row td:nth-of-type(1)", "$module Update test");

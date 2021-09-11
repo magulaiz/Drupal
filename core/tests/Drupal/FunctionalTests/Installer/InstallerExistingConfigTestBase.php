@@ -62,7 +62,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
     mkdir($config_sync_directory, 0777, TRUE);
     $files = [];
     $list = $archiver->listContent();
-    if (is_array($list)) {
+    if (\is_array($list)) {
       /** @var array $list */
       foreach ($list as $file) {
         $files[] = $file['filename'];

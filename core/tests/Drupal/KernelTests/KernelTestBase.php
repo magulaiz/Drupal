@@ -485,7 +485,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
       //   https://www.drupal.org/node/2447753.
-      if (function_exists('apcu_fetch')) {
+      if (\function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = ApcuFileCacheBackend::class;
       }
     }
@@ -621,7 +621,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
     while ($callback = array_shift($callbacks)) {
-      call_user_func_array($callback['callback'], $callback['arguments']);
+      \call_user_func_array($callback['callback'], $callback['arguments']);
     }
 
     // Shut down the kernel (if bootKernel() was called).
@@ -679,7 +679,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     FileCache::reset();
 
     // Clean up statics, container, and settings.
-    if (function_exists('drupal_static_reset')) {
+    if (\function_exists('drupal_static_reset')) {
       drupal_static_reset();
     }
     \Drupal::unsetContainer();
@@ -751,7 +751,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       // The tables key_value and key_value_expire are lazy loaded and therefore
       // no longer have to be created with the installSchema() method.
       // @see https://www.drupal.org/node/3143286
-      if ($module === 'system' && in_array($table, ['key_value', 'key_value_expire'])) {
+      if ($module === 'system' && \in_array($table, ['key_value', 'key_value_expire'])) {
         @trigger_error('Installing the tables key_value and key_value_expire with the method KernelTestBase::installSchema() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. The tables are now lazy loaded and therefore will be installed automatically when used. See https://www.drupal.org/node/3143286', E_USER_DEPRECATED);
         continue;
       }
@@ -995,7 +995,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // defined by base classes should be sorted first. Then, merge the results
     // together.
     $modules = array_values(array_reverse($modules));
-    return call_user_func_array('array_merge_recursive', $modules);
+    return \call_user_func_array('array_merge_recursive', $modules);
   }
 
   /**

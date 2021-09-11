@@ -27,7 +27,7 @@ trait FieldInputValueNormalizerTrait {
     if (!isset($value) || $value === NULL) {
       return [];
     }
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       if ($main_property_name === NULL) {
         throw new \InvalidArgumentException('A main property is required when normalizing scalar field values.');
       }

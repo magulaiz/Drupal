@@ -177,7 +177,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     if (isset($data['uuid'])) {
       $uuid = $data['uuid'];
       // The value may be a nested array like $uuid[0]['value'].
-      if (is_array($uuid) && isset($uuid[0]['value'])) {
+      if (\is_array($uuid) && isset($uuid[0]['value'])) {
         $uuid = $uuid[0]['value'];
       }
       return $uuid;

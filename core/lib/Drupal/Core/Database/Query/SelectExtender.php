@@ -76,14 +76,14 @@ class SelectExtender implements SelectInterface {
    * {@inheritdoc}
    */
   public function hasAllTags() {
-    return call_user_func_array([$this->query, 'hasAllTags'], func_get_args());
+    return \call_user_func_array([$this->query, 'hasAllTags'], \func_get_args());
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasAnyTag() {
-    return call_user_func_array([$this->query, 'hasAnyTag'], func_get_args());
+    return \call_user_func_array([$this->query, 'hasAnyTag'], \func_get_args());
   }
 
   /**
@@ -510,7 +510,7 @@ class SelectExtender implements SelectInterface {
    * to handle any additional methods.
    */
   public function __call($method, $args) {
-    $return = call_user_func_array([$this->query, $method], $args);
+    $return = \call_user_func_array([$this->query, $method], $args);
 
     // Some methods will return the called object as part of a fluent interface.
     // Others will return some useful value.  If it's a value, then the caller

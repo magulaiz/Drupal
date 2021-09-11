@@ -572,7 +572,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Note: deserialization of the XML format is not supported, so only test
     // this for other formats.
     if (static::$format !== 'xml') {
-      $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+      $unserialized = $this->serializer->deserialize((string) $response->getBody(), \get_class($this->entity), static::$format);
       $this->assertSame($unserialized->uuid(), $this->entity->uuid());
 
     }
@@ -605,7 +605,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $ignored_headers = ['Date', 'Content-Length', 'X-Drupal-Cache', 'X-Drupal-Dynamic-Cache', 'Transfer-Encoding', 'Vary'];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (strpos($header, 'X-Drupal-Assertion-') === 0 || \in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }
@@ -672,13 +672,13 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   protected static function castToString(array $normalization) {
     foreach ($normalization as $key => $value) {
-      if (is_bool($value)) {
+      if (\is_bool($value)) {
         $normalization[$key] = (string) (int) $value;
       }
-      elseif (is_int($value) || is_float($value)) {
+      elseif (\is_int($value) || \is_float($value)) {
         $normalization[$key] = (string) $value;
       }
-      elseif (is_array($value)) {
+      elseif (\is_array($value)) {
         $normalization[$key] = static::castToString($value);
       }
     }
@@ -820,7 +820,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
     // If the entity is stored, perform extra checks.
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+    if (\get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
       // Assert that the entity was indeed created, and that the response body
       // contains the serialized created entity.
       $created_entity = $this->entityStorage->loadUnchanged(static::$firstCreatedEntityId);
@@ -1208,7 +1208,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   protected function assertPatchProtectedFieldNamesStructure() {
     $is_null_or_string = function ($value) {
-      return is_null($value) || is_string($value);
+      return \is_null($value) || \is_string($value);
     };
     $this->assertTrue(
       Inspector::assertAllStrings(array_keys(static::$patchProtectedFieldNames)),
@@ -1412,7 +1412,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
           foreach ($field_normalization as $delta => $expected_field_item_normalization) {
             foreach ($property_definitions as $property_name => $property_definition) {
               // Not every property is required to be sent.
-              if (!array_key_exists($property_name, $field_normalization[$delta])) {
+              if (!\array_key_exists($property_name, $field_normalization[$delta])) {
                 continue;
               }
               // Computed properties are not stored.
@@ -1448,7 +1448,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   protected function assertEntityArraySubset($expected, $actual) {
     foreach ($expected as $key => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $this->assertEntityArraySubset($value, $actual[$key]);
       }
       else {

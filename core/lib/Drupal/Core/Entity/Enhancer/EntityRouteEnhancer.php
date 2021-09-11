@@ -121,14 +121,14 @@ class EntityRouteEnhancer implements EnhancerInterface {
       // The entity is not keyed by its entity_type. Attempt to find it
       // using a converter.
       $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
-      if ($route && is_object($route)) {
+      if ($route && \is_object($route)) {
         $options = $route->getOptions();
         if (isset($options['parameters'])) {
           foreach ($options['parameters'] as $name => $details) {
             if (!empty($details['type'])) {
               $type = $details['type'];
               // Type is of the form entity:{entity_type}.
-              $parameter_entity_type = substr($type, strlen('entity:'));
+              $parameter_entity_type = substr($type, \strlen('entity:'));
               if ($entity_type == $parameter_entity_type) {
                 // We have the matching entity type. Set the '_entity' key
                 // to point to this named placeholder. The entity in this

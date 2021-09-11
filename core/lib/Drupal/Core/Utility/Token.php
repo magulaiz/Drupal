@@ -252,7 +252,7 @@ class Token {
     // $tokens grouped by $types, pointing to the version of the token found in
     // the source text. For example, $results['node']['title'] = '[node:title]';
     $results = [];
-    for ($i = 0; $i < count($tokens); $i++) {
+    for ($i = 0; $i < \count($tokens); $i++) {
       $results[$types[$i]][$tokens[$i]] = $matches[0][$i];
     }
 
@@ -346,7 +346,7 @@ class Token {
     $results = [];
     foreach ($tokens as $token => $raw) {
       $parts = explode($delimiter, $token, 2);
-      if (count($parts) == 2 && $parts[0] == $prefix) {
+      if (\count($parts) == 2 && $parts[0] == $prefix) {
         $results[$parts[1]] = $raw;
       }
     }
@@ -367,7 +367,7 @@ class Token {
    * @see hook_token_info()
    */
   public function getInfo() {
-    if (is_null($this->tokenInfo)) {
+    if (\is_null($this->tokenInfo)) {
       $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       $cache = $this->cache->get($cache_id);
       if ($cache) {

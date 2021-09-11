@@ -73,7 +73,7 @@ trait AssertLegacyTrait {
    */
   protected function assertText($text) {
     @trigger_error('AssertLegacyTrait::assertText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
     // Cast MarkupInterface to string.
@@ -116,7 +116,7 @@ trait AssertLegacyTrait {
    */
   protected function assertNoText($text) {
     @trigger_error('AssertLegacyTrait::assertNoText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertNoText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
 
@@ -383,7 +383,7 @@ trait AssertLegacyTrait {
    */
   protected function assertRaw($raw) {
     @trigger_error('AssertLegacyTrait::assertRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
     $this->assertSession()->responseContains($raw);
@@ -404,7 +404,7 @@ trait AssertLegacyTrait {
    */
   protected function assertNoRaw($raw) {
     @trigger_error('AssertLegacyTrait::assertNoRaw() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertNoRaw() with more that one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
     $this->assertSession()->responseNotContains($raw);
@@ -537,7 +537,7 @@ trait AssertLegacyTrait {
    */
   protected function assertUrl($path) {
     @trigger_error('AssertLegacyTrait::assertUrl() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling AssertLegacyTrait::assertUrl() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->addressEquals() instead. See https://www.drupal.org/node/3129738', E_USER_DEPRECATED);
     }
     $this->assertSession()->addressEquals($path);
@@ -748,7 +748,7 @@ trait AssertLegacyTrait {
       if ($fields) {
         foreach ($fields as $field) {
           if ($field->getAttribute('type') == 'checkbox') {
-            if (is_bool($value)) {
+            if (\is_bool($value)) {
               $found = $field->isChecked() == $value;
             }
             else {

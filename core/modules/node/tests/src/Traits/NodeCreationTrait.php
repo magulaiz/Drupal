@@ -79,7 +79,7 @@ trait NodeCreationTrait {
       'type'      => 'page',
     ];
 
-    if (!array_key_exists('uid', $values)) {
+    if (!\array_key_exists('uid', $values)) {
       $user = User::load(\Drupal::currentUser()->id());
       if ($user) {
         $values['uid'] = $user->id();

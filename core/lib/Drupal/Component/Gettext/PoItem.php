@@ -198,7 +198,7 @@ class PoItem {
         strpos($this->source, self::DELIMITER) !== FALSE) {
       $this->setSource(explode(self::DELIMITER, $this->source));
       $this->setTranslation(explode(self::DELIMITER, $this->translation));
-      $this->setPlural(count($this->source) > 1);
+      $this->setPlural(\count($this->source) > 1);
     }
   }
 
@@ -280,7 +280,7 @@ class PoItem {
 
     // Multiline string should be exported starting with a "" and newline to
     // have all lines aligned on the same column.
-    if (count($parts) > 1) {
+    if (\count($parts) > 1) {
       return "\"\"\n\"" . implode("\"\n\"", $parts) . "\"\n";
     }
     // Single line strings are output on the same line.

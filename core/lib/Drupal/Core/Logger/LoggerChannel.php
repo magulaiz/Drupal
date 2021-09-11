@@ -118,7 +118,7 @@ class LoggerChannel implements LoggerChannelInterface {
       }
     }
 
-    if (is_string($level)) {
+    if (\is_string($level)) {
       // Convert to integer equivalent for consistency with RFC 5424.
       $level = $this->levelTranslation[$level];
     }

@@ -311,7 +311,7 @@ class DbUpdateController extends ControllerBase {
           }
         }
         if (isset($update['pending'])) {
-          $count = $count + count($update['pending']);
+          $count = $count + \count($update['pending']);
         }
       }
     }

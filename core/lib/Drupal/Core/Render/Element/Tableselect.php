@@ -97,7 +97,7 @@ class Tableselect extends Table {
         return $value;
       }
       else {
-        return is_array($input) ? array_combine($input, $input) : [];
+        return \is_array($input) ? array_combine($input, $input) : [];
       }
     }
   }
@@ -170,7 +170,7 @@ class Tableselect extends Table {
             // A header can span over multiple cells and in this case the cells
             // are passed in an array. The order of this array determines the
             // order in which they are added.
-            if (is_array($element['#options'][$key][$fieldname]) && !isset($element['#options'][$key][$fieldname]['data'])) {
+            if (\is_array($element['#options'][$key][$fieldname]) && !isset($element['#options'][$key][$fieldname]['data'])) {
               foreach ($element['#options'][$key][$fieldname] as $cell) {
                 $row['data'][] = $cell;
               }
@@ -218,7 +218,7 @@ class Tableselect extends Table {
    */
   public static function processTableselect(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#multiple']) {
-      $value = is_array($element['#value']) ? $element['#value'] : [];
+      $value = \is_array($element['#value']) ? $element['#value'] : [];
     }
     else {
       // Advanced selection behavior makes no sense for radios.
@@ -227,7 +227,7 @@ class Tableselect extends Table {
 
     $element['#tree'] = TRUE;
 
-    if (count($element['#options']) > 0) {
+    if (\count($element['#options']) > 0) {
       if (!isset($element['#default_value']) || $element['#default_value'] === 0) {
         $element['#default_value'] = [];
       }
@@ -240,7 +240,7 @@ class Tableselect extends Table {
         if (!isset($element[$key])) {
           if ($element['#multiple']) {
             $title = '';
-            if (isset($element['#options'][$key]['title']) && is_array($element['#options'][$key]['title'])) {
+            if (isset($element['#options'][$key]['title']) && \is_array($element['#options'][$key]['title'])) {
               if (!empty($element['#options'][$key]['title']['data']['#title'])) {
                 $title = new TranslatableMarkup('Update @title', [
                   '@title' => $element['#options'][$key]['title']['data']['#title'],

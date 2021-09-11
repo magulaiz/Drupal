@@ -1172,7 +1172,7 @@ class ConfigTranslationUiTest extends BrowserTestBase {
    */
   protected function renderContextualLinks($ids, $current_path) {
     $post = [];
-    for ($i = 0; $i < count($ids); $i++) {
+    for ($i = 0; $i < \count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
     return $this->drupalPostWithFormat('contextual/render', 'json', $post, ['query' => ['destination' => $current_path]]);

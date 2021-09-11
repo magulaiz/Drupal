@@ -76,7 +76,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     $last_statement_index = max(array_keys($executed_statements));
 
     $cachetag_statements = array_keys($this->getStatementsForTable(\Drupal::database()->getLoggedStatements(), 'cachetags'));
-    $this->assertSame($last_statement_index - count($cachetag_statements) + 1, min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
+    $this->assertSame($last_statement_index - \count($cachetag_statements) + 1, min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
 
     // Verify that a nested entity save occurred.
     $this->assertSame('johndoe', User::load(1)->getAccountName());

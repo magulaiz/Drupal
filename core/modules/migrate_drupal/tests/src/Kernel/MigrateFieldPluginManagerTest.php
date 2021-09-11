@@ -114,7 +114,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
     ];
     foreach ($definitions as $id => $definition) {
       $this->assertArrayHasKey('weight', $definition);
-      if (in_array($id, $deprecated_plugins, TRUE)) {
+      if (\in_array($id, $deprecated_plugins, TRUE)) {
         $this->assertSame(9999999, $definition['weight']);
       }
       else {

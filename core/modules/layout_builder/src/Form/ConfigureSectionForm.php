@@ -111,7 +111,7 @@ class ConfigureSectionForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state, SectionStorageInterface $section_storage = NULL, $delta = NULL, $plugin_id = NULL) {
     $this->sectionStorage = $section_storage;
     $this->delta = $delta;
-    $this->isUpdate = is_null($plugin_id);
+    $this->isUpdate = \is_null($plugin_id);
 
     if ($this->isUpdate) {
       $section = $this->sectionStorage->getSection($this->delta);

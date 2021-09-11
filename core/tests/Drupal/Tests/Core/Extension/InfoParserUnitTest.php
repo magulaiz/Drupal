@@ -710,7 +710,7 @@ INFO;
     if (!empty($lifecycle)) {
       $info .= "\nlifecycle: $lifecycle\n";
     }
-    if (in_array($lifecycle, [ExtensionLifecycle::DEPRECATED, ExtensionLifecycle::OBSOLETE], TRUE)) {
+    if (\in_array($lifecycle, [ExtensionLifecycle::DEPRECATED, ExtensionLifecycle::OBSOLETE], TRUE)) {
       $info .= "\nlifecycle_link: http://example.com\n";
     }
     vfsStream::setup('modules');

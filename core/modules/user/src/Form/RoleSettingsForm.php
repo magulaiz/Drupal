@@ -73,7 +73,7 @@ class RoleSettingsForm extends FormBase {
       '#description' => $this->t('This role will be automatically assigned new permissions whenever a module is enabled. Changing this setting will not affect existing permissions.'),
       // Don't allow to select a single admin role in case multiple roles got
       // marked as admin role already.
-      '#access' => count($admin_roles) <= 1,
+      '#access' => \count($admin_roles) <= 1,
     ];
 
     $form['actions'] = ['#type' => 'actions'];

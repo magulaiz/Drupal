@@ -661,7 +661,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table, $this->definitionFields());
     foreach ($properties as $name => $value) {
-      if (!in_array($name, $this->definitionFields(), TRUE)) {
+      if (!\in_array($name, $this->definitionFields(), TRUE)) {
         $fields = implode(', ', $this->definitionFields());
         throw new \InvalidArgumentException("An invalid property name, $name was specified. Allowed property names are: $fields.");
       }
@@ -953,14 +953,14 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $parameters->conditions = array_intersect_key($parameters->conditions, array_flip($this->definitionFields()));
       $serialized_fields = $this->serializedFields();
       foreach ($parameters->conditions as $column => $value) {
-        if (is_array($value)) {
+        if (\is_array($value)) {
           $operator = $value[1];
           $value = $value[0];
         }
         else {
           $operator = '=';
         }
-        if (in_array($column, $serialized_fields)) {
+        if (\in_array($column, $serialized_fields)) {
           $value = serialize($value);
         }
         $query->condition($column, $value, $operator);
@@ -1129,7 +1129,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         'has_children' => $tree_link_definition['has_children'],
         // We need to determine if we're on the path to root so we can later
         // build the correct active trail.
-        'in_active_trail' => in_array($tree_link_definition['id'], $parents),
+        'in_active_trail' => \in_array($tree_link_definition['id'], $parents),
         'subtree' => [],
         'depth' => $tree_link_definition['depth'],
       ];

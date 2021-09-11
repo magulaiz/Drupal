@@ -294,7 +294,7 @@ class CommentForm extends ContentEntityForm {
       // Admin can leave the author ID blank to revert to anonymous.
       $author_id = $author_id ?: 0;
     }
-    if (!is_null($author_id)) {
+    if (!\is_null($author_id)) {
       if ($author_id === 0 && $form['author']['name']['#access']) {
         // Use the author name value when the form has access to the element and
         // the author ID is anonymous.

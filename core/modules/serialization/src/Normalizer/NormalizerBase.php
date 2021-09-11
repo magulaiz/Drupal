@@ -33,7 +33,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
   public function supportsNormalization($data, $format = NULL) {
     // If we aren't dealing with an object or the format is not supported return
     // now.
-    if (!is_object($data) || !$this->checkFormat($format)) {
+    if (!\is_object($data) || !$this->checkFormat($format)) {
       return FALSE;
     }
 
@@ -63,7 +63,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
       return (class_exists($name) || interface_exists($name)) && is_subclass_of($type, $name, TRUE);
     };
 
-    return in_array($type, $supported) || array_filter($supported, $subclass_check);
+    return \in_array($type, $supported) || array_filter($supported, $subclass_check);
   }
 
   /**
@@ -81,7 +81,7 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
       return TRUE;
     }
 
-    return in_array($format, (array) $this->format, TRUE);
+    return \in_array($format, (array) $this->format, TRUE);
   }
 
   /**

@@ -148,7 +148,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     // and searching has to happen in the same request, so running the shutdown
     // function manually is needed to finish the indexing process.
     $search_index = \Drupal::service('search.index');
-    assert($search_index instanceof SearchIndexInterface);
+    \assert($search_index instanceof SearchIndexInterface);
     $this->assertIndexCounts(6, 8, 'after updating partially');
     $this->assertDatabaseCounts(2, 0, 'after updating partially');
 

@@ -123,14 +123,14 @@ final class SecurityAdvisoriesFetcher {
     $json_payload = $this->keyValueExpirable->get(self::ADVISORIES_JSON_EXPIRABLE_KEY);
     // If $json_payload is not an array then it was not set in this method or
     // has expired in which case we should try to retrieve the advisories.
-    if (!is_array($json_payload)) {
+    if (!\is_array($json_payload)) {
       if (!$allow_outgoing_request) {
         return NULL;
       }
       $response = $this->doRequest($timeout);
       $interval_seconds = $this->config->get('interval_hours') * 60 * 60;
       $json_payload = Json::decode($response);
-      if (is_array($json_payload)) {
+      if (\is_array($json_payload)) {
         // Only store and use the response if it could be successfully
         // decoded to an array from the JSON string.
         // This value will be deleted if the 'advisories.interval_hours' config
@@ -221,7 +221,7 @@ final class SecurityAdvisoriesFetcher {
       else {
         // If the existing version is not a dev version, then it must match an
         // insecure version exactly.
-        return in_array($existing_version, $insecure_versions, TRUE);
+        return \in_array($existing_version, $insecure_versions, TRUE);
       }
     }
     return FALSE;

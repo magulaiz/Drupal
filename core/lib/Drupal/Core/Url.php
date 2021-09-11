@@ -292,7 +292,7 @@ class Url implements TrustedCallbackInterface {
     }
     $uri_parts += ['path' => ''];
     // Discard empty fragment in $options for consistency with parse_url().
-    if (isset($options['fragment']) && strlen($options['fragment']) == 0) {
+    if (isset($options['fragment']) && \strlen($options['fragment']) == 0) {
       unset($options['fragment']);
     }
     // Extract query parameters and fragment and merge them into $uri_options,
@@ -530,7 +530,7 @@ class Url implements TrustedCallbackInterface {
       $uri = $this->uri;
     }
     $query = !empty($this->options['query']) ? ('?' . UrlHelper::buildQuery($this->options['query'])) : '';
-    $fragment = isset($this->options['fragment']) && strlen($this->options['fragment']) ? '#' . $this->options['fragment'] : '';
+    $fragment = isset($this->options['fragment']) && \strlen($this->options['fragment']) ? '#' . $this->options['fragment'] : '';
     return $uri . $query . $fragment;
   }
 
@@ -775,7 +775,7 @@ class Url implements TrustedCallbackInterface {
       '#options' => $this->getOptions(),
     ];
     if (!$this->unrouted) {
-      $render_array['#access_callback'] = [get_class(), 'renderAccess'];
+      $render_array['#access_callback'] = [\get_class(), 'renderAccess'];
     }
     return $render_array;
   }

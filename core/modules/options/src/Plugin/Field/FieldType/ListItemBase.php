@@ -130,7 +130,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   public static function validateAllowedValues($element, FormStateInterface $form_state) {
     $values = static::extractAllowedValues($element['#value'], $element['#field_has_data']);
 
-    if (!is_array($values)) {
+    if (!\is_array($values)) {
       $form_state->setError($element, t('Allowed values list: invalid input.'));
     }
     else {
@@ -279,7 +279,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   protected static function simplifyAllowedValues(array $structured_values) {
     $values = [];
     foreach ($structured_values as $item) {
-      if (is_array($item['label'])) {
+      if (\is_array($item['label'])) {
         // Nested elements are embedded in the label.
         $item['label'] = static::simplifyAllowedValues($item['label']);
       }
@@ -304,7 +304,7 @@ abstract class ListItemBase extends FieldItemBase implements OptionsProviderInte
   protected static function structureAllowedValues(array $values) {
     $structured_values = [];
     foreach ($values as $value => $label) {
-      if (is_array($label)) {
+      if (\is_array($label)) {
         $label = static::structureAllowedValues($label);
       }
       $structured_values[] = [

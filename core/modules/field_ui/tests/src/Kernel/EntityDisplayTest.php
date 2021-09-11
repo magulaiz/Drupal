@@ -692,7 +692,7 @@ class EntityDisplayTest extends KernelTestBase {
     $all_dependencies = $display->getDependencies();
     $dependencies = !empty($all_dependencies[$type]) ? $all_dependencies[$type] : [];
     $context = $display instanceof EntityViewDisplayInterface ? 'View' : 'Form';
-    $value = $assertion ? in_array($key, $dependencies) : !in_array($key, $dependencies);
+    $value = $assertion ? \in_array($key, $dependencies) : !\in_array($key, $dependencies);
     $args = ['@context' => $context, '@id' => $display->id(), '@type' => $type, '@key' => $key];
     $message = $assertion ? new FormattableMarkup("@context display '@id' depends on @type '@key'.", $args) : new FormattableMarkup("@context display '@id' do not depend on @type '@key'.", $args);
     $this->assertTrue($value, $message);

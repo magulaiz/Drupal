@@ -165,7 +165,7 @@ class EntityUser extends EntityContentBase {
 
     // @todo Work-around for https://www.drupal.org/node/2602066.
     $name = $row->getDestinationProperty('name');
-    if (is_array($name)) {
+    if (\is_array($name)) {
       $name = reset($name);
     }
     if (mb_strlen($name) > UserInterface::USERNAME_MAX_LENGTH) {

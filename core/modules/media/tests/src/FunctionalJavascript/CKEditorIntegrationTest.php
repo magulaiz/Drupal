@@ -1581,7 +1581,7 @@ JS;
     $dom = Html::load($value);
     $xpath = new \DOMXPath($dom);
     $list = $xpath->query('//drupal-media');
-    return count($list) > 0 ? $list[0] : NULL;
+    return \count($list) > 0 ? $list[0] : NULL;
   }
 
 }

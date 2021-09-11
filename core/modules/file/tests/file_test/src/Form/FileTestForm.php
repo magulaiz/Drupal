@@ -112,7 +112,7 @@ class FileTestForm implements FormInterface {
     // triggering a warning is unavoidable. We're interested in what happens
     // afterwards in file_save_upload().
     if (\Drupal::state()->get('file_test.disable_error_collection')) {
-      define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+      \define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
 
     $file = file_save_upload('file_test_upload', $validators, $destination, 0, $form_state->getValue('file_test_replace'));

@@ -32,11 +32,11 @@ class ContentTypeHeaderMatcher implements FilterInterface {
         // list and exact matching routes stay on top.
         $collection->add($name, $route);
       }
-      elseif (!in_array($format, $supported_formats)) {
+      elseif (!\in_array($format, $supported_formats)) {
         $collection->remove($name);
       }
     }
-    if (count($collection)) {
+    if (\count($collection)) {
       return $collection;
     }
     // We do not throw a

@@ -38,7 +38,7 @@ class TestHttpClientMiddleware {
               if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $header_name, $matches)) {
                 foreach ($header_values as $header_value) {
                   $parameters = unserialize(urldecode($header_value));
-                  if (count($parameters) === 3) {
+                  if (\count($parameters) === 3) {
                     if ($parameters[1] === 'User deprecated function') {
                       // Fire the same deprecation message to allow it to be
                       // collected by

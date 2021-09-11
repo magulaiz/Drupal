@@ -23,7 +23,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertNotFalse($result, 'Unnamed file saved correctly.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
+    \assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
     $this->assertEquals(\Drupal::config('system.file')->get('default_scheme'), $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEquals(\Drupal::service('file_system')->basename($result->getFileUri()), $result->getFilename(), "Filename was set to the file's basename.");
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
@@ -51,7 +51,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertNotFalse($result, 'Unnamed file saved correctly.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
+    \assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
     $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEquals($filename, \Drupal::service('file_system')->basename($result->getFileUri()), 'File was named correctly.');
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
@@ -77,7 +77,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
+    \assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
     $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEquals($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the source, rather than that of the renamed file.');
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');
@@ -107,7 +107,7 @@ class SaveDataTest extends FileManagedUnitTestBase {
     $this->assertNotFalse($result, 'File saved successfully.');
 
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
-    assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
+    \assert($stream_wrapper_manager instanceof StreamWrapperManagerInterface);
     $this->assertEquals('public', $stream_wrapper_manager::getScheme($result->getFileUri()), "File was placed in Drupal's files directory.");
     $this->assertEquals($existing->getFilename(), $result->getFilename(), 'Filename was set to the basename of the existing file, rather than preserving the original name.');
     $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of the file are correct.');

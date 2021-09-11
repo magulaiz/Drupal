@@ -343,7 +343,7 @@ class RenderCache implements RenderCacheInterface {
     // children of the element, we assume we are only interested in their
     // individual markup and not the parent's one, thus we empty it to minimize
     // the cache entry size.
-    if (!empty($elements['#cache_properties']) && is_array($elements['#cache_properties'])) {
+    if (!empty($elements['#cache_properties']) && \is_array($elements['#cache_properties'])) {
       $data['#cache_properties'] = $elements['#cache_properties'];
 
       // Extract all the cacheable items from the element using cache

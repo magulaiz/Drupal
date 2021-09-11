@@ -160,9 +160,9 @@ class RequestSanitizer {
    *   The sanitized input.
    */
   protected static function stripDangerousValues($input, array $safe_keys, array &$sanitized_keys) {
-    if (is_array($input)) {
+    if (\is_array($input)) {
       foreach ($input as $key => $value) {
-        if ($key !== '' && ((string) $key)[0] === '#' && !in_array($key, $safe_keys, TRUE)) {
+        if ($key !== '' && ((string) $key)[0] === '#' && !\in_array($key, $safe_keys, TRUE)) {
           unset($input[$key]);
           $sanitized_keys[] = $key;
         }

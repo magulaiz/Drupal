@@ -203,7 +203,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       }
 
       // Throw an exception if the theme name is too long.
-      if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+      if (\strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
         throw new ExtensionNameLengthException("Theme name $key is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters.');
       }
 
@@ -267,7 +267,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // they are not uninstalled at the same time.
       if (!empty($list[$key]->sub_themes)) {
         foreach ($list[$key]->sub_themes as $sub_key => $sub_label) {
-          if (isset($list[$sub_key]) && !in_array($sub_key, $theme_list, TRUE)) {
+          if (isset($list[$sub_key]) && !\in_array($sub_key, $theme_list, TRUE)) {
             throw new \InvalidArgumentException("The base theme $key cannot be uninstalled, because theme $sub_key depends on it.");
           }
         }

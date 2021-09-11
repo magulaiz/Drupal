@@ -42,7 +42,7 @@ class JsonTest extends TestCase {
     // @todo: Add tests for non-ASCII characters and Unicode.
     $this->string = '';
     for ($i = 1; $i < 128; $i++) {
-      $this->string .= chr($i);
+      $this->string .= \chr($i);
     }
 
     // Characters that must be escaped.
@@ -57,7 +57,7 @@ class JsonTest extends TestCase {
    */
   public function testEncodingAscii() {
     // Verify there aren't character encoding problems with the source string.
-    $this->assertSame(127, strlen($this->string), 'A string with the full ASCII table has the correct length.');
+    $this->assertSame(127, \strlen($this->string), 'A string with the full ASCII table has the correct length.');
     foreach ($this->htmlUnsafe as $char) {
       $this->assertStringContainsString($char, $this->string, sprintf('A string with the full ASCII table includes %s.', $char));
     }
@@ -70,7 +70,7 @@ class JsonTest extends TestCase {
     // Verify that JSON encoding produces a string with all of the characters.
     $json = Json::encode($this->string);
     // Verify that a JSON-encoded string is larger than the source string.
-    $this->assertGreaterThan(strlen($this->string), strlen($json));
+    $this->assertGreaterThan(\strlen($this->string), \strlen($json));
   }
 
   /**

@@ -385,7 +385,7 @@ class HandlerTest extends ViewTestBase {
     $view->initHandlers();
 
     foreach ($views_data['access_callback'] as $type => $info) {
-      if (!in_array($type, ['title', 'help'])) {
+      if (!\in_array($type, ['title', 'help'])) {
         $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback']);
         $this->assertFalse(isset($view->field['access_callback_arguments']), 'Make sure the user got no access to the access_callback_arguments field ');
       }
@@ -399,7 +399,7 @@ class HandlerTest extends ViewTestBase {
     $view->initHandlers();
 
     foreach ($views_data['access_callback'] as $type => $info) {
-      if (!in_array($type, ['title', 'help'])) {
+      if (!\in_array($type, ['title', 'help'])) {
         $this->assertFalse(isset($view->field['access_callback']), 'Make sure the user got no access to the access_callback field ');
         $this->assertInstanceOf(HandlerBase::class, $view->field['access_callback_arguments']);
       }

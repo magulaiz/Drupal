@@ -100,7 +100,7 @@ class WorkspaceMergeForm extends ConfirmFormBase implements WorkspaceFormInterfa
         '#total_count' => $total_count,
       ];
       foreach ($source_rev_diff as $entity_type_id => $revision_difference) {
-        $form['merge']['#items'][$entity_type_id] = $this->entityTypeManager->getDefinition($entity_type_id)->getCountLabel(count($revision_difference));
+        $form['merge']['#items'][$entity_type_id] = $this->entityTypeManager->getDefinition($entity_type_id)->getCountLabel(\count($revision_difference));
       }
     }
 

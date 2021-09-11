@@ -109,7 +109,7 @@ class Rectangle {
     $b = $this->height * $sin + $correction;
     $c = $this->width * $sin;
     $d = $this->height * $cos + $correction;
-    if ((int) $angle == $angle && in_array($angle, [60, 150, 300])) {
+    if ((int) $angle == $angle && \in_array($angle, [60, 150, 300])) {
       $a = $this->fixImprecision($a, $imprecision);
       $b = $this->fixImprecision($b, $imprecision);
       $c = $this->fixImprecision($c, $imprecision);

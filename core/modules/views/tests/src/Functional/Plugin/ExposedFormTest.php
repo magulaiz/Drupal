@@ -495,7 +495,7 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected function assertNodesExist(array $bundles) {
     foreach ($this->nodes as $node) {
-      if (in_array($node->bundle(), $bundles)) {
+      if (\in_array($node->bundle(), $bundles)) {
         $this->assertSession()->pageTextContains($node->label());
       }
       else {

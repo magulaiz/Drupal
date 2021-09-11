@@ -363,7 +363,7 @@ class Sql extends QueryPluginBase {
     if (empty($link_point)) {
       $link_point = $this->view->storage->get('base_table');
     }
-    elseif (!array_key_exists($link_point, $this->relationships)) {
+    elseif (!\array_key_exists($link_point, $this->relationships)) {
       return FALSE;
     }
 
@@ -482,7 +482,7 @@ class Sql extends QueryPluginBase {
       $relationship = $this->view->storage->get('base_table');
     }
 
-    if (!array_key_exists($relationship, $this->relationships)) {
+    if (!\array_key_exists($relationship, $this->relationships)) {
       return FALSE;
     }
 
@@ -591,7 +591,7 @@ class Sql extends QueryPluginBase {
       return $this->tables[$relationship][$table]['alias'];
     }
 
-    if (!array_key_exists($relationship, $this->relationships)) {
+    if (!\array_key_exists($relationship, $this->relationships)) {
       return FALSE;
     }
 
@@ -661,7 +661,7 @@ class Sql extends QueryPluginBase {
       $relationship = $this->view->storage->get('base_table');
     }
 
-    if (!array_key_exists($relationship, $this->relationships)) {
+    if (!\array_key_exists($relationship, $this->relationships)) {
       return FALSE;
     }
 
@@ -1055,7 +1055,7 @@ class Sql extends QueryPluginBase {
    */
   public function addGroupBy($clause) {
     // Only add it if it's not already in there.
-    if (!in_array($clause, $this->groupby)) {
+    if (!\in_array($clause, $this->groupby)) {
       $this->groupby[] = $clause;
     }
   }
@@ -1223,7 +1223,7 @@ class Sql extends QueryPluginBase {
 
       if (!empty($field['function'])) {
         $info = $this->getAggregationInfo();
-        if (!empty($info[$field['function']]['method']) && is_callable([$this, $info[$field['function']]['method']])) {
+        if (!empty($info[$field['function']]['method']) && \is_callable([$this, $info[$field['function']]['method']])) {
           $string = $this::{$info[$field['function']]['method']}($field['function'], $string);
           $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : [];
           $query->addExpression($string, $fieldname, $placeholders);
@@ -1236,7 +1236,7 @@ class Sql extends QueryPluginBase {
         $placeholders = !empty($field['placeholders']) ? $field['placeholders'] : [];
         $query->addExpression($string, $fieldname, $placeholders);
       }
-      elseif ($this->distinct && !in_array($fieldname, $this->groupby)) {
+      elseif ($this->distinct && !\in_array($fieldname, $this->groupby)) {
         $query->addField(!empty($field['table']) ? $field['table'] : $this->view->storage->get('base_table'), $field['field'], $fieldname);
       }
       elseif (empty($field['aggregate'])) {
@@ -1319,7 +1319,7 @@ class Sql extends QueryPluginBase {
 
     // Add all the tables to the query via joins. We assume all LEFT joins.
     foreach ($this->tableQueue as $table) {
-      if (is_object($table['join'])) {
+      if (\is_object($table['join'])) {
         $table['join']->buildJoin($query, $table, $this);
       }
     }
@@ -1327,7 +1327,7 @@ class Sql extends QueryPluginBase {
     // Assemble the groupby clause, if any.
     $this->hasAggregate = FALSE;
     $non_aggregates = $this->getNonAggregates();
-    if (count($this->having)) {
+    if (\count($this->having)) {
       $this->hasAggregate = TRUE;
     }
     elseif (!$this->hasAggregate) {
@@ -1518,8 +1518,8 @@ class Sql extends QueryPluginBase {
 
         if (!empty($this->limit) || !empty($this->offset)) {
           // We can't have an offset without a limit, so provide a very large limit instead.
-          $limit = intval(!empty($this->limit) ? $this->limit : 999999);
-          $offset = intval(!empty($this->offset) ? $this->offset : 0);
+          $limit = \intval(!empty($this->limit) ? $this->limit : 999999);
+          $offset = \intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
         }
 

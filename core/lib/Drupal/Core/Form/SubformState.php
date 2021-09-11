@@ -72,7 +72,7 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    */
   protected function getParents($property) {
     foreach ([$this->subform, $this->parentForm] as $form) {
-      if (!isset($form[$property]) || !is_array($form[$property])) {
+      if (!isset($form[$property]) || !\is_array($form[$property])) {
         throw new \RuntimeException(sprintf('The subform and parent form must contain the %s property, which must be an array. Try calling this method from a #process callback instead.', $property));
       }
     }
@@ -102,7 +102,7 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
     if (!$exists) {
       $values = [];
     }
-    elseif (!is_array($values)) {
+    elseif (!\is_array($values)) {
       throw new \UnexpectedValueException('The form state values do not belong to the subform.');
     }
 
@@ -120,7 +120,7 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    * {@inheritdoc}
    */
   public function setLimitValidationErrors($limit_validation_errors) {
-    if (is_array($limit_validation_errors)) {
+    if (\is_array($limit_validation_errors)) {
       $limit_validation_errors = array_merge($this->getParents('#parents'), $limit_validation_errors);
     }
 
@@ -132,8 +132,8 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    */
   public function getLimitValidationErrors() {
     $limit_validation_errors = parent::getLimitValidationErrors();
-    if (is_array($limit_validation_errors)) {
-      return array_slice($limit_validation_errors, count($this->getParents('#parents')));
+    if (\is_array($limit_validation_errors)) {
+      return \array_slice($limit_validation_errors, \count($this->getParents('#parents')));
 
     }
     return $limit_validation_errors;

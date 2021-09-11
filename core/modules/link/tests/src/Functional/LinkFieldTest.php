@@ -456,7 +456,7 @@ class LinkFieldTest extends BrowserTestBase {
     foreach ($options as $setting => $values) {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
-        if (!is_array($new_value)) {
+        if (!\is_array($new_value)) {
           $display_options['settings'] = [$setting => $new_value];
         }
         else {

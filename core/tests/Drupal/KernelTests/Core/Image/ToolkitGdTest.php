@@ -66,7 +66,7 @@ class ToolkitGdTest extends KernelTestBase {
 
   protected function checkRequirements() {
     // GD2 support is available.
-    if (!function_exists('imagegd2')) {
+    if (!\function_exists('imagegd2')) {
       return [
         'Image manipulations for the GD toolkit cannot run because the GD toolkit is not available.',
       ];
@@ -235,7 +235,7 @@ class ToolkitGdTest extends KernelTestBase {
     // Systems using non-bundled GD2 don't have imagerotate. Test if available.
     // @todo Remove the version check once
     //   https://www.drupal.org/project/drupal/issues/2670966 is resolved.
-    if (function_exists('imagerotate') && (version_compare(phpversion(), '7.0.26') < 0)) {
+    if (\function_exists('imagerotate') && (version_compare(phpversion(), '7.0.26') < 0)) {
       $operations += [
         'rotate_5' => [
           'function' => 'rotate',
@@ -271,7 +271,7 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Systems using non-bundled GD2 don't have imagefilter. Test if available.
-    if (function_exists('imagefilter')) {
+    if (\function_exists('imagefilter')) {
       $operations += [
         'desaturate' => [
           'function' => 'desaturate',
@@ -322,7 +322,7 @@ class ToolkitGdTest extends KernelTestBase {
         if ($new_res !== $old_res) {
           // @todo In https://www.drupal.org/node/3133236 convert this to
           //   $this->assertIsNotResource($old_res).
-          $this->assertFalse(is_resource($old_res), new FormattableMarkup("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
+          $this->assertFalse(\is_resource($old_res), new FormattableMarkup("'%operation' destroyed the original resource.", ['%operation' => $values['function']]));
         }
 
         // To keep from flooding the test with assert values, make a general
@@ -460,7 +460,7 @@ class ToolkitGdTest extends KernelTestBase {
     $image = NULL;
     // @todo In https://www.drupal.org/node/3133236 convert this to
     //   $this->assertIsNotResource($res).
-    $this->assertFalse(is_resource($res), 'Image resource was destroyed after losing scope.');
+    $this->assertFalse(\is_resource($res), 'Image resource was destroyed after losing scope.');
 
     // Test that 'create_new' operation does not leave orphaned GD resources.
     $image = $this->imageFactory->get('core/tests/fixtures/files/image-test.png');
@@ -472,7 +472,7 @@ class ToolkitGdTest extends KernelTestBase {
     // Check if the original resource has been destroyed.
     // @todo In https://www.drupal.org/node/3133236 convert this to
     //   $this->assertIsNotResource($old_res).
-    $this->assertFalse(is_resource($old_res));
+    $this->assertFalse(\is_resource($old_res));
     // Check if a new resource has been created successfully.
     $this->assertIsResource($new_res);
   }

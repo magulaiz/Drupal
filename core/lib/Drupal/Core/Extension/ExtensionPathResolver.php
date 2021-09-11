@@ -82,7 +82,7 @@ class ExtensionPathResolver {
    *   If the extension is unknown.
    */
   public function getPath(string $type, string $name): string {
-    return dirname($this->getPathname($type, $name));
+    return \dirname($this->getPathname($type, $name));
   }
 
 }

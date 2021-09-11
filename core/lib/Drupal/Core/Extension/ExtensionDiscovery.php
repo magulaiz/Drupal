@@ -439,7 +439,7 @@ class ExtensionDiscovery {
       $extension_arguments = $this->fileCache ? $this->fileCache->get($fileinfo->getPathName()) : FALSE;
       // Ensure $extension_arguments is an array. Previously, the Extension
       // object was cached and now needs to be replaced with the array.
-      if (empty($extension_arguments) || !is_array($extension_arguments)) {
+      if (empty($extension_arguments) || !\is_array($extension_arguments)) {
         // Determine extension type from info file.
         $type = FALSE;
         $file = $fileinfo->openFile('r');
@@ -464,7 +464,7 @@ class ExtensionDiscovery {
         else {
           $filename = $name . '.' . $type;
         }
-        if (!file_exists($this->root . '/' . dirname($pathname) . '/' . $filename)) {
+        if (!file_exists($this->root . '/' . \dirname($pathname) . '/' . $filename)) {
           $filename = NULL;
         }
         $extension_arguments = [

@@ -54,7 +54,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
     // Remove any null bytes. See
     // http://php.net/manual/security.filesystem.nullbytes.php
-    $filename = str_replace(chr(0), '', $filename);
+    $filename = str_replace(\chr(0), '', $filename);
 
     // Split up the filename by periods. The first part becomes the basename,
     // the last part the final extension.
@@ -65,7 +65,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
     $final_extension = (string) array_pop($filename_parts);
 
     $extensions = $event->getAllowedExtensions();
-    if (!empty($extensions) && !in_array(strtolower($final_extension), $extensions, TRUE)) {
+    if (!empty($extensions) && !\in_array(strtolower($final_extension), $extensions, TRUE)) {
       // This upload will be rejected by file_validate_extensions() anyway so do
       // not make any alterations to the filename. This prevents a file named
       // 'example.php' being renamed to 'example.php_.txt' and uploaded if the
@@ -76,8 +76,8 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if (!$this->config->get('allow_insecure_uploads') && in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
-      if (empty($extensions) || in_array('txt', $extensions, TRUE)) {
+    if (!$this->config->get('allow_insecure_uploads') && \in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
+      if (empty($extensions) || \in_array('txt', $extensions, TRUE)) {
         // Add .txt to potentially executable files prior to munging to help prevent
         // exploits. This results in a filenames like filename.php being changed to
         // filename.php.txt prior to munging.
@@ -107,7 +107,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       if ($munge_everything) {
         $filename .= '_';
       }
-      elseif (!empty($extensions) && !in_array(strtolower($filename_part), $extensions) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
+      elseif (!empty($extensions) && !\in_array(strtolower($filename_part), $extensions) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
         $filename .= '_';
       }
     }

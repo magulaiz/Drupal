@@ -194,7 +194,7 @@ class TwigExtension extends AbstractExtension {
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
   public function getPath($name, $parameters = [], $options = []) {
-    assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
+    \assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
 
     $options['absolute'] = FALSE;
     return $this->urlGenerator->generateFromRoute($name, $parameters, $options);
@@ -217,7 +217,7 @@ class TwigExtension extends AbstractExtension {
    * @todo Add an option for scheme-relative URLs.
    */
   public function getUrl($name, $parameters = [], $options = []) {
-    assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
+    \assert($this->urlGenerator instanceof UrlGeneratorInterface, "The URL generator hasn't been set up. Any configuration YAML file with a service directive dealing with the Twig configuration can cause this, most likely found in a recently installed or changed module.");
 
     // Generate URL.
     $options['absolute'] = TRUE;
@@ -243,8 +243,8 @@ class TwigExtension extends AbstractExtension {
    *   A render array representing a link to the given URL.
    */
   public function getLink($text, $url, $attributes = []) {
-    assert(is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
-    assert(is_array($attributes) || $attributes instanceof Attribute, '$attributes, if set, must be an array or object of type \Drupal\Core\Template\Attribute');
+    \assert(\is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
+    \assert(\is_array($attributes) || $attributes instanceof Attribute, '$attributes, if set, must be an array or object of type \Drupal\Core\Template\Attribute');
 
     if (!$url instanceof Url) {
       $url = Url::fromUri($url);
@@ -323,7 +323,7 @@ class TwigExtension extends AbstractExtension {
     // Support named arguments.
     $parameter_node = $args_node->hasNode('parameters') ? $args_node->getNode('parameters') : ($args_node->hasNode(1) ? $args_node->getNode(1) : NULL);
 
-    if (!isset($parameter_node) || $parameter_node instanceof ArrayExpression && count($parameter_node) <= 2 &&
+    if (!isset($parameter_node) || $parameter_node instanceof ArrayExpression && \count($parameter_node) <= 2 &&
         (!$parameter_node->hasNode(1) || $parameter_node->getNode(1) instanceof ConstantExpression)) {
       return ['html'];
     }
@@ -343,7 +343,7 @@ class TwigExtension extends AbstractExtension {
    *   An asset library.
    */
   public function attachLibrary($library) {
-    assert(is_string($library), 'Argument must be a string.');
+    \assert(\is_string($library), 'Argument must be a string.');
 
     // Use Renderer::render() on a temporary render array to get additional
     // bubbleable metadata on the render stack.
@@ -421,7 +421,7 @@ class TwigExtension extends AbstractExtension {
     if (is_scalar($arg)) {
       $return = (string) $arg;
     }
-    elseif (is_object($arg)) {
+    elseif (\is_object($arg)) {
       if ($arg instanceof RenderableInterface) {
         $arg = $arg->toRenderable();
       }
@@ -435,7 +435,7 @@ class TwigExtension extends AbstractExtension {
         $return = $arg->toString();
       }
       else {
-        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
+        throw new \Exception('Object of type ' . \get_class($arg) . ' cannot be printed.');
       }
     }
 
@@ -456,7 +456,7 @@ class TwigExtension extends AbstractExtension {
     // special simple cases already handled.
 
     // Early return if this element was pre-rendered (no need to re-render).
-    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
+    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && \strlen($arg['#markup']) > 0) {
       return $arg['#markup'];
     }
     $arg['#printed'] = FALSE;
@@ -535,7 +535,7 @@ class TwigExtension extends AbstractExtension {
       return $arg;
     }
 
-    if (is_object($arg)) {
+    if (\is_object($arg)) {
       $this->bubbleArgMetadata($arg);
       if ($arg instanceof RenderableInterface) {
         $arg = $arg->toRenderable();
@@ -550,13 +550,13 @@ class TwigExtension extends AbstractExtension {
         return $arg->toString();
       }
       else {
-        throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
+        throw new \Exception('Object of type ' . \get_class($arg) . ' cannot be printed.');
       }
     }
 
     // This is a render array, with special simple cases already handled.
     // Early return if this element was pre-rendered (no need to re-render).
-    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
+    if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && \strlen($arg['#markup']) > 0) {
       return $arg['#markup'];
     }
     $arg['#printed'] = FALSE;
@@ -627,7 +627,7 @@ class TwigExtension extends AbstractExtension {
     else {
       $filtered_element = $element;
     }
-    $args = func_get_args();
+    $args = \func_get_args();
     unset($args[0]);
     // Since the remaining arguments can be a mix of arrays and strings, we use
     // some native PHP iterator classes to allow us to recursively iterate over

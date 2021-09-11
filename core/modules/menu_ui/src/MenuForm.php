@@ -291,7 +291,7 @@ class MenuForm extends EntityForm {
     // Get the menu links which have pending revisions, and disable the
     // tabledrag if there are any.
     $edited_ids = array_filter(array_map(function ($element) {
-      return is_array($element) && isset($element['#item']) && $element['#item']->link instanceof MenuLinkContent ? $element['#item']->link->getMetaData()['entity_id'] : NULL;
+      return \is_array($element) && isset($element['#item']) && $element['#item']->link instanceof MenuLinkContent ? $element['#item']->link->getMetaData()['entity_id'] : NULL;
     }, $links));
     $pending_menu_link_ids = array_intersect($this->menuLinkContentStorage->getMenuLinkIdsWithPendingRevisions(), $edited_ids);
     if ($pending_menu_link_ids) {
@@ -299,7 +299,7 @@ class MenuForm extends EntityForm {
         '#type' => 'container',
         'message' => [
           '#markup' => $this->formatPlural(
-            count($pending_menu_link_ids),
+            \count($pending_menu_link_ids),
             '%capital_name contains 1 menu link with pending revisions. Manipulation of a menu tree having links with pending revisions is not supported, but you can re-enable manipulation by getting each menu link to a published state.',
             '%capital_name contains @count menu links with pending revisions. Manipulation of a menu tree having links with pending revisions is not supported, but you can re-enable manipulation by getting each menu link to a published state.',
             [
@@ -320,7 +320,7 @@ class MenuForm extends EntityForm {
         $element = $links[$id];
 
         $is_pending_menu_link = isset($element['#item']->link->getMetaData()['entity_id'])
-          && in_array($element['#item']->link->getMetaData()['entity_id'], $pending_menu_link_ids);
+          && \in_array($element['#item']->link->getMetaData()['entity_id'], $pending_menu_link_ids);
 
         $form['links'][$id]['#item'] = $element['#item'];
 
@@ -508,7 +508,7 @@ class MenuForm extends EntityForm {
     // parent. To prevent this, save items in the form in the same order they
     // are sent, ensuring parents are saved first, then their children.
     // See https://www.drupal.org/node/181126#comment-632270.
-    $order = is_array($input) ? array_flip(array_keys($input)) : [];
+    $order = \is_array($input) ? array_flip(array_keys($input)) : [];
     // Update our original form with the new order.
     $form = array_intersect_key(array_merge($order, $form), $form);
 

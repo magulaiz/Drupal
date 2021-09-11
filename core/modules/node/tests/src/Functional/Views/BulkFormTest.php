@@ -271,7 +271,7 @@ class BulkFormTest extends NodeTestBase {
     $node = $this->loadNode(2);
     $this->assertNull($node, '2: Node has been deleted');
     $node = $this->loadNode(3);
-    $result = count($node->getTranslationLanguages()) && $node->language()->getId() == 'it';
+    $result = \count($node->getTranslationLanguages()) && $node->language()->getId() == 'it';
     $this->assertTrue($result, '3: English translation has been deleted');
     $node = $this->loadNode(4);
     $this->assertNull($node, '4: Node has been deleted');

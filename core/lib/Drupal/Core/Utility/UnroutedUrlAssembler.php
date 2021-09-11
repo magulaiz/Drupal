@@ -179,7 +179,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     if (!empty($base_path_with_script)) {
       $script_name = $request->getScriptName();
       if (strpos($base_path_with_script, $script_name) !== FALSE) {
-        $current_script_path = ltrim(substr($script_name, strlen($current_base_path)), '/') . '/';
+        $current_script_path = ltrim(substr($script_name, \strlen($current_base_path)), '/') . '/';
       }
     }
 

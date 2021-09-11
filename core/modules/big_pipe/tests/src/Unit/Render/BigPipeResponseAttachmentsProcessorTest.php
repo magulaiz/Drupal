@@ -40,7 +40,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
   public function nonHtmlResponseProvider() {
     return [
       'AjaxResponse, which implements AttachmentsInterface' => [AjaxResponse::class],
-      'A dummy that implements AttachmentsInterface' => [get_class($this->prophesize(AttachmentsInterface::class)->reveal())],
+      'A dummy that implements AttachmentsInterface' => [\get_class($this->prophesize(AttachmentsInterface::class)->reveal())],
     ];
   }
 

@@ -181,7 +181,7 @@ class UpdateManager implements UpdateManagerInterface {
       'update.confirmation_page',
       'system.themes_page',
     ];
-    if (in_array(\Drupal::routeMatch()->getRouteName(), $route_names)) {
+    if (\in_array(\Drupal::routeMatch()->getRouteName(), $route_names)) {
       $this->keyValueStore->delete($key);
     }
     else {

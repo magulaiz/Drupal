@@ -107,7 +107,7 @@ class NumericArgument extends ArgumentPluginBase {
     $placeholder = $this->placeholder();
     $null_check = empty($this->options['not']) ? '' : " OR $this->tableAlias.$this->realField IS NULL";
 
-    if (count($this->value) > 1) {
+    if (\count($this->value) > 1) {
       $operator = empty($this->options['not']) ? 'IN' : 'NOT IN';
       $placeholder .= '[]';
       $this->query->addWhereExpression(0, "$this->tableAlias.$this->realField $operator($placeholder)" . $null_check, [$placeholder => $this->value]);

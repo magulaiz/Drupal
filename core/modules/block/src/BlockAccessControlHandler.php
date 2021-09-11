@@ -136,7 +136,7 @@ class BlockAccessControlHandler extends EntityAccessControlHandler implements En
         }
       }
       else {
-        $reason = count($conditions) > 1
+        $reason = \count($conditions) > 1
           ? "One of the block visibility conditions ('%s') denied access."
           : "The block visibility condition '%s' denied access.";
         $access = AccessResult::forbidden(sprintf($reason, implode("', '", array_keys($conditions))));

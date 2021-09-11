@@ -139,11 +139,11 @@ class ThemeInitialization implements ThemeInitializationInterface {
       // Include the engine.
       include_once $this->root . '/' . $active_theme->getOwner();
 
-      if (function_exists($theme_engine . '_init')) {
+      if (\function_exists($theme_engine . '_init')) {
         foreach ($active_theme->getBaseThemeExtensions() as $base) {
-          call_user_func($theme_engine . '_init', $base);
+          \call_user_func($theme_engine . '_init', $base);
         }
-        call_user_func($theme_engine . '_init', $active_theme->getExtension());
+        \call_user_func($theme_engine . '_init', $active_theme->getExtension());
       }
     }
     else {

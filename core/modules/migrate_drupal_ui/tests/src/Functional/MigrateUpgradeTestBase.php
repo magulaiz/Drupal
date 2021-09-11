@@ -222,8 +222,8 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
     }
 
     // Test the total count of missing and available paths.
-    $session->elementsCount('xpath', "//td[contains(@class, 'upgrade-analysis-report__status-icon--error')]", count($missing_paths));
-    $session->elementsCount('xpath', "//td[contains(@class, 'upgrade-analysis-report__status-icon--checked')]", count($available_paths));
+    $session->elementsCount('xpath', "//td[contains(@class, 'upgrade-analysis-report__status-icon--error')]", \count($missing_paths));
+    $session->elementsCount('xpath', "//td[contains(@class, 'upgrade-analysis-report__status-icon--checked')]", \count($available_paths));
   }
 
   /**
@@ -313,7 +313,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
       $edit['source_base_path'] = $this->getSourceBasePath();
       $edit['source_private_file_path'] = $this->getSourcePrivateBasePath();
     }
-    if (count($drivers) !== 1) {
+    if (\count($drivers) !== 1) {
       $edit['driver'] = $driver;
     }
     return $edit;

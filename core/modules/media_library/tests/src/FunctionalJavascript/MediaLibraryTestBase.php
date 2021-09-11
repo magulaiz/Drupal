@@ -108,7 +108,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
     $end = $start + ($timeout / 1000);
     do {
       $nodes = $page->findAll($selector_type, $selector);
-      if (count($nodes) === $count) {
+      if (\count($nodes) === $count) {
         return;
       }
       usleep(100000);
@@ -393,7 +393,7 @@ abstract class MediaLibraryTestBase extends WebDriverTestBase {
    */
   protected function selectMediaItem($index, $expected_selected_count = NULL) {
     $checkboxes = $this->getCheckboxes();
-    $this->assertGreaterThan($index, count($checkboxes));
+    $this->assertGreaterThan($index, \count($checkboxes));
     $checkboxes[$index]->check();
 
     if ($expected_selected_count) {

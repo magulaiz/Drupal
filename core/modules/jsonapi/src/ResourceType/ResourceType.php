@@ -235,7 +235,7 @@ class ResourceType {
    *   otherwise.
    */
   public function hasField($field_name) {
-    return array_key_exists($field_name, $this->fields);
+    return \array_key_exists($field_name, $this->fields);
   }
 
   /**
@@ -386,7 +386,7 @@ class ResourceType {
       }
       $internal_field_name = $this->fieldMapping[$public_field_name];
       $field = $fields[$internal_field_name];
-      assert($field instanceof ResourceTypeRelationship);
+      \assert($field instanceof ResourceTypeRelationship);
       $fields[$internal_field_name] = $field->withRelatableResourceTypes($relatable_resource_types[$public_field_name]);
       return $fields;
     }, $this->fields);

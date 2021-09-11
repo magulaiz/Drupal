@@ -45,7 +45,7 @@ class VersionByRel extends NegotiatorBase {
    * {@inheritdoc}
    */
   protected function getRevisionId(EntityInterface $entity, $version_argument) {
-    assert($entity instanceof RevisionableInterface);
+    \assert($entity instanceof RevisionableInterface);
     switch ($version_argument) {
       case static::WORKING_COPY:
         /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */

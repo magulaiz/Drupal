@@ -298,10 +298,10 @@ class FormTest extends FieldTestBase {
       // Assign unique random values and weights.
       do {
         $value = mt_rand(1, 127);
-      } while (in_array($value, $values));
+      } while (\in_array($value, $values));
       do {
         $weight = mt_rand(-$delta_range, $delta_range);
-      } while (in_array($weight, $weights));
+      } while (\in_array($weight, $weights));
       $edit["{$field_name}[$delta][value]"] = $value;
       $edit["{$field_name}[$delta][_weight]"] = $weight;
       // We'll need three slightly different formats to check the values.

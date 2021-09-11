@@ -182,7 +182,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       '#type' => 'weight',
       '#title' => $this->t('Weight for new effect'),
       '#title_display' => 'invisible',
-      '#default_value' => count($this->entity->getEffects()) + 1,
+      '#default_value' => \count($this->entity->getEffects()) + 1,
       '#attributes' => ['class' => ['image-effect-order-weight']],
     ];
     $form['effects']['new']['operations'] = [

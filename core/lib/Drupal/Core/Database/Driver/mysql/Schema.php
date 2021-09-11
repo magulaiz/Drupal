@@ -108,11 +108,11 @@ class Schema extends DatabaseSchema {
     }
 
     // Process keys & indexes.
-    if (!empty($table['primary key']) && is_array($table['primary key'])) {
+    if (!empty($table['primary key']) && \is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
     }
     $keys = $this->createKeysSql($table);
-    if (count($keys)) {
+    if (\count($keys)) {
       $sql .= implode(", \n", $keys) . ", \n";
     }
 
@@ -148,7 +148,7 @@ class Schema extends DatabaseSchema {
   protected function createFieldSql($name, $spec) {
     $sql = "`" . $name . "` " . $spec['mysql_type'];
 
-    if (in_array($spec['mysql_type'], $this->mysqlStringTypes)) {
+    if (\in_array($spec['mysql_type'], $this->mysqlStringTypes)) {
       if (isset($spec['length'])) {
         $sql .= '(' . $spec['length'] . ')';
       }
@@ -185,7 +185,7 @@ class Schema extends DatabaseSchema {
     }
 
     // $spec['default'] can be NULL, so we explicitly check for the key here.
-    if (array_key_exists('default', $spec)) {
+    if (\array_key_exists('default', $spec)) {
       $sql .= ' DEFAULT ' . $this->escapeDefaultValue($spec['default']);
     }
 
@@ -317,12 +317,12 @@ class Schema extends DatabaseSchema {
     foreach ($indexes as $index_name => $index_fields) {
       foreach ($index_fields as $index_key => $index_field) {
         // Get the name of the field from the index specification.
-        $field_name = is_array($index_field) ? $index_field[0] : $index_field;
+        $field_name = \is_array($index_field) ? $index_field[0] : $index_field;
         // Check whether the field is defined in the table specification.
         if (isset($spec['fields'][$field_name])) {
           // Get the MySQL type from the processed field.
           $mysql_field = $this->processField($spec['fields'][$field_name]);
-          if (in_array($mysql_field['mysql_type'], $this->mysqlStringTypes)) {
+          if (\in_array($mysql_field['mysql_type'], $this->mysqlStringTypes)) {
             // Check whether we need to shorten the index.
             if ((!isset($mysql_field['type']) || $mysql_field['type'] != 'varchar_ascii') && (!isset($mysql_field['length']) || $mysql_field['length'] > 191)) {
               // Limit the index length to 191 characters.
@@ -350,7 +350,7 @@ class Schema extends DatabaseSchema {
    * @see Drupal\Core\Database\Driver\mysql\Schema::normalizeIndexes()
    */
   protected function shortenIndex(&$index) {
-    if (is_array($index)) {
+    if (\is_array($index)) {
       if ($index[1] > 191) {
         $index[1] = 191;
       }
@@ -363,7 +363,7 @@ class Schema extends DatabaseSchema {
   protected function createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $return[] = '`' . $field[0] . '`(' . $field[1] . ')';
       }
       else {
@@ -412,7 +412,7 @@ class Schema extends DatabaseSchema {
     }
 
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
-    $is_primary_key = isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE);
+    $is_primary_key = isset($keys_new['primary key']) && \in_array($field, $keys_new['primary key'], TRUE);
     if ($is_primary_key) {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $spec]);
     }
@@ -475,7 +475,7 @@ class Schema extends DatabaseSchema {
     // consistent with PostgreSQL.
     // @see https://mariadb.com/kb/en/library/alter-table
     $primary_key = $this->findPrimaryKeyColumns($table);
-    if ((count($primary_key) > 1) && in_array($field, $primary_key, TRUE)) {
+    if ((\count($primary_key) > 1) && \in_array($field, $primary_key, TRUE)) {
       $this->dropPrimaryKey($table);
     }
 
@@ -625,7 +625,7 @@ class Schema extends DatabaseSchema {
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
+    if (isset($keys_new['primary key']) && \in_array($field_new, $keys_new['primary key'], TRUE)) {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
     }
 

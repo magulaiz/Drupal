@@ -102,7 +102,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   Created custom block type.
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
-    if (is_array($values)) {
+    if (\is_array($values)) {
       if (!isset($values['id'])) {
         do {
           $id = strtolower($this->randomMachineName(8));

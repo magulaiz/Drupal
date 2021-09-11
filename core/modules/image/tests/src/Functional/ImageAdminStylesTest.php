@@ -51,7 +51,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   public function getImageCount(ImageStyleInterface $style) {
     $count = 0;
     if (is_dir('public://styles/' . $style->id())) {
-      $count = count(\Drupal::service('file_system')->scanDirectory('public://styles/' . $style->id(), '/.*/'));
+      $count = \count(\Drupal::service('file_system')->scanDirectory('public://styles/' . $style->id(), '/.*/'));
     }
     return $count;
   }
@@ -197,7 +197,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Change the name of the style and adjust the weights of effects.
     $style_name = strtolower($this->randomMachineName(10));
     $style_label = $this->randomMachineName();
-    $weight = count($effect_edits);
+    $weight = \count($effect_edits);
     $edit = [
       'name' => $style_name,
       'label' => $style_label,

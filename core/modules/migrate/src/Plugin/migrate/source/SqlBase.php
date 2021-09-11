@@ -252,7 +252,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     // Initialize the batch size.
     if ($this->batchSize == 0 && isset($this->configuration['batch_size'])) {
       // Valid batch sizes are integers >= 0.
-      if (is_int($this->configuration['batch_size']) && ($this->configuration['batch_size']) >= 0) {
+      if (\is_int($this->configuration['batch_size']) && ($this->configuration['batch_size']) >= 0) {
         $this->batchSize = $this->configuration['batch_size'];
       }
       else {
@@ -301,13 +301,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         $condition_added = TRUE;
 
         // And as long as we have the map table, add its data to the row.
-        $n = count($this->getIds());
+        $n = \count($this->getIds());
         for ($count = 1; $count <= $n; $count++) {
           $map_key = 'sourceid' . $count;
           $this->query->addField($alias, $map_key, "migrate_map_$map_key");
           $added_fields[] = "$alias.$map_key";
         }
-        if ($n = count($this->migration->getDestinationIds())) {
+        if ($n = \count($this->migration->getDestinationIds())) {
           for ($count = 1; $count <= $n; $count++) {
             $map_key = 'destid' . $count++;
             $this->query->addField($alias, $map_key, "migrate_map_$map_key");

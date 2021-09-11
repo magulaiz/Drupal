@@ -117,7 +117,7 @@ class ServerCommand extends Command {
     $port = 8888;
     while ($port >= 8888 && $port <= 9999) {
       $connection = @fsockopen($host, $port);
-      if (is_resource($connection)) {
+      if (\is_resource($connection)) {
         // Port is being used.
         fclose($connection);
       }
@@ -139,7 +139,7 @@ class ServerCommand extends Command {
    *   The IO.
    */
   protected function openBrowser($url, SymfonyStyle $io) {
-    $is_windows = defined('PHP_WINDOWS_VERSION_BUILD');
+    $is_windows = \defined('PHP_WINDOWS_VERSION_BUILD');
     if ($is_windows) {
       // Handle escaping ourselves.
       $cmd = 'start "web" "' . $url . '""';
@@ -243,7 +243,7 @@ class ServerCommand extends Command {
     $descriptors[1] = ['pipe', 'w'];
     $descriptors[2] = ['pipe', 'w'];
     $server = proc_open($process->getCommandLine(), $descriptors, $pipes, $kernel->getAppRoot());
-    if (is_resource($server)) {
+    if (\is_resource($server)) {
       if ($io->isVerbose()) {
         // Write a blank line so that server output and the useful information are
         // visually separated.

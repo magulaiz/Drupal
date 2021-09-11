@@ -56,7 +56,7 @@ class ConfigCacheTag implements EventSubscriberInterface {
     }
 
     // Theme configuration and global theme settings.
-    if (in_array($config_name, ['system.theme', 'system.theme.global'], TRUE)) {
+    if (\in_array($config_name, ['system.theme', 'system.theme.global'], TRUE)) {
       $this->cacheTagsInvalidator->invalidateTags(['rendered']);
     }
 

@@ -248,7 +248,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testLoad() {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
@@ -282,7 +282,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testLoadMultiple() {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
@@ -314,7 +314,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testCreate() {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())

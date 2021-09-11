@@ -256,7 +256,7 @@ class BigPipe {
    *   metadata or attachments to merge.
    */
   protected function sendChunk($chunk) {
-    assert(is_string($chunk) || $chunk instanceof HtmlResponse);
+    \assert(\is_string($chunk) || $chunk instanceof HtmlResponse);
     if ($chunk instanceof HtmlResponse) {
       print $chunk->getContent();
     }
@@ -417,7 +417,7 @@ class BigPipe {
       }
 
       $placeholder = $fragment;
-      assert(isset($no_js_placeholders[$placeholder]));
+      \assert(isset($no_js_placeholders[$placeholder]));
       $token = Crypt::randomBytesBase64(55);
 
       // Render the placeholder, but include the cumulative settings assets, so
@@ -626,7 +626,7 @@ EOF;
    *   AJAX page state.
    */
   protected function filterEmbeddedResponse(Request $fake_request, Response $embedded_response) {
-    assert($embedded_response instanceof HtmlResponse || $embedded_response instanceof AjaxResponse);
+    \assert($embedded_response instanceof HtmlResponse || $embedded_response instanceof AjaxResponse);
     return $this->filterResponse($fake_request, HttpKernelInterface::SUB_REQUEST, $embedded_response);
   }
 
@@ -646,7 +646,7 @@ EOF;
    *   The filtered response.
    */
   protected function filterResponse(Request $request, $request_type, Response $response) {
-    assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
+    \assert($request_type === HttpKernelInterface::MASTER_REQUEST || $request_type === HttpKernelInterface::SUB_REQUEST);
     $this->requestStack->push($request);
     $event = new ResponseEvent($this->httpKernel, $request, $request_type, $response);
     $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
@@ -771,7 +771,7 @@ EOF;
     };
     $preg_placeholder_strings = array_map($prepare_for_preg_split, $html_placeholders);
     $pattern = '/' . implode('|', $preg_placeholder_strings) . '/';
-    if (strlen($pattern) < 31000) {
+    if (\strlen($pattern) < 31000) {
       // Only small (<31K characters) patterns can be handled by preg_split().
       $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE;
       $result = preg_split($pattern, $html_string, NULL, $flags);

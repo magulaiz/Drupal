@@ -124,7 +124,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
    */
   public function createInstancesByTag($tag) {
     $migrations = array_filter($this->getDefinitions(), function ($migration) use ($tag) {
-      return !empty($migration['migration_tags']) && in_array($tag, $migration['migration_tags']);
+      return !empty($migration['migration_tags']) && \in_array($tag, $migration['migration_tags']);
     });
     return $migrations ? $this->createInstances(array_keys($migrations)) : [];
   }

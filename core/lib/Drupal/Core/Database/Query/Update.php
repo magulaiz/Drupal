@@ -140,7 +140,7 @@ class Update extends Query implements ConditionInterface {
       $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
 
-    if (count($this->condition)) {
+    if (\count($this->condition)) {
       $this->condition->compile($this->connection, $this);
       $update_values = array_merge($update_values, $this->condition->arguments());
     }
@@ -186,7 +186,7 @@ class Update extends Query implements ConditionInterface {
 
     $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);
 
-    if (count($this->condition)) {
+    if (\count($this->condition)) {
       $this->condition->compile($this->connection, $this);
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->condition;

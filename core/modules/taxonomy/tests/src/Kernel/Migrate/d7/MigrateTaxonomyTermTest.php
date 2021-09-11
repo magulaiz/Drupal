@@ -90,11 +90,11 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEquals($expected_weight, $entity->getWeight());
     $this->assertEquals($expected_parents, $this->getParentIDs($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
-    if (!is_null($expected_field_integer_value)) {
+    if (!\is_null($expected_field_integer_value)) {
       $this->assertTrue($entity->hasField('field_integer'));
       $this->assertEquals($expected_field_integer_value, $entity->field_integer->value);
     }
-    if (!is_null($expected_term_reference_tid)) {
+    if (!\is_null($expected_term_reference_tid)) {
       $this->assertTrue($entity->hasField('field_integer'));
       $this->assertEquals($expected_term_reference_tid, $entity->field_term_reference->target_id);
     }

@@ -343,7 +343,7 @@ class CommentController extends ControllerBase {
       throw new NotFoundHttpException();
     }
     // Only handle up to 100 nodes.
-    $nids = array_slice($nids, 0, 100);
+    $nids = \array_slice($nids, 0, 100);
 
     $links = [];
     foreach ($nids as $nid) {

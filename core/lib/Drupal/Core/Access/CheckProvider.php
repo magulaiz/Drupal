@@ -93,7 +93,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
    */
   public function loadCheck($service_id) {
     if (empty($this->checks[$service_id])) {
-      if (!in_array($service_id, $this->checkIds)) {
+      if (!\in_array($service_id, $this->checkIds)) {
         throw new \InvalidArgumentException(sprintf('No check has been registered for %s', $service_id));
       }
 
@@ -102,7 +102,7 @@ class CheckProvider implements CheckProviderInterface, ContainerAwareInterface {
       if (!($check instanceof AccessInterface)) {
         throw new AccessException('All access checks must implement AccessInterface.');
       }
-      if (!is_callable([$check, $this->checkMethods[$service_id]])) {
+      if (!\is_callable([$check, $this->checkMethods[$service_id]])) {
         throw new AccessException(sprintf('Access check method %s in service %s must be callable.', $this->checkMethods[$service_id], $service_id));
       }
 

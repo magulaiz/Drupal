@@ -51,7 +51,7 @@ class CreateNew extends GDImageToolkitOperationBase {
    */
   protected function validateArguments(array $arguments) {
     // Assure extension is supported.
-    if (!in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
+    if (!\in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
       throw new \InvalidArgumentException("Invalid extension ('{$arguments['extension']}') specified for the image 'create_new' operation");
     }
 
@@ -125,7 +125,7 @@ class CreateNew extends GDImageToolkitOperationBase {
     $this->getToolkit()->setResource($res);
 
     // Destroy the original resource if it is not needed by other operations.
-    if (!$arguments['is_temp'] && is_resource($original_res)) {
+    if (!$arguments['is_temp'] && \is_resource($original_res)) {
       imagedestroy($original_res);
     }
 

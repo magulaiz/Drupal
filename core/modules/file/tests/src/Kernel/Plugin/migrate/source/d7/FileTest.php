@@ -87,7 +87,7 @@ class FileTest extends MigrateSqlSourceTestBase {
     // The expected results will include only the first two files, since the
     // plugin will filter out files with either the null URI scheme or the
     // temporary scheme.
-    $tests[0]['expected_data'] = array_slice($tests[0]['source_data']['file_managed'], 0, 2);
+    $tests[0]['expected_data'] = \array_slice($tests[0]['source_data']['file_managed'], 0, 2);
 
     // The filepath property will vary by URI scheme.
     $tests[0]['expected_data'][0]['filepath'] = 'sites/default/files/cube.jpeg';

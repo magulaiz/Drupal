@@ -150,11 +150,11 @@ class PermissionHandler implements PermissionHandlerInterface {
       if (isset($permissions['permission_callbacks'])) {
         foreach ($permissions['permission_callbacks'] as $permission_callback) {
           $callback = $this->controllerResolver->getControllerFromDefinition($permission_callback);
-          if ($callback_permissions = call_user_func($callback)) {
+          if ($callback_permissions = \call_user_func($callback)) {
             // Add any callback permissions to the array of permissions. Any
             // defaults can then get processed below.
             foreach ($callback_permissions as $name => $callback_permission) {
-              if (!is_array($callback_permission)) {
+              if (!\is_array($callback_permission)) {
                 $callback_permission = [
                   'title' => $callback_permission,
                 ];
@@ -174,7 +174,7 @@ class PermissionHandler implements PermissionHandlerInterface {
       }
 
       foreach ($permissions as &$permission) {
-        if (!is_array($permission)) {
+        if (!\is_array($permission)) {
           $permission = [
             'title' => $permission,
           ];

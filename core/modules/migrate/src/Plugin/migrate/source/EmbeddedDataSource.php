@@ -114,7 +114,7 @@ class EmbeddedDataSource extends SourcePluginBase {
    * {@inheritdoc}
    */
   public function count($refresh = FALSE) {
-    return count($this->dataRows);
+    return \count($this->dataRows);
   }
 
 }

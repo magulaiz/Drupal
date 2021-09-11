@@ -59,7 +59,7 @@ class RequestSanitizerTest extends UnitTestCase {
     $request->server->set('QUERY_STRING', http_build_query($request->query->all()));
     $_SERVER['QUERY_STRING'] = $request->server->get('QUERY_STRING');
 
-    $request = RequestSanitizer::sanitize($request, $whitelist, is_null($expected_errors) ? FALSE : TRUE);
+    $request = RequestSanitizer::sanitize($request, $whitelist, \is_null($expected_errors) ? FALSE : TRUE);
 
     // Normalize the expected data.
     $expected += ['cookies' => [], 'query' => [], 'request' => []];

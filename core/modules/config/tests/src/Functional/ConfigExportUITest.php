@@ -63,7 +63,7 @@ class ConfigExportUITest extends BrowserTestBase {
 
     // Extract the archive and verify it's not empty.
     $file_system = \Drupal::service('file_system');
-    assert($file_system instanceof FileSystemInterface);
+    \assert($file_system instanceof FileSystemInterface);
     $temp_directory = $file_system->getTempDirectory();
     $file_path = $temp_directory . '/config.tar.gz';
     $archiver = new Tar($file_path);

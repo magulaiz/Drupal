@@ -91,7 +91,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    *   The normalization parts to cache.
    */
   public function saveOnTerminate(ResourceObject $object, array $normalization_parts) {
-    assert(
+    \assert(
       array_keys($normalization_parts) === [
         static::RESOURCE_CACHE_SUBSET_BASE,
         static::RESOURCE_CACHE_SUBSET_FIELDS,

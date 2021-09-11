@@ -43,7 +43,7 @@ trait TaxonomyIndexDepthQueryTrait {
    */
   protected function addSubQueryJoin($tids): void {
     $connection = $this->query->getConnection();
-    $operator = is_array($tids) ? 'IN' : '=';
+    $operator = \is_array($tids) ? 'IN' : '=';
     // Create the depth 0 subquery.
     $subquery = $connection->select('taxonomy_index', 'tn');
     $subquery->addField('tn', 'nid');

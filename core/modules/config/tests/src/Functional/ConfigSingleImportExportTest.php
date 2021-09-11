@@ -187,7 +187,7 @@ EOD;
     ];
     $this->drupalGet('admin/config/development/configuration/single/import');
     $this->submitForm($edit, 'Import');
-    if (extension_loaded('yaml')) {
+    if (\extension_loaded('yaml')) {
       // If the yaml extension is loaded it will work but not create the PHP
       // object.
       $this->assertSession()->pageTextContains('Are you sure you want to update the second test configuration?');

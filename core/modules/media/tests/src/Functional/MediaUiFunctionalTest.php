@@ -386,7 +386,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // The entire section for creating new media should only be displayed if
     // the user can create at least one media of the type.
     if ($create_media_types) {
-      if (count($create_media_types) === 1) {
+      if (\count($create_media_types) === 1) {
         $url = Url::fromRoute('entity.media.add_form')->setRouteParameter('media_type', $create_media_types[0]);
       }
       else {

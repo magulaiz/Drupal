@@ -133,7 +133,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     if (!empty($expected)) {
       if (!empty($links)) {
         foreach ($expected as $link => $detail) {
-          if (is_array($detail)) {
+          if (\is_array($detail)) {
             // Array of link attributes.
             foreach ($detail as $key => $value) {
               $this->assertEquals($value, $links['comment__comment']['#links'][$link][$key]);
@@ -321,7 +321,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
 
 namespace Drupal\comment;
 
-if (!function_exists('history_read')) {
+if (!\function_exists('history_read')) {
 
   function history_read() {
     return 0;

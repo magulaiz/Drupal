@@ -49,7 +49,7 @@ trait ValidateMigrationStateTestTrait {
     /** @var \Drupal\migrate\Plugin\Migration $migration */
     foreach ($migrations as $migration) {
       $definition = $migration->getPluginDefinition();
-      if (is_array($definition['provider'])) {
+      if (\is_array($definition['provider'])) {
         $provider = reset($definition['provider']);
       }
       else {
@@ -124,8 +124,8 @@ trait ValidateMigrationStateTestTrait {
     // in a migrate_drupal.yml.
     foreach ($discovered_unique as $datum) {
       $data = str_getcsv($datum);
-      $in_finished = in_array($datum, $declared_unique[MigrationState::FINISHED]);
-      $in_not_finished = in_array($datum, $declared_unique[MigrationState::NOT_FINISHED]);
+      $in_finished = \in_array($datum, $declared_unique[MigrationState::FINISHED]);
+      $in_not_finished = \in_array($datum, $declared_unique[MigrationState::NOT_FINISHED]);
       $found = $in_finished || $in_not_finished;
       $this->assertTrue($found, sprintf("No migration state found for version '%s' with source_module '%s' and destination_module '%s' declared in module '%s'", $version, $data[1], $data[2], $data[0]));
     }

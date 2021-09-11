@@ -14,7 +14,7 @@ class Condition extends BaseCondition {
    * {@inheritdoc}
    */
   public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
-    if (is_array($condition['value']) && $case_sensitive === FALSE) {
+    if (\is_array($condition['value']) && $case_sensitive === FALSE) {
       $condition['where'] = 'LOWER(' . $sql_query->escapeField($condition['real_field']) . ') ' . $condition['operator'] . ' (';
       $condition['where_args'] = [];
 

@@ -110,7 +110,7 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
       }
       $sandbox[self::SANDBOX_KEY]['entity_type'] = $entity_type_id;
       $sandbox[self::SANDBOX_KEY]['entities'] = $storage->getQuery()->accessCheck(FALSE)->execute();
-      $sandbox[self::SANDBOX_KEY]['count'] = count($sandbox[self::SANDBOX_KEY]['entities']);
+      $sandbox[self::SANDBOX_KEY]['count'] = \count($sandbox[self::SANDBOX_KEY]['entities']);
     }
 
     // The default behavior is to fix dependencies.
@@ -125,13 +125,13 @@ class ConfigEntityUpdater implements ContainerInjectionInterface {
     /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $entities = $storage->loadMultiple(array_splice($sandbox[self::SANDBOX_KEY]['entities'], 0, $this->batchSize));
     foreach ($entities as $entity) {
-      if (call_user_func($callback, $entity)) {
+      if (\call_user_func($callback, $entity)) {
         $entity->trustData();
         $entity->save();
       }
     }
 
-    $sandbox['#finished'] = empty($sandbox[self::SANDBOX_KEY]['entities']) ? 1 : ($sandbox[self::SANDBOX_KEY]['count'] - count($sandbox[self::SANDBOX_KEY]['entities'])) / $sandbox[self::SANDBOX_KEY]['count'];
+    $sandbox['#finished'] = empty($sandbox[self::SANDBOX_KEY]['entities']) ? 1 : ($sandbox[self::SANDBOX_KEY]['count'] - \count($sandbox[self::SANDBOX_KEY]['entities'])) / $sandbox[self::SANDBOX_KEY]['count'];
   }
 
 }

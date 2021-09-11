@@ -96,7 +96,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
     foreach ($entity_type->getLookupKeys() as $lookup_key) {
       foreach ($this->getKeys($config, $lookup_key, 'get', $entity_type) as $key) {
         $values = $config_key_store->get($key, []);
-        if (!in_array($config->getName(), $values, TRUE)) {
+        if (!\in_array($config->getName(), $values, TRUE)) {
           $values[] = $config->getName();
           $config_key_store->set($key, $values);
         }
@@ -196,7 +196,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    */
   protected function getValues(Config $config, $key, $get_method, array $parts, $start = 0) {
     $value = $config->$get_method($key);
-    if (is_array($value)) {
+    if (\is_array($value)) {
       $new_value = [];
       $start++;
       if (!isset($parts[$start])) {

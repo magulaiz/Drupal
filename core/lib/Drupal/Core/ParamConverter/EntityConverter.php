@@ -146,7 +146,7 @@ class EntityConverter implements ParamConverterInterface {
     if (
       !empty($definition['bundle']) &&
       $entity instanceof EntityInterface &&
-      !in_array($entity->bundle(), $definition['bundle'], TRUE)
+      !\in_array($entity->bundle(), $definition['bundle'], TRUE)
     ) {
       return NULL;
     }
@@ -159,10 +159,10 @@ class EntityConverter implements ParamConverterInterface {
    */
   public function applies($definition, $name, Route $route) {
     if (!empty($definition['type']) && strpos($definition['type'], 'entity:') === 0) {
-      $entity_type_id = substr($definition['type'], strlen('entity:'));
+      $entity_type_id = substr($definition['type'], \strlen('entity:'));
       if (strpos($definition['type'], '{') !== FALSE) {
         $entity_type_slug = substr($entity_type_id, 1, -1);
-        return $name != $entity_type_slug && in_array($entity_type_slug, $route->compile()->getVariables(), TRUE);
+        return $name != $entity_type_slug && \in_array($entity_type_slug, $route->compile()->getVariables(), TRUE);
       }
       return $this->entityTypeManager->hasDefinition($entity_type_id);
     }

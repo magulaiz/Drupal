@@ -54,7 +54,7 @@ final class ClassWriter {
     // Mutate Assert code to make it forward compatible with different PhpUnit
     // versions, by adding Symfony's PHPUnit-bridge PolyfillAssertTrait.
     $alteredFile = $autoloader->findFile('PHPUnit\Framework\Assert');
-    $phpunit_dir = dirname($alteredFile, 3);
+    $phpunit_dir = \dirname($alteredFile, 3);
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/abstract class Assert[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillAssertTrait;" . \PHP_EOL, $alteredCode, 1);
     include static::flushAlteredCodeToFile('Assert.php', $alteredCode);
@@ -79,7 +79,7 @@ final class ClassWriter {
     // Mutate TestCase code to make it forward compatible with different PhpUnit
     // versions, by adding Symfony's PHPUnit-bridge PolyfillTestCaseTrait.
     $alteredFile = $autoloader->findFile('PHPUnit\Framework\TestCase');
-    $phpunit_dir = dirname($alteredFile, 3);
+    $phpunit_dir = \dirname($alteredFile, 3);
     $alteredCode = file_get_contents($alteredFile);
     $alteredCode = preg_replace('/abstract class TestCase[^\{]+\{/', '$0 ' . \PHP_EOL . "    use \Symfony\Bridge\PhpUnit\Legacy\PolyfillTestCaseTrait;" . \PHP_EOL, $alteredCode, 1);
     $alteredCode = str_replace("__DIR__ . '/../Util/", "'$phpunit_dir/src/Util/", $alteredCode);

@@ -585,7 +585,7 @@ abstract class BuildTestBase extends TestCase {
    *   The full path to the root of this Drupal codebase.
    */
   protected function getDrupalRoot() {
-    return realpath(dirname(__DIR__, 5));
+    return realpath(\dirname(__DIR__, 5));
   }
 
 }

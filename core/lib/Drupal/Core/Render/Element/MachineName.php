@@ -157,7 +157,7 @@ class MachineName extends Textfield {
     $initial_values = $form_state->get('machine_name.initial_values') ?: [];
     // Store the initial values in an array so we can differentiate between a
     // NULL default value and a new machine name element.
-    if (!array_key_exists($element['#name'], $initial_values)) {
+    if (!\array_key_exists($element['#name'], $initial_values)) {
       $initial_values[$element['#name']] = $element['#default_value'];
       $form_state->set('machine_name.initial_values', $initial_values);
     }
@@ -262,9 +262,9 @@ class MachineName extends Textfield {
     // default value then it does not need to be validated as the machine name
     // element assumes the form is editing the existing value.
     $initial_values = $form_state->get('machine_name.initial_values') ?: [];
-    if (!array_key_exists($element['#name'], $initial_values) || $initial_values[$element['#name']] !== $element['#value']) {
+    if (!\array_key_exists($element['#name'], $initial_values) || $initial_values[$element['#name']] !== $element['#value']) {
       $function = $element['#machine_name']['exists'];
-      if (call_user_func($function, $element['#value'], $element, $form_state)) {
+      if (\call_user_func($function, $element['#value'], $element, $form_state)) {
         $form_state->setError($element, t('The machine-readable name is already in use. It must be unique.'));
       }
     }

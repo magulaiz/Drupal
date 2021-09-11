@@ -17,7 +17,7 @@ class LocaleUpdatePathTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      dirname(__DIR__, 4) . '/system/tests/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
+      \dirname(__DIR__, 4) . '/system/tests/fixtures/update/drupal-8.8.0.filled.standard.php.gz',
     ];
   }
 

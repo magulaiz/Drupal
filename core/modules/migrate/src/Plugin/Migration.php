@@ -374,7 +374,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   protected function getProcessNormalized(array $process) {
     $normalized_configurations = [];
     foreach ($process as $destination => $configuration) {
-      if (is_string($configuration)) {
+      if (\is_string($configuration)) {
         $configuration = [
           'plugin' => 'get',
           'source' => $configuration,
@@ -383,7 +383,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       if (isset($configuration['plugin'])) {
         $configuration = [$configuration];
       }
-      if (!is_array($configuration)) {
+      if (!\is_array($configuration)) {
         $migration_id = $this->getPluginId();
         throw new MigrateException("Invalid process for destination '$destination' in migration '$migration_id'");
       }
@@ -608,7 +608,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getMigrationDependencies() {
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
-    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
+    if (\count($this->migration_dependencies) !== 2 || !\is_array($this->migration_dependencies['required']) || !\is_array($this->migration_dependencies['optional'])) {
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
@@ -637,10 +637,10 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
             && $plugin_configuration['migration'] == $this->getBaseId()) {
           continue;
         }
-        if (in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {
+        if (\in_array($plugin_configuration['plugin'], ['migration', 'migration_lookup'], TRUE)) {
           $return = array_merge($return, (array) $plugin_configuration['migration']);
         }
-        if (in_array($plugin_configuration['plugin'], ['iterator', 'sub_process'], TRUE)) {
+        if (\in_array($plugin_configuration['plugin'], ['iterator', 'sub_process'], TRUE)) {
           $return = array_merge($return, $this->findMigrationDependencies($plugin_configuration['process']));
         }
       }

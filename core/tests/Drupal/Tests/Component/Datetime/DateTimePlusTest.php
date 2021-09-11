@@ -27,7 +27,7 @@ class DateTimePlusTest extends TestCase {
     $date = new DateTimePlus($input, $timezone);
     $value = $date->format('c');
 
-    if (is_array($input)) {
+    if (\is_array($input)) {
       $input = var_export($input, TRUE);
     }
     $this->assertEquals($expected, $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $timezone, $expected, $value));
@@ -49,7 +49,7 @@ class DateTimePlusTest extends TestCase {
     $date = DateTimePlus::createFromArray($input, $timezone);
     $value = $date->format('c');
 
-    if (is_array($input)) {
+    if (\is_array($input)) {
       $input = var_export($input, TRUE);
     }
     $this->assertEquals($expected, $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $timezone, $expected, $value));

@@ -218,7 +218,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
       }
       else {
         $view_modes = array_keys($view_modes);
-        return substr($view_modes[0], strlen($entity_type) + 1);
+        return substr($view_modes[0], \strlen($entity_type) + 1);
       }
     }
   }
@@ -351,7 +351,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     // which adds the block config entity type's list cache tags.
     $page_cache_tags = Cache::mergeTags($page_cache_tags, \Drupal::moduleHandler()->moduleExists('block') ? ['config:block_list'] : []);
 
-    $page_cache_tags_referencing_entity = in_array('user.permissions', $this->getAccessCacheContextsForEntity($this->referencingEntity)) ? ['config:user.role.anonymous'] : [];
+    $page_cache_tags_referencing_entity = \in_array('user.permissions', $this->getAccessCacheContextsForEntity($this->referencingEntity)) ? ['config:user.role.anonymous'] : [];
 
     $view_cache_tag = [];
     if ($this->entity->getEntityType()->hasHandlerClass('view_builder')) {
@@ -396,7 +396,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     $access_cache_contexts = $this->getAccessCacheContextsForEntity($this->entity);
     $additional_cache_contexts = $this->getAdditionalCacheContextsForEntity($this->referencingEntity);
     $redirected_cid = NULL;
-    if (count($access_cache_contexts) || count($additional_cache_contexts)) {
+    if (\count($access_cache_contexts) || \count($additional_cache_contexts)) {
       $cache_contexts = Cache::mergeContexts($entity_cache_contexts, $additional_cache_contexts);
       $cache_contexts = Cache::mergeContexts($cache_contexts, $access_cache_contexts);
       $redirected_cid = $this->createCacheId($cache_keys, $cache_contexts);

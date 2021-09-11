@@ -197,7 +197,7 @@ class UrlGenerator implements UrlGeneratorInterface {
     // [ [ 0 => 'text', 1 => '/admin/config' ] ]
     foreach ($tokens as $token) {
       if ('variable' === $token[0]) {
-        if (!$optional || !array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
+        if (!$optional || !\array_key_exists($token[3], $defaults) || (isset($mergedParams[$token[3]]) && (string) $mergedParams[$token[3]] !== (string) $defaults[$token[3]])) {
           // check requirement
           if (!preg_match('#^' . $token[2] . '$#', $mergedParams[$token[3]])) {
             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given) to generate a corresponding URL.', $token[3], $name, $token[2], $mergedParams[$token[3]]);
@@ -255,7 +255,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    * {@inheritdoc}
    */
   public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
-    $options['absolute'] = is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
+    $options['absolute'] = \is_bool($referenceType) ? $referenceType : $referenceType === self::ABSOLUTE_URL;
     return $this->generateFromRoute($name, $parameters, $options);
   }
 
@@ -264,7 +264,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
     $options += ['prefix' => ''];
-    if (!isset($options['query']) || !is_array($options['query'])) {
+    if (!isset($options['query']) || !\is_array($options['query'])) {
       $options['query'] = [];
     }
 
@@ -434,7 +434,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function supports($name) {
     // Support a route object and any string as route name.
-    return is_string($name) || $name instanceof SymfonyRoute;
+    return \is_string($name) || $name instanceof SymfonyRoute;
   }
 
   /**

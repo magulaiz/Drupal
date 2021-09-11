@@ -118,7 +118,7 @@ class SettingsForm extends ConfigFormBase {
 
     // Only show basic configuration if there are actually options.
     $basic_conf = [];
-    if (count($this->definitions['fetcher']) > 1) {
+    if (\count($this->definitions['fetcher']) > 1) {
       $basic_conf['aggregator_fetcher'] = [
         '#type' => 'radios',
         '#title' => $this->t('Fetcher'),
@@ -127,7 +127,7 @@ class SettingsForm extends ConfigFormBase {
         '#default_value' => $config->get('fetcher'),
       ];
     }
-    if (count($this->definitions['parser']) > 1) {
+    if (\count($this->definitions['parser']) > 1) {
       $basic_conf['aggregator_parser'] = [
         '#type' => 'radios',
         '#title' => $this->t('Parser'),
@@ -136,7 +136,7 @@ class SettingsForm extends ConfigFormBase {
         '#default_value' => $config->get('parser'),
       ];
     }
-    if (count($this->definitions['processor']) > 1) {
+    if (\count($this->definitions['processor']) > 1) {
       $basic_conf['aggregator_processors'] = [
         '#type' => 'checkboxes',
         '#title' => $this->t('Processors'),
@@ -145,7 +145,7 @@ class SettingsForm extends ConfigFormBase {
         '#default_value' => $config->get('processors'),
       ];
     }
-    if (count($basic_conf)) {
+    if (\count($basic_conf)) {
       $form['basic_conf'] = [
         '#type' => 'details',
         '#title' => $this->t('Basic configuration'),
@@ -158,7 +158,7 @@ class SettingsForm extends ConfigFormBase {
     // Call buildConfigurationForm() on the active fetcher and parser.
     foreach (['fetcher', 'parser'] as $type) {
       $active = $config->get($type);
-      if (array_key_exists($active, $this->definitions[$type])) {
+      if (\array_key_exists($active, $this->definitions[$type])) {
         $instance = $this->managers[$type]->createInstance($active);
         if ($instance instanceof PluginFormInterface) {
           $form = $instance->buildConfigurationForm($form, $form_state);
@@ -174,7 +174,7 @@ class SettingsForm extends ConfigFormBase {
     $form['processors'] = [];
     // Call buildConfigurationForm() for each active processor.
     foreach ($this->definitions['processor'] as $id => $definition) {
-      if (in_array($id, $config->get('processors'))) {
+      if (\in_array($id, $config->get('processors'))) {
         $instance = $this->managers['processor']->createInstance($id);
         if ($instance instanceof PluginFormInterface) {
           $form = $instance->buildConfigurationForm($form, $form_state);

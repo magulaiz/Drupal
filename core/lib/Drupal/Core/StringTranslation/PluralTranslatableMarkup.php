@@ -144,7 +144,7 @@ class PluralTranslatableMarkup extends TranslatableMarkup {
     // locale installed but the child site does not.
     // @todo Refactor in https://www.drupal.org/node/2660338 so this code does
     // not depend on knowing that the Locale module exists.
-    if (function_exists('locale_get_plural') && \Drupal::hasService('locale.plural.formula')) {
+    if (\function_exists('locale_get_plural') && \Drupal::hasService('locale.plural.formula')) {
       return locale_get_plural($this->count, $this->getOption('langcode'));
     }
     return -1;

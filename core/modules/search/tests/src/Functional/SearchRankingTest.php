@@ -258,7 +258,7 @@ class SearchRankingTest extends BrowserTestBase {
     // Update the search index.
     $this->nodeSearch->getPlugin()->updateIndex();
     $search_index = \Drupal::service('search.index');
-    assert($search_index instanceof SearchIndexInterface);
+    \assert($search_index instanceof SearchIndexInterface);
 
     $this->nodeSearch->getPlugin()->setSearch('rocks', [], []);
     // Do the search and assert the results.
@@ -289,7 +289,7 @@ class SearchRankingTest extends BrowserTestBase {
       $set = $this->nodeSearch->getPlugin()->execute();
 
       // Ranking should always be second to last.
-      $set = array_slice($set, -2, 1);
+      $set = \array_slice($set, -2, 1);
 
       // Assert the results.
       $this->assertEquals($node->id(), $set[0]['node']->id(), 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');

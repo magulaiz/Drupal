@@ -37,7 +37,7 @@ abstract class NormalizerBase extends SerializationNormalizerBase {
     if (!$value || is_scalar($value)) {
       return $value;
     }
-    if (is_array($value)) {
+    if (\is_array($value)) {
       $output = [];
       foreach ($value as $key => $item) {
         $output[$key] = static::rasterizeValueRecursive($item);

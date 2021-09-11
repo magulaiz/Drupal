@@ -188,7 +188,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       '#open' => TRUE,
     ];
     foreach ($toggles as $name => $title) {
-      if ((!$theme) || in_array($name, $features)) {
+      if ((!$theme) || \in_array($name, $features)) {
         $form['theme_settings']['toggle_' . $name] = ['#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('features.' . $name, $theme)];
         // Disable checkboxes for features not supported in the current configuration.
         if (isset($disabled['toggle_' . $name])) {
@@ -204,7 +204,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     }
 
     // Logo settings, only available when file.module is enabled.
-    if ((!$theme || in_array('logo', $features)) && $this->moduleHandler->moduleExists('file')) {
+    if ((!$theme || \in_array('logo', $features)) && $this->moduleHandler->moduleExists('file')) {
       $form['logo'] = [
         '#type' => 'details',
         '#title' => $this->t('Logo image'),
@@ -241,7 +241,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       ];
     }
 
-    if (((!$theme) || in_array('favicon', $features)) && $this->moduleHandler->moduleExists('file')) {
+    if (((!$theme) || \in_array('favicon', $features)) && $this->moduleHandler->moduleExists('file')) {
       $form['favicon'] = [
         '#type' => 'details',
         '#title' => $this->t('Favicon'),
@@ -324,7 +324,7 @@ class ThemeSettingsForm extends ConfigFormBase {
     if ($theme) {
       // Call engine-specific settings.
       $function = $themes[$theme]->prefix . '_engine_settings';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $form['engine_specific'] = [
           '#type' => 'details',
           '#title' => $this->t('Theme-engine-specific settings'),
@@ -365,7 +365,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
             // The file must be required for the cached form too.
             $files = $form_state->getBuildInfo()['files'];
-            if (!in_array($filename, $files)) {
+            if (!\in_array($filename, $files)) {
               $files[] = $filename;
             }
             $form_state->addBuildInfo('files', $files);
@@ -374,7 +374,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
         // Call theme-specific settings.
         $function = $theme . '_form_system_theme_settings_alter';
-        if (function_exists($function)) {
+        if (\function_exists($function)) {
           $function($form, $form_state);
         }
       }

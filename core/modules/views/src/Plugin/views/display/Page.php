@@ -202,7 +202,7 @@ class Page extends PathPluginBase {
     // And the title, which is much easier.
     // @todo Figure out how to support custom response objects. Maybe for pages
     //   it should be dropped.
-    if (is_array($render)) {
+    if (\is_array($render)) {
       $render += [
         '#title' => ['#markup' => $this->view->getTitle(), '#allowed_tags' => Xss::getHtmlTagList()],
       ];
@@ -217,7 +217,7 @@ class Page extends PathPluginBase {
     parent::optionsSummary($categories, $options);
 
     $menu = $this->getOption('menu');
-    if (!is_array($menu)) {
+    if (!\is_array($menu)) {
       $menu = ['type' => 'none'];
     }
     switch ($menu['type']) {

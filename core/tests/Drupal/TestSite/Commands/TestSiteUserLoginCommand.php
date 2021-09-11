@@ -42,7 +42,7 @@ class TestSiteUserLoginCommand extends Command {
    * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $root = dirname(__DIR__, 5);
+    $root = \dirname(__DIR__, 5);
     chdir($root);
 
     $this->classLoader = require 'autoload.php';

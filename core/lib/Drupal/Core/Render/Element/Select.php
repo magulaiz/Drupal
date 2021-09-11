@@ -168,10 +168,10 @@ class Select extends FormElement {
         // unselected. A disabled multi-select always submits NULL, and the
         // default value should be used.
         if (empty($element['#disabled'])) {
-          return (is_array($input)) ? array_combine($input, $input) : [];
+          return (\is_array($input)) ? array_combine($input, $input) : [];
         }
         else {
-          return (isset($element['#default_value']) && is_array($element['#default_value'])) ? $element['#default_value'] : [];
+          return (isset($element['#default_value']) && \is_array($element['#default_value'])) ? $element['#default_value'] : [];
         }
       }
       // Non-multiple select elements may have an empty option prepended to them

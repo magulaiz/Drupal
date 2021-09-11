@@ -27,7 +27,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
     ];
     $denormalized = $this->serializer->denormalize($data_with_valid_type, $this->entityClass, $this->format);
-    $this->assertEquals($this->entityClass, get_class($denormalized), 'Request with valid type results in creation of correct bundle.');
+    $this->assertEquals($this->entityClass, \get_class($denormalized), 'Request with valid type results in creation of correct bundle.');
 
     // Multiple types.
     $data_with_multiple_types = [
@@ -43,7 +43,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
     ];
     $denormalized = $this->serializer->denormalize($data_with_multiple_types, $this->entityClass, $this->format);
-    $this->assertEquals($this->entityClass, get_class($denormalized), 'Request with multiple types results in creation of correct bundle.');
+    $this->assertEquals($this->entityClass, \get_class($denormalized), 'Request with multiple types results in creation of correct bundle.');
 
     // Invalid type.
     $data_with_invalid_type = [
@@ -136,7 +136,7 @@ class DenormalizeTest extends NormalizerTestBase {
       ],
       'field_test_text' => [],
     ];
-    $entity = $this->serializer->denormalize($data, get_class($entity), $this->format, ['target_instance' => $entity]);
+    $entity = $this->serializer->denormalize($data, \get_class($entity), $this->format, ['target_instance' => $entity]);
     $this->assertEquals(0, $entity->field_test_text->count());
   }
 

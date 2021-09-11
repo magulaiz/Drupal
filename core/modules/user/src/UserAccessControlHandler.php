@@ -91,7 +91,7 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
     ];
 
     // Administrative users are allowed to edit and view all fields.
-    if (!in_array($field_definition->getName(), $explicit_check_fields) && $account->hasPermission('administer users')) {
+    if (!\in_array($field_definition->getName(), $explicit_check_fields) && $account->hasPermission('administer users')) {
       return AccessResult::allowed()->cachePerPermissions();
     }
 

@@ -93,7 +93,7 @@ class SiteSettingsForm extends FormBase {
       // information is usually normalized into an array already, but the form
       // element only allows to configure one default prefix for all tables.
       $prefix = &$input[$default_driver]['prefix'];
-      if (isset($prefix) && is_array($prefix)) {
+      if (isset($prefix) && \is_array($prefix)) {
         $prefix = $prefix['default'];
       }
       $default_options = $input[$default_driver];
@@ -112,7 +112,7 @@ class SiteSettingsForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => $default_driver,
     ];
-    if (count($drivers) == 1) {
+    if (\count($drivers) == 1) {
       $form['driver']['#disabled'] = TRUE;
     }
 
@@ -189,13 +189,13 @@ class SiteSettingsForm extends FormBase {
     $form_errors = array_filter($errors, function ($value) {
       // Errors keyed by something other than an integer already are linked to
       // form elements.
-      return is_int($value);
+      return \is_int($value);
     });
 
     // Find the generic errors.
     $errors = array_diff_key($errors, $form_errors);
 
-    if (count($errors)) {
+    if (\count($errors)) {
       $error_message = static::getDatabaseErrorsTemplate($errors);
 
       // These are generic errors, so we do not have any specific key of the

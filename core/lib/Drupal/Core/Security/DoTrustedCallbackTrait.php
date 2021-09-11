@@ -52,10 +52,10 @@ trait DoTrustedCallbackTrait {
     $object_or_classname = $callback;
     $safe_callback = FALSE;
 
-    if (is_array($callback)) {
+    if (\is_array($callback)) {
       list($object_or_classname, $method_name) = $callback;
     }
-    elseif (is_string($callback) && strpos($callback, '::') !== FALSE) {
+    elseif (\is_string($callback) && strpos($callback, '::') !== FALSE) {
       list($object_or_classname, $method_name) = explode('::', $callback, 2);
     }
 
@@ -64,13 +64,13 @@ trait DoTrustedCallbackTrait {
         $safe_callback = TRUE;
       }
       elseif (is_subclass_of($object_or_classname, TrustedCallbackInterface::class)) {
-        if (is_object($object_or_classname)) {
+        if (\is_object($object_or_classname)) {
           $methods = $object_or_classname->trustedCallbacks();
         }
         else {
-          $methods = call_user_func($object_or_classname . '::trustedCallbacks');
+          $methods = \call_user_func($object_or_classname . '::trustedCallbacks');
         }
-        $safe_callback = in_array($method_name, $methods, TRUE);
+        $safe_callback = \in_array($method_name, $methods, TRUE);
       }
     }
     elseif ($callback instanceof \Closure) {
@@ -79,8 +79,8 @@ trait DoTrustedCallbackTrait {
 
     if (!$safe_callback) {
       $description = $object_or_classname;
-      if (is_object($description)) {
-        $description = get_class($description);
+      if (\is_object($description)) {
+        $description = \get_class($description);
       }
       if (isset($method_name)) {
         $description .= '::' . $method_name;
@@ -98,7 +98,7 @@ trait DoTrustedCallbackTrait {
     }
 
     // @TODO Allow named arguments in https://www.drupal.org/node/3174150
-    return call_user_func_array($callback, array_values($args));
+    return \call_user_func_array($callback, array_values($args));
   }
 
 }

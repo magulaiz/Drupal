@@ -249,7 +249,7 @@ class PermissionsHashGeneratorTest extends UnitTestCase {
 namespace Drupal\Core\Session;
 
 // @todo remove once user_role_permissions() can be injected.
-if (!function_exists('user_role_permissions')) {
+if (!\function_exists('user_role_permissions')) {
 
   function user_role_permissions(array $roles) {
     $role_permissions = [];

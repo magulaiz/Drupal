@@ -218,7 +218,7 @@ class LocaleConfigManager {
       if (!isset($active[$key])) {
         continue;
       }
-      if (is_array($item)) {
+      if (\is_array($item)) {
         // Only add this key if there was a translated value underneath.
         $value = $this->processTranslatableData($name, $active[$key], $item, $langcode);
         if (!empty($value)) {
@@ -633,7 +633,7 @@ class LocaleConfigManager {
       if (isset($translatable[$key])) {
         // If the translatable default configuration has this key, look further
         // for subkeys or ignore this element for scalar values.
-        if (is_array($value)) {
+        if (\is_array($value)) {
           $value = $this->filterOverride($value, $translatable[$key]);
           if (!empty($value)) {
             $filtered_data[$key] = $value;

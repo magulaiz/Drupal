@@ -64,7 +64,7 @@ class Extension {
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()
-    assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
+    \assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
     $this->root = $root;
     $this->type = $type;
     $this->pathname = $pathname;
@@ -95,7 +95,7 @@ class Extension {
    * @return string
    */
   public function getPath() {
-    return dirname($this->pathname);
+    return \dirname($this->pathname);
   }
 
   /**
@@ -159,7 +159,7 @@ class Extension {
     if (!isset($this->splFileInfo)) {
       $this->splFileInfo = new \SplFileInfo($this->root . '/' . $this->pathname);
     }
-    return call_user_func_array([$this->splFileInfo, $method], $args);
+    return \call_user_func_array([$this->splFileInfo, $method], $args);
   }
 
   /**

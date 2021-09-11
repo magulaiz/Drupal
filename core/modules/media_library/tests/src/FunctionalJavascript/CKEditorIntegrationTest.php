@@ -307,18 +307,18 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
       $assert_session = $this->assertSession();
       $this->assertNotEmpty($assert_session->waitForId('media-library-wrapper'));
 
-      if (empty($allowed_media_types) || count($allowed_media_types) === 2) {
+      if (empty($allowed_media_types) || \count($allowed_media_types) === 2) {
         $assert_session->elementExists('css', 'li.media-library-menu-image');
         $assert_session->elementExists('css', 'li.media-library-menu-arrakis');
         $assert_session->elementTextContains('css', '.media-library-item__name', 'Fear is the mind-killer');
       }
-      elseif (count($allowed_media_types) === 1 && !empty($allowed_media_types['image'])) {
+      elseif (\count($allowed_media_types) === 1 && !empty($allowed_media_types['image'])) {
         // No tabs should appear if there's only one media type available.
         $assert_session->elementNotExists('css', 'li.media-library-menu-image');
         $assert_session->elementNotExists('css', 'li.media-library-menu-arrakis');
         $assert_session->elementTextContains('css', '.media-library-item__name', 'Fear is the mind-killer');
       }
-      elseif (count($allowed_media_types) === 1 && !empty($allowed_media_types['arrakis'])) {
+      elseif (\count($allowed_media_types) === 1 && !empty($allowed_media_types['arrakis'])) {
         // No tabs should appear if there's only one media type available.
         $assert_session->elementNotExists('css', 'li.media-library-menu-image');
         $assert_session->elementNotExists('css', 'li.media-library-menu-arrakis');

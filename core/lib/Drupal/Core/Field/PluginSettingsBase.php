@@ -58,7 +58,7 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
    */
   public function getSetting($key) {
     // Merge defaults if we have no value for the key.
-    if (!$this->defaultSettingsMerged && !array_key_exists($key, $this->settings)) {
+    if (!$this->defaultSettingsMerged && !\array_key_exists($key, $this->settings)) {
       $this->mergeDefaults();
     }
     return isset($this->settings[$key]) ? $this->settings[$key] : NULL;
@@ -153,9 +153,9 @@ abstract class PluginSettingsBase extends PluginBase implements PluginSettingsIn
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
     if (!empty($this->thirdPartySettings) && !empty($dependencies['module'])) {
-      $old_count = count($this->thirdPartySettings);
+      $old_count = \count($this->thirdPartySettings);
       $this->thirdPartySettings = array_diff_key($this->thirdPartySettings, array_flip($dependencies['module']));
-      $changed = $old_count != count($this->thirdPartySettings);
+      $changed = $old_count != \count($this->thirdPartySettings);
     }
     return $changed;
   }

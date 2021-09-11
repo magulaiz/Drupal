@@ -60,12 +60,12 @@ class PathSetTranslated extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       throw new MigrateException("The input value should be an array.");
     }
 
     $path = isset($value[0]) ? $value[0] : '';
-    $nid = (is_array($value[1]) && isset($value[1][0])) ? $value[1][0] : FALSE;
+    $nid = (\is_array($value[1]) && isset($value[1][0])) ? $value[1][0] : FALSE;
     if (preg_match('/^\/node\/\d+$/', $path) && $nid) {
       return '/node/' . $nid;
     }

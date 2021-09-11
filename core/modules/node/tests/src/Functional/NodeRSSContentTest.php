@@ -95,7 +95,7 @@ class NodeRSSContentTest extends NodeTestBase {
         'format' => 'full_html',
       ],
     ]);
-    $protocol_relative_url = substr($file_url_generator->generateAbsoluteString('public://protocol-relative'), strlen(\Drupal::request()->getScheme() . ':'));
+    $protocol_relative_url = substr($file_url_generator->generateAbsoluteString('public://protocol-relative'), \strlen(\Drupal::request()->getScheme() . ':'));
     $this->drupalCreateNode($defaults + [
       'body' => [
         'value' => '<p><a href="' . $protocol_relative_url . '">Protocol-relative URL</a></p>',

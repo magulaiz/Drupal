@@ -42,7 +42,7 @@ class ThemeExtensionListTest extends UnitTestCase {
 
     // Verify that info parser is called with the specified paths.
     $argument_condition = function ($path) {
-      return in_array($path, [
+      return \in_array($path, [
         'core/modules/system/tests/themes/test_subtheme/test_subtheme.info.yml',
         'core/modules/system/tests/themes/test_basetheme/test_basetheme.info.yml',
         'core/themes/engines/twig/twig.info.yml',

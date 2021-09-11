@@ -158,14 +158,14 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function hasAllTags() {
-    return !(boolean) array_diff(func_get_args(), array_keys($this->alterTags));
+    return !(boolean) array_diff(\func_get_args(), array_keys($this->alterTags));
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasAnyTag() {
-    return (boolean) array_intersect(func_get_args(), array_keys($this->alterTags));
+    return (boolean) array_intersect(\func_get_args(), array_keys($this->alterTags));
   }
 
   /**
@@ -634,7 +634,7 @@ class Select extends Query implements SelectInterface {
     }
     $alias = $alias_candidate;
 
-    if (is_string($condition)) {
+    if (\is_string($condition)) {
       $condition = str_replace('%alias', $alias, $condition);
     }
 
@@ -858,7 +858,7 @@ class Select extends Query implements SelectInterface {
     }
 
     // WHERE
-    if (count($this->condition)) {
+    if (\count($this->condition)) {
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->condition;
     }
@@ -869,7 +869,7 @@ class Select extends Query implements SelectInterface {
     }
 
     // HAVING
-    if (count($this->having)) {
+    if (\count($this->having)) {
       // There is an implicit string cast on $this->having.
       $query .= "\nHAVING " . $this->having;
     }

@@ -94,8 +94,8 @@ class DiffEngine {
     $edits = [];
     $xi = $yi = 0;
     while ($xi < $n_from || $yi < $n_to) {
-      $this::USE_ASSERTS && assert($yi < $n_to || $this->xchanged[$xi]);
-      $this::USE_ASSERTS && assert($xi < $n_from || $this->ychanged[$yi]);
+      $this::USE_ASSERTS && \assert($yi < $n_to || $this->xchanged[$xi]);
+      $this::USE_ASSERTS && \assert($xi < $n_from || $this->ychanged[$yi]);
 
       // Skip matching "snake".
       $copy = [];
@@ -204,14 +204,14 @@ class DiffEngine {
           if (!$found_empty) {
             if (empty($this->in_seq[$y])) {
               $k = $this->_lcs_pos($y);
-              $this::USE_ASSERTS && assert($k > 0);
+              $this::USE_ASSERTS && \assert($k > 0);
               $ymids[$k] = $ymids[$k - 1];
               $found_empty = TRUE;
             }
           }
           else {
             if ($y > $this->seq[$k - 1]) {
-              $this::USE_ASSERTS && assert($y < $this->seq[$k]);
+              $this::USE_ASSERTS && \assert($y < $this->seq[$k]);
               // Optimization: this is a common case:
               // next match is just replacing previous match.
               $this->in_seq[$this->seq[$k]] = FALSE;
@@ -220,7 +220,7 @@ class DiffEngine {
             }
             elseif (empty($this->in_seq[$y])) {
               $k = $this->_lcs_pos($y);
-              $this::USE_ASSERTS && assert($k > 0);
+              $this::USE_ASSERTS && \assert($k > 0);
               $ymids[$k] = $ymids[$k - 1];
             }
           }
@@ -260,7 +260,7 @@ class DiffEngine {
       }
     }
 
-    $this::USE_ASSERTS && assert($ypos != $this->seq[$end]);
+    $this::USE_ASSERTS && \assert($ypos != $this->seq[$end]);
 
     $this->in_seq[$this->seq[$end]] = FALSE;
     $this->seq[$end] = $ypos;
@@ -343,7 +343,7 @@ class DiffEngine {
     $i = 0;
     $j = 0;
 
-    $this::USE_ASSERTS && assert(sizeof($lines) == sizeof($changed));
+    $this::USE_ASSERTS && \assert(sizeof($lines) == sizeof($changed));
     $len = sizeof($lines);
     $other_len = sizeof($other_changed);
 
@@ -363,7 +363,7 @@ class DiffEngine {
         $j++;
       }
       while ($i < $len && !$changed[$i]) {
-        $this::USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
+        $this::USE_ASSERTS && \assert($j < $other_len && ! $other_changed[$j]);
         $i++;
         $j++;
         while ($j < $other_len && $other_changed[$j]) {
@@ -399,11 +399,11 @@ class DiffEngine {
           while ($start > 0 && $changed[$start - 1]) {
             $start--;
           }
-          $this::USE_ASSERTS && assert($j > 0);
+          $this::USE_ASSERTS && \assert($j > 0);
           while ($other_changed[--$j]) {
             continue;
           }
-          $this::USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
+          $this::USE_ASSERTS && \assert($j >= 0 && !$other_changed[$j]);
         }
 
         /*
@@ -426,7 +426,7 @@ class DiffEngine {
           while ($i < $len && $changed[$i]) {
             $i++;
           }
-          $this::USE_ASSERTS && assert($j < $other_len && ! $other_changed[$j]);
+          $this::USE_ASSERTS && \assert($j < $other_len && ! $other_changed[$j]);
           $j++;
           if ($j < $other_len && $other_changed[$j]) {
             $corresponding = $i;
@@ -444,11 +444,11 @@ class DiffEngine {
       while ($corresponding < $i) {
         $changed[--$start] = 1;
         $changed[--$i] = 0;
-        $this::USE_ASSERTS && assert($j > 0);
+        $this::USE_ASSERTS && \assert($j > 0);
         while ($other_changed[--$j]) {
           continue;
         }
-        $this::USE_ASSERTS && assert($j >= 0 && !$other_changed[$j]);
+        $this::USE_ASSERTS && \assert($j >= 0 && !$other_changed[$j]);
       }
     }
   }

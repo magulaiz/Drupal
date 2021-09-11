@@ -110,7 +110,7 @@ class FormSubmitter implements FormSubmitterInterface {
         $batch['has_form_submits'] = TRUE;
       }
       else {
-        call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+        \call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
       }
     }
   }

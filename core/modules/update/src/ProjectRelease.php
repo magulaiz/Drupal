@@ -164,7 +164,7 @@ final class ProjectRelease {
       'allowExtraFields' => TRUE,
     ]);
     $violations = Validation::createValidator()->validate($data, $collection_constraint);
-    if (count($violations)) {
+    if (\count($violations)) {
       foreach ($violations as $violation) {
         $violation_messages[] = "Field " . $violation->getPropertyPath() . ": " . $violation->getMessage();
       }
@@ -232,7 +232,7 @@ final class ProjectRelease {
    *   TRUE if the release matches the type, or FALSE otherwise.
    */
   private function isReleaseType(string $type): bool {
-    return $this->releaseTypes && in_array($type, $this->releaseTypes, TRUE);
+    return $this->releaseTypes && \in_array($type, $this->releaseTypes, TRUE);
   }
 
   /**

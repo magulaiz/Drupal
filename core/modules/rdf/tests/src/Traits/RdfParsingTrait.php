@@ -98,7 +98,7 @@ trait RdfParsingTrait {
     $parser = $this->getInstanceParser();
     $graph = $this->getInstanceGraph();
     $parser->parse($graph, $this->drupalGet($url), 'rdfa', $base_uri);
-    return count($graph->allOfType($type));
+    return \count($graph->allOfType($type));
   }
 
   /**

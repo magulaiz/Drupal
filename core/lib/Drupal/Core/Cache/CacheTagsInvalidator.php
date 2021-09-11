@@ -23,7 +23,7 @@ class CacheTagsInvalidator implements CacheTagsInvalidatorInterface {
    * {@inheritdoc}
    */
   public function invalidateTags(array $tags) {
-    assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
+    \assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
 
     // Notify all added cache tags invalidators.
     foreach ($this->invalidators as $invalidator) {

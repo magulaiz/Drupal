@@ -53,9 +53,9 @@ class Checkboxes extends FormElement {
    * Processes a checkboxes form element.
    */
   public static function processCheckboxes(&$element, FormStateInterface $form_state, &$complete_form) {
-    $value = is_array($element['#value']) ? $element['#value'] : [];
+    $value = \is_array($element['#value']) ? $element['#value'] : [];
     $element['#tree'] = TRUE;
-    if (count($element['#options']) > 0) {
+    if (\count($element['#options']) > 0) {
       if (!isset($element['#default_value']) || $element['#default_value'] == 0) {
         $element['#default_value'] = [];
       }
@@ -102,7 +102,7 @@ class Checkboxes extends FormElement {
       }
       return $value;
     }
-    elseif (is_array($input)) {
+    elseif (\is_array($input)) {
       // Programmatic form submissions use NULL to indicate that a checkbox
       // should be unchecked. We therefore remove all NULL elements from the
       // array before constructing the return value, to simulate the behavior

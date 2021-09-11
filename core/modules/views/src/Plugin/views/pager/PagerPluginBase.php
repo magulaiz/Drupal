@@ -210,7 +210,7 @@ abstract class PagerPluginBase extends PluginBase {
    */
   public function hasMoreRecords() {
     return $this->getItemsPerPage()
-      && $this->total_items > (intval($this->current_page) + 1) * $this->getItemsPerPage();
+      && $this->total_items > (\intval($this->current_page) + 1) * $this->getItemsPerPage();
   }
 
   public function exposedFormAlter(&$form, FormStateInterface $form_state) {}

@@ -376,7 +376,7 @@ class DbLogController extends ControllerBase {
       if ($variables === NULL) {
         $message = Xss::filterAdmin($row->message);
       }
-      elseif (!is_array($variables)) {
+      elseif (!\is_array($variables)) {
         $message = $this->t('Log data is corrupted and cannot be unserialized: @message', ['@message' => Xss::filterAdmin($row->message)]);
       }
       // Message to translate with injected variables.

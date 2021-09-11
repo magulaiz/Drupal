@@ -59,11 +59,11 @@ class Element implements TrustedCallbackInterface {
     $editors = Editor::loadMultiple($format_ids);
     foreach ($editors as $key => $editor) {
       $definition = $this->pluginManager->getDefinition($editor->getEditor());
-      if (!in_array($element['#base_type'], $definition['supported_element_types'])) {
+      if (!\in_array($element['#base_type'], $definition['supported_element_types'])) {
         unset($editors[$key]);
       }
     }
-    if (count($editors) === 0) {
+    if (\count($editors) === 0) {
       return $element;
     }
 

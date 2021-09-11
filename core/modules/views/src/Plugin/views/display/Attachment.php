@@ -80,10 +80,10 @@ class Attachment extends DisplayPluginBase {
     ];
 
     $displays = array_filter($this->getOption('displays'));
-    if (count($displays) > 1) {
+    if (\count($displays) > 1) {
       $attach_to = $this->t('Multiple displays');
     }
-    elseif (count($displays) == 1) {
+    elseif (\count($displays) == 1) {
       $display = array_shift($displays);
       if ($display = $this->view->storage->getDisplay($display)) {
         $attach_to = $display['display_title'];

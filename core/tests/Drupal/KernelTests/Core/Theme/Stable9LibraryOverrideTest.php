@@ -100,7 +100,7 @@ class Stable9LibraryOverrideTest extends KernelTestBase {
     foreach ($libraries_before as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
         // Allow skipping libraries.
-        if (in_array("$extension/$library_name", $this->librariesToSkip)) {
+        if (\in_array("$extension/$library_name", $this->librariesToSkip)) {
           continue;
         }
         $library_after = $libraries_after[$extension][$library_name];

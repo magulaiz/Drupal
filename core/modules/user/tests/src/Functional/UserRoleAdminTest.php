@@ -108,7 +108,7 @@ class UserRoleAdminTest extends BrowserTestBase {
   public function testRoleWeightOrdering() {
     $this->drupalLogin($this->adminUser);
     $roles = user_roles();
-    $weight = count($roles);
+    $weight = \count($roles);
     $new_role_weights = [];
     $saved_rids = [];
 

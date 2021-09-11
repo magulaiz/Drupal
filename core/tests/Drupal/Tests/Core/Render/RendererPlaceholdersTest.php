@@ -70,7 +70,7 @@ class RendererPlaceholdersTest extends RendererTestBase {
       $token_render_array = [
         '#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', $args],
       ];
-      if (is_array($cache_keys)) {
+      if (\is_array($cache_keys)) {
         $token_render_array['#cache']['keys'] = $cache_keys;
       }
       $token = Crypt::hashBase64(serialize($token_render_array));

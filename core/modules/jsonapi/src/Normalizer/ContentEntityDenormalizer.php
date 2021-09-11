@@ -66,7 +66,7 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
         continue;
       }
 
-      if (!isset($field_map[$internal_name]) || !in_array($resource_type->getBundle(), $field_map[$internal_name]['bundles'], TRUE)) {
+      if (!isset($field_map[$internal_name]) || !\in_array($resource_type->getBundle(), $field_map[$internal_name]['bundles'], TRUE)) {
         throw new UnprocessableEntityHttpException(sprintf(
           'The attribute %s does not exist on the %s resource type.',
           $internal_name,

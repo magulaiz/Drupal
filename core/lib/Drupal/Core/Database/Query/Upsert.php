@@ -77,7 +77,7 @@ abstract class Upsert extends Query implements \Countable {
     }
 
     // Don't execute query without fields.
-    if (count($this->insertFields) + count($this->defaultFields) == 0) {
+    if (\count($this->insertFields) + \count($this->defaultFields) == 0) {
       throw new NoFieldsException('There are no fields available to insert with.');
     }
 

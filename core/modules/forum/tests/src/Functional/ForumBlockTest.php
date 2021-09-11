@@ -74,7 +74,7 @@ class ForumBlockTest extends BrowserTestBase {
     // We expect only the 2 most recent forum topics to appear in the "New forum
     // topics" block.
     for ($index = 0; $index < 5; $index++) {
-      if (in_array($index, [3, 4])) {
+      if (\in_array($index, [3, 4])) {
         $this->assertSession()->linkExists($topics[$index], 0, new FormattableMarkup('Forum topic @topic found in the "New forum topics" block.', ['@topic' => $topics[$index]]));
       }
       else {
@@ -137,7 +137,7 @@ class ForumBlockTest extends BrowserTestBase {
     // We expect only the 2 forum topics with most recent comments to appear in
     // the "Active forum topics" block.
     for ($index = 0; $index < 10; $index++) {
-      if (in_array($index, [3, 4])) {
+      if (\in_array($index, [3, 4])) {
         $this->assertSession()->linkExists($topics[$index], 0, 'Forum topic found in the "Active forum topics" block.');
       }
       else {

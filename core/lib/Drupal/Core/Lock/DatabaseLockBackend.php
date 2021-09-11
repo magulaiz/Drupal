@@ -223,7 +223,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
     // Nothing to do if the name is a US ASCII string of 255 characters or less.
     $name_is_ascii = mb_check_encoding($name, 'ASCII');
 
-    if (strlen($name) <= 255 && $name_is_ascii) {
+    if (\strlen($name) <= 255 && $name_is_ascii) {
       return $name;
     }
     // Return a string that uses as much as possible of the original name with
@@ -234,7 +234,7 @@ class DatabaseLockBackend extends LockBackendAbstract {
       return $hash;
     }
 
-    return substr($name, 0, 255 - strlen($hash)) . $hash;
+    return substr($name, 0, 255 - \strlen($hash)) . $hash;
   }
 
   /**

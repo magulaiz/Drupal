@@ -381,7 +381,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
   public function supportsUri($uri) {
     // Only support the URI if its extension is supported by the current image
     // toolkit.
-    return in_array(
+    return \in_array(
       mb_strtolower(pathinfo($uri, PATHINFO_EXTENSION)),
       $this->getImageFactory()->getSupportedExtensions()
     );

@@ -33,7 +33,7 @@ trait DependencySerializationTrait {
     $this->_serviceIds = [];
     $vars = get_object_vars($this);
     foreach ($vars as $key => $value) {
-      if (is_object($value) && isset($value->_serviceId)) {
+      if (\is_object($value) && isset($value->_serviceId)) {
         // If a class member was instantiated by the dependency injection
         // container, only store its ID so it can be used to get a fresh object
         // on unserialization.

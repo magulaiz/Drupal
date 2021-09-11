@@ -304,7 +304,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
   public function offsetExists($offset) {
     // PHP's array access does not work correctly with isset(), so we have to
     // bake isset() in here. See https://bugs.php.net/bug.php?id=41727.
-    return array_key_exists($offset, $this->definition) && isset($this->definition[$offset]);
+    return \array_key_exists($offset, $this->definition) && isset($this->definition[$offset]);
   }
 
   /**

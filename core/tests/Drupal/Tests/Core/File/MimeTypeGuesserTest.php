@@ -28,7 +28,7 @@ class MimeTypeGuesserTest extends UnitTestCase {
     $reflected_guessers = new \ReflectionProperty($symfony_guesser, 'guessers');
     $reflected_guessers->setAccessible(TRUE);
     $guessers = $reflected_guessers->getValue($symfony_guesser);
-    if (count($guessers)) {
+    if (\count($guessers)) {
       $this->assertNotInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
     }
     $container = new ContainerBuilder();
@@ -38,7 +38,7 @@ class MimeTypeGuesserTest extends UnitTestCase {
     $guessers = $reflected_guessers->getValue($symfony_guesser);
     $this->assertSame($container->get('file.mime_type.guesser'), $guessers[0]);
     $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
-    $count = count($guessers);
+    $count = \count($guessers);
 
     $container = new ContainerBuilder();
     $container->set('file.mime_type.guesser', new MimeTypeGuesser(new StreamWrapperManager()));
@@ -47,7 +47,7 @@ class MimeTypeGuesserTest extends UnitTestCase {
     $guessers = $reflected_guessers->getValue($symfony_guesser);
     $this->assertSame($container->get('file.mime_type.guesser'), $guessers[0]);
     $this->assertInstanceOf('Drupal\Core\File\MimeType\MimeTypeGuesser', $guessers[0]);
-    $new_count = count($guessers);
+    $new_count = \count($guessers);
     $this->assertEquals($count, $new_count, 'The count of mime type guessers remains the same after container re-init.');
   }
 

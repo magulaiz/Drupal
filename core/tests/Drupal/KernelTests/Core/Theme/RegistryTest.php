@@ -72,7 +72,7 @@ class RegistryTest extends KernelTestBase {
     \Drupal::service('theme_installer')->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
 
     $module_list = $this->container->get('extension.list.module');
-    assert($module_list instanceof ModuleExtensionList);
+    \assert($module_list instanceof ModuleExtensionList);
 
     $registry_subsub_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_subsubtheme', NULL, $module_list);
     $registry_subsub_theme->setThemeManager(\Drupal::theme());
@@ -111,7 +111,7 @@ class RegistryTest extends KernelTestBase {
     \Drupal::service('theme_installer')->install(['test_theme']);
 
     $extension_list = $this->container->get('extension.list.module');
-    assert($extension_list instanceof ModuleExtensionList);
+    \assert($extension_list instanceof ModuleExtensionList);
     $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme', NULL, $extension_list);
     $registry_theme->setThemeManager(\Drupal::theme());
 
@@ -153,7 +153,7 @@ class RegistryTest extends KernelTestBase {
     $this->config('system.theme')->set('default', 'test_theme')->save();
 
     $extension_list = $this->container->get('extension.list.module');
-    assert($extension_list instanceof ModuleExtensionList);
+    \assert($extension_list instanceof ModuleExtensionList);
     $registry = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme', NULL, $extension_list);
     $registry->setThemeManager(\Drupal::theme());
     $this->assertEquals('value', $registry->get()['theme_test_template_test']['variables']['additional']);
@@ -243,7 +243,7 @@ class RegistryTest extends KernelTestBase {
     \Drupal::service('theme_installer')->install(['test_theme']);
 
     $extension_list = \Drupal::service('extension.list.module');
-    assert($extension_list instanceof ModuleExtensionList);
+    \assert($extension_list instanceof ModuleExtensionList);
     $registry_theme = new Registry($this->root, \Drupal::cache(), \Drupal::lock(), \Drupal::moduleHandler(), $theme_handler, \Drupal::service('theme.initialization'), 'test_theme', NULL, $extension_list);
     $registry_theme->setThemeManager(\Drupal::theme());
 

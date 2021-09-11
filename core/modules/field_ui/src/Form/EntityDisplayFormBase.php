@@ -666,7 +666,7 @@ abstract class EntityDisplayFormBase extends EntityForm {
         // it back to 'non edit' mode.
         $updated_rows = explode(' ', $form_state->getValue('refresh_rows'));
         $plugin_settings_edit = $form_state->get('plugin_settings_edit');
-        if ($plugin_settings_edit && in_array($plugin_settings_edit, $updated_rows)) {
+        if ($plugin_settings_edit && \in_array($plugin_settings_edit, $updated_rows)) {
           $form_state->set('plugin_settings_edit', NULL);
         }
         break;

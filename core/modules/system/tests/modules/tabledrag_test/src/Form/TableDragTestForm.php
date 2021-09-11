@@ -107,7 +107,7 @@ class TableDragTestForm extends FormBase {
       $this->state->get('tabledrag_test_table', array_flip(range(1, 5)));
 
     foreach ($rows as $id => $row) {
-      if (!is_array($row)) {
+      if (!\is_array($row)) {
         $row = [];
       }
 

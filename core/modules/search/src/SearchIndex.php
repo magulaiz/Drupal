@@ -124,7 +124,7 @@ class SearchIndex implements SearchIndexInterface {
           $tagname = substr($tagname, 1);
           // If we encounter unexpected tags, reset score to avoid incorrect
           // boosting.
-          if (!count($tagstack) || $tagstack[0] != $tagname) {
+          if (!\count($tagstack) || $tagstack[0] != $tagname) {
             $tagstack = [];
             $score = 1;
           }
@@ -166,12 +166,12 @@ class SearchIndex implements SearchIndexInterface {
               // Focus is a decaying value in terms of the amount of unique
               // words up to this point. From 100 words and more, it decays, to
               // e.g. 0.5 at 500 words and 0.3 at 1000 words.
-              $focus = min(1, .01 + 3.5 / (2 + count($scored_words) * .015));
+              $focus = min(1, .01 + 3.5 / (2 + \count($scored_words) * .015));
             }
             $tagwords++;
             // Too many words inside a single tag probably mean a tag was
             // accidentally left open.
-            if (count($tagstack) && $tagwords >= 15) {
+            if (\count($tagstack) && $tagwords >= 15) {
               $tagstack = [];
               $score = 1;
             }
@@ -316,7 +316,7 @@ class SearchIndex implements SearchIndexInterface {
       foreach ($result as $word) {
         $or->condition('word', $word->realword);
       }
-      if (count($or) > 0) {
+      if (\count($or) > 0) {
         $this->connection->delete('search_total')
           ->condition($or)
           ->execute();

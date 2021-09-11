@@ -55,7 +55,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    assert($object instanceof ResourceObject);
+    \assert($object instanceof ResourceObject);
     // If the fields to use were specified, only output those field values.
     $context['resource_object'] = $object;
     $resource_type = $object->getResourceType();
@@ -181,7 +181,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       if ($field instanceof EntityReferenceFieldItemListInterface) {
         // Build the relationship object based on the entity reference and
         // normalize that object instead.
-        assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
+        \assert(!empty($context['resource_object']) && $context['resource_object'] instanceof ResourceObject);
         $resource_object = $context['resource_object'];
         $relationship = Relationship::createFromEntityReferenceField($resource_object, $field);
         $normalized_field = $this->serializer->normalize($relationship, $format, $context);
@@ -189,7 +189,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       else {
         $normalized_field = $this->serializer->normalize($field, $format, $context);
       }
-      assert($normalized_field instanceof CacheableNormalization);
+      \assert($normalized_field instanceof CacheableNormalization);
       return $normalized_field->withCacheableDependency(CacheableMetadata::createFromObject($field_access_result));
     }
     else {

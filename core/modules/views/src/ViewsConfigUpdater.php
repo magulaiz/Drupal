@@ -429,7 +429,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
       $typed_handler = $typed_view->get($path_to_handler);
 
       // Filter values we want to convert from a string to an array.
-      if ($handler_type === 'filter' && $typed_handler->get('value') instanceof ArrayElement && is_string($handler['value'])) {
+      if ($handler_type === 'filter' && $typed_handler->get('value') instanceof ArrayElement && \is_string($handler['value'])) {
         // An empty string cast to an array is an array with one element.
         if ($handler['value'] === '') {
           $handler['value'] = [];

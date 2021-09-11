@@ -21,7 +21,7 @@ class TourViewBuilder extends EntityViewBuilder {
     $total_tips = 0;
     foreach ($entities as $entity_id => $entity) {
       $tour[$entity_id] = $entity->getTips();
-      $total_tips += count($tour[$entity_id]);
+      $total_tips += \count($tour[$entity_id]);
       $cache_tags = Cache::mergeTags($cache_tags, $entity->getCacheTags());
     }
 

@@ -118,22 +118,22 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
     // If the value is already an AttributeValueBase object,
     // return a new instance of the same class, but with the new name.
     if ($value instanceof AttributeValueBase) {
-      $class = get_class($value);
+      $class = \get_class($value);
       return new $class($name, $value->value());
     }
     // An array value or 'class' attribute name are forced to always be an
     // AttributeArray value for consistency.
-    if ($name == 'class' && !is_array($value)) {
+    if ($name == 'class' && !\is_array($value)) {
       // Cast the value to string in case it implements MarkupInterface.
       $value = [(string) $value];
     }
-    if (is_array($value)) {
+    if (\is_array($value)) {
       // Cast the value to an array if the value was passed in as a string.
       // @todo Decide to fix all the broken instances of class as a string
       // in core or cast them.
       $value = new AttributeArray($name, $value);
     }
-    elseif (is_bool($value)) {
+    elseif (\is_bool($value)) {
       $value = new AttributeBoolean($name, $value);
     }
     // As a development aid, we allow the value to be a safe string object.
@@ -143,7 +143,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
       $value = PlainTextOutput::renderFromHtml($value);
       $value = new AttributeString($name, $value);
     }
-    elseif (!is_object($value)) {
+    elseif (!\is_object($value)) {
       $value = new AttributeString($name, $value);
     }
     return $value;
@@ -172,7 +172,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return $this
    */
   public function addClass() {
-    $args = func_get_args();
+    $args = \func_get_args();
     if ($args) {
       $classes = [];
       foreach ($args as $arg) {
@@ -222,7 +222,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    *   Returns TRUE if the attribute exists, or FALSE otherwise.
    */
   public function hasAttribute($name) {
-    return array_key_exists($name, $this->storage);
+    return \array_key_exists($name, $this->storage);
   }
 
   /**
@@ -234,10 +234,10 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    * @return $this
    */
   public function removeAttribute() {
-    $args = func_get_args();
+    $args = \func_get_args();
     foreach ($args as $arg) {
       // Support arrays or multiple arguments.
-      if (is_array($arg)) {
+      if (\is_array($arg)) {
         foreach ($arg as $value) {
           unset($this->storage[$value]);
         }
@@ -261,7 +261,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
   public function removeClass() {
     // With no class attribute, there is no need to remove.
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
-      $args = func_get_args();
+      $args = \func_get_args();
       $classes = [];
       foreach ($args as $arg) {
         // Merge the values passed in from the classes array.
@@ -303,7 +303,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate, MarkupInterface {
    */
   public function hasClass($class) {
     if (isset($this->storage['class']) && $this->storage['class'] instanceof AttributeArray) {
-      return in_array($class, $this->storage['class']->value());
+      return \in_array($class, $this->storage['class']->value());
     }
     else {
       return FALSE;

@@ -130,11 +130,11 @@ final class ProjectSecurityData {
 
     // Check if the installed version has a specific end date defined.
     $version_suffix = $existing_release_version->getMajorVersion() . '_' . $this->getSemanticMinorVersion($this->existingVersion);
-    if (defined("self::SECURITY_COVERAGE_END_DATE_$version_suffix")) {
-      $info['security_coverage_end_date'] = constant("self::SECURITY_COVERAGE_END_DATE_$version_suffix");
+    if (\defined("self::SECURITY_COVERAGE_END_DATE_$version_suffix")) {
+      $info['security_coverage_end_date'] = \constant("self::SECURITY_COVERAGE_END_DATE_$version_suffix");
       $info['security_coverage_ending_warn_date'] =
-        defined("self::SECURITY_COVERAGE_ENDING_WARN_DATE_$version_suffix")
-          ? constant("self::SECURITY_COVERAGE_ENDING_WARN_DATE_$version_suffix")
+        \defined("self::SECURITY_COVERAGE_ENDING_WARN_DATE_$version_suffix")
+          ? \constant("self::SECURITY_COVERAGE_ENDING_WARN_DATE_$version_suffix")
           : NULL;
     }
     elseif ($security_coverage_until_version = $this->getSecurityCoverageUntilVersion()) {

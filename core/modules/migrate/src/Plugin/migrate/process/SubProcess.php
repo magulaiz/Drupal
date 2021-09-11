@@ -201,12 +201,12 @@ class SubProcess extends ProcessPluginBase {
       $source[$key] = $row->getSource();
     }
 
-    if (is_array($value) || $value instanceof \Traversable) {
+    if (\is_array($value) || $value instanceof \Traversable) {
       foreach ($value as $key => $new_value) {
         $new_row = new Row($new_value + $source);
         $migrate_executable->processRow($new_row, $this->configuration['process']);
         $destination = $new_row->getDestination();
-        if (array_key_exists('key', $this->configuration)) {
+        if (\array_key_exists('key', $this->configuration)) {
           $key = $this->transformKey($key, $migrate_executable, $new_row);
         }
         // Do not save the result if the key is NULL. The configured process

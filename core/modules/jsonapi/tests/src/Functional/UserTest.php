@@ -160,7 +160,7 @@ class UserTest extends ResourceTestBase {
    */
   protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('mail', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('mail', $sparse_fieldset)) {
       $cache_contexts = Cache::mergeContexts($cache_contexts, ['user']);
     }
     return $cache_contexts;
@@ -395,8 +395,8 @@ class UserTest extends ResourceTestBase {
     $doc = Json::decode((string) $response->getBody());
     $this->assertSame($user_a->uuid(), $doc['data']['2']['id']);
     $this->assertArrayHasKey('mail', $doc['data'][2]['attributes'], "Own user--user resource's 'mail' field is visible.");
-    $this->assertSame($user_b->uuid(), $doc['data'][count($doc['data']) - 1]['id']);
-    $this->assertArrayNotHasKey('mail', $doc['data'][count($doc['data']) - 1]['attributes']);
+    $this->assertSame($user_b->uuid(), $doc['data'][\count($doc['data']) - 1]['id']);
+    $this->assertArrayNotHasKey('mail', $doc['data'][\count($doc['data']) - 1]['attributes']);
 
     // Now request the same URLs, but as user B (same roles/permissions).
     $this->account = $user_b;
@@ -410,8 +410,8 @@ class UserTest extends ResourceTestBase {
     $doc = Json::decode((string) $response->getBody());
     $this->assertSame($user_a->uuid(), $doc['data']['2']['id']);
     $this->assertArrayNotHasKey('mail', $doc['data'][2]['attributes']);
-    $this->assertSame($user_b->uuid(), $doc['data'][count($doc['data']) - 1]['id']);
-    $this->assertArrayHasKey('mail', $doc['data'][count($doc['data']) - 1]['attributes']);
+    $this->assertSame($user_b->uuid(), $doc['data'][\count($doc['data']) - 1]['id']);
+    $this->assertArrayHasKey('mail', $doc['data'][\count($doc['data']) - 1]['attributes']);
 
     // Now grant permission to view user email addresses and verify.
     $this->grantPermissionsToTestedRole(['view user email addresses']);

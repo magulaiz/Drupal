@@ -45,7 +45,7 @@ class PluginFormFactory implements PluginFormFactoryInterface {
     $form_class = $plugin->getFormClass($operation);
 
     // If the form specified is the plugin itself, use it directly.
-    if (ltrim(get_class($plugin), '\\') === ltrim($form_class, '\\')) {
+    if (ltrim(\get_class($plugin), '\\') === ltrim($form_class, '\\')) {
       $form_object = $plugin;
     }
     else {

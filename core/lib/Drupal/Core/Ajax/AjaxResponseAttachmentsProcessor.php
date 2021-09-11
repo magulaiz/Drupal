@@ -131,8 +131,8 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     $ajax_page_state = $request->request->get('ajax_page_state');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
-    $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
-    $optimize_js = !defined('MAINTENANCE_MODE') && $this->config->get('js.preprocess');
+    $optimize_css = !\defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
+    $optimize_js = !\defined('MAINTENANCE_MODE') && $this->config->get('js.preprocess');
 
     $attachments = $response->getAttachments();
 

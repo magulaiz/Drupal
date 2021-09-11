@@ -73,7 +73,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
     $config_ids = array_filter($config_storage->listAll($prefix), function ($config_id) use ($prefix) {
       return $config_id != $prefix . LanguageInterface::LANGCODE_NOT_SPECIFIED && $config_id != $prefix . LanguageInterface::LANGCODE_NOT_APPLICABLE;
     });
-    return count($config_ids) > 1;
+    return \count($config_ids) > 1;
   }
 
   /**
@@ -94,7 +94,7 @@ class LanguageServiceProvider extends ServiceProviderBase {
       return FALSE;
     }
     $default_language = $config_storage->read(static::CONFIG_PREFIX . $system['default_langcode']);
-    if (is_array($default_language)) {
+    if (\is_array($default_language)) {
       return $default_language;
     }
     return FALSE;

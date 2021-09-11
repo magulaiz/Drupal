@@ -111,12 +111,12 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
       '#type' => 'select',
       '#options' => [
         'un' => $this->t("United Nations' official languages"),
-        'all' => $this->t('All @count languages', ['@count' => count($predefined_languages)]),
+        'all' => $this->t('All @count languages', ['@count' => \count($predefined_languages)]),
       ],
       '#default_value' => $config['language_list'],
       '#description' => $this->t('The list of languages to show in the language dropdown. The basic list will only show the <a href=":url">six official languages of the UN</a>. The extended list will show all @count languages that are available in Drupal.', [
         ':url' => 'https://www.un.org/en/sections/about-un/official-languages',
-        '@count' => count($predefined_languages),
+        '@count' => \count($predefined_languages),
       ]),
       '#attached' => ['library' => ['ckeditor/drupal.ckeditor.language.admin']],
     ];

@@ -406,7 +406,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $page->waitFor(10, function () use ($page, $selector) {
       return $page->find('css', "$selector .contextual-links");
     });
-    if (count($page->findAll('css', "$selector .contextual-links")) > 1) {
+    if (\count($page->findAll('css', "$selector .contextual-links")) > 1) {
       throw new \Exception('More than one contextual links found by selector');
     }
 

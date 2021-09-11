@@ -189,11 +189,11 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   public function getFormId($form_arg, FormStateInterface &$form_state) {
     // If the $form_arg is the name of a class, instantiate it. Don't allow
     // arbitrary strings to be passed to the class resolver.
-    if (is_string($form_arg) && class_exists($form_arg)) {
+    if (\is_string($form_arg) && class_exists($form_arg)) {
       $form_arg = $this->classResolver->getInstanceFromDefinition($form_arg);
     }
 
-    if (!is_object($form_arg) || !($form_arg instanceof FormInterface)) {
+    if (!\is_object($form_arg) || !($form_arg instanceof FormInterface)) {
       throw new \InvalidArgumentException("The form argument $form_arg is not a valid form.");
     }
 
@@ -211,7 +211,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   public function getForm($form_arg) {
     $form_state = new FormState();
 
-    $args = func_get_args();
+    $args = \func_get_args();
     // Remove $form_arg from the arguments.
     unset($args[0]);
     $form_state->addBuildInfo('args', array_values($args));
@@ -471,7 +471,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
   public function submitForm($form_arg, FormStateInterface &$form_state) {
     $build_info = $form_state->getBuildInfo();
     if (empty($build_info['args'])) {
-      $args = func_get_args();
+      $args = \func_get_args();
       // Remove $form and $form_state from the arguments.
       unset($args[0], $args[1]);
       $form_state->addBuildInfo('args', array_values($args));
@@ -528,7 +528,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // passed explicitly.
     $args = array_merge([$form, &$form_state], $args);
 
-    $form = call_user_func_array($callback, $args);
+    $form = \call_user_func_array($callback, $args);
     // If the form returns a response, skip subsequent page construction by
     // throwing an exception.
     // @see Drupal\Core\EventSubscriber\EnforcedFormResponseSubscriber
@@ -582,7 +582,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // exactly one submit button in the form, and if so, automatically use it
       // as triggering_element.
       $buttons = $form_state->getButtons();
-      if ($form_state->isProgrammed() && !$form_state->getTriggeringElement() && count($buttons) == 1) {
+      if ($form_state->isProgrammed() && !$form_state->getTriggeringElement() && \count($buttons) == 1) {
         $form_state->setTriggeringElement(reset($buttons));
       }
       $this->formValidator->validateForm($form_id, $form, $form_state);
@@ -1004,7 +1004,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     if (isset($element['#process']) && !$element['#processed']) {
       foreach ($element['#process'] as $callback) {
         $complete_form = &$form_state->getCompleteForm();
-        $element = call_user_func_array($form_state->prepareCallback($callback), [&$element, &$form_state, &$complete_form]);
+        $element = \call_user_func_array($form_state->prepareCallback($callback), [&$element, &$form_state, &$complete_form]);
       }
       $element['#processed'] = TRUE;
     }
@@ -1075,7 +1075,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // after normal input parsing has been completed.
     if (isset($element['#after_build']) && !isset($element['#after_build_done'])) {
       foreach ($element['#after_build'] as $callback) {
-        $element = call_user_func_array($form_state->prepareCallback($callback), [$element, &$form_state]);
+        $element = \call_user_func_array($form_state->prepareCallback($callback), [$element, &$form_state]);
       }
       $element['#after_build_done'] = TRUE;
     }
@@ -1155,10 +1155,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    *   otherwise.
    */
   protected function valueCallableIsSafe(callable $value_callable) {
-    if (is_callable($value_callable, FALSE, $callable_name)) {
+    if (\is_callable($value_callable, FALSE, $callable_name)) {
       // The third parameter of is_callable() is set to a string form, but we
       // still have to normalize further by stripping a leading '\'.
-      return in_array(ltrim($callable_name, '\\'), $this->safeCoreValueCallables);
+      return \in_array(ltrim($callable_name, '\\'), $this->safeCoreValueCallables);
     }
     return FALSE;
   }
@@ -1177,7 +1177,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // @todo Remove this files prefix now?
         $element['#name'] = 'files[' . $element['#name'] . ']';
       }
-      elseif (count($element['#parents'])) {
+      elseif (\count($element['#parents'])) {
         $element['#name'] .= '[' . implode('][', $element['#parents']) . ']';
       }
       array_unshift($element['#parents'], $name);
@@ -1220,12 +1220,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $process_input = empty($element['#disabled']) && (($form_state->isProgrammed() && $form_state->isBypassingProgrammedAccessChecks()) || ($form_state->isProcessingInput() && (!isset($element['#access']) || $element['#access'])));
 
     // Set the element's #value property.
-    if (!isset($element['#value']) && !array_key_exists('#value', $element)) {
+    if (!isset($element['#value']) && !\array_key_exists('#value', $element)) {
       // @todo Once all elements are converted to plugins in
       //   https://www.drupal.org/node/2311393, rely on
       //   $element['#value_callback'] directly.
       $value_callable = !empty($element['#value_callback']) ? $element['#value_callback'] : 'form_type_' . $element['#type'] . '_value';
-      if (!is_callable($value_callable)) {
+      if (!\is_callable($value_callable)) {
         $value_callable = '\Drupal\Core\Render\Element\FormElement::valueCallback';
       }
 
@@ -1255,7 +1255,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
           // Skip all value callbacks except safe ones like text if the CSRF
           // token was invalid.
           if (!$form_state->hasInvalidToken() || $this->valueCallableIsSafe($value_callable)) {
-            $element['#value'] = call_user_func_array($value_callable, [&$element, $input, &$form_state]);
+            $element['#value'] = \call_user_func_array($value_callable, [&$element, $input, &$form_state]);
           }
           else {
             $input = NULL;
@@ -1274,7 +1274,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       if (!isset($element['#value'])) {
         // Call #type_value without a second argument to request default_value
         // handling.
-        $element['#value'] = call_user_func_array($value_callable, [&$element, FALSE, &$form_state]);
+        $element['#value'] = \call_user_func_array($value_callable, [&$element, FALSE, &$form_state]);
 
         // Final catch. If we haven't set a value yet, use the explicit default
         // value. Avoid image buttons (which come with garbage value), so we

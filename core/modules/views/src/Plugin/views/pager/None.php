@@ -75,7 +75,7 @@ class None extends PagerPluginBase {
   }
 
   public function postExecute(&$result) {
-    $this->total_items = count($result);
+    $this->total_items = \count($result);
   }
 
   public function query() {

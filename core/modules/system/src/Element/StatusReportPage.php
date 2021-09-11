@@ -97,7 +97,7 @@ class StatusReportPage extends RenderElement {
       if (isset($requirement['severity'])) {
         $severity = $severities[(int) $requirement['severity']];
       }
-      elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
+      elseif (\defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
         $severity = $severities[REQUIREMENT_OK];
       }
 

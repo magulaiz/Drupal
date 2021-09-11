@@ -75,7 +75,7 @@ class FieldConfigDeleteForm extends EntityDeleteForm {
 
     // If there is only one bundle left for this field storage, it will be
     // deleted too, notify the user about dependencies.
-    if (count($field_storage->getBundles()) <= 1) {
+    if (\count($field_storage->getBundles()) <= 1) {
       $config_names[] = $field_storage->getConfigDependencyName();
     }
     return $config_names;

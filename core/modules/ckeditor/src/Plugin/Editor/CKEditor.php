@@ -219,7 +219,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       ],
     ];
     $this->ckeditorPluginManager->injectPluginSettingsForm($form, $form_state, $editor);
-    if (count(Element::children($form['plugins'])) === 0) {
+    if (\count(Element::children($form['plugins'])) === 0) {
       unset($form['plugins']);
       unset($form['plugin_settings']);
     }

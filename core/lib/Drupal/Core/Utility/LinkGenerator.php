@@ -86,7 +86,7 @@ class LinkGenerator implements LinkGeneratorInterface {
     // service from the container.
     $url->setUrlGenerator($this->urlGenerator);
 
-    if (is_array($text)) {
+    if (\is_array($text)) {
       $text = $this->renderer->render($text);
     }
 

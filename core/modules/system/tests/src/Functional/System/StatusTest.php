@@ -52,7 +52,7 @@ class StatusTest extends BrowserTestBase {
     // Verify that the PHP version is shown on the page.
     $this->assertSession()->pageTextContains(phpversion());
 
-    if (function_exists('phpinfo')) {
+    if (\function_exists('phpinfo')) {
       $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());
     }
     else {

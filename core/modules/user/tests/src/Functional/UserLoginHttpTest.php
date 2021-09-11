@@ -266,7 +266,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    */
   protected function getResultValue(ResponseInterface $response, $key, $format) {
     $decoded = $this->serializer->decode((string) $response->getBody(), $format);
-    if (is_array($decoded)) {
+    if (\is_array($decoded)) {
       return $decoded[$key];
     }
     else {

@@ -188,7 +188,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       // Cast the display title to a string since it is an object.
       // @see \Drupal\Core\StringTranslation\TranslatableMarkup
       'display_title' => (string) $title,
-      'position' => $id === 'default' ? 0 : count($this->display),
+      'position' => $id === 'default' ? 0 : \count($this->display),
       'display_options' => [],
     ];
 
@@ -481,7 +481,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $changed = FALSE;
 
     // Don't intervene if the views module is removed.
-    if (isset($dependencies['module']) && in_array('views', $dependencies['module'])) {
+    if (isset($dependencies['module']) && \in_array('views', $dependencies['module'])) {
       return FALSE;
     }
 
@@ -490,7 +490,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $views_data = Views::viewsData();
     $base_table = $this->get('base_table');
     $base_table_data = $views_data->get($base_table);
-    if (!empty($base_table_data['table']['provider']) && in_array($base_table_data['table']['provider'], $dependencies['module'])) {
+    if (!empty($base_table_data['table']['provider']) && \in_array($base_table_data['table']['provider'], $dependencies['module'])) {
       return FALSE;
     }
 

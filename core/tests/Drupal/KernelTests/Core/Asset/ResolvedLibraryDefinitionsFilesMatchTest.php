@@ -162,7 +162,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   protected function verifyLibraryFilesExist($library_definitions) {
     foreach ($library_definitions as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
-        if (in_array("$extension/$library_name", $this->librariesToSkip)) {
+        if (\in_array("$extension/$library_name", $this->librariesToSkip)) {
           continue;
         }
 

@@ -179,7 +179,7 @@ class ContentTranslationController extends ControllerBase {
         ];
 
         $links = &$operations['data']['#links'];
-        if (array_key_exists($langcode, $translations)) {
+        if (\array_key_exists($langcode, $translations)) {
           // Existing translation in the translation set: display status.
           $translation = $entity->getTranslation($langcode);
           $metadata = $manager->getTranslationMetadata($translation);

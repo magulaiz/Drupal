@@ -190,7 +190,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
       // body. These responses are not cacheable, so we add no cacheability
       // metadata here.
       $headers = [];
-      if (in_array('canonical', $entity->uriRelationships(), TRUE)) {
+      if (\in_array('canonical', $entity->uriRelationships(), TRUE)) {
         $url = $entity->toUrl('canonical', ['absolute' => TRUE])->toString(TRUE);
         $headers['Location'] = $url->getGeneratedUrl();
       }

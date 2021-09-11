@@ -27,7 +27,7 @@ final class InputBag extends ParameterBag {
     }
 
     $value = $this->parameters[$key] ?? [];
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       throw new \UnexpectedValueException(sprintf('Unexpected value for parameter "%s": expecting "array", got "%s".', $key, get_debug_type($value)));
     }
 

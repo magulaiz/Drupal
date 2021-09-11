@@ -50,7 +50,7 @@ class InputRequired extends ExposedFormPluginBase {
     static $cache = NULL;
     if (!isset($cache)) {
       $view = $this->view;
-      if (is_array($view->filter) && count($view->filter)) {
+      if (\is_array($view->filter) && \count($view->filter)) {
         foreach ($view->filter as $filter) {
           if ($filter->isExposed()) {
             $identifier = $filter->options['expose']['identifier'];

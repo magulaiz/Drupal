@@ -97,7 +97,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
       throw new ConfigNameException("Missing namespace in Config object name $name.");
     }
     // The name must be shorter than Config::MAX_NAME_LENGTH characters.
-    if (strlen($name) > self::MAX_NAME_LENGTH) {
+    if (\strlen($name) > self::MAX_NAME_LENGTH) {
       throw new ConfigNameException("Config object name $name exceeds maximum allowed length of " . static::MAX_NAME_LENGTH . " characters.");
     }
 
@@ -134,7 +134,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
     }
     else {
       $parts = explode('.', $key);
-      if (count($parts) == 1) {
+      if (\count($parts) == 1) {
         return isset($this->data[$key]) ? $this->data[$key] : NULL;
       }
       else {
@@ -181,11 +181,11 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
     $value = $this->castSafeStrings($value);
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
-    if (is_array($value)) {
+    if (\is_array($value)) {
       $this->validateKeys($value);
     }
     $parts = explode('.', $key);
-    if (count($parts) == 1) {
+    if (\count($parts) == 1) {
       $this->data[$key] = $value;
     }
     else {
@@ -210,7 +210,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
       if (strpos($key, '.') !== FALSE) {
         throw new ConfigValueException("$key key contains a dot which is not supported.");
       }
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $this->validateKeys($value);
       }
     }
@@ -227,7 +227,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
    */
   public function clear($key) {
     $parts = explode('.', $key);
-    if (count($parts) == 1) {
+    if (\count($parts) == 1) {
       unset($this->data[$key]);
     }
     else {
@@ -285,7 +285,7 @@ abstract class ConfigBase implements RefinableCacheableDependencyInterface {
     if ($data instanceof MarkupInterface) {
       $data = (string) $data;
     }
-    elseif (is_array($data)) {
+    elseif (\is_array($data)) {
       array_walk_recursive($data, function (&$value) {
         if ($value instanceof MarkupInterface) {
           $value = (string) $value;

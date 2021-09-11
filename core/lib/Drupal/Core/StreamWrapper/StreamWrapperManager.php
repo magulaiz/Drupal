@@ -188,7 +188,7 @@ class StreamWrapperManager implements ContainerAwareInterface, StreamWrapperMana
    * {@inheritdoc}
    */
   public function registerWrapper($scheme, $class, $type) {
-    if (in_array($scheme, stream_get_wrappers(), TRUE)) {
+    if (\in_array($scheme, stream_get_wrappers(), TRUE)) {
       stream_wrapper_unregister($scheme);
     }
 

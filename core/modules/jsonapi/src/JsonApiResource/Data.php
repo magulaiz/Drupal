@@ -56,9 +56,9 @@ abstract class Data implements \IteratorAggregate, \Countable {
    *   cardinality.
    */
   public function __construct(array $data, $cardinality = -1) {
-    assert(Inspector::assertAllObjects($data, ResourceIdentifierInterface::class));
-    assert($cardinality >= -1 && $cardinality !== 0, 'Cardinality must be -1 for unlimited cardinality or a positive integer.');
-    assert($cardinality === -1 || count($data) <= $cardinality, 'If cardinality is not unlimited, the number of given resources must not exceed the cardinality of the collection.');
+    \assert(Inspector::assertAllObjects($data, ResourceIdentifierInterface::class));
+    \assert($cardinality >= -1 && $cardinality !== 0, 'Cardinality must be -1 for unlimited cardinality or a positive integer.');
+    \assert($cardinality === -1 || \count($data) <= $cardinality, 'If cardinality is not unlimited, the number of given resources must not exceed the cardinality of the collection.');
     $this->data = array_values($data);
     $this->cardinality = $cardinality;
   }
@@ -80,7 +80,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
    *   The number of parameters
    */
   public function count() {
-    return count($this->data);
+    return \count($this->data);
   }
 
   /**
@@ -168,7 +168,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
     $deduplicated = [];
     foreach ($collection as $resource) {
       $dedupe_key = $resource->getTypeName() . ':' . $resource->getId();
-      if ($resource instanceof EntityAccessDeniedHttpException && ($error = $resource->getError()) && !is_null($error['relationship_field'])) {
+      if ($resource instanceof EntityAccessDeniedHttpException && ($error = $resource->getError()) && !\is_null($error['relationship_field'])) {
         $dedupe_key .= ':' . $error['relationship_field'];
       }
       $deduplicated[$dedupe_key] = $resource;

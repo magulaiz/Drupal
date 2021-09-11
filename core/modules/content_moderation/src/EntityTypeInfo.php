@@ -146,7 +146,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         'workspace',
         'taxonomy_term',
       ];
-      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && !in_array($entity_type_id, $entity_type_to_exclude)) {
+      if ($entity_type->isRevisionable() && !$entity_type->isInternal() && !\in_array($entity_type_id, $entity_type_to_exclude)) {
         $entity_types[$entity_type_id] = $this->addModerationToEntityType($entity_type);
       }
     }
@@ -356,7 +356,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
 
       // Move the 'moderation_state' field widget to the footer region, if
       // available.
-      if (isset($form['footer']) && in_array($form_object->getOperation(), ['edit', 'default'], TRUE)) {
+      if (isset($form['footer']) && \in_array($form_object->getOperation(), ['edit', 'default'], TRUE)) {
         $form['moderation_state']['#group'] = 'footer';
       }
 
@@ -379,7 +379,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
    */
   protected function isModeratedEntityEditForm(FormInterface $form_object) {
     return $form_object instanceof ContentEntityFormInterface &&
-      in_array($form_object->getOperation(), ['edit', 'default', 'layout_builder'], TRUE) &&
+      \in_array($form_object->getOperation(), ['edit', 'default', 'layout_builder'], TRUE) &&
       $this->moderationInfo->isModeratedEntity($form_object->getEntity());
   }
 

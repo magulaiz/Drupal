@@ -86,7 +86,7 @@ class PhpMail implements MailInterface {
 
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
-      if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
+      if (\in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
         $value = explode(',', $value);
       }
       $headers->addHeader($name, $value);
@@ -162,7 +162,7 @@ class PhpMail implements MailInterface {
    *   location for this helper.
    */
   protected static function _isShellSafe($string) {
-    if (escapeshellcmd($string) !== $string || !in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
+    if (escapeshellcmd($string) !== $string || !\in_array(escapeshellarg($string), ["'$string'", "\"$string\""])) {
       return FALSE;
     }
     if (preg_match('/[^a-zA-Z0-9@_\-.]/', $string) !== 0) {

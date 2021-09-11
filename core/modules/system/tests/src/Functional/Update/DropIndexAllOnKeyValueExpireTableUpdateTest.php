@@ -17,7 +17,7 @@ class DropIndexAllOnKeyValueExpireTableUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      dirname(__DIR__, 3) . '/fixtures/update/drupal-8.8.0.bare.standard.php.gz',
+      \dirname(__DIR__, 3) . '/fixtures/update/drupal-8.8.0.bare.standard.php.gz',
     ];
   }
 

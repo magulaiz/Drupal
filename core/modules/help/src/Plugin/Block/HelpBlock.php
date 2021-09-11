@@ -102,7 +102,7 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
       if ($help = $this->moduleHandler->invoke($module, 'help', $args)) {
         // Convert strings to #markup render arrays so that they will XSS admin
         // filtered.
-        $build[] = is_array($help) ? $help : ['#markup' => $help];
+        $build[] = \is_array($help) ? $help : ['#markup' => $help];
       }
     }
     return $build;

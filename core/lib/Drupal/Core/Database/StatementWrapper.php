@@ -96,9 +96,9 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    * @see https://www.drupal.org/node/3177488
    */
   public function __call($method, $arguments) {
-    if (is_callable([$this->getClientStatement(), $method])) {
+    if (\is_callable([$this->getClientStatement(), $method])) {
       @trigger_error("StatementWrapper::{$method} should not be called in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488", E_USER_DEPRECATED);
-      return call_user_func_array([$this->getClientStatement(), $method], $arguments);
+      return \call_user_func_array([$this->getClientStatement(), $method], $arguments);
     }
     throw new \BadMethodCallException($method);
   }
@@ -127,7 +127,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
+      if (\is_string($options['fetch'])) {
         // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
         // are added to the object.
         $this->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $options['fetch']);
@@ -172,7 +172,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
   public function fetchAllAssoc($key, $fetch = NULL) {
     $return = [];
     if (isset($fetch)) {
-      if (is_string($fetch)) {
+      if (\is_string($fetch)) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
       }
       else {
@@ -181,7 +181,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     }
 
     foreach ($this as $record) {
-      $record_key = is_object($record) ? $record->$key : $record[$key];
+      $record_key = \is_object($record) ? $record->$key : $record[$key];
       $return[$record_key] = $record;
     }
 
@@ -246,7 +246,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 1:
         return $this->clientStatement->setFetchMode($mode);
 
@@ -266,7 +266,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 0:
         return $this->clientStatement->fetch();
 
@@ -289,7 +289,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 0:
         return $this->clientStatement->fetchAll();
 
@@ -340,7 +340,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function bindColumn($column, &$param, int $type = 0, int $maxlen = 0, $driverdata = NULL): bool {
     @trigger_error("StatementWrapper::bindColumn should not be called in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488", E_USER_DEPRECATED);
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 2:
         return $this->clientStatement->bindColumn($column, $param);
 
@@ -387,7 +387,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
    */
   public function bindParam($parameter, &$variable, int $data_type = \PDO::PARAM_STR, int $length = 0, $driver_options = NULL) : bool {
     @trigger_error("StatementWrapper::bindParam should not be called in drupal:9.1.0 and will error in drupal:10.0.0. Access the client-level statement object via ::getClientStatement(). See https://www.drupal.org/node/3177488", E_USER_DEPRECATED);
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 2:
         return $this->clientStatement->bindParam($parameter, $variable);
 

@@ -195,7 +195,7 @@ class FileFieldWidgetTest extends WebDriverTestBase {
     $web_driver = $this->getSession()->getDriver();
     $file_system = \Drupal::service('file_system');
 
-    $files = array_slice($this->getTestFiles('text'), 0, 3);
+    $files = \array_slice($this->getTestFiles('text'), 0, 3);
     $real_paths = [];
     foreach ($files as $file) {
       $real_paths[] = $file_system->realpath($file->uri);

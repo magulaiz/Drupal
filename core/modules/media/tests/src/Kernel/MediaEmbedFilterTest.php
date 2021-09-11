@@ -296,7 +296,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
     $this->setRawContent($result->getProcessedText());
     $this->assertCount(0, $this->cssSelect('div[data-media-embed-test-view-mode="foobar"]'));
     $this->assertCount(1, $this->cssSelect('div.this-error-message-is-themeable'));
-    if (in_array('filter_align', $filter_ids, TRUE) && !empty($additional_attributes['data-align'])) {
+    if (\in_array('filter_align', $filter_ids, TRUE) && !empty($additional_attributes['data-align'])) {
       $this->assertCount(1, $this->cssSelect('div.align-' . $additional_attributes['data-align']));
     }
 

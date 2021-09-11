@@ -206,7 +206,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
       // Contextual links only work on blocks whose content is a renderable
       // array, so if the block contains a string of already-rendered markup,
       // convert it to an array.
-      if (is_string($output)) {
+      if (\is_string($output)) {
         $output = ['#markup' => $output];
       }
 

@@ -29,10 +29,10 @@ class SearchSimplifyTest extends KernelTestBase {
     // and the odd-numbered lines we need to split into shorter chunks and
     // verify that simplification doesn't lose any characters.
     $input = file_get_contents($this->root . '/core/modules/search/tests/UnicodeTest.txt');
-    $basestrings = explode(chr(10), $input);
+    $basestrings = explode(\chr(10), $input);
     $strings = [];
     $text_processor = \Drupal::service('search.text_processor');
-    assert($text_processor instanceof SearchTextProcessorInterface);
+    \assert($text_processor instanceof SearchTextProcessorInterface);
     foreach ($basestrings as $key => $string) {
       if ($key % 2) {
         // Even line - should simplify down to a space.
@@ -67,7 +67,7 @@ class SearchSimplifyTest extends KernelTestBase {
     // in the text file because they are problematic for diff, especially \0.
     $string = '';
     for ($i = 0; $i < 32; $i++) {
-      $string .= chr($i);
+      $string .= \chr($i);
     }
     $this->assertSame(' ', $text_processor->analyze($string), 'Search simplify works for ASCII control characters.');
   }
@@ -84,7 +84,7 @@ class SearchSimplifyTest extends KernelTestBase {
     ];
 
     $text_processor = \Drupal::service('search.text_processor');
-    assert($text_processor instanceof SearchTextProcessorInterface);
+    \assert($text_processor instanceof SearchTextProcessorInterface);
     foreach ($cases as $case) {
       $out = trim($text_processor->analyze($case[0]));
       $this->assertEquals($case[1], $out, $case[2]);

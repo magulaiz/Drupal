@@ -62,9 +62,9 @@ class StyleGridTest extends PluginKernelTestBase {
     $output = $view->preview();
     $output = \Drupal::service('renderer')->renderRoot($output);
     $this->setRawContent($output);
-    if (!in_array($alignment, $this->alignmentsTested)) {
+    if (!\in_array($alignment, $this->alignmentsTested)) {
       $result = $this->xpath('//div[contains(@class, "views-view-grid") and contains(@class, :alignment) and contains(@class, :columns)]', [':alignment' => $alignment, ':columns' => 'cols-' . $columns]);
-      $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " grid markup detected.");
+      $this->assertGreaterThan(0, \count($result), ucfirst($alignment) . " grid markup detected.");
       $this->alignmentsTested[] = $alignment;
     }
     $width = '0';
@@ -86,15 +86,15 @@ class StyleGridTest extends PluginKernelTestBase {
     }
     // Ensure last column exists.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns) and starts-with(@style, :width)]', [':columns' => 'col-' . $columns, ':width' => 'width: ' . $width]);
-    $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " $columns column grid: last column exists and automatic width calculated correctly.");
+    $this->assertGreaterThan(0, \count($result), ucfirst($alignment) . " $columns column grid: last column exists and automatic width calculated correctly.");
     // Ensure no extra columns were generated.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, :columns)]', [':columns' => 'col-' . ($columns + 1)]);
     $this->assertEmpty($result, ucfirst($alignment) . " $columns column grid: no extraneous columns exist.");
     // Ensure tokens are being replaced in custom row/column classes.
     $result = $this->xpath('//div[contains(@class, "views-col") and contains(@class, "name-John")]');
-    $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " $columns column grid: Token replacement verified in custom column classes.");
+    $this->assertGreaterThan(0, \count($result), ucfirst($alignment) . " $columns column grid: Token replacement verified in custom column classes.");
     $result = $this->xpath('//div[contains(@class, "views-row") and contains(@class, "age-25")]');
-    $this->assertGreaterThan(0, count($result), ucfirst($alignment) . " $columns column grid: Token replacement verified in custom row classes.");
+    $this->assertGreaterThan(0, \count($result), ucfirst($alignment) . " $columns column grid: Token replacement verified in custom row classes.");
   }
 
 }

@@ -175,11 +175,11 @@ class StorageComparer implements StorageComparerInterface {
     $changes = array_diff($changes, $this->changelist[$collection][$op]);
     $this->changelist[$collection][$op] = array_merge($this->changelist[$collection][$op], $changes);
     if (isset($sort_order)) {
-      $count = count($this->changelist[$collection][$op]);
+      $count = \count($this->changelist[$collection][$op]);
       // Sort the changelist in the same order as the $sort_order array and
       // ensure the array is keyed from 0.
       $this->changelist[$collection][$op] = array_values(array_intersect($sort_order, $this->changelist[$collection][$op]));
-      if ($count != count($this->changelist[$collection][$op])) {
+      if ($count != \count($this->changelist[$collection][$op])) {
         throw new \InvalidArgumentException("Sorting the $op changelist should not change its length.");
       }
     }
@@ -291,7 +291,7 @@ class StorageComparer implements StorageComparerInterface {
     $create_uuids = [];
     foreach ($this->sourceNames[$collection] as $name) {
       $data = $this->getSourceStorage($collection)->read($name);
-      if (isset($data['uuid']) && in_array($name, $create_list)) {
+      if (isset($data['uuid']) && \in_array($name, $create_list)) {
         $create_uuids[$data['uuid']] = $name;
       }
     }

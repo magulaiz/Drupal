@@ -352,7 +352,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
 
     // Status should be FALSE when posting as anonymous.
     $response = $this->request('POST', $url, $request_options);
-    $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+    $unserialized = $this->serializer->deserialize((string) $response->getBody(), \get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertFalse($unserialized->isPublished());
 
@@ -361,7 +361,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
 
     // Status should be TRUE when posting as anonymous and skip comment approval.
     $response = $this->request('POST', $url, $request_options);
-    $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
+    $unserialized = $this->serializer->deserialize((string) $response->getBody(), \get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertTrue($unserialized->isPublished());
   }

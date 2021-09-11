@@ -267,7 +267,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    *   An array of outlines that could match the specified path parts.
    */
   protected function getCandidateOutlines(array $parts) {
-    $number_parts = count($parts);
+    $number_parts = \count($parts);
     $ancestors = [];
     $length = $number_parts - 1;
     $end = (1 << $number_parts) - 1;
@@ -364,7 +364,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     try {
       $routes = $this->connection->query("SELECT [name], [route], [fit] FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE [pattern_outline] IN ( :patterns[] ) AND [number_parts] >= :count_parts", [
         ':patterns[]' => $ancestors,
-        ':count_parts' => count($parts),
+        ':count_parts' => \count($parts),
       ])
         ->fetchAll(\PDO::FETCH_ASSOC);
     }

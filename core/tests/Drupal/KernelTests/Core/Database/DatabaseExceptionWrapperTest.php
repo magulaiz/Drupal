@@ -33,7 +33,7 @@ class DatabaseExceptionWrapperTest extends KernelTestBase {
       $this->fail('Expected PDOException or DatabaseExceptionWrapper, none was thrown.');
     }
     catch (\Exception $e) {
-      $this->assertTrue($e instanceof \PDOException || $e instanceof DatabaseExceptionWrapper, 'Exception should be an instance of \PDOException or DatabaseExceptionWrapper, thrown ' . get_class($e));
+      $this->assertTrue($e instanceof \PDOException || $e instanceof DatabaseExceptionWrapper, 'Exception should be an instance of \PDOException or DatabaseExceptionWrapper, thrown ' . \get_class($e));
     }
   }
 

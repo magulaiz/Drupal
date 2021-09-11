@@ -357,7 +357,7 @@ class DateTimePlus {
       throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $method));
     }
 
-    $result = call_user_func_array([$this->dateTimeObject, $method], $args);
+    $result = \call_user_func_array([$this->dateTimeObject, $method], $args);
 
     return $result === $this->dateTimeObject ? $this : $result;
   }
@@ -395,7 +395,7 @@ class DateTimePlus {
     if (!method_exists('\DateTime', $method)) {
       throw new \BadMethodCallException(sprintf('Call to undefined method %s::%s()', static::class, $method));
     }
-    return call_user_func_array(['\DateTime', $method], $args);
+    return \call_user_func_array(['\DateTime', $method], $args);
   }
 
   /**
@@ -444,7 +444,7 @@ class DateTimePlus {
     }
 
     // Allow string timezone input, and create a timezone from it.
-    elseif (!empty($timezone) && is_string($timezone)) {
+    elseif (!empty($timezone) && \is_string($timezone)) {
       $timezone_adjusted = new \DateTimeZone($timezone);
     }
 
@@ -510,7 +510,7 @@ class DateTimePlus {
    *   otherwise.
    */
   public function hasErrors() {
-    return (boolean) count($this->errors);
+    return (boolean) \count($this->errors);
   }
 
   /**
@@ -541,21 +541,21 @@ class DateTimePlus {
     $array = static::prepareArray($array, $force_valid_date);
     $input_time = '';
     if ($array['year'] !== '') {
-      $input_time = static::datePad(intval($array['year']), 4);
+      $input_time = static::datePad(\intval($array['year']), 4);
       if ($force_valid_date || $array['month'] !== '') {
-        $input_time .= '-' . static::datePad(intval($array['month']));
+        $input_time .= '-' . static::datePad(\intval($array['month']));
         if ($force_valid_date || $array['day'] !== '') {
-          $input_time .= '-' . static::datePad(intval($array['day']));
+          $input_time .= '-' . static::datePad(\intval($array['day']));
         }
       }
     }
     if ($array['hour'] !== '') {
       $input_time .= $input_time ? 'T' : '';
-      $input_time .= static::datePad(intval($array['hour']));
+      $input_time .= static::datePad(\intval($array['hour']));
       if ($force_valid_date || $array['minute'] !== '') {
-        $input_time .= ':' . static::datePad(intval($array['minute']));
+        $input_time .= ':' . static::datePad(\intval($array['minute']));
         if ($force_valid_date || $array['second'] !== '') {
-          $input_time .= ':' . static::datePad(intval($array['second']));
+          $input_time .= ':' . static::datePad(\intval($array['second']));
         }
       }
     }
@@ -626,7 +626,7 @@ class DateTimePlus {
     // Testing for valid time is reversed. Missing time is OK,
     // but incorrect values are not.
     foreach (['hour', 'minute', 'second'] as $key) {
-      if (array_key_exists($key, $array)) {
+      if (\array_key_exists($key, $array)) {
         $value = $array[$key];
         switch ($key) {
           case 'hour':

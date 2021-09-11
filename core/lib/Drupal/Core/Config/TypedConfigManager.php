@@ -89,7 +89,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $type = $definition['type'];
     if (strpos($type, ']')) {
       // Replace variable names in definition.
-      $replace = is_array($value) ? $value : [];
+      $replace = \is_array($value) ? $value : [];
       if (isset($parent)) {
         $replace['%parent'] = $parent;
       }
@@ -321,13 +321,13 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $parts = explode('.', $value);
     // Process each value part, one at a time.
     while ($name = array_shift($parts)) {
-      if (!is_array($data) || !isset($data[$name])) {
+      if (!\is_array($data) || !isset($data[$name])) {
         // Key not found, return original value
         return $value;
       }
       elseif (!$parts) {
         $value = $data[$name];
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
           $value = (int) $value;
         }
         // If no more parts left, this is the final property.
@@ -360,7 +360,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
   public function hasConfigSchema($name) {
     // The schema system falls back on the Undefined class for unknown types.
     $definition = $this->getDefinition($name);
-    return is_array($definition) && ($definition['class'] != Undefined::class);
+    return \is_array($definition) && ($definition['class'] != Undefined::class);
   }
 
   /**

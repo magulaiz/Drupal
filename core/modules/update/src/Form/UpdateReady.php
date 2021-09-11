@@ -140,7 +140,7 @@ class UpdateReady extends FormBase {
         $project_real_location = \Drupal::service('file_system')->realpath($project_location);
         $updates[] = [
           'project' => $project,
-          'updater_name' => get_class($updater),
+          'updater_name' => \get_class($updater),
           'local_url' => $project_real_location,
         ];
       }

@@ -93,7 +93,7 @@ class NodeStatisticsDatabaseStorage implements StatisticsStorageInterface {
    * {@inheritdoc}
    */
   public function fetchAll($order = 'totalcount', $limit = 5) {
-    assert(in_array($order, ['totalcount', 'daycount', 'timestamp']), "Invalid order argument.");
+    \assert(\in_array($order, ['totalcount', 'daycount', 'timestamp']), "Invalid order argument.");
 
     return $this->connection
       ->select('node_counter', 'nc')

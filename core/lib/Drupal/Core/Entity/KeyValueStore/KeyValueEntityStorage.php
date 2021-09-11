@@ -104,7 +104,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
         if (isset($values[$name])) {
           $entity->$name = $values[$name];
         }
-        elseif (!array_key_exists($name, $values)) {
+        elseif (!\array_key_exists($name, $values)) {
           $entity->get($name)->applyDefaultValue();
         }
         unset($values[$name]);
@@ -161,7 +161,7 @@ class KeyValueEntityStorage extends EntityStorageBase {
     // Check the entity ID length.
     // @todo This is not config-specific, but serial IDs will likely never hit
     //   this limit. Consider renaming the exception class.
-    if (strlen($entity->id()) > static::MAX_ID_LENGTH) {
+    if (\strlen($entity->id()) > static::MAX_ID_LENGTH) {
       throw new ConfigEntityIdLengthException("Entity ID {$entity->id()} exceeds maximum allowed length of " . static::MAX_ID_LENGTH . ' characters.');
     }
     return parent::save($entity);

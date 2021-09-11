@@ -190,7 +190,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    */
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
+      if (\is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
         // before the constructor is run. If you need to assign fields after
         // the constructor is run. See https://www.drupal.org/node/315092.
@@ -227,7 +227,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
     // \Drupal\Core\Database\Driver\sqlite\Statement for an explanation.
     unset($statement);
 
-    $this->resultRowCount = count($this->data);
+    $this->resultRowCount = \count($this->data);
 
     if ($this->resultRowCount) {
       $this->columnNames = array_keys($this->data[0]);
@@ -347,7 +347,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
           if (!isset($class_name)) {
             $class_name = $this->fetchOptions['class'];
           }
-          if (count($this->fetchOptions['constructor_args'])) {
+          if (\count($this->fetchOptions['constructor_args'])) {
             $reflector = new \ReflectionClass($class_name);
             $result = $reflector->newInstanceArgs($this->fetchOptions['constructor_args']);
           }

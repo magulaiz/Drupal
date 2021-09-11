@@ -110,11 +110,11 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Debian/Ubuntu uses the (broken) OSSP extension as their UUID
     // implementation. The OSSP implementation is not compatible with the
     // PECL functions.
-    if (function_exists('uuid_create') && !function_exists('uuid_make')) {
+    if (\function_exists('uuid_create') && !\function_exists('uuid_make')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Pecl');
     }
     // Try to use the COM implementation for Windows users.
-    elseif (function_exists('com_create_guid')) {
+    elseif (\function_exists('com_create_guid')) {
       $uuid_service->setClass('Drupal\Component\Uuid\Com');
     }
   }
@@ -132,7 +132,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     }
     // The test middleware is not required for kernel tests as there is no child
     // site. DRUPAL_TEST_IN_CHILD_SITE is not defined in this case.
-    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
+    if (!\defined('DRUPAL_TEST_IN_CHILD_SITE')) {
       return;
     }
     // Add the HTTP request middleware to Guzzle.

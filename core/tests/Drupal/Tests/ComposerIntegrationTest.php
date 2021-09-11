@@ -105,7 +105,7 @@ class ComposerIntegrationTest extends UnitTestCase {
     $module_names = [];
     $discard = ['.', '..'];
     foreach ($folders as $file_name) {
-      if ((!in_array($file_name, $discard)) && is_dir($module_path . '/' . $file_name)) {
+      if ((!\in_array($file_name, $discard)) && is_dir($module_path . '/' . $file_name)) {
         // Skip any modules marked as hidden.
         $info_yml = $module_path . '/' . $file_name . '/' . $file_name . '.info.yml';
         if (file_exists($info_yml)) {

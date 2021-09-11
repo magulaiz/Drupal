@@ -31,16 +31,16 @@ class MethodFilter implements FilterInterface {
 
       // If the GET method is allowed we also need to allow the HEAD method
       // since HEAD is a GET method that doesn't return the body.
-      if (in_array('GET', $supported_methods, TRUE)) {
+      if (\in_array('GET', $supported_methods, TRUE)) {
         $supported_methods[] = 'HEAD';
       }
 
-      if (!in_array($method, $supported_methods, TRUE)) {
+      if (!\in_array($method, $supported_methods, TRUE)) {
         $all_supported_methods = array_merge($supported_methods, $all_supported_methods);
         $collection->remove($name);
       }
     }
-    if (count($collection)) {
+    if (\count($collection)) {
       return $collection;
     }
     throw new MethodNotAllowedException(array_unique($all_supported_methods));

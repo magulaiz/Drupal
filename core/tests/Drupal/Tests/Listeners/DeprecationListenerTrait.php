@@ -35,8 +35,8 @@ trait DeprecationListenerTrait {
       if (strpos($method, 'testLegacy') === 0
         || strpos($method, 'provideLegacy') === 0
         || strpos($method, 'getLegacy') === 0
-        || strpos(get_class($test), '\Legacy')
-        || in_array('legacy', Test::getGroups(get_class($test), $method), TRUE)) {
+        || strpos(\get_class($test), '\Legacy')
+        || \in_array('legacy', Test::getGroups(\get_class($test), $method), TRUE)) {
         // This is a legacy test don't skip deprecations.
         return;
       }
@@ -65,7 +65,7 @@ trait DeprecationListenerTrait {
    *   TRUE if the deprecation error should be skipped, FALSE if not.
    */
   public static function isDeprecationSkipped($message) {
-    if (in_array($message, static::getSkippedDeprecations(), TRUE)) {
+    if (\in_array($message, static::getSkippedDeprecations(), TRUE)) {
       return TRUE;
     }
     $dynamic_skipped_deprecations = [
@@ -139,7 +139,7 @@ trait DeprecationListenerTrait {
       if ($type === E_USER_DEPRECATED && static::isDeprecationSkipped($msg)) {
         return;
       }
-      return call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
+      return \call_user_func($this->previousHandler, $type, $msg, $file, $line, $context);
     };
 
     $this->previousHandler = set_error_handler($deprecation_handler);

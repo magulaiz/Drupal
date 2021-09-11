@@ -67,7 +67,7 @@ class FormHelper {
         $index = array_search($id, $keys, TRUE);
         $keys[$index] = $new_id;
       }
-      elseif (is_array($values)) {
+      elseif (\is_array($values)) {
         static::processStatesArray($conditions[$id], $search, $replace);
       }
     }

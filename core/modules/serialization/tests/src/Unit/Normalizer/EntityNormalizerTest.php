@@ -222,8 +222,8 @@ class EntityNormalizerTest extends UnitTestCase {
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
       ->withConsecutive(
-        ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
-        ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
+        ['value_1', \get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
+        ['value_2', \get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );
 
     $this->entityNormalizer->setSerializer($serializer);
@@ -371,8 +371,8 @@ class EntityNormalizerTest extends UnitTestCase {
     $serializer->expects($this->exactly(2))
       ->method('denormalize')
       ->withConsecutive(
-        ['value_1', get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
-        ['value_2', get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
+        ['value_1', \get_class($key_1), NULL, ['target_instance' => $key_1, 'entity_type' => 'test']],
+        ['value_2', \get_class($key_2), NULL, ['target_instance' => $key_2, 'entity_type' => 'test']],
       );
 
     $this->entityNormalizer->setSerializer($serializer);

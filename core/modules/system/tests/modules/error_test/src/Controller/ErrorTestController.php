@@ -42,7 +42,7 @@ class ErrorTestController extends ControllerBase {
    */
   public function generateWarnings($collect_errors = FALSE) {
     // Tell Drupal error reporter to send errors to Simpletest or not.
-    define('SIMPLETEST_COLLECT_ERRORS', $collect_errors);
+    \define('SIMPLETEST_COLLECT_ERRORS', $collect_errors);
     // This will generate a notice.
     $notice = new \stdClass();
     $notice == 1 ? 1 : 0;
@@ -70,7 +70,7 @@ class ErrorTestController extends ControllerBase {
    * Trigger an exception to test the exception handler.
    */
   public function triggerException() {
-    define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+    \define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     throw new \Exception("Drupal & awesome");
   }
 
@@ -78,7 +78,7 @@ class ErrorTestController extends ControllerBase {
    * Trigger an exception to test the PDO exception handler.
    */
   public function triggerPDOException() {
-    define('SIMPLETEST_COLLECT_ERRORS', FALSE);
+    \define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     $this->database->select('bananas_are_awesome', 'b')
       ->fields('b')
       ->execute();

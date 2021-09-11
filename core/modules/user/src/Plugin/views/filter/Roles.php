@@ -75,7 +75,7 @@ class Roles extends ManyToOne {
   public function calculateDependencies() {
     $dependencies = [];
 
-    if (in_array($this->operator, ['empty', 'not empty'])) {
+    if (\in_array($this->operator, ['empty', 'not empty'])) {
       return $dependencies;
     }
 
@@ -83,7 +83,7 @@ class Roles extends ManyToOne {
     // field data, and subsequently the incorrect config schema object and
     // value. In the empty case stop early. Otherwise we cast it to an array
     // later.
-    if (is_string($this->value) && $this->value === '') {
+    if (\is_string($this->value) && $this->value === '') {
       return [];
     }
 

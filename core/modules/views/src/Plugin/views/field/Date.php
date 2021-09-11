@@ -137,7 +137,7 @@ class Date extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     $format = $this->options['date_format'];
-    if (in_array($format, ['custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'])) {
+    if (\in_array($format, ['custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'])) {
       $custom_format = $this->options['custom_date_format'];
     }
 

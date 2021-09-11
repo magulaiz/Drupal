@@ -397,7 +397,7 @@ class BigPipeTest extends BrowserTestBase {
     }
     $this->assertEquals($expected_big_pipe_placeholders_with_replacements, array_filter($expected_big_pipe_placeholders));
     $this->assertSetsEqual(array_keys($expected_big_pipe_placeholders_with_replacements), array_values($placeholder_replacement_positions));
-    $this->assertSame(count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getSession()->getPage()->getContent()));
+    $this->assertSame(\count($expected_big_pipe_placeholders_with_replacements), preg_match_all('/' . preg_quote('<script type="application/vnd.drupal-ajax" data-big-pipe-replacement-for-placeholder-with-id="', '/') . '/', $this->getSession()->getPage()->getContent()));
 
     // Verifying BigPipe start/stop signals.
     $this->assertSession()->responseContains(BigPipe::START_SIGNAL);
@@ -439,7 +439,7 @@ class BigPipeTest extends BrowserTestBase {
    * Asserts whether arrays A and B are equal, when treated as sets.
    */
   protected function assertSetsEqual(array $a, array $b) {
-    return count($a) == count($b) && !array_diff_assoc($a, $b);
+    return \count($a) == \count($b) && !array_diff_assoc($a, $b);
   }
 
   /**

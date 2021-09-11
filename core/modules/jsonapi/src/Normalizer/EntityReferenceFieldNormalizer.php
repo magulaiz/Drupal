@@ -33,16 +33,16 @@ class EntityReferenceFieldNormalizer extends FieldNormalizer {
    * {@inheritdoc}
    */
   public function normalize($field, $format = NULL, array $context = []) {
-    assert($field instanceof EntityReferenceFieldItemListInterface);
+    \assert($field instanceof EntityReferenceFieldItemListInterface);
     // Build the relationship object based on the Entity Reference and normalize
     // that object instead.
     $resource_identifiers = array_filter(ResourceIdentifier::toResourceIdentifiers($field->filterEmptyItems()), function (ResourceIdentifierInterface $resource_identifier) {
       return !$resource_identifier->getResourceType()->isInternal();
     });
     $normalized_items = CacheableNormalization::aggregate($this->serializer->normalize($resource_identifiers, $format, $context));
-    assert($context['resource_object'] instanceof ResourceObject);
+    \assert($context['resource_object'] instanceof ResourceObject);
     $resource_relationship = $context['resource_object']->getResourceType()->getFieldByInternalName($field->getName());
-    assert($resource_relationship instanceof ResourceTypeRelationship);
+    \assert($resource_relationship instanceof ResourceTypeRelationship);
     $link_cacheability = new CacheableMetadata();
     $links = array_map(function (Url $link) use ($link_cacheability) {
       $href = $link->setAbsolute()->toString(TRUE);

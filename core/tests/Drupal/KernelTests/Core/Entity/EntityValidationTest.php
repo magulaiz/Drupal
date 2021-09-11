@@ -109,7 +109,7 @@ class EntityValidationTest extends EntityKernelTestBase {
     $cached_discoveries = $get_cached_discoveries();
     $cached_discovery_classes = [];
     foreach ($cached_discoveries as $cached_discovery) {
-      $cached_discovery_classes[] = get_class($cached_discovery);
+      $cached_discovery_classes[] = \get_class($cached_discovery);
     }
     $this->assertContains('Drupal\Core\Validation\ConstraintManager', $cached_discovery_classes);
 

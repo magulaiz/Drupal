@@ -271,7 +271,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @covers ::getHandler
    */
   public function testGetHandler() {
-    $class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
+    $class = \get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getHandlerClass('storage')->willReturn($class);
 
@@ -390,7 +390,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    *   A mock controller class name.
    */
   protected function getTestHandlerClass() {
-    return get_class($this->getMockForAbstractClass(EntityHandlerBase::class));
+    return \get_class($this->getMockForAbstractClass(EntityHandlerBase::class));
   }
 
 }

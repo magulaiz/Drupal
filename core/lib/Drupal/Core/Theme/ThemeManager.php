@@ -135,7 +135,7 @@ class ThemeManager implements ThemeManagerInterface {
     // If called before all modules are loaded, we do not necessarily have a
     // full theme registry to work with, and therefore cannot process the theme
     // request properly. See also \Drupal\Core\Theme\Registry::get().
-    if (!$this->moduleHandler->isLoaded() && !defined('MAINTENANCE_MODE')) {
+    if (!$this->moduleHandler->isLoaded() && !\defined('MAINTENANCE_MODE')) {
       throw new \Exception('The theme implementations may not be rendered until all modules are loaded.');
     }
 
@@ -143,7 +143,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
-    if (is_array($hook)) {
+    if (\is_array($hook)) {
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -191,7 +191,7 @@ class ThemeManager implements ThemeManagerInterface {
       $variables = [];
       if (isset($info['variables'])) {
         foreach (array_keys($info['variables']) as $name) {
-          if (isset($element["#$name"]) || array_key_exists("#$name", $element)) {
+          if (isset($element["#$name"]) || \array_key_exists("#$name", $element)) {
             $variables[$name] = $element["#$name"];
           }
         }
@@ -283,7 +283,7 @@ class ThemeManager implements ThemeManagerInterface {
     }
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
-        if (function_exists($preprocessor_function)) {
+        if (\function_exists($preprocessor_function)) {
           $preprocessor_function($variables, $hook, $info);
         }
       }
@@ -310,7 +310,7 @@ class ThemeManager implements ThemeManagerInterface {
     // Generate the output using either a function or a template.
     $output = '';
     if (isset($info['function'])) {
-      if (function_exists($info['function'])) {
+      if (\function_exists($info['function'])) {
         // Theme functions do not render via the theme engine, so the output is
         // not autoescaped. However, we can only presume that the theme function
         // has been written correctly and that the markup is safe.
@@ -326,11 +326,11 @@ class ThemeManager implements ThemeManagerInterface {
       $theme_engine = $active_theme->getEngine();
       if (isset($theme_engine)) {
         if ($info['type'] != 'module') {
-          if (function_exists($theme_engine . '_render_template')) {
+          if (\function_exists($theme_engine . '_render_template')) {
             $render_function = $theme_engine . '_render_template';
           }
           $extension_function = $theme_engine . '_extension';
-          if (function_exists($extension_function)) {
+          if (\function_exists($extension_function)) {
             $extension = $extension_function();
           }
         }
@@ -416,7 +416,7 @@ class ThemeManager implements ThemeManagerInterface {
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
     // specific variants of it, as in the case of array('form', 'form_FORM_ID').
-    if (is_array($type)) {
+    if (\is_array($type)) {
       $extra_types = $type;
       $type = array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
@@ -432,13 +432,13 @@ class ThemeManager implements ThemeManagerInterface {
     $functions = [];
     foreach ($theme_keys as $theme_key) {
       $function = $theme_key . '_' . $type . '_alter';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $functions[] = $function;
       }
       if (isset($extra_types)) {
         foreach ($extra_types as $extra_type) {
           $function = $theme_key . '_' . $extra_type . '_alter';
-          if (function_exists($function)) {
+          if (\function_exists($function)) {
             $functions[] = $function;
           }
         }

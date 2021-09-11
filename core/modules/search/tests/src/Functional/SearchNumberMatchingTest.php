@@ -91,7 +91,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
    * Tests that all the numbers can be searched.
    */
   public function testNumberSearching() {
-    for ($i = 0; $i < count($this->numbers); $i++) {
+    for ($i = 0; $i < \count($this->numbers); $i++) {
       $node = $this->nodes[$i];
 
       // Verify that the node title does not appear on the search page
@@ -102,7 +102,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
 
       // Now verify that we can find node i by searching for any of the
       // numbers.
-      for ($j = 0; $j < count($this->numbers); $j++) {
+      for ($j = 0; $j < \count($this->numbers); $j++) {
         $number = $this->numbers[$j];
         // If the number is negative, remove the - sign, because - indicates
         // "not keyword" when searching.

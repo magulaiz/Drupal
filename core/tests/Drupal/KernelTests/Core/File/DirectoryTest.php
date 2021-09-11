@@ -204,7 +204,7 @@ class DirectoryTest extends FileTestBase {
    * paths. This test forks the process to create the same situation.
    */
   public function testMultiplePrepareDirectory() {
-    if (!function_exists('pcntl_fork')) {
+    if (!\function_exists('pcntl_fork')) {
       $this->markTestSkipped('Requires the pcntl_fork() function');
     }
     $directories = [];

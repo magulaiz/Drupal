@@ -463,9 +463,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
-      if (isset($this->definition['access arguments']) && is_array($this->definition['access arguments'])) {
-        return call_user_func_array($this->definition['access callback'], [$account] + $this->definition['access arguments']);
+    if (isset($this->definition['access callback']) && \function_exists($this->definition['access callback'])) {
+      if (isset($this->definition['access arguments']) && \is_array($this->definition['access arguments'])) {
+        return \call_user_func_array($this->definition['access callback'], [$account] + $this->definition['access arguments']);
       }
       return $this->definition['access callback']($account);
     }

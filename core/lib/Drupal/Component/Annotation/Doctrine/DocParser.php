@@ -419,7 +419,7 @@ final class DocParser
             ? 'end of string'
             : sprintf("'%s' at position %s", $token['value'], $token['position']);
 
-        if (strlen($this->context)) {
+        if (\strlen($this->context)) {
             $message .= ' in ' . $this->context;
         }
 
@@ -622,7 +622,7 @@ final class DocParser
             }
 
             // make sure the @ is preceded by non-catchable pattern
-            if (null !== $this->lexer->token && $this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value'])) {
+            if (null !== $this->lexer->token && $this->lexer->lookahead['position'] === $this->lexer->token['position'] + \strlen($this->lexer->token['value'])) {
                 $this->lexer->moveNext();
                 continue;
             }
@@ -630,7 +630,7 @@ final class DocParser
             // make sure the @ is followed by either a namespace separator, or
             // an identifier token
             if ((null === $peek = $this->lexer->glimpse())
-                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && !in_array($peek['type'], self::$classIdentifiers, true))
+                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && !\in_array($peek['type'], self::$classIdentifiers, true))
                 || $peek['position'] !== $this->lexer->lookahead['position'] + 1) {
                 $this->lexer->moveNext();
                 continue;
@@ -749,7 +749,7 @@ final class DocParser
             // checks all declared attributes
             foreach (self::$annotationMetadata[$name]['enum'] as $property => $enum) {
                 // checks if the attribute is a valid enumerator
-                if (isset($values[$property]) && ! in_array($values[$property], $enum['value'])) {
+                if (isset($values[$property]) && ! \in_array($values[$property], $enum['value'])) {
                     throw AnnotationException::enumeratorError($property, $name, $this->context, $enum['literal'], $values[$property]);
                 }
             }
@@ -773,19 +773,19 @@ final class DocParser
 
             if ($type['type'] === 'array') {
                 // handle the case of a single value
-                if ( ! is_array($values[$property])) {
+                if ( ! \is_array($values[$property])) {
                     $values[$property] = array($values[$property]);
                 }
 
                 // checks if the attribute has array type declaration, such as "array<string>"
                 if (isset($type['array_type'])) {
                     foreach ($values[$property] as $item) {
-                        if (gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
+                        if (\gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
                             throw AnnotationException::attributeTypeError($property, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
                         }
                     }
                 }
-            } elseif (gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
+            } elseif (\gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
                 throw AnnotationException::attributeTypeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
             }
         }
@@ -859,7 +859,7 @@ final class DocParser
             $token = $this->lexer->lookahead;
             $value = $this->Value();
 
-            if ( ! is_object($value) && ! is_array($value)) {
+            if ( ! \is_object($value) && ! \is_array($value)) {
                 $this->syntaxError('Value', $token);
             }
 
@@ -867,12 +867,12 @@ final class DocParser
         }
 
         foreach ($values as $k => $value) {
-            if (is_object($value) && $value instanceof \stdClass) {
+            if (\is_object($value) && $value instanceof \stdClass) {
                 $values[$value->name] = $value->value;
             } else if ( ! isset($values['value'])){
                 $values['value'] = $value;
             } else {
-                if ( ! is_array($values['value'])) {
+                if ( ! \is_array($values['value'])) {
                     $values['value'] = array($values['value']);
                 }
 
@@ -896,7 +896,7 @@ final class DocParser
     {
         $identifier = $this->Identifier();
 
-        if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
+        if ( ! \defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
             list($className, $const) = explode('::', $identifier);
 
             $alias = (false === $pos = strpos($className, '\\')) ? $className : substr($className, 0, $pos);
@@ -939,15 +939,15 @@ final class DocParser
 
         // checks if identifier ends with ::class, \strlen('::class') === 7
         $classPos = stripos($identifier, '::class');
-        if ($classPos === strlen($identifier) - 7) {
+        if ($classPos === \strlen($identifier) - 7) {
             return substr($identifier, 0, $classPos);
         }
 
-        if (!defined($identifier)) {
+        if (!\defined($identifier)) {
             throw AnnotationException::semanticalErrorConstants($identifier, $this->context);
         }
 
-        return constant($identifier);
+        return \constant($identifier);
     }
 
     /**
@@ -968,7 +968,7 @@ final class DocParser
 
         while (
             null !== $this->lexer->lookahead &&
-            $this->lexer->lookahead['position'] === ($this->lexer->token['position'] + strlen($this->lexer->token['value'])) &&
+            $this->lexer->lookahead['position'] === ($this->lexer->token['position'] + \strlen($this->lexer->token['value'])) &&
             $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)
         ) {
             $this->match(DocLexer::T_NAMESPACE_SEPARATOR);

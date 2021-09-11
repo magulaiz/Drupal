@@ -359,7 +359,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.
 
-    if (is_string(key($form_state->getValue('roles')))) {
+    if (\is_string(key($form_state->getValue('roles')))) {
       $form_state->setValue('roles', array_keys(array_filter($form_state->getValue('roles'))));
     }
 
@@ -375,7 +375,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
 
     // Set existing password if set in the form state.
     $current_pass = trim($form_state->getValue('current_pass'));
-    if (strlen($current_pass) > 0) {
+    if (\strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }
 

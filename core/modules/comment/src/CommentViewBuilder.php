@@ -82,7 +82,7 @@ class CommentViewBuilder extends EntityViewBuilder {
     // Store a threading field setting to use later in self::buildComponents().
     $commented_entity = $entity->getCommentedEntity();
     $build['#comment_threaded'] =
-      is_null($commented_entity)
+      \is_null($commented_entity)
       || $commented_entity->getFieldDefinition($entity->getFieldName())
         ->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED;
     // If threading is enabled, don't render cache individual comments, but do
@@ -124,7 +124,7 @@ class CommentViewBuilder extends EntityViewBuilder {
 
     foreach ($entities as $id => $entity) {
       if ($build[$id]['#comment_threaded']) {
-        $comment_indent = count(explode('.', $entity->getThread())) - 1;
+        $comment_indent = \count(explode('.', $entity->getThread())) - 1;
         if ($comment_indent > $current_indent) {
           // Set 1 to indent this comment from the previous one (its parent).
           // Set only one extra level of indenting even if the difference in

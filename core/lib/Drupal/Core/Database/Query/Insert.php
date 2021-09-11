@@ -125,8 +125,8 @@ class Insert extends Query implements \Countable {
     // default keywords even though they are not, strictly speaking,
     // placeholders for prepared statements.
     $placeholders = [];
-    $placeholders = array_pad($placeholders, count($this->defaultFields), 'default');
-    $placeholders = array_pad($placeholders, count($this->insertFields), '?');
+    $placeholders = array_pad($placeholders, \count($this->defaultFields), 'default');
+    $placeholders = array_pad($placeholders, \count($this->insertFields), '?');
 
     return $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES (' . implode(', ', $placeholders) . ')';
   }
@@ -157,7 +157,7 @@ class Insert extends Query implements \Countable {
     }
     else {
       // Don't execute query without fields.
-      if (count($this->insertFields) + count($this->defaultFields) == 0) {
+      if (\count($this->insertFields) + \count($this->defaultFields) == 0) {
         throw new NoFieldsException('There are no fields available to insert with.');
       }
     }
@@ -165,7 +165,7 @@ class Insert extends Query implements \Countable {
     // If no values have been added, silently ignore this query. This can happen
     // if values are added conditionally, so we don't want to throw an
     // exception.
-    if (!isset($this->insertValues[0]) && count($this->insertFields) > 0 && empty($this->fromQuery)) {
+    if (!isset($this->insertValues[0]) && \count($this->insertFields) > 0 && empty($this->fromQuery)) {
       return FALSE;
     }
     return TRUE;

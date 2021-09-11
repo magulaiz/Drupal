@@ -16,10 +16,10 @@ class ConfigOverrider implements ConfigFactoryOverrideInterface {
   public function loadOverrides($names) {
     $overrides = [];
     if (!empty($GLOBALS['config_test_run_module_overrides'])) {
-      if (in_array('system.site', $names)) {
+      if (\in_array('system.site', $names)) {
         $overrides = $overrides + ['system.site' => ['name' => 'ZOMG overridden site name']];
       }
-      if (in_array('config_override_test.new', $names)) {
+      if (\in_array('config_override_test.new', $names)) {
         $overrides = $overrides + ['config_override_test.new' => ['module' => 'override']];
       }
     }

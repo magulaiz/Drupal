@@ -185,7 +185,7 @@ class EditorMediaDialog extends FormBase {
       '#options' => $view_mode_options,
       '#default_value' => $default_view_mode,
       '#parents' => ['attributes', 'data-view-mode'],
-      '#access' => count($view_mode_options) >= 2,
+      '#access' => \count($view_mode_options) >= 2,
     ];
 
     // Store the default from the MediaEmbed filter, so that if the selected
@@ -291,7 +291,7 @@ class EditorMediaDialog extends FormBase {
   public static function getViewModeDefaultValue(array $view_mode_options, FilterInterface $media_embed_filter, $media_element_view_mode_attribute) {
     // The select element won't display without at least two options, so if
     // that's the case, just return NULL.
-    if (count($view_mode_options) < 2) {
+    if (\count($view_mode_options) < 2) {
       return NULL;
     }
 
@@ -300,10 +300,10 @@ class EditorMediaDialog extends FormBase {
     // If the current media embed ($media_embed_element) has a set view mode,
     // we want to use that as the default in the select form element,
     // otherwise we'll want to use the default for all embedded media.
-    if (!empty($media_element_view_mode_attribute) && array_key_exists($media_element_view_mode_attribute, $view_mode_options)) {
+    if (!empty($media_element_view_mode_attribute) && \array_key_exists($media_element_view_mode_attribute, $view_mode_options)) {
       return $media_element_view_mode_attribute;
     }
-    elseif (array_key_exists($filter_default_view_mode, $view_mode_options)) {
+    elseif (\array_key_exists($filter_default_view_mode, $view_mode_options)) {
       return $filter_default_view_mode;
     }
 

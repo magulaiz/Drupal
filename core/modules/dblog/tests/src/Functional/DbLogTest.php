@@ -436,7 +436,7 @@ class DbLogTest extends BrowserTestBase {
     foreach ($result as $row) {
       $ids[] = $row->wid;
     }
-    $count_before = (isset($ids)) ? count($ids) : 0;
+    $count_before = (isset($ids)) ? \count($ids) : 0;
     $this->assertGreaterThan(0, $count_before, new FormattableMarkup('DBLog contains @count records for @name', ['@count' => $count_before, '@name' => $user->getAccountName()]));
 
     // Log in the admin user.
@@ -757,7 +757,7 @@ class DbLogTest extends BrowserTestBase {
    */
   protected function getTypeCount(array $types) {
     $entries = $this->getLogEntries();
-    $count = array_fill(0, count($types), 0);
+    $count = array_fill(0, \count($types), 0);
     foreach ($entries as $entry) {
       foreach ($types as $key => $type) {
         if ($entry['type'] == $type['type'] && $entry['severity'] == $type['severity']) {

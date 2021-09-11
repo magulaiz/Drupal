@@ -116,7 +116,7 @@ class TwigNodeTrans extends Node {
     }
 
     $tokens = [];
-    if (count($body)) {
+    if (\count($body)) {
       $text = '';
 
       foreach ($body as $node) {
@@ -173,7 +173,7 @@ class TwigNodeTrans extends Node {
           }
           else {
             $argName = $n->getAttribute('name');
-            if (!is_null($args)) {
+            if (!\is_null($args)) {
               $argName = $args->getAttribute('name');
             }
             $expr = new NameExpression($argName, $n->getTemplateLine());

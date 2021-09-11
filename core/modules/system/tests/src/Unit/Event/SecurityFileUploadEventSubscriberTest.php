@@ -83,7 +83,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       'no extension produces no errors' => ['foo', '', 'foo'],
       'filename is munged' => ['foo.phar.png.php.jpg', 'jpg png', 'foo.phar_.png_.php_.jpg'],
       'filename is munged regardless of case' => ['FOO.pHAR.PNG.PhP.jpg', 'jpg png', 'FOO.pHAR_.PNG_.PhP_.jpg'],
-      'null bytes are removed' => ['foo' . chr(0) . '.txt' . chr(0), '', 'foo.txt'],
+      'null bytes are removed' => ['foo' . \chr(0) . '.txt' . \chr(0), '', 'foo.txt'],
       'dot files are renamed' => ['.htaccess', '', 'htaccess'],
     ];
   }
@@ -141,7 +141,7 @@ class SecurityFileUploadEventSubscriberTest extends UnitTestCase {
       // The following filename would be rejected by file_validate_extension()
       // and therefore remains unchanged.
       '.php is not munged when it would be rejected' => ['foo.php.php', 'jpg'],
-      '.php is not munged when it would be rejected and filename contains null byte character' => ['foo.' . chr(0) . 'php.php', 'jpg'],
+      '.php is not munged when it would be rejected and filename contains null byte character' => ['foo.' . \chr(0) . 'php.php', 'jpg'],
       'extension less files are not munged when they would be rejected' => ['foo', 'jpg'],
       'dot files are not munged when they would be rejected' => ['.htaccess', 'jpg png'],
     ];

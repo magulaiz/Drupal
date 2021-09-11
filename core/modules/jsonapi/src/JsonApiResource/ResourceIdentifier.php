@@ -78,12 +78,12 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   Any metadata for the ResourceIdentifier.
    */
   public function __construct($resource_type, $id, array $meta = []) {
-    assert(is_string($resource_type) || $resource_type instanceof ResourceType);
-    assert(!isset($meta[static::ARITY_KEY]) || is_int($meta[static::ARITY_KEY]) && $meta[static::ARITY_KEY] >= 0);
-    $this->resourceTypeName = is_string($resource_type) ? $resource_type : $resource_type->getTypeName();
+    \assert(\is_string($resource_type) || $resource_type instanceof ResourceType);
+    \assert(!isset($meta[static::ARITY_KEY]) || \is_int($meta[static::ARITY_KEY]) && $meta[static::ARITY_KEY] >= 0);
+    $this->resourceTypeName = \is_string($resource_type) ? $resource_type : $resource_type->getTypeName();
     $this->id = $id;
     $this->meta = $meta;
-    if (!is_string($resource_type)) {
+    if (!\is_string($resource_type)) {
       $this->resourceType = $resource_type;
     }
   }
@@ -139,7 +139,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   The arity.
    */
   public function getArity() {
-    assert($this->hasArity());
+    \assert($this->hasArity());
     return $this->meta[static::ARITY_KEY];
   }
 
@@ -247,12 +247,12 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    * @see self::isDuplicate()
    */
   public static function deduplicate(array $resource_identifiers) {
-    return array_reduce(array_slice($resource_identifiers, 1), function ($deduplicated, $current) {
-      assert($current instanceof static);
+    return array_reduce(\array_slice($resource_identifiers, 1), function ($deduplicated, $current) {
+      \assert($current instanceof static);
       return array_merge($deduplicated, array_reduce($deduplicated, function ($duplicate, $previous) use ($current) {
         return $duplicate ?: static::isDuplicate($previous, $current);
       }, FALSE) ? [] : [$current]);
-    }, array_slice($resource_identifiers, 0, 1));
+    }, \array_slice($resource_identifiers, 0, 1));
   }
 
   /**
@@ -265,7 +265,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
    *   Whether all the given resource identifiers are unique.
    */
   public static function areResourceIdentifiersUnique(array $resource_identifiers) {
-    return count($resource_identifiers) === count(static::deduplicate($resource_identifiers));
+    return \count($resource_identifiers) === \count(static::deduplicate($resource_identifiers));
   }
 
   /**
@@ -285,7 +285,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     if ($target === NULL) {
       return static::getVirtualOrMissingResourceIdentifier($item);
     }
-    assert($target instanceof EntityInterface);
+    \assert($target instanceof EntityInterface);
     /** @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository */
     $resource_type_repository = \Drupal::service('jsonapi.resource_type.repository');
     $resource_type = $resource_type_repository->get($target->getEntityTypeId(), $target->bundle());
@@ -294,7 +294,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
     $main_property_name = $item->getDataDefinition()->getMainPropertyName();
     $meta = array_diff_key($properties, array_flip([$property_name, $main_property_name]));
-    if (!is_null($arity)) {
+    if (!\is_null($arity)) {
       $meta[static::ARITY_KEY] = $arity;
     }
     $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
@@ -414,15 +414,15 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     $resource_type_repository = \Drupal::service('jsonapi.resource_type.repository');
     $property_name = static::getDataReferencePropertyName($item);
     $value = $item->get($property_name)->getValue();
-    assert($value === NULL);
+    \assert($value === NULL);
     $field = $item->getParent();
-    assert($field instanceof EntityReferenceFieldItemListInterface);
+    \assert($field instanceof EntityReferenceFieldItemListInterface);
     $host_entity = $field->getEntity();
-    assert($host_entity instanceof EntityInterface);
+    \assert($host_entity instanceof EntityInterface);
     $resource_type = $resource_type_repository->get($host_entity->getEntityTypeId(), $host_entity->bundle());
-    assert($resource_type instanceof ResourceType);
+    \assert($resource_type instanceof ResourceType);
     $relatable_resource_types = $resource_type->getRelatableResourceTypesByField($resource_type->getPublicName($field->getName()));
-    assert(!empty($relatable_resource_types));
+    \assert(!empty($relatable_resource_types));
     $get_metadata = function ($type) {
       return [
         'links' => [
@@ -442,7 +442,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     // "<root>" term. And references to entities that no longer exist are not
     // cleaned up by Drupal; hence we map it to a "missing" resource.
     if ($field->getFieldDefinition()->getSetting('target_type') === 'taxonomy_term' && $item->get('target_id')->getCastedValue() === 0) {
-      if (count($relatable_resource_types) !== 1) {
+      if (\count($relatable_resource_types) !== 1) {
         throw new \RuntimeException('Relationships to virtual resources are possible only if a single resource type is relatable.');
       }
       return new static($resource_type, 'virtual', $get_metadata('virtual'));
@@ -454,7 +454,7 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
       // If we can reliably determine the resource type of the dangling
       // reference, use it; otherwise conjure a fake resource type out of thin
       // air, one that indicates we don't know the bundle.
-      $resource_type = count($relatable_resource_types) > 1
+      $resource_type = \count($relatable_resource_types) > 1
         ? new ResourceType('?', '?', '')
         : reset($relatable_resource_types);
       return new static($resource_type, 'missing', $get_metadata('missing'));

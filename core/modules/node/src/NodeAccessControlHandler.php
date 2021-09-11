@@ -131,13 +131,13 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
     // Only users with the administer nodes permission can edit administrative
     // fields.
     $administrative_fields = ['uid', 'status', 'created', 'promote', 'sticky'];
-    if ($operation == 'edit' && in_array($field_definition->getName(), $administrative_fields, TRUE)) {
+    if ($operation == 'edit' && \in_array($field_definition->getName(), $administrative_fields, TRUE)) {
       return AccessResult::allowedIfHasPermission($account, 'administer nodes');
     }
 
     // No user can change read only fields.
     $read_only_fields = ['revision_timestamp', 'revision_uid'];
-    if ($operation == 'edit' && in_array($field_definition->getName(), $read_only_fields, TRUE)) {
+    if ($operation == 'edit' && \in_array($field_definition->getName(), $read_only_fields, TRUE)) {
       return AccessResult::forbidden();
     }
 

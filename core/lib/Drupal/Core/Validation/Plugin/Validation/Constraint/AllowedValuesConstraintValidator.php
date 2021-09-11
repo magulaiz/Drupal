@@ -98,7 +98,7 @@ class AllowedValuesConstraintValidator extends ChoiceValidator implements Contai
     }
 
     // Force the choices to be the same type as the value.
-    $type = gettype($value);
+    $type = \gettype($value);
     foreach ($constraint->choices as &$choice) {
       settype($choice, $type);
     }

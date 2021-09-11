@@ -163,7 +163,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // /user is just a redirect, so skip it.
     // @todo Find a better way to deal with /user.
     $exclude['/user'] = TRUE;
-    while (count($path_elements) > 1) {
+    while (\count($path_elements) > 1) {
       array_pop($path_elements);
       // Copy the path elements for up-casting.
       $route_request = $this->getRequestForPath('/' . implode('/', $path_elements), $exclude);

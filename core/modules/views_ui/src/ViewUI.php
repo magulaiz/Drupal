@@ -253,7 +253,7 @@ class ViewUI implements ViewEntityInterface {
     }
 
     $submit_handler = [$form_state->getFormObject(), 'submitForm'];
-    call_user_func_array($submit_handler, [&$form, $form_state]);
+    \call_user_func_array($submit_handler, [&$form, $form_state]);
   }
 
   /**
@@ -283,7 +283,7 @@ class ViewUI implements ViewEntityInterface {
 
     if (empty($name)) {
       $name = t('Apply');
-      if (!empty($this->stack) && count($this->stack) > 1) {
+      if (!empty($this->stack) && \count($this->stack) > 1) {
         $name = t('Apply and continue');
       }
       $names = [t('Apply'), t('Apply and continue')];
@@ -322,7 +322,7 @@ class ViewUI implements ViewEntityInterface {
     }
 
     // Create a "Cancel" button. For purely informational forms, label it "OK".
-    $cancel_submit = function_exists($form_id . '_cancel') ? $form_id . '_cancel' : [$this, 'standardCancel'];
+    $cancel_submit = \function_exists($form_id . '_cancel') ? $form_id . '_cancel' : [$this, 'standardCancel'];
     $form['actions']['cancel'] = [
       '#type' => 'submit',
       '#value' => !$form_state->get('ok_button') ? t('Cancel') : t('Ok'),
@@ -447,7 +447,7 @@ class ViewUI implements ViewEntityInterface {
       $display->setOverride($section);
     }
 
-    if (!$form_state->isValueEmpty('name') && is_array($form_state->getValue('name'))) {
+    if (!$form_state->isValueEmpty('name') && \is_array($form_state->getValue('name'))) {
       // Loop through each of the items that were checked and add them to the view.
       foreach (array_keys(array_filter($form_state->getValue('name'))) as $field) {
         list($table, $field) = explode('.', $field, 2);
@@ -626,7 +626,7 @@ class ViewUI implements ViewEntityInterface {
               $quoted = $query_string->getArguments();
               $connection = Database::getConnection();
               foreach ($quoted as $key => $val) {
-                if (is_array($val)) {
+                if (\is_array($val)) {
                   $quoted[$key] = implode(', ', array_map([$connection, 'quote'], $val));
                 }
                 else {
@@ -725,7 +725,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query build time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->build_time * 100000) / 100]),
+              t('@time ms', ['@time' => \intval($executable->build_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -735,7 +735,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'Query execute time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($executable->execute_time * 100000) / 100]),
+              t('@time ms', ['@time' => \intval($executable->execute_time * 100000) / 100]),
             ];
 
             $rows['statistics'][] = [
@@ -745,7 +745,7 @@ class ViewUI implements ViewEntityInterface {
                   '#template' => "<strong>{% trans 'View render time' %}</strong>",
                 ],
               ],
-              t('@time ms', ['@time' => intval($this->render_time * 100) / 100]),
+              t('@time ms', ['@time' => \intval($this->render_time * 100) / 100]),
             ];
           }
           \Drupal::moduleHandler()->alter('views_preview_info', $rows, $executable);
@@ -897,7 +897,7 @@ class ViewUI implements ViewEntityInterface {
    * Passes through all unknown calls onto the storage object.
    */
   public function __call($method, $args) {
-    return call_user_func_array([$this->storage, $method], $args);
+    return \call_user_func_array([$this->storage, $method], $args);
   }
 
   /**

@@ -208,7 +208,7 @@ abstract class AggregatorTestBase extends BrowserTestBase {
     $feed->items = array_values($item_ids);
 
     if ($expected_count !== NULL) {
-      $feed->item_count = count($feed->items);
+      $feed->item_count = \count($feed->items);
       $this->assertEquals($expected_count, $feed->item_count, new FormattableMarkup('Total items in feed equal to the total items in database (@val1 != @val2)', ['@val1' => $expected_count, '@val2' => $feed->item_count]));
     }
   }
@@ -307,7 +307,7 @@ EOF;
 
     $path = 'public://valid-opml.xml';
     // Add the UTF-8 byte order mark.
-    return \Drupal::service('file_system')->saveData(chr(239) . chr(187) . chr(191) . $opml, $path);
+    return \Drupal::service('file_system')->saveData(\chr(239) . \chr(187) . \chr(191) . $opml, $path);
   }
 
   /**

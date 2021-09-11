@@ -21,7 +21,7 @@ trait AssertButtonsTrait {
     // Verify that the number of buttons passed as parameters is
     // available in the dropbutton widget.
     if ($dropbutton) {
-      $count = count($buttons);
+      $count = \count($buttons);
 
       // Assert there is no save button.
       $this->assertSession()->buttonNotExists('Save');

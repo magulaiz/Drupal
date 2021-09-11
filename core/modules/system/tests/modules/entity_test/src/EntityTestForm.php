@@ -81,7 +81,7 @@ class EntityTestForm extends ContentEntityForm {
       }
     }
     catch (\Exception $e) {
-      \Drupal::state()->set('entity_test.form.save.exception', get_class($e) . ': ' . $e->getMessage());
+      \Drupal::state()->set('entity_test.form.save.exception', \get_class($e) . ': ' . $e->getMessage());
     }
   }
 

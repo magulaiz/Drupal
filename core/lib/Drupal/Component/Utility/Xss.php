@@ -57,7 +57,7 @@ class Xss {
    * @ingroup sanitization
    */
   public static function filter($string, array $html_tags = NULL) {
-    if (is_null($html_tags)) {
+    if (\is_null($html_tags)) {
       $html_tags = static::$htmlTags;
     }
     // Only operate on valid UTF-8 strings. This is necessary to prevent cross
@@ -66,7 +66,7 @@ class Xss {
       return '';
     }
     // Remove NULL characters (ignored by some browsers).
-    $string = str_replace(chr(0), '', $string);
+    $string = str_replace(\chr(0), '', $string);
     // Remove Netscape 4 JS entities.
     $string = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $string);
 
@@ -145,7 +145,7 @@ class Xss {
       // We matched a lone ">" character.
       return '&gt;';
     }
-    elseif (strlen($string) == 1) {
+    elseif (\strlen($string) == 1) {
       // We matched a lone "<" character.
       return '&lt;';
     }
@@ -185,7 +185,7 @@ class Xss {
     // Clean up attributes.
     $attr2 = implode(' ', $class::attributes($attributes));
     $attr2 = preg_replace('/[<>]/', '', $attr2);
-    $attr2 = strlen($attr2) ? ' ' . $attr2 : '';
+    $attr2 = \strlen($attr2) ? ' ' . $attr2 : '';
 
     return "<$elem$attr2$xhtml_slash>";
   }
@@ -206,7 +206,7 @@ class Xss {
     $skip = FALSE;
     $skip_protocol_filtering = FALSE;
 
-    while (strlen($attributes) != 0) {
+    while (\strlen($attributes) != 0) {
       // Was the last operation successful?
       $working = 0;
 
@@ -221,7 +221,7 @@ class Xss {
               substr($attribute_name, 0, 1) == '-' ||
               // Ignore long attributes to avoid unnecessary processing
               // overhead.
-              strlen($attribute_name) > 96
+              \strlen($attribute_name) > 96
             );
 
             // Values for attributes of type URI should be filtered for
@@ -232,7 +232,7 @@ class Xss {
             // such attributes.
             // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
             // @see http://www.w3.org/TR/html4/index/attributes.html
-            $skip_protocol_filtering = substr($attribute_name, 0, 5) === 'data-' || in_array($attribute_name, [
+            $skip_protocol_filtering = substr($attribute_name, 0, 5) === 'data-' || \in_array($attribute_name, [
               'title',
               'alt',
               'rel',

@@ -641,10 +641,10 @@ class ConfigTest extends UnitTestCase {
       $this->assertTrue($this->config->hasOverrides());
       foreach ($overridden_data as $key => $value) {
         // If there are nested overrides test a keys at every level.
-        if (is_array($value)) {
+        if (\is_array($value)) {
           $nested_key = $key;
           $nested_value = $overridden_data[$key];
-          while (is_array($nested_value)) {
+          while (\is_array($nested_value)) {
             $nested_key .= '.' . key($nested_value);
             $this->assertTrue($this->config->hasOverrides($nested_key));
             $nested_value = array_pop($nested_value);
@@ -658,10 +658,10 @@ class ConfigTest extends UnitTestCase {
     foreach ($non_overridden_keys as $non_overridden_key) {
       $this->assertFalse($this->config->hasOverrides($non_overridden_key));
       // If there are nested overrides test keys at every level.
-      if (is_array($data[$non_overridden_key])) {
+      if (\is_array($data[$non_overridden_key])) {
         $nested_key = $non_overridden_key;
         $nested_value = $data[$non_overridden_key];
-        while (is_array($nested_value)) {
+        while (\is_array($nested_value)) {
           $nested_key .= '.' . key($nested_value);
           $this->assertFalse($this->config->hasOverrides($nested_key));
           $nested_value = array_pop($nested_value);

@@ -113,7 +113,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       if (empty($invalid)) {
         $form_state->set('notify_emails', $valid);
       }
-      elseif (count($invalid) == 1) {
+      elseif (\count($invalid) == 1) {
         $form_state->setErrorByName('update_notify_emails', $this->t('%email is not a valid email address.', ['%email' => reset($invalid)]));
       }
       else {

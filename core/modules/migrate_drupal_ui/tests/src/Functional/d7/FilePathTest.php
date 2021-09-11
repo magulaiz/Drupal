@@ -129,7 +129,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
       $driver => $connection_options,
       'version' => '7',
     ];
-    if (count($drivers) !== 1) {
+    if (\count($drivers) !== 1) {
       $edit['driver'] = $driver;
     }
     // Set the public and private base paths for the Credential Form.

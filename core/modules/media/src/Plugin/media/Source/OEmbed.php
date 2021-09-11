@@ -411,7 +411,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $remote_thumbnail_url = $remote_thumbnail_url->toString();
     $hash = Crypt::hashBase64($remote_thumbnail_url);
     $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
-    if (count($files) > 0) {
+    if (\count($files) > 0) {
       return reset($files)->uri;
     }
 

@@ -268,7 +268,7 @@ class TaxonomyIndexTid extends ManyToOne {
         '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', ['@voc' => $vocabulary->label()]) : $this->t('Select terms'),
         '#multiple' => TRUE,
         '#options' => $options,
-        '#size' => min(9, count($options)),
+        '#size' => min(9, \count($options)),
         '#default_value' => $default_value,
       ];
 

@@ -217,7 +217,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     foreach ($this->handlers as $type => $handlers) {
       foreach ($handlers as $id => $handler) {
-        if (is_object($handler)) {
+        if (\is_object($handler)) {
           $this->handlers[$type][$id]->destroy();
         }
       }
@@ -732,7 +732,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     $display_id = $this->getLinkDisplay();
-    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+    if ($display_id && $this->view->displayHandlers->has($display_id) && \is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getPath();
     }
   }
@@ -749,7 +749,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // If the display does not have a route (e.g. a block display), get the
     // route for the linked display.
     $display_id = $this->getLinkDisplay();
-    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+    if ($display_id && $this->view->displayHandlers->has($display_id) && \is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getRoutedDisplay();
     }
 
@@ -779,7 +779,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       return $this->default_display->getOption($option);
     }
 
-    if (isset($this->options[$option]) || array_key_exists($option, $this->options)) {
+    if (isset($this->options[$option]) || \array_key_exists($option, $this->options)) {
       return $this->options[$option];
     }
   }
@@ -1980,8 +1980,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
 
       case 'use_more':
-        $this->setOption($section, intval($form_state->getValue($section)));
-        $this->setOption('use_more_always', intval($form_state->getValue('use_more_always')));
+        $this->setOption($section, \intval($form_state->getValue($section)));
+        $this->setOption('use_more_always', \intval($form_state->getValue('use_more_always')));
         $this->setOption('use_more_text', $form_state->getValue('use_more_text'));
         break;
 
@@ -2220,7 +2220,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $empty = empty($view->result);
 
     // Force a render array so CSS/JS can be attached.
-    if (!is_array($element['#rows'])) {
+    if (!\is_array($element['#rows'])) {
       $element['#rows'] = ['#markup' => $element['#rows']];
     }
 
@@ -2505,7 +2505,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
     else {
       $result = $style->validate();
-      if (!empty($result) && is_array($result)) {
+      if (!empty($result) && \is_array($result)) {
         $errors = array_merge($errors, $result);
       }
     }
@@ -2513,7 +2513,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Validate query plugin.
     $query = $this->getPlugin('query');
     $result = $query->validate();
-    if (!empty($result) && is_array($result)) {
+    if (!empty($result) && \is_array($result)) {
       $errors = array_merge($errors, $result);
     }
 
@@ -2521,7 +2521,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $relationships = array_keys($this->getHandlers('relationship'));
     foreach (ViewExecutable::getHandlerTypes() as $type => $handler_type_info) {
       foreach ($this->getHandlers($type) as $handler_id => $handler) {
-        if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !in_array($handler->options['relationship'], $relationships)) {
+        if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !\in_array($handler->options['relationship'], $relationships)) {
           $errors[] = $this->t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => $handler_type_info['lstitle'], '%handler' => $handler->adminLabel()]);
         }
       }
@@ -2531,7 +2531,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
-        if (!empty($result) && is_array($result)) {
+        if (!empty($result) && \is_array($result)) {
           $errors = array_merge($errors, $result);
         }
       }
@@ -2540,7 +2540,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Validate extenders.
     foreach ($this->extenders as $extender) {
       $result = $extender->validate();
-      if (!empty($result) && is_array($result)) {
+      if (!empty($result) && \is_array($result)) {
         $errors = array_merge($errors, $result);
       }
     }
@@ -2670,7 +2670,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Find all defined options, that have specified a merge_defaults callback.
     foreach ($defined_options as $type => $definition) {
-      if (!isset($definition['merge_defaults']) || !is_callable($definition['merge_defaults'])) {
+      if (!isset($definition['merge_defaults']) || !\is_callable($definition['merge_defaults'])) {
         continue;
       }
       // Switch the type to singular, if it's a plural handler.
@@ -2678,7 +2678,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $type = $type_map[$type];
       }
 
-      call_user_func($definition['merge_defaults'], $type);
+      \call_user_func($definition['merge_defaults'], $type);
     }
   }
 

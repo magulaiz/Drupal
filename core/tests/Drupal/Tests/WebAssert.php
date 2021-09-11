@@ -52,7 +52,7 @@ class WebAssert extends MinkWebAssert {
     }
     // Strip the base URL from the beginning for absolute URLs.
     if ($this->baseUrl !== '' && strpos($url, $this->baseUrl) === 0) {
-      $url = substr($url, strlen($this->baseUrl));
+      $url = substr($url, \strlen($this->baseUrl));
     }
     $parts = parse_url($url);
     // Make sure there is a forward slash at the beginning of relative URLs for
@@ -138,7 +138,7 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function buttonExists($button, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -163,7 +163,7 @@ class WebAssert extends MinkWebAssert {
    *   When the button exists.
    */
   public function buttonNotExists($button, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -187,7 +187,7 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function selectExists($select, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -220,7 +220,7 @@ class WebAssert extends MinkWebAssert {
    *   When the element doesn't exist.
    */
   public function optionExists($select, $option, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -256,7 +256,7 @@ class WebAssert extends MinkWebAssert {
    *   When the select element doesn't exist.
    */
   public function optionNotExists($select, $option, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -284,7 +284,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the title is a different one.
    */
   public function titleEquals($expected_title) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $title_element = $this->session->getPage()->find('css', 'title');
@@ -450,13 +450,13 @@ class WebAssert extends MinkWebAssert {
   public function buildXPathQuery($xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
-      if (is_object($value)) {
+      if (\is_object($value)) {
         throw new \InvalidArgumentException('Just pass in scalar values for $args and remove all t() calls from your test.');
       }
       // XPath 1.0 doesn't support a way to escape single or double quotes in a
       // string literal. We split double quotes out of the string, and encode
       // them separately.
-      if (is_string($value)) {
+      if (\is_string($value)) {
         // Explode the text at the quote characters.
         $parts = explode('"', $value);
 
@@ -466,7 +466,7 @@ class WebAssert extends MinkWebAssert {
         }
 
         // Return the string.
-        $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
+        $value = \count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
       }
 
       // Use preg_replace_callback() instead of preg_replace() to prevent the
@@ -488,7 +488,7 @@ class WebAssert extends MinkWebAssert {
    *   Raw (HTML) string to look for.
    */
   public function assertNoEscaped($raw) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $this->responseNotContains(Html::escape($raw));
@@ -503,7 +503,7 @@ class WebAssert extends MinkWebAssert {
    *   Raw (HTML) string to look for.
    */
   public function assertEscaped($raw) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $this->responseContains(Html::escape($raw));
@@ -518,7 +518,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseContains($text) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     parent::responseContains((string) $text);
@@ -533,7 +533,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function responseNotContains($text) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     parent::responseNotContains((string) $text);
@@ -575,7 +575,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function fieldDisabled($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -607,7 +607,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function fieldEnabled($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -638,7 +638,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function hiddenFieldExists($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -659,7 +659,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldNotExists($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $container = $container ?: $this->session->getPage();
@@ -681,7 +681,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldValueEquals($field, $value, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $node = $this->hiddenFieldExists($field, $container);
@@ -705,7 +705,7 @@ class WebAssert extends MinkWebAssert {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldValueNotEquals($field, $value, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $node = $this->hiddenFieldExists($field, $container);
@@ -724,7 +724,7 @@ class WebAssert extends MinkWebAssert {
    * @see \Behat\Mink\WebAssert::pageTextContains()
    */
   public function pageTextContainsOnce($text) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $regex = '/' . preg_quote($text, '/') . '/ui';
@@ -756,7 +756,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function addressEquals($page) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $expected = $this->cleanUrl($page, TRUE);
@@ -769,7 +769,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function addressNotEquals($page) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     $expected = $this->cleanUrl($page, TRUE);
@@ -782,7 +782,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function addressMatches($regex) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::addressMatches($regex);
@@ -792,7 +792,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function cookieEquals($name, $value) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::cookieEquals($name, $value);
@@ -802,7 +802,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function cookieExists($name) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::cookieExists($name);
@@ -812,7 +812,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function statusCodeEquals($code) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::statusCodeEquals($code);
@@ -822,7 +822,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function statusCodeNotEquals($code) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::statusCodeNotEquals($code);
@@ -832,7 +832,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderEquals($name, $value) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderEquals($name, $value);
@@ -842,7 +842,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderNotEquals($name, $value) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderNotEquals($name, $value);
@@ -852,7 +852,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderContains($name, $value) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderContains($name, $value);
@@ -862,7 +862,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderNotContains($name, $value) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderNotContains($name, $value);
@@ -872,7 +872,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderMatches($name, $regex) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderMatches($name, $regex);
@@ -882,7 +882,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseHeaderNotMatches($name, $regex) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseHeaderNotMatches($name, $regex);
@@ -892,7 +892,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function pageTextContains($text) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::pageTextContains($text);
@@ -902,7 +902,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function pageTextNotContains($text) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::pageTextNotContains($text);
@@ -912,7 +912,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function pageTextMatches($regex) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::pageTextMatches($regex);
@@ -922,7 +922,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function pageTextNotMatches($regex) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::pageTextNotMatches($regex);
@@ -932,7 +932,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseMatches($regex) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseMatches($regex);
@@ -942,7 +942,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function responseNotMatches($regex) {
-    if (func_num_args() > 1) {
+    if (\func_num_args() > 1) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than one argument is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::responseNotMatches($regex);
@@ -952,7 +952,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementsCount($selectorType, $selector, $count, ElementInterface $container = NULL) {
-    if (func_num_args() > 4) {
+    if (\func_num_args() > 4) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than four arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementsCount($selectorType, $selector, $count, $container);
@@ -962,7 +962,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementExists($selectorType, $selector, ElementInterface $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementExists($selectorType, $selector, $container);
@@ -972,7 +972,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementNotExists($selectorType, $selector, ElementInterface $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementNotExists($selectorType, $selector, $container);
@@ -989,7 +989,7 @@ class WebAssert extends MinkWebAssert {
    *   Expected text.
    */
   public function elementTextEquals(string $selectorType, $selector, string $text): void {
-    $selector_string = is_array($selector) ? '[' . implode(', ', $selector) . ']' : $selector;
+    $selector_string = \is_array($selector) ? '[' . implode(', ', $selector) . ']' : $selector;
     $message = "Failed asserting that the text of the element identified by '$selector_string' equals '$text'.";
     $constraint = new IsEqual($text);
     Assert::assertThat($this->elementExists($selectorType, $selector)->getText(), $constraint, $message);
@@ -999,7 +999,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementTextContains($selectorType, $selector, $text) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementTextContains($selectorType, $selector, $text);
@@ -1009,7 +1009,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementTextNotContains($selectorType, $selector, $text) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementTextNotContains($selectorType, $selector, $text);
@@ -1019,7 +1019,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementContains($selectorType, $selector, $html) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementContains($selectorType, $selector, $html);
@@ -1029,7 +1029,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementNotContains($selectorType, $selector, $html) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementNotContains($selectorType, $selector, $html);
@@ -1039,7 +1039,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementAttributeExists($selectorType, $selector, $attribute) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementAttributeExists($selectorType, $selector, $attribute);
@@ -1049,7 +1049,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementAttributeContains($selectorType, $selector, $attribute, $text) {
-    if (func_num_args() > 4) {
+    if (\func_num_args() > 4) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than four arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementAttributeContains($selectorType, $selector, $attribute, $text);
@@ -1059,7 +1059,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function elementAttributeNotContains($selectorType, $selector, $attribute, $text) {
-    if (func_num_args() > 4) {
+    if (\func_num_args() > 4) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than four arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::elementAttributeNotContains($selectorType, $selector, $attribute, $text);
@@ -1069,7 +1069,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function fieldExists($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::fieldExists($field, $container);
@@ -1079,7 +1079,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function fieldNotExists($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::fieldNotExists($field, $container);
@@ -1089,7 +1089,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function fieldValueEquals($field, $value, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::fieldValueEquals($field, $value, $container);
@@ -1099,7 +1099,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function fieldValueNotEquals($field, $value, TraversableElement $container = NULL) {
-    if (func_num_args() > 3) {
+    if (\func_num_args() > 3) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than three arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::fieldValueNotEquals($field, $value, $container);
@@ -1109,7 +1109,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function checkboxChecked($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::checkboxChecked($field, $container);
@@ -1119,7 +1119,7 @@ class WebAssert extends MinkWebAssert {
    * {@inheritdoc}
    */
   public function checkboxNotChecked($field, TraversableElement $container = NULL) {
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       @trigger_error('Calling ' . __METHOD__ . ' with more than two arguments is deprecated in drupal:9.1.0 and will throw an \InvalidArgumentException in drupal:10.0.0. See https://www.drupal.org/node/3162537', E_USER_DEPRECATED);
     }
     return parent::checkboxNotChecked($field, $container);

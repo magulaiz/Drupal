@@ -447,7 +447,7 @@ class ManagedFile extends FormElement {
     }
 
     // Check required property based on the FID.
-    if ($element['#required'] && empty($element['fids']['#value']) && !in_array($clicked_button, ['upload_button', 'remove_button'])) {
+    if ($element['#required'] && empty($element['fids']['#value']) && !\in_array($clicked_button, ['upload_button', 'remove_button'])) {
       // We expect the field name placeholder value to be wrapped in t()
       // here, so it won't be escaped again as it's already marked safe.
       $form_state->setError($element, t('@name field is required.', ['@name' => $element['#title']]));

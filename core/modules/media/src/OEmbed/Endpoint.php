@@ -73,7 +73,7 @@ class Endpoint {
 
     $this->formats = $formats = array_map('mb_strtolower', $formats);
     // Assert that only the supported formats are present.
-    assert(array_diff($formats, ['json', 'xml']) == []);
+    \assert(array_diff($formats, ['json', 'xml']) == []);
 
     // Use the first provided format to build the endpoint URL. If no formats
     // are provided, default to JSON.

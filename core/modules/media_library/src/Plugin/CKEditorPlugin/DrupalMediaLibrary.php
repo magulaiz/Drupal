@@ -127,7 +127,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
       }
     }
 
-    if (in_array('image', $media_type_ids, TRUE)) {
+    if (\in_array('image', $media_type_ids, TRUE)) {
       // Due to a bug where the active item styling and the focus styling
       // create the visual appearance of two active items, we'll move
       // the 'image' media type to first position, so that the focused item and

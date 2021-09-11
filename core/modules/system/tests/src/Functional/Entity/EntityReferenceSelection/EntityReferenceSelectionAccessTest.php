@@ -97,13 +97,13 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
-        $result = call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
+        $result = \call_user_func_array([$handler, 'getReferenceableEntities'], $arguments);
         $this->assertEquals($test['result'], $result, new FormattableMarkup('Valid result set returned by @handler.', ['@handler' => $handler_name]));
 
-        $result = call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
+        $result = \call_user_func_array([$handler, 'countReferenceableEntities'], $arguments);
         if (!empty($test['result'])) {
           $bundle = key($test['result']);
-          $count = count($test['result'][$bundle]);
+          $count = \count($test['result'][$bundle]);
         }
         else {
           $count = 0;
@@ -274,7 +274,7 @@ class EntityReferenceSelectionAccessTest extends KernelTestBase {
 
     $user_labels = [];
     foreach ($user_values as $key => $values) {
-      if (is_array($values)) {
+      if (\is_array($values)) {
         $account = User::create($values);
         $account->save();
       }

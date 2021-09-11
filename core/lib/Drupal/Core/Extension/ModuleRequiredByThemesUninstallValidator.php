@@ -52,7 +52,7 @@ class ModuleRequiredByThemesUninstallValidator implements ModuleUninstallValidat
     if (!empty($themes_depending_on_module)) {
       $module_name = $this->moduleExtensionList->get($module)->info['name'];
       $theme_names = implode(', ', $themes_depending_on_module);
-      $reasons[] = $this->formatPlural(count($themes_depending_on_module),
+      $reasons[] = $this->formatPlural(\count($themes_depending_on_module),
         'Required by the theme: @theme_names',
         'Required by the themes: @theme_names',
         ['@module_name' => $module_name, '@theme_names' => $theme_names]);
@@ -73,7 +73,7 @@ class ModuleRequiredByThemesUninstallValidator implements ModuleUninstallValidat
   protected function getThemesDependingOnModule($module) {
     $installed_themes = $this->themeExtensionList->getAllInstalledInfo();
     $themes_depending_on_module = array_map(function ($theme) use ($module) {
-      if (in_array($module, $theme['dependencies'])) {
+      if (\in_array($module, $theme['dependencies'])) {
         return $theme['name'];
       }
     }, $installed_themes);

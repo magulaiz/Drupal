@@ -125,7 +125,7 @@ abstract class DestinationBase extends PluginBase implements MigrateDestinationI
     if (!empty($this->pluginDefinition['destination_module'])) {
       return $this->pluginDefinition['destination_module'];
     }
-    if (is_string($this->migration->provider)) {
+    if (\is_string($this->migration->provider)) {
       return $this->migration->provider;
     }
     else {

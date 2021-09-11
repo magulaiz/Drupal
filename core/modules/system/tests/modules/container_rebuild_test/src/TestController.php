@@ -26,7 +26,7 @@ class TestController extends ControllerBase {
     else {
       $module_message .= 'not installed';
     }
-    $function_message = $function . ': ' . var_export(function_exists($function), TRUE);
+    $function_message = $function . ': ' . var_export(\function_exists($function), TRUE);
 
     return [
       '#theme' => 'item_list',

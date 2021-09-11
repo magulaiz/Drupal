@@ -158,7 +158,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     // end of the installation process. Once the install profile is installed
     // optional configuration should be installed as usual.
     // @see install_install_profile()
-    $profile_installed = in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
+    $profile_installed = \in_array($this->drupalGetProfile(), $this->getEnabledExtensions(), TRUE);
     if (!$this->isSyncing() && (!InstallerKernel::installationAttempted() || $profile_installed)) {
       $optional_install_path = $extension_path . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY;
       if (is_dir($optional_install_path)) {
@@ -219,7 +219,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       // - does not already exist
       // - is a configuration entity (this also excludes config that has an
       //   implicit dependency on modules that are not yet installed)
-      return !in_array($config_name, $existing_config) && $this->configManager->getEntityTypeIdByName($config_name);
+      return !\in_array($config_name, $existing_config) && $this->configManager->getEntityTypeIdByName($config_name);
     });
 
     $all_config = array_merge($existing_config, $list);
@@ -406,7 +406,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     $enabled_extensions = $this->getEnabledExtensions();
     $config_to_install = array_filter($storage->listAll(), function ($config_name) use ($enabled_extensions) {
       $provider = mb_substr($config_name, 0, strpos($config_name, '.'));
-      return in_array($provider, $enabled_extensions);
+      return \in_array($provider, $enabled_extensions);
     });
     if (!empty($config_to_install)) {
       $this->createConfiguration($collection, $storage->readMultiple($config_to_install));
@@ -590,7 +590,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
     if (!isset($data['dependencies'])) {
       // Simple config or a config entity without dependencies.
       list($provider) = explode('.', $config_name, 2);
-      return in_array($provider, $enabled_extensions, TRUE);
+      return \in_array($provider, $enabled_extensions, TRUE);
     }
 
     $missing = $this->getMissingDependencies($config_name, $data, $enabled_extensions, $all_config);
@@ -625,7 +625,7 @@ class ConfigInstaller implements ConfigInstallerInterface {
       }
       // Ensure the configuration entity type provider is in the list of
       // dependencies.
-      if (!isset($all_dependencies['module']) || !in_array($provider, $all_dependencies['module'])) {
+      if (!isset($all_dependencies['module']) || !\in_array($provider, $all_dependencies['module'])) {
         $all_dependencies['module'][] = $provider;
       }
 

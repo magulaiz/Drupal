@@ -257,7 +257,7 @@ class CommentAdminOverview extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->setValue('comments', array_diff($form_state->getValue('comments'), [0]));
     // We can't execute any 'Update options' if no comments were selected.
-    if (count($form_state->getValue('comments')) == 0) {
+    if (\count($form_state->getValue('comments')) == 0) {
       $form_state->setErrorByName('', $this->t('Select one or more comments to perform the update on.'));
     }
   }

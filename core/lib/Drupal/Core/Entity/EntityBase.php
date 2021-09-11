@@ -189,8 +189,8 @@ abstract class EntityBase implements EntityInterface {
 
       // Invoke the callback to get the URI. If there is no callback, use the
       // default URI format.
-      if (isset($uri_callback) && is_callable($uri_callback)) {
-        $uri = call_user_func($uri_callback, $this);
+      if (isset($uri_callback) && \is_callable($uri_callback)) {
+        $uri = \call_user_func($uri_callback, $this);
       }
       else {
         throw new UndefinedLinkTemplateException("No link template '$rel' found for the '{$this->getEntityTypeId()}' entity type");
@@ -206,7 +206,7 @@ abstract class EntityBase implements EntityInterface {
     // Display links by default based on the current language.
     // Link relations that do not require an existing entity should not be
     // affected by this entity's language, however.
-    if (!in_array($rel, ['collection', 'add-page', 'add-form'], TRUE)) {
+    if (!\in_array($rel, ['collection', 'add-page', 'add-form'], TRUE)) {
       $options += ['language' => $this->language()];
     }
 
@@ -263,7 +263,7 @@ abstract class EntityBase implements EntityInterface {
   protected function urlRouteParameters($rel) {
     $uri_route_parameters = [];
 
-    if (!in_array($rel, ['collection', 'add-page', 'add-form'], TRUE)) {
+    if (!\in_array($rel, ['collection', 'add-page', 'add-form'], TRUE)) {
       // The entity ID is needed as a route parameter.
       $uri_route_parameters[$this->getEntityTypeId()] = $this->id();
     }

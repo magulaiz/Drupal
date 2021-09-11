@@ -151,7 +151,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
   public function getTitle(LocalActionInterface $local_action) {
     $controller = [$local_action, 'getTitle'];
     $arguments = $this->argumentResolver->getArguments($this->requestStack->getCurrentRequest(), $controller);
-    return call_user_func_array($controller, $arguments);
+    return \call_user_func_array($controller, $arguments);
   }
 
   /**
@@ -163,7 +163,7 @@ class LocalActionManager extends DefaultPluginManager implements LocalActionMana
       $this->instances[$route_appears] = [];
       // @todo - optimize this lookup by compiling or caching.
       foreach ($this->getDefinitions() as $plugin_id => $action_info) {
-        if (in_array($route_appears, $action_info['appears_on'])) {
+        if (\in_array($route_appears, $action_info['appears_on'])) {
           $plugin = $this->createInstance($plugin_id);
           $route_names[] = $plugin->getRouteName();
           $this->instances[$route_appears][$plugin_id] = $plugin;

@@ -112,7 +112,7 @@ class Table extends FormElement {
         return array_combine($value, $value);
       }
       else {
-        return is_array($input) ? array_combine($input, $input) : [];
+        return \is_array($input) ? array_combine($input, $input) : [];
       }
     }
   }
@@ -134,7 +134,7 @@ class Table extends FormElement {
   public static function processTable(&$element, FormStateInterface $form_state, &$complete_form) {
     if ($element['#tableselect']) {
       if ($element['#multiple']) {
-        $value = is_array($element['#value']) ? $element['#value'] : [];
+        $value = \is_array($element['#value']) ? $element['#value'] : [];
       }
       // Advanced selection behavior makes no sense for radios.
       else {
@@ -262,7 +262,7 @@ class Table extends FormElement {
       return;
     }
     if ($element['#multiple']) {
-      if (!is_array($element['#value']) || !count(array_filter($element['#value']))) {
+      if (!\is_array($element['#value']) || !\count(array_filter($element['#value']))) {
         $form_state->setError($element, t('No items selected.'));
       }
     }
@@ -366,7 +366,7 @@ class Table extends FormElement {
     Element::setAttributes($element, ['id']);
 
     // Add sticky headers, if applicable.
-    if (count($element['#header']) && $element['#sticky']) {
+    if (\count($element['#header']) && $element['#sticky']) {
       $element['#attached']['library'][] = 'core/drupal.tableheader';
       // Add 'sticky-enabled' class to the table to identify it for JS.
       // This is needed to target tables constructed by this function.
@@ -375,7 +375,7 @@ class Table extends FormElement {
     // If the table has headers and it should react responsively to columns hidden
     // with the classes represented by the constants RESPONSIVE_PRIORITY_MEDIUM
     // and RESPONSIVE_PRIORITY_LOW, add the tableresponsive behaviors.
-    if (count($element['#header']) && $element['#responsive']) {
+    if (\count($element['#header']) && $element['#responsive']) {
       $element['#attached']['library'][] = 'core/drupal.tableresponsive';
       // Add 'responsive-enabled' class to the table to identify it for JS.
       // This is needed to target tables constructed by this function.

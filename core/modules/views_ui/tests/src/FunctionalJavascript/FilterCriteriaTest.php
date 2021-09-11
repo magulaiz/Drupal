@@ -139,7 +139,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
 
     // Get the last filter on the list.
     $row = $page->findAll('css', '.draggable');
-    $row_count = count($row);
+    $row_count = \count($row);
     $last_row = array_pop($row);
     $penultimate_row = array_pop($row);
 
@@ -149,7 +149,7 @@ class FilterCriteriaTest extends WebDriverTestBase {
 
     // Assert there are valid number of visible operator labels.
     $operator_label = $page->findAll('css', '.views-operator-label');
-    $this->assertEquals($row_count - 1, count($operator_label), 'There are valid number of operator labels after drag.');
+    $this->assertEquals($row_count - 1, \count($operator_label), 'There are valid number of operator labels after drag.');
 
     // Get the last filter on the rearranged list.
     $row = $page->findAll('css', '.draggable');

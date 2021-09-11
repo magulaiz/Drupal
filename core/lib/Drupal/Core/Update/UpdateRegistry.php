@@ -95,7 +95,7 @@ class UpdateRegistry {
   public function getRemovedPostUpdates($module) {
     $this->scanExtensionsAndLoadUpdateFiles();
     $function = "{$module}_removed_post_updates";
-    if (function_exists($function)) {
+    if (\function_exists($function)) {
       return $function();
     }
     return [];
@@ -116,7 +116,7 @@ class UpdateRegistry {
       // If this function is a module update function, add it to the list of
       // module updates.
       if (preg_match($regexp, $function, $matches)) {
-        if (in_array($matches['module'], $this->enabledModules)) {
+        if (\in_array($matches['module'], $this->enabledModules)) {
           $function_name = $matches['module'] . '_' . $this->updateType . '_' . $matches['name'];
           if ($this->updateType === 'post_update') {
             $removed = array_keys($this->getRemovedPostUpdates($matches['module']));

@@ -104,10 +104,10 @@ class Query extends QueryBase implements QueryInterface {
     $this->initializePager();
 
     if ($this->range) {
-      $result = array_slice($result, $this->range['start'], $this->range['length'], TRUE);
+      $result = \array_slice($result, $this->range['start'], $this->range['length'], TRUE);
     }
     if ($this->count) {
-      return count($result);
+      return \count($result);
     }
 
     // Create the expected structure of entity_id => entity_id. Config
@@ -126,7 +126,7 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function loadRecords() {
     $prefix = $this->entityType->getConfigPrefix() . '.';
-    $prefix_length = strlen($prefix);
+    $prefix_length = \strlen($prefix);
 
     // Search the conditions for restrictions on configuration object names.
     $names = FALSE;
@@ -136,8 +136,8 @@ class Query extends QueryBase implements QueryInterface {
       $lookup_keys = $this->entityType->getLookupKeys();
       $conditions = $this->condition->conditions();
       foreach ($conditions as $condition_key => $condition) {
-        $operator = $condition['operator'] ?: (is_array($condition['value']) ? 'IN' : '=');
-        if (is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
+        $operator = $condition['operator'] ?: (\is_array($condition['value']) ? 'IN' : '=');
+        if (\is_string($condition['field']) && ($operator == 'IN' || $operator == '=')) {
           // Special case ID lookups.
           if ($condition['field'] == $id_key) {
             $ids = (array) $condition['value'];
@@ -145,7 +145,7 @@ class Query extends QueryBase implements QueryInterface {
               return $prefix . $id;
             }, $ids);
           }
-          elseif (in_array($condition['field'], $lookup_keys)) {
+          elseif (\in_array($condition['field'], $lookup_keys)) {
             // If we don't find anything then there are no matches. No point in
             // listing anything.
             $names = [];
@@ -208,7 +208,7 @@ class Query extends QueryBase implements QueryInterface {
         case 'ENDS_WITH':
           $filter = function ($name) use ($value, $prefix_length) {
             $id = substr($name, $prefix_length);
-            return strrpos($id, $value) === strlen($id) - strlen($value);
+            return strrpos($id, $value) === \strlen($id) - \strlen($value);
           };
           break;
       }

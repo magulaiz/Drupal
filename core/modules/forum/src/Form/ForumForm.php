@@ -149,7 +149,7 @@ class ForumForm extends TermForm {
     $options[0] = '<' . $this->t('root') . '>';
     if ($tree) {
       foreach ($tree as $term) {
-        if (!in_array($term->id(), $exclude)) {
+        if (!\in_array($term->id(), $exclude)) {
           $options[$term->id()] = str_repeat(' -- ', $term->depth) . $term->getName();
         }
       }

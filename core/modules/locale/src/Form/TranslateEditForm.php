@@ -63,7 +63,7 @@ class TranslateEditForm extends TranslateFormBase {
         // Split source to work with plural values.
         $source_array = $source->getPlurals();
         $translation_array = $string->getPlurals();
-        if (count($source_array) == 1) {
+        if (\count($source_array) == 1) {
           // Add original string value and mark as non-plural.
           $plural = FALSE;
           $form['strings'][$string->lid]['original'] = [
@@ -139,7 +139,7 @@ class TranslateEditForm extends TranslateFormBase {
           }
         }
       }
-      if (count(Element::children($form['strings']))) {
+      if (\count(Element::children($form['strings']))) {
         $form['actions'] = ['#type' => 'actions'];
         $form['actions']['submit'] = [
           '#type' => 'submit',

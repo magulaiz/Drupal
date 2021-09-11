@@ -71,7 +71,7 @@ class FieldOrLanguageJoin extends JoinPluginBase {
       return;
     }
 
-    if (is_array($this->extra)) {
+    if (\is_array($this->extra)) {
       $extras = [];
       foreach ($this->extra as $extra) {
         $extras[] = $this->buildExtra($extra, $arguments, $table, $select_query, $left_table);
@@ -86,7 +86,7 @@ class FieldOrLanguageJoin extends JoinPluginBase {
         }
       }
 
-      if (count($extras) > 1) {
+      if (\count($extras) > 1) {
         $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
       }
       elseif ($extras) {
@@ -98,7 +98,7 @@ class FieldOrLanguageJoin extends JoinPluginBase {
         $condition .= ' AND (' . implode(' OR ', $language_bundle_conditions) . ')';
       }
     }
-    elseif (is_string($this->extra)) {
+    elseif (\is_string($this->extra)) {
       $condition .= " AND ($this->extra)";
     }
   }

@@ -208,7 +208,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
         'bin' => $this->cacheBin,
       ];
 
-      if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
+      if ($entity instanceof TranslatableDataInterface && \count($entity->getTranslationLanguages()) > 1) {
         $build['#cache']['keys'][] = $entity->language()->getId();
       }
     }
@@ -503,7 +503,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
    */
   protected function getSingleFieldDisplay($entity, $field_name, $display_options) {
-    if (is_string($display_options)) {
+    if (\is_string($display_options)) {
       // View mode: use the Display configured for the view mode.
       $view_mode = $display_options;
       $display = EntityViewDisplay::collectRenderDisplay($entity, $view_mode);

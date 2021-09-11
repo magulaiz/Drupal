@@ -129,7 +129,7 @@ class EntityConfigBase extends Entity {
     $this->rollbackAction = MigrateIdMapInterface::ROLLBACK_DELETE;
     $ids = $this->getIds();
     $id_key = $this->getKey('id');
-    if (count($ids) > 1) {
+    if (\count($ids) > 1) {
       // Ids is keyed by the key name so grab the keys.
       $id_keys = array_keys($ids);
       if (!$row->getDestinationProperty($id_key)) {
@@ -142,7 +142,7 @@ class EntityConfigBase extends Entity {
     if (!$this->isTranslationDestination()) {
       $entity->save();
     }
-    if (count($ids) > 1) {
+    if (\count($ids) > 1) {
       // This can only be a config entity, content entities have their ID key
       // and that's it.
       $return = [];
@@ -229,7 +229,7 @@ class EntityConfigBase extends Entity {
   protected function updateEntityProperty(EntityInterface $entity, array $parents, $value) {
     $top_key = array_shift($parents);
     $entity_value = $entity->get($top_key);
-    if (is_array($entity_value)) {
+    if (\is_array($entity_value)) {
       NestedArray::setValue($entity_value, $parents, $value);
     }
     else {

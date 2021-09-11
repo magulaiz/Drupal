@@ -204,7 +204,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
     // Normalize.
     $actual = $this->normalizer->normalize($relationship, 'api_json');
     // Assert.
-    assert($actual instanceof CacheableNormalization);
+    \assert($actual instanceof CacheableNormalization);
     $this->assertEquals($expected, $actual->getNormalization());
   }
 

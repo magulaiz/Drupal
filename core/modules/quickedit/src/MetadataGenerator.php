@@ -88,7 +88,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
       'editor' => $editor_id,
     ];
     $custom_metadata = $editor->getMetadata($items);
-    if (count($custom_metadata)) {
+    if (\count($custom_metadata)) {
       $metadata['custom'] = $custom_metadata;
     }
 

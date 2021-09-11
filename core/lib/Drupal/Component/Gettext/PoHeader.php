@@ -337,10 +337,10 @@ class PoHeader {
     $return = $element_stack;
 
     // Now validate stack.
-    $previous_size = count($element_stack) + 1;
-    while (count($element_stack) < $previous_size) {
-      $previous_size = count($element_stack);
-      for ($i = 2; $i < count($element_stack); $i++) {
+    $previous_size = \count($element_stack) + 1;
+    while (\count($element_stack) < $previous_size) {
+      $previous_size = \count($element_stack);
+      for ($i = 2; $i < \count($element_stack); $i++) {
         $op = $element_stack[$i];
         if (!empty($precedence[$op])) {
           if ($op == ":") {
@@ -359,7 +359,7 @@ class PoHeader {
     }
 
     // If only one element is left, the number of operators is appropriate.
-    return count($element_stack) == 1 ? $return : FALSE;
+    return \count($element_stack) == 1 ? $return : FALSE;
   }
 
   /**
@@ -374,11 +374,11 @@ class PoHeader {
   private function tokenizeFormula($formula) {
     $formula = str_replace(" ", "", $formula);
     $tokens = [];
-    for ($i = 0; $i < strlen($formula); $i++) {
+    for ($i = 0; $i < \strlen($formula); $i++) {
       if (is_numeric($formula[$i])) {
         $num = $formula[$i];
         $j = $i + 1;
-        while ($j < strlen($formula) && is_numeric($formula[$j])) {
+        while ($j < \strlen($formula) && is_numeric($formula[$j])) {
           $num .= $formula[$j];
           $j++;
         }
@@ -479,7 +479,7 @@ class PoHeader {
    * @throws \Exception
    */
   protected function evaluatePlural($element_stack, $n) {
-    $count = count($element_stack);
+    $count = \count($element_stack);
     $limit = $count;
     // Replace the '$n' value in the formula by the plural value.
     for ($i = 0; $i < $count; $i++) {
@@ -495,7 +495,7 @@ class PoHeader {
       for ($i = 2; $i < $count; $i++) {
         // There's no point in checking non-symbols. Also, switch(TRUE) would
         // match any case and so it would break.
-        if (is_bool($element_stack[$i]) || is_numeric($element_stack[$i])) {
+        if (\is_bool($element_stack[$i]) || is_numeric($element_stack[$i])) {
           continue;
         }
         $f = NULL;

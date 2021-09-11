@@ -142,7 +142,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $this->assertSession()->fieldValueNotEquals('subject[0][value]', '');
     }
 
-    if ($contact !== NULL && is_array($contact)) {
+    if ($contact !== NULL && \is_array($contact)) {
       $edit += $contact;
     }
     switch ($preview_mode) {

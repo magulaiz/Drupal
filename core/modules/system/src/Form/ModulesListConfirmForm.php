@@ -144,7 +144,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
       foreach ($this->modules['dependencies'] as $module => $dependencies) {
-        $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
+        $items[] = $this->formatPlural(\count($dependencies), 'You must enable the @required module to install @module.', 'You must enable the @required modules to install @module.', [
           '@module' => $this->modules['install'][$module],
           // It is safe to implode this because module names are not translated
           // markup and so will not be double-escaped.
@@ -176,7 +176,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
         $this->messenger()->addError(
           $this->formatPlural(
-            count($config_objects),
+            \count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
             [
@@ -197,7 +197,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // new container.
       $this->messenger = NULL;
       $module_names = array_values($this->modules['install']);
-      $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
+      $this->messenger()->addStatus($this->formatPlural(\count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
         '%name' => $module_names[0],
         '%names' => implode(', ', $module_names),
       ]));

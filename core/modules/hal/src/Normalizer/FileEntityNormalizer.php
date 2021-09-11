@@ -63,7 +63,7 @@ class FileEntityNormalizer extends ContentEntityNormalizer {
    * {@inheritdoc}
    */
   protected function getEntityUri(EntityInterface $entity, array $context = []) {
-    assert($entity instanceof FileInterface);
+    \assert($entity instanceof FileInterface);
     // https://www.drupal.org/project/drupal/issues/2277705 introduced a hack
     // in \Drupal\file\Entity\File::url(), but EntityInterface::url() was
     // deprecated in favor of ::toUrl(). The parent implementation now calls

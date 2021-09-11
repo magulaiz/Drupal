@@ -130,7 +130,7 @@ class UsesCommandRequirements {
   use ExternalCommandRequirementsTrait;
 
   protected static function externalCommandIsAvailable($command) {
-    return in_array($command, ['available_command']);
+    return \in_array($command, ['available_command']);
   }
 
 }
@@ -143,7 +143,7 @@ class ClassRequiresAvailable {
   use ExternalCommandRequirementsTrait;
 
   protected static function externalCommandIsAvailable($command) {
-    return in_array($command, ['available_command']);
+    return \in_array($command, ['available_command']);
   }
 
 }
@@ -176,7 +176,7 @@ class MethodRequires {
   }
 
   protected static function externalCommandIsAvailable($command) {
-    return in_array($command, ['available_command']);
+    return \in_array($command, ['available_command']);
   }
 
 }

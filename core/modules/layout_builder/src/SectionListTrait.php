@@ -30,7 +30,7 @@ trait SectionListTrait {
       return 0;
     }
 
-    return count($this->getSections());
+    return \count($this->getSections());
   }
 
   /**
@@ -82,8 +82,8 @@ trait SectionListTrait {
 
     if ($this->hasSection($delta)) {
       // @todo Use https://www.drupal.org/node/66183 once resolved.
-      $start = array_slice($this->getSections(), 0, $delta);
-      $end = array_slice($this->getSections(), $delta);
+      $start = \array_slice($this->getSections(), 0, $delta);
+      $end = \array_slice($this->getSections(), $delta);
       $this->setSections(array_merge($start, [$section], $end));
     }
     else {

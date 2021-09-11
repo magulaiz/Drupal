@@ -302,7 +302,7 @@ trait UserCreationTrait {
     $available = array_keys(\Drupal::service('user.permissions')->getPermissions());
     $valid = TRUE;
     foreach ($permissions as $permission) {
-      if (!in_array($permission, $available)) {
+      if (!\in_array($permission, $available)) {
         $this->fail(new FormattableMarkup('Invalid permission %permission.', ['%permission' => $permission]), 'Role');
         $valid = FALSE;
       }

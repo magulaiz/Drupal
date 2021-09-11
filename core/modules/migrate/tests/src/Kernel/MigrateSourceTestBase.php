@@ -159,8 +159,8 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
         ->set($this->migration->reveal()->id(), $high_water);
     }
 
-    if (is_null($expected_count)) {
-      $expected_count = count($expected_data);
+    if (\is_null($expected_count)) {
+      $expected_count = \count($expected_data);
     }
     // If an expected count was given, assert it only if the plugin is
     // countable.
@@ -181,7 +181,7 @@ abstract class MigrateSourceTestBase extends KernelTestBase {
         $this->assertArrayHasKey($key, $actual);
 
         $msg = sprintf("Value at 'array[%s][%s]' is not correct.", $i - 1, $key);
-        if (is_array($value)) {
+        if (\is_array($value)) {
           ksort($value);
           ksort($actual[$key]);
           $this->assertEquals($value, $actual[$key], $msg);

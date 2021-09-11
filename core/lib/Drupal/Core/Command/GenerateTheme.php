@@ -32,7 +32,7 @@ class GenerateTheme extends Command {
   public function __construct(string $name = NULL) {
     parent::__construct($name);
 
-    $this->root = dirname(__DIR__, 5);
+    $this->root = \dirname(__DIR__, 5);
   }
 
   /**

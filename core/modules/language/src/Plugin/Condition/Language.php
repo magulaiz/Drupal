@@ -114,7 +114,7 @@ class Language extends ConditionPluginBase implements ContainerFactoryPluginInte
     }, []);
 
     // If we have more than one language selected, separate them by commas.
-    if (count($this->configuration['langcodes']) > 1) {
+    if (\count($this->configuration['langcodes']) > 1) {
       $languages = implode(', ', $language_names);
     }
     else {

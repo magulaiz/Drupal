@@ -100,7 +100,7 @@ class ImageTest extends UnitTestCase {
    *   An image object.
    */
   protected function getTestImage($load_expected = TRUE, array $stubs = []) {
-    if (!$load_expected && !in_array('load', $stubs)) {
+    if (!$load_expected && !\in_array('load', $stubs)) {
       $stubs = array_merge(['load'], $stubs);
     }
 

@@ -85,7 +85,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
       '#title' => $this->t('Menu levels'),
       // Open if not set to defaults.
       '#open' => $defaults['level'] !== $config['level'] || $defaults['depth'] !== $config['depth'],
-      '#process' => [[get_class(), 'processMenuLevelParents']],
+      '#process' => [[\get_class(), 'processMenuLevelParents']],
     ];
 
     $options = range(0, $this->menuTree->maxDepth());
@@ -170,7 +170,7 @@ class SystemMenuBlock extends BlockBase implements ContainerFactoryPluginInterfa
     // from the current active trail. Adjust the root according to the current
     // position in the menu in order to determine if we can show the subtree.
     if ($level > 1) {
-      if (count($parameters->activeTrail) >= $level) {
+      if (\count($parameters->activeTrail) >= $level) {
         // Active trail array is child-first. Reverse it, and pull the new menu
         // root based on the parent of the configured start level.
         $menu_trail_ids = array_reverse(array_values($parameters->activeTrail));

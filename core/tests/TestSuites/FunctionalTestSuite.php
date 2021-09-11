@@ -16,7 +16,7 @@ class FunctionalTestSuite extends TestSuiteBase {
    *   The test suite.
    */
   public static function suite() {
-    $root = dirname(__DIR__, 3);
+    $root = \dirname(__DIR__, 3);
 
     $suite = new static('functional');
     $suite->addTestsBySuiteNamespace($root, 'Functional');

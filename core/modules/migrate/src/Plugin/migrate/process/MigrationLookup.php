@@ -219,7 +219,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         throw $e;
       }
       catch (\Exception $e) {
-        throw new MigrateException(sprintf('A %s was thrown while processing this migration lookup', gettype($e)), $e->getCode(), $e);
+        throw new MigrateException(sprintf('A %s was thrown while processing this migration lookup', \gettype($e)), $e->getCode(), $e);
       }
 
       if ($destination_id_array) {
@@ -232,7 +232,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       return NULL;
     }
 
-    if (!$destination_ids && ($self || isset($this->configuration['stub_id']) || count($lookup_migration_ids) == 1)) {
+    if (!$destination_ids && ($self || isset($this->configuration['stub_id']) || \count($lookup_migration_ids) == 1)) {
       // If the lookup didn't succeed, figure out which migration will do the
       // stubbing.
       if ($self) {
@@ -263,11 +263,11 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         throw $e;
       }
       catch (\Exception $e) {
-        throw new MigrateException(sprintf('A(n) %s was thrown while attempting to stub.', gettype($e)), $e->getCode(), $e);
+        throw new MigrateException(sprintf('A(n) %s was thrown while attempting to stub.', \gettype($e)), $e->getCode(), $e);
       }
     }
     if ($destination_ids) {
-      if (count($destination_ids) == 1) {
+      if (\count($destination_ids) == 1) {
         return reset($destination_ids);
       }
       else {
@@ -302,7 +302,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    *   Return true if the value is valid.
    */
   protected function isValid($value) {
-    return !in_array($value, [NULL, FALSE, [], ""], TRUE);
+    return !\in_array($value, [NULL, FALSE, [], ""], TRUE);
   }
 
 }

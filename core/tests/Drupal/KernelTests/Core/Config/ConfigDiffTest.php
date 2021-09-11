@@ -158,7 +158,7 @@ class ConfigDiffTest extends KernelTestBase {
       // Choose which section to search for the field.
       $haystack = $type == 'add' ? $edit->closing : $edit->orig;
       // Look through each line and try and find the key.
-      if (is_array($haystack)) {
+      if (\is_array($haystack)) {
         foreach ($haystack as $item) {
           if (strpos($item, $field . ':') === 0) {
             $match = TRUE;

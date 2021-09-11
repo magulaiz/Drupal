@@ -42,7 +42,7 @@ class AuditResult implements MarkupInterface, \Countable {
    *   (optional) The reasons why the migration passed or failed the audit.
    */
   public function __construct(MigrationInterface $migration, $status, array $reasons = []) {
-    if (!is_bool($status)) {
+    if (!\is_bool($status)) {
       throw new \InvalidArgumentException('Audit results must have a boolean status.');
     }
     $this->migration = $migration;
@@ -120,7 +120,7 @@ class AuditResult implements MarkupInterface, \Countable {
    * @see \Drupal\Component\Render\MarkupInterface
    */
   public function count() {
-    return count($this->reasons);
+    return \count($this->reasons);
   }
 
   /**

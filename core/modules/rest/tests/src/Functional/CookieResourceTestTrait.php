@@ -82,7 +82,7 @@ trait CookieResourceTestTrait {
   protected function getAuthenticationRequestOptions($method) {
     $request_options[RequestOptions::HEADERS]['Cookie'] = $this->sessionCookie;
     // @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-    if (!in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
+    if (!\in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
       $request_options[RequestOptions::HEADERS]['X-CSRF-Token'] = $this->csrfToken;
     }
     return $request_options;
@@ -106,7 +106,7 @@ trait CookieResourceTestTrait {
       //   to cacheable anonymous responses: it updates their cacheability.
       // - A 403 response to a GET request is cacheable.
       // Therefore we must update our cacheability expectations accordingly.
-      if (in_array('user.permissions', $expected_cookie_403_cacheability->getCacheContexts(), TRUE)) {
+      if (\in_array('user.permissions', $expected_cookie_403_cacheability->getCacheContexts(), TRUE)) {
         $expected_cookie_403_cacheability->addCacheTags(['config:user.role.anonymous']);
       }
       // @todo Fix \Drupal\block\BlockAccessControlHandler::mergeCacheabilityFromConditions() in https://www.drupal.org/node/2867881
@@ -127,7 +127,7 @@ trait CookieResourceTestTrait {
     // X-CSRF-Token request header is unnecessary for safe and side effect-free
     // HTTP methods. No need for additional assertions.
     // @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html
-    if (in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
+    if (\in_array($method, ['HEAD', 'GET', 'OPTIONS', 'TRACE'])) {
       return;
     }
 

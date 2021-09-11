@@ -69,17 +69,17 @@ class PhpassHashedPassword implements PasswordInterface {
     $output = '';
     $i = 0;
     do {
-      $value = ord($input[$i++]);
+      $value = \ord($input[$i++]);
       $output .= static::$ITOA64[$value & 0x3f];
       if ($i < $count) {
-        $value |= ord($input[$i]) << 8;
+        $value |= \ord($input[$i]) << 8;
       }
       $output .= static::$ITOA64[($value >> 6) & 0x3f];
       if ($i++ >= $count) {
         break;
       }
       if ($i < $count) {
-        $value |= ord($input[$i]) << 16;
+        $value |= \ord($input[$i]) << 16;
       }
       $output .= static::$ITOA64[($value >> 12) & 0x3f];
       if ($i++ >= $count) {
@@ -156,7 +156,7 @@ class PhpassHashedPassword implements PasswordInterface {
    */
   protected function crypt($algo, $password, $setting) {
     // Prevent DoS attacks by refusing to hash large passwords.
-    if (strlen($password) > PasswordInterface::PASSWORD_MAX_LENGTH) {
+    if (\strlen($password) > PasswordInterface::PASSWORD_MAX_LENGTH) {
       return FALSE;
     }
 
@@ -175,7 +175,7 @@ class PhpassHashedPassword implements PasswordInterface {
     }
     $salt = substr($setting, 4, 8);
     // Hashes must have an 8 character salt.
-    if (strlen($salt) != 8) {
+    if (\strlen($salt) != 8) {
       return FALSE;
     }
 
@@ -187,12 +187,12 @@ class PhpassHashedPassword implements PasswordInterface {
       $hash = hash($algo, $hash . $password, TRUE);
     } while (--$count);
 
-    $len = strlen($hash);
+    $len = \strlen($hash);
     $output = $setting . $this->base64Encode($hash, $len);
     // $this->base64Encode() of a 16 byte MD5 will always be 22 characters.
     // $this->base64Encode() of a 64 byte sha512 will always be 86 characters.
     $expected = 12 + ceil((8 * $len) / 6);
-    return (strlen($output) == $expected) ? substr($output, 0, static::HASH_LENGTH) : FALSE;
+    return (\strlen($output) == $expected) ? substr($output, 0, static::HASH_LENGTH) : FALSE;
   }
 
   /**
@@ -259,7 +259,7 @@ class PhpassHashedPassword implements PasswordInterface {
    */
   public function needsRehash($hash) {
     // Check whether this was an updated password.
-    if ((substr($hash, 0, 3) != '$S$') || (strlen($hash) != static::HASH_LENGTH)) {
+    if ((substr($hash, 0, 3) != '$S$') || (\strlen($hash) != static::HASH_LENGTH)) {
       return TRUE;
     }
     // Ensure that $count_log2 is within set bounds.

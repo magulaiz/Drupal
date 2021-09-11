@@ -167,7 +167,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
 
     // If the delta and the count are the same, it is either the end of the
     // layout or an empty layout.
-    if ($delta === count($section_storage)) {
+    if ($delta === \count($section_storage)) {
       if ($delta === 0) {
         $title = $this->t('Add section');
       }

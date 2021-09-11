@@ -78,7 +78,7 @@ class TelephoneLinkFormatter extends FormatterBase {
       // we need the work around on any 5 digit (or less) number.
       // First we strip whitespace so we're counting actual digits.
       $phone_number = preg_replace('/\s+/', '', $item->value);
-      if (strlen($phone_number) <= 5) {
+      if (\strlen($phone_number) <= 5) {
         $phone_number = substr_replace($phone_number, '-', 1, 0);
       }
 

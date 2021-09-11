@@ -61,7 +61,7 @@ trait XmlEntityNormalizationQuirksTrait {
         continue;
       }
 
-      for ($i = 0; $i < count($normalization[$field_name]); $i++) {
+      for ($i = 0; $i < \count($normalization[$field_name]); $i++) {
         switch ($field->getItemDefinition()->getClass()) {
           case BooleanItem::class:
           case StatusItem::class:
@@ -108,7 +108,7 @@ trait XmlEntityNormalizationQuirksTrait {
         }
       }
 
-      if (count($normalization[$field_name]) === 1) {
+      if (\count($normalization[$field_name]) === 1) {
         $normalization[$field_name] = $normalization[$field_name][0];
       }
     }
@@ -137,7 +137,7 @@ trait XmlEntityNormalizationQuirksTrait {
     // When a single dependency is listed, it's not decoded into an array.
     if (isset($normalization['dependencies'])) {
       foreach ($normalization['dependencies'] as $dependency_type => $dependency_list) {
-        if (count($dependency_list) === 1) {
+        if (\count($dependency_list) === 1) {
           $normalization['dependencies'][$dependency_type] = $dependency_list[0];
         }
       }

@@ -136,7 +136,7 @@ class SessionConfiguration implements SessionConfigurationInterface {
     // agents in order to defeat malicious websites attempting to set cookies
     // for top-level domains. Also IP addresses may not be used in the domain
     // attribute of a Set-Cookie header.
-    if (count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
+    if (\count(explode('.', $cookie_domain)) > 2 && !is_numeric(str_replace('.', '', $cookie_domain))) {
       return $cookie_domain;
     }
   }

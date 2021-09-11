@@ -466,7 +466,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       foreach ($field_names as $field_name) {
         $field_columns = $this->tableMapping->getColumnNames($field_name);
         // Handle field types that store several properties.
-        if (count($field_columns) > 1) {
+        if (\count($field_columns) > 1) {
           $definition_columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
@@ -590,7 +590,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $definition_columns = $storage_definition->getColumns();
           $columns = $table_mapping->getColumnNames($field_name);
           // Do not key single-column fields by property name.
-          if (count($columns) == 1) {
+          if (\count($columns) == 1) {
             $column_name = reset($columns);
             $column_attributes = $definition_columns[key($columns)];
             $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name]) : $row[$column_name];
@@ -657,7 +657,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       //   https://www.drupal.org/node/1866330.
       // Default to the original entity language if not explicitly specified
       // otherwise.
-      if (!array_key_exists($this->defaultLangcodeKey, $values)) {
+      if (!\array_key_exists($this->defaultLangcodeKey, $values)) {
         $values[$this->defaultLangcodeKey] = 1;
       }
       // If the 'default_langcode' flag is explicitly not set, we do not care
@@ -956,7 +956,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     // Update dedicated table records if necessary.
     if ($dedicated_table_fields) {
-      $names = is_array($dedicated_table_fields) ? $dedicated_table_fields : [];
+      $names = \is_array($dedicated_table_fields) ? $dedicated_table_fields : [];
       $this->saveToDedicatedTables($entity, $update, $names);
     }
   }
@@ -1043,7 +1043,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // stored serialized.
         // @todo Give field types more control over this behavior in
         //   https://www.drupal.org/node/2232427.
-        if (!$definition->getMainPropertyName() && count($columns) == 1) {
+        if (!$definition->getMainPropertyName() && \count($columns) == 1) {
           $value = ($item = $entity->$field_name->first()) ? $item->getValue() : [];
         }
         else {
@@ -1246,7 +1246,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         // Ensure that records for non-translatable fields having invalid
         // languages are skipped.
         if ($langcode == LanguageInterface::LANGCODE_DEFAULT || $definitions[$bundle][$field_name]->isTranslatable()) {
-          if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
+          if ($storage_definition->getCardinality() == FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED || \count($values[$value_key][$field_name][$langcode]) < $storage_definition->getCardinality()) {
             $item = [];
             // For each column declared by the field, populate the item from the
             // prefixed database column.

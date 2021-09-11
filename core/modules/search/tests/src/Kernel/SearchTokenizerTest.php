@@ -96,7 +96,7 @@ class SearchTokenizerTest extends KernelTestBase {
     // Merge into a string and tokenize.
     $string = implode('', $chars);
     $text_processor = \Drupal::service('search.text_processor');
-    assert($text_processor instanceof SearchTextProcessorInterface);
+    \assert($text_processor instanceof SearchTextProcessorInterface);
     $out = trim($text_processor->analyze($string));
     $expected = mb_strtolower(implode(' ', $chars));
 
@@ -120,7 +120,7 @@ class SearchTokenizerTest extends KernelTestBase {
 
     $letters = 'abcdefghijklmnopqrstuvwxyz';
     $text_processor = \Drupal::service('search.text_processor');
-    assert($text_processor instanceof SearchTextProcessorInterface);
+    \assert($text_processor instanceof SearchTextProcessorInterface);
     $out = trim($text_processor->analyze($letters));
 
     $this->assertEquals($letters, $out, 'Letters are not CJK tokenized');
@@ -135,19 +135,19 @@ class SearchTokenizerTest extends KernelTestBase {
    */
   public function code2utf($num) {
     if ($num < 128) {
-      return chr($num);
+      return \chr($num);
     }
 
     if ($num < 2048) {
-      return chr(($num >> 6) + 192) . chr(($num & 63) + 128);
+      return \chr(($num >> 6) + 192) . \chr(($num & 63) + 128);
     }
 
     if ($num < 65536) {
-      return chr(($num >> 12) + 224) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
+      return \chr(($num >> 12) + 224) . \chr((($num >> 6) & 63) + 128) . \chr(($num & 63) + 128);
     }
 
     if ($num < 2097152) {
-      return chr(($num >> 18) + 240) . chr((($num >> 12) & 63) + 128) . chr((($num >> 6) & 63) + 128) . chr(($num & 63) + 128);
+      return \chr(($num >> 18) + 240) . \chr((($num >> 12) & 63) + 128) . \chr((($num >> 6) & 63) + 128) . \chr(($num & 63) + 128);
     }
 
     return '';

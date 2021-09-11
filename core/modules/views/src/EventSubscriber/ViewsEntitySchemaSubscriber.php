@@ -249,7 +249,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
     foreach ($all_views as $id => $view) {
 
       // First check just the base table.
-      if (in_array($view->get('base_table'), $tables)) {
+      if (\in_array($view->get('base_table'), $tables)) {
         $view->disable();
         $view->save();
       }
@@ -366,7 +366,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
     $this->processHandlers($all_views, function (&$handler_config, ViewEntityInterface $view) use ($entity_type_id, $base_table, $data_table, $base_table_fields, $data_table_fields) {
       if (isset($handler_config['entity_type']) && isset($handler_config['entity_field']) && $handler_config['entity_type'] == $entity_type_id) {
         // Move all fields which just exists on the data table.
-        if ($handler_config['table'] == $base_table && in_array($handler_config['entity_field'], $data_table_fields) && !in_array($handler_config['entity_field'], $base_table_fields)) {
+        if ($handler_config['table'] == $base_table && \in_array($handler_config['entity_field'], $data_table_fields) && !\in_array($handler_config['entity_field'], $base_table_fields)) {
           $handler_config['table'] = $data_table;
           $view->set('_updated', TRUE);
         }
@@ -411,7 +411,7 @@ class ViewsEntitySchemaSubscriber implements EntityTypeListenerInterface, EventS
     $revision_data_table = $original->getRevisionDataTable();
 
     foreach ($all_views as $view) {
-      if (in_array($view->get('base_table'), [$revision_base_table, $revision_data_table])) {
+      if (\in_array($view->get('base_table'), [$revision_base_table, $revision_data_table])) {
         // Let's disable the views as we no longer support revisions.
         $view->setStatus(FALSE);
         $view->set('_updated', TRUE);

@@ -67,7 +67,7 @@ class FileFieldItemList extends EntityReferenceFieldItemList {
 
       // Add new usage entries for newly added files.
       foreach ($files as $file) {
-        if (!in_array($file->id(), $original_ids)) {
+        if (!\in_array($file->id(), $original_ids)) {
           \Drupal::service('file.usage')->add($file, 'file', $entity->getEntityTypeId(), $entity->id());
         }
       }

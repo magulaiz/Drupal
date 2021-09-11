@@ -212,7 +212,7 @@ abstract class Database {
     // possible connections for this target. Pick one at random. That allows
     // us to have, for example, multiple replica servers.
     if (empty($info['driver'])) {
-      $info = $info[mt_rand(0, count($info) - 1)];
+      $info = $info[mt_rand(0, \count($info) - 1)];
     }
 
     // Parse the prefix information.
@@ -222,7 +222,7 @@ abstract class Database {
       // Default to an empty prefix.
       $info['prefix'] = '';
     }
-    elseif (is_array($info['prefix'])) {
+    elseif (\is_array($info['prefix'])) {
       $prefix = $info['prefix']['default'] ?? '';
       unset($info['prefix']['default']);
       // If there are keys left besides the 'default' one, we are in a
@@ -230,7 +230,7 @@ abstract class Database {
       // In that case, we put the non-default keys in a 'extra_prefix' key
       // to avoid mixing up with the normal 'prefix', which is a string since
       // Drupal 9.1.0.
-      if (count($info['prefix'])) {
+      if (\count($info['prefix'])) {
         $info['extra_prefix'] = $info['prefix'];
       }
       $info['prefix'] = $prefix;

@@ -172,7 +172,7 @@ class DownloadTest extends FileManagedTestBase {
     // supported by the filesystem, and create the file in the specified
     // directory.
     $filepath = \Drupal::service('file_system')->createFilename($filename, $directory);
-    $directory_uri = $scheme . '://' . dirname($filepath);
+    $directory_uri = $scheme . '://' . \dirname($filepath);
     \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
     $file = $this->createFile($filepath, NULL, $scheme);
 

@@ -95,7 +95,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $translation = $this->getTranslation($entity, $default_langcode);
     foreach ($values[$default_langcode] as $property => $value) {
       $stored_value = $this->getValue($translation, $property, $default_langcode);
-      $value = is_array($value) ? $value[0]['value'] : $value;
+      $value = \is_array($value) ? $value[0]['value'] : $value;
       $message = new FormattableMarkup('@property correctly stored in the default language.', ['@property' => $property]);
       $this->assertEquals($value, $stored_value, $message);
     }
@@ -204,7 +204,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $translation = $this->getTranslation($entity, $langcode);
       foreach ($property_values as $property => $value) {
         $stored_value = $this->getValue($translation, $property, $langcode);
-        $value = is_array($value) ? $value[0]['value'] : $value;
+        $value = \is_array($value) ? $value[0]['value'] : $value;
         $message = new FormattableMarkup('%property correctly stored with language %language.', ['%property' => $property, '%language' => $langcode]);
         $this->assertEquals($value, $stored_value, $message);
       }
@@ -408,7 +408,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $edit = $values[$langcode];
     $langcode = $new ? LanguageInterface::LANGCODE_NOT_SPECIFIED : $langcode;
     foreach ($values[$langcode] as $property => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $edit["{$property}[0][value]"] = $value[0]['value'];
         unset($edit[$property]);
       }
@@ -584,7 +584,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
       $timestamps = [];
       foreach ($entity->getTranslationLanguages() as $language) {
         $next_timestamp = $entity->getTranslation($language->getId())->getChangedTime();
-        if (!in_array($next_timestamp, $timestamps)) {
+        if (!\in_array($next_timestamp, $timestamps)) {
           $timestamps[] = $next_timestamp;
         }
       }

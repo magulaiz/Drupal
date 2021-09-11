@@ -141,7 +141,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
     foreach ($values as $key => $value) {
       // The entity_autocomplete form element returns an array when an entity
       // was "autocreated", so we need to move it up a level.
-      if (is_array($value['target_id'])) {
+      if (\is_array($value['target_id'])) {
         unset($values[$key]['target_id']);
         $values[$key] += $value['target_id'];
       }
@@ -166,7 +166,7 @@ class EntityReferenceAutocompleteWidget extends WidgetBase {
         $bundle = $this->getFieldSetting('target_type');
       }
       // If there's only one target bundle, use it.
-      elseif (count($target_bundles) == 1) {
+      elseif (\count($target_bundles) == 1) {
         $bundle = reset($target_bundles);
       }
       // If there's more than one target bundle, use the autocreate bundle

@@ -136,7 +136,7 @@ class ViewsSelection extends SelectionPluginBase implements ContainerFactoryPlug
     foreach ($displays as $data) {
       list($view_id, $display_id) = $data;
       $view = $view_storage->load($view_id);
-      if (in_array($view->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
+      if (\in_array($view->get('base_table'), [$entity_type->getBaseTable(), $entity_type->getDataTable()])) {
         $display = $view->get('display');
         $options[$view_id . ':' . $display_id] = $view_id . ' - ' . $display[$display_id]['display_title'];
       }

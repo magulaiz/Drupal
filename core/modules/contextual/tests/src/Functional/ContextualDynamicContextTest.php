@@ -106,7 +106,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
 
     // Editor user: can access contextual links and can edit articles.
     $this->drupalGet('node');
-    for ($i = 0; $i < count($ids); $i++) {
+    for ($i = 0; $i < \count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
     }
     $response = $this->renderContextualLinks([], 'node');
@@ -129,7 +129,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     // Authenticated user: can access contextual links, cannot edit articles.
     $this->drupalLogin($this->authenticatedUser);
     $this->drupalGet('node');
-    for ($i = 0; $i < count($ids); $i++) {
+    for ($i = 0; $i < \count($ids); $i++) {
       $this->assertContextualLinkPlaceHolder($ids[$i]);
     }
     $response = $this->renderContextualLinks([], 'node');
@@ -146,7 +146,7 @@ class ContextualDynamicContextTest extends BrowserTestBase {
     // Anonymous user: cannot access contextual links.
     $this->drupalLogin($this->anonymousUser);
     $this->drupalGet('node');
-    for ($i = 0; $i < count($ids); $i++) {
+    for ($i = 0; $i < \count($ids); $i++) {
       $this->assertNoContextualLinkPlaceHolder($ids[$i]);
     }
     $response = $this->renderContextualLinks([], 'node');

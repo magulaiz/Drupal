@@ -14,7 +14,7 @@ trait FileSystemModuleDiscoveryDataProviderTrait {
    *   An array of module names to test.
    */
   public function coreModuleListDataProvider() {
-    $prefix = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'modules';
+    $prefix = \dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'modules';
     $module_dirs = array_keys(iterator_to_array(new \FilesystemIterator($prefix)));
     $module_names = array_map(function ($path) use ($prefix) {
       return str_replace($prefix . DIRECTORY_SEPARATOR, '', $path);

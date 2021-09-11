@@ -89,7 +89,7 @@ class WorkspaceSelection extends DefaultSelection {
       foreach (array_keys($bundle_options) as $id) {
         // If a user can not view a workspace, we need to prevent them from
         // referencing that workspace as well as its descendants.
-        if (in_array($id, $restricted_access_entities) || !$entities[$id]->access('view', $this->currentUser)) {
+        if (\in_array($id, $restricted_access_entities) || !$entities[$id]->access('view', $this->currentUser)) {
           $restricted_access_entities += $workspace_tree[$id]['descendants'];
           unset($options[$bundle][$id]);
         }

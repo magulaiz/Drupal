@@ -89,7 +89,7 @@ class Tables implements TablesInterface {
     $index_prefix = '';
     $specifiers = explode('.', $field);
     $base_table = 'base_table';
-    $count = count($specifiers) - 1;
+    $count = \count($specifiers) - 1;
     // This will contain the definitions of the last specifier seen by the
     // system.
     $propertyDefinitions = [];
@@ -162,7 +162,7 @@ class Tables implements TablesInterface {
           }
           // Is this a field column?
           $columns = $field_storage->getColumns();
-          if (isset($columns[$next]) || in_array($next, $table_mapping->getReservedColumns())) {
+          if (isset($columns[$next]) || \in_array($next, $table_mapping->getReservedColumns())) {
             // Use it.
             $column = $next;
             // Do not process it again.
@@ -202,7 +202,7 @@ class Tables implements TablesInterface {
           $data_table = $entity_type->getDataTable();
           $entity_base_table = $entity_type->getBaseTable();
 
-          if ($field_storage && $field_storage->isRevisionable() && in_array($field_storage->getName(), $entity_type->getRevisionMetadataKeys())) {
+          if ($field_storage && $field_storage->isRevisionable() && \in_array($field_storage->getName(), $entity_type->getRevisionMetadataKeys())) {
             $revision_table = $entity_type->getRevisionTable();
           }
         }
@@ -243,7 +243,7 @@ class Tables implements TablesInterface {
           }
           // Is this a field column?
           $columns = $field_storage->getColumns();
-          if (isset($columns[$next]) || in_array($next, $table_mapping->getReservedColumns())) {
+          if (isset($columns[$next]) || \in_array($next, $table_mapping->getReservedColumns())) {
             // Use it.
             $sql_column = $table_mapping->getFieldColumnName($field_storage, $next);
             // Do not process it again.

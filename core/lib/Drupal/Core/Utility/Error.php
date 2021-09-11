@@ -56,7 +56,7 @@ class Error {
     $caller = static::getLastCaller($backtrace);
 
     return [
-      '%type' => get_class($exception),
+      '%type' => \get_class($exception),
       // The standard PHP exception handler considers that the exception message
       // is plain-text. We mimic this behavior here.
       '@message' => $message,
@@ -108,7 +108,7 @@ class Error {
     // Errors that occur inside PHP internal functions do not generate
     // information about file and line. Ignore the ignored functions.
     while (($backtrace && !isset($backtrace[0]['line'])) ||
-      (isset($backtrace[1]['function']) && in_array($backtrace[1]['function'], static::$ignoredFunctions))) {
+      (isset($backtrace[1]['function']) && \in_array($backtrace[1]['function'], static::$ignoredFunctions))) {
       array_shift($backtrace);
     }
 
@@ -162,10 +162,10 @@ class Error {
       if (isset($trace['args'])) {
         foreach ($trace['args'] as $arg) {
           if (is_scalar($arg)) {
-            $call['args'][] = is_string($arg) ? '\'' . Xss::filter($arg) . '\'' : $arg;
+            $call['args'][] = \is_string($arg) ? '\'' . Xss::filter($arg) . '\'' : $arg;
           }
           else {
-            $call['args'][] = ucfirst(gettype($arg));
+            $call['args'][] = ucfirst(\gettype($arg));
           }
         }
       }

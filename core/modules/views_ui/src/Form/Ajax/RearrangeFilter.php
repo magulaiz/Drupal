@@ -87,7 +87,7 @@ class RearrangeFilter extends ViewsFormBase {
      * );
      */
 
-    $grouping = count(array_keys($groups['groups'])) > 1;
+    $grouping = \count(array_keys($groups['groups'])) > 1;
 
     $form['filter_groups']['#tree'] = TRUE;
     $form['filter_groups']['operator'] = [
@@ -246,7 +246,7 @@ class RearrangeFilter extends ViewsFormBase {
     foreach ($form_state->getValue('filters') as $field => $info) {
       // add each value that is a field with a weight to our list, but only if
       // it has had its 'removed' checkbox checked.
-      if (is_array($info) && empty($info['removed'])) {
+      if (\is_array($info) && empty($info['removed'])) {
         if (isset($info['weight'])) {
           $order[$field] = $info['weight'];
         }

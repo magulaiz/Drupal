@@ -329,7 +329,7 @@ class BlockForm extends EntityForm {
       // All condition plugins use 'negate' as a Boolean in their schema.
       // However, certain form elements may return it as 0/1. Cast here to
       // ensure the data is in the expected type.
-      if (array_key_exists('negate', $values)) {
+      if (\array_key_exists('negate', $values)) {
         $form_state->setValue(['visibility', $condition_id, 'negate'], (bool) $values['negate']);
       }
 
@@ -419,7 +419,7 @@ class BlockForm extends EntityForm {
     // 'plugin', 'plugin_2', 'plugin_3', etc.
     $count = 1;
     $machine_default = $suggestion;
-    while (in_array($machine_default, $block_ids)) {
+    while (\in_array($machine_default, $block_ids)) {
       $machine_default = $suggestion . '_' . ++$count;
     }
     return $machine_default;

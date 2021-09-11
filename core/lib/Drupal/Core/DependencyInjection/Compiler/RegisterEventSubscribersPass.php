@@ -35,11 +35,11 @@ class RegisterEventSubscribersPass implements CompilerPassInterface {
 
       // Get all subscribed events.
       foreach ($class::getSubscribedEvents() as $event_name => $params) {
-        if (is_string($params)) {
+        if (\is_string($params)) {
           $priority = 0;
           $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params]];
         }
-        elseif (is_string($params[0])) {
+        elseif (\is_string($params[0])) {
           $priority = isset($params[1]) ? $params[1] : 0;
           $event_subscriber_info[$event_name][$priority][] = ['service' => [$id, $params[0]]];
         }

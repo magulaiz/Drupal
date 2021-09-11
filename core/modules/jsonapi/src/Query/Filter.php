@@ -177,7 +177,7 @@ class Filter {
     $expanded = [];
     foreach ($original as $key => $item) {
       // Allow extreme shorthand filters, f.e. `?filter[promote]=1`.
-      if (!is_array($item)) {
+      if (!\is_array($item)) {
         $item = [
           EntityCondition::VALUE_KEY => $item,
         ];

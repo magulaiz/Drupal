@@ -236,7 +236,7 @@ abstract class Connection {
       $this->identifierQuotes = ['', ''];
     }
 
-    assert(count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
+    \assert(\count($this->identifierQuotes) === 2 && Inspector::assertAllStrings($this->identifierQuotes), '\Drupal\Core\Database\Connection::$identifierQuotes must contain 2 string values');
 
     // The 'transactions' option is deprecated.
     if (isset($connection_options['transactions'])) {
@@ -245,8 +245,8 @@ abstract class Connection {
     }
 
     // Manage the table prefix.
-    if (isset($connection_options['prefix']) && is_array($connection_options['prefix'])) {
-      if (count($connection_options['prefix']) > 1) {
+    if (isset($connection_options['prefix']) && \is_array($connection_options['prefix'])) {
+      if (\count($connection_options['prefix']) > 1) {
         // If there are keys left besides the 'default' one, we are in a
         // multi-prefix scenario (for per-table prefixing, or migrations).
         // In that case, we put the non-default keys in a 'extra_prefix' key
@@ -444,7 +444,7 @@ abstract class Connection {
    *   Either a single prefix, or an array of prefixes.
    */
   protected function setPrefix($prefix) {
-    if (is_array($prefix)) {
+    if (\is_array($prefix)) {
       $this->prefixes = $prefix + ['default' => ''];
     }
     else {
@@ -892,12 +892,12 @@ abstract class Connection {
   public function query($query, array $args = [], $options = []) {
     // Use default values if not already set.
     $options += $this->defaultOptions();
-    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
+    \assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     // We allow either a pre-bound statement object (deprecated) or a literal
     // string. In either case, we want to end up with an executed statement
     // object, which we pass to StatementInterface::execute.
-    if (is_string($query)) {
+    if (\is_string($query)) {
       $this->expandArguments($query, $args);
       $stmt = $this->prepareStatement($query, $options);
     }
@@ -911,7 +911,7 @@ abstract class Connection {
     }
 
     try {
-      if (is_string($query)) {
+      if (\is_string($query)) {
         $stmt->execute($args, $options);
       }
       elseif ($query instanceof StatementInterface) {
@@ -951,7 +951,7 @@ abstract class Connection {
       // Most database drivers will return NULL here, but some of them
       // (e.g. the SQLite driver) may need to re-run the query, so the return
       // value will be the same as for static::query().
-      if (is_string($query)) {
+      if (\is_string($query)) {
         return $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, $options);
       }
       else {
@@ -1046,7 +1046,7 @@ abstract class Connection {
     // expand it out into a comma-delimited set of placeholders.
     foreach ($args as $key => $data) {
       $is_bracket_placeholder = substr($key, -2) === '[]';
-      $is_array_data = is_array($data);
+      $is_array_data = \is_array($data);
       if ($is_bracket_placeholder && !$is_array_data) {
         throw new \InvalidArgumentException('Placeholders with a trailing [] can only be expanded with an array of values.');
       }
@@ -1184,7 +1184,7 @@ abstract class Connection {
    * @see \Drupal\Core\Database\Query\Select
    */
   public function select($table, $alias = NULL, array $options = []) {
-    if (!is_null($alias) && !is_string($alias)) {
+    if (!\is_null($alias) && !\is_string($alias)) {
       @trigger_error('Passing a non-string \'alias\' argument to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. Refactor your calling code. See https://www.drupal.org/project/drupal/issues/3216552', E_USER_DEPRECATED);
     }
     $class = $this->getDriverClass('Select');
@@ -1478,7 +1478,7 @@ abstract class Connection {
    *   The current transaction depth.
    */
   public function transactionDepth() {
-    return count($this->transactionLayers);
+    return \count($this->transactionLayers);
   }
 
   /**
@@ -1549,7 +1549,7 @@ abstract class Connection {
     $callbacks = $this->rootTransactionEndCallbacks;
     $this->rootTransactionEndCallbacks = [];
     foreach ($callbacks as $callback) {
-      call_user_func($callback, FALSE);
+      \call_user_func($callback, FALSE);
     }
 
     $this->connection->rollBack();
@@ -1677,7 +1677,7 @@ abstract class Connection {
       $callbacks = $this->rootTransactionEndCallbacks;
       $this->rootTransactionEndCallbacks = [];
       foreach ($callbacks as $callback) {
-        call_user_func($callback, $success);
+        \call_user_func($callback, $success);
       }
     }
 

@@ -185,7 +185,7 @@ class UrlGeneratorTest extends UnitTestCase {
    * @return string
    */
   public function aliasManagerCallback() {
-    $args = func_get_args();
+    $args = \func_get_args();
     switch ($args[0]) {
       case '/test/one':
         return '/hello/world';

@@ -285,7 +285,7 @@ class ConfigImporter {
   public function hasUnprocessedConfigurationChanges() {
     foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
       foreach (['delete', 'create', 'rename', 'update'] as $op) {
-        if (count($this->getUnprocessedConfiguration($op, $collection))) {
+        if (\count($this->getUnprocessedConfiguration($op, $collection))) {
           return TRUE;
         }
       }
@@ -504,13 +504,13 @@ class ConfigImporter {
    *   Exception thrown if the $sync_step can not be called.
    */
   public function doSyncStep($sync_step, &$context) {
-    if (!is_array($sync_step) && method_exists($this, $sync_step)) {
+    if (!\is_array($sync_step) && method_exists($this, $sync_step)) {
       \Drupal::service('config.installer')->setSyncing(TRUE);
       $this->$sync_step($context);
     }
-    elseif (is_callable($sync_step)) {
+    elseif (\is_callable($sync_step)) {
       \Drupal::service('config.installer')->setSyncing(TRUE);
-      call_user_func_array($sync_step, [&$context, $this]);
+      \call_user_func_array($sync_step, [&$context, $this]);
     }
     else {
       throw new \InvalidArgumentException('Invalid configuration synchronization step');
@@ -541,11 +541,11 @@ class ConfigImporter {
     $sync_steps = [];
     $modules = $this->getUnprocessedExtensions('module');
     foreach (['install', 'uninstall'] as $op) {
-      $this->totalExtensionsToProcess += count($modules[$op]);
+      $this->totalExtensionsToProcess += \count($modules[$op]);
     }
     $themes = $this->getUnprocessedExtensions('theme');
     foreach (['install', 'uninstall'] as $op) {
-      $this->totalExtensionsToProcess += count($themes[$op]);
+      $this->totalExtensionsToProcess += \count($themes[$op]);
     }
 
     // We have extensions to process.
@@ -571,8 +571,8 @@ class ConfigImporter {
     if (!empty($operation)) {
       $this->processExtension($operation['type'], $operation['op'], $operation['name']);
       $context['message'] = t('Synchronizing extensions: @op @name.', ['@op' => $operation['op'], '@name' => $operation['name']]);
-      $processed_count = count($this->processedExtensions['module']['install']) + count($this->processedExtensions['module']['uninstall']);
-      $processed_count += count($this->processedExtensions['theme']['uninstall']) + count($this->processedExtensions['theme']['install']);
+      $processed_count = \count($this->processedExtensions['module']['install']) + \count($this->processedExtensions['module']['uninstall']);
+      $processed_count += \count($this->processedExtensions['theme']['uninstall']) + \count($this->processedExtensions['theme']['install']);
       $context['finished'] = $processed_count / $this->totalExtensionsToProcess;
     }
     else {
@@ -595,7 +595,7 @@ class ConfigImporter {
       $this->storageComparer->reset();
       foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
         foreach (['delete', 'create', 'rename', 'update'] as $op) {
-          $this->totalConfigurationToProcess += count($this->getUnprocessedConfiguration($op, $collection));
+          $this->totalConfigurationToProcess += \count($this->getUnprocessedConfiguration($op, $collection));
         }
       }
     }
@@ -613,7 +613,7 @@ class ConfigImporter {
       $processed_count = 0;
       foreach ($this->storageComparer->getAllCollectionNames() as $collection) {
         foreach (['delete', 'create', 'rename', 'update'] as $op) {
-          $processed_count += count($this->processedConfiguration[$collection][$op]);
+          $processed_count += \count($this->processedConfiguration[$collection][$op]);
         }
       }
       $context['finished'] = $processed_count / $this->totalConfigurationToProcess;
@@ -634,7 +634,7 @@ class ConfigImporter {
     if (!isset($sandbox['missing_content'])) {
       $missing_content = $this->configManager->findMissingContentDependencies();
       $sandbox['missing_content']['data'] = $missing_content;
-      $sandbox['missing_content']['total'] = count($missing_content);
+      $sandbox['missing_content']['total'] = \count($missing_content);
     }
     else {
       $missing_content = $sandbox['missing_content']['data'];
@@ -645,7 +645,7 @@ class ConfigImporter {
       $this->eventDispatcher->dispatch($event, ConfigEvents::IMPORT_MISSING_CONTENT);
       $sandbox['missing_content']['data'] = $event->getMissingContent();
     }
-    $current_count = count($sandbox['missing_content']['data']);
+    $current_count = \count($sandbox['missing_content']['data']);
     if ($current_count) {
       $context['message'] = $this->t('Resolving missing content');
       $context['finished'] = ($sandbox['missing_content']['total'] - $current_count) / $sandbox['missing_content']['total'];
@@ -745,7 +745,7 @@ class ConfigImporter {
         }
       }
       $this->eventDispatcher->dispatch(new ConfigImporterEvent($this), ConfigEvents::IMPORT_VALIDATE);
-      if (count($this->getErrors())) {
+      if (\count($this->getErrors())) {
         $errors = array_merge(['There were errors validating the config synchronization.'], $this->getErrors());
         throw new ConfigImporterException(implode(PHP_EOL, $errors));
       }
@@ -987,7 +987,7 @@ class ConfigImporter {
       // Call to the configuration entity's storage to handle the configuration
       // change.
       if (!($entity_storage instanceof ImportableEntityStorageInterface)) {
-        throw new EntityStorageException(sprintf('The entity storage "%s" for the "%s" entity type does not support imports', get_class($entity_storage), $entity_type));
+        throw new EntityStorageException(sprintf('The entity storage "%s" for the "%s" entity type does not support imports', \get_class($entity_storage), $entity_type));
       }
       $entity_storage->$method($name, $new_config, $old_config);
       $this->setProcessedConfiguration($collection, $op, $name);
@@ -1033,7 +1033,7 @@ class ConfigImporter {
     // Call to the configuration entity's storage to handle the configuration
     // change.
     if (!($entity_storage instanceof ImportableEntityStorageInterface)) {
-      throw new EntityStorageException(sprintf("The entity storage '%s' for the '%s' entity type does not support imports", get_class($entity_storage), $entity_type_id));
+      throw new EntityStorageException(sprintf("The entity storage '%s' for the '%s' entity type does not support imports", \get_class($entity_storage), $entity_type_id));
     }
     $entity_storage->importRename($names['old_name'], $new_config, $old_config);
     $this->setProcessedConfiguration($collection, 'rename', $rename_name);
@@ -1061,7 +1061,7 @@ class ConfigImporter {
     $this->_serviceIds = [];
     $vars = get_object_vars($this);
     foreach ($vars as $key => $value) {
-      if (is_object($value) && isset($value->_serviceId)) {
+      if (\is_object($value) && isset($value->_serviceId)) {
         $this->$key = \Drupal::service($value->_serviceId);
       }
     }

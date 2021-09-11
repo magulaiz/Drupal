@@ -174,7 +174,7 @@ class RowTest extends UnitTestCase {
     $hash = hash('sha256', serialize($row->getSource()));
     $this->assertSame($hash, $row->getHash());
     // Check length of generated hash used for mapping schema.
-    $this->assertSame(64, strlen($row->getHash()));
+    $this->assertSame(64, \strlen($row->getHash()));
 
     // Set the map to successfully imported.
     $test_id_map = [

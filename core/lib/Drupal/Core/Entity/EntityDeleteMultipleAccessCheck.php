@@ -66,7 +66,7 @@ class EntityDeleteMultipleAccessCheck implements AccessInterface {
       return AccessResult::neutral();
     }
     $selection = $this->tempStore->get($account->id() . ':' . $entity_type_id);
-    if (empty($selection) || !is_array($selection)) {
+    if (empty($selection) || !\is_array($selection)) {
       return AccessResult::neutral();
     }
 

@@ -175,9 +175,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       ];
     }
 
-    if (!empty($fields) && is_array($fields)) {
+    if (!empty($fields) && \is_array($fields)) {
       foreach ($fields as $identifier => $info) {
-        if (is_array($info)) {
+        if (\is_array($info)) {
           if (isset($info['table'])) {
             $table_alias = $this->query->ensureTable($info['table'], $this->relationship);
           }
@@ -1103,7 +1103,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    */
   protected function getPreviousFieldLabels() {
     $all_fields = $this->view->display_handler->getFieldLabels();
-    $field_options = array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
+    $field_options = \array_slice($all_fields, 0, array_search($this->options['id'], array_keys($all_fields)));
     return $field_options;
   }
 
@@ -1154,7 +1154,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
     else {
       $value = $this->render($values);
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $value = $this->getRenderer()->render($value);
       }
       $this->last_render = $value;
@@ -1166,7 +1166,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $items = [];
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
-          if (is_array($value)) {
+          if (\is_array($value)) {
             $value = (string) $this->getRenderer()->render($value);
           }
           $this->last_render = $value;
@@ -1184,7 +1184,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $value = $this->renderText($alter);
       }
 
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $value = $this->getRenderer()->render($value);
       }
       // This happens here so that renderAsLink can get the unaltered value of
@@ -1283,9 +1283,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     $more_link = '';
     if (!empty($alter['trim']) && !empty($alter['max_length'])) {
-      $length = strlen($value);
+      $length = \strlen($value);
       $value = $this->renderTrimText($alter, $value);
-      if ($this->options['alter']['more_link'] && strlen($value) < $length) {
+      if ($this->options['alter']['more_link'] && \strlen($value) < $length) {
         $tokens = $this->getRenderTokens($alter);
         $more_link_text = $this->options['alter']['more_link_text'] ? $this->options['alter']['more_link_text'] : $this->t('more');
         $more_link_text = strtr(Xss::filterAdmin($more_link_text), $tokens);
@@ -1417,7 +1417,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       // Link fields, so all internal paths will be prefixed by base_path(). For
       // proper further handling reset this to internal:/.
       if (strpos($path, base_path()) === 0) {
-        $path = 'internal:/' . substr($path, strlen(base_path()));
+        $path = 'internal:/' . substr($path, \strlen(base_path()));
       }
 
       // If we have no $path and no $alter['url'], we have nothing to work with,
@@ -1528,7 +1528,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // Allow the addition of arbitrary attributes to links. Additional attributes
     // currently can only be altered in preprocessors and not within the UI.
-    if (isset($alter['link_attributes']) && is_array($alter['link_attributes'])) {
+    if (isset($alter['link_attributes']) && \is_array($alter['link_attributes'])) {
       foreach ($alter['link_attributes'] as $key => $attribute) {
         if (!isset($options['attributes'][$key])) {
           $options['attributes'][$key] = $this->viewsTokenReplace($attribute, $tokens);
@@ -1690,7 +1690,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $tokens = [];
 
     foreach ($array as $param => $val) {
-      if (is_array($val)) {
+      if (\is_array($val)) {
         // Copy parent_keys array, so we don't affect other elements of this
         // iteration.
         $child_parent_keys = $parent_keys;
@@ -1802,7 +1802,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $value = mb_substr($value, 0, $alter['max_length']);
       if (!empty($alter['word_boundary'])) {
         $regex = "(.*)\b.+";
-        if (function_exists('mb_ereg')) {
+        if (\function_exists('mb_ereg')) {
           mb_regex_encoding('UTF-8');
           $found = mb_ereg($regex, $value, $matches);
         }

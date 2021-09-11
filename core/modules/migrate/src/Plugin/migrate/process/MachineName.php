@@ -95,7 +95,7 @@ class MachineName extends ProcessPluginBase implements ContainerFactoryPluginInt
     $this->transliteration = $transliteration;
 
     $this->replacePattern = $this->configuration['replace_pattern'] ?? '/[^a-z0-9_]+/';
-    if (!is_string($this->replacePattern)) {
+    if (!\is_string($this->replacePattern)) {
       throw new MigrateException('The replace pattern should be a string');
     }
   }

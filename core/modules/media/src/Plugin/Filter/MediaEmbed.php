@@ -295,7 +295,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       $node->removeAttribute('data-view-mode');
 
       $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
-      assert($media === NULL || $media instanceof MediaInterface);
+      \assert($media === NULL || $media instanceof MediaInterface);
       if (!$media) {
         $this->loggerFactory->get('media')->error('During rendering of embedded media: the media item with UUID "@uuid" does not exist.', ['@uuid' => $uuid]);
       }
@@ -401,7 +401,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
    *   The text or HTML that will replace the contents of $node.
    */
   protected static function replaceNodeContent(\DOMNode &$node, $content) {
-    if (strlen($content)) {
+    if (\strlen($content)) {
       // Load the content into a new DOMDocument and retrieve the DOM nodes.
       $replacement_nodes = Html::load($content)->getElementsByTagName('body')
         ->item(0)

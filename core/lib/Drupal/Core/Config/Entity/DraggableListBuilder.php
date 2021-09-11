@@ -117,7 +117,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     $delta = 10;
     // Change the delta of the weight field if have more than 20 entities.
     if (!empty($this->weightKey)) {
-      $count = count($this->entities);
+      $count = \count($this->entities);
       if ($count > 20) {
         $delta = ceil($count / 2);
       }

@@ -481,7 +481,7 @@ class BookManager implements BookManagerInterface {
         // Don't iterate through any links on this level.
         return;
       }
-      if (!in_array($data['link']['nid'], $exclude)) {
+      if (!\in_array($data['link']['nid'], $exclude)) {
         $nids[] = $data['link']['nid'];
       }
     }
@@ -1129,7 +1129,7 @@ class BookManager implements BookManagerInterface {
     while ($item = array_pop($links)) {
       // We need to determine if we're on the path to root so we can later build
       // the correct active trail.
-      $item['in_active_trail'] = in_array($item['nid'], $parents);
+      $item['in_active_trail'] = \in_array($item['nid'], $parents);
       // Add the current link to the tree.
       $tree[$item['nid']] = [
         'link' => $item,

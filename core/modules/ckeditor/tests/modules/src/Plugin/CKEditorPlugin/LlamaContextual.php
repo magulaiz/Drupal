@@ -23,7 +23,7 @@ class LlamaContextual extends Llama implements CKEditorPluginContextualInterface
     $settings = $editor->getSettings();
     foreach ($settings['toolbar']['rows'] as $row) {
       foreach ($row as $group) {
-        if (in_array('Strike', $group['items'])) {
+        if (\in_array('Strike', $group['items'])) {
           return TRUE;
         }
       }

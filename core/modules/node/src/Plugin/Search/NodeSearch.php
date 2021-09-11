@@ -221,7 +221,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // At least, we should parse out the parameters and see if there are any
     // keyword matches in that case, rather than just printing out the
     // "Please enter keywords" message.
-    return !empty($this->keywords) || (isset($this->searchParameters['f']) && count($this->searchParameters['f']));
+    return !empty($this->keywords) || (isset($this->searchParameters['f']) && \count($this->searchParameters['f']));
   }
 
   /**
@@ -277,7 +277,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
     // We need to parse this out into query conditions, some of which go into
     // the keywords string, and some of which are separate conditions.
     $parameters = $this->getParameters();
-    if (!empty($parameters['f']) && is_array($parameters['f'])) {
+    if (!empty($parameters['f']) && \is_array($parameters['f'])) {
       $filters = [];
       // Match any query value that is an expected option and a value
       // separated by ':' like 'term:27'.
@@ -653,7 +653,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       // Make locked languages appear special in the list.
       $language_options[$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
     }
-    if (count($language_options) > 1) {
+    if (\count($language_options) > 1) {
       $form['advanced']['lang-fieldset'] = [
         '#type' => 'fieldset',
         '#title' => t('Languages'),
@@ -680,7 +680,7 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
 
     // Collect extra filters.
     $filters = [];
-    if ($form_state->hasValue('type') && is_array($form_state->getValue('type'))) {
+    if ($form_state->hasValue('type') && \is_array($form_state->getValue('type'))) {
       // Retrieve selected types - Form API sets the value of unselected
       // checkboxes to 0.
       foreach ($form_state->getValue('type') as $type) {
@@ -691,13 +691,13 @@ class NodeSearch extends ConfigurableSearchPluginBase implements AccessibleInter
       }
     }
 
-    if ($form_state->hasValue('term') && is_array($form_state->getValue('term'))) {
+    if ($form_state->hasValue('term') && \is_array($form_state->getValue('term'))) {
       foreach ($form_state->getValue('term') as $term) {
         $filters[] = 'term:' . $term;
         $advanced = TRUE;
       }
     }
-    if ($form_state->hasValue('language') && is_array($form_state->getValue('language'))) {
+    if ($form_state->hasValue('language') && \is_array($form_state->getValue('language'))) {
       foreach ($form_state->getValue('language') as $language) {
         if ($language) {
           $advanced = TRUE;

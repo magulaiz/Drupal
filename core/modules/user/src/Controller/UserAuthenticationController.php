@@ -342,7 +342,7 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
    */
   protected function getRequestFormat(Request $request) {
     $format = $request->getRequestFormat();
-    if (!in_array($format, $this->serializerFormats)) {
+    if (!\in_array($format, $this->serializerFormats)) {
       throw new BadRequestHttpException("Unrecognized format: $format.");
     }
     return $format;

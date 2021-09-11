@@ -95,7 +95,7 @@ class EntityWorkspaceConflictConstraintValidator extends ConstraintValidator imp
       if ($latest_revision_workspace = $latest_revision->workspace->entity) {
         $descendants_and_self = $this->workspaceRepository->getDescendantsAndSelf($latest_revision_workspace->id());
 
-        if (!$active_workspace || !in_array($active_workspace->id(), $descendants_and_self, TRUE)) {
+        if (!$active_workspace || !\in_array($active_workspace->id(), $descendants_and_self, TRUE)) {
           $this->context->buildViolation($constraint->message)
             ->setParameter('%label', $latest_revision_workspace->label())
             ->addViolation();

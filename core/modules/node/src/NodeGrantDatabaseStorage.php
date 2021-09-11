@@ -60,7 +60,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function access(NodeInterface $node, $operation, AccountInterface $account) {
     // Grants only support these operations.
-    if (!in_array($operation, ['view', 'update', 'delete'])) {
+    if (!\in_array($operation, ['view', 'update', 'delete'])) {
       return AccessResult::neutral();
     }
 
@@ -99,7 +99,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     $grants = $this->buildGrantsQueryCondition(node_access_grants($operation, $account));
 
-    if (count($grants) > 0) {
+    if (\count($grants) > 0) {
       $query->condition($grants);
     }
 
@@ -137,7 +137,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     $grants = $this->buildGrantsQueryCondition(node_access_grants('view', $account));
 
-    if (count($grants) > 0) {
+    if (\count($grants) > 0) {
       $query->condition($grants);
     }
     return $query->execute()->fetchField();
@@ -158,7 +158,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     // If any grant exists for the specified user, then user has access to the
     // node for the specified operation.
     $grant_conditions = $this->buildGrantsQueryCondition($grants);
-    $grants_exist = count($grant_conditions->conditions()) > 0;
+    $grants_exist = \count($grant_conditions->conditions()) > 0;
 
     $is_multilingual = \Drupal::languageManager()->isMultilingual();
     foreach ($tables as $nalias => $tableinfo) {
@@ -208,7 +208,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       $query->execute();
     }
     // Only perform work when node_access modules are active.
-    if (!empty($grants) && count($this->moduleHandler->getImplementations('node_grants'))) {
+    if (!empty($grants) && \count($this->moduleHandler->getImplementations('node_grants'))) {
       $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.

@@ -271,7 +271,7 @@ class MailManager extends DefaultPluginManager implements MailManagerInterface {
     // invoking hook_mail() on this module. We cannot use
     // moduleHandler()->invoke() as we need to have $message by reference in
     // hook_mail().
-    if (function_exists($function = $module . '_mail')) {
+    if (\function_exists($function = $module . '_mail')) {
       $function($key, $message, $params);
     }
 

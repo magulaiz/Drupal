@@ -137,7 +137,7 @@ class ConfigManager implements ConfigManagerInterface {
     $entity_type_id = $this->getEntityTypeIdByName($name);
     if ($entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-      $id = substr($name, strlen($entity_type->getConfigPrefix()) + 1);
+      $id = substr($name, \strlen($entity_type->getConfigPrefix()) + 1);
       return $this->entityTypeManager->getStorage($entity_type_id)->load($id);
     }
     return NULL;
@@ -285,7 +285,7 @@ class ConfigManager implements ConfigManagerInterface {
       // dependents of the system module are calculated since system.site has
       // a UUID key.
       if ($entity_type_id) {
-        $id = substr($config_name, strlen($definitions[$entity_type_id]->getConfigPrefix()) + 1);
+        $id = substr($config_name, \strlen($definitions[$entity_type_id]->getConfigPrefix()) + 1);
         $entities[$entity_type_id][] = $id;
       }
     }
@@ -369,7 +369,7 @@ class ConfigManager implements ConfigManagerInterface {
         // list of current dependents and removing any entities that we've
         // already processed.
         $dependents_to_process = array_filter($current_dependents, function ($current_dependent) use ($affected_uuids) {
-          return !in_array($current_dependent->uuid(), $affected_uuids);
+          return !\in_array($current_dependent->uuid(), $affected_uuids);
         });
         // Ensure that the dependent has actually been fixed. It is possible
         // that other dependencies cause it to still be in the list.
@@ -397,7 +397,7 @@ class ConfigManager implements ConfigManagerInterface {
     // Use the list of affected UUIDs to filter the original list to work out
     // which configuration entities are unchanged.
     $return['unchanged'] = array_filter($original_dependents, function ($dependent) use ($affected_uuids) {
-      return !(in_array($dependent->uuid(), $affected_uuids));
+      return !(\in_array($dependent->uuid(), $affected_uuids));
     });
 
     return $return;
@@ -477,7 +477,7 @@ class ConfigManager implements ConfigManagerInterface {
     // dependencies if necessary.
     if (isset($entity_dependencies['config'])) {
       foreach ($dependent_entities as $dependent_entity) {
-        if (in_array($dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
+        if (\in_array($dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
           $affected_dependencies['config'][] = $dependent_entity;
         }
       }

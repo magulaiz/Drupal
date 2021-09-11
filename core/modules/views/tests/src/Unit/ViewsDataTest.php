@@ -160,7 +160,7 @@ class ViewsDataTest extends UnitTestCase {
     // Test the number of tables returned and their order.
     $this->assertCount(6, $base_tables, 'The correct amount of base tables were returned.');
     $base_tables_keys = array_keys($base_tables);
-    for ($i = 1; $i < count($base_tables); ++$i) {
+    for ($i = 1; $i < \count($base_tables); ++$i) {
       $prev = $base_tables[$base_tables_keys[$i - 1]];
       $current = $base_tables[$base_tables_keys[$i]];
       $this->assertGreaterThanOrEqual($prev['weight'], $current['weight']);

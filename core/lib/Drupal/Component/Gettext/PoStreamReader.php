@@ -182,7 +182,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
     $this->lastItem = NULL;
 
     // Read until finished with the stream or a complete item was identified.
-    while (!$this->finished && is_null($this->lastItem)) {
+    while (!$this->finished && \is_null($this->lastItem)) {
       $this->readLine();
     }
 
@@ -316,7 +316,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
         }
 
         // Append the plural source to the current entry.
-        if (is_string($this->currentItem['msgid'])) {
+        if (\is_string($this->currentItem['msgid'])) {
           // The first value was stored as string. Now we know the context is
           // plural, it is converted to array.
           $this->currentItem['msgid'] = [$this->currentItem['msgid']];
@@ -420,7 +420,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
           $this->errors[] = new FormattableMarkup('The translation stream %uri contains an error: invalid format for "msgstr[]" on line %line.', $log_vars);
           return FALSE;
         }
-        if (!isset($this->currentItem['msgstr']) || !is_array($this->currentItem['msgstr'])) {
+        if (!isset($this->currentItem['msgstr']) || !\is_array($this->currentItem['msgstr'])) {
           $this->currentItem['msgstr'] = [];
         }
 
@@ -466,9 +466,9 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
 
         // Append the string to the current item.
         if (($this->context == 'MSGID') || ($this->context == 'MSGID_PLURAL')) {
-          if (is_array($this->currentItem['msgid'])) {
+          if (\is_array($this->currentItem['msgid'])) {
             // Add string to last array element for plural sources.
-            $last_index = count($this->currentItem['msgid']) - 1;
+            $last_index = \count($this->currentItem['msgid']) - 1;
             $this->currentItem['msgid'][$last_index] .= $quoted;
           }
           else {
@@ -519,7 +519,7 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
       $comments = $this->shortenComments($value['#']);
     }
 
-    if (is_array($value['msgstr'])) {
+    if (\is_array($value['msgstr'])) {
       // Sort plural variants by their form index.
       ksort($value['msgstr']);
       $plural = TRUE;
@@ -579,9 +579,9 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
    */
   private function shortenComments($comment) {
     $comm = '';
-    while (count($comment)) {
+    while (\count($comment)) {
       $test = $comm . substr(array_shift($comment), 1) . ', ';
-      if (strlen($comm) < 130) {
+      if (\strlen($comm) < 130) {
         $comm = $test;
       }
       else {

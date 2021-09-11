@@ -42,7 +42,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
-    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    $this->root = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
   }
 
   /**
@@ -52,7 +52,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Create a connection to the DB configured in SIMPLETEST_DB.
     $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
+    $table_count = \count($connection->schema()->findTables('%'));
 
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "this-class-does-not-exist" --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root);
@@ -70,7 +70,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Create a connection to the DB configured in SIMPLETEST_DB.
     $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
+    $table_count = \count($connection->schema()->findTables('%'));
 
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file core/tests/fixtures/empty_file.php.module --db-url "' . getenv('SIMPLETEST_DB') . '"';
     $process = Process::fromShellCommandline($command_line, $this->root);
@@ -89,7 +89,7 @@ class TestSiteApplicationTest extends UnitTestCase {
 
     // Create a connection to the DB configured in SIMPLETEST_DB.
     $connection = Database::getConnection('default', $this->addTestDatabase(''));
-    $table_count = count($connection->schema()->findTables('%'));
+    $table_count = \count($connection->schema()->findTables('%'));
 
     // Use __FILE__ to test absolute paths.
     $command_line = $this->php . ' core/scripts/test-site.php install --setup-file "' . __FILE__ . '" --db-url "' . getenv('SIMPLETEST_DB') . '"';
@@ -134,7 +134,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     // Ensure that there are files and database tables for the tear down command
     // to clean up.
     $key = $this->addTestDatabase($db_prefix);
-    $this->assertGreaterThan(0, count(Database::getConnection('default', $key)->schema()->findTables('%')));
+    $this->assertGreaterThan(0, \count(Database::getConnection('default', $key)->schema()->findTables('%')));
     $test_database = new TestDatabase($db_prefix);
     $test_file = $this->root . DIRECTORY_SEPARATOR . $test_database->getTestSitePath() . DIRECTORY_SEPARATOR . '.htkey';
     $this->assertFileExists($test_file);
@@ -156,7 +156,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     preg_match('/Database prefix\s+([^\s]*)/', $process->getOutput(), $matches);
     $other_db_prefix = $matches[1];
     $other_key = $this->addTestDatabase($other_db_prefix);
-    $this->assertGreaterThan(0, count(Database::getConnection('default', $other_key)->schema()->findTables('%')));
+    $this->assertGreaterThan(0, \count(Database::getConnection('default', $other_key)->schema()->findTables('%')));
 
     // Ensure the lock file exists for the new install.
     $this->assertFileExists($this->getTestLockFile($other_db_prefix));
@@ -175,7 +175,7 @@ class TestSiteApplicationTest extends UnitTestCase {
     $this->assertFileDoesNotExist($test_file);
 
     // Ensure the other site's tables and files still exist.
-    $this->assertGreaterThan(0, count(Database::getConnection('default', $other_key)->schema()->findTables('%')));
+    $this->assertGreaterThan(0, \count(Database::getConnection('default', $other_key)->schema()->findTables('%')));
     $test_database = new TestDatabase($other_db_prefix);
     $test_file = $this->root . DIRECTORY_SEPARATOR . $test_database->getTestSitePath() . DIRECTORY_SEPARATOR . '.htkey';
     $this->assertFileExists($test_file);

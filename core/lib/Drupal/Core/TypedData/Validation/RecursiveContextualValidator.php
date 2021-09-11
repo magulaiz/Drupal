@@ -93,7 +93,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
 
     // You can pass a single constraint or an array of constraints.
     // Make sure to deal with an array in the rest of the code.
-    if (isset($constraints) && !is_array($constraints)) {
+    if (isset($constraints) && !\is_array($constraints)) {
       $constraints = [$constraints];
     }
 
@@ -211,7 +211,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
     if (isset($groups)) {
       throw new \LogicException('Passing custom groups is not supported.');
     }
-    if (!is_object($object)) {
+    if (!\is_object($object)) {
       throw new \InvalidArgumentException('Passing class name is not supported.');
     }
     elseif (!$object instanceof TypedDataInterface) {
@@ -227,7 +227,7 @@ class RecursiveContextualValidator implements ContextualValidatorInterface {
    * {@inheritdoc}
    */
   public function validatePropertyValue($object, $property_name, $value, $groups = NULL) {
-    if (!is_object($object)) {
+    if (!\is_object($object)) {
       throw new \InvalidArgumentException('Passing class name is not supported.');
     }
     elseif (!$object instanceof TypedDataInterface) {

@@ -160,7 +160,7 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
     // If there are existing fields to choose from, allow the user to reuse one.
     $options = [];
     foreach ($this->entityFieldManager->getFieldStorageDefinitions('media') as $field_name => $field) {
-      $allowed_type = in_array($field->getType(), $this->pluginDefinition['allowed_field_types'], TRUE);
+      $allowed_type = \in_array($field->getType(), $this->pluginDefinition['allowed_field_types'], TRUE);
       if ($allowed_type && !$field->isBaseField()) {
         $options[$field_name] = $field->getLabel();
       }

@@ -106,7 +106,7 @@ class EntityUntranslatableFieldsConstraintValidator extends ConstraintValidator 
     }
 
     foreach ($entity->getFieldDefinitions() as $field_name => $definition) {
-      if (in_array($field_name, $skip_fields, TRUE) || $definition->isTranslatable() || $definition->isComputed()) {
+      if (\in_array($field_name, $skip_fields, TRUE) || $definition->isTranslatable() || $definition->isComputed()) {
         continue;
       }
 

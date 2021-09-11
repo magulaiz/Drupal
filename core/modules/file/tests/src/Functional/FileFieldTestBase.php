@@ -165,7 +165,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
     // Attach files to the node.
     $field_storage = FieldStorageConfig::loadByName('node', $field_name);
     // File input name depends on number of files already uploaded.
-    $field_num = count($node->{$field_name});
+    $field_num = \count($node->{$field_name});
     foreach ($files as $i => $file) {
       $delta = $field_num + $i;
       $file_path = $this->container->get('file_system')->realpath($file->getFileUri());
@@ -173,7 +173,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       if ($field_storage->getCardinality() != 1) {
         $name .= '[]';
       }
-      if (count($files) == 1) {
+      if (\count($files) == 1) {
         $edit[$name] = $file_path;
       }
       else {

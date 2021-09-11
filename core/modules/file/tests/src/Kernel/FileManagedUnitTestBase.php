@@ -55,7 +55,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
 
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
-    if (count($uncalled)) {
+    if (\count($uncalled)) {
       $this->assertTrue(FALSE, new FormattableMarkup('Expected hooks %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
@@ -64,7 +64,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
 
     // Determine if there were any unexpected calls.
     $unexpected = array_diff($actual, $expected);
-    if (count($unexpected)) {
+    if (\count($unexpected)) {
       $this->assertTrue(FALSE, new FormattableMarkup('Unexpected hooks were called: %unexpected.', ['%unexpected' => empty($unexpected) ? '(none)' : implode(', ', $unexpected)]));
     }
     else {
@@ -83,7 +83,7 @@ abstract class FileManagedUnitTestBase extends KernelTestBase {
    *   Optional translated string message.
    */
   public function assertFileHookCalled($hook, $expected_count = 1, $message = NULL) {
-    $actual_count = count(file_test_get_calls($hook));
+    $actual_count = \count(file_test_get_calls($hook));
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {

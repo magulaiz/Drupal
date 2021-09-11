@@ -160,7 +160,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     if (!$entity) {
       throw new MigrateException('Unable to get entity');
     }
-    assert($entity instanceof ContentEntityInterface);
+    \assert($entity instanceof ContentEntityInterface);
     if ($this->isEntityValidationRequired($entity)) {
       $this->validateEntity($entity);
     }
@@ -187,7 +187,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
   public function validateEntity(FieldableEntityInterface $entity) {
     $violations = $entity->validate();
 
-    if (count($violations) > 0) {
+    if (\count($violations) > 0) {
       throw new EntityValidationException($violations);
     }
   }
@@ -313,7 +313,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     $fields = $this->entityFieldManager
       ->getFieldDefinitions($this->storage->getEntityTypeId(), $row->getDestinationProperty($bundle_key));
     foreach ($fields as $field_name => $field_definition) {
-      if ($field_definition->isRequired() && is_null($row->getDestinationProperty($field_name))) {
+      if ($field_definition->isRequired() && \is_null($row->getDestinationProperty($field_name))) {
         // Use the configured default value for this specific field, if any.
         if ($default_value = $field_definition->getDefaultValueLiteral()) {
           $values = $default_value;
@@ -323,7 +323,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
           $field_type_class = $this->fieldTypeManager
             ->getPluginClass($field_definition->getType());
           $values = $field_type_class::generateSampleValue($field_definition);
-          if (is_null($values)) {
+          if (\is_null($values)) {
             // Handle failure to generate a sample value.
             throw new MigrateException('Stubbing failed, unable to generate value for field ' . $field_name);
           }

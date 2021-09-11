@@ -153,7 +153,7 @@ class TranslationTest extends FieldKernelTestBase {
     $field = FieldConfig::create($field_definition);
     $field->save();
 
-    $translation_langcodes = array_slice($available_langcodes, 0, 2);
+    $translation_langcodes = \array_slice($available_langcodes, 0, 2);
     asort($translation_langcodes);
     $translation_langcodes = array_values($translation_langcodes);
 

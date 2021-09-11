@@ -149,7 +149,7 @@ class FileSystem implements FileSystemInterface {
       return $this->streamWrapperManager->getViaScheme($scheme)->dirname($uri);
     }
     else {
-      return dirname($uri);
+      return \dirname($uri);
     }
   }
 
@@ -246,7 +246,7 @@ class FileSystem implements FileSystemInterface {
    * @see self::mkdir()
    */
   protected function mkdirCall($uri, $mode, $recursive, $context) {
-    if (is_null($context)) {
+    if (\is_null($context)) {
       return mkdir($uri, $mode, $recursive);
     }
     else {
@@ -352,7 +352,7 @@ class FileSystem implements FileSystemInterface {
    */
   public function deleteRecursive($path, callable $callback = NULL) {
     if ($callback) {
-      call_user_func($callback, $path);
+      \call_user_func($callback, $path);
     }
 
     if (is_dir($path)) {
@@ -675,7 +675,7 @@ class FileSystem implements FileSystemInterface {
       });
       $options['nomask'] = '/^' . implode('|', $ignore_directories) . '$/';
     }
-    $options['key'] = in_array($options['key'], ['uri', 'filename', 'name']) ? $options['key'] : 'uri';
+    $options['key'] = \in_array($options['key'], ['uri', 'filename', 'name']) ? $options['key'] : 'uri';
     return $this->doScanDirectory($dir, $mask, $options);
   }
 

@@ -71,14 +71,14 @@ class DestinationCategoryTest extends MigrateDrupalTestBase {
   protected function assertCategories($migrations) {
     foreach ($migrations as $id => $migration) {
       $object_classes = class_parents($migration->getDestinationPlugin());
-      $object_classes[] = get_class($migration->getDestinationPlugin());
+      $object_classes[] = \get_class($migration->getDestinationPlugin());
 
       // Ensure that the destination plugin is an instance of at least one of
       // the expected classes.
-      if (in_array('Configuration', $migration->getMigrationTags(), TRUE)) {
+      if (\in_array('Configuration', $migration->getMigrationTags(), TRUE)) {
         $this->assertNotEmpty(array_intersect($object_classes, $this->getConfigurationClasses()), "The migration $id is tagged as Configuration.");
       }
-      elseif (in_array('Content', $migration->getMigrationTags(), TRUE)) {
+      elseif (\in_array('Content', $migration->getMigrationTags(), TRUE)) {
         $this->assertNotEmpty(array_intersect($object_classes, $this->getContentClasses()), "The migration $id is tagged as Content.");
       }
       else {

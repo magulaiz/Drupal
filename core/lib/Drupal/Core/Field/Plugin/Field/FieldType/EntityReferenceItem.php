@@ -173,7 +173,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    if (isset($values) && !is_array($values)) {
+    if (isset($values) && !\is_array($values)) {
       // If either a scalar or an object was passed as the value for the item,
       // assign it to the 'entity' property since that works for both cases.
       $this->set('entity', $values, $notify);
@@ -183,13 +183,13 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       // Support setting the field item with only one property, but make sure
       // values stay in sync if only property is passed.
       // NULL is a valid value, so we use array_key_exists().
-      if (is_array($values) && array_key_exists('target_id', $values) && !isset($values['entity'])) {
+      if (\is_array($values) && \array_key_exists('target_id', $values) && !isset($values['entity'])) {
         $this->onChange('target_id', FALSE);
       }
-      elseif (is_array($values) && !array_key_exists('target_id', $values) && isset($values['entity'])) {
+      elseif (\is_array($values) && !\array_key_exists('target_id', $values) && isset($values['entity'])) {
         $this->onChange('entity', FALSE);
       }
-      elseif (is_array($values) && array_key_exists('target_id', $values) && isset($values['entity'])) {
+      elseif (\is_array($values) && \array_key_exists('target_id', $values) && isset($values['entity'])) {
         // If both properties are passed, verify the passed values match. The
         // only exception we allow is when we have a new entity: in this case
         // its actual id and target_id will be different, due to the new entity
@@ -396,10 +396,10 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       // We only display base plugins (e.g. 'default', 'views', ...) and not
       // entity type specific plugins (e.g. 'default:node', 'default:user',
       // ...).
-      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
+      if (\array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
         $handlers_options[$selection_group_id] = Html::escape($selection_plugins[$selection_group_id][$selection_group_id]['label']);
       }
-      elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
+      elseif (\array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
         $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
         $handlers_options[$selection_group_plugin] = Html::escape($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
       }
@@ -489,7 +489,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $value) {
-        if (is_array($value) && isset($value['target_uuid'])) {
+        if (\is_array($value) && isset($value['target_uuid'])) {
           $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
@@ -539,7 +539,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $key => $value) {
-        if (is_array($value) && isset($value['target_uuid'])) {
+        if (\is_array($value) && isset($value['target_uuid'])) {
           $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
@@ -631,7 +631,7 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
       $return[$bundle_label] = $entity_ids;
     }
 
-    return count($return) == 1 ? reset($return) : $return;
+    return \count($return) == 1 ? reset($return) : $return;
   }
 
   /**

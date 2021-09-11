@@ -83,7 +83,7 @@ trait BrowserHtmlDebugTrait {
    */
   protected function formatHtmlOutputHeaders(array $headers) {
     $flattened_headers = array_map(function ($header) {
-      if (is_array($header)) {
+      if (\is_array($header)) {
         return implode(';', array_map('trim', $header));
       }
       else {

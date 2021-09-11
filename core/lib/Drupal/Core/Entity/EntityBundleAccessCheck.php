@@ -47,7 +47,7 @@ class EntityBundleAccessCheck implements AccessInterface {
       $parameters = $route_match->getParameters();
       if ($parameters->has($entity_type)) {
         $entity = $parameters->get($entity_type);
-        if ($entity instanceof EntityInterface && in_array($entity->bundle(), $bundles, TRUE)) {
+        if ($entity instanceof EntityInterface && \in_array($entity->bundle(), $bundles, TRUE)) {
           return AccessResult::allowed()->addCacheableDependency($entity);
         }
       }

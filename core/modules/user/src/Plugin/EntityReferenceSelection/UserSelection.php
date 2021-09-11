@@ -227,7 +227,7 @@ class UserSelection extends DefaultSelection {
       // database.
       $conditions = &$query->conditions();
       foreach ($conditions as $key => $condition) {
-        if ($key !== '#conjunction' && is_string($condition['field']) && $condition['field'] === 'users_field_data.name') {
+        if ($key !== '#conjunction' && \is_string($condition['field']) && $condition['field'] === 'users_field_data.name') {
           // Remove the condition.
           unset($conditions[$key]);
 

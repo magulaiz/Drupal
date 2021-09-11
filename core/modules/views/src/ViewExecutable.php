@@ -743,7 +743,7 @@ class ViewExecutable {
    *   The first accessible display id, at least default.
    */
   public function chooseDisplay($displays) {
-    if (!is_array($displays)) {
+    if (!\is_array($displays)) {
       return $displays;
     }
 
@@ -1165,7 +1165,7 @@ class ViewExecutable {
    */
   public function initQuery() {
     if (!empty($this->query)) {
-      $class = get_class($this->query);
+      $class = \get_class($this->query);
       if ($class && $class != 'stdClass') {
         // return if query is already initialized.
         return TRUE;
@@ -1348,7 +1348,7 @@ class ViewExecutable {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {
 
-      if (!empty($handlers[$id]) && is_object($handlers[$id])) {
+      if (!empty($handlers[$id]) && \is_object($handlers[$id])) {
         $multiple_exposed_input = [0 => NULL];
         if ($handlers[$id]->multipleExposedInput()) {
           $multiple_exposed_input = $handlers[$id]->groupMultipleExposedInput($this->exposed_data);
@@ -1525,7 +1525,7 @@ class ViewExecutable {
     // Let the themes play too, because prerender is a very themey thing.
     foreach ($themes as $theme_name) {
       $function = $theme_name . '_views_pre_render';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $function($this);
       }
     }
@@ -1542,7 +1542,7 @@ class ViewExecutable {
     // Let the themes play too, because post render is a very themey thing.
     foreach ($themes as $theme_name) {
       $function = $theme_name . '_views_post_render';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $function($this, $this->display_handler->output, $cache);
       }
     }
@@ -2110,7 +2110,7 @@ class ViewExecutable {
         }
 
         $result = $this->displayHandlers->get($id)->validate();
-        if (!empty($result) && is_array($result)) {
+        if (!empty($result) && \is_array($result)) {
           $errors[$id] = $result;
         }
       }

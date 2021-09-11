@@ -64,7 +64,7 @@ trait AssertViewsCacheTagsTrait {
       // Ensure that the views query is built.
       $view->build();
       $results_cache_item = \Drupal::cache('data')->get($cache_plugin->generateResultsKey());
-      if (is_array($expected_results_cache)) {
+      if (\is_array($expected_results_cache)) {
         $this->assertNotEmpty($results_cache_item, 'Results cache item found.');
         if ($results_cache_item) {
           $this->assertEqualsCanonicalizing($expected_results_cache, $results_cache_item->tags);

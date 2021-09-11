@@ -132,7 +132,7 @@ trait AssertPageCacheContextsAndTagsTrait {
       $default_contexts = ['languages:language_interface', 'theme'];
       // Add the user.permission context to the list of default contexts except
       // when user is already there.
-      if (!in_array('user', $expected_contexts)) {
+      if (!\in_array('user', $expected_contexts)) {
         $default_contexts[] = 'user.permissions';
       }
       $expected_contexts = Cache::mergeContexts($expected_contexts, $default_contexts);

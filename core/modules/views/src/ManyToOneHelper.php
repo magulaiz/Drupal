@@ -279,11 +279,11 @@ class ManyToOneHelper {
       $add_condition = FALSE;
     }
     elseif ($operator == 'or' && empty($options['reduce_duplicates'])) {
-      if (count($value) > 1) {
+      if (\count($value) > 1) {
         $operator = 'IN';
       }
       else {
-        $value = is_array($value) ? array_pop($value) : $value;
+        $value = \is_array($value) ? array_pop($value) : $value;
         $operator = '=';
       }
       $add_condition = FALSE;
@@ -305,7 +305,7 @@ class ManyToOneHelper {
       }
       else {
         $placeholder = $this->placeholder();
-        if (count($this->handler->value) > 1) {
+        if (\count($this->handler->value) > 1) {
           $placeholder .= '[]';
 
           if ($operator == 'IS NULL') {

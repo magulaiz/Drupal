@@ -352,7 +352,7 @@ class DbDumpCommand extends DbCommandBase {
 
     $schema_type = explode(':', $map[$type])[0];
     // Only specify size on these types.
-    if (in_array($schema_type, ['blob', 'float', 'int', 'text'])) {
+    if (\in_array($schema_type, ['blob', 'float', 'int', 'text'])) {
       // The MySql map contains type:size. Remove the type part.
       return explode(':', $map[$type])[1];
     }

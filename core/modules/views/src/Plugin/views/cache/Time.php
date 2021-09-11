@@ -47,7 +47,7 @@ class Time extends CachePluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, DateFormatterInterface $date_formatter) {
     $this->dateFormatter = $date_formatter;
-    if (func_num_args() == 5 && func_get_arg(4) instanceof Request) {
+    if (\func_num_args() == 5 && func_get_arg(4) instanceof Request) {
       @trigger_error('The request object must not be passed to ' . __METHOD__ . '(). It is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3154016', E_USER_DEPRECATED);
     }
 

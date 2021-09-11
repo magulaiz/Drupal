@@ -314,7 +314,7 @@ class FilterTest extends JsonapiKernelTestBase {
     $resource_type = new ResourceType('foo', 'bar', NULL);
     $actual = Filter::createFromQueryParameter($case, $resource_type, $this->getFieldResolverMock($resource_type));
     $conditions = $actual->root()->members();
-    for ($i = 0; $i < count($case); $i++) {
+    for ($i = 0; $i < \count($case); $i++) {
       $this->assertEquals($expected[$i]['path'], $conditions[$i]->field());
       $this->assertEquals($expected[$i]['value'], $conditions[$i]->value());
       $this->assertEquals($expected[$i]['operator'], $conditions[$i]->operator());

@@ -81,7 +81,7 @@ trait TestFileCreationTrait {
 
     $files = [];
     // Make sure type is valid.
-    if (in_array($type, ['binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'])) {
+    if (\in_array($type, ['binary', 'html', 'image', 'javascript', 'php', 'sql', 'text'])) {
       $files = $file_system->scanDirectory('public://', '/' . $type . '\-.*/');
 
       // If size is set then remove any files that are not of that size.
@@ -151,11 +151,11 @@ trait TestFileCreationTrait {
       for ($j = 0; $j < $width - 1; $j++) {
         switch ($type) {
           case 'text':
-            $text .= chr(rand(32, 126));
+            $text .= \chr(rand(32, 126));
             break;
 
           case 'binary':
-            $text .= chr(rand(0, 31));
+            $text .= \chr(rand(0, 31));
             break;
 
           case 'binary-text':

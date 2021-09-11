@@ -16,7 +16,7 @@ class InsertLobTest extends DatabaseTestBase {
    */
   public function testInsertOneBlob() {
     $data = "This is\000a test.";
-    $this->assertSame(15, strlen($data), 'Test data contains a NULL.');
+    $this->assertSame(15, \strlen($data), 'Test data contains a NULL.');
     $id = $this->connection->insert('test_one_blob')
       ->fields(['blob1' => $data])
       ->execute();

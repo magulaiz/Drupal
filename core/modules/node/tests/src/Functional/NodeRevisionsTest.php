@@ -374,7 +374,7 @@ class NodeRevisionsTest extends NodeTestBase {
    */
   protected function renderContextualLinks(array $ids, $current_path) {
     $post = [];
-    for ($i = 0; $i < count($ids); $i++) {
+    for ($i = 0; $i < \count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
     $response = $this->drupalPost('contextual/render', 'application/json', $post, ['query' => ['destination' => $current_path]]);

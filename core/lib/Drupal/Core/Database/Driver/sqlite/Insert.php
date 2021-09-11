@@ -17,7 +17,7 @@ class Insert extends QueryInsert {
     if (!$this->preExecute()) {
       return NULL;
     }
-    if (count($this->insertFields) || !empty($this->fromQuery)) {
+    if (\count($this->insertFields) || !empty($this->fromQuery)) {
       return parent::execute();
     }
     else {
@@ -32,7 +32,7 @@ class Insert extends QueryInsert {
     // Produce as many generic placeholders as necessary.
     $placeholders = [];
     if (!empty($this->insertFields)) {
-      $placeholders = array_fill(0, count($this->insertFields), '?');
+      $placeholders = array_fill(0, \count($this->insertFields), '?');
     }
 
     $insert_fields = array_map(function ($field) {

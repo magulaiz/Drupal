@@ -116,7 +116,7 @@ class DefaultConfigTest extends KernelTestBase {
    *   An array of theme names to test.
    */
   public function themeListDataProvider() {
-    $prefix = dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'themes';
+    $prefix = \dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'themes';
     $theme_dirs = array_keys(iterator_to_array(new \FilesystemIterator($prefix)));
     $theme_names = array_map(function ($path) use ($prefix) {
       return str_replace($prefix . DIRECTORY_SEPARATOR, '', $path);

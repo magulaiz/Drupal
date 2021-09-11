@@ -112,7 +112,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    * {@inheritdoc}
    */
   public function processAttachments(AttachmentsInterface $response) {
-    assert($response instanceof HtmlResponse);
+    \assert($response instanceof HtmlResponse);
 
     // First, render the actual placeholders; this may cause additional
     // attachments to be added to the response, which the attachment
@@ -231,7 +231,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   public static function formatHttpHeaderAttributes(array $attributes = []) {
     foreach ($attributes as $attribute => &$data) {
-      if (is_array($data)) {
+      if (\is_array($data)) {
         $data = implode(' ', $data);
       }
       $data = $attribute . '="' . $data . '"';
@@ -308,14 +308,14 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
-      $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
+      $optimize_css = !\defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
       $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css));
     }
 
     // Print scripts - if any are present.
     if (isset($placeholders['scripts']) || isset($placeholders['scripts_bottom'])) {
       // Optimize JS if necessary, but only during normal site operation.
-      $optimize_js = !defined('MAINTENANCE_MODE') && !\Drupal::state()->get('system.maintenance_mode') && $this->config->get('js.preprocess');
+      $optimize_js = !\defined('MAINTENANCE_MODE') && !\Drupal::state()->get('system.maintenance_mode') && $this->config->get('js.preprocess');
       list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, $optimize_js);
       $variables['scripts'] = $this->jsCollectionRenderer->render($js_assets_header);
       $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($js_assets_footer);

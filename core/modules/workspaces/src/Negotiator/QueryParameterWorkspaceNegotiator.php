@@ -13,7 +13,7 @@ class QueryParameterWorkspaceNegotiator extends SessionWorkspaceNegotiator {
    * {@inheritdoc}
    */
   public function applies(Request $request) {
-    return is_string($request->query->get('workspace')) && parent::applies($request);
+    return \is_string($request->query->get('workspace')) && parent::applies($request);
   }
 
   /**

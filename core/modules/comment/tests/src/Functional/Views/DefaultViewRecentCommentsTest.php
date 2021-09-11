@@ -138,7 +138,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     // Check the number of results given by the display is the expected.
     $this->assertCount($this->blockDisplayResults, $view->result,
       new FormattableMarkup('There are exactly @results comments. Expected @expected',
-        ['@results' => count($view->result), '@expected' => $this->blockDisplayResults]
+        ['@results' => \count($view->result), '@expected' => $this->blockDisplayResults]
       )
     );
   }

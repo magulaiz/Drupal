@@ -181,7 +181,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    * {@inheritdoc}
    */
   public function get($entity_type_id, $bundle) {
-    assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
+    \assert(\is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
     if (empty($entity_type_id)) {
       throw new PreconditionFailedHttpException('Server error. The current route is malformed.');
     }
@@ -221,9 +221,9 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   An array of JSON:API resource type fields keyed by internal field names.
    */
   protected function getFields(array $field_names, EntityTypeInterface $entity_type, $bundle) {
-    assert(Inspector::assertAllStrings($field_names));
-    assert($entity_type instanceof ContentEntityTypeInterface || $entity_type instanceof ConfigEntityTypeInterface);
-    assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
+    \assert(Inspector::assertAllStrings($field_names));
+    \assert($entity_type instanceof ContentEntityTypeInterface || $entity_type instanceof ConfigEntityTypeInterface);
+    \assert(\is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
 
     // JSON:API resource identifier objects are sufficient to identify
     // entities. By exposing all fields as attributes, we expose unwanted,
@@ -268,7 +268,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
     foreach (array_diff($field_names, array_keys($fields)) as $field_name) {
       $alias = $field_name;
       // Alias the fields reserved by the JSON:API spec with `{entity_type}_`.
-      if (in_array($field_name, $reserved_field_names, TRUE)) {
+      if (\in_array($field_name, $reserved_field_names, TRUE)) {
         $alias = $entity_type->id() . '_' . $field_name;
       }
 
@@ -353,7 +353,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   TRUE if the entity type is mutable, FALSE otherwise.
    */
   protected static function isMutableResourceType(EntityTypeInterface $entity_type, $bundle) {
-    assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
+    \assert(\is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
     return !$entity_type instanceof ConfigEntityTypeInterface;
   }
 
@@ -369,7 +369,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   TRUE if the entity type is locatable, FALSE otherwise.
    */
   protected static function isLocatableResourceType(EntityTypeInterface $entity_type, $bundle) {
-    assert(is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
+    \assert(\is_string($bundle) && !empty($bundle), 'A bundle ID is required. Bundleless entity types should pass the entity type ID again.');
     return $entity_type->getStorageClass() !== ContentEntityNullStorage::class;
   }
 
@@ -384,7 +384,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   protected static function isVersionableResourceType(EntityTypeInterface $entity_type) {
     // @todo: remove the following line and uncomment the next one when revisions have standardized access control. For now, it is unsafe to support all revisionable entity types.
-    return in_array($entity_type->id(), ['node', 'media']);
+    return \in_array($entity_type->id(), ['node', 'media']);
     /* return $entity_type->isRevisionable(); */
   }
 

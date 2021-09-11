@@ -130,7 +130,7 @@ class BreakpointManager extends DefaultPluginManager implements BreakpointManage
       $definition['group'] = $definition['provider'];
     }
     // Ensure a 1x multiplier exists.
-    if (!in_array('1x', $definition['multipliers'])) {
+    if (!\in_array('1x', $definition['multipliers'])) {
       $definition['multipliers'][] = '1x';
     }
     // Ensure that multipliers are sorted correctly.

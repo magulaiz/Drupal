@@ -163,7 +163,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
           $sort->query();
         }
         elseif (!empty($sort->options['expose']['field_identifier']) && $sort->options['expose']['field_identifier'] === $sort_by) {
-          if (isset($exposed_data['sort_order']) && in_array($exposed_data['sort_order'], ['ASC', 'DESC'], TRUE)) {
+          if (isset($exposed_data['sort_order']) && \in_array($exposed_data['sort_order'], ['ASC', 'DESC'], TRUE)) {
             $sort->options['order'] = $exposed_data['sort_order'];
           }
           $sort->setRelationship();
@@ -211,7 +211,7 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
       }
     }
 
-    if (count($exposed_sorts)) {
+    if (\count($exposed_sorts)) {
       $form['sort_by'] = [
         '#type' => 'select',
         '#options' => $exposed_sorts_options,

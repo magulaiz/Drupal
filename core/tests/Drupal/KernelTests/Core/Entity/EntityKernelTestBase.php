@@ -80,7 +80,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
           foreach (array_intersect(['node', 'comment'], $class::$modules) as $module) {
             $this->installEntitySchema($module);
           }
-          if (in_array('forum', $class::$modules, TRUE)) {
+          if (\in_array('forum', $class::$modules, TRUE)) {
             // Forum module is particular about the order that dependencies are
             // enabled in. The comment, node and taxonomy config and the
             // taxonomy_term schema need to be installed before the forum config

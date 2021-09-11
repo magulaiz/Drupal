@@ -185,7 +185,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Test hook_entity_update(): decrement, by modifying the last revision:
     // remove the data-entity-type attribute from the body field.
     $original_values = [];
-    for ($i = 0; $i < count($image_entities); $i++) {
+    for ($i = 0; $i < \count($image_entities); $i++) {
       $original_value = $node->body[$i]->value;
       $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
       $node->body[$i]->value = $new_value;

@@ -83,8 +83,8 @@ class TestCoverageTest extends BrowserTestBase {
       }
     }
 
-    $all = count($this->definitions);
-    $good = $all - count($problems);
+    $all = \count($this->definitions);
+    $good = $all - \count($problems);
     $this->assertSame([], $problems, $this->getLlamaMessage($good, $all));
   }
 

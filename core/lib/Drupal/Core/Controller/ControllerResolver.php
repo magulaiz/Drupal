@@ -55,12 +55,12 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
    * {@inheritdoc}
    */
   public function getControllerFromDefinition($controller, $path = '') {
-    if (is_array($controller) || (is_object($controller) && method_exists($controller, '__invoke'))) {
+    if (\is_array($controller) || (\is_object($controller) && method_exists($controller, '__invoke'))) {
       return $controller;
     }
 
     if (strpos($controller, ':') === FALSE) {
-      if (function_exists($controller)) {
+      if (\function_exists($controller)) {
         return $controller;
       }
       return $this->classResolver->getInstanceFromDefinition($controller);
@@ -68,7 +68,7 @@ class ControllerResolver extends BaseControllerResolver implements ControllerRes
 
     $callable = $this->createController($controller);
 
-    if (!is_callable($callable)) {
+    if (!\is_callable($callable)) {
       throw new \InvalidArgumentException(sprintf('The controller for URI "%s" is not callable.', $path));
     }
 

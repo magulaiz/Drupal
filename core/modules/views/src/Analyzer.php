@@ -72,7 +72,7 @@ class Analyzer {
     foreach ($types as $type => $messages) {
       $type .= ' messages';
       $message = '';
-      if (count($messages) > 1) {
+      if (\count($messages) > 1) {
         $item_list = [
           '#theme' => 'item_list',
           '#items' => $messages,

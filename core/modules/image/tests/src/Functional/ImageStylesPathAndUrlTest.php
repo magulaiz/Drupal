@@ -258,7 +258,7 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
         // (cf. http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.2)
         // in the response body.
         $raw = $this->getSession()->getPage()->getContent();
-        $this->assertStringNotContainsString(chr(137) . chr(80) . chr(78) . chr(71) . chr(13) . chr(10) . chr(26) . chr(10), $raw);
+        $this->assertStringNotContainsString(\chr(137) . \chr(80) . \chr(78) . \chr(71) . \chr(13) . \chr(10) . \chr(26) . \chr(10), $raw);
       }
     }
     else {
@@ -311,9 +311,9 @@ class ImageStylesPathAndUrlTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(404);
     // Check that this restriction cannot be bypassed by adding extra slashes
     // to the URL.
-    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '//styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
+    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '//styles/', strrpos($nested_url_with_wrong_token, '/styles/'), \strlen('/styles/')));
     $this->assertSession()->statusCodeEquals(404);
-    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '////styles/', strrpos($nested_url_with_wrong_token, '/styles/'), strlen('/styles/')));
+    $this->drupalGet(substr_replace($nested_url_with_wrong_token, '////styles/', strrpos($nested_url_with_wrong_token, '/styles/'), \strlen('/styles/')));
     $this->assertSession()->statusCodeEquals(404);
     // Make sure the image can still be generated if a correct token is used.
     $this->drupalGet($nested_url);

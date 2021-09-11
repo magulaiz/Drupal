@@ -49,7 +49,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
    */
   public function providerTestOptimize() {
     $path = 'core/tests/Drupal/Tests/Core/Asset/css_test_files/';
-    $absolute_path = dirname(__FILE__) . '/css_test_files/';
+    $absolute_path = \dirname(__FILE__) . '/css_test_files/';
     return [
       // File. Tests:
       // - Stripped comments and white-space.
@@ -286,7 +286,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
  */
 namespace Drupal\Core\Asset;
 
-if (!function_exists('Drupal\Core\Asset\file_uri_scheme')) {
+if (!\function_exists('Drupal\Core\Asset\file_uri_scheme')) {
 
   function file_uri_scheme($uri) {
     return FALSE;

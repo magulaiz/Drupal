@@ -22,13 +22,13 @@ class Variable {
     if ($callable instanceof \Closure) {
       return '[closure]';
     }
-    elseif (is_array($callable) && $callable) {
-      if (is_object($callable[0])) {
-        $callable[0] = get_class($callable[0]);
+    elseif (\is_array($callable) && $callable) {
+      if (\is_object($callable[0])) {
+        $callable[0] = \get_class($callable[0]);
       }
       return implode('::', $callable);
     }
-    elseif (is_string($callable)) {
+    elseif (\is_string($callable)) {
       return $callable;
     }
     else {
@@ -48,7 +48,7 @@ class Variable {
    *   The variable exported in a way compatible to Drupal's coding standards.
    */
   public static function export($var, $prefix = '') {
-    if (is_array($var)) {
+    if (\is_array($var)) {
       if (empty($var)) {
         $output = 'array()';
       }
@@ -62,10 +62,10 @@ class Variable {
         $output .= ')';
       }
     }
-    elseif (is_bool($var)) {
+    elseif (\is_bool($var)) {
       $output = $var ? 'TRUE' : 'FALSE';
     }
-    elseif (is_string($var)) {
+    elseif (\is_string($var)) {
       if (strpos($var, "\n") !== FALSE || strpos($var, "'") !== FALSE) {
         // If the string contains a line break or a single quote, use the
         // double quote export mode. Encode backslash, dollar symbols, and
@@ -77,7 +77,7 @@ class Variable {
         $output = "'" . $var . "'";
       }
     }
-    elseif (is_object($var) && get_class($var) === 'stdClass') {
+    elseif (\is_object($var) && \get_class($var) === 'stdClass') {
       // var_export() will export stdClass objects using an undefined
       // magic method __set_state() leaving the export broken. This
       // workaround avoids this by casting the object as an array for

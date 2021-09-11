@@ -465,7 +465,7 @@ class Registry implements DestructableInterface {
     // Invoke the hook_theme() implementation, preprocess what is returned, and
     // merge it into $cache.
     $function = $name . '_theme';
-    if (function_exists($function)) {
+    if (\function_exists($function)) {
       $result = $function($cache, $type, $theme, $path);
       foreach ($result as $hook => $info) {
         // When a theme or engine overrides a module's theme function
@@ -511,7 +511,7 @@ class Registry implements DestructableInterface {
         // ensure the function actually exists.
         if (isset($info['function'])) {
           trigger_error(sprintf('Theme functions are deprecated in drupal:8.0.0 and are removed from drupal:10.0.0. Use Twig templates instead of %s(). See https://www.drupal.org/node/1831138', $info['function']), E_USER_DEPRECATED);
-          if (!function_exists($info['function'])) {
+          if (!\function_exists($info['function'])) {
             throw new \BadFunctionCallException(sprintf(
               'Theme hook "%s" refers to a theme function callback that does not exist: "%s"',
               $hook,
@@ -542,7 +542,7 @@ class Registry implements DestructableInterface {
 
         // Preprocess variables for all theming hooks, whether the hook is
         // implemented as a template or as a function. Ensure they are arrays.
-        if (!isset($info['preprocess functions']) || !is_array($info['preprocess functions'])) {
+        if (!isset($info['preprocess functions']) || !\is_array($info['preprocess functions'])) {
           $info['preprocess functions'] = [];
           $prefixes = [];
           if ($type == 'module') {
@@ -570,10 +570,10 @@ class Registry implements DestructableInterface {
             // Only use non-hook-specific variable preprocessors for theming
             // hooks implemented as templates. See the @defgroup themeable
             // topic.
-            if (isset($info['template']) && function_exists($prefix . '_preprocess')) {
+            if (isset($info['template']) && \function_exists($prefix . '_preprocess')) {
               $info['preprocess functions'][] = $prefix . '_preprocess';
             }
-            if (function_exists($prefix . '_preprocess_' . $hook)) {
+            if (\function_exists($prefix . '_preprocess_' . $hook)) {
               $info['preprocess functions'][] = $prefix . '_preprocess_' . $hook;
             }
           }
@@ -585,7 +585,7 @@ class Registry implements DestructableInterface {
           // Flag not needed inside the registry.
           unset($result[$hook]['override preprocess functions']);
         }
-        elseif (isset($cache[$hook]['preprocess functions']) && is_array($cache[$hook]['preprocess functions'])) {
+        elseif (isset($cache[$hook]['preprocess functions']) && \is_array($cache[$hook]['preprocess functions'])) {
           $info['preprocess functions'] = array_merge($cache[$hook]['preprocess functions'], $info['preprocess functions']);
         }
         $result[$hook]['preprocess functions'] = $info['preprocess functions'];
@@ -614,10 +614,10 @@ class Registry implements DestructableInterface {
           }
           // Only use non-hook-specific variable preprocessors for theme hooks
           // implemented as templates. See the @defgroup themeable topic.
-          if (isset($info['template']) && function_exists($name . '_preprocess')) {
+          if (isset($info['template']) && \function_exists($name . '_preprocess')) {
             $cache[$hook]['preprocess functions'][] = $name . '_preprocess';
           }
-          if (function_exists($name . '_preprocess_' . $hook)) {
+          if (\function_exists($name . '_preprocess_' . $hook)) {
             $cache[$hook]['preprocess functions'][] = $name . '_preprocess_' . $hook;
             $cache[$hook]['theme path'] = $path;
           }
@@ -750,7 +750,7 @@ class Registry implements DestructableInterface {
     ksort($suggestion_level);
     foreach ($suggestion_level as $level => $item) {
       foreach ($item as $preprocessor => $hook) {
-        if (isset($cache[$hook]['preprocess functions']) && !in_array($hook, $cache[$hook]['preprocess functions'])) {
+        if (isset($cache[$hook]['preprocess functions']) && !\in_array($hook, $cache[$hook]['preprocess functions'])) {
           // Add missing preprocessor to existing hook.
           $cache[$hook]['preprocess functions'][] = $preprocessor;
         }

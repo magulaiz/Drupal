@@ -137,7 +137,7 @@ class QueryTest extends QueryPluginBase {
         return $value == $condition['value'];
 
       case 'IN':
-        return in_array($value, $condition['value']);
+        return \in_array($value, $condition['value']);
     }
     return FALSE;
   }

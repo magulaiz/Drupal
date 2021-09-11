@@ -130,7 +130,7 @@ class ContextHandlerTest extends UnitTestCase {
    * @dataProvider providerTestGetMatchingContexts
    */
   public function testGetMatchingContexts($contexts, $requirement, $expected = NULL) {
-    if (is_null($expected)) {
+    if (\is_null($expected)) {
       $expected = $contexts;
     }
     $this->assertSame($expected, $this->contextHandler->getMatchingContexts($contexts, $requirement));

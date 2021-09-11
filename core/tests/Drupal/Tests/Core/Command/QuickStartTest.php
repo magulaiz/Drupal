@@ -53,7 +53,7 @@ class QuickStartTest extends TestCase {
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
-    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    $this->root = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
     chdir($this->root);
     if (!is_writable("{$this->root}/sites/simpletest")) {
       $this->markTestSkipped('This test requires a writable sites/simpletest directory');
@@ -125,7 +125,7 @@ class QuickStartTest extends TestCase {
     $this->assertStringContainsString("127.0.0.1:$port/user/reset/1/", $process->getOutput());
 
     // Generate a cookie so we can make a request against the installed site.
-    define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
+    \define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
       'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix()),
@@ -225,7 +225,7 @@ class QuickStartTest extends TestCase {
     sleep(2);
 
     // Generate a cookie so we can make a request against the installed site.
-    define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
+    \define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
     chmod($this->testDb->getTestSitePath(), 0755);
     $cookieJar = CookieJar::fromArray([
       'SIMPLETEST_USER_AGENT' => drupal_generate_test_ua($this->testDb->getDatabasePrefix()),
@@ -312,7 +312,7 @@ class QuickStartTest extends TestCase {
    */
   protected function fileUnmanagedDeleteRecursive($path, $callback = NULL) {
     if (isset($callback)) {
-      call_user_func($callback, $path);
+      \call_user_func($callback, $path);
     }
     if (is_dir($path)) {
       $dir = dir($path);

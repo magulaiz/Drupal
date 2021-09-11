@@ -74,7 +74,7 @@ class RearrangeFieldsTest extends UITestBase {
     foreach ($reversedFields as $delta => $field) {
       $fields['fields[' . $field . '][weight]'] = $delta;
     }
-    $fields_count = count($fields);
+    $fields_count = \count($fields);
     $this->drupalGet('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field');
     $this->submitForm($fields, 'Apply');
     $this->assertFieldOrder($view_name, $reversedFields);

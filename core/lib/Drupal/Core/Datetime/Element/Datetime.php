@@ -32,7 +32,7 @@ class Datetime extends DateElementBase {
     $date_format = '';
     $time_format = '';
     // Date formats cannot be loaded during install or update.
-    if (!defined('MAINTENANCE_MODE')) {
+    if (!\defined('MAINTENANCE_MODE')) {
       if ($date_format_entity = DateFormat::load('html_date')) {
         /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
         $date_format = $date_format_entity->getPattern();
@@ -86,7 +86,7 @@ class Datetime extends DateElementBase {
       $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
 
       // Seconds will be omitted in a post in case there's no entry.
-      if (!empty($time_input) && strlen($time_input) == 5) {
+      if (!empty($time_input) && \strlen($time_input) == 5) {
         $time_input .= ':00';
       }
 
@@ -265,7 +265,7 @@ class Datetime extends DateElementBase {
         '#value' => $date_value,
         '#attributes' => $element['#attributes'] + $extra_attributes,
         '#required' => $element['#required'],
-        '#size' => max(12, strlen($element['#value']['date'])),
+        '#size' => max(12, \strlen($element['#value']['date'])),
         '#error_no_message' => TRUE,
         '#date_date_format' => $element['#date_date_format'],
       ];

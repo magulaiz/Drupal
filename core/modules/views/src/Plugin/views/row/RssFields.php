@@ -126,7 +126,7 @@ class RssFields extends RowPluginBase {
     if (!isset($row_index)) {
       $row_index = 0;
     }
-    if (function_exists('rdf_get_namespaces')) {
+    if (\function_exists('rdf_get_namespaces')) {
       // Merge RDF namespaces in the XML namespaces in case they are used
       // further in the RSS content.
       $xml_rdf_namespaces = [];
@@ -142,7 +142,7 @@ class RssFields extends RowPluginBase {
     $item->link = $this->getAbsoluteUrl($this->getField($row_index, $this->options['link_field']));
 
     $field = $this->getField($row_index, $this->options['description_field']);
-    $item->description = is_array($field) ? $field : ['#markup' => $field];
+    $item->description = \is_array($field) ? $field : ['#markup' => $field];
 
     $item->elements = [
       ['key' => 'pubDate', 'value' => $this->getField($row_index, $this->options['date_field'])],
@@ -197,7 +197,7 @@ class RssFields extends RowPluginBase {
    *   a MarkupInterface object containing the rendered field value.
    */
   public function getField($index, $field_id) {
-    if (empty($this->view->style_plugin) || !is_object($this->view->style_plugin) || empty($field_id)) {
+    if (empty($this->view->style_plugin) || !\is_object($this->view->style_plugin) || empty($field_id)) {
       return '';
     }
     return $this->view->style_plugin->getField($index, $field_id);

@@ -106,14 +106,14 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
     // including and particularly when the client forgot to specify a response
     // format, then use heuristics to select the format that is most likely
     // expected.
-    if (in_array($requested_format, $acceptable_response_formats, TRUE)) {
+    if (\in_array($requested_format, $acceptable_response_formats, TRUE)) {
       return $requested_format;
     }
 
     // If a request body is present, then use the format corresponding to the
     // request body's Content-Type for the response, if it's an acceptable
     // format for the request.
-    if (!empty($request->getContent()) && in_array($content_type_format, $acceptable_request_formats, TRUE)) {
+    if (!empty($request->getContent()) && \in_array($content_type_format, $acceptable_request_formats, TRUE)) {
       return $content_type_format;
     }
 

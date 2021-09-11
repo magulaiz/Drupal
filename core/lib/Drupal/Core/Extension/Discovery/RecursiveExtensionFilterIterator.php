@@ -141,7 +141,7 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
       // recurse into the whole filesystem tree that possibly contains other
       // files aside from Drupal.
       if ($this->current()->getSubPath() == '') {
-        return in_array($name, $this->allowedExtensionTypes, TRUE);
+        return \in_array($name, $this->allowedExtensionTypes, TRUE);
       }
       // 'config' directories are special-cased here, because every extension
       // contains one. However, those default configuration directories cannot
@@ -155,7 +155,7 @@ class RecursiveExtensionFilterIterator extends \RecursiveFilterIterator {
         return substr($this->current()->getPathname(), -14) == 'modules/config';
       }
       // Accept the directory unless the folder is skipped.
-      return !in_array($name, $this->skippedFolders, TRUE);
+      return !\in_array($name, $this->skippedFolders, TRUE);
     }
     else {
       // Only accept extension info files.

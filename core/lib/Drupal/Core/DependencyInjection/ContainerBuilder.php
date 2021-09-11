@@ -79,7 +79,7 @@ class ContainerBuilder extends SymfonyContainerBuilder {
     SymfonyContainer::set($id, $service);
 
     // Ensure that the _serviceId property is set on synthetic services as well.
-    if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
+    if (isset($this->services[$id]) && \is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
       $this->services[$id]->_serviceId = $id;
     }
   }
@@ -150,14 +150,14 @@ class ContainerBuilder extends SymfonyContainerBuilder {
       }
     }
 
-    call_user_func_array(array($service, $call[0]), $this->resolveServices($this->getParameterBag()->resolveValue($call[1])));
+    \call_user_func_array(array($service, $call[0]), $this->resolveServices($this->getParameterBag()->resolveValue($call[1])));
   }
 
   /**
    * {@inheritdoc}
    */
   public function __sleep() {
-    assert(FALSE, 'The container was serialized.');
+    \assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
   }
 

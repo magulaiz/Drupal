@@ -71,7 +71,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     // Store field information in $form_state.
     if (!static::getWidgetState($parents, $field_name, $form_state)) {
       $field_state = [
-        'items_count' => count($items),
+        'items_count' => \count($items),
         'array_parents' => [],
       ];
       static::setWidgetState($parents, $field_name, $form_state, $field_state);
@@ -301,7 +301,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $button = $form_state->getTriggeringElement();
 
     // Go one level up in the form, to the widgets container.
-    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $element = NestedArray::getValue($form, \array_slice($button['#array_parents'], 0, -1));
     $field_name = $element['#field_name'];
     $parents = $element['#field_parents'];
 
@@ -323,7 +323,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $button = $form_state->getTriggeringElement();
 
     // Go one level up in the form, to the widgets container.
-    $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
+    $element = NestedArray::getValue($form, \array_slice($button['#array_parents'], 0, -1));
 
     // Ensure the widget allows adding additional items.
     if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {

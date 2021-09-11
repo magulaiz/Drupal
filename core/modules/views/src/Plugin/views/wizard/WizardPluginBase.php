@@ -154,7 +154,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entity_types as $entity_type_id => $entity_type) {
-      if (in_array($this->base_table, [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
+      if (\in_array($this->base_table, [$entity_type->getBaseTable(), $entity_type->getDataTable(), $entity_type->getRevisionTable(), $entity_type->getRevisionDataTable()], TRUE)) {
         $this->entityType = $entity_type;
         $this->entityTypeId = $entity_type_id;
       }
@@ -358,7 +358,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         '#type' => 'select',
         '#options' => $feed_row_options,
         '#default_value' => key($feed_row_options),
-        '#access' => (count($feed_row_options) > 1),
+        '#access' => (\count($feed_row_options) > 1),
         '#states' => [
           'visible' => [
             ':input[name="page[feed]"]' => ['checked' => TRUE],
@@ -554,7 +554,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       // option A is no longer one of the choices. In that case, we don't want to
       // use the value that was submitted anymore but rather fall back to the
       // default value.
-      if ($key_exists && in_array($submitted, array_keys($element['#options']))) {
+      if ($key_exists && \in_array($submitted, array_keys($element['#options']))) {
         return $submitted;
       }
     }
@@ -583,7 +583,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
         '#type' => 'select',
         '#title' => $this->t('of'),
         '#options' => $options,
-        '#access' => count($options) > 1,
+        '#access' => \count($options) > 1,
       ];
       // For the block display, the default value should be "titles (linked)",
       // if it's available (since that's the most common use case).
@@ -1025,7 +1025,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       list($column, $sort) = explode(':', $sort_type);
       // Column either be a column-name or the table-column-name.
       $column = explode('-', $column);
-      if (count($column) > 1) {
+      if (\count($column) > 1) {
         $table = $column[0];
         $column = $column[1];
       }

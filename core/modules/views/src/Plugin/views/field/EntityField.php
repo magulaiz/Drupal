@@ -214,7 +214,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
 
       // Otherwise, we only limit values if the user hasn't selected "all", 0, or
       // the value matching field cardinality.
-      if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
+      if ((($this->options['delta_limit'] > 0) && ($this->options['delta_limit'] != $cardinality)) || \intval($this->options['delta_offset'])) {
         $this->limit_values = TRUE;
       }
     }
@@ -248,7 +248,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       if ($this->options['group_column'] != 'entity_id') {
         $options = [$this->options['group_column'] => $this->options['group_column']];
       }
-      $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : [];
+      $options += \is_array($this->options['group_columns']) ? $this->options['group_columns'] : [];
 
       // Go through the list and determine the actual column name from field api.
       $fields = [];
@@ -371,10 +371,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     $column_names = array_keys($field_storage_definition->getColumns());
     $default_column = '';
     // Try to determine a sensible default.
-    if (count($column_names) == 1) {
+    if (\count($column_names) == 1) {
       $default_column = $column_names[0];
     }
-    elseif (in_array('value', $column_names)) {
+    elseif (\in_array('value', $column_names)) {
       $default_column = 'value';
     }
 
@@ -452,7 +452,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     }
 
     // No need to ask the user anything if the field has only one column.
-    if (count($field->getColumns()) == 1) {
+    if (\count($field->getColumns()) == 1) {
       $form['click_sort_column'] = [
         '#type' => 'value',
         '#value' => isset($column_names[0]) ? $column_names[0] : '',
@@ -750,12 +750,12 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       }
       else {
         $delta_limit = $this->options['delta_limit'];
-        $offset = intval($this->options['delta_offset']);
+        $offset = \intval($this->options['delta_offset']);
 
         // We should only get here in this case if there is an offset, and in
         // that case we are limiting to all values after the offset.
         if ($delta_limit === 0) {
-          $delta_limit = count($all_values) - $offset;
+          $delta_limit = \count($all_values) - $offset;
         }
       }
 
@@ -950,7 +950,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       if (isset($item['raw'])) {
         $raw = $item['raw'];
 
-        if (is_array($raw)) {
+        if (\is_array($raw)) {
           if (isset($raw[$id]) && is_scalar($raw[$id])) {
             $tokens['{{ ' . $this->options['id'] . '__' . $id . ' }}'] = Xss::filterAdmin($raw[$id]);
           }
@@ -960,7 +960,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           }
         }
 
-        if (is_object($raw)) {
+        if (\is_object($raw)) {
           $property = $raw->get($id);
           // Check if TypedDataInterface is implemented so we know how to render
           // the item as a string.
@@ -1124,7 +1124,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       // Check if any of the handler dependencies match the dependencies being
       // removed.
       foreach ($dependency_list as $config_key) {
-        if (isset($dependencies[$group]) && array_key_exists($config_key, $dependencies[$group])) {
+        if (isset($dependencies[$group]) && \array_key_exists($config_key, $dependencies[$group])) {
           // This handlers dependency matches a dependency being removed,
           // indicate that this handler needs to be removed.
           $remove = TRUE;

@@ -234,13 +234,13 @@ class Connection extends DatabaseConnection {
    * SQLite compatibility implementation for the GREATEST() SQL function.
    */
   public static function sqlFunctionGreatest() {
-    $args = func_get_args();
+    $args = \func_get_args();
     foreach ($args as $v) {
       if (!isset($v)) {
         unset($args);
       }
     }
-    if (count($args)) {
+    if (\count($args)) {
       return max($args);
     }
     else {
@@ -253,16 +253,16 @@ class Connection extends DatabaseConnection {
    */
   public static function sqlFunctionLeast() {
     // Remove all NULL, FALSE and empty strings values but leaves 0 (zero) values.
-    $values = array_filter(func_get_args(), 'strlen');
+    $values = array_filter(\func_get_args(), 'strlen');
 
-    return count($values) < 1 ? NULL : min($values);
+    return \count($values) < 1 ? NULL : min($values);
   }
 
   /**
    * SQLite compatibility implementation for the CONCAT() SQL function.
    */
   public static function sqlFunctionConcat() {
-    $args = func_get_args();
+    $args = \func_get_args();
     return implode('', $args);
   }
 
@@ -272,15 +272,15 @@ class Connection extends DatabaseConnection {
    * @see http://dev.mysql.com/doc/refman/5.6/en/string-functions.html#function_concat-ws
    */
   public static function sqlFunctionConcatWs() {
-    $args = func_get_args();
+    $args = \func_get_args();
     $separator = array_shift($args);
     // If the separator is NULL, the result is NULL.
-    if ($separator === FALSE || is_null($separator)) {
+    if ($separator === FALSE || \is_null($separator)) {
       return NULL;
     }
     // Skip any NULL values after the separator argument.
     $args = array_filter($args, function ($value) {
-      return !is_null($value);
+      return !\is_null($value);
     });
     return implode($separator, $args);
   }
@@ -304,7 +304,7 @@ class Connection extends DatabaseConnection {
     for ($i = 0; $i < $count; $i++) {
       $end = strpos($string, $delimiter, $end + 1);
       if ($end === FALSE) {
-        $end = strlen($string);
+        $end = \strlen($string);
       }
     }
     return substr($string, 0, $end);
@@ -417,7 +417,7 @@ class Connection extends DatabaseConnection {
    */
   public function createDatabase($database) {
     // Verify the database is writable.
-    $db_directory = new \SplFileInfo(dirname($database));
+    $db_directory = new \SplFileInfo(\dirname($database));
     if (!$db_directory->isDir() && !\Drupal::service('file_system')->mkdir($db_directory->getPathName(), 0755, TRUE)) {
       throw new DatabaseNotFoundException('Unable to create database directory ' . $db_directory->getPathName());
     }

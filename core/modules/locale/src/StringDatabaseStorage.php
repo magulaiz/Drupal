@@ -251,10 +251,10 @@ class StringDatabaseStorage implements StringStorageInterface {
    *     table fields)
    */
   protected function dbFieldTable($field) {
-    if (in_array($field, ['language', 'translation', 'customized'])) {
+    if (\in_array($field, ['language', 'translation', 'customized'])) {
       return 't';
     }
-    elseif (in_array($field, ['type', 'name'])) {
+    elseif (\in_array($field, ['type', 'name'])) {
       return 'l';
     }
     else {
@@ -296,7 +296,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     elseif ($string->isTranslation()) {
       $keys = ['lid', 'language'];
     }
-    if (!empty($keys) && ($values = $string->getValues($keys)) && count($keys) == count($values)) {
+    if (!empty($keys) && ($values = $string->getValues($keys)) && \count($keys) == \count($values)) {
       return $values;
     }
     else {
@@ -411,7 +411,7 @@ class StringDatabaseStorage implements StringStorageInterface {
     foreach ($conditions as $field => $value) {
       $table_alias = $this->dbFieldTable($field);
       $field_alias = $table_alias . '.' . $field;
-      if (is_null($value)) {
+      if (\is_null($value)) {
         $query->isNull($field_alias);
       }
       elseif ($table_alias == 't' && $join === 'leftJoin') {
@@ -429,7 +429,7 @@ class StringDatabaseStorage implements StringStorageInterface {
 
     // Process other options, string filter, query limit, etc.
     if (!empty($options['filters'])) {
-      if (count($options['filters']) > 1) {
+      if (\count($options['filters']) > 1) {
         $filter = $this->connection->condition('OR');
         $query->condition($filter);
       }

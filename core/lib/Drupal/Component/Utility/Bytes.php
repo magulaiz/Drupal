@@ -125,7 +125,7 @@ class Bytes {
     // Remove remaining spaces from the value.
     $string = trim($string);
 
-    return in_array(strtolower($string), self::ALLOWED_SUFFIXES);
+    return \in_array(strtolower($string), self::ALLOWED_SUFFIXES);
   }
 
 }

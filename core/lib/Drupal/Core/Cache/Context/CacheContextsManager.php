@@ -100,7 +100,7 @@ class CacheContextsManager {
    *   cacheability metadata.
    */
   public function convertTokensToKeys(array $context_tokens) {
-    assert($this->assertValidTokens($context_tokens));
+    \assert($this->assertValidTokens($context_tokens));
     $cacheable_metadata = new CacheableMetadata();
     $optimized_tokens = $this->optimizeTokens($context_tokens);
     // Iterate over cache contexts that have been optimized away and get their
@@ -188,7 +188,7 @@ class CacheContextsManager {
         $ancestor = str_replace(':', '.', $context_token);
         do {
           $ancestor = substr($ancestor, 0, strrpos($ancestor, '.'));
-          if (in_array($ancestor, $context_tokens)) {
+          if (\in_array($ancestor, $context_tokens)) {
             // An ancestor cache context is in $context_tokens, hence this cache
             // context is implied.
             $ancestor_found = TRUE;
@@ -266,8 +266,8 @@ class CacheContextsManager {
     }
 
     foreach ($context_tokens as $context_token) {
-      if (!is_string($context_token)) {
-        throw new \LogicException(sprintf('Cache contexts must be strings, %s given.', gettype($context_token)));
+      if (!\is_string($context_token)) {
+        throw new \LogicException(sprintf('Cache contexts must be strings, %s given.', \gettype($context_token)));
       }
 
       if (isset($this->validContextTokens[$context_token])) {
@@ -308,7 +308,7 @@ class CacheContextsManager {
    *   TRUE if context_tokens is an array of valid tokens.
    */
   public function assertValidTokens($context_tokens) {
-    if (!is_array($context_tokens)) {
+    if (!\is_array($context_tokens)) {
       return FALSE;
     }
 

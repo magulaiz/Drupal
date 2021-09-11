@@ -67,7 +67,7 @@ class FieldUiTable extends Table {
           unset($list[$name]);
 
           // Determine the region for the row.
-          $region_name = call_user_func_array($row['#region_callback'], [&$row]);
+          $region_name = \call_user_func_array($row['#region_callback'], [&$row]);
 
           // Add the element in the tree.
           $target = &$trees[$region_name][''];
@@ -77,7 +77,7 @@ class FieldUiTable extends Table {
           $target['children'][$name] = ['name' => $name, 'weight' => $row['weight']['#value']];
 
           // Add tabledrag indentation to the first row cell.
-          if ($depth = count($parents[$name])) {
+          if ($depth = \count($parents[$name])) {
             $children = Element::children($row);
             $cell = current($children);
             $indentation = [
@@ -141,7 +141,7 @@ class FieldUiTable extends Table {
     // columns in the headers.
     $columns_count = 0;
     foreach ($elements['#header'] as $header) {
-      $columns_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
+      $columns_count += (\is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
     }
 
     $rows = [];

@@ -55,7 +55,7 @@ class BrowserTestBaseTest extends UnitTestCase {
     $ref_gethttpclient = new \ReflectionMethod($btb, 'getHttpClient');
     $ref_gethttpclient->setAccessible(TRUE);
 
-    $this->assertSame(get_class($expected), get_class($ref_gethttpclient->invoke($btb)));
+    $this->assertSame(\get_class($expected), \get_class($ref_gethttpclient->invoke($btb)));
   }
 
   /**

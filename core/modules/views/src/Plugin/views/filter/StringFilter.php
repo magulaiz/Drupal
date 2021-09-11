@@ -227,7 +227,7 @@ class StringFilter extends FilterPluginBase {
     if (!empty($options[$this->operator])) {
       $output = $options[$this->operator];
     }
-    if (in_array($this->operator, $this->operatorValues(1))) {
+    if (\in_array($this->operator, $this->operatorValues(1))) {
       $output .= ' ' . $this->value;
     }
     return $output;
@@ -261,7 +261,7 @@ class StringFilter extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // exposed and locked.
-        $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
+        $which = \in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';

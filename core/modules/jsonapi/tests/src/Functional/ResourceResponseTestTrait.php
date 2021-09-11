@@ -42,7 +42,7 @@ trait ResourceResponseTestTrait {
    *   The merged ResourceResponse.
    */
   protected static function toCollectionResourceResponse(array $responses, $self_link, $is_multiple) {
-    assert(count($responses) > 0);
+    \assert(\count($responses) > 0);
     $merged_document = [];
     $merged_cacheability = new CacheableMetadata();
     foreach ($responses as $response) {
@@ -180,7 +180,7 @@ trait ResourceResponseTestTrait {
     // The test entity reference field should always be present.
     if (!isset($individual_document['data']['relationships']['field_jsonapi_test_entity_ref'])) {
       if (static::$resourceTypeIsVersionable) {
-        assert($this->entity instanceof RevisionableInterface);
+        \assert($this->entity instanceof RevisionableInterface);
         $version_identifier = 'id:' . $this->entity->getRevisionId();
         $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
       }
@@ -275,7 +275,7 @@ trait ResourceResponseTestTrait {
    *   TRUE if the array has a type and ID, FALSE otherwise.
    */
   protected static function isResourceIdentifier(array $data) {
-    return array_key_exists('type', $data) && array_key_exists('id', $data);
+    return \array_key_exists('type', $data) && \array_key_exists('id', $data);
   }
 
   /**
@@ -325,7 +325,7 @@ trait ResourceResponseTestTrait {
    *   An array of link paths, keyed by relationship field name.
    */
   protected static function getLinkPaths(array $relationship_field_names, $type) {
-    assert($type === 'relationship' || $type === 'related');
+    \assert($type === 'relationship' || $type === 'related');
     return array_reduce($relationship_field_names, function ($link_paths, $relationship_field_name) use ($type) {
       $tail = $type === 'relationship' ? 'self' : $type;
       $link_paths[$relationship_field_name] = "data.relationships.$relationship_field_name.links.$tail.href";
@@ -378,7 +378,7 @@ trait ResourceResponseTestTrait {
    *   The resource link.
    */
   protected static function getResourceLink(array $resource_identifier) {
-    assert(static::isResourceIdentifier($resource_identifier));
+    \assert(static::isResourceIdentifier($resource_identifier));
     $resource_type = $resource_identifier['type'];
     $resource_id = $resource_identifier['id'];
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', $resource_type), ['entity' => $resource_id]);

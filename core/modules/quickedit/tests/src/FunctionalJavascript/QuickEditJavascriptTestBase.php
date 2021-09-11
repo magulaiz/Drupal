@@ -255,11 +255,11 @@ JS;
    *   deprecation layer and add array typehint.
    */
   protected function assertEntityInstanceFieldMarkup($expected_field_attributes) {
-    if (func_num_args() === 4) {
+    if (\func_num_args() === 4) {
       $expected_field_attributes = func_get_arg(3);
       @trigger_error('Calling ' . __METHOD__ . '() with 4 arguments is deprecated in drupal:9.1.0 and will throw an error in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3037436', E_USER_DEPRECATED);
     }
-    if (!is_array($expected_field_attributes)) {
+    if (!\is_array($expected_field_attributes)) {
       throw new \InvalidArgumentException('The $expected_field_attributes argument must be an array.');
     }
     foreach ($expected_field_attributes as $quickedit_field_id => $expectation) {
