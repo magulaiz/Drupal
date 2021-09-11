@@ -97,9 +97,9 @@ class StyleTableTest extends ViewTestBase {
     // do: "views-field-job-1" would also contain "views-field-job".
     // @see Drupal\system\Tests\Form\ElementTest::testButtonClasses().
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job ")]');
-    $this->assertGreaterThan(0, count($result), 'Ensure there is a td with the class views-field-job');
+    $this->assertGreaterThan(0, \count($result), 'Ensure there is a td with the class views-field-job');
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
-    $this->assertGreaterThan(0, count($result), 'Ensure there is a td with the class views-field-job-1');
+    $this->assertGreaterThan(0, \count($result), 'Ensure there is a td with the class views-field-job-1');
 
     // Combine the second job-column with the first one, with ', ' as separator.
     $view = View::load('test_table');
@@ -112,10 +112,10 @@ class StyleTableTest extends ViewTestBase {
     $this->drupalGet('test-table');
 
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job views-field-job-1 ")]');
-    $this->assertGreaterThan(0, count($result), 'Ensure that the job column class names are joined into a single column');
+    $this->assertGreaterThan(0, \count($result), 'Ensure that the job column class names are joined into a single column');
 
     $result = $this->xpath('//tbody/tr/td[contains(., "Drummer, Drummer")]');
-    $this->assertGreaterThan(0, count($result), 'Ensure the job column values are joined into a single column');
+    $this->assertGreaterThan(0, \count($result), 'Ensure the job column values are joined into a single column');
   }
 
   /**
@@ -139,10 +139,10 @@ class StyleTableTest extends ViewTestBase {
     $this->drupalGet('test-table');
 
     $result = $this->xpath('//tbody/tr/td[contains(., "Baby")]');
-    $this->assertGreaterThan(0, count($result), 'Ensure that the baby is found.');
+    $this->assertGreaterThan(0, \count($result), 'Ensure that the baby is found.');
 
     $result = $this->xpath('//tbody/tr/td[text()=0]');
-    $this->assertGreaterThan(0, count($result), 'Ensure that the baby\'s age is shown');
+    $this->assertGreaterThan(0, \count($result), 'Ensure that the baby\'s age is shown');
   }
 
   /**

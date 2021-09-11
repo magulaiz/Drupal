@@ -97,7 +97,7 @@ class User extends ContentEntityBase implements UserInterface {
 
     // Make sure that the authenticated/anonymous roles are not persisted.
     foreach ($this->get('roles') as $index => $item) {
-      if (in_array($item->target_id, [RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID])) {
+      if (\in_array($item->target_id, [RoleInterface::ANONYMOUS_ID, RoleInterface::AUTHENTICATED_ID])) {
         $this->get('roles')->offsetUnset($index);
       }
     }
@@ -180,7 +180,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function hasRole($rid) {
-    return in_array($rid, $this->getRoles());
+    return \in_array($rid, $this->getRoles());
   }
 
   /**
@@ -188,7 +188,7 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function addRole($rid) {
 
-    if (in_array($rid, [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID])) {
+    if (\in_array($rid, [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID])) {
       throw new \InvalidArgumentException('Anonymous or authenticated role ID must not be assigned manually.');
     }
 
@@ -404,7 +404,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function checkExistingPassword(UserInterface $account_unchanged) {
-    return strlen($this->get('pass')->existing) > 0 && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged->getPassword());
+    return \strlen($this->get('pass')->existing) > 0 && \Drupal::service('password')->check(trim($this->get('pass')->existing), $account_unchanged->getPassword());
   }
 
   /**

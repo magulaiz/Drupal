@@ -84,7 +84,7 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
     }
 
     // Ensure we have at least two valid images.
-    $this->assertGreaterThanOrEqual(2, count($valid_images));
+    $this->assertGreaterThanOrEqual(2, \count($valid_images));
 
     // Create a File entity for the initial image.
     $file = File::create([

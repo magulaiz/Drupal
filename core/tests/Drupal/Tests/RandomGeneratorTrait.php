@@ -116,7 +116,7 @@ trait RandomGeneratorTrait {
    *   The random generator.
    */
   protected function getRandomGenerator() {
-    if (!is_object($this->randomGenerator)) {
+    if (!\is_object($this->randomGenerator)) {
       $this->randomGenerator = new Random();
     }
     return $this->randomGenerator;

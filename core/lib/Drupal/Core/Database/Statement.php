@@ -56,7 +56,7 @@ class Statement extends \PDOStatement implements StatementInterface {
    */
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
+      if (\is_string($options['fetch'])) {
         // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
         // are added to the object.
         $this->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $options['fetch']);
@@ -101,7 +101,7 @@ class Statement extends \PDOStatement implements StatementInterface {
   public function fetchAllAssoc($key, $fetch = NULL) {
     $return = [];
     if (isset($fetch)) {
-      if (is_string($fetch)) {
+      if (\is_string($fetch)) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
       }
       else {
@@ -110,7 +110,7 @@ class Statement extends \PDOStatement implements StatementInterface {
     }
 
     foreach ($this as $record) {
-      $record_key = is_object($record) ? $record->$key : $record[$key];
+      $record_key = \is_object($record) ? $record->$key : $record[$key];
       $return[$record_key] = $record;
     }
 
@@ -165,7 +165,7 @@ class Statement extends \PDOStatement implements StatementInterface {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 1:
         return parent::setFetchMode($mode);
 
@@ -185,7 +185,7 @@ class Statement extends \PDOStatement implements StatementInterface {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    switch (func_num_args()) {
+    switch (\func_num_args()) {
       case 0:
         return parent::fetchAll();
 

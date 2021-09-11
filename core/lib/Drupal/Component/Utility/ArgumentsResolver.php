@@ -74,14 +74,14 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
 
     // If the argument exists and is NULL, return it, regardless of
     // parameter type hint.
-    if (!isset($this->objects[$parameter_name]) && array_key_exists($parameter_name, $this->objects)) {
+    if (!isset($this->objects[$parameter_name]) && \array_key_exists($parameter_name, $this->objects)) {
       return NULL;
     }
 
     if ($parameter_type_hint) {
       $parameter_type_hint = new \ReflectionClass($parameter_type_hint);
       // If the argument exists and complies with the type hint, return it.
-      if (isset($this->objects[$parameter_name]) && is_object($this->objects[$parameter_name]) && $parameter_type_hint->isInstance($this->objects[$parameter_name])) {
+      if (isset($this->objects[$parameter_name]) && \is_object($this->objects[$parameter_name]) && $parameter_type_hint->isInstance($this->objects[$parameter_name])) {
         return $this->objects[$parameter_name];
       }
       // Otherwise, resolve wildcard arguments by type matching.
@@ -119,7 +119,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface {
    *   The ReflectionMethod or ReflectionFunction to introspect the callable.
    */
   protected function getReflector(callable $callable) {
-    return is_array($callable) ? new \ReflectionMethod($callable[0], $callable[1]) : new \ReflectionFunction($callable);
+    return \is_array($callable) ? new \ReflectionMethod($callable[0], $callable[1]) : new \ReflectionFunction($callable);
   }
 
   /**

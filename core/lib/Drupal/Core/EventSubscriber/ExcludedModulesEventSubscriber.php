@@ -95,7 +95,7 @@ final class ExcludedModulesEventSubscriber implements EventSubscriberInterface {
 
     $modules = $extension['module'];
     foreach ($this->getExcludedModules() as $module) {
-      if (array_key_exists($module, $existing['module'])) {
+      if (\array_key_exists($module, $existing['module'])) {
         // Set the modules weight from the active store.
         $modules[$module] = $existing['module'][$module];
       }

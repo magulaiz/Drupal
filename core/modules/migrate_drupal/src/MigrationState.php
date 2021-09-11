@@ -356,7 +356,7 @@ class MigrationState {
     foreach ($definitions as $definition) {
       // This is not strict so that we find field plugins with an annotation
       // where the Drupal core version is an integer and when it is a string.
-      if (in_array($version, $definition['core'])) {
+      if (\in_array($version, $definition['core'])) {
         $source_module = $definition['source_module'];
         $destination_module = $definition['destination_module'];
         $discovered_upgrade_paths[$source_module][] = $destination_module;
@@ -421,7 +421,7 @@ class MigrationState {
       // No declared state.
       return MigrationState::NOT_FINISHED;
     }
-    if (in_array(MigrationState::NOT_FINISHED, $this->stateBySource[$version][$source_module], TRUE) || !in_array(MigrationState::FINISHED, $this->stateBySource[$version][$source_module], TRUE)) {
+    if (\in_array(MigrationState::NOT_FINISHED, $this->stateBySource[$version][$source_module], TRUE) || !\in_array(MigrationState::FINISHED, $this->stateBySource[$version][$source_module], TRUE)) {
       return MigrationState::NOT_FINISHED;
     }
     if (array_diff($destinations, $this->enabledModules)) {

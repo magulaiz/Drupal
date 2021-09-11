@@ -60,7 +60,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    * catch it, and pass it to the value object that JSON:API uses.
    */
   public function normalize($field_item, $format = NULL, array $context = []) {
-    assert($field_item instanceof FieldItemInterface);
+    \assert($field_item instanceof FieldItemInterface);
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     $values = [];
     $context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY] = new CacheableMetadata();
@@ -72,7 +72,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
         $values[$property_name] = $this->serializer->normalize($property, $format, $context);
       }
       // Flatten if there is only a single property to normalize.
-      $flatten = count($field_properties) === 1 && $field_item::mainPropertyName() !== NULL;
+      $flatten = \count($field_properties) === 1 && $field_item::mainPropertyName() !== NULL;
       $values = static::rasterizeValueRecursive($flatten ? reset($values) : $values);
     }
     else {
@@ -91,7 +91,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
     $item_definition = $context['field_definition']->getItemDefinition();
-    assert($item_definition instanceof FieldItemDataDefinitionInterface);
+    \assert($item_definition instanceof FieldItemDataDefinitionInterface);
 
     $field_item = $this->getFieldItemInstance($context['resource_type'], $item_definition);
     $this->checkForSerializedStrings($data, $class, $field_item);
@@ -104,7 +104,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
         return $this->serializer->denormalize($property_value, $property_value_class, $format, $context);
       }
       else {
-        if (in_array($property_name, $serialized_property_names, TRUE)) {
+        if (\in_array($property_name, $serialized_property_names, TRUE)) {
           $property_value = serialize($property_value);
         }
         return $property_value;
@@ -113,7 +113,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     // Because e.g. the 'bundle' entity key field requires field values to not
     // be expanded to an array of all properties, we special-case single-value
     // properties.
-    if (!is_array($data)) {
+    if (!\is_array($data)) {
       // The NULL normalization means there is no value, hence we can return
       // early. Note that this is not just an optimization but a necessity for
       // field types without main properties (such as the "map" field type).
@@ -161,9 +161,9 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     }
     $entity = $this->entityTypeManager->getStorage($resource_type->getEntityTypeId())->create($create_values);
     $field = $entity->get($item_definition->getFieldDefinition()->getName());
-    assert($field instanceof FieldItemListInterface);
+    \assert($field instanceof FieldItemListInterface);
     $field_item = $field->appendItem();
-    assert($field_item instanceof FieldItemInterface);
+    \assert($field_item instanceof FieldItemInterface);
     return $field_item;
   }
 

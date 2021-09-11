@@ -166,7 +166,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *   The migration to execute, or its ID.
    */
   protected function executeMigration($migration) {
-    if (is_string($migration)) {
+    if (\is_string($migration)) {
       $this->migration = $this->getMigration($migration);
     }
     else {
@@ -239,7 +239,7 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *   MigrateIdMapInterface::STATUS_FAILED.
    */
   protected function mockFailure($migration, array $row, $status = MigrateIdMapInterface::STATUS_FAILED) {
-    if (is_string($migration)) {
+    if (\is_string($migration)) {
       $migration = $this->getMigration($migration);
     }
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */

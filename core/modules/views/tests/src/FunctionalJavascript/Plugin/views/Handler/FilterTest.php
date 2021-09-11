@@ -126,7 +126,7 @@ class FilterTest extends WebDriverTestBase {
     return $page->waitFor($timeout / 1000, function () use ($count, $page, $locator) {
       $elements = $page->findAll('css', $locator);
       $visible_elements = $this->filterVisibleElements($elements);
-      if (count($visible_elements) === $count) {
+      if (\count($visible_elements) === $count) {
         return TRUE;
       }
       return FALSE;

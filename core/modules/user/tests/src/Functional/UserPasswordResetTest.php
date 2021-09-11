@@ -156,7 +156,7 @@ class UserPasswordResetTest extends BrowserTestBase {
 
     // Request a new password again, this time using the email address.
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $before = \count($this->drupalGetMails(['id' => 'user_password_reset']));
     $this->drupalGet('user/password');
     $edit = ['name' => $this->account->getEmail()];
     $this->submitForm($edit, 'Submit');
@@ -190,7 +190,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     // Verify a blocked user can not request a new password.
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $before = \count($this->drupalGetMails(['id' => 'user_password_reset']));
     $edit = ['name' => $blocked_account->getAccountName()];
     $this->submitForm($edit, 'Submit');
     $this->assertCount($before, $this->drupalGetMails(['id' => 'user_password_reset']), 'No email was sent when requesting password reset for a blocked account');
@@ -398,7 +398,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $edit = ['name' => $this->account->getAccountName()];
 
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $before = \count($this->drupalGetMails(['id' => 'user_password_reset']));
 
     // Try 3 requests that should not trigger flood control.
     for ($i = 0; $i < 3; $i++) {
@@ -455,7 +455,7 @@ class UserPasswordResetTest extends BrowserTestBase {
     $edit = ['name' => $this->account->getAccountName()];
 
     // Count email messages before to compare with after.
-    $before = count($this->drupalGetMails(['id' => 'user_password_reset']));
+    $before = \count($this->drupalGetMails(['id' => 'user_password_reset']));
 
     // Try 3 requests that should not trigger flood control.
     for ($i = 0; $i < 3; $i++) {

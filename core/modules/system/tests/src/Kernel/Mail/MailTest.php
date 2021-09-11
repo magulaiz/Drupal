@@ -159,7 +159,7 @@ class MailTest extends KernelTestBase {
     // hardcode some double-quotes and backslash to validate these are escaped
     // properly too.
     $specials = '()<>[]:;@\,."';
-    $site_name = 'Drupal' . $specials[rand(0, strlen($specials) - 1)] . ' "si\te"';
+    $site_name = 'Drupal' . $specials[rand(0, \strlen($specials) - 1)] . ' "si\te"';
     $this->config('system.site')->set('name', $site_name)->save();
     // Send an email and check that the From-header contains the site name
     // within double-quotes. Also make sure double-quotes and "\" are escaped.
@@ -288,7 +288,7 @@ class MailTest extends KernelTestBase {
     $test_base_url = 'http://localhost';
     $this->setSetting('file_public_base_url', $test_base_url);
     $filepath = \Drupal::service('file_system')->createFilename("{$image_name}.png", '');
-    $directory_uri = 'public://' . dirname($filepath);
+    $directory_uri = 'public://' . \dirname($filepath);
     \Drupal::service('file_system')->prepareDirectory($directory_uri, FileSystemInterface::CREATE_DIRECTORY);
 
     // Create an image file.

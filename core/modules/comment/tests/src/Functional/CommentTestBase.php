@@ -142,7 +142,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       $this->assertSession()->fieldNotExists('subject[0][value]');
     }
 
-    if ($contact !== NULL && is_array($contact)) {
+    if ($contact !== NULL && \is_array($contact)) {
       $edit += $contact;
     }
     switch ($preview_mode) {

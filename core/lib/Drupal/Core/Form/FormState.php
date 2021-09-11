@@ -618,7 +618,7 @@ class FormState implements FormStateInterface {
    * @see http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.1.1
    */
   protected function isRequestMethodSafe() {
-    return in_array($this->requestMethod, ['GET', 'HEAD']);
+    return \in_array($this->requestMethod, ['GET', 'HEAD']);
   }
 
   /**
@@ -1071,7 +1071,7 @@ class FormState implements FormStateInterface {
           // valid, so errors for this element must be recorded. As the exploded
           // array will all be strings, we need to cast every value of the
           // section array to string.
-          if (array_slice(explode('][', $name), 0, count($section)) === array_map('strval', $section)) {
+          if (\array_slice(explode('][', $name), 0, \count($section)) === array_map('strval', $section)) {
             $record = TRUE;
             break;
           }
@@ -1145,7 +1145,7 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function prepareCallback($callback) {
-    if (is_string($callback) && substr($callback, 0, 2) == '::') {
+    if (\is_string($callback) && substr($callback, 0, 2) == '::') {
       $callback = [$this->getFormObject(), substr($callback, 2)];
     }
     return $callback;
@@ -1229,7 +1229,7 @@ class FormState implements FormStateInterface {
       $last_parent = array_pop($parents);
       $key_exists = NULL;
       $values = &NestedArray::getValue($this->getValues(), $parents, $key_exists);
-      if ($key_exists && is_array($values)) {
+      if ($key_exists && \is_array($values)) {
         unset($values[$last_parent]);
       }
     }

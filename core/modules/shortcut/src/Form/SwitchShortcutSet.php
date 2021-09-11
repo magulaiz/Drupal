@@ -79,7 +79,7 @@ class SwitchShortcutSet extends FormBase {
     }
 
     $account_is_user = $this->user->id() == $account->id();
-    if (count($options) > 1) {
+    if (\count($options) > 1) {
       $form['set'] = [
         '#type' => 'radios',
         '#title' => $account_is_user ? $this->t('Choose a set of shortcuts to use') : $this->t('Choose a set of shortcuts for this user'),

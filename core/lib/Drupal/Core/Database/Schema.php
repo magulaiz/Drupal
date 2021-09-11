@@ -111,7 +111,7 @@ abstract class Schema implements PlaceholderInterface {
    * This prevents using {} around non-table names like indexes and keys.
    */
   public function prefixNonTable($table) {
-    $args = func_get_args();
+    $args = \func_get_args();
     $info = $this->getPrefixInfo($table);
     $args[0] = $info['table'];
     return implode('_', $args);
@@ -193,7 +193,7 @@ abstract class Schema implements PlaceholderInterface {
 
     $individually_prefixed_tables = $this->connection->getUnprefixedTablesMap();
     $default_prefix = $this->connection->tablePrefix();
-    $default_prefix_length = strlen($default_prefix);
+    $default_prefix_length = \strlen($default_prefix);
     $tables = [];
     // Normally, we would heartily discourage the use of string
     // concatenation for conditionals like this however, we
@@ -204,7 +204,7 @@ abstract class Schema implements PlaceholderInterface {
     foreach ($results as $table) {
       // Take into account tables that have an individual prefix.
       if (isset($individually_prefixed_tables[$table->table_name])) {
-        $prefix_length = strlen($this->connection->tablePrefix($individually_prefixed_tables[$table->table_name]));
+        $prefix_length = \strlen($this->connection->tablePrefix($individually_prefixed_tables[$table->table_name]));
       }
       elseif ($default_prefix && substr($table->table_name, 0, $default_prefix_length) !== $default_prefix) {
         // This table name does not start the default prefix, which means that
@@ -634,7 +634,7 @@ abstract class Schema implements PlaceholderInterface {
   public function fieldNames($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $return[] = $field[0];
       }
       else {
@@ -672,10 +672,10 @@ abstract class Schema implements PlaceholderInterface {
    *   The escaped value.
    */
   protected function escapeDefaultValue($value) {
-    if (is_null($value)) {
+    if (\is_null($value)) {
       return 'NULL';
     }
-    return is_string($value) ? $this->connection->quote($value) : $value;
+    return \is_string($value) ? $this->connection->quote($value) : $value;
   }
 
   /**

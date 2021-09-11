@@ -141,7 +141,7 @@ class MigrationTest extends UnitTestCase {
    */
   public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
     $migration = new TestMigration();
-    if (!is_null($source)) {
+    if (!\is_null($source)) {
       $migration->set('migration_dependencies', $source);
     }
     $this->assertSame($migration->getMigrationDependencies(), $expected_value);

@@ -37,7 +37,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
     $pattern_outline = static::getPatternOutline($stripped_path);
     // We count the number of parts including any optional trailing parts. This
     // allows the RouteProvider to filter candidate routes more efficiently.
-    $num_parts = count(explode('/', trim($route->getPath(), '/')));
+    $num_parts = \count(explode('/', trim($route->getPath(), '/')));
 
     return new CompiledRoute(
       $fit,
@@ -88,7 +88,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    */
   public static function getFit($path) {
     $parts = explode('/', trim($path, '/'));
-    $number_parts = count($parts);
+    $number_parts = \count($parts);
     // We store the highest index of parts here to save some work in the fit
     // calculation loop.
     $slashes = $number_parts - 1;

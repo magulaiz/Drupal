@@ -97,7 +97,7 @@ class Sort {
     }
 
     // Expand a JSON:API compliant sort into a more expressive sort parameter.
-    if (is_string($parameter)) {
+    if (\is_string($parameter)) {
       $parameter = static::expandFieldString($parameter);
     }
 
@@ -165,7 +165,7 @@ class Sort {
     $expanded = array_merge($defaults, $sort_item);
 
     // Verify correct sort keys.
-    if (count(array_diff($expected_keys, array_keys($expanded))) > 0) {
+    if (\count(array_diff($expected_keys, array_keys($expanded))) > 0) {
       throw new CacheableBadRequestHttpException($cacheability, 'You have provided an invalid set of sort keys.');
     }
 

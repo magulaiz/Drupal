@@ -195,7 +195,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    */
   public function getNumberOfChangesOnTarget() {
     $total_changes = $this->getDifferringRevisionIdsOnTarget();
-    return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
+    return \count($total_changes, COUNT_RECURSIVE) - \count($total_changes);
   }
 
   /**
@@ -203,7 +203,7 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
    */
   public function getNumberOfChangesOnSource() {
     $total_changes = $this->getDifferringRevisionIdsOnSource();
-    return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
+    return \count($total_changes, COUNT_RECURSIVE) - \count($total_changes);
   }
 
 }

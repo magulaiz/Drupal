@@ -191,11 +191,11 @@ class ViewsUIController extends ControllerBase {
     foreach ($views as $view) {
       $view_tag = $view->get('tag');
       foreach (Tags::explode($view_tag) as $tag) {
-        if ($tag && !in_array($tag, $tags, TRUE)) {
+        if ($tag && !\in_array($tag, $tags, TRUE)) {
           $tags[] = $tag;
           if (mb_stripos($tag, $string) !== FALSE) {
             $matches[] = ['value' => $tag, 'label' => Html::escape($tag)];
-            if (count($matches) >= 10) {
+            if (\count($matches) >= 10) {
               break 2;
             }
           }

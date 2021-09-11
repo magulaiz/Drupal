@@ -16,7 +16,7 @@ class Container extends DrupalContainer {
     parent::set($id, $service);
 
     // Ensure that the _serviceId property is set on synthetic services as well.
-    if (isset($this->services[$id]) && is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
+    if (isset($this->services[$id]) && \is_object($this->services[$id]) && !isset($this->services[$id]->_serviceId)) {
       $this->services[$id]->_serviceId = $id;
     }
   }
@@ -25,7 +25,7 @@ class Container extends DrupalContainer {
    * {@inheritdoc}
    */
   public function __sleep() {
-    assert(FALSE, 'The container was serialized.');
+    \assert(FALSE, 'The container was serialized.');
     return array_keys(get_object_vars($this));
   }
 

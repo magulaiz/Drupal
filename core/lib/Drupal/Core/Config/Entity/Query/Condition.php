@@ -26,14 +26,14 @@ class Condition extends ConditionBase {
       }
       else {
         if (!isset($condition['operator'])) {
-          $condition['operator'] = is_array($condition['value']) ? 'IN' : '=';
+          $condition['operator'] = \is_array($condition['value']) ? 'IN' : '=';
         }
 
         // Lowercase condition value(s) for case-insensitive matches.
-        if (is_array($condition['value'])) {
+        if (\is_array($condition['value'])) {
           $condition['value'] = array_map('mb_strtolower', $condition['value']);
         }
-        elseif (!is_bool($condition['value'])) {
+        elseif (!\is_bool($condition['value'])) {
           $condition['value'] = mb_strtolower($condition['value']);
         }
 
@@ -123,7 +123,7 @@ class Condition extends ConditionBase {
     }
     foreach ($candidates as $key) {
       if ($needs_matching) {
-        if (is_array($data[$key])) {
+        if (\is_array($data[$key])) {
           $new_parents = $parents;
           $new_parents[] = $key;
           if ($this->matchArray($condition, $data[$key], $needs_matching, $new_parents)) {
@@ -160,14 +160,14 @@ class Condition extends ConditionBase {
   protected function match(array $condition, $value) {
     // "IS NULL" and "IS NOT NULL" conditions can also deal with array values,
     // so we return early for them to avoid problems.
-    if (in_array($condition['operator'], ['IS NULL', 'IS NOT NULL'], TRUE)) {
+    if (\in_array($condition['operator'], ['IS NULL', 'IS NOT NULL'], TRUE)) {
       $should_be_set = $condition['operator'] === 'IS NOT NULL';
       return $should_be_set === isset($value);
     }
 
     if (isset($value)) {
       // We always want a case-insensitive match.
-      if (!is_bool($value)) {
+      if (!\is_bool($value)) {
         $value = mb_strtolower($value);
       }
 
@@ -203,7 +203,7 @@ class Condition extends ConditionBase {
           return strpos($value, $condition['value']) !== FALSE;
 
         case 'ENDS_WITH':
-          return substr($value, -strlen($condition['value'])) === (string) $condition['value'];
+          return substr($value, -\strlen($condition['value'])) === (string) $condition['value'];
 
         default:
           throw new QueryException('Invalid condition operator.');

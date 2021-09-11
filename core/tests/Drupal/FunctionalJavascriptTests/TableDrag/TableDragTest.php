@@ -487,7 +487,7 @@ class TableDragTest extends WebDriverTestBase {
    */
   protected function assertDraggableTable(array $structure, $table_id = 'tabledrag-test-table', $skip_missing = FALSE) {
     $rows = $this->getSession()->getPage()->findAll('xpath', "//table[@id='$table_id']/tbody/tr");
-    $this->assertSession()->elementsCount('xpath', "//table[@id='$table_id']/tbody/tr", count($structure));
+    $this->assertSession()->elementsCount('xpath', "//table[@id='$table_id']/tbody/tr", \count($structure));
 
     foreach ($structure as $delta => $expected) {
       $this->assertTableRow($rows[$delta], $expected['id'], $expected['weight'], $expected['parent'], $expected['indentation'], $expected['changed'], $skip_missing);

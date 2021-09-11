@@ -82,7 +82,7 @@ class RestRegisterUserTest extends ResourceTestBase {
     $user = $this->registerUser('Palmer.Eldritch');
     $this->assertFalse($user->isBlocked());
     $this->assertFalse(empty($user->getPassword()));
-    $email_count = count($this->drupalGetMails());
+    $email_count = \count($this->drupalGetMails());
 
     $this->assertEquals(0, $email_count);
 

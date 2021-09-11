@@ -80,7 +80,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
    *   The current user.
    */
   public function __construct(AccountInterface $current_user = NULL) {
-    if (is_null($current_user)) {
+    if (\is_null($current_user)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
       $current_user = \Drupal::currentUser();
     }
@@ -91,11 +91,11 @@ class LinkCollectionNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    assert($object instanceof LinkCollection);
+    \assert($object instanceof LinkCollection);
     $normalized = [];
     /** @var \Drupal\jsonapi\JsonApiResource\Link $link */
     foreach ($object as $key => $links) {
-      $is_multiple = count($links) > 1;
+      $is_multiple = \count($links) > 1;
       foreach ($links as $link) {
         $link_key = $is_multiple ? sprintf('%s--%s', $key, $this->hashByHref($link)) : $key;
         $attributes = $link->getTargetAttributes();

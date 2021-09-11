@@ -57,7 +57,7 @@ class Plugin implements AnnotationInterface {
       if ($value instanceof AnnotationInterface) {
         $definitions[$key] = $value->get();
       }
-      elseif (is_array($value)) {
+      elseif (\is_array($value)) {
         $definitions[$key] = $this->parse($value);
       }
       else {

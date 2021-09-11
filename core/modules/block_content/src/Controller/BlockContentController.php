@@ -75,11 +75,11 @@ class BlockContentController extends ControllerBase {
   public function add(Request $request) {
     $types = $this->blockContentTypeStorage->loadMultiple();
     uasort($types, [$this->blockContentTypeStorage->getEntityType()->getClass(), 'sort']);
-    if ($types && count($types) == 1) {
+    if ($types && \count($types) == 1) {
       $type = reset($types);
       return $this->addForm($type, $request);
     }
-    if (count($types) === 0) {
+    if (\count($types) === 0) {
       return [
         '#markup' => $this->t('You have not created any block types yet. Go to the <a href=":url">block type creation page</a> to add a new block type.', [
           ':url' => Url::fromRoute('block_content.type_add')->toString(),
@@ -106,7 +106,7 @@ class BlockContentController extends ControllerBase {
     $block = $this->blockContentStorage->create([
       'type' => $block_content_type->id(),
     ]);
-    if (($theme = $request->query->get('theme')) && in_array($theme, array_keys($this->themeHandler->listInfo()))) {
+    if (($theme = $request->query->get('theme')) && \in_array($theme, array_keys($this->themeHandler->listInfo()))) {
       // We have navigated to this page from the block library and will keep track
       // of the theme for redirecting the user to the configuration page for the
       // newly created block in the given theme.

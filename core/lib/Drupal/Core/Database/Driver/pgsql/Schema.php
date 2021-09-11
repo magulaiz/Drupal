@@ -88,7 +88,7 @@ class Schema extends DatabaseSchema {
       $this->maxIdentifierLength = $this->connection->query("SHOW max_identifier_length")->fetchField();
     }
 
-    if (strlen($identifierName) > $this->maxIdentifierLength) {
+    if (\strlen($identifierName) > $this->maxIdentifierLength) {
       $saveIdentifier = '"drupal_' . $this->hashBase64($identifierName) . '_' . $tag . '"';
     }
     else {
@@ -241,7 +241,7 @@ EOD;
    *   Exception thrown when the query for the table information fails.
    */
   public function queryFieldInformation($table, $field, $constraint_type = 'c') {
-    assert(in_array($constraint_type, ['c', 'f', 'p', 'u', 't', 'x']));
+    \assert(\in_array($constraint_type, ['c', 'f', 'p', 'u', 't', 'x']));
     $prefixInfo = $this->getPrefixInfo($table, TRUE);
 
     // Split the key into schema and table for querying.
@@ -288,11 +288,11 @@ EOD;
     }
 
     $sql_keys = [];
-    if (!empty($table['primary key']) && is_array($table['primary key'])) {
+    if (!empty($table['primary key']) && \is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
       $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, '', 'pkey') . ' PRIMARY KEY (' . $this->createPrimaryKeySql($table['primary key']) . ')';
     }
-    if (isset($table['unique keys']) && is_array($table['unique keys'])) {
+    if (isset($table['unique keys']) && \is_array($table['unique keys'])) {
       foreach ($table['unique keys'] as $key_name => $key) {
         $sql_keys[] = 'CONSTRAINT ' . $this->ensureIdentifiersLength($name, $key_name, 'key') . ' UNIQUE (' . implode(', ', $key) . ')';
       }
@@ -300,14 +300,14 @@ EOD;
 
     $sql = "CREATE TABLE {" . $name . "} (\n\t";
     $sql .= implode(",\n\t", $sql_fields);
-    if (count($sql_keys) > 0) {
+    if (\count($sql_keys) > 0) {
       $sql .= ",\n\t";
     }
     $sql .= implode(",\n\t", $sql_keys);
     $sql .= "\n)";
     $statements[] = $sql;
 
-    if (isset($table['indexes']) && is_array($table['indexes'])) {
+    if (isset($table['indexes']) && \is_array($table['indexes'])) {
       foreach ($table['indexes'] as $key_name => $key) {
         $statements[] = $this->_createIndexSql($name, $key_name, $key);
       }
@@ -345,7 +345,7 @@ EOD;
       unset($spec['not null']);
     }
 
-    if (in_array($spec['pgsql_type'], ['varchar', 'character']) && isset($spec['length'])) {
+    if (\in_array($spec['pgsql_type'], ['varchar', 'character']) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -364,7 +364,7 @@ EOD;
         $sql .= ' NULL';
       }
     }
-    if (array_key_exists('default', $spec)) {
+    if (\array_key_exists('default', $spec)) {
       $default = $this->escapeDefaultValue($spec['default']);
       $sql .= " default $default";
     }
@@ -468,7 +468,7 @@ EOD;
   protected function _createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $return[] = 'substr(' . $field[0] . ', 1, ' . $field[1] . ')';
       }
       else {
@@ -488,7 +488,7 @@ EOD;
   protected function createPrimaryKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $return[] = '"' . $field[0] . '"';
       }
       else {
@@ -513,7 +513,7 @@ EOD;
   public function findTables($table_expression) {
     $individually_prefixed_tables = $this->connection->getUnprefixedTablesMap();
     $default_prefix = $this->connection->tablePrefix();
-    $default_prefix_length = strlen($default_prefix);
+    $default_prefix_length = \strlen($default_prefix);
     $tables = [];
 
     // Load all the tables up front in order to take into account per-table
@@ -522,7 +522,7 @@ EOD;
     foreach ($results as $table) {
       // Take into account tables that have an individual prefix.
       if (isset($individually_prefixed_tables[$table->tablename])) {
-        $prefix_length = strlen($this->connection->tablePrefix($individually_prefixed_tables[$table->tablename]));
+        $prefix_length = \strlen($this->connection->tablePrefix($individually_prefixed_tables[$table->tablename]));
       }
       elseif ($default_prefix && substr($table->tablename, 0, $default_prefix_length) !== $default_prefix) {
         // This table name does not start the default prefix, which means that
@@ -646,7 +646,7 @@ EOD;
     }
 
     // Fields that are part of a PRIMARY KEY must be added as NOT NULL.
-    $is_primary_key = isset($new_keys['primary key']) && in_array($field, $new_keys['primary key'], TRUE);
+    $is_primary_key = isset($new_keys['primary key']) && \in_array($field, $new_keys['primary key'], TRUE);
     if ($is_primary_key) {
       $this->ensureNotNullPrimaryKey($new_keys['primary key'], [$field => $spec]);
     }
@@ -899,7 +899,7 @@ EOD;
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($new_keys['primary key']) && in_array($field_new, $new_keys['primary key'], TRUE)) {
+    if (isset($new_keys['primary key']) && \in_array($field_new, $new_keys['primary key'], TRUE)) {
       $this->ensureNotNullPrimaryKey($new_keys['primary key'], [$field_new => $spec]);
     }
 
@@ -908,14 +908,14 @@ EOD;
     // Type 'serial' is known to PostgreSQL, but only during table creation,
     // not when altering. Because of that, we create it here as an 'int'. After
     // we create it we manually re-apply the sequence.
-    if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
+    if (\in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
       $field_def = 'int';
     }
     else {
       $field_def = $spec['pgsql_type'];
     }
 
-    if (in_array($spec['pgsql_type'], ['varchar', 'character', 'text']) && isset($spec['length'])) {
+    if (\in_array($spec['pgsql_type'], ['varchar', 'character', 'text']) && isset($spec['length'])) {
       $field_def .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -966,7 +966,7 @@ EOD;
       $this->connection->query('ALTER TABLE {' . $table . '} ALTER "' . $field . '" ' . $null_action);
     }
 
-    if (in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
+    if (\in_array($spec['pgsql_type'], ['serial', 'bigserial'])) {
       // Type "serial" is known to PostgreSQL, but *only* during table creation,
       // not when altering. Because of that, the sequence needs to be created
       // and initialized by hand.

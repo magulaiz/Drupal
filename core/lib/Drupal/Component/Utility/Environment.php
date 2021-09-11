@@ -63,7 +63,7 @@ class Environment {
    *   Whether set_time_limit() was successful or not.
    */
   public static function setTimeLimit($time_limit) {
-    if (function_exists('set_time_limit')) {
+    if (\function_exists('set_time_limit')) {
       $current = ini_get('max_execution_time');
       // Do not set time limit if it is currently unlimited.
       if ($current != 0) {

@@ -620,7 +620,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     $summary_plugins = [];
     $format_options = [];
     foreach ($style_plugins as $key => $plugin) {
-      if (isset($plugin['display_types']) && in_array('summary', $plugin['display_types'])) {
+      if (isset($plugin['display_types']) && \in_array('summary', $plugin['display_types'])) {
         $summary_plugins[$key] = $plugin;
         $format_options[$key] = $plugin['title'];
       }
@@ -715,7 +715,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
     }
 
     if (!empty($info['method args'])) {
-      return call_user_func_array([&$this, $info['method']], $info['method args']);
+      return \call_user_func_array([&$this, $info['method']], $info['method args']);
     }
     else {
       return $this->{$info['method']}();
@@ -1158,7 +1158,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    * @see \Drupal\Core\Render\Element\Radios::processRadios()
    */
   public static function processContainerRadios($element) {
-    if (count($element['#options']) > 0) {
+    if (\count($element['#options']) > 0) {
       foreach ($element['#options'] as $key => $choice) {
         $element += [$key => []];
         // Generate the parents as the autogenerator does, so we will have a

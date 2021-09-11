@@ -129,7 +129,7 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
         throw new \InvalidArgumentException(sprintf('A bundle was provided but the entity type (%s) is not bundleable.', $plugin_definition['entity_type']));
       }
       $bundle_info = array_keys($this->entityTypeBundleInfo->getBundleInfo($this->entityType->id()));
-      if (!in_array($configuration['bundle'], $bundle_info, TRUE)) {
+      if (!\in_array($configuration['bundle'], $bundle_info, TRUE)) {
         throw new \InvalidArgumentException(sprintf('The provided bundle (%s) is not valid for the (%s) entity type.', $configuration['bundle'], $plugin_definition['entity_type']));
       }
     }

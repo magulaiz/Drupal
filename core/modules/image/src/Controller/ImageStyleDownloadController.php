@@ -144,7 +144,7 @@ class ImageStyleDownloadController extends FileDownloadController {
     // control access to the file.
     if ($scheme == 'private') {
       $headers = $this->moduleHandler()->invokeAll('file_download', [$image_uri]);
-      if (in_array(-1, $headers) || empty($headers)) {
+      if (\in_array(-1, $headers) || empty($headers)) {
         throw new AccessDeniedHttpException();
       }
     }

@@ -163,10 +163,10 @@ class HtmlTest extends TestCase {
     // Note, we truncate two hyphens at the end.
     // @see \Drupal\Component\Utility\Html::getId()
     if (strpos($source, '--') !== FALSE) {
-      $random_suffix = substr($id, strlen($source) + 1);
+      $random_suffix = substr($id, \strlen($source) + 1);
     }
     else {
-      $random_suffix = substr($id, strlen($source) + 2);
+      $random_suffix = substr($id, \strlen($source) + 2);
     }
     $expected = $expected . $random_suffix;
     $this->assertSame($expected, $id);

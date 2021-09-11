@@ -62,13 +62,13 @@ class InstallCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $io = new SymfonyStyle($input, $output);
-    if (!extension_loaded('pdo_sqlite')) {
+    if (!\extension_loaded('pdo_sqlite')) {
       $io->getErrorStyle()->error('You must have the pdo_sqlite PHP extension installed. See core/INSTALL.sqlite.txt for instructions.');
       return 1;
     }
 
     // Change the directory to the Drupal root.
-    chdir(dirname(__DIR__, 5));
+    chdir(\dirname(__DIR__, 5));
 
     // Check whether there is already an installation.
     if ($this->isDrupalInstalled()) {
@@ -195,7 +195,7 @@ class InstallCommand extends Command {
         $progress_bar->setFormat("%current%/%max% [%bar%]\n%message%\n");
         $progress_bar->setMessage(t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
         $tasks = install_tasks($install_state);
-        $progress_bar->start(count($tasks) + 1);
+        $progress_bar->start(\count($tasks) + 1);
       }
       $tasks_to_perform = install_tasks_to_perform($install_state);
       $task = current($tasks_to_perform);
@@ -247,7 +247,7 @@ class InstallCommand extends Command {
     $profiles = $this->getProfiles();
 
     // If there is a distribution there will be only one profile.
-    if (count($profiles) == 1) {
+    if (\count($profiles) == 1) {
       return key($profiles);
     }
     // Display alphabetically by human-readable name, but always put the core
@@ -290,7 +290,7 @@ class InstallCommand extends Command {
       $alternatives = [];
       foreach (array_keys($profiles) as $profile_name) {
         $lev = levenshtein($install_profile, $profile_name);
-        if ($lev <= strlen($profile_name) / 4 || FALSE !== strpos($profile_name, $install_profile)) {
+        if ($lev <= \strlen($profile_name) / 4 || FALSE !== strpos($profile_name, $install_profile)) {
           $alternatives[] = $profile_name;
         }
       }

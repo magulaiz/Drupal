@@ -157,7 +157,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
       $mappings = $form_state->getValue('mappings');
       foreach ($mappings as $key => $data) {
         // Make sure browser_langcode is unique.
-        if (array_key_exists($data['browser_langcode'], $unique_values)) {
+        if (\array_key_exists($data['browser_langcode'], $unique_values)) {
           $form_state->setErrorByName('mappings][new_mapping][browser_langcode', $this->t('Browser language codes must be unique.'));
         }
         elseif (preg_match('/[^a-z\-]/', $data['browser_langcode'])) {
@@ -171,7 +171,7 @@ class NegotiationBrowserForm extends ConfigFormBase {
     $data = $form_state->getValue('new_mapping');
     if (!empty($data['browser_langcode'])) {
       // Make sure browser_langcode is unique.
-      if (array_key_exists($data['browser_langcode'], $unique_values)) {
+      if (\array_key_exists($data['browser_langcode'], $unique_values)) {
         $form_state->setErrorByName('mappings][' . $key . '][browser_langcode', $this->t('Browser language codes must be unique.'));
       }
       elseif (preg_match('/[^a-z\-]/', $data['browser_langcode'])) {

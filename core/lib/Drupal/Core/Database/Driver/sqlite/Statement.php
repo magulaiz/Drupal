@@ -27,15 +27,15 @@ class Statement extends StatementPrefetch implements StatementInterface {
    * See http://bugs.php.net/bug.php?id=45259 for more details.
    */
   protected function getStatement($query, &$args = []) {
-    if (is_array($args) && !empty($args)) {
+    if (\is_array($args) && !empty($args)) {
       // Check if $args is a simple numeric array.
-      if (range(0, count($args) - 1) === array_keys($args)) {
+      if (range(0, \count($args) - 1) === array_keys($args)) {
         // In that case, we have unnamed placeholders.
         $count = 0;
         $new_args = [];
         foreach ($args as $value) {
-          if (is_float($value) || is_int($value)) {
-            if (is_float($value)) {
+          if (\is_float($value) || \is_int($value)) {
+            if (\is_float($value)) {
               // Force the conversion to float so as not to loose precision
               // in the automatic cast.
               $value = sprintf('%F', $value);
@@ -53,8 +53,8 @@ class Statement extends StatementPrefetch implements StatementInterface {
       else {
         // Else, this is using named placeholders.
         foreach ($args as $placeholder => $value) {
-          if (is_float($value) || is_int($value)) {
-            if (is_float($value)) {
+          if (\is_float($value) || \is_int($value)) {
+            if (\is_float($value)) {
               // Force the conversion to float so as not to loose precision
               // in the automatic cast.
               $value = sprintf('%F', $value);

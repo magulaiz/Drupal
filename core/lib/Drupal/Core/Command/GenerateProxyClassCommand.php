@@ -77,7 +77,7 @@ class GenerateProxyClassCommand extends Command {
 EOF;
       $file_string = str_replace(['{{ proxy_class_name }}', '{{ proxy_class_string }}'], [$proxy_class_name, $proxy_class_string], $file_string);
 
-      mkdir(dirname($proxy_filename), 0775, TRUE);
+      mkdir(\dirname($proxy_filename), 0775, TRUE);
       file_put_contents($proxy_filename, $file_string);
 
       $output->writeln(sprintf('Proxy of class %s written to %s', $class_name, $proxy_filename));

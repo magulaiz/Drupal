@@ -340,7 +340,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         'options' => ['query' => []],
         'dialogType' => 'ajax',
       ];
-      if (array_key_exists('callback', $settings) && !isset($settings['url'])) {
+      if (\array_key_exists('callback', $settings) && !isset($settings['url'])) {
         $settings['url'] = Url::fromRoute('<current>');
         // Add all the current query parameters in order to ensure that we build
         // the same form on the AJAX POST requests. For example,
@@ -398,7 +398,7 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
       }
 
       // Convert a simple #ajax['progress'] string into an array.
-      if (isset($settings['progress']) && is_string($settings['progress'])) {
+      if (isset($settings['progress']) && \is_string($settings['progress'])) {
         $settings['progress'] = ['type' => $settings['progress']];
       }
       // Change progress path to a full URL.

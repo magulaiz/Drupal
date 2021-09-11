@@ -112,7 +112,7 @@ class ContextDefinition implements ContextDefinitionInterface {
     $this->description = $description;
     $this->defaultValue = $default_value;
 
-    assert(strpos($data_type, 'entity:') !== 0 || $this instanceof EntityContextDefinition);
+    \assert(strpos($data_type, 'entity:') !== 0 || $this instanceof EntityContextDefinition);
   }
 
   /**
@@ -310,7 +310,7 @@ class ContextDefinition implements ContextDefinitionInterface {
       $violations = $validator->validate($value, $constraints);
       foreach ($violations as $delta => $violation) {
         // Remove any violation that does not correspond to the constraints.
-        if (!in_array($violation->getConstraint(), $constraints)) {
+        if (!\in_array($violation->getConstraint(), $constraints)) {
           $violations->remove($delta);
         }
       }

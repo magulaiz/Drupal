@@ -26,7 +26,7 @@ trait AssertConfigTrait {
    */
   protected function assertConfigDiff(Diff $result, $config_name, array $skipped_config) {
     foreach ($result->getEdits() as $op) {
-      switch (get_class($op)) {
+      switch (\get_class($op)) {
         case 'Drupal\Component\Diff\Engine\DiffOpCopy':
           // Nothing to do, a copy is what we expect.
           break;
@@ -35,7 +35,7 @@ trait AssertConfigTrait {
         case 'Drupal\Component\Diff\Engine\DiffOpChange':
           // It is not part of the skipped config, so we can directly throw the
           // exception.
-          if (!in_array($config_name, array_keys($skipped_config))) {
+          if (!\in_array($config_name, array_keys($skipped_config))) {
             throw new \Exception($config_name . ': ' . var_export($op, TRUE));
           }
 
@@ -49,7 +49,7 @@ trait AssertConfigTrait {
           // skipped.
           $all_skipped = TRUE;
 
-          $changes = get_class($op) == 'Drupal\Component\Diff\Engine\DiffOpDelete' ? $op->orig : $op->closing;
+          $changes = \get_class($op) == 'Drupal\Component\Diff\Engine\DiffOpDelete' ? $op->orig : $op->closing;
           foreach ($changes as $closing) {
             // Skip some of the changes, as they are caused by module install
             // code.

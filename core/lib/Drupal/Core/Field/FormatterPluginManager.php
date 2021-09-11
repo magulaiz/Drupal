@@ -110,7 +110,7 @@ class FormatterPluginManager extends DefaultPluginManager {
     // - the field type is not allowed for the formatter
     // - the formatter is not applicable to the field definition.
     $definition = $this->getDefinition($configuration['type'], FALSE);
-    if (!isset($definition['class']) || !in_array($field_type, $definition['field_types']) || !$definition['class']::isApplicable($field_definition)) {
+    if (!isset($definition['class']) || !\in_array($field_type, $definition['field_types']) || !$definition['class']::isApplicable($field_definition)) {
       // Grab the default widget for the field type.
       $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
       if (empty($field_type_definition['default_formatter'])) {

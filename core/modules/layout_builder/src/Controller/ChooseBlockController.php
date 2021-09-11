@@ -90,7 +90,7 @@ class ChooseBlockController implements ContainerInjectionInterface {
    */
   public function build(SectionStorageInterface $section_storage, int $delta, $region) {
     if ($this->entityTypeManager->hasDefinition('block_content_type') && $types = $this->entityTypeManager->getStorage('block_content_type')->loadMultiple()) {
-      if (count($types) === 1) {
+      if (\count($types) === 1) {
         $type = reset($types);
         $plugin_id = 'inline_block:' . $type->id();
         if ($this->blockManager->hasDefinition($plugin_id)) {

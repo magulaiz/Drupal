@@ -63,7 +63,7 @@ class CronQueueTest extends KernelTestBase {
     $this->assertEquals($this->currentTime, \Drupal::time()->getRequestTime());
 
     $realQueueFactory = $this->container->get('queue');
-    $queue_factory = $this->prophesize(get_class($realQueueFactory));
+    $queue_factory = $this->prophesize(\get_class($realQueueFactory));
     $database = new DatabaseQueue('cron_queue_test_database_delay_exception', $this->connection);
     $memory = new Memory('cron_queue_test_memory_delay_exception');
     $queue_factory->get('cron_queue_test_database_delay_exception', Argument::cetera())->willReturn($database);

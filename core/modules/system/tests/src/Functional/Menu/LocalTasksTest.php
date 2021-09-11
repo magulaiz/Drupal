@@ -56,7 +56,7 @@ class LocalTasksTest extends BrowserTestBase {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ]);
-    $this->assertGreaterThan(0, count($elements), 'Local tasks found.');
+    $this->assertGreaterThan(0, \count($elements), 'Local tasks found.');
     foreach ($routes as $index => $route_info) {
       list($route_name, $route_parameters) = $route_info;
       $expected = Url::fromRoute($route_name, $route_parameters)->toString();

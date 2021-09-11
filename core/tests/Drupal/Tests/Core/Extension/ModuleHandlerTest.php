@@ -65,14 +65,14 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testLoadModule() {
     $module_handler = $this->getModuleHandler();
-    $this->assertFalse(function_exists('module_handler_test_hook'));
+    $this->assertFalse(\function_exists('module_handler_test_hook'));
     $this->assertTrue($module_handler->load('module_handler_test'));
-    $this->assertTrue(function_exists('module_handler_test_hook'));
+    $this->assertTrue(\function_exists('module_handler_test_hook'));
 
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
-    $this->assertFalse(function_exists('module_handler_test_added_hook'), 'Function does not exist before being loaded.');
+    $this->assertFalse(\function_exists('module_handler_test_added_hook'), 'Function does not exist before being loaded.');
     $this->assertTrue($module_handler->load('module_handler_test_added'));
-    $this->assertTrue(function_exists('module_handler_test_added_helper'), 'Function exists after being loaded.');
+    $this->assertTrue(\function_exists('module_handler_test_added_helper'), 'Function exists after being loaded.');
     $this->assertTrue($module_handler->load('module_handler_test_added'));
 
     $this->assertFalse($module_handler->load('module_handler_test_dne'), 'Non-existent modules returns false.');
@@ -87,11 +87,11 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getModuleHandler();
     $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
     $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
-    $this->assertFalse(function_exists('module_handler_test_all1_hook'), 'Function does not exist before being loaded.');
-    $this->assertFalse(function_exists('module_handler_test_all2_hook'), 'Function does not exist before being loaded.');
+    $this->assertFalse(\function_exists('module_handler_test_all1_hook'), 'Function does not exist before being loaded.');
+    $this->assertFalse(\function_exists('module_handler_test_all2_hook'), 'Function does not exist before being loaded.');
     $module_handler->loadAll();
-    $this->assertTrue(function_exists('module_handler_test_all1_hook'), 'Function exists after being loaded.');
-    $this->assertTrue(function_exists('module_handler_test_all2_hook'), 'Function exists after being loaded.');
+    $this->assertTrue(\function_exists('module_handler_test_all1_hook'), 'Function exists after being loaded.');
+    $this->assertTrue(\function_exists('module_handler_test_all2_hook'), 'Function exists after being loaded.');
   }
 
   /**
@@ -286,7 +286,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler = $this->getModuleHandler();
     // Include exists.
     $this->assertEquals(__DIR__ . '/modules/module_handler_test/hook_include.inc', $module_handler->loadInclude('module_handler_test', 'inc', 'hook_include'));
-    $this->assertTrue(function_exists('module_handler_test_hook_include'));
+    $this->assertTrue(\function_exists('module_handler_test_hook_include'));
     // Include doesn't exist.
     $this->assertFalse($module_handler->loadInclude('module_handler_test', 'install'));
   }

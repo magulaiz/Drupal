@@ -210,7 +210,7 @@ class TestDatabase {
    */
   public static function insertAssert($test_id, $test_class, $status, $message = '', $group = 'Other', array $caller = []) {
     // Convert boolean status to string status.
-    if (is_bool($status)) {
+    if (\is_bool($status)) {
       $status = $status ? 'pass' : 'fail';
     }
 

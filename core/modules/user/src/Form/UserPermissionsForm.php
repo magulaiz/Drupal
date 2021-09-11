@@ -137,9 +137,9 @@ class UserPermissionsForm extends FormBase {
       $keys = array_keys($permissions_by_provider['node']);
       $offset = (int) array_search('view own unpublished content', $keys);
       $permissions_by_provider['node'] = array_merge(
-        array_slice($permissions_by_provider['node'], 0, $offset),
+        \array_slice($permissions_by_provider['node'], 0, $offset),
         ['access content' => $permissions_by_provider['system']['access content']],
-        array_slice($permissions_by_provider['node'], $offset)
+        \array_slice($permissions_by_provider['node'], $offset)
       );
       unset($permissions_by_provider['system']['access content']);
     }
@@ -149,7 +149,7 @@ class UserPermissionsForm extends FormBase {
       $form['permissions'][$provider] = [
         [
           '#wrapper_attributes' => [
-            'colspan' => count($role_names) + 1,
+            'colspan' => \count($role_names) + 1,
             'class' => ['module'],
             'id' => 'module-' . $provider,
           ],
@@ -183,7 +183,7 @@ class UserPermissionsForm extends FormBase {
               'class' => ['checkbox'],
             ],
             '#type' => 'checkbox',
-            '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
+            '#default_value' => \in_array($perm, $role_permissions[$rid]) ? 1 : 0,
             '#attributes' => ['class' => ['rid-' . $rid, 'js-rid-' . $rid]],
             '#parents' => [$rid, $perm],
           ];

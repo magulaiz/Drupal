@@ -134,7 +134,7 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
 
       $template = array_pop($template_parts);
       $template_path = $path;
-      if (count($template_parts) > 0) {
+      if (\count($template_parts) > 0) {
         $template_path .= '/' . implode('/', $template_parts);
       }
       $definition->setTemplate($template);

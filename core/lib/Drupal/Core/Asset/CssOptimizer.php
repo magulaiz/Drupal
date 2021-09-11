@@ -132,7 +132,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Store the parent base path to restore it later.
     $parent_base_path = $basepath;
     // Set the current base path to process possible child imports.
-    $basepath = dirname($file);
+    $basepath = \dirname($file);
 
     // Load the CSS stylesheet. We suppress errors because themes may specify
     // stylesheets in their .info.yml file that don't exist in the theme's path,
@@ -147,7 +147,7 @@ class CssOptimizer implements AssetOptimizerInterface {
       // If no BOM, check for fallback encoding. Per CSS spec the regex is very strict.
       elseif (preg_match('/^@charset "([^"]+)";/', $contents, $matches)) {
         if ($matches[1] !== 'utf-8' && $matches[1] !== 'UTF-8') {
-          $contents = substr($contents, strlen($matches[0]));
+          $contents = substr($contents, \strlen($matches[0]));
           $contents = Unicode::convertToUtf8($contents, $matches[1]);
         }
       }
@@ -183,7 +183,7 @@ class CssOptimizer implements AssetOptimizerInterface {
     $file = $this->loadFile($filename, NULL, FALSE);
 
     // Determine the file's directory.
-    $directory = dirname($filename);
+    $directory = \dirname($filename);
     // If the file is in the current directory, make sure '.' doesn't appear in
     // the url() path.
     $directory = $directory == '.' ? '' : $directory . '/';

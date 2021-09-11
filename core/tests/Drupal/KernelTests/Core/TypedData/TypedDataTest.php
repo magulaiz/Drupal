@@ -53,7 +53,7 @@ class TypedDataTest extends KernelTestBase {
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   protected function createTypedData($definition, $value = NULL, $name = NULL) {
-    if (is_array($definition)) {
+    if (\is_array($definition)) {
       $definition = DataDefinition::create($definition['type']);
     }
     $data = $this->typedDataManager->create($definition, $value, $name);

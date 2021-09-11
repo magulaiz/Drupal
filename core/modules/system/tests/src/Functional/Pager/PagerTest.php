@@ -231,14 +231,14 @@ class PagerTest extends BrowserTestBase {
       $previous = array_shift($elements);
     }
     // next/last always exist, unless the current page is the last.
-    if ($current_page != count($elements)) {
+    if ($current_page != \count($elements)) {
       $last = array_pop($elements);
       $next = array_pop($elements);
     }
 
     // We remove elements from the $elements array in the following code, so
     // we store the total number of pages for verifying the "last" link.
-    $total_pages = count($elements);
+    $total_pages = \count($elements);
 
     // Verify items and links to pages.
     foreach ($elements as $page => $element) {

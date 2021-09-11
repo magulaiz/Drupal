@@ -447,7 +447,7 @@ class MenuUiTest extends BrowserTestBase {
     // item's weight doesn't get changed because of the old hardcoded delta=50.
     $items = [];
     for ($i = -50; $i <= 51; $i++) {
-      $items[$i] = $this->addMenuLink('', '/node/' . $node1->id(), $menu_name, TRUE, strval($i));
+      $items[$i] = $this->addMenuLink('', '/node/' . $node1->id(), $menu_name, TRUE, \strval($i));
     }
     $this->assertMenuLink(['weight' => '51'], $items[51]->getPluginId());
 

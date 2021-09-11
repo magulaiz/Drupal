@@ -343,7 +343,7 @@ class Fixtures {
       if (file_exists($composer_json_tmpl)) {
         $composer_json_contents = file_get_contents($composer_json_tmpl);
         $composer_json_contents = $interpolator->interpolate($composer_json_contents, [], FALSE);
-        file_put_contents(dirname($composer_json_tmpl) . "/composer.json", $composer_json_contents);
+        file_put_contents(\dirname($composer_json_tmpl) . "/composer.json", $composer_json_contents);
         @unlink($composer_json_tmpl);
       }
     }

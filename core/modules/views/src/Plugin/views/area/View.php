@@ -117,7 +117,7 @@ class View extends AreaPluginBase {
 
       // Check if the view is part of the parent views of this view
       $search = "$view_name:$display_id";
-      if (in_array($search, $this->view->parent_views)) {
+      if (\in_array($search, $this->view->parent_views)) {
         \Drupal::messenger()->addError(t("Recursion detected in view @view display @display.", ['@view' => $view_name, '@display' => $display_id]));
       }
       else {

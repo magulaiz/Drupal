@@ -69,9 +69,9 @@ final class ModuleVersion {
     }
     $version_parts = explode('.', $version_string);
     $major_version = $version_parts[0];
-    $version_parts_count = count($version_parts);
-    $last_part_split = explode('-', $version_parts[count($version_parts) - 1]);
-    $version_extra = count($last_part_split) === 1 ? NULL : $last_part_split[1];
+    $version_parts_count = \count($version_parts);
+    $last_part_split = explode('-', $version_parts[\count($version_parts) - 1]);
+    $version_extra = \count($last_part_split) === 1 ? NULL : $last_part_split[1];
     if ($version_parts_count > 3 || $version_parts_count < 2
        || !is_numeric($major_version)
        || ($version_parts_count === 3 && !is_numeric($version_parts[1]))

@@ -153,12 +153,12 @@ class AssetResolverTest extends UnitTestCase {
 
 }
 
-if (!defined('CSS_AGGREGATE_DEFAULT')) {
-  define('CSS_AGGREGATE_DEFAULT', 0);
+if (!\defined('CSS_AGGREGATE_DEFAULT')) {
+  \define('CSS_AGGREGATE_DEFAULT', 0);
 }
 
-if (!defined('JS_DEFAULT')) {
-  define('JS_DEFAULT', 0);
+if (!\defined('JS_DEFAULT')) {
+  \define('JS_DEFAULT', 0);
 }
 
 class TestMemoryBackend extends MemoryBackend {

@@ -519,7 +519,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     // extension to apache.
     $expected = $this->getExpectedNormalizedEntity(1, 'example.php_.txt', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example.php_.txt');
 
@@ -531,7 +531,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_2.php"']);
     $expected = $this->getExpectedNormalizedEntity(2, 'example_2.php_.txt', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example_2.php_.txt');
     $this->assertFileDoesNotExist('public://foobar/example_2.php');
@@ -546,7 +546,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     // The filename is munged.
     $expected = $this->getExpectedNormalizedEntity(3, 'example_3.php_.doc', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     // The file mime should be 'application/msword'.
     $expected['filemime'][0]['value'] = 'application/msword';
     $this->assertResponseData($expected, $response);
@@ -563,7 +563,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     // The filename is munged.
     $expected = $this->getExpectedNormalizedEntity(4, 'example_4.php_.doc', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     // The file mime should be 'application/msword'.
     $expected['filemime'][0]['value'] = 'application/msword';
     $this->assertResponseData($expected, $response);
@@ -576,7 +576,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
     $expected = $this->getExpectedNormalizedEntity(5, 'example_5.php_.png', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     // The file mime should still see this as a PNG image.
     $expected['filemime'][0]['value'] = 'image/png';
     $this->assertResponseData($expected, $response);
@@ -586,7 +586,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_6.cgi.png.txt"']);
     $expected = $this->getExpectedNormalizedEntity(6, 'example_6.cgi_.png_.txt', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     // The file mime should also now be text.
     $expected['filemime'][0]['value'] = 'text/plain';
     $this->assertResponseData($expected, $response);
@@ -616,7 +616,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
     $expected = $this->getExpectedNormalizedEntity(7, 'example_7.php', TRUE);
     // Override the expected filesize.
-    $expected['filesize'][0]['value'] = strlen($php_string);
+    $expected['filesize'][0]['value'] = \strlen($php_string);
     // The file mime should also now be PHP.
     $expected['filemime'][0]['value'] = 'application/x-httpd-php';
     $this->assertResponseData($expected, $response);
@@ -721,7 +721,7 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
       ],
       'filesize' => [
         [
-          'value' => strlen($this->testFileData),
+          'value' => \strlen($this->testFileData),
         ],
       ],
       'status' => [

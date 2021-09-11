@@ -72,7 +72,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $this->assertArrayHasKey('standard', $directories, 'Standard profile is being scanned');
 
     $definitions = (new HelpTopicDiscovery($directories))->getDefinitions();
-    $this->assertGreaterThan(0, count($definitions), 'At least 1 topic was found');
+    $this->assertGreaterThan(0, \count($definitions), 'At least 1 topic was found');
 
     // Test each topic for compliance with standards, or for failing in the
     // right way.

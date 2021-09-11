@@ -116,7 +116,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
 
     // Add the format_tags setting, if its button is enabled.
     $toolbar_buttons = CKEditorPluginManager::getEnabledButtons($editor);
-    if (in_array('Format', $toolbar_buttons)) {
+    if (\in_array('Format', $toolbar_buttons)) {
       $config['format_tags'] = $this->generateFormatTagsSetting($editor);
     }
 
@@ -416,7 +416,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
     $filter_types = $format->getFilterTypes();
 
     // When nothing is disallowed, set allowedContent to true.
-    if (!in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
+    if (!\in_array(FilterInterface::TYPE_HTML_RESTRICTOR, $filter_types)) {
       return [TRUE, FALSE];
     }
     // Generate setting that accurately reflects allowed tags and attributes.
@@ -430,7 +430,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
             return $value === FALSE;
           }
         }));
-        if (count($values)) {
+        if (\count($values)) {
           return implode(',', $values);
         }
         else {
@@ -486,7 +486,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           if (isset($html_restrictions['allowed']['*'])) {
             $wildcard = $html_restrictions['allowed']['*'];
             if (isset($wildcard['style'])) {
-              if (!is_array($wildcard['style'])) {
+              if (!\is_array($wildcard['style'])) {
                 $allowed[$tag]['styles'] = $wildcard['style'];
               }
               else {
@@ -500,7 +500,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
               }
             }
             if (isset($wildcard['class'])) {
-              if (!is_array($wildcard['class'])) {
+              if (!\is_array($wildcard['class'])) {
                 $allowed[$tag]['classes'] = $wildcard['class'];
               }
               else {
@@ -516,7 +516,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           }
         }
         // Tell CKEditor the tag is allowed, along with some tags.
-        elseif (is_array($attributes)) {
+        elseif (\is_array($attributes)) {
           // Set defaults (these will be overridden below if more specific
           // values are present).
           $allowed[$tag] = [
@@ -536,14 +536,14 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           $allowed_attributes = array_filter($attributes, function ($value) {
             return $value !== FALSE;
           });
-          if (count($allowed_attributes)) {
+          if (\count($allowed_attributes)) {
             $allowed[$tag]['attributes'] = implode(',', array_keys($allowed_attributes));
           }
           if (isset($allowed_attributes['style'])) {
-            if (is_bool($allowed_attributes['style'])) {
+            if (\is_bool($allowed_attributes['style'])) {
               $allowed[$tag]['styles'] = $allowed_attributes['style'];
             }
-            elseif (is_array($allowed_attributes['style'])) {
+            elseif (\is_array($allowed_attributes['style'])) {
               $allowed_classes = $get_attribute_values($allowed_attributes['style'], TRUE);
               if (isset($allowed_classes)) {
                 $allowed[$tag]['styles'] = $allowed_classes;
@@ -551,10 +551,10 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
             }
           }
           if (isset($allowed_attributes['class'])) {
-            if (is_bool($allowed_attributes['class'])) {
+            if (\is_bool($allowed_attributes['class'])) {
               $allowed[$tag]['classes'] = $allowed_attributes['class'];
             }
-            elseif (is_array($allowed_attributes['class'])) {
+            elseif (\is_array($allowed_attributes['class'])) {
               $allowed_classes = $get_attribute_values($allowed_attributes['class'], TRUE);
               if (isset($allowed_classes)) {
                 $allowed[$tag]['classes'] = $allowed_classes;
@@ -571,7 +571,7 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
           $disallowed_attributes = array_filter($attributes, function ($value) {
             return $value === FALSE;
           });
-          if (count($disallowed_attributes)) {
+          if (\count($disallowed_attributes)) {
             // No need to blacklist the 'class' or 'style' attributes; CKEditor
             // handles them separately (if no specific class or style attribute
             // values are allowed, then those attributes are disallowed).
@@ -583,13 +583,13 @@ class Internal extends CKEditorPluginBase implements ContainerFactoryPluginInter
             }
             $disallowed[$tag]['attributes'] = implode(',', array_keys($disallowed_attributes));
           }
-          if (isset($allowed_attributes['style']) && is_array($allowed_attributes['style'])) {
+          if (isset($allowed_attributes['style']) && \is_array($allowed_attributes['style'])) {
             $disallowed_styles = $get_attribute_values($allowed_attributes['style'], FALSE);
             if (isset($disallowed_styles)) {
               $disallowed[$tag]['styles'] = $disallowed_styles;
             }
           }
-          if (isset($allowed_attributes['class']) && is_array($allowed_attributes['class'])) {
+          if (isset($allowed_attributes['class']) && \is_array($allowed_attributes['class'])) {
             $disallowed_classes = $get_attribute_values($allowed_attributes['class'], FALSE);
             if (isset($disallowed_classes)) {
               $disallowed[$tag]['classes'] = $disallowed_classes;

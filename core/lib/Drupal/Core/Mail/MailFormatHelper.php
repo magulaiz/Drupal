@@ -62,19 +62,19 @@ class MailFormatHelper {
       $text = preg_replace('/(?(?<!^--) +\n|  +\n)/m', "\n", $text);
       // Wrap each line at the needed width.
       $lines = explode("\n", $text);
-      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => strlen($indent)]);
+      array_walk($lines, '\Drupal\Core\Mail\MailFormatHelper::wrapMailLine', ['soft' => $soft, 'length' => \strlen($indent)]);
       $text = implode("\n", $lines);
     }
     else {
       // Wrap this line.
-      static::wrapMailLine($text, 0, ['soft' => $soft, 'length' => strlen($indent)]);
+      static::wrapMailLine($text, 0, ['soft' => $soft, 'length' => \strlen($indent)]);
     }
     // Empty lines with nothing but spaces.
     $text = preg_replace('/^ +\n/m', "\n", $text);
     // Space-stuff special lines.
     $text = preg_replace('/^(>| |From)/m', ' $1', $text);
     // Apply indentation. We only include non-'>' indentation on the first line.
-    $text = $indent . substr(preg_replace('/^/m', $clean_indent, $text), strlen($indent));
+    $text = $indent . substr(preg_replace('/^/m', $clean_indent, $text), \strlen($indent));
 
     return $text;
   }
@@ -128,9 +128,9 @@ class MailFormatHelper {
     $string = preg_replace_callback($pattern, 'static::htmlToMailUrls', $string);
     $urls = static::htmlToMailUrls();
     $footnotes = '';
-    if (count($urls)) {
+    if (\count($urls)) {
       $footnotes .= "\n";
-      for ($i = 0, $max = count($urls); $i < $max; $i++) {
+      for ($i = 0, $max = \count($urls); $i < $max; $i++) {
         $footnotes .= '[' . ($i + 1) . '] ' . $urls[$i] . "\n";
       }
     }
@@ -174,7 +174,7 @@ class MailFormatHelper {
           // Quotation/list markers, non-fancy headers.
           case 'blockquote':
             // Format=flowed indentation cannot be mixed with lists.
-            $indent[] = count($lists) ? ' "' : '>';
+            $indent[] = \count($lists) ? ' "' : '>';
             break;
 
           case 'li':
@@ -194,7 +194,7 @@ class MailFormatHelper {
             break;
 
           case '/blockquote':
-            if (count($lists)) {
+            if (\count($lists)) {
               // Append closing quote for inline quotes (immediately).
               $output = rtrim($output, "> \n") . "\"\n";
               // Ensure blank new-line.
@@ -337,7 +337,7 @@ class MailFormatHelper {
         list(, , $url, $label) = $match;
         // Ensure all URLs are absolute.
         static::$urls[] = strpos($url, '://') ? $url : preg_replace(static::$regexp, $base_url . '/', $url);
-        return $label . ' [' . count(static::$urls) . ']';
+        return $label . ' [' . \count(static::$urls) . ']';
       }
     }
     return static::$urls;
@@ -375,7 +375,7 @@ class MailFormatHelper {
     if (($p = strrpos($text, "\n")) === FALSE) {
       $p = -1;
     }
-    $n = max(0, 79 - (strlen($text) - $p) - strlen($prefix));
+    $n = max(0, 79 - (\strlen($text) - $p) - \strlen($prefix));
     // Add prefix and padding, and restore linebreak.
     return $text . $prefix . str_repeat($pad, $n) . "\n";
   }

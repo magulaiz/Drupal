@@ -70,7 +70,7 @@ class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
   public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the language property, if no array
     // is given as this handles language codes and objects.
-    if (isset($values) && !is_array($values)) {
+    if (isset($values) && !\is_array($values)) {
       $this->set('language', $values, $notify);
     }
     else {
@@ -113,7 +113,7 @@ class LanguageItem extends FieldItemBase implements OptionsProviderInterface {
     // Defer to the callback in the item definition as it can be overridden.
     $constraint = $field_definition->getItemDefinition()->getConstraint('ComplexData');
     if (isset($constraint['value']['AllowedValues']['callback'])) {
-      $languages = call_user_func($constraint['value']['AllowedValues']['callback']);
+      $languages = \call_user_func($constraint['value']['AllowedValues']['callback']);
     }
     else {
       $languages = array_keys(\Drupal::languageManager()->getLanguages(LanguageInterface::STATE_ALL));

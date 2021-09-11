@@ -57,7 +57,7 @@ class SystemInfoController implements ContainerInjectionInterface {
    *   A response object to be sent to the client.
    */
   public function php() {
-    if (function_exists('phpinfo')) {
+    if (\function_exists('phpinfo')) {
       ob_start();
       phpinfo();
       $output = ob_get_clean();

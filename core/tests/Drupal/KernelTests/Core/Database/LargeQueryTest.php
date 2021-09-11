@@ -45,7 +45,7 @@ class LargeQueryTest extends DatabaseTestBase {
       $this->assertEquals(1153, $e->getPrevious()->errorInfo[1]);
       // 'max_allowed_packet' exception message truncated.
       // Use strlen() to count the bytes exactly, not the unicode chars.
-      $this->assertLessThanOrEqual($max_allowed_packet, strlen($e->getMessage()));
+      $this->assertLessThanOrEqual($max_allowed_packet, \strlen($e->getMessage()));
     }
   }
 

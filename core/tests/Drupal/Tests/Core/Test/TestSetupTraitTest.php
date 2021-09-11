@@ -37,7 +37,7 @@ class TestSetupTraitTest extends UnitTestCase {
     $test_setup->databasePrefix = 'testDbPrefix';
     $test_setup->root = '';
 
-    $method = new \ReflectionMethod(get_class($test_setup), 'changeDatabasePrefix');
+    $method = new \ReflectionMethod(\get_class($test_setup), 'changeDatabasePrefix');
     $method->setAccessible(TRUE);
     $method->invoke($test_setup);
 

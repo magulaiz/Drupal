@@ -188,7 +188,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * Only exposed filters with operators available can be converted into groups.
    */
   protected function canBuildGroup() {
-    return $this->isExposed() && (count($this->operatorOptions()) > 0);
+    return $this->isExposed() && (\count($this->operatorOptions()) > 0);
   }
 
   /**
@@ -297,7 +297,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     $options = $this->operatorOptions();
     if (!empty($options)) {
       $form['operator'] = [
-        '#type' => count($options) < 10 ? 'radios' : 'select',
+        '#type' => \count($options) < 10 ? 'radios' : 'select',
         '#title' => $this->t('Operator'),
         '#default_value' => $this->operator,
         '#options' => $options,
@@ -566,7 +566,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       ];
 
       $operators = $this->operatorOptions();
-      if (!empty($operators) && count($operators) > 1) {
+      if (!empty($operators) && \count($operators) > 1) {
         $form['expose']['operator_limit_selection'] = [
           '#type' => 'checkbox',
           '#title' => $this->t('Limit the available operators'),
@@ -671,7 +671,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     $limit_operators = $form_state->getValue(['options', 'expose', 'operator_limit_selection']);
     $operators_selected = $form_state->getValue(['options', 'expose', 'operator_list']);
     $selected_operator = $form_state->getValue(['options', 'operator']);
-    if ($limit_operators && !in_array($selected_operator, $operators_selected, TRUE)) {
+    if ($limit_operators && !\in_array($selected_operator, $operators_selected, TRUE)) {
       $form_state->setError(
         $form['expose']['operator_list'],
         $this->t('You selected the "@operator" operator as the default value but is not included in the list of limited operators.', ['@operator' => $this->operatorOptions()[$selected_operator]]));
@@ -694,15 +694,15 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       return TRUE;
     }
     else {
-      if (is_string($group['value'])) {
+      if (\is_string($group['value'])) {
         return trim($group['value']) != '';
       }
-      elseif (is_array($group['value'])) {
+      elseif (\is_array($group['value'])) {
         // Some filters allow multiple options to be selected (for example, node
         // types). Ensure at least the minimum number of values is present for
         // this entry to be considered valid.
         $min_values = $operators[$group['operator']]['values'];
-        $actual_values = count(array_filter($group['value'], 'static::arrayFilterZero'));
+        $actual_values = \count(array_filter($group['value'], 'static::arrayFilterZero'));
         return $actual_values >= $min_values;
       }
     }
@@ -859,7 +859,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       }
     }
 
-    if (count($groups)) {
+    if (\count($groups)) {
       $value = $this->options['group_info']['identifier'];
 
       $form[$value] = [
@@ -869,7 +869,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         '#options' => $groups,
       ];
       if (!empty($this->options['group_info']['multiple'])) {
-        if (count($groups) < 5) {
+        if (\count($groups) < 5) {
           $form[$value]['#type'] = 'checkboxes';
         }
         else {
@@ -949,7 +949,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       // When the operator and value forms are both in play, enclose them within
       // a wrapper, for usability. Also wrap if the value form is comprised of
       // multiple elements.
-      if ((!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) || count(Element::children($form[$value]))) {
+      if ((!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) || \count(Element::children($form[$value]))) {
         $wrapper = $value . '_wrapper';
         $this->buildValueWrapper($form, $wrapper);
         $form[$wrapper][$value] = $form[$value];
@@ -1104,7 +1104,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     $groups = ['All' => $this->t('- Any -')];
 
     // Provide 3 options to start when we are in a new group.
-    if (count($this->options['group_info']['group_items']) == 0) {
+    if (\count($this->options['group_info']['group_items']) == 0) {
       $this->options['group_info']['group_items'] = array_fill(1, 3, []);
     }
 
@@ -1194,7 +1194,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
           '#title' => $this->t('Weight'),
           '#title_display' => 'invisible',
           '#type' => 'weight',
-          '#delta' => count($this->options['group_info']['group_items']),
+          '#delta' => \count($this->options['group_info']['group_items']),
           '#default_value' => $default_weight++,
           '#attributes' => ['class' => ['weight']],
         ],
@@ -1238,7 +1238,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       'limit' => 0,
     ];
     $js_settings = $form_state->get('js_settings');
-    if ($js_settings && is_array($js)) {
+    if ($js_settings && \is_array($js)) {
       $js_settings = array_merge($js_settings, $js);
     }
     else {
@@ -1317,12 +1317,12 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   protected function prepareFilterSelectOptions(&$options) {
     foreach ($options as $value => $label) {
       // Recurse for optgroups.
-      if (is_array($label)) {
+      if (\is_array($label)) {
         $this->prepareFilterSelectOptions($options[$value]);
       }
       // FAPI has some special value to allow hierarchy.
       // @see _form_options_flatten
-      elseif (is_object($label) && isset($label->option)) {
+      elseif (\is_object($label) && isset($label->option)) {
         $this->prepareFilterSelectOptions($options[$value]->option);
       }
       else {
@@ -1509,7 +1509,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
 
           // If checkboxes are used to render this filter, do not include the
           // filter if no options are checked.
-          if (is_array($value) && Checkboxes::detectEmptyCheckboxes($value)) {
+          if (\is_array($value) && Checkboxes::detectEmptyCheckboxes($value)) {
             return FALSE;
           }
         }
@@ -1520,7 +1520,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       }
       if (isset($value)) {
         $this->value = $value;
-        if (empty($this->alwaysMultiple) && empty($this->options['expose']['multiple']) && !is_array($value)) {
+        if (empty($this->alwaysMultiple) && empty($this->options['expose']['multiple']) && !\is_array($value)) {
           $this->value = [$value];
         }
       }
@@ -1662,7 +1662,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *   TRUE if the value is equal to an empty string, FALSE otherwise.
    */
   protected static function arrayFilterZero($var) {
-    if (is_int($var)) {
+    if (\is_int($var)) {
       return $var != 0;
     }
     return trim($var) != '';

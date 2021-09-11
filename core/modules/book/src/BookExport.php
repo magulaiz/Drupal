@@ -125,7 +125,7 @@ class BookExport {
       if ($node = $this->nodeStorage->load($data['link']['nid'])) {
         $node = $this->entityRepository->getTranslationFromContext($node);
         $children = $data['below'] ? $this->exportTraverse($data['below'], $callable) : '';
-        $build[] = call_user_func($callable, $node, $children);
+        $build[] = \call_user_func($callable, $node, $children);
       }
     }
 

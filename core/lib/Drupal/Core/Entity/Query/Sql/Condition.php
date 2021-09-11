@@ -102,7 +102,7 @@ class Condition extends ConditionBase {
    */
   public static function translateCondition(&$condition, SelectInterface $sql_query, $case_sensitive) {
     // // There is nothing we can do for IN ().
-    if (is_array($condition['value'])) {
+    if (\is_array($condition['value'])) {
       return;
     }
 

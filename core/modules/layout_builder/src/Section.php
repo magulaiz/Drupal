@@ -301,7 +301,7 @@ class Section implements ThirdPartySettingsInterface {
    */
   public function insertComponent($delta, SectionComponent $new_component) {
     $components = $this->getComponentsByRegion($new_component->getRegion());
-    $count = count($components);
+    $count = \count($components);
     if ($delta > $count) {
       throw new \OutOfBoundsException(sprintf('Invalid delta "%s" for the "%s" component', $delta, $new_component->getUuid()));
     }
@@ -316,7 +316,7 @@ class Section implements ThirdPartySettingsInterface {
     $this->setComponent($new_component->setWeight($weight++));
 
     // Increase the weight of every subsequent component.
-    foreach (array_slice($components, $delta) as $component) {
+    foreach (\array_slice($components, $delta) as $component) {
       $component->setWeight($weight++);
     }
     return $this;

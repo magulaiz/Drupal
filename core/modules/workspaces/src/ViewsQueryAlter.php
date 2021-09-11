@@ -228,7 +228,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
       // Dereference the alias into the actual table.
       $table = $table_queue[$field_info['table']]['table'];
-      if ($table == $base_entity_table && in_array($field_info['field'], $revisionable_fields)) {
+      if ($table == $base_entity_table && \in_array($field_info['field'], $revisionable_fields)) {
         $relationship = $table_queue[$field_info['table']]['alias'];
         $alias = $this->ensureRevisionTable($entity_type, $query, $relationship);
         if ($alias) {
@@ -253,7 +253,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
         // to switch.
         foreach ($relationships as $relationship) {
           foreach ($revisionable_fields as $field) {
-            if (is_string($where_info['field']) && $where_info['field'] == "$relationship.$field") {
+            if (\is_string($where_info['field']) && $where_info['field'] == "$relationship.$field") {
               $alias = $this->ensureRevisionTable($entity_type, $query, $relationship);
               if ($alias) {
                 // Change the base table to use the revision table instead.
@@ -434,9 +434,9 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
     // Now move the item to the proper location in the array. Don't use
     // array_splice() because that breaks indices.
-    $table_queue = array_slice($table_queue, 0, $index, TRUE) +
+    $table_queue = \array_slice($table_queue, 0, $index, TRUE) +
       $splice +
-      array_slice($table_queue, $index, NULL, TRUE);
+      \array_slice($table_queue, $index, NULL, TRUE);
   }
 
 }

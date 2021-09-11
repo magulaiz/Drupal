@@ -151,7 +151,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
     }
     $fix_deps = \Drupal::state()->get('config_test.fix_dependencies', []);
     foreach ($dependencies['config'] as $entity) {
-      if (in_array($entity->getConfigDependencyName(), $fix_deps)) {
+      if (\in_array($entity->getConfigDependencyName(), $fix_deps)) {
         $key = array_search($entity->getConfigDependencyName(), $this->dependencies['enforced']['config']);
         if ($key !== FALSE) {
           $changed = TRUE;

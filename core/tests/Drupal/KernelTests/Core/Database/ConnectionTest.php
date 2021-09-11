@@ -243,7 +243,7 @@ class ConnectionTest extends DatabaseTestBase {
       $namespace = Condition::class;
     }
     $condition = $connection->condition('AND');
-    $this->assertSame($namespace, get_class($condition));
+    $this->assertSame($namespace, \get_class($condition));
   }
 
 }

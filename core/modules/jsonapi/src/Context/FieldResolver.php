@@ -132,7 +132,7 @@ class FieldResolver {
    *   The current user account.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL) {
-    if (is_null($current_user)) {
+    if (\is_null($current_user)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
       $current_user = \Drupal::currentUser();
     }
@@ -204,7 +204,7 @@ class FieldResolver {
       }
       throw new CacheableBadRequestHttpException($cacheability, $message);
     }
-    $remaining_parts = array_slice($path_parts, 1);
+    $remaining_parts = \array_slice($path_parts, 1);
     if (empty($remaining_parts)) {
       return [[$internal_field_name]];
     }
@@ -220,7 +220,7 @@ class FieldResolver {
         $exceptions[] = $e;
       }
     }
-    if (!empty($exceptions) && count($exceptions) === count($relatable_resource_types)) {
+    if (!empty($exceptions) && \count($exceptions) === \count($relatable_resource_types)) {
       $previous_messages = implode(' ', array_unique(array_map(function (CacheableBadRequestHttpException $e) {
         return $e->getMessage();
       }, $exceptions)));
@@ -297,7 +297,7 @@ class FieldResolver {
     $resource_types = [$resource_type];
     // This complex expression is needed to handle the string, "0", which would
     // otherwise be evaluated as FALSE.
-    while (!is_null(($part = array_shift($parts)))) {
+    while (!\is_null(($part = array_shift($parts)))) {
       if (!$this->isMemberFilterable($part, $resource_types)) {
         throw new CacheableBadRequestHttpException($cacheability, sprintf(
           'Invalid nested filtering. The field `%s`, given in the path `%s`, does not exist.',
@@ -318,7 +318,7 @@ class FieldResolver {
 
       // Different resource types have different field definitions.
       $candidate_definitions = $this->getFieldItemDefinitions($resource_types, $field_name);
-      assert(!empty($candidate_definitions));
+      \assert(!empty($candidate_definitions));
 
       // We have a valid field, so add it to the validated trail of path parts.
       $reference_breadcrumbs[] = $field_name;
@@ -369,7 +369,7 @@ class FieldResolver {
       // JSON:API representation, or if it is an relationship (an entity
       // reference field), in which case the `id` of the related resource must
       // always be specified.
-      $property_specifier_needed = $at_least_one_entity_reference_field || count($candidate_property_names) > 1;
+      $property_specifier_needed = $at_least_one_entity_reference_field || \count($candidate_property_names) > 1;
 
       // If there are no remaining path parts, the process is finished unless
       // the field has multiple properties, in which case one must be specified.
@@ -377,7 +377,7 @@ class FieldResolver {
         // If the operator is asserting the presence or absence of a
         // relationship entirely, it does not make sense to require a property
         // specifier.
-        if ($property_specifier_needed && (!$at_least_one_entity_reference_field || !in_array($operator, ['IS NULL', 'IS NOT NULL'], TRUE))) {
+        if ($property_specifier_needed && (!$at_least_one_entity_reference_field || !\in_array($operator, ['IS NULL', 'IS NOT NULL'], TRUE))) {
           $possible_specifiers = array_map(function ($specifier) use ($at_least_one_entity_reference_field) {
             return $at_least_one_entity_reference_field && $specifier !== 'id' ? "meta.$specifier" : $specifier;
           }, $candidate_property_names);
@@ -409,7 +409,7 @@ class FieldResolver {
         if ($parts[0] === 'meta') {
           array_shift($parts);
         }
-        elseif (in_array($parts[0], $candidate_property_names) && !static::isCandidateDefinitionReferenceProperty($parts[0], $candidate_definitions)) {
+        elseif (\in_array($parts[0], $candidate_property_names) && !static::isCandidateDefinitionReferenceProperty($parts[0], $candidate_definitions)) {
           throw new CacheableBadRequestHttpException($cacheability, sprintf('Invalid nested filtering. The property `%s`, given in the path `%s` belongs to the meta object of a relationship and must be preceded by `meta`.', $parts[0], $external_field_name));
         }
       }
@@ -432,10 +432,10 @@ class FieldResolver {
           // defined, throw an error because in the JSON:API output, it does not
           // exist. This is because JSON:API elides single-value properties;
           // respecting it would leak this Drupalism out.
-          if (count($candidate_property_names) === 1) {
-            throw new CacheableBadRequestHttpException($cacheability, sprintf('Invalid nested filtering. The property `%s`, given in the path `%s`, does not exist. Filter by `%s`, not `%s` (the JSON:API module elides property names from single-property fields).', $parts[0], $external_field_name, substr($external_field_name, 0, strlen($external_field_name) - strlen($parts[0]) - 1), $external_field_name));
+          if (\count($candidate_property_names) === 1) {
+            throw new CacheableBadRequestHttpException($cacheability, sprintf('Invalid nested filtering. The property `%s`, given in the path `%s`, does not exist. Filter by `%s`, not `%s` (the JSON:API module elides property names from single-property fields).', $parts[0], $external_field_name, substr($external_field_name, 0, \strlen($external_field_name) - \strlen($parts[0]) - 1), $external_field_name));
           }
-          elseif (!in_array($parts[0], $candidate_property_names, TRUE)) {
+          elseif (!\in_array($parts[0], $candidate_property_names, TRUE)) {
             throw new CacheableBadRequestHttpException($cacheability, sprintf('Invalid nested filtering. The property `%s`, given in the path `%s`, does not exist. Must be one of the following property names: `%s`.', $parts[0], $external_field_name, implode('`, `', $candidate_property_names)));
           }
           return $this->constructInternalPath($reference_breadcrumbs, $parts);
@@ -622,7 +622,7 @@ class FieldResolver {
       foreach ($property_definitions as $property_name => $property_definition) {
         if ($property_definition instanceof DataReferenceDefinitionInterface) {
           $target_definition = $property_definition->getTargetDefinition();
-          assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
+          \assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
           $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
         }
       }
@@ -646,9 +646,9 @@ class FieldResolver {
    */
   protected static function getDataReferencePropertyName(array $candidate_definitions, array $remaining_parts, array $unresolved_path_parts) {
     $unique_reference_names = static::getAllDataReferencePropertyNames($candidate_definitions);
-    if (count($unique_reference_names) > 1) {
+    if (\count($unique_reference_names) > 1) {
       $choices = array_map(function ($reference_name) use ($unresolved_path_parts, $remaining_parts) {
-        $prior_parts = array_slice($unresolved_path_parts, 0, count($unresolved_path_parts) - count($remaining_parts));
+        $prior_parts = \array_slice($unresolved_path_parts, 0, \count($unresolved_path_parts) - \count($remaining_parts));
         return implode('.', array_merge($prior_parts, [$reference_name], $remaining_parts));
       }, $unique_reference_names);
       // @todo Add test coverage for this in https://www.drupal.org/project/drupal/issues/2971281
@@ -757,7 +757,7 @@ class FieldResolver {
    */
   protected function getFieldAccess(ResourceType $resource_type, $internal_field_name) {
     $definitions = $this->fieldManager->getFieldDefinitions($resource_type->getEntityTypeId(), $resource_type->getBundle());
-    assert(isset($definitions[$internal_field_name]), 'The field name should have already been validated.');
+    \assert(isset($definitions[$internal_field_name]), 'The field name should have already been validated.');
     $field_definition = $definitions[$internal_field_name];
     $filter_access_results = $this->moduleHandler->invokeAll('jsonapi_entity_field_filter_access', [$field_definition, $this->currentUser]);
     $filter_access_result = array_reduce($filter_access_results, function (AccessResultInterface $combined_result, AccessResultInterface $result) {

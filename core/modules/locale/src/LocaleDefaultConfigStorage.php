@@ -133,7 +133,7 @@ class LocaleDefaultConfigStorage {
         array_keys($this->optionalInstallStorage->getComponentNames($type, $list))
       )
     );
-    if ($type == 'module' && in_array('language', $list)) {
+    if ($type == 'module' && \in_array('language', $list)) {
       $languages = $this->predefinedConfiguredLanguages();
       $names = array_unique(array_merge($names, $languages));
     }

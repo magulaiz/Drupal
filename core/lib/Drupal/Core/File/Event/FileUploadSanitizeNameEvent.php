@@ -71,7 +71,7 @@ class FileUploadSanitizeNameEvent extends Event {
    *   Thrown when $filename contains path information.
    */
   public function setFilename(string $filename): self {
-    if (dirname($filename) !== '.') {
+    if (\dirname($filename) !== '.') {
       throw new \InvalidArgumentException(sprintf('$filename must be a filename with no path information, "%s" provided', $filename));
     }
     $this->filename = $filename;

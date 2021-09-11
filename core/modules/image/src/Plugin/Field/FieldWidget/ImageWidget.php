@@ -292,7 +292,7 @@ class ImageWidget extends FileWidget {
     // Only do validation if the function is triggered from other places than
     // the image process form.
     $triggering_element = $form_state->getTriggeringElement();
-    if (!empty($triggering_element['#submit']) && in_array('file_managed_file_submit', $triggering_element['#submit'], TRUE)) {
+    if (!empty($triggering_element['#submit']) && \in_array('file_managed_file_submit', $triggering_element['#submit'], TRUE)) {
       $form_state->setLimitValidationErrors([]);
     }
   }

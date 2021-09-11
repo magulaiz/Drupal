@@ -105,7 +105,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
       }
     }
 
-    throw new SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, get_class($obj)));
+    throw new SecurityError(sprintf('Calling "%s" method on a "%s" object is not allowed.', $method, \get_class($obj)));
   }
 
 }

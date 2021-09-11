@@ -1081,7 +1081,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKeys')
       ->will($this->returnValue(['id' => 'id']));
@@ -1203,7 +1203,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
 
     $this->cache->expects($this->once())
       ->method('getMultiple')
@@ -1241,7 +1241,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
 
     // There should be no calls to the cache backend for an entity type without
     // persistent caching.
@@ -1295,7 +1295,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue($this->entityTypeId));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
 
     // In case of a cache miss, the entity is loaded from the storage and then
     // set in the cache.

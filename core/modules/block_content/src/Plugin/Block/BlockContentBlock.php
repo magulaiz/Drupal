@@ -154,7 +154,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
       '#title' => $this->t('View mode'),
       '#description' => $this->t('Output the block in this view mode.'),
       '#default_value' => $this->configuration['view_mode'],
-      '#access' => (count($options) > 1),
+      '#access' => (\count($options) > 1),
     ];
     $form['title']['#description'] = $this->t('The title of the block as shown to the user.');
     return $form;

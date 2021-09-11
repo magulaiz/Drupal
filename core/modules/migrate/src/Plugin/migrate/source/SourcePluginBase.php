@@ -295,7 +295,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       $result_hook = $this->getModuleHandler()->invokeAll('migrate_prepare_row', [$row, $this, $this->migration]);
       $result_named_hook = $this->getModuleHandler()->invokeAll('migrate_' . $this->migration->id() . '_prepare_row', [$row, $this, $this->migration]);
       // We will skip if any hook returned FALSE.
-      $skip = ($result_hook && in_array(FALSE, $result_hook)) || ($result_named_hook && in_array(FALSE, $result_named_hook));
+      $skip = ($result_hook && \in_array(FALSE, $result_hook)) || ($result_named_hook && \in_array(FALSE, $result_named_hook));
       $save_to_map = TRUE;
     }
     catch (MigrateSkipRowException $e) {
@@ -495,7 +495,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
     // requested.
     if ($this->cacheCounts && !$refresh) {
       $cache_object = $this->getCache()->get($this->cacheKey, 'cache');
-      if (is_object($cache_object)) {
+      if (\is_object($cache_object)) {
         return $cache_object->data;
       }
     }

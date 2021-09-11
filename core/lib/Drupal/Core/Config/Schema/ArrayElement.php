@@ -21,7 +21,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   Array of valid configuration data keys.
    */
   protected function getAllKeys() {
-    return is_array($this->value) ? array_keys($this->value) : [];
+    return \is_array($this->value) ? array_keys($this->value) : [];
   }
 
   /**

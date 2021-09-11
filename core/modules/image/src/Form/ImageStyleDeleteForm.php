@@ -30,7 +30,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
    * {@inheritdoc}
    */
   public function getDescription() {
-    if (count($this->getReplacementOptions()) > 1) {
+    if (\count($this->getReplacementOptions()) > 1) {
       return $this->t('If this style is in use on the site, you may select another style to replace it. All images that have been generated for this style will be permanently deleted. If no replacement style is selected, the dependent configurations might need manual reconfiguration.');
     }
     return $this->t('All images that have been generated for this style will be permanently deleted. The dependent configurations might need manual reconfiguration.');
@@ -43,7 +43,7 @@ class ImageStyleDeleteForm extends EntityDeleteForm {
     $replacement_styles = $this->getReplacementOptions();
     // If there are non-empty options in the list, allow the user to optionally
     // pick up a replacement.
-    if (count($replacement_styles) > 1) {
+    if (\count($replacement_styles) > 1) {
       $form['replacement'] = [
         '#type' => 'select',
         '#title' => $this->t('Replacement style'),

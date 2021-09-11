@@ -99,7 +99,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
       // Get a plugin manager for this type.
       $manager = $this->container->get("plugin.manager.views.$type");
       foreach ($plugins as $id => $definition) {
-        if ($test_deprecated !== in_array($definition['class'], $this->deprecatedPlugins)) {
+        if ($test_deprecated !== \in_array($definition['class'], $this->deprecatedPlugins)) {
           continue;
         }
         // Get a reflection class for this plugin.

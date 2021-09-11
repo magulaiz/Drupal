@@ -80,7 +80,7 @@ class YamlFileLoader
 
         // parameters
         if (isset($content['parameters'])) {
-            if (!is_array($content['parameters'])) {
+            if (!\is_array($content['parameters'])) {
                 throw new InvalidArgumentException(sprintf('The "parameters" key should contain an array in %s. Check your YAML syntax.', $file));
             }
 
@@ -109,7 +109,7 @@ class YamlFileLoader
             return;
         }
 
-        if (!is_array($content['services'])) {
+        if (!\is_array($content['services'])) {
             throw new InvalidArgumentException(sprintf('The "services" key should contain an array in %s. Check your YAML syntax.', $file));
         }
 
@@ -122,7 +122,7 @@ class YamlFileLoader
             list($provider, ) = explode('.', $basename, 2);
         }
         foreach ($content['services'] as $id => $service) {
-            if (is_array($service)) {
+            if (\is_array($service)) {
               $service['tags'][] = ['name' => '_provider', 'provider' => $provider];
             }
             $this->parseDefinition($id, $service, $file);
@@ -141,7 +141,7 @@ class YamlFileLoader
      */
     private function parseDefinition($id, $service, $file)
     {
-        if (is_string($service) && 0 === strpos($service, '@')) {
+        if (\is_string($service) && 0 === strpos($service, '@')) {
             $this->container->setAlias($id, substr($service, 1));
 
             return;
@@ -151,18 +151,18 @@ class YamlFileLoader
             $service = [];
         }
 
-        if (!is_array($service)) {
-            throw new InvalidArgumentException(sprintf('A service definition must be an array or a string starting with "@" but %s found for service "%s" in %s. Check your YAML syntax.', gettype($service), $id, $file));
+        if (!\is_array($service)) {
+            throw new InvalidArgumentException(sprintf('A service definition must be an array or a string starting with "@" but %s found for service "%s" in %s. Check your YAML syntax.', \gettype($service), $id, $file));
         }
 
         if (isset($service['alias'])) {
             $alias = $this->container->setAlias($id, new Alias($service['alias']));
 
-            if (array_key_exists('public', $service)) {
+            if (\array_key_exists('public', $service)) {
                 $alias->setPublic($service['public']);
             }
 
-            if (array_key_exists('deprecated', $service)) {
+            if (\array_key_exists('deprecated', $service)) {
                 if (method_exists($alias, 'getDeprecation')) {
                     $deprecation = \is_array($service['deprecated']) ? $service['deprecated'] : ['message' => $service['deprecated']];
                     $alias->setDeprecated($deprecation['package'] ?? '', $deprecation['version'] ?? '', $deprecation['message']);
@@ -209,7 +209,7 @@ class YamlFileLoader
             $definition->setAbstract($service['abstract']);
         }
 
-        if (array_key_exists('deprecated', $service)) {
+        if (\array_key_exists('deprecated', $service)) {
             if (method_exists($definition, 'getDeprecation')) {
                 $deprecation = \is_array($service['deprecated']) ? $service['deprecated'] : ['message' => $service['deprecated']];
                 $definition->setDeprecated($deprecation['package'] ?? '', $deprecation['version'] ?? '', $deprecation['message']);
@@ -221,7 +221,7 @@ class YamlFileLoader
         }
 
         if (isset($service['factory'])) {
-            if (is_string($service['factory'])) {
+            if (\is_string($service['factory'])) {
                 if (strpos($service['factory'], ':') !== false && strpos($service['factory'], '::') === false) {
                     $parts = explode(':', $service['factory']);
                     $definition->setFactory(array($this->resolveServices('@'.$parts[0]), $parts[1]));
@@ -258,7 +258,7 @@ class YamlFileLoader
         }
 
         if (isset($service['configurator'])) {
-            if (is_string($service['configurator'])) {
+            if (\is_string($service['configurator'])) {
                 $definition->setConfigurator($service['configurator']);
             } else {
                 $definition->setConfigurator(array($this->resolveServices($service['configurator'][0]), $service['configurator'][1]));
@@ -266,7 +266,7 @@ class YamlFileLoader
         }
 
         if (isset($service['calls'])) {
-            if (!is_array($service['calls'])) {
+            if (!\is_array($service['calls'])) {
                 throw new InvalidArgumentException(sprintf('Parameter "calls" must be an array for service "%s" in %s. Check your YAML syntax.', $id, $file));
             }
 
@@ -284,12 +284,12 @@ class YamlFileLoader
         }
 
         if (isset($service['tags'])) {
-            if (!is_array($service['tags'])) {
+            if (!\is_array($service['tags'])) {
                 throw new InvalidArgumentException(sprintf('Parameter "tags" must be an array for service "%s" in %s. Check your YAML syntax.', $id, $file));
             }
 
             foreach ($service['tags'] as $tag) {
-                if (!is_array($tag)) {
+                if (!\is_array($tag)) {
                     throw new InvalidArgumentException(sprintf('A "tags" entry must be an array for service "%s" in %s. Check your YAML syntax.', $id, $file));
                 }
 
@@ -363,7 +363,7 @@ class YamlFileLoader
             return $content;
         }
 
-        if (!is_array($content)) {
+        if (!\is_array($content)) {
             throw new InvalidArgumentException(sprintf('The service file "%s" is not valid. It should contain an array. Check your YAML syntax.', $file));
         }
 
@@ -383,13 +383,13 @@ class YamlFileLoader
      */
     private function resolveServices($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $value = array_map(array($this, 'resolveServices'), $value);
-        } elseif (is_string($value) &&  0 === strpos($value, '@=')) {
+        } elseif (\is_string($value) &&  0 === strpos($value, '@=')) {
             // Not supported.
             //return new Expression(substr($value, 2));
             throw new InvalidArgumentException(sprintf("'%s' is an Expression, but expressions are not supported.", $value));
-        } elseif (is_string($value) &&  0 === strpos($value, '@')) {
+        } elseif (\is_string($value) &&  0 === strpos($value, '@')) {
             if (0 === strpos($value, '@@')) {
                 $value = substr($value, 1);
                 $invalidBehavior = null;

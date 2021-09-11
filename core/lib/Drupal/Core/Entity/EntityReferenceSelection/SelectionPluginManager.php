@@ -80,7 +80,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     unset($definitions['broken']);
 
     foreach ($definitions as $plugin_id => $plugin) {
-      if (empty($plugin['entity_types']) || in_array($entity_type_id, $plugin['entity_types'])) {
+      if (empty($plugin['entity_types']) || \in_array($entity_type_id, $plugin['entity_types'])) {
         $plugins[$plugin['group']][$plugin_id] = $plugin;
       }
     }

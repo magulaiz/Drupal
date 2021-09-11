@@ -194,7 +194,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    *   (Optional) The name of the column to check. Defaults to 'value'.
    */
   protected function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED, $column = 'value') {
-    $expected_values_count = count($expected_values);
+    $expected_values_count = \count($expected_values);
 
     // Re-load the entity to make sure we have the latest changes.
     $storage = $this->container->get('entity_type.manager')

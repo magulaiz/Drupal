@@ -50,7 +50,7 @@ class Context extends ComponentContext implements ContextInterface {
   public function __construct(ContextDefinitionInterface $context_definition, $context_value = NULL) {
     parent::__construct($context_definition, NULL);
     $this->cacheabilityMetadata = new CacheableMetadata();
-    if (!is_null($context_value)) {
+    if (!\is_null($context_value)) {
       $this->setContextValue($context_value);
     }
   }

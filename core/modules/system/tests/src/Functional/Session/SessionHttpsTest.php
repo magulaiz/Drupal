@@ -248,7 +248,7 @@ class SessionHttpsTest extends BrowserTestBase {
     $location = $response->getHeader('location')[0];
 
     $this->assertStringStartsWith($base_url, $location, 'Location header contains expected base URL');
-    return substr($location, strlen($base_url));
+    return substr($location, \strlen($base_url));
   }
 
   /**

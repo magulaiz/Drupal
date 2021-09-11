@@ -182,7 +182,7 @@ class HelpTopicPluginManager extends DefaultPluginManager implements HelpTopicPl
           continue;
         }
         // Make the related relationship bi-directional.
-        if (isset($definitions[$related_id]) && !in_array($plugin_id, $definitions[$related_id]['related'], TRUE)) {
+        if (isset($definitions[$related_id]) && !\in_array($plugin_id, $definitions[$related_id]['related'], TRUE)) {
           $definitions[$related_id]['related'][] = $plugin_id;
         }
       }

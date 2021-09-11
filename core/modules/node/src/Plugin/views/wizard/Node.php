@@ -180,7 +180,7 @@ class Node extends WizardPluginBase {
       ];
       // If the user entered more than one valid term in the autocomplete
       // field, they probably intended both of them to be applied.
-      if (count($tids) > 1) {
+      if (\count($tids) > 1) {
         $filters['tid']['operator'] = 'and';
         // Sort the terms so the filter will be displayed as it normally would
         // on the edit screen.
@@ -274,7 +274,7 @@ class Node extends WizardPluginBase {
     $bundles = array_keys($this->bundleInfoService->getBundleInfo($this->entityTypeId));
     // Double check that this is a real bundle before using it (since above
     // we added a dummy option 'all' to the bundle list on the form).
-    if (isset($selected_bundle) && in_array($selected_bundle, $bundles)) {
+    if (isset($selected_bundle) && \in_array($selected_bundle, $bundles)) {
       $bundles = [$selected_bundle];
     }
     $tag_fields = [];
@@ -299,7 +299,7 @@ class Node extends WizardPluginBase {
       // that is created by the Standard install profile in core and also
       // commonly used by contrib modules; thus, it is most likely to be
       // associated with the "main" free-tagging vocabulary on the site.
-      if (array_key_exists('field_tags', $tag_fields)) {
+      if (\array_key_exists('field_tags', $tag_fields)) {
         $tag_field_name = 'field_tags';
       }
       else {

@@ -34,7 +34,7 @@ class LazyRouteCollection extends RouteCollection {
    *   The number of routes
    */
   public function count() {
-    return count($this->all());
+    return \count($this->all());
   }
 
   /**

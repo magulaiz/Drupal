@@ -31,7 +31,7 @@ class SyslogTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     // If we're on Windows, there is no configuration form.
-    if (defined('LOG_LOCAL6')) {
+    if (\defined('LOG_LOCAL6')) {
       $this->drupalGet('admin/config/development/logging');
       $this->submitForm(['syslog_facility' => LOG_LOCAL6], 'Save configuration');
       $this->assertSession()->pageTextContains('The configuration options have been saved.');

@@ -226,7 +226,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
       // Editor.module's JS present. Note: ckeditor/drupal.ckeditor depends on
       // editor/drupal.editor, hence presence of the former implies presence of
       // the latter.
-      isset($settings['ajaxPageState']['libraries']) && in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])),
+      isset($settings['ajaxPageState']['libraries']) && \in_array('ckeditor/drupal.ckeditor', explode(',', $settings['ajaxPageState']['libraries'])),
     ];
   }
 

@@ -740,7 +740,7 @@ class FormTest extends BrowserTestBase {
     $edit = [];
     foreach (Element::children($form) as $key) {
       if (isset($form[$key]['#test_hijack_value'])) {
-        if (is_array($form[$key]['#test_hijack_value'])) {
+        if (\is_array($form[$key]['#test_hijack_value'])) {
           foreach ($form[$key]['#test_hijack_value'] as $subkey => $value) {
             $edit[$key . '[' . $subkey . ']'] = $value;
           }
@@ -768,9 +768,9 @@ class FormTest extends BrowserTestBase {
 
     // All the elements should be marked as disabled, including the ones below
     // the disabled container.
-    $actual_count = count($disabled_elements);
+    $actual_count = \count($disabled_elements);
     $expected_count = 42;
-    $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]));
+    $this->assertEquals($expected_count, $actual_count, new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => \count($disabled_elements), '@expected' => $expected_count]));
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.
@@ -830,15 +830,15 @@ class FormTest extends BrowserTestBase {
 
     foreach ($form as $name => $item) {
       // Skip special #types.
-      if (!isset($item['#type']) || in_array($item['#type'], ['hidden', 'text_format'])) {
+      if (!isset($item['#type']) || \in_array($item['#type'], ['hidden', 'text_format'])) {
         continue;
       }
       // Setup XPath and CSS class depending on #type.
-      if (in_array($item['#type'], ['button', 'submit'])) {
+      if (\in_array($item['#type'], ['button', 'submit'])) {
         $path = "//!type[contains(@class, :div-class) and @value=:value]";
         $class = 'is-disabled';
       }
-      elseif (in_array($item['#type'], ['image_button'])) {
+      elseif (\in_array($item['#type'], ['image_button'])) {
         $path = "//!type[contains(@class, :div-class) and @value=:value]";
         $class = 'is-disabled';
       }
@@ -852,7 +852,7 @@ class FormTest extends BrowserTestBase {
       if (isset($type_map[$item['#type']])) {
         $type = $type_map[$item['#type']];
       }
-      if (isset($item['#value']) && is_object($item['#value'])) {
+      if (isset($item['#value']) && \is_object($item['#value'])) {
         $item['#value'] = (string) $item['#value'];
       }
       $path = strtr($path, ['!type' => $type]);

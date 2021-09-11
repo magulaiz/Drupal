@@ -32,7 +32,7 @@ class RoleAccessCheck implements AccessInterface {
     $rid_string = $route->getRequirement('_role');
 
     $explode_and = array_filter(array_map('trim', explode(',', $rid_string)));
-    if (count($explode_and) > 1) {
+    if (\count($explode_and) > 1) {
       $diff = array_diff($explode_and, $account->getRoles());
       if (empty($diff)) {
         return AccessResult::allowed()->addCacheContexts(['user.roles']);

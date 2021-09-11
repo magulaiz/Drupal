@@ -69,7 +69,7 @@ class AggregatorController extends ControllerBase {
       '#type' => 'container',
       '#attributes' => ['class' => ['aggregator-wrapper']],
     ];
-    $build['feed_source'] = is_array($feed_source) ? $feed_source : ['#markup' => $feed_source];
+    $build['feed_source'] = \is_array($feed_source) ? $feed_source : ['#markup' => $feed_source];
     if ($items) {
       $build['items'] = $this->entityTypeManager()->getViewBuilder('aggregator_item')
         ->viewMultiple($items, 'default');

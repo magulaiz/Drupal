@@ -102,7 +102,7 @@ class GDToolkit extends ImageToolkitBase {
    * @todo Remove the method for PHP 8.0+ https://www.drupal.org/node/3173031
    */
   public function __destruct() {
-    if (is_resource($this->resource)) {
+    if (\is_resource($this->resource)) {
       imagedestroy($this->resource);
     }
   }
@@ -133,11 +133,11 @@ class GDToolkit extends ImageToolkitBase {
    *   An instance of the current toolkit object.
    */
   public function setResource($resource) {
-    if (!(is_object($resource) && $resource instanceof \GdImage)) {
+    if (!(\is_object($resource) && $resource instanceof \GdImage)) {
       // Since PHP 8.0 resource should be \GdImage, for previous versions it
       // should be resource.
       // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
-      if (!is_resource($resource) || get_resource_type($resource) != 'gd') {
+      if (!\is_resource($resource) || get_resource_type($resource) != 'gd') {
         throw new \InvalidArgumentException('Invalid resource argument');
       }
     }
@@ -154,7 +154,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function getResource() {
     // @TODO clean-up for PHP 8.0+ https://www.drupal.org/node/3173031
-    if (!(is_resource($this->resource) || (is_object($this->resource) && $this->resource instanceof \GdImage))) {
+    if (!(\is_resource($this->resource) || (\is_object($this->resource) && $this->resource instanceof \GdImage))) {
       $this->load();
     }
     return $this->resource;
@@ -198,7 +198,7 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-    if (function_exists($function) && $resource = $function($this->getSource())) {
+    if (\function_exists($function) && $resource = $function($this->getSource())) {
       $this->setResource($resource);
       if (imageistruecolor($resource)) {
         return TRUE;
@@ -249,7 +249,7 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     $function = 'image' . image_type_to_extension($this->getType(), FALSE);
-    if (!function_exists($function)) {
+    if (!\function_exists($function)) {
       return FALSE;
     }
     if ($this->getType() == IMAGETYPE_JPEG) {
@@ -257,7 +257,7 @@ class GDToolkit extends ImageToolkitBase {
     }
     else {
       // Image types that support alpha need to be saved accordingly.
-      if (in_array($this->getType(), [IMAGETYPE_PNG, IMAGETYPE_WEBP], TRUE)) {
+      if (\in_array($this->getType(), [IMAGETYPE_PNG, IMAGETYPE_WEBP], TRUE)) {
         imagealphablending($this->getResource(), FALSE);
         imagesavealpha($this->getResource(), TRUE);
       }
@@ -281,7 +281,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public function parseFile() {
     $data = @getimagesize($this->getSource());
-    if ($data && in_array($data[2], static::supportedTypes())) {
+    if ($data && \in_array($data[2], static::supportedTypes())) {
       $this->setType($data[2]);
       $this->preLoadInfo = $data;
       return TRUE;
@@ -372,7 +372,7 @@ class GDToolkit extends ImageToolkitBase {
    * @return $this
    */
   public function setType($type) {
-    if (in_array($type, static::supportedTypes())) {
+    if (\in_array($type, static::supportedTypes())) {
       $this->type = $type;
     }
     return $this;
@@ -398,7 +398,7 @@ class GDToolkit extends ImageToolkitBase {
     ];
 
     // Check for filter and rotate support.
-    if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
+    if (!\function_exists('imagefilter') || !\function_exists('imagerotate')) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
       $requirements['version']['description'] = t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from http://www.libgd.org instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="http://php.net/manual/book.image.php">the PHP manual</a>.');
     }
@@ -411,7 +411,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public static function isAvailable() {
     // GD2 support is available.
-    return function_exists('imagegd2');
+    return \function_exists('imagegd2');
   }
 
   /**
@@ -448,7 +448,7 @@ class GDToolkit extends ImageToolkitBase {
    * @see image_type_to_extension()
    */
   public function extensionToImageType($extension) {
-    if (in_array($extension, ['jpe', 'jpg'])) {
+    if (\in_array($extension, ['jpe', 'jpg'])) {
       $extension = 'jpeg';
     }
     foreach ($this->supportedTypes() as $type) {

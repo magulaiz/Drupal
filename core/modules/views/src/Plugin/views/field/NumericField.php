@@ -161,7 +161,7 @@ class NumericField extends FieldPluginBase {
       $precision = $this->options['precision'];
     }
     elseif ($decimal_position = strpos($value, '.')) {
-      $precision = strlen($value) - $decimal_position - 1;
+      $precision = \strlen($value) - $decimal_position - 1;
     }
     else {
       $precision = 0;

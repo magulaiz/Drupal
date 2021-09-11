@@ -95,7 +95,7 @@ class EntityModerationForm extends FormBase {
       $target_states[$transition->to()->id()] = $transition->to()->label();
     }
 
-    if (!count($target_states)) {
+    if (!\count($target_states)) {
       return $form;
     }
 

@@ -97,7 +97,7 @@ class YamlPecl implements SerializationInterface {
     // YAML 1.1 spec dictates that 'Y', 'N', 'y' and 'n' are booleans. But, we
     // want the 1.2 behavior, so we only consider 'false', 'FALSE', 'true' and
     // 'TRUE' as booleans.
-    if (!in_array(strtolower($value), ['false', 'true'], TRUE)) {
+    if (!\in_array(strtolower($value), ['false', 'true'], TRUE)) {
       return $value;
     }
     $map = [

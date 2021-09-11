@@ -17,7 +17,7 @@ class DrupalComponentTest extends TestCase {
    * Tests that classes in Component do not use any Core class.
    */
   public function testNoCoreInComponent() {
-    $component_path = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))) . '/lib/Drupal/Component';
+    $component_path = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__))) . '/lib/Drupal/Component';
     foreach ($this->findPhpClasses($component_path) as $class) {
       $this->assertNoCoreUsage($class);
     }
@@ -27,7 +27,7 @@ class DrupalComponentTest extends TestCase {
    * Tests that classes in Component Tests do not use any Core class.
    */
   public function testNoCoreInComponentTests() {
-    $component_path = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))) . '/tests/Drupal/Tests/Component';
+    $component_path = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__))) . '/tests/Drupal/Tests/Component';
     foreach ($this->findPhpClasses($component_path) as $class) {
       $this->assertNoCoreUsage($class);
     }
@@ -52,7 +52,7 @@ class DrupalComponentTest extends TestCase {
    * @return array
    */
   public function getComponents() {
-    $root_component_path = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__))) . '/lib/Drupal/Component';
+    $root_component_path = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__))) . '/lib/Drupal/Component';
     $component_paths = [];
     foreach (new \DirectoryIterator($root_component_path) as $file) {
       if ($file->isDir() && !$file->isDot()) {

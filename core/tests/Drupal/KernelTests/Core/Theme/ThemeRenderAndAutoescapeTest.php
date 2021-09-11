@@ -31,7 +31,7 @@ class ThemeRenderAndAutoescapeTest extends KernelTestBase {
    * @dataProvider providerTestThemeRenderAndAutoescape
    */
   public function testThemeRenderAndAutoescape($arg, $expected) {
-    if (is_array($arg) && isset($arg['#type']) && $arg['#type'] === 'link') {
+    if (\is_array($arg) && isset($arg['#type']) && $arg['#type'] === 'link') {
       $arg = Link::createFromRoute($arg['#title'], $arg['#url']);
     }
 

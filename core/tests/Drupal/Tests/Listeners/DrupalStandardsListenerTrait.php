@@ -28,7 +28,7 @@ trait DrupalStandardsListenerTrait {
    */
   private function fail(TestCase $test, $message) {
     // Add the report to the test's results.
-    $message .= ': ' . get_class($test) . '::' . $test->getName();
+    $message .= ': ' . \get_class($test) . '::' . $test->getName();
     $fail = new AssertionFailedError($message);
     $result = $test->getTestResultObject();
     $result->addFailure($test, $fail, 0);
@@ -69,7 +69,7 @@ trait DrupalStandardsListenerTrait {
     $default_class = '';
     $valid_default_class = FALSE;
     if (isset($annotations['class']['coversDefaultClass'])) {
-      if (count($annotations['class']['coversDefaultClass']) > 1) {
+      if (\count($annotations['class']['coversDefaultClass']) > 1) {
         $this->fail($test, '@coversDefaultClass has too many values');
       }
       // Grab the first one.
@@ -130,7 +130,7 @@ trait DrupalStandardsListenerTrait {
             // function exists. Since this listener should always be listening
             // for endTest(), the function should have already been loaded from
             // its .module or .inc file.
-            if (!function_exists($method)) {
+            if (!\function_exists($method)) {
               $this->fail($test, '@covers global method does not exist ' . $method);
             }
           }

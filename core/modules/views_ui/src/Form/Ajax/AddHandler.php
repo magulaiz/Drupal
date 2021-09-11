@@ -118,7 +118,7 @@ class AddHandler extends ViewsFormBase {
         $group = preg_replace('/[^a-z0-9]/', '-', strtolower($option['group']));
         $groups[$group] = $option['group'];
         $grouped_options[$group][$key] = $option;
-        if (!empty($option['aliases']) && is_array($option['aliases'])) {
+        if (!empty($option['aliases']) && \is_array($option['aliases'])) {
           foreach ($option['aliases'] as $id => $alias) {
             if (empty($alias['base']) || !empty($base_tables[$alias['base']])) {
               $copy = $option;
@@ -179,7 +179,7 @@ class AddHandler extends ViewsFormBase {
 
     // Remove the default submit function.
     $form['actions']['submit']['#submit'] = array_filter($form['actions']['submit']['#submit'], function ($var) {
-      return !(is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
+      return !(\is_array($var) && isset($var[1]) && $var[1] == 'standardSubmit');
     });
     $form['actions']['submit']['#submit'][] = [$view, 'submitItemAdd'];
 

@@ -44,7 +44,7 @@ class Test extends MediaSourceBase {
       'attribute_2' => ['label' => $this->t('Attribute 2'), 'value' => 'Value 1'],
     ]);
 
-    if (in_array($attribute_name, array_keys($attributes))) {
+    if (\in_array($attribute_name, array_keys($attributes))) {
       return $attributes[$attribute_name]['value'];
     }
 

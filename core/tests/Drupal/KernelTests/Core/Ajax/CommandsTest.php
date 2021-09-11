@@ -100,7 +100,7 @@ class CommandsTest extends KernelTestBase {
     foreach ($haystack as $command) {
       // If the command has additional settings that we're not testing for, do
       // not consider that a failure.
-      if (isset($command['settings']) && is_array($command['settings']) && isset($needle['settings']) && is_array($needle['settings'])) {
+      if (isset($command['settings']) && \is_array($command['settings']) && isset($needle['settings']) && \is_array($needle['settings'])) {
         $command['settings'] = array_intersect_key($command['settings'], $needle['settings']);
       }
       // If the command has additional data that we're not testing for, do not

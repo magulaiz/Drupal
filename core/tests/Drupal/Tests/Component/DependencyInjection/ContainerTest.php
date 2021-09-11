@@ -438,7 +438,7 @@ class ContainerTest extends TestCase {
    */
   public function testGetWithFileInclude() {
     $this->container->get('container_test_file_service_test');
-    $this->assertTrue(function_exists('container_test_file_service_test_service_function'));
+    $this->assertTrue(\function_exists('container_test_file_service_test_service_function'));
     $this->assertEquals('Hello Container', container_test_file_service_test_service_function());
   }
 
@@ -491,7 +491,7 @@ class ContainerTest extends TestCase {
     $service = $this->container->get('service.provider');
     $factory_service = $this->container->get('factory_class');
 
-    $this->assertInstanceOf(get_class($service), $factory_service);
+    $this->assertInstanceOf(\get_class($service), $factory_service);
     $this->assertEquals('bar', $factory_service->getSomeParameter(), 'Correct parameter was passed via the factory class instantiation.');
     $this->assertEquals($this->container, $factory_service->getContainer(), 'Container was injected via setter injection.');
   }
@@ -694,11 +694,11 @@ class ContainerTest extends TestCase {
   protected function getMockContainerDefinition() {
     $fake_service = new \stdClass();
     $parameters = [];
-    $parameters['some_parameter_class'] = get_class($fake_service);
+    $parameters['some_parameter_class'] = \get_class($fake_service);
     $parameters['some_private_config'] = 'really_private_lama';
     $parameters['some_config'] = 'foo';
     $parameters['some_other_config'] = 'lama';
-    $parameters['factory_service_class'] = get_class($fake_service);
+    $parameters['factory_service_class'] = \get_class($fake_service);
     // Also test alias resolving.
     $parameters['service_from_parameter'] = $this->getServiceCall('service.provider_alias');
 
@@ -707,11 +707,11 @@ class ContainerTest extends TestCase {
       'class' => '\Drupal\service_container\DependencyInjection\Container',
     ];
     $services['other.service'] = [
-      'class' => get_class($fake_service),
+      'class' => \get_class($fake_service),
     ];
 
     $services['non_shared_service'] = [
-      'class' => get_class($fake_service),
+      'class' => \get_class($fake_service),
       'shared' => FALSE,
     ];
 
@@ -719,7 +719,7 @@ class ContainerTest extends TestCase {
       'class' => $this->getParameterCall('some_parameter_class'),
     ];
     $services['late.service'] = [
-      'class' => get_class($fake_service),
+      'class' => \get_class($fake_service),
     ];
     $services['service.provider'] = [
       'class' => '\Drupal\Tests\Component\DependencyInjection\MockService',
@@ -1049,7 +1049,7 @@ class MockInstantiationService {
    * Construct a mock instantiation service.
    */
   public function __construct() {
-    $this->arguments = func_get_args();
+    $this->arguments = \func_get_args();
   }
 
   /**
@@ -1101,7 +1101,7 @@ class MockService {
    *   (optional) An injected parameter.
    */
   public function __construct($some_other_service = NULL, $some_parameter = NULL) {
-    if (is_array($some_other_service)) {
+    if (\is_array($some_other_service)) {
       $some_other_service = $some_other_service[0];
     }
     $this->someOtherService = $some_other_service;

@@ -20,7 +20,7 @@ class RequestFormatRouteFilter implements FilterInterface {
     // Determine the request format.
     $default_format = static::getDefaultFormat($collection);
     // If the request does not specify a format then use the default.
-    if (is_null($request->getRequestFormat(NULL))) {
+    if (\is_null($request->getRequestFormat(NULL))) {
       $format = $default_format;
       $request->setRequestFormat($default_format);
     }
@@ -45,7 +45,7 @@ class RequestFormatRouteFilter implements FilterInterface {
     foreach ($routes_with_requirement as $name => $route) {
       // If the route has no _format specification, we move it to the end. If it
       // does, then no match means the route is removed entirely.
-      if (($supported_formats = array_filter(explode('|', $route->getRequirement('_format')))) && in_array($format, $supported_formats, TRUE)) {
+      if (($supported_formats = array_filter(explode('|', $route->getRequirement('_format')))) && \in_array($format, $supported_formats, TRUE)) {
         $result_collection->add($name, $route);
       }
     }
@@ -54,7 +54,7 @@ class RequestFormatRouteFilter implements FilterInterface {
       $result_collection->add($name, $route);
     }
 
-    if (count($result_collection)) {
+    if (\count($result_collection)) {
       return $result_collection;
     }
 
@@ -94,7 +94,7 @@ class RequestFormatRouteFilter implements FilterInterface {
     $formats = static::getAvailableFormats($collection);
 
     // The default format is 'html' unless ALL routes require the same format.
-    return count($formats) === 1
+    return \count($formats) === 1
       ? reset($formats)
       : 'html';
   }

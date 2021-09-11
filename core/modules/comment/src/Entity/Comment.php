@@ -131,7 +131,7 @@ class Comment extends ContentEntityBase implements CommentInterface {
             $max = rtrim($max, '/');
             // Get the value at the correct depth.
             $parts = explode('.', $max);
-            $parent_depth = count(explode('.', $parent->getThread()));
+            $parent_depth = \count(explode('.', $parent->getThread()));
             $n = Number::alphadecimalToInt($parts[$parent_depth]);
           }
         }

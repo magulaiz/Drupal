@@ -78,7 +78,7 @@ class FormOperations implements ContainerInjectionInterface {
     // Whitelist a few forms that we know are safe to submit.
     $form_object = $form_state->getFormObject();
     $is_workspace_form = $form_object instanceof WorkspaceFormInterface;
-    $is_search_form = in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE);
+    $is_search_form = \in_array($form_object->getFormId(), ['search_block_form', 'search_form'], TRUE);
     $is_views_exposed_form = $form_object instanceof ViewsExposedForm;
     if ($is_workspace_form || $is_search_form || $is_views_exposed_form) {
       $workspace_safe = TRUE;

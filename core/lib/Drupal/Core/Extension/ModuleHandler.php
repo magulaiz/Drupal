@@ -223,7 +223,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
       $graph[$module->getName()]['edges'] = [];
-      if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
+      if (isset($module->info['dependencies']) && \is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
           $dependency_data = Dependency::createFromString($dependency);
           $graph[$module->getName()]['edges'][$dependency_data->getName()] = $dependency_data;
@@ -312,9 +312,9 @@ class ModuleHandler implements ModuleHandlerInterface {
     // $this->invokeAll() would cause an infinite recursion.
     foreach ($this->moduleList as $module => $filename) {
       $function = $module . '_hook_info';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $result = $function();
-        if (isset($result) && is_array($result)) {
+        if (isset($result) && \is_array($result)) {
           $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
         }
       }
@@ -366,7 +366,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function implementsHook($module, $hook) {
     $function = $module . '_' . $hook;
-    if (function_exists($function)) {
+    if (\function_exists($function)) {
       return TRUE;
     }
     // If the hook implementation does not exist, check whether it lives in an
@@ -374,7 +374,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     $hook_info = $this->getHookInfo();
     if (isset($hook_info[$hook]['group'])) {
       $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         return TRUE;
       }
     }
@@ -389,7 +389,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       return;
     }
     $function = $module . '_' . $hook;
-    return call_user_func_array($function, $args);
+    return \call_user_func_array($function, $args);
   }
 
   /**
@@ -400,8 +400,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $implementations = $this->getImplementations($hook);
     foreach ($implementations as $module) {
       $function = $module . '_' . $hook;
-      $result = call_user_func_array($function, $args);
-      if (isset($result) && is_array($result)) {
+      $result = \call_user_func_array($function, $args);
+      if (isset($result) && \is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
       elseif (isset($result)) {
@@ -457,7 +457,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
     // specific variants of it, as in the case of array('form', 'form_FORM_ID').
-    if (is_array($type)) {
+    if (\is_array($type)) {
       $cid = implode(',', $type);
       $extra_types = $type;
       $type = array_shift($extra_types);
@@ -522,12 +522,12 @@ class ModuleHandler implements ModuleHandlerInterface {
           // know whether it has any particular implementation, so we need a
           // function_exists().
           $function = $module . '_' . $hook;
-          if (function_exists($function)) {
+          if (\function_exists($function)) {
             $this->alterFunctions[$cid][] = $function;
           }
           foreach ($extra_types as $extra_type) {
             $function = $module . '_' . $extra_type . '_alter';
-            if (function_exists($function)) {
+            if (\function_exists($function)) {
               $this->alterFunctions[$cid][] = $function;
             }
           }
@@ -551,7 +551,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     // internally, but we have to extract the proper $cid in order to discover
     // implementations.
     $cid = $type;
-    if (is_array($type)) {
+    if (\is_array($type)) {
       $cid = implode(',', $type);
       $extra_types = $type;
       $type = array_shift($extra_types);
@@ -627,7 +627,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $include_file = isset($hook_info[$hook]['group']) && $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
       // Since $this->implementsHook() may needlessly try to load the include
       // file again, function_exists() is used directly here.
-      if (function_exists($module . '_' . $hook)) {
+      if (\function_exists($module . '_' . $hook)) {
         $implementations[$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
       }
     }
@@ -647,7 +647,7 @@ class ModuleHandler implements ModuleHandlerInterface {
           $this->loadInclude($module, 'inc', "$module.$group");
         }
         // If a new implementation was added, verify that the function exists.
-        if (!function_exists($module . '_' . $hook)) {
+        if (!\function_exists($module . '_' . $hook)) {
           throw new \RuntimeException("An invalid implementation {$module}_{$hook} was added by hook_module_implements_alter()");
         }
       }
@@ -682,7 +682,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // function exists on each request to avoid undefined function errors.
       // Since ModuleHandler::implementsHook() may needlessly try to
       // load the include file again, function_exists() is used directly here.
-      if (!function_exists($module . '_' . $hook)) {
+      if (!\function_exists($module . '_' . $hook)) {
         // Clear out the stale implementation from the cache and force a cache
         // refresh to forget about no longer existing hook implementations.
         unset($implementations[$module]);

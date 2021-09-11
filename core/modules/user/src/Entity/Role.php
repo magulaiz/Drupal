@@ -120,7 +120,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
     if ($this->isAdmin()) {
       return TRUE;
     }
-    return in_array($permission, $this->permissions);
+    return \in_array($permission, $this->permissions);
   }
 
   /**
@@ -239,7 +239,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
         continue;
       }
 
-      if (in_array($permission_definitions[$permission]['provider'], $dependencies['module'], TRUE)) {
+      if (\in_array($permission_definitions[$permission]['provider'], $dependencies['module'], TRUE)) {
         unset($this->permissions[$key]);
         $changed = TRUE;
         // Process the next permission.

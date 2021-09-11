@@ -114,7 +114,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
     // requested version, without regard for whether a version query parameter
     // was provided or not.
     if (isset($defaults['entity'])) {
-      assert($defaults['entity'] instanceof EntityInterface);
+      \assert($defaults['entity'] instanceof EntityInterface);
       $defaults['entity']->addCacheContexts([static::CACHE_CONTEXT]);
     }
 
@@ -155,7 +155,7 @@ final class ResourceVersionRouteEnhancer implements EnhancerInterface {
       }
       // 'latest-version' and 'working-copy' are the only acceptable version
       // identifiers for a collection resource.
-      if (!in_array($resource_version_identifier, [$latest_version_identifier, $working_copy_identifier])) {
+      if (!\in_array($resource_version_identifier, [$latest_version_identifier, $working_copy_identifier])) {
         $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', static::CACHE_CONTEXT]);
         $message = sprintf('Collection resources only support the following resource version identifiers: %s', implode(', ', [
           $latest_version_identifier,

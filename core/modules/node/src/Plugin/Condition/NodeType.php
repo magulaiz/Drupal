@@ -96,7 +96,7 @@ class NodeType extends ConditionPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function summary() {
-    if (count($this->configuration['bundles']) > 1) {
+    if (\count($this->configuration['bundles']) > 1) {
       $bundles = $this->configuration['bundles'];
       $last = array_pop($bundles);
       $bundles = implode(', ', $bundles);

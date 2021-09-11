@@ -554,7 +554,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     $view_save_count = \Drupal::state()->get('views_test_data.view_save_count', []);
     foreach ($all_view_ids as $view_id) {
-      if (in_array($view_id, $updated_view_ids, TRUE)) {
+      if (\in_array($view_id, $updated_view_ids, TRUE)) {
         $this->assertTrue(isset($view_save_count[$view_id]), "The $view_id view has been updated.");
       }
       else {
@@ -564,7 +564,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
 
     // Check that all test cases are updating only a subset of all the available
     // views.
-    $this->assertGreaterThan(count($updated_view_ids), count($all_view_ids));
+    $this->assertGreaterThan(\count($updated_view_ids), \count($all_view_ids));
   }
 
 }

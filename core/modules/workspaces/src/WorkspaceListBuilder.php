@@ -333,7 +333,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
     }
 
     $items = [];
-    $rows = array_slice($build['table']['#rows'], 0, 5, TRUE);
+    $rows = \array_slice($build['table']['#rows'], 0, 5, TRUE);
     foreach ($rows as $id => $row) {
       if (!$active_workspace || $active_workspace->id() !== $id) {
         $url = Url::fromRoute('entity.workspace.activate_form', ['workspace' => $id], ['query' => $this->getDestinationArray()]);

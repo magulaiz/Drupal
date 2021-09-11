@@ -241,7 +241,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function load($id) {
-    assert(!is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
+    \assert(!\is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $entities = $this->loadMultiple([$id]);
     return isset($entities[$id]) ? $entities[$id] : NULL;
   }

@@ -276,7 +276,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
         // Get N random tags.
         $selected_tags = mt_rand(1, $num_tags);
         $tags = [];
-        while (count($tags) < $selected_tags) {
+        while (\count($tags) < $selected_tags) {
           $tags[] = mt_rand(1, $num_tags);
           $tags = array_unique($tags);
         }

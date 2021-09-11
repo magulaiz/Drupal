@@ -61,7 +61,7 @@ trait PhpUnitWarnings {
    * @internal
    */
   public function addWarning(string $warning): void {
-    if (in_array($warning, self::$deprecationWarnings, TRUE)) {
+    if (\in_array($warning, self::$deprecationWarnings, TRUE)) {
       // Convert listed PHPUnit deprecations into E_USER_DEPRECATED and prevent
       // each from being raised as a test warning.
       @trigger_error($warning, E_USER_DEPRECATED);

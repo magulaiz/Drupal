@@ -18,14 +18,14 @@ class MemoryStorage extends StorageBase {
    * {@inheritdoc}
    */
   public function has($key) {
-    return array_key_exists($key, $this->data);
+    return \array_key_exists($key, $this->data);
   }
 
   /**
    * {@inheritdoc}
    */
   public function get($key, $default = NULL) {
-    return array_key_exists($key, $this->data) ? $this->data[$key] : $default;
+    return \array_key_exists($key, $this->data) ? $this->data[$key] : $default;
   }
 
   /**

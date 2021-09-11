@@ -121,7 +121,7 @@ class ResourceResponseSubscriber implements EventSubscriberInterface {
       // Having just normalized the data, we can associate its cacheability with
       // the response object.
       if ($response instanceof CacheableResponseInterface) {
-        assert($jsonapi_doc_object instanceof CacheableNormalization);
+        \assert($jsonapi_doc_object instanceof CacheableNormalization);
         $response->addCacheableDependency($jsonapi_doc_object);
       }
       // Finally, encode the normalized data (JSON:API's encoder rasterizes it

@@ -39,7 +39,7 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
    */
   protected function setUpAuthorization($method) {
     parent::setUpAuthorization($method);
-    if (in_array($method, ['POST', 'PATCH'], TRUE)) {
+    if (\in_array($method, ['POST', 'PATCH'], TRUE)) {
       $this->grantPermissionsToTestedRole(['use text format my_text_format']);
     }
   }

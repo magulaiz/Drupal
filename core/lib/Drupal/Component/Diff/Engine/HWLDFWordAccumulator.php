@@ -64,7 +64,7 @@ class HWLDFWordAccumulator {
         $this->_flushLine($tag);
         $word = mb_substr($word, 1);
       }
-      assert(!strstr($word, "\n"));
+      \assert(!strstr($word, "\n"));
       $this->group .= $word;
     }
   }

@@ -173,7 +173,7 @@ class ConfigEntityTest extends BrowserTestBase {
     try {
       $status = $id_length_config_test->save();
       $this->fail(new FormattableMarkup("config_test entity with ID length @length exceeding the maximum allowed length of @max saved successfully", [
-        '@length' => strlen($id_length_config_test->id()),
+        '@length' => \strlen($id_length_config_test->id()),
         '@max' => static::MAX_ID_LENGTH,
       ]));
     }

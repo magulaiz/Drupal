@@ -132,7 +132,7 @@ class CronTest extends UnitTestCase {
     $queue_worker_plugin->processItem('RequeueException')->will(function ($args, $mock, $method) {
       // Fetch the number of calls to this prophesied method. This value will
       // start at zero during the first call.
-      $method_calls = count($mock->findProphecyMethodCalls($method->getMethodName(), new ArgumentsWildcard($args)));
+      $method_calls = \count($mock->findProphecyMethodCalls($method->getMethodName(), new ArgumentsWildcard($args)));
 
       // Throw the expected exception on the first few calls.
       if ($method_calls < self::REQUEUE_COUNT) {

@@ -64,7 +64,7 @@ class Radio extends FormElement {
     // #return_value that evaluates to empty.
     if (isset($element['#return_value']) &&
       $element['#value'] !== FALSE &&
-      !is_array($element['#value']) &&
+      !\is_array($element['#value']) &&
       ((empty($element['#value']) && empty($element['#return_value'])) || (string) $element['#value'] === (string) $element['#return_value'])) {
       $element['#attributes']['checked'] = 'checked';
     }

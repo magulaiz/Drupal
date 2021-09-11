@@ -69,7 +69,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
     ];
 
     $this->coreLibrariesWithJqueryUiAssets = array_filter($core_libraries, function ($key) use ($libraries_to_check) {
-      return in_array($key, $libraries_to_check);
+      return \in_array($key, $libraries_to_check);
     }, ARRAY_FILTER_USE_KEY);
 
     // Loop through the core libraries with jQuery assets to build an array that
@@ -213,7 +213,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
   protected function trimFilePath($path) {
     $base_path_position = strpos($path, base_path());
     if ($base_path_position !== FALSE) {
-      $path = substr_replace($path, '', $base_path_position, strlen(base_path()));
+      $path = substr_replace($path, '', $base_path_position, \strlen(base_path()));
     }
     $query_pos = strpos($path, '?');
     return $query_pos !== FALSE ? substr($path, 0, $query_pos) : $path;
@@ -255,7 +255,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       $file = $this->trimFilePath($item->getAttribute('href'));
       $found = FALSE;
       foreach ($this->weightGroupedAssets as $key => $array) {
-        if (in_array($file, $array)) {
+        if (\in_array($file, $array)) {
           $found = TRUE;
           $this->assertGreaterThanOrEqual($css_weight, $key, "The file $file not loading in the expected order based on its weight value.");
           $css_weight = $key;
@@ -272,7 +272,7 @@ class JqueryUiLibraryAssetsTest extends BrowserTestBase {
       $file = $this->trimFilePath($item->getAttribute('src'));
       $found = FALSE;
       foreach ($this->weightGroupedAssets as $key => $array) {
-        if (in_array($file, $array)) {
+        if (\in_array($file, $array)) {
           $found = TRUE;
           $this->assertGreaterThanOrEqual($js_weight, $key, "The file $file not loading in the expected order based on its weight value.");
           $js_weight = $key;

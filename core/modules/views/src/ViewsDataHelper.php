@@ -82,7 +82,7 @@ class ViewsDataHelper {
               if ($grouping && !empty($info[$key]['no group by'])) {
                 continue;
               }
-              if ($sub_type && isset($info[$key]['sub_type']) && (!in_array($sub_type, (array) $info[$key]['sub_type']))) {
+              if ($sub_type && isset($info[$key]['sub_type']) && (!\in_array($sub_type, (array) $info[$key]['sub_type']))) {
                 continue;
               }
               if (!empty($info[$key]['skip base'])) {
@@ -141,7 +141,7 @@ class ViewsDataHelper {
     // If we have an array of base tables available, go through them
     // all and add them together. Duplicate keys will be lost and that's
     // Just Fine.
-    if (is_array($base)) {
+    if (\is_array($base)) {
       $strings = [];
       foreach ($base as $base_table) {
         if (isset($this->fields[$base_table][$type])) {

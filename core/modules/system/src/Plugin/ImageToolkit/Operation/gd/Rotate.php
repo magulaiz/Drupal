@@ -88,7 +88,7 @@ class Rotate extends GDImageToolkitOperationBase {
    */
   protected function execute(array $arguments) {
     // PHP installations using non-bundled GD do not have imagerotate.
-    if (!function_exists('imagerotate')) {
+    if (!\function_exists('imagerotate')) {
       $this->logger->notice('The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', ['%file' => $this->getToolkit()->getSource()]);
       return FALSE;
     }

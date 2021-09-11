@@ -59,7 +59,7 @@ class Update extends QueryUpdate {
       }
     }
 
-    if (count($this->condition)) {
+    if (\count($this->condition)) {
       $this->condition->compile($this->connection, $this);
 
       $arguments = $this->condition->arguments();

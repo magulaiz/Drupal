@@ -88,7 +88,7 @@ class StableTemplateOverrideTest extends KernelTestBase {
     foreach ($registry_full as $hook => $info) {
       if (isset($info['template'])) {
         // Allow skipping templates.
-        if (in_array($info['template'], $this->templatesToSkip)) {
+        if (\in_array($info['template'], $this->templatesToSkip)) {
           continue;
         }
 

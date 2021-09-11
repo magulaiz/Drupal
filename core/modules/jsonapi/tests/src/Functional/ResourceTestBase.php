@@ -227,7 +227,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $user_role->revokePermission($permission);
     }
     $user_role->save();
-    assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
+    \assert([] === $user_role->getPermissions(), 'The anonymous user role has no permissions at all.');
 
     // Ensure the authenticated user role has no permissions at all.
     $user_role = Role::load(RoleInterface::AUTHENTICATED_ID);
@@ -235,7 +235,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $user_role->revokePermission($permission);
     }
     $user_role->save();
-    assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
+    \assert([] === $user_role->getPermissions(), 'The authenticated user role has no permissions at all.');
 
     // Create an account, which tests will use. Also ensure the @current_user
     // service this account, to ensure certain access check logic in tests works
@@ -411,7 +411,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function createAnotherEntity($key) {
     $duplicate = $this->getEntityDuplicate($this->entity, $key);
     // Some entity types are not stored, hence they cannot be reloaded.
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+    if (\get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
       $duplicate->set('field_rest_test', 'Second collection entity');
     }
     $duplicate->save();
@@ -558,7 +558,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         if ($entity instanceof FieldableEntityInterface) {
           foreach ($entity as $field_name => $field_item_list) {
             /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
-            if (is_null($sparse_fieldset) || in_array($field_name, $sparse_fieldset)) {
+            if (\is_null($sparse_fieldset) || \in_array($field_name, $sparse_fieldset)) {
               $field_access = static::entityFieldAccess($entity, $field_name, 'view', $account);
               $cacheability->addCacheableDependency($field_access);
               if ($field_access->isAllowed()) {
@@ -624,7 +624,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @see ::testRevisions()
    */
   protected function setUpRevisionAuthorization($method) {
-    assert($method === 'GET', 'Only read operations on revisions are supported.');
+    \assert($method === 'GET', 'Only read operations on revisions are supported.');
     $this->setUpAuthorization($method);
   }
 
@@ -721,13 +721,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Expected cache tags: X-Drupal-Cache-Tags header.
     $this->assertSame($expected_cache_tags !== FALSE, $response->hasHeader('X-Drupal-Cache-Tags'));
-    if (is_array($expected_cache_tags)) {
+    if (\is_array($expected_cache_tags)) {
       $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
     }
 
     // Expected cache contexts: X-Drupal-Cache-Contexts header.
     $this->assertSame($expected_cache_contexts !== FALSE, $response->hasHeader('X-Drupal-Cache-Contexts'));
-    if (is_array($expected_cache_contexts)) {
+    if (\is_array($expected_cache_contexts)) {
       $optimized_expected_cache_contexts = \Drupal::service('cache_contexts_manager')->optimizeTokens($expected_cache_contexts);
       $this->assertEqualsCanonicalizing($optimized_expected_cache_contexts, explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
     }
@@ -824,7 +824,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Defaults to FALSE.
    */
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
-    assert(is_null($via_link) || $via_link instanceof Url);
+    \assert(\is_null($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
       $expected_error['title'] = Response::$statusTexts[$expected_status_code];
@@ -982,7 +982,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ->condition('cid', '%[route]=jsonapi.%', 'LIKE')
       ->execute()
       ->fetchAllAssoc('cid');
-    $this->assertGreaterThanOrEqual(2, count($cache_items));
+    $this->assertGreaterThanOrEqual(2, \count($cache_items));
     $found_cache_redirect = FALSE;
     $found_cached_200_response = FALSE;
     $other_cached_responses_are_4xx = TRUE;
@@ -1031,7 +1031,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ];
     $header_cleaner = function ($headers) use ($ignored_headers) {
       foreach ($headers as $header => $value) {
-        if (strpos($header, 'X-Drupal-Assertion-') === 0 || in_array($header, $ignored_headers)) {
+        if (strpos($header, 'X-Drupal-Assertion-') === 0 || \in_array($header, $ignored_headers)) {
           unset($headers[$header]);
         }
       }
@@ -1066,7 +1066,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    */
   public function testCollection() {
     $entity_collection = $this->getData();
-    assert(count($entity_collection) > 1, 'A collection must have more that one entity in it.');
+    \assert(\count($entity_collection) > 1, 'A collection must have more that one entity in it.');
 
     $collection_url = Url::fromRoute(sprintf('jsonapi.%s.collection', static::$resourceTypeName))->setAbsolute(TRUE);
     $request_options = [];
@@ -1259,7 +1259,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $collection_response = new CacheableResourceResponse($merged_document);
     $collection_response->addCacheableDependency($cacheability);
 
-    if (is_null($included_paths)) {
+    if (\is_null($included_paths)) {
       return $collection_response;
     }
 
@@ -1431,11 +1431,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $resource = $this->createAnotherEntity('dupe');
     $resource->set('field_jsonapi_test_entity_ref', NULL);
     $violations = $resource->validate();
-    assert($violations->count() === 0, (string) $violations);
+    \assert($violations->count() === 0, (string) $violations);
     $resource->save();
     $target_resource = $this->createUser();
     $violations = $target_resource->validate();
-    assert($violations->count() === 0, (string) $violations);
+    \assert($violations->count() === 0, (string) $violations);
     $target_resource->save();
     $target_identifier = static::toResourceIdentifier($target_resource);
     $resource_identifier = static::toResourceIdentifier($resource);
@@ -1720,7 +1720,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $self_link = Url::fromUri("base:/jsonapi/$entity_type_id/$bundle/$id/relationships/$relationship_field_name")->setAbsolute();
     $related_link = Url::fromUri("base:/jsonapi/$entity_type_id/$bundle/$id/$relationship_field_name")->setAbsolute();
     if (static::$resourceTypeIsVersionable) {
-      assert($entity instanceof RevisionableInterface);
+      \assert($entity instanceof RevisionableInterface);
       $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId()];
       $related_link->setOption('query', $version_query);
     }
@@ -1757,7 +1757,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     if (!$is_multiple) {
       $target_entity = $field->entity;
-      if (is_null($target_entity)) {
+      if (\is_null($target_entity)) {
         return NULL;
       }
 
@@ -1770,7 +1770,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $relation_list = array_filter(array_map(function ($item) use (&$arity_counter) {
         $target_entity = $item->entity;
 
-        if (is_null($target_entity)) {
+        if (\is_null($target_entity)) {
           return NULL;
         }
 
@@ -1920,7 +1920,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
           $related_response = $relationship_response;
         }
         else {
-          $cardinality = is_null($relationship_document['data']) ? 1 : -1;
+          $cardinality = \is_null($relationship_document['data']) ? 1 : -1;
           $related_response = (new CacheableResourceResponse(static::getEmptyCollectionResponse($cardinality, $self_link)->getResponseData()))->addCacheableDependency($cacheability);
         }
       }
@@ -2064,13 +2064,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
     // If the entity is stored, perform extra checks.
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+    if (\get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
       $created_entity = $this->entityLoadUnchanged(static::$firstCreatedEntityId);
       $uuid = $created_entity->uuid();
       // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
       $location = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
       if (static::$resourceTypeIsVersionable) {
-        assert($created_entity instanceof RevisionableInterface);
+        \assert($created_entity instanceof RevisionableInterface);
         $location->setOption('query', ['resourceVersion' => 'id:' . $created_entity->getRevisionId()]);
       }
       /* $location = $this->entityStorage->load(static::$firstCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
@@ -2086,7 +2086,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         // If the value is an array of properties, only verify that the sent
         // properties are present, the server could be computing additional
         // properties.
-        if (is_array($field_normalization)) {
+        if (\is_array($field_normalization)) {
           foreach ($field_normalization as $value) {
             $this->assertContains($value, $created_entity_document['data']['attributes'][$field_name]);
           }
@@ -2111,7 +2111,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // 201 for well-formed request that creates another entity.
     // If the entity is stored, delete the first created entity (in case there
     // is a uniqueness constraint).
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+    if (\get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
       $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
     }
     $response = $this->request('POST', $url, $request_options);
@@ -2125,7 +2125,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $location = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
       /* $location = $this->entityStorage->load(static::$secondCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       if (static::$resourceTypeIsVersionable) {
-        assert($created_entity instanceof RevisionableInterface);
+        \assert($created_entity instanceof RevisionableInterface);
         $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId()]);
       }
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
@@ -2341,7 +2341,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // If the value is an array of properties, only verify that the sent
       // properties are present, the server could be computing additional
       // properties.
-      if (is_array($field_normalization)) {
+      if (\is_array($field_normalization)) {
         foreach ($field_normalization as $value) {
           $this->assertContains($value, $updated_entity_document['data']['attributes'][$field_name]);
         }
@@ -2434,7 +2434,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity->getEntityType()->hasHandlerClass('moderation') || !$this->entity instanceof FieldableEntityInterface) {
       return;
     }
-    assert($this->entity instanceof RevisionableInterface);
+    \assert($this->entity instanceof RevisionableInterface);
 
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
     $request_options[RequestOptions::BODY] = Json::encode([
@@ -2538,7 +2538,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Then check for child arrays.
     foreach ($array as $key => &$value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         static::recursiveKsort($value);
       }
     }
@@ -2643,8 +2643,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_cacheability = new CacheableMetadata();
     foreach ($field_sets as $type => $field_set) {
       if ($type === 'all') {
-        assert($this->getExpectedCacheTags($field_set) === $this->getExpectedCacheTags());
-        assert($this->getExpectedCacheContexts($field_set) === $this->getExpectedCacheContexts());
+        \assert($this->getExpectedCacheTags($field_set) === $this->getExpectedCacheTags());
+        \assert($this->getExpectedCacheContexts($field_set) === $this->getExpectedCacheContexts());
       }
       $query = ['fields[' . static::$resourceTypeName . ']' => implode(',', $field_set)];
       $expected_document = $this->getExpectedDocument();
@@ -2725,12 +2725,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'empty' => [],
       'all' => $relationship_field_names,
     ];
-    if (count($relationship_field_names) > 1) {
-      $about_half_the_fields = floor(count($relationship_field_names) / 2);
-      $field_sets['some'] = array_slice($relationship_field_names, $about_half_the_fields);
+    if (\count($relationship_field_names) > 1) {
+      $about_half_the_fields = floor(\count($relationship_field_names) / 2);
+      $field_sets['some'] = \array_slice($relationship_field_names, $about_half_the_fields);
 
       $nested_includes = $this->getNestedIncludePaths();
-      if (!empty($nested_includes) && !in_array($nested_includes, $field_sets)) {
+      if (!empty($nested_includes) && !\in_array($nested_includes, $field_sets)) {
         $field_sets['nested'] = $nested_includes;
       }
     }
@@ -2766,7 +2766,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!$this->entity->getEntityType()->isRevisionable() || !$this->entity instanceof FieldableEntityInterface) {
       return;
     }
-    assert($this->entity instanceof RevisionableInterface);
+    \assert($this->entity instanceof RevisionableInterface);
 
     // JSON:API will only support node and media revisions until Drupal core has
     // a generic revision access API.
@@ -3151,7 +3151,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       list($revision_id, $relationship_url, $related_url) = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
+      $revision = \is_null($revision_id)
         ? $this->entityStorage->load($entity->id())
         : $this->entityStorage->loadRevision($revision_id);
       // Request the relationship resource without access to the relationship
@@ -3176,7 +3176,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       list($revision_id, $relationship_url, $related_url) = $revision_case;
       // Load the revision that will be requested.
       $this->entityStorage->resetCache([$entity->id()]);
-      $revision = is_null($revision_id)
+      $revision = \is_null($revision_id)
         ? $this->entityStorage->load($entity->id())
         : $this->entityStorage->loadRevision($revision_id);
       // Request the relationship resource after granting access to the
@@ -3315,7 +3315,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $field_names = array_keys($this->entity->toArray());
     $field_sets = [
       'empty' => [],
-      'some' => array_slice($field_names, floor(count($field_names) / 2)),
+      'some' => \array_slice($field_names, floor(\count($field_names) / 2)),
       'all' => $field_names,
     ];
     if ($this->entity instanceof EntityOwnerInterface) {

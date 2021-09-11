@@ -36,7 +36,7 @@ class UrlEncode extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     // Only apply to a full URL.
-    if (is_string($value) && strpos($value, '://') > 0) {
+    if (\is_string($value) && strpos($value, '://') > 0) {
       // URL encode everything after the hostname.
       $parsed_url = parse_url($value);
       // Fail on seriously malformed URLs.
@@ -46,7 +46,7 @@ class UrlEncode extends ProcessPluginBase {
       // Iterate over specific pieces of the URL rawurlencoding each one.
       $url_parts_to_encode = ['path', 'query', 'fragment'];
       foreach ($parsed_url as $parsed_url_key => $parsed_url_value) {
-        if (in_array($parsed_url_key, $url_parts_to_encode)) {
+        if (\in_array($parsed_url_key, $url_parts_to_encode)) {
           // urlencode() would convert spaces to + signs.
           $urlencoded_parsed_url_value = rawurlencode($parsed_url_value);
           // Restore special characters depending on which part of the URL this is.

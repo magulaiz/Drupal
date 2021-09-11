@@ -68,7 +68,7 @@ class IncludeResolver {
    *   Thrown if a storage handler couldn't be loaded.
    */
   public function resolve($data, $include_parameter) {
-    assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
+    \assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
     $data = $data instanceof ResourceObjectData ? $data : new ResourceObjectData([$data], 1);
     $include_tree = static::toIncludeTree($data, $include_parameter);
     return IncludedData::deduplicate($this->resolveIncludeTree($include_tree, $data));
@@ -99,13 +99,13 @@ class IncludeResolver {
    *   Thrown if a storage handler couldn't be loaded.
    */
   protected function resolveIncludeTree(array $include_tree, Data $data, Data $includes = NULL) {
-    $includes = is_null($includes) ? new IncludedData([]) : $includes;
+    $includes = \is_null($includes) ? new IncludedData([]) : $includes;
     foreach ($include_tree as $field_name => $children) {
       $references = [];
       foreach ($data as $resource_object) {
         // Some objects in the collection may be LabelOnlyResourceObjects or
         // EntityAccessDeniedHttpException objects.
-        assert($resource_object instanceof ResourceIdentifierInterface);
+        \assert($resource_object instanceof ResourceIdentifierInterface);
         $public_field_name = $resource_object->getResourceType()->getPublicName($field_name);
 
         if ($resource_object instanceof LabelOnlyResourceObject) {
@@ -138,9 +138,9 @@ class IncludeResolver {
           continue;
         }
         $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
-        assert(!empty($target_type));
+        \assert(!empty($target_type));
         foreach ($field_list as $field_item) {
-          assert($field_item instanceof EntityReferenceItem);
+          \assert($field_item instanceof EntityReferenceItem);
           $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
         }
       }

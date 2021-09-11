@@ -50,7 +50,7 @@ class DrupalSelenium2DriverTest extends WebDriverTestBase {
     $entity = EntityTest::create();
     $entity->save();
 
-    $files = array_slice($this->getTestFiles('text'), 0, 3);
+    $files = \array_slice($this->getTestFiles('text'), 0, 3);
     $real_paths = [];
     foreach ($files as $file) {
       $real_paths[] = $file_system->realpath($file->uri);

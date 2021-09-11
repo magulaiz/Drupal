@@ -29,7 +29,7 @@ class SelectLanguageForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $install_state = NULL) {
-    if (count($install_state['translations']) > 1) {
+    if (\count($install_state['translations']) > 1) {
       $files = $install_state['translations'];
     }
     else {
@@ -50,7 +50,7 @@ class SelectLanguageForm extends FormBase {
       $browser_options[$langcode] = $langcode;
     }
     // Add languages based on language files in the translations directory.
-    if (count($files)) {
+    if (\count($files)) {
       foreach ($files as $langcode => $uri) {
         $select_options[$langcode] = isset($standard_languages[$langcode]) ? $standard_languages[$langcode][1] : $langcode;
         $browser_options[$langcode] = $langcode;

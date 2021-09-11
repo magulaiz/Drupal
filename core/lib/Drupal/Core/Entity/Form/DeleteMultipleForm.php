@@ -120,7 +120,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->formatPlural(count($this->selection), 'Are you sure you want to delete this @item?', 'Are you sure you want to delete these @items?', [
+    return $this->formatPlural(\count($this->selection), 'Are you sure you want to delete this @item?', 'Are you sure you want to delete these @items?', [
       '@item' => $this->entityType->getSingularLabel(),
       '@items' => $this->entityType->getPluralLabel(),
     ]);
@@ -171,7 +171,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
           // Build a nested list of translations that will be deleted if the
           // entity has multiple translations.
           $entity_languages = $entity->getTranslationLanguages();
-          if (count($entity_languages) > 1 && $entity->isDefaultTranslation()) {
+          if (\count($entity_languages) > 1 && $entity->isDefaultTranslation()) {
             $names = [];
             foreach ($entity_languages as $translation_langcode => $language) {
               $names[] = $language->getName();
@@ -240,7 +240,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
             // Update the total count. Since a single delete will delete all
             // translations, we need to add the number of translations to the
             // count.
-            $total_count += count($entity->getTranslationLanguages());
+            $total_count += \count($entity->getTranslationLanguages());
           }
           // Add the translation to the list of translations to be deleted
           // unless the default translation is being deleted.
@@ -280,7 +280,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
             '@language'    => $translation->language()->getName(),
           ]);
         }
-        $total_count += count($translations);
+        $total_count += \count($translations);
       }
     }
 
@@ -288,7 +288,7 @@ class DeleteMultipleForm extends ConfirmFormBase implements BaseFormIdInterface 
       $this->messenger->addStatus($this->getDeletedMessage($total_count));
     }
     if ($inaccessible_entities) {
-      $this->messenger->addWarning($this->getInaccessibleMessage(count($inaccessible_entities)));
+      $this->messenger->addWarning($this->getInaccessibleMessage(\count($inaccessible_entities)));
     }
     $this->tempStore->delete($this->currentUser->id());
     $form_state->setRedirectUrl($this->getCancelUrl());

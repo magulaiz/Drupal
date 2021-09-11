@@ -160,7 +160,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    */
   public function getAuthenticationProvidersForMethodGranularity($method) {
     $method = $this->normalizeRestMethod($method);
-    if (in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_auth'])) {
+    if (\in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_auth'])) {
       return $this->configuration[$method]['supported_auth'];
     }
     return [];
@@ -193,7 +193,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    */
   protected function getFormatsForMethodGranularity($method) {
     $method = $this->normalizeRestMethod($method);
-    if (in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_formats'])) {
+    if (\in_array($method, $this->getMethods()) && isset($this->configuration[$method]['supported_formats'])) {
       return $this->configuration[$method]['supported_formats'];
     }
     return [];

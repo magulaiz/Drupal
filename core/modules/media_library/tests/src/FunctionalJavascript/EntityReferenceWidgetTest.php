@@ -376,7 +376,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // Assert the selection is cleared when the modal is closed.
     $this->openMediaLibraryForField('field_unlimited_media');
     $checkboxes = $this->getCheckboxes();
-    $this->assertGreaterThanOrEqual(4, count($checkboxes));
+    $this->assertGreaterThanOrEqual(4, \count($checkboxes));
     // Nothing is selected yet.
     $this->assertFalse($checkboxes[0]->isChecked());
     $this->assertFalse($checkboxes[1]->isChecked());
@@ -396,7 +396,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $assert_session->elementExists('css', '.ui-dialog-titlebar-close')->click();
     $this->openMediaLibraryForField('field_unlimited_media');
     $checkboxes = $this->getCheckboxes();
-    $this->assertGreaterThanOrEqual(4, count($checkboxes));
+    $this->assertGreaterThanOrEqual(4, \count($checkboxes));
     $this->assertFalse($checkboxes[0]->isChecked());
     $this->assertFalse($checkboxes[1]->isChecked());
     $this->assertFalse($checkboxes[2]->isChecked());

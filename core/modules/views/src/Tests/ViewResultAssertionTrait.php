@@ -93,13 +93,13 @@ trait ViewResultAssertionTrait {
         // using the entity itself.
         elseif (empty($value->$view_column) && isset($view->field[$expected_column]) && ($field = $view->field[$expected_column]) && $field instanceof EntityField) {
           $column = NULL;
-          if (count(explode(':', $view_column)) == 2) {
+          if (\count(explode(':', $view_column)) == 2) {
             $column = explode(':', $view_column)[1];
           }
           // The comparison will be done on the string representation of the
           // value.
           $field_value = $field->getValue($value, $column);
-          $row[$expected_column] = is_array($field_value) ? array_map('strval', $field_value) : (string) $field_value;
+          $row[$expected_column] = \is_array($field_value) ? array_map('strval', $field_value) : (string) $field_value;
         }
       }
       $result[$key] = $row;
@@ -110,11 +110,11 @@ trait ViewResultAssertionTrait {
       $row = [];
       foreach ($column_map as $expected_column) {
         // The comparison will be done on the string representation of the value.
-        if (is_object($value)) {
+        if (\is_object($value)) {
           $row[$expected_column] = (string) $value->$expected_column;
         }
         // This case is about fields with multiple values.
-        elseif (is_array($value[$expected_column])) {
+        elseif (\is_array($value[$expected_column])) {
           foreach (array_keys($value[$expected_column]) as $delta) {
             $row[$expected_column][$delta] = (string) $value[$expected_column][$delta];
           }

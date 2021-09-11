@@ -917,7 +917,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $name, $matches)) {
         foreach ($values as $value) {
           $parameters = unserialize(urldecode($value));
-          if (count($parameters) === 3) {
+          if (\count($parameters) === 3) {
             if ($parameters[1] === 'User deprecated function') {
               $deprecation_messages[] = (string) $parameters[0];
             }

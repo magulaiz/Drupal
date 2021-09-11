@@ -147,7 +147,7 @@ class QuickEditController extends ControllerBase {
 
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->getEntityTypeId() . '/' . $entity_id;
-      if (is_array($entities) && in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
+      if (\is_array($entities) && \in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
         $metadata[$entity_id] = $this->metadataGenerator->generateEntityMetadata($entity);
       }
 
@@ -243,7 +243,7 @@ class QuickEditController extends ControllerBase {
       $response->addCommand(new FieldFormCommand($output));
 
       $errors = $form_state->getErrors();
-      if (count($errors)) {
+      if (\count($errors)) {
         $status_messages = [
           '#type' => 'status_messages',
         ];
@@ -281,7 +281,7 @@ class QuickEditController extends ControllerBase {
    */
   protected function renderField(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $entity_view_mode_ids = array_keys($this->entityDisplayRepository->getViewModes($entity->getEntityTypeId()));
-    if (in_array($view_mode_id, $entity_view_mode_ids)) {
+    if (\in_array($view_mode_id, $entity_view_mode_ids)) {
       $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
       $output = $entity->get($field_name)->view($view_mode_id);
     }

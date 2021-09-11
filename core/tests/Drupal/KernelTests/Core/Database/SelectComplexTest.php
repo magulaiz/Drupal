@@ -216,7 +216,7 @@ class SelectComplexTest extends DatabaseTestBase {
       ->having('[age] + 1 > 0');
     $query->addField('test', 'age');
     $query->addExpression('[age] + 1');
-    $count = count($query->execute()->fetchCol());
+    $count = \count($query->execute()->fetchCol());
     $this->assertEquals(4, $count, 'Counted the correct number of records.');
   }
 

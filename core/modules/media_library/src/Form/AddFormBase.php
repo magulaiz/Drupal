@@ -167,7 +167,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
         '#type' => 'inline_template',
         '#template' => '<p>{{ text }}</p>',
         '#context' => [
-          'text' => $this->formatPlural(count($added_media), 'The media item has been created but has not yet been saved. Fill in any required fields and save to add it to the media library.', 'The media items have been created but have not yet been saved. Fill in any required fields and save to add them to the media library.'),
+          'text' => $this->formatPlural(\count($added_media), 'The media item has been created but has not yet been saved. Fill in any required fields and save to add it to the media library.', 'The media items have been created but have not yet been saved. Fill in any required fields and save to add them to the media library.'),
         ],
       ];
 
@@ -560,7 +560,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     // Retrieve the delta of the media item from the parents of the remove
     // button.
     $triggering_element = $form_state->getTriggeringElement();
-    $delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+    $delta = \array_slice($triggering_element['#array_parents'], -2, 1)[0];
 
     $added_media = $form_state->get('media');
     $removed_media = $added_media[$delta];
@@ -620,7 +620,7 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
         // Find the delta of the next media item. If there is no item with a
         // bigger delta, we automatically use the delta of the previous item and
         // shift the focus there.
-        $removed_delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+        $removed_delta = \array_slice($triggering_element['#array_parents'], -2, 1)[0];
         $delta_to_focus = 0;
         foreach ($added_media as $delta => $media) {
           $delta_to_focus = $delta;

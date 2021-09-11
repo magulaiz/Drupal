@@ -157,7 +157,7 @@ class Log {
 
     // Return the first function call whose stack entry has a 'file' key, that
     // is, it is not a callback or a closure.
-    for ($i = 0; $i < count($stack); $i++) {
+    for ($i = 0; $i < \count($stack); $i++) {
       if (!empty($stack[$i]['file'])) {
         return [
           'file' => $stack[$i]['file'],
@@ -186,7 +186,7 @@ class Log {
     // Starting from the very first entry processed during the request, find
     // the first function call that can be identified as a call to a
     // method/function in the database layer.
-    for ($n = count($backtrace) - 1; $n >= 0; $n--) {
+    for ($n = \count($backtrace) - 1; $n >= 0; $n--) {
       // If the call was made from a function, 'class' will be empty. We give
       // it a default empty string value in that case.
       $class = $backtrace[$n]['class'] ?? '';
@@ -195,7 +195,7 @@ class Log {
       }
     }
 
-    return array_values(array_slice($backtrace, $n));
+    return array_values(\array_slice($backtrace, $n));
   }
 
   /**

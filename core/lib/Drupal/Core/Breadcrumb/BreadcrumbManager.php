@@ -87,7 +87,7 @@ class BreadcrumbManager implements ChainBreadcrumbBuilderInterface {
         break;
       }
       else {
-        throw new \UnexpectedValueException('Invalid breadcrumb returned by ' . get_class($builder) . '::build().');
+        throw new \UnexpectedValueException('Invalid breadcrumb returned by ' . \get_class($builder) . '::build().');
       }
     }
     // Allow modules to alter the breadcrumb.

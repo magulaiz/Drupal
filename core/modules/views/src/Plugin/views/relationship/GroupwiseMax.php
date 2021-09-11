@@ -303,10 +303,10 @@ class GroupwiseMax extends RelationshipPluginBase {
     foreach ($conditions as $condition_id => &$condition) {
       // Skip the #conjunction element.
       if (is_numeric($condition_id)) {
-        if (is_string($condition['field'])) {
+        if (\is_string($condition['field'])) {
           $condition['field'] = $this->conditionNamespace($condition['field']);
         }
-        elseif (is_object($condition['field'])) {
+        elseif (\is_object($condition['field'])) {
           $sub_conditions = &$condition['field']->conditions();
           $this->alterSubqueryCondition($query, $sub_conditions);
         }

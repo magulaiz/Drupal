@@ -162,7 +162,7 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
   public function defaultableSections($section = NULL) {
     $sections = parent::defaultableSections($section);
 
-    if (in_array($section, ['style', 'row'])) {
+    if (\in_array($section, ['style', 'row'])) {
       return FALSE;
     }
 
@@ -235,10 +235,10 @@ class Feed extends PathPluginBase implements ResponseDisplayPluginInterface {
     }
 
     $displays = array_filter($this->getOption('displays'));
-    if (count($displays) > 1) {
+    if (\count($displays) > 1) {
       $attach_to = $this->t('Multiple displays');
     }
-    elseif (count($displays) == 1) {
+    elseif (\count($displays) == 1) {
       $display = array_shift($displays);
       $displays = $this->view->storage->get('display');
       if (!empty($displays[$display])) {

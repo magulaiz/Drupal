@@ -23,7 +23,7 @@ class FieldSettings extends ProcessPluginBase {
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     // To maintain backwards compatibility, ensure that $value contains at least
     // three elements.
-    if (count($value) == 2) {
+    if (\count($value) == 2) {
       $value[] = NULL;
     }
     list($field_type, $global_settings, $original_field_type) = $value;

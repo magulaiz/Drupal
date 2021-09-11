@@ -30,7 +30,7 @@ class HtmlTagTest extends RendererTestBase {
   public function testPreRenderHtmlTag($element, $expected) {
     $result = HtmlTag::preRenderHtmlTag($element);
     foreach ($result as &$child) {
-      if (is_array($child) && isset($child['#tag'])) {
+      if (\is_array($child) && isset($child['#tag'])) {
         $child = HtmlTag::preRenderHtmlTag($child);
       }
     }

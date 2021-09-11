@@ -328,7 +328,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
 
     // Disallow reserved field names.
     $disallowed_field_names = array_keys($entity_field_manager->getBaseFieldDefinitions($this->getTargetEntityTypeId()));
-    if (in_array($this->getName(), $disallowed_field_names)) {
+    if (\in_array($this->getName(), $disallowed_field_names)) {
       throw new FieldException("Attempt to create field storage {$this->getName()} which is reserved by entity type {$this->getTargetEntityTypeId()}.");
     }
 
@@ -556,11 +556,11 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // @todo See getSettings() about potentially statically caching this.
     // We assume here that one call to array_key_exists() is more efficient
     // than calling getSettings() when all we need is a single setting.
-    if (array_key_exists($setting_name, $this->settings)) {
+    if (\array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
     $settings = $this->getSettings();
-    if (array_key_exists($setting_name, $settings)) {
+    if (\array_key_exists($setting_name, $settings)) {
       return $settings[$setting_name];
     }
     else {
@@ -814,7 +814,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     // The field storage is not deleted, is configured to be removed when there
     // are no fields, the field storage has no bundles, and field storages are
     // not in the process of being deleted.
-    return !$this->deleted && !$this->persist_with_no_fields && count($this->getBundles()) == 0 && !static::$inDeletion;
+    return !$this->deleted && !$this->persist_with_no_fields && \count($this->getBundles()) == 0 && !static::$inDeletion;
   }
 
   /**

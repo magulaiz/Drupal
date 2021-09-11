@@ -120,7 +120,7 @@ class CredentialForm extends MigrateUpgradeFormBase {
       '#required' => TRUE,
       '#default_value' => $default_driver,
     ];
-    if (count($drivers) == 1) {
+    if (\count($drivers) == 1) {
       $form['database']['driver']['#disabled'] = TRUE;
     }
 

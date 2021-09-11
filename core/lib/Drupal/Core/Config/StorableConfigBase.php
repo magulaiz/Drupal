@@ -151,7 +151,7 @@ abstract class StorableConfigBase extends ConfigBase {
    */
   protected function validateValue($key, $value) {
     // Minimal validation. Should not try to serialize resources or non-arrays.
-    if (is_array($value)) {
+    if (\is_array($value)) {
       foreach ($value as $nested_value_key => $nested_value) {
         $this->validateValue($key . '.' . $nested_value_key, $nested_value);
       }
@@ -203,7 +203,7 @@ abstract class StorableConfigBase extends ConfigBase {
     }
     else {
       // Throw exception on any non-scalar or non-array value.
-      if (!is_array($value)) {
+      if (!\is_array($value)) {
         throw new UnsupportedDataTypeConfigException("Invalid data type for config element {$this->getName()}:$key");
       }
       // Recurse into any nested keys.

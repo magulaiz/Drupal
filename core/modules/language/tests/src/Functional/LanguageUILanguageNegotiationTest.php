@@ -261,7 +261,7 @@ class LanguageUILanguageNegotiationTest extends BrowserTestBase {
     // Enable only methods, which are either not limited to a specific language
     // type or are supporting the interface language type.
     $language_interface_method_definitions = array_filter($definitions, function ($method_definition) {
-      return !isset($method_definition['types']) || (isset($method_definition['types']) && in_array(LanguageInterface::TYPE_INTERFACE, $method_definition['types']));
+      return !isset($method_definition['types']) || (isset($method_definition['types']) && \in_array(LanguageInterface::TYPE_INTERFACE, $method_definition['types']));
     });
     $this->config('language.types')
       ->set('negotiation.' . LanguageInterface::TYPE_INTERFACE . '.enabled', array_flip(array_keys($language_interface_method_definitions)))

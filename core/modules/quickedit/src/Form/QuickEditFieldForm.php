@@ -207,7 +207,7 @@ class QuickEditFieldForm extends FormBase {
     // with per-delta elements. Skip single checkboxes, because their title is
     // key to their UI. Also skip widgets with multiple subelements, because in
     // that case, per-element labeling is informative.
-    $num_children = count(Element::children($widget_element));
+    $num_children = \count(Element::children($widget_element));
     if ($num_children == 0 && $widget_element['#type'] != 'checkbox') {
       $widget_element['#title_display'] = 'invisible';
     }
@@ -219,7 +219,7 @@ class QuickEditFieldForm extends FormBase {
 
     // Adjust textarea elements to fit their content.
     if (isset($widget_element[0]['value']['#type']) && $widget_element[0]['value']['#type'] == 'textarea') {
-      $lines = count(explode("\n", $widget_element[0]['value']['#default_value']));
+      $lines = \count(explode("\n", $widget_element[0]['value']['#default_value']));
       $widget_element[0]['value']['#rows'] = $lines + 1;
     }
   }

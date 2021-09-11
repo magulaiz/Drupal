@@ -149,7 +149,7 @@ class TermTranslationTest extends TaxonomyTestBase {
    *   The final term in the hierarchy.
    */
   protected function getLeafTerm() {
-    return $this->terms[count($this->termTranslationMap) - 1];
+    return $this->terms[\count($this->termTranslationMap) - 1];
   }
 
 }

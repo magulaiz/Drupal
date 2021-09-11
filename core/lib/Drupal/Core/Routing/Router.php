@@ -130,7 +130,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
       return $this->applyRouteEnhancers($ret, $request);
     }
 
-    throw 0 < count($this->allow)
+    throw 0 < \count($this->allow)
       ? new MethodNotAllowedException(array_unique($this->allow))
       : new ResourceNotFoundException(sprintf('No routes found for "%s".', $this->currentPath->getPath()));
   }
@@ -203,7 +203,7 @@ class Router extends UrlMatcher implements RequestMatcherInterface, RouterInterf
           $method = 'GET';
         }
 
-        if (!in_array($method, $requiredMethods)) {
+        if (!\in_array($method, $requiredMethods)) {
           $this->allow = array_merge($this->allow, $requiredMethods);
           $routes->remove($name);
           continue;

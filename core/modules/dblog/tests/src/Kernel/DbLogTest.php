@@ -45,7 +45,7 @@ class DbLogTest extends KernelTestBase {
 
     // Get the number of enabled modules. Cron adds a log entry for each module.
     $list = $this->container->get('module_handler')->getImplementations('cron');
-    $module_count = count($list);
+    $module_count = \count($list);
     $cron_detailed_count = $this->runCron();
     $this->assertEquals($module_count + 2, $cron_detailed_count, new FormattableMarkup('Cron added @count of @expected new log entries', ['@count' => $cron_detailed_count, '@expected' => $module_count + 2]));
 

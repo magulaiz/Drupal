@@ -365,7 +365,7 @@ class SelectTest extends DatabaseTestBase {
     $count = (int) $query_1->countQuery()->execute()->fetchField();
 
     // Ensure the counts match.
-    $this->assertSame(count($names), $count, "The count query's result matched the number of rows in the UNION query.");
+    $this->assertSame(\count($names), $count, "The count query's result matched the number of rows in the UNION query.");
   }
 
   /**

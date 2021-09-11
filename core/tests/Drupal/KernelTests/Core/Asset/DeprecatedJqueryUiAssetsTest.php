@@ -41,8 +41,8 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
 
       // Confirm that the libraries extending jQuery UI functionality depend on
       // core/jquery.ui directly or via a dependency on core/jquery.ui.widget.
-      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position'])) {
-        $has_main_or_widget = (in_array('core/jquery.ui', $library_definition['dependencies']) || in_array('core/jquery.ui.widget', $library_definition['dependencies']));
+      if (!\in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position'])) {
+        $has_main_or_widget = (\in_array('core/jquery.ui', $library_definition['dependencies']) || \in_array('core/jquery.ui.widget', $library_definition['dependencies']));
         $this->assertTrue($has_main_or_widget, "$library must depend on core/jquery.ui or core/jquery.ui.widget");
       }
       elseif ($library === 'jquery.ui.dialog') {
@@ -53,7 +53,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
         //
         // @todo Remove the tests specific to only jquery.ui.dialog as part of
         //   https://drupal.org/node/3192804
-        $dialog_depends_on_jquery_core = in_array('core/jquery', $library_definition['dependencies']) && $library === 'jquery.ui.dialog';
+        $dialog_depends_on_jquery_core = \in_array('core/jquery', $library_definition['dependencies']) && $library === 'jquery.ui.dialog';
         $this->assertTrue($dialog_depends_on_jquery_core, 'core/jquery.ui.dialog must depend on core/jquery');
       }
 

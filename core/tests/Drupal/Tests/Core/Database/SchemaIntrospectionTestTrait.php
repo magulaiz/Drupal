@@ -61,10 +61,10 @@ trait SchemaIntrospectionTestTrait {
    *   the given type.
    */
   protected function getIndexColumnNames($table_name, $index_type) {
-    assert(in_array($index_type, ['index', 'unique', 'primary'], TRUE));
+    \assert(\in_array($index_type, ['index', 'unique', 'primary'], TRUE));
 
     $schema = \Drupal::database()->schema();
-    $introspect_index_schema = new \ReflectionMethod(get_class($schema), 'introspectIndexSchema');
+    $introspect_index_schema = new \ReflectionMethod(\get_class($schema), 'introspectIndexSchema');
     $introspect_index_schema->setAccessible(TRUE);
     $index_schema = $introspect_index_schema->invoke($schema, $table_name);
 

@@ -216,7 +216,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
           // If there is more than one column, display them all, otherwise just
           // display the field label.
           // @todo: Use property labels instead of the column name.
-          if (count($columns) > 1) {
+          if (\count($columns) > 1) {
             foreach ($columns as $column_name => $column_info) {
               $fields[$field_name . '.' . $column_name] = $this->t('@label (@column)', ['@label' => $field_definition->getLabel(), '@column' => $column_name]);
             }
@@ -291,7 +291,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#title' => $this->t('Store new items in'),
         '#options' => $selected_bundles,
         '#default_value' => $configuration['auto_create_bundle'],
-        '#access' => count($selected_bundles) > 1,
+        '#access' => \count($selected_bundles) > 1,
         '#states' => [
           'visible' => [
             ':input[name="settings[handler_settings][auto_create]"]' => ['checked' => TRUE],
@@ -415,7 +415,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     return array_filter($entities, function ($entity) {
       $target_bundles = $this->getConfiguration()['target_bundles'];
       if (isset($target_bundles)) {
-        return in_array($entity->bundle(), $target_bundles);
+        return \in_array($entity->bundle(), $target_bundles);
       }
       return TRUE;
     });
@@ -444,7 +444,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
 
     // If 'target_bundles' is NULL, all bundles are referenceable, no further
     // conditions are needed.
-    if (is_array($configuration['target_bundles'])) {
+    if (\is_array($configuration['target_bundles'])) {
       // If 'target_bundles' is an empty array, no bundle is referenceable,
       // force the query to never return anything and bail out early.
       if ($configuration['target_bundles'] === []) {

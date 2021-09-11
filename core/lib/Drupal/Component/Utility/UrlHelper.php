@@ -46,7 +46,7 @@ class UrlHelper {
       $key = ($parent ? $parent . rawurlencode('[' . $key . ']') : rawurlencode($key));
 
       // Recurse into children.
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $params[] = static::buildQuery($value, $key);
       }
       // If a query parameter value is NULL, only append its key.
@@ -92,7 +92,7 @@ class UrlHelper {
         continue;
       }
 
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $params[$key] = static::filterQueryParameters($value, $exclude, $string_key);
       }
       else {

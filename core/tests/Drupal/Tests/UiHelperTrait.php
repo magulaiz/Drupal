@@ -196,7 +196,7 @@ trait UiHelperTrait {
    */
   protected function drupalPostForm($path, $edit, $submit, array $options = [], $form_html_id = NULL) {
     @trigger_error('UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
-    if (is_object($submit)) {
+    if (\is_object($submit)) {
       @trigger_error('Calling ' . __METHOD__ . '() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858', E_USER_DEPRECATED);
       // Cast MarkupInterface objects to string.
       $submit = (string) $submit;
@@ -414,7 +414,7 @@ trait UiHelperTrait {
       // Ensure that we have a string (and no xpath object).
       $path = (string) $path;
       // Strip $base_path, if existent.
-      $length = strlen($base_path);
+      $length = \strlen($base_path);
       if (substr($path, 0, $length) === $base_path) {
         $path = substr($path, $length);
       }

@@ -254,7 +254,7 @@ class ModulesListForm extends FormBase {
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
     // than checking to see if the page exists, which is costly.
-    if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
+    if ($this->moduleHandler->moduleExists('help') && $module->status && \in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
       $row['links']['help'] = [
         '#type' => 'link',
         '#title' => $this->t('Help'),
@@ -473,7 +473,7 @@ class ModulesListForm extends FormBase {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
         $module_names = array_values($modules['install']);
-        $this->messenger()->addStatus($this->formatPlural(count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
+        $this->messenger()->addStatus($this->formatPlural(\count($module_names), 'Module %name has been enabled.', '@count modules have been enabled: %names.', [
           '%name' => $module_names[0],
           '%names' => implode(', ', $module_names),
         ]));
@@ -482,7 +482,7 @@ class ModulesListForm extends FormBase {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
         $this->messenger()->addError(
           $this->formatPlural(
-            count($config_objects),
+            \count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
             [

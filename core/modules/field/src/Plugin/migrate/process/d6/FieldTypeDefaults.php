@@ -20,7 +20,7 @@ class FieldTypeDefaults extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (is_array($value)) {
+    if (\is_array($value)) {
       if ($row->getSourceProperty('module') == 'date') {
         $value = 'datetime_default';
       }

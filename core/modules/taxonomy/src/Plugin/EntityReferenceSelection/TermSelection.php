@@ -66,7 +66,7 @@ class TermSelection extends DefaultSelection {
         /** @var \Drupal\taxonomy\TermInterface[] $terms */
         if ($terms = $this->entityTypeManager->getStorage('taxonomy_term')->loadTree($vocabulary->id(), 0, NULL, TRUE)) {
           foreach ($terms as $term) {
-            if (!$has_admin_access && (!$term->isPublished() || in_array($term->parent->target_id, $unpublished_terms))) {
+            if (!$has_admin_access && (!$term->isPublished() || \in_array($term->parent->target_id, $unpublished_terms))) {
               $unpublished_terms[] = $term->id();
               continue;
             }
@@ -90,7 +90,7 @@ class TermSelection extends DefaultSelection {
     $total = 0;
     $referenceable_entities = $this->getReferenceableEntities($match, $match_operator, 0);
     foreach ($referenceable_entities as $bundle => $entities) {
-      $total += count($entities);
+      $total += \count($entities);
     }
     return $total;
   }

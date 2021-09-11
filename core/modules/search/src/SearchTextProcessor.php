@@ -156,7 +156,7 @@ class SearchTextProcessor implements SearchTextProcessorInterface {
     for ($i = 0; $i < $length; $i++) {
       // Add the next character off the beginning of the string to the queue.
       $current = mb_substr($str, 0, 1);
-      $str = substr($str, strlen($current));
+      $str = substr($str, \strlen($current));
       $chars[] = $current;
       if ($i >= $min - 1) {
         // Make a token of $min characters, and add it to the token string.

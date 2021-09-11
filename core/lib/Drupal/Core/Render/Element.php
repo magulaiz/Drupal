@@ -73,13 +73,13 @@ class Element {
     $sort = isset($elements['#sorted']) ? !$elements['#sorted'] : $sort;
 
     // Filter out properties from the element, leaving only children.
-    $count = count($elements);
+    $count = \count($elements);
     $child_weights = [];
     $i = 0;
     $sortable = FALSE;
     foreach ($elements as $key => $value) {
-      if (is_int($key) || $key === '' || $key[0] !== '#') {
-        if (is_array($value)) {
+      if (\is_int($key) || $key === '' || $key[0] !== '#') {
+        if (\is_array($value)) {
           if (isset($value['#weight'])) {
             $weight = $value['#weight'];
             $sortable = TRUE;
@@ -153,7 +153,7 @@ class Element {
    *   TRUE if the element is visible, otherwise FALSE.
    */
   public static function isVisibleElement($element) {
-    return (!isset($element['#type']) || !in_array($element['#type'], ['value', 'hidden', 'token']))
+    return (!isset($element['#type']) || !\in_array($element['#type'], ['value', 'hidden', 'token']))
       && (!isset($element['#access'])
       || (($element['#access'] instanceof AccessResultInterface && $element['#access']->isAllowed()) || ($element['#access'] === TRUE)));
   }
@@ -173,7 +173,7 @@ class Element {
   public static function setAttributes(array &$element, array $map) {
     foreach ($map as $property => $attribute) {
       // If the key is numeric, the attribute name needs to be taken over.
-      if (is_int($property)) {
+      if (\is_int($property)) {
         $property = '#' . $attribute;
       }
       // Do not overwrite already existing attributes.
@@ -196,7 +196,7 @@ class Element {
    *   Whether the given element is empty.
    */
   public static function isEmpty(array $elements) {
-    return empty($elements) || (count($elements) === 1 && array_keys($elements) === ['#cache']);
+    return empty($elements) || (\count($elements) === 1 && array_keys($elements) === ['#cache']);
   }
 
 }

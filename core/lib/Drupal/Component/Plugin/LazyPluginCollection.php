@@ -154,7 +154,7 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    * {@inheritdoc}
    */
   public function count() {
-    return count($this->instanceIds);
+    return \count($this->instanceIds);
   }
 
 }

@@ -90,7 +90,7 @@ class AdminPathConfigEntityConverter extends EntityConverter {
     }
 
     if (parent::applies($definition, $name, $route)) {
-      $entity_type_id = substr($definition['type'], strlen('entity:'));
+      $entity_type_id = substr($definition['type'], \strlen('entity:'));
       // If the entity type is dynamic, defer checking to self::convert().
       if (strpos($entity_type_id, '{') === 0) {
         return TRUE;

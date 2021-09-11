@@ -78,7 +78,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
       // Loops over the parent entities and adds its children to the tree array.
       // Uses a loop instead of a recursion, because it's more efficient.
       $tree = [];
-      while (count($process_parents)) {
+      while (\count($process_parents)) {
         $parent = array_pop($process_parents);
 
         if (!empty($tree_children[$parent])) {
@@ -116,7 +116,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
       foreach (array_keys($tree) as $workspace_id) {
         $this->tree[$workspace_id] = [
-          'depth' => count($graph[$workspace_id]['paths']),
+          'depth' => \count($graph[$workspace_id]['paths']),
           'ancestors' => array_keys($graph[$workspace_id]['paths']),
           'descendants' => isset($graph[$workspace_id]['reverse_paths']) ? array_keys($graph[$workspace_id]['reverse_paths']) : [],
         ];

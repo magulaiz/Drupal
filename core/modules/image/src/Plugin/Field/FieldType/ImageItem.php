@@ -337,7 +337,7 @@ class ImageItem extends FileItem {
     $extensions = array_intersect(explode(' ', $settings['file_extensions']), ['png', 'gif', 'jpg', 'jpeg']);
     $extension = array_rand(array_combine($extensions, $extensions));
     // Generate a max of 5 different images.
-    if (!isset($images[$extension][$min_resolution][$max_resolution]) || count($images[$extension][$min_resolution][$max_resolution]) <= 5) {
+    if (!isset($images[$extension][$min_resolution][$max_resolution]) || \count($images[$extension][$min_resolution][$max_resolution]) <= 5) {
       /** @var \Drupal\Core\File\FileSystemInterface $file_system */
       $file_system = \Drupal::service('file_system');
       $tmp_file = $file_system->tempnam('temporary://', 'generateImage_');

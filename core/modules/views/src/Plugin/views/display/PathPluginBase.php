@@ -140,7 +140,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $arg_counter = 0;
 
     $argument_ids = array_keys((array) $this->getOption('arguments'));
-    $total_arguments = count($argument_ids);
+    $total_arguments = \count($argument_ids);
 
     $argument_map = [];
 
@@ -267,7 +267,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     return !$route->hasDefault('view_id')
     && ('/' . $view_path == $route_path)
     // Also ensure that we don't override for example REST routes.
-    && (!$route->getMethods() || in_array('GET', $route->getMethods()));
+    && (!$route->getMethods() || \in_array('GET', $route->getMethods()));
   }
 
   /**
@@ -365,7 +365,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $links[$menu_link_id]['expanded'] = $menu['expanded'];
 
         if (isset($menu['weight'])) {
-          $links[$menu_link_id]['weight'] = intval($menu['weight']);
+          $links[$menu_link_id]['weight'] = \intval($menu['weight']);
         }
 
         // Insert item into the proper menu.

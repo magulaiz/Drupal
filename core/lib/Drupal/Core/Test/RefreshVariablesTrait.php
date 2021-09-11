@@ -26,7 +26,7 @@ trait RefreshVariablesTrait {
     // Clear the tag cache.
     \Drupal::service('cache_tags.invalidator')->resetChecksums();
     foreach (Cache::getBins() as $backend) {
-      if (is_callable([$backend, 'reset'])) {
+      if (\is_callable([$backend, 'reset'])) {
         $backend->reset();
       }
     }

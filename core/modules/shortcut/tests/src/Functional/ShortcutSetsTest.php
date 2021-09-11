@@ -76,7 +76,7 @@ class ShortcutSetsTest extends ShortcutTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
 
     // Look for test shortcuts in the table.
-    $weight = count($shortcuts);
+    $weight = \count($shortcuts);
     $edit = [];
     foreach ($shortcuts as $shortcut) {
       $title = $shortcut->getTitle();

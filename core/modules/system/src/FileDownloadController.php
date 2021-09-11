@@ -81,7 +81,7 @@ class FileDownloadController extends ControllerBase {
         }
       }
 
-      if (count($headers)) {
+      if (\count($headers)) {
         // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond()
         // sets response as not cacheable if the Cache-Control header is not
         // already modified. We pass in FALSE for non-private schemes for the

@@ -341,7 +341,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(\array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -350,7 +350,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(\array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -722,12 +722,12 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   protected function assertResult() {
     $assert = [];
-    $expected = func_get_args();
-    if ($expected && is_array($expected[0])) {
+    $expected = \func_get_args();
+    if ($expected && \is_array($expected[0])) {
       $expected = $expected[0];
     }
     foreach ($expected as $binary) {
-      $assert[$binary] = strval($binary);
+      $assert[$binary] = \strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
   }
@@ -735,7 +735,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected function assertRevisionResult($keys, $expected) {
     $assert = [];
     foreach ($expected as $key => $binary) {
-      $assert[$keys[$key]] = strval($binary);
+      $assert[$keys[$key]] = \strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
     return $assert;

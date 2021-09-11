@@ -105,7 +105,7 @@ class BookBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     /** @var \Drupal\node\NodeInterface[] $parent_books */
     $parent_books = $this->nodeStorage->loadMultiple($book_nids);
     $parent_books = array_map([$this->entityRepository, 'getTranslationFromContext'], $parent_books);
-    if (count($parent_books) > 0) {
+    if (\count($parent_books) > 0) {
       $depth = 1;
       while (!empty($book['p' . ($depth + 1)])) {
         if (!empty($parent_books[$book['p' . $depth]]) && ($parent_book = $parent_books[$book['p' . $depth]])) {

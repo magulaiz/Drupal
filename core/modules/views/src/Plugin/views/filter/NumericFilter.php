@@ -211,7 +211,7 @@ class NumericFilter extends FilterPluginBase {
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // exposed and locked.
-        $which = in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
+        $which = \in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
@@ -267,7 +267,7 @@ class NumericFilter extends FilterPluginBase {
         !empty($this->options['expose']['operator_list'])) {
       $two_value_operators_available = FALSE;
       foreach ($this->options['expose']['operator_list'] as $operator) {
-        if (in_array($operator, $this->operatorValues(2), TRUE)) {
+        if (\in_array($operator, $this->operatorValues(2), TRUE)) {
           $two_value_operators_available = TRUE;
           break;
         }
@@ -387,10 +387,10 @@ class NumericFilter extends FilterPluginBase {
 
     $options = $this->operatorOptions('short');
     $output = $options[$this->operator];
-    if (in_array($this->operator, $this->operatorValues(2))) {
+    if (\in_array($this->operator, $this->operatorValues(2))) {
       $output .= ' ' . $this->t('@min and @max', ['@min' => $this->value['min'], '@max' => $this->value['max']]);
     }
-    elseif (in_array($this->operator, $this->operatorValues(1))) {
+    elseif (\in_array($this->operator, $this->operatorValues(1))) {
       $output .= ' ' . $this->value['value'];
     }
     return $output;
@@ -408,7 +408,7 @@ class NumericFilter extends FilterPluginBase {
     // the parent gets the right data.
     if (!empty($this->options['expose']['identifier'])) {
       $value = &$input[$this->options['expose']['identifier']];
-      if (!is_array($value)) {
+      if (!\is_array($value)) {
         $value = [
           'value' => $value,
         ];

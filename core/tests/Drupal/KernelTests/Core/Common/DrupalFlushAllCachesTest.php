@@ -27,7 +27,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
    * Tests that drupal_flush_all_caches() uses core.extension properly.
    */
   public function testDrupalFlushAllCachesModuleList() {
-    $this->assertFalse(function_exists('system_test_help'));
+    $this->assertFalse(\function_exists('system_test_help'));
     $core_extension = \Drupal::configFactory()->getEditable('core.extension');
     $module = $core_extension->get('module');
     $module['system_test'] = -10;
@@ -36,7 +36,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     drupal_flush_all_caches();
     $this->assertSame(['system_test', 'system'], array_keys($this->container->getParameter('container.modules')));
     $this->assertSame(1, $this->containerBuilds);
-    $this->assertTrue(function_exists('system_test_help'));
+    $this->assertTrue(\function_exists('system_test_help'));
 
     $core_extension->clear('module.system_test')->save();
     $this->containerBuilds = 0;

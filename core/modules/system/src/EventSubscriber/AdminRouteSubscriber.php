@@ -50,7 +50,7 @@ class AdminRouteSubscriber extends RouteSubscriberBase {
   protected static function isHtmlRoute(Route $route) {
     // If a route has no explicit format, then HTML is valid.
     $format = $route->hasRequirement('_format') ? explode('|', $route->getRequirement('_format')) : ['html'];
-    return in_array('html', $format, TRUE);
+    return \in_array('html', $format, TRUE);
   }
 
 }

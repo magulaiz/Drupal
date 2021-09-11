@@ -103,7 +103,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
       'my_operation',
       'convert',
     ];
-    if (count(array_intersect($expected, $operations)) > 0 && !in_array('apply', $expected)) {
+    if (\count(array_intersect($expected, $operations)) > 0 && !\in_array('apply', $expected)) {
       $expected[] = 'apply';
     }
 
@@ -112,7 +112,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
 
     // Determine if there were any expected that were not called.
     $uncalled = array_diff($expected, $actual);
-    if (count($uncalled)) {
+    if (\count($uncalled)) {
       $this->assertTrue(FALSE, new FormattableMarkup('Expected operations %expected to be called but %uncalled was not called.', ['%expected' => implode(', ', $expected), '%uncalled' => implode(', ', $uncalled)]));
     }
     else {
@@ -123,7 +123,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
     // If all unexpected calls are operations and apply was expected, we do not
     // count it as an error.
     $unexpected = array_diff($actual, $expected);
-    if (count($unexpected) && (!in_array('apply', $expected) || count(array_intersect($unexpected, $operations)) !== count($unexpected))) {
+    if (\count($unexpected) && (!\in_array('apply', $expected) || \count(array_intersect($unexpected, $operations)) !== \count($unexpected))) {
       $this->assertTrue(FALSE, new FormattableMarkup('Unexpected operations were called: %unexpected.', ['%unexpected' => implode(', ', $unexpected)]));
     }
     else {

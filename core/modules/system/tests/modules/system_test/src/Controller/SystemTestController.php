@@ -311,7 +311,7 @@ class SystemTestController extends ControllerBase implements TrustedCallbackInte
     // the exception message can not be tested.
     // @see _drupal_shutdown_function()
     // @see \Drupal\system\Tests\System\ShutdownFunctionsTest
-    if (function_exists('fastcgi_finish_request')) {
+    if (\function_exists('fastcgi_finish_request')) {
       return ['#markup' => 'The function fastcgi_finish_request exists when serving the request.'];
     }
     return [];

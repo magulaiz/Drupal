@@ -161,7 +161,7 @@ class ConfigTranslationFieldListBuilder extends ConfigTranslationEntityListBuild
     }
 
     // There is more than one bundle defined.
-    if (count($this->baseEntityBundles) > 1) {
+    if (\count($this->baseEntityBundles) > 1) {
       return TRUE;
     }
 

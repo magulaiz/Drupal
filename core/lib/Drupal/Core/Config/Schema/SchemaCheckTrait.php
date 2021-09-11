@@ -99,7 +99,7 @@ trait SchemaCheckTrait {
 
     if ($element && is_scalar($value) || $value === NULL) {
       $success = FALSE;
-      $type = gettype($value);
+      $type = \gettype($value);
       if ($element instanceof PrimitiveInterface) {
         $success =
           ($type == 'integer' && $element instanceof IntegerInterface) ||
@@ -114,7 +114,7 @@ trait SchemaCheckTrait {
       elseif ($element instanceof ArrayElement && $element->isNullable() && $value === NULL) {
         $success = TRUE;
       }
-      $class = get_class($element);
+      $class = \get_class($element);
       if (!$success) {
         return [$error_key => "variable type is $type but applied schema class is $class"];
       }
@@ -127,7 +127,7 @@ trait SchemaCheckTrait {
 
       // Go on processing so we can get errors on all levels. Any non-scalar
       // value must be an array so cast to an array.
-      if (!is_array($value)) {
+      if (!\is_array($value)) {
         $value = (array) $value;
       }
       // Recurse into any nested keys.

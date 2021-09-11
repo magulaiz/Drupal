@@ -202,7 +202,7 @@ class FileStorage implements StorageInterface {
   public function decode($raw) {
     $data = Yaml::decode($raw);
     // A simple string is valid YAML for any reason.
-    if (!is_array($data)) {
+    if (!\is_array($data)) {
       return FALSE;
     }
     return $data;

@@ -130,7 +130,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
       }
       if (!empty($missing_dependencies)) {
         $module_name = $module_data[$module]->info['name'];
-        $message = $this->formatPlural(count($missing_dependencies),
+        $message = $this->formatPlural(\count($missing_dependencies),
           'Unable to install the %module module since it requires the %required_module module.',
           'Unable to install the %module module since it requires the %required_module modules.',
           ['%module' => $module_name, '%required_module' => implode(', ', $missing_dependencies)]
@@ -144,7 +144,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     $uninstalls = $config_importer->getExtensionChangelist('module', 'uninstall');
     foreach ($uninstalls as $module) {
       foreach (array_keys($module_data[$module]->required_by) as $dependent_module) {
-        if ($module_data[$dependent_module]->status && !in_array($dependent_module, $uninstalls, TRUE) && $dependent_module !== $install_profile) {
+        if ($module_data[$dependent_module]->status && !\in_array($dependent_module, $uninstalls, TRUE) && $dependent_module !== $install_profile) {
           $module_name = $module_data[$module]->info['name'];
           $dependent_module_name = $module_data[$dependent_module]->info['name'];
           $config_importer->logError($this->t('Unable to uninstall the %module module since the %dependent_module module is installed.', ['%module' => $module_name, '%dependent_module' => $dependent_module_name]));
@@ -153,7 +153,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     }
 
     // Ensure that the install profile is not being uninstalled.
-    if (in_array($install_profile, $uninstalls, TRUE)) {
+    if (\in_array($install_profile, $uninstalls, TRUE)) {
       $profile_name = $module_data[$install_profile]->info['name'];
       $config_importer->logError($this->t('Unable to uninstall the %profile profile since it is the install profile.', ['%profile' => $profile_name]));
     }
@@ -195,7 +195,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     $uninstalls = $config_importer->getExtensionChangelist('theme', 'uninstall');
     foreach ($uninstalls as $theme) {
       foreach (array_keys($theme_data[$theme]->required_by) as $dependent_theme) {
-        if ($theme_data[$dependent_theme]->status && !in_array($dependent_theme, $uninstalls, TRUE)) {
+        if ($theme_data[$dependent_theme]->status && !\in_array($dependent_theme, $uninstalls, TRUE)) {
           $theme_name = $theme_data[$theme]->info['name'];
           $dependent_theme_name = $theme_data[$dependent_theme]->info['name'];
           $config_importer->logError($this->t('Unable to uninstall the %theme theme since the %dependent_theme theme is installed.', ['%theme' => $theme_name, '%dependent_theme' => $dependent_theme_name]));
@@ -270,7 +270,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
             switch ($type) {
               case 'module':
                 $message = $this->formatPlural(
-                  count($diffs),
+                  \count($diffs),
                   'Configuration %name depends on the %module module that will not be installed after import.',
                   'Configuration %name depends on modules (%module) that will not be installed after import.',
                   ['%name' => $name, '%module' => implode(', ', $this->getNames($diffs, $module_data))]
@@ -279,7 +279,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
 
               case 'theme':
                 $message = $this->formatPlural(
-                  count($diffs),
+                  \count($diffs),
                   'Configuration %name depends on the %theme theme that will not be installed after import.',
                   'Configuration %name depends on themes (%theme) that will not be installed after import.',
                   ['%name' => $name, '%theme' => implode(', ', $this->getNames($diffs, $theme_data))]
@@ -288,7 +288,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
 
               case 'config':
                 $message = $this->formatPlural(
-                  count($diffs),
+                  \count($diffs),
                   'Configuration %name depends on the %config configuration that will not exist after import.',
                   'Configuration %name depends on configuration (%config) that will not exist after import.',
                   ['%name' => $name, '%config' => implode(', ', $diffs)]

@@ -155,7 +155,7 @@ class ForumManager implements ForumManagerInterface {
     ];
 
     $order = $this->getTopicOrder($sortby);
-    for ($i = 0; $i < count($header); $i++) {
+    for ($i = 0; $i < \count($header); $i++) {
       if ($header[$i]['field'] == $order['field']) {
         $header[$i]['sort'] = $order['sort'];
       }

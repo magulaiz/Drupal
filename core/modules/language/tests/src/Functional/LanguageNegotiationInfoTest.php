@@ -172,7 +172,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   protected function checkFixedLanguageTypes() {
     $configurable = $this->languageManager()->getLanguageTypes();
     foreach ($this->languageManager()->getDefinedLanguageTypesInfo() as $type => $info) {
-      if (!in_array($type, $configurable) && isset($info['fixed'])) {
+      if (!\in_array($type, $configurable) && isset($info['fixed'])) {
         $negotiation = $this->config('language.types')->get('negotiation.' . $type . '.enabled');
         $equal = array_keys($negotiation) === array_values($info['fixed']);
         $this->assertTrue($equal, new FormattableMarkup('language negotiation for %type is properly set up', ['%type' => $type]));
@@ -216,7 +216,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    */
   protected function isLanguageTypeConfigurable($type) {
     $configurable_types = $this->config('language.types')->get('configurable');
-    return in_array($type, $configurable_types);
+    return \in_array($type, $configurable_types);
   }
 
 }

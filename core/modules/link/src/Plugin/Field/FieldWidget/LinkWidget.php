@@ -115,7 +115,7 @@ class LinkWidget extends WidgetBase {
       $uri = 'entity:node/' . $entity_id;
     }
     // Support linking to nothing.
-    elseif (in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
+    elseif (\in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
       $uri = 'route:' . $string;
     }
     // Detect a schemeless string, map to 'internal:' URI.
@@ -125,7 +125,7 @@ class LinkWidget extends WidgetBase {
       // - '<front>' -> '/'
       // - '<front>#foo' -> '/#foo'
       if (strpos($string, '<front>') === 0) {
-        $string = '/' . substr($string, strlen('<front>'));
+        $string = '/' . substr($string, \strlen('<front>'));
       }
       $uri = 'internal:' . $string;
     }
@@ -146,7 +146,7 @@ class LinkWidget extends WidgetBase {
     // URI , ensure the raw value begins with '/', '?' or '#'.
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941
-    if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
+    if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !\in_array($element['#value'][0], ['/', '?', '#'], TRUE) && substr($element['#value'], 0, 7) !== '<front>') {
       $form_state->setError($element, t('Manually entered paths should start with one of the following characters: / ? #'));
       return;
     }

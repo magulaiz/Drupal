@@ -84,7 +84,7 @@ abstract class Tasks {
    * Ensure the PDO driver is supported by the version of PHP in use.
    */
   protected function hasPdoDriver() {
-    return in_array($this->pdoDriver, \PDO::getAvailableDrivers());
+    return \in_array($this->pdoDriver, \PDO::getAvailableDrivers());
   }
 
   /**
@@ -139,7 +139,7 @@ abstract class Tasks {
         }
         if (method_exists($this, $task['function'])) {
           // Returning false is fatal. No other tasks can run.
-          if (FALSE === call_user_func_array([$this, $task['function']], $task['arguments'])) {
+          if (FALSE === \call_user_func_array([$this, $task['function']], $task['arguments'])) {
             break;
           }
         }
@@ -235,7 +235,7 @@ abstract class Tasks {
     // @todo https:///www.drupal.org/node/3123240 Provide a better way to get
     //   the driver name.
     $reflection = new \ReflectionClass($this);
-    $dir_parts = explode(DIRECTORY_SEPARATOR, dirname($reflection->getFileName(), 2));
+    $dir_parts = explode(DIRECTORY_SEPARATOR, \dirname($reflection->getFileName(), 2));
     $driver = array_pop($dir_parts);
 
     $form['database'] = [
@@ -329,7 +329,7 @@ abstract class Tasks {
     $errors = [];
 
     // Verify the table prefix.
-    if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
+    if (!empty($database['prefix']) && \is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
       $errors[$database['driver'] . '][prefix'] = t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', ['%prefix' => $database['prefix']]);
     }
 

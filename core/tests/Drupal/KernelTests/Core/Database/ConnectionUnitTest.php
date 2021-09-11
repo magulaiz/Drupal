@@ -258,7 +258,7 @@ class ConnectionUnitTest extends KernelTestBase {
     // Skip this test when a database driver does not implement PDO.
     // An alternative database driver that does not implement PDO
     // should implement its own connection test.
-    if (get_class($connection_property->getValue($this->connection)) !== 'PDO') {
+    if (\get_class($connection_property->getValue($this->connection)) !== 'PDO') {
       $this->markTestSkipped('Ignored PDO connection unit test for this driver because it does not implement PDO.');
     }
     $error_mode = $connection_property->getValue($this->connection)

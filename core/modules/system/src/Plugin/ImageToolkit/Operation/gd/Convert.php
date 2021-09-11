@@ -30,7 +30,7 @@ class Convert extends GDImageToolkitOperationBase {
    * {@inheritdoc}
    */
   protected function validateArguments(array $arguments) {
-    if (!in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
+    if (!\in_array($arguments['extension'], $this->getToolkit()->getSupportedExtensions())) {
       throw new \InvalidArgumentException("Invalid extension ({$arguments['extension']}) specified for the image 'convert' operation");
     }
     return $arguments;

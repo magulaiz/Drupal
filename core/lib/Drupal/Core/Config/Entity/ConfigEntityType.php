@@ -85,7 +85,7 @@ class ConfigEntityType extends EntityType implements ConfigEntityTypeInterface {
       $config_prefix = $this->provider . '.' . $this->id();
     }
 
-    if (strlen($config_prefix) > static::PREFIX_LENGTH) {
+    if (\strlen($config_prefix) > static::PREFIX_LENGTH) {
       throw new ConfigPrefixLengthException("The configuration file name prefix $config_prefix exceeds the maximum character limit of " . static::PREFIX_LENGTH);
     }
     return $config_prefix;

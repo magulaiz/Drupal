@@ -183,7 +183,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $enabled = $extension_config->get("module.$module") !== NULL;
       if (!$enabled) {
         // Throw an exception if the module name is too long.
-        if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+        if (\strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
           throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 

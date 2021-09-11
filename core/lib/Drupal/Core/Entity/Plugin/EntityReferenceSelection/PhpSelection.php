@@ -33,10 +33,10 @@ class PhpSelection extends DefaultSelection {
     // the incoming $match needs to be escaped as well, making the comparison
     // possible.
     // @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface::getReferenceableEntities()
-    if (is_string($match)) {
+    if (\is_string($match)) {
       $match = Html::escape(mb_strtolower($match));
     }
-    elseif (is_array($match)) {
+    elseif (\is_array($match)) {
       array_walk($match, function (&$item) {
         $item = Html::escape(mb_strtolower($item));
       });
@@ -67,7 +67,7 @@ class PhpSelection extends DefaultSelection {
   public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     $count = 0;
     foreach ($this->getReferenceableEntities($match, $match_operator) as &$items) {
-      $count += count($items);
+      $count += \count($items);
     }
 
     return $count;

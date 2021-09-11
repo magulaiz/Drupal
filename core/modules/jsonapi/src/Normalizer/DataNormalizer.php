@@ -21,7 +21,7 @@ class DataNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []) {
-    assert($object instanceof Data);
+    \assert($object instanceof Data);
     $cacheable_normalizations = array_map(function ($resource) use ($format, $context) {
       return $this->serializer->normalize($resource, $format, $context);
     }, $object->toArray());

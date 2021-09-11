@@ -172,7 +172,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session->optionNotExists('settings[handler_settings][sort][field]', 'field_text.value');
     // Test that the title option appears once, with the default label.
     $title_options = $sort_by->findAll('xpath', 'option[@value="title"]');
-    $this->assertEquals(1, count($title_options));
+    $this->assertEquals(1, \count($title_options));
     $this->assertEquals('Title', $title_options[0]->getText());
 
     // Also select the target bundle so that field_text is also available.
@@ -192,7 +192,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $assert_session->optionExists('settings[handler_settings][sort][field]', 'field_text.value');
     // Exception: the title option has a different label.
     $title_options = $sort_by->findAll('xpath', 'option[@value="title"]');
-    $this->assertEquals(1, count($title_options));
+    $this->assertEquals(1, \count($title_options));
     $this->assertEquals($this->target_type . ' title', $title_options[0]->getText());
 
     // Test the sort settings.
@@ -210,7 +210,7 @@ class EntityReferenceAdminTest extends WebDriverTestBase {
     $labels = array_map(function (NodeElement $element) {
       return $element->getText();
     }, $sort_by->findAll('xpath', 'option'));
-    for ($i = count($labels) - 1, $sorted = TRUE; $i > 0; --$i) {
+    for ($i = \count($labels) - 1, $sorted = TRUE; $i > 0; --$i) {
       if ($labels[$i - 1] > $labels[$i]) {
         $sorted = FALSE;
         break;

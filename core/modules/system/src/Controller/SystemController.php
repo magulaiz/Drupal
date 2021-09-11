@@ -367,10 +367,10 @@ class SystemController extends ControllerBase {
 
     // There are two possible theme groups.
     $theme_group_titles = [
-      'installed' => $this->formatPlural(count($theme_groups['installed']), 'Installed theme', 'Installed themes'),
+      'installed' => $this->formatPlural(\count($theme_groups['installed']), 'Installed theme', 'Installed themes'),
     ];
     if (!empty($theme_groups['uninstalled'])) {
-      $theme_group_titles['uninstalled'] = $this->formatPlural(count($theme_groups['uninstalled']), 'Uninstalled theme', 'Uninstalled themes');
+      $theme_group_titles['uninstalled'] = $this->formatPlural(\count($theme_groups['uninstalled']), 'Uninstalled theme', 'Uninstalled themes');
     }
 
     uasort($theme_groups['installed'], 'system_sort_themes');

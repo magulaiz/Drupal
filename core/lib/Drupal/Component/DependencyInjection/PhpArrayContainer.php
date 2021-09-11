@@ -69,14 +69,14 @@ class PhpArrayContainer extends Container {
 
     if (isset($definition['factory'])) {
       $factory = $definition['factory'];
-      if (is_array($factory)) {
+      if (\is_array($factory)) {
         $factory = $this->resolveServicesAndParameters([$factory[0], $factory[1]]);
       }
-      elseif (!is_string($factory)) {
+      elseif (!\is_string($factory)) {
         throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
       }
 
-      $service = call_user_func_array($factory, $arguments);
+      $service = \call_user_func_array($factory, $arguments);
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
@@ -95,7 +95,7 @@ class PhpArrayContainer extends Container {
           $arguments = $call[1];
           $arguments = $this->resolveServicesAndParameters($arguments);
         }
-        call_user_func_array([$service, $method], $arguments);
+        \call_user_func_array([$service, $method], $arguments);
       }
     }
 
@@ -108,15 +108,15 @@ class PhpArrayContainer extends Container {
 
     if (isset($definition['configurator'])) {
       $callable = $definition['configurator'];
-      if (is_array($callable)) {
+      if (\is_array($callable)) {
         $callable = $this->resolveServicesAndParameters($callable);
       }
 
-      if (!is_callable($callable)) {
-        throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', get_class($service)));
+      if (!\is_callable($callable)) {
+        throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', \get_class($service)));
       }
 
-      call_user_func($callable, $service);
+      \call_user_func($callable, $service);
     }
 
     return $service;
@@ -176,12 +176,12 @@ class PhpArrayContainer extends Container {
         }
       }
 
-      if (is_array($argument)) {
+      if (\is_array($argument)) {
         $arguments[$key] = $this->resolveServicesAndParameters($argument);
         continue;
       }
 
-      if (!is_string($argument)) {
+      if (!\is_string($argument)) {
         continue;
       }
 

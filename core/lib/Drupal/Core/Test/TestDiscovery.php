@@ -213,7 +213,7 @@ class TestDiscovery {
 
     if ($types) {
       $list = NestedArray::filter($list, function ($element) use ($types) {
-        return !(is_array($element) && isset($element['type']) && !in_array($element['type'], $types));
+        return !(\is_array($element) && isset($element['type']) && !\in_array($element['type'], $types));
       });
     }
 

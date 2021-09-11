@@ -51,7 +51,7 @@ class TimezoneTest extends KernelTestBase {
 
     // Test that the ungrouped and grouped results have the same number of
     // items.
-    $ungrouped_count = count(system_time_zones());
+    $ungrouped_count = \count(system_time_zones());
     $grouped_result = system_time_zones(NULL, TRUE);
     $grouped_count = 0;
     array_walk_recursive($grouped_result, function () use (&$grouped_count) {

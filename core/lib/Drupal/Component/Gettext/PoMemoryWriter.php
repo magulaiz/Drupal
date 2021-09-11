@@ -25,7 +25,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * {@inheritdoc}
    */
   public function writeItem(PoItem $item) {
-    if (is_array($item->getSource())) {
+    if (\is_array($item->getSource())) {
       $item->setSource(implode(PoItem::DELIMITER, $item->getSource()));
       $item->setTranslation(implode(PoItem::DELIMITER, $item->getTranslation()));
     }

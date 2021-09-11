@@ -228,7 +228,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // filter_formats(), so its cache must be reset upfront.
       if (($roles = $this->get('roles')) && $permission = $this->getPermissionName()) {
         foreach (user_roles() as $rid => $name) {
-          $enabled = in_array($rid, $roles, TRUE);
+          $enabled = \in_array($rid, $roles, TRUE);
           user_role_change_permissions($rid, [$permission => $enabled]);
         }
       }
@@ -320,7 +320,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
             foreach ($intersection as $tag => $attributes) {
               // If the current tag is not allowed by the new filter, then it's
               // outside of the intersection.
-              if (!array_key_exists($tag, $new_restrictions['allowed'])) {
+              if (!\array_key_exists($tag, $new_restrictions['allowed'])) {
                 // The exception is the asterisk (which applies to all tags): it
                 // does not need to be allowed by every filter in order to be
                 // used; not every filter needs attribute restrictions on all tags.
@@ -336,19 +336,19 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
                 $new_attributes = $new_restrictions['allowed'][$tag];
                 // The current intersection does not allow any attributes, never
                 // allow.
-                if (!is_array($current_attributes) && $current_attributes == FALSE) {
+                if (!\is_array($current_attributes) && $current_attributes == FALSE) {
                   continue;
                 }
                 // The new filter allows less attributes (all -> list or none).
-                elseif (!is_array($current_attributes) && $current_attributes == TRUE && ($new_attributes == FALSE || is_array($new_attributes))) {
+                elseif (!\is_array($current_attributes) && $current_attributes == TRUE && ($new_attributes == FALSE || \is_array($new_attributes))) {
                   $intersection[$tag] = $new_attributes;
                 }
                 // The new filter allows less attributes (list -> none).
-                elseif (is_array($current_attributes) && $new_attributes == FALSE) {
+                elseif (\is_array($current_attributes) && $new_attributes == FALSE) {
                   $intersection[$tag] = $new_attributes;
                 }
                 // The new filter allows more attributes; retain current.
-                elseif (is_array($current_attributes) && $new_attributes == TRUE) {
+                elseif (\is_array($current_attributes) && $new_attributes == TRUE) {
                   continue;
                 }
                 // The new filter allows the same attributes; retain current.
@@ -392,7 +392,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
       // (which contains attribute restrictions that apply to all tags), and
       // there are no forbidden tags, then effectively nothing is allowed.
       if (isset($restrictions['allowed'])) {
-        if (count($restrictions['allowed']) === 1 && array_key_exists('*', $restrictions['allowed']) && !isset($restrictions['forbidden_tags'])) {
+        if (\count($restrictions['allowed']) === 1 && \array_key_exists('*', $restrictions['allowed']) && !isset($restrictions['forbidden_tags'])) {
           $restrictions['allowed'] = [];
         }
       }
@@ -418,7 +418,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface, En
     foreach ($filters as $filter) {
       // Remove disabled filters, so that this FilterFormat config entity can
       // continue to exist.
-      if (!$filter->status && in_array($filter->provider, $dependencies['module'])) {
+      if (!$filter->status && \in_array($filter->provider, $dependencies['module'])) {
         $this->removeFilter($filter->getPluginId());
         $changed = TRUE;
       }

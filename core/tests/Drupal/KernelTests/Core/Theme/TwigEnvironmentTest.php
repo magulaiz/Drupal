@@ -156,15 +156,15 @@ class TwigEnvironmentTest extends KernelTestBase {
     // TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH should get truncated.
     $cache = $environment->getCache();
     $long_name = 'core/modules/system/templates/block--system-messages-block.html.twig';
-    $this->assertGreaterThan(TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH, strlen(basename($long_name)));
+    $this->assertGreaterThan(TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH, \strlen(basename($long_name)));
     $class = $environment->getTemplateClass($long_name);
     $key = $cache->generateKey($long_name, $class);
     $prefix = $environment->getTwigCachePrefix();
     // The key should consist of the prefix, an underscore, and two strings
     // each truncated to length TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH
     // separated by an underscore.
-    $expected = strlen($prefix) + 2 + 2 * TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH;
-    $this->assertEquals($expected, strlen($key));
+    $expected = \strlen($prefix) + 2 + 2 * TwigPhpStorageCache::SUFFIX_SUBSTRING_LENGTH;
+    $this->assertEquals($expected, \strlen($key));
 
     $cache = $environment->getCache();
     $class = $environment->getTemplateClass($template_path);

@@ -53,7 +53,7 @@ class Schema extends DatabaseSchema {
    *   An array of SQL statements to create the table.
    */
   public function createTableSql($name, $table) {
-    if (!empty($table['primary key']) && is_array($table['primary key'])) {
+    if (!empty($table['primary key']) && \is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
     }
 
@@ -111,7 +111,7 @@ class Schema extends DatabaseSchema {
   protected function createKeySql($fields) {
     $return = [];
     foreach ($fields as $field) {
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $return[] = $field[0];
       }
       else {
@@ -176,7 +176,7 @@ class Schema extends DatabaseSchema {
     else {
       $sql = $name . ' ' . $spec['sqlite_type'];
 
-      if (in_array($spec['sqlite_type'], ['VARCHAR', 'TEXT'])) {
+      if (\in_array($spec['sqlite_type'], ['VARCHAR', 'TEXT'])) {
         if (isset($spec['length'])) {
           $sql .= '(' . $spec['length'] . ')';
         }
@@ -200,7 +200,7 @@ class Schema extends DatabaseSchema {
       }
 
       if (isset($spec['default'])) {
-        if (is_string($spec['default'])) {
+        if (\is_string($spec['default'])) {
           $spec['default'] = $this->connection->quote($spec['default']);
         }
         $sql .= ' DEFAULT ' . $spec['default'];
@@ -321,7 +321,7 @@ class Schema extends DatabaseSchema {
     if ($this->fieldExists($table, $field)) {
       throw new SchemaObjectExistsException("Cannot add field '$table.$field': field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field, $keys_new['primary key'], TRUE)) {
+    if (isset($keys_new['primary key']) && \in_array($field, $keys_new['primary key'], TRUE)) {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field => $specification]);
     }
 
@@ -442,7 +442,7 @@ class Schema extends DatabaseSchema {
         continue;
       }
 
-      if (is_array($field_source)) {
+      if (\is_array($field_source)) {
         $select->addExpression($field_source['expression'], $field_alias, $field_source['arguments']);
       }
       else {
@@ -538,7 +538,7 @@ class Schema extends DatabaseSchema {
     foreach ($indexes as $index) {
       $name = $index['name'];
       // Get index name without prefix.
-      $index_name = substr($name, strlen($info['table']) + 1);
+      $index_name = substr($name, \strlen($info['table']) + 1);
       $result = $this->connection->query('PRAGMA ' . $info['schema'] . '.index_info(' . $name . ')');
       foreach ($result as $row) {
         $schema[$index['schema_key']][$index_name][] = $row->name;
@@ -563,7 +563,7 @@ class Schema extends DatabaseSchema {
     // Drop the primary key if the field to drop is part of it. This is
     // consistent with the behavior on PostgreSQL.
     // @see \Drupal\Core\Database\Driver\mysql\Schema::dropField()
-    if (isset($new_schema['primary key']) && in_array($field, $new_schema['primary key'], TRUE)) {
+    if (isset($new_schema['primary key']) && \in_array($field, $new_schema['primary key'], TRUE)) {
       unset($new_schema['primary key']);
     }
 
@@ -593,7 +593,7 @@ class Schema extends DatabaseSchema {
     if (($field != $field_new) && $this->fieldExists($table, $field_new)) {
       throw new SchemaObjectExistsException("Cannot rename field '$table.$field' to '$field_new': target field already exists.");
     }
-    if (isset($keys_new['primary key']) && in_array($field_new, $keys_new['primary key'], TRUE)) {
+    if (isset($keys_new['primary key']) && \in_array($field_new, $keys_new['primary key'], TRUE)) {
       $this->ensureNotNullPrimaryKey($keys_new['primary key'], [$field_new => $spec]);
     }
 
@@ -644,7 +644,7 @@ class Schema extends DatabaseSchema {
   protected function mapKeyDefinition(array $key_definition, array $mapping) {
     foreach ($key_definition as &$field) {
       // The key definition can be an array($field, $length).
-      if (is_array($field)) {
+      if (\is_array($field)) {
         $field = &$field[0];
       }
 

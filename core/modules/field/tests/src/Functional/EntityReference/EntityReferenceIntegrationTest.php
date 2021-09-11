@@ -185,7 +185,7 @@ class EntityReferenceIntegrationTest extends BrowserTestBase {
       $field = FieldConfig::loadByName($this->entityType, $this->bundle, $this->fieldName);
       $field->save();
       $dependencies = $field->getDependencies();
-      $this->assertFalse(isset($dependencies[$key]) && in_array($referenced_entities[0]->getConfigDependencyName(), $dependencies[$key]), new FormattableMarkup('@type dependency @name does not exist.', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
+      $this->assertFalse(isset($dependencies[$key]) && \in_array($referenced_entities[0]->getConfigDependencyName(), $dependencies[$key]), new FormattableMarkup('@type dependency @name does not exist.', ['@type' => $key, '@name' => $referenced_entities[0]->getConfigDependencyName()]));
     }
   }
 

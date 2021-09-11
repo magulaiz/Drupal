@@ -65,7 +65,7 @@ class MemoryBackend implements FloodInterface {
       return $threshold > 0;
     }
     $limit = microtime(TRUE) - $window;
-    $number = count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {
+    $number = \count(array_filter($this->events[$name][$identifier], function ($timestamp) use ($limit) {
       return $timestamp > $limit;
     }));
     return ($number < $threshold);

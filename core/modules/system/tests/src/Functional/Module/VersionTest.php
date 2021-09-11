@@ -50,7 +50,7 @@ class VersionTest extends ModuleTestBase {
       'common_test (>2.4-rc0)',
     ];
     \Drupal::state()->set('system_test.dependencies', $dependencies);
-    $n = count($dependencies);
+    $n = \count($dependencies);
     for ($i = 0; $i < $n; $i++) {
       $this->drupalGet('admin/modules');
       if ($i % 2 == 0) {

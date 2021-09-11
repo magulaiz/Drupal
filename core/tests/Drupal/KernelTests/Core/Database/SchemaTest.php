@@ -181,7 +181,7 @@ class SchemaTest extends KernelTestBase {
     $this->schema->addField('test_table', 'test_serial', ['type' => 'serial', 'not null' => TRUE], ['primary key' => ['test_serial']]);
 
     // Test the primary key columns.
-    $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
+    $method = new \ReflectionMethod(\get_class($this->schema), 'findPrimaryKeyColumns');
     $method->setAccessible(TRUE);
     $this->assertSame(['test_serial'], $method->invoke($this->schema, 'test_table'));
 
@@ -223,13 +223,13 @@ class SchemaTest extends KernelTestBase {
     // SQLite does not have any limit. Use the lowest common value and create a
     // table name as long as possible in order to cover edge cases around
     // identifier names for the table's primary or unique key constraints.
-    $table_name = strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix())));
+    $table_name = strtolower($this->getRandomGenerator()->name(63 - \strlen($this->getDatabasePrefix())));
     $this->schema->createTable($table_name, $table_specification);
 
     $this->assertIndexOnColumns($table_name, ['id'], 'primary');
     $this->assertIndexOnColumns($table_name, ['test_field'], 'unique');
 
-    $new_table_name = strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix())));
+    $new_table_name = strtolower($this->getRandomGenerator()->name(63 - \strlen($this->getDatabasePrefix())));
     $this->assertNull($this->schema->renameTable($table_name, $new_table_name));
 
     // Test for renamed primary and unique keys.
@@ -247,7 +247,7 @@ class SchemaTest extends KernelTestBase {
       $this->assertTrue($sequence_exists, 'Sequence was renamed.');
 
       // Rename the table again and repeat the check.
-      $another_table_name = strtolower($this->getRandomGenerator()->name(63 - strlen($this->getDatabasePrefix())));
+      $another_table_name = strtolower($this->getRandomGenerator()->name(63 - \strlen($this->getDatabasePrefix())));
       $this->schema->renameTable($new_table_name, $another_table_name);
 
       $sequence_exists = (bool) $this->connection->query("SELECT pg_get_serial_sequence('{" . $another_table_name . "}', 'id')")->fetchField();
@@ -326,14 +326,14 @@ class SchemaTest extends KernelTestBase {
 
     unset($table_specification['fields']);
 
-    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $introspect_index_schema = new \ReflectionMethod(\get_class($this->schema), 'introspectIndexSchema');
     $introspect_index_schema->setAccessible(TRUE);
     $index_schema = $introspect_index_schema->invoke($this->schema, $table_name);
 
     // The PostgreSQL driver is using a custom naming scheme for its indexes, so
     // we need to adjust the initial table specification.
     if ($this->connection->databaseType() === 'pgsql') {
-      $ensure_identifier_length = new \ReflectionMethod(get_class($this->schema), 'ensureIdentifiersLength');
+      $ensure_identifier_length = new \ReflectionMethod(\get_class($this->schema), 'ensureIdentifiersLength');
       $ensure_identifier_length->setAccessible(TRUE);
 
       foreach ($table_specification['unique keys'] as $original_index_name => $columns) {
@@ -810,7 +810,7 @@ class SchemaTest extends KernelTestBase {
    * @covers ::findPrimaryKeyColumns
    */
   public function testSchemaChangePrimaryKey(array $initial_primary_key, array $renamed_primary_key) {
-    $find_primary_key_columns = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
+    $find_primary_key_columns = new \ReflectionMethod(\get_class($this->schema), 'findPrimaryKeyColumns');
     $find_primary_key_columns->setAccessible(TRUE);
 
     // Test making the field the primary key of the table upon creation.
@@ -1062,7 +1062,7 @@ class SchemaTest extends KernelTestBase {
    * @covers ::findPrimaryKeyColumns
    */
   public function testFindPrimaryKeyColumns() {
-    $method = new \ReflectionMethod(get_class($this->schema), 'findPrimaryKeyColumns');
+    $method = new \ReflectionMethod(\get_class($this->schema), 'findPrimaryKeyColumns');
     $method->setAccessible(TRUE);
 
     // Test with single column primary key.

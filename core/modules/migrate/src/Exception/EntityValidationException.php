@@ -67,7 +67,7 @@ class EntityValidationException extends MigrateException {
     $messages = [];
 
     foreach ($this->violations as $violation) {
-      assert($violation instanceof ConstraintViolationInterface);
+      \assert($violation instanceof ConstraintViolationInterface);
       $messages[] = sprintf('%s=%s', $violation->getPropertyPath(), $violation->getMessage());
     }
 

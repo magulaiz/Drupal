@@ -223,7 +223,7 @@ class DatabaseBackend implements CacheBackendInterface {
         'tags' => [],
       ];
 
-      assert(Inspector::assertAllStrings($item['tags']), 'Cache Tags must be strings.');
+      \assert(Inspector::assertAllStrings($item['tags']), 'Cache Tags must be strings.');
       $item['tags'] = array_unique($item['tags']);
       // Sort the cache tags so that they are stored consistently in the DB.
       sort($item['tags']);
@@ -241,7 +241,7 @@ class DatabaseBackend implements CacheBackendInterface {
         continue;
       }
 
-      if (!is_string($item['data'])) {
+      if (!\is_string($item['data'])) {
         $fields['data'] = serialize($item['data']);
         $fields['serialized'] = 1;
       }
@@ -458,7 +458,7 @@ class DatabaseBackend implements CacheBackendInterface {
   protected function normalizeCid($cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
-    if (strlen($cid) <= 255 && $cid_is_ascii) {
+    if (\strlen($cid) <= 255 && $cid_is_ascii) {
       return $cid;
     }
     // Return a string that uses as much as possible of the original cache ID
@@ -467,7 +467,7 @@ class DatabaseBackend implements CacheBackendInterface {
     if (!$cid_is_ascii) {
       return $hash;
     }
-    return substr($cid, 0, 255 - strlen($hash)) . $hash;
+    return substr($cid, 0, 255 - \strlen($hash)) . $hash;
   }
 
   /**

@@ -238,7 +238,7 @@ class OverviewTerms extends FormBase {
       foreach ($current_page as $key => $term) {
         // Verify this is a term for the current page and set at the current
         // depth.
-        if (is_array($user_input['terms'][$key]) && is_numeric($user_input['terms'][$key]['term']['tid'])) {
+        if (\is_array($user_input['terms'][$key]) && is_numeric($user_input['terms'][$key]['term']['tid'])) {
           $current_page[$key]->depth = $user_input['terms'][$key]['term']['depth'];
         }
         else {
@@ -290,7 +290,7 @@ class OverviewTerms extends FormBase {
     $pending_term_ids = array_intersect($this->storageController->getTermIdsWithPendingRevisions(), $edited_term_ids);
     if ($pending_term_ids) {
       $help_message = $this->formatPlural(
-        count($pending_term_ids),
+        \count($pending_term_ids),
         '%capital_name contains 1 term with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         '%capital_name contains @count terms with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         $args
@@ -360,12 +360,12 @@ class OverviewTerms extends FormBase {
       // Add a special class for terms with pending revision so we can highlight
       // them in the form.
       $form['terms'][$key]['#attributes']['class'] = [];
-      if (in_array($term->id(), $pending_term_ids)) {
+      if (\in_array($term->id(), $pending_term_ids)) {
         $form['terms'][$key]['#attributes']['class'][] = 'color-warning';
         $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term--pending-revision';
       }
 
-      if ($update_tree_access->isAllowed() && count($tree) > 1) {
+      if ($update_tree_access->isAllowed() && \count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = [
           '#type' => 'hidden',
@@ -423,7 +423,7 @@ class OverviewTerms extends FormBase {
         $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term-preview';
       }
 
-      if ($row_position !== 0 && $row_position !== count($tree) - 1) {
+      if ($row_position !== 0 && $row_position !== \count($tree) - 1) {
         if ($row_position == $back_step - 1 || $row_position == $page_entries - $forward_step - 1) {
           $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term-divider-top';
         }
@@ -471,7 +471,7 @@ class OverviewTerms extends FormBase {
       ];
     }
 
-    if ($update_tree_access->isAllowed() && count($tree) > 1) {
+    if ($update_tree_access->isAllowed() && \count($tree) > 1) {
       $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
       $form['actions']['submit'] = [
         '#type' => 'submit',
@@ -559,7 +559,7 @@ class OverviewTerms extends FormBase {
     }
 
     // Build a list of all terms that need to be updated on following pages.
-    for ($weight; $weight < count($tree); $weight++) {
+    for ($weight; $weight < \count($tree); $weight++) {
       $term = $tree[$weight];
       if ($term->parents[0] == 0 && $term->getWeight() != $weight) {
         $term->parent->target_id = $term->parents[0];

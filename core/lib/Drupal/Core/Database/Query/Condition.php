@@ -102,7 +102,7 @@ class Condition implements ConditionInterface, \Countable {
    * conjunction.
    */
   public function count() {
-    return count($this->conditions) - 1;
+    return \count($this->conditions) - 1;
   }
 
   /**
@@ -112,7 +112,7 @@ class Condition implements ConditionInterface, \Countable {
     if (empty($operator)) {
       $operator = '=';
     }
-    if (empty($value) && is_array($value)) {
+    if (empty($value) && \is_array($value)) {
       throw new InvalidQueryException(sprintf("Query condition '%s %s ()' cannot be empty.", $field, $operator));
     }
 
@@ -291,7 +291,7 @@ class Condition implements ConditionInterface, \Countable {
         if ($operator['use_value']) {
           // For simplicity, we first convert to an array, so that we can handle
           // the single and multi value cases the same.
-          if (!is_array($condition['value'])) {
+          if (!\is_array($condition['value'])) {
             if ($condition['value'] instanceof SelectInterface && ($operator['operator'] === 'IN' || $operator['operator'] === 'NOT IN')) {
               // Special case: IN is followed by a single select query instead
               // of a set of values: unset prefix and postfix to prevent double
@@ -328,7 +328,7 @@ class Condition implements ConditionInterface, \Countable {
 
       // Concatenate all conditions using the conjunction and brackets around
       // the individual conditions to assure the proper evaluation order.
-      $this->stringVersion = count($condition_fragments) > 1 ? '(' . implode(") $conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
+      $this->stringVersion = \count($condition_fragments) > 1 ? '(' . implode(") $conjunction (", $condition_fragments) . ')' : implode($condition_fragments);
       $this->arguments = $arguments;
       $this->changed = FALSE;
     }

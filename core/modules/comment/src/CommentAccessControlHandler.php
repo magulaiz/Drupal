@@ -78,7 +78,7 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         'created',
         'date',
       ];
-      if (in_array($field_definition->getName(), $administrative_fields, TRUE)) {
+      if (\in_array($field_definition->getName(), $administrative_fields, TRUE)) {
         return AccessResult::allowedIfHasPermission($account, 'administer comments');
       }
 
@@ -98,21 +98,21 @@ class CommentAccessControlHandler extends EntityAccessControlHandler {
         'field_name',
         'pid',
       ];
-      if ($items && ($entity = $items->getEntity()) && $entity->isNew() && in_array($field_definition->getName(), $create_only_fields, TRUE)) {
+      if ($items && ($entity = $items->getEntity()) && $entity->isNew() && \in_array($field_definition->getName(), $create_only_fields, TRUE)) {
         // We are creating a new comment, user can edit create only fields.
         return AccessResult::allowedIfHasPermission($account, 'post comments')->addCacheableDependency($entity);
       }
       // We are editing an existing comment - create only fields are now read
       // only.
       $read_only_fields = array_merge($read_only_fields, $create_only_fields);
-      if (in_array($field_definition->getName(), $read_only_fields, TRUE)) {
+      if (\in_array($field_definition->getName(), $read_only_fields, TRUE)) {
         return AccessResult::forbidden();
       }
 
       // If the field is configured to accept anonymous contact details - admins
       // can edit name, homepage and mail. Anonymous users can also fill in the
       // fields on comment creation.
-      if (in_array($field_definition->getName(), ['name', 'mail', 'homepage'], TRUE)) {
+      if (\in_array($field_definition->getName(), ['name', 'mail', 'homepage'], TRUE)) {
         if (!$items) {
           // We cannot make a decision about access to edit these fields if we
           // don't have any items and therefore cannot determine the Comment

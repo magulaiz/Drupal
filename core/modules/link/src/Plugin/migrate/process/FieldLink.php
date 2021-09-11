@@ -65,13 +65,13 @@ class FieldLink extends ProcessPluginBase {
     }
 
     // Empty URI and non-links are allowed.
-    if (empty($uri) || in_array($uri, ['<nolink>', '<none>'])) {
+    if (empty($uri) || \in_array($uri, ['<nolink>', '<none>'])) {
       return 'route:<nolink>';
     }
 
     // Remove the <front> component of the URL.
     if (strpos($uri, '<front>') === 0) {
-      $uri = substr($uri, strlen('<front>'));
+      $uri = substr($uri, \strlen('<front>'));
     }
     else {
       // List of unicode-encoded characters that were allowed in URLs,
@@ -121,13 +121,13 @@ class FieldLink extends ProcessPluginBase {
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $attributes = unserialize($value['attributes']);
     // Drupal 6/7 link attributes might be double serialized.
-    if (!is_array($attributes)) {
+    if (!\is_array($attributes)) {
       $attributes = unserialize($attributes);
     }
 
     // In rare cases Drupal 6/7 link attributes are triple serialized. To avoid
     // further problems with them we set them to an empty array in this case.
-    if (!is_array($attributes)) {
+    if (!\is_array($attributes)) {
       $attributes = [];
     }
 

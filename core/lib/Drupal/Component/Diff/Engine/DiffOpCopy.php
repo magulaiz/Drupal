@@ -11,7 +11,7 @@ class DiffOpCopy extends DiffOp {
   public $type = 'copy';
 
   public function __construct($orig, $closing = FALSE) {
-    if (!is_array($closing)) {
+    if (!\is_array($closing)) {
       $closing = $orig;
     }
     $this->orig = $orig;

@@ -557,7 +557,7 @@ trait FunctionalTestSetupTrait {
 
     // If we only have one db driver available, we cannot set the driver.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    if (count($this->getDatabaseTypes()) == 1) {
+    if (\count($this->getDatabaseTypes()) == 1) {
       unset($parameters['forms']['install_settings_form']['driver']);
     }
     return $parameters;
@@ -588,7 +588,7 @@ trait FunctionalTestSetupTrait {
     $port = isset($parsed_url['port']) ? $parsed_url['port'] : 80;
 
     $valid_url_schemes = ['http', 'https'];
-    if (!in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
+    if (!\in_array(strtolower($parsed_url['scheme']), $valid_url_schemes, TRUE)) {
       throw new \Exception(
         'You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.'
       );

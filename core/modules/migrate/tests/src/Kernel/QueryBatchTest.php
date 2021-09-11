@@ -178,7 +178,7 @@ class QueryBatchTest extends KernelTestBase {
     self::assertSame($num_rows, $i);
 
     // Test the batch size.
-    if (is_null($expected_batch_size)) {
+    if (\is_null($expected_batch_size)) {
       $expected_batch_size = $configuration['batch_size'];
     }
     $property = $reflector->getProperty('batchSize');
@@ -186,7 +186,7 @@ class QueryBatchTest extends KernelTestBase {
     self::assertSame($expected_batch_size, $property->getValue($plugin));
 
     // Test the batch count.
-    if (is_null($expected_batch_count)) {
+    if (\is_null($expected_batch_count)) {
       $expected_batch_count = intdiv($num_rows, $expected_batch_size);
       if ($num_rows % $configuration['batch_size']) {
         $expected_batch_count++;

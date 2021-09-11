@@ -337,7 +337,7 @@ EOT;
     foreach (explode($eol, $output) as $line) {
       // We must use strlen() rather than mb_strlen() in order to count octets
       // rather than characters.
-      $maximum_line_length = max($maximum_line_length, strlen($line . $eol));
+      $maximum_line_length = max($maximum_line_length, \strlen($line . $eol));
     }
     // Verify that the maximum line length found was less than or equal to 1000
     // characters as per RFC 821.

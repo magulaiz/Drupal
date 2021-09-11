@@ -60,7 +60,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
         $values[$key] = $this->cache[$key];
       }
       // Load the value if we don't have an explicit NULL value.
-      elseif (!array_key_exists($key, $this->cache)) {
+      elseif (!\array_key_exists($key, $this->cache)) {
         $load[] = $key;
       }
     }
@@ -152,7 +152,7 @@ class LocaleProjectStorage implements LocaleProjectStorageInterface {
    * {@inheritdoc}
    */
   public function countProjects() {
-    return count($this->getAll());
+    return \count($this->getAll());
   }
 
   /**

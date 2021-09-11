@@ -28,7 +28,7 @@ trait FileMigrationSetupTrait {
     $info = $this->getFileMigrationInfo();
     $fs = $this->container->get('file_system');
     // Ensure that the files directory exists.
-    $fs->mkdir(dirname($info['path']), NULL, TRUE);
+    $fs->mkdir(\dirname($info['path']), NULL, TRUE);
     // Put test file in the source directory.
     file_put_contents($info['path'], str_repeat('*', $info['size']));
 

@@ -727,7 +727,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
 
     $result = Json::decode($this->drupalGet('test/serialize/node-field', ['query' => ['_format' => 'json']]));
-    $this->assertSame($node->body->count(), count($result[2]['body']), 'Expected count of values');
+    $this->assertSame($node->body->count(), \count($result[2]['body']), 'Expected count of values');
     $this->assertEquals($result[2]['body'], array_map(function ($item) {
       return $item['value'];
     }, $node->body->getValue()), 'Expected raw body values found.');

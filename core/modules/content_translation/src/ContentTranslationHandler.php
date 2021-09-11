@@ -266,7 +266,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *   TRUE if translatable field storage definition exists, FALSE otherwise.
    */
   protected function checkFieldStorageDefinitionTranslatability($field_name) {
-    return array_key_exists($field_name, $this->fieldStorageDefinitions) && $this->fieldStorageDefinitions[$field_name]->isTranslatable();
+    return \array_key_exists($field_name, $this->fieldStorageDefinitions) && $this->fieldStorageDefinitions[$field_name]->isTranslatable();
   }
 
   /**
@@ -328,7 +328,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       unset($translations[$form_langcode]);
     }
     $is_translation = $new_translation || ($entity->language()->getId() != $entity_langcode);
-    $has_translations = count($translations) > 1;
+    $has_translations = \count($translations) > 1;
 
     // Adjust page title to specify the current language being edited, if we
     // have at least one translation.
@@ -763,7 +763,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   public function entityFormDelete($form, FormStateInterface $form_state) {
     $form_object = $form_state->getFormObject();
     $entity = $form_object->getEntity();
-    if (count($entity->getTranslationLanguages()) > 1) {
+    if (\count($entity->getTranslationLanguages()) > 1) {
       $this->messenger->addWarning(t('This will delete all the translations of %label.', ['%label' => $entity->label()]));
     }
   }

@@ -90,7 +90,7 @@ class ThemeUiTest extends BrowserTestBase {
     $all_dependent_modules = array_merge($first_modules, $second_modules);
     $this->drupalGet('admin/appearance');
     $assert_module_enabled_message = function ($enabled_modules) {
-      $count = count($enabled_modules);
+      $count = \count($enabled_modules);
       $module_enabled_text = $count === 1 ? "{$this->testModules[$enabled_modules[0]]} has been enabled." : $count . " modules have been enabled:";
       $this->assertSession()->pageTextContains($module_enabled_text);
     };

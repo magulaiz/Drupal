@@ -451,9 +451,9 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   public function onDependencyRemoval(array $dependencies) {
     $changed = FALSE;
     if (!empty($this->third_party_settings)) {
-      $old_count = count($this->third_party_settings);
+      $old_count = \count($this->third_party_settings);
       $this->third_party_settings = array_diff_key($this->third_party_settings, array_flip($dependencies['module']));
-      $changed = $old_count != count($this->third_party_settings);
+      $changed = $old_count != \count($this->third_party_settings);
     }
     return $changed;
   }

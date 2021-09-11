@@ -134,7 +134,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
 
     foreach ($form['#language_types_info'] as $type => $info) {
       // Show locked language types only if they are configurable.
-      if (empty($info['locked']) || in_array($type, $configurable)) {
+      if (empty($info['locked']) || \in_array($type, $configurable)) {
         $form['#language_types'][] = $type;
       }
     }
@@ -164,7 +164,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
     $method_weights_type = [];
 
     foreach ($configurable_types as $type) {
-      $customized[$type] = in_array($type, $stored_values);
+      $customized[$type] = \in_array($type, $stored_values);
       $method_weights = [];
       $enabled_methods = $form_state->getValue([$type, 'enabled']);
       $enabled_methods[LanguageNegotiationSelected::METHOD_ID] = TRUE;
@@ -231,7 +231,7 @@ class NegotiationConfigureForm extends ConfigFormBase {
       $table_form['configurable'] = [
         '#type' => 'checkbox',
         '#title' => $this->t('Customize %language_name language detection to differ from Interface text language detection settings', ['%language_name' => $info['name']]),
-        '#default_value' => in_array($type, $configurable),
+        '#default_value' => \in_array($type, $configurable),
         '#attributes' => ['class' => ['language-customization-checkbox']],
         '#attached' => [
           'library' => [

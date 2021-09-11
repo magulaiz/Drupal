@@ -758,7 +758,7 @@ class RouteProviderTest extends KernelTestBase {
 
     // Query a limited sets of routes.
     $routes = $provider->getRoutesPaged(1, 2);
-    $this->assertEquals(array_slice(array_keys($fixture_routes), 1, 2), array_keys($routes));
+    $this->assertEquals(\array_slice(array_keys($fixture_routes), 1, 2), array_keys($routes));
   }
 
   /**

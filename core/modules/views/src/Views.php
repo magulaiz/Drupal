@@ -146,7 +146,7 @@ class Views {
 
     foreach ($definitions as $id => $plugin) {
       // Skip plugins that don't conform to our key, if they have one.
-      if ($key && isset($plugin['display_types']) && !in_array($key, $plugin['display_types'])) {
+      if ($key && isset($plugin['display_types']) && !\in_array($key, $plugin['display_types'])) {
         continue;
       }
 
@@ -226,9 +226,9 @@ class Views {
 
       foreach ($view->get('display') as $id => $display) {
         // If the key doesn't exist, enabled is assumed.
-        $enabled = !empty($display['display_options']['enabled']) || !array_key_exists('enabled', $display['display_options']);
+        $enabled = !empty($display['display_options']['enabled']) || !\array_key_exists('enabled', $display['display_options']);
 
-        if ($enabled && in_array($display['display_plugin'], $plugin_ids)) {
+        if ($enabled && \in_array($display['display_plugin'], $plugin_ids)) {
           $result[] = [$view->id(), $id];
         }
       }
@@ -308,7 +308,7 @@ class Views {
       case 'disabled':
       case 'enabled':
         $filter = ucfirst($filter);
-        $views = call_user_func("static::get{$filter}Views");
+        $views = \call_user_func("static::get{$filter}Views");
         break;
 
       default:
@@ -320,7 +320,7 @@ class Views {
       $exclude_view_name = '';
       $exclude_view_display = '';
     }
-    elseif (is_object($exclude_view)) {
+    elseif (\is_object($exclude_view)) {
       $exclude_view_name = $exclude_view->storage->id();
       $exclude_view_display = $exclude_view->current_display;
     }
@@ -511,7 +511,7 @@ class Views {
       return array_keys(static::$plugins);
     }
 
-    if (!in_array($type, ['plugin', 'handler'])) {
+    if (!\in_array($type, ['plugin', 'handler'])) {
       throw new \Exception('Invalid plugin type used. Valid types are "plugin" or "handler".');
     }
 

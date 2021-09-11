@@ -101,7 +101,7 @@ class Term extends FieldableEntity {
     // The translations will be migrated by the d7_node_entity_translation
     // migration.
     $translatable_vocabularies = array_keys(array_filter($this->variableGet('entity_translation_taxonomy', [])));
-    $entity_translatable = $this->isEntityTranslatable('taxonomy_term') && in_array($vocabulary, $translatable_vocabularies, TRUE);
+    $entity_translatable = $this->isEntityTranslatable('taxonomy_term') && \in_array($vocabulary, $translatable_vocabularies, TRUE);
 
     if ($entity_translatable) {
       $source_language = $this->getEntityTranslationSourceLanguage('taxonomy_term', $tid);
@@ -135,7 +135,7 @@ class Term extends FieldableEntity {
     // Determine if this is a forum container.
     $forum_container_tids = $this->variableGet('forum_containers', []);
     $current_tid = $row->getSourceProperty('tid');
-    $row->setSourceProperty('is_container', in_array($current_tid, $forum_container_tids));
+    $row->setSourceProperty('is_container', \in_array($current_tid, $forum_container_tids));
 
     // If the term name or term description were replaced by real fields using
     // the Drupal 7 Title module, use the fields value instead of the term name

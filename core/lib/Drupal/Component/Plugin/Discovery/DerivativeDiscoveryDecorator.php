@@ -209,7 +209,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
       $class = $base_definition->getDeriver();
       $id = $base_definition->id();
     }
-    if ((is_array($base_definition) || ($base_definition = (array) $base_definition)) && (isset($base_definition['deriver']))) {
+    if ((\is_array($base_definition) || ($base_definition = (array) $base_definition)) && (isset($base_definition['deriver']))) {
       $class = $base_definition['deriver'];
       $id = $base_definition['id'];
     }
@@ -248,7 +248,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * Passes through all unknown calls onto the decorated object.
    */
   public function __call($method, $args) {
-    return call_user_func_array([$this->decorated, $method], $args);
+    return \call_user_func_array([$this->decorated, $method], $args);
   }
 
 }

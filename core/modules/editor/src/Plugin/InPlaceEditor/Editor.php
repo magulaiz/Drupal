@@ -60,7 +60,7 @@ class Editor extends PluginBase implements InPlaceEditorInterface {
    */
   protected function textFormatHasTransformationFilters($format_id) {
     $format = FilterFormat::load($format_id);
-    return (bool) count(array_intersect([FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE], $format->getFiltertypes()));
+    return (bool) \count(array_intersect([FilterInterface::TYPE_TRANSFORM_REVERSIBLE, FilterInterface::TYPE_TRANSFORM_IRREVERSIBLE], $format->getFiltertypes()));
   }
 
   /**

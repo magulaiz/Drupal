@@ -455,7 +455,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected function getFormSubmitSuffix(EntityInterface $entity, $langcode) {
     if (!$entity->isNew() && $entity->isTranslatable()) {
       $translations = $entity->getTranslationLanguages();
-      if ((count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
+      if ((\count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
         return ' ' . ($field->isTranslatable() ? t('(this translation)') : t('(all translations)'));
       }
     }
@@ -471,7 +471,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($nodes as $node) {
       $node->delete();
     }
-    $language_count = count(\Drupal::configFactory()->listAll('language.content_settings.'));
+    $language_count = \count(\Drupal::configFactory()->listAll('language.content_settings.'));
     \Drupal::service('module_installer')->uninstall(['content_translation']);
     $this->rebuildContainer();
     $this->assertCount($language_count, \Drupal::configFactory()->listAll('language.content_settings.'), 'Languages have been fixed rather than deleted during content_translation uninstall.');

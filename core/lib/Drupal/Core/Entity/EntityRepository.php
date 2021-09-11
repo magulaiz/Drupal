@@ -93,7 +93,7 @@ class EntityRepository implements EntityRepositoryInterface {
   public function getTranslationFromContext(EntityInterface $entity, $langcode = NULL, $context = []) {
     $translation = $entity;
 
-    if ($entity instanceof TranslatableDataInterface && count($entity->getTranslationLanguages()) > 1) {
+    if ($entity instanceof TranslatableDataInterface && \count($entity->getTranslationLanguages()) > 1) {
       if (empty($langcode)) {
         $langcode = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
         $entity->addCacheContexts(['languages:' . LanguageInterface::TYPE_CONTENT]);

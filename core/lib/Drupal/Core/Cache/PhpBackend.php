@@ -144,7 +144,7 @@ class PhpBackend implements CacheBackendInterface {
    * {@inheritdoc}
    */
   public function set($cid, $data, $expire = Cache::PERMANENT, array $tags = []) {
-    assert(Inspector::assertAllStrings($tags), 'Cache Tags must be strings.');
+    \assert(Inspector::assertAllStrings($tags), 'Cache Tags must be strings.');
 
     $item = (object) [
       'cid' => $cid,

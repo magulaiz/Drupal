@@ -43,7 +43,7 @@ trait ToolkitTestTrait {
       'my_operation',
       'convert',
     ];
-    if (count(array_intersect($expected, $operations)) > 0 && !in_array('apply', $expected)) {
+    if (\count(array_intersect($expected, $operations)) > 0 && !\in_array('apply', $expected)) {
       $expected[] = 'apply';
     }
 
@@ -57,7 +57,7 @@ trait ToolkitTestTrait {
     // Determine if there were any unexpected calls. If all unexpected calls are
     // operations and apply was expected, we do not count it as an error.
     $unexpected = array_diff($actual, $expected);
-    $assert = !(count($unexpected) && (!in_array('apply', $expected) || count(array_intersect($unexpected, $operations)) !== count($unexpected)));
+    $assert = !(\count($unexpected) && (!\in_array('apply', $expected) || \count(array_intersect($unexpected, $operations)) !== \count($unexpected)));
     $this->assertTrue($assert);
   }
 

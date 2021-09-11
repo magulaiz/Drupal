@@ -147,7 +147,7 @@ class AssetResolver implements AssetResolverInterface {
 
           // Always add a tiny value to the weight, to conserve the insertion
           // order.
-          $options['weight'] += count($css) / 1000;
+          $options['weight'] += \count($css) / 1000;
 
           // CSS files are being keyed by the full path.
           $css[$options['data']] = $options;
@@ -215,7 +215,7 @@ class AssetResolver implements AssetResolverInterface {
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
     $libraries_to_load = $this->getLibrariesToLoad($assets);
-    $cid = 'js:' . $theme_info->getName() . ':' . $this->languageManager->getCurrentLanguage()->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
+    $cid = 'js:' . $theme_info->getName() . ':' . $this->languageManager->getCurrentLanguage()->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (\count($assets->getSettings()) > 0) . (int) $optimize;
 
     if ($cached = $this->cache->get($cid)) {
       list($js_assets_header, $js_assets_footer, $settings, $settings_in_header) = $cached->data;
@@ -256,7 +256,7 @@ class AssetResolver implements AssetResolverInterface {
 
             // 'scope' is a calculated option, based on which libraries are
             // marked to be loaded from the header (see above).
-            $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
+            $options['scope'] = \in_array($library, $header_js_libraries) ? 'header' : 'footer';
 
             // Preprocess can only be set if caching is enabled and no
             // attributes are set.
@@ -264,7 +264,7 @@ class AssetResolver implements AssetResolverInterface {
 
             // Always add a tiny value to the weight, to conserve the insertion
             // order.
-            $options['weight'] += count($javascript) / 1000;
+            $options['weight'] += \count($javascript) / 1000;
 
             // Local and external files must keep their name as the associative
             // key so the same JavaScript file is not added twice.
@@ -302,8 +302,8 @@ class AssetResolver implements AssetResolverInterface {
       // loaded, get the JavaScript settings assets, and convert them into a
       // single "regular" JavaScript asset.
       $libraries_to_load = $this->getLibrariesToLoad($assets);
-      $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
-      $settings_have_changed = count($libraries_to_load) > 0 || count($assets->getSettings()) > 0;
+      $settings_required = \in_array('core/drupalSettings', $libraries_to_load) || \in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
+      $settings_have_changed = \count($libraries_to_load) > 0 || \count($assets->getSettings()) > 0;
 
       // Initialize settings to FALSE since they are not needed by default. This
       // distinguishes between an empty array which must still allow
@@ -317,7 +317,7 @@ class AssetResolver implements AssetResolverInterface {
           $function($settings, $assets);
         }
       }
-      $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
+      $settings_in_header = \in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
     }
 

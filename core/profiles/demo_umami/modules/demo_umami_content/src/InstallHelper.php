@@ -205,7 +205,7 @@ class InstallHelper implements ContainerInjectionInterface {
    *   Term ID, or 0 if Term ID could not be found.
    */
   protected function getTermId($vocabulary, $term_csv_id) {
-    if (array_key_exists($vocabulary, $this->termIdMap) && array_key_exists($term_csv_id, $this->termIdMap[$vocabulary])) {
+    if (\array_key_exists($vocabulary, $this->termIdMap) && \array_key_exists($term_csv_id, $this->termIdMap[$vocabulary])) {
       return $this->termIdMap[$vocabulary][$term_csv_id];
     }
     return 0;
@@ -235,7 +235,7 @@ class InstallHelper implements ContainerInjectionInterface {
    *   Media Image ID, or 0 if Media Image ID could not be found.
    */
   protected function getMediaImageId($media_image_csv_id) {
-    if (array_key_exists($media_image_csv_id, $this->mediaImageIdMap)) {
+    if (\array_key_exists($media_image_csv_id, $this->mediaImageIdMap)) {
       return $this->mediaImageIdMap[$media_image_csv_id];
     }
     return 0;
@@ -267,9 +267,9 @@ class InstallHelper implements ContainerInjectionInterface {
    *   Node path, or 0 if node CSV ID could not be found.
    */
   protected function getNodePath($langcode, $content_type, $node_csv_id) {
-    if (array_key_exists($langcode, $this->nodeIdMap) &&
-        array_key_exists($content_type, $this->nodeIdMap[$langcode]) &&
-        array_key_exists($node_csv_id, $this->nodeIdMap[$langcode][$content_type])) {
+    if (\array_key_exists($langcode, $this->nodeIdMap) &&
+        \array_key_exists($content_type, $this->nodeIdMap[$langcode]) &&
+        \array_key_exists($node_csv_id, $this->nodeIdMap[$langcode][$content_type])) {
       return $this->nodeIdMap[$langcode][$content_type][$node_csv_id];
     }
     return 0;

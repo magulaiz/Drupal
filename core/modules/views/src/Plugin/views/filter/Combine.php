@@ -80,7 +80,7 @@ class Combine extends StringFilter {
       // Using the CONCAT_WS operator with a single field is not a problem for
       // the by core supported databases. Only the MS SQL Server requires the
       // CONCAT_WS operator to be used with at least three arguments.
-      if (count($fields) == 1) {
+      if (\count($fields) == 1) {
         $expression = reset($fields);
       }
       else {

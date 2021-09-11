@@ -80,7 +80,7 @@ class ConfigDependencies implements ContainerInjectionInterface {
         break;
 
       case RestResourceConfigInterface::RESOURCE_GRANULARITY:
-        $methods = array_slice($rest_config->getMethods(), 0, 1);
+        $methods = \array_slice($rest_config->getMethods(), 0, 1);
         break;
 
       default:
@@ -165,12 +165,12 @@ class ConfigDependencies implements ContainerInjectionInterface {
         // authentication providers and formats.
         foreach (array_keys($rest_config->get('configuration')) as $request_method) {
           foreach ($removed_formats as $format) {
-            if (in_array($format, $rest_config->getFormats($request_method), TRUE)) {
+            if (\in_array($format, $rest_config->getFormats($request_method), TRUE)) {
               $configuration[$request_method]['supported_formats'] = array_diff($configuration[$request_method]['supported_formats'], $removed_formats);
             }
           }
           foreach ($removed_auth as $auth) {
-            if (in_array($auth, $rest_config->getAuthenticationProviders($request_method), TRUE)) {
+            if (\in_array($auth, $rest_config->getAuthenticationProviders($request_method), TRUE)) {
               $configuration[$request_method]['supported_auth'] = array_diff($configuration[$request_method]['supported_auth'], $removed_auth);
             }
           }
@@ -234,12 +234,12 @@ class ConfigDependencies implements ContainerInjectionInterface {
         // Try to fix dependency problems by removing affected
         // authentication providers and formats.
         foreach ($removed_formats as $format) {
-          if (in_array($format, $rest_config->getFormats($first_method), TRUE)) {
+          if (\in_array($format, $rest_config->getFormats($first_method), TRUE)) {
             $configuration['formats'] = array_diff($configuration['formats'], $removed_formats);
           }
         }
         foreach ($removed_auth as $auth) {
-          if (in_array($auth, $rest_config->getAuthenticationProviders($first_method), TRUE)) {
+          if (\in_array($auth, $rest_config->getAuthenticationProviders($first_method), TRUE)) {
             $configuration['authentication'] = array_diff($configuration['authentication'], $removed_auth);
           }
         }

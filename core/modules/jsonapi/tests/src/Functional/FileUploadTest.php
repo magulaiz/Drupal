@@ -623,7 +623,7 @@ class FileUploadTest extends ResourceTestBase {
     // extension to apache.
     $expected = $this->getExpectedDocument(1, 'example.php_.txt', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example.php_.txt');
 
@@ -635,7 +635,7 @@ class FileUploadTest extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_2.php"']);
     $expected = $this->getExpectedDocument(2, 'example_2.php_.txt', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example_2.php_.txt');
     $this->assertFileDoesNotExist('public://foobar/example_2.php');
@@ -650,7 +650,7 @@ class FileUploadTest extends ResourceTestBase {
     // The filename is munged.
     $expected = $this->getExpectedDocument(3, 'example_3.php_.doc', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     // The file mime should be 'application/msword'.
     $expected['data']['attributes']['filemime'] = 'application/msword';
     $this->assertResponseData($expected, $response);
@@ -667,7 +667,7 @@ class FileUploadTest extends ResourceTestBase {
     // The filename is munged.
     $expected = $this->getExpectedDocument(4, 'example_4.php_.doc', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     // The file mime should be 'application/msword'.
     $expected['data']['attributes']['filemime'] = 'application/msword';
     $this->assertResponseData($expected, $response);
@@ -680,7 +680,7 @@ class FileUploadTest extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
     $expected = $this->getExpectedDocument(5, 'example_5.php_.png', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     // The file mime should still see this as a PNG image.
     $expected['data']['attributes']['filemime'] = 'image/png';
     $this->assertResponseData($expected, $response);
@@ -690,7 +690,7 @@ class FileUploadTest extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_6.cgi.png.txt"']);
     $expected = $this->getExpectedDocument(6, 'example_6.cgi_.png_.txt', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     // The file mime should also now be text.
     $expected['data']['attributes']['filemime'] = 'text/plain';
     $this->assertResponseData($expected, $response);
@@ -720,7 +720,7 @@ class FileUploadTest extends ResourceTestBase {
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
     $expected = $this->getExpectedDocument(7, 'example_7.php', TRUE);
     // Override the expected filesize.
-    $expected['data']['attributes']['filesize'] = strlen($php_string);
+    $expected['data']['attributes']['filesize'] = \strlen($php_string);
     // The file mime should also now be PHP.
     $expected['data']['attributes']['filemime'] = 'application/x-httpd-php';
     $this->assertResponseData($expected, $response);
@@ -806,7 +806,7 @@ class FileUploadTest extends ResourceTestBase {
           'changed' => (new \DateTime())->setTimestamp($file->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
           'filemime' => 'text/plain',
           'filename' => $expected_as_filename ? $expected_filename : 'example.txt',
-          'filesize' => strlen($this->testFileData),
+          'filesize' => \strlen($this->testFileData),
           'langcode' => 'en',
           'status' => $expected_status,
           'uri' => [

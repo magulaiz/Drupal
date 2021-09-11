@@ -138,7 +138,7 @@ class Container implements ContainerInterface, ResetInterface {
     }
 
     // Re-use shared service instance if it exists.
-    if (isset($this->services[$id]) || ($invalid_behavior === ContainerInterface::NULL_ON_INVALID_REFERENCE && array_key_exists($id, $this->services))) {
+    if (isset($this->services[$id]) || ($invalid_behavior === ContainerInterface::NULL_ON_INVALID_REFERENCE && \array_key_exists($id, $this->services))) {
       return $this->services[$id];
     }
 
@@ -248,14 +248,14 @@ class Container implements ContainerInterface, ResetInterface {
 
     if (isset($definition['factory'])) {
       $factory = $definition['factory'];
-      if (is_array($factory)) {
+      if (\is_array($factory)) {
         $factory = $this->resolveServicesAndParameters([$factory[0], $factory[1]]);
       }
-      elseif (!is_string($factory)) {
+      elseif (!\is_string($factory)) {
         throw new RuntimeException(sprintf('Cannot create service "%s" because of invalid factory', $id));
       }
 
-      $service = call_user_func_array($factory, $arguments);
+      $service = \call_user_func_array($factory, $arguments);
     }
     else {
       $class = $this->frozen ? $definition['class'] : current($this->resolveServicesAndParameters([$definition['class']]));
@@ -276,7 +276,7 @@ class Container implements ContainerInterface, ResetInterface {
             $arguments = $this->resolveServicesAndParameters($arguments);
           }
         }
-        call_user_func_array([$service, $method], $arguments);
+        \call_user_func_array([$service, $method], $arguments);
       }
     }
 
@@ -291,15 +291,15 @@ class Container implements ContainerInterface, ResetInterface {
 
     if (isset($definition['configurator'])) {
       $callable = $definition['configurator'];
-      if (is_array($callable)) {
+      if (\is_array($callable)) {
         $callable = $this->resolveServicesAndParameters($callable);
       }
 
-      if (!is_callable($callable)) {
-        throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', get_class($service)));
+      if (!\is_callable($callable)) {
+        throw new InvalidArgumentException(sprintf('The configurator for class "%s" is not a callable.', \get_class($service)));
       }
 
-      call_user_func($callable, $service);
+      \call_user_func($callable, $service);
     }
 
     return $service;
@@ -323,7 +323,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function getParameter($name) {
-    if (!(isset($this->parameters[$name]) || array_key_exists($name, $this->parameters))) {
+    if (!(isset($this->parameters[$name]) || \array_key_exists($name, $this->parameters))) {
       if (!$name) {
         throw new ParameterNotFoundException('');
       }
@@ -338,7 +338,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function hasParameter($name) {
-    return isset($this->parameters[$name]) || array_key_exists($name, $this->parameters);
+    return isset($this->parameters[$name]) || \array_key_exists($name, $this->parameters);
   }
 
   /**
@@ -360,7 +360,7 @@ class Container implements ContainerInterface, ResetInterface {
       $id = $this->aliases[$id];
     }
 
-    return isset($this->services[$id]) || array_key_exists($id, $this->services);
+    return isset($this->services[$id]) || \array_key_exists($id, $this->services);
   }
 
   /**
@@ -500,7 +500,7 @@ class Container implements ContainerInterface, ResetInterface {
     $alternatives = [];
     foreach ($keys as $key) {
       $lev = levenshtein($search_key, $key);
-      if ($lev <= strlen($search_key) / 3 || strpos($key, $search_key) !== FALSE) {
+      if ($lev <= \strlen($search_key) / 3 || strpos($key, $search_key) !== FALSE) {
         $alternatives[] = $key;
       }
     }

@@ -93,7 +93,7 @@ class ModuleTest extends ViewsKernelTestBase {
           'field' => $field,
         ];
         foreach ($data as $id => $field_data) {
-          if (!in_array($id, ['title', 'help'])) {
+          if (!\in_array($id, ['title', 'help'])) {
             $handler = $this->container->get('plugin.manager.views.' . $id)->getHandler($item);
             $this->assertInstanceHandler($handler, $table, $field, $id);
           }

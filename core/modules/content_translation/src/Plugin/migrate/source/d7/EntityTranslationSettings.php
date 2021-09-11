@@ -71,11 +71,11 @@ class EntityTranslationSettings extends DrupalSqlBase {
     // Find out which vocabulary uses entity translation by looking at the
     // 'entity_translation_taxonomy' variable.
     $vocabularies = [];
-    if (isset($results['entity_translation_taxonomy']) && is_array($results['entity_translation_taxonomy'])) {
+    if (isset($results['entity_translation_taxonomy']) && \is_array($results['entity_translation_taxonomy'])) {
       $vocabularies = array_keys(array_filter($results['entity_translation_taxonomy']));
     }
 
-    if (in_array('node', $entity_types, TRUE) && !empty($node_types)) {
+    if (\in_array('node', $entity_types, TRUE) && !empty($node_types)) {
       // For each node type that uses entity translation, check if a
       // settings variable exists for that node type, otherwise use default
       // values.
@@ -98,7 +98,7 @@ class EntityTranslationSettings extends DrupalSqlBase {
       }
     }
 
-    if (in_array('comment', $entity_types, TRUE) && !empty($node_types)) {
+    if (\in_array('comment', $entity_types, TRUE) && !empty($node_types)) {
       // A comment type uses entity translation if the associated node type
       // uses it. So, for each node type that uses entity translation, check
       // if a settings variable exists for that comment type, otherwise use
@@ -124,7 +124,7 @@ class EntityTranslationSettings extends DrupalSqlBase {
       }
     }
 
-    if (in_array('taxonomy_term', $entity_types, TRUE) && !empty($vocabularies)) {
+    if (\in_array('taxonomy_term', $entity_types, TRUE) && !empty($vocabularies)) {
       // For each vocabulary that uses entity translation, check if a
       // settings variable exists for that vocabulary, otherwise use default
       // values.
@@ -146,7 +146,7 @@ class EntityTranslationSettings extends DrupalSqlBase {
       }
     }
 
-    if (in_array('user', $entity_types, TRUE)) {
+    if (\in_array('user', $entity_types, TRUE)) {
       // User entity type is not bundleable. Check if a settings variable
       // exists, otherwise use default values.
       $settings = isset($results['entity_translation_settings_user__user']) ? $results['entity_translation_settings_user__user'] : [];

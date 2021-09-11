@@ -17,7 +17,7 @@ trait FilteredPluginManagerTrait {
    * Implements \Drupal\Core\Plugin\FilteredPluginManagerInterface::getFilteredDefinitions().
    */
   public function getFilteredDefinitions($consumer, $contexts = NULL, array $extra = []) {
-    if (!is_null($contexts)) {
+    if (!\is_null($contexts)) {
       $definitions = $this->getDefinitionsForContexts($contexts);
     }
     else {

@@ -112,7 +112,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
    */
   private function write($data) {
     $result = fwrite($this->fd, $data);
-    if ($result === FALSE || $result != strlen($data)) {
+    if ($result === FALSE || $result != \strlen($data)) {
       throw new \Exception('Unable to write data: ' . substr($data, 0, 20));
     }
   }

@@ -119,8 +119,8 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
         $edit_form_url = $user->toUrl('edit-form');
       }
     }
-    assert(isset($current_user));
-    assert(isset($edit_form_url));
+    \assert(isset($current_user));
+    \assert(isset($edit_form_url));
 
     // Create a link collection to normalize.
     $mock_resource_object = $this->createMock(ResourceObject::class);
@@ -189,7 +189,7 @@ class LinkCollectionNormalizerTest extends KernelTestBase {
    * Get an instance of the normalizer to test.
    */
   protected function getNormalizer(AccountInterface $current_user = NULL) {
-    if (is_null($current_user)) {
+    if (\is_null($current_user)) {
       $current_user = $this->setUpCurrentUser();
     }
     else {

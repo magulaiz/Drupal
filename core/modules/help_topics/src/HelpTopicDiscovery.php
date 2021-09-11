@@ -127,14 +127,14 @@ class HelpTopicDiscovery implements DiscoveryInterface {
         foreach ($front_matter as $key => $value) {
           switch ($key) {
             case 'related':
-              if (!is_array($value)) {
+              if (!\is_array($value)) {
                 throw new DiscoveryException("$file contains invalid value for 'related' key, the value must be an array of strings");
               }
               $data[$key] = $value;
               break;
 
             case 'top_level':
-              if (!is_bool($value)) {
+              if (!\is_bool($value)) {
                 throw new DiscoveryException("$file contains invalid value for 'top_level' key, the value must be a Boolean");
               }
               $data[$key] = $value;

@@ -171,7 +171,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     $controller = [$local_task, 'getTitle'];
     $request = $this->requestStack->getCurrentRequest();
     $arguments = $this->argumentResolver->getArguments($request, $controller);
-    return call_user_func_array($controller, $arguments);
+    return \call_user_func_array($controller, $arguments);
   }
 
   /**

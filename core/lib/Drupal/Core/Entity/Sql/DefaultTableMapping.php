@@ -399,7 +399,7 @@ class DefaultTableMapping implements TableMappingInterface {
    */
   public function getAllFieldTableNames($field_name) {
     return array_keys(array_filter($this->fieldNames, function ($table_fields) use ($field_name) {
-      return in_array($field_name, $table_fields, TRUE);
+      return \in_array($field_name, $table_fields, TRUE);
     }));
   }
 
@@ -425,14 +425,14 @@ class DefaultTableMapping implements TableMappingInterface {
     $field_name = $storage_definition->getName();
 
     if ($this->allowsSharedTableStorage($storage_definition)) {
-      $column_name = count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
+      $column_name = \count($storage_definition->getColumns()) == 1 ? $field_name : $field_name . '__' . $property_name;
     }
     elseif ($this->requiresDedicatedTableStorage($storage_definition)) {
       if ($property_name == TableMappingInterface::DELTA) {
         $column_name = 'delta';
       }
       else {
-        $column_name = !in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
+        $column_name = !\in_array($property_name, $this->getReservedColumns()) ? $field_name . '_' . $property_name : $property_name;
       }
     }
     else {
@@ -624,7 +624,7 @@ class DefaultTableMapping implements TableMappingInterface {
     $table_name = $this->prefix . $entity_type_id . $separator . $storage_definition->getName();
     // Limit the string to 48 characters, keeping a 16 characters margin for db
     // prefixes.
-    if (strlen($table_name) > 48) {
+    if (\strlen($table_name) > 48) {
       // Use a shorter separator and a hash of the field storage unique
       // identifier.
       $separator = $revision ? '_r__' : '__';
@@ -637,7 +637,7 @@ class DefaultTableMapping implements TableMappingInterface {
       // - prefix: max 34 chars;
       // - separator: max 4 chars;
       // - field_hash: max 10 chars.
-      if (strlen($table_name) > 48) {
+      if (\strlen($table_name) > 48) {
         $prefix = substr($this->prefix, 0, 34);
         $table_name = $prefix . $separator . $field_hash;
       }

@@ -59,7 +59,7 @@ class TermForm extends ContentEntityForm {
       }
 
       foreach ($tree as $item) {
-        if (!in_array($item->tid, $exclude)) {
+        if (!\in_array($item->tid, $exclude)) {
           $options[$item->tid] = str_repeat('-', $item->depth) . $item->name;
         }
       }
@@ -200,7 +200,7 @@ class TermForm extends ContentEntityForm {
         break;
     }
 
-    $current_parent_count = count($form_state->getValue('parent'));
+    $current_parent_count = \count($form_state->getValue('parent'));
     // Root doesn't count if it's the only parent.
     if ($current_parent_count == 1 && $form_state->hasValue(['parent', 0])) {
       $form_state->setValue('parent', []);

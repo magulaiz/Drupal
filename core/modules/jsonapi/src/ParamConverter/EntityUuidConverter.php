@@ -62,7 +62,7 @@ class EntityUuidConverter extends EntityConverter {
         $entity = $this->entityRepository->getTranslationFromContext($entity, NULL, ['operation' => 'entity_upcast']);
         // JSON:API always has only one method per route.
         $method = $defaults[RouteObjectInterface::ROUTE_OBJECT]->getMethods()[0];
-        if (in_array($method, ['PATCH', 'DELETE'], TRUE)) {
+        if (\in_array($method, ['PATCH', 'DELETE'], TRUE)) {
           $current_content_language = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
           if ($method === 'DELETE' && (!$entity->isDefaultTranslation() || $entity->language()->getId() !== $current_content_language)) {
             throw new MethodNotAllowedHttpException(['GET'], 'Deleting a resource object translation is not yet supported. See https://www.drupal.org/docs/8/modules/jsonapi/translations.');

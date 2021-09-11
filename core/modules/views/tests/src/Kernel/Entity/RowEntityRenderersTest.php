@@ -102,7 +102,7 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $controller = \Drupal::entityTypeManager()->getStorage('node');
     $langcode_index = 0;
 
-    for ($i = 0; $i < count($this->langcodes); $i++) {
+    for ($i = 0; $i < \count($this->langcodes); $i++) {
       // Create a node with a different default language each time.
       $default_langcode = $this->langcodes[$langcode_index++];
       $node = $controller->create(['type' => 'test', 'uid' => $this->testAuthor->id(), 'langcode' => $default_langcode]);

@@ -40,7 +40,7 @@ class LanguageFallbackTest extends LanguageTestBase {
 
     // Check that candidates are alterable.
     $this->state->set('language_test.fallback_alter.candidates', TRUE);
-    $expected = array_slice($expected, 0, count($expected) - 1);
+    $expected = \array_slice($expected, 0, \count($expected) - 1);
     $candidates = $this->languageManager->getFallbackCandidates();
     $this->assertEquals($expected, array_values($candidates), 'Language fallback candidates are alterable.');
 

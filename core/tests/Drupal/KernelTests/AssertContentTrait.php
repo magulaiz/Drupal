@@ -170,13 +170,13 @@ trait AssertContentTrait {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       // Cast MarkupInterface objects to string.
-      if (is_object($value)) {
+      if (\is_object($value)) {
         $value = (string) $value;
       }
       // XPath 1.0 doesn't support a way to escape single or double quotes in a
       // string literal. We split double quotes out of the string, and encode
       // them separately.
-      if (is_string($value)) {
+      if (\is_string($value)) {
         // Explode the text at the quote characters.
         $parts = explode('"', $value);
 
@@ -186,7 +186,7 @@ trait AssertContentTrait {
         }
 
         // Return the string.
-        $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
+        $value = \count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
       }
 
       // Use preg_replace_callback() instead of preg_replace() to prevent the
@@ -703,7 +703,7 @@ trait AssertContentTrait {
     if ($first_occurrence === FALSE) {
       $this->fail($message);
     }
-    $offset = $first_occurrence + strlen($text);
+    $offset = $first_occurrence + \strlen($text);
     $second_occurrence = strpos($this->getTextContent(), $text, $offset);
     $this->assertEquals($be_unique, $second_occurrence === FALSE, $message);
     return TRUE;
@@ -1477,7 +1477,7 @@ trait AssertContentTrait {
     $status = TRUE;
     foreach ($this->xpath('//*[@id]') as $element) {
       $id = (string) $element['id'];
-      if (isset($seen_ids[$id]) && !in_array($id, $ids_to_skip)) {
+      if (isset($seen_ids[$id]) && !\in_array($id, $ids_to_skip)) {
         $this->fail(new FormattableMarkup('The HTML ID %id is unique.', ['%id' => $id]), $group);
         $status = FALSE;
       }

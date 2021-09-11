@@ -131,7 +131,7 @@ class Connection extends DatabaseConnection {
       @trigger_error('Connection::handleQueryException() is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Get a handler through $this->exceptionHandler() instead, and use one of its methods. See https://www.drupal.org/node/3187222', E_USER_DEPRECATED);
       $query_string = ($query instanceof StatementInterface) ? $query->getQueryString() : $query;
       $message = $e->getMessage() . ": " . $query_string . "; " . print_r($args, TRUE);
-      throw new IntegrityConstraintViolationException($message, is_int($e->getCode()) ? $e->getCode() : 0, $e);
+      throw new IntegrityConstraintViolationException($message, \is_int($e->getCode()) ? $e->getCode() : 0, $e);
     }
 
     parent::handleQueryException($e, $query, $args, $options);
@@ -481,7 +481,7 @@ class Connection extends DatabaseConnection {
         $callbacks = $this->rootTransactionEndCallbacks;
         $this->rootTransactionEndCallbacks = [];
         foreach ($callbacks as $callback) {
-          call_user_func($callback, $success);
+          \call_user_func($callback, $success);
         }
       }
     }

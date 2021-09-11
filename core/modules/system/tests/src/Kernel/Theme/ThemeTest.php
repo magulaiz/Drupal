@@ -58,11 +58,11 @@ class ThemeTest extends KernelTestBase {
     $foos = ['null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo', 'empty_string' => ''];
     foreach ($foos as $type => $example) {
       $output = \Drupal::theme()->render('theme_test_foo', ['foo' => $example]);
-      $this->assertTrue($output instanceof MarkupInterface || is_string($output), new FormattableMarkup('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
+      $this->assertTrue($output instanceof MarkupInterface || \is_string($output), new FormattableMarkup('\Drupal::theme() returns an object that implements MarkupInterface or a string for data type @type.', ['@type' => $type]));
       if ($output instanceof MarkupInterface) {
         $this->assertSame((string) $example, $output->__toString());
       }
-      elseif (is_string($output)) {
+      elseif (\is_string($output)) {
         $this->assertSame('', $output, 'A string will be return when the theme returns an empty string.');
       }
     }

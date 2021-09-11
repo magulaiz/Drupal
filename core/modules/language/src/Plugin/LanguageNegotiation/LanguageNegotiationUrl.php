@@ -135,12 +135,12 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
       $options['language'] = $language_url;
     }
     // We allow only added languages here.
-    elseif (!is_object($options['language']) || !isset($languages[$options['language']->getId()])) {
+    elseif (!\is_object($options['language']) || !isset($languages[$options['language']->getId()])) {
       return $path;
     }
     $config = $this->config->get('language.negotiation')->get('url');
     if ($config['source'] == LanguageNegotiationUrl::CONFIG_PATH_PREFIX) {
-      if (is_object($options['language']) && !empty($config['prefixes'][$options['language']->getId()])) {
+      if (\is_object($options['language']) && !empty($config['prefixes'][$options['language']->getId()])) {
         $options['prefix'] = $config['prefixes'][$options['language']->getId()] . '/';
         if ($bubbleable_metadata) {
           $bubbleable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL]);
@@ -148,7 +148,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
       }
     }
     elseif ($config['source'] == LanguageNegotiationUrl::CONFIG_DOMAIN) {
-      if (is_object($options['language']) && !empty($config['domains'][$options['language']->getId()])) {
+      if (\is_object($options['language']) && !empty($config['domains'][$options['language']->getId()])) {
 
         // Save the original base URL. If it contains a port, we need to
         // retain it below.

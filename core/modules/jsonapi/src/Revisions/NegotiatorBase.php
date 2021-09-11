@@ -97,7 +97,7 @@ abstract class NegotiatorBase implements VersionNegotiatorInterface {
    *   found.
    */
   protected static function ensureVersionExists($revision) {
-    if (is_null($revision)) {
+    if (\is_null($revision)) {
       throw new VersionNotFoundException();
     }
     return $revision;

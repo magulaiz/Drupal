@@ -103,7 +103,7 @@ class FileCacheFactoryTest extends TestCase {
     $file_cache = $this->getMockBuilder(FileCache::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $class = get_class($file_cache);
+    $class = \get_class($file_cache);
 
     // Test fallback configuration.
     $data['fallback-configuration'] = [

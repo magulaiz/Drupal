@@ -104,7 +104,7 @@ class StylesCombo extends CKEditorPluginBase implements CKEditorPluginConfigurab
       $style_names = array_map(function ($style) {
         return $style['name'];
       }, $styles_setting);
-      if (count($style_names) !== count(array_unique($style_names))) {
+      if (\count($style_names) !== \count(array_unique($style_names))) {
         $form_state->setError($element, $this->t('Each style must have a unique label.'));
       }
     }

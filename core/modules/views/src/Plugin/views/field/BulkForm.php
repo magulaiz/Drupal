@@ -281,7 +281,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
 
     // Add the tableselect javascript.
     $form['#attached']['library'][] = 'core/drupal.tableselect';
-    $use_revision = array_key_exists('revision', $this->view->getQuery()->getEntityTableInfo());
+    $use_revision = \array_key_exists('revision', $this->view->getQuery()->getEntityTableInfo());
 
     // Only add the bulk form options and buttons if there are results.
     if (!empty($this->view->result)) {
@@ -344,7 +344,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     // Filter the action list.
     foreach ($this->actions as $id => $action) {
       if ($filtered) {
-        $in_selected = in_array($id, $this->options['selected_actions']);
+        $in_selected = \in_array($id, $this->options['selected_actions']);
         // If the field is configured to include only the selected actions,
         // skip actions that were not selected.
         if (($this->options['include_exclude'] == 'include') && !$in_selected) {
@@ -517,7 +517,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
     $revision_id = NULL;
 
     // If there are 3 items, vid will be last.
-    if (count($key_parts) === 3) {
+    if (\count($key_parts) === 3) {
       $revision_id = array_pop($key_parts);
     }
 

@@ -218,7 +218,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * {@inheritdoc}
    */
   public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE) {
-    if ($check && !is_array($options)) {
+    if ($check && !\is_array($options)) {
       return;
     }
 
@@ -227,13 +227,13 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     }
 
     foreach ($options as $key => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         // Ignore arrays with no definition.
         if (!$all && empty($definition[$key])) {
           continue;
         }
 
-        if (!isset($storage[$key]) || !is_array($storage[$key])) {
+        if (!isset($storage[$key]) || !\is_array($storage[$key])) {
           $storage[$key] = [];
         }
 
@@ -351,7 +351,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @return string
    */
   protected function viewsTokenReplace($text, $tokens) {
-    if (!strlen($text)) {
+    if (!\strlen($text)) {
       // No need to run filterAdmin on an empty string.
       return '';
     }
@@ -376,17 +376,17 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
         // We need to validate tokens are valid Twig variables. Twig uses the
         // same variable naming rules as PHP.
         // @see http://php.net/manual/language.variables.basics.php
-        assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token) === 1, 'Tokens need to be valid Twig variables.');
+        \assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $token) === 1, 'Tokens need to be valid Twig variables.');
         $twig_tokens[$token] = $replacement;
       }
       else {
         $parts = explode('.', $token);
         $top = array_shift($parts);
-        assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $top) === 1, 'Tokens need to be valid Twig variables.');
+        \assert(preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $top) === 1, 'Tokens need to be valid Twig variables.');
         $token_array = [array_pop($parts) => $replacement];
         foreach (array_reverse($parts) as $key) {
           // The key could also be numeric (array index) so allow that.
-          assert(is_numeric($key) || preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $key) === 1, 'Tokens need to be valid Twig variables.');
+          \assert(is_numeric($key) || preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $key) === 1, 'Tokens need to be valid Twig variables.');
           $token_array = [$key => $token_array];
         }
         if (!isset($twig_tokens[$top])) {
@@ -603,7 +603,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
           // If this (non-configurable) type is among the current values,
           // add that option too, so it is not lost. If not among the current
           // values, skip displaying it to avoid user confusion.
-          if (isset($type['name']) && !isset($list[$id]) && in_array($id, $current_values, TRUE)) {
+          if (isset($type['name']) && !isset($list[$id]) && \in_array($id, $current_values, TRUE)) {
             $list[$id] = $this->t('@type language selected for page', ['@type' => $type['name']]);
           }
         }

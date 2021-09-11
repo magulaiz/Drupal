@@ -195,7 +195,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!$this->hasState($state_id)) {
       throw new \InvalidArgumentException("The state '$state_id' does not exist in workflow.");
     }
-    if (count($this->configuration['states']) === 1) {
+    if (\count($this->configuration['states']) === 1) {
       throw new \InvalidArgumentException("The state '$state_id' can not be deleted from workflow as it is the only state.");
     }
 
@@ -279,7 +279,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    *   transition ID.
    */
   protected static function labelWeightMultisort($objects) {
-    if (count($objects) > 1) {
+    if (\count($objects) > 1) {
       // Separate weights, labels, and keys into arrays.
       $weights = $labels = [];
       $keys = array_keys($objects);
@@ -335,7 +335,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function getTransitionsForState($state_id, $direction = TransitionInterface::DIRECTION_FROM) {
     $transition_ids = array_keys(array_filter($this->configuration['transitions'], function ($transition) use ($state_id, $direction) {
-      return in_array($state_id, (array) $transition[$direction], TRUE);
+      return \in_array($state_id, (array) $transition[$direction], TRUE);
     }));
     return $this->getTransitions($transition_ids);
   }
@@ -371,7 +371,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   protected function getTransitionIdFromStateToState($from_state_id, $to_state_id) {
     foreach ($this->configuration['transitions'] as $transition_id => $transition) {
-      if (in_array($from_state_id, $transition['from'], TRUE) && $transition['to'] === $to_state_id) {
+      if (\in_array($from_state_id, $transition['from'], TRUE) && $transition['to'] === $to_state_id) {
         return $transition_id;
       }
     }

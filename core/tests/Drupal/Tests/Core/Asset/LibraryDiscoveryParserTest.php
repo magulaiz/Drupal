@@ -122,7 +122,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_module')
@@ -152,7 +152,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(FALSE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('theme', 'example_theme')
@@ -179,7 +179,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files_not_existing';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_module')
@@ -200,7 +200,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'invalid_file')
@@ -222,7 +222,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_module_only_dependencies')
@@ -244,7 +244,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_module_missing_information')
@@ -267,7 +267,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'versions')
@@ -300,7 +300,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'external')
@@ -326,7 +326,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'css_weights')
@@ -367,7 +367,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'js_positive_weight')
@@ -389,7 +389,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'css_js_settings')
@@ -422,7 +422,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'dependencies')
@@ -451,7 +451,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'data_types')
@@ -486,7 +486,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'js')
@@ -512,7 +512,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'licenses_missing_information')
@@ -535,7 +535,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'licenses')
@@ -640,7 +640,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($this->activeTheme);
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_module')
@@ -694,7 +694,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->willReturn($this->activeTheme);
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'deprecated')
@@ -732,7 +732,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', $extension)
@@ -764,7 +764,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'example_contrib_module')
@@ -795,7 +795,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
 
     $this->extensionPathResolver->expects($this->once())
       ->method('getPath')
@@ -830,7 +830,7 @@ class LibraryDiscoveryParserTest extends UnitTestCase {
       ->will($this->returnValue(TRUE));
 
     $path = __DIR__ . '/library_test_files';
-    $path = substr($path, strlen($this->root) + 1);
+    $path = substr($path, \strlen($this->root) + 1);
     $this->extensionPathResolver->expects($this->atLeastOnce())
       ->method('getPath')
       ->with('module', 'empty')
@@ -860,36 +860,36 @@ class TestLibraryDiscoveryParser extends LibraryDiscoveryParser {
 
 }
 
-if (!defined('CSS_AGGREGATE_DEFAULT')) {
-  define('CSS_AGGREGATE_DEFAULT', 0);
+if (!\defined('CSS_AGGREGATE_DEFAULT')) {
+  \define('CSS_AGGREGATE_DEFAULT', 0);
 }
-if (!defined('CSS_AGGREGATE_THEME')) {
-  define('CSS_AGGREGATE_THEME', 100);
+if (!\defined('CSS_AGGREGATE_THEME')) {
+  \define('CSS_AGGREGATE_THEME', 100);
 }
-if (!defined('CSS_BASE')) {
-  define('CSS_BASE', -200);
+if (!\defined('CSS_BASE')) {
+  \define('CSS_BASE', -200);
 }
-if (!defined('CSS_LAYOUT')) {
-  define('CSS_LAYOUT', -100);
+if (!\defined('CSS_LAYOUT')) {
+  \define('CSS_LAYOUT', -100);
 }
-if (!defined('CSS_COMPONENT')) {
-  define('CSS_COMPONENT', 0);
+if (!\defined('CSS_COMPONENT')) {
+  \define('CSS_COMPONENT', 0);
 }
-if (!defined('CSS_STATE')) {
-  define('CSS_STATE', 100);
+if (!\defined('CSS_STATE')) {
+  \define('CSS_STATE', 100);
 }
-if (!defined('CSS_THEME')) {
-  define('CSS_THEME', 200);
+if (!\defined('CSS_THEME')) {
+  \define('CSS_THEME', 200);
 }
-if (!defined('JS_SETTING')) {
-  define('JS_SETTING', -200);
+if (!\defined('JS_SETTING')) {
+  \define('JS_SETTING', -200);
 }
-if (!defined('JS_LIBRARY')) {
-  define('JS_LIBRARY', -100);
+if (!\defined('JS_LIBRARY')) {
+  \define('JS_LIBRARY', -100);
 }
-if (!defined('JS_DEFAULT')) {
-  define('JS_DEFAULT', 0);
+if (!\defined('JS_DEFAULT')) {
+  \define('JS_DEFAULT', 0);
 }
-if (!defined('JS_THEME')) {
-  define('JS_THEME', 100);
+if (!\defined('JS_THEME')) {
+  \define('JS_THEME', 100);
 }

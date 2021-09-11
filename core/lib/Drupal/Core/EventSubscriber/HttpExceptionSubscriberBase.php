@@ -96,7 +96,7 @@ abstract class HttpExceptionSubscriberBase implements EventSubscriberInterface {
 
     $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
 
-    if ($exception instanceof HttpExceptionInterface && (empty($handled_formats) || in_array($format, $handled_formats))) {
+    if ($exception instanceof HttpExceptionInterface && (empty($handled_formats) || \in_array($format, $handled_formats))) {
       $method = 'on' . $exception->getStatusCode();
       // Keep just the leading number of the status code to produce either a
       // 400 or a 500 method callback.

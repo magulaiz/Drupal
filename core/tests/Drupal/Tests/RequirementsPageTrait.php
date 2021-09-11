@@ -64,7 +64,7 @@ trait RequirementsPageTrait {
     // @todo Make this more reliable in
     //   https://www.drupal.org/project/drupal/issues/2927345.
     $selectors = [];
-    for ($i = 0; $i <= count($warning_summaries); $i++) {
+    for ($i = 0; $i <= \count($warning_summaries); $i++) {
       $selectors[] = 'h3#warning' . implode('', array_fill(0, $i + 1, '+details')) . ' summary';
     }
     $warning_elements = $this->cssSelect(implode(', ', $selectors));

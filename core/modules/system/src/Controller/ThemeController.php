@@ -150,7 +150,7 @@ class ThemeController extends ControllerBase {
         $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
         $this->messenger()->addError(
           $this->formatPlural(
-            count($config_objects),
+            \count($config_objects),
             'Unable to install @extension, %config_names already exists in active configuration.',
             'Unable to install @extension, %config_names already exist in active configuration.',
             [

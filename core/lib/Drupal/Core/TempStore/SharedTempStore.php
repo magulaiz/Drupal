@@ -110,7 +110,7 @@ class SharedTempStore {
     $this->requestStack = $request_stack;
     if (!$current_user instanceof AccountProxyInterface) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3006268', E_USER_DEPRECATED);
-      if (is_int($current_user)) {
+      if (\is_int($current_user)) {
         // If the $current_user argument is numeric then this object has been
         // instantiated with the old constructor signature.
         $expire = $current_user;

@@ -133,7 +133,7 @@ class TranslationManager implements TranslationInterface, TranslatorInterface {
    */
   protected function doTranslate($string, array $options = []) {
     // If a NULL langcode has been provided, unset it.
-    if (!isset($options['langcode']) && array_key_exists('langcode', $options)) {
+    if (!isset($options['langcode']) && \array_key_exists('langcode', $options)) {
       unset($options['langcode']);
     }
 

@@ -13,7 +13,7 @@ abstract class ViewModeBase extends DrupalSqlBase {
    * {@inheritdoc}
    */
   public function count($refresh = FALSE) {
-    return count($this->initializeIterator());
+    return \count($this->initializeIterator());
   }
 
   /**

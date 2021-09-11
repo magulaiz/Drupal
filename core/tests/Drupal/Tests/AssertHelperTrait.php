@@ -35,7 +35,7 @@ trait AssertHelperTrait {
     if ($value instanceof MarkupInterface) {
       $value = (string) $value;
     }
-    if (is_array($value)) {
+    if (\is_array($value)) {
       array_walk_recursive($value, function (&$item) {
         if ($item instanceof MarkupInterface) {
           $item = (string) $item;

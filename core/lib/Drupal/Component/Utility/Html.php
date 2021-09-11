@@ -452,9 +452,9 @@ EOD;
    *   The updated (X)HTML snippet.
    */
   public static function transformRootRelativeUrlsToAbsolute($html, $scheme_and_host) {
-    assert(empty(array_diff(array_keys(parse_url($scheme_and_host)), ["scheme", "host", "port"])), '$scheme_and_host contains scheme, host and port at most.');
-    assert(isset(parse_url($scheme_and_host)["scheme"]), '$scheme_and_host is absolute and hence has a scheme.');
-    assert(isset(parse_url($scheme_and_host)["host"]), '$base_url is absolute and hence has a host.');
+    \assert(empty(array_diff(array_keys(parse_url($scheme_and_host)), ["scheme", "host", "port"])), '$scheme_and_host contains scheme, host and port at most.');
+    \assert(isset(parse_url($scheme_and_host)["scheme"]), '$scheme_and_host is absolute and hence has a scheme.');
+    \assert(isset(parse_url($scheme_and_host)["host"]), '$base_url is absolute and hence has a host.');
 
     $html_dom = Html::load($html);
     $xpath = new \DOMXpath($html_dom);
@@ -469,7 +469,7 @@ EOD;
         // @see https://html.spec.whatwg.org/multipage/embedded-content.html#image-candidate-string
         $image_candidate_strings = explode(',', $node->getAttribute('srcset'));
         $image_candidate_strings = array_map('trim', $image_candidate_strings);
-        for ($i = 0; $i < count($image_candidate_strings); $i++) {
+        for ($i = 0; $i < \count($image_candidate_strings); $i++) {
           $image_candidate_string = $image_candidate_strings[$i];
           if ($image_candidate_string[0] === '/' && $image_candidate_string[1] !== '/') {
             $image_candidate_strings[$i] = $scheme_and_host . $image_candidate_string;

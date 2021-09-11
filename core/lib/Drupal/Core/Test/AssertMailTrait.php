@@ -93,7 +93,7 @@ trait AssertMailTrait {
     $string_found = FALSE;
     // Cast MarkupInterface objects to string.
     $string = (string) $string;
-    for ($i = count($mails) - 1; $i >= count($mails) - $email_depth && $i >= 0; $i--) {
+    for ($i = \count($mails) - 1; $i >= \count($mails) - $email_depth && $i >= 0; $i--) {
       $mail = $mails[$i];
       // Normalize whitespace, as we don't know what the mail system might have
       // done. Any run of whitespace becomes a single space.
@@ -152,7 +152,7 @@ trait AssertMailTrait {
   protected function verboseEmail($count = 1) {
     @trigger_error('AssertMailTrait::verboseEmail() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use dump() instead. See https://www.drupal.org/node/3197514', E_USER_DEPRECATED);
     $mails = $this->getMails();
-    for ($i = count($mails) - 1; $i >= count($mails) - $count && $i >= 0; $i--) {
+    for ($i = \count($mails) - 1; $i >= \count($mails) - $count && $i >= 0; $i--) {
       $mail = $mails[$i];
       $this->verbose('Email:<pre>' . print_r($mail, TRUE) . '</pre>');
     }

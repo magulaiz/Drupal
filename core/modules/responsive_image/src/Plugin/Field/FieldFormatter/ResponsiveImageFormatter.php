@@ -228,7 +228,7 @@ class ResponsiveImageFormatter extends ImageFormatterBase {
     }
 
     foreach ($files as $delta => $file) {
-      assert($file instanceof FileInterface);
+      \assert($file instanceof FileInterface);
       // Link the <picture> element to the original file.
       if (isset($link_file)) {
         $url = $file->createFileUrl();

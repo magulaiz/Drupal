@@ -322,7 +322,7 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->minkDefaultDriverClass === BrowserKitDriver::class) {
       $driver = new $this->minkDefaultDriverClass(new DrupalTestBrowser());
     }
-    elseif (is_array($this->minkDefaultDriverArgs)) {
+    elseif (\is_array($this->minkDefaultDriverArgs)) {
       // Use ReflectionClass to instantiate class with received params.
       $reflector = new \ReflectionClass($this->minkDefaultDriverClass);
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
@@ -394,7 +394,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function setUpAppRoot(): void {
     if ($this->root === NULL) {
-      $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+      $this->root = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
     }
   }
 
@@ -460,7 +460,7 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     // Restore original shutdown callbacks.
-    if (function_exists('drupal_register_shutdown_function')) {
+    if (\function_exists('drupal_register_shutdown_function')) {
       $callbacks = &drupal_register_shutdown_function();
       $callbacks = $this->originalShutdownCallbacks;
     }
@@ -517,7 +517,7 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
     }
-    throw new \RuntimeException('The Mink client type ' . get_class($mink_driver) . ' does not support getHttpClient().');
+    throw new \RuntimeException('The Mink client type ' . \get_class($mink_driver) . ' does not support getHttpClient().');
   }
 
   /**
@@ -532,7 +532,7 @@ abstract class BrowserTestBase extends TestCase {
    *   Associative array of option keys and values.
    */
   protected function getOptions($select, Element $container = NULL) {
-    if (is_string($select)) {
+    if (\is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }
     $options = [];

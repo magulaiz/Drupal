@@ -72,7 +72,7 @@ trait EntityTranslationRenderTrait {
     // types. Below we apply language fallback to ensure a valid value is always
     // picked.
     $translation = $entity;
-    if ($entity instanceof TranslatableInterface && count($entity->getTranslationLanguages()) > 1) {
+    if ($entity instanceof TranslatableInterface && \count($entity->getTranslationLanguages()) > 1) {
       $langcode = $this->getEntityTranslationRenderer()->getLangcode($row);
       $translation = $this->getEntityRepository()->getTranslationFromContext($entity, $langcode);
     }

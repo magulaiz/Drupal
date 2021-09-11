@@ -157,9 +157,9 @@ trait InsertTrait {
 
         // Default fields aren't really placeholders, but this is the most convenient
         // way to handle them.
-        $placeholders = array_pad($placeholders, count($default_fields), 'default');
+        $placeholders = array_pad($placeholders, \count($default_fields), 'default');
 
-        $new_placeholder = $max_placeholder + count($insert_values);
+        $new_placeholder = $max_placeholder + \count($insert_values);
         for ($i = $max_placeholder; $i < $new_placeholder; ++$i) {
           $placeholders[] = ':db_insert_placeholder_' . $i;
         }
@@ -169,7 +169,7 @@ trait InsertTrait {
     }
     else {
       // If there are no values, then this is a default-only query. We still need to handle that.
-      $placeholders = array_fill(0, count($default_fields), 'default');
+      $placeholders = array_fill(0, \count($default_fields), 'default');
       $values[] = '(' . implode(', ', $placeholders) . ')';
     }
 
@@ -180,7 +180,7 @@ trait InsertTrait {
    * {@inheritdoc}
    */
   public function count() {
-    return count($this->insertValues);
+    return \count($this->insertValues);
   }
 
 }

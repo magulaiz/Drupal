@@ -45,7 +45,7 @@ class OptionsRequestSubscriber implements EventSubscriberInterface {
       $routes = $this->routeProvider->getRouteCollectionForRequest($event->getRequest());
       // In case we don't have any routes, a 403 should be thrown by the normal
       // request handling.
-      if (count($routes) > 0) {
+      if (\count($routes) > 0) {
         // Flatten and unique the available methods.
         $methods = array_reduce($routes->all(), function ($methods, Route $route) {
           return array_merge($methods, $route->getMethods());

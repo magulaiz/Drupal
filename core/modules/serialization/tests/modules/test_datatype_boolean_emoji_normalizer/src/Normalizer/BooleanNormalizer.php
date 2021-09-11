@@ -27,7 +27,7 @@ class BooleanNormalizer extends NormalizerBase implements DenormalizerInterface 
    * {@inheritdoc}
    */
   public function denormalize($data, $class, $format = NULL, array $context = []) {
-    if (!in_array($data, ['👍', '👎'], TRUE)) {
+    if (!\in_array($data, ['👍', '👎'], TRUE)) {
       throw new \UnexpectedValueException('Only 👍 and 👎 are acceptable values.');
     }
     return $data === '👍';

@@ -358,7 +358,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
    * {@inheritdoc}
    */
   public function getSetting($setting_name) {
-    if (array_key_exists($setting_name, $this->settings)) {
+    if (\array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
     else {
@@ -395,7 +395,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   public function getDefaultValue(FieldableEntityInterface $entity) {
     // Allow custom default values function.
     if ($callback = $this->getDefaultValueCallback()) {
-      $value = call_user_func($callback, $entity, $this);
+      $value = \call_user_func($callback, $entity, $this);
       $value = $this->normalizeValue($value, $this->getFieldStorageDefinition()->getMainPropertyName());
     }
     else {

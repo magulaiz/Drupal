@@ -92,7 +92,7 @@ class InstallStorage extends FileStorage {
    * {@inheritdoc}
    */
   public function exists($name) {
-    return array_key_exists($name, $this->getAllFolders());
+    return \array_key_exists($name, $this->getAllFolders());
   }
 
   /**

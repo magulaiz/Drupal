@@ -426,7 +426,7 @@ class EntityResource {
     // We request N+1 items to find out if there is a next page for the pager.
     // We may need to remove that extra item before loading the entities.
     $pager_size = $query->getMetaData('pager_size');
-    if ($has_next_page = $pager_size < count($results)) {
+    if ($has_next_page = $pager_size < \count($results)) {
       // Drop the last result.
       array_pop($results);
     }
@@ -698,7 +698,7 @@ class EntityResource {
    *   Thrown when a "to-one" relationship is not provided.
    */
   protected function doPatchIndividualRelationship(EntityInterface $entity, array $resource_identifiers, FieldDefinitionInterface $field_definition) {
-    if (count($resource_identifiers) > 1) {
+    if (\count($resource_identifiers) > 1) {
       throw new BadRequestHttpException(sprintf('Provide a single relationship so to-one relationship fields (%s).', $field_definition->getName()));
     }
     $this->doPatchMultipleRelationship($entity, $resource_identifiers, $field_definition);
@@ -810,10 +810,10 @@ class EntityResource {
    *   Thrown if the request body cannot be denormalized.
    */
   protected function deserialize(ResourceType $resource_type, Request $request, $class, $relationship_field_name = NULL) {
-    assert($class === JsonApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && is_string($relationship_field_name));
+    \assert($class === JsonApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && \is_string($relationship_field_name));
     $received = (string) $request->getContent();
     if (!$received) {
-      assert($request->isMethod('POST') || $request->isMethod('PATCH') || $request->isMethod('DELETE'));
+      \assert($request->isMethod('POST') || $request->isMethod('PATCH') || $request->isMethod('DELETE'));
       if ($request->isMethod('DELETE') && $relationship_field_name) {
         throw new BadRequestHttpException(sprintf('You need to provide a body for DELETE operations on a relationship (%s).', $relationship_field_name));
       }
@@ -1032,7 +1032,7 @@ class EntityResource {
    *   The response.
    */
   protected function respondWithCollection(ResourceObjectData $primary_data, Data $includes, Request $request, ResourceType $resource_type, OffsetPage $page_param) {
-    assert(Inspector::assertAllObjects([$includes], IncludedData::class, NullIncludedData::class));
+    \assert(Inspector::assertAllObjects([$includes], IncludedData::class, NullIncludedData::class));
     $link_context = [
       'has_next_page' => $primary_data->hasNextPage(),
     ];
@@ -1107,7 +1107,7 @@ class EntityResource {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getIncludes(Request $request, $data) {
-    assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
+    \assert($data instanceof ResourceObject || $data instanceof ResourceObjectData);
     return $request->query->has('include') && ($include_parameter = $request->query->get('include')) && !empty($include_parameter)
       ? $this->includeResolver->resolve($data, $include_parameter)
       : new NullIncludedData();
@@ -1176,7 +1176,7 @@ class EntityResource {
   protected function loadEntitiesWithAccess(EntityStorageInterface $storage, array $ids, $load_latest_revisions) {
     $output = [];
     if ($load_latest_revisions) {
-      assert($storage instanceof RevisionableStorageInterface);
+      \assert($storage instanceof RevisionableStorageInterface);
       $entities = $storage->loadMultipleRevisions(array_keys($ids));
     }
     else {

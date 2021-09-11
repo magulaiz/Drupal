@@ -50,7 +50,7 @@ class FileStorage implements PhpStorageInterface {
    */
   public function save($name, $code) {
     $path = $this->getFullPath($name);
-    $directory = dirname($path);
+    $directory = \dirname($path);
     $this->ensureDirectory($directory);
     return (bool) file_put_contents($path, $code);
   }
@@ -99,7 +99,7 @@ class FileStorage implements PhpStorageInterface {
     }
 
     // If the parent directory doesn't exist, try to create it.
-    $parent_exists = is_dir($parent = dirname($directory));
+    $parent_exists = is_dir($parent = \dirname($directory));
     if (!$parent_exists) {
       $parent_exists = $this->createDirectory($parent, $mode);
     }

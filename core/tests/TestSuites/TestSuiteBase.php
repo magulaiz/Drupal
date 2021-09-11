@@ -22,7 +22,7 @@ abstract class TestSuiteBase extends TestSuite {
    *   Associative array of extension paths, with extension name as keys.
    */
   protected function findExtensionDirectories($root) {
-    $extension_roots = \drupal_phpunit_contrib_extension_directory_roots($root);
+    $extension_roots = drupal_phpunit_contrib_extension_directory_roots($root);
 
     $extension_directories = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
     return array_reduce($extension_directories, 'array_merge', []);

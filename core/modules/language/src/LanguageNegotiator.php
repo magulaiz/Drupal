@@ -184,7 +184,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     $langcode = NULL;
     $method = $this->negotiatorManager->getDefinition($method_id);
 
-    if (!isset($method['types']) || in_array($type, $method['types'])) {
+    if (!isset($method['types']) || \in_array($type, $method['types'])) {
       $langcode = $this->getNegotiationMethodInstance($method_id)->getLangcode($this->requestStack->getCurrentRequest());
     }
 
@@ -307,7 +307,7 @@ class LanguageNegotiator implements LanguageNegotiatorInterface {
     $method_definitions = $this->getNegotiationMethods();
 
     foreach ($language_types_info as $type => $info) {
-      $configurable = in_array($type, $types);
+      $configurable = \in_array($type, $types);
 
       // The default language negotiation settings, if available, are stored in
       // $info['fixed'].

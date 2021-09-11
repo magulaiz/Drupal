@@ -153,7 +153,7 @@ JS;
     WebDriverCurlService::disableRetry();
     $wrapper = function (Element $element) use ($callback) {
       try {
-        return call_user_func($callback, $element);
+        return \call_user_func($callback, $element);
       }
       catch (CurlExec $e) {
         return NULL;
@@ -261,7 +261,7 @@ JS;
   public function assertVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is not visible in the viewport.') {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
-      if (is_array($selector)) {
+      if (\is_array($selector)) {
         $selector = implode(' ', $selector);
       }
       throw new ElementNotFoundException($this->session->getDriver(), 'element', $selector_type, $selector);
@@ -305,7 +305,7 @@ JS;
   public function assertNotVisibleInViewport($selector_type, $selector, $corner = FALSE, $message = 'Element is visible in the viewport.') {
     $node = $this->session->getPage()->find($selector_type, $selector);
     if ($node === NULL) {
-      if (is_array($selector)) {
+      if (\is_array($selector)) {
         $selector = implode(' ', $selector);
       }
       throw new ElementNotFoundException($this->session->getDriver(), 'element', $selector_type, $selector);

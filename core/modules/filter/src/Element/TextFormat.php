@@ -108,7 +108,7 @@ class TextFormat extends RenderElement {
     // Move this element into sub-element 'value'.
     unset($element['value']);
     foreach (Element::properties($element) as $key) {
-      if (!in_array($key, $keys_not_to_copy)) {
+      if (!\in_array($key, $keys_not_to_copy)) {
         $element['value'][$key] = $element[$key];
       }
     }
@@ -160,7 +160,7 @@ class TextFormat extends RenderElement {
     $config = static::configFactory()->get('filter.settings');
     if (!isset($element['#allowed_formats']) && !$config->get('always_show_fallback_choice')) {
       $fallback_format = $config->get('fallback_format');
-      if ($element['#format'] !== $fallback_format && count($formats) > 1) {
+      if ($element['#format'] !== $fallback_format && \count($formats) > 1) {
         unset($formats[$fallback_format]);
       }
     }
@@ -193,7 +193,7 @@ class TextFormat extends RenderElement {
       '#title' => t('Text format'),
       '#options' => $options,
       '#default_value' => $element['#format'],
-      '#access' => count($formats) > 1,
+      '#access' => \count($formats) > 1,
       '#weight' => 10,
       '#attributes' => ['class' => ['js-filter-list']],
       '#parents' => array_merge($element['#parents'], ['format']),
@@ -215,7 +215,7 @@ class TextFormat extends RenderElement {
 
     $all_formats = filter_formats();
     $format_exists = isset($all_formats[$element['#format']]);
-    $format_allowed = !isset($element['#allowed_formats']) || in_array($element['#format'], $element['#allowed_formats']);
+    $format_allowed = !isset($element['#allowed_formats']) || \in_array($element['#format'], $element['#allowed_formats']);
     $user_has_access = isset($formats[$element['#format']]);
     $user_is_admin = $user->hasPermission('administer filters');
 

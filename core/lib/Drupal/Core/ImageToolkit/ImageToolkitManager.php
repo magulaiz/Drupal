@@ -90,7 +90,7 @@ class ImageToolkitManager extends DefaultPluginManager {
     $output = [];
     foreach ($toolkits as $id => $definition) {
       // Only allow modules that aren't marked as unavailable.
-      if (call_user_func($definition['class'] . '::isAvailable')) {
+      if (\call_user_func($definition['class'] . '::isAvailable')) {
         $output[$id] = $definition;
       }
     }

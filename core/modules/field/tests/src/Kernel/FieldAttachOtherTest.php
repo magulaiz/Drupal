@@ -320,7 +320,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       // Assign random weight.
       do {
         $weight = mt_rand(0, $this->fieldTestData->field_storage->getCardinality());
-      } while (in_array($weight, $weights));
+      } while (\in_array($weight, $weights));
       $weights[$delta] = $weight;
       $values[$delta]['_weight'] = $weight;
     }
@@ -334,7 +334,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       // Assign random weight.
       do {
         $weight = mt_rand(0, $this->fieldTestData->field_storage_2->getCardinality());
-      } while (in_array($weight, $weights_2));
+      } while (\in_array($weight, $weights_2));
       $weights_2[$delta] = $weight;
       $values_2[$delta]['_weight'] = $weight;
     }

@@ -18,7 +18,7 @@ class Color {
    *   TRUE if $hex is valid or FALSE if it is not.
    */
   public static function validateHex($hex) {
-    if (!is_string($hex)) {
+    if (!\is_string($hex)) {
       return FALSE;
     }
     return preg_match('/^[#]?([0-9a-fA-F]{3}){1,2}$/', $hex) === 1;
@@ -44,7 +44,7 @@ class Color {
     $hex = ltrim($hex, '#');
 
     // Convert shorthands like '#abc' to '#aabbcc'.
-    if (strlen($hex) == 3) {
+    if (\strlen($hex) == 3) {
       $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
     }
 
@@ -71,11 +71,11 @@ class Color {
    */
   public static function rgbToHex($input) {
     // Remove named array keys if input comes from Color::hex2rgb().
-    if (is_array($input)) {
+    if (\is_array($input)) {
       $rgb = array_values($input);
     }
     // Parse string input in CSS notation ('10, 20, 30').
-    elseif (is_string($input)) {
+    elseif (\is_string($input)) {
       preg_match('/(\d+), ?(\d+), ?(\d+)/', $input, $rgb);
       array_shift($rgb);
     }
@@ -101,7 +101,7 @@ class Color {
     // Ignore '#' prefixes.
     $hex = ltrim($hex, '#');
 
-    if (strlen($hex) === 3) {
+    if (\strlen($hex) === 3) {
       $hex[5] = $hex[2];
       $hex[4] = $hex[2];
       $hex[3] = $hex[1];

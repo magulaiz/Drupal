@@ -43,7 +43,7 @@ class ViewTestData {
         $available_views = $file_storage->listAll('views.view.');
         foreach ($views as $id) {
           $config_name = 'views.view.' . $id;
-          if (in_array($config_name, $available_views)) {
+          if (\in_array($config_name, $available_views)) {
             $storage
               ->create($file_storage->read($config_name))
               ->save();

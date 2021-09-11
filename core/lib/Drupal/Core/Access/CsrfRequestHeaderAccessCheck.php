@@ -93,7 +93,7 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
     $method = $request->getMethod();
 
     // Read-only operations are always allowed.
-    if (in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'], TRUE)) {
+    if (\in_array($method, ['GET', 'HEAD', 'OPTIONS', 'TRACE'], TRUE)) {
       return AccessResult::allowed();
     }
 

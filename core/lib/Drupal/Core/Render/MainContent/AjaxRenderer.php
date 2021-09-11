@@ -56,7 +56,7 @@ class AjaxRenderer implements MainContentRendererInterface {
       $error = $main_content['#error'];
       if (!empty($error)) {
         // Fall back to some default message otherwise use the specific one.
-        if (!is_string($error)) {
+        if (!\is_string($error)) {
           $error = 'An error occurred while handling the request: The server received invalid input.';
         }
         $response->addCommand(new AlertCommand($error));

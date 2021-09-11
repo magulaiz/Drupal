@@ -76,7 +76,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
     // an array of values keyed by delta first, then by column, while our
     // widgets return the opposite.
 
-    if (is_array($element['#value'])) {
+    if (\is_array($element['#value'])) {
       $values = array_values($element['#value']);
     }
     else {

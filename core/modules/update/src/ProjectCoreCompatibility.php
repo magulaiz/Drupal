@@ -175,7 +175,7 @@ final class ProjectCoreCompatibility {
       $core_compatibility_ranges = $this->getCompatibilityRanges($core_compatibility_constraint);
       $range_messages = [];
       foreach ($core_compatibility_ranges as $core_compatibility_range) {
-        if (count($core_compatibility_range) === 2) {
+        if (\count($core_compatibility_range) === 2) {
           $range_messages[] = $this->t('@low_version_number to @high_version_number', ['@low_version_number' => $core_compatibility_range[0], '@high_version_number' => $core_compatibility_range[1]]);
         }
         else {

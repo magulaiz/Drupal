@@ -49,7 +49,7 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
   public function getImageCount($style, $wrapper) {
     $count = 0;
     if (is_dir($wrapper . '://styles/' . $style->id())) {
-      $count = count(\Drupal::service('file_system')->scanDirectory($wrapper . '://styles/' . $style->id(), '/.*/'));
+      $count = \count(\Drupal::service('file_system')->scanDirectory($wrapper . '://styles/' . $style->id(), '/.*/'));
     }
     return $count;
   }

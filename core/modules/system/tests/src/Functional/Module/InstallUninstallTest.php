@@ -113,7 +113,7 @@ class InstallUninstallTest extends ModuleTestBase {
       // Handle experimental modules, which require a confirmation screen.
       if ($lifecycle === ExtensionLifecycle::EXPERIMENTAL) {
         $this->assertSession()->pageTextContains('Are you sure you wish to enable experimental modules?');
-        if (count($modules_to_install) > 1) {
+        if (\count($modules_to_install) > 1) {
           // When there are experimental modules, needed dependencies do not
           // result in the same page title, but there will be expected text
           // indicating they need to be enabled.
@@ -123,7 +123,7 @@ class InstallUninstallTest extends ModuleTestBase {
       }
       // Handle the case where modules were installed along with this one and
       // where we therefore hit a confirmation screen.
-      elseif (count($modules_to_install) > 1) {
+      elseif (\count($modules_to_install) > 1) {
         // Verify that we are on the correct form and that the expected text
         // about enabling dependencies appears.
         $this->assertSession()->pageTextContains('Some required modules must be enabled');
@@ -136,8 +136,8 @@ class InstallUninstallTest extends ModuleTestBase {
       foreach ($modules_to_install as $module_to_install) {
         $module_names[] = $all_modules[$module_to_install]->info['name'];
       }
-      if (count($modules_to_install) > 1) {
-        $this->assertSession()->pageTextContains(count($module_names) . ' modules have been enabled: ' . implode(', ', $module_names));
+      if (\count($modules_to_install) > 1) {
+        $this->assertSession()->pageTextContains(\count($module_names) . ' modules have been enabled: ' . implode(', ', $module_names));
       }
       else {
         $this->assertSession()->pageTextContains('Module ' . $module_names[0] . ' has been enabled.');
@@ -172,7 +172,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $now_installed_list = \Drupal::moduleHandler()->getModuleList();
       $added_modules = array_diff(array_keys($now_installed_list), array_keys($was_installed_list));
       while ($added_modules) {
-        $initial_count = count($added_modules);
+        $initial_count = \count($added_modules);
         foreach ($added_modules as $to_uninstall) {
           // See if we can currently uninstall this module (if its dependencies
           // have been uninstalled), and do so if we can.
@@ -188,7 +188,7 @@ class InstallUninstallTest extends ModuleTestBase {
 
         // If we were not able to find a module to uninstall, fail and exit the
         // loop.
-        $final_count = count($added_modules);
+        $final_count = \count($added_modules);
         if ($initial_count == $final_count) {
           $this->fail('Remaining modules could not be uninstalled for ' . $name);
           break;
@@ -223,7 +223,7 @@ class InstallUninstallTest extends ModuleTestBase {
       $this->assertSession()->pageTextContains('Are you sure you wish to enable experimental modules?');
       $this->submitForm([], 'Continue');
     }
-    $this->assertSession()->pageTextContains(count($all_modules) . ' modules have been enabled: ');
+    $this->assertSession()->pageTextContains(\count($all_modules) . ' modules have been enabled: ');
   }
 
   /**

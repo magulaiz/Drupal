@@ -173,7 +173,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
         }
       }
       $pos_tag_end = NULL;
-      for ($i = $pos_match; $pos_tag_end === NULL && $i < strlen($html_markup); $i++) {
+      for ($i = $pos_match; $pos_tag_end === NULL && $i < \strlen($html_markup); $i++) {
         if ($html_markup[$i] === '>') {
           $pos_tag_end = $i;
         }
@@ -191,7 +191,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
 
       // Ensure we don't set the "active" class twice on the same element.
       $class = $node->getAttribute('class');
-      $add_active = !in_array('is-active', explode(' ', $class));
+      $add_active = !\in_array('is-active', explode(' ', $class));
 
       // The language of an active link is equal to the current language.
       if ($add_active && $url_language) {
@@ -217,7 +217,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
       // Only if the path, the language and the query match, we set the
       // "is-active" class.
       if ($add_active) {
-        if (strlen($class) > 0) {
+        if (\strlen($class) > 0) {
           $class .= ' ';
         }
         $class .= 'is-active';
@@ -231,7 +231,7 @@ class ActiveLinkResponseFilter implements EventSubscriberInterface {
         $html_markup = str_replace($tag, $updated_tag, $html_markup);
 
         // Ensure we only search the remaining HTML.
-        $offset = $pos_tag_end - strlen($tag) + strlen($updated_tag);
+        $offset = $pos_tag_end - \strlen($tag) + \strlen($updated_tag);
       }
       else {
         // Ensure we only search the remaining HTML.

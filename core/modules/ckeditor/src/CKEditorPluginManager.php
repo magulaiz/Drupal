@@ -83,7 +83,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
       // Enable this plugin if it provides a button that has been enabled.
       if ($plugin instanceof CKEditorPluginButtonsInterface) {
         $plugin_buttons = array_keys($plugin->getButtons());
-        $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
+        $enabled = (\count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
       }
       // Otherwise enable this plugin if it declares itself as enabled.
       if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {

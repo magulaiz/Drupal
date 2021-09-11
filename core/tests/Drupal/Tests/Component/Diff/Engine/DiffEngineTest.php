@@ -82,7 +82,7 @@ class DiffEngineTest extends TestCase {
     $this->assertSameSize($expected, $diff);
     // Make sure the diff objects match our expectations.
     foreach ($expected as $index => $op_class) {
-      $this->assertEquals($op_class, get_class($diff[$index]));
+      $this->assertEquals($op_class, \get_class($diff[$index]));
     }
   }
 

@@ -133,7 +133,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
         '#type' => 'details',
         '#title' => t('Default processor settings'),
         '#description' => $info['description'],
-        '#open' => in_array($info['id'], $processors),
+        '#open' => \in_array($info['id'], $processors),
       ];
     }
 
@@ -183,7 +183,7 @@ class DefaultProcessor extends AggregatorPluginSettingsBase implements Processor
    * {@inheritdoc}
    */
   public function process(FeedInterface $feed) {
-    if (!is_array($feed->items)) {
+    if (!\is_array($feed->items)) {
       return;
     }
     foreach ($feed->items as $item) {

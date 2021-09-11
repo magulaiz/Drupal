@@ -76,9 +76,9 @@ final class Link implements CacheableDependencyInterface {
    * @see https://tools.ietf.org/html/rfc8288#section-2.1
    */
   public function __construct(CacheableMetadata $cacheability, Url $url, string $link_relation_type, array $target_attributes = []) {
-    assert(Inspector::assertAllStrings(array_keys($target_attributes)));
-    assert(Inspector::assertAll(function ($target_attribute_value) {
-      return is_string($target_attribute_value) || is_array($target_attribute_value);
+    \assert(Inspector::assertAllStrings(array_keys($target_attributes)));
+    \assert(Inspector::assertAll(function ($target_attribute_value) {
+      return \is_string($target_attribute_value) || \is_array($target_attribute_value);
     }, array_values($target_attributes)));
     $generated_url = $url->setAbsolute()->toString(TRUE);
     $this->href = $generated_url->getGeneratedUrl();
@@ -168,7 +168,7 @@ final class Link implements CacheableDependencyInterface {
    *   A new JSON:API Link object with the cacheability of both links merged.
    */
   public static function merge(Link $a, Link $b) {
-    assert(static::compare($a, $b) === 0, 'Only equivalent links can be merged.');
+    \assert(static::compare($a, $b) === 0, 'Only equivalent links can be merged.');
     $merged_cacheability = (new CacheableMetadata())->addCacheableDependency($a)->addCacheableDependency($b);
     return new static($merged_cacheability, $a->getUri(), $a->getLinkRelationType(), $a->getTargetAttributes());
   }

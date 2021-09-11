@@ -31,14 +31,14 @@ class AcceptHeaderMatcher implements FilterInterface {
         // the end of the collection by re-adding it.
         $collection->add($name, $route);
       }
-      elseif (in_array($primary_format, $supported_formats)) {
+      elseif (\in_array($primary_format, $supported_formats)) {
         // Perfect match, which will get a higher priority by leaving the route
         // on top of the list.
       }
       // The route partially matches if it doesn't care about format, if it
       // explicitly allows any format, or if one of its allowed formats is
       // in the request's list of acceptable formats.
-      elseif (in_array('*/*', $acceptable_mime_types) || array_intersect($acceptable_formats, $supported_formats)) {
+      elseif (\in_array('*/*', $acceptable_mime_types) || array_intersect($acceptable_formats, $supported_formats)) {
         // Move it to the end of the list.
         $collection->add($name, $route);
       }
@@ -48,7 +48,7 @@ class AcceptHeaderMatcher implements FilterInterface {
       }
     }
 
-    if (count($collection)) {
+    if (\count($collection)) {
       return $collection;
     }
 

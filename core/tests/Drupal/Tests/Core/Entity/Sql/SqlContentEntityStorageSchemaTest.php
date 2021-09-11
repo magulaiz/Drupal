@@ -1202,7 +1202,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'entity_keys' => ['id' => 'id'],
     ]);
 
-    $this->storage->expects($this->exactly(is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
+    $this->storage->expects($this->exactly(\is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
       ->method('hasData')
       ->willReturn($original_storage_has_data);
 

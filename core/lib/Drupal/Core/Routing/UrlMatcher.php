@@ -46,7 +46,7 @@ class UrlMatcher extends BaseUrlMatcher {
    * {@inheritdoc}
    */
   protected function getAttributes(Route $route, $name, array $attributes) {
-    if ($route instanceof RouteObjectInterface && is_string($route->getRouteKey())) {
+    if ($route instanceof RouteObjectInterface && \is_string($route->getRouteKey())) {
       $name = $route->getRouteKey();
     }
     $attributes[RouteObjectInterface::ROUTE_NAME] = $name;

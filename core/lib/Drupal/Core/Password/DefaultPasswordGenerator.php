@@ -28,7 +28,7 @@ class DefaultPasswordGenerator implements PasswordGeneratorInterface {
    */
   public function generate(int $length = 10): string {
     // The maximum integer we want from random_int().
-    $max = strlen($this->allowedChars) - 1;
+    $max = \strlen($this->allowedChars) - 1;
 
     $pass = '';
 

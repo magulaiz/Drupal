@@ -24,7 +24,7 @@ class PhpUnitBridgeTest extends UnitTestCase {
 
   public function testDeprecatedFunction() {
     $this->markTestIncomplete('Modules are not loaded for unit tests, so deprecated_test_function() will not be available.');
-    $this->assertEquals('known_return_value', \deprecation_test_function());
+    $this->assertEquals('known_return_value', deprecation_test_function());
   }
 
   /**

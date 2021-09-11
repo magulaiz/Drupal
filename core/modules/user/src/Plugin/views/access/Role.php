@@ -82,7 +82,7 @@ class Role extends AccessPluginBase implements CacheableDependencyInterface {
   }
 
   public function summaryTitle() {
-    $count = count($this->options['role']);
+    $count = \count($this->options['role']);
     if ($count < 1) {
       return $this->t('No role(s) selected');
     }

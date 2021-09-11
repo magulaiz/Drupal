@@ -94,7 +94,7 @@ class ListFloatItem extends ListItemBase {
     $values = [];
     foreach ($structured_values as $item) {
       // Nested elements are embedded in the label.
-      if (is_array($item['label'])) {
+      if (\is_array($item['label'])) {
         $item['label'] = static::simplifyAllowedValues($item['label']);
       }
       // Cast the value to a float first so that .5 and 0.5 are the same value

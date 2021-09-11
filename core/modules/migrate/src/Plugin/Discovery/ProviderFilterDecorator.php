@@ -62,7 +62,7 @@ class ProviderFilterDecorator implements DiscoveryInterface {
   public static function filterDefinitions(array $definitions, callable $provider_exists) {
     // Besides what the caller accepts, we also accept core or component.
     $provider_exists = function ($provider) use ($provider_exists) {
-      return in_array($provider, ['core', 'component']) || $provider_exists($provider);
+      return \in_array($provider, ['core', 'component']) || $provider_exists($provider);
     };
     return array_filter($definitions, function ($definition) use ($provider_exists) {
       // Plugin definitions can be objects (for example, Typed Data) those will
@@ -70,7 +70,7 @@ class ProviderFilterDecorator implements DiscoveryInterface {
       $definition = (array) $definition + ['provider' => []];
       // There can be one or many providers, handle them as multiple always.
       $providers = (array) $definition['provider'];
-      return count($providers) == count(array_filter($providers, $provider_exists));
+      return \count($providers) == \count(array_filter($providers, $provider_exists));
     });
   }
 
@@ -93,7 +93,7 @@ class ProviderFilterDecorator implements DiscoveryInterface {
    *   The return value from the method on the decorated object.
    */
   public function __call($method, array $args) {
-    return call_user_func_array([$this->decorated, $method], $args);
+    return \call_user_func_array([$this->decorated, $method], $args);
   }
 
 }

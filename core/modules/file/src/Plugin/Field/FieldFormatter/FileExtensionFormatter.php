@@ -53,7 +53,7 @@ class FileExtensionFormatter extends BaseFieldFileFormatterBase {
     }
     else {
       $file_parts = explode('.', basename($filename));
-      if (count($file_parts) > 1) {
+      if (\count($file_parts) > 1) {
         $extension = array_pop($file_parts);
         $last_part_in_name = array_pop($file_parts);
         if ($last_part_in_name === 'tar') {

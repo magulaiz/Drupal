@@ -38,7 +38,7 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
    * {@inheritdoc}
    */
   public function normalize($datetime, $format = NULL, array $context = []) {
-    assert($datetime instanceof DateTimeIso8601);
+    \assert($datetime instanceof DateTimeIso8601);
     $field_item = $datetime->getParent();
     // @todo Remove this in https://www.drupal.org/project/drupal/issues/2958416.
     if ($field_item instanceof DateTimeItem && $field_item->getFieldDefinition()->getFieldStorageDefinition()->getSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {

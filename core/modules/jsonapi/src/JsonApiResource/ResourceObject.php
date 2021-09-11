@@ -78,7 +78,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   The links for the resource object.
    */
   public function __construct(CacheableDependencyInterface $cacheability, ResourceType $resource_type, $id, $revision_id, array $fields, LinkCollection $links) {
-    assert(is_null($revision_id) || $resource_type->isVersionable());
+    \assert(\is_null($revision_id) || $resource_type->isVersionable());
     $this->setCacheability($cacheability);
     $this->resourceType = $resource_type;
     $this->resourceIdentifier = new ResourceIdentifier($resource_type, $id);
@@ -212,7 +212,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   entity, the fields will be scalar values or arrays.
    */
   protected static function extractFieldsFromEntity(ResourceType $resource_type, EntityInterface $entity) {
-    assert($entity instanceof ContentEntityInterface || $entity instanceof ConfigEntityInterface);
+    \assert($entity instanceof ContentEntityInterface || $entity instanceof ConfigEntityInterface);
     return $entity instanceof ContentEntityInterface
       ? static::extractContentEntityFields($resource_type, $entity)
       : static::extractConfigEntityFields($resource_type, $entity);
@@ -237,7 +237,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     if ($resource_type->isLocatable() && !$resource_type->isInternal()) {
       $self_url = Url::fromRoute(Routes::getRouteName($resource_type, 'individual'), ['entity' => $entity->uuid()]);
       if ($resource_type->isVersionable()) {
-        assert($entity instanceof RevisionableInterface);
+        \assert($entity instanceof RevisionableInterface);
         if (!$links->hasLinkWithKey('self')) {
           // If the resource is versionable, the `self` link should be the exact
           // link for the represented version. This helps a client track
@@ -288,7 +288,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     $entity_type = $entity->getEntityType();
     if ($entity_type->id() == 'user' && $resource_type->isFieldEnabled('display_name')) {
-      assert($entity instanceof UserInterface);
+      \assert($entity instanceof UserInterface);
       $display_name = $resource_type->getPublicName('display_name');
       $output[$display_name] = $entity->getDisplayName();
     }

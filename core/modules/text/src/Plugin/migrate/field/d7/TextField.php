@@ -84,7 +84,7 @@ class TextField extends FieldPluginBase {
       }
     }
 
-    if (in_array($type, ['text', 'text_long'])) {
+    if (\in_array($type, ['text', 'text_long'])) {
       // If a text or text_long field has only plain text instances, migrate it
       // to a string or string_long field.
       if ($plain_text && !$filtered_text) {

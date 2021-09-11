@@ -223,7 +223,7 @@ abstract class ContentTranslationTestBase extends BrowserTestBase {
     $storage = $this->container->get('entity_type.manager')->getStorage($this->entityTypeId);
     if (!($storage instanceof SqlContentEntityStorage)) {
       foreach ($values as $property => $value) {
-        if (is_array($value)) {
+        if (\is_array($value)) {
           $entity_values[$property] = [$langcode => $value];
         }
       }

@@ -590,7 +590,7 @@ class ViewEditForm extends ViewFormBase {
       else {
         $column = 'third';
       }
-      if (isset($bucket['build']) && is_array($bucket['build'])) {
+      if (isset($bucket['build']) && \is_array($bucket['build'])) {
         $build['columns'][$column][$id] = $bucket['build'];
         $build['columns'][$column][$id]['#theme_wrappers'][] = 'views_ui_display_tab_bucket';
         $build['columns'][$column][$id]['#title'] = !empty($bucket['title']) ? $bucket['title'] : '';
@@ -941,7 +941,7 @@ class ViewEditForm extends ViewFormBase {
     $option_build['#link'] = $view->getExecutable()->displayHandlers->get($display['id'])->optionLink($option['value'], $id, '', empty($option['desc']) ? '' : $option['desc']);
 
     $option_build['#links'] = [];
-    if (!empty($option['links']) && is_array($option['links'])) {
+    if (!empty($option['links']) && \is_array($option['links'])) {
       foreach ($option['links'] as $link_id => $link_value) {
         $option_build['#settings_links'][] = $view->getExecutable()->displayHandlers->get($display['id'])->optionLink($option['setting'], $link_id, 'views-button-configure', $link_value);
       }
@@ -1027,7 +1027,7 @@ class ViewEditForm extends ViewFormBase {
 
     // Create an array of actions to pass to links template.
     $actions = [];
-    $count_handlers = count($executable->display_handler->getHandlers($type));
+    $count_handlers = \count($executable->display_handler->getHandlers($type));
 
     // Create the add text variable for the add action.
     $add_text = $this->t('Add <span class="visually-hidden">@type</span>', ['@type' => $types[$type]['ltitle']]);
@@ -1083,7 +1083,7 @@ class ViewEditForm extends ViewFormBase {
       // If there is only one group but it is using the "OR" filter, we still
       // treat it as a group for display purposes, since we want to display the
       // "OR" label next to items within the group.
-      if (!empty($group_info['groups']) && (count($group_info['groups']) > 1 || current($group_info['groups']) == 'OR')) {
+      if (!empty($group_info['groups']) && (\count($group_info['groups']) > 1 || current($group_info['groups']) == 'OR')) {
         $grouping = TRUE;
         $groups = [0 => []];
       }

@@ -67,7 +67,7 @@ class LatestRevisionCheckTest extends UnitTestCase {
       'view own unpublished content',
     ];
     foreach ($possible_permissions as $permission) {
-      $account->hasPermission($permission)->willReturn(in_array($permission, $account_permissions));
+      $account->hasPermission($permission)->willReturn(\in_array($permission, $account_permissions));
     }
     $account->id()->willReturn(42);
 

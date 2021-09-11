@@ -144,7 +144,7 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
       foreach ($properties as $property) {
         $items = $entity->get($field_name)->getValue();
         $original_items = $original->get($field_name)->getValue();
-        if (count($items) !== count($original_items)) {
+        if (\count($items) !== \count($original_items)) {
           return TRUE;
         }
         foreach ($items as $delta => $item) {

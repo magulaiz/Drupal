@@ -101,7 +101,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   public function setValue($values, $notify = TRUE) {
     // Support passing in only the value of the first item, either as a literal
     // (value of the first property) or as an array of properties.
-    if (isset($values) && (!is_array($values) || (!empty($values) && !is_numeric(current(array_keys($values)))))) {
+    if (isset($values) && (!\is_array($values) || (!empty($values) && !is_numeric(current(array_keys($values)))))) {
       $values = [0 => $values];
     }
     parent::setValue($values, $notify);
@@ -226,11 +226,11 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   protected function delegateMethod($method) {
     $result = [];
-    $args = array_slice(func_get_args(), 1);
+    $args = \array_slice(\func_get_args(), 1);
     foreach ($this->list as $delta => $item) {
       // call_user_func_array() is way slower than a direct call so we avoid
       // using it if have no parameters.
-      $result[$delta] = $args ? call_user_func_array([$item, $method], $args) : $item->{$method}();
+      $result[$delta] = $args ? \call_user_func_array([$item, $method], $args) : $item->{$method}();
     }
     return $result;
   }
@@ -307,7 +307,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       $violations = $this->validate();
 
       // Assign reported errors to the correct form element.
-      if (count($violations)) {
+      if (\count($violations)) {
         $widget->flagErrors($this, $violations, $element, $form_state);
       }
     }
@@ -369,8 +369,8 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function equals(FieldItemListInterface $list_to_compare) {
-    $count1 = count($this);
-    $count2 = count($list_to_compare);
+    $count1 = \count($this);
+    $count2 = \count($list_to_compare);
     if ($count1 === 0 && $count2 === 0) {
       // Both are empty we can safely assume that it did not change.
       return TRUE;
@@ -391,7 +391,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
       return !$property->isComputed();
     });
     $callback = function (&$value) use ($non_computed_properties) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $value = array_intersect_key($value, $non_computed_properties);
 
         // Also filter out properties with a NULL value as they might exist in

@@ -37,7 +37,7 @@ class CacheableNormalization implements CacheableDependencyInterface {
    *   CacheableNormalizations.
    */
   public function __construct(CacheableDependencyInterface $cacheability, $normalization) {
-    assert((is_array($normalization) && static::hasNoNestedInstances($normalization)) || is_string($normalization) || is_int($normalization) || is_float($normalization) || is_bool($normalization) || is_null($normalization));
+    \assert((\is_array($normalization) && static::hasNoNestedInstances($normalization)) || \is_string($normalization) || \is_int($normalization) || \is_float($normalization) || \is_bool($normalization) || \is_null($normalization));
     $this->normalization = $normalization;
     $this->setCacheability($cacheability);
   }
@@ -104,7 +104,7 @@ class CacheableNormalization implements CacheableDependencyInterface {
    *   does *not* behave like array_merge() or NestedArray::mergeDeep().
    */
   public static function aggregate(array $cacheable_normalizations) {
-    assert(Inspector::assertAllObjects($cacheable_normalizations, CacheableNormalization::class));
+    \assert(Inspector::assertAllObjects($cacheable_normalizations, CacheableNormalization::class));
     return new static(
       array_reduce($cacheable_normalizations, function (CacheableMetadata $merged, CacheableNormalization $item) {
         return $merged->addCacheableDependency($item);
@@ -130,7 +130,7 @@ class CacheableNormalization implements CacheableDependencyInterface {
    */
   protected static function hasNoNestedInstances($array) {
     foreach ($array as $value) {
-      if ((is_array($value) || $value instanceof \Traversable) && !static::hasNoNestedInstances($value) || $value instanceof static) {
+      if ((\is_array($value) || $value instanceof \Traversable) && !static::hasNoNestedInstances($value) || $value instanceof static) {
         return FALSE;
       }
     }

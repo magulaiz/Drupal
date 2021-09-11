@@ -125,7 +125,7 @@ class QuickEditImageController extends ControllerBase {
 
     // Attempt to save the image given the field's constraints.
     $result = file_save_upload('image', $field_validators, $destination);
-    if (is_array($result) && $result[0]) {
+    if (\is_array($result) && $result[0]) {
       /** @var \Drupal\file\Entity\File $file */
       $file = $result[0];
       $image = $this->imageFactory->get($file->getFileUri());
@@ -140,7 +140,7 @@ class QuickEditImageController extends ControllerBase {
 
       // Render the new image using the correct formatter settings.
       $entity_view_mode_ids = array_keys($this->entityDisplayRepository->getViewModes($entity->getEntityTypeId()));
-      if (in_array($view_mode_id, $entity_view_mode_ids, TRUE)) {
+      if (\in_array($view_mode_id, $entity_view_mode_ids, TRUE)) {
         $output = $entity->$field_name->view($view_mode_id);
       }
       else {

@@ -192,7 +192,7 @@ class FileUploadForm extends AddFormBase {
       $element['#value'] = [];
     }
     $values = $form_state->getValue('upload', []);
-    if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+    if (\count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
       $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
         '@count' => $element['#cardinality'],
       ]));
@@ -360,7 +360,7 @@ class FileUploadForm extends AddFormBase {
     // Retrieve the delta of the media item from the parents of the remove
     // button.
     $triggering_element = $form_state->getTriggeringElement();
-    $delta = array_slice($triggering_element['#array_parents'], -2, 1)[0];
+    $delta = \array_slice($triggering_element['#array_parents'], -2, 1)[0];
 
     /** @var \Drupal\media\MediaInterface $removed_media */
     $removed_media = $form_state->get(['media', $delta]);

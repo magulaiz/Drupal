@@ -133,7 +133,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
       if ($type == 'relationship') {
         continue;
       }
-      $this->assertGreaterThan(0, count($view->$type), new FormattableMarkup('Make sure a %type instance got instantiated.', ['%type' => $type]));
+      $this->assertGreaterThan(0, \count($view->$type), new FormattableMarkup('Make sure a %type instance got instantiated.', ['%type' => $type]));
     }
 
     // initHandlers() should create display handlers automatically as well.
@@ -470,7 +470,7 @@ class ViewExecutableTest extends ViewsKernelTestBase {
     $executable->newDisplay('display_test');
     $errors = $executable->validate();
     $total_error_count = array_reduce($errors, function ($carry, $item) {
-      $carry += count($item);
+      $carry += \count($item);
 
       return $carry;
     });

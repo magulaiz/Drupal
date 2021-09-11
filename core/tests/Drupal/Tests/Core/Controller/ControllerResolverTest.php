@@ -189,7 +189,7 @@ class ControllerResolverTest extends UnitTestCase {
       $this->assertInstanceOf($class, $controller[0]);
     }
     $this->assertIsCallable($controller);
-    $this->assertSame($output, call_user_func($controller));
+    $this->assertSame($output, \call_user_func($controller));
   }
 
 }

@@ -63,13 +63,13 @@ class ReadOnlyModeMethodFilter implements FilterInterface {
       }
 
       $supported_methods = $route->getMethods();
-      assert(count($supported_methods) > 0, 'JSON:API routes always have a method specified.');
+      \assert(\count($supported_methods) > 0, 'JSON:API routes always have a method specified.');
       $is_read_only_route = empty(array_diff($supported_methods, $read_only_methods));
       if (!$is_read_only_route) {
         $collection->remove($name);
       }
     }
-    if (count($collection)) {
+    if (\count($collection)) {
       return $collection;
     }
     throw new MethodNotAllowedHttpException(array_intersect($all_supported_methods, $read_only_methods), sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromRoute('jsonapi.settings')->setAbsolute()->toString(TRUE)->getGeneratedUrl()));

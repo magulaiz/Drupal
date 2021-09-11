@@ -158,7 +158,7 @@ class TemporaryJsonapiFileFieldUploader {
    *   or when temporary files cannot be moved to their new location.
    */
   public function handleFileUploadForField(FieldDefinitionInterface $field_definition, $filename, AccountInterface $owner) {
-    assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
+    \assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
     $destination = $this->getUploadLocation($field_definition->getSettings());
 
     // Check the destination file path is writable.
@@ -282,7 +282,7 @@ class TemporaryJsonapiFileFieldUploader {
    *   The file upload access result.
    */
   public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-    assert(is_null($entity) || $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() && $field_definition->getTargetBundle() === $entity->bundle());
+    \assert(\is_null($entity) || $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() && $field_definition->getTargetBundle() === $entity->bundle());
     $entity_type_manager = \Drupal::entityTypeManager();
     $entity_access_control_handler = $entity_type_manager->getAccessControlHandler($field_definition->getTargetEntityTypeId());
     $bundle = $entity_type_manager->getDefinition($field_definition->getTargetEntityTypeId())->hasKey('bundle') ? $field_definition->getTargetBundle() : NULL;

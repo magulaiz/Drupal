@@ -240,7 +240,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $revision_data_table = $entity_type->getRevisionDataTable();
 
     $schema = $this->database->schema();
-    $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
+    $find_primary_key_columns = new \ReflectionMethod(\get_class($schema), 'findPrimaryKeyColumns');
     $find_primary_key_columns->setAccessible(TRUE);
 
     // Build up a map of primary keys depending on the entity type
@@ -338,7 +338,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
 
     foreach (array_keys($schema) as $storage_definition_name) {
       list($entity_type_id, ,) = explode('.', $storage_definition_name);
-      if (in_array($entity_type_id, $entity_type_ids)) {
+      if (\in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }
     }
@@ -359,7 +359,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
 
     foreach (array_keys($schema) as $storage_definition_name) {
       list($entity_type_id, ,) = explode('.', $storage_definition_name);
-      if (in_array($entity_type_id, $entity_type_ids)) {
+      if (\in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }
     }

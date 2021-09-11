@@ -141,7 +141,7 @@ class ConfigurableLanguageManager extends LanguageManager implements Configurabl
    * {@inheritdoc}
    */
   public function isMultilingual() {
-    return count($this->getLanguages(LanguageInterface::STATE_CONFIGURABLE)) > 1;
+    return \count($this->getLanguages(LanguageInterface::STATE_CONFIGURABLE)) > 1;
   }
 
   /**

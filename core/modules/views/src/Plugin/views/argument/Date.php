@@ -109,7 +109,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
     if (!$raw && $this->options['default_argument_type'] == 'date') {
       return date($this->argFormat, REQUEST_TIME);
     }
-    elseif (!$raw && in_array($this->options['default_argument_type'], ['node_created', 'node_changed'])) {
+    elseif (!$raw && \in_array($this->options['default_argument_type'], ['node_created', 'node_changed'])) {
       $node = $this->routeMatch->getParameter('node');
 
       if (!($node instanceof NodeInterface)) {

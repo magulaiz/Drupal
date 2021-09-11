@@ -308,7 +308,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Removing the namespace directories from the path.
     // - Getting the path to the directory two levels up from the path
     //   determined in the previous step.
-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    return \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
   }
 
   /**
@@ -399,9 +399,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     $uri = explode('/', $script_name);
     $server = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
-    for ($i = count($uri) - 1; $i > 0; $i--) {
-      for ($j = count($server); $j > 0; $j--) {
-        $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+    for ($i = \count($uri) - 1; $i > 0; $i--) {
+      for ($j = \count($server); $j > 0; $j--) {
+        $dir = implode('.', \array_slice($server, -$j)) . implode('.', \array_slice($uri, 0, $i));
         if (isset($sites[$dir]) && file_exists($app_root . '/sites/' . $sites[$dir])) {
           $dir = $sites[$dir];
         }
@@ -459,7 +459,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
       //   https://www.drupal.org/node/2447753.
-      if (function_exists('apcu_fetch')) {
+      if (\function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = '\Drupal\Component\FileCache\ApcuFileCacheBackend';
       }
     }
@@ -480,7 +480,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    if (in_array('phar', stream_get_wrappers(), TRUE)) {
+    if (\in_array('phar', stream_get_wrappers(), TRUE)) {
       // Set up a stream wrapper to handle insecurities due to PHP's builtin
       // phar stream wrapper. This is not registered as a regular stream wrapper
       // to prevent \Drupal\Core\File\FileSystem::validScheme() treating "phar"
@@ -648,7 +648,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       if (class_exists($class)) {
         $this->serviceProviderClasses['app'][$module] = $class;
       }
-      $filename = dirname($filename) . "/$module.services.yml";
+      $filename = \dirname($filename) . "/$module.services.yml";
       if (file_exists($filename)) {
         $this->serviceYamls['app'][$module] = $filename;
       }
@@ -657,7 +657,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Add site-specific service providers.
     if (!empty($GLOBALS['conf']['container_service_providers'])) {
       foreach ($GLOBALS['conf']['container_service_providers'] as $class) {
-        if ((is_string($class) && class_exists($class)) || (is_object($class) && ($class instanceof ServiceProviderInterface || $class instanceof ServiceModifierInterface))) {
+        if ((\is_string($class) && class_exists($class)) || (\is_object($class) && ($class instanceof ServiceProviderInterface || $class instanceof ServiceModifierInterface))) {
           $this->serviceProviderClasses['site'][] = $class;
         }
       }
@@ -789,7 +789,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function updateModules(array $module_list, array $module_filenames = []) {
     $pre_existing_module_namespaces = [];
-    if ($this->booted && is_array($this->moduleList)) {
+    if ($this->booted && \is_array($this->moduleList)) {
       $pre_existing_module_namespaces = $this->getModuleNamespacesPsr4($this->getModuleFileNames());
     }
     $this->moduleList = $module_list;
@@ -1015,14 +1015,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     mb_language('uni');
 
     // Indicate that code is operating in a test child site.
-    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
+    if (!\defined('DRUPAL_TEST_IN_CHILD_SITE')) {
       if ($test_prefix = drupal_valid_test_ua()) {
         $test_db = new TestDatabase($test_prefix);
         // Only code that interfaces directly with tests should rely on this
         // constant; e.g., the error/exception handler conditionally adds further
         // error information into HTTP response headers that are consumed by
         // Simpletest's internal browser.
-        define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
+        \define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
         // Web tests are to be conducted with runtime assertions active.
         assert_options(ASSERT_ACTIVE, TRUE);
@@ -1038,7 +1038,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       }
       else {
         // Ensure that no other code defines this.
-        define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
+        \define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
       }
     }
 
@@ -1093,11 +1093,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
     // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
-    if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME')), '\/')) {
+    if ($dir = rtrim(\dirname($request->server->get('SCRIPT_NAME')), '\/')) {
       // Remove "core" directory if present, allowing install.php,
       // authorize.php, and others to auto-detect a base path.
       $core_position = strrpos($dir, '/core');
-      if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
+      if ($core_position !== FALSE && \strlen($dir) - 5 == $core_position) {
         $base_path = substr($dir, 0, $core_position);
       }
       else {
@@ -1309,7 +1309,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     ];
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
-        if (!is_object($class)) {
+        if (!\is_object($class)) {
           $this->serviceProviders[$origin][$name] = new $class();
         }
         else {
@@ -1430,7 +1430,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = [];
     foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = dirname($filename) . '/src';
+      $namespaces["Drupal\\$module"] = \dirname($filename) . '/src';
     }
     return $namespaces;
   }
@@ -1452,12 +1452,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $class_loader = $this->classLoader;
     }
     foreach ($namespaces as $prefix => $paths) {
-      if (is_array($paths)) {
+      if (\is_array($paths)) {
         foreach ($paths as $key => $value) {
           $paths[$key] = $this->root . '/' . $value;
         }
       }
-      elseif (is_string($paths)) {
+      elseif (\is_string($paths)) {
         $paths = $this->root . '/' . $paths;
       }
       $class_loader->addPsr4($prefix . '\\', $paths);
@@ -1476,7 +1476,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected static function validateHostnameLength($host) {
     // Limit the length of the host name to 1000 bytes to prevent DoS attacks
     // with long host names.
-    return strlen($host) <= 1000
+    return \strlen($host) <= 1000
     // Limit the number of subdomains and port separators to prevent DoS attacks
     // in findSitePath().
     && substr_count($host, '.') <= 100

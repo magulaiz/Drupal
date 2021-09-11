@@ -146,7 +146,7 @@ class DefaultViewsTest extends ViewTestBase {
         $view->setDisplay($display_id);
 
         // Add any args if needed.
-        if (array_key_exists($name, $this->viewArgMap)) {
+        if (\array_key_exists($name, $this->viewArgMap)) {
           $view->preExecute($this->viewArgMap[$name]);
         }
 

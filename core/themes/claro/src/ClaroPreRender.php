@@ -16,12 +16,12 @@ class ClaroPreRender implements TrustedCallbackInterface {
    * Prerender callback for managed_file.
    */
   public static function managedFile($element) {
-    if (!empty($element['remove_button']) && is_array($element['remove_button'])) {
+    if (!empty($element['remove_button']) && \is_array($element['remove_button'])) {
       $element['remove_button']['#attributes']['class'][] = 'button--extrasmall';
       $element['remove_button']['#attributes']['class'][] = 'remove-button';
     }
 
-    if (!empty($element['upload_button']) && is_array($element['upload_button'])) {
+    if (!empty($element['upload_button']) && \is_array($element['upload_button'])) {
       $element['upload_button']['#attributes']['class'][] = 'upload-button';
     }
 
@@ -66,7 +66,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
    */
   public static function verticalTabs($element) {
     $group_type_is_details = isset($element['group']['#type']) && $element['group']['#type'] === 'details';
-    $groups_are_present = isset($element['group']['#groups']) && is_array($element['group']['#groups']);
+    $groups_are_present = isset($element['group']['#groups']) && \is_array($element['group']['#groups']);
 
     // If the vertical tabs have a details group, add attributes to those
     // details elements so they are styled as accordion items and have BEM
@@ -81,7 +81,7 @@ class ClaroPreRender implements TrustedCallbackInterface {
       foreach ($element['#parents'] as $group_key) {
         // Check parents against groups because we are only looking for group
         // elements.
-        if (!in_array($group_key, $group_keys)) {
+        if (!\in_array($group_key, $group_keys)) {
           continue;
         }
         $children_keys = Element::children($element['group']['#groups'][$group_key], TRUE);

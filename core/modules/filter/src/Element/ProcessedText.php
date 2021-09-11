@@ -92,7 +92,7 @@ class ProcessedText extends RenderElement {
       $enabled = $filter->status === TRUE;
       $type = $filter->getType();
       // Prevent FilterInterface::TYPE_HTML_RESTRICTOR from being skipped.
-      $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !in_array($type, $filter_types_to_skip);
+      $filter_type_must_be_applied = $type == FilterInterface::TYPE_HTML_RESTRICTOR || !\in_array($type, $filter_types_to_skip);
       return $enabled && $filter_type_must_be_applied;
     };
 

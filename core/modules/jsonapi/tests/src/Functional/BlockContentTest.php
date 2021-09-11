@@ -182,7 +182,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
     $tags = parent::getExpectedCacheTags($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('body', $sparse_fieldset)) {
       $tags = Cache::mergeTags($tags, ['config:filter.format.plain_text']);
     }
     return $tags;
@@ -193,7 +193,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
     $contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('body', $sparse_fieldset)) {
       $contexts = Cache::mergeContexts($contexts, ['languages:language_interface', 'theme']);
     }
     return $contexts;

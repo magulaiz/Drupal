@@ -251,7 +251,7 @@ class StaticReflectionParser
                     break;
             }
 
-            $last_token = is_array($token) ? $token[0] : false;
+            $last_token = \is_array($token) ? $token[0] : false;
         }
     }
 

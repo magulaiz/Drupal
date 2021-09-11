@@ -639,7 +639,7 @@ class BookTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//table//ul[@class="dropbutton"]/li/a', 'View');
 
     // Test that all the book pages are displayed on the book outline page.
-    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', count($nodes));
+    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', \count($nodes));
 
     // Unpublish a book in the hierarchy.
     $nodes[0]->setUnPublished();
@@ -647,7 +647,7 @@ class BookTest extends BrowserTestBase {
 
     // Node should still appear on the outline for admins.
     $this->drupalGet('admin/structure/book/' . $this->book->id());
-    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', count($nodes));
+    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', \count($nodes));
 
     // Saving a book page not as the current version shouldn't effect the book.
     $old_title = $nodes[1]->getTitle();
@@ -657,7 +657,7 @@ class BookTest extends BrowserTestBase {
     $nodes[1]->setTitle($new_title);
     $nodes[1]->save();
     $this->drupalGet('admin/structure/book/' . $this->book->id());
-    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', count($nodes));
+    $this->assertSession()->elementsCount('xpath', '//table//ul[@class="dropbutton"]/li/a', \count($nodes));
     $this->assertSession()->responseNotContains($new_title);
     $this->assertSession()->responseContains($old_title);
   }

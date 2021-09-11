@@ -33,7 +33,7 @@ class InstallerLanguageTest extends KernelTestBase {
     $file_translation = new FileTranslation('core/tests/fixtures/files/translations', $this->container->get('file_system'));
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = $file_translation->findTranslationFiles($langcode);
-      $this->assertSameSize($files_expected, $files_found, new FormattableMarkup('@count installer languages found.', ['@count' => count($files_expected)]));
+      $this->assertSameSize($files_expected, $files_found, new FormattableMarkup('@count installer languages found.', ['@count' => \count($files_expected)]));
       foreach ($files_found as $file) {
         $this->assertContains($file->filename, $files_expected, new FormattableMarkup('@file found.', ['@file' => $file->filename]));
       }
@@ -52,7 +52,7 @@ class InstallerLanguageTest extends KernelTestBase {
     // location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $profile_list = \Drupal::service('extension.list.profile');
-    assert($profile_list instanceof ProfileExtensionList);
+    \assert($profile_list instanceof ProfileExtensionList);
     $profile_list->setPathname('testing', 'core/profiles/testing/testing.info.yml');
 
     $info_en = install_profile_info('testing', 'en');

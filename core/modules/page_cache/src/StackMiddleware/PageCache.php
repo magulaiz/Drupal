@@ -134,7 +134,7 @@ class PageCache implements HttpKernelInterface {
     // 2. The Vary: Cookie header is on the response.
     // 3. The Cache-Control header does not contain the no-cache directive.
     if ($request->cookies->has(session_name()) &&
-      in_array('Cookie', $response->getVary()) &&
+      \in_array('Cookie', $response->getVary()) &&
       !$response->headers->hasCacheControlDirective('no-cache')) {
 
       $response->setPrivate();
@@ -160,7 +160,7 @@ class PageCache implements HttpKernelInterface {
         // In the case of a 304 response, certain headers must be sent, and the
         // remaining may not (see RFC 2616, section 10.3.5).
         foreach (array_keys($response->headers->all()) as $name) {
-          if (!in_array($name, ['content-location', 'expires', 'cache-control', 'vary'])) {
+          if (!\in_array($name, ['content-location', 'expires', 'cache-control', 'vary'])) {
             $response->headers->remove($name);
           }
         }

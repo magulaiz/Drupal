@@ -71,7 +71,7 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
 
     $is_critical = !$exception instanceof HttpExceptionInterface || $exception->getStatusCode() >= 500;
     if ($is_critical) {
-      error_log(sprintf('Uncaught PHP Exception %s: "%s" at %s line %s', get_class($exception), $exception->getMessage(), $exception->getFile(), $exception->getLine()));
+      error_log(sprintf('Uncaught PHP Exception %s: "%s" at %s line %s', \get_class($exception), $exception->getMessage(), $exception->getFile(), $exception->getLine()));
     }
   }
 

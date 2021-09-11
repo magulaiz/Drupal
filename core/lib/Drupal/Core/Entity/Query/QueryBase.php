@@ -321,7 +321,7 @@ abstract class QueryBase implements QueryInterface {
   public function tableSort(&$headers) {
     // If 'field' is not initialized, the header columns aren't clickable.
     foreach ($headers as $key => $header) {
-      if (is_array($header) && isset($header['specifier'])) {
+      if (\is_array($header) && isset($header['specifier'])) {
         $headers[$key]['field'] = '';
       }
     }
@@ -329,7 +329,7 @@ abstract class QueryBase implements QueryInterface {
     $order = TableSort::getOrder($headers, \Drupal::request());
     $direction = TableSort::getSort($headers, \Drupal::request());
     foreach ($headers as $header) {
-      if (is_array($header) && ($header['data'] == $order['name'])) {
+      if (\is_array($header) && ($header['data'] == $order['name'])) {
         $this->sort($header['specifier'], $direction, isset($header['langcode']) ? $header['langcode'] : NULL);
       }
     }
@@ -363,14 +363,14 @@ abstract class QueryBase implements QueryInterface {
    * {@inheritdoc}
    */
   public function hasAllTags() {
-    return !(boolean) array_diff(func_get_args(), array_keys($this->alterTags));
+    return !(boolean) array_diff(\func_get_args(), array_keys($this->alterTags));
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasAnyTag() {
-    return (boolean) array_intersect(func_get_args(), array_keys($this->alterTags));
+    return (boolean) array_intersect(\func_get_args(), array_keys($this->alterTags));
   }
 
   /**
@@ -472,7 +472,7 @@ abstract class QueryBase implements QueryInterface {
    */
   public static function getNamespaces($object) {
     $namespaces = [];
-    for ($class = get_class($object); $class; $class = get_parent_class($class)) {
+    for ($class = \get_class($object); $class; $class = get_parent_class($class)) {
       $namespaces[] = substr($class, 0, strrpos($class, '\\'));
     }
     return $namespaces;

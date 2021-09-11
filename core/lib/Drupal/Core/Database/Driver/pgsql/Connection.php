@@ -159,7 +159,7 @@ class Connection extends DatabaseConnection {
     // correctly when parameters are bound using associative arrays.
     // @see http://bugs.php.net/bug.php?id=48383
     foreach ($args as &$value) {
-      if (is_bool($value)) {
+      if (\is_bool($value)) {
         $value = (int) $value;
       }
     }
@@ -170,7 +170,7 @@ class Connection extends DatabaseConnection {
     // - The query is not a savepoint query.
     $wrap_with_savepoint = $this->inTransaction() &&
       !isset($this->transactionLayers['mimic_implicit_commit']) &&
-      !(is_string($query) && (
+      !(\is_string($query) && (
         stripos($query, 'ROLLBACK TO SAVEPOINT ') === 0 ||
         stripos($query, 'RELEASE SAVEPOINT ') === 0 ||
         stripos($query, 'SAVEPOINT ') === 0

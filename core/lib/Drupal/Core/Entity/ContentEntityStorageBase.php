@@ -101,7 +101,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // \Drupal\Core\Field\FieldInputValueNormalizerTrait::normalizeValue()
       // because we just need the scalar value.
       $bundle_value = $values[$this->bundleKey];
-      if (!is_array($bundle_value)) {
+      if (!\is_array($bundle_value)) {
         // The bundle value is a scalar, use it as-is.
         $bundle = $bundle_value;
       }
@@ -135,7 +135,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if (!$bundle) {
         throw new EntityStorageException("No entity bundle was specified");
       }
-      if (!array_key_exists($bundle, $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId))) {
+      if (!\array_key_exists($bundle, $this->entityTypeBundleInfo->getBundleInfo($this->entityTypeId))) {
         throw new EntityStorageException(sprintf("Missing entity bundle. The \"%s\" bundle does not exist", $bundle));
       }
       $values[$bundle_key] = $bundle;
@@ -147,7 +147,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     $entity = $this->create($values);
     foreach ($entity as $field_name => $value) {
-      if (!in_array($field_name, $forbidden_keys, TRUE)) {
+      if (!\in_array($field_name, $forbidden_keys, TRUE)) {
         $entity->get($field_name)->generateSampleItems();
       }
     }
@@ -173,7 +173,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
         if (isset($values[$name])) {
           $entity->$name = $values[$name];
         }
-        elseif (!array_key_exists($name, $values)) {
+        elseif (!\array_key_exists($name, $values)) {
           $entity->get($name)->applyDefaultValue();
         }
       }
@@ -466,7 +466,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $items->delete();
       $this->purgeFieldItems($items->getEntity(), $field_definition);
     }
-    return count($items_by_entity);
+    return \count($items_by_entity);
   }
 
   /**
@@ -816,7 +816,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   protected function invokeFieldMethod($method, ContentEntityInterface $entity) {
     $result = [];
-    $args = array_slice(func_get_args(), 2);
+    $args = \array_slice(\func_get_args(), 2);
     $langcodes = array_keys($entity->getTranslationLanguages());
     // Ensure that the field method is invoked as first on the current entity
     // translation and then on all other translations.
@@ -835,7 +835,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       foreach ($fields as $name => $items) {
         // call_user_func_array() is way slower than a direct call so we avoid
         // using it if have no parameters.
-        $result[$langcode][$name] = $args ? call_user_func_array([$items, $method], $args) : $items->{$method}();
+        $result[$langcode][$name] = $args ? \call_user_func_array([$items, $method], $args) : $items->{$method}();
       }
     }
 

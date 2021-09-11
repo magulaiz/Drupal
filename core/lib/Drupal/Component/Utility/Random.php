@@ -65,7 +65,7 @@ class Random {
       }
       $str = '';
       for ($i = 0; $i < $length; $i++) {
-        $str .= chr(mt_rand(32, 126));
+        $str .= \chr(mt_rand(32, 126));
       }
       $counter++;
 
@@ -73,10 +73,10 @@ class Random {
       if ($unique) {
         $continue = isset($this->strings[$str]);
       }
-      if (!$continue && is_callable($validator)) {
+      if (!$continue && \is_callable($validator)) {
         // If the validator callback returns FALSE generate another random
         // string.
-        $continue = !call_user_func($validator, $str);
+        $continue = !\call_user_func($validator, $str);
       }
     } while ($continue);
 
@@ -109,16 +109,16 @@ class Random {
    */
   public function name($length = 8, $unique = FALSE) {
     $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
-    $max = count($values) - 1;
+    $max = \count($values) - 1;
     $counter = 0;
 
     do {
       if ($counter == static::MAXIMUM_TRIES) {
         throw new \RuntimeException('Unable to generate a unique random name');
       }
-      $str = chr(mt_rand(97, 122));
+      $str = \chr(mt_rand(97, 122));
       for ($i = 1; $i < $length; $i++) {
-        $str .= chr($values[mt_rand(0, $max)]);
+        $str .= \chr($values[mt_rand(0, $max)]);
       }
       $counter++;
     } while ($unique && isset($this->names[$str]));
@@ -145,11 +145,11 @@ class Random {
       "sl", "cl", "sh",
     ];
 
-    $num_vowels = count($vowels);
-    $num_cons = count($cons);
+    $num_vowels = \count($vowels);
+    $num_cons = \count($cons);
     $word = '';
 
-    while (strlen($word) < $length) {
+    while (\strlen($word) < $length) {
       $word .= $cons[mt_rand(0, $num_cons - 1)] . $vowels[mt_rand(0, $num_vowels - 1)];
     }
 
@@ -239,7 +239,7 @@ class Random {
     else {
       // Use slightly different method for titles.
       $words = array_rand($dictionary_flipped, $min_word_count);
-      $words = is_array($words) ? implode(' ', $words) : $words;
+      $words = \is_array($words) ? implode(' ', $words) : $words;
       $greeking = ucwords($words);
     }
     return trim($greeking);

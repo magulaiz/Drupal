@@ -95,7 +95,7 @@ class UserBulkFormTest extends UnitTestCase {
 
     $reflected_actions = (new \ReflectionObject($user_bulk_form))->getProperty('actions');
     $reflected_actions->setAccessible(TRUE);
-    $this->assertEquals(array_slice($actions, 0, -1, TRUE), $reflected_actions->getValue($user_bulk_form));
+    $this->assertEquals(\array_slice($actions, 0, -1, TRUE), $reflected_actions->getValue($user_bulk_form));
   }
 
 }

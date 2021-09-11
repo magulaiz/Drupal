@@ -134,7 +134,7 @@ abstract class LocalStream implements StreamWrapperInterface {
     $realpath = realpath($path);
     if (!$realpath) {
       // This file does not yet exist.
-      $realpath = realpath(dirname($path)) . '/' . \Drupal::service('file_system')->basename($path);
+      $realpath = realpath(\dirname($path)) . '/' . \Drupal::service('file_system')->basename($path);
     }
     $directory = realpath($this->getDirectoryPath());
     if (!$realpath || !$directory || strpos($realpath, $directory) !== 0) {
@@ -168,7 +168,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * {@inheritdoc}
    */
   public function stream_lock($operation) {
-    if (in_array($operation, [LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB])) {
+    if (\in_array($operation, [LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB])) {
       return flock($this->handle, $operation);
     }
 
@@ -319,7 +319,7 @@ abstract class LocalStream implements StreamWrapperInterface {
   public function dirname($uri = NULL) {
     list($scheme) = explode('://', $uri, 2);
     $target = $this->getTarget($uri);
-    $dirname = dirname($target);
+    $dirname = \dirname($target);
 
     if ($dirname == '.') {
       $dirname = '';

@@ -132,7 +132,7 @@ trait UpdatePathTestTrait {
       /** @var \Drupal\Core\Config\TypedConfigManagerInterface $typed_config */
       $typed_config = $this->container->get('config.typed');
       foreach ($names as $name) {
-        if (in_array($name, $exclude, TRUE)) {
+        if (\in_array($name, $exclude, TRUE)) {
           // Skip checking schema if the config is listed in the
           // $configSchemaCheckerExclusions property.
           continue;

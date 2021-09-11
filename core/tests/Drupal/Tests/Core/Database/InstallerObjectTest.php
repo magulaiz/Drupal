@@ -43,7 +43,7 @@ class InstallerObjectTest extends UnitTestCase {
    */
   public function testDbInstallerObject($driver, $namespace, $expected_class_name) {
     $object = db_installer_object($driver, $namespace);
-    $this->assertEquals(get_class($object), $expected_class_name);
+    $this->assertEquals(\get_class($object), $expected_class_name);
   }
 
   /**

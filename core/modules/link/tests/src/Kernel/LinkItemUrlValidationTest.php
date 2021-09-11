@@ -29,7 +29,7 @@ class LinkItemUrlValidationTest extends FieldKernelTestBase {
       [$value, $expected_violations] = $data;
       $link_item->setValue($value);
       $violations = $link_item->validate();
-      $expected_count = count($expected_violations);
+      $expected_count = \count($expected_violations);
       $this->assertCount($expected_count, $violations, sprintf('Violation message count error for %s', $value));
       if ($expected_count) {
         $i = 0;

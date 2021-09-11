@@ -34,7 +34,7 @@ trait NodeMigrateTypeTestTrait {
 
     foreach ($bases as $base) {
       $base_tables = preg_grep('/^migrate_map_d' . $version . '_' . $base . '_{2}.*$/', $tables);
-      $results[$base] = count($base_tables);
+      $results[$base] = \count($base_tables);
     }
     return $results;
   }

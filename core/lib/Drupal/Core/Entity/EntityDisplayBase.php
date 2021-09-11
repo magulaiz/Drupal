@@ -440,7 +440,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
     foreach ($this->getComponents() as $name => $component) {
       if ($renderer = $this->getRenderer($name)) {
-        if (in_array($renderer->getPluginDefinition()['provider'], $dependencies['module'])) {
+        if (\in_array($renderer->getPluginDefinition()['provider'], $dependencies['module'])) {
           // Revert to the defaults if the plugin that supplies the widget or
           // formatter depends on a module that is being uninstalled.
           $this->setComponent($name);
@@ -506,7 +506,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
         // Config and content entities have the dependency names as keys while
         // module and theme dependencies are indexed arrays of dependency names.
         // @see \Drupal\Core\Config\ConfigManager::callOnDependencyRemoval()
-        if (in_array($type, ['config', 'content'])) {
+        if (\in_array($type, ['config', 'content'])) {
           $removed = array_intersect_key($removed_dependencies[$type], array_flip($dependencies));
         }
         else {

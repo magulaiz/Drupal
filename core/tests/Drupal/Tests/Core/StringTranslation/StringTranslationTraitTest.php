@@ -41,7 +41,7 @@ class StringTranslationTraitTest extends UnitTestCase {
       return $args[0]->getUntranslatedString();
     });
     $this->translation->setStringTranslation($mock->reveal());
-    $this->reflection = new \ReflectionClass(get_class($this->translation));
+    $this->reflection = new \ReflectionClass(\get_class($this->translation));
   }
 
   /**

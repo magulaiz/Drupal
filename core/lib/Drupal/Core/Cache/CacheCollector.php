@@ -112,7 +112,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    *   (optional) The tags to specify for the cache item.
    */
   public function __construct($cid, CacheBackendInterface $cache, LockBackendInterface $lock, array $tags = []) {
-    assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
+    \assert(Inspector::assertAllStrings($tags), 'Cache tags must be strings.');
     $this->cid = $cid;
     $this->cache = $cache;
     $this->tags = $tags;
@@ -134,7 +134,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
   public function has($key) {
     // Make sure the value is loaded.
     $this->get($key);
-    return isset($this->storage[$key]) || array_key_exists($key, $this->storage);
+    return isset($this->storage[$key]) || \array_key_exists($key, $this->storage);
   }
 
   /**
@@ -142,7 +142,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    */
   public function get($key) {
     $this->lazyLoadCache();
-    if (isset($this->storage[$key]) || array_key_exists($key, $this->storage)) {
+    if (isset($this->storage[$key]) || \array_key_exists($key, $this->storage)) {
       return $this->storage[$key];
     }
     else {
@@ -285,7 +285,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
   protected function normalizeLockName($cid) {
     // Nothing to do if the ID is a US ASCII string of 255 characters or less.
     $cid_is_ascii = mb_check_encoding($cid, 'ASCII');
-    if (strlen($cid) <= 255 && $cid_is_ascii) {
+    if (\strlen($cid) <= 255 && $cid_is_ascii) {
       return $cid;
     }
     // Return a string that uses as much as possible of the original cache ID
@@ -294,7 +294,7 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
     if (!$cid_is_ascii) {
       return $hash;
     }
-    return substr($cid, 0, 255 - strlen($hash)) . $hash;
+    return substr($cid, 0, 255 - \strlen($hash)) . $hash;
   }
 
   /**

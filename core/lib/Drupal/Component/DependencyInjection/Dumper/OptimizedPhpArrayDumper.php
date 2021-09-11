@@ -153,7 +153,7 @@ class OptimizedPhpArrayDumper extends Dumper {
   protected function prepareParameters(array $parameters, $escape = TRUE) {
     $filtered = [];
     foreach ($parameters as $key => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $value = $this->prepareParameters($value, $escape);
       }
       elseif ($value instanceof Reference) {
@@ -179,10 +179,10 @@ class OptimizedPhpArrayDumper extends Dumper {
     $args = [];
 
     foreach ($parameters as $key => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $args[$key] = $this->escape($value);
       }
-      elseif (is_string($value)) {
+      elseif (\is_string($value)) {
         $args[$key] = str_replace('%', '%%', $value);
       }
       else {
@@ -231,7 +231,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     if ($definition->getArguments()) {
       $arguments = $definition->getArguments();
       $service['arguments'] = $this->dumpCollection($arguments);
-      $service['arguments_count'] = count($arguments);
+      $service['arguments_count'] = \count($arguments);
     }
     else {
       $service['arguments_count'] = 0;
@@ -307,7 +307,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     $code = [];
 
     foreach ($collection as $key => $value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         $resolve_collection = FALSE;
         $code[$key] = $this->dumpCollection($value, $resolve_collection);
 
@@ -317,7 +317,7 @@ class OptimizedPhpArrayDumper extends Dumper {
       }
       else {
         $code[$key] = $this->dumpValue($value);
-        if (is_object($code[$key])) {
+        if (\is_object($code[$key])) {
           $resolve = TRUE;
         }
       }
@@ -344,7 +344,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   The processed callable.
    */
   protected function dumpCallable($callable) {
-    if (is_array($callable)) {
+    if (\is_array($callable)) {
       $callable[0] = $this->dumpValue($callable[0]);
       $callable = [$callable[0], $callable[1]];
     }
@@ -393,7 +393,7 @@ class OptimizedPhpArrayDumper extends Dumper {
    *   When trying to dump object or resource.
    */
   protected function dumpValue($value) {
-    if (is_array($value)) {
+    if (\is_array($value)) {
       $code = [];
       foreach ($value as $k => $v) {
         $code[$k] = $this->dumpValue($v);
@@ -410,7 +410,7 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Parameter) {
       return $this->getParameterCall((string) $value);
     }
-    elseif (is_string($value) && FALSE !== strpos($value, '%')) {
+    elseif (\is_string($value) && FALSE !== strpos($value, '%')) {
       if (preg_match('/^%([^%]+)%$/', $value, $matches)) {
         return $this->getParameterCall($matches[1]);
       }
@@ -430,14 +430,14 @@ class OptimizedPhpArrayDumper extends Dumper {
     elseif ($value instanceof Expression) {
       throw new RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
     }
-    elseif (is_object($value)) {
+    elseif (\is_object($value)) {
       // Drupal specific: Instantiated objects have a _serviceId parameter.
       if (isset($value->_serviceId)) {
         return $this->getReferenceCall($value->_serviceId);
       }
       throw new RuntimeException('Unable to dump a service container if a parameter is an object without _serviceId.');
     }
-    elseif (is_resource($value)) {
+    elseif (\is_resource($value)) {
       throw new RuntimeException('Unable to dump a service container if a parameter is a resource.');
     }
 

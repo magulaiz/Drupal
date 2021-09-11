@@ -780,7 +780,7 @@ class FieldPluginBaseTestField extends FieldPluginBase {
 // @todo Remove as part of https://www.drupal.org/node/2529170.
 namespace Drupal\views\Plugin\views\field;
 
-if (!function_exists('base_path')) {
+if (!\function_exists('base_path')) {
 
   function base_path() {
     return '/';

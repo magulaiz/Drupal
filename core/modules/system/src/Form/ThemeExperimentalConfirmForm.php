@@ -113,7 +113,7 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
     $items = [];
     if (!empty($dependencies)) {
       // Display a list of required themes that have to be installed as well.
-      $items[] = $this->formatPlural(count($dependencies), 'You must enable the @required theme to install @theme.', 'You must enable the @required themes to install @theme.', [
+      $items[] = $this->formatPlural(\count($dependencies), 'You must enable the @required theme to install @theme.', 'You must enable the @required themes to install @theme.', [
         '@theme' => $get_label($theme),
         // It is safe to implode this because theme names are not translated
         // markup and so will not be double-escaped.
@@ -171,7 +171,7 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
       $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
       $this->messenger()->addError(
         $this->formatPlural(
-          count($config_objects),
+          \count($config_objects),
           'Unable to install @extension, %config_names already exists in active configuration.',
           'Unable to install @extension, %config_names already exist in active configuration.',
           [

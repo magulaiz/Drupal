@@ -87,7 +87,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
         // Ensure that newest revisions are displayed at the top.
         krsort($tracked_entities);
 
-        $changes_count[$entity_type_id] = $this->entityTypeManager->getDefinition($entity_type_id)->getCountLabel(count($tracked_entities));
+        $changes_count[$entity_type_id] = $this->entityTypeManager->getDefinition($entity_type_id)->getCountLabel(\count($tracked_entities));
 
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         if ($this->entityTypeManager->hasHandler($entity_type_id, 'list_builder')) {
@@ -123,7 +123,7 @@ class WorkspaceViewBuilder extends EntityViewBuilder {
             $title = ['#markup' => $revision->label()];
           }
 
-          if (count($bundle_info[$entity_type_id]) > 1) {
+          if (\count($bundle_info[$entity_type_id]) > 1) {
             $type = [
               '#markup' => $this->t('@entity_type_label: @entity_bundle_label', [
                 '@entity_type_label' => $entity_type->getLabel(),

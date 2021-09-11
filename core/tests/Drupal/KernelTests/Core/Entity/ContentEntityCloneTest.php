@@ -330,7 +330,7 @@ class ContentEntityCloneTest extends EntityKernelTestBase {
       // modified in a non-consistent way and ContentEntityBase::__sleep() will
       // not be able to properly access all properties and this will cause
       // exceptions without a proper backtrace.
-      if (in_array($property->getName(), $translation_unique_properties)) {
+      if (\in_array($property->getName(), $translation_unique_properties)) {
         $this->assertEquals('default-value', $property->getValue($entity), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
         $this->assertEquals('test-translation-cloning', $property->getValue($translation), (string) new FormattableMarkup('Entity property %property_name is not cloned properly.', ['%property_name' => $property->getName()]));
       }

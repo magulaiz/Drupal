@@ -21,9 +21,9 @@ trait LoggedStatementsTrait {
     // Log the query if it is a string, can receive statement objects e.g
     // in the pgsql driver. These are hard to log as the table name has already
     // been replaced.
-    if (is_string($query)) {
+    if (\is_string($query)) {
       $stringified_args = array_map(function ($v) {
-        return is_array($v) ? implode(',', $v) : $v;
+        return \is_array($v) ? implode(',', $v) : $v;
       }, $args);
       $this->loggedStatements[] = str_replace(array_keys($stringified_args), array_values($stringified_args), $query);
     }

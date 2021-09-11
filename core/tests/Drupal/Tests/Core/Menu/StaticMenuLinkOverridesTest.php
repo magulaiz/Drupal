@@ -167,7 +167,7 @@ class StaticMenuLinkOverridesTest extends UnitTestCase {
 
     $static_override = new StaticMenuLinkOverrides($config_factory);
 
-    if (is_array($ids)) {
+    if (\is_array($ids)) {
       $static_override->deleteMultipleOverrides($ids);
     }
     else {

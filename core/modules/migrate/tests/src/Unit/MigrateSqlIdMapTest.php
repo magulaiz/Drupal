@@ -457,7 +457,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     }
     foreach ($rows as $row) {
       $values = array_combine($db_keys, $row);
-      $source_values = array_slice($row, 0, count($source_keys));
+      $source_values = \array_slice($row, 0, \count($source_keys));
       $values['source_ids_hash'] = $this->getIdMap()->getSourceIdsHash($source_values);
       $this->saveMap($values);
     }
@@ -741,7 +741,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
       }
     }
     // Assert multiple rows have been processed.
-    $this->assertSame(count($row_statuses), $id_map->processedCount());
+    $this->assertSame(\count($row_statuses), $id_map->processedCount());
   }
 
   /**
@@ -1060,7 +1060,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $this->sourceIds = $destination_ids;
     $this->destinationIds = $destination_ids;
     $db_keys = [];
-    $dest_id_count = count($destination_ids);
+    $dest_id_count = \count($destination_ids);
     for ($i = 1; $i <= $dest_id_count; $i++) {
       $db_keys[$i] = "sourceid$i";
     }
@@ -1070,7 +1070,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
     $id_map = $this->getIdMap();
     foreach ($rows as $row) {
       $values = array_combine($db_keys, $row);
-      $source_values = array_slice($row, 0, $dest_id_count);
+      $source_values = \array_slice($row, 0, $dest_id_count);
       $values['source_ids_hash'] = $id_map->getSourceIdsHash($source_values);
       $this->saveMap($values);
     }

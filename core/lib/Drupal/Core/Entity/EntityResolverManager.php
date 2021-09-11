@@ -83,7 +83,7 @@ class EntityResolverManager {
       if (method_exists($controller, '__invoke')) {
         return [$controller, '__invoke'];
       }
-      if (function_exists($controller)) {
+      if (\function_exists($controller)) {
         return $controller;
       }
       return NULL;
@@ -123,7 +123,7 @@ class EntityResolverManager {
 
     $result = FALSE;
 
-    if (is_array($controller)) {
+    if (\is_array($controller)) {
       list($instance, $method) = $controller;
       $reflection = new \ReflectionMethod($instance, $method);
     }

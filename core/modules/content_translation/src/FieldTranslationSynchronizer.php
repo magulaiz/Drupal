@@ -82,7 +82,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     // If we have no information about what to sync to, if we are creating a new
     // entity, if we have no translations for the current entity and we are not
     // creating one, then there is nothing to synchronize.
-    if (empty($sync_langcode) || $entity->isNew() || count($translations) < 2) {
+    if (empty($sync_langcode) || $entity->isNew() || \count($translations) < 2) {
       return;
     }
 
@@ -210,7 +210,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
 
     // By picking the maximum size between updated and unchanged items, we make
     // sure to process also removed items.
-    $total = max([count($source_items), count($unchanged_items)]);
+    $total = max([\count($source_items), \count($unchanged_items)]);
 
     // As a first step we build a map of the deltas corresponding to the column
     // values to be synchronized. Recording both the old values and the new
@@ -339,7 +339,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
           $value = $items[$delta][$property];
           // String and integer values are by far the most common item values,
           // thus we special-case them to improve performance.
-          $values[] = is_string($value) || is_int($value) ? $value : hash('sha256', serialize($value));
+          $values[] = \is_string($value) || \is_int($value) ? $value : hash('sha256', serialize($value));
         }
         else {
           // Explicitly track also empty values.

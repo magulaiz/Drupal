@@ -238,11 +238,11 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
     // Verify that path repo packages were installed.
     $path_repos = array_keys($path_repos);
     foreach (array_keys($require) as $package_name) {
-      if (in_array($package_name, $path_repos)) {
+      if (\in_array($package_name, $path_repos)) {
         // Metapackages do not report that they were installed as symlinks, but
         // we still must check that their installed version matches
         // COMPOSER_CORE_VERSION.
-        if (array_key_exists($package_name, $metapackage_path_repos)) {
+        if (\array_key_exists($package_name, $metapackage_path_repos)) {
           $this->assertErrorOutputContains("Installing $package_name ($simulated_core_version)");
         }
         else {
@@ -305,7 +305,7 @@ class ComposerProjectTemplatesTest extends BuildTestBase {
   }
 }
 JSON;
-    mkdir(dirname($repository_path));
+    mkdir(\dirname($repository_path));
     file_put_contents($repository_path, $json);
   }
 
@@ -349,7 +349,7 @@ JSON;
     }
 
     $json = json_encode($packages, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    mkdir(dirname($repository_path));
+    mkdir(\dirname($repository_path));
     file_put_contents($repository_path, $json);
   }
 
@@ -362,13 +362,13 @@ JSON;
     $this->assertCommandSuccessful();
     $installed = json_decode($process->getOutput(), TRUE);
 
-    $lowest_stability_order_index = count(static::STABILITY_ORDER);
+    $lowest_stability_order_index = \count(static::STABILITY_ORDER);
     foreach ($installed['installed'] as $project) {
       // Exclude dependencies that are required with "self.version", since
       // those stabilities will automatically match the corresponding Drupal
       // release.
       $exclude = ['drupal/core', 'drupal/core-project-message', 'drupal/core-vendor-hardening'];
-      if (!in_array($project['name'], $exclude, TRUE)) {
+      if (!\in_array($project['name'], $exclude, TRUE)) {
         $stability = VersionParser::parseStability($project['version']);
         $stability_order_index = array_search($stability, static::STABILITY_ORDER);
         $lowest_stability_order_index = min($lowest_stability_order_index, $stability_order_index);

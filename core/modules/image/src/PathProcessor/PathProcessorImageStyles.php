@@ -52,7 +52,7 @@ class PathProcessorImageStyles implements InboundPathProcessorInterface {
     // that means we have a case of private file's image style.
     elseif (strpos($path, '/system/files/styles/') !== FALSE) {
       $path_prefix = '/system/files/styles/';
-      $path = substr($path, strpos($path, $path_prefix), strlen($path));
+      $path = substr($path, strpos($path, $path_prefix), \strlen($path));
     }
     else {
       return $path;

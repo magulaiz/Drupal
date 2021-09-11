@@ -85,7 +85,7 @@ class Updater {
     $updaters = drupal_get_updaters();
     foreach ($updaters as $updater) {
       $class = $updater['class'];
-      if (call_user_func([$class, 'canUpdateDirectory'], $directory)) {
+      if (\call_user_func([$class, 'canUpdateDirectory'], $directory)) {
         return $class;
       }
     }
@@ -308,7 +308,7 @@ class Updater {
   public function prepareInstallDirectory(&$filetransfer, $directory) {
     // Make the parent dir writable if need be and create the dir.
     if (!is_dir($directory)) {
-      $parent_dir = dirname($directory);
+      $parent_dir = \dirname($directory);
       if (!is_writable($parent_dir)) {
         @chmod($parent_dir, 0755);
         // It is expected that this will fail if the directory is owned by the
@@ -326,7 +326,7 @@ class Updater {
             $filetransfer->createDirectory($directory);
             $this->makeWorldReadable($filetransfer, $directory);
             // Put the permissions back.
-            $filetransfer->chmod($parent_dir, intval($old_perms, 8));
+            $filetransfer->chmod($parent_dir, \intval($old_perms, 8));
           }
           catch (FileTransferException $e) {
             $message = t($e->getMessage(), $e->arguments);
@@ -354,7 +354,7 @@ class Updater {
     if (!is_executable($path)) {
       // Set it to read + execute.
       $new_perms = substr(sprintf('%o', fileperms($path)), -4, -1) . "5";
-      $filetransfer->chmod($path, intval($new_perms, 8), $recursive);
+      $filetransfer->chmod($path, \intval($new_perms, 8), $recursive);
     }
   }
 

@@ -438,7 +438,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   public function getDefaultValue(FieldableEntityInterface $entity) {
     // Allow custom default values function.
     if ($callback = $this->getDefaultValueCallback()) {
-      $value = call_user_func($callback, $entity, $this);
+      $value = \call_user_func($callback, $entity, $this);
     }
     else {
       $value = $this->getDefaultValueLiteral();
@@ -457,11 +457,11 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
       $value = [];
     }
     // Unless the value is an empty array, we may need to transform it.
-    if (!is_array($value) || !empty($value)) {
-      if (!is_array($value)) {
+    if (!\is_array($value) || !empty($value)) {
+      if (!\is_array($value)) {
         $value = [[$this->getMainPropertyName() => $value]];
       }
-      elseif (is_array($value) && !is_numeric(array_keys($value)[0])) {
+      elseif (\is_array($value) && !is_numeric(array_keys($value)[0])) {
         $value = [0 => $value];
       }
     }
@@ -473,7 +473,7 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    * {@inheritdoc}
    */
   public function setDefaultValueCallback($callback) {
-    if (isset($callback) && !is_string($callback)) {
+    if (isset($callback) && !\is_string($callback)) {
       throw new \InvalidArgumentException('Default value callback must be a string, like "function_name" or "ClassName::methodName"');
     }
     $this->definition['default_value_callback'] = $callback;

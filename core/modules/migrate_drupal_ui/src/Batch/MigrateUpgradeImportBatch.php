@@ -93,7 +93,7 @@ class MigrateUpgradeImportBatch {
       static::$listenersAdded = TRUE;
     }
     if (!isset($context['sandbox']['migration_ids'])) {
-      $context['sandbox']['max'] = count($initial_ids);
+      $context['sandbox']['max'] = \count($initial_ids);
       $context['sandbox']['current'] = 1;
       // Total number processed for this migration.
       $context['sandbox']['num_processed'] = 0;
@@ -159,7 +159,7 @@ class MigrateUpgradeImportBatch {
           // @see onPostImport()
           if (!empty(static::$followUpMigrations)) {
             foreach (static::$followUpMigrations as $migration_id => $migration) {
-              if (!in_array($migration_id, $context['sandbox']['migration_ids'], TRUE)) {
+              if (!\in_array($migration_id, $context['sandbox']['migration_ids'], TRUE)) {
                 // Add the follow-up migration ID to the batch migration IDs for
                 // later execution.
                 $context['sandbox']['migration_ids'][] = $migration_id;
@@ -214,7 +214,7 @@ class MigrateUpgradeImportBatch {
       }
 
       // Only display the last MESSAGE_LENGTH messages, in reverse order.
-      $message_count = count($context['sandbox']['messages']);
+      $message_count = \count($context['sandbox']['messages']);
       $context['message'] = '';
       for ($index = max(0, $message_count - self::MESSAGE_LENGTH); $index < $message_count; $index++) {
         $context['message'] = $context['sandbox']['messages'][$index] . "<br />\n" . $context['message'];
@@ -241,7 +241,7 @@ class MigrateUpgradeImportBatch {
       $context['sandbox']['current']++;
     }
 
-    $context['finished'] = 1 - count($context['sandbox']['migration_ids']) / $context['sandbox']['max'];
+    $context['finished'] = 1 - \count($context['sandbox']['migration_ids']) / $context['sandbox']['max'];
   }
 
   /**

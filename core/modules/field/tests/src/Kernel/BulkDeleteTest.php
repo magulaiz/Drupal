@@ -78,7 +78,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
           }
           // In case of an array, compare the array size and make sure it
           // contains the same elements.
-          elseif (is_array($argument) && count($actual_arguments[1]) == count($argument) && count(array_diff_key($actual_arguments[1], $argument)) == 0) {
+          elseif (\is_array($argument) && \count($actual_arguments[1]) == \count($argument) && \count(array_diff_key($actual_arguments[1], $argument)) == 0) {
             $found = TRUE;
             break;
           }

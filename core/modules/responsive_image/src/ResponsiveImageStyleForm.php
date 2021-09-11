@@ -148,7 +148,7 @@ class ResponsiveImageStyleForm extends EntityForm {
           '#type' => 'select',
           '#title' => $this->t('Image style'),
           '#options' => $image_styles,
-          '#default_value' => isset($image_style_mapping['image_mapping']) && is_string($image_style_mapping['image_mapping']) ? $image_style_mapping['image_mapping'] : '',
+          '#default_value' => isset($image_style_mapping['image_mapping']) && \is_string($image_style_mapping['image_mapping']) ? $image_style_mapping['image_mapping'] : '',
           '#description' => $this->t('Select an image style for this breakpoint.'),
           '#states' => [
             'visible' => [

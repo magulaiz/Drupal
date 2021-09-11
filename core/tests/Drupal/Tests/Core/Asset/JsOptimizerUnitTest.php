@@ -37,7 +37,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *   An array of test data.
    */
   public function providerTestClean() {
-    $path = dirname(__FILE__) . '/js_test_files/';
+    $path = \dirname(__FILE__) . '/js_test_files/';
     return [
       // File. Tests:
       // - Stripped sourceMappingURL with comment # syntax.
@@ -84,7 +84,7 @@ class JsOptimizerUnitTest extends UnitTestCase {
    *   An array of test data.
    */
   public function providerTestOptimize() {
-    $path = dirname(__FILE__) . '/js_test_files/';
+    $path = \dirname(__FILE__) . '/js_test_files/';
     return [
       0 => [
         [

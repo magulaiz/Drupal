@@ -113,8 +113,8 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
    */
   protected function sortRowsMultiple($a, $b, $keys) {
     $key = array_shift($keys);
-    $a_value = (is_array($a) && isset($a[$key]['data'])) ? $a[$key]['data'] : '';
-    $b_value = (is_array($b) && isset($b[$key]['data'])) ? $b[$key]['data'] : '';
+    $a_value = (\is_array($a) && isset($a[$key]['data'])) ? $a[$key]['data'] : '';
+    $b_value = (\is_array($b) && isset($b[$key]['data'])) ? $b[$key]['data'] : '';
 
     if ($a_value == $b_value && !empty($keys)) {
       return $this->sortRowsMultiple($a, $b, $keys);

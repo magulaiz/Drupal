@@ -84,7 +84,7 @@ class DefaultConfigTest extends KernelTestBase {
     // every module, profile and theme.
     $default_config_storage = new TestInstallStorage();
     foreach ($default_config_storage->listAll() as $config_name) {
-      if (in_array($config_name, $this->toSkip)) {
+      if (\in_array($config_name, $this->toSkip)) {
         continue;
       }
 

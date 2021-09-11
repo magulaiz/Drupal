@@ -127,7 +127,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    */
   protected function setUp() {
     parent::setUpAppRoot();
-    $this->zlibInstalled = function_exists('gzopen');
+    $this->zlibInstalled = \function_exists('gzopen');
 
     $request = Request::createFromGlobals();
 

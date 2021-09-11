@@ -208,7 +208,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'uid,field_tags'],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThan(0, count($single_output['data']));
+    $this->assertGreaterThan(0, \count($single_output['data']));
     // 14. Test filtering when using long syntax.
     $filter = [
       'and_group' => ['group' => ['conjunction' => 'AND']],
@@ -231,7 +231,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'uid,field_tags'],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThan(0, count($single_output['data']));
+    $this->assertGreaterThan(0, \count($single_output['data']));
     // 15. Test filtering when using invalid syntax.
     $filter = [
       'and_group' => ['group' => ['conjunction' => 'AND']],
@@ -269,7 +269,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'field_tags'] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(2, count($single_output['included']));
+    $this->assertGreaterThanOrEqual(2, \count($single_output['included']));
     // 17. Single user (check fields lacking 'view' access).
     $user_url = Url::fromRoute('jsonapi.user--user.individual', [
       'entity' => $this->user->uuid(),
@@ -300,7 +300,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(1, count($single_output['data']));
+    $this->assertGreaterThanOrEqual(1, \count($single_output['data']));
     // 19. Test non-existing route without 'Accept' header.
     $this->drupalGet('/jsonapi/node/article/broccoli');
     $this->assertSession()->statusCodeEquals(404);
@@ -412,7 +412,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 2. Nested Filters: Get nodes created by user admin.
     $filter = [
       'name-filter' => [
@@ -426,7 +426,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 3. Filtering with arrays: Get nodes created by users [admin, john].
     $filter = [
       'name-filter' => [
@@ -444,7 +444,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 4. Grouping filters: Get nodes that are published and create by admin.
     $filter = [
       'and-group' => [
@@ -471,7 +471,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 5. Grouping grouped filters: Get nodes that are promoted or sticky and
     //    created by admin.
     $filter = [

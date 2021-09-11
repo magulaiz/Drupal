@@ -152,7 +152,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testCreateWithPredefinedUuid() {
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($this->getMockEntity())));
+      ->will($this->returnValue(\get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage();
 
     $this->moduleHandler->expects($this->exactly(2))
@@ -175,7 +175,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     // Set up the entity storage to expect no UUID key.
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($this->getMockEntity())));
+      ->will($this->returnValue(\get_class($this->getMockEntity())));
     $this->setUpKeyValueEntityStorage(NULL);
 
     $this->moduleHandler->expects($this->exactly(2))
@@ -200,7 +200,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $entity = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [], ['toArray']);
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $this->moduleHandler->expects($this->exactly(2))
@@ -230,7 +230,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testSaveInsert(EntityInterface $entity) {
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $expected = ['id' => 'foo'];
@@ -276,7 +276,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testSaveUpdate(EntityInterface $entity) {
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $expected = ['id' => 'foo'];
@@ -355,7 +355,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
   public function testSaveRenameConfigEntity(ConfigEntityInterface $entity) {
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $this->moduleHandler->expects($this->exactly(2))
@@ -474,7 +474,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $entity = $this->getMockEntity();
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $this->keyValueStore->expects($this->once())
@@ -519,7 +519,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $expected['bar'] = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [['id' => 'bar']]);
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class(reset($expected))));
+      ->will($this->returnValue(\get_class(reset($expected))));
     $this->setUpKeyValueEntityStorage();
 
     $this->keyValueStore->expects($this->once())
@@ -547,7 +547,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $entity = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [['id' => 'foo']]);
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class($entity)));
+      ->will($this->returnValue(\get_class($entity)));
     $this->setUpKeyValueEntityStorage();
 
     $expected[] = $entity;
@@ -593,7 +593,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $entities['bar'] = $this->getMockEntity('Drupal\Core\Entity\EntityBase', [['id' => 'bar']]);
     $this->entityType->expects($this->once())
       ->method('getClass')
-      ->will($this->returnValue(get_class(reset($entities))));
+      ->will($this->returnValue(\get_class(reset($entities))));
     $this->setUpKeyValueEntityStorage();
 
     $this->moduleHandler->expects($this->exactly(8))
@@ -656,9 +656,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
 
 namespace Drupal\Core\Entity\KeyValueStore;
 
-if (!defined('SAVED_NEW')) {
-  define('SAVED_NEW', 1);
+if (!\defined('SAVED_NEW')) {
+  \define('SAVED_NEW', 1);
 }
-if (!defined('SAVED_UPDATED')) {
-  define('SAVED_UPDATED', 2);
+if (!\defined('SAVED_UPDATED')) {
+  \define('SAVED_UPDATED', 2);
 }

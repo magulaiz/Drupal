@@ -132,7 +132,7 @@ class LibraryDiscoveryParser {
       }
       $library += ['dependencies' => [], 'js' => [], 'css' => []];
 
-      if (isset($library['header']) && !is_bool($library['header'])) {
+      if (isset($library['header']) && !\is_bool($library['header'])) {
         throw new \LogicException(sprintf("The 'header' key in the library definition '%s' in extension '%s' is invalid: it must be a boolean.", $id, $extension));
       }
 
@@ -142,7 +142,7 @@ class LibraryDiscoveryParser {
           $library['version'] = \Drupal::VERSION;
         }
         // Remove 'v' prefix from external library versions.
-        elseif (is_string($library['version']) && $library['version'][0] === 'v') {
+        elseif (\is_string($library['version']) && $library['version'][0] === 'v') {
           $library['version'] = substr($library['version'], 1);
         }
       }
@@ -167,17 +167,17 @@ class LibraryDiscoveryParser {
         //   properly resolve dependencies for all (css) libraries per category,
         //   and only once prior to rendering out an HTML page.
         if ($type == 'css' && !empty($library[$type])) {
-          assert(static::validateCssLibrary($library[$type]) < 2, 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
-          assert(static::validateCssLibrary($library[$type]) === 0, 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
+          \assert(static::validateCssLibrary($library[$type]) < 2, 'CSS files should be specified as key/value pairs, where the values are configuration options. See https://www.drupal.org/node/2274843.');
+          \assert(static::validateCssLibrary($library[$type]) === 0, 'CSS must be nested under a category. See https://www.drupal.org/node/2274843.');
           foreach ($library[$type] as $category => $files) {
             $category_weight = 'CSS_' . strtoupper($category);
-            assert(defined($category_weight), 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
+            \assert(\defined($category_weight), 'Invalid CSS category: ' . $category . '. See https://www.drupal.org/node/2274843.');
             foreach ($files as $source => $options) {
               if (!isset($options['weight'])) {
                 $options['weight'] = 0;
               }
               // Apply the corresponding weight defined by CSS_* constants.
-              $options['weight'] += constant($category_weight);
+              $options['weight'] += \constant($category_weight);
               $library[$type][$source] = $options;
             }
             unset($library[$type][$category]);
@@ -186,7 +186,7 @@ class LibraryDiscoveryParser {
         foreach ($library[$type] as $source => $options) {
           unset($library[$type][$source]);
           // Allow to omit the options hashmap in YAML declarations.
-          if (!is_array($options)) {
+          if (!\is_array($options)) {
             $options = [];
           }
           if ($type == 'js' && isset($options['weight']) && $options['weight'] > 0) {
@@ -404,7 +404,7 @@ class LibraryDiscoveryParser {
           }
           // Active theme defines an override for this library.
           $override_definition = $libraries_overrides["$extension/$library_name"];
-          if (is_string($override_definition) || $override_definition === FALSE) {
+          if (\is_string($override_definition) || $override_definition === FALSE) {
             // A string or boolean definition implies an override (or removal)
             // for the whole library. Use the override key to specify that this
             // library will be overridden when it is called.
@@ -416,12 +416,12 @@ class LibraryDiscoveryParser {
               $libraries[$library_name]['override'] = FALSE;
             }
           }
-          elseif (is_array($override_definition)) {
+          elseif (\is_array($override_definition)) {
             // An array definition implies an override for an asset within this
             // library.
             foreach ($override_definition as $sub_key => $value) {
               // Throw an exception if the asset is not properly specified.
-              if (!is_array($value)) {
+              if (!\is_array($value)) {
                 throw new InvalidLibrariesOverrideSpecificationException(sprintf('Library asset %s is not correctly specified. It should be in the form "extension/library_name/sub_key/path/to/asset.js".', "$extension/$library_name/$sub_key"));
               }
               if ($sub_key === 'drupalSettings') {
@@ -463,7 +463,7 @@ class LibraryDiscoveryParser {
    * Determines if the supplied string is a valid URI.
    */
   protected function isValidUri($string) {
-    return count(explode('://', $string)) === 2;
+    return \count(explode('://', $string)) === 2;
   }
 
   /**
@@ -540,12 +540,12 @@ class LibraryDiscoveryParser {
     $categories = [];
     // Verify options first and return early if invalid.
     foreach ($library as $category => $files) {
-      if (!is_array($files)) {
+      if (!\is_array($files)) {
         return 2;
       }
       $categories[] = $category;
       foreach ($files as $source => $options) {
-        if (!is_array($options)) {
+        if (!\is_array($options)) {
           return 1;
         }
       }

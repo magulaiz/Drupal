@@ -150,7 +150,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
     // @todo Remove when https://www.drupal.org/node/3041850 is resolved.
     $plugin_ids_to_update = array_filter($plugin_ids_to_update, function ($info) {
       // Delta, region, and UUID each count as one.
-      return count($info, COUNT_RECURSIVE) === 3;
+      return \count($info, COUNT_RECURSIVE) === 3;
     });
 
     $plugin_ids_to_update = NestedArray::mergeDeepArray($plugin_ids_to_update, TRUE);
@@ -284,7 +284,7 @@ class QuickEditIntegration implements ContainerInjectionInterface {
     // the element is rendered into the final text.
     if (isset($elements['#pre_render'])) {
       foreach ($elements['#pre_render'] as $callable) {
-        $elements = call_user_func($callable, $elements);
+        $elements = \call_user_func($callable, $elements);
       }
     }
 

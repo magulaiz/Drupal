@@ -154,7 +154,7 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
    * {@inheritdoc}
    */
   public function appliesToEntityTypeAndBundle($entity_type_id, $bundle_id) {
-    return in_array($bundle_id, $this->getBundlesForEntityType($entity_type_id), TRUE);
+    return \in_array($bundle_id, $this->getBundlesForEntityType($entity_type_id), TRUE);
   }
 
   /**
@@ -268,7 +268,7 @@ class ContentModeration extends WorkflowTypeBase implements ContentModerationInt
       // are being removed.
       $module_entity_definitions = [];
       foreach ($this->entityTypeManager->getDefinitions() as $entity_definition) {
-        if (in_array($entity_definition->getProvider(), $dependencies['module'])) {
+        if (\in_array($entity_definition->getProvider(), $dependencies['module'])) {
           $module_entity_definitions[] = $entity_definition;
         }
       }

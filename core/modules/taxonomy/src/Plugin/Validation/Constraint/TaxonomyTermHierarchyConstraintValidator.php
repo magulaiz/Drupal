@@ -45,7 +45,7 @@ class TaxonomyTermHierarchyConstraintValidator extends ConstraintValidator imple
    */
   public function validate($entity, Constraint $constraint) {
     $term_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-    assert($term_storage instanceof TermStorageInterface);
+    \assert($term_storage instanceof TermStorageInterface);
 
     // Newly created entities should be able to specify a parent.
     if ($entity && $entity->isNew()) {

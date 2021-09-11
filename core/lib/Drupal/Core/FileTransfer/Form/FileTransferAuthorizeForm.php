@@ -302,7 +302,7 @@ class FileTransferAuthorizeForm extends FormBase {
     // processing, pass in that subarray to the recursive call. Otherwise, just
     // pass on the whole $defaults array.
     foreach (Element::children($element) as $child_key) {
-      $this->setConnectionSettingsDefaults($element[$child_key], $child_key, ((isset($defaults[$key]) && is_array($defaults[$key])) ? $defaults[$key] : $defaults));
+      $this->setConnectionSettingsDefaults($element[$child_key], $child_key, ((isset($defaults[$key]) && \is_array($defaults[$key])) ? $defaults[$key] : $defaults));
     }
   }
 
@@ -321,7 +321,7 @@ class FileTransferAuthorizeForm extends FormBase {
     $operation = $this->getRequest()->getSession()->remove('authorize_operation');
 
     require_once $operation['file'];
-    return call_user_func_array($operation['callback'], array_merge([$filetransfer], $operation['arguments']));
+    return \call_user_func_array($operation['callback'], array_merge([$filetransfer], $operation['arguments']));
   }
 
 }

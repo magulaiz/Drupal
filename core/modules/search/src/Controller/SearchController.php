@@ -108,7 +108,7 @@ class SearchController extends ControllerBase {
       }
     }
 
-    if (count($results)) {
+    if (\count($results)) {
       $build['search_results_title'] = [
         '#markup' => '<h2>' . $this->t('Search results') . '</h2>',
       ];

@@ -16,7 +16,7 @@ class OpCodeCache {
    *   TRUE if opcache is enabled, FALSE otherwise.
    */
   public static function isEnabled() {
-    return extension_loaded('Zend OPcache') && ini_get('opcache.enable');
+    return \extension_loaded('Zend OPcache') && ini_get('opcache.enable');
   }
 
   /**
@@ -32,7 +32,7 @@ class OpCodeCache {
     clearstatcache(TRUE, $pathname);
 
     // Check if the Zend OPcache is enabled and if so invalidate the file.
-    if (function_exists('opcache_invalidate')) {
+    if (\function_exists('opcache_invalidate')) {
       opcache_invalidate($pathname, TRUE);
     }
   }

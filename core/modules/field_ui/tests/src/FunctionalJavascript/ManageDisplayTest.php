@@ -403,7 +403,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     }
 
     // Validate the default value if passed.
-    if (!is_null($selected)) {
+    if (!\is_null($selected)) {
       $this->assertEquals($selected, $field->getValue());
     }
   }

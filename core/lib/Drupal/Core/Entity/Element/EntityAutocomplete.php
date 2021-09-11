@@ -100,10 +100,10 @@ class EntityAutocomplete extends Textfield {
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     // Process the #default_value property.
     if ($input === FALSE && isset($element['#default_value']) && $element['#process_default_value']) {
-      if (is_array($element['#default_value']) && $element['#tags'] !== TRUE) {
+      if (\is_array($element['#default_value']) && $element['#tags'] !== TRUE) {
         throw new \InvalidArgumentException('The #default_value property is an array but the form element does not allow multiple values.');
       }
-      elseif (!empty($element['#default_value']) && !is_array($element['#default_value'])) {
+      elseif (!empty($element['#default_value']) && !\is_array($element['#default_value'])) {
         // Convert the default value into an array for easier processing in
         // static::getEntityLabels().
         $element['#default_value'] = [$element['#default_value']];
@@ -122,7 +122,7 @@ class EntityAutocomplete extends Textfield {
 
     // Potentially the #value is set directly, so it contains the 'target_id'
     // array structure instead of a string.
-    if ($input !== FALSE && is_array($input)) {
+    if ($input !== FALSE && \is_array($input)) {
       $entity_ids = array_map(function (array $item) {
         return $item['target_id'];
       }, $input);
@@ -208,7 +208,7 @@ class EntityAutocomplete extends Textfield {
 
       // GET forms might pass the validated data around on the next request, in
       // which case it will already be in the expected format.
-      if (is_array($element['#value'])) {
+      if (\is_array($element['#value'])) {
         $value = $element['#value'];
       }
       else {
@@ -286,7 +286,7 @@ class EntityAutocomplete extends Textfield {
       // Use only the last value if the form element does not support multiple
       // matches (tags).
       if (!$element['#tags'] && !empty($value)) {
-        $last_value = $value[count($value) - 1];
+        $last_value = $value[\count($value) - 1];
         $value = isset($last_value['target_id']) ? $last_value['target_id'] : $last_value;
       }
     }
@@ -331,12 +331,12 @@ class EntityAutocomplete extends Textfield {
         $form_state->setError($element, t('There are no @entity_type_plural matching "%value".', $params));
       }
     }
-    elseif (count($entities) > 5) {
+    elseif (\count($entities) > 5) {
       $params['@id'] = key($entities);
       // Error if there are more than 5 matching entities.
       $form_state->setError($element, t('Many @entity_type_plural are called %value. Specify the one you want by appending the id in parentheses, like "@value (@id)".', $params));
     }
-    elseif (count($entities) > 1) {
+    elseif (\count($entities) > 1) {
       // More helpful error if there are only a few matching entities.
       $multiples = [];
       foreach ($entities as $id => $name) {

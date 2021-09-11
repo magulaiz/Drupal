@@ -67,13 +67,13 @@ class DiffFormatter {
 
     foreach ($diff->getEdits() as $edit) {
       if ($edit->type == 'copy') {
-        if (is_array($block)) {
+        if (\is_array($block)) {
           if (sizeof($edit->orig) <= $nlead + $ntrail) {
             $block[] = $edit;
           }
           else {
             if ($ntrail) {
-              $context = array_slice($edit->orig, 0, $ntrail);
+              $context = \array_slice($edit->orig, 0, $ntrail);
               $block[] = new DiffOpCopy($context);
             }
             $this->_block($x0, $ntrail + $xi - $x0, $y0, $ntrail + $yi - $y0, $block);
@@ -83,8 +83,8 @@ class DiffFormatter {
         $context = $edit->orig;
       }
       else {
-        if (!is_array($block)) {
-          $context = array_slice($context, sizeof($context) - $nlead);
+        if (!\is_array($block)) {
+          $context = \array_slice($context, sizeof($context) - $nlead);
           $x0 = $xi - sizeof($context);
           $y0 = $yi - sizeof($context);
           $block = [];
@@ -103,7 +103,7 @@ class DiffFormatter {
       }
     }
 
-    if (is_array($block)) {
+    if (\is_array($block)) {
       $this->_block($x0, $xi - $x0, $y0, $yi - $y0, $block);
     }
     $end = $this->_end_diff();

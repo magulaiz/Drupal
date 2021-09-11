@@ -49,7 +49,7 @@ class FormattableMarkupTest extends TestCase {
   public function testCount() {
     $string = 'Can I please have a @replacement';
     $formattable_string = new FormattableMarkup($string, ['@replacement' => 'kitten']);
-    $this->assertEquals(strlen($string), $formattable_string->count());
+    $this->assertEquals(\strlen($string), $formattable_string->count());
   }
 
   /**

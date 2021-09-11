@@ -46,7 +46,7 @@ class ImageFieldWidgetMultipleTest extends WebDriverTestBase {
     $this->assertSession()->fieldExists('title[0][value]')->setValue('Test');
 
     $images = $this->getTestFiles('image');
-    $images = array_slice($images, 0, 5);
+    $images = \array_slice($images, 0, 5);
 
     $paths = [];
     foreach ($images as $image) {

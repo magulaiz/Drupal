@@ -166,7 +166,7 @@ class FieldInstance extends DrupalSqlBase {
     // Check if this is an i18n synchronized field.
     $synchronized_fields = $this->variableGet('i18n_sync_node_type_' . $row->getSourceProperty('bundle'), NULL);
     if ($synchronized_fields) {
-      if (in_array($row->getSourceProperty('field_name'), $synchronized_fields)) {
+      if (\in_array($row->getSourceProperty('field_name'), $synchronized_fields)) {
         $translatable = FALSE;
       }
     }

@@ -102,7 +102,7 @@ class HelpController extends ControllerBase {
       ];
 
       $links = $plugin->listTopics();
-      if (is_array($links) && count($links)) {
+      if (\is_array($links) && \count($links)) {
         $this_output['#links'] = $links;
       }
 
@@ -142,7 +142,7 @@ class HelpController extends ControllerBase {
         $build['top'] = ['#markup' => $this->t('No help is available for module %module.', ['%module' => $module_name])];
       }
       else {
-        if (!is_array($temp)) {
+        if (!\is_array($temp)) {
           $temp = ['#markup' => $temp];
         }
         $build['top'] = $temp;

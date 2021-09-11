@@ -159,7 +159,7 @@ class ExecutionContext implements ExecutionContextInterface {
     // The parameters $invalidValue and following are ignored by the new
     // API, as they are not present in the new interface anymore.
     // You should use buildViolation() instead.
-    if (func_num_args() > 2) {
+    if (\func_num_args() > 2) {
       throw new \LogicException('Legacy validator API is unsupported.');
     }
 
@@ -226,7 +226,7 @@ class ExecutionContext implements ExecutionContextInterface {
    * {@inheritdoc}
    */
   public function getClassName() {
-    return get_class($this->data);
+    return \get_class($this->data);
   }
 
   /**

@@ -241,7 +241,7 @@ class UpdateManagerInstall extends FormBase {
     $project_real_location = \Drupal::service('file_system')->realpath($project_location);
     $arguments = [
       'project' => $project,
-      'updater_name' => get_class($updater),
+      'updater_name' => \get_class($updater),
       'local_url' => $project_real_location,
     ];
 
@@ -258,7 +258,7 @@ class UpdateManagerInstall extends FormBase {
     if (fileowner($project_real_location) == fileowner($this->sitePath) && !$test_authorize) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
       $filetransfer = new Local($this->root, \Drupal::service('file_system'));
-      $response = call_user_func_array('update_authorize_run_install', array_merge([$filetransfer], $arguments));
+      $response = \call_user_func_array('update_authorize_run_install', array_merge([$filetransfer], $arguments));
       if ($response instanceof Response) {
         $form_state->setResponse($response);
       }

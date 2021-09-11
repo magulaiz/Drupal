@@ -66,7 +66,7 @@ abstract class UnitTestCase extends TestCase {
     // Ensure that FileCacheFactory has a prefix.
     FileCacheFactory::setPrefix('prefix');
 
-    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    $this->root = \dirname(substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
   }
 
   /**
@@ -91,7 +91,7 @@ abstract class UnitTestCase extends TestCase {
    *   The random generator
    */
   protected function getRandomGenerator() {
-    if (!is_object($this->randomGenerator)) {
+    if (!\is_object($this->randomGenerator)) {
       $this->randomGenerator = new Random();
     }
     return $this->randomGenerator;

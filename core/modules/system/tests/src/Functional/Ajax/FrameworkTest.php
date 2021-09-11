@@ -71,10 +71,10 @@ class FrameworkTest extends BrowserTestBase {
     // 3. JavaScript files in the footer
     // 4. Any other AJAX commands, in whatever order they were added.
     $commands = $this->drupalGetAjax('ajax-test/order');
-    $this->assertCommand(array_slice($commands, 0, 1), $expected_commands[1]->render());
-    $this->assertCommand(array_slice($commands, 1, 1), $expected_commands[2]->render());
-    $this->assertCommand(array_slice($commands, 2, 1), $expected_commands[3]->render());
-    $this->assertCommand(array_slice($commands, 3, 1), $expected_commands[4]->render());
+    $this->assertCommand(\array_slice($commands, 0, 1), $expected_commands[1]->render());
+    $this->assertCommand(\array_slice($commands, 1, 1), $expected_commands[2]->render());
+    $this->assertCommand(\array_slice($commands, 2, 1), $expected_commands[3]->render());
+    $this->assertCommand(\array_slice($commands, 3, 1), $expected_commands[4]->render());
   }
 
   /**
@@ -117,7 +117,7 @@ class FrameworkTest extends BrowserTestBase {
     foreach ($haystack as $command) {
       // If the command has additional settings that we're not testing for, do
       // not consider that a failure.
-      if (isset($command['settings']) && is_array($command['settings']) && isset($needle['settings']) && is_array($needle['settings'])) {
+      if (isset($command['settings']) && \is_array($command['settings']) && isset($needle['settings']) && \is_array($needle['settings'])) {
         $command['settings'] = array_intersect_key($command['settings'], $needle['settings']);
       }
       // If the command has additional data that we're not testing for, do not

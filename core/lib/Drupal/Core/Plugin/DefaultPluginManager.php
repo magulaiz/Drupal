@@ -149,7 +149,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    *   definitions should be cleared along with other, related cache entries.
    */
   public function setCacheBackend(CacheBackendInterface $cache_backend, $cache_key, array $cache_tags = []) {
-    assert(Inspector::assertAllStrings($cache_tags), 'Cache Tags must be strings.');
+    \assert(Inspector::assertAllStrings($cache_tags), 'Cache Tags must be strings.');
     $this->cacheBackend = $cache_backend;
     $this->cacheKey = $cache_key;
     $this->cacheTags = $cache_tags;
@@ -240,7 +240,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   public function processDefinition(&$definition, $plugin_id) {
     // Only array-based definitions can have defaults merged in.
-    if (is_array($definition) && !empty($this->defaults) && is_array($this->defaults)) {
+    if (\is_array($definition) && !empty($this->defaults) && \is_array($this->defaults)) {
       $definition = NestedArray::mergeDeep($this->defaults, $definition);
     }
 
@@ -248,7 +248,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     if ($definition instanceof PluginDefinitionInterface) {
       $definition->setClass(ltrim($definition->getClass(), '\\'));
     }
-    elseif (is_array($definition) && isset($definition['class'])) {
+    elseif (\is_array($definition) && isset($definition['class'])) {
       $definition['class'] = ltrim($definition['class'], '\\');
     }
   }
@@ -290,7 +290,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     // plugin definition.
     foreach ($definitions as $plugin_id => $plugin_definition) {
       $provider = $this->extractProviderFromDefinition($plugin_definition);
-      if ($provider && !in_array($provider, ['core', 'component']) && !$this->providerExists($provider)) {
+      if ($provider && !\in_array($provider, ['core', 'component']) && !$this->providerExists($provider)) {
         unset($definitions[$plugin_id]);
       }
     }
@@ -313,7 +313,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     }
 
     // Attempt to convert the plugin definition to an array.
-    if (is_object($plugin_definition)) {
+    if (\is_object($plugin_definition)) {
       $plugin_definition = (array) $plugin_definition;
     }
 

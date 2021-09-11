@@ -728,7 +728,7 @@ class ConfigEntityQueryTest extends KernelTestBase {
    *   Array of expected entity IDs.
    */
   protected function assertResults($expected) {
-    $expected_count = count($expected);
+    $expected_count = \count($expected);
     $this->assertCount($expected_count, $this->queryResults);
     foreach ($expected as $value) {
       // This also tests whether $this->queryResults[$value] is even set at all.

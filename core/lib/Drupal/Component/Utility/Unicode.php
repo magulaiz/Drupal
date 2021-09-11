@@ -127,7 +127,7 @@ EOD;
     mb_language('uni');
 
     // Check for mbstring extension.
-    if (!extension_loaded('mbstring')) {
+    if (!\extension_loaded('mbstring')) {
       return 'mb_strlen';
     }
 
@@ -211,15 +211,15 @@ EOD;
    *   The truncated string.
    */
   public static function truncateBytes($string, $len) {
-    if (strlen($string) <= $len) {
+    if (\strlen($string) <= $len) {
       return $string;
     }
-    if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
+    if ((\ord($string[$len]) < 0x80) || (\ord($string[$len]) >= 0xC0)) {
       return substr($string, 0, $len);
     }
     // Scan backwards to beginning of the byte sequence.
     // @todo Make the code more readable in https://www.drupal.org/node/2911497.
-    while (--$len >= 0 && ord($string[$len]) >= 0x80 && ord($string[$len]) < 0xC0) {
+    while (--$len >= 0 && \ord($string[$len]) >= 0x80 && \ord($string[$len]) < 0xC0) {
     }
 
     return substr($string, 0, $len);
@@ -404,7 +404,7 @@ EOD;
     if (preg_match('/[^\x20-\x7E]/', $string)) {
       // floor((75 - strlen("=?UTF-8?B??=")) * 0.75);
       $chunk_size = 47;
-      $len = strlen($string);
+      $len = \strlen($string);
       $output = '';
       while ($len > 0) {
         $chunk = static::truncateBytes($string, $chunk_size);
@@ -412,7 +412,7 @@ EOD;
         if ($shorten) {
           break;
         }
-        $c = strlen($chunk);
+        $c = \strlen($chunk);
         $string = substr($string, $c);
         $len -= $c;
       }
@@ -475,7 +475,7 @@ EOD;
    *   TRUE if the text is valid UTF-8, FALSE if not.
    */
   public static function validateUtf8($text) {
-    if (strlen($text) == 0) {
+    if (\strlen($text) == 0) {
       return TRUE;
     }
     // With the PCRE_UTF8 modifier 'u', preg_match() fails silently on strings

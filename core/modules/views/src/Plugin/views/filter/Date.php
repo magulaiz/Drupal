@@ -101,7 +101,7 @@ class Date extends NumericFilter {
    * {@inheritdoc}
    */
   protected function hasValidGroupedValue(array $group) {
-    if (!is_array($group['value']) || empty($group['value'])) {
+    if (!\is_array($group['value']) || empty($group['value'])) {
       return FALSE;
     }
 
@@ -111,7 +111,7 @@ class Date extends NumericFilter {
     // one greater.
     $operators = $this->operators();
     $expected = $operators[$group['operator']]['values'] + 1;
-    $actual = count(array_filter($group['value'], 'static::arrayFilterZero'));
+    $actual = \count(array_filter($group['value'], 'static::arrayFilterZero'));
 
     return $actual == $expected;
   }
@@ -124,7 +124,7 @@ class Date extends NumericFilter {
     // Store this because it will get overwritten.
     $type = NULL;
     if ($this->isAGroup()) {
-      if (is_array($this->group_info)) {
+      if (\is_array($this->group_info)) {
         $type = $this->group_info['type'];
       }
     }
@@ -134,7 +134,7 @@ class Date extends NumericFilter {
     $rc = parent::acceptExposedInput($input);
 
     // Restore what got overwritten by the parent.
-    if (!is_null($type)) {
+    if (!\is_null($type)) {
       $this->value['type'] = $type;
     }
 
@@ -166,8 +166,8 @@ class Date extends NumericFilter {
   }
 
   protected function opBetween($field) {
-    $a = intval(strtotime($this->value['min'], 0));
-    $b = intval(strtotime($this->value['max'], 0));
+    $a = \intval(strtotime($this->value['min'], 0));
+    $b = \intval(strtotime($this->value['max'], 0));
 
     if ($this->value['type'] == 'offset') {
       // Keep sign.
@@ -182,7 +182,7 @@ class Date extends NumericFilter {
   }
 
   protected function opSimple($field) {
-    $value = intval(strtotime($this->value['value'], 0));
+    $value = \intval(strtotime($this->value['value'], 0));
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       // Keep sign.
       $value = '***CURRENT_TIME***' . sprintf('%+d', $value);
