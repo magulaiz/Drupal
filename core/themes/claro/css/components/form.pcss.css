@@ -20,6 +20,11 @@
   margin-top: var(--space-l);
   margin-bottom: var(--space-l);
 }
+
+.views-form .form-item {
+  margin-left: var(--space-l);
+}
+
 /**
  * When a table row or a container-inline has a single form item, prevent it
  * from adding unnecessary extra spacing.
@@ -138,6 +143,10 @@ tr .form-item,
 }
 .form-actions .ajax-progress--throbber {
   align-self: center;
+}
+
+.views-form .form-actions {
+  margin-left: var(--space-l);
 }
 
 /**
