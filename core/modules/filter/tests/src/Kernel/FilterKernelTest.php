@@ -388,7 +388,7 @@ class FilterKernelTest extends KernelTestBase {
     // Very long string hitting PCRE limits.
     $limit = max(ini_get('pcre.backtrack_limit'), ini_get('pcre.recursion_limit'));
     $source = $this->randomMachineName($limit);
-    $result = _filter_autop($source);
+    $result = $filter->process($source, $filter)->getProcessedText();
     $this->assertEquals($result, '<p>' . $source . "</p>\n", 'Line break filter can process very long strings.');
   }
 
@@ -923,10 +923,12 @@ www.example.com with a newline in comments -->
     ]);
     $path = __DIR__ . '/../..';
 
-    $input = file_get_contents($path . '/filter.url-input.txt');
-    $expected = file_get_contents($path . '/filter.url-output.txt');
-    $result = _filter_url($input, $filter);
-    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+    $tests = [
+      file_get_contents($path . '/filter.url-input.txt') => [
+        file_get_contents($path . '/filter.url-output.txt') => TRUE,
+      ]
+    ];
+    $this->assertFilteredString($filter, $tests);
   }
 
   /**
