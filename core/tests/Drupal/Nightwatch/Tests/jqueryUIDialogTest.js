@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define, func-names, prefer-arrow-callback */
+/* eslint-disable no-use-before-define, func-names, prefer-arrow-callback, max-nested-callbacks */
 // cSpell:ignore expando plusplus dialogbeforeclose Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
 
 const domEquals = function (selector, modifier, message) {
@@ -2177,8 +2177,6 @@ module.exports = {
           });
 
           setTimeout(() => {
-
-
             toReturn.firstFoundElement = element
               .dialog('widget')
               .parent()[0]
@@ -2187,7 +2185,8 @@ module.exports = {
             toReturn.overlayFirstFoundElement = $('.ui-widget-overlay')
               .parent()[0]
               .isEqualNode($('#wrap1')[0]);
-            toReturn.onlyAppendsOneElement = $('#wrap2 .ui-dialog').length === 0;
+            toReturn.onlyAppendsOneElement =
+              $('#wrap2 .ui-dialog').length === 0;
             toReturn.overlayOnlyAppendsOneElement =
               $('#wrap2 .ui-dialog').length === 0;
             element.dialog('destroy');
@@ -2259,12 +2258,12 @@ module.exports = {
       function () {
         const $ = jQuery;
         const toReturn = {};
-        let element = $( "<div></div>" ).dialog( { autoOpen: false } );
-        toReturn.autoOpenFalse = !element.dialog( "widget" ).is( ":visible" );
+        let element = $('<div></div>').dialog({ autoOpen: false });
+        toReturn.autoOpenFalse = !element.dialog('widget').is(':visible');
         element.remove();
 
-        element = $( "<div></div>" ).dialog( { autoOpen: true } );
-        toReturn.autoOpenTrue = element.dialog( "widget" ).is( ":visible" );
+        element = $('<div></div>').dialog({ autoOpen: true });
+        toReturn.autoOpenTrue = element.dialog('widget').is(':visible');
 
         return toReturn;
       },
@@ -2292,32 +2291,38 @@ module.exports = {
         const toReturn = {};
         toReturn.mustMatch = {};
 
-        const $element = $("<div></div>");
+        const $element = $('<div></div>');
         const buttons = {
-          "Ok": function(event) {
+          Ok: function (event) {
             toReturn.okButtonFiresCallback = true;
             toReturn.okButtonContext = $element[0].isEqualNode(this);
             toReturn.mustMatch.okButtonEvent = [$btn[0], event.target];
           },
-          "Cancel": function (event) {
+          Cancel: function (event) {
             toReturn.cancelButtonFiresCallback = true;
             toReturn.cancelButtonContext = $element[0].isEqualNode(this);
             toReturn.mustMatch.cancelButtonEvent = [$btn[1], event.target];
-          }
+          },
         };
         $element.dialog({ buttons: buttons });
-        const $btn = $element.dialog('widget').find('.ui-dialog-buttonpane button');
+        const $btn = $element
+          .dialog('widget')
+          .find('.ui-dialog-buttonpane button');
         toReturn.numberOfButtons = $btn.length === 2;
 
         let i = 0;
 
-        toReturn.buttonText = Object.keys(buttons).reduce(function (result, key) {
+        toReturn.buttonText = Object.keys(buttons).reduce(function (
+          result,
+          key,
+        ) {
           if (result !== false) {
             result = $btn[i].textContent === key;
           }
           i++;
           return result;
-        }, null);
+        },
+        null);
 
         toReturn.buttonsetClass = $btn.parent().hasClass('ui-dialog-buttonset');
         toReturn.dialogClass = $element.parent().hasClass('ui-dialog-buttons');
@@ -2326,18 +2331,17 @@ module.exports = {
 
         setTimeout(() => {
           const newButtons = {
-            'Close': function (ev) {
+            Close: function (ev) {
               //assert.ok( true, "button click fires callback" );
               //assert.equal( this, element[ 0 ], "context of callback" );
               //assert.equal( ev.target, btn[ 0 ], "event target" );
-            }
+            },
           };
 
           // $element.dialog('option', 'buttons', newButtons);
 
           done(toReturn);
         }, 1000);
-
 
         //toReturn.mustMatch.buttonGetter = [buttons, $element.dialog('option', 'buttons')];
 
@@ -2372,7 +2376,6 @@ module.exports = {
           // numberOfNewButtons: 'number of buttons after buttons are reset',
           // newButtonText: 'text of new buttons',
         };
-        console.log('results', result);
         const { mustMatch } = result.value;
         delete result.value.mustMatch;
 
@@ -2403,26 +2406,29 @@ module.exports = {
           buttons: [
             {
               text: 'a button',
-              'class': 'additional-class',
+              class: 'additional-class',
               id: 'my-button-id',
-              click: function() {
+              click: function () {
                 toReturn.correctContext = this.isEqualNode($element[0]);
               },
               icon: 'ui-icon-cancel',
-              showLabel: false
-            }
-          ]
+              showLabel: false,
+            },
+          ],
         });
 
-        const $buttons = $element.dialog('widget').find('.ui-dialog-buttonpane button');
+        const $buttons = $element
+          .dialog('widget')
+          .find('.ui-dialog-buttonpane button');
         toReturn.numberOfButtons = $buttons.length === 1;
         toReturn.buttonId = $buttons.attr('id') === 'my-button-id';
-        toReturn.buttonText = String.prototype.trim.call($buttons.text()) === 'a button';
+        toReturn.buttonText =
+          String.prototype.trim.call($buttons.text()) === 'a button';
         toReturn.buttonClasses = $buttons.hasClass('additional-class');
         toReturn.icon = $buttons.button('option', 'icon') === 'ui-icon-cancel';
         toReturn.showLabel = $buttons.button('option', 'showLabel') === false;
 
-        $buttons.trigger( "click" );
+        $buttons.trigger('click');
 
         return toReturn;
       },
@@ -2455,7 +2461,8 @@ module.exports = {
         const toReturn = {};
         Array.prototype.test = $.noop;
         const $element = $('<div></div>').dialog();
-        toReturn.noButtonPane = $element.dialog('widget').find('.ui-dialog-buttonpane').length === 0;
+        toReturn.noButtonPane =
+          $element.dialog('widget').find('.ui-dialog-buttonpane').length === 0;
         $element.remove();
         delete Array.prototype.test;
 
@@ -2484,29 +2491,43 @@ module.exports = {
         const toReturn = {};
         const $element = $('<div></div>').dialog({ closeOnEscape: false });
 
-        toReturn.dialogOpenEscDisabled = $element.dialog( "widget" ).is( ":visible" ) && !$element.dialog( "widget" ).is( ":hidden" );
-        $element.simulate('keydown', { keyCode: $.ui.keyCode.ESCAPE })
+        toReturn.dialogOpenEscDisabled =
+          $element.dialog('widget').is(':visible') &&
+          !$element.dialog('widget').is(':hidden');
+        $element
+          .simulate('keydown', { keyCode: $.ui.keyCode.ESCAPE })
           .simulate('keypress', { keyCode: $.ui.keyCode.ESCAPE })
           .simulate('keyup', { keyCode: $.ui.keyCode.ESCAPE });
-        toReturn.dialogOpenEscDisabledAfterEsc = $element.dialog('widget').is(':visible') && !$element.dialog('widget').is(':hidden');
+        toReturn.dialogOpenEscDisabledAfterEsc =
+          $element.dialog('widget').is(':visible') &&
+          !$element.dialog('widget').is(':hidden');
         $element.remove();
 
         const $newElement = $('<div></div>').dialog({ closeOnEscape: true });
-        toReturn.dialogOpenEscEnabled = $newElement.dialog('widget').is(':visible') && !$newElement.dialog('widget').is(':hidden');
-        $newElement.simulate('keydown', { keyCode: $.ui.keyCode.ESCAPE })
+        toReturn.dialogOpenEscEnabled =
+          $newElement.dialog('widget').is(':visible') &&
+          !$newElement.dialog('widget').is(':hidden');
+        $newElement
+          .simulate('keydown', { keyCode: $.ui.keyCode.ESCAPE })
           .simulate('keypress', { keyCode: $.ui.keyCode.ESCAPE })
           .simulate('keyup', { keyCode: $.ui.keyCode.ESCAPE });
-        toReturn.dialogClosedEscEnabledAfterEsc = $newElement.dialog('widget').is( ":hidden" ) && !$newElement.dialog('widget').is(':visible');
+        toReturn.dialogClosedEscEnabledAfterEsc =
+          $newElement.dialog('widget').is(':hidden') &&
+          !$newElement.dialog('widget').is(':visible');
 
         return toReturn;
       },
       [],
       (result) => {
         const expectedTrue = {
-          dialogOpenEscDisabled: 'dialog is open before pressing ESC, ESC disabled',
-          dialogOpenEscDisabledAfterEsc: 'dialog is open after pressing ESC, ESC disabled',
-          dialogOpenEscEnabled: 'dialog is open before pressing ESC, ESC enabled',
-          dialogClosedEscEnabledAfterEsc: 'dialog is closed after pressing ESC, ESC enabled',
+          dialogOpenEscDisabled:
+            'dialog is open before pressing ESC, ESC disabled',
+          dialogOpenEscDisabledAfterEsc:
+            'dialog is open after pressing ESC, ESC disabled',
+          dialogOpenEscEnabled:
+            'dialog is open before pressing ESC, ESC enabled',
+          dialogClosedEscEnabledAfterEsc:
+            'dialog is closed after pressing ESC, ESC enabled',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
@@ -2526,19 +2547,35 @@ module.exports = {
         const toReturn = {};
 
         let $element = $('<div></div>').dialog();
-        toReturn.defaultCloseText = String.prototype.trim.call($element.dialog('widget').find('.ui-dialog-titlebar-close').text()) === 'Close';
+        toReturn.defaultCloseText =
+          String.prototype.trim.call(
+            $element.dialog('widget').find('.ui-dialog-titlebar-close').text(),
+          ) === 'Close';
         $element.remove();
 
         $element = $('<div></div>').dialog({ closeText: 'foo' });
-        toReturn.closeTextOnInit = String.prototype.trim.call($element.dialog('widget').find('.ui-dialog-titlebar-close').text()) === 'foo';
+        toReturn.closeTextOnInit =
+          String.prototype.trim.call(
+            $element.dialog('widget').find('.ui-dialog-titlebar-close').text(),
+          ) === 'foo';
         $element.remove();
 
-        $element = $('<div></div>').dialog().dialog('option', 'closeText', 'bar');
-        toReturn.closeTextViaOptonMethod = String.prototype.trim.call($element.dialog('widget').find('.ui-dialog-titlebar-close').text()) === 'bar';
+        $element = $('<div></div>')
+          .dialog()
+          .dialog('option', 'closeText', 'bar');
+        toReturn.closeTextViaOptionMethod =
+          String.prototype.trim.call(
+            $element.dialog('widget').find('.ui-dialog-titlebar-close').text(),
+          ) === 'bar';
         $element.remove();
 
-        $element = $('<div></div>').dialog().dialog('option', 'closeText', '<span>foo</span>');
-        toReturn.closeTextIsEscaped = String.prototype.trim.call($element.dialog('widget').find('.ui-dialog-titlebar-close').text()) === '<span>foo</span>';
+        $element = $('<div></div>')
+          .dialog()
+          .dialog('option', 'closeText', '<span>foo</span>');
+        toReturn.closeTextIsEscaped =
+          String.prototype.trim.call(
+            $element.dialog('widget').find('.ui-dialog-titlebar-close').text(),
+          ) === '<span>foo</span>';
 
         return toReturn;
       },
@@ -2547,7 +2584,7 @@ module.exports = {
         const expectedTrue = {
           defaultCloseText: 'default close text',
           closeTextOnInit: 'close text set on init',
-          closeTextViaOptonMethod: 'close text set via option method',
+          closeTextViaOptionMethod: 'close text set via option method',
           closeTextIsEscaped: 'close text is escaped',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
@@ -2580,14 +2617,18 @@ module.exports = {
         let offsetBefore = $element.dialog('widget').offset();
         drag($element, $handle, 50, -50);
         let offsetAfter = $element.dialog('widget').offset();
-        toReturn.draggableFalseInit = offsetBefore.left === offsetAfter.left && offsetBefore.top === offsetAfter.top;
+        toReturn.draggableFalseInit =
+          offsetBefore.left === offsetAfter.left &&
+          offsetBefore.top === offsetAfter.top;
 
         $element.dialog('option', 'draggable', true);
         $handle = $('.ui-resizable-se', $element.dialog('widget'));
         offsetBefore = $element.dialog('widget').offset();
         drag($element, $handle, 50, -50);
         offsetAfter = $element.dialog('widget').offset();
-        toReturn.draggableTrueOption = 50 - offsetAfter.left - offsetBefore.left <= 1 && -50 - offsetAfter.top - offsetBefore.top <= 1;
+        toReturn.draggableTrueOption =
+          50 - offsetAfter.left - offsetBefore.left <= 1 &&
+          -50 - offsetAfter.top - offsetBefore.top <= 1;
         $element.remove();
 
         $element = $('<div></div>').dialog({ draggable: true });
@@ -2595,24 +2636,32 @@ module.exports = {
         offsetBefore = $element.dialog('widget').offset();
         drag($element, $handle, 50, -50);
         offsetAfter = $element.dialog('widget').offset();
-        toReturn.draggableTrueInit = 50 - offsetAfter.left - offsetBefore.left <= 1 && -50 - offsetAfter.top - offsetBefore.top <= 1;
+        toReturn.draggableTrueInit =
+          50 - offsetAfter.left - offsetBefore.left <= 1 &&
+          -50 - offsetAfter.top - offsetBefore.top <= 1;
 
         $element.dialog('option', 'draggable', false);
         $handle = $('.ui-resizable-se', $element.dialog('widget'));
         offsetBefore = $element.dialog('widget').offset();
         drag($element, $handle, 50, -50);
         offsetAfter = $element.dialog('widget').offset();
-        toReturn.draggableFalseOption = offsetBefore.left === offsetAfter.left && offsetBefore.top === offsetAfter.top;
+        toReturn.draggableFalseOption =
+          offsetBefore.left === offsetAfter.left &&
+          offsetBefore.top === offsetAfter.top;
 
         return toReturn;
       },
       [],
       (result) => {
         const expectedTrue = {
-          draggableFalseInit: 'dialog cannot be dragged when draggable is set to false on init',
-          draggableTrueOption: 'dialog can be dragged when draggable is set to true via option',
-          draggableTrueInit: 'dialog can be dragged when draggable is set to true on init',
-          draggableFalseOption: 'dialog cannot be dragged when draggable is set to false via option',
+          draggableFalseInit:
+            'dialog cannot be dragged when draggable is set to false on init',
+          draggableTrueOption:
+            'dialog can be dragged when draggable is set to true via option',
+          draggableTrueInit:
+            'dialog can be dragged when draggable is set to true on init',
+          draggableFalseOption:
+            'dialog cannot be dragged when draggable is set to false via option',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
@@ -2632,21 +2681,26 @@ module.exports = {
         const toReturn = {};
 
         let $element = $('<div></div>').dialog();
-        toReturn.defaultHeight = Math.abs($element.dialog('widget').outerHeight() - 150) < 0.25;
+        toReturn.defaultHeight =
+          Math.abs($element.dialog('widget').outerHeight() - 150) < 0.25;
         $element.remove();
 
         $element = $('<div></div>').dialog({ height: 237 });
-        toReturn.explicitHeightInit = Math.abs($element.dialog('widget').outerHeight() - 237) < 0.25;
+        toReturn.explicitHeightInit =
+          Math.abs($element.dialog('widget').outerHeight() - 237) < 0.25;
         $element.remove();
 
         $element = $('<div></div>').dialog();
         $element.dialog('option', 'height', 238);
-        toReturn.explicitHeightOption = Math.abs($element.dialog('widget').outerHeight() - 238) < 0.25;
+        toReturn.explicitHeightOption =
+          Math.abs($element.dialog('widget').outerHeight() - 238) < 0.25;
         $element.remove();
 
-        $element = $('<div></div>').css('padding', '20px')
+        $element = $('<div></div>')
+          .css('padding', '20px')
           .dialog({ height: 240 });
-        toReturn.explicitHeightWithPadding = Math.abs($element.dialog('widget').outerHeight() - 240) < 0.25;
+        toReturn.explicitHeightWithPadding =
+          Math.abs($element.dialog('widget').outerHeight() - 240) < 0.25;
 
         return toReturn;
       },
@@ -2654,9 +2708,12 @@ module.exports = {
       (result) => {
         const expectedTrue = {
           defaultHeight: 'default height within 0.25 from expected',
-          explicitHeightInit: 'explicit height set on init within 0.25 from expected',
-          explicitHeightOption: 'explicit height set via option within 0.25 from expected',
-          explicitHeightWithPadding: 'explicit height with padding within 0.25 from expected',
+          explicitHeightInit:
+            'explicit height set on init within 0.25 from expected',
+          explicitHeightOption:
+            'explicit height set via option within 0.25 from expected',
+          explicitHeightWithPadding:
+            'explicit height with padding within 0.25 from expected',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
@@ -2686,29 +2743,35 @@ module.exports = {
 
         let $element = $('<div></div>').dialog({ maxHeight: 200 });
         let $handle = $('.ui-resizable-s', $element.dialog('widget'));
-        drag($element, $handle, 1000, 1000 );
-        toReturn.maxHeightDragBottom = $element.dialog('widget').height() - 200 <= 1
+        drag($element, $handle, 1000, 1000);
+        toReturn.maxHeightDragBottom =
+          $element.dialog('widget').height() - 200 <= 1;
         $element.remove();
 
-        $element = $( "<div></div>" ).dialog( { maxHeight: 200 } );
+        $element = $('<div></div>').dialog({ maxHeight: 200 });
         $handle = $('.ui-resizable-n', $element.dialog('widget'));
-        drag($element, $handle, -1000, -1000 );
-        toReturn.maxHeightDragTop = $element.dialog('widget').height() - 200 <= 1;
+        drag($element, $handle, -1000, -1000);
+        toReturn.maxHeightDragTop =
+          $element.dialog('widget').height() - 200 <= 1;
         $element.remove();
 
-
-        $element = $('<div></div>').dialog({ maxHeight: 200 }).dialog('option', 'maxHeight', 300);
+        $element = $('<div></div>')
+          .dialog({ maxHeight: 200 })
+          .dialog('option', 'maxHeight', 300);
         $handle = $('.ui-resizable-s', $element.dialog('widget'));
-        drag($element, $handle, 1000, 1000 );
-        toReturn.maxHeightOption = $element.dialog('widget').height() - 300 <= 1;
+        drag($element, $handle, 1000, 1000);
+        toReturn.maxHeightOption =
+          $element.dialog('widget').height() - 300 <= 1;
 
         return toReturn;
       },
       [],
       (result) => {
         const expectedTrue = {
-          maxHeightDragBottom: 'height within 1 from maxHeight when dragged from bottom',
-          maxHeightDragTop: 'height within 1 from maxHeight when dragged from top',
+          maxHeightDragBottom:
+            'height within 1 from maxHeight when dragged from bottom',
+          maxHeightDragTop:
+            'height within 1 from maxHeight when dragged from top',
           maxHeightOption: 'height within 1 when maxHeight set as option',
         };
         browser.assert.equal(expectedTrue.length, result.value.length);
@@ -2723,8 +2786,8 @@ module.exports = {
     );
   },
   maxWidth: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
 
@@ -2736,25 +2799,49 @@ module.exports = {
             dy,
           });
         };
+        let element = {};
+        element = $('<div></div>').dialog({ maxWidth: 200 });
+        setTimeout(() => {
+          drag(element, '.ui-resizable-e', 1000, 1000);
+          setTimeout(() => {
+            toReturn.maxWidthE =
+              element.dialog('widget').width() >= 199 &&
+              element.dialog('widget').width() <= 201;
+            // assert.close( element.dialog( "widget" ).width(), 200, 1, "maxWidth" );
+            element.remove();
 
-        const element = $('<div></div>').dialog({ maxWidth: 200 });
-        // testHelper.drag( element, ".ui-resizable-e", 1000, 1000 );
-        // assert.close( element.dialog( "widget" ).width(), 200, 1, "maxWidth" );
-        // element.remove();
-        //
-        // element = $( "<div></div>" ).dialog( { maxWidth: 200 } );
-        // testHelper.drag( element, ".ui-resizable-w", -1000, -1000 );
-        // assert.close( element.dialog( "widget" ).width(), 200, 1, "maxWidth" );
-        // element.remove();
-        //
-        // element = $( "<div></div>" ).dialog( { maxWidth: 200 } ).dialog( "option", "maxWidth", 300 );
-        // testHelper.drag( element, ".ui-resizable-w", -1000, -1000 );
-        // assert.close( element.dialog( "widget" ).width(), 300, 1, "maxWidth" );
-        // element.remove();
+            element = $('<div></div>').dialog({ maxWidth: 200 });
+            setTimeout(() => {
+              drag(element, '.ui-resizable-w', -1000, -1000);
+              setTimeout(() => {
+                toReturn.maxWidthW =
+                  element.dialog('widget').width() >= 199 &&
+                  element.dialog('widget').width() <= 201;
+                element.remove();
+                element = $('<div></div>')
+                  .dialog({ maxWidth: 200 })
+                  .dialog('option', 'maxWidth', 300);
+                setTimeout(() => {
+                  drag(element, '.ui-resizable-w', -1000, -1000);
+                  setTimeout(() => {
+                    toReturn.maxWidthW2 =
+                      element.dialog('widget').width() >= 299 &&
+                      element.dialog('widget').width() <= 301;
+                    done(toReturn);
+                  });
+                });
+              });
+            });
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          maxWidthE: 'maxWidthE',
+          maxWidthW: 'maxWidthW',
+          maxWidthW2: 'maxWidthW2',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2767,14 +2854,57 @@ module.exports = {
     );
   },
   minHeight: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        function drag(element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx,
+            dy,
+          });
+        }
+        let element = {};
+        element = $('<div></div>').dialog({ minHeight: 10 });
+        drag(element, '.ui-resizable-s', -1000, -1000);
+        setTimeout(() => {
+          toReturn.minHeightS =
+            element.dialog('widget').height() >= 9 &&
+            element.dialog('widget').height() <= 11;
+          element.remove();
+          element = $('<div></div>').dialog({ minHeight: 10 });
+          setTimeout(() => {
+            drag(element, '.ui-resizable-n', 1000, 1000);
+            setTimeout(() => {
+              toReturn.minHeightN =
+                element.dialog('widget').height() >= 9 &&
+                element.dialog('widget').height() <= 11;
+              element.remove();
+              element = $('<div></div>')
+                .dialog({ minHeight: 10 })
+                .dialog('option', 'minHeight', 30);
+              setTimeout(() => {
+                drag(element, '.ui-resizable-n', 1000, 1000);
+                setTimeout(() => {
+                  toReturn.minHeightN2 =
+                    element.dialog('widget').height() >= 29 &&
+                    element.dialog('widget').height() <= 31;
+                  done(toReturn);
+                });
+              });
+            });
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          minHeightS: 'minHeightS',
+          minHeightN: 'minHeightN',
+          minHeightN2: 'minHeightN2',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2787,14 +2917,59 @@ module.exports = {
     );
   },
   minWidth: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        function drag(element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx,
+            dy,
+          });
+        }
+
+        let element = {};
+        element = $('<div></div>').dialog({ minWidth: 10 });
+        drag(element, '.ui-resizable-e', -1000, -1000);
+        setTimeout(() => {
+          toReturn.minWidthE =
+            element.dialog('widget').width() >= 9 &&
+            element.dialog('widget').width() <= 11;
+          element.remove();
+          setTimeout(() => {
+            element = $('<div></div>').dialog({ minWidth: 10 });
+            drag(element, '.ui-resizable-w', 1000, 1000);
+            setTimeout(() => {
+              toReturn.minWidthW =
+                element.dialog('widget').width() >= 9 &&
+                element.dialog('widget').width() <= 11;
+              element.remove();
+              element = $('<div></div>')
+                .dialog({ minWidth: 30 })
+                .dialog('option', 'minWidth', 30);
+
+              setTimeout(() => {
+                drag(element, '.ui-resizable-w', 1000, 1000);
+                setTimeout(() => {
+                  toReturn.minWidthW2 =
+                    element.dialog('widget').width() >= 29 &&
+                    element.dialog('widget').width() <= 31;
+                  done(toReturn);
+                });
+              });
+            });
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          minWidthE: 'minWidthE',
+          minWidthW: 'minWidthW',
+          minWidthW2: 'minWidthW2',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2807,14 +2982,41 @@ module.exports = {
     );
   },
   'position, default center on window': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        // Dialogs alter the window width and height in Firefox
+        // so we collect that information before creating the dialog
+        // Support: Firefox
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const element = $('<div></div>').dialog();
+
+        setTimeout(() => {
+          const dialog = element.dialog('widget');
+          const offset = dialog.offset();
+          const leftOff =
+            Math.round(winWidth / 2 - dialog.outerWidth() / 2) +
+            $(window).scrollLeft();
+          const topOff =
+            Math.round(winHeight / 2 - dialog.outerHeight() / 2) +
+            $(window).scrollTop();
+          toReturn.leftPosition =
+            offset.left >= leftOff - 1 && offset.left <= leftOff + 1;
+          toReturn.topPosition =
+            offset.top >= topOff - 1 && offset.top <= topOff + 1;
+          done(toReturn);
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          leftPosition:
+            'dialog left position of center on window on initialization',
+          topPosition:
+            'dialog top position of center on window on initialization',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2827,14 +3029,40 @@ module.exports = {
     );
   },
   'position, right bottom at right bottom via ui.position args': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        const winWidth = $(window).width();
+        const winHeight = $(window).height();
+        const element = $('<div></div>').dialog({
+          position: {
+            my: 'right bottom',
+            at: 'right bottom',
+          },
+        });
+        setTimeout(() => {
+          const dialog = element.dialog('widget');
+          const offset = dialog.offset();
+          const leftOff =
+            winWidth - dialog.outerWidth() + $(window).scrollLeft();
+          const topOff =
+            winHeight - dialog.outerHeight() + $(window).scrollTop();
+          toReturn.leftPosition =
+            offset.left >= leftOff - 1 && offset.left <= leftOff + 1;
+          toReturn.topPosition =
+            offset.top >= topOff - 1 && offset.top <= topOff + 1;
+          done(toReturn);
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          leftPosition:
+            'dialog left position of right bottom at right bottom on initialization',
+          topPosition:
+            'dialog top position of right bottom at right bottom on initialization',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2847,14 +3075,66 @@ module.exports = {
     );
   },
   'position, at another element': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+
+        const parent = $('<div></div>')
+          .css({
+            position: 'absolute',
+            top: 400,
+            left: 600,
+            height: 10,
+            width: 10,
+          })
+          .appendTo('body');
+
+        const element = $('<div></div>').dialog({
+          position: {
+            my: 'left top',
+            at: 'left top',
+            of: parent,
+            collision: 'none',
+          },
+        });
+
+        const dialog = element.dialog('widget');
+        let offset = 0;
+
+        setTimeout(() => {
+          offset = dialog.offset();
+          toReturn.leftPositionOnInit =
+            offset.left >= 599 && offset.left <= 601;
+          toReturn.topPositionOnInit = offset.top >= 399 && offset.top <= 401;
+          element.dialog('option', 'position', {
+            my: 'left top',
+            at: 'right bottom',
+            of: parent,
+            collision: 'none',
+          });
+          setTimeout(() => {
+            offset = dialog.offset();
+            toReturn.leftPositionViaSetting =
+              offset.left >= 609 && offset.left <= 611;
+            toReturn.topPositionViaSetting =
+              offset.top >= 409 && offset.top <= 411;
+            done(toReturn);
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          leftPositionOnInit:
+            'dialog left position at another element on initialization',
+          topPositionOnInit:
+            'dialog top position at another element on initialization',
+          leftPositionViaSetting:
+            'dialog left position at another element via setting option',
+          topPositionViaSetting:
+            'dialog top position at another element via setting option',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2867,14 +3147,65 @@ module.exports = {
     );
   },
   resizable: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+
+        function drag(element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx,
+            dy,
+          });
+        }
+
+        function shouldResize(element, dw, dh) {
+          const d = element.dialog('widget');
+          const handle = $('.ui-resizable-se', d);
+          const heightBefore = element.height();
+          const widthBefore = element.width();
+
+          drag(element, handle, 50, 50);
+
+          const heightAfter = element.height();
+          const widthAfter = element.width();
+
+          const actualDH = heightAfter - heightBefore;
+          const actualDW = widthAfter - widthBefore;
+
+          return Math.abs(actualDH - dh) <= 1 && Math.abs(actualDW - dw) <= 1;
+        }
+
+        let element = {};
+        element = $('<div></div>').dialog();
+        setTimeout(() => {
+          toReturn.default = shouldResize(element, 50, 50);
+          element.dialog('option', 'resizable', false);
+          setTimeout(() => {
+            toReturn.disabledAfterInit = shouldResize(element, 0, 0);
+            element.remove();
+            element = $('<div></div>').dialog({ resizable: false });
+            setTimeout(() => {
+              toReturn.disabledInInitOptions = shouldResize(element, 0, 0);
+              element.dialog('option', 'resizable', true);
+              setTimeout(() => {
+                toReturn.enabledAfterInit = shouldResize(element, 50, 50);
+                done(toReturn);
+              });
+            });
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          default: '[default]',
+          disabledAfterInit: 'disabled after init',
+          disabledInInitOptions: 'disabled in init options',
+          enabledAfterInit: 'enabled after init',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2887,14 +3218,84 @@ module.exports = {
     );
   },
   title: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        let element = {};
+        function titleText() {
+          return element.dialog('widget').find('.ui-dialog-title').html();
+        }
+
+        element = $('<div></div>').dialog();
+
+        // Some browsers return a non-breaking space and some return "&nbsp;"
+        // so we generate a non-breaking space for comparison
+        setTimeout(() => {
+          toReturn.defaultTitle =
+            $('<span>&#160;</span>').html() === titleText();
+          toReturn.optionNotChanged =
+            element.dialog('option', 'title') === null;
+          element.remove();
+          element = $("<div title='foo'>").dialog();
+          setTimeout(() => {
+            toReturn.titleInElementAttribute = 'foo' === titleText();
+            toReturn.optionUpdatedFromAttribute =
+              element.dialog('option', 'title') === 'foo';
+            element.remove();
+            element = $('<div></div>').dialog({ title: 'foo' });
+            setTimeout(() => {
+              toReturn.titleInInitOptions = 'foo' === titleText();
+              toReturn.optionSetFromOptionsHash =
+                element.dialog('option', 'title') === 'foo';
+              element.remove();
+              element = $("<div title='foo'>").dialog({ title: 'bar' });
+              setTimeout(() => {
+                toReturn.initOptionsOverrideElementAttribute =
+                  titleText() === 'bar';
+                toReturn.titleOptionSetFromOptionsHash =
+                  element.dialog('option', 'title') === 'bar';
+                element.remove();
+                element = $('<div></div>')
+                  .dialog()
+                  .dialog('option', 'title', 'foo');
+
+                setTimeout(() => {
+                  toReturn.titleAfterInit = titleText() === 'foo';
+                  element.remove();
+                  element = $("<form><input name='title'></form>").dialog();
+                  setTimeout(() => {
+                    // Make sure attribute properties are properly ignored - #5742 - .attr() might return a DOMElement
+                    toReturn.attributePropertiesDefault =
+                      titleText() === $('<span>&#160;</span>').html();
+                    toReturn.attributePropertiesOptionNotChanged =
+                      element.dialog('option', 'title') === null;
+                    done(toReturn);
+                  });
+                });
+              });
+            });
+          });
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          defaultTitle: '[default]',
+          optionNotChanged: 'option not changed',
+          titleInElementAttribute: 'title in element attribute',
+          optionUpdatedFromAttribute: 'option updated from attribute',
+          titleInInitOptions: 'title in init options',
+          optionSetFromOptionsHash: 'option set from options hash',
+          initOptionsOverrideElementAttribute:
+            'title in init options should override title in element attribute',
+          titleOptionSetFromOptionsHash:
+            'options set from options hash, title attr',
+          titleAfterInit: 'title after init',
+          attributePropertiesDefault: 'attribute properties [default]',
+          attributePropertiesOptionNotChanged:
+            'attribute properties option not changed',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2907,14 +3308,40 @@ module.exports = {
     );
   },
   width: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        const element = $('<div></div>').dialog();
+        setTimeout(() => {
+          toReturn.defaultWidth =
+            element.dialog('widget').width() >= 299 &&
+            element.dialog('widget').width() <= 301;
+        });
+
+        const element2 = $('<div></div>').dialog({ width: 437 });
+        setTimeout(() => {
+          toReturn.explicitWidth =
+            element2.dialog('widget').width() >= 437 &&
+            element.dialog('widget').width() <= 437;
+          done(toReturn);
+
+          element2.dialog('option', 'width', 438);
+          setTimeout(() => {
+            toReturn.explicitWidthAfterInit =
+              element2.dialog('widget').width() >= 438 &&
+              element.dialog('widget').width() <= 438;
+            done(toReturn);
+          });
+        }, 10);
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          defaultWidth: 'default width',
+          explicitWidth: 'explicit width',
+          explicitWidthAfterInit: 'explicit width after init',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2927,14 +3354,87 @@ module.exports = {
     );
   },
   '#4826: setting resizable false toggles resizable on dialog': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        function drag(element, handle, dx, dy) {
+          const d = element.dialog('widget');
+
+          $(handle, d).simulate('mouseover').simulate('drag', {
+            dx,
+            dy,
+          });
+        }
+
+        function shouldResize(element, dw, dh) {
+          const d = element.dialog('widget');
+          const handle = $('.ui-resizable-se', d);
+          const heightBefore = element.height();
+          const widthBefore = element.width();
+
+          drag(element, handle, 50, 50);
+
+          const heightAfter = element.height();
+          const widthAfter = element.width();
+
+          const actualDH = heightAfter - heightBefore;
+          const actualDW = widthAfter - widthBefore;
+
+          return Math.abs(actualDH - dh) <= 1 && Math.abs(actualDW - dw) <= 1;
+        }
+        let i = 0;
+        const element = $('<div></div>').dialog({ resizable: false });
+        setTimeout(() => {
+          toReturn.default1 = shouldResize(element, 0, 0);
+          for (i = 0; i < 2; i++) {
+            element.dialog('close').dialog('open');
+            setTimeout(
+              (iteration) => {
+                toReturn[`initResizableFalseToggle${iteration}`] =
+                  shouldResize(element, 0, 0);
+              },
+              0,
+              [i + 1],
+            );
+          }
+        });
+
+        const element2 = $('<div></div>').dialog({ resizable: true });
+
+        setTimeout(() => {
+          toReturn.default2 = shouldResize(element2, 50, 50);
+          for (i = 0; i < 2; i++) {
+            element2
+              .dialog('close')
+              .dialog('option', 'resizable', false)
+              .dialog('open');
+            setTimeout(
+              (iteration) => {
+                toReturn[`optionResizableFalseToggle${iteration}`] =
+                  shouldResize(element2, 0, 0);
+                if (`${iteration}` === '2') {
+                  done(toReturn);
+                }
+              },
+              0,
+              [i + 1],
+            );
+          }
+        }, 50);
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          initResizableFalseToggle1:
+            'initialized with resizable false toggle 1',
+          initResizableFalseToggle2:
+            'initialized with resizable false toggle 2',
+          optionResizableFalseToggle1: 'option with resizable false toggle 1',
+          optionResizableFalseToggle2: 'option with resizable false toggle 2',
+          default1: 'default 0 0',
+          default2: 'default 50 50',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2947,14 +3447,27 @@ module.exports = {
     );
   },
   '#4421 - Focus lost from dialog which uses show-effect': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+        const element = $('<div></div>').dialog({
+          show: 'blind',
+          focus() {
+            setTimeout(() => {
+              toReturn.dialogMaintainsFocus =
+                element.dialog('widget').find(document.activeElement).length ===
+                1;
+              done(toReturn);
+            });
+          },
+        });
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          dialogMaintainsFocus: 'dialog maintains focus',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
@@ -2967,14 +3480,29 @@ module.exports = {
     );
   },
   'Open followed by close during show effect': (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
+
+        const element = $('<div></div>').dialog({
+          show: 'blind',
+          close() {
+            toReturn.closedProperlyDuringAnimation = true;
+            done(toReturn);
+          },
+        });
+
+        setTimeout(() => {
+          element.dialog('close');
+        }, 100);
       },
       [],
       (result) => {
-        const expectedTrue = {};
+        const expectedTrue = {
+          closedProperlyDuringAnimation:
+            'dialog closed properly during animation',
+        };
         browser.assert.equal(expectedTrue.length, result.value.length);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
