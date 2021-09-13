@@ -23,7 +23,7 @@
         "instaclick/php-webdriver": "^1.4.1",
         "mikey179/vfsstream": "v1.6.10-alpha.0",
         "phpunit/phpunit": "^8.5.14 || ^9",
-        "phpspec/prophecy": "dev-master",
+        "phpspec/prophecy": "^1.12",
         "symfony/css-selector": "^4.4",
         "symfony/phpunit-bridge": "^5.3.0",
         "symfony/var-dumper": "^5.3.0",
