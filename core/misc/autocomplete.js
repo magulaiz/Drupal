@@ -129,7 +129,6 @@
         $autocomplete.autocomplete(autocomplete.options).each(function () {
           $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
         });
-
         $autocomplete.on('change.autocomplete', function () {
           autocomplete.options.isComposing = false;
         });
