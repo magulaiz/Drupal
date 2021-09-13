@@ -322,12 +322,26 @@ class Sql extends QueryPluginBase {
   }
 
   /**
-   * Special submit handling.
+   * {@inheritdoc}
+   *
+   * This is used to split comma-delimited query tags into an array.
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state) {
     $element = ['#parents' => ['query', 'options', 'query_tags']];
-    $value = explode(',', NestedArray::getValue($form_state->getValues(), $element['#parents']));
-    $value = array_filter(array_map('trim', $value));
+    $element_value = NestedArray::getValue(
+      $form_state->getValues(),
+      $element['#parents']
+    );
+
+    if (is_array($element_value)) {
+      // #3232745 - We already ran on this form state. This happens when a site
+      // builder is toggling a display to override defaults or vice-versa -- the
+      // submit handler gets invoked twice, and we don't want to bash the values
+      // from the original call.
+      return;
+    }
+
+    $value = array_filter(array_map('trim', explode(',', $element_value)));
     $form_state->setValueForElement($element, $value);
   }
 
