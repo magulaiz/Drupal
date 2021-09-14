@@ -47,6 +47,14 @@
 
     var queryString = window.location.search || '';
 
+    if (settings.view_query && settings.view_query.length) {
+      if (queryString.length) {
+        queryString = "".concat(settings.view_query, "&").concat(queryString);
+      } else {
+        queryString = settings.view_query;
+      }
+    }
+
     if (queryString !== '') {
       queryString = queryString.slice(1).replace(/q=[^&]+&?|&?render=[^&]+/, '');
 
