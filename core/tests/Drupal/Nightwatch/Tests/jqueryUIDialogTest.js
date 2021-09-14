@@ -205,7 +205,10 @@ module.exports = {
           oneButtonSet: 'Buttonpane has exactly one buttonset',
           oneButtons: 'Buttonset contains exactly 1 button when created with 1',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -259,7 +262,10 @@ module.exports = {
           elementHasClasses:
             'Element has "ui-dialog-content ui-widget-content" classes',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -308,7 +314,6 @@ module.exports = {
         ).dialog();
         toReturn.noNewDescriptionAdded =
           element.dialog('widget').attr('aria-describedby') == null;
-        toReturn.debug = element.dialog('widget').attr('aria-describedby');
         element.remove();
 
         return toReturn;
@@ -322,7 +327,10 @@ module.exports = {
           noNewDescriptionAdded:
             'no aria-describedby added, as already present in markup',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -517,7 +525,10 @@ module.exports = {
           step7HonorPreventDefault:
             'Honor preventDefault, allowing custom focus management',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -533,7 +544,7 @@ module.exports = {
       function () {
         const $ = jQuery;
         const resizable = $('<div>').resizable();
-        const dialog = $('<div>').dialog({ modal: true });
+        $('<div>').dialog({ modal: true });
         const resizableZindex = parseInt(
           resizable.find('.ui-resizable-handle').css('zIndex'),
           10,
@@ -605,7 +616,10 @@ module.exports = {
             'Shift-Tab key event moved focus back to second input',
           focusSetOnSecondInput: 'Focus set on second input',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -695,7 +709,10 @@ module.exports = {
           secondInputFocused: 'Second input focused',
           firstInputFocused: 'Last active dialog input focused',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -761,7 +778,10 @@ module.exports = {
           contextOfCallbackEvent: 'context of callback in event',
           uiHashInCallbackEvent: 'ui hash in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -849,7 +869,10 @@ module.exports = {
               ? 'no repeat events'
               : `${result.noRepeatEvents} and should not have`,
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -908,7 +931,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -971,7 +997,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1031,7 +1060,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1102,7 +1134,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1175,7 +1210,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1245,7 +1283,10 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1278,7 +1319,7 @@ module.exports = {
         element.dialog('close');
         element.remove();
 
-        // Close event with an effect
+        // Close event with an effect.
         const element2 = $('<div></div>')
           .dialog({
             hide: 10,
@@ -1320,7 +1361,10 @@ module.exports = {
           contextOfEventHasEffect: 'context of event',
           uiHashInEventHasEffect: 'ui hash in event',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1397,6 +1441,7 @@ module.exports = {
           contextOfCallback: 'context of callback',
           eventTypeInCallback: 'event type in callback',
           uiHashInCallback: 'ui hash in callback',
+          uiHashInCallbackEvent: 'ui hash in callback event',
           beforeCloseShouldPreventDialogClose:
             'beforeClose callback should prevent dialog from closing',
           dialogCloseFiresBeforeCloseCallbackAsOption:
@@ -1413,7 +1458,10 @@ module.exports = {
           dialogBeforeCloseEventPreventDialogClosing:
             'dialogbeforeclose event should prevent dialog from closing',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1450,7 +1498,10 @@ module.exports = {
           scrollNotMoveAfterFocusMoveToDialog:
             "scroll hasn't moved after focus moved to dialog",
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1487,7 +1538,10 @@ module.exports = {
           dialogOpenAfterInit: 'dialog is open after init',
           dialogNotOpenAfterClose: 'dialog is not open after close',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1503,7 +1557,7 @@ module.exports = {
       function (done) {
         const $ = jQuery;
         const toReturn = {};
-        const element = $('<div></div>').dialog({
+        $('<div></div>').dialog({
           modal: true,
         });
         toReturn.focusInDialog =
@@ -1521,7 +1575,10 @@ module.exports = {
           focusInDialog: 'focus in dialog',
           focusStillInDialog: 'focus still in dialog',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1570,7 +1627,10 @@ module.exports = {
           arbitraryOptionGetterAfterInit: 'arbitrary option getter after init',
           arbitraryOptionSetterAfterInit: 'arbitrary option setter after init',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1611,7 +1671,7 @@ module.exports = {
           }
         });
 
-        // Ensure dimensions are restored (#8119)
+        // Ensure dimensions are restored (#8119).
         $('#dialog1').show().css({
           width: '400px',
           minHeight: '100px',
@@ -1658,7 +1718,6 @@ module.exports = {
       },
       [domEquals.toString()],
       (result) => {
-        // Should have 17 assertions.
         const { mustMatch } = result.value;
         delete result.value.mustMatch;
         const expectedTrue = {
@@ -1682,7 +1741,10 @@ module.exports = {
           uiDialogOverlaysEqualsNumberOpenOverlaysAfterAllGone:
             'ui-dialog-overlays equals the number of open overlays',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1690,7 +1752,7 @@ module.exports = {
             expectedTrue[property],
           );
         });
-
+        browser.assert.equal(Object.keys(mustMatch).length, 3);
         Object.keys(mustMatch).forEach((property) => {
           browser.assert.deepEqual(
             mustMatch[property][0],
@@ -1756,7 +1818,10 @@ module.exports = {
           dialogShouldPlaceElementBackInOriginalDom:
             'dialog should place element back into dom',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1794,7 +1859,10 @@ module.exports = {
           disableDoesNotAddAriaDisabled:
             "disable method doesn't add aria-disabled",
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1833,7 +1901,10 @@ module.exports = {
           dialogVisibleBeforeClose: 'dialog visible before close method called',
           dialogHiddenAfterClose: 'dialog hidden after close method called',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1870,7 +1941,10 @@ module.exports = {
           autoDialogCloseAfterInit: 'autoOpen dialog is open after init',
           autoDialogOpen: 'autoOpen dialog open',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1906,7 +1980,7 @@ module.exports = {
           },
         });
         focusOn = 'dialog2';
-        const dialog2 = $('#dialog2').dialog({
+        $('#dialog2').dialog({
           focus() {
             toReturn.dialogTwoFocused = focusOn === 'dialog2';
           },
@@ -1925,7 +1999,10 @@ module.exports = {
           dialogOneFocused: 'dialog 1 focused',
           dialogTwoFocused: 'dialog 2 focused',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1933,7 +2010,7 @@ module.exports = {
             expectedTrue[property],
           );
         });
-
+        browser.assert.equal(Object.keys(mustMatch).length, 2);
         Object.keys(mustMatch).forEach((property) => {
           browser.assert.deepEqual(
             mustMatch[property][0],
@@ -1969,7 +2046,10 @@ module.exports = {
           scrollNoChangeFirst: 'scroll top first',
           scrollNoChangeSecond: 'scroll top second',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1995,7 +2075,6 @@ module.exports = {
               element.dialog('widget').is(':hidden') &&
               !element.dialog('widget').is(':visible');
             element.dialog('open');
-            // eslint-disable-next-line max-nested-callbacks
             setTimeout(() => {
               toReturn.dialogVisibleAfterOpenCalled =
                 element.dialog('widget').is(':visible') &&
@@ -2014,7 +2093,10 @@ module.exports = {
           dialogVisibleAfterOpenCalled:
             'dialog visible after open method called',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2031,8 +2113,8 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         const d1 = $(
-          "<form><input type='radio' name='radio' id='a' value='a' checked='checked'></input>" +
-            "<input type='radio' name='radio' id='b' value='b'>b</input></form>",
+          `<form><input type='radio' name='radio' id='a' value='a' checked='checked'>a</input>
+            <input type='radio' name='radio' id='b' value='b'>b</input></form>`,
         )
           .appendTo('body')
           .dialog({ autoOpen: false });
@@ -2053,7 +2135,10 @@ module.exports = {
           checkboxChecked1: 'checkbox b is checked 1',
           checkboxChecked2: 'checkbox b is checked 2',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2141,7 +2226,10 @@ module.exports = {
           widthChangesWhenMoreThanMin: 'width changed if set to > minWidth',
           widthIsAtLeast300: 'width is at least 300',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2212,10 +2300,6 @@ module.exports = {
               .dialog('option', 'appendTo', '#wrap1')
               .dialog('open');
             setTimeout(() => {
-              // toReturn.widFake = element
-              //   .dialog('widget')
-              //   .parent()[0].outerHTML;
-              // toReturn.wrapFake = $('#wrap1')[0].outerHTML;
               toReturn.modifiedAfterInit = element
                 .dialog('widget')
                 .parent()[0]
@@ -2223,9 +2307,58 @@ module.exports = {
               toReturn.overlayModifiedAfterInit = $('.ui-widget-overlay')
                 .parent()[0]
                 .isEqualNode($('#wrap1')[0]);
-              done(toReturn);
-            }, 100);
-          }, 100);
+              element.dialog('destroy');
+              element.dialog({
+                appendTo: detached,
+                modal: true,
+              });
+              setTimeout(() => {
+                toReturn.detachedJqueryObject = element
+                  .dialog('widget')
+                  .parent()[0]
+                  .isEqualNode(detached[0]);
+                toReturn.overlayDetachedJqueryObject = detached
+                  .find('.ui-widget-overlay')
+                  .parent()[0]
+                  .isEqualNode(detached[0]);
+                element.dialog('destroy');
+
+                element.dialog({
+                  appendTo: detached[0],
+                  modal: true,
+                });
+                setTimeout(() => {
+                  toReturn.detachedDOM = element
+                    .dialog('widget')
+                    .parent()[0]
+                    .isEqualNode(detached[0]);
+                  toReturn.overlayDetachedDOM = detached
+                    .find('.ui-widget-overlay')
+                    .parent()[0]
+                    .isEqualNode(detached[0]);
+                  element.dialog('destroy');
+
+                  element
+                    .dialog({
+                      autoOpen: false,
+                      modal: true,
+                    })
+                    .dialog('option', 'appendTo', detached);
+
+                  setTimeout(() => {
+                    toReturn.detachedViaOption = element
+                      .dialog('widget')
+                      .parent()[0]
+                      .isEqualNode(detached[0]);
+                    toReturn.overlayDetachedViaOption =
+                      detached.find('.ui-widget-overlay').length === 0;
+
+                    done(toReturn);
+                  });
+                });
+              });
+            });
+          });
         });
       },
       [],
@@ -2241,8 +2374,17 @@ module.exports = {
           overlayAppendNull: 'overlay null',
           modifiedAfterInit: 'modified after init',
           overlayModifiedAfterInit: 'overlay modified after init',
+          detachedJqueryObject: 'detached jQuery object',
+          overlayDetachedJqueryObject: 'overlay detached jQuery object',
+          detachedDOM: 'detached DOM',
+          overlayDetachedDOM: 'overlay detached DOM',
+          detachedViaOption: 'detached DOM element via option()',
+          overlayDetachedViaOption: 'overlay detached DOM element via option()',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2273,7 +2415,10 @@ module.exports = {
           autoOpenFalse: '.dialog({ autoOpen: false })',
           autoOpenTrue: '.dialog({ autoOpen: true })',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2319,6 +2464,7 @@ module.exports = {
           if (result !== false) {
             result = $btn[i].textContent === key;
           }
+          // eslint-disable-next-line no-plusplus
           i++;
           return result;
         },
@@ -2339,8 +2485,6 @@ module.exports = {
             toReturn.closeButtonTarget = $btn[0].isEqualNode(ev.target);
           },
         };
-        toReturn.someElement = $element[0];
-        toReturn.someDialog = $element.dialog('widget');
 
         $element.dialog('option', 'buttons', newButtons);
         $btn = $element.dialog('widget').find('.ui-dialog-buttonpane button');
@@ -2370,7 +2514,6 @@ module.exports = {
       },
       [],
       (result) => {
-        console.log('The result', result);
         const expectedTrue = {
           numberOfButtons: 'number of buttons',
           buttonText: 'text of buttons',
@@ -2388,11 +2531,16 @@ module.exports = {
           numberOfButtonsAfterSetter: 'number of buttons after setter',
           allButtonsRemoved: 'all buttons have been removed',
           buttonSetRemoved: 'buttonset has been removed',
+          textOfButton1: 'Close button available after setter',
+          uiDialogButtonsClass: 'no longer has ui-dialog-buttons class',
         };
         const { mustMatch } = result.value;
         delete result.value.mustMatch;
 
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2400,6 +2548,7 @@ module.exports = {
             expectedTrue[property],
           );
         });
+        browser.assert.equal(Object.keys(mustMatch).length, 2);
         Object.keys(mustMatch).forEach((property) => {
           browser.assert.deepEqual(
             mustMatch[property][0],
@@ -2457,7 +2606,10 @@ module.exports = {
           showLabel: 'label configuration is correct',
           correctContext: 'context in click event is correct',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2488,7 +2640,10 @@ module.exports = {
         const expectedTrue = {
           noButtonPane: 'button pane should not exist',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2544,7 +2699,10 @@ module.exports = {
           dialogClosedEscEnabledAfterEsc:
             'dialog is closed after pressing ESC, ESC enabled',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2602,7 +2760,10 @@ module.exports = {
           closeTextViaOptionMethod: 'close text set via option method',
           closeTextIsEscaped: 'close text is escaped',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2678,7 +2839,10 @@ module.exports = {
           draggableFalseOption:
             'dialog cannot be dragged when draggable is set to false via option',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2730,7 +2894,10 @@ module.exports = {
           explicitHeightWithPadding:
             'explicit height with padding within 0.25 from expected',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2789,7 +2956,10 @@ module.exports = {
             'height within 1 from maxHeight when dragged from top',
           maxHeightOption: 'height within 1 when maxHeight set as option',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2857,7 +3027,10 @@ module.exports = {
           maxWidthW: 'maxWidthW',
           maxWidthW2: 'maxWidthW2',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2920,7 +3093,10 @@ module.exports = {
           minHeightN: 'minHeightN',
           minHeightN2: 'minHeightN2',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -2985,7 +3161,10 @@ module.exports = {
           minWidthW: 'minWidthW',
           minWidthW2: 'minWidthW2',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3001,9 +3180,7 @@ module.exports = {
       function (done) {
         const $ = jQuery;
         const toReturn = {};
-        // Dialogs alter the window width and height in Firefox
-        // so we collect that information before creating the dialog
-        // Support: Firefox
+
         const winWidth = $(window).width();
         const winHeight = $(window).height();
         const element = $('<div></div>').dialog();
@@ -3032,7 +3209,10 @@ module.exports = {
           topPosition:
             'dialog top position of center on window on initialization',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3078,7 +3258,10 @@ module.exports = {
           topPosition:
             'dialog top position of right bottom at right bottom on initialization',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3150,7 +3333,10 @@ module.exports = {
           topPositionViaSetting:
             'dialog top position at another element via setting option',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3221,7 +3407,10 @@ module.exports = {
           disabledInInitOptions: 'disabled in init options',
           enabledAfterInit: 'enabled after init',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3311,7 +3500,10 @@ module.exports = {
           attributePropertiesOptionNotChanged:
             'attribute properties option not changed',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3357,7 +3549,10 @@ module.exports = {
           explicitWidth: 'explicit width',
           explicitWidthAfterInit: 'explicit width after init',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3453,7 +3648,10 @@ module.exports = {
           default1: 'default 0 0',
           default2: 'default 50 50',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3486,7 +3684,10 @@ module.exports = {
         const expectedTrue = {
           dialogMaintainsFocus: 'dialog maintains focus',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -3521,7 +3722,10 @@ module.exports = {
           closedProperlyDuringAnimation:
             'dialog closed properly during animation',
         };
-        browser.assert.equal(expectedTrue.length, result.value.length);
+        browser.assert.equal(
+          Object.keys(expectedTrue).length,
+          Object.keys(result.value).length,
+        );
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
