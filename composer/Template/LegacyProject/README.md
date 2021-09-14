@@ -1,0 +1,1 @@
+For instructions on using this project see [Starting a Site Using Drupal Composer Project Templates](https://www.drupal.org/docs/develop/using-composer/starting-a-site-using-drupal-composer-project-templates)
