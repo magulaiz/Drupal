@@ -674,7 +674,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var deferred = $.Deferred();
       var parentEl = document.querySelector(response.selector || 'body');
       var settings = ajax.settings || drupalSettings;
-      var scriptsSrc = response.data.map(function (script) {
+      var allUniqueBundleIDs = response.data.map(function (script) {
         var uniqueBundleID = script.src + ajax.instanceIndex;
         loadjs(script.src, uniqueBundleID, {
           async: !!script.async,
@@ -689,7 +689,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
         return uniqueBundleID;
       });
-      loadjs.ready(scriptsSrc, {
+      loadjs.ready(allUniqueBundleIDs, {
         success: function success() {
           Drupal.attachBehaviors(parentEl, settings);
           deferred.resolve();

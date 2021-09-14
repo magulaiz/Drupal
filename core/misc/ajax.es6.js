@@ -1640,7 +1640,7 @@
       const deferred = $.Deferred();
       const parentEl = document.querySelector(response.selector || 'body');
       const settings = ajax.settings || drupalSettings;
-      const scriptsSrc = response.data.map((script) => {
+      const allUniqueBundleIDs = response.data.map((script) => {
         // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
         // guaranteed to be unique.
         // @see Drupal.behaviors.AJAX.detach
@@ -1660,7 +1660,7 @@
         });
         return uniqueBundleID;
       });
-      loadjs.ready(scriptsSrc, {
+      loadjs.ready(allUniqueBundleIDs, {
         success() {
           Drupal.attachBehaviors(parentEl, settings);
           // All JS files were loaded and new and old behaviors have
