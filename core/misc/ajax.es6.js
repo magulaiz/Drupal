@@ -1668,6 +1668,13 @@
           // execute.
           deferred.resolve();
         },
+        error(depsNotFound) {
+          const message = Drupal.t(
+            `The following files could not be loaded: @deps`,
+            { '@deps': depsNotFound.join(', ') },
+          );
+          deferred.reject(message);
+        },
       });
       // Returns the promise so that the next AJAX command waits on the completion
       // of this one to execute, ensuring the JS is loaded before executing.

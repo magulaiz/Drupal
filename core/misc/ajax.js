@@ -693,6 +693,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         success: function success() {
           Drupal.attachBehaviors(parentEl, settings);
           deferred.resolve();
+        },
+        error: function error(depsNotFound) {
+          var message = Drupal.t("The following files could not be loaded: @deps", {
+            '@deps': depsNotFound.join(', ')
+          });
+          deferred.reject(message);
         }
       });
       return deferred.promise();
