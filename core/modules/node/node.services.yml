@@ -51,3 +51,8 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
+  node.breadcrumb:
+    class: Drupal\node\NodeBreadcrumbBuilder
+    arguments: ['@request_stack', '@config.factory', '@current_user', '@title_resolver', '@access_manager']
+    tags:
+      - { name: breadcrumb_builder }
