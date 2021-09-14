@@ -1651,8 +1651,6 @@
             if (script.defer) {
               scriptEl.defer = true;
             }
-            // To avoid synchronous XMLHttpRequest on the main thread and break
-            // load dependency, it should not use jQuery.
             parentEl.appendChild(scriptEl);
             // Return `false` to bypass loadjs' default DOM insertion mechanism.
             return false;
