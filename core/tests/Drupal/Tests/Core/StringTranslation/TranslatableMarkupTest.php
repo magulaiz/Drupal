@@ -103,10 +103,10 @@ class TranslatableMarkupTest extends UnitTestCase {
 
   /**
    * @covers ::__construct
+   * @group legacy
    */
   public function testPlaceholderOnlyAssertion() {
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('$string ("@foo") consists of only a placeholder.');
+    $this->expectDeprecation('Passing only placeholder strings in t(), is deprecated in drupal:9.3.x and will throw an error in drupal:10.0.0.');
     new TranslatableMarkup('@foo', ['@foo' => 'foo']);
   }
 

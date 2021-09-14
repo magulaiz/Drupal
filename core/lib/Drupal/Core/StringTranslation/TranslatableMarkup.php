@@ -132,8 +132,7 @@ class TranslatableMarkup extends FormattableMarkup {
       throw new \InvalidArgumentException($message);
     }
     if (count($arguments) == 1 && array_keys($arguments)[0] === $string) {
-      $message = '$string ("' . $string . '") consists of only a placeholder.';
-      throw new \InvalidArgumentException($message);
+      @trigger_error('Passing only placeholder strings in t(), is deprecated in drupal:9.3.x and will throw an error in drupal:10.0.0.', E_USER_DEPRECATED);
     }
     parent::__construct($string, $arguments);
     $this->options = $options;
