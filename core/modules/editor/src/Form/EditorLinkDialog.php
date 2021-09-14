@@ -2,6 +2,8 @@
 
 namespace Drupal\editor\Form;
 
+@trigger_error('The ' . __NAMESPACE__ . '\EditorLinkDialog is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3231341 for more details.', E_USER_DEPRECATED);
+
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\Entity\Editor;
@@ -12,6 +14,10 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 
 /**
  * Provides a link dialog for text editors.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3231341
  *
  * @internal
  */
