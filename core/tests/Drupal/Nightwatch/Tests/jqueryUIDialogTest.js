@@ -1,12 +1,12 @@
+/* eslint-disable no-use-before-define, func-names, prefer-arrow-callback, max-nested-callbacks */
+// cSpell:ignore Qunit expando plusplus dialogbeforeclose Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
+
 // These are Nightwatch versions of the Qunit tests provided with jQuery UI for
 // the dialog widget. They are added to core to ensure the shimmed version of
 // jQuery UI dialog (which does not use any jQuery UI code for dialogs) is fully
 // backwards compatible. If these tests, which all pass with jQuery UI dialog,
 // also pass with the shimmed dialog, there is good assurance that the shim is
 // covering the full scope of jQuery UI dialog's functionality.
-
-/* eslint-disable no-use-before-define, func-names, prefer-arrow-callback, max-nested-callbacks */
-// cSpell:ignore expando plusplus dialogbeforeclose Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
 
 const domEquals = function (selector, modifier, message) {
   function getElementStyles(elem) {
@@ -2047,7 +2047,6 @@ module.exports = {
       [],
       (result) => {
         const { mustMatch } = result.value;
-        console.log('ao resv', result.value);
         delete result.value.mustMatch;
         const expectedTrue = {
           dialogOneFocused: 'dialog 1 focused',
