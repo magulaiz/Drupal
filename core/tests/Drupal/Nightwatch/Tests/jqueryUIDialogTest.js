@@ -887,7 +887,7 @@ module.exports = {
         // check is provided in this test to confirm events are not triggered
         // multiple times. In Qunit this is verified with the expected number
         // of assertions, but would not work here as the repeat event would
-        // simply overwrite the existing object property of the retun object.
+        // overwrite the existing object property of toReturn.
         browser.assert.equal(Object.keys(expectedTrue).length, 6);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
