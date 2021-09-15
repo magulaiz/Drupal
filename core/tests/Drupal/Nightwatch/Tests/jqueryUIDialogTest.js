@@ -1,3 +1,10 @@
+// These are Nightwatch versions of the Qunit tests provided with jQuery UI for
+// the dialog widget. They are added to core to ensure the shimmed version of
+// jQuery UI dialog (which does not use any jQuery UI code for dialogs) is fully
+// backwards compatible. If these tests, which all pass with jQuery UI dialog,
+// also pass with the shimmed dialog, there is good assurance that the shim is
+// covering the full scope of jQuery UI dialog's functionality.
+
 /* eslint-disable no-use-before-define, func-names, prefer-arrow-callback, max-nested-callbacks */
 // cSpell:ignore expando plusplus dialogbeforeclose Zindex dialogopen dialogfocus dialogdragstart dialogdrag dialogdragstop dialogresizestart dialogresize dialogresizestop dialogclose
 
@@ -205,6 +212,7 @@ module.exports = {
           oneButtonSet: 'Buttonpane has exactly one buttonset',
           oneButtons: 'Buttonset contains exactly 1 button when created with 1',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 11);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -262,6 +270,7 @@ module.exports = {
           elementHasClasses:
             'Element has "ui-dialog-content ui-widget-content" classes',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 7);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -327,6 +336,7 @@ module.exports = {
           noNewDescriptionAdded:
             'no aria-describedby added, as already present in markup',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -525,6 +535,7 @@ module.exports = {
           step7HonorPreventDefault:
             'Honor preventDefault, allowing custom focus management',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 8);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -616,6 +627,7 @@ module.exports = {
             'Shift-Tab key event moved focus back to second input',
           focusSetOnSecondInput: 'Focus set on second input',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -709,6 +721,7 @@ module.exports = {
           secondInputFocused: 'Second input focused',
           firstInputFocused: 'Last active dialog input focused',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -778,6 +791,7 @@ module.exports = {
           contextOfCallbackEvent: 'context of callback in event',
           uiHashInCallbackEvent: 'ui hash in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 13);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -869,6 +883,12 @@ module.exports = {
               ? 'no repeat events'
               : `${result.noRepeatEvents} and should not have`,
         };
+        // The Qunit version of this test has 5 assertions. An additional
+        // check is provided in this test to confirm events are not triggered
+        // multiple times. In Qunit this is verified with the expected number
+        // of assertions, but would not work here as the repeat event would
+        // simply overwrite the existing object property of the retun object.
+        browser.assert.equal(Object.keys(expectedTrue).length, 6);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -931,6 +951,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 9);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -997,6 +1018,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 9);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1060,6 +1082,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiOffsetInEvent: 'ui.offset in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 9);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1134,6 +1157,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 13);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1210,6 +1234,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 13);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1283,6 +1308,7 @@ module.exports = {
           uiPositionInEvent: 'ui.position in event',
           uiSizeInEvent: 'ui.size in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 13);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1361,6 +1387,7 @@ module.exports = {
           contextOfEventHasEffect: 'context of event',
           uiHashInEventHasEffect: 'ui hash in event',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 14);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1401,8 +1428,6 @@ module.exports = {
           element.dialog('option', 'beforeClose', function (ev, ui) {
             toReturn.dialogCloseFiresBeforeCloseCallbackAsOption = true;
             toReturn.contextOfCallbackAsOption = element[0].isEqualNode(this);
-            toReturn.eventTypeInCallbackAsOption =
-              ev.type === 'dialogbeforeclose';
             toReturn.uiHashInCallbackAsOption = JSON.stringify(ui) === '{}';
             return false;
           });
@@ -1447,7 +1472,6 @@ module.exports = {
           dialogCloseFiresBeforeCloseCallbackAsOption:
             ".dialog('close') fires beforeClose callback as option",
           contextOfCallbackAsOption: 'context of callback as option',
-          eventTypeInCallbackAsOption: 'event type in callback as option',
           uiHashInCallbackAsOption: 'ui hash in callback as option',
           beforeCloseAsOptionShouldPreventDialogClose:
             'beforeClose callback as option should prevent dialog from closing',
@@ -1458,6 +1482,7 @@ module.exports = {
           dialogBeforeCloseEventPreventDialogClosing:
             'dialogbeforeclose event should prevent dialog from closing',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 14);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1502,6 +1527,7 @@ module.exports = {
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
         );
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
             result.value[property],
@@ -1538,6 +1564,7 @@ module.exports = {
           dialogOpenAfterInit: 'dialog is open after init',
           dialogNotOpenAfterClose: 'dialog is not open after close',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1575,6 +1602,7 @@ module.exports = {
           focusInDialog: 'focus in dialog',
           focusStillInDialog: 'focus still in dialog',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1627,6 +1655,7 @@ module.exports = {
           arbitraryOptionGetterAfterInit: 'arbitrary option getter after init',
           arbitraryOptionSetterAfterInit: 'arbitrary option setter after init',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 6);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1741,6 +1770,13 @@ module.exports = {
           uiDialogOverlaysEqualsNumberOpenOverlaysAfterAllGone:
             'ui-dialog-overlays equals the number of open overlays',
         };
+        // The Qunit tests has 17 assertions. This has 10 because the 17
+        // includes 3 calls to assert.domEqual() that are now simply function
+        // calls as assertions can't happen in execute contexts. The assertions
+        // within these calls to domEqual() in Qunit have been changed to error
+        // checks, for the same reason that assertions can't happen in the
+        // execute context.
+        browser.assert.equal(Object.keys(expectedTrue).length, 10);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1818,6 +1854,7 @@ module.exports = {
           dialogShouldPlaceElementBackInOriginalDom:
             'dialog should place element back into dom',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1859,6 +1896,7 @@ module.exports = {
           disableDoesNotAddAriaDisabled:
             "disable method doesn't add aria-disabled",
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1901,6 +1939,7 @@ module.exports = {
           dialogVisibleBeforeClose: 'dialog visible before close method called',
           dialogHiddenAfterClose: 'dialog hidden after close method called',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1941,6 +1980,7 @@ module.exports = {
           autoDialogCloseAfterInit: 'autoOpen dialog is open after init',
           autoDialogOpen: 'autoOpen dialog open',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -1956,8 +1996,8 @@ module.exports = {
     );
   },
   moveToTop: (browser) => {
-    browser.execute(
-      function () {
+    browser.executeAsync(
+      function (done) {
         const $ = jQuery;
         const toReturn = {};
         toReturn.mustMatch = {};
@@ -1972,33 +2012,49 @@ module.exports = {
           // eslint-disable-next-line prefer-rest-params
           toReturn.mustMatch[`${arguments[0]}`] = [actual, makeArgumentArray];
         }
-
         let focusOn = 'dialog1';
         const dialog1 = $('#dialog1').dialog({
           focus() {
-            toReturn.dialogOneFocused = focusOn === 'dialog1';
+            if (!toReturn.hasOwnProperty('dialogOneFocused')) {
+              toReturn.dialogOneFocused = focusOn === 'dialog1';
+            } else {
+              toReturn.dialogOneFocusedAgain = focusOn === 'dialog1';
+            }
           },
         });
-        focusOn = 'dialog2';
-        $('#dialog2').dialog({
-          focus() {
-            toReturn.dialogTwoFocused = focusOn === 'dialog2';
-          },
+        setTimeout(() => {
+          focusOn = 'dialog2';
+          $('#dialog2').dialog({
+            focus() {
+              if (!toReturn.hasOwnProperty('dialogTwoFocused')) {
+                toReturn.dialogTwoFocused = focusOn === 'dialog2';
+              } else {
+                toReturn.dialogTwoFocusedAgain = focusOn === 'dialog2';
+              }
+            },
+          });
+          setTimeout(() => {
+            order(100, 101);
+            focusOn = 'dialog1';
+            dialog1.dialog('moveToTop');
+            setTimeout(() => {
+              order(102, 101);
+              done(toReturn);
+            });
+          });
         });
-        order(100, 101);
-        focusOn = 'dialog1';
-        dialog1.dialog('moveToTop');
-        order(102, 101);
-        return toReturn;
       },
       [],
       (result) => {
         const { mustMatch } = result.value;
+        console.log('ao resv', result.value);
         delete result.value.mustMatch;
         const expectedTrue = {
           dialogOneFocused: 'dialog 1 focused',
+          dialogOneFocusedAgain: 'dialog 1 focused again',
           dialogTwoFocused: 'dialog 2 focused',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2010,6 +2066,7 @@ module.exports = {
             expectedTrue[property],
           );
         });
+
         browser.assert.equal(Object.keys(mustMatch).length, 2);
         Object.keys(mustMatch).forEach((property) => {
           browser.assert.deepEqual(
@@ -2046,6 +2103,7 @@ module.exports = {
           scrollNoChangeFirst: 'scroll top first',
           scrollNoChangeSecond: 'scroll top second',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2093,6 +2151,7 @@ module.exports = {
           dialogVisibleAfterOpenCalled:
             'dialog visible after open method called',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2135,6 +2194,7 @@ module.exports = {
           checkboxChecked1: 'checkbox b is checked 1',
           checkboxChecked2: 'checkbox b is checked 2',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2226,6 +2286,7 @@ module.exports = {
           widthChangesWhenMoreThanMin: 'width changed if set to > minWidth',
           widthIsAtLeast300: 'width is at least 300',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2352,7 +2413,6 @@ module.exports = {
                       .isEqualNode(detached[0]);
                     toReturn.overlayDetachedViaOption =
                       detached.find('.ui-widget-overlay').length === 0;
-
                     done(toReturn);
                   });
                 });
@@ -2381,6 +2441,7 @@ module.exports = {
           detachedViaOption: 'detached DOM element via option()',
           overlayDetachedViaOption: 'overlay detached DOM element via option()',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 16);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2415,6 +2476,7 @@ module.exports = {
           autoOpenFalse: '.dialog({ autoOpen: false })',
           autoOpenTrue: '.dialog({ autoOpen: true })',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2536,7 +2598,10 @@ module.exports = {
         };
         const { mustMatch } = result.value;
         delete result.value.mustMatch;
-
+        // Qunit test has 21 assertions. This looks for 18 as two are checked
+        // later in mustMatch, and expectedTrue.buttonText covers two of the
+        // Qunit assertions in a single check.
+        browser.assert.equal(Object.keys(expectedTrue).length, 18);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2606,6 +2671,7 @@ module.exports = {
           showLabel: 'label configuration is correct',
           correctContext: 'context in click event is correct',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 7);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2699,6 +2765,10 @@ module.exports = {
           dialogClosedEscEnabledAfterEsc:
             'dialog is closed after pressing ESC, ESC enabled',
         };
+        // The Qunit tests have 6 assertions. There are only 4 here as two of
+        // those assertions effectively check nothing and exist only to provide
+        // an assertion message in the test results.
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2760,6 +2830,7 @@ module.exports = {
           closeTextViaOptionMethod: 'close text set via option method',
           closeTextIsEscaped: 'close text is escaped',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2839,6 +2910,7 @@ module.exports = {
           draggableFalseOption:
             'dialog cannot be dragged when draggable is set to false via option',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2880,7 +2952,6 @@ module.exports = {
           .dialog({ height: 240 });
         toReturn.explicitHeightWithPadding =
           Math.abs($element.dialog('widget').outerHeight() - 240) < 0.25;
-
         return toReturn;
       },
       [],
@@ -2894,6 +2965,7 @@ module.exports = {
           explicitHeightWithPadding:
             'explicit height with padding within 0.25 from expected',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -2956,6 +3028,7 @@ module.exports = {
             'height within 1 from maxHeight when dragged from top',
           maxHeightOption: 'height within 1 when maxHeight set as option',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3027,6 +3100,7 @@ module.exports = {
           maxWidthW: 'maxWidthW',
           maxWidthW2: 'maxWidthW2',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3093,6 +3167,7 @@ module.exports = {
           minHeightN: 'minHeightN',
           minHeightN2: 'minHeightN2',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3161,6 +3236,7 @@ module.exports = {
           minWidthW: 'minWidthW',
           minWidthW2: 'minWidthW2',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3209,6 +3285,7 @@ module.exports = {
           topPosition:
             'dialog top position of center on window on initialization',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3258,6 +3335,7 @@ module.exports = {
           topPosition:
             'dialog top position of right bottom at right bottom on initialization',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 2);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3333,6 +3411,7 @@ module.exports = {
           topPositionViaSetting:
             'dialog top position at another element via setting option',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3407,6 +3486,7 @@ module.exports = {
           disabledInInitOptions: 'disabled in init options',
           enabledAfterInit: 'enabled after init',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 4);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3500,6 +3580,7 @@ module.exports = {
           attributePropertiesOptionNotChanged:
             'attribute properties option not changed',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 11);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3549,6 +3630,7 @@ module.exports = {
           explicitWidth: 'explicit width',
           explicitWidthAfterInit: 'explicit width after init',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 3);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
@@ -3648,6 +3730,7 @@ module.exports = {
           default1: 'default 0 0',
           default2: 'default 50 50',
         };
+        browser.assert.equal(Object.keys(expectedTrue).length, 6);
         browser.assert.equal(
           Object.keys(expectedTrue).length,
           Object.keys(result.value).length,
