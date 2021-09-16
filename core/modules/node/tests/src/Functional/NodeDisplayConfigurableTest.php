@@ -89,12 +89,15 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
 
     $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes);
 
+    $assert->elementExists('css', 'div[rel="schema:author"]');
+
     // Remove from display.
     $display->removeComponent('uid')
       ->removeComponent('created')
       ->save();
 
     $this->drupalGet($node->toUrl());
+    $assert->elementNotExists('css', 'div[rel="schema:author"]');
     $assert->elementTextNotContains('css', 'article', $user->getAccountName());
   }
 
