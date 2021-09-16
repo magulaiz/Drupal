@@ -69,7 +69,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
 
     // Check the node with Drupal default non-configurable display.
     $this->drupalGet($node->toUrl());
-    $this->assertNodeHtml($node, $user, 'span', $metadata_region, $field_classes);
+    $this->assertNodeHtml($node, $user, TRUE, $metadata_region, $field_classes);
 
     // Enable module to make base fields' displays configurable.
     \Drupal::service('module_installer')->install(['node_display_configurable_test']);
@@ -87,7 +87,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
     // Recheck the node with configurable display.
     $this->drupalGet($node->toUrl());
 
-    $this->assertNodeHtml($node, $user, 'div', $metadata_region, $field_classes);
+    $this->assertNodeHtml($node, $user, FALSE, $metadata_region, $field_classes);
 
     // Remove from display.
     $display->removeComponent('uid')
@@ -105,38 +105,41 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *   The node being tested.
    * @param \Drupal\user\UserInterface $user
    *   The logged in user.
-   * @param string $html_element
-   *   Either 'div' or 'span'
+   * @param bool $is_inline
+   *   Whether the fields are rendered inline or not.
    * @param string $metadata_region
    *   The region of the node html content where meta data is expected.
    * @param bool $field_classes
    *   If TRUE, check for field--name-XXX classes.
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, string $html_element, string $metadata_region, bool $field_classes) {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes) {
     $assert = $this->assertSession();
 
+    $html_element = $is_inline ? 'span' : 'div';
     $title_selector = 'h1 span' . ($field_classes ? '.field--name-title' : '');
     $assert->elementTextContains('css', $title_selector, $node->getTitle());
 
-    // With field classes, we can be very specific.
+    // With field classes, the selector can be very specific.
     if ($field_classes) {
       $created_selector = 'article ' . $html_element . '.field--name-created';
       $assert->elementTextContains('css', $created_selector, \Drupal::service('date.formatter')->format($node->getCreatedTime()));
     }
-    // Without field classes, we cannot target specific elements.
     else {
-      // We can only verify that the date appears somewhere in the response.
-      $assert->responseContains(\Drupal::service('date.formatter')->format($node->getCreatedTime()));
+      // When field classes aren't available, use HTML elements for testing.
+      $formatted_time = \Drupal::service('date.formatter')->format($node->getCreatedTime());
+      if ($is_inline) {
+        $created_selector = sprintf('//article//%s//%s[text()="%s"]', $metadata_region, $html_element, $formatted_time);
+      }
+      else {
+        $created_selector = sprintf('//article//%s[text()="%s"]', $html_element, $formatted_time);
+      }
+      $assert->elementExists('xpath', $created_selector);
     }
 
     $uid_selector = 'article ' . $html_element . ($field_classes ? '.field--name-uid' : '');
-    if ($html_element === 'div') {
-      if ($field_classes) {
-        $assert->elementTextContains('css', "$uid_selector $html_element", 'Authored by');
-      }
-      else {
-        $assert->responseContains('Authored by');
-      }
+    if (!$is_inline) {
+      $field_classes_selector = $field_classes ? "[contains(concat(' ', normalize-space(@class), ' '), ' field--name-uid ')]" : '';
+      $assert->elementExists('xpath', sprintf('//article//%s//*%s//%s[text()="Authored by"]', $html_element, $field_classes_selector, $html_element));
       $assert->elementTextContains('css', "$uid_selector $html_element" . '[rel="schema:author"]', $user->getAccountName());
       $assert->elementNotExists('css', "$uid_selector a");
       $assert->elementExists('css', 'span[property="schema:dateCreated"]');
