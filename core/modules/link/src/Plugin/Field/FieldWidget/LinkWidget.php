@@ -259,11 +259,12 @@ class LinkWidget extends WidgetBase {
       ];
     }
 
+    $title_default_value = isset($default_values[$delta]['title']) ? $default_values[$delta]['title'] : NULL;
     $element['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
-      '#default_value' => isset($default_values[$delta]['title']) ? $default_values[$delta]['title'] : NULL,
+      '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : $title_default_value,
       '#maxlength' => 255,
       '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
       '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
