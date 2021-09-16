@@ -783,12 +783,14 @@ module.exports = {
         element.autocomplete('search', 'j');
         setTimeout(() => {
           toReturn.menuDisplaysInitially = menu.is(':visible');
-          element.trigger('blur');
-          toReturn.menuHiddenAfterBlur = !menu.is(':visible');
-          element.autocomplete('search', 'j');
+          jQuery('#autocomplete-textarea').focus();
           setTimeout(() => {
-            toReturn.displaysAfterSameValue = menu.is(':visible');
-            done(toReturn);
+            toReturn.menuHiddenAfterBlur = !menu.is(':visible');
+            element.autocomplete('search', 'j');
+            setTimeout(() => {
+              toReturn.displaysAfterSameValue = menu.is(':visible');
+              done(toReturn);
+            });
           });
         });
       },

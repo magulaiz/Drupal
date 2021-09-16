@@ -94,8 +94,6 @@ class AutocompleteTestForm extends FormBase {
           'itemClass' => 'class-added-to-item another-class-added-to-item',
         ]),
       ],
-      // This feature will only work on the non-shimmed autocomplete.
-      '#use-drupal-10-autocomplete' => TRUE,
     ];
     $form['custom_classes_separate_data_attributes'] = [
       '#type' => 'textfield',
@@ -107,8 +105,6 @@ class AutocompleteTestForm extends FormBase {
         'data-autocomplete-ul-class' => 'class-added-to-ul another-class-added-to-ul',
         'data-autocomplete-item-class' => 'class-added-to-item another-class-added-to-item',
       ],
-      // This feature will only work on the non-shimmed autocomplete.
-      '#use-drupal-10-autocomplete' => TRUE,
     ];
 
     // Inputs with set cardinality and a custom separator.
@@ -229,7 +225,7 @@ class AutocompleteTestForm extends FormBase {
     // Inputs with the option to display labels instead of values enabled.
     $form['display_labels_data_autocomplete'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Display labels data-autocomplete'),
+      '#title' => $this->t('Disable display labels data-autocomplete'),
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
@@ -238,20 +234,16 @@ class AutocompleteTestForm extends FormBase {
           'displayLabels' => FALSE,
         ]),
       ],
-      // This feature will only work on the non-shimmed autocomplete.
-      '#use-drupal-10-autocomplete' => TRUE,
     ];
     $form['display_labels_data_attributes'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('Display labels data attributes'),
+      '#title' => $this->t('Disable display labels data attributes'),
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete-list' => JSON::encode($custom_list),
         'data-autocomplete-display-labels' => 'false',
       ],
-      // This feature will only work on the non-shimmed autocomplete.
-      '#use-drupal-10-autocomplete' => TRUE,
     ];
 
     $form['#attached']['library'][] = 'core/drupal.autocomplete';

@@ -19,7 +19,10 @@
     // @todo remove this conditional and its contents, in
     //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
     if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(instance);
+      Drupal.autocompleteShim.jqueryUiShimInit(
+        instance,
+        e.detail.originalOptions,
+      );
     }
   });
 
@@ -54,8 +57,7 @@
     // items in`<a>` tags, so this class is moved to the `<li>` which provides
     // a visually identical autocomplete experience to the previous jQuery UI
     // autocomplete.
-    itemClass: 'ui-menu-item-wrapper',
-    displayLabels: false,
+    itemClass: 'ui-menu-item',
   };
 
   /**
@@ -66,14 +68,25 @@
    * @param {_A11yAutocomplete} instance
    *   The initialized autocomplete input.
    */
-  Drupal.autocompleteShim.jqueryUiShimInit = (instance) => {
+  Drupal.autocompleteShim.jqueryUiShimInit = (instance, options) => {
     const isContentEditable = instance.input.hasAttribute('contenteditable');
 
+    const attributesToOptions = instance.attributesToOptions();
+
+    if (
+      attributesToOptions.hasOwnProperty('list') &&
+      typeof attributesToOptions.list === 'string'
+    ) {
+      attributesToOptions.list = JSON.parse(attributesToOptions.list);
+    }
     // Bypass option filtering.
     instance.options = Object.assign(
       instance.options,
       Drupal.autocompleteShim.defaultOptions,
+      options,
+      attributesToOptions,
     );
+
     // Apply class changes.
     instance.implementInput();
     instance.implementList();
@@ -83,12 +96,6 @@
     instance.options.isMultiline =
       instance.input.tagName === 'TEXTAREA' ||
       (instance.input.tagName !== 'INPUT' && isContentEditable);
-
-    // jQuery UI adds a 'ui-menu-item' class to autocomplete list elements.
-    // This may seem odd as the core jQuery UI autocomplete implementation of
-    // these list items include an `<a>` tag with a 'ui-menu-item-wrapper' class.
-    // This shim reproduces that wrapper inside the item structure.
-    instance.options.itemClass = 'ui-menu-item';
 
     // jQuery UI allows repeat values in multivalue inputs.
     // If the option is explicitly set to false, that option was set by the form
@@ -346,8 +353,13 @@
      */
     // eslint-disable-next-line func-names
     instance._renderItem = function (ul, item) {
-      // Drupal core's implementation of jQuery UI autocomplete added an `<a>`.
-      return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+      const propertyToDisplay = instance.options.displayLabels
+        ? 'label'
+        : 'value';
+      // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
+      return $('<li>')
+        .append($('<a>').html(item[propertyToDisplay]))
+        .appendTo(ul);
     };
 
     /**

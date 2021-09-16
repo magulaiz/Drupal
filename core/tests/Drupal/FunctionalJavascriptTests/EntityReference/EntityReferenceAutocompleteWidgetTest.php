@@ -631,7 +631,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     // leverage wait(). With A11yAutocomplete, the updating of
     // #drupal-live-announce is intentionally delayed to prevent collision with
     // browser default screenreader announcements.
-    $this->assertJsCondition('document.getElementById("drupal-live-announce").innerText.includes("' . $message . '")', 10000, "Live region did not include: $message, Instead it included:" . $this->getSession()->getPage()->findById('drupal-live-announce')->getText());
+    $this->assertJsCondition('document.getElementById("drupal-live-announce").innerText.includes("' . $message . '")', 10000, "Live region did not include: $message, Instead it included:" . $this->getSession()->evaluateScript('document.getElementById("drupal-live-announce").innerText'));
   }
 
   /**
@@ -735,9 +735,13 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    * @group legacy
    */
   public function testAutocompleteDeprecation() {
+    // @todo this is currently failing due to the deprecation not triggering,
+    // but unsure why as the block where the deprecation is triggered in
+    // template_preprocess_input() definitely runs. This was  confirmed by
+    // putting a `die()` next to the @trigger_error().
+    $this->expectDeprecation('The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715');
     $this->drupalGet('drupal_autocomplete/test-form');
     $this->assertNotNull($this->assertSession()->waitForElementVisible('css', '[data-autocomplete-input]'));
-    $this->expectDeprecation('The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715');
   }
 
 }

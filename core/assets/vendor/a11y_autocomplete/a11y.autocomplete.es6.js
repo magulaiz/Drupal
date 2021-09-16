@@ -167,6 +167,12 @@ class _A11yAutocomplete {
       'list',
       'cardinality',
       'minChars',
+      // @todo, adding maxItems to supported options is needed for tests to
+      // pass. Clearly this would need to be changed in the external library.
+      // It can either be added to supportedOptions there, or we can remove the
+      // maxItems option entirely since it is a new feature and not needed for
+      // jQuery Ui autocomplete BC.
+      'maxItems',
       'separatorChar',
       'firstCharacterIgnoreList',
       // Try to remove.
@@ -314,7 +320,9 @@ class _A11yAutocomplete {
      * @event A11yAutocomplete#autocomplete-created
      * @property {Class} autocomplete - The autocomplete instance.
      */
-    this.triggerEvent('autocomplete-created');
+    this.triggerEvent('autocomplete-created', {
+      originalOptions: options,
+    });
   }
 
   /**

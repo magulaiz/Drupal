@@ -33,7 +33,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var instance = e.detail.autocomplete._internal_object;
 
     if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(instance);
+      Drupal.autocompleteShim.jqueryUiShimInit(instance, e.detail.originalOptions);
     }
   });
 
@@ -47,18 +47,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     inputClass: 'ui-autocomplete-input',
     ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
     loadingClass: 'ui-autocomplete-loading',
-    itemClass: 'ui-menu-item-wrapper',
-    displayLabels: false
+    itemClass: 'ui-menu-item'
   };
 
-  Drupal.autocompleteShim.jqueryUiShimInit = function (instance) {
+  Drupal.autocompleteShim.jqueryUiShimInit = function (instance, options) {
     var isContentEditable = instance.input.hasAttribute('contenteditable');
-    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions);
+    var attributesToOptions = instance.attributesToOptions();
+
+    if (attributesToOptions.hasOwnProperty('list') && typeof attributesToOptions.list === 'string') {
+      attributesToOptions.list = JSON.parse(attributesToOptions.list);
+    }
+
+    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
     instance.implementInput();
     instance.implementList();
     instance.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
-    instance.options.itemClass = 'ui-menu-item';
 
     if (instance.options.allowRepeatValues === null) {
       instance.options.allowRepeatValues = true;
@@ -194,7 +198,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
 
     instance._renderItem = function (ul, item) {
-      return $('<li>').append($('<a>').html(item.label)).appendTo(ul);
+      var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
+      return $('<li>').append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
     };
 
     var autocompleteNormalizeSuggestionItems = function autocompleteNormalizeSuggestionItems() {

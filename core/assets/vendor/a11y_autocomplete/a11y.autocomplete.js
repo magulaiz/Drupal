@@ -42,7 +42,7 @@ var _A11yAutocomplete = function () {
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-listbox-".concat(this.count);
-    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
+    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'maxItems', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
       firstCharacterIgnoreList: ',',
@@ -140,7 +140,9 @@ var _A11yAutocomplete = function () {
       this.api.id = input.id;
     }
 
-    this.triggerEvent('autocomplete-created');
+    this.triggerEvent('autocomplete-created', {
+      originalOptions: options
+    });
   }
 
   _createClass(_A11yAutocomplete, [{
