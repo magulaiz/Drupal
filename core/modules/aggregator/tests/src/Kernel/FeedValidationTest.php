@@ -55,9 +55,9 @@ class FeedValidationTest extends EntityKernelTestBase {
 
     $this->assertCount(2, $violations);
     $this->assertEquals('title', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('A feed named %value already exists. Enter a unique title.', ['%value' => $feed->label()]), $violations[0]->getMessage());
+    $this->assertEquals("A feed named <em class=\"placeholder\">{$feed->label()}</em> already exists. Enter a unique title.", $violations[0]->getMessage());
     $this->assertEquals('url', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('A feed with this URL %value already exists. Enter a unique URL.', ['%value' => $feed->getUrl()]), $violations[1]->getMessage());
+    $this->assertEquals("A feed with this URL <em class=\"placeholder\">{$feed->getUrl()}</em> already exists. Enter a unique URL.", $violations[1]->getMessage());
   }
 
 }

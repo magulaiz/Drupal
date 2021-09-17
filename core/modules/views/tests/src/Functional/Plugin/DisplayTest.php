@@ -363,8 +363,8 @@ class DisplayTest extends ViewTestBase {
     $errors = $view->validate();
     // Check that the error messages are shown.
     $this->assertCount(2, $errors['default'], 'Error messages found for required relationship');
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Last login']), $errors['default'][0]);
-    $this->assertEquals(t('The %handler_type %handler uses a relationship that has been removed.', ['%handler_type' => 'field', '%handler' => 'User: Created']), $errors['default'][1]);
+    $this->assertEquals('The <em class="placeholder">field</em> <em class="placeholder">User: Last login</em> uses a relationship that has been removed.', $errors['default'][0]);
+    $this->assertEquals('The <em class="placeholder">field</em> <em class="placeholder">User: Created</em> uses a relationship that has been removed.', $errors['default'][1]);
   }
 
   /**
