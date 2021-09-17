@@ -246,10 +246,6 @@
         this.sortSuggestions();
       }
       this.totalSuggestions = this.suggestions.length;
-      this.suggestions = this.suggestions.slice(
-        0,
-        parseInt(this.options.maxItems, 10),
-      );
 
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions,

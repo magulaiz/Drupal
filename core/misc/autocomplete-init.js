@@ -12,7 +12,6 @@
     createLiveRegion: false,
     minCharAssistiveHint: Drupal.t('Type @count or more characters for results'),
     noResultsAssistiveHint: Drupal.t('No results found'),
-    moreThanMaxResultsAssistiveHint: Drupal.t('There are at least @count results available. Type additional characters to refine your search.'),
     someResultsAssistiveHint: Drupal.t('There are @count results available.'),
     oneResultAssistiveHint: Drupal.t('There is one result available.'),
     inputAssistiveHint: Drupal.t('When autocomplete results are available use up and down arrows to review and enter to select.  Touch device users, explore by touch or with swipe gestures.'),
@@ -29,7 +28,7 @@
     if (autocompleteInput.hasAttribute('data-autocomplete-first-character-blacklist')) {
       options.firstCharacterIgnoreList = autocompleteInput.getAttribute('data-autocomplete-first-character-blacklist');
       Drupal.deprecationError({
-        message: 'The data-autocomplete-first-character-blacklist attribute is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use data-autocomplete-first-character-ignore-list instead See https://www.drupal.org/node/3083715'
+        message: 'The data-autocomplete-first-character-blacklist attribute is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use data-autocomplete-first-character-ignore-list instead See https://www.drupal.org/node/3083715'
       });
     }
 

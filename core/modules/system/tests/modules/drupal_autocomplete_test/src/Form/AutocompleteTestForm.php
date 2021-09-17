@@ -135,28 +135,6 @@ class AutocompleteTestForm extends FormBase {
       ],
     ];
 
-    // Inputs with custom max options instead of the default 10.
-    $form['maxItems_data_autocomplete'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('10 Max items data-autocomplete'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete' => JSON::encode([
-          'maxItems' => '10',
-        ]),
-      ],
-    ];
-    $form['maxItems_separate_data_attributes'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('10 Max items separate data attributes'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete-max-items' => '10',
-      ],
-    ];
-
     $custom_list = [
       [
         'label' => 'Zebra Label',

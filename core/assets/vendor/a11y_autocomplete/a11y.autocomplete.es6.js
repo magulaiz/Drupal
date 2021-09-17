@@ -40,13 +40,13 @@
  * // Options can be set in three ways, listed from highest precedence to lowest:
  *
  * // 1. An object literal in the input's `data-autocomplete` attribute with the format {camelCaseOptionName: value}.
- * <input data-autocomplete="{maxItems: 10, path:'http://path-to-results'}" />
+ * <input data-autocomplete="{minChars: 3, path:'http://path-to-results'}" />
  *
  * // 2. Via the data-autocomplete-(hyphen delimited option name) attribute.
- * <input data-autocomplete-max-items="10" data-autocomplete-path="http://path-to-results" />
+ * <input data-autocomplete-min-chars="3" data-autocomplete-path="http://path-to-results" />
  *
  * // 3. Via the options argument when initializing a new instance
- * A11yAutocomplete(input, {maxItems: 10, , path:'http://path-to-results'})
+ * A11yAutocomplete(input, {minChars: 3, path:'http://path-to-results'})
  *
  * @param {HTMLElement} input
  *   The element to be used as an autocomplete.
@@ -73,8 +73,6 @@
  *  `separatorChar`.
  * @param {Number} [options.minChars=1] - Minimum number of characters that must
  *  be typed before displaying autocomplete results.
- * @param {Number} [options.maxItems=20] - The maximum number of results
- *  displayed.
  * @param {Number} [options.cardinality=1] - The number of values the input can
  *  reference, where multiple values are separated by the character specified in
  *  the `separatorChar` option. Set to `-1` for unlimited cardinality.
@@ -112,13 +110,10 @@
  *  needed to trigger a search.  `@count` is replaced with the value of`minChars`.
  * @param {string} [options.noResultsAssistiveHint='No results found'] - Message
  *  conveyed to assistive technology when the query returns no results.
- * @param {string} [options.moreThanMaxResultsAssistiveHint='There are at least @count results available. Type additional characters to refine your search.'] -
- *  Message conveyed to assistive technology when the number of results exceeds
- *  the maximum amount set via the `maxItems` option. `@count` is  replaced with
- *  the value of `maxItems`.
+
  * @param {string} [options.someResultsAssistiveHint='There are @count results available.'] -
  *  Message conveyed to assistive technology when the number of results exceeds
- *  one and does not exceed the maximum amount set via the `maxItems` option.
+ *  one.
  *  `@count` is replaced with the number of results returned.
  * @param {string} [options.oneResultAssistiveHint='There is one result available.'] -
  *  Message conveyed to assistive technology when there is one result.
@@ -167,12 +162,6 @@ class _A11yAutocomplete {
       'list',
       'cardinality',
       'minChars',
-      // @todo, adding maxItems to supported options is needed for tests to
-      // pass. Clearly this would need to be changed in the external library.
-      // It can either be added to supportedOptions there, or we can remove the
-      // maxItems option entirely since it is a new feature and not needed for
-      // jQuery Ui autocomplete BC.
-      'maxItems',
       'separatorChar',
       'firstCharacterIgnoreList',
       // Try to remove.
@@ -184,7 +173,6 @@ class _A11yAutocomplete {
       'minCharAssistiveHint',
       'inputAssistiveHint',
       'noResultsAssistiveHint',
-      'moreThanMaxResultsAssistiveHint',
       'someResultsAssistiveHint',
       'oneResultAssistiveHint',
       'highlightedAssistiveHint',
@@ -196,8 +184,6 @@ class _A11yAutocomplete {
       // remove and use separatorChar
       firstCharacterIgnoreList: ',',
       minChars: 1,
-      // new feature
-      maxItems: 20,
       // API already sort results
       sort: false,
       path: '',
@@ -228,8 +214,6 @@ class _A11yAutocomplete {
       inputAssistiveHint:
         'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
       noResultsAssistiveHint: 'No results found',
-      moreThanMaxResultsAssistiveHint:
-        'There are at least @count results available. Type additional characters to refine your search.',
       someResultsAssistiveHint: 'There are @count results available.',
       oneResultAssistiveHint: 'There is one result available.',
       highlightedAssistiveHint:
@@ -889,7 +873,7 @@ class _A11yAutocomplete {
               .split(' ')
               .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
-
+            console.log("RESULTS", results);
             this.displayResults();
             this.cache[inputId][searchTerm] = results;
           });
@@ -970,10 +954,6 @@ class _A11yAutocomplete {
       this.sortSuggestions();
     }
     this.totalSuggestions = this.suggestions.length;
-    this.suggestions = this.suggestions.slice(
-      0,
-      parseInt(this.options.maxItems, 10),
-    );
 
     /**
      * Fires after suggestion items are retrieved, but before they are added to the DOM.
@@ -1228,12 +1208,9 @@ class _A11yAutocomplete {
    *   A message based on the number of suggestions found.
    */
   resultsMessage(count) {
-    const { maxItems } = this.options;
     let message;
     if (count === 0) {
       message = this.options.noResultsAssistiveHint;
-    } else if (parseInt(maxItems, 10) === this.totalSuggestions) {
-      message = this.options.moreThanMaxResultsAssistiveHint;
     } else if (count === 1) {
       message = this.options.oneResultAssistiveHint;
     } else {

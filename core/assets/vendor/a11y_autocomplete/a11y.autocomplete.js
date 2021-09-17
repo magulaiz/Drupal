@@ -42,12 +42,11 @@ var _A11yAutocomplete = function () {
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-listbox-".concat(this.count);
-    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'maxItems', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'moreThanMaxResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
+    this.supportedOptions = ['path', 'list', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
       firstCharacterIgnoreList: ',',
       minChars: 1,
-      maxItems: 20,
       sort: false,
       path: '',
       displayLabels: true,
@@ -66,7 +65,6 @@ var _A11yAutocomplete = function () {
       minCharAssistiveHint: 'Type @count or more characters for results',
       inputAssistiveHint: 'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
       noResultsAssistiveHint: 'No results found',
-      moreThanMaxResultsAssistiveHint: 'There are at least @count results available. Type additional characters to refine your search.',
       someResultsAssistiveHint: 'There are @count results available.',
       oneResultAssistiveHint: 'There is one result available.',
       highlightedAssistiveHint: '@selectedItem @position of @count is highlighted'
@@ -140,9 +138,7 @@ var _A11yAutocomplete = function () {
       this.api.id = input.id;
     }
 
-    this.triggerEvent('autocomplete-created', {
-      originalOptions: options
-    });
+    this.triggerEvent('autocomplete-created');
   }
 
   _createClass(_A11yAutocomplete, [{
@@ -508,6 +504,7 @@ var _A11yAutocomplete = function () {
               return _this6.input.classList.remove(className);
             });
             _this6.suggestionItems = results;
+            console.log("RESULTS", results);
 
             _this6.displayResults();
 
@@ -584,7 +581,6 @@ var _A11yAutocomplete = function () {
       }
 
       this.totalSuggestions = this.suggestions.length;
-      this.suggestions = this.suggestions.slice(0, parseInt(this.options.maxItems, 10));
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
@@ -744,13 +740,10 @@ var _A11yAutocomplete = function () {
   }, {
     key: "resultsMessage",
     value: function resultsMessage(count) {
-      var maxItems = this.options.maxItems;
       var message;
 
       if (count === 0) {
         message = this.options.noResultsAssistiveHint;
-      } else if (parseInt(maxItems, 10) === this.totalSuggestions) {
-        message = this.options.moreThanMaxResultsAssistiveHint;
       } else if (count === 1) {
         message = this.options.oneResultAssistiveHint;
       } else {

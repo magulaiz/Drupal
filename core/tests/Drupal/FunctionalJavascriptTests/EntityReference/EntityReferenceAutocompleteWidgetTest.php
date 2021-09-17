@@ -320,7 +320,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     $assert_session->waitOnAutocomplete();
     $this->assertCount(10, $page->findAll('css', '[data-autocomplete-item-list] li'));
     $this->assertCount(10, $page->findAll('css', '[data-autocomplete-item-list] li[aria-selected="false"]'));
-    $this->assertScreenreader('There are at least 10 results available. Type additional characters to refine your search.');
+    $this->assertScreenreader('There are 10 results available.');
     $autocomplete_field->setValue('Fo');
     $this->assertScreenreader('There are 3 results available.');
 
@@ -480,22 +480,6 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       // the next test is accurate.
       $this->setAutocompleteValue($input, $id, 'a');
       $this->assertCount(19, $list->findAll('css', 'li'));
-
-      // Reset value to ensure the next input isn't obscured.
-      $this->setAutocompleteValue($input, $id, ' ', FALSE);
-    }
-
-    /* cspell:disable */
-    // Test the maxitems: option.
-    foreach ([
-      'edit-maxitems-data-autocomplete',
-      'edit-maxitems-separate-data-attributes',
-    ] as $id) {
-      /* cspell:enable */
-      $input = $page->findById($id);
-      $list = $this->getList($input);
-      $this->setAutocompleteValue($input, $id, 'a');
-      $this->assertCount(10, $list->findAll('css', 'li'));
 
       // Reset value to ensure the next input isn't obscured.
       $this->setAutocompleteValue($input, $id, ' ', FALSE);
