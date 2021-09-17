@@ -30,7 +30,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
   /**
    * Tests the GET method.
-   * @group jsonapitest
+   * @group jsonapi
    */
   public function testRead() {
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
