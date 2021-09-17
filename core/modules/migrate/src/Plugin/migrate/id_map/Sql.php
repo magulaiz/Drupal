@@ -539,10 +539,13 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
     $query = $this->getDatabase()->select($this->mapTableName(), 'map')
       ->fields('map');
     foreach ($this->destinationIdFields() as $field_name => $destination_id) {
+      if (!isset($destination_id_values[$field_name])) {
+        return [];
+      }
       $query->condition("map.$destination_id", $destination_id_values[$field_name], '=');
     }
-    $result = $query->execute();
-    return $result->fetchAssoc();
+    $result = $query->execute()->fetchAssoc();
+    return $result ? $result : [];
   }
 
   /**
@@ -884,6 +887,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *
    * This is called before beginning a foreach loop.
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     $this->currentRow = NULL;
     $fields = [];
@@ -905,6 +909,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    *
    * This is called when entering a loop iteration, returning the current row.
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     return $this->currentRow;
   }
@@ -916,6 +921,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * current row. It must be a scalar - we will serialize to fulfill the
    * requirement, but using getCurrentKey() is preferable.
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     return serialize($this->currentKey);
   }
@@ -960,6 +966,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * This is called at the bottom of the loop implicitly, as well as explicitly
    * from rewind().
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     $this->currentRow = $this->result->fetchAssoc();
     $this->currentKey = [];
@@ -978,6 +985,7 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * This is called at the top of the loop, returning TRUE to process the loop
    * and FALSE to terminate it.
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     return $this->currentRow !== FALSE;
   }
