@@ -265,7 +265,8 @@ function _tracker_add($nid, $uid, $changed) {
  */
 function _tracker_calculate_changed($node) {
   $changed = $node->getChangedTime();
-  $latest_comment = \Drupal::service('comment.statistics')->read([$node], 'node', FALSE);
+  $latest_comment_statistics = \Drupal::service('comment.statistics')->read([$node->id() => $node], 'node', FALSE);
+  $latest_comment = reset($latest_comment_statistics);
   if ($latest_comment && $latest_comment->last_comment_timestamp > $changed) {
     $changed = $latest_comment->last_comment_timestamp;
   }
