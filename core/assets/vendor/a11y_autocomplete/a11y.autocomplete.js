@@ -504,7 +504,7 @@ var _A11yAutocomplete = function () {
               return _this6.input.classList.remove(className);
             });
             _this6.suggestionItems = results;
-            console.log("RESULTS", results);
+            console.log('RESULTS', results);
 
             _this6.displayResults();
 

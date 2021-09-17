@@ -2,8 +2,6 @@
  * @module
  */
 
-
-
 /**
  * A standalone autocomplete, optimized for accessibility and querying remote
  * sources.
@@ -320,11 +318,10 @@ class _A11yAutocomplete {
     Object.keys(options).forEach((key) => {
       if (this.supportedOptions.includes(key)) {
         filteredOptions[key] = options[key];
-      }
-      else {
+      } else {
         rejectedOptions[key] = options[key];
       }
-    })
+    });
     // Temporary to help debug the shim.
     if (Object.keys(rejectedOptions).length) {
       console.warn('Rejected autocomplete options: ', rejectedOptions);
@@ -804,7 +801,7 @@ class _A11yAutocomplete {
     const { cardinality } = this.options;
     const numItems = this.splitValues().length - 1;
     return numItems < parseInt(cardinality, 10) ||
-    parseInt(cardinality, 10) <= 0
+      parseInt(cardinality, 10) <= 0
       ? this.options.separatorChar
       : '';
   }
@@ -863,17 +860,19 @@ class _A11yAutocomplete {
         this.suggestionItems = this.cache[inputId][searchTerm];
         this.displayResults();
       } else if (this.options.list.length === 0 && this.options.path.length) {
-        this.options.loadingClass && this.options.loadingClass
-          .split(' ')
-          .forEach((className) => this.input.classList.add(className));
+        this.options.loadingClass &&
+          this.options.loadingClass
+            .split(' ')
+            .forEach((className) => this.input.classList.add(className));
         fetch(this.queryUrl(searchTerm))
           .then((response) => response.json())
           .then((results) => {
-            this.options.loadingClass && this.options.loadingClass
-              .split(' ')
-              .forEach((className) => this.input.classList.remove(className));
+            this.options.loadingClass &&
+              this.options.loadingClass
+                .split(' ')
+                .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
-            console.log("RESULTS", results);
+            console.log('RESULTS', results);
             this.displayResults();
             this.cache[inputId][searchTerm] = results;
           });

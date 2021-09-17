@@ -9,7 +9,7 @@
   };
 
   document.addEventListener('drupal-autocomplete-init', (e) => {
-    const { instance, options} = e.detail;
+    const { instance, options } = e.detail;
     // By default, autocomplete inputs are processed with a backwards
     // compatible shim that provides jQuery UI autocomplete markup
     // structure and API surface. If the input has the
@@ -19,10 +19,7 @@
     // @todo remove this conditional and its contents, in
     //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
     if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(
-        instance,
-        options,
-      );
+      Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
     }
   });
 
