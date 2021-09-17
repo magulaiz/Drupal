@@ -244,8 +244,10 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
    * @param bool $referencing_twice
    *   (optional) Set to TRUE if you want articles to reference the same tag
    *   twice.
+   * @param bool $article_has_heroless_image
+   *   (options) Set to TRUE if you want to add a heroless image to the generated articles.
    */
-  protected function createDefaultContent($num_articles, $num_tags, $article_has_image, $article_has_link, $is_multilingual, $referencing_twice = FALSE) {
+  protected function createDefaultContent($num_articles, $num_tags, $article_has_image, $article_has_link, $is_multilingual, $referencing_twice = FALSE, $article_has_heroless_image = FALSE) {
     $random = $this->getRandomGenerator();
     for ($created_tags = 0; $created_tags < $num_tags; $created_tags++) {
       $term = Term::create([
@@ -292,6 +294,15 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
         $file->save();
         $this->files[] = $file;
         $values['field_image'] = ['target_id' => $file->id(), 'alt' => 'alt text'];
+      }
+      if ($article_has_heroless_image) {
+        $file = File::create([
+          'uri' => 'public://' . $random->name() . '.png',
+        ]);
+        $file->setPermanent();
+        $file->save();
+        $this->files[] = $file;
+        $values['field_heroless'] = ['target_id' => $file->id(), 'alt' => 'alt text'];
       }
       if ($article_has_link) {
         $values['field_link'] = [
