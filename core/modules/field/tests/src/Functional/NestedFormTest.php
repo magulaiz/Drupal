@@ -127,16 +127,18 @@ class NestedFormTest extends FieldTestBase {
     $edit = [
       'field_unlimited[1][value]' => -1,
     ];
-    $this->drupalPostForm('test-entity/nested/1/2', $edit, 'Save');
-    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']));
+    $this->drupalGet('test-entity/nested/1/2');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("Unlimited field does not accept the value -1.");
     // Entity 1: check that the error was flagged on the correct element.
     $error_field = $this->assertSession()->fieldExists('edit-field-unlimited-1-value');
     $this->assertTrue($error_field->hasClass('error'));
     $edit = [
       'entity_2[field_unlimited][1][value]' => -1,
     ];
-    $this->drupalPostForm('test-entity/nested/1/2', $edit, 'Save');
-    $this->assertRaw(t('%label does not accept the value -1', ['%label' => 'Unlimited field']));
+    $this->drupalGet('test-entity/nested/1/2');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("Unlimited field does not accept the value -1.");
     // Entity 2: check that the error was flagged on the correct element.
     $error_field = $this->assertSession()->fieldExists('edit-entity-2-field-unlimited-1-value');
     $this->assertTrue($error_field->hasClass('error'));
@@ -148,7 +150,8 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][0][_weight]' => 0,
       'entity_2[field_unlimited][1][_weight]' => -1,
     ];
-    $this->drupalPostForm('test-entity/nested/1/2', $edit, 'Save');
+    $this->drupalGet('test-entity/nested/1/2');
+    $this->submitForm($edit, 'Save');
     $this->assertFieldValues($entity_1, 'field_unlimited', [3, 2]);
     $this->assertFieldValues($entity_2, 'field_unlimited', [13, 12]);
 

@@ -29,8 +29,10 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: var(--color--blue-50);
-    border-color: var(--color--blue-50);
+    color: var(--color--blue-10);
+    border: solid 2px var(--color--blue-10);
+    background: none;
+    font-weight: 700;
   }
 
   &:focus {
@@ -77,6 +79,7 @@
   padding-block: calc((var(--sp2-5) - var(--line-height-s)) / 2);
   padding-inline: var(--sp);
   font-size: var(--font-size-base);
+  line-height: normal;
 }
 
 .button--primary {
@@ -86,7 +89,8 @@
   &:hover,
   &:focus {
     color: var(--color--white);
-    background-color: var(--color--blue-50);
+    border-color: var(--color--blue-10);
+    background-color: var(--color--blue-10);
   }
 
   &:active {
@@ -102,6 +106,9 @@
 }
 
 .button--icon-back {
+  display: inline-flex;
+  align-items: center;
+
   &:before {
     display: block;
     width: 0.5em;

@@ -54,8 +54,10 @@
 .button:hover,
   .button:focus {
     text-decoration: none;
-    color: #2494db;
-    border-color: #2494db;
+    color: #0f6292;
+    border: solid 2px #0f6292;
+    background: none;
+    font-weight: 700;
   }
 
 .button:focus {
@@ -128,6 +130,7 @@
   padding-left: 1.125rem;
   padding-right: 1.125rem;
   font-size: 1rem;
+  line-height: normal;
 }
 
 .button--primary {
@@ -138,7 +141,8 @@
 .button--primary:hover,
   .button--primary:focus {
     color: #fff;
-    background-color: #2494db;
+    border-color: #0f6292;
+    background-color: #0f6292;
   }
 
 .button--primary:active {
@@ -151,6 +155,11 @@
     color: #fff;
     background-color: #d7e1e8;
   }
+
+.button--icon-back {
+  display: inline-flex;
+  align-items: center
+}
 
 [dir="ltr"] .button--icon-back:before {
     margin-right: 0.5em

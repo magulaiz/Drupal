@@ -328,7 +328,8 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $route_match = new RouteMatch('example', new Route('/test/{langcode}'), ['langcode' => 'xx']);
     $this->configNamesMapper->populateFromRouteMatch($route_match);
 
-    $expected = ['langcode' => 'xx'];    $result = $this->configNamesMapper->getDeleteRouteParameters();
+    $expected = ['langcode' => 'xx'];
+    $result = $this->configNamesMapper->getDeleteRouteParameters();
     $this->assertSame($expected, $result);
   }
 
@@ -505,7 +506,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $this->typedConfigManager
       ->expects($this->any())
       ->method('hasConfigSchema')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
 
     $result = $this->configNamesMapper->hasSchema();
     $this->assertSame($expected, $result);
@@ -552,7 +553,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $this->configMapperManager
       ->expects($this->any())
       ->method('hasTranslatable')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
 
     $result = $this->configNamesMapper->hasTranslatable();
     $this->assertSame($expected, $result);
@@ -603,7 +604,7 @@ class ConfigNamesMapperTest extends UnitTestCase {
     $this->localeConfigManager
       ->expects($this->any())
       ->method('hasTranslation')
-      ->will($this->returnValueMap($map));
+      ->willReturnMap($map);
 
     $result = $this->configNamesMapper->hasTranslation($language);
     $this->assertSame($expected, $result);

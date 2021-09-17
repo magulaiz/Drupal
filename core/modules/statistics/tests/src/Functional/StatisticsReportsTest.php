@@ -49,10 +49,10 @@ class StatisticsReportsTest extends StatisticsTestBase {
 
     // Get some page and check if the block is displayed.
     $this->drupalGet('user');
-    $this->assertText('Popular content');
-    $this->assertText("Today's");
-    $this->assertText('All time');
-    $this->assertText('Last viewed');
+    $this->assertSession()->pageTextContains('Popular content');
+    $this->assertSession()->pageTextContains("Today's");
+    $this->assertSession()->pageTextContains('All time');
+    $this->assertSession()->pageTextContains('Last viewed');
 
     $tags = Cache::mergeTags($node->getCacheTags(), $block->getCacheTags());
     $tags = Cache::mergeTags($tags, $this->blockingUser->getCacheTags());
@@ -63,7 +63,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->assertCacheContexts($contexts);
 
     // Check if the node link is displayed.
-    $this->assertRaw(Link::fromTextAndUrl($node->label(), $node->toUrl('canonical'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl($node->label(), $node->toUrl('canonical'))->toString());
   }
 
 }

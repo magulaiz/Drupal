@@ -29,12 +29,13 @@ interface QueryInterface extends AlterableInterface {
    * and the Polish 'siema' within a 'greetings' text field:
    * @code
    *   $entity_ids = \Drupal::entityQuery($entity_type)
+   *     ->accessCheck(FALSE)
    *     ->condition('greetings', 'merhaba', '=', 'tr')
    *     ->condition('greetings.value', 'siema', '=', 'pl')
    *     ->execute();
    * @endcode
    *
-   * @param string|\Drupal\Core\Condition\ConditionInterface $field
+   * @param string|\Drupal\Core\Entity\Query\ConditionInterface $field
    *   Name of the field being queried or an instance of ConditionInterface.
    *   In the case of the name, it must contain a field name, optionally
    *   followed by a column name. The column can be the reference property,
@@ -236,7 +237,7 @@ interface QueryInterface extends AlterableInterface {
    * field containing 'shape' and 'color' columns. To find all drawings
    * containing both a red triangle and a blue circle:
    * @code
-   *   $query = \Drupal::entityQuery('drawing');
+   *   $query = \Drupal::entityQuery('drawing')->accessCheck(FALSE);
    *   $group = $query->andConditionGroup()
    *     ->condition('figures.color', 'red')
    *     ->condition('figures.shape', 'triangle');
@@ -260,7 +261,7 @@ interface QueryInterface extends AlterableInterface {
    * containing 'building_type' and 'color' columns. To find all green and
    * red bikesheds:
    * @code
-   *   $query = \Drupal::entityQuery('map');
+   *   $query = \Drupal::entityQuery('map')->accessCheck(FALSE);
    *   $group = $query->orConditionGroup()
    *     ->condition('attributes.color', 'red')
    *     ->condition('attributes.color', 'green');
@@ -283,7 +284,10 @@ interface QueryInterface extends AlterableInterface {
   public function orConditionGroup();
 
   /**
-   * Queries the current revision.
+   * Limits the query to only default revisions.
+   *
+   * See the @link entity_api Entity API topic @endlink for information about
+   * the current revision.
    *
    * @return $this
    */

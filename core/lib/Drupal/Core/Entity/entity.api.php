@@ -785,7 +785,7 @@ function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $a
  * @see hook_entity_type_alter()
  */
 function hook_entity_type_build(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Add a form for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_type_alter().
   $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooForm');
@@ -814,7 +814,7 @@ function hook_entity_type_build(array &$entity_types) {
  * @see \Drupal\Core\Entity\EntityTypeInterface
  */
 function hook_entity_type_alter(array &$entity_types) {
-  /** @var $entity_types \Drupal\Core\Entity\EntityTypeInterface[] */
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
   $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorage');
@@ -1537,7 +1537,7 @@ function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  * the particular entity type template, if there is one (e.g., node.html.twig).
  *
  * See the @link themeable Default theme implementations topic @endlink and
- * drupal_render() for details.
+ * \Drupal\Core\Render\RendererInterface::render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1576,7 +1576,7 @@ function hook_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterfa
  * the particular entity type template, if there is one (e.g., node.html.twig).
  *
  * See the @link themeable Default theme implementations topic @endlink and
- * drupal_render() for details.
+ * \Drupal\Core\Render\RendererInterface::render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1659,7 +1659,7 @@ function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInte
 }
 
 /**
- * Alter entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking during rendering.
  *
  * Invoked for a specific entity type.
  *
@@ -1685,7 +1685,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
 }
 
 /**
- * Alter entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking during rendering.
  *
  * The values in the #cache key of the renderable array are used to determine if
  * a cache entry exists for the entity's rendered output. Ideally only values
