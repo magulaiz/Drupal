@@ -719,7 +719,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    * @group legacy
    */
   public function testAutocompleteDeprecation() {
-    $this->expectDeprecation('The jQuery UI markup structure is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715');
+    $this->expectDeprecation('The jQuery UI markup structure is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715');
     $this->drupalGet('drupal_autocomplete/test-form');
     $this->assertNotNull($this->assertSession()->waitForElementVisible('css', '[data-autocomplete-input]'));
   }
