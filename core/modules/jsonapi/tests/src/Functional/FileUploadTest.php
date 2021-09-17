@@ -751,7 +751,6 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->field->setSetting('file_directory', '')
       ->save();
-    $this->rebuildAll();
 
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
     $expected = $this->getExpectedDocument(1, 'example.txt', TRUE);
