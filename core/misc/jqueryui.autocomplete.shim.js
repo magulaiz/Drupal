@@ -286,7 +286,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       Drupal.deprecationError({
-        message: 'The autocomplete() function is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
+        message: 'The autocomplete() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
       });
       var id = this.attr('id');
       var optionMapping = {
@@ -323,7 +323,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'source', 'valueMethod'].forEach(function (property) {
               Object.defineProperty(instanceToReturn, property, {
                 get: function get() {
-                  return console.warn("The ".concat(property, " property is not supported beginning with 9.2, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
+                  return console.warn("The ".concat(property, " property is not supported beginning with 9.3, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
                 }
               });
             });
@@ -527,6 +527,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   });
 
   $.ui.autocomplete = function () {
-    console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.2.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
+    console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
   };
 })(jQuery, Drupal);
