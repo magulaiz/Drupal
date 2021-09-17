@@ -69,6 +69,15 @@
     const autocomplete = A11yAutocomplete(autocompleteInput, options);
     const instance = autocomplete._internal_object;
 
+    document.dispatchEvent(
+      new CustomEvent('drupal-autocomplete-init', {
+        detail: {
+          instance,
+          options,
+        },
+      }),
+    );
+
     /**
      * Sends a message to assistive technology.
      *

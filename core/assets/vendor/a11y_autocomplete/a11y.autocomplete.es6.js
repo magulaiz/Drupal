@@ -320,9 +320,7 @@ class _A11yAutocomplete {
      * @event A11yAutocomplete#autocomplete-created
      * @property {Class} autocomplete - The autocomplete instance.
      */
-    this.triggerEvent('autocomplete-created', {
-      originalOptions: options,
-    });
+    this.triggerEvent('autocomplete-created');
   }
 
   /**

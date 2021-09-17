@@ -35,6 +35,12 @@
 
     var autocomplete = A11yAutocomplete(autocompleteInput, options);
     var instance = autocomplete._internal_object;
+    document.dispatchEvent(new CustomEvent('drupal-autocomplete-init', {
+      detail: {
+        instance: instance,
+        options: options
+      }
+    }));
 
     function autocompleteSendToLiveRegion(message) {
       Drupal.announce(message, 'assertive');

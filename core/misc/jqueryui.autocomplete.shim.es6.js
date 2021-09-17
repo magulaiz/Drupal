@@ -8,8 +8,8 @@
     overrides: {},
   };
 
-  document.addEventListener('autocomplete-created', (e) => {
-    const instance = e.detail.autocomplete._internal_object;
+  document.addEventListener('drupal-autocomplete-init', (e) => {
+    const { instance, options} = e.detail;
     // By default, autocomplete inputs are processed with a backwards
     // compatible shim that provides jQuery UI autocomplete markup
     // structure and API surface. If the input has the
@@ -21,7 +21,7 @@
     if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
       Drupal.autocompleteShim.jqueryUiShimInit(
         instance,
-        e.detail.originalOptions,
+        options,
       );
     }
   });

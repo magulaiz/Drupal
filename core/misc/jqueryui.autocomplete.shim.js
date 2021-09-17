@@ -29,11 +29,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   Drupal.autocompleteShim = {
     overrides: {}
   };
-  document.addEventListener('autocomplete-created', function (e) {
-    var instance = e.detail.autocomplete._internal_object;
+  document.addEventListener('drupal-autocomplete-init', function (e) {
+    var _e$detail = e.detail,
+        instance = _e$detail.instance,
+        options = _e$detail.options;
 
     if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(instance, e.detail.originalOptions);
+      Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
     }
   });
 
