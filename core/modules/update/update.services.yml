@@ -22,3 +22,7 @@ services:
     class: Drupal\update\UpdateRootFactory
     arguments: ['@kernel', '@request_stack']
     public: false
+  update.route_subscriber:
+    class: Drupal\update\Routing\UpdateRouteSubscriber
+    tags:
+      - { name: event_subscriber }

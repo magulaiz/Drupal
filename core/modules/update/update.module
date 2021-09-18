@@ -68,29 +68,13 @@ function update_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
-  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    $route_name = \Drupal::routeMatch()->getRouteName();
-    switch ($route_name) {
-      // These pages don't need additional nagging.
-      case 'update.theme_update':
-      case 'system.theme_install':
-      case 'update.module_update':
-      case 'update.module_install':
-      case 'update.status':
-      case 'update.report_update':
-      case 'update.report_install':
-      case 'update.settings':
-      case 'system.status':
-      case 'update.confirmation_page':
-        return;
-
+  $route_object = $route_match->getRouteObject();
+  if (!$route_object->getOption('_omit_update_message') && $admin_context->isAdminRoute($route_object) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
+    $route_name = $route_match->getRouteName();
+    if ($route_name === 'system.themes_page' || $route_name === 'system.modules_list') {
       // If we are on the appearance or modules list, display a detailed report
       // of the update status.
-      case 'system.themes_page':
-      case 'system.modules_list':
-        $verbose = TRUE;
-        break;
-
+      $verbose = TRUE;
     }
     module_load_install('update');
     $status = update_requirements('runtime');
