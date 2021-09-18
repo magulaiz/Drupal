@@ -5,6 +5,8 @@ update.settings:
     _title: 'Update Manager settings'
   requirements:
     _permission: 'administer site configuration'
+  options:
+    _omit_update_message: TRUE
 
 update.status:
   path: '/admin/reports/updates'
@@ -13,6 +15,8 @@ update.status:
     _title: 'Available updates'
   requirements:
     _permission: 'administer site configuration'
+  options:
+    _omit_update_message: TRUE
 
 update.manual_status:
   path: '/admin/reports/updates/check'
@@ -31,6 +35,8 @@ update.report_install:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.report_update:
   path: '/admin/reports/updates/update'
@@ -40,6 +46,8 @@ update.report_update:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.module_install:
   path: '/admin/modules/install'
@@ -49,6 +57,8 @@ update.module_install:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.module_update:
   path: '/admin/modules/update'
@@ -58,6 +68,8 @@ update.module_update:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.theme_install:
   path: '/admin/theme/install'
@@ -67,6 +79,8 @@ update.theme_install:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.theme_update:
   path: '/admin/theme/update'
@@ -76,6 +90,8 @@ update.theme_update:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
 
 update.confirmation_page:
   path: '/admin/update/ready'
@@ -85,3 +101,6 @@ update.confirmation_page:
   requirements:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
+  options:
+    _omit_update_message: TRUE
+
