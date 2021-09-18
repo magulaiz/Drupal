@@ -71,6 +71,7 @@ update.module_update:
   options:
     _update_message: 'skip'
 
+
 update.theme_install:
   path: '/admin/theme/install'
   defaults:
@@ -82,6 +83,7 @@ update.theme_install:
   options:
     _update_message: 'skip'
 
+
 update.theme_update:
   path: '/admin/theme/update'
   defaults:
@@ -92,6 +94,7 @@ update.theme_update:
     _access_update_manager: 'TRUE'
   options:
     _update_message: 'skip'
+
 
 update.confirmation_page:
   path: '/admin/update/ready'
