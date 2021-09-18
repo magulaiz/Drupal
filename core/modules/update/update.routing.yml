@@ -103,4 +103,3 @@ update.confirmation_page:
     _access_update_manager: 'TRUE'
   options:
     _omit_update_message: TRUE
-
