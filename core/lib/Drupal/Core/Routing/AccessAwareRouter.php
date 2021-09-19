@@ -10,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\RequestContextAwareInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -88,7 +89,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when access checking failed.
    */
-  public function matchRequest(Request $request) {
+  public function matchRequest(Request $request): array {
     $parameters = $this->router->matchRequest($request);
     $request->attributes->add($parameters);
     $this->checkAccess($request);
@@ -126,7 +127,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getRouteCollection() {
+  public function getRouteCollection(): RouteCollection {
     if ($this->router instanceof RouterInterface) {
       return $this->router->getRouteCollection();
     }
