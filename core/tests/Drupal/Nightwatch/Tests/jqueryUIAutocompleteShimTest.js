@@ -15,6 +15,8 @@ module.exports = {
           1000,
         )
         .click('input[name="modules[jquery_simulate][enable]"]')
+        .click('input[type="submit"]')
+        .drupalRelativeURL('/admin/modules')
         .setValue('input[type="search"]', 'autocomplete Shim Test')
         .waitForElementVisible(
           'input[name="modules[autocomplete_shim_test][enable]"]',
