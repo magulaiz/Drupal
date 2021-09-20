@@ -872,7 +872,6 @@ class _A11yAutocomplete {
                 .split(' ')
                 .forEach((className) => this.input.classList.remove(className));
             this.suggestionItems = results;
-            console.log('RESULTS', results);
             this.displayResults();
             this.cache[inputId][searchTerm] = results;
           });
