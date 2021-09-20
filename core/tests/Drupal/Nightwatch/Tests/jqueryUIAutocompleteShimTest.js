@@ -9,6 +9,12 @@ module.exports = {
     browser.drupalInstall().drupalLoginAsAdmin(() => {
       browser
         .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'jQuery Simulate')
+        .waitForElementVisible(
+          'input[name="modules[jquery_simulate][enable]"]',
+          1000,
+        )
+        .click('input[name="modules[jquery_simulate][enable]"]')
         .setValue('input[type="search"]', 'autocomplete Shim Test')
         .waitForElementVisible(
           'input[name="modules[autocomplete_shim_test][enable]"]',

@@ -587,16 +587,6 @@ jquery.once.bc:
     - core/once
     - core/drupal.object.assign
 
-jquery.simulate:
-  remote: https://github.com/jquery/jquery-simulate
-  version: "1.0.0"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/jquery/jquery-simulate/1.0.0/LICENSE.txt
-    gpl-compatible: true
-  js:
-    assets/vendor/jquery-simulate/jquery.simulate.js: { }
-
 jquery.ui:
   version: &jquery_ui_version 1.12.1
   license: &jquery_ui_license

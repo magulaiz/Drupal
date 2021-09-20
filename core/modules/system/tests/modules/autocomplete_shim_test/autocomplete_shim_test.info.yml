@@ -3,3 +3,5 @@ type: module
 description: 'Module for the testing jQuery UI autocomplete shim'
 package: Testing
 version: VERSION
+dependencies:
+  - drupal:jquery_simulate
