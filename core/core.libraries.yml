@@ -205,6 +205,7 @@ drupal.collapse:
 drupal.customevent:
   version: VERSION
   js:
+    # @todo add nomodule if https://drupal.org/node/3181050 has landed.
     misc/polyfills/customevent.js: { weight: -20 }
 
 drupal.date:
