@@ -168,6 +168,7 @@ drupal.array.find:
 drupal.array.includes:
   version: VERSION
   js:
+    # @todo add nomodule if https://drupal.org/node/3181050 has landed.
     misc/polyfills/array.includes.js: { weight: -20 }
 
 drupal.batch:
@@ -340,6 +341,7 @@ drupal.fetch:
     url: https://raw.githubusercontent.com/github/fetch/v3.4.1/LICENSE
     gpl-compatible: true
   js:
+    # @todo add nomodule if https://drupal.org/node/3181050 has landed.
     assets/vendor/fetch/fetch.umd.js: {}
   dependencies:
     - core/es6-promise
@@ -405,6 +407,7 @@ drupal.states:
 drupal.string.includes:
   version: VERSION
   js:
+    # @todo add nomodule if https://drupal.org/node/3181050 has landed.
     misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:
