@@ -631,13 +631,6 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    *   If the autocomplete is expected to open.
    */
   public function setAutocompleteValue(NodeElement $input, $id, $value, $should_open = TRUE) {
-    // Before setting a value, the the autocomplete instance must set the
-    // preventCloseOnBlur property to false. This is due to setValue() blurring
-    // the element to force triggering of the change event. Without
-    // preventCloseOnBlur set to true, that blur event will close the suggestion
-    // list moments after it is opened.
-    // @see \Behat\Mink\Driver\Selenium2Driver::setValue
-    $this->getSession()->executeScript('Drupal.Autocomplete.instances["' . $id . '"].preventCloseOnBlur = true');
     $input->setValue($value);
     if ($should_open) {
       $this->assertSession()->waitOnAutocomplete();
