@@ -6,7 +6,7 @@ update.settings:
   requirements:
     _permission: 'administer site configuration'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.status:
   path: '/admin/reports/updates'
@@ -16,7 +16,7 @@ update.status:
   requirements:
     _permission: 'administer site configuration'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.manual_status:
   path: '/admin/reports/updates/check'
@@ -36,7 +36,7 @@ update.report_install:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.report_update:
   path: '/admin/reports/updates/update'
@@ -47,7 +47,7 @@ update.report_update:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.module_install:
   path: '/admin/modules/install'
@@ -58,7 +58,7 @@ update.module_install:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.module_update:
   path: '/admin/modules/update'
@@ -69,7 +69,7 @@ update.module_update:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.theme_install:
   path: '/admin/theme/install'
@@ -80,7 +80,7 @@ update.theme_install:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.theme_update:
   path: '/admin/theme/update'
@@ -91,7 +91,7 @@ update.theme_update:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
 
 update.confirmation_page:
   path: '/admin/update/ready'
@@ -102,4 +102,4 @@ update.confirmation_page:
     _permission: 'administer software updates'
     _access_update_manager: 'TRUE'
   options:
-    _omit_update_message: TRUE
+    _update_message: 'skip'
