@@ -1,0 +1,5 @@
+name: 'jQuery Simulate'
+type: module
+description: 'Module that provides the jQuery Simulate test library'
+package: Testing
+version: VERSION
