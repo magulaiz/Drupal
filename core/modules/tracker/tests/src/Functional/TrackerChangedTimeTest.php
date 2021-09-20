@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\tracker\Functional;
 
+use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Tests\BrowserTestBase;
@@ -32,23 +35,47 @@ class TrackerChangedTimeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  protected $contentType;
+  protected $commentType;
+
+  protected function setUp(): void {
+    parent::setUp();
+    // Create a page content type.
+    $this->contentType = $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+
+    // Allow comments on page.
+    $this->commentType = CommentType::create([
+      'id' => 'node_comment',
+      'label' => 'Node comment',
+      'description' => '',
+      'target_entity_type_id' => 'node',
+    ]);
+    $this->commentType->save();
+
+    $this->addDefaultCommentField(
+      'node',
+       $this->contentType->id(),
+      'field_comment',
+      CommentItemInterface::OPEN,
+      $this->commentType->id()
+    );
+  }
+
   /**
    * Tests the changed time calculated on node.
    */
   public function testCalculateChangedTime() {
-    // Create comment field on a page.
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
-    $this->addDefaultCommentField('node', 'page');
-
     $node = $this->createNode(['changed' => 979534800]);
     $changed_time = $node->getChangedTime();
 
     $this->assertEquals($changed_time, _tracker_calculate_changed($node));
+
     // Add comment.
     $comment = Comment::create([
       'entity_id' => $node->id(),
       'entity_type' => 'node',
-      'field_name' => 'comment',
+      'field_name' => 'field_comment',
+      'status' => CommentInterface::PUBLISHED,
       'subject' => $this->randomMachineName(),
       'language' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'comment_body' => [LanguageInterface::LANGCODE_NOT_SPECIFIED => [$this->randomMachineName()]],
