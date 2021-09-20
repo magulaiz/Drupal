@@ -69,13 +69,8 @@ function update_page_top() {
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
   $route_object = $route_match->getRouteObject();
-  if (!$route_object->getOption('_omit_update_message') && $admin_context->isAdminRoute($route_object) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    $route_name = $route_match->getRouteName();
-    if ($route_name === 'system.themes_page' || $route_name === 'system.modules_list') {
-      // If we are on the appearance or modules list, display a detailed report
-      // of the update status.
-      $verbose = TRUE;
-    }
+  $update_message_route_option = $route_object->getOption('_update_message');
+  if ($update_message_route_option !== 'skip' && $admin_context->isAdminRoute($route_object) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     module_load_install('update');
     $status = update_requirements('runtime');
     foreach (['core', 'contrib'] as $report_type) {
@@ -86,7 +81,7 @@ function update_page_top() {
       if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
         $status[$type]['description'] = \Drupal::service('renderer')->renderPlain($status[$type]['description']);
       }
-      if (!empty($verbose)) {
+      if ($update_message_route_option === 'verbose') {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
             \Drupal::messenger()->addError($status[$type]['description']);
