@@ -170,8 +170,13 @@ class TemporaryJsonapiFileFieldUploader {
 
     $prepared_filename = $this->prepareFilename($filename, $validators);
 
+    // Ensure there is a trailing slash.
+    if (substr($destination, -1) !== '/') {
+      $destination .= '/';
+    }
+
     // Create the file.
-    $file_uri = "{$destination}/{$prepared_filename}";
+    $file_uri = $destination . $prepared_filename;
 
     $temp_file_path = $this->streamUploadData();
 
