@@ -133,10 +133,6 @@ define('DRUPAL_ROOT', dirname(__DIR__, 2));
 //   alias once Drupal is running Symfony 5.3 or higher.
 class_alias('Drupal\Core\Http\KernelEvent', 'Symfony\Component\HttpKernel\Event\KernelEvent', TRUE);
 
-// PHP 8.1 workarounds not final fixes.
-// @see https://www.drupal.org/project/drupal/issues/3220021
-class_alias('Drupal\Core\PhpFixes\AbstractFeed', '\Laminas\Feed\Reader\Feed\AbstractFeed', TRUE);
-
 /**
  * Set up the Symfony Request factory for forward compatibility with Symfony 5.
  *
