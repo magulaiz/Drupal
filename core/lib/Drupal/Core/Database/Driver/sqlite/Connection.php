@@ -91,15 +91,15 @@ class Connection extends DatabaseConnection {
       if (!empty($prefix)) {
         // Only attach the database once.
         if (!isset($this->attachedDatabases[$prefix])) {
-          $this->attachedDatabases[$prefix] = $prefix;
           if ($connection_options['database'] === ':memory:') {
             // In memory database use ':memory:' as database name. According to
             // http://www.sqlite.org/inmemorydb.html it will open a unique
             // database so attaching it twice is not a problem.
+            $this->attachedDatabases[$prefix] = $prefix;
             $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'], ':prefix' => $prefix]);
           }
           else {
-            $this->query('ATTACH DATABASE :database AS :prefix', [':database' => $connection_options['database'] . '-' . $prefix, ':prefix' => $prefix]);
+            $this->attachDatabase($prefix);
           }
         }
 
@@ -209,6 +209,14 @@ class Connection extends DatabaseConnection {
       }
     }
     parent::__destruct();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function attachDatabase(string $database): void {
+    $this->attachedDatabases[$database] = $database;
+    $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $this->connectionOptions['database'] . '-' . $database, ':database' => $database]);
   }
 
   /**
