@@ -136,7 +136,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * {@inheritdoc}
    */
-  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH) {
+  public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
     if ($this->router instanceof UrlGeneratorInterface) {
       return $this->router->generate($name, $parameters, $referenceType);
     }
@@ -148,7 +148,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when access checking failed.
    */
-  public function match($pathinfo) {
+  public function match($pathinfo): array {
     return $this->matchRequest(Request::create($pathinfo));
   }
 
