@@ -8,7 +8,6 @@
  *
  * Date: 2014-08-22
  */
-// cSpell:disable
 // Disable eslint as this is a third party library. It isn't in /core/vendor,
 // where such libraries would typically be, because it is intended to only be
 // used in tests.

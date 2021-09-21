@@ -1326,6 +1326,8 @@ revlog
 revpub
 ribisi
 ritchie
+rkeyEvent
+rmouseEvent
 robloach
 robo
 rolename
