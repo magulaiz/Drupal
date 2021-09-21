@@ -54,7 +54,7 @@ class DateTimeIso8601Normalizer extends DateTimeNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     // @todo Move the date-only handling out of here in https://www.drupal.org/project/drupal/issues/2958416.
     $field_definition = isset($context['target_instance'])
       ? $context['target_instance']->getFieldDefinition()

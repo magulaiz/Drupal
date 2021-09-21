@@ -63,7 +63,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[LanguageConfigOverrideEvents::SAVE_OVERRIDE] = 'onOverrideChange';
     $events[LanguageConfigOverrideEvents::DELETE_OVERRIDE] = 'onOverrideChange';
     $events[ConfigEvents::SAVE] = 'onConfigSave';
