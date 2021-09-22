@@ -260,9 +260,38 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    if ($type == 'install') {
-      // Make sure the installation API is available
+    $inactive_modules = [];
+    if ($type === 'install') {
+      // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
+      if (!$this->moduleExists($module)) {
+        // In case if there are no enabled extension definition found, let's
+        // try to find the extension's install file to include.
+        $extensions_type_order = [
+          'module',
+          'theme',
+          'profile',
+          'theme_engine',
+        ];
+        // Found extension definitions are empty by the default.
+        $definitions = NULL;
+        foreach ($extensions_type_order as $extension_type) {
+          try {
+            // Let's try to read extension.
+            $definitions = \Drupal::service('extension.list.' . $extension_type)
+              ->get($module);
+          }
+          catch (UnknownExtensionException $e) {
+            // Keep try to load other type of extensions.
+          }
+          if ($definitions !== NULL) {
+            // The extension definitions was found, let's keep it for the main
+            // handler below.
+            $inactive_modules[$module] = $definitions;
+            break;
+          }
+        }
+      }
     }
 
     $name = $name ?: $module;
@@ -270,16 +299,20 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    if (isset($this->moduleList[$module])) {
+    $module_list = $this->moduleList;
+    if (!empty($inactive_modules)) {
+      // Temporarily add the inactive module definition to handle loading
+      // install module file.
+      $module_list = array_merge($module_list, $inactive_modules);
+    }
+    if (isset($module_list[$module])) {
       $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
       if (is_file($file)) {
         require_once $file;
         $this->includeFileKeys[$key] = $file;
         return $file;
       }
-      else {
-        $this->includeFileKeys[$key] = FALSE;
-      }
+      $this->includeFileKeys[$key] = FALSE;
     }
     return FALSE;
   }

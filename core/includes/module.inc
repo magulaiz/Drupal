@@ -54,10 +54,6 @@ function module_load_install($module) {
  *   Use \Drupal::moduleHandler()->loadInclude($module, $type, $name = NULL);
  *
  * @see https://www.drupal.org/node/2948698
- * @todo The module_handler service has a loadInclude() method which performs
- *   this same task but only for enabled modules. Figure out a way to move this
- *   functionality entirely into the module_handler while keeping the ability to
- *   load the files of disabled modules.
  */
 function module_load_include($type, $module, $name = NULL) {
   @trigger_error("module_load_include() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
