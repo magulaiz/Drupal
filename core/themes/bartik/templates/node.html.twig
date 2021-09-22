@@ -91,7 +91,11 @@
       <div class="node__meta">
         {{ author_picture }}
         <span{{ author_attributes }}>
-          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+          {% if author_name %}
+              {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+          {% else %}
+              {% trans %}Submitted on {{ date }}{% endtrans %}
+          {% endif %}
         </span>
         {{ metadata }}
       </div>

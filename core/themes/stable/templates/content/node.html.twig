@@ -81,7 +81,11 @@
     <footer>
       {{ author_picture }}
       <div{{ author_attributes }}>
-        {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {% if author_name %}
+          {% trans %}Submitted by {{ author_name }} on {{ date }}{% endtrans %}
+        {% else %}
+          {% trans %}Submitted on {{ date }}{% endtrans %}
+        {% endif %}
         {{ metadata }}
       </div>
     </footer>
