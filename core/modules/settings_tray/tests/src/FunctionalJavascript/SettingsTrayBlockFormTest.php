@@ -74,7 +74,6 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $this->drupalGet('user');
 
     $link = $web_assert->waitForElement('css', "$block_selector .contextual-links li a");
-    $this->assertEquals('Quick edit', $link->getHtml(), "'Quick edit' is the first contextual link for the block.");
     $destination = (string) $this->loggedInUser->toUrl()->toString();
     $this->assertStringContainsString("/admin/structure/block/manage/$block_id/settings-tray?destination=$destination", $link->getAttribute('href'));
 

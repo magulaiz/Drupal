@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
+use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -293,6 +294,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if a custom can be in-place edited with Quick Edit.
    */
   public function testCustomBlock() {
+    $web_assert = $this->assertSession();
     $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',
@@ -310,11 +312,14 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
       ],
     ]);
     $block_content->save();
-    $this->drupalPlaceBlock('block_content:' . $block_content->uuid(), [
+    $block = $this->drupalPlaceBlock('block_content:' . $block_content->uuid(), [
       'label' => 'My custom block!',
     ]);
+    $block_selector = $this->getBlockSelector($block);
 
     $this->drupalGet('');
+    $link = $web_assert->waitForElement('css', "$block_selector .contextual-links li a");
+    $this->assertEquals('Quick edit', $link->getHtml(), "'Quick edit' is the first contextual link for the block.");
 
     // Initial state.
     $this->awaitQuickEditForEntity('block_content', 1);
@@ -344,6 +349,19 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
       'block_content/1/body/en/full' => '.cke_editable_inline',
     ]);
     $this->assertSession()->elementExists('css', '#quickedit-entity-toolbar .quickedit-toolgroup.wysiwyg-main > .cke_chrome .cke_top[role="presentation"] .cke_toolbar[role="toolbar"] .cke_toolgroup[role="presentation"] > .cke_button[title~="Bold"][role="button"]');
+  }
+
+  /**
+   * Gets the block CSS selector.
+   *
+   * @param \Drupal\block\Entity\Block $block
+   *   The block.
+   *
+   * @return string
+   *   The CSS selector.
+   */
+  public function getBlockSelector(Block $block) {
+    return '#block-' . str_replace('_', '-', $block->id());
   }
 
 }
