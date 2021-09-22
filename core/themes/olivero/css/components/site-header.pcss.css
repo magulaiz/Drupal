@@ -81,6 +81,10 @@ html.js body:not(.is-always-mobile-nav) .site-header__inner {
   @media (--nav) {
     transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
   }
+
+  @media (--nav) and (prefers-reduced-motion) {
+    transition: opacity 0.3s, box-shadow 0.3s;
+  }
 }
 
 .site-header__fixable.is-expanded .site-header__inner {

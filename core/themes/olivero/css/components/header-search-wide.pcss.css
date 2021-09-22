@@ -129,6 +129,10 @@
         transform: scaleX(0);
         transform-origin: left;
         border-block-start: solid var(--sp0-5) var(--color--blue-50);
+
+        @media (prefers-reduced-motion) {
+          transition: none;
+        }
       }
     }
 

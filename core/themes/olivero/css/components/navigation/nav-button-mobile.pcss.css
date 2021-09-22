@@ -77,6 +77,10 @@
     content: "";
     transition: all 0.2s;
     background-color: var(--color--blue-50);
+
+    @media (prefers-reduced-motion) {
+      transition: none;
+    }
   }
 
   &:after {
@@ -88,6 +92,10 @@
     content: "";
     transition: all 0.2s;
     background-color: var(--color--blue-50);
+
+    @media (prefers-reduced-motion) {
+      transition: none;
+    }
   }
 }
 

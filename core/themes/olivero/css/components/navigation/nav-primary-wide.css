@@ -346,6 +346,13 @@ body:not(.is-always-mobile-nav) {
     }
   }
 
+@media (min-width: 75rem) and (prefers-reduced-motion) {
+    html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2,
+    html.js body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
+      transition: visibility 0.2s, opacity 0.2s;
+    }
+  }
+
 @media (min-width: 75rem) {
         [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner:after {
           transform-origin: right;

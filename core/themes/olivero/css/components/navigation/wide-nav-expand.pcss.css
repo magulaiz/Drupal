@@ -64,6 +64,10 @@ body.is-always-mobile-nav .wide-nav-expand {
       height: 0;
       transition: transform 0.2s;
       background-color: currentColor;
+
+      @media (prefers-reduced-motion) {
+        transition: none;
+      }
     }
 
     &:nth-child(2) {
@@ -84,6 +88,10 @@ body.is-always-mobile-nav .wide-nav-expand {
       height: 0;
       transition: transform 0.2s;
       background-color: currentColor;
+
+      @media (prefers-reduced-motion) {
+        transition: none;
+      }
     }
   }
 }

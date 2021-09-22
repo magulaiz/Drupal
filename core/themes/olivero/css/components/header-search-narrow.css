@@ -202,8 +202,15 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left; /* LTR */
-        border-top: solid 5px #2494db;
+        border-top: solid 5px #2494db
       }
+
+@media (prefers-reduced-motion) {
+
+.block-search-narrow .search-form__submit .icon--search:after {
+          transition: none
+      }
+        }
 
 .block-search-narrow .search-form__submit:focus {
       outline: solid 4px transparent;

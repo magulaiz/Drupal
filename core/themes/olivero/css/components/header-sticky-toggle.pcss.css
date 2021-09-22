@@ -68,6 +68,10 @@ body.is-always-mobile-nav .sticky-header-toggle {
       height: 0;
       transition: transform 0.2s;
       background-color: var(--color--white);
+
+      @media (prefers-reduced-motion) {
+        transition: none;
+      }
     }
 
     &:nth-child(2) {
@@ -88,6 +92,10 @@ body.is-always-mobile-nav .sticky-header-toggle {
       height: 0;
       transition: transform 0.2s;
       background-color: var(--color--white);
+
+      @media (prefers-reduced-motion) {
+        transition: none;
+      }
     }
   }
 }

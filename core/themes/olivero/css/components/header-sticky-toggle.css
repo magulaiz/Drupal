@@ -86,8 +86,15 @@ body.is-always-mobile-nav .sticky-header-toggle {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: #fff
     }
+
+@media (prefers-reduced-motion) {
+
+.sticky-header-toggle__icon > span:nth-child(1) {
+        transition: none
+    }
+      }
 
 [dir="ltr"] .sticky-header-toggle__icon > span:nth-child(2) {
       left: 0
@@ -121,8 +128,15 @@ body.is-always-mobile-nav .sticky-header-toggle {
       width: 100%;
       height: 0;
       transition: transform 0.2s;
-      background-color: #fff;
+      background-color: #fff
     }
+
+@media (prefers-reduced-motion) {
+
+.sticky-header-toggle__icon > span:nth-child(3) {
+        transition: none
+    }
+      }
 
 .is-fixed .sticky-header-toggle {
   cursor: pointer;

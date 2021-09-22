@@ -97,8 +97,15 @@
     transform: translateY(0.3125rem);
     opacity: 0;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 2px currentColor;
+    border-top: solid 2px currentColor
   }
+
+@media (prefers-reduced-motion) {
+
+.secondary-nav__menu-link:after {
+      transition: opacity 0.2s
+  }
+    }
 
 .secondary-nav__menu-link:hover:after {
       transform: translateY(0);

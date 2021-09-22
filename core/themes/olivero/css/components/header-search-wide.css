@@ -248,8 +248,15 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left;
-        border-top: solid 9px #2494db;
+        border-top: solid 9px #2494db
       }
+
+@media (prefers-reduced-motion) {
+
+.block-search-wide__wrapper .search-form__submit .icon--search:after {
+          transition: none
+      }
+        }
 
 .block-search-wide__wrapper .search-form__submit:focus {
       outline: solid 4px transparent;

@@ -58,6 +58,12 @@ html.js .header-nav {
   transition: visibility 0.2s, transform 0.2s;
 }
 
+@media (prefers-reduced-motion) {
+  html.js .header-nav {
+    transition: visibility 0.2s;
+  }
+}
+
 /* Toolbar is fixed, and tray is vertical. */
 body.toolbar-vertical .header-nav {
   border-top-width: calc(var(--toolbar-height) + var(--sp3));
@@ -101,6 +107,10 @@ body:not(.is-always-mobile-nav) .header-nav {
     transform: none;
     border-block-start: 0;
     box-shadow: none;
+  }
+
+  @media (--nav) and (prefers-reduced-motion) {
+    transition: none;
   }
 }
 
