@@ -184,13 +184,6 @@ if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   fi
 fi
 
-# @todo Remove the next 3 lines before committing. This script only lints
-#  JavaScript files that have changed, so we add this to check all files for
-#  jQuery-specific lint errors.
-cd "$TOP_LEVEL/core"
-yarn lint:core-js-passing
-cd $TOP_LEVEL
-
 for FILE in $FILES; do
   STATUS=0;
   # Print a line to separate spellcheck output from per file output.
@@ -420,6 +413,22 @@ for FILE in $FILES; do
   printf -- '-%.0s' {1..100}
   printf "\n"
 done
+
+# @todo Remove the next chunk of lines before committing. This script only lints
+#  JavaScript files that have changed, so we add this to check all files for
+#  jQuery-specific lint errors.
+cd "$TOP_LEVEL/core"
+node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json .
+
+CORRECTJQS=$?
+if [ "$CORRECTJQS" -ne "0" ]; then
+  # No need to write any output the node command will do this for us.
+  printf "${red}FAILURE ${reset}: unsupported jQuery usage. See errors above."
+  STATUS=1
+  FINAL_STATUS=1
+fi
+cd $TOP_LEVEL
+# @todo end lines to remove
 
 if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
