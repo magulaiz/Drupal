@@ -184,6 +184,13 @@ if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]]; then
   fi
 fi
 
+# @todo Remove the next 3 lines before committing. This script only lints
+#  JavaScript files that have changed, so we add this to check all files for
+#  jQuery-specific lint errors.
+cd "$TOP_LEVEL/core"
+yarn lint:core-js-passing
+cd $TOP_LEVEL
+
 for FILE in $FILES; do
   STATUS=0;
   # Print a line to separate spellcheck output from per file output.
@@ -252,10 +259,6 @@ for FILE in $FILES; do
   ############################################################################
   ### JAVASCRIPT FILES
   ############################################################################
-  # @TODO Remove the next line before committing. This script only lints
-  #  JavaScript files that have changed, so we add this to check all files for
-  #  jQuery-specific lint errors. 
-  node ./node_modules/eslint/bin/eslint.js --quiet  --config=.eslintrc.passing.json  .
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ ! $FILE =~ ^core/tests/Drupal/Nightwatch ]] && [[ ! $FILE =~ ^core/assets/vendor/jquery.ui/ui ]]; then
     # Work out the root name of the JavaScript so we can ensure that the ES6
     # version has been compiled correctly.
