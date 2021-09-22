@@ -11,7 +11,7 @@ interface MigrateExecutableInterface {
    *
    * @return int
    *   Returns a value indicating the status of the import operation.
-   *   The values are:
+   *   The possible values are:
    *     - MigrationInterface::RESULT_COMPLETED: the process has a fatal error.
    *     - MigrationInterface::RESULT_INCOMPLETE: the process has stopped
    *     itself (e.g., the memory limit is approaching).
