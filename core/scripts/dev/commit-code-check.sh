@@ -252,6 +252,10 @@ for FILE in $FILES; do
   ############################################################################
   ### JAVASCRIPT FILES
   ############################################################################
+  # @TODO Remove the next line before committing. This script only lints
+  #  JavaScript files that have changed, so we add this to check all files for
+  #  jQuery-specific lint errors. 
+  node ./node_modules/eslint/bin/eslint.js --quiet  --config=.eslintrc.passing.json  .
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ ! $FILE =~ ^core/tests/Drupal/Nightwatch ]] && [[ ! $FILE =~ ^core/assets/vendor/jquery.ui/ui ]]; then
     # Work out the root name of the JavaScript so we can ensure that the ES6
     # version has been compiled correctly.
