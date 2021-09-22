@@ -1724,7 +1724,7 @@ function install_download_additional_translations_operations(&$install_state) {
  */
 function install_import_translations(&$install_state) {
   $module_handler = \Drupal::moduleHandler();
-  $module_handler->loadInclude('locale', 'translation.inc');
+  $module_handler->loadInclude('locale', 'inc', 'translation');
 
   // If there is more than one language or the single one is not English, we
   // should import translations.
@@ -1742,7 +1742,7 @@ function install_import_translations(&$install_state) {
       $operations[] = ['locale_translation_batch_fetch_import', ['drupal', $language->getId(), []]];
     }
 
-    $module_handler->loadInclude('fetch.inc', 'locale');
+    $module_handler->loadInclude('locale', 'inc', 'fetch');
     $batch = [
       'operations' => $operations,
       'title' => t('Updating translations.'),
@@ -1765,7 +1765,7 @@ function install_import_translations(&$install_state) {
  */
 function _install_prepare_import($langcodes, $server_pattern) {
   $module_handler = \Drupal::moduleHandler();
-  $module_handler->loadInclude('locale', 'bulk.inc');
+  $module_handler->loadInclude('locale', 'inc', 'bulk');
   $matches = [];
 
   foreach ($langcodes as $langcode) {
@@ -1792,7 +1792,7 @@ function _install_prepare_import($langcodes, $server_pattern) {
             'status' => 1,
           ];
           \Drupal::service('locale.project')->set($data['name'], $data);
-          $module_handler->loadInclude('compare.inc', 'locale');
+          $module_handler->loadInclude('locale', 'inc', 'compare');
           // Reset project information static cache so that it uses the data
           // set above.
           locale_translation_clear_cache_projects();

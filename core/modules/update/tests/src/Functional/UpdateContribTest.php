@@ -418,7 +418,7 @@ class UpdateContribTest extends UpdateTestBase {
    * Tests updates with a hidden base theme.
    */
   public function testUpdateHiddenBaseTheme() {
-    \Drupal::moduleHandler()->loadInclude('compare.inc', 'update');
+    \Drupal::moduleHandler()->loadInclude('update', 'inc', 'compare');
 
     // Install the subtheme.
     \Drupal::service('theme_installer')->install(['update_test_subtheme']);

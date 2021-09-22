@@ -20,7 +20,7 @@ function module_load_install($module) {
   // Make sure the installation API is available
   include_once __DIR__ . '/install.inc';
 
-  return \Drupal::moduleHandler()->loadInclude('install', $module);
+  return \Drupal::moduleHandler()->loadInclude($module, 'install');
 }
 
 /**
