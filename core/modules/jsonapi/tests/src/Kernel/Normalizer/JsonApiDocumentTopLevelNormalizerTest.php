@@ -21,6 +21,7 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -38,6 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -222,8 +224,16 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * @covers ::normalize
+   * @dataProvider normalizeDataProvider
    */
-  public function testNormalize() {
+  public function testNormalize($has_view_user_permission) {
+    if ($has_view_user_permission) {
+      $this->setUpCurrentUser([], ['view usernames', 'access content']);
+    }
+    else {
+      $this->setUpCurrentUser([], ['access content']);
+    }
+
     list($request, $resource_type) = $this->generateProphecies('node', 'article');
 
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
@@ -299,16 +309,37 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
         'related' => ['href' => Url::fromUri('internal:/jsonapi/node/article/' . $this->node->uuid() . '/uid', ['query' => ['resourceVersion' => 'id:' . $this->node->getRevisionId()]])->setAbsolute()->toString(TRUE)->getGeneratedUrl()],
       ],
     ], $normalized['data']['relationships']['uid']);
-    $this->assertTrue(empty($normalized['meta']['omitted']));
-    $this->assertSame($this->user->uuid(), $normalized['included'][0]['id']);
-    $this->assertSame('user--user', $normalized['included'][0]['type']);
-    $this->assertSame('user1', $normalized['included'][0]['attributes']['display_name']);
-    $this->assertCount(1, $normalized['included'][0]['attributes']);
-    $this->assertSame($this->term1->uuid(), $normalized['included'][1]['id']);
-    $this->assertSame('taxonomy_term--tags', $normalized['included'][1]['type']);
-    $this->assertSame($this->term1->label(), $normalized['included'][1]['attributes']['name']);
-    $this->assertCount(12, $normalized['included'][1]['attributes']);
-    $this->assertTrue(!isset($normalized['included'][1]['attributes']['created']));
+    if ($has_view_user_permission) {
+      $this->assertTrue(empty($normalized['meta']['omitted']));
+      $this->assertSame($this->user->uuid(), $normalized['included'][0]['id']);
+      $this->assertSame('user--user', $normalized['included'][0]['type']);
+      $this->assertSame('user1', $normalized['included'][0]['attributes']['display_name']);
+      $this->assertCount(1, $normalized['included'][0]['attributes']);
+      $this->assertSame($this->term1->uuid(), $normalized['included'][1]['id']);
+      $this->assertSame('taxonomy_term--tags', $normalized['included'][1]['type']);
+      $this->assertSame($this->term1->label(), $normalized['included'][1]['attributes']['name']);
+      $this->assertCount(12, $normalized['included'][1]['attributes']);
+      $this->assertTrue(!isset($normalized['included'][1]['attributes']['created']));
+      // Make sure that the cache tags for the includes and the requested entities
+      // are bubbling as expected.
+      $this->assertEqualsCanonicalizing(
+        ['file:1', 'node:1', 'taxonomy_term:1', 'taxonomy_term:2', 'user:1'],
+        $jsonapi_doc_object->getCacheTags()
+      );
+      $this->assertSame(
+        Cache::PERMANENT,
+        $jsonapi_doc_object->getCacheMaxAge()
+      );
+    }
+    else {
+      $this->assertNotEmpty($normalized['meta']['omitted']);
+      $this->assertSame($this->term1->uuid(), $normalized['included'][0]['id']);
+      $this->assertSame('taxonomy_term--tags', $normalized['included'][0]['type']);
+      $this->assertSame($this->term1->label(), $normalized['included'][0]['attributes']['name']);
+      $this->assertCount(12, $normalized['included'][0]['attributes']);
+      $this->assertTrue(!isset($normalized['included'][0]['attributes']['created']));
+    }
+
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertEqualsCanonicalizing(
@@ -319,6 +350,16 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       Cache::PERMANENT,
       $jsonapi_doc_object->getCacheMaxAge()
     );
+  }
+
+  /**
+   * Provides test cases for data normalization.
+   */
+  public function normalizeDataProvider() {
+    return [
+      'with view user permission' => [TRUE],
+      'without view user permission' => [FALSE],
+    ];
   }
 
   /**
@@ -360,8 +401,15 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * @covers ::normalize
+   * @dataProvider normalizeDataProvider
    */
-  public function testNormalizeUuid() {
+  public function testNormalizeUuid($has_view_user_permission) {
+    if ($has_view_user_permission) {
+      $this->setUpCurrentUser([], ['view usernames', 'access content']);
+    }
+    else {
+      $this->setUpCurrentUser([], ['access content']);
+    }
     list($request, $resource_type) = $this->generateProphecies('node', 'article', 'uuid');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
     $include_param = 'uid,field_tags';
@@ -393,12 +441,18 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     $normalized = $jsonapi_doc_object->getNormalization();
     $this->assertStringMatchesFormat($this->node->uuid(), $normalized['data']['id']);
     $this->assertEquals($this->node->type->entity->uuid(), $normalized['data']['relationships']['node_type']['data']['id']);
-    $this->assertEquals($this->user->uuid(), $normalized['data']['relationships']['uid']['data']['id']);
-    $this->assertFalse(empty($normalized['included'][0]['id']));
-    $this->assertTrue(empty($normalized['meta']['omitted']));
-    $this->assertEquals($this->user->uuid(), $normalized['included'][0]['id']);
-    $this->assertCount(1, $normalized['included'][0]['attributes']);
-    $this->assertCount(12, $normalized['included'][1]['attributes']);
+    $this->assertEquals($this->node->uid->entity->uuid(), $normalized['data']['relationships']['uid']['data']['id']);
+    if ($has_view_user_permission) {
+      $this->assertTrue(empty($normalized['meta']['omitted']));
+      $this->assertFalse(empty($normalized['included'][0]['id']));
+      $this->assertEquals($this->user->uuid(), $normalized['included'][0]['id']);
+      $this->assertCount(1, $normalized['included'][0]['attributes']);
+      $this->assertCount(12, $normalized['included'][1]['attributes']);
+    }
+    else {
+      $this->assertNotEmpty($normalized['meta']['omitted']);
+      $this->assertNotEquals($this->node->uid->entity->uuid(), $normalized['included'][0]['id']);
+    }
     // Make sure that the cache tags for the includes and the requested entities
     // are bubbling as expected.
     $this->assertEqualsCanonicalizing(

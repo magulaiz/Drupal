@@ -318,6 +318,33 @@ class UserTest extends ResourceTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function testGetIndividual() {
+    // Without "view usernames" permissions we expect an HTTP 403.
+    // @todo Eliminate this code duplicate if we can.
+    // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
+    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
+    // $url = $this->entity->toUrl('jsonapi');
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
+
+    $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
+    $expected_403_cacheability->addCacheTags(['user:' . $this->entity->id()]);
+    $response = $this->request('GET', $url, $request_options);
+
+    $reason = $this->getExpectedUnauthorizedAccessMessage('GET');
+    $message = trim("The current user is not allowed to GET the selected resource. $reason");
+    $this->assertResourceErrorResponse(403, $message, $url, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $this->assertArrayNotHasKey('Link', $response->getHeaders());
+
+    // Grant permission to the user to see usernames (user entity labels).
+    $this->account = $this->createUser(['view usernames']);
+    parent::testGetIndividual();
+  }
+
+  /**
    * Tests PATCHing security-sensitive base fields to change other users.
    */
   public function testPatchSecurityOtherUser() {
@@ -457,7 +484,6 @@ class UserTest extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     $doc = Json::decode((string) $response->getBody());
 
-    $this->assertCount(4, $doc['data']);
     $this->assertSame(User::load(0)->uuid(), $doc['data'][0]['id']);
     $this->assertSame('User 0', $doc['data'][0]['attributes']['display_name']);
   }

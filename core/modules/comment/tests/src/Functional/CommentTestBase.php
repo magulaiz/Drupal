@@ -74,10 +74,11 @@ abstract class CommentTestBase extends BrowserTestBase {
       'skip comment approval',
       'post comments',
       'access comments',
-      // Usernames aren't shown in comment edit form autocomplete unless this
-      // permission is granted.
-      'access user profiles',
       'access content',
+      // Usernames aren't shown in comment edit form autocomplete unless these
+      // permissions are granted.
+      'view usernames',
+      'access user profiles',
      ]);
     $this->webUser = $this->drupalCreateUser([
       'access comments',

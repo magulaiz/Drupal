@@ -55,7 +55,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
         'media_view',
         'user:2',
       ])
-      ->setCacheContexts(['timezone', 'user.permissions'])
+      ->setCacheContexts(['timezone', 'user', 'user.permissions'])
       ->setCacheMaxAge(Cache::PERMANENT);
 
     return [
@@ -417,7 +417,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       'media_view',
       'user:2',
     ], $result->getCacheTags());
-    $this->assertEqualsCanonicalizing(['timezone', 'user.permissions'], $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing(['timezone', 'user', 'user.permissions'], $result->getCacheContexts());
     $this->assertSame(Cache::PERMANENT, $result->getCacheMaxAge());
     $this->assertSame(['library'], array_keys($result->getAttachments()));
     $this->assertSame($expected_asset_libraries, $result->getAttachments()['library']);

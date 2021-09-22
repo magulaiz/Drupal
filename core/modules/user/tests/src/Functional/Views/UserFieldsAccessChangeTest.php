@@ -59,27 +59,30 @@ class UserFieldsAccessChangeTest extends UserTestBase {
    * access but not otherwise.
    */
   public function testUserNameLink() {
+    $user_to_check = $this->drupalCreateUser();
+
+    // No access, no username.
     $test_user = $this->drupalCreateUser();
-    $xpath = "//td/a[.='" . $test_user->getAccountName() . "'][@class='username']/@href[.='" . $test_user->toUrl()->toString() . "']";
-
-    $attributes = [
-      'title' => 'View user profile.',
-      'class' => 'username',
-    ];
-    $link = $test_user->toLink(NULL, 'canonical', ['attributes' => $attributes])->toString();
-
-    // No access, so no link.
+    $this->drupalLogin($test_user);
     $this->drupalGet('test_user_fields_access');
-    $this->assertSession()->pageTextContains($test_user->getAccountName());
+    $this->assertSession()->pageTextNotContains($user_to_check->getAccountName());
+
+    $xpath = "//td/a[.='" . $user_to_check->getAccountName() . "'][@class='username']/@href[.='" . $user_to_check->toUrl()->toString() . "']";
+
+    // Has view usernames permission but no view user profiles.
+    $test_user = $this->drupalCreateUser(['view usernames']);
+    $this->drupalLogin($test_user);
+    $this->drupalGet('test_user_fields_access');
+    $this->assertSession()->pageTextContains($user_to_check->getAccountName());
     $result = $this->xpath($xpath);
-    $this->assertCount(0, $result, 'User is not a link');
+    $this->assertCount(0, $result, "{$user_to_check->getAccountName()} user is not a link");
 
     // Assign sub-admin role to grant extra access.
-    $user = $this->drupalCreateUser(['sub-admin']);
-    $this->drupalLogin($user);
+    $test_user = $this->drupalCreateUser(['sub-admin', 'view usernames']);
+    $this->drupalLogin($test_user);
     $this->drupalGet('test_user_fields_access');
     $result = $this->xpath($xpath);
-    $this->assertCount(1, $result, 'User is a link');
+    $this->assertCount(1, $result, "{$user_to_check->getAccountName()} user is a link");
   }
 
 }

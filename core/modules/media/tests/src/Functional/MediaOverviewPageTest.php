@@ -92,6 +92,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
       'view media',
       'update any media',
       'delete any media',
+      'view usernames',
     ]);
     $this->getSession()->reload();
     $row1 = $assert_session->elementExists('css', 'table tbody tr:nth-child(1)');

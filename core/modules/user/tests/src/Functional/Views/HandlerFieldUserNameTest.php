@@ -68,6 +68,7 @@ class HandlerFieldUserNameTest extends UserTestBase {
    * Tests that the field handler works when no additional fields are added.
    */
   public function testNoAdditionalFields() {
+    $this->setUpCurrentUser([], ['view usernames']);
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 

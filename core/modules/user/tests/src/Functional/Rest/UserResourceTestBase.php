@@ -52,7 +52,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['access user profiles']);
+        $this->grantPermissionsToTestedRole(['access user profiles', 'view usernames']);
         break;
 
       case 'POST':

@@ -90,6 +90,7 @@ class NodeRevisionsTest extends NodeTestBase {
         'access contextual links',
         'translate any entity',
         'administer content types',
+        'view usernames',
       ]
     );
 
