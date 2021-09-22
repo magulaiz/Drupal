@@ -22,8 +22,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    module_load_include('compare.inc', 'locale');
-    module_load_include('fetch.inc', 'locale');
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->loadInclude('compare.inc', 'locale');
+    $module_handler->loadInclude('fetch.inc', 'locale');
     $admin_user = $this->drupalCreateUser([
       'administer modules',
       'administer site configuration',
