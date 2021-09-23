@@ -319,6 +319,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
     $block_selector = $this->getBlockSelector($block);
 
     $this->drupalGet('');
+    $web_assert->waitForElement('css', "$block_selector .contextual-links li.quickedit");
     $link = $web_assert->waitForElement('css', "$block_selector .contextual-links li a");
     $this->assertEquals('Quick edit', $link->getHtml(), "'Quick edit' is the first contextual link for the block.");
 
