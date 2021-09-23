@@ -68,10 +68,7 @@
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window)
-      // @todo use a media query event listener https://www.drupal.org/project/drupal/issues/3225621
-      .on('resize.tabs', Drupal.debounce(toggleCollapsed, 150))
-      .trigger('resize.tabs');
+      window.addEventListener('resize.tabs', Drupal.debounce(toggleCollapsed, 150))
   }
   /**
    * Initialize the tabs JS.

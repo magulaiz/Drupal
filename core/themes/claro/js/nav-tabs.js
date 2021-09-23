@@ -61,7 +61,7 @@
       $item.attr('data-original-order', $item.index());
     });
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window).on('resize.tabs', Drupal.debounce(toggleCollapsed, 150)).trigger('resize.tabs');
+    window.addEventListener('resize.tabs', Drupal.debounce(toggleCollapsed, 150));
   }
 
   Drupal.behaviors.navTabs = {
