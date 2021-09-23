@@ -11,17 +11,10 @@ interface MigrateExecutableInterface {
    *
    * @return int
    *   Returns a value indicating the status of the import operation.
-   *   The possible values are:
-   *     - MigrationInterface::RESULT_COMPLETED: the process has a fatal error.
-   *     - MigrationInterface::RESULT_INCOMPLETE: the process has stopped
-   *     itself (e.g., the memory limit is approaching).
-   *     - MigrationInterface::RESULT_STOPPED: the process was stopped
-   *     externally (e.g., via drush migrate-stop).
-   *     - MigrationInterface::RESULT_FAILED: the process has a fatal error.
-   *     - MigrationInterface::RESULT_SKIPPED: dependencies are unfulfilled -
-   *     skip the process.
-   *     - MigrationInterface::RESULT_DISABLED: this migration is disabled,
-   *     skipping.
+   *   The possible values are the 'RESULT_' constants defined
+   *   in MigrationInterface.
+   *
+   * @see \Drupal\migrate\Plugin\MigrationInterface
    */
   public function import();
 
