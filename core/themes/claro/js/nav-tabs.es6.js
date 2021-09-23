@@ -68,7 +68,10 @@
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-      window.addEventListener('resize.tabs', Drupal.debounce(toggleCollapsed, 150))
+    window.addEventListener(
+      'resize.tabs',
+      Drupal.debounce(toggleCollapsed, 150),
+    );
   }
   /**
    * Initialize the tabs JS.
