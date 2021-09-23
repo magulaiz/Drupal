@@ -69,7 +69,7 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
       }
     }
   }
-  return array_filter($paths, 'file_exists');
+  return array_filter($paths);
 }
 
 /**
