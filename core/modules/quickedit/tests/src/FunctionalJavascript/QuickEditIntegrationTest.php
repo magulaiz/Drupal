@@ -30,6 +30,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
     'block',
     'block_content',
     'hold_test',
+    'settings_tray',
   ];
 
   /**
