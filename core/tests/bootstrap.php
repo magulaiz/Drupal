@@ -63,11 +63,9 @@ function drupal_phpunit_contrib_extension_directory_roots($root = NULL) {
       continue;
     }
     $path = "$sites_path/$site";
-    foreach (['modules', 'profiles', 'themes'] as $type) {
-      if (is_dir("$path/$type")) {
-        $paths[] = realpath("$path/$type");
-      }
-    }
+    $paths[] = is_dir("$path/modules") ? realpath("$path/modules") : NULL;
+    $paths[] = is_dir("$path/profiles") ? realpath("$path/profiles") : NULL;
+    $paths[] = is_dir("$path/themes") ? realpath("$path/themes") : NULL;
   }
   return array_filter($paths);
 }
