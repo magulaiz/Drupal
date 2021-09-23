@@ -4,7 +4,7 @@ drupal.ajax:
     js/ajax.js: {}
   css:
     theme:
-      css/core/autocomplete.css: {}
+      css/core/autocomplete.jquery.css: {}
 
 drupal.autocomplete:
   version: VERSION

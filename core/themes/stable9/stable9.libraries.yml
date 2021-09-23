@@ -4,7 +4,7 @@ drupal.autocomplete:
     js/autocomplete.js: { }
   css:
     theme:
-      css/core/autocomplete.css: {}
+      css/core/autocomplete.jquery.css: {}
 
 normalize:
   remote: https://github.com/necolas/normalize.css
