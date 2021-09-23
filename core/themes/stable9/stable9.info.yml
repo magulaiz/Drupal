@@ -327,5 +327,7 @@ libraries-override:
         css/views_ui.contextual.css: css/views_ui/views_ui.contextual.css
 
 libraries-extend:
+  core/drupal.autocomplete:
+    - stable9/drupal.autocomplete
   tour/tour:
     - stable9/tour

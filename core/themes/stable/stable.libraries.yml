@@ -2,6 +2,14 @@ drupal.ajax:
   version: VERSION
   js:
     js/ajax.js: {}
+  css:
+    theme:
+      css/core/autocomplete.css: {}
+
+drupal.autocomplete:
+  version: VERSION
+  js:
+    js/autocomplete.js: { }
 
 drupal.user:
   version: VERSION

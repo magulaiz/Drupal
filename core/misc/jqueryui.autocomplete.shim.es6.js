@@ -43,19 +43,7 @@
     }
   };
 
-  Drupal.autocompleteShim.defaultOptions = {
-    // Add jQuery UI classes so the autocomplete is styled the same as its
-    // jQuery UI predecessor.
-    inputClass: 'ui-autocomplete-input',
-    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-    loadingClass: 'ui-autocomplete-loading',
-    // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
-    // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
-    // items in`<a>` tags, so this class is moved to the `<li>` which provides
-    // a visually identical autocomplete experience to the previous jQuery UI
-    // autocomplete.
-    itemClass: 'ui-menu-item',
-  };
+  Drupal.autocompleteShim.defaultOptions = {};
 
   /**
    * Provides overrides needed for jQuery UIs backwards compatibility.
@@ -64,10 +52,20 @@
    *
    * @param {_A11yAutocomplete} instance
    *   The initialized autocomplete input.
+   * @param {object} options
+   *   The options sent to autocomplete init.
    */
   Drupal.autocompleteShim.jqueryUiShimInit = (instance, options) => {
+    const usingBCMarkup = Drupal.hasOwnProperty(
+      'jQueryAutocompleteStableMarkup',
+    );
+    if (usingBCMarkup) {
+      Object.assign(
+        Drupal.autocompleteShim.defaultOptions,
+        Drupal.jQueryAutocompleteStableMarkup.options,
+      );
+    }
     const isContentEditable = instance.input.hasAttribute('contenteditable');
-
     const attributesToOptions = instance.attributesToOptions();
 
     if (
@@ -99,21 +97,6 @@
     // API and should be preserved. Otherwise set to true.
     if (instance.options.allowRepeatValues === null) {
       instance.options.allowRepeatValues = true;
-    }
-
-    // If the list was not explicitly appended somewhere else, then it should be
-    // appended to match jQuery UI markup.
-    if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      const listBoxId = instance.ul.getAttribute('id');
-      const uiFront = $(instance.input).closest('.ui-front, dialog');
-
-      // If the autocomplete is contained by an element with the class
-      // 'ui-front' or a dialog, append the class to that element. Otherwise
-      // append it to the document body.
-      const appendTo =
-        uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector(`#${listBoxId}`);
     }
 
     /**
@@ -157,7 +140,7 @@
           const active = instance.ul.querySelectorAll(
             '.ui-menu-item-wrapper.ui-state-active',
           );
-          if (active.length) {
+          if (active.length || instance.ul.contains(document.activeElement)) {
             e.preventDefault();
           }
         }
@@ -287,10 +270,11 @@
 
         // Everything prior to this is logic that also happens in the
         // A11yAutocomplete suggestionItems() method. Below is logic specific
-        // to the `<a>` tag added to list items when using this shim.
-        const a = li.querySelector('a');
-        a.classList.add('ui-menu-item-wrapper');
-        a.setAttribute('id', `ui-id-${index}`);
+        // to the `<a>` tag added to list items when using this shim on a theme
+        // that extends Stable or Stable 9.
+        if (instance.hasOwnProperty('addBcListItemClasses')) {
+          instance.addBcListItemClasses(li, index);
+        }
       });
     };
 
@@ -331,29 +315,32 @@
       return this._renderItem(ul, item).data('ui-autocomplete-item', item);
     };
 
-    /**
-     * A copy of jQuery UI autocomplete _renderItem.
-     *
-     * Copied to the instance so it is available as an extension point.
-     *
-     * @param {Element} ul
-     *   Contains the list items.
-     * @param {Object} item
-     *    Suggestion with 'label' and 'value' properties.
-     *
-     * @return {*}
-     *   Typically a jQuery Object for an `<li>` element.
-     */
-    // eslint-disable-next-line func-names
-    instance._renderItem = function (ul, item) {
-      const propertyToDisplay = instance.options.displayLabels
-        ? 'label'
-        : 'value';
-      // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
-      return $('<li>')
-        .append($('<a>').html(item[propertyToDisplay]))
-        .appendTo(ul);
-    };
+    // Only override _renderItem if backwards compatible markup is not needed.
+    // In these instances an override of this function will be supplied by the
+    // Stable or Stable 9 theme, which reproduces the _renderItem override
+    // provided by Drupal core when jQuery UI Autocomplete was in use.
+    if (!usingBCMarkup) {
+      /**
+       * A copy of jQuery UI autocomplete _renderItem.
+       *
+       * Copied to the instance so it is available as an extension point.
+       *
+       * @param {Element} ul
+       *   Contains the list items.
+       * @param {Object} item
+       *    Suggestion with 'label' and 'value' properties.
+       *
+       * @return {*}
+       *   Typically a jQuery Object for an `<li>` element.
+       */
+      // eslint-disable-next-line func-names
+      instance._renderItem = function (ul, item) {
+        const propertyToDisplay = instance.options.displayLabels
+          ? 'label'
+          : 'value';
+        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
+      };
+    }
 
     /**
      * Converts all suggestions into an object with value and label properties.
@@ -430,34 +417,6 @@
     instance.ul.addEventListener('mousedown', (e) => {
       e.preventDefault();
     });
-
-    // If the input receives focus, remove the 'ui-state-active' class from all
-    // result items.
-    instance.input.addEventListener('focus', () => {
-      instance.ul
-        .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
-        .forEach((element) => {
-          element.classList.remove('ui-state-active');
-        });
-    });
-
-    // When a result item is highlighted, jQuery UI adds a 'ui-state-active'
-    // class to it.
-    instance.input.addEventListener('autocomplete-highlight', () => {
-      instance.ul
-        .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
-        .forEach((element) => {
-          element.classList.remove('ui-state-active');
-        });
-      document.activeElement
-        .querySelector('.ui-menu-item-wrapper')
-        .classList.add('ui-state-active');
-    });
-
-    // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
-    // added by A11yAutocomplete.
-    $(instance.input).unwrap('[data-autocomplete-wrapper]');
-    $(instance.input).data('ui-autocomplete', instance);
 
     // If the widget itself has been overridden via $.widget, map each
     // overridden property to the autocomplete instance.

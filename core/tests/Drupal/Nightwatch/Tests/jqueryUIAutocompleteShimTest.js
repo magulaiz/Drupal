@@ -24,6 +24,15 @@ module.exports = {
         )
         .click('input[name="modules[autocomplete_shim_test][enable]"]')
         .click('input[type="submit"]');
+      browser
+        .drupalRelativeURL('/admin/appearance')
+        .click(
+          '[title="Install Test theme depending on Stable as default theme"]',
+        )
+        .waitForElementVisible(
+          '[data-drupal-messages] [role="contentinfo"]',
+          10000,
+        );
     });
   },
   beforeEach(browser) {

@@ -45,14 +45,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   };
 
-  Drupal.autocompleteShim.defaultOptions = {
-    inputClass: 'ui-autocomplete-input',
-    ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-    loadingClass: 'ui-autocomplete-loading',
-    itemClass: 'ui-menu-item'
-  };
+  Drupal.autocompleteShim.defaultOptions = {};
 
   Drupal.autocompleteShim.jqueryUiShimInit = function (instance, options) {
+    var usingBCMarkup = Drupal.hasOwnProperty('jQueryAutocompleteStableMarkup');
+
+    if (usingBCMarkup) {
+      Object.assign(Drupal.autocompleteShim.defaultOptions, Drupal.jQueryAutocompleteStableMarkup.options);
+    }
+
     var isContentEditable = instance.input.hasAttribute('contenteditable');
     var attributesToOptions = instance.attributesToOptions();
 
@@ -68,14 +69,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     if (instance.options.allowRepeatValues === null) {
       instance.options.allowRepeatValues = true;
-    }
-
-    if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      var listBoxId = instance.ul.getAttribute('id');
-      var uiFront = $(instance.input).closest('.ui-front, dialog');
-      var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector("#".concat(listBoxId));
     }
 
     function shimmedInputKeyDown(e) {
@@ -100,7 +93,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         if (keyCode === this.keyCode.RETURN) {
           var active = instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
 
-          if (active.length) {
+          if (active.length || instance.ul.contains(document.activeElement)) {
             e.preventDefault();
           }
         }
@@ -181,9 +174,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return _this2.blurHandler(e);
         };
 
-        var a = li.querySelector('a');
-        a.classList.add('ui-menu-item-wrapper');
-        a.setAttribute('id', "ui-id-".concat(index));
+        if (instance.hasOwnProperty('addBcListItemClasses')) {
+          instance.addBcListItemClasses(li, index);
+        }
       });
     };
 
@@ -198,10 +191,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this._renderItem(ul, item).data('ui-autocomplete-item', item);
     };
 
-    instance._renderItem = function (ul, item) {
-      var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-      return $('<li>').append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
-    };
+    if (!usingBCMarkup) {
+      instance._renderItem = function (ul, item) {
+        var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
+        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
+      };
+    }
 
     var autocompleteNormalizeSuggestionItems = function autocompleteNormalizeSuggestionItems() {
       this.suggestionItems = this.suggestionItems.map(function (item) {
@@ -258,19 +253,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     instance.ul.addEventListener('mousedown', function (e) {
       e.preventDefault();
     });
-    instance.input.addEventListener('focus', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
-        element.classList.remove('ui-state-active');
-      });
-    });
-    instance.input.addEventListener('autocomplete-highlight', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
-        element.classList.remove('ui-state-active');
-      });
-      document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
-    });
-    $(instance.input).unwrap('[data-autocomplete-wrapper]');
-    $(instance.input).data('ui-autocomplete', instance);
     Object.keys(Drupal.autocompleteShim.overrides).forEach(function (propertyToOverride) {
       var overrideWith = Drupal.autocompleteShim.overrides[propertyToOverride];
       applyWidgetOverrides(instance, propertyToOverride, overrideWith);
