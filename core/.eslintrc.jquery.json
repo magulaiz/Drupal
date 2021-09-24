@@ -33,7 +33,7 @@
     "jquery/no-map": 0,
     "jquery/no-merge": 0,
     "jquery/no-param": 2,
-    "jquery/no-parent": 0,
+    "jquery/no-parent": 2,
     "jquery/no-parents": 0,
     "jquery/no-parse-html": 0,
     "jquery/no-prop": 0,
