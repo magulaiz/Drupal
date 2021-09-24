@@ -377,8 +377,7 @@ class EntityResource {
 
       user_cancel([], $entity->id(), $cancel_method);
       // Since user_cancel() is not invoked via Form API, batch processing
-      // needs to be invoked manually and should redirect to the front page
-      // after completion.
+      // needs to be invoked manually.
       $batch =& batch_get();
       // Mark this batch as non-progressive to bypass the progress bar and
       // redirect.
