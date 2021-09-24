@@ -374,18 +374,16 @@ class EntityResource {
       $cancel_method = \Drupal::service('config.factory')->get('user.settings')->get('cancel_method');
 
       // Allow other modules to act.
-      if ($cancel_method !== 'user_cancel_delete') {
-        \Drupal::service('module_handler')->invokeAll(
-          'user_cancel', [
-            [],
-            $entity,
-            $cancel_method,
-          ]
-        );
-      }
 
-      // Actually cancel the account.
-      _user_cancel([], $entity, $cancel_method);
+      user_cancel([], $entity->id(), $cancel_method);
+      // Since user_cancel() is not invoked via Form API, batch processing
+      // needs to be invoked manually and should redirect to the front page
+      // after completion.
+      $batch =& batch_get();
+      // Mark this batch as non-progressive to bypass the progress bar and
+      // redirect.
+      $batch['progressive'] = FALSE;
+      batch_process();
     }
     else {
       $entity->delete();
