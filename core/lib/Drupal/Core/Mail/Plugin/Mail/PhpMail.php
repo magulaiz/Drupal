@@ -24,7 +24,7 @@ class PhpMail implements MailInterface {
    *
    * @see \Symfony\Component\Mime\Header\Headers::HEADER_CLASS_MAP
    */
-  private const MAILBOX_LIST_HEADERS = ['from', 'to', 'reply-to', 'cc', 'bcc'];
+  private const MAILBOX_LIST_HEADERS = ['to', 'reply-to', 'cc', 'bcc'];
 
   /**
    * The configuration factory.
@@ -86,7 +86,11 @@ class PhpMail implements MailInterface {
 
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
-      if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
+      $name = strtolower($name);
+      if ($name === 'from') {
+        $value = [$value];
+      }
+      elseif (in_array($name, self::MAILBOX_LIST_HEADERS, TRUE)) {
         $value = explode(',', $value);
       }
       $headers->addHeader($name, $value);
@@ -104,6 +108,22 @@ class PhpMail implements MailInterface {
     $mail_headers = str_replace("\r\n", "\n", $headers->toString());
     $mail_subject = str_replace("\r\n", "\n", $mail_subject);
 
+    return $this->doMail($message, $mail_subject, $mail_body, $mail_headers);
+  }
+
+  /**
+   * Sends a preformatted email message via mail().
+   *
+   * @param array $message
+   *   A message array, as described in hook_mail_alter().
+   * @param string $subject
+   *   The email subject line.
+   * @param string $body
+   *   The email body.
+   * @param string $headers
+   *   The email headers.
+   */
+  protected function doMail(array $message, string $subject, string $body, string $headers) {
     $request = \Drupal::request();
 
     // We suppress warnings and notices from mail() because of issues on some
@@ -119,9 +139,9 @@ class PhpMail implements MailInterface {
       $additional_headers = isset($message['Return-Path']) && ($site_mail === $message['Return-Path'] || static::_isShellSafe($message['Return-Path'])) ? '-f' . $message['Return-Path'] : '';
       $mail_result = @mail(
         $message['to'],
-        $mail_subject,
-        $mail_body,
-        $mail_headers,
+        $subject,
+        $body,
+        $headers,
         $additional_headers
       );
     }
@@ -132,9 +152,9 @@ class PhpMail implements MailInterface {
       ini_set('sendmail_from', $message['Return-Path']);
       $mail_result = @mail(
         $message['to'],
-        $mail_subject,
-        $mail_body,
-        $mail_headers
+        $subject,
+        $body,
+        $headers
       );
       ini_set('sendmail_from', $old_from);
     }
