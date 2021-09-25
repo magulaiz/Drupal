@@ -116,7 +116,6 @@
 }
 
 .primary-nav__menu-link-inner {
-
   &:after {
     @nest .primary-nav__menu-link:hover & {
       transform: scaleX(1);
