@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8d45389b3d0ae61b9494521b92723562",
+    "content-hash": "3658200d5495d3967b9cace1e47fb71e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -4490,16 +4490,16 @@
     "packages-dev": [
         {
             "name": "behat/mink",
-            "version": "v1.8.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "07c6a9fe3fa98c2de074b25d9ed26c22904e3887"
+                "reference": "1ab79d627a9f42381f089a37b2765166e70a8aa1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/07c6a9fe3fa98c2de074b25d9ed26c22904e3887",
-                "reference": "07c6a9fe3fa98c2de074b25d9ed26c22904e3887",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/1ab79d627a9f42381f089a37b2765166e70a8aa1",
+                "reference": "1ab79d627a9f42381f089a37b2765166e70a8aa1",
                 "shasum": ""
             },
             "require": {
@@ -4518,6 +4518,7 @@
                 "behat/mink-zombie-driver": "fast and JS-enabled headless driver for any app (requires node.js)",
                 "dmore/chrome-mink-driver": "fast and JS-enabled driver for any app (requires chromium or google chrome)"
             },
+            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -4549,22 +4550,22 @@
             ],
             "support": {
                 "issues": "https://github.com/minkphp/Mink/issues",
-                "source": "https://github.com/minkphp/Mink/tree/v1.8.1"
+                "source": "https://github.com/minkphp/Mink/tree/master"
             },
-            "time": "2020-03-11T15:45:53+00:00"
+            "time": "2021-07-17T07:12:53+00:00"
         },
         {
             "name": "behat/mink-selenium2-driver",
-            "version": "v1.4.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/MinkSelenium2Driver.git",
-                "reference": "312a967dd527f28980cce40850339cd5316da092"
+                "reference": "ce711343fe976dd156c0922f11041716af161484"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/312a967dd527f28980cce40850339cd5316da092",
-                "reference": "312a967dd527f28980cce40850339cd5316da092",
+                "url": "https://api.github.com/repos/minkphp/MinkSelenium2Driver/zipball/ce711343fe976dd156c0922f11041716af161484",
+                "reference": "ce711343fe976dd156c0922f11041716af161484",
                 "shasum": ""
             },
             "require": {
@@ -4575,6 +4576,7 @@
             "require-dev": {
                 "mink/driver-testsuite": "dev-master"
             },
+            "default-branch": true,
             "type": "mink-driver",
             "extra": {
                 "branch-alias": {
@@ -4614,9 +4616,9 @@
             ],
             "support": {
                 "issues": "https://github.com/minkphp/MinkSelenium2Driver/issues",
-                "source": "https://github.com/minkphp/MinkSelenium2Driver/tree/v1.4.0"
+                "source": "https://github.com/minkphp/MinkSelenium2Driver/tree/master"
             },
-            "time": "2020-03-11T14:43:21+00:00"
+            "time": "2021-09-10T19:07:57+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -7837,7 +7839,9 @@
     "stability-flags": {
         "drupal/core": 20,
         "drupal/core-project-message": 20,
-        "drupal/core-vendor-hardening": 20
+        "drupal/core-vendor-hardening": 20,
+        "behat/mink": 20,
+        "behat/mink-selenium2-driver": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
