@@ -59,6 +59,10 @@ class RedirectDestination implements RedirectDestinationInterface {
       $query = $this->requestStack->getCurrentRequest()->query;
       if ($query->has('destination')) {
         $this->destination = $query->get('destination');
+        if (UrlHelper::isExternal($this->destination)) {
+          // See https://www.drupal.org/node/2454955 for external redirects.
+          $this->destination = '/';
+        }
       }
       else {
         $this->destination = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => UrlHelper::filterQueryParameters($query->all())]);
