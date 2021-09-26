@@ -310,6 +310,15 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
   /**
    * {@inheritdoc}
    */
+  protected function actions(array $form, FormStateInterface $form_state) {
+    $actions = parent::actions($form, $form_state);
+    $actions['submit']['#submit'][] = '::notify';
+    return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function trustedCallbacks() {
     return ['alterPreferredLangcodeDescription'];
   }
@@ -434,18 +443,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     $own_account = $this->currentUser()->id() === $account->id();
     $skip_verification = !$own_account || $this->currentUser()->hasPermission('administer users');
     if (!$account->isNew() && ($old_mail !== $new_mail) && !$skip_verification) {
-      // Send a verification to the new email address.
-      $account_cloned = clone $account;
-      $account_cloned->setEmail($new_mail);
-      if (_user_mail_notify('mail_change_verification', $account_cloned) !== NULL) {
-        // Send notification email to the old email address, if it's set.
-        if ($old_mail) {
-          _user_mail_notify('mail_change_notification', $account);
-        }
-        // The user's mail address will be updated only after verification.
-        $form_state->setValue('mail', $old_mail);
-        $this->messenger()->addWarning($this->t('You must confirm your email address. Further instructions have been sent to your new email address.'));
-      }
+      // After ::save, which ensures password hashes are updated, send verification emails in ::notify
+      $form_state->set('mail_change_verification', $new_mail);
+      $form_state->setValue('mail', $old_mail);
     }
 
     parent::submitForm($form, $form_state);
@@ -454,6 +454,41 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     // since a new password was saved.
     if (isset($_SESSION['pass_reset_' . $account->id()])) {
       unset($_SESSION['pass_reset_' . $account->id()]);
+    }
+  }
+
+  /**
+   * Send notifications after the account is updated.
+   * This callback is called after ::submitForm and ::save complete, so that the user
+   * entity is guaranteed to be fully updated with any new password hashes.
+   * This ensures that notifications that contain any URLs using user_pass_rehash are
+   * valid and are able to use the hashed password that is generated upon save only.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  public function notify(array &$form, FormStateInterface $form_state) {
+    $new_mail = $form_state->get('mail_change_verification');
+    if ($new_mail !== NULL) {
+      // Send a verification to the new email address.
+      /** @var \Drupal\user\UserInterface $account */
+      $account = $this->getEntity();
+      /** @var \Drupal\user\UserInterface $account_cloned */
+      $account_cloned = clone $account;
+      $account_cloned->setEmail($new_mail);
+      if (_user_mail_notify('mail_change_verification', $account_cloned) !== NULL) {
+        // Send notification email to the old email address, if it's set.
+        if ($account->getEmail()) {
+          _user_mail_notify('mail_change_notification', $account);
+        }
+        $this->messenger()->addWarning($this->t('You must confirm your email address. Further instructions have been sent to your new email address.'));
+      } else {
+        // Process change immediately if no verification email is configured.
+        $account->setEmail($new_mail);
+        $account->save();
+      }
     }
   }
 
