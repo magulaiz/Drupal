@@ -350,6 +350,11 @@ drupal.object.assign:
   js:
     misc/polyfills/object.assign.js: { weight: -20 }
 
+drupal.customevent:
+  version: VERSION
+  js:
+    misc/polyfills/customevent.js: { weight: -20 }
+
 drupal.progress:
   version: VERSION
   js:
