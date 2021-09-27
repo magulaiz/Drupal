@@ -43,7 +43,7 @@
     "jquery/no-show": 0,
     "jquery/no-size": 2,
     "jquery/no-sizzle": 0,
-    "jquery/no-slide": 0,
+    "jquery/no-slide": 2,
     "jquery/no-submit": 2,
     "jquery/no-text": 0,
     "jquery/no-toggle": 0,
