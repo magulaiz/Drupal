@@ -51,6 +51,6 @@
     "jquery/no-trim": 0,
     "jquery/no-val": 0,
     "jquery/no-when": 0,
-    "jquery/no-wrap": 0
+    "jquery/no-wrap": 2
   }
 }
