@@ -179,8 +179,9 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowed()->setCacheMaxAge(CacheBackendInterface::CACHE_PERMANENT);
     }
 
-    // Users with this permission can always access.
-    if ($current_user->hasPermission('administer users')) {
+    // Users with the first permission can always access.
+    // Users with the second permission can always see other user's username.
+    if ($current_user->hasPermission('administer users') || $current_user->hasPermission('view usernames')) {
       return AccessResult::allowed()->cachePerPermissions();
     }
 
@@ -188,11 +189,6 @@ class UserAccessControlHandler extends EntityAccessControlHandler {
     // a result that varies per user.
     if ($other->id() == $current_user->id()) {
       return AccessResult::allowed()->cachePerUser()->setCacheMaxAge(CacheBackendInterface::CACHE_PERMANENT);
-    }
-
-    // Users with this permission can always see other user's username.
-    if ($current_user->hasPermission('view usernames')) {
-      return AccessResult::allowed()->addCacheableDependency($other)->cachePerPermissions();
     }
 
     // No opinion but the above used cache dependencies must be applied on this
