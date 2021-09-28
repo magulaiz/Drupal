@@ -2,6 +2,7 @@
 
 namespace Drupal\workspaces;
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Graph\Graph;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -62,7 +63,7 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface {
 
       // First, sort everything alphabetically.
       uasort($workspaces, function (WorkspaceInterface $a, WorkspaceInterface $b) {
-        assert(is_string($a->label() && is_string($b->label())), 'Workspace labels are expected to be a string.');
+        assert(Inspector::assertStringable($a->label()) && Inspector::assertStringable($b->label()), 'Workspace labels are expected to be a string.');
         return strnatcasecmp($a->label(), $b->label());
       });
 

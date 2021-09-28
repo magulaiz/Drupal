@@ -433,7 +433,7 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Dump some variables.
     $this->enableModules(['system', 'user']);
-    $role = Role::create(['id' => 'test_role', 'label' => $this->randomString()]);
+    $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     dump($role);
     dump($role->id());
 

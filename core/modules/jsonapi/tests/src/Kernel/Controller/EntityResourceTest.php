@@ -165,7 +165,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
           'access user profiles',
           'access content',
         ],
-        'label' => $this->randomString(),
+        'label' => $role_id,
       ])->save();
     }, [RoleInterface::ANONYMOUS_ID, 'test_role_one', 'test_role_two']);
 
