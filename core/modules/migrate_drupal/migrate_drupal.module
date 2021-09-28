@@ -112,8 +112,6 @@ function migrate_drupal_migration_plugins_alter(array &$definitions) {
 
     try {
       $source_connection = $source_plugin->getDatabase();
-      // @todo Move this static method off the trait and somewhere we can call
-      //   from here.
       $version = NodeMigrateType::getLegacyDrupalVersion($source_connection);
     }
     catch (\Exception $e) {
