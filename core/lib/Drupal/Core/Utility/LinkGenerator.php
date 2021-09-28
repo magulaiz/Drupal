@@ -5,7 +5,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\GeneratedButton;
@@ -184,7 +184,7 @@ class LinkGenerator implements LinkGeneratorInterface {
       $attributes['href'] = $generated_url->getGeneratedUrl();
     }
 
-    if (isset($variables['cache']) && $variables['cache'] instanceof RefinableCacheableDependencyInterface) {
+    if (isset($variables['cache']) && $variables['cache'] instanceof CacheableDependencyInterface) {
       $generated_link->addCacheableDependency($variables['cache']);
     }
 
