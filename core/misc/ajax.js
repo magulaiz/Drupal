@@ -531,7 +531,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var method = response.method || ajax.method;
       var effect = ajax.getEffect(response);
       var settings = response.settings || ajax.settings || drupalSettings;
-      var $newContent = $($.parseHTML(response.data, document, true));
+
+      var parseHTML = function parseHTML(str) {
+        var el = document.createElement('div');
+        el.innerHTML = str;
+        return el.childNodes;
+      };
+
+      var $newContent = $(parseHTML(response.data));
       $newContent = Drupal.theme('ajaxWrapperNewContent', $newContent, ajax, response);
 
       switch (method) {

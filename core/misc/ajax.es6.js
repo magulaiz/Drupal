@@ -1220,8 +1220,15 @@
       // Apply any settings from the returned JSON if available.
       const settings = response.settings || ajax.settings || drupalSettings;
 
+      const parseHTML = (str) => {
+        const el = document.createElement('div');
+        el.innerHTML = str;
+        return el.childNodes;
+      };
+
       // Parse response.data into an element collection.
-      let $newContent = $($.parseHTML(response.data, document, true));
+      // let $newContent = $($.parseHTML(response.data, document, true));
+      let $newContent = $(parseHTML(response.data));
       // For backward compatibility, in some cases a wrapper will be added. This
       // behavior will be removed before Drupal 9.0.0. If different behavior is
       // needed, the theme functions can be overridden.
