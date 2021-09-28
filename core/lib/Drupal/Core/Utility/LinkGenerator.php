@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
 use Drupal\Core\GeneratedButton;
@@ -154,7 +155,6 @@ class LinkGenerator implements LinkGeneratorInterface {
     }
 
     // Allow other modules to modify the structure of the link.
-    $variables['cache'] = new CacheableMetadata();
     $this->moduleHandler->alter('link', $variables);
     $url = $variables['url'];
 
@@ -164,32 +164,31 @@ class LinkGenerator implements LinkGeneratorInterface {
     unset($variables['options']['attributes']);
     $url->setOptions($variables['options']);
 
-    // External URLs can not have cacheable metadata.
     if ($url->isExternal()) {
-      $generated_link = (new GeneratedLink())
-        ->addCacheableDependency($variables['cache']);
+      $generated_link = new GeneratedLink();
       $attributes['href'] = $url->toString(FALSE);
-      return $this->doGenerate($generated_link, $attributes, $variables);
     }
-    if ($url->isRouted() && $url->getRouteName() === '<nolink>') {
-      $generated_link = (new GeneratedNoLink())
-        ->addCacheableDependency($variables['cache']);
+    elseif ($url->isRouted() && $url->getRouteName() === '<nolink>') {
+      $generated_link = new GeneratedNoLink();
       unset($attributes['href'], $attributes['hreflang']);
-      return $this->doGenerate($generated_link, $attributes, $variables);
     }
-    if ($url->isRouted() && $url->getRouteName() === '<button>') {
-      $generated_link = (new GeneratedButton())
-        ->addCacheableDependency($variables['cache']);
+    elseif ($url->isRouted() && $url->getRouteName() === '<button>') {
+      $generated_link = new GeneratedButton();
       $attributes['type'] = 'button';
       unset($attributes['href'], $attributes['hreflang']);
-      return $this->doGenerate($generated_link, $attributes, $variables);
     }
-    $generated_url = $url->toString(TRUE);
-    $generated_link = GeneratedLink::createFromObject($generated_url)
-      ->addCacheableDependency($variables['cache']);
-    // The result of the URL generator is a plain-text URL to use as the href
-    // attribute, and it is escaped by \Drupal\Core\Template\Attribute.
-    $attributes['href'] = $generated_url->getGeneratedUrl();
+    else {
+      $generated_url = $url->toString(TRUE);
+      $generated_link = GeneratedLink::createFromObject($generated_url);
+      // The result of the URL generator is a plain-text URL to use as the href
+      // attribute, and it is escaped by \Drupal\Core\Template\Attribute.
+      $attributes['href'] = $generated_url->getGeneratedUrl();
+    }
+
+    if (isset($variables['cache']) && $variables['cache'] instanceof RefinableCacheableDependencyInterface) {
+      $generated_link->addCacheableDependency($variables['cache']);
+    }
+
     return $this->doGenerate($generated_link, $attributes, $variables);
   }
 
