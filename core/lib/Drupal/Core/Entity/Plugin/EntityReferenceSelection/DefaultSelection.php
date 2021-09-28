@@ -352,8 +352,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
     $entities = $this->entityTypeManager->getStorage($target_type)->loadMultiple($result);
     foreach ($entities as $entity_id => $entity) {
       $bundle = $entity->bundle();
-      // @todo or should we use the ID here?
-      $options[$bundle][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label() ?? '');
+      $options[$bundle][$entity_id] = Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
     }
 
     return $options;

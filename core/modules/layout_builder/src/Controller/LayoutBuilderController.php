@@ -25,8 +25,7 @@ class LayoutBuilderController {
    *   The title for the layout page.
    */
   public function title(SectionStorageInterface $section_storage) {
-    // @todo what is the correct thing to do here when there is no label?
-    return $this->t('Edit layout for %label', ['%label' => $section_storage->label() ?? $section_storage->getStorageType() . ' ' . $section_storage->getStorageId()]);
+    return $this->t('Edit layout for %label', ['%label' => $section_storage->label()]);
   }
 
   /**
