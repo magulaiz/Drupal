@@ -847,6 +847,8 @@ function user_user_role_insert(RoleInterface $role) {
     return;
   }
 
+  assert(is_string($role->label()), 'Role label is expected to be a string.');
+
   $add_id = 'user_add_role_action.' . $role->id();
   if (!Action::load($add_id)) {
     $action = Action::create([

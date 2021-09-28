@@ -25,7 +25,8 @@ class LayoutBuilderController {
    *   The title for the layout page.
    */
   public function title(SectionStorageInterface $section_storage) {
-    return $this->t('Edit layout for %label', ['%label' => $section_storage->label()]);
+    assert(is_string($section_storage->label()), 'Section storage label is expected to be a string.');
+    return $this->t('Edit layout for %label', ['%label' => $section_storage->label() ?? $section_storage->getStorageType() . ' ' . $section_storage->getStorageId()]);
   }
 
   /**
