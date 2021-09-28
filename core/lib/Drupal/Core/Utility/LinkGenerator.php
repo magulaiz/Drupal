@@ -5,7 +5,6 @@ namespace Drupal\Core\Utility;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\GeneratedLink;
