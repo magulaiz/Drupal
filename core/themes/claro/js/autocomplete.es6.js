@@ -14,6 +14,7 @@
           const classRemove = ($autoCompleteElem) => {
             $autoCompleteElem.removeClass('is-autocompleting');
             $autoCompleteElem
+              .parent()
               .siblings('[data-drupal-selector="autocomplete-message"]')
               .addClass('hidden');
           };
@@ -24,6 +25,7 @@
               if (event && event.type && event.type === 'autocompletesearch') {
                 $(event.target).addClass('is-autocompleting');
                 $(event.target)
+                  .parent()
                   .siblings('[data-drupal-selector="autocomplete-message"]')
                   .removeClass('hidden');
               }
