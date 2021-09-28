@@ -21,7 +21,7 @@ function link_generation_test_link_alter(&$variables) {
     }
 
     // Add cacheable metadata.
-    $variables['cache'] = (new CacheableMetadata())
+    $variables['cacheable_dependency'] = (new CacheableMetadata())
       ->addCacheContexts(['url', 'languages'])
       ->addCacheTags(['foo', 'bar'])
       ->mergeCacheMaxAge(3600);

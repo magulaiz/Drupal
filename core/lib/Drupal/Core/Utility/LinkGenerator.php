@@ -184,8 +184,8 @@ class LinkGenerator implements LinkGeneratorInterface {
       $attributes['href'] = $generated_url->getGeneratedUrl();
     }
 
-    if (isset($variables['cache']) && $variables['cache'] instanceof CacheableDependencyInterface) {
-      $generated_link->addCacheableDependency($variables['cache']);
+    if (isset($variables['cacheable_dependency']) && $variables['cacheable_dependency'] instanceof CacheableDependencyInterface) {
+      $generated_link->addCacheableDependency($variables['cacheable_dependency']);
     }
 
     return $this->doGenerate($generated_link, $attributes, $variables);
