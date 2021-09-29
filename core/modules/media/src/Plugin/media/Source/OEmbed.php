@@ -14,6 +14,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\Token;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\media\OEmbed\Resource;
 use Drupal\media\OEmbed\ResourceException;
@@ -125,6 +126,13 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   protected $fileSystem;
 
   /**
+   * The token replacement service.
+   *
+   * @var \Drupal\Core\Utility\Token
+   */
+  protected $token;
+
+  /**
    * Constructs a new OEmbed instance.
    *
    * @param array $configuration
@@ -155,8 +163,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    *   The iFrame URL helper service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
+   * @param \Drupal\Core\Utility\Token $token
+   *   The token replacement service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $entity_field_manager, ConfigFactoryInterface $config_factory, FieldTypePluginManagerInterface $field_type_manager, LoggerInterface $logger, MessengerInterface $messenger, ClientInterface $http_client, ResourceFetcherInterface $resource_fetcher, UrlResolverInterface $url_resolver, IFrameUrlHelper $iframe_url_helper, FileSystemInterface $file_system, Token $token = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $entity_field_manager, $field_type_manager, $config_factory);
     $this->logger = $logger;
     $this->messenger = $messenger;
@@ -165,6 +175,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $this->urlResolver = $url_resolver;
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->fileSystem = $file_system;
+    // @todo Trigger a deprecation if $token wasn't passed.
+    $this->token = $token ?: \Drupal::token();
   }
 
   /**
@@ -185,7 +197,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $container->get('media.oembed.resource_fetcher'),
       $container->get('media.oembed.url_resolver'),
       $container->get('media.oembed.iframe_url_helper'),
-      $container->get('file_system')
+      $container->get('file_system'),
+      $container->get('token')
     );
   }
 
@@ -360,7 +373,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
    */
   public function defaultConfiguration() {
     return [
-      'thumbnails_directory' => 'public://oembed_thumbnails',
+      'thumbnails_directory' => 'public://oembed_thumbnails/[date:custom:Y-m]',
       'providers' => [],
     ] + parent::defaultConfiguration();
   }
@@ -393,7 +406,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     // Ensure that we can write to the local directory where thumbnails are
     // stored.
     $configuration = $this->getConfiguration();
-    $directory = $configuration['thumbnails_directory'];
+    $directory = $this->token->replace($configuration['thumbnails_directory']);
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,

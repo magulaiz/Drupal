@@ -165,13 +165,19 @@ class OEmbedSourceTest extends MediaKernelTestBase {
     ]);
     $media->save();
 
+    // The thumbnail directory should include the current date, as per the
+    // default configuration of the oEmbed source plugin.
+    $date = date('Y-m', $this->container->get('datetime.time')->getRequestTime());
+
     // The thumbnail should have a file extension, even if it wasn't in the URL.
-    $expected_uri = 'public://oembed_thumbnails/' . Crypt::hashBase64($thumbnail_url) . ".$expected_extension";
+    $expected_uri = "public://oembed_thumbnails/$date/" . Crypt::hashBase64($thumbnail_url) . ".$expected_extension";
     $this->assertSame($expected_uri, $source->getMetadata($media, 'thumbnail_uri'));
+
     // Even if we get the thumbnail_uri more than once, it should only be
     // downloaded once (this is verified by the shouldBeCalledOnce() checks
     // in the mocked HTTP client).
     $source->getMetadata($media, 'thumbnail_uri');
+
     // The downloaded thumbnail should be usable by the image toolkit.
     $this->assertFileExists($expected_uri);
     /** @var \Drupal\Core\Image\Image $image */
