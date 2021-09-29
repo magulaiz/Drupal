@@ -18,18 +18,11 @@ class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->config('media.settings')->set('standalone_url', TRUE)->save();
-  }
-
-  /**
    * Test to ensure that help text exists when it is set on field configuration.
    */
   public function testFieldWidgetHelpText() {
-    $this->drupalLogin($this->rootUser);
+    $account = $this->drupalCreateUser(['create media']);
+    $this->drupalLogin($account);
 
     $media_type = $this->createMediaType('oembed:video');
     $source_field = $media_type->getSource()
