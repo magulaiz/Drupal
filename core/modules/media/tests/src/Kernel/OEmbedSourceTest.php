@@ -52,31 +52,31 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    */
   public function providerThumbnailUri(): array {
     return [
-      'no query string, file extension in URL' => [
+      'no query string, extension in URL' => [
         'internal:/core/misc/druplicon.png',
         [],
         'png',
       ],
-      'with query string, file extension in URL' => [
+      'with query string, extension in URL' => [
         'internal:/core/misc/druplicon.png?foo=bar',
         [],
         'png',
       ],
-      'no query string, has MIME type' => [
+      'no query string or extension in URL, has MIME type' => [
         'internal:/core/misc/druplicon',
         [
           'Content-Type' => ['image/png'],
         ],
         'png',
       ],
-      'query string, has MIME type' => [
+      'query string but no extension in URL, has MIME type' => [
         'internal:/core/misc/druplicon?pasta=ravioli',
         [
           'Content-Type' => ['image/png'],
         ],
         'png',
       ],
-      'no query string or MIME type' => [
+      'no query string, MIME type, or extension in URL' => [
         'internal:/core/misc/druplicon',
         [],
         '',
