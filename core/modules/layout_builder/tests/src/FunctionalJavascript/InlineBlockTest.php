@@ -101,6 +101,46 @@ class InlineBlockTest extends InlineBlockTestBase {
   }
 
   /**
+   * Tests an inline block with no body and hidden title.
+   */
+  public function testEmptyBlock() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+      'create and edit custom blocks',
+    ]));
+
+    // Enable Layout Builder.
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $page->checkField('layout[enabled]');
+    $page->checkField('layout[allow_custom]');
+    $page->pressButton('Save');
+
+    // Add a basic block with no body field set.
+    $this->drupalGet('node/1/layout');
+    $this->addInlineBlockToLayout('Block title', '');
+    $this->assertSaveLayout();
+    $assert_session->pageTextContains('Block title');
+
+    // Hide the title.
+    $this->drupalGet('node/1/layout');
+    $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Configure');
+    $checkbox = $assert_session->waitForElementVisible('css', '[name="settings[label_display]"]');
+    $checkbox->uncheck();
+    $page->pressButton('Update');
+    $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Assert that the placeholder is used.
+    $assert_session->pageTextContains('Placeholder for the "Block title" block');
+  }
+
+  /**
    * Tests adding a new entity block and then not saving the layout.
    *
    * @dataProvider layoutNoSaveProvider
