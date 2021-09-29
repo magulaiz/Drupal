@@ -18,7 +18,7 @@ class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test to ensure that help text exists when it is set on field configuration.
+   * Tests that the oEmbed field widget shows the configured help text.
    */
   public function testFieldWidgetHelpText() {
     $account = $this->drupalCreateUser(['create media']);
@@ -35,7 +35,9 @@ class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
       ->save();
 
     $this->drupalGet('media/add/' . $media_type->id());
-    $this->assertSession()->pageTextContains($field->getDescription());
+    $assert_session = $this->assertSession();
+    $assert_session->pageTextContains($field->getDescription());
+    $assert_session->pageTextContains('You can link to media from the following services: YouTube, Vimeo');
   }
 
 }
