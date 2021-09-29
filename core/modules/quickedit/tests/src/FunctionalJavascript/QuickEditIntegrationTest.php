@@ -346,17 +346,4 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
     $this->assertSession()->elementExists('css', '#quickedit-entity-toolbar .quickedit-toolgroup.wysiwyg-main > .cke_chrome .cke_top[role="presentation"] .cke_toolbar[role="toolbar"] .cke_toolgroup[role="presentation"] > .cke_button[title~="Bold"][role="button"]');
   }
 
-  /**
-   * Gets the block CSS selector.
-   *
-   * @param \Drupal\block\Entity\Block $block
-   *   The block.
-   *
-   * @return string
-   *   The CSS selector.
-   */
-  protected function getBlockSelector(Block $block) {
-    return '#block-' . str_replace('_', '-', $block->id());
-  }
-
 }
