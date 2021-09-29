@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\quickedit\FunctionalJavascript;
 
-use Drupal\block\Entity\Block;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -30,7 +29,6 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
     'block',
     'block_content',
     'hold_test',
-    'settings_tray',
   ];
 
   /**
@@ -295,7 +293,6 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if a custom can be in-place edited with Quick Edit.
    */
   public function testCustomBlock() {
-    $web_assert = $this->assertSession();
     $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',
@@ -313,15 +310,11 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
       ],
     ]);
     $block_content->save();
-    $block = $this->drupalPlaceBlock('block_content:' . $block_content->uuid(), [
+    $this->drupalPlaceBlock('block_content:' . $block_content->uuid(), [
       'label' => 'My custom block!',
     ]);
-    $block_selector = $this->getBlockSelector($block);
 
     $this->drupalGet('');
-    $web_assert->waitForElement('css', "$block_selector .contextual-links li.quickedit");
-    $link = $web_assert->waitForElement('css', "$block_selector .contextual-links li a");
-    $this->assertEquals('Quick edit', $link->getHtml(), "'Quick edit' is the first contextual link for the block.");
 
     // Initial state.
     $this->awaitQuickEditForEntity('block_content', 1);
