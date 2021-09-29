@@ -362,7 +362,7 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * @return string
    *   The CSS selector.
    */
-  public function getBlockSelector(Block $block) {
+  protected function getBlockSelector(Block $block) {
     return '#block-' . str_replace('_', '-', $block->id());
   }
 
