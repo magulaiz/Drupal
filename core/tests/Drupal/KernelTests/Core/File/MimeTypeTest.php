@@ -20,6 +20,7 @@ class MimeTypeTest extends FileTestBase {
    * Tests mapping of mimetypes from filenames.
    */
   public function testFileMimeTypeDetection() {
+    $this->setSetting('file_private_path', $this->container->getParameter('site.path') . '/private');
     $prefixes = ['public://', 'private://', 'temporary://', 'dummy-remote://'];
 
     $test_case = [

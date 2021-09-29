@@ -56,12 +56,12 @@ class PrivateStream extends LocalStream {
    * so you should alter that form or substitute a different form if you change
    * the class providing the stream_wrapper.private service.
    *
-   * @return string
-   *   The base path for private://.
+   * @return string|null
+   *   The base path for private://. NULL means the private directory is not
+   *   set.
    */
   public static function basePath() {
-    // @todo what does an empty string / NULL mean here?
-    return Settings::get('file_private_path', '');
+    return Settings::get('file_private_path');
   }
 
 }
