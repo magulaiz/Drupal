@@ -458,7 +458,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     }
 
     if (empty($response)) {
-      @trigger_error('Not passing the $response parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will cause an error in drupal:10.0.0. See https://www.drupal.org/node/3231731', E_USER_DEPRECATED);
+      @trigger_error('Not passing the $response parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will cause an error in drupal:10.0.0. See https://www.drupal.org/node/3239948', E_USER_DEPRECATED);
       return NULL;
     }
     // If the URL didn't give us any clues about the file extension, see if the
