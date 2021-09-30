@@ -24,6 +24,7 @@ use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -451,9 +452,8 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     if (empty($response)) {
       @trigger_error('Not passing the $response parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will cause an error in drupal:10.0.0. See https://www.drupal.org/node/3239948', E_USER_DEPRECATED);
       // Create an empty response with no Content-Type header, which will allow
-      // the rest of this method to run normally, and make it easy to remove
-      // this deprecation in Drupal 10.
-      $response = new \GuzzleHttp\Psr7\Response();
+      // the rest of this method to run normally and return NULL.
+      $response = new Response();
     }
 
     // First, try to glean the extension from the URL path.
