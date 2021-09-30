@@ -930,6 +930,27 @@ www.example.com with a newline in comments -->
   }
 
   /**
+   * Tests _filter_url with very long html tag.
+   */
+  public function testUrlFilterLongTag() {
+    // Get FilterUrl object.
+    $filter = $this->filters['filter_url'];
+    $filter->setConfiguration([
+      'settings' => [
+        'filter_url_length' => 496,
+      ],
+    ]);
+
+    // Test the filter when there's a p tag with tons of classes.
+    // Each class is ten bytes (including the trailing space).
+    // So $classes is about 1MB.
+    $classes = str_repeat('dum-class ', 100000);
+    $input = '<div><p class="' . $classes . '">Not a url.</p></div>';
+    $result = _filter_url($input, $filter);
+    $this->assertSame($input, $result);
+  }
+
+  /**
    * Tests the HTML corrector filter.
    *
    * @todo This test could really use some validity checking function.
