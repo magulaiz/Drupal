@@ -17,6 +17,7 @@ use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
+use Drupal\user\UserInterface;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -527,4 +528,71 @@ function media_views_query_substitutions(ViewExecutable $view) {
     '***VIEW_OWN_UNPUBLISHED_MEDIA***' => (int) $account->hasPermission('view own unpublished media'),
     '***ADMINISTER_MEDIA***' => (int) $account->hasPermission('administer media'),
   ];
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function media_user_cancel($edit, UserInterface $account, $method) {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish medias (current revisions).
+      $mids = \Drupal::entityQuery('media')
+        ->condition('uid', $account->id())
+        ->execute();
+      module_load_include('inc', 'media', 'media.admin');
+      media_mass_update($mids, ['status' => 0], NULL, TRUE);
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize all of the medias for this old account.
+      $vids = _media_get_revision_ids_by_user($account);
+      module_load_include('inc', 'media', 'media.admin');
+      media_mass_update($vids, [
+        'uid' => 0,
+        'revision_uid' => 0,
+      ], NULL, TRUE, TRUE);
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function media_user_predelete($account) {
+  // Delete medias (current revisions).
+  $mids = \Drupal::entityQuery('media')
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+
+  $media_storage = \Drupal::entityTypeManager()->getStorage('media');
+
+  $entities = $media_storage->loadMultiple($mids);
+  $media_storage->delete($entities);
+
+  // Delete old revisions.
+  $revisions = _media_get_revision_ids_by_user($account);
+  foreach ($revisions as $revision) {
+    $media_storage->deleteRevision($revision);
+  }
+}
+
+/**
+ * Gets a list of revision IDs having a given user as media author.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The user entity.
+ *
+ * @return int[]
+ *   Media revision IDs (in ascending order).
+ */
+function _media_get_revision_ids_by_user(AccountInterface $account) {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $media_entity_type = $definition_update_manager->getEntityType('media');
+
+  return \Drupal::database()->query(
+    'SELECT vid FROM {' . $media_entity_type->getRevisionDataTable() . '} WHERE uid = :uid ORDER BY vid',
+    [':uid' => $account->id()]
+  )->fetchCol();
 }

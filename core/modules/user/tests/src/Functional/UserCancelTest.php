@@ -5,9 +5,11 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -18,13 +20,14 @@ use Drupal\user\Entity\User;
 class UserCancelTest extends BrowserTestBase {
 
   use CommentTestTrait;
+  use MediaTypeCreationTrait;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['node', 'comment'];
+  public static $modules = ['node', 'comment', 'media'];
 
   /**
    * {@inheritdoc}
@@ -44,6 +47,8 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser([]);
@@ -54,6 +59,15 @@ class UserCancelTest extends BrowserTestBase {
 
     // Create a node.
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
+
+    // Create a media.
+    $media_type = $this->createMediaType('image');
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media 1',
+      'uid' => $account->id(),
+    ]);
+    $media->save();
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
@@ -72,6 +86,10 @@ class UserCancelTest extends BrowserTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertEquals($account->id(), $test_node->getOwnerId(), 'Node of the user has not been altered.');
     $this->assertTrue($test_node->isPublished());
+
+    $media_storage->resetCache([$media->id()]);
+    $test_media = $media_storage->load($media->id());
+    $this->assertTrue(($test_media->getOwnerId() == $account->id() && $test_media->isPublished()), 'Media of the user has not been altered.');
   }
 
   /**
@@ -130,6 +148,8 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -140,6 +160,15 @@ class UserCancelTest extends BrowserTestBase {
 
     // Create a node.
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
+
+    // Create a media.
+    $media_type = $this->createMediaType('image');
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media 1',
+      'uid' => $account->id(),
+    ]);
+    $media->save();
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
@@ -171,6 +200,10 @@ class UserCancelTest extends BrowserTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertEquals($account->id(), $test_node->getOwnerId(), 'Node of the user has not been altered.');
     $this->assertTrue($test_node->isPublished());
+
+    $media_storage->resetCache([$media->id()]);
+    $test_media = $media_storage->load($media->id());
+    $this->assertTrue(($test_media->getOwnerId() == $account->id() && $test_media->isPublished()), 'Media of the user has not been altered.');
   }
 
   /**
@@ -220,6 +253,8 @@ class UserCancelTest extends BrowserTestBase {
     // Create comment field on page.
     $this->addDefaultCommentField('node', 'page');
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -248,6 +283,18 @@ class UserCancelTest extends BrowserTestBase {
     ]);
     $comment->save();
 
+    // Create a media with two revisions.
+    $media_type = $this->createMediaType('image');
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media 1',
+      'uid' => $account->id(),
+    ]);
+    $media->save();
+    $media->setName($this->randomMachineName());
+    $media->setNewRevision();
+    $media->save();
+
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->submitForm([], 'Cancel account');
@@ -274,14 +321,20 @@ class UserCancelTest extends BrowserTestBase {
     // Confirm user's content has been unpublished.
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
-    $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
+    $this->assertEmpty($test_node->isPublished(), 'Node of the user has been unpublished.');
     $test_node = node_revision_load($node->getRevisionId());
-    $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
+    $this->assertEmpty($test_node->isPublished(), 'Node revision of the user has been unpublished.');
 
     $storage = \Drupal::entityTypeManager()->getStorage('comment');
     $storage->resetCache([$comment->id()]);
     $comment = $storage->load($comment->id());
-    $this->assertFalse($comment->isPublished(), 'Comment of the user has been unpublished.');
+    $this->assertEmpty($comment->isPublished(), 'Comment of the user has been unpublished.');
+
+    $media_storage->resetCache([$media->id()]);
+    $test_media = $media_storage->load($media->id());
+    $this->assertEmpty($test_media->isPublished(), 'Media of the user has been unpublished.');
+    $test_media_revision = $media_storage->loadRevision($media->getRevisionId());
+    $this->assertEmpty($test_media_revision->isPublished(), 'Media revision of the user has been unpublished.');
   }
 
   /**
@@ -335,6 +388,8 @@ class UserCancelTest extends BrowserTestBase {
     // Create comment field on page.
     $this->addDefaultCommentField('node', 'page');
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -360,6 +415,15 @@ class UserCancelTest extends BrowserTestBase {
     ]);
     $comment->save();
 
+    // Create a simple media.
+    $media_type = $this->createMediaType('image');
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media 1',
+      'uid' => $account->id(),
+    ]);
+    $media->save();
+
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(['uid' => $account->id()]);
@@ -369,6 +433,21 @@ class UserCancelTest extends BrowserTestBase {
     // Set new/current revision to someone else.
     $settings['uid'] = 1;
     $revision_node = $this->drupalCreateNode($settings);
+
+    // Create a media with two revisions, the initial one belonging to the
+    // cancelling user.
+    $media_type = $this->createMediaType('image');
+    $revision_media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media with revision',
+      'uid' => $account->id(),
+    ]);
+    $revision_media->save();
+    $first_revision_media = $revision_media->getRevisionId();
+    // Set new/current revision to someone else.
+    $revision_media->setOwnerId(1);
+    $revision_media->setNewRevision();
+    $revision_media->save();
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
@@ -407,6 +486,16 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertTrue($test_comment->isPublished());
     $this->assertEquals($anonymous_user->getDisplayName(), $test_comment->getAuthorName(), 'Comment of the user has been attributed to anonymous user name.');
 
+    $media_storage->resetCache([$media->id()]);
+    $test_media = $media_storage->load($media->id());
+    $this->assertTrue(($test_media->getOwnerId() == 0 && $test_media->isPublished()), 'Media of the user has been attributed to anonymous user.');
+    /** @var \Drupal\media\Entity\Media $test_media_revision */
+    $test_media_revision = $media_storage->loadRevision($first_revision_media);
+    $this->assertTrue(($test_media_revision->getRevisionUserId() == 0 && $test_media_revision->isPublished()), 'Media revision of the user has been attributed to anonymous user.');
+    $media_storage->resetCache([$revision_media->id()]);
+    $test_media_revision = $media_storage->load($revision_media->id());
+    $this->assertTrue(($test_media_revision->getOwnerId() != 0 && $test_media_revision->isPublished()), "Current revision of the user's media was not attributed to anonymous user.");
+
     // Confirm that the confirmation message made it through to the end user.
     $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
   }
@@ -418,6 +507,8 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $this->config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser(['cancel account']);
@@ -432,6 +523,20 @@ class UserCancelTest extends BrowserTestBase {
     for ($i = 0; $i < 11; $i++) {
       $node = $this->drupalCreateNode(['uid' => $account->id()]);
       $nodes[$node->id()] = $node;
+    }
+
+    // Create 11 medias in order to trigger batch processing in
+    // media_mass_update().
+    $medias = [];
+    $media_type = $this->createMediaType('image');
+    for ($i = 0; $i < 11; $i++) {
+      $media = Media::create([
+        'bundle' => $media_type->id(),
+        'name' => sprintf('Media %s', $i),
+        'uid' => $account->id(),
+      ]);
+      $media->save();
+      $medias[$media->id()] = $media;
     }
 
     // Attempt to cancel account.
@@ -457,6 +562,12 @@ class UserCancelTest extends BrowserTestBase {
       $this->assertEquals(0, $test_node->getOwnerId(), 'Node ' . $test_node->id() . ' of the user has been attributed to anonymous user.');
       $this->assertTrue($test_node->isPublished());
     }
+
+    $media_storage->resetCache(array_keys($medias));
+    $test_medias = $media_storage->loadMultiple(array_keys($medias));
+    foreach ($test_medias as $test_media) {
+      $this->assertTrue(($test_media->getOwnerId() == 0 && $test_media->isPublished()), 'Media ' . $test_media->id() . ' of the user has been attributed to anonymous user.');
+    }
   }
 
   /**
@@ -469,6 +580,8 @@ class UserCancelTest extends BrowserTestBase {
     $this->resetAll();
     $this->addDefaultCommentField('node', 'page');
     $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
+    /** @var \Drupal\media\MediaStorage $media_storage */
+    $media_storage = $this->container->get('entity_type.manager')->getStorage('media');
 
     // Create a user.
     $account = $this->drupalCreateUser([
@@ -497,6 +610,15 @@ class UserCancelTest extends BrowserTestBase {
     $comment = reset($comments);
     $this->assertNotEmpty($comment->id(), 'Comment found.');
 
+    // Create a simple media.
+    $media_type = $this->createMediaType('image');
+    $media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media 1',
+      'uid' => $account->id(),
+    ]);
+    $media->save();
+
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(['uid' => $account->id()]);
@@ -506,6 +628,21 @@ class UserCancelTest extends BrowserTestBase {
     // Set new/current revision to someone else.
     $settings['uid'] = 1;
     $revision_node = $this->drupalCreateNode($settings);
+
+    // Create a media with two revisions, the initial one belonging to the
+    // cancelling user.
+    $media_type = $this->createMediaType('image');
+    $revision_media = Media::create([
+      'bundle' => $media_type->id(),
+      'name' => 'Media with revision',
+      'uid' => $account->id(),
+    ]);
+    $revision_media->save();
+    $first_revision_media = $revision_media->getRevisionId();
+    // Set new/current revision to someone else.
+    $revision_media->setOwnerId(1);
+    $revision_media->setNewRevision();
+    $revision_media->save();
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
@@ -536,6 +673,12 @@ class UserCancelTest extends BrowserTestBase {
     $this->assertInstanceOf(Node::class, $node_storage->load($revision_node->id()));
     \Drupal::entityTypeManager()->getStorage('comment')->resetCache([$comment->id()]);
     $this->assertNull(Comment::load($comment->id()), 'Comment of the user has been deleted.');
+
+    $media_storage->resetCache([$media->id()]);
+    $this->assertNull($media_storage->load($media->id()), 'Media of the user has been deleted.');
+    $this->assertNull($media_storage->loadRevision($first_revision_media), 'Media revision of the user has been deleted.');
+    $media_storage->resetCache([$revision_media->id()]);
+    $this->assertNotNull($media_storage->load($revision_media->id()), "Current revision of the user's media was not deleted.");
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertSession()->pageTextContains("{$account->getAccountName()} has been deleted.");
@@ -636,17 +779,17 @@ class UserCancelTest extends BrowserTestBase {
       $user_storage->resetCache([$account->id()]);
       $status = $status && !$user_storage->load($account->id());
     }
-    $this->assertTrue($status, 'Users deleted and not found in the database.');
+    $this->assertNotEmpty($status, 'Users deleted and not found in the database.');
 
     // Ensure that admin account was not cancelled.
     $this->assertSession()->pageTextContains('A confirmation request to cancel your account has been sent to your email address.');
     $admin_user = $user_storage->load($admin_user->id());
-    $this->assertTrue($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
+    $this->assertNotEmpty($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
 
     // Verify that uid 1's account was not cancelled.
     $user_storage->resetCache([1]);
     $user1 = $user_storage->load(1);
-    $this->assertTrue($user1->isActive(), 'User #1 still exists and is not blocked.');
+    $this->assertNotEmpty($user1->isActive(), 'User #1 still exists and is not blocked.');
   }
 
   /**
@@ -662,7 +805,7 @@ class UserCancelTest extends BrowserTestBase {
     $node = $this->drupalCreateNode(['type' => 'page', 'uid' => $account->id()]);
     $account->delete();
     $load2 = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
-    $this->assertTrue(empty($load2));
+    $this->assertNotEmpty(empty($load2));
   }
 
 }
