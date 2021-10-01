@@ -25,6 +25,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'layout_test',
     'block',
     'block_test',
+    'contextual',
     'node',
     'layout_builder_test',
   ];
@@ -631,13 +632,14 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that block plugins can provide custom attributes.
+   * Tests that block plugins can define custom attributes and contextual links.
    */
-  public function testPluginsProvidingCustomAttributes() {
+  public function testPluginsProvidingCustomAttributesAndContextualLinks() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
     $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
       'configure any layout',
       'administer node display',
     ]));
@@ -656,6 +658,7 @@ class LayoutBuilderTest extends BrowserTestBase {
 
     $assert_session->elementExists('css', '.attribute-test-class');
     $assert_session->elementExists('css', '[custom-attribute=test]');
+    $assert_session->elementExists('css', 'div[data-contextual-id*="layout_builder_test"]');
   }
 
   /**

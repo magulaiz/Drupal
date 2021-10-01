@@ -33,6 +33,9 @@ class TestAttributesBlock extends BlockBase {
         'custom-attribute' => 'test',
       ],
       '#markup' => $this->t('Example block providing its own attributes.'),
+      '#contextual_links' => [
+        'layout_builder_test' => ['route_parameters' => []],
+      ],
     ];
     return $build;
   }
