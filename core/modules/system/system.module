@@ -432,7 +432,7 @@ function template_preprocess_entity_add_list(&$variables) {
  * Example (update_manager_install_form_submit()):
  * @code
  *  system_authorized_init('update_authorize_run_install',
- *    drupal_get_path('module', 'update') . '/update.authorize.inc',
+ *    \Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc',
  *    $arguments, t('Update manager'));
  *  $form_state->setRedirectUrl(system_authorized_get_url());
  * @endcode
@@ -891,8 +891,14 @@ function system_region_list($theme, $show = REGIONS_ALL) {
 
 /**
  * Array sorting callback; sorts modules by their name.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Extension\ExtensionList::sortByName() instead.
+ *
+ * @see https://www.drupal.org/node/3225999
  */
 function system_sort_modules_by_info_name($a, $b) {
+  @trigger_error('system_sort_modules_by_info_name() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::sortByName() instead. See https://www.drupal.org/node/3225999', E_USER_DEPRECATED);
   return strcasecmp($a->info['name'], $b->info['name']);
 }
 
@@ -902,7 +908,7 @@ function system_sort_modules_by_info_name($a, $b) {
  * Callback for uasort() within
  * \Drupal\system\Controller\SystemController::themesPage().
  *
- * @see system_sort_modules_by_info_name()
+ * @see \Drupal\Core\Extension\Extension::sortByName()
  */
 function system_sort_themes($a, $b) {
   if ($a->is_default) {
@@ -1175,7 +1181,9 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
   if (!isset($destination)) {
-    $path = file_build_uri(\Drupal::service('file_system')->basename($parsed_url['path']));
+    $path = $file_system->basename($parsed_url['path']);
+    $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
+    $path = \Drupal::service('stream_wrapper_manager')->normalizeUri($path);
   }
   else {
     if (is_dir($file_system->realpath($destination))) {

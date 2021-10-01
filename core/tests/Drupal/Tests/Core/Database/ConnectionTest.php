@@ -75,6 +75,7 @@ class ConnectionTest extends UnitTestCase {
    *   - Expected result.
    *   - Table prefix.
    *   - Query to be prefixed.
+   *   - Quote identifier.
    */
   public function providerTestPrefixTables() {
     return [
@@ -85,23 +86,23 @@ class ConnectionTest extends UnitTestCase {
         ['', ''],
       ],
       [
-        'SELECT * FROM "first_table" JOIN "second"."thingie"',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        'SELECT * FROM "test_table"',
+        'test_',
+        'SELECT * FROM {table}',
+        ['"', '"'],
       ],
       [
-        'SELECT * FROM [first_table] JOIN [second].[thingie]',
-        [
-          'table' => 'first_',
-          'thingie' => 'second.',
-        ],
-        'SELECT * FROM {table} JOIN {thingie}',
+        "SELECT * FROM 'test_table'",
+        'test_',
+        'SELECT * FROM {table}',
+        ["'", "'"],
+      ],
+      [
+        "SELECT * FROM [test_table]",
+        'test_',
+        'SELECT * FROM {table}',
         ['[', ']'],
       ],
-
     ];
   }
 
@@ -667,7 +668,7 @@ class ConnectionTest extends UnitTestCase {
    */
   public function testQueryTrim($expected, $query, $options) {
     $mock_pdo = $this->getMockBuilder(StubPdo::class)
-      ->setMethods(['execute', 'prepare', 'setAttribute'])
+      ->onlyMethods(['prepare'])
       ->getMock();
     $mock_statement = $this->getMockBuilder(StatementWrapper::class)
       ->disableOriginalConstructor()

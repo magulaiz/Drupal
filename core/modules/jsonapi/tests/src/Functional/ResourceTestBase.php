@@ -428,7 +428,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     if ($duplicate instanceof ConfigEntityInterface && $id_key = $duplicate->getEntityType()->getKey('id')) {
       $id = $original->id();
-      $id_key = $duplicate->getEntityType()->getKey('id');
       $duplicate->set($id_key, $id . '_' . $key);
     }
     return $duplicate;
@@ -723,14 +722,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Expected cache tags: X-Drupal-Cache-Tags header.
     $this->assertSame($expected_cache_tags !== FALSE, $response->hasHeader('X-Drupal-Cache-Tags'));
     if (is_array($expected_cache_tags)) {
-      $this->assertSame($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
+      $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
     }
 
     // Expected cache contexts: X-Drupal-Cache-Contexts header.
     $this->assertSame($expected_cache_contexts !== FALSE, $response->hasHeader('X-Drupal-Cache-Contexts'));
     if (is_array($expected_cache_contexts)) {
       $optimized_expected_cache_contexts = \Drupal::service('cache_contexts_manager')->optimizeTokens($expected_cache_contexts);
-      $this->assertSame($optimized_expected_cache_contexts, explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
+      $this->assertEqualsCanonicalizing($optimized_expected_cache_contexts, explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
     }
 
     // Expected Page Cache header value: X-Drupal-Cache header.
@@ -789,7 +788,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     foreach ($expected_document as $member_name => $expected_member) {
       $actual_member = $actual_document[$member_name];
-      $this->assertEquals($expected_member, $actual_member, "The '$member_name' member was not as expected.");
+      $this->assertEqualsCanonicalizing($expected_member, $actual_member, "The '$member_name' member was not as expected.");
     }
   }
 
@@ -2448,7 +2447,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->grantPermissionsToTestedRole([
       'use editorial transition create_new_draft',
       'use editorial transition archived_published',
-      'use editorial transition published',
+      'use editorial transition publish',
     ]);
 
     // Disallow PATCHing an entity that has a pending revision.
