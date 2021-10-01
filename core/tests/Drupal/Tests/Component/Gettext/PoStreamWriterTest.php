@@ -38,9 +38,9 @@ class PoStreamWriterTest extends TestCase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->poWriter = new PoStreamWriter();
     $poHeader = $this->prophesize(PoHeader::class);
     $poHeader->__toString()->willReturn('');
+    $this->poWriter = new PoStreamWriter();
     $this->poWriter->setHeader($poHeader->reveal());
 
     $root = vfsStream::setup();

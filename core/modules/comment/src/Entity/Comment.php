@@ -389,8 +389,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getSubject() {
-    // @todo Not sure if this is the best fix but it is adhering to the
-    //   interface.
     return $this->get('subject')->value ?? '';
   }
 
@@ -490,9 +488,6 @@ class Comment extends ContentEntityBase implements CommentInterface {
     if (!empty($thread->value)) {
       return $thread->value;
     }
-    // @todo decide if we should handle this here. It is conforming to the
-    //   interface.
-    return '';
   }
 
   /**
