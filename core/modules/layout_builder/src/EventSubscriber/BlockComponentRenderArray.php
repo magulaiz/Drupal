@@ -125,24 +125,28 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#base_plugin_id' => $block->getBaseId(),
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#weight' => $event->getComponent()->getWeight(),
-        '#attributes' => isset($content['#attributes']) ? $content['#attributes'] : [],
-        'content' => $content,
-        '#contextual_links' => isset($content['#contextual_links']) && !($block instanceof InlineBlock) ? $content['#contextual_links'] : [],
       ];
-      if (!$is_content_empty) {
-        // Place the $content returned by the block plugin into a 'content'
-        // child element, as a way to allow the plugin to have complete control
-        // of its properties and rendering (for instance, its own #theme)
-        // without conflicting with the properties used above, or alternate ones
-        // used by alternate block rendering approaches in contributed modules.
-        // However, the use of a child element is an implementation detail of
-        // this particular block rendering approach. Semantically, the content
-        // returned by the block plugin, and in particular, #attributes is
-        // information about the entire block. Therefore, we must move this
-        // property from $content and merge them into the top-level element.
-        if (isset($content['#attributes'])) {
-          unset($content['#attributes']);
-        }
+
+      // Place the $content returned by the block plugin into a 'content' child
+      // element, as a way to allow the plugin to have complete control of its
+      // properties and rendering (for instance, its own #theme) without
+      // conflicting with the properties used above, or alternate ones used by
+      // alternate block rendering approaches in contributed modules. However,
+      // the use of a child element is an implementation detail of this
+      // particular block rendering approach. Semantically, the content returned
+      // by the block plugin, and in particular, attributes and contextual links
+      // are information that belong to the entire block. Therefore, we must
+      // move these properties from $content and merge them into the top-level
+      // element.
+      if (isset($content['#attributes'])) {
+        $build['#attributes'] = $content['#attributes'];
+        unset($content['#attributes']);
+      }
+      // Hide contextual links for inline blocks until the UX issues surrounding
+      // editing them directly are resolved.
+      // @see https://www.drupal.org/project/drupal/issues/3075308
+      if (!$block instanceof InlineBlock) {
+        $build['#contextual_links'] = $content['#contextual_links'] ?? [];
       }
       $build['content'] = $content;
 
