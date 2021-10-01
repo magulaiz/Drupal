@@ -644,7 +644,8 @@ class LayoutBuilderTest extends BrowserTestBase {
       'administer node display',
     ]));
 
-    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $page->clickLink('Manage layout');
     $page->clickLink('Add section');
     $page->clickLink('Layout Builder Test Plugin');

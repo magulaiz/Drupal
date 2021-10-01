@@ -119,9 +119,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      '#attributes' => [],
       'content' => $block_content,
-      '#contextual_links' => [],
     ];
 
     $expected_cache = $expected_build + [
@@ -196,9 +194,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      '#attributes' => [],
       'content' => $block_content,
-      '#contextual_links' => [],
     ];
 
     $expected_cache = $expected_build + [
@@ -325,7 +321,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#contextual_links' => [],
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_label,
       ],
@@ -385,7 +380,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
       'content' => $block_content,
-      '#contextual_links' => [],
       '#attributes' => [
         'data-layout-content-preview-placeholder-label' => $placeholder_string,
       ],

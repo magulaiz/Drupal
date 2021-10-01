@@ -145,8 +145,8 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       // Hide contextual links for inline blocks until the UX issues surrounding
       // editing them directly are resolved.
       // @see https://www.drupal.org/project/drupal/issues/3075308
-      if (!$block instanceof InlineBlock) {
-        $build['#contextual_links'] = $content['#contextual_links'] ?? [];
+      if (!$block instanceof InlineBlock && !empty($content['#contextual_links'])) {
+        $build['#contextual_links'] = $content['#contextual_links'];
       }
       $build['content'] = $content;
 
