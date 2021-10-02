@@ -86,10 +86,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('entity_type', $comment->getCommentedEntityTypeId())
       ->condition('default_langcode', 1);
     $query->addExpression('MAX([thread])', 'thread');
-    // Result could be FALSE when no comments found. For details see
-    // https://www.php.net/manual/en/pdostatement.fetchcolumn page.
     return $query->execute()
-      ->fetchField() ?: '';
+      ->fetchField();
   }
 
   /**
@@ -103,10 +101,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->condition('thread', $comment->getParentComment()->getThread() . '.%', 'LIKE')
       ->condition('default_langcode', 1);
     $query->addExpression('MAX([thread])', 'thread');
-    // Result could be FALSE when no comments found. For details see
-    // https://www.php.net/manual/en/pdostatement.fetchcolumn page.
     return $query->execute()
-      ->fetchField() ?: '';
+      ->fetchField();
   }
 
   /**
