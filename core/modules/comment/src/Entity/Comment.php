@@ -484,7 +484,10 @@ class Comment extends ContentEntityBase implements CommentInterface {
    * {@inheritdoc}
    */
   public function getThread() {
-    return $this->get('thread')->value ?? '';
+    $thread = $this->get('thread');
+    if (!empty($thread->value)) {
+      return $thread->value;
+    }
   }
 
   /**
