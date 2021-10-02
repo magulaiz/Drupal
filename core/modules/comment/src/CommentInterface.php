@@ -212,7 +212,8 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    * Returns the alphadecimal representation of the comment's place in a thread.
    *
    * @return string
-   *   The alphadecimal representation of the comment's place in a thread.
+   *   The alphadecimal representation of the comment's place in a thread. Or
+   *   empty string for new comment.
    */
   public function getThread();
 

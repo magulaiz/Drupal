@@ -19,7 +19,7 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    *
    * @return string
    *   The maximum encoded thread value among the top level comments of the
-   *   node $comment belongs to.
+   *   node $comment belongs to. Or empty string if no comments yet.
    */
   public function getMaxThread(CommentInterface $comment);
 
@@ -30,7 +30,8 @@ interface CommentStorageInterface extends ContentEntityStorageInterface {
    *   A comment entity.
    *
    * @return string
-   *   The maximum encoded thread value among all replies of $comment.
+   *   The maximum encoded thread value among all replies of $comment. Or empty
+   *   string if no comments yet.
    */
   public function getMaxThreadPerThread(CommentInterface $comment);
 
