@@ -112,7 +112,7 @@ class DownloadTest extends FileTestBase {
 
     // Return the downloaded file's local URI.
     $value = [
-      'http://drupal.org/favicon.ico',
+      'https://drupal.org/favicon.ico',
       $destination_uri,
     ];
     return $plugin->transform($value, $executable, $row, 'foobaz');
