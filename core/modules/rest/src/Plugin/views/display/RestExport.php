@@ -422,6 +422,10 @@ class RestExport extends PathPluginBase implements ResponseDisplayPluginInterfac
     $renderer = \Drupal::service('renderer');
 
     $output = (string) $renderer->renderRoot($build);
+    // Rollback special character encoder. @see https://drupal.org/node/2928793.
+    $output = preg_replace_callback('/\\\\u([0-9a-fA-F]{4})/', function ($match) {
+        return mb_convert_encoding(pack('H*', $match[1]), 'UTF-8', 'UCS-2BE');
+      }, $output);
 
     $response->setContent($output);
     $cache_metadata = CacheableMetadata::createFromRenderArray($build);
