@@ -520,3 +520,14 @@ system.csrftoken:
     _controller: '\Drupal\system\Controller\CsrfTokenController::csrfToken'
   requirements:
     _access: 'TRUE'
+
+system.menu.linkset:
+  path: '/system/menu/{menu}/linkset'
+  defaults:
+    _controller: 'Drupal\system\Controller\Linkset::process'
+  requirements:
+    _access: 'TRUE'
+  options:
+    parameters:
+      menu:
+        type: 'entity:menu'

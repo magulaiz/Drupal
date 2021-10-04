@@ -1,0 +1,9 @@
+name: 'Decoupled menus test module'
+type: module
+description: 'Support module for decoupled_menus endpoint.'
+package: Testing
+version: VERSION
+dependencies:
+  drupal:hal
+  drupal:rest
+  drupal:user

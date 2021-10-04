@@ -64,3 +64,19 @@ services:
     arguments: ['@system.sa_fetcher']
     tags:
       - { name: event_subscriber }
+  system.menus.route_subscriber:
+    class: Drupal\system\Routing\EventSubscriber
+    arguments: ['%authentication_providers%']
+    tags:
+      - { name: event_subscriber }
+
+parameters:
+  # Specify a default format per host name. Host names which do not appear
+  # will default to HTML.
+  #
+  # For example:
+  #
+  # host.default_formats:
+  #   json: ['api.example.com', 'backend.example.com']
+  #   xml: ['soap.example.com']
+  host.default_formats: {}
