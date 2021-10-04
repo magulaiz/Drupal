@@ -124,10 +124,26 @@ class CssCollectionOptimizer implements AssetCollectionOptimizerInterface {
               // http://www.w3.org/TR/REC-CSS2/cascade.html#at-import, @import
               // rules must precede any other style, so we move those to the
               // top.
-              $regexp = '/@import\s*(?:url\(\s*)?[\'"]?([^\'"\]+)([\'")]+\)?.*;)/ig';
-              preg_match_all($regexp, $data, $matches);
-              $data = preg_replace($regexp, '', $data);
-              $data = implode('', $matches[0]) . $data;
+              // To preserve resources, execute a number of small efficient
+              // regular expressions rather than a complex single one. CSS files
+              // can often be very large, and we want to avoid a blown stack.
+              $expressions = [
+                // Matches `@import 'filename.css';`.
+                '/@import\s*\'(?:\\\'|.)*\'.*;/Ui',
+                // Matches `@import "filename.css";`.
+                '/@import\s*"(?:\\"|.)*".*;/Ui',
+                // Matches `@import url(filename.css);`.
+                '/@import\s*url\(\s*(?:\\[\)\\\'\"]|[^\'")])*\s*\).*;/Ui',
+                // Matches `@import url('filename.css');`.
+                '/@import\s*url\(\s*\'(?:\\\'|.)*\'\s*\).*;/Ui',
+                // Matches `@import url("filename.css");`.
+                '/@import\s*url\(\s*"(?:\\"|.)*"\s*\).*;/Ui',
+              ];
+              foreach ($expressions as $expression) {
+                preg_match_all($expression, $data, $matches);
+                $data = preg_replace($expression, '', $data);
+                $data = implode('', $matches[0]) . $data;
+              }
               // Dump the optimized CSS for this group into an aggregate file.
               $uri = $this->dumper->dump($data, 'css');
               // Set the URI for this group's aggregate file.
