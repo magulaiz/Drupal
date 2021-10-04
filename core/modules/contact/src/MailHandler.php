@@ -135,17 +135,13 @@ class MailHandler implements MailHandlerInterface {
     if (!$message->isPersonal()) {
       $this->logger->notice('%sender-name (@sender-from) sent an email regarding %contact_form.', [
         '%sender-name' => $sender_cloned->getAccountName(),
-        // @todo PHP 8.1 means the whe getMail() returns a NULL this will generate
-        //   deprecation errors. Is an empty string correct?
-        '@sender-from' => $sender_cloned->getEmail() ?: '',
+        '@sender-from' => $sender_cloned->getEmail() ?? '',
         '%contact_form' => $contact_form->label(),
       ]);
     }
     else {
       $this->logger->notice('%sender-name (@sender-from) sent %recipient-name an email.', [
         '%sender-name' => $sender_cloned->getAccountName(),
-        // On personal contact forms an email address is required so this will
-        // not be NULL.
         '@sender-from' => $sender_cloned->getEmail(),
         '%recipient-name' => $message->getPersonalRecipient()->getAccountName(),
       ]);

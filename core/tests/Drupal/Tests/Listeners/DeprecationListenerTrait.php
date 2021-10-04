@@ -79,9 +79,6 @@ trait DeprecationListenerTrait {
       // Guzzle 6 will not be updated for full PHP 8.1 compatibility, see
       // https://github.com/guzzle/guzzle/pull/2918.
       '%Return type of GuzzleHttp\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
-      // Skip Symfony deprecations for PHP 8.1 -  fixed by
-      // https://github.com/symfony/symfony/pull/42260.
-      '%Return type of Symfony\\\\Component\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
       // Skip EasyRdf deprecations for PHP 8.1 - fixed by
       // https://github.com/easyrdf/easyrdf/pull/384.
       '%Return type of EasyRdf\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
@@ -107,8 +104,9 @@ trait DeprecationListenerTrait {
    */
   public static function getSkippedDeprecations() {
     return [
-      // The following deprecation message is skipped for testing purposes.
+      // The following deprecation messages are skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
+      'Return type of PhpDeprecation::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice',
       // The following Symfony deprecations are introduced in the Symfony 4
       // development cycle. They will need to be resolved prior to Symfony 5
       // compatibility.
