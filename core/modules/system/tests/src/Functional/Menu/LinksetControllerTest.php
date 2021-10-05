@@ -147,8 +147,8 @@ final class LinksetControllerTest extends BrowserTestBase {
           'foo',
           'bar',
           1729,
-          true,
-          false,
+          TRUE,
+          FALSE,
           0,
           -1,
           3.141592,
@@ -459,6 +459,8 @@ final class LinksetControllerTest extends BrowserTestBase {
    *
    * @param array $values
    *   Menu field values.
+   * @param array $options
+   *   Menu options.
    *
    * @return \Drupal\menu_link_content\MenuLinkContentInterface
    *   The newly created menu link content entity.
