@@ -123,9 +123,9 @@
             name: 'moveArrowJoyridePosition',
             enabled: true,
             phase: 'write',
-            fn({state}) {
-              const {arrow} = state.elements;
-              const {placement} = state;
+            fn({ state }) {
+              const { arrow } = state.elements;
+              const { placement } = state;
               if (
                 arrow &&
                 /^top|bottom/.test(placement) &&
@@ -189,7 +189,7 @@
     } else {
       Drupal.tour.activeTour.cancel();
     }
-  };
+  }
 
   /**
    * Attaches the tour's toolbar tab behavior.

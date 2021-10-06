@@ -100,7 +100,6 @@
     }
   }
 
-  ;
   Drupal.behaviors.tour = {
     attach: function attach(context) {
       once('tour', 'body').forEach(function () {
