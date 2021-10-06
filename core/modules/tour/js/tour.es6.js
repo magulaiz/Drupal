@@ -10,7 +10,24 @@
    * @namespace
    */
   Drupal.tour = Drupal.tour || {
+    /**
+     * The current tour for the page.
+     *
+     * @type {Array}
+     */
     currentTour: [],
+    /**
+     * Indicates whether the tour is currently running.
+     *
+     * @type {boolean}
+     */
+    isActive: false,
+    /**
+     * Indicates which tour is the active one (necessary to cleanly stop).
+     *
+     * @type {Array}
+     */
+    activeTour: [],
   };
 
   function _removeIrrelevantTourItems(tourItems) {
@@ -35,6 +52,7 @@
 
     // If there are tours filtered, we'll have to update model.
     if (tourItems.length !== filteredTour.length) {
+      console.log(filteredTour.tour);
       filteredTour.forEach((filteredTourItem, filteredTourItemId) => {
         filteredTour[filteredTourItemId].counter = Drupal.t(
           '!tour_item of !total',
@@ -49,10 +67,47 @@
         }
       });
       Drupal.tour.currentTour = filteredTour;
-      // this.model.set('tour', filteredTour);
     }
     console.log(`filtered tour: ${filteredTour.length}`);
   }
+
+  function toggleTour() {
+    if (Drupal.tour.isActive === false) {
+      _removeIrrelevantTourItems(Drupal.tour.currentTour);
+      const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+      shepherdTour.on('cancel', () => {
+        console.log('tour is cancelled');
+        Drupal.tour.isActive = false;
+      });
+      shepherdTour.on('complete', () => {
+        console.log('tour is complete');
+        Drupal.tour.isActive = false;
+      });
+      const tourItems = Drupal.tour.currentTour;
+      tourItems.forEach((tourStepConfig, index) => {
+        // Create the configuration for a given tour step by using values
+        // defined in TourViewBuilder.
+        // @see \Drupal\tour\TourViewBuilder::viewMultiple()
+        const tourItemOptions = {
+          title: tourStepConfig.title
+            ? Drupal.checkPlain(tourStepConfig.title)
+            : null,
+          text: () => Drupal.theme('tourItemContent', tourStepConfig),
+          attachTo: tourStepConfig.attachTo,
+          buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
+          classes: tourStepConfig.classes,
+          index,
+        };
+        shepherdTour.addStep(tourItemOptions);
+      });
+      shepherdTour.start();
+      Drupal.tour.isActive = true;
+      Drupal.tour.activeTour = shepherdTour;
+    } else {
+      console.log("in else");
+      Drupal.tour.activeTour.cancel();
+    }
+  };
 
   /**
    * Attaches the tour's toolbar tab behavior.
@@ -74,49 +129,27 @@
   Drupal.behaviors.tour = {
     attach(context) {
       once('tour', 'body').forEach(() => {
-        const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
           console.log('settings tour internal is true');
-          _removeIrrelevantTourItems(settings._tour_internal);
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
           $(context)
             .find('#toolbar-tab-tour')[0]
             .addEventListener(
               'click',
               function () {
-                shepherdTour.start();
+                toggleTour();
               },
               false,
             );
           console.log(Drupal.tour.currentTour.length);
         }
-        const tourItems = Drupal.tour.currentTour;
-
-        tourItems.forEach((tourStepConfig, index) => {
-          // Create the configuration for a given tour step by using values
-          // defined in TourViewBuilder.
-          // @see \Drupal\tour\TourViewBuilder::viewMultiple()
-          const tourItemOptions = {
-            title: tourStepConfig.title
-              ? Drupal.checkPlain(tourStepConfig.title)
-              : null,
-            text: () => Drupal.theme('tourItemContent', tourStepConfig),
-            attachTo: tourStepConfig.attachTo,
-            buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
-            classes: tourStepConfig.classes,
-            index,
-          };
-          shepherdTour.addStep(tourItemOptions);
-        });
-
-        shepherdTour.on('cancel', () => {
-          console.log('tour is cancelled');
-        });
-        shepherdTour.on('complete', () => {
-          console.log('tour is complete');
-        });
+        // Start the tour immediately if toggled via query string.
+        if (/tour=?/i.test(queryString)) {
+          // model.set('isActive', true);
+          // TODO: ADD QUERY STRING FUNCTIONALITY
+        }
       });
     },
   };

@@ -8,7 +8,9 @@
 (function ($, Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
   Drupal.tour = Drupal.tour || {
-    currentTour: []
+    currentTour: [],
+    isActive: false,
+    activeTour: []
   };
 
   function _removeIrrelevantTourItems(tourItems) {
@@ -22,6 +24,7 @@
     });
 
     if (tourItems.length !== filteredTour.length) {
+      console.log(filteredTour.tour);
       filteredTour.forEach(function (filteredTourItem, filteredTourItemId) {
         filteredTour[filteredTourItemId].counter = Drupal.t('!tour_item of !total', {
           '!tour_item': filteredTourItemId + 1,
@@ -38,44 +41,58 @@
     console.log("filtered tour: ".concat(filteredTour.length));
   }
 
+  function toggleTour() {
+    if (Drupal.tour.isActive === false) {
+      _removeIrrelevantTourItems(Drupal.tour.currentTour);
+
+      var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+      shepherdTour.on('cancel', function () {
+        console.log('tour is cancelled');
+        Drupal.tour.isActive = false;
+      });
+      shepherdTour.on('complete', function () {
+        console.log('tour is complete');
+        Drupal.tour.isActive = false;
+      });
+      var tourItems = Drupal.tour.currentTour;
+      tourItems.forEach(function (tourStepConfig, index) {
+        var tourItemOptions = {
+          title: tourStepConfig.title ? Drupal.checkPlain(tourStepConfig.title) : null,
+          text: function text() {
+            return Drupal.theme('tourItemContent', tourStepConfig);
+          },
+          attachTo: tourStepConfig.attachTo,
+          buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
+          classes: tourStepConfig.classes,
+          index: index
+        };
+        shepherdTour.addStep(tourItemOptions);
+      });
+      shepherdTour.start();
+      Drupal.tour.isActive = true;
+      Drupal.tour.activeTour = shepherdTour;
+    } else {
+      console.log("in else");
+      Drupal.tour.activeTour.cancel();
+    }
+  }
+
+  ;
   Drupal.behaviors.tour = {
     attach: function attach(context) {
       once('tour', 'body').forEach(function () {
-        var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
           console.log('settings tour internal is true');
-
-          _removeIrrelevantTourItems(settings._tour_internal);
-
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
           $(context).find('#toolbar-tab-tour')[0].addEventListener('click', function () {
-            shepherdTour.start();
+            toggleTour();
           }, false);
           console.log(Drupal.tour.currentTour.length);
         }
 
-        var tourItems = Drupal.tour.currentTour;
-        tourItems.forEach(function (tourStepConfig, index) {
-          var tourItemOptions = {
-            title: tourStepConfig.title ? Drupal.checkPlain(tourStepConfig.title) : null,
-            text: function text() {
-              return Drupal.theme('tourItemContent', tourStepConfig);
-            },
-            attachTo: tourStepConfig.attachTo,
-            buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
-            classes: tourStepConfig.classes,
-            index: index
-          };
-          shepherdTour.addStep(tourItemOptions);
-        });
-        shepherdTour.on('cancel', function () {
-          console.log('tour is cancelled');
-        });
-        shepherdTour.on('complete', function () {
-          console.log('tour is complete');
-        });
+        if (/tour=?/i.test(queryString)) {}
       });
     }
   };
