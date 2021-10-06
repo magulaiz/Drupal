@@ -515,9 +515,7 @@ class EntityTypeTest extends UnitTestCase {
   public function testIsSerializable() {
     $entity_type = $this->setUpEntityType([]);
 
-    $translation = $this->prophesize(UnserializableTranslationManager::class);
-    $translation->__serialize()->willThrow(\Exception::class);
-    $translation_service = $translation->reveal();
+    $translation_service = new UnserializableTranslationManager();
     $translation_service->_serviceId = 'string_translation';
 
     $entity_type->setStringTranslation($translation_service);
@@ -532,6 +530,12 @@ class EntityTypeTest extends UnitTestCase {
  * Test class.
  */
 class UnserializableTranslationManager extends TranslationManager {
+
+  /**
+   * Constructs a UnserializableTranslationManager object.
+   */
+  public function __construct() {
+  }
 
   /**
    * @return array
