@@ -15,8 +15,11 @@
 @import "http://example.com/style.css" supports(display: table-cell) screen;
 @import url("http://example.com/style.css") screen and (orientation:landscape);
 @import url("http://example.com/style.css") screen;
-@import url(http://example.com/cus(t;om.css);
-@import url(http://example.com/cu(s)t;om.css);
+@import url("http://user:pass@example.com/style.css") screen and (orientation:landscape);
+@import url(http://example.com/cus\(t;om.css);
+@import url('http://example.com/cu(st;o)m.css');
+@import url("http://user:pass@example.com/cu(s)t;om.css");
+@import url(http://user:pass@example.com/cu\(s\)t;om.css);
 
 body {
   margin: 0;
