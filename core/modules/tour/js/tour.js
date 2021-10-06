@@ -24,7 +24,6 @@
     });
 
     if (tourItems.length !== filteredTour.length) {
-      console.log(filteredTour.tour);
       filteredTour.forEach(function (filteredTourItem, filteredTourItemId) {
         filteredTour[filteredTourItemId].counter = Drupal.t('!tour_item of !total', {
           '!tour_item': filteredTourItemId + 1,
@@ -37,8 +36,6 @@
       });
       Drupal.tour.currentTour = filteredTour;
     }
-
-    console.log("filtered tour: ".concat(filteredTour.length));
   }
 
   function toggleTour() {
@@ -47,11 +44,9 @@
 
       var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
       shepherdTour.on('cancel', function () {
-        console.log('tour is cancelled');
         Drupal.tour.isActive = false;
       });
       shepherdTour.on('complete', function () {
-        console.log('tour is complete');
         Drupal.tour.isActive = false;
       });
       var tourItems = Drupal.tour.currentTour;
@@ -101,7 +96,6 @@
         Drupal.tour.activeTour = shepherdTour;
       }
     } else {
-      console.log("in else");
       Drupal.tour.activeTour.cancel();
     }
   }
@@ -113,12 +107,10 @@
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
-          console.log('settings tour internal is true');
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
-          $(context).find('#toolbar-tab-tour')[0].addEventListener('click', function () {
+          context.querySelector('#toolbar-tab-tour > button').addEventListener('click', function () {
             toggleTour();
           }, false);
-          console.log(Drupal.tour.currentTour.length);
         }
 
         if (/tour=?/i.test(queryString)) {

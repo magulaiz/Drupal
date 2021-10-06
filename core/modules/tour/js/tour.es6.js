@@ -11,7 +11,7 @@
    */
   Drupal.tour = Drupal.tour || {
     /**
-     * The current tour for the page.
+     * The current tour for the page provided by settings.tour_internal.
      *
      * @type {Array}
      */
@@ -30,6 +30,23 @@
     activeTour: [],
   };
 
+  /**
+   * Removes tour items for elements that don't have matching page elements.
+   *
+   * Or that are explicitly filtered out via the 'tips' query string.
+   *
+   * @example
+   * <caption>This will filter out tips that do not have a matching
+   * page element or don't have the "bar" class.</caption>
+   * http://example.com/foo?tips=bar
+   *
+   * @param {Object[]} tourItems
+   *   An array containing tour Step config objects.
+   *   The object properties relevant to this function:
+   *   - classes {string}: A string of classes to be added to the tour step
+   *     when rendered.
+   *   - selector {string}: The selector a tour step is associated with.
+   */
   function _removeIrrelevantTourItems(tourItems) {
     const tips = /tips=([^&]+)/.exec(queryString);
     const filteredTour = tourItems.filter((tourItem) => {
@@ -52,7 +69,6 @@
 
     // If there are tours filtered, we'll have to update model.
     if (tourItems.length !== filteredTour.length) {
-      console.log(filteredTour.tour);
       filteredTour.forEach((filteredTourItem, filteredTourItemId) => {
         filteredTour[filteredTourItemId].counter = Drupal.t(
           '!tour_item of !total',
@@ -68,19 +84,19 @@
       });
       Drupal.tour.currentTour = filteredTour;
     }
-    console.log(`filtered tour: ${filteredTour.length}`);
   }
 
+  /**
+   * Responsible for starting and stopping the tour.
+   */
   function toggleTour() {
     if (Drupal.tour.isActive === false) {
       _removeIrrelevantTourItems(Drupal.tour.currentTour);
       const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
       shepherdTour.on('cancel', () => {
-        console.log('tour is cancelled');
         Drupal.tour.isActive = false;
       });
       shepherdTour.on('complete', () => {
-        console.log('tour is complete');
         Drupal.tour.isActive = false;
       });
       const tourItems = Drupal.tour.currentTour;
@@ -171,7 +187,6 @@
         Drupal.tour.activeTour = shepherdTour;
       }
     } else {
-      console.log("in else");
       Drupal.tour.activeTour.cancel();
     }
   };
@@ -199,10 +214,10 @@
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
-          console.log('settings tour internal is true');
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
-          $(context)
-            .find('#toolbar-tab-tour')[0]
+          context
+            .querySelector('#toolbar-tab-tour > button')
+            // .find('#toolbar-tab-tour')
             .addEventListener(
               'click',
               function () {
@@ -210,12 +225,10 @@
               },
               false,
             );
-          console.log(Drupal.tour.currentTour.length);
         }
         // Start the tour immediately if toggled via query string.
         if (/tour=?/i.test(queryString)) {
           toggleTour();
-          // TODO: ADD QUERY STRING FUNCTIONALITY
         }
       });
     },
