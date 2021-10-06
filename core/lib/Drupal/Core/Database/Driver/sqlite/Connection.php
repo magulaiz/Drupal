@@ -96,7 +96,7 @@ class Connection extends DatabaseConnection {
         $prefix .= '.';
       }
     }
-    
+
     // Regenerate the prefixes replacement table.
     $this->setPrefix($prefixes);
   }
