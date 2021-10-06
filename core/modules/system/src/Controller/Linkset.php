@@ -219,7 +219,7 @@ final class Linkset extends ControllerBase {
    * 5. These attributes require special handling. For instance,
    *    these parameters must be strings instead of an array of strings.
    *
-   * NOTE: Values which are not object/array are typecasted to string.
+   * NOTE: Values which are not object/array are cast to string.
    *
    * @param array $link
    *   Link structure.

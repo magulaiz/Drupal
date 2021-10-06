@@ -135,7 +135,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'parent' => $about_us_link->getPluginId(),
     ]);
 
-    $cust_attributes_test_page = $this->createNode([
+    $custom_attributes_test_page = $this->createNode([
       'nid' => 3,
       'title' => 'Custom attributes test page',
       'type' => 'page',
@@ -166,7 +166,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     $this->createMenuItem([
       'title' => 'Custom attributes test page',
       'description' => 'Links to the page which describes the origin of the organization name.',
-      'link' => 'entity:node/' . (int) $cust_attributes_test_page->id(),
+      'link' => 'entity:node/' . (int) $custom_attributes_test_page->id(),
       'menu_name' => 'main',
       'parent' => $about_us_link->getPluginId(),
     ], $options);
