@@ -10,7 +10,6 @@ use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\State\StateInterface;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
@@ -25,8 +24,8 @@ class ExtensionListTest extends UnitTestCase {
    * @covers ::getName
    */
   public function testGetNameWithNonExistingExtension() {
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
-    $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), $state->reveal(), 'testing');
+    list($cache, $info_parser, $module_handler) = $this->getMocks();
+    $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), 'testing');
 
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
     $extension_discovery->scan('test_extension')->willReturn([]);
@@ -49,8 +48,8 @@ class ExtensionListTest extends UnitTestCase {
    * @covers ::get
    */
   public function testGetWithNonExistingExtension() {
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
-    $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), $state->reveal(), 'testing');
+    list($cache, $info_parser, $module_handler) = $this->getMocks();
+    $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), 'testing');
 
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
     $extension_discovery->scan('test_extension')->willReturn([]);
@@ -292,12 +291,12 @@ class ExtensionListTest extends UnitTestCase {
       touch("vfs://drupal_root/example/$extension_name/$extension_name.info.yml", 123456789);
     }
 
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
+    list($cache, $info_parser, $module_handler) = $this->getMocks();
     $info_parser->parse(Argument::any())->will(function ($args) {
       return Yaml::decode(file_get_contents('vfs://drupal_root/' . $args[0]));
     });
 
-    $test_extension_list = new TestExtension('vfs://drupal_root', 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), $state->reveal(), 'testing');
+    $test_extension_list = new TestExtension('vfs://drupal_root', 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), 'testing');
 
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
     $extension_scan_result = [];
@@ -313,8 +312,7 @@ class ExtensionListTest extends UnitTestCase {
     $cache = $this->prophesize(CacheBackendInterface::class);
     $info_parser = $this->prophesize(InfoParserInterface::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $state = $this->prophesize(StateInterface::class);
-    return [$cache, $info_parser, $module_handler, $state];
+    return [$cache, $info_parser, $module_handler];
   }
 
 }

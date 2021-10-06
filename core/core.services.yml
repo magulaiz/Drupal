@@ -536,16 +536,16 @@ services:
     lazy: true
   extension.list.module:
     class: Drupal\Core\Extension\ModuleExtensionList
-    arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
+    arguments: ['%app.root%', 'module', '@cache.default', '@info_parser', '@module_handler', '@config.factory', '@extension.list.profile', '%install_profile%', '%container.modules%']
   extension.list.profile:
     class: Drupal\Core\Extension\ProfileExtensionList
-    arguments: ['%app.root%', 'profile', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+    arguments: ['%app.root%', 'profile', '@cache.default', '@info_parser', '@module_handler', '%install_profile%']
   extension.list.theme:
     class: Drupal\Core\Extension\ThemeExtensionList
-    arguments: ['%app.root%', 'theme', '@cache.default', '@info_parser', '@module_handler', '@state', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
+    arguments: ['%app.root%', 'theme', '@cache.default', '@info_parser', '@module_handler', '@config.factory', '@extension.list.theme_engine', '%install_profile%']
   extension.list.theme_engine:
     class: Drupal\Core\Extension\ThemeEngineExtensionList
-    arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '@state', '%install_profile%']
+    arguments: ['%app.root%', 'theme_engine', '@cache.default', '@info_parser', '@module_handler', '%install_profile%']
   extension.path.resolver:
     class: Drupal\Core\Extension\ExtensionPathResolver
     arguments: ['@extension.list.module', '@extension.list.profile', '@extension.list.theme', '@extension.list.theme_engine']

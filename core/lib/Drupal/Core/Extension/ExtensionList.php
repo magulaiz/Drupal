@@ -5,7 +5,6 @@ namespace Drupal\Core\Extension;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Provides available extensions.
@@ -101,13 +100,6 @@ abstract class ExtensionList {
   protected $addedPathNames = [];
 
   /**
-   * The state store.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
    * The install profile used by the site.
    *
    * @var string
@@ -127,18 +119,15 @@ abstract class ExtensionList {
    *   The info parser.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state.
    * @param string $install_profile
    *   The install profile used by the site.
    */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, $install_profile) {
+  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, $install_profile) {
     $this->root = $root;
     $this->type = $type;
     $this->cache = $cache;
     $this->infoParser = $info_parser;
     $this->moduleHandler = $module_handler;
-    $this->state = $state;
     $this->installProfile = $install_profile;
   }
 
@@ -166,14 +155,6 @@ abstract class ExtensionList {
     $this->extensionInfo = NULL;
     $this->cache->delete($this->getInfoCacheId());
     $this->pathNames = NULL;
-
-    try {
-      $this->state->delete($this->getPathnamesCacheId());
-    }
-    catch (DatabaseExceptionWrapper $e) {
-      // Ignore exceptions caused by a non existing {key_value} table in the
-      // early installer.
-    }
 
     $this->cache->delete($this->getPathnamesCacheId());
     // @todo In the long run it would be great to add the reset, but the early
@@ -417,12 +398,10 @@ abstract class ExtensionList {
       if ($cache = $this->cache->get($cache_id)) {
         $path_names = $cache->data;
       }
-      // We use $file_names below.
-      elseif (!$path_names = $this->state->get($cache_id)) {
+      else {
         $path_names = $this->recalculatePathnames();
         // Store filenames to allow static::getPathname() to retrieve them
         // without having to rebuild or scan the filesystem.
-        $this->state->set($cache_id, $path_names);
         $this->cache->set($cache_id, $path_names);
       }
       $this->pathNames = $path_names;

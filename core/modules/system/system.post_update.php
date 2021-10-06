@@ -204,3 +204,13 @@ function system_post_update_service_advisory_settings() {
 function system_post_update_delete_authorize_settings() {
   \Drupal::configFactory()->getEditable('system.authorize')->delete();
 }
+
+/**
+ * Remove ExtensionList states data.
+ */
+function system_post_update_remove_extension_list_states_data() {
+  $state = \Drupal::state();
+  $state->delete('system.module.files');
+  $state->delete('system.theme.files');
+  $state->delete('system.profile.files');
+}
