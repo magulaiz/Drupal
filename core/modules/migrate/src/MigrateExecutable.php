@@ -293,7 +293,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param int $eventValue
    *   MigrateEvents constant.
    * @param array $destination_id_values
-   *   The destination ids returned by the import when successfull.
+   *   The destination ids returned by the import when successful.
    */
   protected function dispatchMigrationPostRowSaveEvent(int $eventValue, $destination_id_values) {
     $event = new MigratePostRowSaveEvent($this->migration, $this->message, $this->currentProcessedRow, $destination_id_values);
@@ -340,7 +340,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
   /**
    * Finalizes the migration row import by setting row status to imported,
-   * cheking for memory exhaustion and checking if stop migration was requested.
+   * checking for memory exhaustion and checking if stop migration was requested.
    * It then passes onto the next row.
    */
   protected function resolveImportRow() {
