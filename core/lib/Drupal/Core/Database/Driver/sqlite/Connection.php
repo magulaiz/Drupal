@@ -206,16 +206,12 @@ class Connection extends DatabaseConnection {
   public function attachDatabase(string $database): void {
     // Only attach the database once.
     if (!isset($this->attachedDatabases[$database])) {
+      // In memory database use ':memory:' as database name. According to
+      // http://www.sqlite.org/inmemorydb.html it will open a unique database so
+      // attaching it twice is not a problem.
+      $database_file = $this->connectionOptions['database'] !== ':memory:' ? $this->connectionOptions['database'] . '-' . $database : $this->connectionOptions['database'];
+      $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $database_file, ':database' => $database]);
       $this->attachedDatabases[$database] = $database;
-      if ($this->connectionOptions['database'] === ':memory:') {
-        // In memory database use ':memory:' as database name. According to
-        // http://www.sqlite.org/inmemorydb.html it will open a unique
-        // database so attaching it twice is not a problem.
-        $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $this->connectionOptions['database'], ':database' => $database]);
-      }
-      else {
-        $this->query('ATTACH DATABASE :database_file AS :database', [':database_file' => $this->connectionOptions['database'] . '-' . $database, ':database' => $database]);
-      }
     }
   }
 
