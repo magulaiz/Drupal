@@ -56,7 +56,6 @@ final class LinksetControllerTest extends BrowserTestBase {
     'user',
     'menu_link_content',
     'node',
-    'decoupled_menus',
     'page_cache',
     'dynamic_page_cache',
   ];

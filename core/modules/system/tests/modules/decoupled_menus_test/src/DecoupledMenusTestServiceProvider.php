@@ -10,7 +10,7 @@ use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 /**
  * Makes "hal_json" the default content negotiation format.
  *
- * @see \Drupal\decoupled_menus\StackMiddleware\NegotiationMiddleware
+ * @see \Drupal\system\StackMiddleware\NegotiationMiddleware
  * @see \Drupal\Tests\decoupled_menus\Functional\LinksetControllerTest::testPathAliasResolution()
  */
 final class DecoupledMenusTestServiceProvider implements ServiceModifierInterface {
