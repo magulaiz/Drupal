@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\Core\Extension;
 
-use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
@@ -11,8 +10,6 @@ use Drupal\Core\Extension\InfoParserInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeEngineExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
-use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
-use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
