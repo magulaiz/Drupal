@@ -24,6 +24,11 @@ use Symfony\Component\HttpFoundation\Request;
 final class Linkset extends ControllerBase {
 
   /**
+   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
+   */
+  private $menuTree;
+
+  /**
    * Linkset constructor.
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menu_tree_loader
@@ -35,7 +40,7 @@ final class Linkset extends ControllerBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static($container->get('menu.link_tree'));
