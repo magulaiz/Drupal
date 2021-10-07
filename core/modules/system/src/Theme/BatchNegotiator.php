@@ -12,6 +12,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class BatchNegotiator implements ThemeNegotiatorInterface {
 
+  const BATCH_ROUTE_HTML = 'system.batch_page.html';
+  const BATCH_ROUTE_JSON = 'system.batch_page.json';
+
+  const BATCH_ROUTES = [
+    self::BATCH_ROUTE_HTML => self::BATCH_ROUTE_HTML,
+    self::BATCH_ROUTE_JSON => self::BATCH_ROUTE_JSON,
+  ];
+
   /**
    * The batch storage.
    *
@@ -43,7 +51,7 @@ class BatchNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match) {
-    return $route_match->getRouteName() == 'system.batch_page';
+    return isset(self::BATCH_ROUTES[$route_match->getRouteName()]);
   }
 
   /**
