@@ -98,6 +98,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       $current_user = \Drupal::currentUser();
     }
     $this->currentUser = $current_user;
+    $this->entityDisplayRepository = $entity_display_repository;
   }
 
   /**
@@ -235,8 +236,14 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
         $this->blockContent = unserialize($this->configuration['block_serialized']);
       }
       elseif (!empty($this->configuration['block_revision_id'])) {
-        $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
-        $this->blockContent = $entity;
+        $revision_id = $this->configuration['block_revision_id'];
+        $query = \Drupal::database()->select('block_content_field_revision', 'bc');
+        $query->addField('bc', 'id');
+        $query->condition('bc.revision_id', $revision_id);
+        $results = $query->execute()->fetchAll();
+        $block_id = $results[0]->id;
+        $block = \Drupal\block_content\Entity\BlockContent::load($block_id);
+        $this->blockContent = $block;
       }
       else {
         $this->blockContent = $this->entityTypeManager->getStorage('block_content')->create([

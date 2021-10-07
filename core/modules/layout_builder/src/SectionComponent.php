@@ -188,6 +188,28 @@ class SectionComponent {
    *   The component plugin configuration.
    */
   protected function getConfiguration() {
+    if (str_contains($this->configuration['id'], 'inline_block')) {
+      if(isset($this->configuration['block_revision_id'])){
+        $revision_id = $this->configuration['block_revision_id'];
+        $query = \Drupal::database()->select('block_content_field_revision', 'bc');
+        $query->addField('bc', 'id');
+        $query->condition('bc.revision_id', $revision_id);
+        $results = $query->execute()->fetchAll();
+        $block_id = $results[0]->id;
+        $block = \Drupal\block_content\Entity\BlockContent::load($block_id);
+        $block_array = $this->block_to_array($block);
+        $current_langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+        $default_langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        if ($current_langcode == $default_langcode){
+          $this->configuration['label'] = $block_array['values']['info']['x-default'];
+        }
+        else{
+          if (isset($block_array['values']['info'][$current_langcode])) {
+            $this->configuration['label'] = $block_array['values']['info'][$current_langcode];
+          }
+        }
+      }
+    }
     return $this->configuration;
   }
 
@@ -202,6 +224,28 @@ class SectionComponent {
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration;
     return $this;
+  }
+
+  /**
+   * Converts the inline block to an associative array.
+   *
+   * @param \Drupal\block_content\Entity\BlockContent $object
+   *   The inline block content.
+   *
+   * @return array
+   *   Array of \Drupal\block_content\Entity\BlockContent entities.
+   */
+  public function block_to_array( &$object ) {
+    if(!is_object($object)){
+        return false;
+    }
+    $reflection = new \ReflectionObject($object);
+    $properties = array();
+    foreach($reflection->getProperties() as $property){
+        $property->setAccessible(true);
+        $properties[$property->getName()] = $property->getValue($object);
+    }
+    return array_merge((array) $reflection->getConstants(), $properties);
   }
 
   /**
