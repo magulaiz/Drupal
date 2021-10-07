@@ -2,6 +2,7 @@
 
 namespace Drupal\media\Plugin\media\Source;
 
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
@@ -408,10 +409,13 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       return NULL;
     }
 
-    // Ensure that we can write to the local directory where thumbnails are
-    // stored.
+    // Use the configured directory to store thumbnails. The directory can
+    // contain basic (i.e., global) tokens. If any of the replaced tokens
+    // contain HTML, the tags will be removed and XML entities will be decoded.
     $configuration = $this->getConfiguration();
-    $directory = $this->token->replace($configuration['thumbnails_directory']);
+    $directory = $configuration['thumbnails_directory'];
+    $directory = $this->token->replace($directory);
+    $directory = PlainTextOutput::renderFromHtml($directory);
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,
