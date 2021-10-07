@@ -1107,15 +1107,13 @@ class FormState implements FormStateInterface {
    * {@inheritdoc}
    */
   public function getError(array $element) {
-    if ($errors = $this->getErrors()) {
+    if (isset($element['#parents']) && $errors = $this->getErrors()) {
       $parents = [];
-      if (isset($element['#parents'])) {
-        foreach ($element['#parents'] as $parent) {
-          $parents[] = $parent;
-          $key = implode('][', $parents);
-          if (isset($errors[$key])) {
-            return $errors[$key];
-          }
+      foreach ($element['#parents'] as $parent) {
+        $parents[] = $parent;
+        $key = implode('][', $parents);
+        if (isset($errors[$key])) {
+          return $errors[$key];
         }
       }
     }
