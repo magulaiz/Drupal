@@ -15,18 +15,18 @@ use Drupal\KernelTests\KernelTestBase;
 class FormAfterBuildNotice extends KernelTestBase implements FormInterface {
 
   /**
-   * The modules to load to run the test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'form_test',
-    ];
+  ];
 
   /**
    * Catches warnings and notices.
+   *
+   * @var string[]
    */
-  public static $caughtErrors;
+  private static $caughtErrors = [];
 
   /**
    * {@inheritdoc}
@@ -60,10 +60,10 @@ class FormAfterBuildNotice extends KernelTestBase implements FormInterface {
   }
 
   /**
-   * Trigger a notice/error on #after_build when new elements are added.
+   * Triggers a notice/error on #after_build when new elements are added.
    */
   public function testUndefinedParentsInAfterBuild() {
-    set_error_handler(self::class . "::errorHandler");
+    set_error_handler(self::class . '::errorHandler');
     $form_state = new FormState();
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
