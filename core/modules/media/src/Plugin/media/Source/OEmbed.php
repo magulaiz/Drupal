@@ -24,8 +24,11 @@ use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Provides a media source plugin for oEmbed resources.
@@ -195,19 +198,19 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     return [
       'type' => $this->t('Resource type'),
       'title' => $this->t('Resource title'),
-      'author_name' => $this->t('The name of the author/owner'),
-      'author_url' => $this->t('The URL of the author/owner'),
-      'provider_name' => $this->t("The name of the provider"),
-      'provider_url' => $this->t('The URL of the provider'),
+      'author_name' => $this->t('Author/owner name'),
+      'author_url' => $this->t('Author/owner URL'),
+      'provider_name' => $this->t('Provider name'),
+      'provider_url' => $this->t('Provider URL'),
       'cache_age' => $this->t('Suggested cache lifetime'),
-      'default_name' => $this->t('Default name of the media item'),
-      'thumbnail_uri' => $this->t('Local URI of the thumbnail'),
+      'default_name' => $this->t('Media item default name'),
+      'thumbnail_uri' => $this->t('Thumbnail local URI'),
       'thumbnail_width' => $this->t('Thumbnail width'),
       'thumbnail_height' => $this->t('Thumbnail height'),
-      'url' => $this->t('The source URL of the resource'),
-      'width' => $this->t('The width of the resource'),
-      'height' => $this->t('The height of the resource'),
-      'html' => $this->t('The HTML representation of the resource'),
+      'url' => $this->t('Resource source URL'),
+      'width' => $this->t('Resource width'),
+      'height' => $this->t('Resource height'),
+      'html' => $this->t('Resource HTML representation'),
     ];
   }
 
@@ -388,21 +391,11 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     if (!$remote_thumbnail_url) {
       return NULL;
     }
-    $remote_thumbnail_url = $remote_thumbnail_url->toString();
 
-    // Remove the query string, since we do not want to include it in the local
-    // thumbnail URI.
-    $local_thumbnail_url = parse_url($remote_thumbnail_url, PHP_URL_PATH);
-
-    // Compute the local thumbnail URI, regardless of whether or not it exists.
+    // Ensure that we can write to the local directory where thumbnails are
+    // stored.
     $configuration = $this->getConfiguration();
     $directory = $configuration['thumbnails_directory'];
-    $local_thumbnail_uri = "$directory/" . Crypt::hashBase64($local_thumbnail_url) . '.' . pathinfo($local_thumbnail_url, PATHINFO_EXTENSION);
-
-    // If the local thumbnail already exists, return its URI.
-    if (file_exists($local_thumbnail_uri)) {
-      return $local_thumbnail_uri;
-    }
 
     // The local thumbnail doesn't exist yet, so try to download it. First,
     // ensure that the destination directory is writable, and if it's not,
@@ -414,9 +407,21 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       return NULL;
     }
 
+    // The local filename of the thumbnail is always a hash of its remote URL.
+    // If a file with that name already exists in the thumbnails directory,
+    // regardless of its extension, return its URI.
+    $remote_thumbnail_url = $remote_thumbnail_url->toString();
+    $hash = Crypt::hashBase64($remote_thumbnail_url);
+    $files = $this->fileSystem->scanDirectory($directory, "/^$hash\..*/");
+    if (count($files) > 0) {
+      return reset($files)->uri;
+    }
+
+    // The local thumbnail doesn't exist yet, so we need to download it.
     try {
-      $response = $this->httpClient->get($remote_thumbnail_url);
+      $response = $this->httpClient->request('GET', $remote_thumbnail_url);
       if ($response->getStatusCode() === 200) {
+        $local_thumbnail_uri = $directory . DIRECTORY_SEPARATOR . $hash . '.' . $this->getThumbnailFileExtensionFromUrl($remote_thumbnail_url, $response);
         $this->fileSystem->saveData((string) $response->getBody(), $local_thumbnail_uri, FileSystemInterface::EXISTS_REPLACE);
         return $local_thumbnail_uri;
       }
@@ -429,6 +434,50 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         'url' => $remote_thumbnail_url,
       ]);
     }
+    return NULL;
+  }
+
+  /**
+   * Tries to determine the file extension of a thumbnail.
+   *
+   * @param string $thumbnail_url
+   *   The remote URL of the thumbnail.
+   * @param \Psr\Http\Message\ResponseInterface $response
+   *   The response for the downloaded thumbnail.
+   *
+   * @return string|null
+   *   The file extension, or NULL if it could not be determined.
+   */
+  protected function getThumbnailFileExtensionFromUrl(string $thumbnail_url, ResponseInterface $response = NULL): ?string {
+    if (empty($response)) {
+      @trigger_error('Not passing the $response parameter to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and will cause an error in drupal:10.0.0. See https://www.drupal.org/node/3239948', E_USER_DEPRECATED);
+      // Create an empty response with no Content-Type header, which will allow
+      // the rest of this method to run normally and return NULL.
+      $response = new Response();
+    }
+
+    // First, try to glean the extension from the URL path.
+    $path = parse_url($thumbnail_url, PHP_URL_PATH);
+    if ($path) {
+      $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+      if ($extension) {
+        return $extension;
+      }
+    }
+
+    // If the URL didn't give us any clues about the file extension, see if the
+    // response headers will give us a MIME type.
+    $content_type = $response->getHeader('Content-Type');
+    // If there was no Content-Type header, there's nothing else we can do.
+    if (empty($content_type)) {
+      return NULL;
+    }
+    $extensions = MimeTypes::getDefault()->getExtensions(reset($content_type));
+    if ($extensions) {
+      return reset($extensions);
+    }
+    // If no file extension could be determined from the Content-Type header,
+    // we're stumped.
     return NULL;
   }
 

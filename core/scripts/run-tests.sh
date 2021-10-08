@@ -644,9 +644,7 @@ function simpletest_script_setup_database($new = FALSE) {
     $databases['test-runner']['default'] = [
       'driver' => 'sqlite',
       'database' => $sqlite,
-      'prefix' => [
-        'default' => '',
-      ],
+      'prefix' => '',
     ];
     // Create the test runner SQLite database, unless it exists already.
     if ($new && !file_exists($sqlite)) {
@@ -1313,7 +1311,7 @@ function simpletest_script_reporter_write_xml_results() {
 function simpletest_script_reporter_timer_stop() {
   echo "\n";
   $end = Timer::stop('run-tests');
-  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval($end['time'] / 1000);
+  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
   echo "\n\n";
 }
 

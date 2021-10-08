@@ -74,12 +74,12 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     // Test that the translation settings are ignored if the bundle is marked
     // translatable but the entity type is not.
     $edit = ['settings[comment][comment_article][translatable]' => TRUE];
-    $this->assertSettings('comment', NULL, FALSE, $edit);
+    $this->assertSettings('comment', 'comment_article', FALSE, $edit);
 
     // Test that the translation settings are ignored if only a field is marked
     // as translatable and not the related entity type and bundle.
     $edit = ['settings[comment][comment_article][fields][comment_body]' => TRUE];
-    $this->assertSettings('comment', NULL, FALSE, $edit);
+    $this->assertSettings('comment', 'comment_article', FALSE, $edit);
 
     // Test that the translation settings are not stored if an entity type and
     // bundle are marked as translatable but no field is.
@@ -182,7 +182,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
       'settings[node][article][translatable]' => TRUE,
       'settings[node][article][fields][title]' => TRUE,
     ];
-    $this->assertSettings('node', NULL, TRUE, $edit);
+    $this->assertSettings('node', 'article', TRUE, $edit);
 
     foreach ([TRUE, FALSE] as $translatable) {
       // Test that configurable field translatability is correctly switched.
@@ -259,16 +259,13 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
    *   TRUE if translatability should be enabled, FALSE otherwise.
    * @param array $edit
    *   An array of values to submit to the content translation settings page.
-   *
-   * @return bool
-   *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSettings($entity_type, $bundle, $enabled, $edit) {
     $this->drupalGet('admin/config/regional/content-language');
     $this->submitForm($edit, 'Save configuration');
     $args = ['@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled'];
     $message = new FormattableMarkup('Translation for entity @entity_type (@bundle) is @enabled.', $args);
-    return $this->assertEquals($enabled, \Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle), $message);
+    $this->assertEquals($enabled, \Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle), $message);
   }
 
   /**
@@ -305,7 +302,7 @@ class ContentTranslationSettingsTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->assertSession()->fieldEnabled('edit-translatable');
     $this->assertSession()->checkboxChecked('edit-translatable');
-    $this->assertNoText('To enable translation of this field, enable language support for this type.');
+    $this->assertSession()->pageTextNotContains('To enable translation of this field, enable language support for this type.');
   }
 
   /**

@@ -38,7 +38,7 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('olivero/css/base/base.css');
-    $this->assertSession()->responseContains('olivero/js/scripts.js');
+    $this->assertSession()->responseContains('olivero/js/navigation-utils.js');
   }
 
   /**
@@ -101,9 +101,6 @@ class OliveroTest extends BrowserTestBase {
     $this->drupalLogin(
       $this->drupalCreateUser(['search content'])
     );
-
-    // Ensure region attribute was added for primary menu.
-    $this->assertSession()->elementExists('css', 'ul[region="primary_menu"]');
 
     // Confirm that search narrow and search wide libraries were added by
     // preprocess.

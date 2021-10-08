@@ -876,6 +876,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Verify that blocks explicitly removed are not present.
     $assert_session->linkNotExists('Help');
     $assert_session->linkNotExists('Sticky at top of lists');
+    $assert_session->linkNotExists('Main page content');
     $assert_session->linkNotExists('Page title');
 
     // Verify that Changed block is not present on first section.
@@ -1297,12 +1298,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Install Quick Edit as well.
-    $this->container->get('module_installer')->install(['quickedit']);
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
-      'access in-place editing',
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';

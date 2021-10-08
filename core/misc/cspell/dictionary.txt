@@ -191,6 +191,7 @@ buildtest
 bundable
 bundleable
 bundleless
+bundlenode
 buttonpane
 buttonset
 buytaert
@@ -642,7 +643,6 @@ goldfinger
 gonner
 googleapis
 gotit
-goutte
 grandgrandchild
 grandgrandchild's
 granularities
@@ -840,6 +840,7 @@ llamasarelame
 llame
 llamma
 lnumber
+loadjs
 localemark
 localetranslatedirty
 localizable
@@ -1407,6 +1408,7 @@ someschema
 sometext
 somethinggeneric
 soofy
+sortablejs
 sortby
 sorteren
 sourcearea
