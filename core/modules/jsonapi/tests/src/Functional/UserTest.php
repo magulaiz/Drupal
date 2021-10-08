@@ -20,6 +20,8 @@ use GuzzleHttp\RequestOptions;
  */
 class UserTest extends ResourceTestBase {
 
+  const BATCH_TEST_NODE_COUNT = 15;
+
   /**
    * {@inheritdoc}
    */
@@ -665,6 +667,53 @@ class UserTest extends ResourceTestBase {
     $this->assertFalse($test_node->isPublished(), 'Node of the user is no longer published.');
     $test_node = node_revision_load($node->getRevisionId());
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user is no longer published.');
+  }
+
+  /**
+   * Tests if JSON:API respects user.settings.cancel_method: user_cancel_block_unpublish.
+   * @group jsonapi
+   */
+  public function testDeleteRespectsUserCancelBlockUnpublishAndProcessesBatches() {
+    $cancel_method = 'user_cancel_block_unpublish';
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+    $this->config('user.settings')->set('cancel_method', $cancel_method)->save(TRUE);
+
+    $account = $this->createAnotherEntity($cancel_method);
+
+    $nodeCount = self::BATCH_TEST_NODE_COUNT;
+    $node_ids = [];
+    $nodes = [];
+    while ($nodeCount-- > 0) {
+      $node = $this->drupalCreateNode(['uid' => $account->id()]);
+      $nodes[] = $node;
+      $node_ids[] = $node->id();
+    }
+
+    $this->sendDeleteRequestForUser($account, $cancel_method);
+
+    $user_storage = $this->container->get('entity_type.manager')
+      ->getStorage('user');
+    $user_storage->resetCache([$account->id()]);
+    $account = $user_storage->load($account->id());
+
+    $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
+    $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
+
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $node_storage->resetCache($node_ids);
+
+    $test_nodes = $node_storage->loadMultiple($node_ids);
+
+    $this->assertCount(self::BATCH_TEST_NODE_COUNT, $test_nodes, 'Nodes of the user are not deleted.');
+
+    foreach ($test_nodes as $test_node) {
+      $this->assertFalse($test_node->isPublished(), 'Node of the user is no longer published.');
+    }
+
+    foreach ($nodes as $node) {
+      $test_node = node_revision_load($node->getRevisionId());
+      $this->assertFalse($test_node->isPublished(), 'Node revision of the user is no longer published.');
+    }
   }
 
   /**
