@@ -3,7 +3,6 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\BrokenHandlerTrait;
-use Drupal\views\ResultRow;
 
 /**
  * A special handler to take the place of missing or broken handlers.
@@ -14,12 +13,5 @@ use Drupal\views\ResultRow;
  */
 class Broken extends FieldPluginBase {
   use BrokenHandlerTrait;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render(ResultRow $values) {
-    return '';
-  }
 
 }
