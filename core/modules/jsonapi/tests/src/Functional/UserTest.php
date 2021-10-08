@@ -10,6 +10,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use GuzzleHttp\RequestOptions;
 
 /**
@@ -617,22 +618,17 @@ class UserTest extends ResourceTestBase {
     $account = $this->createAnotherEntity($cancel_method);
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
 
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-    $this->setUpAuthorization('DELETE');
-    $response = $this->request('DELETE', $url, $request_options);
-    $this->assertResourceResponse(204, NULL, $response);
+    $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-
+    $user_storage = $this->container->get('entity_type.manager')
+      ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
+
     $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
     $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -652,22 +648,17 @@ class UserTest extends ResourceTestBase {
     $account = $this->createAnotherEntity($cancel_method);
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
 
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-    $this->setUpAuthorization('DELETE');
-    $response = $this->request('DELETE', $url, $request_options);
-    $this->assertResourceResponse(204, NULL, $response);
+    $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-
+    $user_storage = $this->container->get('entity_type.manager')
+      ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
+
     $this->assertNotNull($account, 'User is not deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
     $this->assertTrue($account->isBlocked(), 'User is blocked after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -687,21 +678,16 @@ class UserTest extends ResourceTestBase {
     $account = $this->createAnotherEntity($cancel_method);
     $node = $this->drupalCreateNode(['uid' => $account->id()]);
 
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
-    $request_options = [];
-    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-    $this->setUpAuthorization('DELETE');
-    $response = $this->request('DELETE', $url, $request_options);
-    $this->assertResourceResponse(204, NULL, $response);
+    $this->sendDeleteRequestForUser($account, $cancel_method);
 
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $user_storage = $this->container->get('entity_type.manager')->getStorage('user');
-
+    $user_storage = $this->container->get('entity_type.manager')
+      ->getStorage('user');
     $user_storage->resetCache([$account->id()]);
     $account = $user_storage->load($account->id());
+
     $this->assertNull($account, 'User is deleted after JSON:API DELETE operation with user.settings.cancel_method: ' . $cancel_method);
 
+    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
@@ -764,6 +750,20 @@ class UserTest extends ResourceTestBase {
       return $document;
     }
     return parent::makeNormalizationInvalid($document, $entity_key);
+  }
+
+  /**
+   * @param \Drupal\user\UserInterface $account
+   * @param string $cancel_method
+   */
+  private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method) {
+    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
+    $this->setUpAuthorization('DELETE');
+    $response = $this->request('DELETE', $url, $request_options);
+    $this->assertResourceResponse(204, NULL, $response);
   }
 
 }
