@@ -155,5 +155,6 @@
     "last 1 UCAndroid version",
     "last 1 Samsung version",
     "Firefox ESR"
-  ]
+  ],
+  "version": "0.0.0"
 }
