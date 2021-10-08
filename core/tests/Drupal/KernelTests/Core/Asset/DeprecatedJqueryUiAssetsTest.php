@@ -21,7 +21,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
     $library_discovery = $this->container->get('library.discovery');
     $deprecated_jquery_ui_libraries = [
       'jquery.ui' => '80e78b662ca8f420049800cee64f8396',
-      'jquery.ui.autocomplete' => '153f2836f8f2da39767208b6e09cb5b4',
+      'jquery.ui.autocomplete' => 'a8333f8c4713561cd58bbdfb8f4e4c5d',
       'jquery.ui.button' => 'ad23e5de0fa1de1f511d10ba2e10d2dd',
       'jquery.ui.dialog' => '6521b8917536afe00f35055da4ec466c',
       'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
