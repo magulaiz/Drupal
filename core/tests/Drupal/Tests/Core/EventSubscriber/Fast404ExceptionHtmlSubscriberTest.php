@@ -19,13 +19,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class Fast404ExceptionHtmlSubscriberTest extends UnitTestCase {
 
   /**
-   * The mocked config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $configFactory;
-
-  /**
    * Tests if the subscriber returns a minimalist 404 response.
    *
    * @covers ::on4xx
