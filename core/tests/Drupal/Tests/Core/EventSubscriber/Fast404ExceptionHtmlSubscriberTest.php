@@ -26,6 +26,8 @@ class Fast404ExceptionHtmlSubscriberTest extends UnitTestCase {
   protected $configFactory;
 
   /**
+   * Tests if the subscriber returns a minimalist 404 response.
+   *
    * @covers ::on4xx
    * @dataProvider providerTestOn404
    */
