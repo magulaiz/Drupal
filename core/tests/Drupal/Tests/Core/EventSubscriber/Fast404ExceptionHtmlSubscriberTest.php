@@ -11,6 +11,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
+ * Tests high-performance 404 exception subscriber.
+ *
  * @coversDefaultClass \Drupal\Core\EventSubscriber\Fast404ExceptionHtmlSubscriber
  * @group EventSubscriber
  */
