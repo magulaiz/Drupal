@@ -587,12 +587,12 @@ class Sql extends PluginBase implements MigrateIdMapInterface, ContainerFactoryP
    * {@inheritdoc}
    */
   public function lookupDestinationIds(array $source_id_values) {
-    if (empty($source_id_values) || (array_key_exists(0, $source_id_values) && $source_id_values[0] == NULL)) {
+    if (empty($source_id_values)) {
       return [];
     }
 
     // Canonicalize the keys into a hash of DB-field => value.
-    $is_associative = !isset($source_id_values[0]);
+    $is_associative = !array_key_exists(0, $source_id_values);
     $conditions = [];
     foreach ($this->sourceIdFields() as $field_name => $db_field) {
       if ($is_associative) {
