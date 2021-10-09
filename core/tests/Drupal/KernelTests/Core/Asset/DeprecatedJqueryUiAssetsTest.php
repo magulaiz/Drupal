@@ -28,7 +28,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
       'jquery.ui.menu' => '746345d3c6327b5ef7b1e651f4fbfff2',
       'jquery.ui.mouse' => '8251c5dcf578abcc4d009c1f78ad0112',
       'jquery.ui.position' => '857689f6555a1f1380e57bc71e75da37',
-      'jquery.ui.resizable' => 'a2448fa87071a17a9756f39c9becb70d',
+      'jquery.ui.resizable' => '35324c9358d605fcf1ca754390373035',
       'jquery.ui.widget' => 'eacd675de09572383b58e52309ba2245',
     ];
     // DrupalCI uses a precision of 100 in certain environments which breaks
