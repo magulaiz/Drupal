@@ -23,7 +23,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
       'jquery.ui' => '80e78b662ca8f420049800cee64f8396',
       'jquery.ui.autocomplete' => 'a8333f8c4713561cd58bbdfb8f4e4c5d',
       'jquery.ui.button' => '211b1c7e2b2013c6876013d0c7569151',
-      'jquery.ui.dialog' => '6521b8917536afe00f35055da4ec466c',
+      'jquery.ui.dialog' => 'd3be267bd30dd5d15277b5b97399f440',
       'jquery.ui.draggable' => 'af0f2bdc8aa4ade1e3de8042f31a9312',
       'jquery.ui.menu' => '7d0c4d57f43d2f881d2cd5e5b79effbb',
       'jquery.ui.mouse' => '626bb203807fa2cdc62510412685df4a',
