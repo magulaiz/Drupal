@@ -2,12 +2,19 @@
 
 namespace Drupal\link\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -33,6 +40,20 @@ class LinkFormatter extends FormatterBase {
   protected $pathValidator;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * The entity repository service.
+   *
+   * @var \Drupal\Core\Entity\EntityRepositoryInterface
+   */
+  protected $entityRepository;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -44,7 +65,9 @@ class LinkFormatter extends FormatterBase {
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('path.validator')
+      $container->get('path.validator'),
+      $container->get('entity_type.manager'),
+      $container->get('entity.repository')
     );
   }
 
@@ -67,10 +90,16 @@ class LinkFormatter extends FormatterBase {
    *   Third party settings.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The path validator service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   *   The entity repository.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, PathValidatorInterface $path_validator) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, PathValidatorInterface $path_validator, EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->pathValidator = $path_validator;
+    $this->entityTypeManager = $entity_type_manager;
+    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -212,6 +241,7 @@ class LinkFormatter extends FormatterBase {
           '#title' => $link_title,
           '#options' => $url->getOptions(),
         ];
+
         $element[$delta]['#url'] = $url;
 
         if (!empty($item->_attributes)) {
@@ -222,9 +252,84 @@ class LinkFormatter extends FormatterBase {
           unset($item->_attributes);
         }
       }
+
+      if ($url->isRouted() && preg_match('/^entity\.(\w+)\.canonical$/', $url->getRouteName(), $matches)) {
+        // Check access to the canonical entity route.
+        $entity_type = $matches[1];
+        if (!empty($url->getRouteParameters()[$entity_type])) {
+          $entity_param = $url->getRouteParameters()[$entity_type];
+          if ($entity_param instanceof EntityInterface) {
+            $entity = $entity_param;
+          }
+          elseif (is_string($entity_param) || is_numeric($entity_param)) {
+            try {
+              $storage = $this->entityTypeManager->getStorage($entity_type);
+              $entity = $storage->load($entity_param);
+            }
+            catch (InvalidPluginDefinitionException | PluginNotFoundException $e) {
+            }
+          }
+          // Set the entity in the correct language for display.
+          if ($entity instanceof TranslatableInterface) {
+            $entity = $this->entityRepository->getTranslationFromContext($entity, $langcode);
+          }
+          if ($entity instanceof EntityInterface) {
+            $access = $entity->access('view', NULL, TRUE);
+            // Add the access result's cacheability, ::view() needs it.
+            $item->_accessCacheability = CacheableMetadata::createFromObject($access);
+            if (!$access->isAllowed()) {
+              // Remove the link if the user has no access to it.
+              unset($element[$delta]);
+            }
+          }
+        }
+      }
     }
 
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @see ::viewElements()
+   */
+  public function view(FieldItemListInterface $items, $langcode = NULL) {
+    $elements = parent::view($items, $langcode);
+
+    $field_level_access_cacheability = new CacheableMetadata();
+
+    // Try to map the cacheability of the access result that was set at
+    // _accessCacheability in viewElements() to the corresponding render
+    // subtree. If no such subtree is found, then merge it with the field-level
+    // access cacheability.
+    foreach ($items as $delta => $item) {
+      // Ignore items for which access cacheability could not be determined in
+      // viewElements().
+      if (!empty($item->_accessCacheability)) {
+        if (isset($elements[$delta])) {
+          CacheableMetadata::createFromRenderArray($elements[$delta])
+            ->merge($item->_accessCacheability)
+            ->applyTo($elements[$delta]);
+        }
+        else {
+          $field_level_access_cacheability = $field_level_access_cacheability->merge($item->_accessCacheability);
+        }
+      }
+    }
+
+    // Apply the cacheability metadata for the inaccessible entities and the
+    // entities for which the corresponding render subtree could not be found.
+    // This causes the field to be rendered (and cached) according to the cache
+    // contexts by which the access results vary, to ensure only users with
+    // access to this field can view it. It also tags this field with the cache
+    // tags on which the access results depend, to ensure users that cannot view
+    // this field at the moment will gain access once any of those cache tags
+    // are invalidated.
+    $field_level_access_cacheability->merge(CacheableMetadata::createFromRenderArray($elements))
+      ->applyTo($elements);
+
+    return $elements;
   }
 
   /**
