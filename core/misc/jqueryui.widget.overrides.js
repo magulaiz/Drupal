@@ -27,6 +27,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
     if ($.ui.hasOwnProperty('autocomplete')) {
       if (args[1] === $.ui.autocomplete && _typeof(args[2]) === 'object') {
+        var supportedProperties = ['options', '_renderItem', '_renderMenu', '_resizeMenu'];
+        var unsupported = Object.keys(args[2]).filter(function (key) {
+          return !supportedProperties.includes(key);
+        });
+
+        if (unsupported.length > 0) {
+          throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
+        }
+
         runDefaultWidget = false;
 
         if (args[0] === 'ui.autocomplete') {

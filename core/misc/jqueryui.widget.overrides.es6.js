@@ -15,6 +15,27 @@
     let runDefaultWidget = true;
     if ($.ui.hasOwnProperty('autocomplete')) {
       if (args[1] === $.ui.autocomplete && typeof args[2] === 'object') {
+        const supportedProperties = [
+          'options',
+          '_renderItem',
+          '_renderMenu',
+          '_resizeMenu',
+        ];
+        const unsupported = Object.keys(args[2]).filter((key) => {
+          return !supportedProperties.includes(key);
+        });
+
+        // Support for widget is limited only to options and
+        // autocomplete-specific methods. Any uses beyond that will trigger an
+        // error
+        if (unsupported.length > 0) {
+          throw new Error(
+            `Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ${unsupported.join(
+              ', ',
+            )}`,
+          );
+        }
+
         runDefaultWidget = false;
 
         // eslint-disable-next-line no-unused-vars
