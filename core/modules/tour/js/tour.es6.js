@@ -90,7 +90,7 @@
    * Responsible for starting and stopping the tour.
    */
   function toggleTour() {
-    if (!Drupal.tour.isActive) {
+    if (Drupal.tour.isActive) {
       Drupal.tour.activeTour.cancel();
       return;
     }
