@@ -518,11 +518,4 @@ class ObjectDefinition extends PluginDefinition {
     }
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getClass() {
-    return __CLASS__;
-  }
-
 }
