@@ -39,65 +39,68 @@
   }
 
   function toggleTour() {
-    if (Drupal.tour.isActive === false) {
-      _removeIrrelevantTourItems(Drupal.tour.currentTour);
-
-      var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
-      shepherdTour.on('cancel', function () {
-        Drupal.tour.isActive = false;
-      });
-      shepherdTour.on('complete', function () {
-        Drupal.tour.isActive = false;
-      });
-      var tourItems = Drupal.tour.currentTour;
-
-      if (tourItems.length) {
-        settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push({
-          name: 'moveArrowJoyridePosition',
-          enabled: true,
-          phase: 'write',
-          fn: function fn(_ref) {
-            var state = _ref.state;
-            var arrow = state.elements.arrow;
-            var placement = state.placement;
-
-            if (arrow && /^top|bottom/.test(placement) && /-start|-end$/.test(placement)) {
-              var horizontalPosition = placement.split('-')[1];
-              var offset = horizontalPosition === 'start' ? 28 : state.elements.popper.clientWidth - 56;
-              arrow.style.transform = "translate3d(".concat(offset, "px, 0px, 0px)");
-            }
-          }
-        });
-        tourItems.forEach(function (tourStepConfig, index) {
-          var tourItemOptions = {
-            title: tourStepConfig.title ? Drupal.checkPlain(tourStepConfig.title) : null,
-            text: function text() {
-              return Drupal.theme('tourItemContent', tourStepConfig);
-            },
-            attachTo: tourStepConfig.attachTo,
-            buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
-            classes: tourStepConfig.classes,
-            index: index
-          };
-          tourItemOptions.when = {
-            show: function show() {
-              var nextButton = shepherdTour.currentStep.el.querySelector('footer button');
-              nextButton.focus();
-
-              if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
-                Drupal.tour.convertToJoyrideMarkup(shepherdTour);
-              }
-            }
-          };
-          shepherdTour.addStep(tourItemOptions);
-        });
-        shepherdTour.start();
-        Drupal.tour.isActive = true;
-        Drupal.tour.activeTour = shepherdTour;
-      }
-    } else {
+    if (!Drupal.tour.isActive) {
       Drupal.tour.activeTour.cancel();
+      return;
     }
+
+    _removeIrrelevantTourItems(Drupal.tour.currentTour);
+
+    var shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+    shepherdTour.on('cancel', function () {
+      Drupal.tour.isActive = false;
+    });
+    shepherdTour.on('complete', function () {
+      Drupal.tour.isActive = false;
+    });
+    var tourItems = Drupal.tour.currentTour;
+
+    if (!tourItems.length) {
+      return;
+    }
+
+    settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push({
+      name: 'moveArrowJoyridePosition',
+      enabled: true,
+      phase: 'write',
+      fn: function fn(_ref) {
+        var state = _ref.state;
+        var arrow = state.elements.arrow;
+        var placement = state.placement;
+
+        if (arrow && /^top|bottom/.test(placement) && /-start|-end$/.test(placement)) {
+          var horizontalPosition = placement.split('-')[1];
+          var offset = horizontalPosition === 'start' ? 28 : state.elements.popper.clientWidth - 56;
+          arrow.style.transform = "translate3d(".concat(offset, "px, 0px, 0px)");
+        }
+      }
+    });
+    tourItems.forEach(function (tourStepConfig, index) {
+      var tourItemOptions = {
+        title: tourStepConfig.title ? Drupal.checkPlain(tourStepConfig.title) : null,
+        text: function text() {
+          return Drupal.theme('tourItemContent', tourStepConfig);
+        },
+        attachTo: tourStepConfig.attachTo,
+        buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
+        classes: tourStepConfig.classes,
+        index: index
+      };
+      tourItemOptions.when = {
+        show: function show() {
+          var nextButton = shepherdTour.currentStep.el.querySelector('footer button');
+          nextButton.focus();
+
+          if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
+            Drupal.tour.convertToJoyrideMarkup(shepherdTour);
+          }
+        }
+      };
+      shepherdTour.addStep(tourItemOptions);
+    });
+    shepherdTour.start();
+    Drupal.tour.isActive = true;
+    Drupal.tour.activeTour = shepherdTour;
   }
 
   Drupal.behaviors.tour = {

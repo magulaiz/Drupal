@@ -90,105 +90,106 @@
    * Responsible for starting and stopping the tour.
    */
   function toggleTour() {
-    if (Drupal.tour.isActive === false) {
-      _removeIrrelevantTourItems(Drupal.tour.currentTour);
-      const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
-      shepherdTour.on('cancel', () => {
-        Drupal.tour.isActive = false;
-      });
-      shepherdTour.on('complete', () => {
-        Drupal.tour.isActive = false;
-      });
-      const tourItems = Drupal.tour.currentTour;
-
-      if (tourItems.length) {
-        // If Joyride is positioned relative to the top or bottom of an
-        // element, and its secondary position is right or left, then the
-        // arrow is also positioned right or left. Shepherd defaults to
-        // center positioning the arrow.
-        //
-        // In most cases, this arrow positioning difference has
-        // little impact. However, tours built with Joyride may have tips
-        // using a higher level selector than the element the tip is
-        // expected to point to, and relied on Joyride's arrow positioning
-        // to align the arrow with the expected reference element. Joyride's
-        // arrow positioning behavior is replicated here to prevent those
-        // use cases from causing UI regressions.
-        //
-        // This modifier is provided here instead of TourViewBuilder (where
-        // most position modifications are) because it includes adding a
-        // JavaScript callback function.
-        settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push(
-          {
-            name: 'moveArrowJoyridePosition',
-            enabled: true,
-            phase: 'write',
-            fn({ state }) {
-              const { arrow } = state.elements;
-              const { placement } = state;
-              if (
-                arrow &&
-                /^top|bottom/.test(placement) &&
-                /-start|-end$/.test(placement)
-              ) {
-                const horizontalPosition = placement.split('-')[1];
-                const offset =
-                  horizontalPosition === 'start'
-                    ? 28
-                    : state.elements.popper.clientWidth - 56;
-                arrow.style.transform = `translate3d(${offset}px, 0px, 0px)`;
-              }
-            },
-          },
-        );
-        tourItems.forEach((tourStepConfig, index) => {
-          // Create the configuration for a given tour step by using values
-          // defined in TourViewBuilder.
-          // @see \Drupal\tour\TourViewBuilder::viewMultiple()
-          const tourItemOptions = {
-            title: tourStepConfig.title
-              ? Drupal.checkPlain(tourStepConfig.title)
-              : null,
-            text: () => Drupal.theme('tourItemContent', tourStepConfig),
-            attachTo: tourStepConfig.attachTo,
-            buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
-            classes: tourStepConfig.classes,
-            index,
-          };
-
-          tourItemOptions.when = {
-            show() {
-              const nextButton =
-                shepherdTour.currentStep.el.querySelector('footer button');
-
-              // Drupal disables Shepherd's built in focus after item
-              // creation functionality due to focus being set on the tour
-              // item container after every scroll and resize event. In its
-              // place, the 'next' button is focused here.
-              nextButton.focus();
-
-              // When Stable or Stable 9 are part of the active theme, the
-              // Drupal.tour.convertToJoyrideMarkup() function is available.
-              // This function converts Shepherd markup to Joyride markup,
-              // facilitating the use of the Shepherd library that is
-              // backwards compatible with customizations intended for
-              // Joyride.
-              // The Drupal.tour.convertToJoyrideMarkup() function is
-              // internal, and will eventually be removed from Drupal core.
-              if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
-                Drupal.tour.convertToJoyrideMarkup(shepherdTour);
-              }
-            },
-          };
-          shepherdTour.addStep(tourItemOptions);
-        });
-        shepherdTour.start();
-        Drupal.tour.isActive = true;
-        Drupal.tour.activeTour = shepherdTour;
-      }
-    } else {
+    if (!Drupal.tour.isActive) {
       Drupal.tour.activeTour.cancel();
+      return;
     }
+    _removeIrrelevantTourItems(Drupal.tour.currentTour);
+    const shepherdTour = new Shepherd.Tour(settings.tourShepherdConfig);
+    shepherdTour.on('cancel', () => {
+      Drupal.tour.isActive = false;
+    });
+    shepherdTour.on('complete', () => {
+      Drupal.tour.isActive = false;
+    });
+    const tourItems = Drupal.tour.currentTour;
+
+    if (!tourItems.length) {
+      return;
+    }
+    // If Joyride is positioned relative to the top or bottom of an
+    // element, and its secondary position is right or left, then the
+    // arrow is also positioned right or left. Shepherd defaults to
+    // center positioning the arrow.
+    //
+    // In most cases, this arrow positioning difference has
+    // little impact. However, tours built with Joyride may have tips
+    // using a higher level selector than the element the tip is
+    // expected to point to, and relied on Joyride's arrow positioning
+    // to align the arrow with the expected reference element. Joyride's
+    // arrow positioning behavior is replicated here to prevent those
+    // use cases from causing UI regressions.
+    //
+    // This modifier is provided here instead of TourViewBuilder (where
+    // most position modifications are) because it includes adding a
+    // JavaScript callback function.
+    settings.tourShepherdConfig.defaultStepOptions.popperOptions.modifiers.push(
+      {
+        name: 'moveArrowJoyridePosition',
+        enabled: true,
+        phase: 'write',
+        fn({ state }) {
+          const { arrow } = state.elements;
+          const { placement } = state;
+          if (
+            arrow &&
+            /^top|bottom/.test(placement) &&
+            /-start|-end$/.test(placement)
+          ) {
+            const horizontalPosition = placement.split('-')[1];
+            const offset =
+              horizontalPosition === 'start'
+                ? 28
+                : state.elements.popper.clientWidth - 56;
+            arrow.style.transform = `translate3d(${offset}px, 0px, 0px)`;
+          }
+        },
+      },
+    );
+    tourItems.forEach((tourStepConfig, index) => {
+      // Create the configuration for a given tour step by using values
+      // defined in TourViewBuilder.
+      // @see \Drupal\tour\TourViewBuilder::viewMultiple()
+      const tourItemOptions = {
+        title: tourStepConfig.title
+          ? Drupal.checkPlain(tourStepConfig.title)
+          : null,
+        text: () => Drupal.theme('tourItemContent', tourStepConfig),
+        attachTo: tourStepConfig.attachTo,
+        buttons: [Drupal.tour.nextButton(shepherdTour, tourStepConfig)],
+        classes: tourStepConfig.classes,
+        index,
+      };
+
+      tourItemOptions.when = {
+        show() {
+          const nextButton =
+            shepherdTour.currentStep.el.querySelector('footer button');
+
+          // Drupal disables Shepherd's built in focus after item
+          // creation functionality due to focus being set on the tour
+          // item container after every scroll and resize event. In its
+          // place, the 'next' button is focused here.
+          nextButton.focus();
+
+          // When Stable or Stable 9 are part of the active theme, the
+          // Drupal.tour.convertToJoyrideMarkup() function is available.
+          // This function converts Shepherd markup to Joyride markup,
+          // facilitating the use of the Shepherd library that is
+          // backwards compatible with customizations intended for
+          // Joyride.
+          // The Drupal.tour.convertToJoyrideMarkup() function is
+          // internal, and will eventually be removed from Drupal core.
+          if (Drupal.tour.hasOwnProperty('convertToJoyrideMarkup')) {
+            Drupal.tour.convertToJoyrideMarkup(shepherdTour);
+          }
+        },
+      };
+      shepherdTour.addStep(tourItemOptions);
+    });
+    shepherdTour.start();
+    Drupal.tour.isActive = true;
+    Drupal.tour.activeTour = shepherdTour;
   }
 
   /**
