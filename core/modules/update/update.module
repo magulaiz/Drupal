@@ -68,7 +68,7 @@ function update_page_top() {
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
   $currentUser = \Drupal::currentUser();
-  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && $currentUser->hasPermission('administer site configuration')) {
+  if ($currentUser->hasPermission('see update notifications') && $admin_context->isAdminRoute($route_match->getRouteObject())) {
     $route_name = $route_match->getRouteName();
     switch ($route_name) {
       // These pages don't need additional nagging.
@@ -89,7 +89,7 @@ function update_page_top() {
       // of the update status.
       case 'system.themes_page':
       case 'system.modules_list':
-        $verbose = $currentUser->hasPermission('see update notifications');
+        $verbose = TRUE;
         break;
 
     }
