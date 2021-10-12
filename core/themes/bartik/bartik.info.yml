@@ -24,6 +24,8 @@ libraries:
   - bartik/global-styling
 
 libraries-extend:
+  core/drupal.autocomplete:
+    - bartik/autocomplete
   core/drupal.dialog:
     - bartik/classy.dialog
   core/drupal.dropbutton:
