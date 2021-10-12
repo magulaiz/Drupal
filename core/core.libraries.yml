@@ -26,10 +26,9 @@ autocomplete.jqueryui.shim:
     assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
     assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
     assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
-
-    misc/jqueryui.widget.overrides.js: {}
-    misc/jquery.event.overrides.js: {}
-    misc/jqueryui.autocomplete.shim.js: {}
+    misc/jquery_overrides/jqueryui.widget.overrides.js: {}
+    misc/jquery_overrides/jquery.event.overrides.js: {}
+    misc/autocomplete/jqueryui.autocomplete.shim.js: {}
   dependencies:
     - core/drupal
     - core/jquery
@@ -144,7 +143,7 @@ loadjs:
 drupal.autocomplete:
   version: VERSION
   js:
-    misc/autocomplete-init.js: {}
+    misc/autocomplete/autocomplete-init.js: {}
   css:
     component:
       misc/autocomplete.css: {}
