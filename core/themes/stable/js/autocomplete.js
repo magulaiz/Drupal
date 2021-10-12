@@ -55,6 +55,17 @@
       });
       document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
     });
+    instance.ul.addEventListener('mouseover', function (e) {
+      instance.ul.querySelectorAll('a').forEach(function (item) {
+        item.classList.remove('ui-state-active');
+      });
+
+      if (e.target.tagName === 'LI') {
+        e.target.querySelector('a').classList.add('ui-state-active');
+      } else if (e.target.tagName === 'A') {
+        e.target.classList.add('ui-state-active');
+      }
+    });
     $(instance.input).unwrap('[data-autocomplete-wrapper]');
     $(instance.input).data('ui-autocomplete', instance);
   };

@@ -103,6 +103,23 @@
         .classList.add('ui-state-active');
     });
 
+    // When a list item is hovered over, the ui-state-active class is added to
+    // the anchor within that item. Only one item at a time can have this class.
+    // A currently focused item will have this class, but hovering another item
+    // in the list will move the ui-state-active class to the hovered item,
+    // whether or not it is focused.
+    instance.ul.addEventListener('mouseover', (e) => {
+      instance.ul.querySelectorAll('a').forEach((item) => {
+        item.classList.remove('ui-state-active');
+      });
+
+      if (e.target.tagName === 'LI') {
+        e.target.querySelector('a').classList.add('ui-state-active');
+      } else if (e.target.tagName === 'A') {
+        e.target.classList.add('ui-state-active');
+      }
+    });
+
     // jQuery UI autocomplete does not have a wrapper, so remove the wrapper
     // added by A11yAutocomplete.
     $(instance.input).unwrap('[data-autocomplete-wrapper]');
