@@ -1,0 +1,7 @@
+[data-autocomplete-item-list] > li {
+  color: #0074bd;
+}
+
+[data-autocomplete-item-list] > li:hover {
+  margin: -1px;
+}

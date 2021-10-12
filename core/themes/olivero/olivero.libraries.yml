@@ -68,6 +68,12 @@ global-styling:
     - core/once
     - core/tabbable
 
+autocomplete:
+  version: VERSION
+  css:
+    component:
+      css/components/autocomplete.css: {}
+
 book:
   version: VERSION
   css:

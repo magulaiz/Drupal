@@ -54,6 +54,7 @@ libraries-extend:
     - seven/ckeditor-dialog
   core/drupal.autocomplete:
     - seven/seven.jquery.ui
+    - seven/autocomplete
   core/drupal.dialog:
     - seven/seven.drupal.dialog
     - seven/seven.jquery.ui

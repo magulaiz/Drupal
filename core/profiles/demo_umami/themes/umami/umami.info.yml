@@ -28,6 +28,8 @@ libraries-override:
 libraries-extend:
   tour/tour-styling:
     - umami/demo-umami-tour
+  core/drupal.autocomplete:
+    - umami/autocomplete
   core/drupal.dialog:
     - umami/classy.dialog
   core/drupal.dropbutton:

@@ -1,0 +1,6 @@
+[data-autocomplete-item-list] > li:hover {
+  color: #fff;
+  border: 1px solid #003eff;
+  background: #007fff;
+  font-weight: normal;
+}

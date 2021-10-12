@@ -58,6 +58,8 @@ libraries-override:
   layout_builder/threecol_section: olivero/layout_builder_threecol_section
   layout_builder/fourcol_section: olivero/layout_builder_fourcol_section
 libraries-extend:
+  core/drupal.autocomplete:
+    - olivero/autocomplete
   core/drupal.message:
     - olivero/messages
   core/drupal.collapse:

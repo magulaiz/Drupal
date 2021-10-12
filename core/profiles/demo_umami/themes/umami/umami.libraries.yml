@@ -53,6 +53,12 @@ global:
   dependencies:
     - umami/demo-umami-tour
 
+autocomplete:
+  version: VERSION
+  css:
+    component:
+      css/components/forms/autocomplete.css: {}
+
 messages:
   css:
     component:

@@ -214,6 +214,9 @@ autocomplete:
   version: VERSION
   js:
     js/autocomplete.js: {}
+  css:
+    component:
+      css/components/autocomplete.css: {}
   dependencies:
     - core/once
 
