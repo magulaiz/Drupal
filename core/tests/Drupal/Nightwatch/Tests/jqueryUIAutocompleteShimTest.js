@@ -59,6 +59,34 @@ module.exports = {
       },
     );
   },
+  'unsupported use of custom widget': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $ = jQuery;
+        $.widget('custom.categoryComplete', $.ui.autocomplete, {
+          // eslint-disable-next-line object-shorthand
+          _create() {
+            // create is not supported, so this should trigger an error.
+          },
+        });
+        return {};
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.status,
+          -1,
+          'Unsupported uses custom widget extending autocomplete throws error',
+        );
+        browser.assert.equal(
+          result.value.message,
+          'javascript error: Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: _create',
+          'custom widget error specifies unusable properties',
+        );
+      },
+    );
+  },
   'test autocomplete': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
