@@ -31,11 +31,7 @@
       $(once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)).on('click', function (e) {
         e.preventDefault();
         $(e.currentTarget).toggleClass('active');
-
-        $(e.currentTarget)[0].textContent = function () {
-          return $(e.currentTarget).hasClass('active') ? strings.hide : strings.show;
-        };
-
+        $(e.currentTarget)[0].textContent = $(e.currentTarget).hasClass('active') ? strings.hide : strings.show;
         $(e.currentTarget).closest('.js-media-library-widget').find('.js-media-library-item-weight').parent().toggle();
       })[0].textContent = strings.show;
       $(once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();

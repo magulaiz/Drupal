@@ -53,8 +53,11 @@
       ).on('click', (e) => {
         e.preventDefault();
         $(e.currentTarget).toggleClass('active');
-        $(e.currentTarget)[0].textContent = () =>
-          $(e.currentTarget).hasClass('active') ? strings.hide : strings.show;
+        $(e.currentTarget)[0].textContent = $(e.currentTarget).hasClass(
+          'active',
+        )
+          ? strings.hide
+          : strings.show;
         $(e.currentTarget)
           .closest('.js-media-library-widget')
           .find('.js-media-library-item-weight')
