@@ -135,7 +135,7 @@
       outline-offset: -4px
 
       /*
-        We normally indicate focus by animating background-image width. This isn't
+        We normally indicate focus by animating background-image width. This isn"t
         available in IE11 when in Windows high contrast mode.
       */
     }
@@ -254,7 +254,7 @@
 @media (prefers-reduced-motion) {
 
 .block-search-wide__wrapper .search-form__submit .icon--search:after {
-          transition: none
+          transition-duration: 0.01s /* Needed for transitionend event */
       }
         }
 
@@ -282,7 +282,7 @@
 @media screen and (-ms-high-contrast: active) {
 
 .block-search-wide__wrapper .search-form__submit {
-      /* IE11's high contrast show will not show the background image, so we show the text. */
+      /* IE11"s high contrast show will not show the background image, so we show the text. */
   }
       .block-search-wide__wrapper .search-form__submit .visually-hidden {
         position: static;
@@ -295,12 +295,18 @@
 
 .block-search-wide__wrapper .search-form__submit {
 
-      /* Edge's high contrast does show the background image, so we hide it. */
+      /* Edge"s high contrast does show the background image, so we hide it. */
   }
       .block-search-wide__wrapper .search-form__submit .icon--search {
         display: none;
       }
     }
+
+@media (prefers-reduced-motion) {
+  .block-search-wide__wrapper {
+    transition-duration: 0.01s; /* Needed for transitionend event. */
+  }
+}
 
 [dir="ltr"] .block-search-wide__container {
   padding-right: 2.25rem;
@@ -431,7 +437,11 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+  background-image:
+    linear-gradient(
+      #2494db,
+      #2494db); /* Two values are needed for IE11 support. */
+
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 0.625rem
@@ -440,6 +450,12 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 [dir] .block-search-wide__wrapper input[type="search"]:focus {
     background-size: 100% 0.5625rem;
   }
+
+@media (prefers-reduced-motion) {
+  [dir] .block-search-wide__wrapper input[type="search"] {
+    transition-duration: 0.01s;
+  }
+}
 
 [dir="rtl"] .block-search-wide__wrapper input[type="search"] {
     background-position: bottom right;
