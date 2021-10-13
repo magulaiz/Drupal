@@ -79,9 +79,10 @@ module.exports = {
           -1,
           'Unsupported uses custom widget extending autocomplete throws error',
         );
-        browser.assert.equal(
-          result.value.message,
-          'javascript error: Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: _create',
+        browser.assert.ok(
+          result.value.message.includes(
+            'Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: _create',
+          ),
           'custom widget error specifies unusable properties',
         );
       },

@@ -178,7 +178,7 @@ class ElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/autocomplete');
 
     // Make sure that the autocomplete library is added.
-    $this->assertSession()->responseContains('core/misc/autocomplete-init.js');
+    $this->assertSession()->responseContains('core/misc/autocomplete/autocomplete-init.js');
 
     // Ensure that the user does have access to the autocompletion.
     $this->assertSession()->elementExists('xpath', '//input[@id="edit-autocomplete-1" and contains(@data-autocomplete-path, "form-test/autocomplete-1")]');
