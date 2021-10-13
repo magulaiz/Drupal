@@ -38,7 +38,7 @@
     messageWrapper.setAttribute('data-drupal-message-type', type);
     var svg = '';
 
-    if (['error', 'warning', 'status', 'info'].indexOf(type) > -1) {
+    if (['error', 'warning', 'status', 'info'].includes(type)) {
       svg = '<div class="messages__icon"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">';
     }
 
