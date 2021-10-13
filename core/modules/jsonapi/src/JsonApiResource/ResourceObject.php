@@ -96,6 +96,9 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
     $this->versionIdentifier = $revision_id ? 'id:' . $revision_id : NULL;
     $this->fields = $fields;
     $this->links = $links->withContext($this);
+
+    // If the specified language empty it falls back the same way as in the entity system
+    // @see \Drupal\Core\Entity\EntityBase::language()
     $this->language = $language ?: new Language(['id' => LanguageInterface::LANGCODE_NOT_SPECIFIED]);
   }
 
@@ -106,7 +109,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   The JSON:API resource type of the resource object.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be represented by this resource object.
-   * @param \Drupal\jsonapi\JsonApiResource\LinkCollection $links
+   * @param \Drupal\jsonapi\JsonApiResource\LinkCollection|null $links
    *   (optional) Any links for the resource object, if a `self` link is not
    *   provided, one will be automatically added if the resource is locatable
    *   and is not an internal entity.
@@ -172,7 +175,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    * @return \Drupal\Core\Language\LanguageInterface
    *   The resource language.
    */
-  public function getLanguage() {
+  public function getLanguage(): LanguageInterface {
     return $this->language;
   }
 

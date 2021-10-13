@@ -232,7 +232,7 @@ class EntityResource {
    *   Thrown when the entity does not pass validation.
    */
   public function createIndividual(ResourceType $resource_type, Request $request) {
-    $parsed_entity = $this->getEntityFromRequest($resource_type, $request);
+    $parsed_entity = $this->getEntityFromRequestBody($resource_type, $request);
 
     if ($parsed_entity instanceof FieldableEntityInterface) {
       // Only check 'edit' permissions for fields that were actually submitted
@@ -311,9 +311,9 @@ class EntityResource {
       throw new BadRequestHttpException('Updating a resource object that has a working copy is not yet supported. See https://www.drupal.org/project/drupal/issues/2795279.');
     }
 
-    $parsed_entity = $this->getEntityFromRequest($resource_type, $request);
+    $parsed_entity = $this->getEntityFromRequestBody($resource_type, $request);
 
-    $body = $this->getRequestBody($request);
+    $body = static::getRequestBody($request);
     $data = $body['data'];
     if ($data['id'] != $entity->uuid()) {
       throw new BadRequestHttpException(sprintf(
@@ -323,7 +323,7 @@ class EntityResource {
       ));
     }
 
-    $field_names = $this->getRequestFieldNames($resource_type, $request);
+    $field_names = static::getRequestFieldNames($resource_type, $request);
 
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
@@ -815,8 +815,8 @@ class EntityResource {
    * @return \Drupal\Core\Entity\EntityInterface
    *   A non-stored entity object.
    */
-  protected function getEntityFromRequest(ResourceType $resource_type, Request $request): EntityInterface {
-    $parsed_entity = $this->getRequestAttribute($request, 'jsonapi_parsed_entity', function (Request $request) use ($resource_type) {
+  protected function getEntityFromRequestBody(ResourceType $resource_type, Request $request): EntityInterface {
+    $parsed_entity = static::getRequestAttribute($request, 'jsonapi_parsed_entity', function (Request $request) use ($resource_type) {
       return $this->deserialize($resource_type, $request, JsonApiDocumentTopLevel::class);
     });
     assert($parsed_entity instanceof EntityInterface);
@@ -834,9 +834,9 @@ class EntityResource {
    * @return string[]
    *   An array of field names.
    */
-  protected function getRequestFieldNames(ResourceType $resource_type, Request $request): array {
-    return $this->getRequestAttribute($request, 'jsonapi_field_names', function (Request $request) use ($resource_type) {
-      $body = $this->getRequestBody($request);
+  protected static function getRequestFieldNames(ResourceType $resource_type, Request $request): array {
+    return static::getRequestAttribute($request, 'jsonapi_field_names', function (Request $request) use ($resource_type) {
+      $body = static::getRequestBody($request);
       $data = $body['data'];
       $data += ['attributes' => [], 'relationships' => []];
       return array_map([$resource_type, 'getInternalName'], array_merge(array_keys($data['attributes']), array_keys($data['relationships'])));
@@ -852,8 +852,8 @@ class EntityResource {
    * @return mixed
    *   The decoded request body.
    */
-  protected function getRequestBody(Request $request) {
-    return $this->getRequestAttribute($request, 'jsonapi_body_decoded', function (Request $request) {
+  protected static function getRequestBody(Request $request) {
+    return static::getRequestAttribute($request, 'jsonapi_body_decoded', function (Request $request) {
       return Json::decode($request->getContent());
     });
   }
@@ -871,7 +871,7 @@ class EntityResource {
    * @return mixed
    *   The attribute value.
    */
-  protected function getRequestAttribute(Request $request, string $key, callable $value_callback) {
+  protected static function getRequestAttribute(Request $request, string $key, callable $value_callback) {
     if (!$request->attributes->has($key)) {
       $request->attributes->set($key, $value_callback($request));
     }
