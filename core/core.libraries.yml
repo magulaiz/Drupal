@@ -63,7 +63,7 @@ drupalSettings:
 drupal.active-link:
   version: VERSION
   js:
-    misc/active-link.js: {}
+    misc/active-link.js: { }
   dependencies:
     - core/drupal
     - core/drupalSettings
@@ -71,14 +71,14 @@ drupal.active-link:
 drupal.ajax:
   version: VERSION
   js:
-    misc/ajax.js: {}
+    misc/ajax.js: { }
   drupalSettings:
     # These placeholder values will be set by system_js_settings_alter().
     ajaxPageState:
       libraries: null
       theme: null
       theme_token: null
-    ajaxTrustedUrl: {}
+    ajaxTrustedUrl: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -90,7 +90,7 @@ drupal.ajax:
 drupal.announce:
   version: VERSION
   js:
-    misc/announce.js: {}
+    misc/announce.js: { }
   dependencies:
     - core/drupal
     - core/drupal.debounce
@@ -169,16 +169,16 @@ drupal.batch:
 drupal.checkbox:
   version: VERSION
   js:
-    misc/checkbox.js: {}
+    misc/checkbox.js: { }
   dependencies:
     - core/drupal
 
 drupal.collapse:
   version: VERSION
   js:
-    misc/details-summarized-content.js: {}
-    misc/details-aria.js: {}
-    misc/collapse.js: {}
+    misc/details-summarized-content.js: { }
+    misc/details-aria.js: { }
+    misc/collapse.js: { }
   dependencies:
     - core/jquery
     - core/modernizr
@@ -194,7 +194,7 @@ drupal.customevent:
 drupal.date:
   version: VERSION
   js:
-    misc/date.js: {}
+    misc/date.js: { }
   dependencies:
     - core/drupal
     - core/modernizr
@@ -203,7 +203,7 @@ drupal.date:
 drupal.debounce:
   version: VERSION
   js:
-    misc/debounce.js: {}
+    misc/debounce.js: { }
   dependencies:
     # @todo Remove Drupal dependency.
     - core/drupal
@@ -211,9 +211,9 @@ drupal.debounce:
 drupal.dialog:
   version: VERSION
   js:
-    misc/dialog/dialog.js: {}
-    misc/dialog/dialog.position.js: {}
-    misc/dialog/dialog.jquery-ui.js: {}
+    misc/dialog/dialog.js: { }
+    misc/dialog/dialog.position.js: { }
+    misc/dialog/dialog.jquery-ui.js: { }
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
     # All weights are based on on the requirements defined within each file.
@@ -266,7 +266,7 @@ drupal.dialog:
 drupal.dialog.ajax:
   version: VERSION
   js:
-    misc/dialog/dialog.ajax.js: {}
+    misc/dialog/dialog.ajax.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -278,7 +278,7 @@ drupal.dialog.ajax:
 drupal.displace:
   version: VERSION
   js:
-    misc/displace.js: {}
+    misc/displace.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -287,10 +287,10 @@ drupal.displace:
 drupal.dropbutton:
   version: VERSION
   js:
-    misc/dropbutton/dropbutton.js: {}
+    misc/dropbutton/dropbutton.js: { }
   css:
     component:
-      misc/dropbutton/dropbutton.css: {}
+      misc/dropbutton/dropbutton.css: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -312,14 +312,14 @@ drupal.element.matches:
 drupal.entity-form:
   version: VERSION
   js:
-    misc/entity-form.js: {}
+    misc/entity-form.js: { }
   dependencies:
     - core/drupal.form
 
 drupal.form:
   version: VERSION
   js:
-    misc/form.js: {}
+    misc/form.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -329,7 +329,7 @@ drupal.form:
 drupal.machine-name:
   version: VERSION
   js:
-    misc/machine-name.js: {}
+    misc/machine-name.js: { }
   dependencies:
     - core/jquery
     - core/once
@@ -340,7 +340,7 @@ drupal.machine-name:
 drupal.message:
   version: VERSION
   js:
-    misc/message.js: {}
+    misc/message.js: { }
   dependencies:
     - core/drupal
     - core/drupal.announce
@@ -358,7 +358,7 @@ drupal.object.assign:
 drupal.progress:
   version: VERSION
   js:
-    misc/progress.js: {}
+    misc/progress.js: { }
   dependencies:
     - core/drupal
     - core/jquery
@@ -367,7 +367,7 @@ drupal.progress:
 drupal.states:
   version: VERSION
   js:
-    misc/states.js: {}
+    misc/states.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -377,7 +377,7 @@ drupal.states:
 drupal.tabbingmanager:
   version: VERSION
   js:
-    misc/tabbingmanager.js: {}
+    misc/tabbingmanager.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -396,7 +396,7 @@ drupal.tabledrag:
 drupal.tableheader:
   version: VERSION
   js:
-    misc/tableheader.js: {}
+    misc/tableheader.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -407,7 +407,7 @@ drupal.tableheader:
 drupal.tableresponsive:
   version: VERSION
   js:
-    misc/tableresponsive.js: {}
+    misc/tableresponsive.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -416,7 +416,7 @@ drupal.tableresponsive:
 drupal.tableselect:
   version: VERSION
   js:
-    misc/tableselect.js: {}
+    misc/tableselect.js: { }
   dependencies:
     - core/drupal
     - core/drupal.checkbox
@@ -426,7 +426,7 @@ drupal.tableselect:
 drupal.timezone:
   version: VERSION
   js:
-    misc/timezone.js: {}
+    misc/timezone.js: { }
   dependencies:
     - core/jquery
     - core/once
@@ -439,7 +439,7 @@ drupal.vertical-tabs:
     misc/vertical-tabs.js: { weight: -1 }
   css:
     component:
-      misc/vertical-tabs.css: {}
+      misc/vertical-tabs.css: { }
   dependencies:
     - core/jquery
     - core/once
@@ -469,7 +469,7 @@ jquery:
 jquery.cookie:
   version: VERSION
   js:
-    misc/jquery.cookie.shim.js: {}
+    misc/jquery.cookie.shim.js: { }
   dependencies:
     - core/jquery
     - core/drupal
@@ -488,7 +488,7 @@ jquery.farbtastic:
     assets/vendor/farbtastic/farbtastic.js: { minified: true }
   css:
     component:
-      assets/vendor/farbtastic/farbtastic.css: {}
+      assets/vendor/farbtastic/farbtastic.css: { }
   dependencies:
     - core/jquery
 
@@ -707,7 +707,7 @@ drupal.jquery.position:
   # recommended for any new uses.
   version: VERSION
   js:
-    misc/position.js: {}
+    misc/position.js: { }
   dependencies:
     - core/jquery
 
@@ -826,7 +826,7 @@ tabbable:
 tabbable.jquery.shim:
   version: VERSION
   js:
-    misc/jquery.tabbable.shim.js: {}
+    misc/jquery.tabbable.shim.js: { }
   dependencies:
     - core/drupal
     - core/tabbable
@@ -845,24 +845,24 @@ underscore:
 drupal.dialog.off_canvas:
   version: VERSION
   js:
-    misc/dialog/off-canvas.js: {}
+    misc/dialog/off-canvas.js: { }
   css:
     base:
-      misc/dialog/off-canvas.reset.css: {}
-      misc/dialog/off-canvas.base.css: {}
-      misc/dialog/off-canvas.css: {}
+      misc/dialog/off-canvas.reset.css: { }
+      misc/dialog/off-canvas.base.css: { }
+      misc/dialog/off-canvas.css: { }
       # Add group setting to make sure this CSS load before any jQuery UI Dialog
       # CSS.
       misc/dialog/off-canvas.theme.css: { group: 200 }
     component:
-      misc/dialog/off-canvas.motion.css: {}
-      misc/dialog/off-canvas.button.css: {}
-      misc/dialog/off-canvas.form.css: {}
-      misc/dialog/off-canvas.table.css: {}
-      misc/dialog/off-canvas.details.css: {}
-      misc/dialog/off-canvas.tabledrag.css: {}
-      misc/dialog/off-canvas.dropbutton.css: {}
-      misc/dialog/off-canvas.layout.css: {}
+      misc/dialog/off-canvas.motion.css: { }
+      misc/dialog/off-canvas.button.css: { }
+      misc/dialog/off-canvas.form.css: { }
+      misc/dialog/off-canvas.table.css: { }
+      misc/dialog/off-canvas.details.css: { }
+      misc/dialog/off-canvas.tabledrag.css: { }
+      misc/dialog/off-canvas.dropbutton.css: { }
+      misc/dialog/off-canvas.layout.css: { }
   dependencies:
     - core/jquery
     - core/once
@@ -880,4 +880,4 @@ js-cookie:
     url: https://raw.githubusercontent.com/js-cookie/js-cookie/v3.0.0-rc.0/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/js-cookie/js.cookie.min.js: {}
+    assets/vendor/js-cookie/js.cookie.min.js: { }
