@@ -186,6 +186,11 @@ drupal.collapse:
     - core/drupal.form
     - core/once
 
+drupal.customevent:
+  version: VERSION
+  js:
+    misc/polyfills/customevent.js: { weight: -20 }
+
 drupal.date:
   version: VERSION
   js:
@@ -349,11 +354,6 @@ drupal.object.assign:
   version: VERSION
   js:
     misc/polyfills/object.assign.js: { weight: -20 }
-
-drupal.customevent:
-  version: VERSION
-  js:
-    misc/polyfills/customevent.js: { weight: -20 }
 
 drupal.progress:
   version: VERSION
