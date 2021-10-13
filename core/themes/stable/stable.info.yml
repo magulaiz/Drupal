@@ -66,7 +66,7 @@ libraries-override:
   core/drupal.autocomplete:
     css:
       component:
-        misc/autocomplete.css: css/core/autocomplete.css
+        misc/autocomplete/autocomplete.css: css/core/autocomplete.css
 
   core/drupal.dialog.off_canvas:
     css:

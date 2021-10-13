@@ -146,7 +146,7 @@ drupal.autocomplete:
     misc/autocomplete/autocomplete-init.js: {}
   css:
     component:
-      misc/autocomplete.css: {}
+      misc/autocomplete/autocomplete.css: {}
   dependencies:
     - core/drupal
     - core/drupalSettings
