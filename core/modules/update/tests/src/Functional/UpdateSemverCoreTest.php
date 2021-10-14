@@ -501,6 +501,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testBrokenThenFixedUpdates() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'see update notifications',
       'access administration pages',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
