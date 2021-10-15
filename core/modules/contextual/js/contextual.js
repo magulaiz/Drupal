@@ -61,7 +61,7 @@
       this.setAttribute('href', url + glue + destination);
     });
     var model = new contextual.StateModel({
-      title: $region.find('h2').eq(0).text().trim()
+      title: $region.find('h2').eq(0)[0].textContent.trim()
     });
     var viewOptions = $.extend({
       el: $contextual,

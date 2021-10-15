@@ -84,7 +84,7 @@
           $details.each(function () {
             const $that = $(this);
             const verticalTab = new Drupal.verticalTab({
-              title: $that.find('> summary').text(),
+              title: $that.find('> summary')[0].textContent,
               details: $that,
             });
             tabList.append(verticalTab.item);
@@ -280,15 +280,13 @@
    */
   Drupal.theme.verticalTab = function (settings) {
     const tab = {};
+    tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');
+    tab.title[0].textContent = settings.title;
     tab.item = $(
       '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
     ).append(
       (tab.link = $('<a href="#"></a>')
-        .append(
-          (tab.title = $(
-            '<strong class="vertical-tabs__menu-item-title"></strong>',
-          ).text(settings.title)),
-        )
+        .append(tab.title)
         .append(
           (tab.summary = $(
             '<span class="vertical-tabs__menu-item-summary"></span>',

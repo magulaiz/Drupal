@@ -78,7 +78,7 @@
     let $editables;
     // Turn on edit mode.
     if (editMode) {
-      $editButton.text(Drupal.t('Editing'));
+      $editButton[0].textContent = Drupal.t('Editing');
       closeToolbarTrays();
 
       $editables = $(
@@ -143,7 +143,7 @@
         $(quickEditItemSelector).off('.settingstray');
       }
 
-      $editButton.text(Drupal.t('Edit'));
+      $editButton[0].textContent = Drupal.t('Edit');
       closeOffCanvas();
       disableQuickEdit();
     }

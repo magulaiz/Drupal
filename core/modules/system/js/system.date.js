@@ -24,7 +24,7 @@
         var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
           return dateFormats[key] ? dateFormats[key] : value;
         });
-        $preview.text(dateString);
+        $preview[0].textContent = dateString;
         $target.toggleClass('js-hide', !dateString.length);
       }
 

@@ -44,7 +44,8 @@
          */
         const toggleBlockEntry = (index, link) => {
           const $link = $(link);
-          const textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
+          const textMatch =
+            $link[0].textContent.toLowerCase().indexOf(query) !== -1;
           $link.toggle(textMatch);
         };
 

@@ -80,13 +80,14 @@
           $tr.toggleClass('expanded');
 
           // Change screen reader text.
-          $tr.find('.locale-translation-update__prefix').text(() => {
-            if ($tr.hasClass('expanded')) {
-              return Drupal.t('Hide description');
-            }
+          $tr.find('.locale-translation-update__prefix')[0].textContent =
+            () => {
+              if ($tr.hasClass('expanded')) {
+                return Drupal.t('Hide description');
+              }
 
-            return Drupal.t('Show description');
-          });
+              return Drupal.t('Show description');
+            };
         });
         $table.find('.requirements, .links').hide();
       }

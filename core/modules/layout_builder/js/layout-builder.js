@@ -22,7 +22,7 @@
 
         var toggleBlockEntry = function toggleBlockEntry(index, link) {
           var $link = $(link);
-          var textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
+          var textMatch = $link[0].textContent.toLowerCase().indexOf(query) !== -1;
           $link.toggle(textMatch);
         };
 

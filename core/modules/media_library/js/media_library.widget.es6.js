@@ -50,22 +50,17 @@
           '.js-media-library-widget-toggle-weight',
           context,
         ),
-      )
-        .on('click', (e) => {
-          e.preventDefault();
-          $(e.currentTarget)
-            .toggleClass('active')
-            .text(
-              $(e.currentTarget).hasClass('active')
-                ? strings.hide
-                : strings.show,
-            )
-            .closest('.js-media-library-widget')
-            .find('.js-media-library-item-weight')
-            .parent()
-            .toggle();
-        })
-        .text(strings.show);
+      ).on('click', (e) => {
+        e.preventDefault();
+        $(e.currentTarget).toggleClass('active');
+        $(e.currentTarget)[0].textContent = () =>
+          $(e.currentTarget).hasClass('active') ? strings.hide : strings.show;
+        $(e.currentTarget)
+          .closest('.js-media-library-widget')
+          .find('.js-media-library-item-weight')
+          .parent()
+          .toggle();
+      })[0].textContent = strings.show;
       $(once('media-library-toggle', '.js-media-library-item-weight', context))
         .parent()
         .hide();
