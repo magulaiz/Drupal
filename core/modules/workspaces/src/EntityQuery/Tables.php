@@ -3,7 +3,7 @@
 namespace Drupal\workspaces\EntityQuery;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\Sql\Tables as BaseTables;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
@@ -113,7 +113,7 @@ class Tables extends BaseTables {
   /**
    * {@inheritdoc}
    */
-  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
+  protected function addNextBaseTable(EntityTypeInterface $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
     $next_base_table_alias = parent::addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
 
     $active_workspace_id = $this->sqlQuery->getMetaData('active_workspace_id');
