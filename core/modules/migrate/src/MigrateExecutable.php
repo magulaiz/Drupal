@@ -2,18 +2,22 @@
 
 namespace Drupal\migrate;
 
-use Drupal\Component\Utility\Bytes;
 use Drupal\Core\Utility\Error;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Component\Utility\Bytes;
 use Drupal\migrate\Event\MigrateEvents;
 use Drupal\migrate\Event\MigrateImportEvent;
-use Drupal\migrate\Event\MigratePostRowSaveEvent;
-use Drupal\migrate\Event\MigratePreRowSaveEvent;
+use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\MigrateRowDeleteEvent;
-use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Event\MigratePostRowSaveEvent;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Exception\SourceRewindException;
+use Drupal\migrate\Exception\MigrationBusyException;
+use Drupal\migrate\Exception\MemoryExhaustionException;
+use Drupal\migrate\Exception\MigrationStoppedException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -102,17 +106,26 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
-    $this->message = $message ?: new MigrateMessage();
-    $this->getIdMap()->setMessage($this->message);
     $this->eventDispatcher = $event_dispatcher;
-    // Record the memory limit in bytes
-    $limit = trim(ini_get('memory_limit'));
-    if ($limit == '-1') {
-      $this->memoryLimit = PHP_INT_MAX;
-    }
-    else {
-      $this->memoryLimit = Bytes::toNumber($limit);
-    }
+    $this->message = $message ?? new MigrateMessage();
+    $this->getIdMap()->setMessage($this->message);
+    $this->setMemoryLimit();
+  }
+
+  /**
+   * Sets memoryLimit to the given memory limit expressed in Bytes.
+   * Defaults to PHP_INT_MAX.
+   */
+  protected function setMemoryLimit() {
+    $limit = $this->getMemoryLimit();
+    $this->memoryLimit = $limit == '-1' ? PHP_INT_MAX : Bytes::toNumber($limit);
+  }
+
+  /**
+   * Gets the memory limit from ini.
+   */
+  protected function getMemoryLimit() {
+    return trim(ini_get('memory_limit'));
   }
 
   /**
@@ -143,147 +156,236 @@ class MigrateExecutable implements MigrateExecutableInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Only begin the import operation if the migration is currently idle.
    */
-  public function import() {
-    // Only begin the import operation if the migration is currently idle.
+  protected function checkIfMigrationIsBusy() {
     if ($this->migration->getStatus() !== MigrationInterface::STATUS_IDLE) {
-      $this->message->display($this->t('Migration @id is busy with another operation: @status',
-        [
-          '@id' => $this->migration->id(),
-          '@status' => $this->t($this->migration->getStatusLabel()),
-        ]), 'error');
-      return MigrationInterface::RESULT_FAILED;
+      throw new MigrationBusyException();
     }
-    $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::PRE_IMPORT);
+  }
 
-    // Knock off migration if the requirements haven't been met.
-    try {
-      $this->migration->checkRequirements();
-    }
-    catch (RequirementsException $e) {
-      $this->message->display(
-        $this->t(
-          'Migration @id did not meet the requirements. @message @requirements',
-          [
-            '@id' => $this->migration->id(),
-            '@message' => $e->getMessage(),
-            '@requirements' => $e->getRequirementsString(),
-          ]
-        ),
-        'error'
-      );
+  /**
+   * Asks the event dispatcher to dispatch a MigrateImportEvent.
+   *
+   * @param int $eventValue
+   *   MigrateEvents constant value.
+   */
+  protected function dispatchMigrationEvent(int $eventValue) {
+    $event = new MigrateImportEvent($this->migration, $this->message);
+    $this->getEventDispatcher()->dispatch($event, $eventValue);
+  }
 
-      return MigrationInterface::RESULT_FAILED;
-    }
-
-    $this->migration->setStatus(MigrationInterface::STATUS_IMPORTING);
-    $return = MigrationInterface::RESULT_COMPLETED;
-    $source = $this->getSource();
-    $id_map = $this->getIdMap();
-
+  /**
+   * Tries to rewind the source.
+   *
+   * @throws Drupal\migrate\Exception\SourceRewindException
+   */
+  protected function prepareSource(MigrateSourceInterface $source) {
     try {
       $source->rewind();
     }
-    catch (\Exception $e) {
-      $this->message->display(
-        $this->t('Migration failed with source plugin exception: @e in @file line @line', [
-          '@e' => $e->getMessage(),
-          '@file' => $e->getFile(),
-          '@line' => $e->getLine(),
-        ]), 'error');
+    catch (\Exception $exception) {
+      throw new SourceRewindException();
+    }
+  }
+
+  /**
+   * Sets some used variables before launching the migration.
+   */
+  private function prepareNeededVariables() {
+    $this->importSource = $this->getSource();
+    $this->importIdMap = $this->getIdMap();
+    $this->importDestination = $this->migration->getDestinationPlugin();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function import() {
+    try {
+      $this->checkIfMigrationIsBusy();
+      $this->dispatchMigrationEvent(MigrateEvents::PRE_IMPORT);
+      $this->migration->checkRequirements();
+      $this->migration->setStatus(MigrationInterface::STATUS_IMPORTING);
+      $this->prepareNeededVariables();
+      $this->prepareSource($this->importSource);
+      $result = $this->doMigrationImport();
+      $this->dispatchMigrationEvent(MigrateEvents::POST_IMPORT);
       $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
-      return MigrationInterface::RESULT_FAILED;
+      return $result;
     }
+    catch (MigrationBusyException $busyException) {
+      $migrationId = $this->migration->id();
+      $migrationStatus = $this->migration->getStatusLabel();
+      $translatedArguments = ["@id" => $migrationId, "@status" => t($migrationStatus)];
+      $translatedMessage = $this->t('Migration @id is busy with another operation: @status', $translatedArguments);
+      $this->message->display($translatedMessage, 'error');
+    }
+    catch (RequirementsException $requirementsException) {
+      $migrationId = $this->migration->id();
+      $message = $requirementsException->getMessage();
+      $requirements = $requirementsException->getRequirementsString();
+      $arguments = ['@id' => $migrationId, '@message' => $message, '@requirements' => $requirements];
+      $translatedMessage = $this->t('Migration @id did not meet the requirements. @message @requirements', $arguments);
+      $this->message->display($translatedMessage, 'error');
+    }
+    catch (SourceRewindException $rewindException) {
+      $message = $rewindException->getMessage();
+      $file = $rewindException->getFile();
+      $line = $rewindException->getLine();
+      $arguments = ["@e" => $message, "@file" => $file, "@line" => $line];
+      $translatedMessage = $this->t('Migration failed with source plugin exception: @e in @file line @line', $arguments);
+      $this->message->display($translatedMessage, 'error');
+      $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
+    }
+    catch (\Exception $exception) {
+      $message = $exception->getMessage();
+      $file = $exception->getFile();
+      $line = $exception->getLine();
+      $arguments = ['@e' => $message, '@file' => $file, '@line' => $line];
+      $translatedMessage = $this->t('Migration failed with source plugin exception: @e in @file line @line', $arguments);
+      $this->message->display($translatedMessage, 'error');
+      $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
+    }
+    return MigrationInterface::RESULT_FAILED;
+  }
 
-    $destination = $this->migration->getDestinationPlugin();
-    while ($source->valid()) {
-      $row = $source->current();
+  /**
+   * ETL Process. Gets the row, processes the row then save the row.
+   */
+  protected function processImportRow() {
+    try {
+      $this->currentProcessedRow = $this->importSource->current();
       $this->sourceIdValues = $row->getSourceIdValues();
+      $this->processRow($row);
+      $this->saveCurrentProcessedRow = TRUE;
+    }
+    catch (MigrateSkipRowException $migrateSkipRowException) {
+      if ($migrateSkipRowException->getSaveToMap()) {
+        $this->importMigrateMap->saveIdMapping($this->currentProcessedRow, [], MigrateIdMapInterface::STATUS_IGNORED);
+      }
+      if ($message = trim($migrateSkipRowException->getMessage())) {
+        $this->saveMessage($message, MigrationInterface::MESSAGE_INFORMATIONAL);
+      }
+      $this->saveCurrentProcessedRow = FALSE;
+    }
+    catch (MigrateException $migrateException) {
+      $this->getIdMap()->saveIdMapping($row, [], $migrateException->getStatus());
+      $this->saveMessage($migrateException->getMessage(), $migrateException->getLevel());
+      $this->saveCurrentProcessedRow = FALSE;
+    }
+  }
 
-      try {
-        $this->processRow($row);
-        $save = TRUE;
+  /**
+   * Asks the event dispatcher to dispatch a MigratePreRowSaveEvent.
+   *
+   * @param int $eventValue
+   *   MigrateEvents constant.
+   */
+  protected function dispatchMigrationPreRowSaveEvent(int $eventValue) {
+    $event = new MigratePreRowSaveEvent($this->migration, $this->message, $this->currentProcessedRow);
+    $this->getEventDispatcher()->dispatch($event, $eventValue);
+  }
+
+  /**
+   * Asks the event dispatcher to dispatch a MigratePostRowSaveEvent.
+   *
+   * @param int $eventValue
+   *   MigrateEvents constant.
+   * @param array $destination_id_values
+   *   The destination ids returned by the import when successful.
+   */
+  protected function dispatchMigrationPostRowSaveEvent(int $eventValue, $destination_id_values) {
+    $event = new MigratePostRowSaveEvent($this->migration, $this->message, $this->currentProcessedRow, $destination_id_values);
+    $this->getEventDispatcher()->dispatch($event, $eventValue);
+  }
+
+  /**
+   * Saves the currently processed row : pre-row save event, destination import, post-row save event.
+   */
+  protected function saveImportRow() {
+    try {
+      if (!$this->saveCurrentProcessedRow) {
+        return;
       }
-      catch (MigrateException $e) {
-        $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
-        $this->saveMessage($e->getMessage(), $e->getLevel());
-        $save = FALSE;
-      }
-      catch (MigrateSkipRowException $e) {
-        if ($e->getSaveToMap()) {
-          $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
+      $this->dispatchMigrationPreRowSaveEvent(MigrateEvents::PRE_ROW_SAVE);
+      $destination_ids = $this->importIdMap->lookupDestinationIds($this->sourceIdValues);
+      $destination_id_values = $destination_ids ? reset($destination_ids) : [];
+      $destination_id_values = $destination->import($this->currentProcessedRow, $destination_id_values);
+      $this->dispatchMigrationPostRowSaveEvent(MigrateEvents::POST_ROW_SAVE, $destination_id_values);
+      if ($destination_id_values) {
+        // We do not save an idMap entry for config.
+        if ($destination_id_values !== TRUE) {
+          $this->importIdMap->saveIdMapping($this->currentProcessedRow, $destination_id_values, $this->sourceRowStatus, $this->importDestination->rollbackAction());
         }
-        if ($message = trim($e->getMessage())) {
-          $this->saveMessage($message, MigrationInterface::MESSAGE_INFORMATIONAL);
+      }
+      else {
+        $this->importIdMap->saveIdMapping($this->currentProcessedRow, [], MigrateIdMapInterface::STATUS_FAILED);
+        if (!$this->importIdMap->messageCount()) {
+          $message = $this->t('New object was not saved, no error provided');
+          $this->saveMessage($message);
+          $this->message->display($message);
         }
-        $save = FALSE;
-      }
-
-      if ($save) {
-        try {
-          $this->getEventDispatcher()->dispatch(new MigratePreRowSaveEvent($this->migration, $this->message, $row), MigrateEvents::PRE_ROW_SAVE);
-          $destination_ids = $id_map->lookupDestinationIds($this->sourceIdValues);
-          $destination_id_values = $destination_ids ? reset($destination_ids) : [];
-          $destination_id_values = $destination->import($row, $destination_id_values);
-          $this->getEventDispatcher()->dispatch(new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values), MigrateEvents::POST_ROW_SAVE);
-          if ($destination_id_values) {
-            // We do not save an idMap entry for config.
-            if ($destination_id_values !== TRUE) {
-              $id_map->saveIdMapping($row, $destination_id_values, $this->sourceRowStatus, $destination->rollbackAction());
-            }
-          }
-          else {
-            $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_FAILED);
-            if (!$id_map->messageCount()) {
-              $message = $this->t('New object was not saved, no error provided');
-              $this->saveMessage($message);
-              $this->message->display($message);
-            }
-          }
-        }
-        catch (MigrateException $e) {
-          $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
-          $this->saveMessage($e->getMessage(), $e->getLevel());
-        }
-        catch (\Exception $e) {
-          $this->getIdMap()->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_FAILED);
-          $this->handleException($e);
-        }
-      }
-
-      $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
-
-      // Check for memory exhaustion.
-      if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
-        break;
-      }
-
-      // If anyone has requested we stop, return the requested result.
-      if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
-        $return = $this->migration->getInterruptionResult();
-        $this->migration->clearInterruptionResult();
-        break;
-      }
-
-      try {
-        $source->next();
-      }
-      catch (\Exception $e) {
-        $this->message->display(
-          $this->t('Migration failed with source plugin exception: @e in @file line @line', [
-            '@e' => $e->getMessage(),
-            '@file' => $e->getFile(),
-            '@line' => $e->getLine(),
-          ]), 'error');
-        $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
-        return MigrationInterface::RESULT_FAILED;
       }
     }
+    catch (MigrateException $e) {
+      $this->getIdMap()->saveIdMapping($this->currentProcessedRow, [], $e->getStatus());
+      $this->saveMessage($e->getMessage(), $e->getLevel());
+    }
+    catch (\Exception $e) {
+      $this->getIdMap()->saveIdMapping($this->currentProcessedRow, [], MigrateIdMapInterface::STATUS_FAILED);
+      $this->handleException($e);
+    }
+  }
 
-    $this->getEventDispatcher()->dispatch(new MigrateImportEvent($this->migration, $this->message), MigrateEvents::POST_IMPORT);
-    $this->migration->setStatus(MigrationInterface::STATUS_IDLE);
-    return $return;
+  /**
+   * Finalizes the migration row import by setting row status to imported,
+   * checking for memory exhaustion and checking if stop migration was requested.
+   * It then passes onto the next row.
+   */
+  protected function resolveImportRow() {
+    $this->sourceRowStatus = MigrateIdMapInterface::STATUS_IMPORTED;
+
+    // Check for memory exhaustion.
+    if (($return = $this->checkStatus()) != MigrationInterface::RESULT_COMPLETED) {
+      throw new MemoryExhaustionException();
+    }
+
+    // If anyone has requested we stop, return the requested result.
+    if ($this->migration->getStatus() == MigrationInterface::STATUS_STOPPING) {
+      throw new MigrationStoppedException();
+    }
+
+    $this->importSource->next();
+  }
+
+  /**
+   * Runs the import : process, save and resolve.
+   */
+  protected function importRow() {
+    $this->processImportRow();
+    $this->saveImportRow();
+    $this->resolveImportRow();
+  }
+
+  /**
+   * Executes the migration import : while source is valid, import source rows.
+   */
+  protected function doMigrationImport() : int {
+    try {
+      while ($source->valid()) {
+        $this->importRow();
+      }
+      return MigrationInterface::RESULT_COMPLETED;
+    }
+    catch (MemoryExhaustionException $memExhaustException) {
+      return MigrationInterface::RESULT_COMPLETED;
+    }
+    catch (MigrationStoppedException $migrationStoppedException) {
+      $return = $this->migration->getInterruptionResult();
+      $this->migration->clearInterruptionResult();
+      return $return;
+    }
   }
 
   /**
@@ -367,7 +469,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
       $multiple = FALSE;
-      /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
+      /**
+       * @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin
+      */
       foreach ($plugins as $plugin) {
         $definition = $plugin->getPluginDefinition();
         // Many plugins expect a scalar value but the current value of the
@@ -482,45 +586,46 @@ class MigrateExecutable implements MigrateExecutableInterface {
     }
     if ($pct_memory > $threshold) {
       $this->message->display(
-        $this->t(
-          'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
-          [
-            '@pct' => round($pct_memory * 100),
-            '@usage' => $this->formatSize($usage),
-            '@limit' => $this->formatSize($this->memoryLimit),
-          ]
-        ),
-        'warning'
-      );
+            $this->t(
+                'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
+                [
+                  '@pct' => round($pct_memory * 100),
+                  '@usage' => $this->formatSize($usage),
+                  '@limit' => $this->formatSize($this->memoryLimit),
+                ]
+            ),
+            'warning'
+        );
       $usage = $this->attemptMemoryReclaim();
       $pct_memory = $usage / $this->memoryLimit;
-      // Use a lower threshold - we don't want to be in a situation where we keep
-      // coming back here and trimming a tiny amount
+      /* Use a lower threshold - we don't want to be in a situation where we keep
+      coming back here and trimming a tiny amount */
       if ($pct_memory > (0.90 * $threshold)) {
         $this->message->display(
           $this->t(
-            'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
-            [
-              '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
-            ]
+              'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
+              [
+                '@pct' => round($pct_memory * 100),
+                '@usage' => $this->formatSize($usage),
+                '@limit' => $this->formatSize($this->memoryLimit),
+              ]
           ),
           'warning'
-        );
+          );
         return TRUE;
       }
       else {
         $this->message->display(
           $this->t(
-            'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
-            [
-              '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
-            ]
+              'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
+              [
+                '@pct' => round($pct_memory * 100),
+                '@usage' => $this->formatSize($usage),
+                '@limit' => $this->formatSize($this->memoryLimit),
+              ]
           ),
-          'warning');
+          'warning'
+          );
         return FALSE;
       }
     }
@@ -553,9 +658,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // Entity storage can blow up with caches, so clear it out.
     \Drupal::service('entity.memory_cache')->deleteAll();
 
-    // @TODO: explore resetting the container.
-
-    // Run garbage collector to further reduce memory.
+    // @todo explore resetting the container.    // Run garbage collector to further reduce memory.
     gc_collect_cycles();
 
     return memory_get_usage();
