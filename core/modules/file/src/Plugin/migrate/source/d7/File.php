@@ -24,12 +24,12 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * In this example the public files are retrieved from the source database.
  * For complete example, refer to the "Public files" migration.
- * @see d7_file.yml
  *
  * For additional configuration keys, refer to the parent classes.
  *
  * @see \Drupal\migrate\Plugin\migrate\source\SqlBase
  * @see \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
+ * @see d7_file.yml
  *
  * @MigrateSource(
  *   id = "d7_file",
