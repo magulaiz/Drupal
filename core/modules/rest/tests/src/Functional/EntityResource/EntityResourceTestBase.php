@@ -1061,7 +1061,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 200 for well-formed request.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertSame(['UNCACHEABLE (request policy)'], $response->getHeader('X-Drupal-Cache'));
     // Assert that the entity was indeed updated, and that the response body
     // contains the serialized updated entity.
     $updated_entity = $this->entityStorage->loadUnchanged($this->entity->id());
