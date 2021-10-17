@@ -56,7 +56,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testGetDatabaseConnectionInfoWithOutManualSetDbUrl() {
     $options = $this->container->get('database')->getConnectionOptions();
-    $this->assertSame($this->databasePrefix, $options['prefix']['default']);
+    $this->assertSame($this->databasePrefix, $options['prefix']);
   }
 
   /**
@@ -433,7 +433,7 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Dump some variables.
     $this->enableModules(['system', 'user']);
-    $role = Role::create(['id' => 'test_role']);
+    $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     dump($role);
     dump($role->id());
 

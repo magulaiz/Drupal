@@ -840,6 +840,7 @@ llamasarelame
 llame
 llamma
 lnumber
+loadjs
 localemark
 localetranslatedirty
 localizable
@@ -1046,6 +1047,7 @@ nothere
 notnull
 notsimpletest
 nourriture
+nowdoc
 nplurals
 nresponse
 ntfs

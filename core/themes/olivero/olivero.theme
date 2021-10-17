@@ -82,7 +82,7 @@ function olivero_preprocess_maintenance_page(&$variables) {
   }
 
   // Olivero has custom styling for the maintenance page.
-  $variables['#attached']['library'][] = 'olivero/maintenance_page';
+  $variables['#attached']['library'][] = 'olivero/maintenance-page';
 }
 
 /**
@@ -628,4 +628,11 @@ function olivero_preprocess_table(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function olivero_form_views_exposed_form_alter(&$form) {
+  $form['#attributes']['class'][] = 'form--inline';
 }
