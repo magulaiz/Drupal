@@ -4,10 +4,11 @@ namespace Drupal\quickedit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\quickedit\Access\QuickEditEntityFieldAccessCheckInterface;
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 
 /**
  * Generates in-place editing metadata for an entity field.
@@ -36,6 +37,13 @@ class MetadataGenerator implements MetadataGeneratorInterface {
   protected $editorManager;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a new MetadataGenerator.
    *
    * @param \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheckInterface $access_checker
@@ -44,11 +52,14 @@ class MetadataGenerator implements MetadataGeneratorInterface {
    *   An object that determines which editor to attach to a given field.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $editor_manager
    *   The manager for editor plugins.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   (optional) The current user.
    */
-  public function __construct(QuickEditEntityFieldAccessCheckInterface $access_checker, EditorSelectorInterface $editor_selector, PluginManagerInterface $editor_manager) {
+  public function __construct(QuickEditEntityFieldAccessCheckInterface $access_checker, EditorSelectorInterface $editor_selector, PluginManagerInterface $editor_manager, AccountInterface $current_user = NULL) {
     $this->accessChecker = $access_checker;
     $this->editorSelector = $editor_selector;
     $this->editorManager = $editor_manager;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -71,7 +82,7 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     $field_name = $items->getFieldDefinition()->getName();
 
     // Early-return if user does not have access.
-    $access = $this->accessChecker->accessEditEntityField($entity, $field_name);
+    $access = $this->accessChecker->accessEditEntityField($entity, $field_name, $this->currentUser);
     if (!$access->isAllowed()) {
       return ['access' => FALSE];
     }

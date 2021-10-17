@@ -180,7 +180,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertCacheContexts(['languages:language_content', 'languages:language_interface', 'session', 'theme', 'url.path', 'url.query_args', 'user', 'route']);
 
     // The node/add/article page is an admin path and currently uncacheable.
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'UNCACHEABLE');
+    $this->assertSame('UNCACHEABLE (poor cacheability)', $this->getSession()->getResponseHeader('X-Drupal-Dynamic-Cache'));
 
     $this->drupalGet('node/' . $node1->id());
     // Check that block is displayed on the node page when node is of type

@@ -448,14 +448,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when attempting to use unallowed authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
+    $this->assertSame(403, $response->getStatusCode());
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth']);
     $request_options[RequestOptions::HEADERS]['REST-test-auth-global'] = '1';
 
     // DX: 403 when attempting to use unallowed global authentication provider.
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceErrorResponse(403, 'The used authentication method is not allowed on this route.', $response);
+    $this->assertSame(403, $response->getStatusCode());
 
     unset($request_options[RequestOptions::HEADERS]['REST-test-auth-global']);
     $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions('GET'));
@@ -474,7 +474,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     else {
       $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
     }
-    $this->assertSame(static::$auth ? [] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
+    $this->assertSame(static::$auth ? ['UNCACHEABLE (request policy)'] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
@@ -491,10 +491,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     }
     else {
       $this->assertSame(406, $response->getStatusCode());
-      $this->assertSame(['UNCACHEABLE'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertSame(['UNCACHEABLE (poor cacheability)'], $response->getHeader('X-Drupal-Dynamic-Cache'));
     }
     $this->assertSame(['text/html; charset=UTF-8'], $response->getHeader('Content-Type'));
-    $this->assertSame(static::$auth ? [] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
+    $this->assertSame(static::$auth ? ['UNCACHEABLE (request policy)'] : ['MISS'], $response->getHeader('X-Drupal-Cache'));
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
@@ -653,7 +653,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     $path = str_replace('987654321', '{' . static::$entityTypeId . '}', $url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
     $message = 'The "' . static::$entityTypeId . '" parameter was not converted for the path "' . $path . '" (route name: "rest.entity.' . static::$entityTypeId . '.GET")';
-    $this->assertResourceErrorResponse(404, $message, $response);
+    $this->assertSame(404, $response->getStatusCode());
   }
 
   /**
@@ -812,7 +812,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     else {
       $this->assertSame([], $response->getHeader('Location'));
     }
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    $this->assertSame([], $response->getHeader('X-Drupal-Cache-Max-Age'));
     // If the entity is stored, perform extra checks.
     if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
       // Assert that the entity was indeed created, and that the response body
@@ -1061,7 +1061,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // 200 for well-formed request.
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
-    $this->assertFalse($response->hasHeader('X-Drupal-Cache'));
+    $this->assertSame(['UNCACHEABLE (request policy)'], $response->getHeader('X-Drupal-Cache'));
     // Assert that the entity was indeed updated, and that the response body
     // contains the serialized updated entity.
     $updated_entity = $this->entityStorage->loadUnchanged($this->entity->id());

@@ -26,22 +26,22 @@ class QuickEditEntityFieldAccessCheck implements AccessInterface, QuickEditEntit
    *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
-   *
-   * @todo Use the $account argument: https://www.drupal.org/node/2266809.
    */
   public function access(EntityInterface $entity, $field_name, $langcode, AccountInterface $account) {
     if (!$this->validateRequestAttributes($entity, $field_name, $langcode)) {
       return AccessResult::forbidden();
     }
 
-    return $this->accessEditEntityField($entity, $field_name);
+    return $this->accessEditEntityField($entity, $field_name, $account);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function accessEditEntityField(EntityInterface $entity, $field_name) {
-    return $entity->access('update', NULL, TRUE)->andIf($entity->get($field_name)->access('edit', NULL, TRUE));
+  public function accessEditEntityField(EntityInterface $entity, $field_name, AccountInterface $account = NULL) {
+    return $entity
+      ->access('update', $account, TRUE)
+      ->andIf($entity->get($field_name)->access('edit', $account, TRUE));
   }
 
   /**
