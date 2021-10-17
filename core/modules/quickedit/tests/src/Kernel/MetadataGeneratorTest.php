@@ -4,7 +4,6 @@ namespace Drupal\Tests\quickedit\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\quickedit\EditorSelector;
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\quickedit\MetadataGenerator;
 use Drupal\quickedit_test\MockQuickEditEntityFieldAccessCheck;
 use Drupal\filter\Entity\FilterFormat;
@@ -44,13 +43,6 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   protected $editorSelector;
 
   /**
-   * The mocked current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * The access checker object to be used by the metadata generator object.
    *
    * @var \Drupal\quickedit\Access\QuickEditEntityFieldAccessCheckInterface
@@ -63,8 +55,7 @@ class MetadataGeneratorTest extends QuickEditTestBase {
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->accessChecker = new MockQuickEditEntityFieldAccessCheck();
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
-    $this->currentUser = new AnonymousUserSession();
-    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager, $this->currentUser);
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
   }
 
   /**
@@ -142,11 +133,11 @@ class MetadataGeneratorTest extends QuickEditTestBase {
   public function testEditorWithCustomMetadata() {
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
-    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager, $this->currentUser);
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
-    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager, $this->currentUser);
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create a rich text field.
     $field_name = 'field_rich';

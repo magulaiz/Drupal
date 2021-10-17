@@ -170,7 +170,7 @@ class EditorIntegrationTest extends QuickEditTestBase {
     $this->editorManager = $this->container->get('plugin.manager.quickedit.editor');
     $this->accessChecker = new MockQuickEditEntityFieldAccessCheck();
     $this->editorSelector = $this->container->get('quickedit.editor.selector');
-    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager, new AnonymousUserSession());
+    $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
 
     // Create an entity with values for the field.
     $entity = EntityTest::create();

@@ -4,7 +4,6 @@ namespace Drupal\quickedit_test;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\quickedit\Access\QuickEditEntityFieldAccessCheckInterface;
 
 /**
@@ -15,7 +14,7 @@ class MockQuickEditEntityFieldAccessCheck implements QuickEditEntityFieldAccessC
   /**
    * {@inheritdoc}
    */
-  public function accessEditEntityField(EntityInterface $entity, $field_name, AccountInterface $account = NULL) {
+  public function accessEditEntityField(EntityInterface $entity, $field_name) {
     switch (\Drupal::state()->get('quickedit_test_field_access')) {
       case 'allowed':
         return AccessResult::allowed();
