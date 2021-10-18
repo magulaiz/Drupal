@@ -139,10 +139,7 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       // are information that belong to the entire block. Therefore, we must
       // move these properties from $content and merge them into the top-level
       // element.
-      if (isset($content['#attributes'])) {
-        $build['#attributes'] = $content['#attributes'];
-        unset($content['#attributes']);
-      }
+      unset($content['#attributes']);
       // Hide contextual links for inline blocks until the UX issues surrounding
       // editing them directly are resolved.
       // @see https://www.drupal.org/project/drupal/issues/3075308
