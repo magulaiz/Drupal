@@ -10,7 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
 class AutocompleteShimTestController extends ControllerBase {
 
   /**
-   * Provides a page with the jQuery UI autocomplete library for testing.
+   * Provides a page with the shimmed jQuery UI autocomplete library.
    *
    * @return array
    *   The render array.
@@ -57,6 +57,7 @@ class AutocompleteShimTestController extends ControllerBase {
       '#attached' => [
         'library' => [
           'core/autocomplete.jqueryui.shim',
+          // Attach jquery.simulate for use by Nightwatch tests.
           'jquery_simulate/jquery.simulate',
         ],
       ],

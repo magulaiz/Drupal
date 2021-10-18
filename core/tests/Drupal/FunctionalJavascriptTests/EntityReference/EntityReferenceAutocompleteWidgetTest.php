@@ -373,11 +373,10 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       $list = $this->getList($input);
       $description = $this->getDescription($input);
 
-      // The minChar option provides additional content to screenreaders on
-      // initial focus, so test for that here.
-      // If an input already has a description associated
-      // with it. That means the screenreader instructions must be added to the
-      // description in a visually-hidden container.
+      // The minChar option results in additional additional content conveyed to
+      // screenreaders on initial focus. If an input already has a description
+      // associated with it, the additional content must be added to the
+      // existing description in a visually hidden container.
       $inserted_screenreader_only_description = $description->find('css', '[data-autocomplete-assistive-hint]');
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
@@ -486,7 +485,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     }
 
     // Test the list: option, which provides a predefined list instead of a
-    // a dynamic request.
+    // dynamic request.
     foreach ([
       'edit-preset-list-separate-data-attributes',
       'edit-preset-list-data-autocomplete',
