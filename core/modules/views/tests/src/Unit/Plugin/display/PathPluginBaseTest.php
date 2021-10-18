@@ -9,6 +9,7 @@ namespace Drupal\Tests\views\Unit\Plugin\display;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -56,8 +57,11 @@ class PathPluginBaseTest extends UnitTestCase {
     $this->state = $this->createMock('\Drupal\Core\State\StateInterface');
     $this->pathPlugin = $this->getMockBuilder('Drupal\views\Plugin\views\display\PathPluginBase')
       ->setConstructorArgs([[], 'path_base', [], $this->routeProvider, $this->state])
-      ->onlyMethods([])
+      ->onlyMethods(['getHandlers'])
       ->getMock();
+    $this->pathPlugin->expects($this->any())
+      ->method('getHandlers')
+      ->willReturn([]);
     $this->setupContainer();
   }
 
@@ -70,6 +74,7 @@ class PathPluginBaseTest extends UnitTestCase {
       ->getMock();
     $container = new ContainerBuilder();
     $container->set('plugin.manager.views.access', $this->accessPluginManager);
+    $container->set('string_translation', $this->getStringTranslationStub());
 
     $config = [
       'views.settings' => [
