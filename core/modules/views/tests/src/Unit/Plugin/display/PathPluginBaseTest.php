@@ -9,7 +9,6 @@ namespace Drupal\Tests\views\Unit\Plugin\display;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\views\display\PathPluginBase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
