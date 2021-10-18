@@ -131,6 +131,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
       ],
       'content' => $block_content,
     ];
+    unset($expected_build['content']['#attributes']);
 
     $expected_build_with_expected_cache = $expected_build + [
       '#cache' => [
