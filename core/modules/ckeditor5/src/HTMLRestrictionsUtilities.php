@@ -127,29 +127,6 @@ final class HTMLRestrictionsUtilities {
   }
 
   /**
-   * Cleans unwanted artifacts from "allowed HTML" arrays.
-   *
-   * @param array $elements
-   *   An array of allowed elements. The structure is the same as the allowed
-   *   tags array documented in FilterInterface::getHTMLRestrictions().
-   *
-   * @return array
-   *   The array without unwanted artifacts.
-   *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
-   */
-  public static function cleanAllowedHtmlArray(array $elements): array {
-    // When recursively merging elements arrays, unkeyed boolean values can
-    // appear in attribute config arrays. This removes them.
-    foreach ($elements as $tag => $tag_config) {
-      if (is_array($tag_config)) {
-        $elements[$tag] = array_filter($tag_config);
-      }
-    }
-    return $elements;
-  }
-
-  /**
    * Adds allowed attributes to the elements array.
    *
    * @param array $elements
