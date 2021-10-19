@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\editor\EditorInterface;
 use Drupal\filter\FilterFormatInterface;
@@ -160,20 +160,22 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
         unset($allowed['*']);
       }
 
-      $diff_allowed = HTMLRestrictionsUtilities::diffAllowedElements($allowed, $provided);
-      $diff_elements = HTMLRestrictionsUtilities::diffAllowedElements($provided, $allowed);
+      $allowed = new HTMLRestrictions($allowed);
+      $provided = new HTMLRestrictions($provided);
+      $diff_allowed = $allowed->diff($provided);
+      $diff_elements = $provided->diff($allowed);
 
-      if (!empty($diff_allowed)) {
+      if ($diff_allowed->count() > 0) {
         $this->context->buildViolation($constraint->notSupportedElementsMessage)
-          ->setParameter('@list', implode(' ', HTMLRestrictionsUtilities::toReadableElements($provided)))
-          ->setParameter('@diff', implode(' ', HTMLRestrictionsUtilities::toReadableElements($diff_allowed)))
+          ->setParameter('@list', $provided->toFilterHtmlAllowedTagsString())
+          ->setParameter('@diff', $diff_allowed->toFilterHtmlAllowedTagsString())
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
       }
-      elseif (!empty($diff_elements)) {
+      elseif ($diff_elements->count() > 0) {
         $this->context->buildViolation($constraint->missingElementsMessage)
-          ->setParameter('@list', implode(' ', HTMLRestrictionsUtilities::toReadableElements($provided)))
-          ->setParameter('@diff', implode(' ', HTMLRestrictionsUtilities::toReadableElements($diff_elements)))
+          ->setParameter('@list', $provided->toFilterHtmlAllowedTagsString())
+          ->setParameter('@diff', $diff_elements->toFilterHtmlAllowedTagsString())
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
       }
