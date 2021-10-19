@@ -137,14 +137,55 @@ final class HTMLRestrictions implements \Countable {
 
   public function intersect(HTMLRestrictions $other): HTMLRestrictions {
     $intersection_based_on_tags = array_intersect_key($this->elements, $other->elements);
-    if (!empty($intersection_based_on_tags)) {
-      foreach ($intersection_based_on_tags as $overlapping_tag => $overlapping_config) {
-        if (is_array($other->elements[$overlapping_tag])) {
-          unset($intersection_based_on_tags[$overlapping_tag]);
+    $intersection = [];
+    foreach (array_keys($intersection_based_on_tags) as $tag) {
+      // If either does not allow attributes, neither does the intersection.
+      if ($this->elements[$tag] === FALSE || $other->elements[$tag] === FALSE) {
+        $intersection[$tag] = FALSE;
+      }
+      // If both allow all attributes, so does the intersection.
+      elseif ($this->elements[$tag] === TRUE && $other->elements[$tag] === TRUE) {
+        $intersection[$tag] = TRUE;
+      }
+      // If the first allows all attributes, return the second.
+      elseif ($this->elements[$tag] === TRUE) {
+        $intersection[$tag] = $other->elements[$tag];
+      }
+      // And vice versa.
+      elseif ($other->elements[$tag] === TRUE) {
+        $intersection[$tag] = $this->elements[$tag];
+      }
+      // In all other cases, we need to return the most restrictive
+      // intersection of per-attribute restrictions.
+      else {
+        $intersection[$tag] = [];
+
+        $attributes_intersection = array_intersect_key($this->elements[$tag], $other->elements[$tag]);
+        foreach (array_keys($attributes_intersection) as $attr) {
+          // If either does not allow this attribute, neither does the intersection.
+          if ($this->elements[$tag][$attr] === FALSE || $other->elements[$tag][$attr] === FALSE) {
+            $intersection[$tag][$attr] = FALSE;
+          }
+          // If both allow all attribute values, so does the intersection.
+          elseif ($this->elements[$tag][$attr] === TRUE && $other->elements[$tag][$attr] === TRUE) {
+            $intersection[$tag][$attr] = TRUE;
+          }
+          // If the first allows all attribute values, return the second.
+          elseif ($this->elements[$tag][$attr] === TRUE) {
+            $intersection[$tag][$attr] = $other->elements[$tag][$attr];
+          }
+          // And vice versa.
+          elseif ($other->elements[$tag][$attr] === TRUE) {
+            $intersection[$tag][$attr] = $this->elements[$tag][$attr];
+          }
+          else {
+            $intersection[$tag][$attr] = array_intersect($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
+          }
         }
       }
     }
-    return new static($intersection_based_on_tags);
+
+    return new static($intersection);
   }
 
   public function union(HTMLRestrictions $other): HTMLRestrictions {
