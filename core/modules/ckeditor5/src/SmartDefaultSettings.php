@@ -139,13 +139,11 @@ final class SmartDefaultSettings {
           ['%enabling_message_content' => $enabling_message_content],
         );
       }
-      unset($unsupported['*']);
       // Warn user about unsupported tags.
       if (!empty($unsupported)) {
-        $unsupported_string = implode(' ', HTMLRestrictionsUtilities::toReadableElements($unsupported));
-        $this->addTagsToSourceEditing($editor, $unsupported_string);
+        $this->addTagsToSourceEditing($editor, $unsupported);
         $messages[] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
-          '@unsupported_string' => $unsupported_string,
+          '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
         ]);
       }
     }
@@ -164,7 +162,7 @@ final class SmartDefaultSettings {
       if ($missing_attributes) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
         $messages[] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
-          '@missing_attributes' => $missing_attributes,
+          '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
         ]);
       }
     }
@@ -179,15 +177,14 @@ final class SmartDefaultSettings {
     return [$editor, $messages];
   }
 
-  private function addTagsToSourceEditing(EditorInterface $editor, string $tags): array {
+  private function addTagsToSourceEditing(EditorInterface $editor, HTMLRestrictions $tags): array {
     $messages = [];
     $settings = $editor->getSettings();
     if (!isset($settings['toolbar']['items']) || !in_array('sourceEditing', $settings['toolbar']['items'])) {
       $messages[] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
       $settings['toolbar']['items'][] = 'sourceEditing';
     }
-    $source_editing_allowed_tags = $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [];
-    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = array_merge($source_editing_allowed_tags, HTMLRestrictionsUtilities::allowedElementsStringToPluginElementsArray($tags));
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::parse($settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [])->union($tags)->toCKEditor5ElementsArray();
     $editor->setSettings($settings);
     return $messages;
   }
@@ -338,7 +335,7 @@ final class SmartDefaultSettings {
    *   NULL when nothing happened, otherwise an array with two values:
    *   1. a description (for use in a message) of which CKEditor 5 plugins were
    *      enabled to match the HTML tags allowed by the text format.
-   *   2. the unsupported tags
+   *   2. the unsupported elements, in an HTMLRestrictions value object
    */
   private function addToolbarItemsToMatchHtmlTagsInFormat(FilterFormatInterface $format, EditorInterface $editor): ?array {
     $html_restrictions_needed_elements = $format->getHtmlRestrictions();
@@ -396,13 +393,14 @@ final class SmartDefaultSettings {
       }
     }
 
+    unset($unsupported['*']);
     if (!empty($enabling_message_content)) {
       $editor->setSettings($editor_settings_to_update);
       $enabling_message_content = substr($enabling_message_content, 0, -1);
-      return [$enabling_message_content, $unsupported];
+      return [$enabling_message_content, new HTMLRestrictions($unsupported)];
     }
     else {
-      return [NULL, $unsupported];
+      return [NULL, new HTMLRestrictions($unsupported)];
     }
   }
 
@@ -418,7 +416,7 @@ final class SmartDefaultSettings {
    *   NULL when nothing happened, otherwise an array with two values:
    *   1. a description (for use in a message) of which CKEditor 5 plugins were
    *      enabled to match the HTML attributes allowed by the text format.
-   *   2. the unsupported attributes
+   *   2. the unsupported elements, in an HTMLRestrictions value object
    */
   private function addToolbarItemsToMatchHtmlAttributesInFormat(FilterFormatInterface $format, EditorInterface $editor): ?array {
     $html_restrictions_needed_elements = $format->getHtmlRestrictions();
@@ -536,7 +534,6 @@ final class SmartDefaultSettings {
       }
 
       $supported_tags_with_unsupported_attributes = array_filter($supported_tags_with_unsupported_attributes);
-      $missing_attributes = implode(' ', HTMLRestrictionsUtilities::toReadableElements($supported_tags_with_unsupported_attributes));
 
       // If additional plugins need to be enable to support attribute config,
       // loop through the list to enable the plugins and build a UI message that
@@ -568,14 +565,14 @@ final class SmartDefaultSettings {
         // Some plugins enabled, maybe some missing attributes.
         return [
           substr($enabled_for_attributes_message_content, 0, -2),
-          $missing_attributes,
+          new HTMLRestrictions($supported_tags_with_unsupported_attributes),
         ];
       }
       else {
         // No plugins enabled, maybe some missing attributes.
         return [
           NULL,
-          $missing_attributes,
+          new HTMLRestrictions($supported_tags_with_unsupported_attributes),
         ];
       }
     }
