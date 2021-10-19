@@ -105,15 +105,13 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
 
       $content = $block->build();
 
-      // We don't output the block render data if there are no render elements
-      // found, but we want to capture the cache metadata from the block
-      // regardless.
-      $event->addCacheableDependency(CacheableMetadata::createFromRenderArray($content));
-
       $is_content_empty = Element::isEmpty($content);
       $is_placeholder_ready = $event->inPreview() && $block instanceof PreviewFallbackInterface;
       // If the content is empty and no placeholder is available, return.
       if ($is_content_empty && !$is_placeholder_ready) {
+        // Even though block is empty, it may contain cache metadata that we
+        // need to capture.
+        $event->addCacheableDependency(CacheableMetadata::createFromRenderArray($content));
         return;
       }
 
