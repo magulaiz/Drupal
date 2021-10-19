@@ -112,7 +112,7 @@ final class HTMLRestrictions implements \Countable {
   /**
    * Compares two HTML restrictions.
    *
-   * @param array $other
+   * @param \Drupal\ckeditor5\HTMLRestrictions $other
    *   The HTML restrictions to compare to.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
@@ -159,8 +159,15 @@ final class HTMLRestrictions implements \Countable {
     return new static($union);
   }
 
-  // all wildcards processed
-  // @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions
+  /**
+   * Gets allowed elements, optionally with wildcards processed.
+   *
+   * @param bool $retain_wildcard
+   *
+   * @return array
+   *
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions
+   */
   public function getAllowedElements(bool $retain_wildcard = FALSE): array {
     $elements = $this->elements;
     // @todo move this to another helper method which returns a new value object with everything processed
@@ -216,7 +223,7 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
-   * Gets the HTML restrictions
+   * Gets the HTML restrictions.
    *
    * @return string[]
    *   An array of allowed elements, structured in the manner expected by the

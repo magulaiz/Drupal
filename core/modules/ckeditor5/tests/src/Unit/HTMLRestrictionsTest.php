@@ -24,7 +24,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
   public function providerCount(): \Generator {
     yield 'empty' => [
       [],
-      0
+      0,
     ];
 
     yield 'one' => [
@@ -55,29 +55,29 @@ class HTMLRestrictionsTest extends UnitTestCase {
     // All empty cases.
     yield 'empty string' => [
       '',
-      []
+      [],
     ];
     yield 'empty array' => [
       [],
-      []
+      [],
     ];
     yield 'whitespace string' => [
       '             ',
-      []
+      [],
     ];
 
     // Some nonsense cases.
     yield 'nonsense string' => [
       'Hello there, this looks nothing like a HTML restriction.',
-      []
+      [],
     ];
     yield 'nonsense array #1' => [
       ['foo', 'bar'],
-      []
+      [],
     ];
     yield 'nonsense array #2' => [
       ['foo' => TRUE, 'bar' => FALSE],
-      []
+      [],
     ];
 
     // Single tag cases.
@@ -162,7 +162,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ['name' => 'a'],
         ['name' => 'p'],
         ['name' => 'br'],
-      ]
+      ],
     ];
 
     yield 'realistic' => [
@@ -181,13 +181,12 @@ class HTMLRestrictionsTest extends UnitTestCase {
           'name' => 'p',
           'attributes' => [
             'data-*' => TRUE,
-          ]
+          ],
         ],
         ['name' => 'br'],
-      ]
+      ],
     ];
   }
-
 
   /**
    * @covers ::diff()
