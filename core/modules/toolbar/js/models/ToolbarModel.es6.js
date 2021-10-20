@@ -128,6 +128,11 @@
           bottom: 0,
           left: 0,
         },
+
+        /**
+         * Indicates that the page is fully loaded.
+         */
+        isPageLoaded: false,
       },
 
       /**
