@@ -31,6 +31,12 @@
           height: $('#toolbar-administration').outerHeight()
         });
         Drupal.toolbar.models.toolbarModel = model;
+        Drupal.toolbar.checkReadyState = setInterval(function () {
+          if (document.readyState === "complete") {
+            clearInterval(Drupal.toolbar.checkReadyState);
+            model.set('isPageLoaded', true);
+          }
+        }, 100);
         Object.keys(options.breakpoints).forEach(function (label) {
           var mq = options.breakpoints[label];
           var mql = window.matchMedia(mq);

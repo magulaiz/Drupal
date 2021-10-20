@@ -52,7 +52,7 @@
         this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
         this.listenTo(
           this.model,
-          'change:activeTab change:orientation change:isOriented',
+          'change:activeTab change:orientation change:isOriented change:isPageLoaded',
           this.updateToolbarHeight,
         );
 
