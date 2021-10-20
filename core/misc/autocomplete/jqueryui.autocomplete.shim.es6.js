@@ -428,12 +428,22 @@
       },
     );
   };
+  console.log('fn', $.fn);
+  console.log('$.autocomplete', $.fn.autocomplete);
+  console.log('$.fn.autocomplete', $.fn.autocomplete);
 
+  const oldAutocomplete = $.fn.autocomplete;
+  console.log('oldAutocomplete', oldAutocomplete);
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
   // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for
   // the functionality.
   $.fn.extend({
     autocomplete(...args) {
+      if (!this[0].hasAttribute('data-autocomplete-path')) {
+        return oldAutocomplete.apply(this, args);
+      } else {
+        console.log('has the path');
+      }
       Drupal.deprecationError({
         message:
           'The autocomplete() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',

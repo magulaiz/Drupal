@@ -34,6 +34,7 @@ autocomplete.jqueryui.shim:
     - core/jquery
     - core/drupal.autocomplete
     - core/drupal.jquery.position
+    - core/jquery.ui.autocomplete  #temporary for shim checking
 
 backbone:
   remote: https://github.com/jashkenas/backbone

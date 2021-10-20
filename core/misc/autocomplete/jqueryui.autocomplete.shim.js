@@ -259,12 +259,23 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
   };
 
+  console.log('fn', $.fn);
+  console.log('$.autocomplete', $.fn.autocomplete);
+  console.log('$.fn.autocomplete', $.fn.autocomplete);
+  var oldAutocomplete = $.fn.autocomplete;
+  console.log('oldAutocomplete', oldAutocomplete);
   $.fn.extend({
     autocomplete: function autocomplete() {
       var _this3 = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
+      }
+
+      if (!this[0].hasAttribute('data-autocomplete-path')) {
+        return oldAutocomplete.apply(this, args);
+      } else {
+        console.log('has the path');
       }
 
       Drupal.deprecationError({
