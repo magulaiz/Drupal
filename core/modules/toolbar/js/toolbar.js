@@ -32,7 +32,7 @@
         });
         Drupal.toolbar.models.toolbarModel = model;
         Drupal.toolbar.checkReadyState = setInterval(function () {
-          if (document.readyState === "complete") {
+          if (document.readyState === 'complete') {
             clearInterval(Drupal.toolbar.checkReadyState);
             model.set('isPageLoaded', true);
           }
