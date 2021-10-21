@@ -45,7 +45,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   };
 
-  Drupal.autocompleteShim.defaultOptions = {};
+  Drupal.autocompleteShim.defaultOptions = {
+    list: []
+  };
 
   Drupal.autocompleteShim.jqueryUiShimInit = function (instance, options) {
     var usingBCMarkup = Drupal.hasOwnProperty('jQueryAutocompleteStableMarkup');
@@ -62,9 +64,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
-    instance.implementInput();
-    instance.implementList();
-    instance.liveRegion = document.querySelector('#drupal-live-announce');
+
+    if (instance.options.inputClass.length > 0) {
+      instance.options.inputClass.split(' ').forEach(function (className) {
+        return instance.input.classList.add(className);
+      });
+    }
+
+    if (instance.options.ulClass.length > 0) {
+      instance.options.ulClass.split(' ').forEach(function (className) {
+        return instance.combobox.listbox.ul.classList.add(className);
+      });
+    }
+
+    instance.combobox.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
 
     if (instance.options.allowRepeatValues === null) {
@@ -87,13 +100,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           e.preventDefault();
           this.preventCloseOnBlur = true;
           var selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+          this.listbox.highlightItem(this.listbox.ul.querySelector(selector));
         }
 
         if (keyCode === this.keyCode.RETURN) {
-          var active = instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
+          var active = instance.combobox.listbox.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
 
-          if (active.length || instance.ul.contains(document.activeElement)) {
+          if (active.length || instance.combobox.listbox.ul.contains(document.activeElement)) {
             e.preventDefault();
           }
         }
@@ -102,28 +115,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       if (this.input.nodeName === 'INPUT' && !this.isOpened && this.options.list.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
         e.preventDefault();
         this.preventCloseOnBlur = true;
-        var typed = this.extractLastInputValue();
+        var typed = instance.extractLastInputValue();
 
         if (!typed && this.options.minChars < 1) {
-          this.ul.innerHTML = '';
-          this.suggestionItems = this.options.list;
-          this.prepareSuggestionList();
+          this.listbox.ul.innerHTML = '';
+          instance.suggestionItems = this.options.list;
+          instance.prepareSuggestionList();
           this.open();
         } else {
-          this.displayResults();
+          instance.displayResults();
         }
 
         if (this.isOpened) {
           var _selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
 
-          this.highlightItem(this.ul.querySelector(_selector));
+          this.listbox.highlightItem(this.ul.querySelector(_selector));
         }
       }
 
       this.removeAssistiveHint();
     }
 
-    instance.inputKeyDown = shimmedInputKeyDown;
+    instance.combobox.inputKeyDown = shimmedInputKeyDown;
 
     function autocompletePrepareSuggestionList(typed) {
       var _this = this;
@@ -147,9 +160,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         list: this.suggestions
       });
 
-      this._renderMenu(this.ul, this.suggestions);
+      this._renderMenu(this.combobox.listbox.ul, this.suggestions);
 
       this.prepareListItemAttributes();
+      return this.suggestions;
     }
 
     instance.prepareSuggestionList = autocompletePrepareSuggestionList;
@@ -157,7 +171,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     instance.prepareListItemAttributes = function () {
       var _this2 = this;
 
-      this.ul.querySelectorAll('li').forEach(function (li, index) {
+      this.combobox.listbox.ul.querySelectorAll('li').forEach(function (li, index) {
         if (_this2.options.itemClass.length > 0) {
           _this2.options.itemClass.split(' ').forEach(function (className) {
             return li.classList.add(className);
@@ -166,13 +180,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         li.setAttribute('role', 'option');
         li.setAttribute('tabindex', '-1');
+        li.setAttribute('data-item-index', index);
         li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-posinset', index + 1);
         li.setAttribute('aria-selected', 'false');
-
-        li.onblur = function (e) {
-          return _this2.blurHandler(e);
-        };
 
         if (instance.hasOwnProperty('addBcListItemClasses')) {
           instance.addBcListItemClasses(li, index);
@@ -230,17 +240,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     var closeOnClickOutside = function closeOnClickOutside(event) {
-      var menuElement = instance.ul;
+      var menuElement = instance.combobox.listbox.ul;
       var targetInWidget = event.target === instance.input || event.target === menuElement || $.contains(menuElement, event.target);
 
       if (!targetInWidget) {
-        instance.close();
+        instance.combobox.close();
       }
     };
 
     instance.input.addEventListener('autocomplete-open', function () {
       document.body.addEventListener('mousedown', closeOnClickOutside);
-      $(instance.ul).position({
+      $(instance.combobox.listbox.ul).position({
         of: instance.input,
         my: 'left top',
         at: 'left bottom',
@@ -250,7 +260,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     instance.input.addEventListener('autocomplete-close', function () {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
-    instance.ul.addEventListener('mousedown', function (e) {
+    instance.combobox.listbox.ul.addEventListener('mousedown', function (e) {
       e.preventDefault();
     });
     Object.keys(Drupal.autocompleteShim.overrides).forEach(function (propertyToOverride) {
@@ -287,16 +297,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
         switch (method) {
           case 'widget':
-            return $(instance.ul);
+            return $(instance.combobox.listbox.ul);
 
           case 'instance':
             var instanceToReturn = {
               document: $(document),
               element: $(instance.input),
               menu: {
-                element: $(instance.ul)
+                element: $(instance.combobox.listbox.ul)
               },
-              liveRegion: $(instance.liveRegion),
+              liveRegion: $(instance.combobox.liveRegion),
               isMultiLine: instance.options.isMultiLine,
               isNewMenu: null,
               options: instance.options,
@@ -336,7 +346,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
 
-              if (instance.ul.children.length === 0) {
+              if (instance.combobox.listbox.ul.children.length === 0) {
                 instance.close();
               } else {
                 instance.open();
@@ -357,7 +367,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
               var optionName = args[1],
                   optionValue = args[2];
-              var listBoxId = instance.ul.getAttribute('id');
+              var listBoxId = instance.combobox.listbox.ul.getAttribute('id');
 
               switch (optionName) {
                 case 'appendTo':
@@ -382,11 +392,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   }
 
                   if (appendTo) {
-                    if (!appendTo.contains(instance.ul)) {
-                      appendTo.appendChild(instance.ul);
+                    if (!appendTo.contains(instance.combobox.listbox.ul)) {
+                      appendTo.appendChild(instance.combobox.listbox.ul);
                     }
 
-                    instance.ul = appendTo.querySelector("#".concat(listBoxId));
+                    instance.combobox.listbox.ul = appendTo.querySelector("#".concat(listBoxId));
                   }
 
                   instance.input.setAttribute('data-autocomplete-list-appended', true);
@@ -395,7 +405,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 case 'classes':
                   Object.keys(optionValue).forEach(function (key) {
                     if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
-                      var element = key === 'ui-autocomplete' ? instance.ul : instance.input;
+                      var element = key === 'ui-autocomplete' ? instance.combobox.listbox.ul : instance.input;
                       optionValue[key].split(' ').forEach(function (className) {
                         element.classList.add(className);
                       });
@@ -406,9 +416,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 case 'classes.ui-autocomplete':
                   optionValue.split(' ').forEach(function (className) {
-                    instance.ul.classList.add(className);
+                    instance.combobox.listbox.ul.classList.add(className);
                   });
-                  instance.ul.classList.remove('ui-autocomplete');
+                  instance.combobox.listbox.ul.classList.remove('ui-autocomplete');
                   break;
 
                 case 'classes.ui-autocomplete-input':
@@ -420,11 +430,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 case 'disabled':
                   instance.options.disabled = optionValue;
-                  $(instance.ul).toggleClass('ui-autocomplete-disabled', optionValue);
+                  $(instance.combobox.listbox.ul).toggleClass('ui-autocomplete-disabled', optionValue);
                   break;
 
                 case 'position':
-                  $(instance.ul).position(_objectSpread({
+                  $(instance.combobox.listbox.ul).position(_objectSpread({
                     of: instance.input,
                     my: 'left top',
                     at: 'left bottom',
@@ -448,12 +458,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   } else if (typeof optionValue === 'string') {
                     try {
                       var list = JSON.parse(optionValue);
-                      instance.options.list = list;
+                      instance.options.source = list;
                     } catch (e) {
-                      instance.options.path = optionValue;
+                      instance.options.source = optionValue;
                     }
                   } else {
-                    instance.options.list = optionValue;
+                    instance.options.source = optionValue;
                   }
 
                   break;

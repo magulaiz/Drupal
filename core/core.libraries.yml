@@ -2,7 +2,7 @@
 a11y_autocomplete:
   version: VERSION
   js:
-    assets/vendor/a11y_autocomplete/a11y.autocomplete.js: { weight: -2 }
+    assets/vendor/a11y_autocomplete/a11y.autocomplete.min.js: { weight: -2 }
   css:
     component:
       assets/vendor/a11y_autocomplete/a11y.autocomplete.css: {}
@@ -148,6 +148,7 @@ drupal.autocomplete:
     component:
       misc/autocomplete/autocomplete.css: {}
   dependencies:
+    - core/jquery
     - core/drupal
     - core/drupalSettings
     - core/a11y_autocomplete
