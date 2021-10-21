@@ -646,7 +646,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    * Test a form that includes shimmed and non-shimmed autocomplete inputs.
    */
   public function testPartialShimUse() {
-    $this->markTestSkipped('This needs to work differently now that markup and API BC are separate');
+    $this->markTestSkipped('This needs to work differently now that markup and API BC are separate, and the shim is loaded on any element with #autocomplete_route_name that renders with a data-autocomplete-path attribute.');
 
     $this->drupalGet('drupal_autocomplete/selective-shim-form');
     $page = $this->getSession()->getPage();

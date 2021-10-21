@@ -171,12 +171,6 @@ abstract class FormElement extends RenderElement implements FormElementInterface
    *     autocomplete JavaScript library.
    *   - #autocomplete_route_parameters: The parameters to be used in
    *     conjunction with the route name.
-   *   - #use-drupal-10-autocomplete: As of Drupal 9.3, jQuery UI Autocomplete
-   *     is no longer used by Drupal core. It has been replaced with the core
-   *     library A11yAutocomplete. By default, a shim is present that provides
-   *     backwards compatibility with the jQuery UI Autocomplete API and markup.
-   *     This shim will be removed in Drupal 10. Set this property to TRUE to
-   *     use autocomplete without the jQuery UI shim.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param array $complete_form

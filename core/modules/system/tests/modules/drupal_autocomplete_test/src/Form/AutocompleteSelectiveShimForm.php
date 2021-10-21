@@ -33,7 +33,6 @@ class AutocompleteSelectiveShimForm extends FormBase {
       '#title' => $this->t('Not Shimmed'),
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#use-drupal-10-autocomplete' => TRUE,
     ];
 
     return $form;
