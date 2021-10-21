@@ -39,8 +39,8 @@
       }
     };
 
-    const toggleCollapsed = () => {
-      if (window.matchMedia('(min-width: 48em)').matches) {
+    const toggleCollapsed = (matches) => {
+      if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           let width = 0;
 
@@ -60,6 +60,10 @@
       }
     };
 
+    const handleToggleMQ = (event) => {
+      toggleCollapsed(event.matches);
+    };
+
     $tab.addClass('position-container is-horizontal-enabled');
 
     $target.find('.js-tab').each((index, element) => {
@@ -68,10 +72,10 @@
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    window.addEventListener(
-      'resize.tabs',
-      Drupal.debounce(toggleCollapsed, 150),
-    );
+
+    const mql = window.matchMedia('(min-width: 48em)');
+    mql.addListener(handleToggleMQ);
+    toggleCollapsed(mql.matches);
   }
   /**
    * Initialize the tabs JS.

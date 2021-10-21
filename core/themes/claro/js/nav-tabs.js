@@ -37,8 +37,8 @@
       }
     };
 
-    var toggleCollapsed = function toggleCollapsed() {
-      if (window.matchMedia('(min-width: 48em)').matches) {
+    var toggleCollapsed = function toggleCollapsed(matches) {
+      if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           var width = 0;
           $target.find('.js-tabs-link').each(function (index, value) {
@@ -55,13 +55,19 @@
       }
     };
 
+    var handleToggleMQ = function handleToggleMQ(event) {
+      toggleCollapsed(event.matches);
+    };
+
     $tab.addClass('position-container is-horizontal-enabled');
     $target.find('.js-tab').each(function (index, element) {
       var $item = $(element);
       $item.attr('data-original-order', $item.index());
     });
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    window.addEventListener('resize.tabs', Drupal.debounce(toggleCollapsed, 150));
+    var mql = window.matchMedia('(min-width: 48em)');
+    mql.addListener(handleToggleMQ);
+    toggleCollapsed(mql.matches);
   }
 
   Drupal.behaviors.navTabs = {
