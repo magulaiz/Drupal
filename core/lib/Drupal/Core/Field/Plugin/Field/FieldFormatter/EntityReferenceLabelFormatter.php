@@ -48,7 +48,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    $summary[] = $this->getSetting('link') ? t('Link to the referenced entity') : t('No link');
+    $summary[] = $this->getSetting('link') ? $this->t('Link to the referenced entity') : $this->t('No link');
     return $summary;
   }
 
