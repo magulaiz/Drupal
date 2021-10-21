@@ -74,7 +74,7 @@
         ? 'label'
         : 'value';
       // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
-      return $(`<li class="hoobastank">`)
+      return $(`<li>`)
         .addClass(instance.options.itemClass)
         .append($('<a>').html(item[propertyToDisplay]))
         .appendTo(ul);
