@@ -22,20 +22,24 @@
 
   Drupal.jQueryAutocompleteStableMarkup.init = function (instance, options) {
     instance.options = Object.assign(instance.options, Drupal.autocompleteShim.stableOptions, Drupal.jQueryAutocompleteStableMarkup.options);
-    instance.implementInput();
-    instance.implementList();
+    instance.options.inputClass.split(' ').forEach(function (aClass) {
+      instance.input.classList.add(aClass);
+    });
+    instance.options.ulClass.split(' ').forEach(function (aClass) {
+      instance.combobox.listbox.ul.classList.add(aClass);
+    });
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      var listBoxId = instance.ul.getAttribute('id');
+      var listBoxId = instance.combobox.listbox.ul.getAttribute('id');
       var uiFront = $(instance.input).closest('.ui-front, dialog');
       var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector("#".concat(listBoxId));
+      appendTo.appendChild(instance.combobox.listbox.ul);
+      instance.combobox.listbox.ul = document.querySelector("#".concat(listBoxId));
     }
 
     instance._renderItem = function (ul, item) {
       var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-      return $("<li>").addClass(instance.options.itemClass).append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
+      return $("<li class=\"hoobastank\">").addClass(instance.options.itemClass).append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {
@@ -45,18 +49,18 @@
     };
 
     instance.input.addEventListener('focus', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
+      instance.combobox.listbox.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');
       });
     });
     instance.input.addEventListener('autocomplete-highlight', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
+      instance.combobox.listbox.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');
       });
       document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
     });
-    instance.ul.addEventListener('mouseover', function (e) {
-      instance.ul.querySelectorAll('a').forEach(function (item) {
+    instance.combobox.listbox.ul.addEventListener('mouseover', function (e) {
+      instance.combobox.listbox.ul.querySelectorAll('a').forEach(function (item) {
         item.classList.remove('ui-state-active');
       });
 

@@ -32,12 +32,16 @@
       Drupal.jQueryAutocompleteStableMarkup.options,
     );
 
-    // Apply class changes.
-    instance.implementInput();
-    instance.implementList();
+    instance.options.inputClass.split(' ').forEach((aClass) => {
+      instance.input.classList.add(aClass);
+    });
+
+    instance.options.ulClass.split(' ').forEach((aClass) => {
+      instance.combobox.listbox.ul.classList.add(aClass);
+    });
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      const listBoxId = instance.ul.getAttribute('id');
+      const listBoxId = instance.combobox.listbox.ul.getAttribute('id');
       const uiFront = $(instance.input).closest('.ui-front, dialog');
 
       // If the autocomplete is contained by an element with the class
@@ -45,8 +49,8 @@
       // append it to the document body.
       const appendTo =
         uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector(`#${listBoxId}`);
+      appendTo.appendChild(instance.combobox.listbox.ul);
+      instance.combobox.listbox.ul = document.querySelector(`#${listBoxId}`);
     }
 
     /**
@@ -85,7 +89,7 @@
     // If the input receives focus, remove the 'ui-state-active' class from all
     // result items.
     instance.input.addEventListener('focus', () => {
-      instance.ul
+      instance.combobox.listbox.ul
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
         .forEach((element) => {
           element.classList.remove('ui-state-active');
@@ -95,7 +99,7 @@
     // When a result item is highlighted, jQuery UI adds a 'ui-state-active'
     // class to it.
     instance.input.addEventListener('autocomplete-highlight', () => {
-      instance.ul
+      instance.combobox.listbox.ul
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
         .forEach((element) => {
           element.classList.remove('ui-state-active');
@@ -110,8 +114,8 @@
     // A currently focused item will have this class, but hovering another item
     // in the list will move the ui-state-active class to the hovered item,
     // whether or not it is focused.
-    instance.ul.addEventListener('mouseover', (e) => {
-      instance.ul.querySelectorAll('a').forEach((item) => {
+    instance.combobox.listbox.ul.addEventListener('mouseover', (e) => {
+      instance.combobox.listbox.ul.querySelectorAll('a').forEach((item) => {
         item.classList.remove('ui-state-active');
       });
 
