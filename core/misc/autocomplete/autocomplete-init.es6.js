@@ -1,4 +1,4 @@
-((Drupal, drupalSettings, A11yAutocomplete, once) => {
+(($, Drupal, drupalSettings, A11yAutocomplete, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
 
@@ -62,6 +62,32 @@
           'The data-autocomplete-first-character-blacklist attribute is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use data-autocomplete-first-character-ignore-list instead See https://www.drupal.org/node/3083715',
       });
     }
+
+    // Transform the path into a source callback and handle ajax results.
+    const path = autocompleteInput.dataset.autocompletePath;
+    const cache = {};
+
+    if (path) {
+      options.source = (search, results) => {
+        function sourceCallbackHandler(data) {
+          cache[search] = data;
+          results(data);
+        }
+
+        if (search in cache) {
+          results(cache[search]);
+        } else {
+          const options = $.extend(
+            { success: sourceCallbackHandler, data: { q: search } },
+            { dataType: 'json', jsonp: false },
+          );
+          $.ajax(path, options);
+        }
+      };
+    }
+
+    // Clean up the attribute.
+    delete autocompleteInput.dataset.autocompletePath;
 
     const autocomplete = A11yAutocomplete(autocompleteInput, options);
     const instance = autocomplete._internal_object;
@@ -127,4 +153,4 @@
       }
     },
   };
-})(Drupal, drupalSettings, A11yAutocomplete, once);
+})(jQuery, Drupal, drupalSettings, A11yAutocomplete, once);

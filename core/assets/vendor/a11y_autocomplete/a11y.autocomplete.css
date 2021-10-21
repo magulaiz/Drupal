@@ -2,24 +2,28 @@
   position: relative;
 }
 
-[data-autocomplete-item-list] {
+[data-autocomplete-wrapper] [role='listbox'] {
   position: absolute;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-[data-autocomplete-item-list][hidden],
-[data-autocomplete-item-list]:empty {
+
+[data-autocomplete-wrapper] [role='listbox'][hidden],
+[data-autocomplete-wrapper] [role='listbox']:empty {
   display: none;
 }
-[data-autocomplete-item-list] li {
+
+[data-autocomplete-wrapper] [role='option'] {
   display: list-item;
 }
-[data-autocomplete-item-list] li a:hover {
+
+[data-autocomplete-wrapper] [role='option'] a:hover {
   cursor: pointer;
 }
 
-[data-autocomplete-live-region] {
+[data-autocomplete-wrapper] [data-autocomplete-live-region],
+[data-autocomplete-wrapper] [id^='assistive-hint'] {
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);

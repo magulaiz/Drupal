@@ -43,7 +43,9 @@
     }
   };
 
-  Drupal.autocompleteShim.defaultOptions = {};
+  Drupal.autocompleteShim.defaultOptions = {
+    list: [],
+  };
 
   /**
    * Provides overrides needed for jQuery UIs backwards compatibility.
@@ -83,10 +85,22 @@
     );
 
     // Apply class changes.
-    instance.implementInput();
-    instance.implementList();
+    if (instance.options.inputClass.length > 0) {
+      instance.options.inputClass
+        .split(' ')
+        .forEach((className) => instance.input.classList.add(className));
+    }
+    if (instance.options.ulClass.length > 0) {
+      instance.options.ulClass
+        .split(' ')
+        .forEach((className) =>
+          instance.combobox.listbox.ul.classList.add(className),
+        );
+    }
 
-    instance.liveRegion = document.querySelector('#drupal-live-announce');
+    instance.combobox.liveRegion = document.querySelector(
+      '#drupal-live-announce',
+    );
 
     instance.options.isMultiline =
       instance.input.tagName === 'TEXTAREA' ||
@@ -101,6 +115,8 @@
 
     /**
      * Alters input keydown behavior to match jQuery UI.
+     *
+     * "this" refers to the combobox.
      *
      * @param {Event} e
      *   The keydown event.
@@ -127,7 +143,7 @@
           // down arrow was pressed.
           const selector =
             keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+          this.listbox.highlightItem(this.listbox.ul.querySelector(selector));
         }
 
         // jQuery UI explicitly cancels 'return' keydown events when an item is
@@ -137,10 +153,13 @@
         // tests will also pass with the shimmed autocomplete.
         if (keyCode === this.keyCode.RETURN) {
           // If this is not null, then an item is highlighted.
-          const active = instance.ul.querySelectorAll(
+          const active = instance.combobox.listbox.ul.querySelectorAll(
             '.ui-menu-item-wrapper.ui-state-active',
           );
-          if (active.length || instance.ul.contains(document.activeElement)) {
+          if (
+            active.length ||
+            instance.combobox.listbox.ul.contains(document.activeElement)
+          ) {
             e.preventDefault();
           }
         }
@@ -163,7 +182,7 @@
         this.preventCloseOnBlur = true;
 
         // See if anything has been typed into the input.
-        const typed = this.extractLastInputValue();
+        const typed = instance.extractLastInputValue();
 
         // In instances where nothing is typed and there is no character
         // minimum, the list must be opened using something other than
@@ -171,19 +190,19 @@
         if (!typed && this.options.minChars < 1) {
           // Reset the item list to avoid duplication when prepareItemList() is
           // called.
-          this.ul.innerHTML = '';
+          this.listbox.ul.innerHTML = '';
 
           // Move the predefined list into suggestionItems, so they can be
           // processed by prepareSuggestionList().
-          this.suggestionItems = this.options.list;
+          instance.suggestionItems = this.options.list;
 
           // Convert the predefined list into markup.
-          this.prepareSuggestionList();
+          instance.prepareSuggestionList();
 
           // Make the markup visible.
           this.open();
         } else {
-          this.displayResults();
+          instance.displayResults();
         }
 
         // If the arrow key press resulted in the opening of a list, then
@@ -192,7 +211,7 @@
         if (this.isOpened) {
           const selector =
             keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+          this.listbox.highlightItem(this.ul.querySelector(selector));
         }
       }
 
@@ -201,7 +220,7 @@
       // event to avoid unnecessary repetition.
       this.removeAssistiveHint();
     }
-    instance.inputKeyDown = shimmedInputKeyDown;
+    instance.combobox.inputKeyDown = shimmedInputKeyDown;
 
     /**
      * Creates a suggestion list based on a typed value.
@@ -235,13 +254,14 @@
       // prepareSuggestionList(). This call to _renderMenu is provided instead
       // of the forEach loop that creates the item list so jQuery UI's
       // extension points are supported.
-      this._renderMenu(this.ul, this.suggestions);
+      this._renderMenu(this.combobox.listbox.ul, this.suggestions);
 
       // Add the list attributes needed for functionality that would have
       // been added in A11yAutocomplete were the class not overridden to
       // accommodate the use of extension points such as the above
       // `this._renderMenu`.
       this.prepareListItemAttributes();
+      return this.suggestions;
     }
     instance.prepareSuggestionList = autocompletePrepareSuggestionList;
 
@@ -255,7 +275,7 @@
      */
     // eslint-disable-next-line func-names
     instance.prepareListItemAttributes = function () {
-      this.ul.querySelectorAll('li').forEach((li, index) => {
+      this.combobox.listbox.ul.querySelectorAll('li').forEach((li, index) => {
         if (this.options.itemClass.length > 0) {
           this.options.itemClass
             .split(' ')
@@ -263,10 +283,9 @@
         }
         li.setAttribute('role', 'option');
         li.setAttribute('tabindex', '-1');
+        li.setAttribute('data-item-index', index);
         li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-posinset', index + 1);
         li.setAttribute('aria-selected', 'false');
-        li.onblur = (e) => this.blurHandler(e);
 
         // Everything prior to this is logic that also happens in the
         // A11yAutocomplete suggestionItems() method. Below is logic specific
@@ -388,13 +407,13 @@
      *   A mousedown event.
      */
     const closeOnClickOutside = (event) => {
-      const menuElement = instance.ul;
+      const menuElement = instance.combobox.listbox.ul;
       const targetInWidget =
         event.target === instance.input ||
         event.target === menuElement ||
         $.contains(menuElement, event.target);
       if (!targetInWidget) {
-        instance.close();
+        instance.combobox.close();
       }
     };
     // jQuery UI will close the autocomplete results on any mousedown that lands
@@ -402,7 +421,7 @@
     instance.input.addEventListener('autocomplete-open', () => {
       document.body.addEventListener('mousedown', closeOnClickOutside);
       // Position the list directly under the input.
-      $(instance.ul).position({
+      $(instance.combobox.listbox.ul).position({
         of: instance.input,
         my: 'left top',
         at: 'left bottom',
@@ -414,7 +433,7 @@
     });
 
     // jQuery UI has a mousedown listener on the list that prevents default.
-    instance.ul.addEventListener('mousedown', (e) => {
+    instance.combobox.listbox.ul.addEventListener('mousedown', (e) => {
       e.preventDefault();
     });
 
@@ -476,7 +495,7 @@
         switch (method) {
           case 'widget':
             // The widget option returns the autocomplete item list.
-            return $(instance.ul);
+            return $(instance.combobox.listbox.ul);
           case 'instance':
             // This is the one method that will not return an exact replica
             // of what jQuery UI would return, as jQuery UI autocomplete
@@ -487,9 +506,9 @@
               document: $(document),
               element: $(instance.input),
               menu: {
-                element: $(instance.ul),
+                element: $(instance.combobox.listbox.ul),
               },
-              liveRegion: $(instance.liveRegion),
+              liveRegion: $(instance.combobox.liveRegion),
               isMultiLine: instance.options.isMultiLine,
               isNewMenu: null,
               options: instance.options,
@@ -560,7 +579,7 @@
             ) {
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
-              if (instance.ul.children.length === 0) {
+              if (instance.combobox.listbox.ul.children.length === 0) {
                 instance.close();
               } else {
                 instance.open();
@@ -585,7 +604,7 @@
             // If args[2] has a value, then this is setting an option.
             if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
               const [, optionName, optionValue] = args;
-              const listBoxId = instance.ul.getAttribute('id');
+              const listBoxId = instance.combobox.listbox.ul.getAttribute('id');
 
               switch (optionName) {
                 case 'appendTo':
@@ -610,10 +629,12 @@
                   }
 
                   if (appendTo) {
-                    if (!appendTo.contains(instance.ul)) {
-                      appendTo.appendChild(instance.ul);
+                    if (!appendTo.contains(instance.combobox.listbox.ul)) {
+                      appendTo.appendChild(instance.combobox.listbox.ul);
                     }
-                    instance.ul = appendTo.querySelector(`#${listBoxId}`);
+                    instance.combobox.listbox.ul = appendTo.querySelector(
+                      `#${listBoxId}`,
+                    );
                   }
 
                   // Add attribute that flags the shim initializer to skip the
@@ -634,7 +655,7 @@
                     ) {
                       const element =
                         key === 'ui-autocomplete'
-                          ? instance.ul
+                          ? instance.combobox.listbox.ul
                           : instance.input;
                       optionValue[key].split(' ').forEach((className) => {
                         element.classList.add(className);
@@ -647,10 +668,12 @@
                 case 'classes.ui-autocomplete':
                   // Add the new class(es).
                   optionValue.split(' ').forEach((className) => {
-                    instance.ul.classList.add(className);
+                    instance.combobox.listbox.ul.classList.add(className);
                   });
                   // Remove the default class.
-                  instance.ul.classList.remove('ui-autocomplete');
+                  instance.combobox.listbox.ul.classList.remove(
+                    'ui-autocomplete',
+                  );
                   break;
                 case 'classes.ui-autocomplete-input':
                   // Add the new class(es).
@@ -662,13 +685,13 @@
                   break;
                 case 'disabled':
                   instance.options.disabled = optionValue;
-                  $(instance.ul).toggleClass(
+                  $(instance.combobox.listbox.ul).toggleClass(
                     'ui-autocomplete-disabled',
                     optionValue,
                   );
                   break;
                 case 'position':
-                  $(instance.ul).position({
+                  $(instance.combobox.listbox.ul).position({
                     of: instance.input,
                     my: 'left top',
                     at: 'left bottom',
@@ -728,12 +751,13 @@
                       // changed.
                       // eslint-disable-next-line no-unused-vars
                       const list = JSON.parse(optionValue);
-                      instance.options.list = list;
+                      instance.options.source = list;
                     } catch (e) {
-                      instance.options.path = optionValue;
+                      // @todo fix this.
+                      instance.options.source = optionValue;
                     }
                   } else {
-                    instance.options.list = optionValue;
+                    instance.options.source = optionValue;
                   }
                   break;
                 default:
