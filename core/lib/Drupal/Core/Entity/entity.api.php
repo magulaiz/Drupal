@@ -14,6 +14,8 @@ use Drupal\Core\Render\Element;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\NodeType;
 
+// cspell:ignore rdftype
+
 /**
  * @defgroup entity_crud Entity CRUD, editing, and view hooks
  * @{
@@ -1537,7 +1539,7 @@ function hook_ENTITY_TYPE_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  * the particular entity type template, if there is one (e.g., node.html.twig).
  *
  * See the @link themeable Default theme implementations topic @endlink and
- * drupal_render() for details.
+ * \Drupal\Core\Render\RendererInterface::render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1576,7 +1578,7 @@ function hook_entity_view_alter(array &$build, \Drupal\Core\Entity\EntityInterfa
  * the particular entity type template, if there is one (e.g., node.html.twig).
  *
  * See the @link themeable Default theme implementations topic @endlink and
- * drupal_render() for details.
+ * \Drupal\Core\Render\RendererInterface::render() for details.
  *
  * @param array &$build
  *   A renderable array representing the entity content.
@@ -1659,7 +1661,7 @@ function hook_entity_view_mode_alter(&$view_mode, \Drupal\Core\Entity\EntityInte
 }
 
 /**
- * Alter entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking during rendering.
  *
  * Invoked for a specific entity type.
  *
@@ -1685,7 +1687,7 @@ function hook_ENTITY_TYPE_build_defaults_alter(array &$build, \Drupal\Core\Entit
 }
 
 /**
- * Alter entity renderable values before cache checking in drupal_render().
+ * Alter entity renderable values before cache checking during rendering.
  *
  * The values in the #cache key of the renderable array are used to determine if
  * a cache entry exists for the entity's rendered output. Ideally only values
