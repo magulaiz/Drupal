@@ -2,7 +2,6 @@
 
 namespace Drupal\media_library\Form;
 
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -10,8 +9,6 @@ use Drupal\media\OEmbed\ResourceException;
 use Drupal\media\OEmbed\ResourceFetcherInterface;
 use Drupal\media\OEmbed\UrlResolverInterface;
 use Drupal\media\Plugin\media\Source\OEmbedInterface;
-use Drupal\media_library\MediaLibraryUiBuilder;
-use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -37,36 +34,33 @@ class OEmbedForm extends AddFormBase {
   protected $resourceFetcher;
 
   /**
-   * Constructs a new OEmbedForm.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
-   *   The media library UI builder.
-   * @param \Drupal\media\OEmbed\UrlResolverInterface $url_resolver
-   *   The oEmbed URL resolver service.
-   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resource_fetcher
-   *   The oEmbed resource fetcher service.
-   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
-   *   The opener resolver.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, UrlResolverInterface $url_resolver, ResourceFetcherInterface $resource_fetcher, OpenerResolverInterface $opener_resolver = NULL) {
-    parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
-    $this->urlResolver = $url_resolver;
-    $this->resourceFetcher = $resource_fetcher;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('media_library.ui_builder'),
-      $container->get('media.oembed.url_resolver'),
-      $container->get('media.oembed.resource_fetcher'),
-      $container->get('media_library.opener_resolver')
-    );
+    $form = parent::create($container);
+    $form->setUrlResolver($container->get('media.oembed.url_resolver'));
+    $form->setResourceFetcher($container->get('media.oembed.resource_fetcher'));
+    return $form;
+  }
+
+  /**
+   * Set URL resolver service.
+   *
+   * @param \Drupal\media\OEmbed\UrlResolverInterface $urlResolver
+   *   The URL resolver service.
+   */
+  protected function setUrlResolver(UrlResolverInterface $urlResolver) {
+    $this->urlResolver = $urlResolver;
+  }
+
+  /**
+   * Set resource fetcher service.
+   *
+   * @param \Drupal\media\OEmbed\ResourceFetcherInterface $resourceFetcher
+   *   The resource fetcher service.
+   */
+  protected function setResourceFetcher(ResourceFetcherInterface $resourceFetcher) {
+    $this->resourceFetcher = $resourceFetcher;
   }
 
   /**

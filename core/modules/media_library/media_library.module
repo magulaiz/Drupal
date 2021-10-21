@@ -26,6 +26,8 @@ use Drupal\image\Entity\ImageStyle;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\media\MediaTypeForm;
 use Drupal\media\MediaTypeInterface;
+use Drupal\media_library\Form\EditForm;
+use Drupal\media_library\Form\FileEditForm;
 use Drupal\media_library\Form\FileUploadForm;
 use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
@@ -102,6 +104,21 @@ function media_library_media_source_info_alter(array &$sources) {
   }
   if (empty($sources['oembed:video']['forms']['media_library_add'])) {
     $sources['oembed:video']['forms']['media_library_add'] = OEmbedForm::class;
+  }
+  if (empty($sources['audio_file']['forms']['media_library_edit'])) {
+    $sources['audio_file']['forms']['media_library_edit'] = FileEditForm::class;
+  }
+  if (empty($sources['file']['forms']['media_library_edit'])) {
+    $sources['file']['forms']['media_library_edit'] = FileEditForm::class;
+  }
+  if (empty($sources['image']['forms']['media_library_edit'])) {
+    $sources['image']['forms']['media_library_edit'] = FileEditForm::class;
+  }
+  if (empty($sources['video_file']['forms']['media_library_edit'])) {
+    $sources['video_file']['forms']['media_library_edit'] = FileEditForm::class;
+  }
+  if (empty($sources['oembed:video']['forms']['media_library_edit'])) {
+    $sources['oembed:video']['forms']['media_library_edit'] = EditForm::class;
   }
 }
 
