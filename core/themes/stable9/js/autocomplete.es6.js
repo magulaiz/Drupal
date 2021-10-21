@@ -72,7 +72,7 @@
       // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
       return $(`<li>`)
         .addClass(instance.options.itemClass)
-        .append($('<a class="dooky">').html(item[propertyToDisplay]))
+        .append($('<a>').html(item[propertyToDisplay]))
         .appendTo(ul);
     };
 

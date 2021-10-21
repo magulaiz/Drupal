@@ -432,7 +432,7 @@
   // When available, the original jQuery UI autocomplete is added to $.fn in
   // jqueryui.widget.overrides.js.
 
-  const oldAutocomplete  = $.fn.autocomplete;
+  const oldAutocomplete = $.fn.autocomplete;
 
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
   // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for

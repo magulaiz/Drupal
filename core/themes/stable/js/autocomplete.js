@@ -35,7 +35,7 @@
 
     instance._renderItem = function (ul, item) {
       var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-      return $("<li>").addClass(instance.options.itemClass).append($('<a class="dooky">').html(item[propertyToDisplay])).appendTo(ul);
+      return $("<li>").addClass(instance.options.itemClass).append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {

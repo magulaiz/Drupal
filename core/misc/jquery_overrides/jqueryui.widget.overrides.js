@@ -36,9 +36,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           if ('filter' in $.ui.autocomplete && 'escapeRegex' in $.ui.autocomplete) {
             var boundOldWidget = oldWidget.bind(this);
             return boundOldWidget.apply(void 0, args);
-          } else {
-            throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
           }
+
+          throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
         }
 
         runDefaultWidget = false;

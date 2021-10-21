@@ -42,13 +42,13 @@
           ) {
             const boundOldWidget = oldWidget.bind(this);
             return boundOldWidget(...args);
-          } else {
-            throw new Error(
-              `Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ${unsupported.join(
-                ', ',
-              )}`,
-            );
           }
+
+          throw new Error(
+            `Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ${unsupported.join(
+              ', ',
+            )}`,
+          );
         }
 
         runDefaultWidget = false;
