@@ -60,12 +60,9 @@
 
         // Indicate on the toolbarModel that the page has finished loading
         // and Big Pipe has populated all its placeholders.
-        Drupal.toolbar.checkReadyState = setInterval(() => {
-          if (document.readyState === 'complete') {
-            clearInterval(Drupal.toolbar.checkReadyState);
-            model.set('isPageLoaded', true);
-          }
-        }, 100);
+        window.addEventListener('load', () => {
+          Drupal.toolbar.models.toolbarModel.set('isPageLoaded', true);
+        });
 
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
