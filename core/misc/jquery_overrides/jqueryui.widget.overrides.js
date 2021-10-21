@@ -25,7 +25,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       args[_key] = arguments[_key];
     }
 
-    if ($.ui.hasOwnProperty('autocomplete')) {
+    if ($.ui.autocomplete) {
       if (args[1] === $.ui.autocomplete && _typeof(args[2]) === 'object') {
         var supportedProperties = ['options', '_renderItem', '_renderMenu', '_resizeMenu'];
         var unsupported = Object.keys(args[2]).filter(function (key) {
@@ -33,7 +33,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         });
 
         if (unsupported.length > 0) {
-          throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
+          if ('filter' in $.ui.autocomplete && 'escapeRegex' in $.ui.autocomplete) {
+            var boundOldWidget = oldWidget.bind(this);
+            return boundOldWidget.apply(void 0, args);
+          } else {
+            throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
+          }
         }
 
         runDefaultWidget = false;
@@ -67,7 +72,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     }
 
     if (runDefaultWidget) {
-      return oldWidget.apply(void 0, args);
+      var oldWidgetBound = oldWidget.bind(this);
+      return oldWidgetBound.apply(void 0, args);
     }
   };
 

@@ -29,6 +29,7 @@
     instance.options = Object.assign(
       instance.options,
       Drupal.autocompleteShim.stableOptions,
+      Drupal.jQueryAutocompleteStableMarkup.options,
     );
 
     // Apply class changes.
@@ -69,8 +70,9 @@
         ? 'label'
         : 'value';
       // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
-      return $('<li>')
-        .append($('<a>').html(item[propertyToDisplay]))
+      return $(`<li>`)
+        .addClass(instance.options.itemClass)
+        .append($('<a class="dooky">').html(item[propertyToDisplay]))
         .appendTo(ul);
     };
 

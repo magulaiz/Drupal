@@ -428,21 +428,25 @@
       },
     );
   };
-  console.log('fn', $.fn);
-  console.log('$.autocomplete', $.fn.autocomplete);
-  console.log('$.fn.autocomplete', $.fn.autocomplete);
 
-  const oldAutocomplete = $.fn.autocomplete;
-  console.log('oldAutocomplete', oldAutocomplete);
+  // When available, the original jQuery UI autocomplete is added to $.fn in
+  // jqueryui.widget.overrides.js.
+
+  const oldAutocomplete  = $.fn.autocomplete;
+
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
   // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for
-  // the functionality.
+  // the functionality. This is applied to any input with the
+  // `data-autocomplete-path` attribute. If an input does not have the
+  // `data-autocomplete-path` attribute, and jQuery UI autocomplete is
+  // available, the input will use jQuery UI autocomplete.
   $.fn.extend({
     autocomplete(...args) {
-      if (!this[0].hasAttribute('data-autocomplete-path')) {
+      if (
+        oldAutocomplete &&
+        (!this.length || !this[0].hasAttribute('data-autocomplete-path'))
+      ) {
         return oldAutocomplete.apply(this, args);
-      } else {
-        console.log('has the path');
       }
       Drupal.deprecationError({
         message:
@@ -809,9 +813,14 @@
     },
   });
 
-  $.ui.autocomplete = () => {
-    console.warn(
-      '$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
-    );
-  };
+  // If $.ui.autocomplete exists, it needs to remain there for modules that want
+  // to use jQuery UI autocomplete via contrib module or the deprecated
+  // core/jquery.ui.autocomplete library;
+  if (!$.ui.hasOwnProperty('autocomplete')) {
+    $.ui.autocomplete = () => {
+      console.warn(
+        '$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
+      );
+    };
+  }
 })(jQuery, Drupal);

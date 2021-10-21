@@ -36,6 +36,7 @@ class AutocompleteShimTestController extends ControllerBase {
           '#attributes' => [
             'id' => 'autocomplete',
             'class' => ['foo'],
+            'data-autocomplete-path' => TRUE,
           ],
         ],
       ],
@@ -45,6 +46,7 @@ class AutocompleteShimTestController extends ControllerBase {
           'id' => 'autocomplete-contenteditable',
           'tabindex' => 0,
           'contenteditable' => '',
+          'data-autocomplete-path' => TRUE,
         ],
       ],
       'textarea' => [
@@ -52,11 +54,12 @@ class AutocompleteShimTestController extends ControllerBase {
         '#tag' => 'textarea',
         '#attributes' => [
           'id' => ['autocomplete-textarea'],
+          'data-autocomplete-path' => TRUE,
         ],
       ],
       '#attached' => [
         'library' => [
-          'core/autocomplete.jqueryui.shim',
+          'core/drupal.autocomplete',
           // Attach jquery.simulate for use by Nightwatch tests.
           'jquery_simulate/jquery.simulate',
         ],

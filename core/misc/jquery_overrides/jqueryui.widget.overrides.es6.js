@@ -13,7 +13,8 @@
   // eslint-disable-next-line func-names
   $.widget = function (...args) {
     let runDefaultWidget = true;
-    if ($.ui.hasOwnProperty('autocomplete')) {
+
+    if ($.ui.autocomplete) {
       if (args[1] === $.ui.autocomplete && typeof args[2] === 'object') {
         const supportedProperties = [
           'options',
@@ -29,11 +30,25 @@
         // autocomplete-specific methods. Any uses beyond that will trigger an
         // error
         if (unsupported.length > 0) {
-          throw new Error(
-            `Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ${unsupported.join(
-              ', ',
-            )}`,
-          );
+          // If filter and escapeRegex are part of the $.ui.autocomplete
+          // prototype, it means jQuery UI autocomplete is available, either via
+          // the deprecated core/jquery.ui.autocomplete library or a contrib
+          // library. If jQuery UI autocomplete is available and the use of
+          // $.widget() would not work with the shim, jQuery UI autocomplete is
+          // used.
+          if (
+            'filter' in $.ui.autocomplete &&
+            'escapeRegex' in $.ui.autocomplete
+          ) {
+            const boundOldWidget = oldWidget.bind(this);
+            return boundOldWidget(...args);
+          } else {
+            throw new Error(
+              `Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ${unsupported.join(
+                ', ',
+              )}`,
+            );
+          }
         }
 
         runDefaultWidget = false;
@@ -70,7 +85,8 @@
 
     // Run jQuery UI's default widget().
     if (runDefaultWidget) {
-      return oldWidget(...args);
+      const oldWidgetBound = oldWidget.bind(this);
+      return oldWidgetBound(...args);
     }
   };
 

@@ -32,9 +32,7 @@ autocomplete.jqueryui.shim:
   dependencies:
     - core/drupal
     - core/jquery
-    - core/drupal.autocomplete
     - core/drupal.jquery.position
-    - core/jquery.ui.autocomplete  #temporary for shim checking
 
 backbone:
   remote: https://github.com/jashkenas/backbone
@@ -158,7 +156,7 @@ drupal.autocomplete:
     - core/drupal.fetch
     - core/drupal.array.includes
     - core/drupal.string.includes
-
+    - core/autocomplete.jqueryui.shim
 
 drupal.array.find:
   version: VERSION

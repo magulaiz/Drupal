@@ -259,11 +259,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
   };
 
-  console.log('fn', $.fn);
-  console.log('$.autocomplete', $.fn.autocomplete);
-  console.log('$.fn.autocomplete', $.fn.autocomplete);
   var oldAutocomplete = $.fn.autocomplete;
-  console.log('oldAutocomplete', oldAutocomplete);
   $.fn.extend({
     autocomplete: function autocomplete() {
       var _this3 = this;
@@ -272,10 +268,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         args[_key] = arguments[_key];
       }
 
-      if (!this[0].hasAttribute('data-autocomplete-path')) {
+      if (oldAutocomplete && (!this.length || !this[0].hasAttribute('data-autocomplete-path'))) {
         return oldAutocomplete.apply(this, args);
-      } else {
-        console.log('has the path');
       }
 
       Drupal.deprecationError({
@@ -519,7 +513,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   });
 
-  $.ui.autocomplete = function () {
-    console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
-  };
+  if (!$.ui.hasOwnProperty('autocomplete')) {
+    $.ui.autocomplete = function () {
+      console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
+    };
+  }
 })(jQuery, Drupal);

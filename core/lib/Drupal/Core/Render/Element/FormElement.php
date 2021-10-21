@@ -205,19 +205,6 @@ abstract class FormElement extends RenderElement implements FormElementInterface
         // Provide a data attribute for the JavaScript behavior to bind to.
         $element['#attributes']['data-autocomplete-path'] = $url->getGeneratedUrl();
         $metadata = $metadata->merge($url);
-
-        // @todo remove this conditional, its contents, and any documentation
-        //   referencing use-drupal-10-autocomplete in
-        //   https://drupal.org/node/3206225, this property is not needed in
-        //   Drupal 10.
-        if (!empty($element['#use-drupal-10-autocomplete'])) {
-          // Use the Drupal 10 autocomplete without the jQuery UI Autocomplete
-          // backwards compatible shim.
-          $element['#attributes']['data-drupal-10-autocomplete'] = $element['#use-drupal-10-autocomplete'];
-        }
-        if (empty($element['#use-drupal-10-autocomplete']) || !empty($element['#attributes']['data-drupal-10-autocomplete']) && !$element['#attributes']['data-drupal-10-autocomplete']) {
-          $metadata->addAttachments(['library' => ['core/autocomplete.jqueryui.shim']]);
-        }
       }
       $metadata
         ->merge(BubbleableMetadata::createFromObject($access))
