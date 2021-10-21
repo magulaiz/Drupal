@@ -106,6 +106,9 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
 
     $page->clickLink($admin_user->label());
     $page->clickLink('Edit profile');
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'nav#toolbar-bar'));
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'div#toolbar-item-user-tray .toolbar-menu'));
+    $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', 'div#toolbar-item-user-tray .toolbar-menu'));
 
     // Get the padding-top value of the body element when Big Page is enabled.
     $bp_body_padding_top = (int) $session->evaluateScript("parseInt(getComputedStyle(document.querySelector('body'))['padding-top'])");
