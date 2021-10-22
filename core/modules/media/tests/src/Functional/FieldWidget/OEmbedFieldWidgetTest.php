@@ -36,7 +36,7 @@ class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
 
     $this->drupalGet('media/add/' . $media_type->id());
     $assert_session = $this->assertSession();
-    $assert_session->pageTextContains($field->getDescription());
+    $assert_session->pageTextContains('This is help text for oEmbed field.');
     $assert_session->pageTextContains('You can link to media from the following services: YouTube, Vimeo');
   }
 
