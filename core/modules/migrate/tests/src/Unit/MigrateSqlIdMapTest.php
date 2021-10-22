@@ -478,7 +478,6 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
 
     // Lookup nothing, gives nothing.
     $this->assertEquals([], $id_map->lookupDestinationIds([]));
-    $this->assertEquals([], $id_map->lookupDestinationIds([NULL]));
     // Lookup by complete non-associative list.
     $this->assertEquals([[101]], $id_map->lookupDestinationIds([1]));
     $this->assertEquals([[102]], $id_map->lookupDestinationIds([2]));
