@@ -32,8 +32,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
    */
   protected function formatDate($date) {
     $format_type = $this->getSetting('format_type');
-    $timezone = $this->getSetting('timezone_override') ?: $date->getTimezone()->getName();
-    return $this->dateFormatter->format($date->getTimestamp(), $format_type, '', $timezone != '' ? $timezone : NULL);
+    return $this->dateFormatter->format($date->getTimestamp(), $format_type, '', $date->getTimezone()->getName());
   }
 
   /**
@@ -68,6 +67,7 @@ class DateTimeDefaultFormatter extends DateTimeFormatterBase {
     $summary = parent::settingsSummary();
 
     $date = new DrupalDateTime();
+    $this->setTimeZone($date);
     $summary[] = t('Format: @display', ['@display' => $this->formatDate($date)]);
 
     return $summary;

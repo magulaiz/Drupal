@@ -35,4 +35,18 @@ class DateTimeFormatConstraint extends Constraint {
    */
   public $badValue = "The datetime value '@value' did not parse properly for the format '@format'";
 
+  /**
+   * Message for when the value isn't a string.
+   *
+   * @var string
+   */
+  public $badTimezoneType = "The time zone value must be a string.";
+
+  /**
+   * Message for when the value did not parse properly.
+   *
+   * @var string
+   */
+  public $badTimezoneValue = "The time zone value '@timezone' was not recognized as a valid time zone.";
+
 }

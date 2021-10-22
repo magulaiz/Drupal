@@ -90,6 +90,11 @@ class DateField extends FieldPluginBase {
         'to_format' => $to_format,
         'source' => 'value',
       ],
+      'timezone' => [
+        'plugin' => 'default_value',
+        'default_value' => '',
+        'source' => 'timezone',
+      ],
     ];
 
     $process = [

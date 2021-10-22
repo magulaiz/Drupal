@@ -49,7 +49,10 @@ class DateRangeItemTest extends FieldKernelTestBase {
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => [
+        'datetime_type' => DateRangeItem::DATETIME_TYPE_DATE,
+        'timezone_storage' => FALSE,
+      ],
     ]);
     $this->fieldStorage->save();
 

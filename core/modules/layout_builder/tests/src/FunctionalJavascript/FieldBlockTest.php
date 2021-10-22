@@ -119,6 +119,7 @@ class FieldBlockTest extends WebDriverTestBase {
       'settings' => [
         'format_type' => 'long',
         'timezone_override' => '',
+        'timezone_default' => 'user',
       ],
       'third_party_settings' => [],
     ];

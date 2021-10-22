@@ -29,6 +29,7 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
   public static function defaultStorageSettings() {
     return [
       'datetime_type' => 'datetime',
+      'timezone_storage' => FALSE,
     ] + parent::defaultStorageSettings();
   }
 
@@ -57,6 +58,9 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
       ->setClass('\Drupal\datetime\DateTimeComputed')
       ->setSetting('date source', 'value');
 
+    $properties['timezone'] = DataDefinition::create('string')
+      ->setLabel(t('Timezone'));
+
     return $properties;
   }
 
@@ -71,9 +75,15 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
           'type' => 'varchar',
           'length' => 20,
         ],
+        'timezone' => [
+          'description' => 'The date timezone',
+          'type' => 'varchar',
+          'length' => 50,
+        ],
       ],
       'indexes' => [
         'value' => ['value'],
+        'value_timezone' => ['value', 'timezone'],
       ],
     ];
   }
@@ -92,6 +102,23 @@ class DateTimeItem extends FieldItemBase implements DateTimeItemInterface {
       '#options' => [
         static::DATETIME_TYPE_DATETIME => t('Date and time'),
         static::DATETIME_TYPE_DATE => t('Date only'),
+      ],
+      '#disabled' => $has_data,
+    ];
+
+    $element['timezone_storage'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Store a time zone'),
+      '#description' => 'Allow storing a preferred time zone with each date and time',
+      '#default_value' => $this->getSetting('timezone_storage'),
+      '#states' => [
+        // Hide the field if this is a date-only field.
+        'visible' => [
+          ':input[name="settings[datetime_type]"]' => ['value' => static::DATETIME_TYPE_DATETIME],
+        ],
+        'disabled' => [
+          ':input[name="settings[datetime_type]"]' => ['value' => static::DATETIME_TYPE_DATE],
+        ],
       ],
       '#disabled' => $has_data,
     ];

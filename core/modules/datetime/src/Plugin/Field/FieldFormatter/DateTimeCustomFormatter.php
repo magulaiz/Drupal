@@ -43,7 +43,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;
 
-        $elements[$delta] = $this->buildDate($date);
+        $elements[$delta] = $this->buildDate($date, $item->timezone);
       }
     }
 
@@ -55,8 +55,7 @@ class DateTimeCustomFormatter extends DateTimeFormatterBase {
    */
   protected function formatDate($date) {
     $format = $this->getSetting('date_format');
-    $timezone = $this->getSetting('timezone_override') ?: $date->getTimezone()->getName();
-    return $this->dateFormatter->format($date->getTimestamp(), 'custom', $format, $timezone != '' ? $timezone : NULL);
+    return $this->dateFormatter->format($date->getTimestamp(), 'custom', $format, $date->getTimezone()->getName());
   }
 
   /**

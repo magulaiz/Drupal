@@ -25,13 +25,13 @@ trait DateTimeRangeTrait {
 
         if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
           $elements[$delta] = [
-            'start_date' => $this->buildDateWithIsoAttribute($start_date),
+            'start_date' => $this->buildDateWithIsoAttribute($start_date, $item->timezone),
             'separator' => ['#plain_text' => ' ' . $separator . ' '],
-            'end_date' => $this->buildDateWithIsoAttribute($end_date),
+            'end_date' => $this->buildDateWithIsoAttribute($end_date, $item->timezone),
           ];
         }
         else {
-          $elements[$delta] = $this->buildDateWithIsoAttribute($start_date);
+          $elements[$delta] = $this->buildDateWithIsoAttribute($start_date, $item->timezone);
 
           if (!empty($item->_attributes)) {
             $elements[$delta]['#attributes'] += $item->_attributes;

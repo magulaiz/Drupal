@@ -28,6 +28,13 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
   protected static $dateString = '2017-03-01T20:02:00';
 
   /**
+   * The Timezone string to use throughout the test.
+   *
+   * @var string
+   */
+  protected static $timezone = 'Australia/Sydney';
+
+  /**
    * Datetime Range test field name.
    *
    * @var string
@@ -68,6 +75,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
     $this->entity = $this->entityStorage->load($this->entity->id());
     $this->entity->set(static::$fieldName, [
       'value' => static::$dateString,
+      'timezone' => static::$timezone,
       'end_value' => static::$dateString,
     ]);
     $this->entity->save();
@@ -95,6 +103,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       static::$fieldName => [
         [
           'value' => '2017-03-02T07:02:00+11:00',
+          'timezone' => 'Australia/Sydney',
           'end_value' => '2017-03-02T07:02:00+11:00',
         ],
       ],
@@ -109,6 +118,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       static::$fieldName => [
         [
           'value' => '2017-03-01T20:02:00+00:00',
+          'timezone' => 'Australia/Sydney',
           'end_value' => '2017-03-01T20:02:00+00:00',
         ],
       ],
@@ -129,6 +139,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       $normalization[static::$fieldName][0]['value'] = [
         '2017', '03', '01', '21', '53', '00',
       ];
+      $normalization[static::$fieldName][0]['timezone'] = NULL;
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
       $message = "Unprocessable Entity: validation failed.\n{$fieldName}.0.value: This value should be of the correct primitive type.\n";
@@ -137,6 +148,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       // DX: 422 when 'end_value' is not specified.
       $normalization = $this->getNormalizedPostEntity();
       unset($normalization[static::$fieldName][0]['end_value']);
+      $normalization[static::$fieldName][0]['timezone'] = NULL;
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
       $message = "Unprocessable Entity: validation failed.\n{$fieldName}.0.end_value: This value should not be null.\n";
@@ -147,6 +159,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       $normalization[static::$fieldName][0]['end_value'] = [
         '2017', '03', '01', '21', '53', '00',
       ];
+      $normalization[static::$fieldName][0]['timezone'] = NULL;
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
       $message = "Unprocessable Entity: validation failed.\n{$fieldName}.0.end_value: This value should be of the correct primitive type.\n";
@@ -157,6 +170,7 @@ class EntityTestDateRangeTest extends EntityTestResourceTestBase {
       $value = '2017-13-55T20:02:00+00:00';
       $normalization[static::$fieldName][0]['end_value'] = $value;
 
+      $normalization[static::$fieldName][0]['timezone'] = NULL;
       $request_options[RequestOptions::BODY] = $this->serializer->encode($normalization, static::$format);
       $response = $this->request($method, $url, $request_options);
       $message = "The specified date \"$value\" is not in an accepted format: \"Y-m-d\\TH:i:sP\" (RFC 3339), \"Y-m-d\\TH:i:sO\" (ISO 8601).";

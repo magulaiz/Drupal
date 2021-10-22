@@ -51,6 +51,23 @@ class DateTimeFormatConstraintValidator extends ConstraintValidator {
           ]);
         }
       }
+      if ($item->getFieldDefinition()->getSetting('timezone_storage')) {
+        $value = $item->getValue();
+        $timezone = isset($value['timezone']) ? $value['timezone'] : '';
+        if (!is_string($timezone)) {
+          $this->context->addViolation($constraint->badTimezoneType);
+        }
+        else {
+          try {
+            new \DateTimeZone($timezone);
+          }
+          catch (\Exception $e) {
+            $this->context->addViolation($constraint->badTimezoneValue, [
+              '@timezone' => $timezone,
+            ]);
+          }
+        }
+      }
     }
   }
 

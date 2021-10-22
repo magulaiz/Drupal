@@ -10,6 +10,9 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\User;
+use Drupal\datetime\Plugin\Field\ConfigurableTimezoneInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Tests Datetime field functionality.
@@ -23,7 +26,11 @@ class DateTimeFieldTest extends DateTestBase {
    *
    * @var array
    */
-  protected $defaultSettings = ['timezone_override' => ''];
+  protected $defaultSettings = [
+    'timezone_default' => ConfigurableTimezoneInterface::TIMEZONE_USER,
+    'timezone_override' => '',
+    'timezone_per_date' => FALSE,
+  ];
 
   /**
    * {@inheritdoc}
@@ -329,7 +336,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     // Verify that the 'timezone_override' setting works.
     $this->displayOptions['type'] = 'datetime_custom';
-    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
+    $this->displayOptions['settings'] = ['date_format' => 'm/d/Y g:i:s A', 'timezone_default' => ConfigurableTimezoneInterface::TIMEZONE_FIXED, 'timezone_override' => 'America/New_York'] + $this->defaultSettings;
     $display_repository->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
       ->setComponent($field_name, $this->displayOptions)
       ->save();
@@ -385,6 +392,334 @@ class DateTimeFieldTest extends DateTestBase {
     ]);
     $output = $this->renderTestEntity($id);
     $this->assertStringContainsString((string) $expected, $output, new FormattableMarkup('Formatted date field using datetime_time_ago format displayed as %expected.', ['%expected' => $expected]));
+  }
+
+  /**
+   * Test combinations of time zone configurations.
+   */
+  public function testFormatterTimezoneSettings() {
+    // Using different time zones wherever possible helps to highlight leakage.
+    // Giving time zones labels that describes the context in which they are
+    // stored makes it easier to diagnose test failures.
+    $timezones = [
+      'site' => 'Pacific/Kwajalein',
+      'user' => 'America/Phoenix',
+      'input' => 'Africa/Lagos',
+      'override' => 'Asia/Kolkata',
+      'php' => 'Pacific/Funafuti',
+      'storage' => DateTimeItemInterface::STORAGE_TIMEZONE,
+    ];
+
+    // Setup test environment.
+    // Reset php's default time zone to guarantee it's different to others here.
+    date_default_timezone_set($timezones['php']);
+    $this->config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', $timezones['site'])
+      ->save();
+    $this->setLoggedInUserTimezone($timezones['user']);
+
+    // Prepare the date that will be stored and rendered by the formatter.
+    $date = new DrupalDateTime("2012-10-15 17:25:00", 'UTC');
+    $date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
+    $field_name = $this->fieldStorage->getName();
+    $fields = [
+      $field_name => [
+        'value' => $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT),
+      ],
+    ];
+
+    // Scenario 1: Stored preference not enabled.
+    // Test the formatter when per-date time zone storage has not been enabled.
+    $this->fieldStorage->setSetting('datetime_type', 'datetime');
+    $this->fieldStorage->setSetting('timezone_storage', FALSE);
+    $this->fieldStorage->save();
+    $entity = $this->entityStorage->create($fields);
+    $entity->save();
+    $this->formatterSettingsTest('not enabled', $entity->id(), $timezones);
+
+    // Scenario 2: Stored preference unspecified.
+    // Test the formatter on the same entity, after enabling per-date storage,
+    // in which case existing entities have NULL as their stored time zone.
+    $this->fieldStorage->setSetting('datetime_type', 'datetime');
+    $this->fieldStorage->setSetting('timezone_storage', TRUE);
+    $this->fieldStorage->save();
+    $this->formatterSettingsTest('no value', $entity->id(), $timezones);
+
+    // Scenario 3: Stored preference specified.
+    // Test the formatter on a new entity, which will now have a preferred
+    // time zone stored in its field.
+    $fields[$field_name]['timezone'] = $timezones['input'];
+    $entity = $this->entityStorage->create($fields);
+    $entity->save();
+    $this->formatterSettingsTest('has value', $entity->id(), $timezones);
+
+  }
+
+  /**
+   * Tests formatter output for different sets of settings.
+   */
+  protected function formatterSettingsTest($timezone_storage, $id, $timezones) {
+    // All the possible formatter time zone settings.
+    $settings = [
+      'per_date' => [
+        'Formatter using preferred time zone for each date' => TRUE,
+        'Formatter not using preferred time zone for each date' => FALSE,
+      ],
+      'default' => [
+        'user' => ConfigurableTimezoneInterface::TIMEZONE_USER,
+        'site' => ConfigurableTimezoneInterface::TIMEZONE_SITE,
+        'override' => ConfigurableTimezoneInterface::TIMEZONE_FIXED,
+      ],
+    ];
+
+    // Gather information about the field.
+    $field_name = $this->fieldStorage->getName();
+    $entity = $this->entityStorage->load($id);
+    $fieldValues = $entity->get($field_name)->getValue()[0];
+    $storedTimezone = $fieldValues['timezone'];
+    $storedDateInStorageFormat = $fieldValues['value'];
+
+    foreach ($settings['per_date'] as $per_date_label => $per_date) {
+      foreach ($settings['default'] as $default_label => $default) {
+        // Prepare the expectations. The time zone used should always be that
+        // set in the 'default' setting, unless the 'Use stored preference'
+        // setting is set AND a time zone is stored in the field for the date
+        // value being rendered.
+        $expected_timezone_label = array_search($default, $settings['default']);
+        if ($timezone_storage === 'has value') {
+          $this->assertEqual($timezones['input'], $storedTimezone, "Verifying the test is correctly setup with the right time zone stored.");
+          if ($per_date) {
+            $expected_timezone_label = 'input';
+          }
+        }
+
+        // Setup the formatter using the settings for the current scenario.
+        // Have the time zone displayed as part of the output.
+        $output_format = 'm/d/Y g:i:s A e';
+        $this->displayOptions['type'] = 'datetime_custom';
+        $this->displayOptions['settings'] = [
+          'date_format' => $output_format,
+          'timezone_default' => $default,
+          'timezone_override' => $timezones['override'],
+          'timezone_per_date' => $per_date,
+        ];
+        $this->container->get('entity_display.repository')
+          ->getViewDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle(), 'full')
+          ->setComponent($field_name, $this->displayOptions)
+          ->save();
+
+        // Try to get the rendered field.
+        $output = $this->renderTestEntity($id);
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($output);
+        $xpath = new \DOMXPath($dom);
+        $fieldXpath = $xpath->query("//div[contains(@class, 'field--type-datetime')]");
+        $fieldFound = ($fieldXpath->length === 1);
+        $this->assertTrue($fieldFound, "Looking for the div.field--type-datetime element");
+
+        // Test the rendered value.
+        if ($fieldFound) {
+          // Extract a date from the rendered value.
+          $actualText = trim($fieldXpath->item(0)->textContent);
+          $actualDate = DrupalDateTime::createFromFormat($output_format, $actualText);
+
+          // Prepare debug messages.
+          $scenario_message = "Per-date time zones in the field: $timezone_storage.";
+          $stored_message = new FormattableMarkup("The stored time zone is '@stored_timezone_label' ('@stored_timezone').", [
+            '@stored_timezone' => $storedTimezone,
+            '@stored_timezone_label' => array_search($storedTimezone, $timezones),
+          ]);
+          $settings_message = new FormattableMarkup("@per_date and 'Default time zone' set to '@default_label' (@default_timezone).", [
+            '@per_date' => $per_date_label,
+            '@default' => $default_label,
+            '@default_timezone' => $timezones[$default_label],
+          ]);
+          $base_message = new FormattableMarkup("Found text: '@actualText'. \n@scenario_message \n@stored_message \n@settings_message", [
+            '@actualText' => $actualText,
+            '@scenario_message' => $scenario_message,
+            '@stored_message' => $stored_message,
+            '@settings_message' => $settings_message,
+          ]);
+
+          // Test that the rendered date matches the stored date.
+          $actualDateInStorageFormat = $actualDate->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, ['timezone' => DateTimeItemInterface::STORAGE_TIMEZONE]);
+          $message = new FormattableMarkup("Rendered date can be interpreted as '@actual',  expected @expected. \n@base_message.", [
+            '@actual' => $actualDateInStorageFormat,
+            '@expected' => $storedDateInStorageFormat,
+            '@base_message' => $base_message,
+          ]);
+          $this->assertEqual($storedDateInStorageFormat, $actualDateInStorageFormat, $message);
+
+          // Test that the rendered date used the expected time zone.
+          // Lookup the logical source of the time zone shown in the rendered date.
+          $actualTimeZone = $actualDate->getTimezone()->getName();
+          if (!$actualTimeSetting = array_search($actualTimeZone, $timezones)) {
+            $actualTimeSetting = $actualTimeZone;
+          }
+          // Compare that with the source expected to be in effect.
+          $message = new FormattableMarkup("Time formatted using '@actual' time zone, expected to use '@expected' time zone. \n @scenario_message @stored_message @settings_message.", [
+            '@actual' => $actualTimeSetting,
+            '@expected' => $expected_timezone_label,
+            '@base_message' => $base_message,
+          ]);
+          $this->assertIdentical($expected_timezone_label, $actualTimeSetting, $message);
+        }
+      }
+    }
+  }
+
+  /**
+   * Tests widget with different settings.
+   */
+  public function testWidgetTimezoneSettings() {
+    // Using different time zones wherever possible helps to highlight leakage.
+    // Giving time zones labels that describes the context in which they are
+    // stored makes it easier to diagnose test failures.
+    $timezones = [
+      'site' => 'Pacific/Kwajalein',
+      'user' => 'America/Phoenix',
+      'input' => 'Africa/Lagos',
+      'override' => 'Asia/Kolkata',
+      'php' => 'Pacific/Funafuti',
+      'storage' => DateTimeItemInterface::STORAGE_TIMEZONE,
+    ];
+
+    // The test date that should be saved by the widget.
+    $date = new DrupalDateTime('2012-10-15 17:25:00', DateTimeItemInterface::STORAGE_TIMEZONE);
+
+    // Store the test date formatted according to the different time zones, for
+    // use in error reporting and debugging.
+    $formattedDates = [];
+    foreach ($timezones as $label => $timezone) {
+      $formattedDates[$label] = $date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timezone);
+    }
+
+    // Setup test environment.
+    // Reset php's default time zone to guarantee it's different to others here.
+    date_default_timezone_set($timezones['php']);
+    $this->config('system.date')
+      ->set('timezone.user.configurable', 1)
+      ->set('timezone.default', $timezones['site'])
+      ->save();
+    $this->setLoggedInUserTimezone($timezones['user']);
+
+    $scenarios = [
+      'per_date' => [
+        // The field is not configured to have per-date time zone storage.
+        'no storage' => FALSE,
+        // The field storage time zones enabled, but the widget does not.
+        'not allowed' => TRUE,
+        // The widget allows, but the editor leaves at the default time zone.
+        'default' => TRUE,
+        // The editor selects a time zone other than the default.
+        'input' => TRUE,
+      ],
+      'default' => [
+        'user' => ConfigurableTimezoneInterface::TIMEZONE_USER,
+        'site' => ConfigurableTimezoneInterface::TIMEZONE_SITE,
+        'override' => ConfigurableTimezoneInterface::TIMEZONE_FIXED,
+      ],
+    ];
+    $this->setLoggedInUserTimezone($timezones['user']);
+    $field_name = $this->fieldStorage->getName();
+
+    foreach ($scenarios['per_date'] as $per_date_label => $per_date) {
+      foreach ($scenarios['default'] as $default_label => $default) {
+        // Determine the time zone the user will intend for input. We assume the
+        // user behaves according to the site builder's intention. Therefore the
+        // time zone used should always be that set in the 'default' setting,
+        // unless we are testing the scenario where the user can and does
+        // select a per-date time zone other than the default.
+        $timezone_intended_label = $default_label;
+        if ($per_date_label === 'input') {
+          $timezone_intended_label = 'input';
+        }
+        $timezone_intended = $timezones[$timezone_intended_label];
+        // Determine what we expect to be stored in the field's time zone
+        // column. We expect nothing to be stored if the field is not configured
+        // to store time zone.
+        $timezone_expected_label = NULL;
+        $timezone_expected = NULL;
+        if ($per_date) {
+          $timezone_expected_label = $timezone_intended_label;
+          $timezone_expected = $timezones[$timezone_expected_label];
+        }
+
+        // Set up the field.
+        $this->fieldStorage->setSetting('datetime_type', 'datetime');
+        if ($per_date_label === 'no storage') {
+          $this->fieldStorage->setSetting('timezone_storage', FALSE);
+        }
+        else {
+          $this->fieldStorage->setSetting('timezone_storage', TRUE);
+        }
+        $this->fieldStorage->save();
+
+        // Setup the widget.
+        $this->container->get('entity_display.repository')
+          ->getFormDisplay($this->field->getTargetEntityTypeId(), $this->field->getTargetBundle())
+          ->setComponent($field_name, [
+            'type' => 'datetime_default',
+            'settings' => [
+              'timezone_default' => $default,
+              'timezone_override' => $timezones['override'],
+              'timezone_per_date' => $per_date,
+            ],
+          ])
+          ->save();
+
+        // Prepare the field values.
+        $date_format = DateFormat::load('html_date')->getPattern();
+        $time_format = DateFormat::load('html_time')->getPattern();
+        $field_name = $this->fieldStorage->getName();
+        $edit = [
+          "{$field_name}[0][value][date]" => $date->format($date_format, ['timezone' => $timezone_intended]),
+          "{$field_name}[0][value][time]" => $date->format($time_format, ['timezone' => $timezone_intended]),
+        ];
+        // Only set time zone input if testing the scenario where a time zone
+        // select is exposed and the user selects other than the default.
+        if ($per_date_label === 'input') {
+          $edit += [
+            "{$field_name}[0][value][timezone]" => $timezone_intended,
+          ];
+        }
+
+        // Try to save the date through a widget on an entity.
+        $this->drupalPostForm('entity_test/add', $edit, t('Save'));
+        preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+        $id = $match[1];
+        $this->assertText(t('entity_test @id has been created.', ['@id' => $id]));
+
+        // Test what is stored in the field.
+        if ($id) {
+          $entity = $this->entityStorage->load($id);
+          $fieldValues = $entity->get($field_name)->getValue()[0];
+          $messageBase = new FormattableMarkup("For scenario per-date '@per_date' with default '@default': ", [
+            '@per_date' => $per_date_label,
+            '@default' => $default_label,
+          ]);
+          $this->assertEqual($date->format(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, ['timezone' => DateTimeItemInterface::STORAGE_TIMEZONE]), $fieldValues['value'], $messageBase . "checking correct date is stored.");
+          $message = new FormattableMarkup("the time zone stored is expected to be '@expected', actually is '@actual'.", [
+            '@expected' => $timezone_expected_label,
+            '@actual' => array_search($fieldValues['timezone'], $timezones),
+          ]);
+          $this->assertEqual($timezone_expected, $fieldValues['timezone'], $messageBase . $message);
+        }
+      }
+    }
+  }
+
+  /**
+   * Sets the time zone for the currently logged in user.
+   */
+  protected function setLoggedInUserTimezone($timezone) {
+    // Ensure a current user is set before trying to add a time zone for it.
+    $this->assertInstanceOf(UserInterface::class, $this->loggedInUser, 'Tried to set time zone without a user.');
+
+    $user = User::load($this->loggedInUser->id());
+    $user->set('timezone', $timezone)->save();
+    $this->setCurrentUser($user);
   }
 
   /**
@@ -801,6 +1136,7 @@ class DateTimeFieldTest extends DateTestBase {
     $this->drupalGet('entity_test/add');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value][time]", '');
+    $this->assertSession()->fieldNotExists("{$field_name}[0][timezone]");
 
     // Submit invalid dates and ensure they is not accepted.
     $date_value = '';

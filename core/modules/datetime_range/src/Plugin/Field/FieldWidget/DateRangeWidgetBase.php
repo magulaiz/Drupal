@@ -30,6 +30,9 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
       '#title' => $this->t('End date'),
     ] + $element['value'];
 
+    // The time zone selector should be present only once.
+    $element['end_value']['#expose_timezone'] = FALSE;
+
     if ($items[$delta]->start_date) {
       /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
       $start_date = $items[$delta]->start_date;
@@ -76,9 +79,21 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
           // we need to explicitly set the timezone.
           $start_date->setTimeZone($user_timezone)->setTime(0, 0, 0);
         }
+        elseif ($datetime_type !== DateRangeItem::DATETIME_TYPE_DATE) {
+          // Store the time zone if appropriate.
+          $item['timezone'] = '';
+          if ($this->shouldStoreTimezone($start_date, $form, $form_state) && $this->getFieldSetting('timezone_storage') === TRUE) {
+            $item['timezone'] = $start_date->getTimezone()->getName();
+          }
+        }
+
+        // Adjust the date for storage once validation is complete.
+        if ($form_state->isValidationComplete()) {
+          $start_date->setTimezone($storage_timezone);
+        }
 
         // Adjust the date for storage.
-        $item['value'] = $start_date->setTimezone($storage_timezone)->format($storage_format);
+        $item['value'] = $start_date->format($storage_format);
       }
 
       if (!empty($item['end_value']) && $item['end_value'] instanceof DrupalDateTime) {
@@ -93,8 +108,13 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
           $end_date->setTimeZone($user_timezone)->setTime(23, 59, 59);
         }
 
+        // Adjust the date for storage once validation is complete.
+        if ($form_state->isValidationComplete()) {
+          $end_date->setTimezone($storage_timezone);
+        }
+
         // Adjust the date for storage.
-        $item['end_value'] = $end_date->setTimezone($storage_timezone)->format($storage_format);
+        $item['end_value'] = $end_date->format($storage_format);
       }
     }
 
@@ -117,6 +137,15 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     $end_date = $element['end_value']['#value']['object'];
 
     if ($start_date instanceof DrupalDateTime && $end_date instanceof DrupalDateTime) {
+
+      if (!empty($element['value']['#expose_timezone'])) {
+        // Ensure the start and end dates both use the same timezone.
+        $start_tz = $start_date->getTimezone();
+        $end_tz = $end_date->getTimezone();
+        $tz_offset = $end_tz->getOffset($end_date->getPhpDateTime()) - $start_tz->getOffset($start_date->getPhpDateTime());
+        $end_date->setTimezone($start_tz)->modify($tz_offset . ' seconds');
+      }
+
       if ($start_date->getTimestamp() !== $end_date->getTimestamp()) {
         $interval = $start_date->diff($end_date);
         if ($interval->invert === 1) {

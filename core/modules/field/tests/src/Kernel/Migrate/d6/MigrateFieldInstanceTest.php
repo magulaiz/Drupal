@@ -109,7 +109,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertInstanceOf(FieldConfig::class, $field);
     $this->assertSame('Date Field', $field->label());
     $this->assertSame('An example date field.', $field->getDescription());
-    $expected = ['datetime_type' => 'datetime'];
+    $expected = ['datetime_type' => 'datetime', 'timezone_storage' => FALSE];
     $this->assertSame($expected, $field->getSettings());
     $expected = [
       [
@@ -125,7 +125,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertInstanceOf(FieldConfig::class, $field);
     $this->assertSame('Datetime Field', $field->label());
     $this->assertSame('An example datetime field.', $field->getDescription());
-    $expected = ['datetime_type' => 'datetime'];
+    $expected = ['datetime_type' => 'datetime', 'timezone_storage' => FALSE];
     $this->assertSame($expected, $field->getSettings());
     $expected = [];
     $this->assertSame($expected, $field->getDefaultValueLiteral());

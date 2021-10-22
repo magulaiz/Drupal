@@ -55,6 +55,9 @@ class DateRangeItem extends DateTimeItem {
       ->setClass(DateTimeComputed::class)
       ->setSetting('date source', 'end_value');
 
+    $properties['timezone'] = DataDefinition::create('string')
+      ->setLabel(t('Time zone'));
+
     return $properties;
   }
 
@@ -82,6 +85,18 @@ class DateRangeItem extends DateTimeItem {
     $element = parent::storageSettingsForm($form, $form_state, $has_data);
 
     $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
+
+    $element['timezone_storage']['#states'] = [
+      // Hide the option for per-date time zone storage if this is a date-only
+      // or all-day field.
+        'visible' => [
+          ':input[name="settings[datetime_type]"]' => ['value' => static::DATETIME_TYPE_DATETIME],
+        ],
+        'disabled' => [
+          [':input[name="settings[datetime_type]"]' => ['value' => static::DATETIME_TYPE_DATE]],
+          [':input[name="settings[datetime_type]"]' => ['value' => static::DATETIME_TYPE_ALLDAY]],
+        ],
+      ];
 
     return $element;
   }
