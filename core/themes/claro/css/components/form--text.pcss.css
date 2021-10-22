@@ -122,10 +122,6 @@ _:-ms-fullscreen,
   -webkit-text-fill-color: var(--input--disabled-fg-color);
 }
 
-.quickedit-toolgroup.wysiwyg-main form label {
-  padding-right: 1rem;
-}
-
 /**
  * Improve form element usability on narrow devices.
  */
