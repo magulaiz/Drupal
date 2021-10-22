@@ -512,7 +512,6 @@
             // A11yAutocomplete expects the input to be focused when a search
             // occurs, even if it's programmatically triggered.
             instance.input.focus();
-
             // If the args[1] argument is present, it will be the search term.
             if (typeof args[1] === 'string') {
               // The input's value property must always be set as it's used
@@ -536,7 +535,7 @@
             if (
               instance.input.value.length === 0 &&
               instance.options.minChars === 0 &&
-              instance.options.list.length > 0
+              Array.isArray(instance.options.source)
             ) {
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
@@ -695,28 +694,6 @@
                         overriddenResponse,
                       );
                     };
-                  } else if (typeof optionValue === 'string') {
-                    // When the 'source' option is a string, it can either be a
-                    // URL to an endpoint, or a JavaScript array of items. This
-                    // try/catch is implemented to distinguish between the two. If
-                    // parsing the string as JSON results in an error, it is
-                    // assumed the string is a URL.
-                    // Unlike jQuery UI autocomplete, which uses the 'source'
-                    // option for both URLs and predefined lists,
-                    // A11yAutocomplete stores these as individual 'path' and
-                    // 'list' options.
-                    try {
-                      // The contents of JSON.parse are assigned to a variable
-                      // instead of directly to instance.options.list so the
-                      // exception can be caught before any option values are
-                      // changed.
-                      // eslint-disable-next-line no-unused-vars
-                      const list = JSON.parse(optionValue);
-                      instance.options.source = list;
-                    } catch (e) {
-                      // @todo fix this.
-                      instance.options.source = optionValue;
-                    }
                   } else {
                     instance.options.source = optionValue;
                   }

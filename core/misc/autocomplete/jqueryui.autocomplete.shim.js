@@ -324,7 +324,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               instance.input.value = instance.input.textContent;
             }
 
-            if (instance.input.value.length === 0 && instance.options.minChars === 0 && instance.options.list.length > 0) {
+            if (instance.input.value.length === 0 && instance.options.minChars === 0 && Array.isArray(instance.options.source)) {
               instance.suggestionItems = instance.options.list;
               instance.prepareSuggestionList();
 
@@ -437,13 +437,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                         term: instance.extractLastInputValue()
                       }, overriddenResponse);
                     };
-                  } else if (typeof optionValue === 'string') {
-                    try {
-                      var list = JSON.parse(optionValue);
-                      instance.options.source = list;
-                    } catch (e) {
-                      instance.options.source = optionValue;
-                    }
                   } else {
                     instance.options.source = optionValue;
                   }
