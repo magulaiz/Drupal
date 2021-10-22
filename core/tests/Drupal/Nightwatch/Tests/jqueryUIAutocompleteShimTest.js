@@ -2166,7 +2166,7 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   ) {
     Drupal.Autocomplete.instances[
       element.attr('id')
-    ]._internal_object.highlightItem = function () {
+    ]._internal_object.combobox.listbox.highlightItem = function () {
       didMove = true;
     };
   } else {
@@ -2195,7 +2195,7 @@ function arrowsMoveFocus(id, isKeyUp) {
   ) {
     Drupal.Autocomplete.instances[
       element.attr('id')
-    ]._internal_object.highlightItem = function () {
+    ]._internal_object.combobox.listbox.highlightItem = function () {
       didMove = true;
     };
   } else {
