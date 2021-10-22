@@ -35,8 +35,7 @@ class AutocompleteShimTestController extends ControllerBase {
           '#tag' => 'input',
           '#attributes' => [
             'id' => 'autocomplete',
-            'class' => ['foo'],
-            'data-autocomplete-path' => TRUE,
+            'class' => ['foo', 'form-autocomplete'],
           ],
         ],
       ],
@@ -46,7 +45,7 @@ class AutocompleteShimTestController extends ControllerBase {
           'id' => 'autocomplete-contenteditable',
           'tabindex' => 0,
           'contenteditable' => '',
-          'data-autocomplete-path' => TRUE,
+          'class' => ['form-autocomplete'],
         ],
       ],
       'textarea' => [
@@ -54,7 +53,7 @@ class AutocompleteShimTestController extends ControllerBase {
         '#tag' => 'textarea',
         '#attributes' => [
           'id' => ['autocomplete-textarea'],
-          'data-autocomplete-path' => TRUE,
+          'class' => ['form-autocomplete'],
         ],
       ],
       '#attached' => [

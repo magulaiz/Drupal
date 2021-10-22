@@ -34,7 +34,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         instance = _e$detail.instance,
         options = _e$detail.options;
 
-    if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
+    if (instance.input.classList.contains('form-autocomplete')) {
       Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
     }
   });
@@ -137,6 +137,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     instance.combobox.inputKeyDown = shimmedInputKeyDown;
+
+    instance.combobox.listbox.itemsLength = function jqueryItemsLength() {
+      return this.ul.children.length;
+    };
 
     instance.combobox.listbox.displayResults = function jqueryDisplayResults(results) {
       this.ul.innerHTML = '';
@@ -251,7 +255,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         args[_key] = arguments[_key];
       }
 
-      if (oldAutocomplete && (!this.length || !this[0].hasAttribute('data-autocomplete-path'))) {
+      if (oldAutocomplete && (!this.length || !this[0].classList.contains('form-autocomplete'))) {
         return oldAutocomplete.apply(this, args);
       }
 
