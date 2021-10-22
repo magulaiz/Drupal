@@ -38,8 +38,8 @@
     }
 
     instance._renderItem = function (ul, item) {
-      var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-      return $("<li>").addClass(instance.options.itemClass).append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
+      var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      return $(instance.combobox.listbox.suggestionItem("<a>".concat(item, "</a>"), index)).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {

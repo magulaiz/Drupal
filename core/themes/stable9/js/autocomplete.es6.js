@@ -69,15 +69,11 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItem = function (ul, item) {
-      const propertyToDisplay = instance.options.displayLabels
-        ? 'label'
-        : 'value';
+    instance._renderItem = function (ul, item, index = null) {
       // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
-      return $(`<li>`)
-        .addClass(instance.options.itemClass)
-        .append($('<a>').html(item[propertyToDisplay]))
-        .appendTo(ul);
+      return $(
+        instance.combobox.listbox.suggestionItem(`<a>${item}</a>`, index),
+      ).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {

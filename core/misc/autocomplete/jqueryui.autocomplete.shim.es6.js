@@ -222,48 +222,12 @@
     }
     instance.combobox.inputKeyDown = shimmedInputKeyDown;
 
-    /**
-     * Creates a suggestion list based on a typed value.
-     *
-     * The majority of this function is identical to A11yAutocomplete
-     * prepareSuggestionList(). It is changed at the end to be compatible with
-     * jQuery UI extension points.
-     *
-     * @param {string} typed
-     *   The typed value querying autocomplete.
-     */
-    function autocompletePrepareSuggestionList(typed) {
-      this.normalizeSuggestionItems();
-      if (typed) {
-        this.suggestions = this.suggestionItems.filter((item) =>
-          this.filterResults(item, typed),
-        );
-      } else {
-        this.suggestions = this.suggestionItems;
-      }
-      if (this.options.sort !== false) {
-        this.sortSuggestions();
-      }
-      this.totalSuggestions = this.suggestions.length;
-
-      this.triggerEvent('autocomplete-response', {
-        list: this.suggestions,
-      });
-
-      // Everything up until this point is identical to A11yAutocomplete
-      // prepareSuggestionList(). This call to _renderMenu is provided instead
-      // of the forEach loop that creates the item list so jQuery UI's
-      // extension points are supported.
-      this._renderMenu(this.combobox.listbox.ul, this.suggestions);
-
-      // Add the list attributes needed for functionality that would have
-      // been added in A11yAutocomplete were the class not overridden to
-      // accommodate the use of extension points such as the above
-      // `this._renderMenu`.
-      this.prepareListItemAttributes();
-      return this.suggestions;
-    }
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
+    instance.combobox.listbox.displayResults = function jqueryDisplayResults(
+      results,
+    ) {
+      this.ul.innerHTML = '';
+      instance._renderMenu(this.ul, results);
+    };
 
     /**
      * Add list item attributes necessary for accessibility and functionality.
@@ -273,28 +237,26 @@
      * to be added after the list items have been processed by any extension
      * points.
      */
-    // eslint-disable-next-line func-names
-    instance.prepareListItemAttributes = function () {
-      this.combobox.listbox.ul.querySelectorAll('li').forEach((li, index) => {
-        if (this.options.itemClass.length > 0) {
-          this.options.itemClass
-            .split(' ')
-            .forEach((className) => li.classList.add(className));
-        }
-        li.setAttribute('role', 'option');
-        li.setAttribute('tabindex', '-1');
-        li.setAttribute('data-item-index', index);
-        li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-selected', 'false');
+    const suggestionItem = instance.combobox.listbox.suggestionItem;
+    instance.combobox.listbox.suggestionItem = function shimSuggestionItem(
+      suggestion,
+      index,
+    ) {
+      const li = suggestionItem(suggestion, index);
 
-        // Everything prior to this is logic that also happens in the
-        // A11yAutocomplete suggestionItems() method. Below is logic specific
-        // to the `<a>` tag added to list items when using this shim on a theme
-        // that extends Stable or Stable 9.
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
-      });
+      // Everything prior to this is logic that also happens in the
+      // A11yAutocomplete suggestionItems() method. Below is logic specific
+      // to the `<a>` tag added to list items when using this shim on a theme
+      // that extends Stable or Stable 9.
+      if (instance.options.itemClass.length > 0) {
+        instance.options.itemClass
+          .split(' ')
+          .forEach((className) => li.classList.add(className));
+      }
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses(li, index);
+      }
+      return li;
     };
 
     /**
@@ -312,7 +274,7 @@
       const that = this;
       // eslint-disable-next-line func-names
       $.each(items, function (index, item) {
-        that._renderItemData(ul, item);
+        that._renderItemData(ul, item, index);
       });
     };
 
@@ -330,8 +292,11 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItemData = function (ul, item) {
-      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+    instance._renderItemData = function (ul, item, index = null) {
+      return this._renderItem(ul, item, index).data(
+        'ui-autocomplete-item',
+        item,
+      );
     };
 
     // Only override _renderItem if backwards compatible markup is not needed.
@@ -353,11 +318,10 @@
        *   Typically a jQuery Object for an `<li>` element.
        */
       // eslint-disable-next-line func-names
-      instance._renderItem = function (ul, item) {
-        const propertyToDisplay = instance.options.displayLabels
-          ? 'label'
-          : 'value';
-        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
+      instance._renderItem = function (ul, item, index = null) {
+        return $(instance.combobox.listbox.suggestionItem('', index))
+          .text(item)
+          .appendTo(ul);
       };
     }
 

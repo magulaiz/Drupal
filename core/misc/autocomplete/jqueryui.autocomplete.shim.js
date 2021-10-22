@@ -138,73 +138,46 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     instance.combobox.inputKeyDown = shimmedInputKeyDown;
 
-    function autocompletePrepareSuggestionList(typed) {
-      var _this = this;
+    instance.combobox.listbox.displayResults = function jqueryDisplayResults(results) {
+      this.ul.innerHTML = '';
 
-      this.normalizeSuggestionItems();
+      instance._renderMenu(this.ul, results);
+    };
 
-      if (typed) {
-        this.suggestions = this.suggestionItems.filter(function (item) {
-          return _this.filterResults(item, typed);
+    var suggestionItem = instance.combobox.listbox.suggestionItem;
+
+    instance.combobox.listbox.suggestionItem = function shimSuggestionItem(suggestion, index) {
+      var li = suggestionItem(suggestion, index);
+
+      if (instance.options.itemClass.length > 0) {
+        instance.options.itemClass.split(' ').forEach(function (className) {
+          return li.classList.add(className);
         });
-      } else {
-        this.suggestions = this.suggestionItems;
       }
 
-      if (this.options.sort !== false) {
-        this.sortSuggestions();
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses(li, index);
       }
 
-      this.totalSuggestions = this.suggestions.length;
-      this.triggerEvent('autocomplete-response', {
-        list: this.suggestions
-      });
-
-      this._renderMenu(this.combobox.listbox.ul, this.suggestions);
-
-      this.prepareListItemAttributes();
-      return this.suggestions;
-    }
-
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
-
-    instance.prepareListItemAttributes = function () {
-      var _this2 = this;
-
-      this.combobox.listbox.ul.querySelectorAll('li').forEach(function (li, index) {
-        if (_this2.options.itemClass.length > 0) {
-          _this2.options.itemClass.split(' ').forEach(function (className) {
-            return li.classList.add(className);
-          });
-        }
-
-        li.setAttribute('role', 'option');
-        li.setAttribute('tabindex', '-1');
-        li.setAttribute('data-item-index', index);
-        li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-selected', 'false');
-
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
-      });
+      return li;
     };
 
     instance._renderMenu = function (ul, items) {
       var that = this;
       $.each(items, function (index, item) {
-        that._renderItemData(ul, item);
+        that._renderItemData(ul, item, index);
       });
     };
 
     instance._renderItemData = function (ul, item) {
-      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+      var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
     };
 
     if (!usingBCMarkup) {
       instance._renderItem = function (ul, item) {
-        var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
+        var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+        return $(instance.combobox.listbox.suggestionItem('', index)).text(item).appendTo(ul);
       };
     }
 
@@ -272,7 +245,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var oldAutocomplete = $.fn.autocomplete;
   $.fn.extend({
     autocomplete: function autocomplete() {
-      var _this3 = this;
+      var _this = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -365,7 +338,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           case 'option':
             if (typeof args[2] === 'undefined' && args[1] === 'object') {
               Object.keys(args[1]).forEach(function (key) {
-                _this3.autocomplete('option', key, args[1][key]);
+                _this.autocomplete('option', key, args[1][key]);
               });
             }
 
@@ -508,12 +481,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
                 var overrideWith = widgetOverrides[propertyToOverride];
 
-                var instance = Drupal.Autocomplete.instances[_this3.attr('id')]._internal_object;
+                var instance = Drupal.Autocomplete.instances[_this.attr('id')]._internal_object;
 
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
             } else {
-              _this3.autocomplete('option', key, args[0][key]);
+              _this.autocomplete('option', key, args[0][key]);
             }
           });
         }
