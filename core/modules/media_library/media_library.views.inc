@@ -18,5 +18,13 @@ function media_library_views_data() {
       'id' => 'media_library_select_form',
     ],
   ];
+  $data['media']['media_library_edit_link'] = [
+    'title' => t('Edit media form Media Library'),
+    'help' => t('Provides a field for selecting media entities in our media library view'),
+    'real field' => 'mid',
+    'field' => [
+      'id' => 'media_library_edit_link',
+    ],
+  ];
   return $data;
 }

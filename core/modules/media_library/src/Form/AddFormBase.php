@@ -9,38 +9,19 @@ use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\BaseFormIdInterface;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
 use Drupal\media_library\Ajax\UpdateSelectionCommand;
-use Drupal\media_library\MediaLibraryUiBuilder;
 use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityViewBuilderInterface;
 
 /**
  * Provides a base class for creating media items from within the media library.
  */
-abstract class AddFormBase extends FormBase implements BaseFormIdInterface, TrustedCallbackInterface {
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The media library UI builder.
-   *
-   * @var \Drupal\media_library\MediaLibraryUiBuilder
-   */
-  protected $libraryUiBuilder;
+abstract class AddFormBase extends MediaLibraryFormBase {
 
   /**
    * The type of media items being created by this form.
@@ -64,31 +45,33 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
   protected $openerResolver;
 
   /**
-   * Constructs an AddFormBase object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
-   *   The media library UI builder.
-   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
-   *   The opener resolver.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, OpenerResolverInterface $opener_resolver) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->libraryUiBuilder = $library_ui_builder;
-    $this->viewBuilder = $this->entityTypeManager->getViewBuilder('media');
-    $this->openerResolver = $opener_resolver;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('media_library.ui_builder'),
-      $container->get('media_library.opener_resolver')
-    );
+    $form = parent::create($container);
+    $form->setOpenerResolver($container->get('media_library.opener_resolver'));
+    $form->setViewBuilder($container->get('entity_type.manager')->getViewBuilder('media'));
+    return $form;
+  }
+
+  /**
+   * Set entity view builder service.
+   *
+   * @param \Drupal\Core\Entity\EntityViewBuilderInterface $viewBuilder
+   *   The entity view builder service.
+   */
+  protected function setViewBuilder(EntityViewBuilderInterface $viewBuilder) {
+    $this->viewBuilder = $viewBuilder;
+  }
+
+  /**
+   * Set the opener resolver service.
+   *
+   * @param \Drupal\media_library\OpenerResolverInterface $openerResolver
+   *   The opener resolver service.
+   */
+  protected function setOpenerResolver(OpenerResolverInterface $openerResolver) {
+    $this->openerResolver = $openerResolver;
   }
 
   /**
@@ -335,34 +318,6 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     //   https://www.drupal.org/project/drupal/issues/2696555
     if (isset($element['fields']['revision_log_message'])) {
       $element['fields']['revision_log_message']['#access'] = FALSE;
-    }
-    return $element;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['preRenderAddedMedia'];
-  }
-
-  /**
-   * Converts the set of newly added media into an item list for rendering.
-   *
-   * @param array $element
-   *   The render element to transform.
-   *
-   * @return array
-   *   The transformed render element.
-   */
-  public function preRenderAddedMedia(array $element) {
-    // Transform the element into an item list for rendering.
-    $element['#theme'] = 'item_list__media_library_add_form_media_list';
-    $element['#list_type'] = 'ul';
-
-    foreach (Element::children($element) as $delta) {
-      $element['#items'][$delta] = $element[$delta];
-      unset($element[$delta]);
     }
     return $element;
   }
@@ -759,41 +714,6 @@ abstract class AddFormBase extends FormBase implements BaseFormIdInterface, Trus
     return $this->openerResolver->get($state)
       ->getSelectionResponse($state, $current_media_ids)
       ->addCommand(new CloseDialogCommand());
-  }
-
-  /**
-   * Get the media library state from the form state.
-   *
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current form state.
-   *
-   * @return \Drupal\media_library\MediaLibraryState
-   *   The media library state.
-   *
-   * @throws \InvalidArgumentException
-   *   If the media library state is not present in the form state.
-   */
-  protected function getMediaLibraryState(FormStateInterface $form_state) {
-    $state = $form_state->get('media_library_state');
-    if (!$state) {
-      throw new \InvalidArgumentException('The media library state is not present in the form state.');
-    }
-    return $state;
-  }
-
-  /**
-   * Returns the name of the source field for a media type.
-   *
-   * @param \Drupal\media\MediaTypeInterface $media_type
-   *   The media type to get the source field name for.
-   *
-   * @return string
-   *   The name of the media type's source field.
-   */
-  protected function getSourceFieldName(MediaTypeInterface $media_type) {
-    return $media_type->getSource()
-      ->getSourceFieldDefinition($media_type)
-      ->getName();
   }
 
   /**

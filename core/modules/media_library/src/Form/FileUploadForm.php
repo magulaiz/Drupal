@@ -3,25 +3,22 @@
 namespace Drupal\media_library\Form;
 
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\ElementInfoManagerInterface;
-use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Url;
 use Drupal\file\FileInterface;
-use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Plugin\Field\FieldType\FileItem;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaTypeInterface;
-use Drupal\media_library\MediaLibraryUiBuilder;
-use Drupal\media_library\OpenerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\ElementInfoManagerInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\file\FileUsage\FileUsageInterface;
 
 /**
  * Creates a form to create media entities from uploaded files.
@@ -41,7 +38,7 @@ class FileUploadForm extends AddFormBase {
   /**
    * The renderer service.
    *
-   * @var \Drupal\Core\Render\ElementInfoManagerInterface
+   * @var \Drupal\Core\Render\RendererInterface
    */
   protected $renderer;
 
@@ -60,44 +57,55 @@ class FileUploadForm extends AddFormBase {
   protected $fileUsage;
 
   /**
-   * Constructs a new FileUploadForm.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
-   * @param \Drupal\media_library\MediaLibraryUiBuilder $library_ui_builder
-   *   The media library UI builder.
-   * @param \Drupal\Core\Render\ElementInfoManagerInterface $element_info
-   *   The element info manager.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer service.
-   * @param \Drupal\Core\File\FileSystemInterface $file_system
-   *   The file system service.
-   * @param \Drupal\media_library\OpenerResolverInterface $opener_resolver
-   *   The opener resolver.
-   * @param \Drupal\file\FileUsage\FileUsageInterface $file_usage
-   *   The file usage service.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, MediaLibraryUiBuilder $library_ui_builder, ElementInfoManagerInterface $element_info, RendererInterface $renderer, FileSystemInterface $file_system, OpenerResolverInterface $opener_resolver, FileUsageInterface $file_usage) {
-    parent::__construct($entity_type_manager, $library_ui_builder, $opener_resolver);
-    $this->elementInfo = $element_info;
-    $this->renderer = $renderer;
-    $this->fileSystem = $file_system;
-    $this->fileUsage = $file_usage;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity_type.manager'),
-      $container->get('media_library.ui_builder'),
-      $container->get('element_info'),
-      $container->get('renderer'),
-      $container->get('file_system'),
-      $container->get('media_library.opener_resolver'),
-      $container->get('file.usage')
-    );
+    $form = parent::create($container);
+    $form->setElementInfo($container->get('element_info'));
+    $form->setRenderer($container->get('renderer'));
+    $form->setFileSystem($container->get('file_system'));
+    $form->setFileUsage($container->get('file.usage'));
+    return $form;
+  }
+
+  /**
+   * Set element info manager service.
+   *
+   * @param \Drupal\Core\Render\ElementInfoManagerInterface $elementInfoManager
+   *   The element info manager service.
+   */
+  protected function setElementInfo(ElementInfoManagerInterface $elementInfoManager) {
+    $this->elementInfo = $elementInfoManager;
+  }
+
+  /**
+   * Set renderer service.
+   *
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer service.
+   */
+  protected function setRenderer(RendererInterface $renderer) {
+    $this->renderer = $renderer;
+  }
+
+  /**
+   * Set filesystem service.
+   *
+   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
+   *   The filesystem service.
+   */
+  protected function setFileSystem(FileSystemInterface $fileSystem) {
+    $this->fileSystem = $fileSystem;
+  }
+
+  /**
+   * Set file usage service.
+   *
+   * @param \Drupal\file\FileUsage\FileUsageInterface $fileUsage
+   *   The file usage service.
+   */
+  protected function setFileUsage(FileUsageInterface $fileUsage) {
+    $this->fileUsage = $fileUsage;
   }
 
   /**
