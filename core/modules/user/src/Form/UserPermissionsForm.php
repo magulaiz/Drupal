@@ -130,7 +130,7 @@ class UserPermissionsForm extends FormBase {
     }
 
     // Add list of links for module specific permissions.
-    if (!empty($modules)) {
+    if (!empty($modules) && count($modules) > 1) {
       $form['module_links'] = [
         '#type' => 'inline_template',
         '#template' => '<div class="module-links"><p><strong>Showing modules: </strong>{% for key,module in modules %}{% if key > 0 %}, {% endif %}<a href="#module-{{ module }}">{{ module }}</a>{% endfor %}</p></div>',
