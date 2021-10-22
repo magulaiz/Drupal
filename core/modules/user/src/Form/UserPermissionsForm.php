@@ -129,6 +129,7 @@ class UserPermissionsForm extends FormBase {
       $admin_roles[$role_name] = $role->isAdmin();
     }
 
+    // Add list of links for module specific permissions.
     if (!empty($modules)) {
       $form['module_links'] = [
         '#type' => 'inline_template',
