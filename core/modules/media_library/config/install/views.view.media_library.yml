@@ -779,6 +779,7 @@ display:
         - user
         - user.permissions
       tags: {  }
+  # @todo Lock down access in https://www.drupal.org/node/2983179
   widget:
     id: widget
     display_title: Widget

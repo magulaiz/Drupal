@@ -1,4 +1,6 @@
 langcode: en
+# This depends on configuration in the install's config/install directory so we
+# can test that this configuration is installed.
 dependencies:
   module:
     - testing_config_overrides

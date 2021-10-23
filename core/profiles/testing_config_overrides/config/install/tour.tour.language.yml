@@ -1,4 +1,6 @@
 langcode: en
+# The enforced dependency ensures that profile configuration in config/install
+# can depend on optional configuration of modules and themes it installs.
 dependencies:
   module:
     - language
