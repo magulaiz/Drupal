@@ -47,7 +47,7 @@
           dateFormats[key] ? dateFormats[key] : value,
         );
 
-        $preview.text(dateString);
+        $preview[0].textContent = dateString;
         $target.toggleClass('js-hide', !dateString.length);
       }
 

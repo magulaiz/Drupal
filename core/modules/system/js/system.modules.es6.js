@@ -44,7 +44,7 @@
           const $sources = $row.find(
             '.table-filter-text-source, .module-name, .module-description',
           );
-          const textMatch = $sources.text().search(re) !== -1;
+          const textMatch = $sources[0].textContent.search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
         // Search over all rows and packages.

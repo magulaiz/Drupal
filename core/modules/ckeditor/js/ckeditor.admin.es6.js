@@ -284,8 +284,7 @@
 
           $group
             .attr('data-drupal-ckeditor-toolbar-group-name', name)
-            .children('.ckeditor-toolbar-group-name')
-            .text(name);
+            .children('.ckeditor-toolbar-group-name')[0].textContent = name;
         }
 
         // Invoke a user-provided callback and indicate failure.

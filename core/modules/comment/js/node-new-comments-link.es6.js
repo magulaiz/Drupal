@@ -115,15 +115,13 @@
     function render(results) {
       Object.keys(results || {}).forEach((nodeID) => {
         if ($placeholdersToUpdate.hasOwnProperty(nodeID)) {
+          $placeholdersToUpdate[nodeID][0].textContent = Drupal.formatPlural(
+            results[nodeID].new_comment_count,
+            '1 new comment',
+            '@count new comments',
+          );
           $placeholdersToUpdate[nodeID]
             .attr('href', results[nodeID].first_new_comment_link)
-            .text(
-              Drupal.formatPlural(
-                results[nodeID].new_comment_count,
-                '1 new comment',
-                '@count new comments',
-              ),
-            )
             .removeClass('hidden');
           show($placeholdersToUpdate[nodeID]);
         }

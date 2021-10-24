@@ -18,7 +18,9 @@
       var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
-        var $comment = $(placeholder).removeClass('hidden').text(newCommentString).closest('.js-comment').addClass('new');
+        var $comment = $(placeholder).removeClass('hidden');
+        $comment[0].textContent = newCommentString;
+        $comment.closest('.js-comment').addClass('new');
 
         if (isFirstNewComment) {
           isFirstNewComment = false;

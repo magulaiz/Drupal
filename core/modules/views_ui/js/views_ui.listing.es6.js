@@ -33,7 +33,8 @@
           const $sources = $row.find(
             '[data-drupal-selector="views-table-filter-text-source"]',
           );
-          const textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          const textMatch =
+            $sources[0].textContent.toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 

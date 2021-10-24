@@ -19,7 +19,7 @@
       switcher = typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
       $item.toggleClass('open', switcher);
       $toggle.toggleClass('open', switcher);
-      $toggle.find('.action').text(switcher ? ui.handleClose : ui.handleOpen);
+      $toggle.find('.action')[0].textContent = switcher ? ui.handleClose : ui.handleOpen;
     }
 
     function toggleClickHandler(event) {
@@ -51,7 +51,7 @@
         if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {
-            '@label': $box.find('a').text()
+            '@label': $box.find('a')[0].textContent
           });
           $item.children('.toolbar-box').append(Drupal.theme('toolbarMenuItemToggle', options));
         }

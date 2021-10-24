@@ -56,11 +56,15 @@
 
       switch (this.model.get('state')) {
         case 'opened':
-          $button.removeClass('action-saving icon-throbber icon-end').text(Drupal.t('Save')).removeAttr('disabled').attr('aria-hidden', !isDirty);
+          $button.removeClass('action-saving icon-throbber icon-end');
+          $button[0].textContent = Drupal.t('Save');
+          $button.removeAttr('disabled').attr('aria-hidden', !isDirty);
           break;
 
         case 'committing':
-          $button.addClass('action-saving icon-throbber icon-end').text(Drupal.t('Saving')).attr('disabled', 'disabled');
+          $button.addClass('action-saving icon-throbber icon-end');
+          $button[0].textContent = Drupal.t('Save');
+          $button.attr('disabled', 'disabled');
           break;
 
         default:

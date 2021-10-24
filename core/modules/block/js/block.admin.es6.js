@@ -46,7 +46,8 @@
         function toggleBlockEntry(index, label) {
           const $label = $(label);
           const $row = $label.parent().parent();
-          const textMatch = $label.text().toLowerCase().indexOf(query) !== -1;
+          const textMatch =
+            $label[0].textContent.toLowerCase().indexOf(query) !== -1;
           $row.toggle(textMatch);
         }
 

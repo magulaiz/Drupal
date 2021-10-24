@@ -38,7 +38,7 @@
         if (escapeAdminPath !== null) {
           $toolbarEscape.attr('href', escapeAdminPath);
         } else {
-          $toolbarEscape.text(Drupal.t('Home'));
+          $toolbarEscape.textContent = Drupal.t('Home');
         }
       }
     },

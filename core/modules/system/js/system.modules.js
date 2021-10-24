@@ -47,7 +47,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         function showModuleRow(index, row) {
           var $row = $(row);
           var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          var textMatch = $sources.text().search(re) !== -1;
+          var textMatch = $sources[0].textContent.search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 

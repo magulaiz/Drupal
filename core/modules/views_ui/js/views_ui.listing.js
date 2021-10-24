@@ -37,7 +37,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         function showViewRow(index, row) {
           var $row = $(row);
           var $sources = $row.find('[data-drupal-selector="views-table-filter-text-source"]');
-          var textMatch = $sources.text().toLowerCase().indexOf(query) !== -1;
+          var textMatch = $sources[0].textContent.toLowerCase().indexOf(query) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 

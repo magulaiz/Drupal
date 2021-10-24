@@ -145,7 +145,7 @@
       `${response.title} $1 ${response.siteName}`,
     );
 
-    $('h1.page-title').text(response.title);
+    $('h1.page-title')[0].textContent = response.title;
   };
 
   /**

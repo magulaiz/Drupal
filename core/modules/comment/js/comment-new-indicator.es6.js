@@ -30,9 +30,9 @@
 
       if (timestamp > lastViewTimestamp) {
         // Turn the placeholder into an actual "new" indicator.
-        const $comment = $(placeholder)
-          .removeClass('hidden')
-          .text(newCommentString)
+        const $comment = $(placeholder).removeClass('hidden');
+        $comment[0].textContent = newCommentString;
+        $comment
           .closest('.js-comment')
           // Add 'new' class to the comment, so it can be styled.
           .addClass('new');

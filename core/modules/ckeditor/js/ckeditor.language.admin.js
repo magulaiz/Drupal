@@ -9,7 +9,7 @@
   Drupal.behaviors.ckeditorLanguageSettingsSummary = {
     attach: function attach() {
       $('#edit-editor-settings-plugins-language').drupalSetSummary(function (context) {
-        return $('#edit-editor-settings-plugins-language-language-list-type option:selected').text();
+        return $('#edit-editor-settings-plugins-language-language-list-type option:selected')[0].textContent;
       });
     }
   };
