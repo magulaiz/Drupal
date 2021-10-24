@@ -4,7 +4,6 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\State\StateInterface;
 
 /**
  * Provides a list of available themes.
@@ -89,8 +88,6 @@ class ThemeExtensionList extends ExtensionList {
    *   The info parser.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Extension\ThemeEngineExtensionList $engine_list
@@ -98,8 +95,8 @@ class ThemeExtensionList extends ExtensionList {
    * @param string $install_profile
    *   The install profile used by the site.
    */
-  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, StateInterface $state, ConfigFactoryInterface $config_factory, ThemeEngineExtensionList $engine_list, $install_profile) {
-    parent::__construct($root, $type, $cache, $info_parser, $module_handler, $state, $install_profile);
+  public function __construct($root, $type, CacheBackendInterface $cache, InfoParserInterface $info_parser, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, ThemeEngineExtensionList $engine_list, $install_profile) {
+    parent::__construct($root, $type, $cache, $info_parser, $module_handler, $install_profile);
 
     $this->configFactory = $config_factory;
     $this->engineList = $engine_list;
