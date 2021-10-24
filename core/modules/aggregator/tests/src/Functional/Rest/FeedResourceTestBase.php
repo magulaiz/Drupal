@@ -52,13 +52,13 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
     $feed->set('fid', 1)
       ->set('uuid', 'abcdefg')
       ->setTitle('Feed')
-      ->setUrl('http://example.com/rss.xml')
+      ->setUrl('https://example.com/rss.xml')
       ->setDescription('Feed Resource Test 1')
       ->setRefreshRate(900)
       ->setLastCheckedTime(123456789)
       ->setQueuedTime(123456789)
-      ->setWebsiteUrl('http://example.com')
-      ->setImage('http://example.com/feed_logo')
+      ->setWebsiteUrl('https://example.com')
+      ->setImage('https://example.com/feed_logo')
       ->setHash('abcdefg')
       ->setEtag('hijklmn')
       ->setLastModified(123456789)
@@ -89,7 +89,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
       ],
       'url' => [
         [
-          'value' => 'http://example.com/rss.xml',
+          'value' => 'https://example.com/rss.xml',
         ],
       ],
       'title' => [
@@ -116,7 +116,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
       ],
       'link' => [
         [
-          'value' => 'http://example.com',
+          'value' => 'https://example.com',
         ],
       ],
       'description' => [
@@ -126,7 +126,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
       ],
       'image' => [
         [
-          'value' => 'http://example.com/feed_logo',
+          'value' => 'https://example.com/feed_logo',
         ],
       ],
       'hash' => [
@@ -160,7 +160,7 @@ abstract class FeedResourceTestBase extends EntityResourceTestBase {
       ],
       'url' => [
         [
-          'value' => 'http://example.com/feed',
+          'value' => 'https://example.com/feed',
         ],
       ],
       'refresh' => [
