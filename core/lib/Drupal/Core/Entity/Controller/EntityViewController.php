@@ -103,7 +103,7 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
 
     $page['#pre_render'][] = [$this, 'buildTitle'];
     $page['#entity_type'] = $_entity->getEntityTypeId();
-    if(!isset($page['#' . $page['#entity_type']])){
+    if (!isset($page['#' . $page['#entity_type']])) {
       $page['#' . $page['#entity_type']] = $_entity;
     }
 
