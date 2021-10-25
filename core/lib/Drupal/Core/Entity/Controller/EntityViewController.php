@@ -103,7 +103,9 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
 
     $page['#pre_render'][] = [$this, 'buildTitle'];
     $page['#entity_type'] = $_entity->getEntityTypeId();
-    $page['#' . $page['#entity_type']] = $_entity;
+    if(!isset($page['#' . $page['#entity_type']])){
+      $page['#' . $page['#entity_type']] = $_entity;
+    }
 
     // Add canonical and shortlink links if the entity has a canonical
     // link template and is not new.
