@@ -16,7 +16,7 @@
   function _removeIrrelevantTourItems(tourItems) {
     var tips = /tips=([^&]+)/.exec(queryString);
     var filteredTour = tourItems.filter(function (tourItem) {
-      if (tips && tourItem.hasOwnProperty('classes') && tourItem.classes.indexOf(tips[1]) === -1) {
+      if (tips && tourItem.hasOwnProperty('classes') && tourItem.classes.includes(tips[1])) {
         return false;
       }
 

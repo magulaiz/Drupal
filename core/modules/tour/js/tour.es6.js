@@ -57,7 +57,7 @@
       if (
         tips &&
         tourItem.hasOwnProperty('classes') &&
-        tourItem.classes.indexOf(tips[1]) === -1
+        tourItem.classes.includes(tips[1])
       ) {
         return false;
       }
@@ -218,7 +218,6 @@
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
           context
             .querySelector('#toolbar-tab-tour > button')
-            // .find('#toolbar-tab-tour')
             .addEventListener(
               'click',
               function () {
