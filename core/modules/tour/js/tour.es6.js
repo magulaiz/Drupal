@@ -57,7 +57,7 @@
       if (
         tips &&
         tourItem.hasOwnProperty('classes') &&
-        tourItem.classes.includes(tips[1])
+        !tourItem.classes.includes(tips[1])
       ) {
         return false;
       }
@@ -216,15 +216,13 @@
 
         if (settings._tour_internal) {
           $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
-          context
-            .querySelector('#toolbar-tab-tour > button')
-            .addEventListener(
-              'click',
-              function () {
-                toggleTour();
-              },
-              false,
-            );
+          context.querySelector('#toolbar-tab-tour > button').addEventListener(
+            'click',
+            function () {
+              toggleTour();
+            },
+            false,
+          );
         }
         // Start the tour immediately if toggled via query string.
         if (/tour=?/i.test(queryString)) {
