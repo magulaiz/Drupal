@@ -74,7 +74,12 @@ attrvals
 auth's
 authless
 authz
+autocompletechange
+autocompleteclose
+autocompletecreate
 autocompletefocus
+autocompleteopen
+autocompleteresponse
 autocompleteresponses
 autocompletesearch
 autocompleteselect
@@ -276,8 +281,6 @@ commenter's
 commenters
 commontest
 complote
-compositionend
-compositionstart
 config's
 configentity
 configtranslation
@@ -389,6 +392,9 @@ descripcion
 deserialization
 deserializes
 destructable
+destructure
+destructured
+desynchronized
 deutsch
 deutscher
 devel
@@ -669,6 +675,7 @@ hookname
 horizontalrule
 hosters
 hostnames
+hoverable
 hreflang
 hreflangs
 hrefs
@@ -861,7 +868,9 @@ mdhash
 mediumint
 mediumtext
 membersonly
+menufocus
 menulist
+menuselect
 merhaba
 messagekey
 metainformation
@@ -988,6 +997,7 @@ noindex
 nojs
 nolink
 nomask
+nomodule
 nonamespace
 nonconfigurable
 nonexistingfilename
@@ -1271,6 +1281,8 @@ revlog
 revpub
 ribisi
 ritchie
+rkeyEvent
+rmouseEvent
 robloach
 robo
 rolename
