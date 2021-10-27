@@ -503,7 +503,6 @@ fcgi
 februar
 feededit
 fetchmode
-fffd
 fffffg
 ffnli
 fichiers
@@ -1714,7 +1713,6 @@ writeln
 wrongparam
 wsod
 wwwrun
-wõrd
 xampl
 xbap
 xbeg
