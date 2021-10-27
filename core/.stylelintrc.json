@@ -10,7 +10,6 @@
     "comment-empty-line-before": null,
     "custom-property-pattern": "^[a-z][-_a-z0-9IE]*$",
     "declaration-block-no-redundant-longhand-properties": null,
-    "font-family-name-quotes": null,
     "function-linear-gradient-no-nonstandard-direction": null,
     "function-url-quotes": null,
     "function-whitespace-after": null,
