@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
+use Drupal\migrate\Plugin\MigrateIdFilterInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\id_map\Sql;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -65,7 +66,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see https://www.drupal.org/docs/8/api/database-api
  * @see \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  */
-abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, RequirementsInterface {
+abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPluginInterface, MigrateIdFilterInterface, RequirementsInterface {
 
   /**
    * The query string.
@@ -103,6 +104,13 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * @var int
    */
   protected $batchSize = 0;
+
+  /**
+   * The list of source IDs to filter by.
+   *
+   * @var array|null
+   */
+  protected $idList = [];
 
   /**
    * {@inheritdoc}
@@ -225,6 +233,20 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getIdList() {
+    return $this->idList;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setIdList(array $idList) {
+    $this->idList = $idList;
+  }
+
+  /**
    * Wrapper for database select.
    */
   protected function select($table, $alias = NULL, array $options = []) {
@@ -243,6 +265,31 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     $this->query->addTag('migrate');
     $this->query->addTag('migrate_' . $this->migration->id());
     $this->query->addMetaData('migration', $this->migration);
+
+    $id_list = $this->getIdList();
+    if (!empty($id_list)) {
+      $id_fields = [];
+      $connection = $this->getDatabase();
+      foreach ($this->getIds() as $field_name => $field_schema) {
+        if (isset($field_schema['alias'])) {
+          $field_name = $connection->escapeAlias($field_schema['alias']) . '.' . $this->query->escapeField($field_name);
+        }
+        else {
+          $field_name = $this->query->escapeField($field_name);
+        }
+        $id_fields[] = $field_name;
+      }
+
+      $or = $this->query->orConditionGroup();
+      foreach ($id_list as $ids) {
+        $and = $this->query->andConditionGroup();
+        foreach ($ids as $key => $id) {
+          $and->condition($id_fields[$key], $id);
+        }
+        $or->condition($and);
+      }
+      $this->query->condition($or);
+    }
 
     return $this->query;
   }
