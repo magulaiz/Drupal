@@ -328,6 +328,10 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $entity->$field_name = NULL;
     }
 
+    if (isset($this->configuration['new_revision']) && $entity instanceof RevisionableInterface && $this->storage instanceof TranslatableRevisionableStorageInterface) {
+      $this->storage->createRevision($entity);
+    }
+
     $this->setRollbackAction($row->getIdMap(), $rollback_action);
 
     // We might have a different (translated) entity, so return it.
