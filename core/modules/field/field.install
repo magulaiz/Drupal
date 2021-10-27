@@ -5,9 +5,212 @@
  * Install, update and uninstall functions for the field module.
  */
 
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+
 /**
  * Implements hook_update_last_removed().
  */
 function field_update_last_removed() {
   return 8500;
+}
+
+/**
+ * Fix entity reference SQL fields size to match target entity.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2680571
+ */
+function field_update_8501(&$sandbox) {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+  $lastInstalledSchemaRepository = \Drupal::service('entity.last_installed_schema.repository');
+  $fieldMap = $entityFieldManager->getFieldMap();
+  $entityNoBundlesFields = [];
+  $entityWithBundlesFields = [];
+  $dbSchema = \Drupal::database()->schema();
+
+  $entityTypeManager->useCaches(FALSE);
+  $entityFieldManager->useCaches(FALSE);
+
+  // Checking all field types to find entity_reference fields, that should
+  // be fixed.
+  foreach ($fieldMap as $entityType => $fields) {
+
+    $entityStorage = $entityTypeManager->getStorage($entityType);
+    // Skipping entities that have no SQL storage.
+    if (!$entityStorage instanceof SqlContentEntityStorage) {
+      continue;
+    }
+
+    foreach ($fields as $fieldName => $fieldInfo) {
+      // Excluding all non-reference field types.
+      if ($fieldInfo['type'] !== 'entity_reference') {
+        continue;
+      }
+      // Get field definition depending on entity bundle availability.
+      if (isset($fieldInfo['bundles'])) {
+        if (!isset($entityWithBundlesFields[$entityType])) {
+          // Using any bundle to get target entity type.
+          $bundle = current($fieldInfo['bundles']);
+          $entityWithBundlesFields[$entityType . '.' . $bundle] = $entityFieldManager->getFieldDefinitions($entityType, $bundle);
+        }
+        $entityFields = $entityWithBundlesFields[$entityType . '.' . $bundle];
+        $fieldDefinition = $entityFields[$fieldName]->getFieldStorageDefinition();
+      }
+      else {
+        if (!isset($entityNoBundlesFields[$entityType])) {
+          $entityNoBundlesFields[$entityType] = $lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entityType);
+        }
+        $entityFields = $entityNoBundlesFields[$entityType];
+        $fieldDefinition = $entityFields[$fieldName];
+      }
+
+      $entityFieldSettings = $fieldDefinition->getSettings();
+
+      $entityFieldTargetEntityType = $entityFieldSettings['target_type'];
+      $targetEntityType = $entityTypeManager->getDefinition($entityFieldTargetEntityType);
+      $targetEntityTypeIdField = $targetEntityType->get('entity_keys')['id'];
+      $targetEntityTypeFields = $lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entityFieldTargetEntityType);
+
+      // Skipping entities with no field definitions.
+      if (!isset($targetEntityTypeFields[$targetEntityTypeIdField])) {
+        continue;
+      }
+
+      $targetEntityTypeIdFieldSchema = $targetEntityTypeFields[$targetEntityTypeIdField]->getSchema();
+      $targetFieldSize = $targetEntityTypeIdFieldSchema['columns']['value']['size'] ?? NULL;
+      $fieldDefinitionSchema = $fieldDefinition->getSchema();
+      $referenceFieldSize = $fieldDefinitionSchema['columns']['target_id']['size'] ?? NULL;
+
+      // Skipping if target entity id field have no custom size value, or default (normal)
+      if ($targetFieldSize == NULL || $targetFieldSize == 'normal') {
+        continue;
+      }
+
+      dump("$entityType - $fieldName - {$fieldInfo['type']} - target $entityFieldTargetEntityType - size target $targetFieldSize ref $referenceFieldSize");
+
+      $fieldSqlTables = $entityTypeManager->getStorage($entityType)->getTableMapping()->getAllFieldTableNames($fieldName);
+      foreach ($fieldSqlTables as $fieldSqlTable) {
+        $fieldSqlColumn = is_a($fieldDefinition, 'Drupal\field\Entity\FieldStorageConfig')
+          ? $fieldName . '_target_id'
+          : $fieldName;
+        $dbSchema->changeField($fieldSqlTable, $fieldSqlColumn, $fieldSqlColumn, $fieldDefinitionSchema['columns']['target_id']);
+
+        $fieldSchemaData = \Drupal::keyValue('entity.storage_schema.sql')->get($entityType . '.field_schema_data.' . $fieldSqlColumn, []);
+        $fieldSchemaData[$entityType]['fields'][$fieldSqlColumn]['size'] = $targetFieldSize;
+        \Drupal::keyValue('entity.storage_schema.sql')->set($entityType . '.field_schema_data.' . $fieldSqlColumn, $fieldSchemaData);
+
+      }
+      $fieldStorageConfigsActual = $entityFieldManager->getFieldStorageDefinitions($entityType);
+      $lastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entityType, $fieldStorageConfigsActual);
+    }
+  }
+  $entityFieldManager->clearCachedFieldDefinitions();
+}
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the field module.
+ */
+
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+
+/**
+ * Implements hook_update_last_removed().
+ */
+function field_update_last_removed() {
+  return 8500;
+}
+
+/**
+ * Fix entity reference SQL fields size to match target entity.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2680571
+ */
+function field_update_8501(&$sandbox) {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $entityFieldManager = \Drupal::service('entity_field.manager');
+  $lastInstalledSchemaRepository = \Drupal::service('entity.last_installed_schema.repository');
+  $fieldMap = $entityFieldManager->getFieldMap();
+  $entityNoBundlesFields = [];
+  $entityWithBundlesFields = [];
+  $dbSchema = \Drupal::database()->schema();
+
+  $entityTypeManager->useCaches(FALSE);
+  $entityFieldManager->useCaches(FALSE);
+
+  // Checking all field types to find entity_reference fields, that should
+  // be fixed.
+  foreach ($fieldMap as $entityType => $fields) {
+
+    $entityStorage = $entityTypeManager->getStorage($entityType);
+    // Skipping entities that have no SQL storage.
+    if (!$entityStorage instanceof SqlContentEntityStorage) {
+      continue;
+    }
+
+    foreach ($fields as $fieldName => $fieldInfo) {
+      // Excluding all non-reference field types.
+      if ($fieldInfo['type'] !== 'entity_reference') {
+        continue;
+      }
+      // Get field definition depending on entity bundle availability.
+      if (isset($fieldInfo['bundles'])) {
+        if (!isset($entityWithBundlesFields[$entityType])) {
+          // Using any bundle to get target entity type.
+          $bundle = current($fieldInfo['bundles']);
+          $entityWithBundlesFields[$entityType . '.' . $bundle] = $entityFieldManager->getFieldDefinitions($entityType, $bundle);
+        }
+        $entityFields = $entityWithBundlesFields[$entityType . '.' . $bundle];
+        $fieldDefinition = $entityFields[$fieldName]->getFieldStorageDefinition();
+      }
+      else {
+        if (!isset($entityNoBundlesFields[$entityType])) {
+          $entityNoBundlesFields[$entityType] = $lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entityType);
+        }
+        $entityFields = $entityNoBundlesFields[$entityType];
+        $fieldDefinition = $entityFields[$fieldName];
+      }
+
+      $entityFieldSettings = $fieldDefinition->getSettings();
+
+      $entityFieldTargetEntityType = $entityFieldSettings['target_type'];
+      $targetEntityType = $entityTypeManager->getDefinition($entityFieldTargetEntityType);
+      $targetEntityTypeIdField = $targetEntityType->get('entity_keys')['id'];
+      $targetEntityTypeFields = $lastInstalledSchemaRepository->getLastInstalledFieldStorageDefinitions($entityFieldTargetEntityType);
+
+      // Skipping entities with no field definitions.
+      if (!isset($targetEntityTypeFields[$targetEntityTypeIdField])) {
+        continue;
+      }
+
+      $targetEntityTypeIdFieldSchema = $targetEntityTypeFields[$targetEntityTypeIdField]->getSchema();
+      $targetFieldSize = $targetEntityTypeIdFieldSchema['columns']['value']['size'] ?? NULL;
+      $fieldDefinitionSchema = $fieldDefinition->getSchema();
+      $referenceFieldSize = $fieldDefinitionSchema['columns']['target_id']['size'] ?? NULL;
+
+      // Skipping if target entity id field have no custom size value, or default (normal)
+      if ($targetFieldSize == NULL || $targetFieldSize == 'normal') {
+        continue;
+      }
+
+      dump("$entityType - $fieldName - {$fieldInfo['type']} - target $entityFieldTargetEntityType - size target $targetFieldSize ref $referenceFieldSize");
+
+      $fieldSqlTables = $entityTypeManager->getStorage($entityType)->getTableMapping()->getAllFieldTableNames($fieldName);
+      foreach ($fieldSqlTables as $fieldSqlTable) {
+        $fieldSqlColumn = is_a($fieldDefinition, 'Drupal\field\Entity\FieldStorageConfig')
+          ? $fieldName . '_target_id'
+          : $fieldName;
+        $dbSchema->changeField($fieldSqlTable, $fieldSqlColumn, $fieldSqlColumn, $fieldDefinitionSchema['columns']['target_id']);
+
+        $fieldSchemaData = \Drupal::keyValue('entity.storage_schema.sql')->get($entityType . '.field_schema_data.' . $fieldSqlColumn, []);
+        $fieldSchemaData[$entityType]['fields'][$fieldSqlColumn]['size'] = $targetFieldSize;
+        \Drupal::keyValue('entity.storage_schema.sql')->set($entityType . '.field_schema_data.' . $fieldSqlColumn, $fieldSchemaData);
+
+      }
+      $fieldStorageConfigsActual = $entityFieldManager->getFieldStorageDefinitions($entityType);
+      $lastInstalledSchemaRepository->setLastInstalledFieldStorageDefinitions($entityType, $fieldStorageConfigsActual);
+    }
+  }
+  $entityFieldManager->clearCachedFieldDefinitions();
 }
