@@ -12,6 +12,7 @@ use Drupal\migrate\Event\MigratePreRowSaveEvent;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\Exception\RequirementsException;
+use Drupal\migrate\Plugin\MigrateIdFilterInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -179,6 +180,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
     $this->migration->setStatus(MigrationInterface::STATUS_IMPORTING);
     $source = $this->getSource();
+    if (!empty($this->idlist)) {
+      $migrate_source = $this->migration->getSourcePlugin();
+      if ($migrate_source instanceof MigrateIdFilterInterface) {
+        $migrate_source->setIdList($this->idlist);
+      }
+    }
 
     try {
       $source->rewind();
