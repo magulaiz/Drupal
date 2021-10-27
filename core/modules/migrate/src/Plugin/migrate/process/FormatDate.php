@@ -116,9 +116,9 @@ class FormatDate extends ProcessPluginBase {
     $to_timezone = isset($this->configuration['to_timezone']) ? $this->configuration['to_timezone'] : $default_timezone;
     $settings = isset($this->configuration['settings']) ? $this->configuration['settings'] : [];
 
-    // Older versions of Drupal where omitting certain granularities (also known
-    // as "collected date attributes") resulted in invalid timestamps getting
-    // stored.
+    // Older versions of Drupal where omitting certain granularity values (also
+    // known as "collected date attributes") resulted in invalid timestamps
+    // getting stored.
     if ($fromFormat === 'Y-m-d\TH:i:s') {
       $value = str_replace(['-00-00T', '-00T'], ['-01-01T', '-01T'], $value);
     }
@@ -130,10 +130,10 @@ class FormatDate extends ProcessPluginBase {
       $transformed = DateTimePlus::createFromFormat($fromFormat, $value, $from_timezone, $settings)->format($toFormat, ['timezone' => $to_timezone]);
     }
     catch (\InvalidArgumentException $e) {
-      throw new MigrateException(sprintf("Format date plugin could not transform '%s' using the format '%s' for destination '%s'. Error: %s", $value, $fromFormat, $destination_property, $e->getMessage()), $e->getCode(), $e);
+      throw new MigrateException(sprintf("Format date plugin could not transform '%s' using the format '%s'. Error: %s", $value, $fromFormat, $e->getMessage()), $e->getCode(), $e);
     }
     catch (\UnexpectedValueException $e) {
-      throw new MigrateException(sprintf("Format date plugin could not transform '%s' using the format '%s' for destination '%s'. Error: %s", $value, $fromFormat, $destination_property, $e->getMessage()), $e->getCode(), $e);
+      throw new MigrateException(sprintf("Format date plugin could not transform '%s' using the format '%s'. Error: %s", $value, $fromFormat, $e->getMessage()), $e->getCode(), $e);
     }
 
     return $transformed;

@@ -269,11 +269,11 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $this->assertRaw(t('Are you sure you want to delete the @entity-type %label?', ['@entity-type' => 'taxonomy term', '%label' => $edit['name[0][value]']]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the taxonomy term {$edit['name[0][value]']}?");
 
     // Confirm deletion.
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('Deleted term %name.', ['%name' => $edit['name[0][value]']]));
+    $this->assertSession()->pageTextContains("Deleted term {$edit['name[0][value]']}.");
 
     // Test as user with "create" permissions.
     $user = $this->drupalCreateUser(["create terms in {$vocabulary->id()}"]);
@@ -291,7 +291,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $edit['name[0][value]'] = $this->randomMachineName();
 
     $this->submitForm($edit, 'Save');
-    $assert_session->pageTextContains(t('Created new term @name.', ['@name' => $edit['name[0][value]']]));
+    $assert_session->pageTextContains("Created new term {$edit['name[0][value]']}.");
 
     $terms = \Drupal::entityTypeManager()
       ->getStorage('taxonomy_term')
@@ -348,11 +348,11 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/delete');
-    $this->assertRaw(t('Are you sure you want to delete the @entity-type %label?', ['@entity-type' => 'taxonomy term', '%label' => $term->getName()]));
+    $this->assertSession()->pageTextContains("Are you sure you want to delete the taxonomy term {$term->getName()}?");
 
     // Confirm deletion.
     $this->submitForm([], 'Delete');
-    $this->assertRaw(t('Deleted term %name.', ['%name' => $term->getName()]));
+    $this->assertSession()->pageTextContains("Deleted term {$term->getName()}.");
 
     // Test as user without proper permissions.
     $user = $this->drupalCreateUser();

@@ -114,7 +114,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $user->validate();
     $this->assertCount(1, $violations, 'Violation found when email is invalid');
     $this->assertEquals('mail.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('This value is not a valid email address.'), $violations[0]->getMessage());
+    $this->assertEquals('This value is not a valid email address.', $violations[0]->getMessage());
 
     $mail = $this->randomMachineName(Email::EMAIL_MAX_LENGTH - 11) . '@example.com';
     $user->set('mail', $mail);
@@ -127,7 +127,7 @@ class UserValidationTest extends KernelTestBase {
     $this->assertEquals('mail.0.value', $violations[0]->getPropertyPath());
     $this->assertEquals(t('%name: the email address can not be longer than @max characters.', ['%name' => $user->get('mail')->getFieldDefinition()->getLabel(), '@max' => Email::EMAIL_MAX_LENGTH]), $violations[0]->getMessage());
     $this->assertEquals('mail.0.value', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('This value is not a valid email address.'), $violations[1]->getMessage());
+    $this->assertEquals('This value is not a valid email address.', $violations[1]->getMessage());
 
     // Provoke an email collision with an existing user.
     $user->set('mail', 'existing@example.com');
@@ -166,8 +166,8 @@ class UserValidationTest extends KernelTestBase {
     $this->assertAllowedValuesViolation($user, 'preferred_admin_langcode');
     $user->set('preferred_admin_langcode', NULL);
 
-    Role::create(['id' => 'role1'])->save();
-    Role::create(['id' => 'role2'])->save();
+    Role::create(['id' => 'role1', 'label' => 'Role 1'])->save();
+    Role::create(['id' => 'role2', 'label' => 'Role 2'])->save();
 
     // Test cardinality of user roles.
     $user = User::create([
@@ -219,7 +219,7 @@ class UserValidationTest extends KernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations, "Allowed values violation for $field_name found.");
     $this->assertEquals($field_name === 'langcode' ? "{$field_name}.0" : "{$field_name}.0.value", $violations[0]->getPropertyPath());
-    $this->assertEquals(t('The value you selected is not a valid choice.'), $violations[0]->getMessage());
+    $this->assertEquals('The value you selected is not a valid choice.', $violations[0]->getMessage());
   }
 
 }

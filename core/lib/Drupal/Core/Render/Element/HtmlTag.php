@@ -95,8 +95,15 @@ class HtmlTag extends RenderElement {
     // Construct all other elements.
     else {
       $open_tag .= '>';
-      $markup = $element['#value'] instanceof MarkupInterface ? $element['#value'] : Xss::filterAdmin($element['#value']);
-      $element['#markup'] = Markup::create($markup);
+      if ($element['#value'] === NULL) {
+        $element['#markup'] = '';
+      }
+      elseif ($element['#value'] instanceof MarkupInterface) {
+        $element['#markup'] = $element['#value'];
+      }
+      else {
+        $element['#markup'] = Markup::create(Xss::filterAdmin($element['#value']));
+      }
     }
     $prefix = isset($element['#prefix']) ? $element['#prefix'] . $open_tag : $open_tag;
     $suffix = isset($element['#suffix']) ? $close_tag . $element['#suffix'] : $close_tag;
@@ -172,8 +179,8 @@ class HtmlTag extends RenderElement {
     // technique. See http://wikipedia.org/wiki/Conditional_comment
     // for details.
 
-    // Ensure what we are dealing with is safe.
-    // This would be done later anyway in drupal_render().
+    // Ensure what we are dealing with is safe. This would be done later anyway
+    // in \Drupal::service('renderer')->render().
     $prefix = isset($element['#prefix']) ? $element['#prefix'] : '';
     if ($prefix && !($prefix instanceof MarkupInterface)) {
       $prefix = Xss::filterAdmin($prefix);

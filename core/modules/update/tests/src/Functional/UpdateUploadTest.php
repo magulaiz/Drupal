@@ -60,7 +60,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->drupalGet('admin/modules/install');
     $this->submitForm($edit, 'Continue');
     $extensions = \Drupal::service('plugin.manager.archiver')->getExtensions();
-    $this->assertSession()->pageTextContains(t('Only files with the following extensions are allowed: @archive_extensions.', ['@archive_extensions' => $extensions]));
+    $this->assertSession()->pageTextContains("Only files with the following extensions are allowed: $extensions.");
     $this->assertSession()->addressEquals('admin/modules/install');
 
     // Check to ensure an existing module can't be reinstalled. Also checks that
@@ -91,7 +91,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->assertSession()->titleEquals('Update manager | Drupal');
     // Check for a success message on the page, and check that the installed
     // module now exists in the expected place in the filesystem.
-    $this->assertRaw(t('Added / updated %project_name successfully', ['%project_name' => 'update_test_new_module']));
+    $this->assertSession()->pageTextContains("Added / updated update_test_new_module successfully");
     $this->assertFileExists($installedInfoFilePath);
     // Ensure the links are relative to the site root and not
     // core/authorize.php.
@@ -138,7 +138,7 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->submitForm(['projects[update_test_new_module]' => TRUE], 'Download these updates');
     $this->submitForm(['maintenance_mode' => FALSE], 'Continue');
     $this->assertSession()->pageTextContains('Update was completed successfully.');
-    $this->assertRaw(t('Added / updated %project_name successfully', ['%project_name' => 'update_test_new_module']));
+    $this->assertSession()->pageTextContains("Added / updated update_test_new_module successfully");
 
     // Parse the info file again to check that the module has been updated to
     // 8.x-1.1.
