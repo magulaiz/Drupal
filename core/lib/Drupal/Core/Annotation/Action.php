@@ -12,7 +12,7 @@ use Drupal\Component\Annotation\Plugin;
  * @see \Drupal\Core\Action\ActionInterface
  * @see \Drupal\Core\Action\ActionManager
  * @see \Drupal\Core\Action\ActionBase
- * @see \Drupal\Core\Action\Plugin\Action\PublishAction
+ * @see \Drupal\Core\Action\Plugin\Action\UnpublishAction
  * @see plugin_api
  *
  * @Annotation
