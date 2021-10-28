@@ -2,9 +2,6 @@
 
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Prophecy\Argument;
-
 /**
  * Tests defining bundles on entities.
  *
@@ -20,28 +17,12 @@ class EntityBundleTest extends EntityKernelTestBase {
   protected static $modules = ['entity_test'];
 
   /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * The database connection used.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $database;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('user', ['users_data']);
     $this->installEntitySchema('entity_test_class_bundles');
-    $this->moduleHandler = $this->container->get('module_handler');
-    $this->database = $this->container->get('database');
   }
 
   /**
