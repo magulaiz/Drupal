@@ -72,7 +72,7 @@
       attributesToOptions.hasOwnProperty('list') &&
       typeof attributesToOptions.list === 'string'
     ) {
-      attributesToOptions.list = JSON.parse(attributesToOptions.list);
+      attributesToOptions.source = JSON.parse(attributesToOptions.list);
     }
     // Bypass option filtering.
     instance.options = Object.assign(
@@ -152,7 +152,8 @@
       if (
         this.input.nodeName === 'INPUT' &&
         !this.isOpened &&
-        this.options.list.length > 0 &&
+        Array.isArray(this.options.source) &&
+        this.options.source.length > 0 &&
         (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)
       ) {
         e.preventDefault();
@@ -169,21 +170,9 @@
         // minimum, the list must be opened using something other than
         // displayResults(), as that method requires input to work.
         if (!typed && this.options.minChars < 1) {
-          // Reset the item list to avoid duplication when prepareItemList() is
-          // called.
-          this.ul.innerHTML = '';
-
-          // Move the predefined list into suggestionItems, so they can be
-          // processed by prepareSuggestionList().
-          this.suggestionItems = this.options.list;
-
-          // Convert the predefined list into markup.
-          this.prepareSuggestionList();
-
-          // Make the markup visible.
-          this.open();
+          this.displayResults(this.options.source);
         } else {
-          this.displayResults();
+          this.displayResults(this.suggestions);
         }
 
         // If the arrow key press resulted in the opening of a list, then
@@ -210,73 +199,44 @@
      * prepareSuggestionList(). It is changed at the end to be compatible with
      * jQuery UI extension points.
      *
-     * @param {string} typed
+     * @param {string[]} suggestionItems
      *   The typed value querying autocomplete.
      */
-    function autocompletePrepareSuggestionList(typed) {
-      this.normalizeSuggestionItems();
-      if (typed) {
-        this.suggestions = this.suggestionItems.filter((item) =>
-          this.filterResults(item, typed),
-        );
-      } else {
-        this.suggestions = this.suggestionItems;
-      }
-      if (this.options.sort !== false) {
-        this.sortSuggestions();
-      }
-      this.totalSuggestions = this.suggestions.length;
-
+    function jQuerydisplayResults(suggestionItems) {
+      const typed = this.extractLastInputValue();
+      this.ul.innerHTML = '';
+      this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
+      /**
+       * Fires after suggestion items are retrieved, but before they are added to the DOM.
+       *
+       * @event A11yAutocomplete#autocomplete-response
+       * @property {Class} autocomplete - The autocomplete instance.
+       * @property {Object[]} list - an array of suggestions as objects with 'label'
+       *  and 'value' properties.
+       */
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions,
       });
+      if (this.suggestions.length) {
+        this._renderMenu(this.ul, this.suggestions);
+      }
+      if (this.ul.children.length === 0) {
+        this.close();
+      } else {
+        this.open();
+      }
 
-      // Everything up until this point is identical to A11yAutocomplete
-      // prepareSuggestionList(). This call to _renderMenu is provided instead
-      // of the forEach loop that creates the item list so jQuery UI's
-      // extension points are supported.
-      this._renderMenu(this.ul, this.suggestions);
-
-      // Add the list attributes needed for functionality that would have
-      // been added in A11yAutocomplete were the class not overridden to
-      // accommodate the use of extension points such as the above
-      // `this._renderMenu`.
-      this.prepareListItemAttributes();
+      window.clearTimeout(this.announceTimeOutId);
+      // Delay the results announcement by 1400 milliseconds. This prevents
+      // unnecessary calls when a user is typing quickly, and avoids the results
+      // announcement being cut short by the screenreader stating the just-typed
+      // character.
+      this.announceTimeOutId = setTimeout(
+        () => this.sendToLiveRegion(this.resultsMessage(this.ul.children.length)),
+        1400,
+      );
     }
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
-
-    /**
-     * Add list item attributes necessary for accessibility and functionality.
-     *
-     * These are attributes that would usually be added by A11yAutocomplete,
-     * but need to be explicitly added here as the shim overrides require these
-     * to be added after the list items have been processed by any extension
-     * points.
-     */
-    // eslint-disable-next-line func-names
-    instance.prepareListItemAttributes = function () {
-      this.ul.querySelectorAll('li').forEach((li, index) => {
-        if (this.options.itemClass.length > 0) {
-          this.options.itemClass
-            .split(' ')
-            .forEach((className) => li.classList.add(className));
-        }
-        li.setAttribute('role', 'option');
-        li.setAttribute('tabindex', '-1');
-        li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-posinset', index + 1);
-        li.setAttribute('aria-selected', 'false');
-        li.onblur = (e) => this.blurHandler(e);
-
-        // Everything prior to this is logic that also happens in the
-        // A11yAutocomplete suggestionItems() method. Below is logic specific
-        // to the `<a>` tag added to list items when using this shim on a theme
-        // that extends Stable or Stable 9.
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
-      });
-    };
+    instance.displayResults = jQuerydisplayResults;
 
     /**
      * A copy of jQuery UI autocomplete _renderMenu.
@@ -293,7 +253,7 @@
       const that = this;
       // eslint-disable-next-line func-names
       $.each(items, function (index, item) {
-        that._renderItemData(ul, item);
+        that._renderItemData(ul, item, index);
       });
     };
 
@@ -311,8 +271,8 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItemData = function (ul, item) {
-      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+    instance._renderItemData = function (ul, item, index) {
+      return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
     };
 
     // Only override _renderItem if backwards compatible markup is not needed.
@@ -334,39 +294,19 @@
        *   Typically a jQuery Object for an `<li>` element.
        */
       // eslint-disable-next-line func-names
-      instance._renderItem = function (ul, item) {
-        const propertyToDisplay = instance.options.displayLabels
-          ? 'label'
-          : 'value';
-        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
+      instance._renderItem = function (ul, item, index) {
+        const li = instance.suggestionItem(item, index);
+
+        // Everything prior to this is logic that also happens in the
+        // A11yAutocomplete suggestionItems() method. Below is logic specific
+        // to the `<a>` tag added to list items when using this shim on a theme
+        // that extends Stable or Stable 9.
+        if (instance.hasOwnProperty('addBcListItemClasses')) {
+          instance.addBcListItemClasses(li, index);
+        }
+        return $(li).appendTo(ul);
       };
     }
-
-    /**
-     * Converts all suggestions into an object with value and label properties.
-     *
-     * Overrides the A11yAutocomplete version so that item objects can have
-     * any property, not just 'value' and 'label'.
-     */
-    // eslint-disable-next-line func-names
-    const autocompleteNormalizeSuggestionItems = function () {
-      this.suggestionItems = this.suggestionItems.map((item) => {
-        if (typeof item === 'string') {
-          item = { value: item, label: item };
-        } else if (item.value && !item.label) {
-          // This is a change from the original function, so properties other
-          // than value and label can be present.
-          item = { ...item, ...{ value: item.value, label: item.value } };
-        } else if (item.label && !item.value) {
-          // This is a change from the original function, so properties other
-          // than value and label can be present.
-          item = { ...item, ...{ value: item.label, label: item.label } };
-        }
-
-        return item;
-      });
-    };
-    instance.normalizeSuggestionItems = autocompleteNormalizeSuggestionItems;
 
     // Elements with the contenteditable attribute require different logic than
     // the default behavior which expects a text input.
@@ -556,15 +496,10 @@
             if (
               instance.input.value.length === 0 &&
               instance.options.minChars === 0 &&
-              instance.options.list.length > 0
+              Array.isArray(instance.options.source) &&
+              instance.options.source.length > 0
             ) {
-              instance.suggestionItems = instance.options.list;
-              instance.prepareSuggestionList();
-              if (instance.ul.children.length === 0) {
-                instance.close();
-              } else {
-                instance.open();
-              }
+              instance.displayResults(instance.options.source);
             } else {
               // If args[1] isn't a string, just trigger a search using whatever
               // is currently in the input.
@@ -686,18 +621,6 @@
                   // - Array: An array of list items. Can be an array of stings
                   //   or of objects with `label` and `value` properties.
                   if (typeof optionValue === 'function') {
-                    /**
-                     * A callback function used by the 'source' function override.
-                     *
-                     * @param {String[]|Object[]} newList
-                     *   The data that will be suggested.
-                     */
-                    // eslint-disable-next-line func-names
-                    const overriddenResponse = function (newList) {
-                      instance.options.list = newList;
-                      instance.suggestionItems = instance.options.list;
-                      instance.displayResults();
-                    };
                     // eslint-disable-next-line func-names
                     instance.doSearch = function () {
                       // This overrides autocomplete search functionality with
@@ -708,7 +631,7 @@
                       // argument: the data to suggest to the user.
                       optionValue(
                         { term: instance.extractLastInputValue() },
-                        overriddenResponse,
+                        instance.displayResults.bind(instance),
                       );
                     };
                   } else if (typeof optionValue === 'string') {
@@ -728,12 +651,12 @@
                       // changed.
                       // eslint-disable-next-line no-unused-vars
                       const list = JSON.parse(optionValue);
-                      instance.options.list = list;
+                      instance.options.source = list;
                     } catch (e) {
                       instance.options.path = optionValue;
                     }
                   } else {
-                    instance.options.list = optionValue;
+                    instance.options.source = optionValue;
                   }
                   break;
                 default:

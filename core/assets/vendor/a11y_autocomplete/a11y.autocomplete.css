@@ -19,7 +19,8 @@
   cursor: pointer;
 }
 
-[data-autocomplete-live-region] {
+[data-autocomplete-live-region],
+[data-autocomplete-wrapper] [id^='assistive-hint'] {
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);

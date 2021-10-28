@@ -1,138 +1,115 @@
+/*! @drupal/autocomplete - v0.0.0 - 2021-10-28 */
 /**
- * @module
- */
-
-/**
+ * @module @drupal/autocomplete
+ *
  * A standalone autocomplete, optimized for accessibility and querying remote
  * sources.
  *
- * @example <caption>Initialization</caption>
- * // Given an input to receive autocomplete functionality.
+ * @example <!-- Ensure the assets are included in the page. -->
+ * <link rel="stylesheet" href="[path]/a11y.autocomplete.css" />
+ * <script src="[path]/a11y.autocomplete.js"></script>
+ *
+ * @example <!-- Initialization -->
+ * <!-- Element to receive autocomplete functionality. -->
  * <input id="an-input" />
- * const input = document.querySelector('#an-input');
  *
- * // Initialize the autocomplete with a fixed list of items
- * const autocompleteInstanceFixedList = A11yAutocomplete(input, {
- *   list: ['first item', 'second item', 'third item'],
- * });
+ * <script>
+ *   const input = document.querySelector('#an-input');
  *
- * // Or initialize the autocomplete to query items from an endpoint
- * const autocompleteInstanceFixedList = A11yAutocomplete(input, {
- *   path: 'https://url.with.query.results',
- * });
+ *   // Initialize the autocomplete with a fixed list of items.
+ *   const autocompleteInstanceFixedList = A11yAutocomplete(input, {
+ *     source: ['first item', 'second item', 'third item'],
+ *   });
  *
- * // When the autocomplete is initialized, markup is added.
+ *   // Or initialize the autocomplete with dynamic results.
+ *   const autocompleteInstanceFixedList = A11yAutocomplete(input, {
+ *     source: (query, result) => {
+ *       result(['first item', 'second item', 'third item']);
+ *     },
+ *   });
+ *
+ *   // When the autocomplete is initialized, markup is added.
+ * </script>
+ *
+ * @example
  * <!-- The input is wrapped in a div, making is possible to position the results list with CSS. -->
  * <div data-drupal-autocomplete-wrapper>
- *   <-- Several attributes are added to the input, used for accessibility and being identifiable by JavaScript. -->
+ *   <!-- Several attributes are added to the input, used for accessibility and being identifiable by JavaScript. -->
  *   <input id="an-input" aria-autocomplete="list" autocomplete="off" data-drupal-autocomplete-input aria-owns="autocomplete-listbox-0" role="combobox" aria-expanded="false" aria-describedby="assistive-hint-0">
  *     <!-- This span provides assitive technology such as screenreaders with additional information when the input is focused. -->
  *     <span class="visually-hidden" id="assistive-hint-0">Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.</span>
- *     <!-- This is the <ul> that will list the query results when characters are typed in the input -->
+ *     <!-- This is the <ul> that will list the query results when characters are typed in the input. -->
  *     <ul role="listbox" data-drupal-autocomplete-list="" id="autocomplete-listbox-0" hidden=""></ul>
  *     <!-- This is a live region, used for conveying the results of interactions to assistive technology, such as the number of results available after typing. -->
  *     <span data-drupal-autocomplete-live-region="" aria-live="assertive"></span>
  * </div>
  *
- * @example <caption>Setting Options</caption>
- * // Options can be set in three ways, listed from highest precedence to lowest:
+ * @example <!-- Setting Options -->
+ * <!-- Options can be set in three ways, listed from highest precedence to lowest: -->
  *
- * // 1. An object literal in the input's `data-autocomplete` attribute with the format {camelCaseOptionName: value}.
- * <input data-autocomplete="{minChars: 3, path:'http://path-to-results'}" />
+ * <!-- 1. An object literal in the input's `data-autocomplete` attribute with the format {camelCaseOptionName: value}. -->
+ * <input data-autocomplete='{"minChars": "3", "source":["first item", "second item", "third item"]}' />
  *
- * // 2. Via the data-autocomplete-(hyphen delimited option name) attribute.
- * <input data-autocomplete-min-chars="3" data-autocomplete-path="http://path-to-results" />
+ * <!-- 2. Via the data-autocomplete-(hyphen delimited option name) attribute. -->
+ * <input data-autocomplete-min-chars="3" data-autocomplete-source="['first item', 'second item', 'third item']" />
  *
- * // 3. Via the options argument when initializing a new instance
- * A11yAutocomplete(input, {minChars: 3, path:'http://path-to-results'})
- *
- * @param {HTMLElement} input
- *   The element to be used as an autocomplete.
- * @param {Object} options
- *  Autocomplete options, these will override the default options.
- * @param {string} [options.path=''] - This should be a URL that returns search
- *  results. By default, when an autocomplete search begins it queries
- *  `(the value of 'path')?q=(value typed in the autocomplete input)`. How the
- *  autocomplete interacts with `path` can be customized by overriding [queryUrl()]{@link A11yAutocomplete#queryUrl}.
- * @param {Object[]|string[]} [options.list=[]] - A predefined list of autocomplete options. This can be an array of strings or objects with
- * `label:` and `value:`properties. If this array is not empty, this property will take
- * precedence over searching the remote resource specified in `path`. {@link options.path}
- * @param {string|null} [options.allowRepeatValues=null] - If `true`,
+ * <script>
+ *   // 3. Via the options argument when initializing a new instance
+ *   A11yAutocomplete(input, {maxItems: 10, , source: ['first item', 'second item', 'third item']})
+ * </script>
+ */
+/**
+ * Options sent to the Autocomplete constructor that will override the default
+ * options.
+ * @typedef {Object} A11yAutocomplete~Options
+ * @property {Array|string|A11yAutocomplete~sourceCallback} [source] - An array or a string containing
+ *  JSON that parses into an array of values to search when the user types in
+ *  the input field, or a function to take what the user types and call a
+ *  callback function with the results to be displayed.
+ * @property {string|null} [allowRepeatValues=null] - If `true`,
  *  autocomplete results can include items already included in the field. A null
  *  value functions the same as false, but a null value can be used to determine
  *  if this value was explicitly set or using defaults.
- * @param {Boolean} [options.autoFocus=false] - When `true`, the first result is
+ * @property {Boolean} [autoFocus=false] - When `true`, the first result is
  *  focused as soon as a list of results becomes visible.
- * @param {string} [options.separatorChar=','] - The character used to separate
+ * @property {string} [separatorChar=','] - The character used to separate
  *  multiple values in the same form.
- * @param {string} [options.firstCharacterIgnoreList=','] - Any characters in this
+ * @property {string} [firstCharacterIgnoreList=','] - Any characters in this
  *  string will not be incorporated in a search as the first character of a
  *  query. Typically, this string should at least include the value of
  *  `separatorChar`.
- * @param {Number} [options.minChars=1] - Minimum number of characters that must
+ * @property {Number} [minChars=1] - Minimum number of characters that must
  *  be typed before displaying autocomplete results.
- * @param {Number} [options.cardinality=1] - The number of values the input can
+ * @property {Number} [cardinality=1] - The number of values the input can
  *  reference, where multiple values are separated by the character specified in
  *  the `separatorChar` option. Set to `-1` for unlimited cardinality.
- * @param {Boolean} [options.sort=true] - When `true` the results are sorted
- *  prior to display. The default sorting behavior is alphabetical, and can be
- *  customized by overriding [sortSuggestions()]{@link A11yAutocomplete#sortSuggestions}.
- *  #### `displayLabels` (default: `true`)
- * @param {Boolean} [options.displayLabels=true] - When `true`, and when query
- *  results are provided as an object with `label:` and `value:` properties, the
- *  suggestion list will display the item `label:`, but when selected the input
- *  will receive the value set in `value:`.
- * @param {Boolean} [options.disabled=false] - When `true`, input events on
- *  the input will not trigger searches.
- * @param {string} [options.inputClass=''] - Additional classes to be added to
- *  the autocomplete input.
- * @param {string} [options.loadingClass=''] - Additional classes to be added to
- *  the autocomplete input while waiting for a query to return results.
- * @param {string} [options.ulClass=''] - Additional classes to be added to
- *  the results list container `<ul>`
- * @param {string} [options.itemClass=''] - Additional classes that can be
- *  added to each `<li>` item in the results list.
- * @param {Boolean} [options.createLiveRegion=true] - When `true`, initialization
+ * @property {Boolean} [createLiveRegion=true] - When `true`, initialization
  *  includes adding a live region specifically that will convey autocomplete activity
  *  to assistive technology. This is typically only set to `false` if a site has
  *  a centralized live region for assistive technology announcements.
- * @param {Number} [options.listZindex=1] - The CSS z-index of the results list.
- * @param {Number} [options.searchDelay=300] - Time to in milliseconds after
- *  input activity before an autocomplete search is triggered. Typically used to
- *  prevent unnecessary searches before typing is completed.
- * @param {string} [options.inputAssistiveHint='When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.'] -
+ * @property {string} [inputAssistiveHint='When autocomplete results areavailable use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.'] -
  *  Message conveyed to assistive technology when the input is focused.
- * @param {string} [options.minCharAssistiveHint='Type @count or more characters for results'] -
+ * @property {string} [minCharAssistiveHint='Type @count or more characters for results'] -
  *  When `minChars` is greater than one, this is appended to
- *  `messages.inputAssistiveHint` so users are aware how many characters are
+ *  `inputAssistiveHint` so users are aware how many characters are
  *  needed to trigger a search.  `@count` is replaced with the value of`minChars`.
- * @param {string} [options.noResultsAssistiveHint='No results found'] - Message
+ * @property {string} [noResultsAssistiveHint='No results found'] - Message
  *  conveyed to assistive technology when the query returns no results.
-
- * @param {string} [options.someResultsAssistiveHint='There are @count results available.'] -
+ * @property {string} [someResultsAssistiveHint='There are @count results available.'] -
  *  Message conveyed to assistive technology when the number of results exceeds
- *  one.
- *  `@count` is replaced with the number of results returned.
- * @param {string} [options.oneResultAssistiveHint='There is one result available.'] -
+ *  one. `@count` is replaced with the number of results returned.
+ * @property {string} [oneResultAssistiveHint='There is one result available.'] -
  *  Message conveyed to assistive technology when there is one result.
  *
- * @return {A11yAutocomplete}
- *   Class to manage an input's autocomplete functionality.
- *
- * @fires A11yAutocomplete#autocomplete-change
- * @fires A11yAutocomplete#autocomplete-close
- * @fires A11yAutocomplete#autocomplete-created
- * @fires A11yAutocomplete#autocomplete-destroy
- * @fires A11yAutocomplete#autocomplete-highlight
- * @fires A11yAutocomplete#autocomplete-open
- * @fires A11yAutocomplete#autocomplete-pre-search
- * @fires A11yAutocomplete#autocomplete-response
- * @fires A11yAutocomplete#autocomplete-select
- * @fires A11yAutocomplete#autocomplete-selection-added
  */
 class _A11yAutocomplete {
   /**
    * Construct a new A11yAutocomplete class.
+   *
+   * @param {HTMLElement} input
+   *   The element to be used as an autocomplete.
+   * @param {A11yAutocomplete~Options} options
+   *  Autocomplete options.
    */
   constructor(input, options = {}) {
     this.keyCode = Object.freeze({
@@ -150,22 +127,20 @@ class _A11yAutocomplete {
       DOWN: 40,
     });
 
+    this.originalInput = input.cloneNode();
     this.input = input;
 
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = `autocomplete-listbox-${this.count}`;
 
     this.supportedOptions = [
-      'path',
-      'list',
+      'source',
       'cardinality',
       'minChars',
       'separatorChar',
       'firstCharacterIgnoreList',
-      // Try to remove.
       'createLiveRegion',
       'autoFocus',
-      // Will be removed probably.
       'allowRepeatValues',
       // messages.
       'minCharAssistiveHint',
@@ -179,17 +154,15 @@ class _A11yAutocomplete {
     const defaultOptions = {
       // from jquery ui
       autoFocus: false,
-      // remove and use separatorChar
       firstCharacterIgnoreList: ',',
       minChars: 1,
       // API already sort results
       sort: false,
-      path: '',
       // shim
       displayLabels: true,
       // shim
       disabled: false,
-      list: [],
+      source: [],
       cardinality: 1,
       // shim
       inputClass: '',
@@ -225,18 +198,23 @@ class _A11yAutocomplete {
     };
 
     // Preset lists provided as strings should be converted to options.
-    if (typeof this.options.list === 'string') {
-      this.options.list = JSON.parse(this.options.list);
+    if (typeof this.options.source === 'string') {
+      this.options.source = JSON.parse(this.options.source);
+    }
+
+    if (
+      typeof this.options.source !== 'function' &&
+      !Array.isArray(this.options.source)
+    ) {
+      throw new TypeError('options.source is not an array or a function.');
     }
 
     this.selected = null;
     this.preventCloseOnBlur = false;
     this.isOpened = false;
-    this.cache = [];
-    this.suggestionItems = [];
+    this.suggestions = [];
     this.announceTimeOutId = null;
     this.searchTimeOutId = null;
-    this.totalSuggestions = 0;
 
     // Create a div that will wrap the input and suggestion list.
     this.wrapper = document.createElement('div');
@@ -282,9 +260,17 @@ class _A11yAutocomplete {
       });
     });
 
-    // Set the public API
+    /**
+     * The API to manage an input's autocomplete functionality.
+     *
+     * @typedef {Object} A11yAutocomplete~Api
+     * @property {A11yAutocomplete~destroy} destroy - Function to destroy the autocomplete
+     *  instance.
+     * @property {string} id - The id of the instance.
+     */
     this.api = {
       destroy: this.destroy.bind(this),
+      id: this.input.id,
       /**
        * Do not use! only for jquery shim.
        *
@@ -292,9 +278,6 @@ class _A11yAutocomplete {
        */
       _internal_object: this,
     };
-    if (input.id) {
-      this.api.id = input.id;
-    }
 
     /**
      * Fires after initialization and markup additions.
@@ -447,38 +430,31 @@ class _A11yAutocomplete {
     const options = {};
     // Any options provided in the `data-autocomplete` attribute will take
     // precedence over those specified in `data-autocomplete-(x)`.
-    const dataAutocompleteAttributeOptions = this.input.getAttribute(
-      'data-autocomplete',
-    )
-      ? JSON.parse(this.input.getAttribute('data-autocomplete'))
+    const dataAutocompleteAttributeOptions = this.input.dataset.autocomplete
+      ? JSON.parse(this.input.dataset.autocomplete)
       : {};
-
+    const dataset = this.input.dataset;
     // Loop through all of the input's attributes. Any attributes beginning with
     // `data-autocomplete` will be added to an options object.
-    for (let i = 0; i < this.input.attributes.length; i++) {
+    for (const key in dataset) {
       if (
-        this.input.attributes[i].nodeName.includes('data-autocomplete') &&
-        this.input.attributes[i].nodeName !== 'data-autocomplete' &&
-        // Unwanted side effect.
-        this.input.attributes[i].nodeName !== 'data-autocomplete-input'
+        key.includes('autocomplete') &&
+        key !== 'autocomplete' &&
+        key !== 'autocompleteInput'
       ) {
-        // Convert the data attribute name to camel case for use in the options
-        // object.
-        let optionName = this.input.attributes[i].nodeName
-          .replace('data-autocomplete-', '')
-          .split('-')
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join('');
+        let optionName = key.replace('autocomplete', '');
         optionName = optionName.charAt(0).toLowerCase() + optionName.slice(1);
-        const value = this.input.attributes[i].nodeValue;
+        const value = dataset[key];
         if (['true', 'false'].includes(value)) {
           options[optionName] = value === 'true';
+        } else if (['cardinality', 'minChars'].includes(optionName)) {
+          // Transform strings to number
+          options[optionName] = +value;
         } else {
           options[optionName] = value;
         }
       }
     }
-
     return { ...options, ...dataAutocompleteAttributeOptions };
   }
 
@@ -565,9 +541,6 @@ class _A11yAutocomplete {
 
       case this.keyCode.DOWN:
         this.focusNext();
-        break;
-
-      default:
         break;
     }
 
@@ -824,6 +797,31 @@ class _A11yAutocomplete {
   }
 
   /**
+   * Helper method.
+   *
+   * @param element
+   * @param classes
+   */
+  addClasses(element, classes) {
+    classes &&
+    classes
+      .split(' ')
+      .forEach((className) => element.classList.add(className));
+  }
+
+  /**
+   * Helper method.
+   *
+   * @param element
+   * @param classes
+   */
+  removeClasses(element, classes) {
+    classes &&
+    classes
+      .split(' ')
+      .forEach((className) => element.classList.remove(className));
+  }
+  /**
    * Triggers an autocomplete search.
    *
    * @param {Event} e
@@ -833,7 +831,6 @@ class _A11yAutocomplete {
     if (this.options.disabled) {
       return;
     }
-    const inputId = this.input.getAttribute('id');
     const searchTerm = this.extractLastInputValue();
     if (searchTerm && searchTerm.length < this.options.minChars) {
       return;
@@ -848,43 +845,36 @@ class _A11yAutocomplete {
     if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
       return;
     }
-    // we should have an explicit method to clear the cache.
-    if (!(inputId in this.cache)) {
-      this.cache[inputId] = {};
-    }
 
     if (searchTerm && searchTerm.length > 0) {
-      if (
-        Object.prototype.hasOwnProperty.call(this.cache[inputId], searchTerm)
-      ) {
-        this.suggestionItems = this.cache[inputId][searchTerm];
-        this.displayResults();
-      } else if (this.options.list.length === 0 && this.options.path.length) {
-        this.options.loadingClass &&
-          this.options.loadingClass
-            .split(' ')
-            .forEach((className) => this.input.classList.add(className));
-        fetch(this.queryUrl(searchTerm))
-          .then((response) => response.json())
-          .then((results) => {
-            this.options.loadingClass &&
-              this.options.loadingClass
-                .split(' ')
-                .forEach((className) => this.input.classList.remove(className));
-            this.suggestionItems = results;
-            this.displayResults();
-            this.cache[inputId][searchTerm] = results;
-          });
-      } else {
+      if (typeof this.options.source === 'function') {
+        this.addClasses(this.input, this.options.loadingClass);
+        /**
+         * A callback to return autocomplete results dynamically.
+         *
+         * @callback A11yAutocomplete~sourceCallback
+         * @param {string} searchTerm - The search term being searched for.
+         * @param {A11yAutocomplete~results} results - A callback to populate
+         *  the results list.
+         */
+        /**
+         * @callback A11yAutocomplete~results
+         * @param {array} results - An array of results.
+         */
+        this.options.source(searchTerm, (results) => {
+          this.removeClasses(this.input, this.options.loadingClass);
+          this.displayResults(results);
+        });
+      } else if (Array.isArray(this.options.source)) {
         // If a predefined list was provided as an option, make this the
         // suggestion items.
-        this.suggestionItems = this.options.list;
-        this.displayResults();
+        this.displayResults(this.options.source);
+      } else {
+        throw new TypeError('options.source is not an array or a function.');
       }
     } else {
       // If the search query is empty, provide an empty list of suggestions.
-      this.suggestionItems = [];
-      this.displayResults();
+      this.displayResults([]);
     }
   }
 
@@ -904,32 +894,24 @@ class _A11yAutocomplete {
   }
 
   /**
-   * The URL used to search for a term.
-   *
-   * @param {string} searchTerm
-   *   The term being searched for.
-   *
-   * @return {string}
-   *   The URL to retrieve search results from.
-   */
-  queryUrl(searchTerm) {
-    return `${this.options.path}?q=${searchTerm}`;
-  }
-
-  /**
    * Converts all suggestions into an object with value and label properties.
+   *
+   * @param {Array} suggestionItems
+   *   An array of suggestion items to be normalized.
+   * @return {Array}
+   *   An array of normalized suggestion items.
    */
-  normalizeSuggestionItems() {
-    this.suggestionItems = this.suggestionItems.map((item) => {
+  normalizeSuggestionItems(suggestionItems) {
+    return suggestionItems.map((item) => {
       if (typeof item === 'string') {
-        item = { value: item, label: item };
-      } else if (item.value && !item.label) {
-        item = { value: item.value, label: item.value };
-      } else if (item.label && !item.value) {
-        item = { value: item.label, label: item.label };
+        return { value: item, label: item };
       }
 
-      return item;
+      return {
+        ...item,
+        value: item.value || item.label || item,
+        label: item.label || item.value || item,
+      };
     });
   }
 
@@ -938,21 +920,34 @@ class _A11yAutocomplete {
    *
    * @param {string} typed
    *   The typed value querying autocomplete.
+   * @param {Array} suggestionItems
+   *   An array of suggestion items.
+   * @return {Array}
+   *   An array of suggestion items that has been filtered based on typed value
+   *   and sorted if options.sort is true.
    */
-  prepareSuggestionList(typed) {
-    this.normalizeSuggestionItems();
+  prepareSuggestionList(typed, suggestionItems) {
+    let normalizedSuggestionItems =
+      this.normalizeSuggestionItems(suggestionItems);
     if (typed) {
-      this.suggestions = this.suggestionItems.filter((item) =>
+      normalizedSuggestionItems = normalizedSuggestionItems.filter((item) =>
         this.filterResults(item, typed),
       );
-    } else {
-      this.suggestions = this.suggestionItems;
     }
     if (this.options.sort !== false) {
-      this.sortSuggestions();
+      return this.sortSuggestions(normalizedSuggestionItems);
     }
-    this.totalSuggestions = this.suggestions.length;
 
+    return normalizedSuggestionItems;
+  }
+
+  /**
+   * Displays the results retrieved in inputListener().
+   */
+  displayResults(suggestionItems) {
+    const typed = this.extractLastInputValue();
+    this.ul.innerHTML = '';
+    this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
     /**
      * Fires after suggestion items are retrieved, but before they are added to the DOM.
      *
@@ -964,22 +959,11 @@ class _A11yAutocomplete {
     this.triggerEvent('autocomplete-response', {
       list: this.suggestions,
     });
-
-    this.suggestions.forEach((suggestion, index) => {
-      this.ul.appendChild(this.suggestionItem(suggestion, index));
-    });
-  }
-
-  /**
-   * Displays the results retrieved in inputListener().
-   */
-  displayResults() {
-    const typed = this.extractLastInputValue();
-    this.ul.innerHTML = '';
-    if (typed && this.suggestionItems.length > 0) {
-      this.prepareSuggestionList(typed);
+    if (this.suggestions.length) {
+      this.suggestions.forEach((suggestion, index) => {
+        this.ul.appendChild(this.suggestionItem(suggestion, index));
+      });
     }
-
     if (this.ul.children.length === 0) {
       this.close();
     } else {
@@ -1000,8 +984,8 @@ class _A11yAutocomplete {
   /**
    * Sorts the array of suggestions.
    */
-  sortSuggestions() {
-    this.suggestions.sort((prior, current) =>
+  sortSuggestions(suggestionItems) {
+    return suggestionItems.sort((prior, current) =>
       prior.label.toUpperCase() > current.label.toUpperCase() ? 1 : -1,
     );
   }
@@ -1236,6 +1220,7 @@ class _A11yAutocomplete {
 
   /**
    * Remove all event listeners added by this class.
+   * @callback A11yAutocomplete~destroy
    */
   destroy() {
     Object.keys(this.events).forEach((elementName) => {
@@ -1246,7 +1231,9 @@ class _A11yAutocomplete {
         );
       });
     });
-    this.ul.remove();
+    if (this.wrapper && this.wrapper.parentNode) {
+      this.wrapper.parentNode.replaceChild(this.originalInput, this.wrapper);
+    }
 
     /**
      * Fires after the instance is destroyed.
@@ -1292,7 +1279,29 @@ class _A11yAutocomplete {
   }
 }
 
-// Wrap the class in factory so we're not reliant on class syntax in future.
+/**
+ * Main entrypoint to the library.
+ *
+ * @global
+ *
+ * @param {HTMLElement} input
+ *   The element to be used as an autocomplete.
+ * @param {A11yAutocomplete~Options} options
+ *  Autocomplete options.
+ * @return {A11yAutocomplete~Api}
+ *  API to manage an input's autocomplete functionality.
+ *
+ * @fires A11yAutocomplete#autocomplete-change
+ * @fires A11yAutocomplete#autocomplete-close
+ * @fires A11yAutocomplete#autocomplete-created
+ * @fires A11yAutocomplete#autocomplete-destroy
+ * @fires A11yAutocomplete#autocomplete-highlight
+ * @fires A11yAutocomplete#autocomplete-open
+ * @fires A11yAutocomplete#autocomplete-pre-search
+ * @fires A11yAutocomplete#autocomplete-response
+ * @fires A11yAutocomplete#autocomplete-select
+ * @fires A11yAutocomplete#autocomplete-selection-added
+ */
 const A11yAutocompleteFactory = (input, options = {}) => {
   const autocomplete = new _A11yAutocomplete(input, options);
   return autocomplete.api;

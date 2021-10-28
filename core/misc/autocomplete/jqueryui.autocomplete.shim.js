@@ -7,6 +7,12 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -18,12 +24,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 (function ($, Drupal) {
   Drupal.autocompleteShim = {
@@ -58,7 +58,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var attributesToOptions = instance.attributesToOptions();
 
     if (attributesToOptions.hasOwnProperty('list') && typeof attributesToOptions.list === 'string') {
-      attributesToOptions.list = JSON.parse(attributesToOptions.list);
+      attributesToOptions.source = JSON.parse(attributesToOptions.list);
     }
 
     instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
@@ -99,18 +99,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }
 
-      if (this.input.nodeName === 'INPUT' && !this.isOpened && this.options.list.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
+      if (this.input.nodeName === 'INPUT' && !this.isOpened && Array.isArray(this.options.source) && this.options.source.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
         e.preventDefault();
         this.preventCloseOnBlur = true;
         var typed = this.extractLastInputValue();
 
         if (!typed && this.options.minChars < 1) {
-          this.ul.innerHTML = '';
-          this.suggestionItems = this.options.list;
-          this.prepareSuggestionList();
-          this.open();
+          this.displayResults(this.options.source);
         } else {
-          this.displayResults();
+          this.displayResults(this.suggestions);
         }
 
         if (this.isOpened) {
@@ -125,103 +122,56 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     instance.inputKeyDown = shimmedInputKeyDown;
 
-    function autocompletePrepareSuggestionList(typed) {
+    function jQuerydisplayResults(suggestionItems) {
       var _this = this;
 
-      this.normalizeSuggestionItems();
-
-      if (typed) {
-        this.suggestions = this.suggestionItems.filter(function (item) {
-          return _this.filterResults(item, typed);
-        });
-      } else {
-        this.suggestions = this.suggestionItems;
-      }
-
-      if (this.options.sort !== false) {
-        this.sortSuggestions();
-      }
-
-      this.totalSuggestions = this.suggestions.length;
+      var typed = this.extractLastInputValue();
+      this.ul.innerHTML = '';
+      this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
 
-      this._renderMenu(this.ul, this.suggestions);
+      if (this.suggestions.length) {
+        this._renderMenu(this.ul, this.suggestions);
+      }
 
-      this.prepareListItemAttributes();
+      if (this.ul.children.length === 0) {
+        this.close();
+      } else {
+        this.open();
+      }
+
+      window.clearTimeout(this.announceTimeOutId);
+      this.announceTimeOutId = setTimeout(function () {
+        return _this.sendToLiveRegion(_this.resultsMessage(_this.ul.children.length));
+      }, 1400);
     }
 
-    instance.prepareSuggestionList = autocompletePrepareSuggestionList;
-
-    instance.prepareListItemAttributes = function () {
-      var _this2 = this;
-
-      this.ul.querySelectorAll('li').forEach(function (li, index) {
-        if (_this2.options.itemClass.length > 0) {
-          _this2.options.itemClass.split(' ').forEach(function (className) {
-            return li.classList.add(className);
-          });
-        }
-
-        li.setAttribute('role', 'option');
-        li.setAttribute('tabindex', '-1');
-        li.setAttribute('data-autocomplete-item', index);
-        li.setAttribute('aria-posinset', index + 1);
-        li.setAttribute('aria-selected', 'false');
-
-        li.onblur = function (e) {
-          return _this2.blurHandler(e);
-        };
-
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
-      });
-    };
+    instance.displayResults = jQuerydisplayResults;
 
     instance._renderMenu = function (ul, items) {
       var that = this;
       $.each(items, function (index, item) {
-        that._renderItemData(ul, item);
+        that._renderItemData(ul, item, index);
       });
     };
 
-    instance._renderItemData = function (ul, item) {
-      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
+    instance._renderItemData = function (ul, item, index) {
+      return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
     };
 
     if (!usingBCMarkup) {
-      instance._renderItem = function (ul, item) {
-        var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-        return $('<li>').text(item[propertyToDisplay]).appendTo(ul);
-      };
-    }
+      instance._renderItem = function (ul, item, index) {
+        var li = instance.suggestionItem(item, index);
 
-    var autocompleteNormalizeSuggestionItems = function autocompleteNormalizeSuggestionItems() {
-      this.suggestionItems = this.suggestionItems.map(function (item) {
-        if (typeof item === 'string') {
-          item = {
-            value: item,
-            label: item
-          };
-        } else if (item.value && !item.label) {
-          item = _objectSpread(_objectSpread({}, item), {
-            value: item.value,
-            label: item.value
-          });
-        } else if (item.label && !item.value) {
-          item = _objectSpread(_objectSpread({}, item), {
-            value: item.label,
-            label: item.label
-          });
+        if (instance.hasOwnProperty('addBcListItemClasses')) {
+          instance.addBcListItemClasses(li, index);
         }
 
-        return item;
-      });
-    };
-
-    instance.normalizeSuggestionItems = autocompleteNormalizeSuggestionItems;
+        return $(li).appendTo(ul);
+      };
+    }
 
     if (isContentEditable) {
       instance.getValue = function () {
@@ -262,7 +212,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   var oldAutocomplete = $.fn.autocomplete;
   $.fn.extend({
     autocomplete: function autocomplete() {
-      var _this3 = this;
+      var _this2 = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -337,15 +287,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               instance.input.value = instance.input.textContent;
             }
 
-            if (instance.input.value.length === 0 && instance.options.minChars === 0 && instance.options.list.length > 0) {
-              instance.suggestionItems = instance.options.list;
-              instance.prepareSuggestionList();
-
-              if (instance.ul.children.length === 0) {
-                instance.close();
-              } else {
-                instance.open();
-              }
+            if (instance.input.value.length === 0 && instance.options.minChars === 0 && Array.isArray(instance.options.source) && instance.options.source.length > 0) {
+              instance.displayResults(instance.options.source);
             } else {
               instance.doSearch($.Event('keydown'));
             }
@@ -355,7 +298,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           case 'option':
             if (typeof args[2] === 'undefined' && args[1] === 'object') {
               Object.keys(args[1]).forEach(function (key) {
-                _this3.autocomplete('option', key, args[1][key]);
+                _this2.autocomplete('option', key, args[1][key]);
               });
             }
 
@@ -439,26 +382,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
                 case 'source':
                   if (typeof optionValue === 'function') {
-                    var overriddenResponse = function overriddenResponse(newList) {
-                      instance.options.list = newList;
-                      instance.suggestionItems = instance.options.list;
-                      instance.displayResults();
-                    };
-
                     instance.doSearch = function () {
                       optionValue({
                         term: instance.extractLastInputValue()
-                      }, overriddenResponse);
+                      }, instance.displayResults.bind(instance));
                     };
                   } else if (typeof optionValue === 'string') {
                     try {
                       var list = JSON.parse(optionValue);
-                      instance.options.list = list;
+                      instance.options.source = list;
                     } catch (e) {
                       instance.options.path = optionValue;
                     }
                   } else {
-                    instance.options.list = optionValue;
+                    instance.options.source = optionValue;
                   }
 
                   break;
@@ -498,12 +435,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
                 var overrideWith = widgetOverrides[propertyToOverride];
 
-                var instance = Drupal.Autocomplete.instances[_this3.attr('id')]._internal_object;
+                var instance = Drupal.Autocomplete.instances[_this2.attr('id')]._internal_object;
 
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
             } else {
-              _this3.autocomplete('option', key, args[0][key]);
+              _this2.autocomplete('option', key, args[0][key]);
             }
           });
         }

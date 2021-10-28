@@ -33,9 +33,15 @@
       instance.ul = document.querySelector("#".concat(listBoxId));
     }
 
-    instance._renderItem = function (ul, item) {
-      var propertyToDisplay = instance.options.displayLabels ? 'label' : 'value';
-      return $("<li>").addClass(instance.options.itemClass).append($('<a>').html(item[propertyToDisplay])).appendTo(ul);
+    instance._renderItem = function (ul, item, index) {
+      var li = instance.suggestionItem(item, index);
+      var $li = $(li).wrapInner('<a></a>');
+
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses($li[0], index);
+      }
+
+      return $li.appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {

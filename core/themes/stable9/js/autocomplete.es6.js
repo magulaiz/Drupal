@@ -65,15 +65,17 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItem = function (ul, item) {
-      const propertyToDisplay = instance.options.displayLabels
-        ? 'label'
-        : 'value';
-      // Drupal core's implementation of jQuery UI autocomplete adds an `<a>`.
-      return $(`<li>`)
-        .addClass(instance.options.itemClass)
-        .append($('<a>').html(item[propertyToDisplay]))
-        .appendTo(ul);
+    instance._renderItem = function (ul, item, index) {
+      const li = instance.suggestionItem(item, index);
+      const $li = $(li).wrapInner('<a></a>');
+      // Everything prior to this is logic that also happens in the
+      // A11yAutocomplete suggestionItems() method. Below is logic specific
+      // to the `<a>` tag added to list items when using this shim on a theme
+      // that extends Stable or Stable 9.
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses($li[0], index);
+      }
+      return $li.appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {
