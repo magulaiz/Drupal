@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal, drupalSettings, A11yAutocomplete, once) {
+(function ($, Drupal, drupalSettings, A11yAutocomplete, once) {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
   Drupal.Autocomplete.defaultOptions = {
@@ -32,6 +32,13 @@
       });
     }
 
+    var path = autocompleteInput.dataset.autocompletePath;
+
+    if (path) {
+      options.source = Drupal.Autocomplete.ajaxSearchProvider(path);
+    }
+
+    delete autocompleteInput.dataset.autocompletePath;
     var autocomplete = A11yAutocomplete(autocompleteInput, options);
     var instance = autocomplete._internal_object;
     document.dispatchEvent(new CustomEvent('drupal-autocomplete-init', {
@@ -72,4 +79,34 @@
       }
     }
   };
-})(Drupal, drupalSettings, A11yAutocomplete, once);
+
+  Drupal.Autocomplete.ajaxSearchProvider = function (path) {
+    var cache = {};
+    return function (search, results) {
+      function sourceCallbackHandler(data) {
+        cache[search] = data;
+        results(data);
+      }
+
+      function error() {
+        results([]);
+      }
+
+      if (search in cache) {
+        results(cache[search]);
+      } else {
+        var options = $.extend({
+          success: sourceCallbackHandler,
+          error: error,
+          data: {
+            q: search
+          }
+        }, {
+          dataType: 'json',
+          jsonp: false
+        });
+        $.ajax(path, options);
+      }
+    };
+  };
+})(jQuery, Drupal, drupalSettings, A11yAutocomplete, once);

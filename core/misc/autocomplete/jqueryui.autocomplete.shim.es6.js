@@ -410,6 +410,9 @@
       // initialized and the string represents a method the autocomplete should
       // execute.
       if (typeof args[0] === 'string') {
+        if (!Drupal.Autocomplete.instances[id]) {
+          return;
+        }
         const instance = Drupal.Autocomplete.instances[id]._internal_object;
         const method = args[0];
 
@@ -614,12 +617,11 @@
                 case 'source':
                   // In jQuery UI autocomplete, 'source' can be one of three
                   // types:
-                  // - Function: a callback function that overrides the default
-                  //   autocomplete search functionality.
-                  // - String: Either a JSON formatted list of items, or a URL
-                  //   to an endpoint that returns items.
-                  // - Array: An array of list items. Can be an array of stings
-                  //   or of objects with `label` and `value` properties.
+                  // - Function: A callback function that can be used to connect
+                  //   any data source to Autocomplete
+                  // - String: An URL to an endpoint that returns JSON.
+                  // - Array: An array of list items. Can be an array of strings
+                  //   or of objects with `label` and/or `value` properties.
                   if (typeof optionValue === 'function') {
                     // eslint-disable-next-line func-names
                     instance.doSearch = function () {
@@ -635,26 +637,8 @@
                       );
                     };
                   } else if (typeof optionValue === 'string') {
-                    // When the 'source' option is a string, it can either be a
-                    // URL to an endpoint, or a JavaScript array of items. This
-                    // try/catch is implemented to distinguish between the two. If
-                    // parsing the string as JSON results in an error, it is
-                    // assumed the string is a URL.
-                    // Unlike jQuery UI autocomplete, which uses the 'source'
-                    // option for both URLs and predefined lists,
-                    // A11yAutocomplete stores these as individual 'path' and
-                    // 'list' options.
-                    try {
-                      // The contents of JSON.parse are assigned to a variable
-                      // instead of directly to instance.options.list so the
-                      // exception can be caught before any option values are
-                      // changed.
-                      // eslint-disable-next-line no-unused-vars
-                      const list = JSON.parse(optionValue);
-                      instance.options.source = list;
-                    } catch (e) {
-                      instance.options.path = optionValue;
-                    }
+                    instance.options.source =
+                      Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
                     instance.options.source = optionValue;
                   }

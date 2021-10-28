@@ -237,6 +237,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       };
 
       if (typeof args[0] === 'string') {
+        if (!Drupal.Autocomplete.instances[id]) {
+          return;
+        }
+
         var instance = Drupal.Autocomplete.instances[id]._internal_object;
         var method = args[0];
 
@@ -388,12 +392,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                       }, instance.displayResults.bind(instance));
                     };
                   } else if (typeof optionValue === 'string') {
-                    try {
-                      var list = JSON.parse(optionValue);
-                      instance.options.source = list;
-                    } catch (e) {
-                      instance.options.path = optionValue;
-                    }
+                    instance.options.source = Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
                     instance.options.source = optionValue;
                   }
