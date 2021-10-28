@@ -42,8 +42,8 @@ var _A11yAutocomplete = function () {
     this.originalInput = input.cloneNode();
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
-    this.listboxId = "autocomplete-listbox-".concat(this.count);
-    this.supportedOptions = ['source', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
+    this.listboxId = "autocomplete-l".concat(this.count);
+    this.supportedOptions = ['source', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'groupBy', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
       firstCharacterIgnoreList: ',',
@@ -52,6 +52,7 @@ var _A11yAutocomplete = function () {
       displayLabels: true,
       disabled: false,
       source: [],
+      groupBy: null,
       cardinality: 1,
       inputClass: '',
       ulClass: '',
@@ -91,7 +92,7 @@ var _A11yAutocomplete = function () {
     this.inputHintRead = false;
     this.implementInput();
     this.implementDescription();
-    this.ul = document.createElement('ul');
+    this.listboxWrapper = document.createElement(this.options.groupBy ? 'div' : 'ul');
     this.implementList();
     this.appendList();
     this.liveRegion = null;
@@ -108,7 +109,7 @@ var _A11yAutocomplete = function () {
           return _this.inputKeyDown(e);
         }
       },
-      ul: {
+      listboxWrapper: {
         mousedown: function mousedown(e) {
           return e.preventDefault();
         },
@@ -208,21 +209,21 @@ var _A11yAutocomplete = function () {
   }, {
     key: "appendList",
     value: function appendList() {
-      this.input.parentNode.appendChild(this.ul);
+      this.input.parentNode.appendChild(this.listboxWrapper);
     }
   }, {
     key: "implementList",
     value: function implementList() {
       var _this4 = this;
 
-      this.ul.setAttribute('role', 'listbox');
-      this.ul.setAttribute('data-autocomplete-item-list', '');
-      this.ul.setAttribute('id', this.listboxId);
-      this.ul.setAttribute('hidden', '');
+      this.listboxWrapper.setAttribute('role', 'listbox');
+      this.listboxWrapper.setAttribute('data-autocomplete-item-list', '');
+      this.listboxWrapper.setAttribute('id', this.listboxId);
+      this.listboxWrapper.setAttribute('hidden', '');
 
       if (this.options.ulClass.length > 0) {
         this.options.ulClass.split(' ').forEach(function (className) {
-          return _this4.ul.classList.add(className);
+          return _this4.listboxWrapper.classList.add(className);
         });
       }
     }
@@ -295,11 +296,11 @@ var _A11yAutocomplete = function () {
   }, {
     key: "listKeyDown",
     value: function listKeyDown(e) {
-      if (!this.ul.contains(document.activeElement) || e.ctrlKey || e.altKey || e.metaKey || e.keyCode === this.keyCode.TAB) {
+      if (!this.listboxWrapper.contains(document.activeElement) || e.ctrlKey || e.altKey || e.metaKey || e.keyCode === this.keyCode.TAB) {
         return;
       }
 
-      this.ul.querySelectorAll('[aria-selected="true"]').forEach(function (li) {
+      this.listboxWrapper.querySelectorAll('[aria-selected="true"]').forEach(function (li) {
         li.setAttribute('aria-selected', 'false');
       });
 
@@ -338,7 +339,7 @@ var _A11yAutocomplete = function () {
       this.preventCloseOnBlur = true;
       var currentItem = document.activeElement.getAttribute('data-autocomplete-item');
       var prevIndex = parseInt(currentItem, 10) - 1;
-      var previousItem = this.ul.querySelector("[data-autocomplete-item=\"".concat(prevIndex, "\"]"));
+      var previousItem = this.listboxWrapper.querySelector("[data-autocomplete-item=\"".concat(prevIndex, "\"]"));
 
       if (previousItem) {
         this.highlightItem(previousItem);
@@ -351,7 +352,7 @@ var _A11yAutocomplete = function () {
     value: function focusNext() {
       var currentItem = document.activeElement.getAttribute('data-autocomplete-item');
       var nextIndex = parseInt(currentItem, 10) + 1;
-      var nextItem = this.ul.querySelector("[data-autocomplete-item=\"".concat(nextIndex, "\"]"));
+      var nextItem = this.listboxWrapper.querySelector("[data-autocomplete-item=\"".concat(nextIndex, "\"]"));
 
       if (nextItem) {
         this.preventCloseOnBlur = true;
@@ -384,7 +385,7 @@ var _A11yAutocomplete = function () {
     value: function highlightMessage(item) {
       var itemIndex = item.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
       var selectedItem = this.suggestions[itemIndex].value;
-      return this.options.highlightedAssistiveHint.replace('@selectedItem', selectedItem).replace('@position', item.getAttribute('aria-posinset')).replace('@count', this.ul.children.length);
+      return this.options.highlightedAssistiveHint.replace('@selectedItem', selectedItem).replace('@position', item.getAttribute('aria-posinset')).replace('@count', this.listboxWrapper.children.length);
     }
   }, {
     key: "inputKeyDown",
@@ -399,7 +400,7 @@ var _A11yAutocomplete = function () {
         if (keyCode === this.keyCode.DOWN) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
-          this.highlightItem(this.ul.querySelector('li'));
+          this.highlightItem(this.listboxWrapper.querySelector('[role="option"]'));
         }
       }
 
@@ -566,19 +567,46 @@ var _A11yAutocomplete = function () {
       var _this9 = this;
 
       var typed = this.extractLastInputValue();
-      this.ul.innerHTML = '';
+      this.listboxWrapper.innerHTML = '';
       this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
 
       if (this.suggestions.length) {
-        this.suggestions.forEach(function (suggestion, index) {
-          _this9.ul.appendChild(_this9.suggestionItem(suggestion, index));
-        });
+        var list;
+        var fragment = document.createDocumentFragment();
+        var appendToFragment = fragment.appendChild.bind(fragment);
+        var formatItem = this.formatSuggestionItem.bind(this);
+        var suggestionItem = this.suggestionItem.bind(this);
+        var groupBy = this.options.groupBy;
+
+        if (groupBy) {
+          var index = 0;
+          var groupId = 0;
+          list = {};
+          var groups = this.suggestions.reduce(this.groupResultsCallback(groupBy), {});
+          Object.keys(groups).forEach(function (group) {
+            list[group] = groups[group].map(formatItem);
+          });
+          Object.keys(list).map(function (group) {
+            var el = _this9.suggestionGroup(group, "".concat(_this9.listboxId, "-g").concat(groupId++));
+
+            var appendToGroup = el.appendChild.bind(el);
+            list[group].map(function (suggestionText) {
+              return suggestionItem(suggestionText, index++);
+            }).forEach(appendToGroup);
+            return el;
+          }).forEach(appendToFragment);
+        } else {
+          list = this.suggestions.map(formatItem);
+          list.map(suggestionItem).forEach(appendToFragment);
+        }
+
+        this.listboxWrapper.appendChild(fragment);
       }
 
-      if (this.ul.children.length === 0) {
+      if (this.suggestions.length === 0) {
         this.close();
       } else {
         this.open();
@@ -586,7 +614,7 @@ var _A11yAutocomplete = function () {
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this9.sendToLiveRegion(_this9.resultsMessage(_this9.ul.children.length));
+        return _this9.sendToLiveRegion(_this9.resultsMessage(_this9.suggestions.length));
       }, 1400);
     }
   }, {
@@ -597,22 +625,46 @@ var _A11yAutocomplete = function () {
       });
     }
   }, {
+    key: "groupResultsCallback",
+    value: function groupResultsCallback(groupBy) {
+      return function (groups, item) {
+        var groupLabel = item[groupBy];
+
+        if (!groupLabel) {
+          return groups;
+        }
+
+        if (!groups[groupLabel]) {
+          groups[groupLabel] = [];
+        }
+
+        groups[groupLabel].push(item);
+        return groups;
+      };
+    }
+  }, {
+    key: "suggestionGroup",
+    value: function suggestionGroup(group, id) {
+      var ul = document.createElement('ul');
+      ul.setAttribute('role', 'group');
+      ul.setAttribute('aria-labelledby', id);
+      var li = document.createElement('li');
+      li.innerHTML = group;
+      li.setAttribute('role', 'presentation');
+      li.setAttribute('id', id);
+      ul.appendChild(li);
+      return ul;
+    }
+  }, {
     key: "suggestionItem",
     value: function suggestionItem(suggestion, itemIndex) {
       var _this10 = this;
 
       var li = document.createElement('li');
-      li.innerHTML = this.formatSuggestionItem(suggestion, li);
-
-      if (this.options.itemClass.length > 0) {
-        this.options.itemClass.split(' ').forEach(function (className) {
-          return li.classList.add(className);
-        });
-      }
-
+      li.innerHTML = suggestion;
       li.setAttribute('role', 'option');
       li.setAttribute('tabindex', '-1');
-      li.setAttribute('id', "suggestion-".concat(this.count, "-").concat(itemIndex));
+      li.setAttribute('id', "".concat(this.listboxId, "-i").concat(itemIndex));
       li.setAttribute('data-autocomplete-item', itemIndex);
       li.setAttribute('aria-posinset', itemIndex + 1);
       li.setAttribute('aria-selected', 'false');
@@ -625,7 +677,7 @@ var _A11yAutocomplete = function () {
     }
   }, {
     key: "formatSuggestionItem",
-    value: function formatSuggestionItem(suggestion, li) {
+    value: function formatSuggestionItem(suggestion) {
       var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
       return suggestion[propertyToDisplay].trim();
     }
@@ -633,15 +685,15 @@ var _A11yAutocomplete = function () {
     key: "open",
     value: function open() {
       this.input.setAttribute('aria-expanded', 'true');
-      this.ul.removeAttribute('hidden');
-      this.ul.style.zIndex = this.options.listZindex;
+      this.listboxWrapper.removeAttribute('hidden');
+      this.listboxWrapper.style.zIndex = this.options.listZindex;
       this.isOpened = true;
-      this.ul.style.minWidth = "".concat(this.input.offsetWidth - 4, "px");
+      this.listboxWrapper.style.minWidth = "".concat(this.input.offsetWidth - 4, "px");
       this.triggerEvent('autocomplete-open');
 
       if (this.options.autoFocus) {
         this.preventCloseOnBlur = true;
-        this.highlightItem(this.ul.querySelector('[data-autocomplete-item="0"]'));
+        this.highlightItem(this.listboxWrapper.querySelector('[data-autocomplete-item="0"]'));
       }
     }
   }, {
@@ -649,7 +701,7 @@ var _A11yAutocomplete = function () {
     value: function close() {
       if (this.isOpened) {
         this.input.setAttribute('aria-expanded', 'false');
-        this.ul.setAttribute('hidden', '');
+        this.listboxWrapper.setAttribute('hidden', '');
         this.isOpened = false;
         this.triggerEvent('autocomplete-close');
       }

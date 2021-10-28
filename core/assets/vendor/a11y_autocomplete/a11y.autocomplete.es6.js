@@ -38,8 +38,8 @@
  *   <input id="an-input" aria-autocomplete="list" autocomplete="off" data-drupal-autocomplete-input aria-owns="autocomplete-listbox-0" role="combobox" aria-expanded="false" aria-describedby="assistive-hint-0">
  *     <!-- This span provides assitive technology such as screenreaders with additional information when the input is focused. -->
  *     <span class="visually-hidden" id="assistive-hint-0">Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.</span>
- *     <!-- This is the <ul> that will list the query results when characters are typed in the input. -->
- *     <ul role="listbox" data-drupal-autocomplete-list="" id="autocomplete-listbox-0" hidden=""></ul>
+ *     <!-- This is the <listboxWrapper> that will list the query results when characters are typed in the input. -->
+ *     <listboxWrapper role="listbox" data-drupal-autocomplete-list="" id="autocomplete-listbox-0" hidden=""></listboxWrapper>
  *     <!-- This is a live region, used for conveying the results of interactions to assistive technology, such as the number of results available after typing. -->
  *     <span data-drupal-autocomplete-live-region="" aria-live="assertive"></span>
  * </div>
@@ -106,7 +106,7 @@ class _A11yAutocomplete {
   /**
    * Construct a new A11yAutocomplete class.
    *
-   * @param {HTMLElement} input
+   * @param {HTMLInputElement} input
    *   The element to be used as an autocomplete.
    * @param {A11yAutocomplete~Options} options
    *  Autocomplete options.
@@ -131,7 +131,7 @@ class _A11yAutocomplete {
     this.input = input;
 
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
-    this.listboxId = `autocomplete-listbox-${this.count}`;
+    this.listboxId = `autocomplete-l${this.count}`;
 
     this.supportedOptions = [
       'source',
@@ -142,6 +142,7 @@ class _A11yAutocomplete {
       'createLiveRegion',
       'autoFocus',
       'allowRepeatValues',
+      'groupBy',
       // messages.
       'minCharAssistiveHint',
       'inputAssistiveHint',
@@ -163,6 +164,7 @@ class _A11yAutocomplete {
       // shim
       disabled: false,
       source: [],
+      groupBy: null,
       cardinality: 1,
       // shim
       inputClass: '',
@@ -226,7 +228,7 @@ class _A11yAutocomplete {
     this.implementDescription();
 
     // Create the list that will display suggestions.
-    this.ul = document.createElement('ul');
+    this.listboxWrapper = document.createElement(this.options.groupBy ? 'div' : 'ul');
     this.implementList();
     this.appendList();
 
@@ -242,7 +244,7 @@ class _A11yAutocomplete {
         blur: (e) => this.blurHandler(e),
         keydown: (e) => this.inputKeyDown(e),
       },
-      ul: {
+      listboxWrapper: {
         mousedown: (e) => e.preventDefault(),
         click: (e) => this.itemClick(e),
         keydown: (e) => this.listKeyDown(e),
@@ -382,21 +384,21 @@ class _A11yAutocomplete {
    * Inserts list into DOM.
    */
   appendList() {
-    this.input.parentNode.appendChild(this.ul);
+    this.input.parentNode.appendChild(this.listboxWrapper);
   }
 
   /**
    * Sets attributes to the results list and inserts it in the DOM.
    */
   implementList() {
-    this.ul.setAttribute('role', 'listbox');
-    this.ul.setAttribute('data-autocomplete-item-list', '');
-    this.ul.setAttribute('id', this.listboxId);
-    this.ul.setAttribute('hidden', '');
+    this.listboxWrapper.setAttribute('role', 'listbox');
+    this.listboxWrapper.setAttribute('data-autocomplete-item-list', '');
+    this.listboxWrapper.setAttribute('id', this.listboxId);
+    this.listboxWrapper.setAttribute('hidden', '');
     if (this.options.ulClass.length > 0) {
       this.options.ulClass
         .split(' ')
-        .forEach((className) => this.ul.classList.add(className));
+        .forEach((className) => this.listboxWrapper.classList.add(className));
     }
   }
 
@@ -508,7 +510,7 @@ class _A11yAutocomplete {
    */
   listKeyDown(e) {
     if (
-      !this.ul.contains(document.activeElement) ||
+      !this.listboxWrapper.contains(document.activeElement) ||
       e.ctrlKey ||
       e.altKey ||
       e.metaKey ||
@@ -517,7 +519,7 @@ class _A11yAutocomplete {
       return;
     }
 
-    this.ul.querySelectorAll('[aria-selected="true"]').forEach((li) => {
+    this.listboxWrapper.querySelectorAll('[aria-selected="true"]').forEach((li) => {
       li.setAttribute('aria-selected', 'false');
     });
 
@@ -568,7 +570,7 @@ class _A11yAutocomplete {
       'data-autocomplete-item',
     );
     const prevIndex = parseInt(currentItem, 10) - 1;
-    const previousItem = this.ul.querySelector(
+    const previousItem = this.listboxWrapper.querySelector(
       `[data-autocomplete-item="${prevIndex}"]`,
     );
 
@@ -587,7 +589,7 @@ class _A11yAutocomplete {
       'data-autocomplete-item',
     );
     const nextIndex = parseInt(currentItem, 10) + 1;
-    const nextItem = this.ul.querySelector(
+    const nextItem = this.listboxWrapper.querySelector(
       `[data-autocomplete-item="${nextIndex}"]`,
     );
     if (nextItem) {
@@ -655,7 +657,7 @@ class _A11yAutocomplete {
     return this.options.highlightedAssistiveHint
       .replace('@selectedItem', selectedItem)
       .replace('@position', item.getAttribute('aria-posinset'))
-      .replace('@count', this.ul.children.length);
+      .replace('@count', this.listboxWrapper.children.length);
   }
 
   /**
@@ -673,7 +675,7 @@ class _A11yAutocomplete {
       if (keyCode === this.keyCode.DOWN) {
         e.preventDefault();
         this.preventCloseOnBlur = true;
-        this.highlightItem(this.ul.querySelector('li'));
+        this.highlightItem(this.listboxWrapper.querySelector('[role="option"]'));
       }
     }
     this.removeAssistiveHint();
@@ -946,7 +948,7 @@ class _A11yAutocomplete {
    */
   displayResults(suggestionItems) {
     const typed = this.extractLastInputValue();
-    this.ul.innerHTML = '';
+    this.listboxWrapper.innerHTML = '';
     this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
     /**
      * Fires after suggestion items are retrieved, but before they are added to the DOM.
@@ -960,11 +962,43 @@ class _A11yAutocomplete {
       list: this.suggestions,
     });
     if (this.suggestions.length) {
-      this.suggestions.forEach((suggestion, index) => {
-        this.ul.appendChild(this.suggestionItem(suggestion, index));
-      });
+      let list;
+      const fragment = document.createDocumentFragment();
+      const appendToFragment = fragment.appendChild.bind(fragment);
+      const formatItem = this.formatSuggestionItem.bind(this);
+      const suggestionItem = this.suggestionItem.bind(this);
+      const { groupBy } = this.options;
+      if (groupBy) {
+        let index = 0;
+        let groupId = 0;
+        list = {};
+        // Group suggestions and transform them to text.
+        const groups = this.suggestions.reduce(this.groupResultsCallback(groupBy), {});
+        Object.keys(groups).forEach((group) => {
+          list[group] = groups[group].map(formatItem);
+        });
+
+        // Append the list of suggestions
+        Object.keys(list)
+          .map((group) => {
+            const el = this.suggestionGroup(group, `${this.listboxId}-g${groupId++}`);
+            const appendToGroup = el.appendChild.bind(el);
+            list[group]
+              .map((suggestionText) =>
+                suggestionItem(suggestionText, index++),
+              )
+              .forEach(appendToGroup);
+            return el;
+          })
+          .forEach(appendToFragment);
+      } else {
+        list = this.suggestions.map(formatItem);
+        list.map(suggestionItem).forEach(appendToFragment);
+      }
+
+      this.listboxWrapper.appendChild(fragment);
     }
-    if (this.ul.children.length === 0) {
+    if (this.suggestions.length === 0) {
       this.close();
     } else {
       this.open();
@@ -976,7 +1010,7 @@ class _A11yAutocomplete {
     // announcement being cut short by the screenreader stating the just-typed
     // character.
     this.announceTimeOutId = setTimeout(
-      () => this.sendToLiveRegion(this.resultsMessage(this.ul.children.length)),
+      () => this.sendToLiveRegion(this.resultsMessage(this.suggestions.length)),
       1400,
     );
   }
@@ -991,9 +1025,52 @@ class _A11yAutocomplete {
   }
 
   /**
+   *
+   * @param groupBy
+   * @returns {(function(*, *=): (*))|*}
+   */
+  groupResultsCallback(groupBy) {
+    return (groups, item) => {
+      const groupLabel = item[groupBy];
+      // Items without group key are not rendered.
+      if (!groupLabel) {
+        return groups;
+      }
+      if (!groups[groupLabel]) {
+        groups[groupLabel] = [];
+      }
+      groups[groupLabel].push(item);
+      return groups;
+    };
+  }
+
+  /**
+   * Creates a suggestion group.
+   *
+   * @param {string} group
+   *   A string containing HTML or text for the label of the group.
+   * @param {string} id
+   *   A unique ID for the group.
+   *
+   * @returns {HTMLElement}
+   *   A list representing a group.
+   */
+  suggestionGroup(group, id) {
+    const ul = document.createElement('ul');
+    ul.setAttribute('role', 'group');
+    ul.setAttribute('aria-labelledby', id);
+    const li = document.createElement('li');
+    li.innerHTML = group;
+    li.setAttribute('role', 'presentation');
+    li.setAttribute('id', id);
+    ul.appendChild(li);
+    return ul;
+  }
+
+  /**
    * Creates a list item that displays the suggestion.
    *
-   * @param {object} suggestion
+   * @param {string} suggestion
    *   A suggestion based on user input. It is an object with label and value
    *   properties.
    * @param {number} itemIndex
@@ -1004,15 +1081,10 @@ class _A11yAutocomplete {
    */
   suggestionItem(suggestion, itemIndex) {
     const li = document.createElement('li');
-    li.innerHTML = this.formatSuggestionItem(suggestion, li);
-    if (this.options.itemClass.length > 0) {
-      this.options.itemClass
-        .split(' ')
-        .forEach((className) => li.classList.add(className));
-    }
+    li.innerHTML = suggestion;
     li.setAttribute('role', 'option');
     li.setAttribute('tabindex', '-1');
-    li.setAttribute('id', `suggestion-${this.count}-${itemIndex}`);
+    li.setAttribute('id', `${this.listboxId}-i${itemIndex}`);
     li.setAttribute('data-autocomplete-item', itemIndex);
     li.setAttribute('aria-posinset', itemIndex + 1);
     li.setAttribute('aria-selected', 'false');
@@ -1026,14 +1098,12 @@ class _A11yAutocomplete {
    *
    * @param {object} suggestion
    *   Object with value and label properties.
-   * @param {Element} li
-   *   The list element.
    *
    * @return {string}
    *   The text and html of a suggestion item.
    */
   // eslint-disable-next-line no-unused-vars
-  formatSuggestionItem(suggestion, li) {
+  formatSuggestionItem(suggestion) {
     const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
     return suggestion[propertyToDisplay].trim();
   }
@@ -1043,10 +1113,10 @@ class _A11yAutocomplete {
    */
   open() {
     this.input.setAttribute('aria-expanded', 'true');
-    this.ul.removeAttribute('hidden');
-    this.ul.style.zIndex = this.options.listZindex;
+    this.listboxWrapper.removeAttribute('hidden');
+    this.listboxWrapper.style.zIndex = this.options.listZindex;
     this.isOpened = true;
-    this.ul.style.minWidth = `${this.input.offsetWidth - 4}px`;
+    this.listboxWrapper.style.minWidth = `${this.input.offsetWidth - 4}px`;
 
     /**
      * Fires after the suggestion list opens.
@@ -1058,7 +1128,7 @@ class _A11yAutocomplete {
     this.triggerEvent('autocomplete-open');
     if (this.options.autoFocus) {
       this.preventCloseOnBlur = true;
-      this.highlightItem(this.ul.querySelector('[data-autocomplete-item="0"]'));
+      this.highlightItem(this.listboxWrapper.querySelector('[data-autocomplete-item="0"]'));
     }
   }
 
@@ -1068,7 +1138,7 @@ class _A11yAutocomplete {
   close() {
     if (this.isOpened) {
       this.input.setAttribute('aria-expanded', 'false');
-      this.ul.setAttribute('hidden', '');
+      this.listboxWrapper.setAttribute('hidden', '');
       this.isOpened = false;
 
       /**

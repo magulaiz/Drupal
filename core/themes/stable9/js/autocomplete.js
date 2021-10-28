@@ -26,22 +26,16 @@
     instance.implementList();
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      var listBoxId = instance.ul.getAttribute('id');
+      var listBoxId = instance.listboxWrapper.getAttribute('id');
       var uiFront = $(instance.input).closest('.ui-front, dialog');
       var appendTo = uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector("#".concat(listBoxId));
+      appendTo.appendChild(instance.listboxWrapper);
+      instance.listboxWrapper = document.querySelector("#".concat(listBoxId));
     }
 
     instance._renderItem = function (ul, item, index) {
-      var li = instance.suggestionItem(item, index);
-      var $li = $(li).wrapInner('<a></a>');
-
-      if (instance.hasOwnProperty('addBcListItemClasses')) {
-        instance.addBcListItemClasses($li[0], index);
-      }
-
-      return $li.appendTo(ul);
+      var li = instance.suggestionItem("<a>".concat(instance.formatSuggestionItem(item), "</a>"), index);
+      return $(li).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {
@@ -51,18 +45,18 @@
     };
 
     instance.input.addEventListener('focus', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
+      instance.listboxWrapper.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');
       });
     });
     instance.input.addEventListener('autocomplete-highlight', function () {
-      instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
+      instance.listboxWrapper.querySelectorAll('.ui-menu-item-wrapper.ui-state-active').forEach(function (element) {
         element.classList.remove('ui-state-active');
       });
       document.activeElement.querySelector('.ui-menu-item-wrapper').classList.add('ui-state-active');
     });
-    instance.ul.addEventListener('mouseover', function (e) {
-      instance.ul.querySelectorAll('a').forEach(function (item) {
+    instance.listboxWrapper.addEventListener('mouseover', function (e) {
+      instance.listboxWrapper.querySelectorAll('a').forEach(function (item) {
         item.classList.remove('ui-state-active');
       });
 

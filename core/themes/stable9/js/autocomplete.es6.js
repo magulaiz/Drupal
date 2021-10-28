@@ -37,7 +37,7 @@
     instance.implementList();
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
-      const listBoxId = instance.ul.getAttribute('id');
+      const listBoxId = instance.listboxWrapper.getAttribute('id');
       const uiFront = $(instance.input).closest('.ui-front, dialog');
 
       // If the autocomplete is contained by an element with the class
@@ -45,8 +45,8 @@
       // append it to the document body.
       const appendTo =
         uiFront.length > 0 ? uiFront[0] : document.querySelector('body');
-      appendTo.appendChild(instance.ul);
-      instance.ul = document.querySelector(`#${listBoxId}`);
+      appendTo.appendChild(instance.listboxWrapper);
+      instance.listboxWrapper = document.querySelector(`#${listBoxId}`);
     }
 
     /**
@@ -66,16 +66,8 @@
      */
     // eslint-disable-next-line func-names
     instance._renderItem = function (ul, item, index) {
-      const li = instance.suggestionItem(item, index);
-      const $li = $(li).wrapInner('<a></a>');
-      // Everything prior to this is logic that also happens in the
-      // A11yAutocomplete suggestionItems() method. Below is logic specific
-      // to the `<a>` tag added to list items when using this shim on a theme
-      // that extends Stable or Stable 9.
-      if (instance.hasOwnProperty('addBcListItemClasses')) {
-        instance.addBcListItemClasses($li[0], index);
-      }
-      return $li.appendTo(ul);
+      const li = instance.suggestionItem(`<a>${instance.formatSuggestionItem(item)}</a>`, index);
+      return $(li).appendTo(ul);
     };
 
     instance.addBcListItemClasses = function (li, index) {
@@ -87,7 +79,7 @@
     // If the input receives focus, remove the 'ui-state-active' class from all
     // result items.
     instance.input.addEventListener('focus', () => {
-      instance.ul
+      instance.listboxWrapper
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
         .forEach((element) => {
           element.classList.remove('ui-state-active');
@@ -97,7 +89,7 @@
     // When a result item is highlighted, jQuery UI adds a 'ui-state-active'
     // class to it.
     instance.input.addEventListener('autocomplete-highlight', () => {
-      instance.ul
+      instance.listboxWrapper
         .querySelectorAll('.ui-menu-item-wrapper.ui-state-active')
         .forEach((element) => {
           element.classList.remove('ui-state-active');
@@ -112,8 +104,8 @@
     // A currently focused item will have this class, but hovering another item
     // in the list will move the ui-state-active class to the hovered item,
     // whether or not it is focused.
-    instance.ul.addEventListener('mouseover', (e) => {
-      instance.ul.querySelectorAll('a').forEach((item) => {
+    instance.listboxWrapper.addEventListener('mouseover', (e) => {
+      instance.listboxWrapper.querySelectorAll('a').forEach((item) => {
         item.classList.remove('ui-state-active');
       });
 

@@ -86,14 +86,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
-          var selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+          var selector = keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
+          this.highlightItem(this.listboxWrapper.querySelector(selector));
         }
 
         if (keyCode === this.keyCode.RETURN) {
-          var active = instance.ul.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
+          var active = instance.listboxWrapper.querySelectorAll('.ui-menu-item-wrapper.ui-state-active');
 
-          if (active.length || instance.ul.contains(document.activeElement)) {
+          if (active.length || instance.listboxWrapper.contains(document.activeElement)) {
             e.preventDefault();
           }
         }
@@ -111,9 +111,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         }
 
         if (this.isOpened) {
-          var _selector = keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
+          var _selector = keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
 
-          this.highlightItem(this.ul.querySelector(_selector));
+          this.highlightItem(this.listboxWrapper.querySelector(_selector));
         }
       }
 
@@ -126,17 +126,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       var _this = this;
 
       var typed = this.extractLastInputValue();
-      this.ul.innerHTML = '';
+      this.listboxWrapper.innerHTML = '';
       this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
 
       if (this.suggestions.length) {
-        this._renderMenu(this.ul, this.suggestions);
+        this._renderMenu(this.listboxWrapper, this.suggestions);
       }
 
-      if (this.ul.children.length === 0) {
+      if (this.suggestions.length === 0) {
         this.close();
       } else {
         this.open();
@@ -144,7 +144,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this.sendToLiveRegion(_this.resultsMessage(_this.ul.children.length));
+        return _this.sendToLiveRegion(_this.resultsMessage(_this.suggestions.length));
       }, 1400);
     }
 
@@ -161,14 +161,27 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
     };
 
+    var suggestionItem = instance.suggestionItem.bind(instance);
+
+    instance.suggestionItem = function jQuerySuggestionItem(text, index) {
+      var li = suggestionItem(text, index);
+
+      if (this.options.itemClass.length > 0) {
+        this.options.itemClass.split(' ').forEach(function (className) {
+          return li.classList.add(className);
+        });
+      }
+
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses(li, index);
+      }
+
+      return li;
+    };
+
     if (!usingBCMarkup) {
       instance._renderItem = function (ul, item, index) {
-        var li = instance.suggestionItem(item, index);
-
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
-
+        var li = instance.suggestionItem(instance.formatSuggestionItem(item), index);
         return $(li).appendTo(ul);
       };
     }
@@ -180,7 +193,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
 
     var closeOnClickOutside = function closeOnClickOutside(event) {
-      var menuElement = instance.ul;
+      var menuElement = instance.listboxWrapper;
       var targetInWidget = event.target === instance.input || event.target === menuElement || $.contains(menuElement, event.target);
 
       if (!targetInWidget) {
@@ -190,7 +203,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     instance.input.addEventListener('autocomplete-open', function () {
       document.body.addEventListener('mousedown', closeOnClickOutside);
-      $(instance.ul).position({
+      $(instance.listboxWrapper).position({
         of: instance.input,
         my: 'left top',
         at: 'left bottom',
@@ -200,7 +213,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     instance.input.addEventListener('autocomplete-close', function () {
       document.body.removeEventListener('mousedown', closeOnClickOutside);
     });
-    instance.ul.addEventListener('mousedown', function (e) {
+    instance.listboxWrapper.addEventListener('mousedown', function (e) {
       e.preventDefault();
     });
     Object.keys(Drupal.autocompleteShim.overrides).forEach(function (propertyToOverride) {
@@ -246,14 +259,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
         switch (method) {
           case 'widget':
-            return $(instance.ul);
+            return $(instance.listboxWrapper);
 
           case 'instance':
             var instanceToReturn = {
               document: $(document),
               element: $(instance.input),
               menu: {
-                element: $(instance.ul)
+                element: $(instance.listboxWrapper)
               },
               liveRegion: $(instance.liveRegion),
               isMultiLine: instance.options.isMultiLine,
@@ -309,7 +322,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
               var optionName = args[1],
                   optionValue = args[2];
-              var listBoxId = instance.ul.getAttribute('id');
+              var listBoxId = instance.listboxWrapper.getAttribute('id');
 
               switch (optionName) {
                 case 'appendTo':
@@ -334,11 +347,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                   }
 
                   if (appendTo) {
-                    if (!appendTo.contains(instance.ul)) {
-                      appendTo.appendChild(instance.ul);
+                    if (!appendTo.contains(instance.listboxWrapper)) {
+                      appendTo.appendChild(instance.listboxWrapper);
                     }
 
-                    instance.ul = appendTo.querySelector("#".concat(listBoxId));
+                    instance.listboxWrapper = appendTo.querySelector("#".concat(listBoxId));
                   }
 
                   instance.input.setAttribute('data-autocomplete-list-appended', true);
@@ -347,7 +360,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                 case 'classes':
                   Object.keys(optionValue).forEach(function (key) {
                     if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
-                      var element = key === 'ui-autocomplete' ? instance.ul : instance.input;
+                      var element = key === 'ui-autocomplete' ? instance.listboxWrapper : instance.input;
                       optionValue[key].split(' ').forEach(function (className) {
                         element.classList.add(className);
                       });
@@ -358,9 +371,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
                 case 'classes.ui-autocomplete':
                   optionValue.split(' ').forEach(function (className) {
-                    instance.ul.classList.add(className);
+                    instance.listboxWrapper.classList.add(className);
                   });
-                  instance.ul.classList.remove('ui-autocomplete');
+                  instance.listboxWrapper.classList.remove('ui-autocomplete');
                   break;
 
                 case 'classes.ui-autocomplete-input':
@@ -372,11 +385,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
                 case 'disabled':
                   instance.options.disabled = optionValue;
-                  $(instance.ul).toggleClass('ui-autocomplete-disabled', optionValue);
+                  $(instance.listboxWrapper).toggleClass('ui-autocomplete-disabled', optionValue);
                   break;
 
                 case 'position':
-                  $(instance.ul).position(_objectSpread({
+                  $(instance.listboxWrapper).position(_objectSpread({
                     of: instance.input,
                     my: 'left top',
                     at: 'left bottom',

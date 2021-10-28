@@ -12,10 +12,23 @@
 [data-autocomplete-item-list]:empty {
   display: none;
 }
-[data-autocomplete-item-list] li {
+
+[data-autocomplete-wrapper] [role='presentation'][id] {
+  font-weight: bold;
+}
+
+[data-autocomplete-wrapper] ul,
+[data-autocomplete-wrapper] li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+[data-autocomplete-wrapper] li {
   display: list-item;
 }
-[data-autocomplete-item-list] li a:hover {
+
+[data-autocomplete-wrapper] li a:hover {
   cursor: pointer;
 }
 

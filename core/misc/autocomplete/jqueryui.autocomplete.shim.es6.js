@@ -126,8 +126,8 @@
           // Highlight the first or last item, depending on whether the up or
           // down arrow was pressed.
           const selector =
-            keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+            keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
+          this.highlightItem(this.listboxWrapper.querySelector(selector));
         }
 
         // jQuery UI explicitly cancels 'return' keydown events when an item is
@@ -137,10 +137,10 @@
         // tests will also pass with the shimmed autocomplete.
         if (keyCode === this.keyCode.RETURN) {
           // If this is not null, then an item is highlighted.
-          const active = instance.ul.querySelectorAll(
+          const active = instance.listboxWrapper.querySelectorAll(
             '.ui-menu-item-wrapper.ui-state-active',
           );
-          if (active.length || instance.ul.contains(document.activeElement)) {
+          if (active.length || instance.listboxWrapper.contains(document.activeElement)) {
             e.preventDefault();
           }
         }
@@ -180,8 +180,8 @@
         // was pressed.
         if (this.isOpened) {
           const selector =
-            keyCode === this.keyCode.DOWN ? 'li' : 'li:last-child';
-          this.highlightItem(this.ul.querySelector(selector));
+            keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
+          this.highlightItem(this.listboxWrapper.querySelector(selector));
         }
       }
 
@@ -204,7 +204,7 @@
      */
     function jQuerydisplayResults(suggestionItems) {
       const typed = this.extractLastInputValue();
-      this.ul.innerHTML = '';
+      this.listboxWrapper.innerHTML = '';
       this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       /**
        * Fires after suggestion items are retrieved, but before they are added to the DOM.
@@ -218,9 +218,9 @@
         list: this.suggestions,
       });
       if (this.suggestions.length) {
-        this._renderMenu(this.ul, this.suggestions);
+        this._renderMenu(this.listboxWrapper, this.suggestions);
       }
-      if (this.ul.children.length === 0) {
+      if (this.suggestions.length === 0) {
         this.close();
       } else {
         this.open();
@@ -232,7 +232,7 @@
       // announcement being cut short by the screenreader stating the just-typed
       // character.
       this.announceTimeOutId = setTimeout(
-        () => this.sendToLiveRegion(this.resultsMessage(this.ul.children.length)),
+        () => this.sendToLiveRegion(this.resultsMessage(this.suggestions.length)),
         1400,
       );
     }
@@ -275,6 +275,26 @@
       return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
     };
 
+    const suggestionItem = instance.suggestionItem.bind(instance);
+    instance.suggestionItem = function jQuerySuggestionItem(text, index) {
+      const li = suggestionItem(text, index);
+
+      if (this.options.itemClass.length > 0) {
+        this.options.itemClass
+          .split(' ')
+          .forEach((className) => li.classList.add(className));
+      }
+
+      // Everything prior to this is logic that also happens in the
+      // A11yAutocomplete suggestionItems() method. Below is logic specific
+      // to the `<a>` tag added to list items when using this shim on a theme
+      // that extends Stable or Stable 9.
+      if (instance.hasOwnProperty('addBcListItemClasses')) {
+        instance.addBcListItemClasses(li, index);
+      }
+      return li;
+    };
+
     // Only override _renderItem if backwards compatible markup is not needed.
     // In these instances an override of this function will be supplied by the
     // Stable or Stable 9 theme, which reproduces the _renderItem override
@@ -295,15 +315,7 @@
        */
       // eslint-disable-next-line func-names
       instance._renderItem = function (ul, item, index) {
-        const li = instance.suggestionItem(item, index);
-
-        // Everything prior to this is logic that also happens in the
-        // A11yAutocomplete suggestionItems() method. Below is logic specific
-        // to the `<a>` tag added to list items when using this shim on a theme
-        // that extends Stable or Stable 9.
-        if (instance.hasOwnProperty('addBcListItemClasses')) {
-          instance.addBcListItemClasses(li, index);
-        }
+        const li = instance.suggestionItem(instance.formatSuggestionItem(item), index);
         return $(li).appendTo(ul);
       };
     }
@@ -328,7 +340,7 @@
      *   A mousedown event.
      */
     const closeOnClickOutside = (event) => {
-      const menuElement = instance.ul;
+      const menuElement = instance.listboxWrapper;
       const targetInWidget =
         event.target === instance.input ||
         event.target === menuElement ||
@@ -342,7 +354,7 @@
     instance.input.addEventListener('autocomplete-open', () => {
       document.body.addEventListener('mousedown', closeOnClickOutside);
       // Position the list directly under the input.
-      $(instance.ul).position({
+      $(instance.listboxWrapper).position({
         of: instance.input,
         my: 'left top',
         at: 'left bottom',
@@ -354,7 +366,7 @@
     });
 
     // jQuery UI has a mousedown listener on the list that prevents default.
-    instance.ul.addEventListener('mousedown', (e) => {
+    instance.listboxWrapper.addEventListener('mousedown', (e) => {
       e.preventDefault();
     });
 
@@ -419,7 +431,7 @@
         switch (method) {
           case 'widget':
             // The widget option returns the autocomplete item list.
-            return $(instance.ul);
+            return $(instance.listboxWrapper);
           case 'instance':
             // This is the one method that will not return an exact replica
             // of what jQuery UI would return, as jQuery UI autocomplete
@@ -430,7 +442,7 @@
               document: $(document),
               element: $(instance.input),
               menu: {
-                element: $(instance.ul),
+                element: $(instance.listboxWrapper),
               },
               liveRegion: $(instance.liveRegion),
               isMultiLine: instance.options.isMultiLine,
@@ -523,7 +535,7 @@
             // If args[2] has a value, then this is setting an option.
             if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
               const [, optionName, optionValue] = args;
-              const listBoxId = instance.ul.getAttribute('id');
+              const listBoxId = instance.listboxWrapper.getAttribute('id');
 
               switch (optionName) {
                 case 'appendTo':
@@ -548,10 +560,10 @@
                   }
 
                   if (appendTo) {
-                    if (!appendTo.contains(instance.ul)) {
-                      appendTo.appendChild(instance.ul);
+                    if (!appendTo.contains(instance.listboxWrapper)) {
+                      appendTo.appendChild(instance.listboxWrapper);
                     }
-                    instance.ul = appendTo.querySelector(`#${listBoxId}`);
+                    instance.listboxWrapper = appendTo.querySelector(`#${listBoxId}`);
                   }
 
                   // Add attribute that flags the shim initializer to skip the
@@ -572,7 +584,7 @@
                     ) {
                       const element =
                         key === 'ui-autocomplete'
-                          ? instance.ul
+                          ? instance.listboxWrapper
                           : instance.input;
                       optionValue[key].split(' ').forEach((className) => {
                         element.classList.add(className);
@@ -585,10 +597,10 @@
                 case 'classes.ui-autocomplete':
                   // Add the new class(es).
                   optionValue.split(' ').forEach((className) => {
-                    instance.ul.classList.add(className);
+                    instance.listboxWrapper.classList.add(className);
                   });
                   // Remove the default class.
-                  instance.ul.classList.remove('ui-autocomplete');
+                  instance.listboxWrapper.classList.remove('ui-autocomplete');
                   break;
                 case 'classes.ui-autocomplete-input':
                   // Add the new class(es).
@@ -600,13 +612,13 @@
                   break;
                 case 'disabled':
                   instance.options.disabled = optionValue;
-                  $(instance.ul).toggleClass(
+                  $(instance.listboxWrapper).toggleClass(
                     'ui-autocomplete-disabled',
                     optionValue,
                   );
                   break;
                 case 'position':
-                  $(instance.ul).position({
+                  $(instance.listboxWrapper).position({
                     of: instance.input,
                     my: 'left top',
                     at: 'left bottom',
