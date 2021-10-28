@@ -3,7 +3,7 @@
  * Attaches behaviors for the Tour module's toolbar tab.
  */
 
-(($, Drupal, settings, document, Shepherd) => {
+((Drupal, settings, document, Shepherd) => {
   const queryString = decodeURI(window.location.search);
 
   /**
@@ -67,7 +67,7 @@
       return !(tourItem.selector && !document.querySelector(tourItem.selector));
     });
 
-    // If there are tours filtered, we'll have to update model.
+    // If there are tours filtered, we'll have to update the current tour for the page.
     if (tourItems.length !== filteredTour.length) {
       filteredTour.forEach((filteredTourItem, filteredTourItemId) => {
         filteredTour[filteredTourItemId].counter = Drupal.t(
@@ -107,6 +107,7 @@
     if (!tourItems.length) {
       return;
     }
+
     // If Joyride is positioned relative to the top or bottom of an
     // element, and its secondary position is right or left, then the
     // arrow is also positioned right or left. Shepherd defaults to
@@ -215,14 +216,10 @@
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
-          $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
-          context.querySelector('#toolbar-tab-tour > button').addEventListener(
-            'click',
-            function () {
-              toggleTour();
-            },
-            false,
-          );
+          context.querySelector('#toolbar-tab-tour').classList.remove('hidden');
+          context
+            .querySelector('#toolbar-tab-tour > button')
+            .addEventListener('click', toggleTour, false);
         }
         // Start the tour immediately if toggled via query string.
         if (/tour=?/i.test(queryString)) {
@@ -310,4 +307,4 @@
    */
   Drupal.theme.tourItemContent = (tourStepConfig) =>
     `${tourStepConfig.body}<div class="tour-progress">${tourStepConfig.counter}</div>`;
-})(jQuery, Drupal, drupalSettings, document, window.Shepherd);
+})(Drupal, drupalSettings, document, window.Shepherd);

@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, settings, document, Shepherd) {
+(function (Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
   Drupal.tour = Drupal.tour || {
     currentTour: [],
@@ -109,10 +109,8 @@
         Drupal.tour.currentTour = settings._tour_internal;
 
         if (settings._tour_internal) {
-          $(context).find('#toolbar-tab-tour').toggleClass('hidden', false);
-          context.querySelector('#toolbar-tab-tour > button').addEventListener('click', function () {
-            toggleTour();
-          }, false);
+          context.querySelector('#toolbar-tab-tour').classList.remove('hidden');
+          context.querySelector('#toolbar-tab-tour > button').addEventListener('click', toggleTour, false);
         }
 
         if (/tour=?/i.test(queryString)) {
@@ -133,4 +131,4 @@
   Drupal.theme.tourItemContent = function (tourStepConfig) {
     return "".concat(tourStepConfig.body, "<div class=\"tour-progress\">").concat(tourStepConfig.counter, "</div>");
   };
-})(jQuery, Drupal, drupalSettings, document, window.Shepherd);
+})(Drupal, drupalSettings, document, window.Shepherd);
