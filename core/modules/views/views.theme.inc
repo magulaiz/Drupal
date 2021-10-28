@@ -488,8 +488,8 @@ function template_preprocess_views_view_table(&$variables) {
           ];
         }
 
-        $query['order'] = $field;
-        $query['sort'] = $initial;
+        $query['sort'] = $field;
+        $query['order'] = $initial;
         $link_options = [
           'query' => $query,
         ];
