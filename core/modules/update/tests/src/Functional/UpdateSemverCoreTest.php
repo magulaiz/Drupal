@@ -366,6 +366,11 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Checks the messages at admin/modules when a security update is missing.
    */
   public function testModulePageSecurityUpdate() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+      'administer themes',
+    ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')

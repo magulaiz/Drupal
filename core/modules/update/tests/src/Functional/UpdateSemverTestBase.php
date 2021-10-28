@@ -42,7 +42,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
-      'administer themes'
       ]);
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('local_actions_block');
