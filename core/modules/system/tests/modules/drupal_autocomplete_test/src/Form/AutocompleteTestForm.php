@@ -130,7 +130,7 @@ class AutocompleteTestForm extends FormBase {
       '#attributes' => [
         'data-autocomplete-cardinality' => '2',
         'data-autocomplete-separator-char' => '|',
-        'data-autocomplete-first-character-deny-list' => '|',
+        'data-autocomplete-first-character-ignore-list' => '|',
         'data-autocomplete-allow-repeat-values' => 'false',
       ],
     ];
