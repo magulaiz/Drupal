@@ -65,7 +65,6 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     // or normal environment.
     // @see locale_modules_installed()
     // @see locale_system_update()
-    locale_system_set_config_langcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
     $names = Locale::config()->getComponentNames();
     Locale::config()->updateConfigTranslations($names, $langcodes);
