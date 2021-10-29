@@ -66,7 +66,7 @@
      */
     // eslint-disable-next-line func-names
     instance._renderItem = function (ul, item, index) {
-      const li = instance.suggestionItem(`<a>${instance.formatSuggestionItem(item)}</a>`, index);
+      const li = instance.suggestionItem(`<a>${instance.options.templates.suggestion(item)}</a>`, index);
       return $(li).appendTo(ul);
     };
 

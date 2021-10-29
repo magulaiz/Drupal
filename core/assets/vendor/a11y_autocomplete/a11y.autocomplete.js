@@ -43,13 +43,12 @@ var _A11yAutocomplete = function () {
     this.input = input;
     this.count = document.querySelectorAll('[data-autocomplete-input]').length;
     this.listboxId = "autocomplete-l".concat(this.count);
-    this.supportedOptions = ['source', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'groupBy', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
+    this.supportedOptions = ['source', 'cardinality', 'minChars', 'separatorChar', 'firstCharacterIgnoreList', 'createLiveRegion', 'autoFocus', 'allowRepeatValues', 'groupBy', 'templates', 'minCharAssistiveHint', 'inputAssistiveHint', 'noResultsAssistiveHint', 'someResultsAssistiveHint', 'oneResultAssistiveHint', 'highlightedAssistiveHint'];
     var defaultOptions = {
       autoFocus: false,
       firstCharacterIgnoreList: ',',
       minChars: 1,
       sort: false,
-      displayLabels: true,
       disabled: false,
       source: [],
       groupBy: null,
@@ -63,6 +62,11 @@ var _A11yAutocomplete = function () {
       listZindex: 100,
       allowRepeatValues: null,
       searchDelay: 300,
+      templates: {
+        suggestion: function suggestion(_suggestion) {
+          return _suggestion.label.trim();
+        }
+      },
       minCharAssistiveHint: 'Type @count or more characters for results',
       inputAssistiveHint: 'When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.',
       noResultsAssistiveHint: 'No results found',
@@ -488,6 +492,7 @@ var _A11yAutocomplete = function () {
       var searchTerm = this.extractLastInputValue();
 
       if (searchTerm && searchTerm.length < this.options.minChars) {
+        this.close();
         return;
       }
 
@@ -563,9 +568,10 @@ var _A11yAutocomplete = function () {
         var list;
         var fragment = document.createDocumentFragment();
         var appendToFragment = fragment.appendChild.bind(fragment);
-        var formatItem = this.formatSuggestionItem.bind(this);
         var suggestionItem = this.suggestionItem.bind(this);
-        var groupBy = this.options.groupBy;
+        var _this$options = this.options,
+            groupBy = _this$options.groupBy,
+            formatItem = _this$options.templates.suggestion;
 
         if (groupBy) {
           var index = 0;
@@ -662,12 +668,6 @@ var _A11yAutocomplete = function () {
       return li;
     }
   }, {
-    key: "formatSuggestionItem",
-    value: function formatSuggestionItem(suggestion) {
-      var propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-      return suggestion[propertyToDisplay].trim();
-    }
-  }, {
     key: "open",
     value: function open() {
       this.input.setAttribute('aria-expanded', 'true');
@@ -734,9 +734,9 @@ var _A11yAutocomplete = function () {
   }, {
     key: "filterResults",
     value: function filterResults(suggestion, typed) {
-      var _this$options = this.options,
-          firstCharacterIgnoreList = _this$options.firstCharacterIgnoreList,
-          cardinality = _this$options.cardinality;
+      var _this$options2 = this.options,
+          firstCharacterIgnoreList = _this$options2.firstCharacterIgnoreList,
+          cardinality = _this$options2.cardinality;
       var suggestionLabel = suggestion.label || suggestion.value || suggestion;
       var currentValues = this.splitValues();
 

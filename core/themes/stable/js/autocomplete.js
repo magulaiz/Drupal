@@ -34,7 +34,7 @@
     }
 
     instance._renderItem = function (ul, item, index) {
-      var li = instance.suggestionItem("<a>".concat(instance.formatSuggestionItem(item), "</a>"), index);
+      var li = instance.suggestionItem("<a>".concat(instance.options.templates.suggestion(item), "</a>"), index);
       return $(li).appendTo(ul);
     };
 

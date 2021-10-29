@@ -184,7 +184,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     if (!usingBCMarkup) {
       instance._renderItem = function (ul, item, index) {
-        var li = instance.suggestionItem(instance.formatSuggestionItem(item), index);
+        var li = instance.suggestionItem(instance.options.templates.suggestion(item), index);
         return $(li).appendTo(ul);
       };
     }

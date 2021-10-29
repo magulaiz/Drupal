@@ -97,6 +97,10 @@
  *           });
  *    },
  *  ```
+ * @property {Object} [templates] - Defines templates (functions) that are used
+ *  for displaying parts of the autocomplete.
+ * @property {A11yAutocomplete~suggestionTemplate} templates.suggestions -
+ *  Defines template for suggestion items.
  * @property {string|null} [allowRepeatValues=null] - If `true`,
  *  autocomplete results can include items already included in the field. A null
  *  value functions the same as false, but a null value can be used to determine
@@ -174,6 +178,7 @@ class _A11yAutocomplete {
       'autoFocus',
       'allowRepeatValues',
       'groupBy',
+      'templates',
       // messages.
       'minCharAssistiveHint',
       'inputAssistiveHint',
@@ -190,8 +195,6 @@ class _A11yAutocomplete {
       minChars: 1,
       // API already sort results
       sort: false,
-      // shim
-      displayLabels: true,
       // shim
       disabled: false,
       source: [],
@@ -213,6 +216,23 @@ class _A11yAutocomplete {
       // to pass jquery ui tests
       allowRepeatValues: null,
       searchDelay: 300,
+      templates: {
+        /**
+         * Formats how a suggestion is structured in the suggestion list.
+         *
+         * @callback A11yAutocomplete~suggestionTemplate
+         *
+         * @param {object} suggestion
+         *   Object with value and label properties.
+         *
+         * @return {string}
+         *   The text and html of a suggestion item.
+         */
+        // eslint-disable-next-line no-unused-vars
+        suggestion: (suggestion) => {
+          return suggestion.label.trim();
+        },
+      },
       // to nest later.
       minCharAssistiveHint: 'Type @count or more characters for results',
       inputAssistiveHint:
@@ -866,6 +886,7 @@ class _A11yAutocomplete {
     }
     const searchTerm = this.extractLastInputValue();
     if (searchTerm && searchTerm.length < this.options.minChars) {
+      this.close();
       return;
     }
 
@@ -976,9 +997,11 @@ class _A11yAutocomplete {
       let list;
       const fragment = document.createDocumentFragment();
       const appendToFragment = fragment.appendChild.bind(fragment);
-      const formatItem = this.formatSuggestionItem.bind(this);
       const suggestionItem = this.suggestionItem.bind(this);
-      const { groupBy } = this.options;
+      const {
+        groupBy,
+        templates: { suggestion: formatItem },
+      } = this.options;
       if (groupBy) {
         let index = 0;
         let groupId = 0;
@@ -1102,21 +1125,6 @@ class _A11yAutocomplete {
     li.onblur = (e) => this.blurHandler(e);
 
     return li;
-  }
-
-  /**
-   * Formats how a suggestion is structured in the suggestion list.
-   *
-   * @param {object} suggestion
-   *   Object with value and label properties.
-   *
-   * @return {string}
-   *   The text and html of a suggestion item.
-   */
-  // eslint-disable-next-line no-unused-vars
-  formatSuggestionItem(suggestion) {
-    const propertyToDisplay = this.options.displayLabels ? 'label' : 'value';
-    return suggestion[propertyToDisplay].trim();
   }
 
   /**
