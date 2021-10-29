@@ -104,7 +104,9 @@
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(
         (panes) => {
           const $this = $(panes).addClass('vertical-tabs__items--processed');
-          const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+          const focusID = $this
+            .find('[type="hidden"].vertical-tabs__active-tab')
+            .val();
           let tabFocus;
 
           // Check if there are some details that can be converted to
@@ -263,7 +265,7 @@
           }
         })
         .end()
-        .siblings(':hidden.vertical-tabs__active-tab')
+        .siblings('[type="hidden"].vertical-tabs__active-tab')
         .val(this.details.attr('id'));
 
       this.details
