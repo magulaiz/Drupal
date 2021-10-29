@@ -735,9 +735,12 @@
             break;
         }
       } else {
-        // This condition means argument 1 was not a string. This means a new
-        // autocomplete instance should be initialized.
-        Drupal.Autocomplete.initialize(this[0]);
+        const id = this.attr('id');
+        if (!Drupal.Autocomplete.instances[id]) {
+          // This condition means argument 1 was not a string. This means a new
+          // autocomplete instance should be initialized.
+          Drupal.Autocomplete.initialize(this[0]);
+        }
 
         // If argument 1 is an object, they are options that should be set on
         // the newly created autocomplete.
@@ -751,7 +754,7 @@
               Object.keys(widgetOverrides).forEach((propertyToOverride) => {
                 const overrideWith = widgetOverrides[propertyToOverride];
                 const instance =
-                  Drupal.Autocomplete.instances[this.attr('id')]
+                  Drupal.Autocomplete.instances[id]
                     ._internal_object;
                 applyWidgetOverrides(
                   instance,

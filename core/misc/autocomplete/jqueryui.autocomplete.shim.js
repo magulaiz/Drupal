@@ -456,7 +456,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             break;
         }
       } else {
-        Drupal.Autocomplete.initialize(this[0]);
+        var _id = this.attr('id');
+
+        if (!Drupal.Autocomplete.instances[_id]) {
+          Drupal.Autocomplete.initialize(this[0]);
+        }
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
@@ -464,9 +468,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
               var widgetOverrides = args[0].widgetOverrides;
               Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
                 var overrideWith = widgetOverrides[propertyToOverride];
-
-                var instance = Drupal.Autocomplete.instances[_this2.attr('id')]._internal_object;
-
+                var instance = Drupal.Autocomplete.instances[_id]._internal_object;
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
             } else {
