@@ -17,18 +17,19 @@
  * hierarchical arrays that include the data to be rendered into HTML (or XML or
  * another output format), and options that affect the markup. Render arrays
  * are ultimately rendered into HTML or other output formats by recursive calls
- * to drupal_render(), traversing the depth of the render array hierarchy. At
- * each level, the theme system is invoked to do the actual rendering. See the
- * documentation of drupal_render() and the
- * @link theme_render Theme system and Render API topic @endlink for more
- * information about render arrays and rendering.
+ * to \Drupal\Core\Render\RendererInterface::render(), traversing the depth of
+ * the render array hierarchy. At each level, the theme system is invoked to do
+ * the actual rendering. See the documentation of
+ * \Drupal\Core\Render\RendererInterface::render() and the @link theme_render
+ * Theme system and Render API topic @endlink for more information about render
+ * arrays and rendering.
  *
  * @section sec_twig_theme Twig Templating Engine
- * Drupal 8 uses the templating engine Twig. Twig offers developers a fast,
- * secure, and flexible method for building templates for Drupal 8 sites. Twig
+ * Drupal uses the templating engine Twig. Twig offers developers a fast,
+ * secure, and flexible method for building templates for Drupal sites. Twig
  * also offers substantial usability improvements over PHPTemplate, and does
  * not require front-end developers to know PHP to build and manipulate Drupal
- * 8 themes.
+ * themes.
  *
  * For further information on theming in Drupal see
  * https://www.drupal.org/docs/theming-drupal
@@ -72,8 +73,7 @@
  * Note that while Twig templates will auto-escape variables, theme functions
  * must explicitly escape any variables by using theme_render_and_autoescape().
  * Failure to do so is likely to result in security vulnerabilities. Theme
- * functions are deprecated in Drupal 8.0.x and will be removed before
- * Drupal 9.0.x. Use Twig templates instead.
+ * functions are deprecated, use Twig templates instead.
  *
  * @section sec_overriding_theme_hooks Overriding Theme Hooks
  * Themes may register new theme hooks within a hook_theme() implementation, but
@@ -98,8 +98,7 @@
  * default function is again a good starting point for overriding its behavior.
  * Again, note that theme functions (unlike templates) must explicitly escape
  * variables using theme_render_and_autoescape() or risk security
- * vulnerabilities. Theme functions are deprecated in Drupal 8.0.x and will be
- * removed before Drupal 9.0.x. Use Twig templates instead.
+ * vulnerabilities. Theme functions are deprecated, use Twig templates instead.
  *
  * @section sec_preprocess_templates Preprocessing for Template Files
  * If the theme implementation is a template file, several functions are called
@@ -233,7 +232,7 @@
  *
  * For further information on the Theme and Render APIs, see:
  * - https://www.drupal.org/docs/theming-drupal
- * - https://www.drupal.org/developing/api/8/render
+ * - https://www.drupal.org/docs/drupal-apis/render-api
  * - @link themeable Theme system overview @endlink.
  *
  * @section arrays Render arrays
@@ -241,13 +240,16 @@
  * hierarchical associative array containing data to be rendered and properties
  * describing how the data should be rendered. A render array that is returned
  * by a function to specify markup to be sent to the web browser or other
- * services will eventually be rendered by a call to drupal_render(), which will
- * recurse through the render array hierarchy if appropriate, making calls into
- * the theme system to do the actual rendering. If a function or method actually
- * needs to return rendered output rather than a render array, the best practice
- * would be to create a render array, render it by calling drupal_render(), and
- * return that result, rather than writing the markup directly. See the
- * documentation of drupal_render() for more details of the rendering process.
+ * services will eventually be rendered by a call to
+ * \Drupal\Core\Render\RendererInterface::render(), which will recurse through
+ * the render array hierarchy if appropriate, making calls into the theme system
+ * to do the actual rendering. If a function or method actually needs to return
+ * rendered output rather than a render array, the best practice would be to
+ * create a render array, render it by calling
+ * \Drupal\Core\Render\RendererInterface::render(), and return that result,
+ * rather than writing the markup directly. See the documentation of
+ * \Drupal\Core\Render\RendererInterface::render() for more details of the
+ * rendering process.
  *
  * Each level in the hierarchy of a render array (including the outermost array)
  * has one or more array elements. Array elements whose names start with '#' are
@@ -439,7 +441,7 @@
  * @section render_pipeline The render pipeline
  * The term "render pipeline" refers to the process Drupal uses to take
  * information provided by modules and render it into a response. See
- * https://www.drupal.org/developing/api/8/render for more details on this
+ * https://www.drupal.org/docs/drupal-apis/render-api for more details on this
  * process. For background on routing concepts, see
  * @link routing Routing API. @endlink
  *
@@ -1170,7 +1172,7 @@ function hook_page_bottom(array &$page_bottom) {
  *     specified, a default template name will be assumed. For example, if a
  *     module registers the 'search_result' theme hook, 'search-result' will be
  *     assigned as its template name.
- *   - function: (deprecated in Drupal 8.0.x, will be removed in Drupal 9.0.x)
+ *   - function: (deprecated in Drupal 8, was removed in Drupal 9)
  *     If specified, this will be the function name to invoke for this
  *     implementation. If neither 'template' nor 'function' are specified, a
  *     default template name will be assumed. See above for more details.
