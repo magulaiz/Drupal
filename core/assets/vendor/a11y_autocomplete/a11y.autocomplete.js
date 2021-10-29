@@ -504,7 +504,9 @@ var _A11yAutocomplete = function () {
             _this6.displayResults(results);
           });
         } else if (Array.isArray(this.options.source)) {
-          this.displayResults(this.options.source);
+          this.displayResults(this.options.source.filter(function (item) {
+            return _this6.filterResults(item, searchTerm);
+          }));
         } else {
           throw new TypeError('options.source is not an array or a function.');
         }
@@ -543,37 +545,21 @@ var _A11yAutocomplete = function () {
       });
     }
   }, {
-    key: "prepareSuggestionList",
-    value: function prepareSuggestionList(typed, suggestionItems) {
-      var _this8 = this;
-
-      var normalizedSuggestionItems = this.normalizeSuggestionItems(suggestionItems);
-
-      if (typed) {
-        normalizedSuggestionItems = normalizedSuggestionItems.filter(function (item) {
-          return _this8.filterResults(item, typed);
-        });
-      }
-
-      if (this.options.sort !== false) {
-        return this.sortSuggestions(normalizedSuggestionItems);
-      }
-
-      return normalizedSuggestionItems;
-    }
-  }, {
     key: "displayResults",
     value: function displayResults(suggestionItems) {
-      var _this9 = this;
+      var _this8 = this;
 
-      var typed = this.extractLastInputValue();
+      this.suggestions = this.normalizeSuggestionItems(suggestionItems);
       this.listboxWrapper.innerHTML = '';
-      this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
 
       if (this.suggestions.length) {
+        if (this.options.sort !== false) {
+          this.suggestions = this.sortSuggestions(this.suggestions);
+        }
+
         var list;
         var fragment = document.createDocumentFragment();
         var appendToFragment = fragment.appendChild.bind(fragment);
@@ -590,7 +576,7 @@ var _A11yAutocomplete = function () {
             list[group] = groups[group].map(formatItem);
           });
           Object.keys(list).map(function (group) {
-            var el = _this9.suggestionGroup(group, "".concat(_this9.listboxId, "-g").concat(groupId++));
+            var el = _this8.suggestionGroup(group, "".concat(_this8.listboxId, "-g").concat(groupId++));
 
             var appendToGroup = el.appendChild.bind(el);
             list[group].map(function (suggestionText) {
@@ -614,7 +600,7 @@ var _A11yAutocomplete = function () {
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this9.sendToLiveRegion(_this9.resultsMessage(_this9.suggestions.length));
+        return _this8.sendToLiveRegion(_this8.resultsMessage(_this8.suggestions.length));
       }, 1400);
     }
   }, {
@@ -658,7 +644,7 @@ var _A11yAutocomplete = function () {
   }, {
     key: "suggestionItem",
     value: function suggestionItem(suggestion, itemIndex) {
-      var _this10 = this;
+      var _this9 = this;
 
       var li = document.createElement('li');
       li.innerHTML = suggestion;
@@ -670,7 +656,7 @@ var _A11yAutocomplete = function () {
       li.setAttribute('aria-selected', 'false');
 
       li.onblur = function (e) {
-        return _this10.blurHandler(e);
+        return _this9.blurHandler(e);
       };
 
       return li;
@@ -751,14 +737,14 @@ var _A11yAutocomplete = function () {
       var _this$options = this.options,
           firstCharacterIgnoreList = _this$options.firstCharacterIgnoreList,
           cardinality = _this$options.cardinality;
-      var suggestionValue = suggestion.value;
+      var suggestionLabel = suggestion.label || suggestion.value || suggestion;
       var currentValues = this.splitValues();
 
-      if (firstCharacterIgnoreList.indexOf(typed[0]) !== -1 || cardinality > 0 && currentValues.length > cardinality || currentValues.indexOf(suggestionValue) !== -1 && !this.options.allowRepeatValues) {
+      if (firstCharacterIgnoreList.indexOf(typed[0]) !== -1 || cardinality > 0 && currentValues.length > cardinality || currentValues.indexOf(suggestionLabel) !== -1 && !this.options.allowRepeatValues) {
         return false;
       }
 
-      return RegExp(this.extractLastInputValue().trim().replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&'), 'i').test(suggestionValue);
+      return RegExp(this.extractLastInputValue().trim().replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&'), 'i').test(suggestionLabel);
     }
   }, {
     key: "sendToLiveRegion",
@@ -794,11 +780,11 @@ var _A11yAutocomplete = function () {
   }, {
     key: "destroy",
     value: function destroy() {
-      var _this11 = this;
+      var _this10 = this;
 
       Object.keys(this.events).forEach(function (elementName) {
-        Object.keys(_this11.events[elementName]).forEach(function (eventName) {
-          _this11[elementName].removeEventListener(eventName, _this11.events[elementName][eventName]);
+        Object.keys(_this10.events[elementName]).forEach(function (eventName) {
+          _this10[elementName].removeEventListener(eventName, _this10.events[elementName][eventName]);
         });
       });
 

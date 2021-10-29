@@ -1,4 +1,4 @@
-/*! @drupal/autocomplete - v0.0.0 - 2021-10-28 */
+/*! @drupal/autocomplete - v0.0.0 - 2021-10-29 */
 /**
  * @module @drupal/autocomplete
  *
@@ -62,10 +62,41 @@
  * Options sent to the Autocomplete constructor that will override the default
  * options.
  * @typedef {Object} A11yAutocomplete~Options
- * @property {Array|string|A11yAutocomplete~sourceCallback} [source] - An array or a string containing
- *  JSON that parses into an array of values to search when the user types in
- *  the input field, or a function to take what the user types and call a
- *  callback function with the results to be displayed.
+ * @property {Array|string|A11yAutocomplete~sourceCallback} [source] -  The data
+ * the autocomplete searches, which can be provided in multiple ways
+ * - An array of strings: `[ "First choice", "Second Choice", ... ]`
+ * - An array of objects. All objects must have either a 'label' or 'value'
+ *   property: `[ { label: "First Choice", value: "First Value" }, ... ]`
+ *   The label property is displayed in the suggestion list, and is what the
+ *   autocomplete process searches. The value property is what is inserted into
+ *   the input element when an item is selected. If just one property (value or
+ *   label) is specified, it will be used for both, e.g., if only 'value' is
+ *   provided, it will also be used as the label.
+ *   Note that these objects can have additional properties beyond 'label' and
+ *   'value', but at least one of those two properties must be present for the
+ *   autocomplete to work.
+ *  - A string of valid JSON that can be parsed into an array of strings or an
+ *    array of objects (i.e. either of the array options listed above).
+ * - A callback function with two arguments:
+ *     - searchTerm: the string the autocomplete is searching for.
+ *     - processResults: a callback function that sends the search results
+ *       to for rendering. This function accepts a single argument that should
+ *       either be an array of strings or an array of objects with value and/or
+ *       label properties.
+ *  ```
+ *    // Example querying an endpoint that provides JSON.
+ *    source: (searchTerm, processResults) => {
+ *        // Query the remote source
+ *        fetch(`https://an-endpoint/?q=${searchTerm}`)
+ *           .then((response) => {
+ *             return response.json();
+ *           })
+ *           .then((results) => {
+ *             // Use the callback to send the results to the
+ *             processResults(results);
+ *           });
+ *    },
+ *  ```
  * @property {string|null} [allowRepeatValues=null] - If `true`,
  *  autocomplete results can include items already included in the field. A null
  *  value functions the same as false, but a null value can be used to determine
@@ -870,7 +901,11 @@ class _A11yAutocomplete {
       } else if (Array.isArray(this.options.source)) {
         // If a predefined list was provided as an option, make this the
         // suggestion items.
-        this.displayResults(this.options.source);
+        this.displayResults(
+          this.options.source.filter((item) =>
+            this.filterResults(item, searchTerm),
+          ),
+        );
       } else {
         throw new TypeError('options.source is not an array or a function.');
       }
@@ -918,38 +953,11 @@ class _A11yAutocomplete {
   }
 
   /**
-   * Creates a suggestion list based on a typed value.
-   *
-   * @param {string} typed
-   *   The typed value querying autocomplete.
-   * @param {Array} suggestionItems
-   *   An array of suggestion items.
-   * @return {Array}
-   *   An array of suggestion items that has been filtered based on typed value
-   *   and sorted if options.sort is true.
-   */
-  prepareSuggestionList(typed, suggestionItems) {
-    let normalizedSuggestionItems =
-      this.normalizeSuggestionItems(suggestionItems);
-    if (typed) {
-      normalizedSuggestionItems = normalizedSuggestionItems.filter((item) =>
-        this.filterResults(item, typed),
-      );
-    }
-    if (this.options.sort !== false) {
-      return this.sortSuggestions(normalizedSuggestionItems);
-    }
-
-    return normalizedSuggestionItems;
-  }
-
-  /**
    * Displays the results retrieved in inputListener().
    */
   displayResults(suggestionItems) {
-    const typed = this.extractLastInputValue();
+    this.suggestions = this.normalizeSuggestionItems(suggestionItems);
     this.listboxWrapper.innerHTML = '';
-    this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
     /**
      * Fires after suggestion items are retrieved, but before they are added to the DOM.
      *
@@ -962,6 +970,9 @@ class _A11yAutocomplete {
       list: this.suggestions,
     });
     if (this.suggestions.length) {
+      if (this.options.sort !== false) {
+        this.suggestions = this.sortSuggestions(this.suggestions);
+      }
       let list;
       const fragment = document.createDocumentFragment();
       const appendToFragment = fragment.appendChild.bind(fragment);
@@ -1215,7 +1226,7 @@ class _A11yAutocomplete {
    */
   filterResults(suggestion, typed) {
     const { firstCharacterIgnoreList, cardinality } = this.options;
-    const suggestionValue = suggestion.value;
+    const suggestionLabel = suggestion.label || suggestion.value || suggestion;
     const currentValues = this.splitValues();
 
     // Prevent suggestions if the first input character is in the ignore list,
@@ -1224,7 +1235,7 @@ class _A11yAutocomplete {
     if (
       firstCharacterIgnoreList.indexOf(typed[0]) !== -1 ||
       (cardinality > 0 && currentValues.length > cardinality) ||
-      (currentValues.indexOf(suggestionValue) !== -1 &&
+      (currentValues.indexOf(suggestionLabel) !== -1 &&
         !this.options.allowRepeatValues)
     ) {
       return false;
@@ -1235,7 +1246,7 @@ class _A11yAutocomplete {
         .trim()
         .replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&'),
       'i',
-    ).test(suggestionValue);
+    ).test(suggestionLabel);
   }
 
   /**

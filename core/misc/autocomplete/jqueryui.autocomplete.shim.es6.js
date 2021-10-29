@@ -195,17 +195,15 @@
     /**
      * Creates a suggestion list based on a typed value.
      *
-     * The majority of this function is identical to A11yAutocomplete
-     * prepareSuggestionList(). It is changed at the end to be compatible with
-     * jQuery UI extension points.
+     * The majority of this function is identical to A11yAutocomplete. It is
+     * changed at the end to be compatible with jQuery UI extension points.
      *
-     * @param {string[]} suggestionItems
+     * @param {string[]|object.<string, string[]>} suggestionItems
      *   The typed value querying autocomplete.
      */
     function jQuerydisplayResults(suggestionItems) {
-      const typed = this.extractLastInputValue();
+      this.suggestions = this.normalizeSuggestionItems(suggestionItems);
       this.listboxWrapper.innerHTML = '';
-      this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       /**
        * Fires after suggestion items are retrieved, but before they are added to the DOM.
        *
@@ -218,6 +216,9 @@
         list: this.suggestions,
       });
       if (this.suggestions.length) {
+        if (this.options.sort !== false) {
+          this.suggestions = this.sortSuggestions(this.suggestions);
+        }
         this._renderMenu(this.listboxWrapper, this.suggestions);
       }
       if (this.suggestions.length === 0) {

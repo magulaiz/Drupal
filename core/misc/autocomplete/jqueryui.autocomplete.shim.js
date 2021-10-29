@@ -125,14 +125,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     function jQuerydisplayResults(suggestionItems) {
       var _this = this;
 
-      var typed = this.extractLastInputValue();
+      this.suggestions = this.normalizeSuggestionItems(suggestionItems);
       this.listboxWrapper.innerHTML = '';
-      this.suggestions = this.prepareSuggestionList(typed, suggestionItems);
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
       });
 
       if (this.suggestions.length) {
+        if (this.options.sort !== false) {
+          this.suggestions = this.sortSuggestions(this.suggestions);
+        }
+
         this._renderMenu(this.listboxWrapper, this.suggestions);
       }
 
