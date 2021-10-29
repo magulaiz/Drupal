@@ -10,7 +10,15 @@
 
   document.addEventListener('drupal-autocomplete-init', (e) => {
     const { instance, options } = e.detail;
-    if (instance.input.classList.contains('form-autocomplete')) {
+    // By default, autocomplete inputs are processed with a backwards
+    // compatible shim that provides jQuery UI autocomplete markup
+    // structure and API surface. If the input has the
+    // 'data-drupal-10-autocomplete' attribute, this shim is not invoked.
+    // Without the shim, the markup and API will be what is provided in
+    // Drupal 10.
+    // @todo remove this conditional and its contents, in
+    //   https://drupal.org/node/3206225, it is not needed in Drupal 10.
+    if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
       Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
     }
   });
@@ -396,14 +404,14 @@
   // This fully replaces jQuery UI's autocomplete() function. This reproduces
   // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for
   // the functionality. This is applied to any input with the
-  // `form-autocomplete` class. If an input does not have that class, and
-  // jQuery UI autocomplete is available, the input will use an un-shimmed
-  // jQuery UI autocomplete.
+  // `data-autocomplete-path` attribute. If an input does not have the
+  // `data-autocomplete-path` attribute, and jQuery UI autocomplete is
+  // available, the input will use jQuery UI autocomplete.
   $.fn.extend({
     autocomplete(...args) {
       if (
         oldAutocomplete &&
-        (!this.length || !this[0].classList.contains('form-autocomplete'))
+        (!this.length || !this[0].hasAttribute('data-autocomplete-path'))
       ) {
         return oldAutocomplete.apply(this, args);
       }
