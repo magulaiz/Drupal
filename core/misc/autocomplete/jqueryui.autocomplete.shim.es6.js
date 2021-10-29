@@ -636,7 +636,26 @@
                   //   or of objects with `label` and/or `value` properties.
                   if (typeof optionValue === 'function') {
                     // eslint-disable-next-line func-names
-                    instance.doSearch = function () {
+                    instance.doSearch = function (e) {
+                      if (this.options.disabled) {
+                        return;
+                      }
+                      const searchTerm = this.extractLastInputValue();
+                      if (searchTerm && searchTerm.length < this.options.minChars) {
+                        this.close();
+                        return;
+                      }
+
+                      /**
+                       * Fires just before a search. Can be used to cancel the search.
+                       *
+                       * @event A11yAutocomplete#autocomplete-pre-search
+                       * @property {Class} autocomplete - The autocomplete instance.
+                       */
+                      if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
+                        return;
+                      }
+
                       // This overrides autocomplete search functionality with
                       // the logic provided in the 'optionValue' function.
                       // Argument 1 is a 'request' object, with a single 'term'

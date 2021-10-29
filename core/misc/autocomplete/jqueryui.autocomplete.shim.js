@@ -399,7 +399,22 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
                 case 'source':
                   if (typeof optionValue === 'function') {
-                    instance.doSearch = function () {
+                    instance.doSearch = function (e) {
+                      if (this.options.disabled) {
+                        return;
+                      }
+
+                      var searchTerm = this.extractLastInputValue();
+
+                      if (searchTerm && searchTerm.length < this.options.minChars) {
+                        this.close();
+                        return;
+                      }
+
+                      if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
+                        return;
+                      }
+
                       optionValue({
                         term: instance.extractLastInputValue()
                       }, instance.displayResults.bind(instance));
