@@ -34,7 +34,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         instance = _e$detail.instance,
         options = _e$detail.options;
 
-    if (!instance.input.hasAttribute('data-drupal-10-autocomplete')) {
+    if (instance.input.classList.contains('form-autocomplete')) {
       Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
     }
   });
@@ -234,7 +234,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         args[_key] = arguments[_key];
       }
 
-      if (oldAutocomplete && (!this.length || !this[0].hasAttribute('data-autocomplete-path'))) {
+      if (oldAutocomplete && (!this.length || !this[0].classList.contains('form-autocomplete'))) {
         return oldAutocomplete.apply(this, args);
       }
 
