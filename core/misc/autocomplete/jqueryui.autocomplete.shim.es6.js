@@ -118,7 +118,9 @@
           // Highlight the first or last item, depending on whether the up or
           // down arrow was pressed.
           const selector =
-            keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
+            keyCode === this.keyCode.DOWN
+              ? 'li[role="option"]'
+              : 'li[role="option"]:last-child';
           this.highlightItem(this.listboxWrapper.querySelector(selector));
         }
 
@@ -132,7 +134,10 @@
           const active = instance.listboxWrapper.querySelectorAll(
             '.ui-menu-item-wrapper.ui-state-active',
           );
-          if (active.length || instance.listboxWrapper.contains(document.activeElement)) {
+          if (
+            active.length ||
+            instance.listboxWrapper.contains(document.activeElement)
+          ) {
             e.preventDefault();
           }
         }
@@ -172,7 +177,9 @@
         // was pressed.
         if (this.isOpened) {
           const selector =
-            keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
+            keyCode === this.keyCode.DOWN
+              ? 'li[role="option"]'
+              : 'li[role="option"]:last-child';
           this.highlightItem(this.listboxWrapper.querySelector(selector));
         }
       }
@@ -225,7 +232,8 @@
       // announcement being cut short by the screenreader stating the just-typed
       // character.
       this.announceTimeOutId = setTimeout(
-        () => this.sendToLiveRegion(this.resultsMessage(this.suggestions.length)),
+        () =>
+          this.sendToLiveRegion(this.resultsMessage(this.suggestions.length)),
         1400,
       );
     }
@@ -265,7 +273,10 @@
      */
     // eslint-disable-next-line func-names
     instance._renderItemData = function (ul, item, index) {
-      return this._renderItem(ul, item, index).data('ui-autocomplete-item', item);
+      return this._renderItem(ul, item, index).data(
+        'ui-autocomplete-item',
+        item,
+      );
     };
 
     const suggestionItem = instance.suggestionItem.bind(instance);
@@ -308,7 +319,10 @@
        */
       // eslint-disable-next-line func-names
       instance._renderItem = function (ul, item, index) {
-        const li = instance.suggestionItem(instance.options.templates.suggestion(item), index);
+        const li = instance.suggestionItem(
+          instance.options.templates.suggestion(item),
+          index,
+        );
         return $(li).appendTo(ul);
       };
     }
@@ -556,7 +570,9 @@
                     if (!appendTo.contains(instance.listboxWrapper)) {
                       appendTo.appendChild(instance.listboxWrapper);
                     }
-                    instance.listboxWrapper = appendTo.querySelector(`#${listBoxId}`);
+                    instance.listboxWrapper = appendTo.querySelector(
+                      `#${listBoxId}`,
+                    );
                   }
 
                   // Add attribute that flags the shim initializer to skip the
@@ -634,7 +650,10 @@
                         return;
                       }
                       const searchTerm = this.extractLastInputValue();
-                      if (searchTerm && searchTerm.length < this.options.minChars) {
+                      if (
+                        searchTerm &&
+                        searchTerm.length < this.options.minChars
+                      ) {
                         this.close();
                         return;
                       }
@@ -645,7 +664,14 @@
                        * @event A11yAutocomplete#autocomplete-pre-search
                        * @property {Class} autocomplete - The autocomplete instance.
                        */
-                      if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
+                      if (
+                        !this.triggerEvent(
+                          'autocomplete-pre-search',
+                          {},
+                          true,
+                          e,
+                        )
+                      ) {
                         return;
                       }
 

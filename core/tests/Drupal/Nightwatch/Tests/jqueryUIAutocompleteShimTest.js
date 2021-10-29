@@ -1294,7 +1294,9 @@ module.exports = {
             toReturn.triggerRequest = true; // trigger request
             ac.simulate('blur');
             setTimeout(() => {
-              response(['result'].filter((item) => item.includes(request.term)));
+              response(
+                ['result'].filter((item) => item.includes(request.term)),
+              );
               done(toReturn);
             }, 25);
           },
