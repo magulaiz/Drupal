@@ -122,7 +122,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     instance.inputKeyDown = shimmedInputKeyDown;
 
-    function jQuerydisplayResults(suggestionItems) {
+    function jQueryDisplayResults(suggestionItems) {
       var _this = this;
 
       this.suggestions = this.normalizeSuggestionItems(suggestionItems);
@@ -151,7 +151,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }, 1400);
     }
 
-    instance.displayResults = jQuerydisplayResults;
+    instance.displayResults = jQueryDisplayResults;
 
     instance._renderMenu = function (ul, items) {
       var that = this;

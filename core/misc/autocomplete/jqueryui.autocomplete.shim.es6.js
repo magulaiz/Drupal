@@ -200,7 +200,7 @@
      * @param {string[]|object.<string, string[]>} suggestionItems
      *   The typed value querying autocomplete.
      */
-    function jQuerydisplayResults(suggestionItems) {
+    function jQueryDisplayResults(suggestionItems) {
       this.suggestions = this.normalizeSuggestionItems(suggestionItems);
       this.listboxWrapper.innerHTML = '';
       /**
@@ -237,7 +237,7 @@
         1400,
       );
     }
-    instance.displayResults = jQuerydisplayResults;
+    instance.displayResults = jQueryDisplayResults;
 
     /**
      * A copy of jQuery UI autocomplete _renderMenu.
