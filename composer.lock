@@ -492,10 +492,14 @@
         {
             "name": "drupal/core",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "version": "11.x-dev",
 =======
             "version": "9.3.0-alpha1",
 >>>>>>> d9e80b8717 (Drupal 9.3.0-alpha1)
+=======
+            "version": "9.3.x-dev",
+>>>>>>> 4d1d79077b (Back to dev.)
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -658,10 +662,14 @@
         {
             "name": "drupal/core-project-message",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "version": "11.x-dev",
 =======
             "version": "9.3.0-alpha1",
 >>>>>>> d9e80b8717 (Drupal 9.3.0-alpha1)
+=======
+            "version": "9.3.x-dev",
+>>>>>>> 4d1d79077b (Back to dev.)
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -695,10 +703,14 @@
         {
             "name": "drupal/core-vendor-hardening",
 <<<<<<< HEAD
+<<<<<<< HEAD
             "version": "11.x-dev",
 =======
             "version": "9.3.0-alpha1",
 >>>>>>> d9e80b8717 (Drupal 9.3.0-alpha1)
+=======
+            "version": "9.3.x-dev",
+>>>>>>> 4d1d79077b (Back to dev.)
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
@@ -9434,7 +9446,11 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "drupal/core": 20,
+        "drupal/core-project-message": 20,
+        "drupal/core-vendor-hardening": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
@@ -9443,8 +9459,12 @@
         "php": "8.3.0"
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
     "plugin-api-version": "2.6.0"
 =======
     "plugin-api-version": "2.0.0"
 >>>>>>> d9e80b8717 (Drupal 9.3.0-alpha1)
+=======
+    "plugin-api-version": "2.1.0"
+>>>>>>> 4d1d79077b (Back to dev.)
 }
