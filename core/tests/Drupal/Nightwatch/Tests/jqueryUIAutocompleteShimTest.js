@@ -1503,6 +1503,9 @@ module.exports = {
       function () {
         const toReturn = {};
         const element = jQuery('#autocomplete');
+        // Remove the already initialized autocomplete on #autocomplete because
+        // of the form-autocomplete class.
+        element.autocomplete('destroy');
 
         jQuery('#autocomplete-wrap2').addClass('ui-front');
         element.autocomplete();
