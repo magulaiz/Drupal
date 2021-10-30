@@ -210,49 +210,4 @@ class LibraryDiscoveryCollectorTest extends UnitTestCase {
     $this->assertSame(['foo.css', 'baz.css'], array_keys($libraries['test_3']['css']['theme']));
   }
 
-  /**
-   * Tests a deprecated library with an extend.
-   *
-   * @covers ::applyLibrariesExtend
-   *
-   * @group legacy
-   */
-  public function testLibrariesExtendDeprecated() {
-    $this->expectDeprecation('Theme "test" is extending a deprecated library. The "test/test_4" asset library is deprecated in drupal:X.0.0 and is removed from drupal:Y.0.0. Use the test_3 library instead. See https://www.example.com');
-    $this->activeTheme = $this->getMockBuilder(ActiveTheme::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-    $this->themeManager->expects($this->any())
-      ->method('getActiveTheme')
-      ->willReturn($this->activeTheme);
-    $this->activeTheme->expects($this->once())
-      ->method('getName')
-      ->willReturn('kitten_theme');
-    $this->activeTheme->expects($this->atLeastOnce())
-      ->method('getLibrariesExtend')
-      ->willReturn([
-        'test/test_4' => [
-          'kitten_theme/extend',
-        ],
-      ]);
-    $this->libraryDiscoveryParser->expects($this->exactly(2))
-      ->method('buildByExtension')
-      ->willReturnMap([
-        ['test', $this->libraryData],
-        [
-          'kitten_theme', [
-            'extend' => [
-              'css' => [
-                'theme' => [
-                  'baz.css' => [],
-                ],
-              ],
-            ],
-          ],
-        ],
-      ]);
-    $library_discovery_collector = new LibraryDiscoveryCollector($this->cache, $this->lock, $this->libraryDiscoveryParser, $this->themeManager);
-    $library_discovery_collector->get('test');
-  }
-
 }
