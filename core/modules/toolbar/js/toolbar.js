@@ -25,6 +25,9 @@
       }
 
       once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
+        document.querySelector('.toolbar-bar .toolbar-tab .trigger').addEventListener('click', function () {
+          return console.log("vanilla: tab clicked");
+        });
         var model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
@@ -54,6 +57,9 @@
         });
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
+        document.querySelector('.toolbar-toggle-orientation button').addEventListener('click', function () {
+          return console.log('vanilla: orientation clicked');
+        });
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
@@ -112,6 +118,8 @@
     mql: {},
     setSubtrees: new $.Deferred(),
     mediaQueryChangeHandler: function mediaQueryChangeHandler(model, label, mql) {
+      console.log('mediaQueryChangeHandler in toolbar.es6');
+
       switch (label) {
         case 'toolbar.narrow':
           model.set({

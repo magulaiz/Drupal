@@ -45,6 +45,11 @@
       }
       // Process the administrative toolbar.
       once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
+        ///////// here
+        document
+          .querySelector('.toolbar-bar .toolbar-tab .trigger')
+          .addEventListener('click', () => console.log("vanilla: tab clicked"));
+
         // Establish the toolbar models and views.
         const model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(
@@ -97,6 +102,12 @@
         // for every media query match.
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
+
+        document
+          .querySelector('.toolbar-toggle-orientation button')
+          .addEventListener('click', () =>
+            console.log('vanilla: orientation clicked'),
+          );
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
@@ -242,6 +253,7 @@
      *   A MediaQueryList object.
      */
     mediaQueryChangeHandler(model, label, mql) {
+      console.log('mediaQueryChangeHandler in toolbar.es6');
       switch (label) {
         case 'toolbar.narrow':
           model.set({

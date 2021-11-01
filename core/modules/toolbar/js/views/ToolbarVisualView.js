@@ -9,6 +9,7 @@
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend({
     events: function events() {
       var touchEndToClick = function touchEndToClick(event) {
+        console.log("touchEndToClick in ToolbarVisualView.es6");
         event.preventDefault();
         event.target.click();
       };
@@ -30,6 +31,7 @@
       this.model.trigger('change:activeTab');
     },
     updateToolbarHeight: function updateToolbarHeight() {
+      console.log("updateToolbarHeight() in ToolbarVisualView.es6");
       var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
       this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
@@ -42,11 +44,14 @@
       this.triggerDisplace();
     },
     triggerDisplace: function triggerDisplace() {
+      console.log("triggerDisplace() in ToolbarVisualView.es6");
+
       _.defer(function () {
         Drupal.displace(true);
       });
     },
     render: function render() {
+      console.log('render() in ToolbarVisualView.es6');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -59,6 +64,8 @@
       return this;
     },
     onTabClick: function onTabClick(event) {
+      console.log("backbone onTabClick");
+
       if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
         var activeTab = this.model.get('activeTab');
         var clickedTab = event.currentTarget;
@@ -68,6 +75,7 @@
       }
     },
     onOrientationToggleClick: function onOrientationToggleClick(event) {
+      console.log("backbone onOrientationToggleClick");
       var orientation = this.model.get('orientation');
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       var locked = antiOrientation === 'vertical';
@@ -89,6 +97,7 @@
       event.stopPropagation();
     },
     updateTabs: function updateTabs() {
+      console.log("updateTabs in ToolbarVisualView.es6");
       var $tab = $(this.model.get('activeTab'));
       $(this.model.previous('activeTab')).removeClass('is-active').prop('aria-pressed', false);
       $(this.model.previous('activeTray')).removeClass('is-active');
@@ -116,6 +125,7 @@
       }
     },
     updateBarAttributes: function updateBarAttributes() {
+      console.log("updateBarAttributes() in ToolbarVisualView.es6");
       var isOriented = this.model.get('isOriented');
 
       if (isOriented) {
@@ -127,6 +137,7 @@
       this.$el.toggleClass('toolbar-oriented', isOriented);
     },
     updateTrayOrientation: function updateTrayOrientation() {
+      console.log('updateTrayOrientation() in ToolbarVisualView.es6');
       var orientation = this.model.get('orientation');
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -143,9 +154,11 @@
       $trays.filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
     adjustPlacement: function adjustPlacement() {
+      console.log('adjustPlacement() in ToolbarVisualView');
       var $trays = this.$el.find('.toolbar-tray');
 
       if (!this.model.get('isOriented')) {
+        console.log("inside adjustPlacement(), if not oriented, make it vertical");
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
     },
@@ -164,13 +177,13 @@
         if (isVertical && subtreesHash === cachedSubtreesHash && cachedSubtrees) {
           Drupal.toolbar.setSubtrees.resolve(cachedSubtrees);
         } else if (isVertical) {
-          localStorage.removeItem("Drupal.toolbar.subtreesHash.".concat(theme));
-          localStorage.removeItem("Drupal.toolbar.subtrees.".concat(theme));
-          Drupal.ajax({
-            url: endpoint
-          }).execute();
-          localStorage.setItem("Drupal.toolbar.subtreesHash.".concat(theme), subtreesHash);
-        }
+            localStorage.removeItem("Drupal.toolbar.subtreesHash.".concat(theme));
+            localStorage.removeItem("Drupal.toolbar.subtrees.".concat(theme));
+            Drupal.ajax({
+              url: endpoint
+            }).execute();
+            localStorage.setItem("Drupal.toolbar.subtreesHash.".concat(theme), subtreesHash);
+          }
       }
     }
   });
