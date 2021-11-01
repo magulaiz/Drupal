@@ -155,7 +155,7 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    * Tests the Update Manager module when a major update is available.
    */
   public function testMajorUpdateAvailable() {
-    foreach ( ['9', '9-plus-8'] as $xml_file) {
+    foreach (['9', '9-plus-8'] as $xml_file) {
       foreach ([0, 1] as $minor_version) {
         foreach ([0, 1] as $patch_version) {
           foreach (['-alpha1', '-beta1', ''] as $extra_version) {
@@ -168,17 +168,17 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
             $this->checkForMetaRefresh();
             $this->assertUpdateTableTextNotContains('Security update required!');
             $this->assertUpdateTableTextNotContains('Latest version:');
-            if($xml_file === '9') {
+            if ($xml_file === '9') {
               $this->assertUpdateTableTextNotContains('Up to date');
               $this->assertUpdateTableTextContains('Not supported!');
               $this->assertVersionUpdateLinks('Recommended version:', '9.0.0');
               $this->assertUpdateTableElementContains('error.svg');
             }
             else {
-              if($installed_version === '8.1.1') {
+              if ($installed_version === '8.1.1') {
                 $this->assertUpdateTableTextContains('Up to date');
               }
-              else{
+              else {
                 $this->assertUpdateTableTextNotContains('Up to date');
                 $this->assertVersionUpdateLinks('Recommended version:', '8.1.1');
               }
