@@ -135,7 +135,7 @@ class AutocompleteTestForm extends FormBase {
       ],
     ];
 
-    $custom_list = [
+    $custom_source = [
       [
         'label' => 'Zebra Label',
         'value' => 'Zebra Value',
@@ -162,7 +162,7 @@ class AutocompleteTestForm extends FormBase {
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete' => JSON::encode([
-          'list' => $custom_list,
+          'source' => $custom_source,
         ]),
       ],
     ];
@@ -172,55 +172,7 @@ class AutocompleteTestForm extends FormBase {
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
-        'data-autocomplete-list' => JSON::encode($custom_list),
-      ],
-    ];
-
-    // Inputs with the sort results option enabled.
-    $form['sort_data_autocomplete'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Sort data-autocomplete'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete' => JSON::encode([
-          'list' => $custom_list,
-          'sort' => TRUE,
-        ]),
-      ],
-    ];
-    $form['sort_separate_data_attributes'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Sort separate data attributes'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete-list' => JSON::encode($custom_list),
-        'data-autocomplete-sort' => TRUE,
-      ],
-    ];
-
-    // Inputs with the option to display labels instead of values enabled.
-    $form['display_labels_data_autocomplete'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Disable display labels data-autocomplete'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete' => JSON::encode([
-          'list' => $custom_list,
-          'displayLabels' => FALSE,
-        ]),
-      ],
-    ];
-    $form['display_labels_data_attributes'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Disable display labels data attributes'),
-      '#default_value' => '',
-      '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
-      '#attributes' => [
-        'data-autocomplete-list' => JSON::encode($custom_list),
-        'data-autocomplete-display-labels' => 'false',
+        'data-autocomplete-source' => JSON::encode($custom_source),
       ],
     ];
 

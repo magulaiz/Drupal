@@ -57,8 +57,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var isContentEditable = instance.input.hasAttribute('contenteditable');
     var attributesToOptions = instance.attributesToOptions();
 
-    if (attributesToOptions.hasOwnProperty('list') && typeof attributesToOptions.list === 'string') {
-      attributesToOptions.source = JSON.parse(attributesToOptions.list);
+    if (attributesToOptions.hasOwnProperty('source') && typeof attributesToOptions.source === 'string') {
+      attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
 
     instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);

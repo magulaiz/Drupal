@@ -61,10 +61,10 @@
     const attributesToOptions = instance.attributesToOptions();
 
     if (
-      attributesToOptions.hasOwnProperty('list') &&
-      typeof attributesToOptions.list === 'string'
+      attributesToOptions.hasOwnProperty('source') &&
+      typeof attributesToOptions.source === 'string'
     ) {
-      attributesToOptions.source = JSON.parse(attributesToOptions.list);
+      attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
     // Bypass option filtering.
     instance.options = Object.assign(
