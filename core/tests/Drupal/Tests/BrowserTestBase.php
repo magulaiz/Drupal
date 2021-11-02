@@ -422,22 +422,7 @@ abstract class BrowserTestBase extends TestCase {
    * Clean up the Simpletest environment.
    */
   protected function cleanupEnvironment() {
-    // Remove all prefixed tables.
-    $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix'];
-    $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix'];
-    if ($original_prefix != $test_prefix) {
-      $tables = Database::getConnection()->schema()->findTables('%');
-      foreach ($tables as $table) {
-        if (Database::getConnection()->schema()->dropTable($table)) {
-          unset($tables[$table]);
-        }
-      }
-    }
-
-    // Delete test site directory.
-    \Drupal::service('file_system')->deleteRecursive($this->siteDirectory, [$this, 'filePreDeleteCallback']);
+    // Do nothing.
   }
 
   /**
