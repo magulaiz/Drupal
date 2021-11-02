@@ -25,11 +25,21 @@
   });
 
   Drupal.jQueryAutocompleteStableMarkup.init = (instance, options) => {
+    const templates = instance.mergeNestedOptions(
+      'templates',
+      instance.options,
+      Drupal.autocompleteShim.stableOptions,
+      Drupal.jQueryAutocompleteStableMarkup.options,
+      options,
+    );
+
     // Bypass option filtering.
     instance.options = Object.assign(
       instance.options,
       Drupal.autocompleteShim.stableOptions,
       Drupal.jQueryAutocompleteStableMarkup.options,
+      options,
+      { templates },
     );
 
     // Apply class changes.

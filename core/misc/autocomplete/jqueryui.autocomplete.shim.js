@@ -58,10 +58,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var attributesToOptions = instance.attributesToOptions();
 
     if (attributesToOptions.hasOwnProperty('source') && typeof attributesToOptions.source === 'string') {
-      attributesToOptions.source = JSON.parse(attributesToOptions.source);
+      attributesToOptions.source = instance.normalizeSuggestionItems(JSON.parse(attributesToOptions.source));
     }
 
-    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
+    var templates = instance.mergeNestedOptions('templates', instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
+    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions, {
+      templates: templates
+    });
     instance.implementInput();
     instance.implementList();
     instance.liveRegion = document.querySelector('#drupal-live-announce');
@@ -125,7 +128,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     function jQueryDisplayResults(suggestionItems) {
       var _this = this;
 
-      this.suggestions = this.normalizeSuggestionItems(suggestionItems);
+      this.suggestions = suggestionItems;
       this.listboxWrapper.innerHTML = '';
       this.triggerEvent('autocomplete-response', {
         list: this.suggestions
@@ -402,30 +405,15 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
                 case 'source':
                   if (typeof optionValue === 'function') {
-                    instance.doSearch = function (e) {
-                      if (this.options.disabled) {
-                        return;
-                      }
-
-                      var searchTerm = this.extractLastInputValue();
-
-                      if (searchTerm && searchTerm.length < this.options.minChars) {
-                        this.close();
-                        return;
-                      }
-
-                      if (!this.triggerEvent('autocomplete-pre-search', {}, true, e)) {
-                        return;
-                      }
-
+                    instance.options.source = function (search, results) {
                       optionValue({
-                        term: instance.extractLastInputValue()
-                      }, instance.displayResults.bind(instance));
+                        term: search
+                      }, results);
                     };
                   } else if (typeof optionValue === 'string') {
                     instance.options.source = Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
-                    instance.options.source = optionValue;
+                    instance.options.source = instance.normalizeSuggestionItems(optionValue);
                   }
 
                   break;

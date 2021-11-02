@@ -64,14 +64,24 @@
       attributesToOptions.hasOwnProperty('source') &&
       typeof attributesToOptions.source === 'string'
     ) {
-      attributesToOptions.source = JSON.parse(attributesToOptions.source);
+      attributesToOptions.source = instance.normalizeSuggestionItems(
+        JSON.parse(attributesToOptions.source),
+      );
     }
+    const templates = instance.mergeNestedOptions(
+      'templates',
+      instance.options,
+      Drupal.autocompleteShim.defaultOptions,
+      options,
+      attributesToOptions,
+    );
     // Bypass option filtering.
     instance.options = Object.assign(
       instance.options,
       Drupal.autocompleteShim.defaultOptions,
       options,
       attributesToOptions,
+      { templates },
     );
 
     // Apply class changes.
@@ -201,7 +211,7 @@
      *   The typed value querying autocomplete.
      */
     function jQueryDisplayResults(suggestionItems) {
-      this.suggestions = this.normalizeSuggestionItems(suggestionItems);
+      this.suggestions = suggestionItems;
       this.listboxWrapper.innerHTML = '';
       /**
        * Fires after suggestion items are retrieved, but before they are added to the DOM.
@@ -644,53 +654,15 @@
                   // - Array: An array of list items. Can be an array of strings
                   //   or of objects with `label` and/or `value` properties.
                   if (typeof optionValue === 'function') {
-                    // eslint-disable-next-line func-names
-                    instance.doSearch = function (e) {
-                      if (this.options.disabled) {
-                        return;
-                      }
-                      const searchTerm = this.extractLastInputValue();
-                      if (
-                        searchTerm &&
-                        searchTerm.length < this.options.minChars
-                      ) {
-                        this.close();
-                        return;
-                      }
-
-                      /**
-                       * Fires just before a search. Can be used to cancel the search.
-                       *
-                       * @event A11yAutocomplete#autocomplete-pre-search
-                       * @property {Class} autocomplete - The autocomplete instance.
-                       */
-                      if (
-                        !this.triggerEvent(
-                          'autocomplete-pre-search',
-                          {},
-                          true,
-                          e,
-                        )
-                      ) {
-                        return;
-                      }
-
-                      // This overrides autocomplete search functionality with
-                      // the logic provided in the 'optionValue' function.
-                      // Argument 1 is a 'request' object, with a single 'term'
-                      // property that matches the current search string.
-                      // Argument 2 is a 'response' callback that expects a single
-                      // argument: the data to suggest to the user.
-                      optionValue(
-                        { term: instance.extractLastInputValue() },
-                        instance.displayResults.bind(instance),
-                      );
+                    instance.options.source = (search, results) => {
+                      optionValue({ term: search }, results);
                     };
                   } else if (typeof optionValue === 'string') {
                     instance.options.source =
                       Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
-                    instance.options.source = optionValue;
+                    instance.options.source =
+                      instance.normalizeSuggestionItems(optionValue);
                   }
                   break;
                 default:
