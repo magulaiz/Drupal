@@ -66,20 +66,11 @@
     ) {
       attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
-    const templates = instance.mergeNestedOptions(
-      'templates',
+    instance.options = instance.initOptions(
       instance.options,
       Drupal.autocompleteShim.defaultOptions,
       options,
       attributesToOptions,
-    );
-    // Bypass option filtering.
-    instance.options = Object.assign(
-      instance.options,
-      Drupal.autocompleteShim.defaultOptions,
-      options,
-      attributesToOptions,
-      { templates },
     );
 
     // Apply class changes.

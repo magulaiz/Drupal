@@ -21,10 +21,7 @@
   });
 
   Drupal.jQueryAutocompleteStableMarkup.init = function (instance, options) {
-    var templates = instance.mergeNestedOptions('templates', instance.options, Drupal.autocompleteShim.stableOptions, Drupal.jQueryAutocompleteStableMarkup.options, options);
-    instance.options = Object.assign(instance.options, Drupal.autocompleteShim.stableOptions, Drupal.jQueryAutocompleteStableMarkup.options, options, {
-      templates: templates
-    });
+    instance.options = instance.initOptions(instance.options, Drupal.autocompleteShim.stableOptions, Drupal.jQueryAutocompleteStableMarkup.options, options);
     instance.implementInput();
     instance.implementList();
 
