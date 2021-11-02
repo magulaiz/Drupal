@@ -64,9 +64,7 @@
       attributesToOptions.hasOwnProperty('source') &&
       typeof attributesToOptions.source === 'string'
     ) {
-      attributesToOptions.source = instance.normalizeSuggestionItems(
-        JSON.parse(attributesToOptions.source),
-      );
+      attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
     const templates = instance.mergeNestedOptions(
       'templates',
@@ -531,7 +529,12 @@
               Array.isArray(instance.options.source) &&
               instance.options.source.length > 0
             ) {
-              instance.displayResults(instance.options.source);
+              // Do not need to execute applySelectionConstraints because there
+              // are no values to filter.
+              const normalizedResults = instance.normalizeSuggestionItems(
+                instance.options.source,
+              );
+              instance.displayResults(normalizedResults);
             } else {
               // If args[1] isn't a string, just trigger a search using whatever
               // is currently in the input.
@@ -661,8 +664,7 @@
                     instance.options.source =
                       Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
-                    instance.options.source =
-                      instance.normalizeSuggestionItems(optionValue);
+                    instance.options.source = optionValue;
                   }
                   break;
                 default:

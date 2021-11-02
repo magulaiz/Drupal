@@ -25,7 +25,6 @@
   });
 
   Drupal.jQueryAutocompleteStableMarkup.init = (instance, options) => {
-
     const templates = instance.mergeNestedOptions(
       'templates',
       instance.options,
