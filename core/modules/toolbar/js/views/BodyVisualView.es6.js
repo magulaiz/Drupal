@@ -1,4 +1,4 @@
-  /**
+/**
  * @file
  * A Backbone view for the body element.
  */
@@ -23,7 +23,7 @@
       },
 
       isToolbarFixed() {
-        console.log('isToolbarFixed() in BodyVisualView.es6');
+        console.log('backbone: isToolbarFixed() in BodyVisualView.es6');
         // When the toolbar is fixed, it will not scroll with page scrolling.
         const isViewportOverflowConstrained = this.model.get(
           'isViewportOverflowConstrained',
@@ -38,7 +38,7 @@
        * {@inheritdoc}
        */
       render() {
-        console.log('render() in BodyVisualView.es6');
+        console.log('backbone: render() in BodyVisualView.es6');
         $('body')
           // Toggle the toolbar-tray-open class on the body element. The class is
           // applied when a toolbar tray is active. Padding might be applied to

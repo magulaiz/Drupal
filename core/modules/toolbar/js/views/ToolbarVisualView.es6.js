@@ -16,7 +16,7 @@
       events() {
         // Prevents delay and simulated mouse events.
         const touchEndToClick = function (event) {
-          console.log("touchEndToClick in ToolbarVisualView.es6");
+          console.log("backbone: touchEndToClick in ToolbarVisualView.es6");
           event.preventDefault();
           event.target.click();
         };
@@ -76,7 +76,7 @@
        * @augments Backbone.View
        */
       updateToolbarHeight() {
-        console.log("updateToolbarHeight() in ToolbarVisualView.es6");
+        console.log("backbone: updateToolbarHeight() in ToolbarVisualView.es6");
         const toolbarTabOuterHeight =
           $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
         const toolbarTrayHorizontalOuterHeight =
@@ -100,7 +100,7 @@
       // to ensure this recalculation happens after changes to visual elements
       // have processed.
       triggerDisplace() {
-        console.log("triggerDisplace() in ToolbarVisualView.es6");
+        console.log("backbone: triggerDisplace() in ToolbarVisualView.es6");
         _.defer(() => {
           Drupal.displace(true);
         });
@@ -113,7 +113,7 @@
        *   The `ToolbarVisualView` instance.
        */
       render() {
-        console.log('render() in ToolbarVisualView.es6');
+        console.log('backbone: render() in ToolbarVisualView.es6');
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
@@ -149,7 +149,7 @@
        *   The event triggered.
        */
       onTabClick(event) {
-        console.log("backbone onTabClick");
+        console.log("backbone: onTabClick()");
         // If this tab has a tray associated with it, it is considered an
         // activatable tab.
         if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
@@ -174,7 +174,7 @@
        *   The event triggered.
        */
       onOrientationToggleClick(event) {
-        console.log("backbone onOrientationToggleClick");
+        console.log("backbone: onOrientationToggleClick()");
         const orientation = this.model.get('orientation');
         // Determine the toggle-to orientation.
         const antiOrientation =
@@ -206,7 +206,7 @@
        * Updates the display of the tabs: toggles a tab and the associated tray.
        */
       updateTabs() {
-        console.log("updateTabs in ToolbarVisualView.es6");
+        console.log("backbone: updateTabs() in ToolbarVisualView.es6");
         const $tab = $(this.model.get('activeTab'));
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
@@ -252,7 +252,7 @@
        * Update the attributes of the toolbar bar element.
        */
       updateBarAttributes() {
-        console.log("updateBarAttributes() in ToolbarVisualView.es6");
+        console.log("backbone: updateBarAttributes() in ToolbarVisualView.es6");
         const isOriented = this.model.get('isOriented');
         if (isOriented) {
           this.$el.find('.toolbar-bar').attr('data-offset-top', '');
@@ -268,7 +268,7 @@
        * Updates the orientation of the active tray if necessary.
        */
       updateTrayOrientation() {
-        console.log('updateTrayOrientation() in ToolbarVisualView.es6');
+        console.log('backbone: updateTrayOrientation() in ToolbarVisualView.es6');
         const orientation = this.model.get('orientation');
 
         // The antiOrientation is used to render the view of action buttons like
@@ -324,10 +324,9 @@
        * Sets the tops of the trays so that they align with the bottom of the bar.
        */
       adjustPlacement() {
-        console.log('adjustPlacement() in ToolbarVisualView');
+        console.log('backbone: adjustPlacement() in ToolbarVisualView');
         const $trays = this.$el.find('.toolbar-tray');
         if (!this.model.get('isOriented')) {
-          console.log("inside adjustPlacement(), if not oriented, make it vertical");
           $trays
             .removeClass('toolbar-tray-horizontal')
             .addClass('toolbar-tray-vertical');
@@ -345,6 +344,7 @@
        * admin menu subtrees cache has been invalidated.
        */
       loadSubtrees() {
+        console.log('backbone: loadSubtrees()');
         const $activeTab = $(this.model.get('activeTab'));
         const orientation = this.model.get('orientation');
         // Only load and render the admin menu subtrees if:

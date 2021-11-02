@@ -9,7 +9,7 @@
   Drupal.toolbar.ToolbarVisualView = Backbone.View.extend({
     events: function events() {
       var touchEndToClick = function touchEndToClick(event) {
-        console.log("touchEndToClick in ToolbarVisualView.es6");
+        console.log("backbone: touchEndToClick in ToolbarVisualView.es6");
         event.preventDefault();
         event.target.click();
       };
@@ -31,7 +31,7 @@
       this.model.trigger('change:activeTab');
     },
     updateToolbarHeight: function updateToolbarHeight() {
-      console.log("updateToolbarHeight() in ToolbarVisualView.es6");
+      console.log("backbone: updateToolbarHeight() in ToolbarVisualView.es6");
       var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
       this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
@@ -44,14 +44,14 @@
       this.triggerDisplace();
     },
     triggerDisplace: function triggerDisplace() {
-      console.log("triggerDisplace() in ToolbarVisualView.es6");
+      console.log("backbone: triggerDisplace() in ToolbarVisualView.es6");
 
       _.defer(function () {
         Drupal.displace(true);
       });
     },
     render: function render() {
-      console.log('render() in ToolbarVisualView.es6');
+      console.log('backbone: render() in ToolbarVisualView.es6');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -64,7 +64,7 @@
       return this;
     },
     onTabClick: function onTabClick(event) {
-      console.log("backbone onTabClick");
+      console.log("backbone: onTabClick()");
 
       if (event.currentTarget.hasAttribute('data-toolbar-tray')) {
         var activeTab = this.model.get('activeTab');
@@ -75,7 +75,7 @@
       }
     },
     onOrientationToggleClick: function onOrientationToggleClick(event) {
-      console.log("backbone onOrientationToggleClick");
+      console.log("backbone: onOrientationToggleClick()");
       var orientation = this.model.get('orientation');
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       var locked = antiOrientation === 'vertical';
@@ -97,7 +97,7 @@
       event.stopPropagation();
     },
     updateTabs: function updateTabs() {
-      console.log("updateTabs in ToolbarVisualView.es6");
+      console.log("backbone: updateTabs() in ToolbarVisualView.es6");
       var $tab = $(this.model.get('activeTab'));
       $(this.model.previous('activeTab')).removeClass('is-active').prop('aria-pressed', false);
       $(this.model.previous('activeTray')).removeClass('is-active');
@@ -125,7 +125,7 @@
       }
     },
     updateBarAttributes: function updateBarAttributes() {
-      console.log("updateBarAttributes() in ToolbarVisualView.es6");
+      console.log("backbone: updateBarAttributes() in ToolbarVisualView.es6");
       var isOriented = this.model.get('isOriented');
 
       if (isOriented) {
@@ -137,7 +137,7 @@
       this.$el.toggleClass('toolbar-oriented', isOriented);
     },
     updateTrayOrientation: function updateTrayOrientation() {
-      console.log('updateTrayOrientation() in ToolbarVisualView.es6');
+      console.log('backbone: updateTrayOrientation() in ToolbarVisualView.es6');
       var orientation = this.model.get('orientation');
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -154,15 +154,15 @@
       $trays.filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
     adjustPlacement: function adjustPlacement() {
-      console.log('adjustPlacement() in ToolbarVisualView');
+      console.log('backbone: adjustPlacement() in ToolbarVisualView');
       var $trays = this.$el.find('.toolbar-tray');
 
       if (!this.model.get('isOriented')) {
-        console.log("inside adjustPlacement(), if not oriented, make it vertical");
         $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');
       }
     },
     loadSubtrees: function loadSubtrees() {
+      console.log('backbone: loadSubtrees()');
       var $activeTab = $(this.model.get('activeTab'));
       var orientation = this.model.get('orientation');
 

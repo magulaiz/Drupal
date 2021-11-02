@@ -23,6 +23,53 @@
     },
   );
 
+  const ToolbarBehaviors = {
+    onTabClick() {
+      console.log('vanilla: onTabClick()');
+    },
+    renderToolbarVisualView() {
+      console.log('vanilla: render() in ToolbarVisualView');
+    },
+    renderMenuVisualView() {
+      console.log('vanilla: render() in MenuVisualView');
+    },
+    updateTabs() {
+      console.log('vanilla: updateTabs() in ToolbarVisualView');
+    },
+    onActiveTrayChange() {
+      console.log('vanilla: onActiveTrayChange in ToolbarVisualView');
+    },
+    renderBodyVisual() {
+      console.log('vanilla: render() in BodyVisualView');
+    },
+    updateTrayOrientation() {
+      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView');
+    },
+    updateBarAttributes() {
+      console.log('vanilla: updateBarAttributes() in ToolbarVisualView');
+    },
+    updateToolbarHeight() {
+      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView');
+    },
+    triggerDisplace() {
+      console.log('vanilla: triggerDisplace() in ToolbarVisualView');
+    },
+    adjustPlacement() {
+      console.log('vanilla: adjustPlacement() in ToolbarVisualView');
+    },
+    // gap
+    onOrientationToggleClick() {
+      console.log('vanilla: onOrientationToggleClick()');
+    },
+    onOrientationChange() {
+      console.log('vanilla: onOrientationChange() in ToolbarAuralView');
+    },
+    loadSubtrees() {
+      console.log('vanilla: loadSubtrees()');
+    },
+    isBlah: false,
+  };
+
   /**
    * Registers tabs with the toolbar.
    *
@@ -45,10 +92,43 @@
       }
       // Process the administrative toolbar.
       once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
-        ///////// here
-        document
-          .querySelector('.toolbar-bar .toolbar-tab .trigger')
-          .addEventListener('click', () => console.log("vanilla: tab clicked"));
+        const toolbarTab = document.querySelector(
+          '.toolbar-bar .toolbar-tab .trigger',
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.onTabClick(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.renderToolbarVisualView(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.updateTabs(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.onActiveTrayChange(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.renderBodyVisual(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.updateTrayOrientation(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.updateBarAttributes(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.updateToolbarHeight(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.triggerDisplace(),
+        );
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.adjustPlacement(),
+        );
+        // TODO: only when vertical
+        toolbarTab.addEventListener('click', () =>
+          ToolbarBehaviors.loadSubtrees(),
+        );
 
         // Establish the toolbar models and views.
         const model = new Drupal.toolbar.ToolbarModel({
@@ -100,14 +180,45 @@
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
+        // TODO: see whats different on mobile view without these
+        // change states of isFixed, activeTray
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
 
-        document
-          .querySelector('.toolbar-toggle-orientation button')
-          .addEventListener('click', () =>
-            console.log('vanilla: orientation clicked'),
-          );
+        const toolbarOrientationButton = document.querySelector(
+          '.toolbar-toggle-orientation button',
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.onOrientationToggleClick(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.renderToolbarVisualView(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.updateTabs(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.updateTrayOrientation(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.updateBarAttributes(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.updateToolbarHeight(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.triggerDisplace(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.onOrientationChange(),
+        );
+        toolbarOrientationButton.addEventListener('click', () =>
+          ToolbarBehaviors.adjustPlacement(),
+        );
+        // TODO: only when it's vertical
+        // toolbarOrientationButton.addEventListener('click', () =>
+        //   ToolbarBehaviors.loadSubtrees(),
+        // );
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
@@ -199,6 +310,9 @@
           'dialog:beforeclose': () => {
             $('#toolbar-bar').css('margin-top', '0');
           },
+
+
+
         });
       });
     },

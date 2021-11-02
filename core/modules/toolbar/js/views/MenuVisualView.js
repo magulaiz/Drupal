@@ -13,7 +13,7 @@
     render: function render() {
       var _this = this;
 
-      console.log('render() in MenuVisualView.es6');
+      console.log('backbone: render() in MenuVisualView.es6');
       var subtrees = this.model.get('subtrees');
       Object.keys(subtrees || {}).forEach(function (id) {
         $(once('toolbar-subtrees', _this.$el.find("#toolbar-link-".concat(id)))).after(subtrees[id]);
