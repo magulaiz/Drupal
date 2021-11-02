@@ -58,7 +58,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     var attributesToOptions = instance.attributesToOptions();
 
     if (attributesToOptions.hasOwnProperty('source') && typeof attributesToOptions.source === 'string') {
-      attributesToOptions.source = instance.normalizeSuggestionItems(JSON.parse(attributesToOptions.source));
+      attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
 
     var templates = instance.mergeNestedOptions('templates', instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
@@ -311,7 +311,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
             }
 
             if (instance.input.value.length === 0 && instance.options.minChars === 0 && Array.isArray(instance.options.source) && instance.options.source.length > 0) {
-              instance.displayResults(instance.options.source);
+              var normalizedResults = instance.normalizeSuggestionItems(instance.options.source);
+              instance.displayResults(normalizedResults);
             } else {
               instance.doSearch($.Event('keydown'));
             }
@@ -413,7 +414,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                   } else if (typeof optionValue === 'string') {
                     instance.options.source = Drupal.Autocomplete.ajaxSearchProvider(optionValue);
                   } else {
-                    instance.options.source = instance.normalizeSuggestionItems(optionValue);
+                    instance.options.source = optionValue;
                   }
 
                   break;
