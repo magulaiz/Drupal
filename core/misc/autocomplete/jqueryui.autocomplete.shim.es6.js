@@ -161,18 +161,19 @@
 
         // See if anything has been typed into the input.
         const typed = this.extractLastInputValue();
-        const filteredResults = this.options.source.filter((item) =>
-          this.filterResults(item, typed),
-        );
-        const normalizedResults =
-          this.normalizeSuggestionItems(filteredResults);
-        const constrainedResults = this.applySelectionConstraints(
-          normalizedResults,
-          this.splitValues(),
-        );
-        // If a predefined list was provided as an option, make this the
-        // suggestion items.
-        this.displayResults(constrainedResults);
+
+
+        // In instances where nothing is typed and there is no character
+        // minimum, the list must be opened using something other than
+        // displayResults(), as that method requires input to work.
+        if (!typed && this.options.minChars < 1) {
+          const normalizedResults = this.normalizeSuggestionItems(
+            this.options.source,
+          );
+          this.displayResults(normalizedResults);
+        } else {
+          this.displayResults(this.suggestions);
+        }
 
         // If the arrow key press resulted in the opening of a list, then
         // highlight the first/last item depending on whether the up/down key

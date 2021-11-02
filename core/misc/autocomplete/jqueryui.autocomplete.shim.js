@@ -72,8 +72,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     }
 
     function shimmedInputKeyDown(e) {
-      var _this = this;
-
       if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
       }
@@ -105,12 +103,13 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         e.preventDefault();
         this.preventCloseOnBlur = true;
         var typed = this.extractLastInputValue();
-        var filteredResults = this.options.source.filter(function (item) {
-          return _this.filterResults(item, typed);
-        });
-        var normalizedResults = this.normalizeSuggestionItems(filteredResults);
-        var constrainedResults = this.applySelectionConstraints(normalizedResults, this.splitValues());
-        this.displayResults(constrainedResults);
+
+        if (!typed && this.options.minChars < 1) {
+          var normalizedResults = this.normalizeSuggestionItems(this.options.source);
+          this.displayResults(normalizedResults);
+        } else {
+          this.displayResults(this.suggestions);
+        }
 
         if (this.isOpened) {
           var _selector = keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
@@ -125,7 +124,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     instance.inputKeyDown = shimmedInputKeyDown;
 
     function jQueryDisplayResults(suggestionItems) {
-      var _this2 = this;
+      var _this = this;
 
       this.suggestions = suggestionItems;
       this.listboxWrapper.innerHTML = '';
@@ -149,7 +148,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       window.clearTimeout(this.announceTimeOutId);
       this.announceTimeOutId = setTimeout(function () {
-        return _this2.sendToLiveRegion(_this2.resultsMessage(_this2.suggestions.length));
+        return _this.sendToLiveRegion(_this.resultsMessage(_this.suggestions.length));
       }, 1400);
     }
 
@@ -230,7 +229,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   var oldAutocomplete = $.fn.autocomplete;
   $.fn.extend({
     autocomplete: function autocomplete() {
-      var _this3 = this;
+      var _this2 = this;
 
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
@@ -321,7 +320,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           case 'option':
             if (typeof args[2] === 'undefined' && args[1] === 'object') {
               Object.keys(args[1]).forEach(function (key) {
-                _this3.autocomplete('option', key, args[1][key]);
+                _this2.autocomplete('option', key, args[1][key]);
               });
             }
 
@@ -460,7 +459,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
             } else {
-              _this3.autocomplete('option', key, args[0][key]);
+              _this2.autocomplete('option', key, args[0][key]);
             }
           });
         }
