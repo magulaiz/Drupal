@@ -162,7 +162,6 @@
         // See if anything has been typed into the input.
         const typed = this.extractLastInputValue();
 
-
         // In instances where nothing is typed and there is no character
         // minimum, the list must be opened using something other than
         // displayResults(), as that method requires input to work.
