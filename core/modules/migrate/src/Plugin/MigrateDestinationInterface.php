@@ -109,10 +109,10 @@ interface MigrateDestinationInterface extends PluginInspectionInterface {
    * @throws \Drupal\migrate\MigrateException
    *   Throws an exception if there is a problem importing the row. By default,
    *   this causes the migration system to treat this row as having failed;
-   *   however, a different status constant from
-   *   \Drupal\migrate\Plugin\MigrateIdMapInterface can be passed for
-   *   \Drupal\migrate\MigrateException::__construct()'s $status parameter, such
-   *   as \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_IGNORED.
+   *   however, any \Drupal\migrate\Plugin\MigrateIdMapInterface status constant
+   *   can be set using the $status parameter of
+   *   \Drupal\migrate\MigrateException, such as
+   *   \Drupal\migrate\Plugin\MigrateIdMapInterface::STATUS_IGNORED.
    */
   public function import(Row $row, array $old_destination_id_values = []);
 
