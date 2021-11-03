@@ -50,7 +50,7 @@ class Truncate extends Query {
   /**
    * Executes the TRUNCATE query.
    *
-   * @return
+   * @return int
    *   Return value is dependent on whether the executed SQL statement is a
    *   TRUNCATE or a DELETE. TRUNCATE is DDL and no information on affected
    *   rows is available. DELETE is DML and will return the number of affected
