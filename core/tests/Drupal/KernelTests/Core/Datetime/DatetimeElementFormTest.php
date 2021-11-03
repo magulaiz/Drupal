@@ -118,8 +118,10 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
         '#type' => 'datetime',
         '#date_date_format' => 'Y-m-d',
         '#date_time_format' => 'H:i:s',
-        '#date_date_element' => 'HTML Date',
-        '#date_time_element' => 'HTML Time',
+        '#date_date_element' => 'date',
+        '#date_time_element' => 'time',
+        '#default_value' => new DrupalDateTime('2000-01-01 00:00:00'),
+        '#required' => TRUE,
       ],
     ];
 
