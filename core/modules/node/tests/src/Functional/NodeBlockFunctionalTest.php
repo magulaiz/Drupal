@@ -31,11 +31,18 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   protected $adminUser;
 
   /**
-   * An unprivileged user for testing.
+   * A user with create article permission.
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $webUser;
+  protected $articleCreator;
+
+  /**
+   * A user with content view only permission.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $viewer;
 
   /**
    * Modules to enable.
@@ -55,9 +62,12 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       'administer blocks',
       'access content overview',
     ]);
-    $this->webUser = $this->drupalCreateUser([
+    $this->articleCreator = $this->drupalCreateUser([
       'access content',
       'create article content',
+    ]);
+    $this->viewer = $this->drupalCreateUser([
+      'access content',
     ]);
   }
 
@@ -80,7 +90,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextContains('No content available.');
 
     // Add some test nodes.
-    $default_settings = ['uid' => $this->webUser->id(), 'type' => 'article'];
+    $default_settings = ['uid' => $this->articleCreator->id(), 'type' => 'article'];
     $node1 = $this->drupalCreateNode($default_settings);
     $node2 = $this->drupalCreateNode($default_settings);
     $node3 = $this->drupalCreateNode($default_settings);
@@ -113,7 +123,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($block->label());
 
     // Test that only the 2 latest nodes are shown.
-    $this->drupalLogin($this->webUser);
+    $this->drupalLogin($this->articleCreator);
     $this->assertSession()->pageTextNotContains($node1->label());
     $this->assertSession()->pageTextContains($node2->label());
     $this->assertSession()->pageTextContains($node3->label());
@@ -160,7 +170,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $node5 = $this->drupalCreateNode(['uid' => $this->adminUser->id(), 'type' => 'page']);
 
     $this->drupalLogout();
-    $this->drupalLogin($this->webUser);
+    $this->drupalLogin($this->viewer);
 
     // Verify visibility rules.
     $this->drupalGet('');
@@ -174,6 +184,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // request above.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'HIT');
 
+    $this->drupalLogout();
+    $this->drupalLogin($this->articleCreator);
+
     $this->drupalGet('node/add/article');
     // Check that block is displayed on the add article page.
     $this->assertSession()->pageTextContains($label);
@@ -181,6 +194,9 @@ class NodeBlockFunctionalTest extends NodeTestBase {
 
     // The node/add/article page is an admin path and currently uncacheable.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Dynamic-Cache', 'UNCACHEABLE');
+
+    $this->drupalLogout();
+    $this->drupalLogin($this->viewer);
 
     $this->drupalGet('node/' . $node1->id());
     // Check that block is displayed on the node page when node is of type

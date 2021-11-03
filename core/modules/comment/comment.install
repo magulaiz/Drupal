@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\user\RoleInterface;
 
 /**
  * Implements hook_uninstall().
@@ -28,6 +29,11 @@ function comment_install() {
   // By default, maintain entity statistics for comments.
   // @see \Drupal\comment\CommentStatisticsInterface
   \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
+
+  // This is a community feature therefore grant the "view usernames"
+  // permission to all users by default.
+  user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['view usernames']);
+  user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['view usernames']);
 }
 
 /**

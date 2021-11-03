@@ -106,9 +106,9 @@ class LayoutSectionTest extends BrowserTestBase {
         'Body',
         'The node body',
       ],
+      'user',
       '',
-      '',
-      'MISS',
+      'UNCACHEABLE',
     ];
     $data['single_section_single_block'] = [
       [
@@ -122,9 +122,9 @@ class LayoutSectionTest extends BrowserTestBase {
       ],
       '.layout--onecol',
       'Powered by',
+      'user',
       '',
-      '',
-      'MISS',
+      'UNCACHEABLE',
     ];
     $data['multiple_sections'] = [
       [
@@ -157,9 +157,9 @@ class LayoutSectionTest extends BrowserTestBase {
         'foo text',
         'bar text',
       ],
-      'user.permissions',
+      'user',
       '',
-      'MISS',
+      'UNCACHEABLE',
     ];
     return $data;
   }

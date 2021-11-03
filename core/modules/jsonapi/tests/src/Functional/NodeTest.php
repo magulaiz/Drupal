@@ -243,6 +243,20 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+    $contexts = parent::getExpectedCacheContexts($sparse_fieldset);
+    if (is_array($sparse_fieldset) && in_array('name', $sparse_fieldset, TRUE)) {
+      $contexts = array_diff($contexts, ['user.permissions']);
+      // Because the current user is the owner of the content.
+      // @see \Drupal\user\UserAccessControlHandler::canViewUserName()
+      $contexts[] = 'user';
+    }
+    return $contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getPostDocument() {
     return [
       'data' => [

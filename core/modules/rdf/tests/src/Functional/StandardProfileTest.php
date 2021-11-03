@@ -372,17 +372,18 @@ class StandardProfileTest extends BrowserTestBase {
       'type' => 'uri',
       'value' => $this->authorUri,
     ];
-    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/author', $expected_value), "$message_prefix author was found (schema:author) in teaser.");
-
-    // Author type.
-    $this->assertEquals('schema:Person', $this->getElementRdfType($node->toUrl(), $this->baseUri, $this->authorUri), '$message_prefix author type was found (schema:Person).');
+    // Without having "view usernames" permission this information cannot be
+    // exposed.
+    $this->assertFalse($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $uri, 'http://schema.org/author', $expected_value), "$message_prefix author was not found (schema:author) in teaser.");
 
     // Author name.
     $expected_value = [
       'type' => 'literal',
       'value' => $this->adminUser->label(),
     ];
-    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was found (schema:name).");
+    // Without having "view usernames" permission this information cannot be
+    // exposed.
+    $this->assertFalse($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was not found (schema:name).");
   }
 
   /**
@@ -472,7 +473,9 @@ class StandardProfileTest extends BrowserTestBase {
       'type' => 'literal',
       'value' => $this->webUser->getAccountName(),
     ];
-    $this->assertTrue($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->commenterUri, 'http://schema.org/name', $expected_value), "Comment author name was found (schema:name).");
+    // Without having "view usernames" permission this information cannot be
+    // exposed.
+    $this->assertFalse($this->hasRdfProperty($this->getSession()->getPage()->getContent(), $this->baseUri, $this->commenterUri, 'http://schema.org/name', $expected_value), "Comment author name was not found (schema:name).");
   }
 
   /**

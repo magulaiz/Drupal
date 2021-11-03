@@ -55,11 +55,11 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
   protected $user;
 
   /**
-   * Test user with access to view profiles.
+   * Test user with access to view profiles and usernames.
    *
    * @var \Drupal\user\Entity\User
    */
-  protected $userCanViewProfiles;
+  protected $userCanViewProfilesAndNames;
 
   /**
    * Test nodes.
@@ -182,8 +182,9 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
     ]);
 
     // Create a user that can.
-    $this->userCanViewProfiles = $this->drupalCreateUser([
+    $this->userCanViewProfilesAndNames = $this->drupalCreateUser([
       'access user profiles',
+      'view usernames',
     ]);
 
     $this->grantPermissions(Role::load(RoleInterface::ANONYMOUS_ID), [

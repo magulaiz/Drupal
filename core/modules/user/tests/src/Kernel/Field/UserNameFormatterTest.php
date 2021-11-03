@@ -5,6 +5,7 @@ namespace Drupal\Tests\user\Kernel\Field;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -13,6 +14,8 @@ use Drupal\user\Entity\User;
  * @group field
  */
 class UserNameFormatterTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   /**
    * Modules to enable.
@@ -72,10 +75,12 @@ class UserNameFormatterTest extends KernelTestBase {
    * Tests the formatter output.
    */
   public function testFormatter() {
-    $user = User::create([
-      'name' => 'test name',
-    ]);
-    $user->save();
+    // @todo Tests that:
+    //   - anonymous user's username is always visible to everyone
+    //   - the current can always see its own username + anonymous but no other
+    //   - user's unless
+    //   - it has "view username" permission
+    $user = $this->setUpCurrentUser(['name' => 'test name']);
 
     $result = $user->{$this->fieldName}->view(['type' => 'user_name']);
     $this->assertEquals('username', $result[0]['#theme']);

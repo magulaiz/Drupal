@@ -73,17 +73,38 @@ class UserAccessControlHandlerTest extends UnitTestCase {
     $container->set('cache_contexts_manager', $cache_contexts_manager);
     \Drupal::setContainer($container);
 
-    $this->viewer = $this->createMock('\Drupal\Core\Session\AccountInterface');
+    $this->anonymous = $this->createMock('\Drupal\user\UserInterface');
+    $this->anonymous
+      ->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue(0));
+    $this->anonymous
+      ->expects($this->any())
+      ->method('isAnonymous')
+      ->will($this->returnValue(TRUE));
+
+    $this->viewer = $this->createMock('\Drupal\user\UserInterface');
     $this->viewer
       ->expects($this->any())
       ->method('hasPermission')
-      ->will($this->returnValue(FALSE));
+      ->willReturnMap([
+        ['view usernames', TRUE],
+      ]);
     $this->viewer
       ->expects($this->any())
       ->method('id')
       ->will($this->returnValue(1));
+    $this->viewer->expects($this->any())
+      ->method('getCacheContexts')
+      ->will($this->returnValue([]));
+    $this->viewer->expects($this->any())
+      ->method('getCacheTags')
+      ->will($this->returnValue(['user:1']));
+    $this->viewer->expects($this->any())
+      ->method('getCacheMaxAge')
+      ->will($this->returnValue(-1));
 
-    $this->owner = $this->createMock('\Drupal\Core\Session\AccountInterface');
+    $this->owner = $this->createMock('\Drupal\user\UserInterface');
     $this->owner
       ->expects($this->any())
       ->method('hasPermission')
@@ -91,6 +112,18 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         ['administer users', FALSE],
         ['change own username', TRUE],
       ]);
+    $this->owner->expects($this->any())
+      ->method('isActive')
+      ->will($this->returnValue(TRUE));
+    $this->owner->expects($this->any())
+      ->method('getCacheContexts')
+      ->will($this->returnValue([]));
+    $this->owner->expects($this->any())
+      ->method('getCacheTags')
+      ->will($this->returnValue(['user:2']));
+    $this->owner->expects($this->any())
+      ->method('getCacheMaxAge')
+      ->will($this->returnValue(-1));
 
     $this->owner
       ->expects($this->any())
@@ -114,6 +147,21 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       ->expects($this->any())
       ->method('id')
       ->will($this->returnValue(3));
+
+    $this->noUsernameViewAccess = $this->createMock('\Drupal\user\UserInterface');
+    $this->noUsernameViewAccess
+      ->expects($this->any())
+      ->method('id')
+      ->will($this->returnValue(4));
+    $this->noUsernameViewAccess->expects($this->any())
+      ->method('getCacheContexts')
+      ->will($this->returnValue([]));
+    $this->noUsernameViewAccess->expects($this->any())
+      ->method('getCacheTags')
+      ->will($this->returnValue(['user:4']));
+    $this->noUsernameViewAccess->expects($this->any())
+      ->method('getCacheMaxAge')
+      ->will($this->returnValue(-1));
 
     $entity_type = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
 
@@ -168,7 +216,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
    */
   public function userNameProvider() {
     $name_access = [
-      // The viewer user is allowed to see user names on all accounts.
+      // The viewer user is allowed to see usernames on all accounts.
       [
         'viewer' => 'viewer',
         'target' => 'viewer',
@@ -178,7 +226,7 @@ class UserAccessControlHandlerTest extends UnitTestCase {
       [
         'viewer' => 'owner',
         'target' => 'viewer',
-        'view' => TRUE,
+        'view' => FALSE,
         'edit' => FALSE,
       ],
       [
@@ -187,18 +235,38 @@ class UserAccessControlHandlerTest extends UnitTestCase {
         'view' => TRUE,
         'edit' => FALSE,
       ],
-      // The owner user is allowed to change its own user name.
+      [
+        'viewer' => 'viewer',
+        'target' => 'anonymous',
+        'view' => TRUE,
+        'edit' => FALSE,
+      ],
+      // The owner user is allowed to change its own username.
       [
         'viewer' => 'owner',
         'target' => 'owner',
         'view' => TRUE,
         'edit' => TRUE,
       ],
-      // The users-administrator user has full access.
+      // A user without permission cannot view other user's username.
+      [
+        'viewer' => 'noUsernameViewAccess',
+        'target' => 'viewer',
+        'view' => FALSE,
+        'edit' => FALSE,
+      ],
+      // The administrator user has full access.
       [
         'viewer' => 'admin',
         'target' => 'owner',
         'view' => TRUE,
+        'edit' => TRUE,
+      ],
+      [
+        'viewer' => 'admin',
+        'target' => 'anonymous',
+        'view' => TRUE,
+        // ... even if this looks odd.
         'edit' => TRUE,
       ],
     ];

@@ -62,7 +62,7 @@ class UserAttributesTest extends BrowserTestBase {
     // Creates users that should and should not be truncated
     // by template_preprocess_username (20 characters)
     // one of these users tests right on the cusp (20).
-    $user1 = $this->drupalCreateUser(['access user profiles']);
+    $user1 = $this->drupalCreateUser(['access user profiles', 'view usernames']);
 
     $authors = [
       $this->drupalCreateUser([], $this->randomMachineName(30)),

@@ -2,6 +2,8 @@
 
 namespace Drupal\user\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
@@ -51,12 +53,16 @@ class UserNameFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
+    $cacheability = CacheableMetadata::createFromRenderArray($elements);
 
     foreach ($items as $delta => $item) {
       /** @var \Drupal\user\UserInterface $user */
       if ($user = $item->getEntity()) {
-        if ($this->getSetting('link_to_entity')) {
-          $elements[$delta] = [
+        $access = $user->access('view label', NULL, TRUE);
+        $cacheability->addCacheableDependency($cacheability);
+        if ($access->isAllowed()) {
+          if ($this->getSetting('link_to_entity')) {
+            $elements[$delta] = [
             '#theme' => 'username',
             '#account' => $user,
             '#link_options' => ['attributes' => ['rel' => 'user']],
@@ -64,17 +70,20 @@ class UserNameFormatter extends FormatterBase {
               'tags' => $user->getCacheTags(),
             ],
           ];
-        }
-        else {
-          $elements[$delta] = [
-            '#markup' => $user->getDisplayName(),
-            '#cache' => [
-              'tags' => $user->getCacheTags(),
-            ],
-          ];
+          }
+          else {
+            $elements[$delta] = [
+              '#markup' => $user->getDisplayName(),
+              '#cache' => [
+                'tags' => $user->getCacheTags(),
+              ],
+            ];
+          }
         }
       }
     }
+
+    $cacheability->applyTo($elements);
 
     return $elements;
   }
@@ -84,6 +93,13 @@ class UserNameFormatter extends FormatterBase {
    */
   public static function isApplicable(FieldDefinitionInterface $field_definition) {
     return $field_definition->getTargetEntityTypeId() === 'user' && $field_definition->getName() === 'name';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkAccess(EntityInterface $entity) {
+    return $entity->access('view label', NULL, TRUE);
   }
 
 }

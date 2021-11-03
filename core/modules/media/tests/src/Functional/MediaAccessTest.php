@@ -103,8 +103,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     // 'view own unpublished media' permission.
     $this->grantPermissions($role, ['view media']);
     $this->drupalGet('media/' . $user_media->id());
-    $this->assertNoCacheContext('user');
-    $this->assertCacheContext('user.permissions');
+    $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $user_media->setUnpublished()->save();
     $this->drupalGet('media/' . $user_media->id());

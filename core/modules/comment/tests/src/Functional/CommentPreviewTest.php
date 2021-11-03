@@ -141,6 +141,7 @@ class CommentPreviewTest extends CommentTestBase {
       'post comments',
       'skip comment approval',
       'edit own comments',
+      'view usernames',
     ]);
     $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);

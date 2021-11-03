@@ -380,6 +380,20 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function getDisplayName() {
+    // $access = $this->access('view label', NULL, TRUE);
+    // $renderer = \Drupal::service('renderer');
+    // $current_request = \Drupal::requestStack()->getCurrentRequest();
+    // // Make sure the cacheability information from access result
+    // // bubble ups even if this method is called directly.
+    // if ($current_request && $current_request->isMethodCacheable() && $renderer->hasRenderContext()) {
+    // $build = [];
+    // CacheableMetadata::createFromRenderArray($build)->addCacheableDependency($access)->applyTo($build);
+    // $renderer->render($build);
+    // }
+    // if ($access->isForbidden()) {
+    // return '';
+    // }
+
     $name = $this->getAccountName() ?: \Drupal::config('user.settings')->get('anonymous');
     \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
     return $name;

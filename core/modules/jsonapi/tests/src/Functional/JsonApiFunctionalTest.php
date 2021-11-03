@@ -88,7 +88,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertSession()->statusCodeEquals(401);
 
     // 5.1 Single article with access denied while authenticated.
-    $this->drupalLogin($this->userCanViewProfiles);
+    $this->drupalLogin($this->userCanViewProfilesAndNames);
     $single_output = Json::decode($this->drupalGet('/jsonapi/node/article/' . $this->nodes[60]->uuid()));
     $this->assertSession()->statusCodeEquals(403);
     $this->assertEquals('/data', $single_output['errors'][0]['source']['pointer']);
@@ -276,8 +276,8 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('GET', $user_url, [
       'auth' => [
-        $this->userCanViewProfiles->getAccountName(),
-        $this->userCanViewProfiles->pass_raw,
+        $this->userCanViewProfilesAndNames->getAccountName(),
+        $this->userCanViewProfilesAndNames->pass_raw,
       ],
     ]);
     $single_output = Json::decode($response->getBody()->__toString());
@@ -592,7 +592,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     // 2.1 Authorization error with a user without create permissions.
     $response = $this->request('POST', $collection_url, [
       'body' => Json::encode($body),
-      'auth' => [$this->userCanViewProfiles->getAccountName(), $this->userCanViewProfiles->pass_raw],
+      'auth' => [$this->userCanViewProfilesAndNames->getAccountName(), $this->userCanViewProfilesAndNames->pass_raw],
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);
     $created_response = Json::decode($response->getBody()->__toString());
@@ -727,7 +727,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]);
     $response = $this->request('PATCH', $individual_url, [
       'body' => Json::encode($body),
-      'auth' => [$this->userCanViewProfiles->getAccountName(), $this->userCanViewProfiles->pass_raw],
+      'auth' => [$this->userCanViewProfilesAndNames->getAccountName(), $this->userCanViewProfilesAndNames->pass_raw],
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);
     $this->assertEquals(403, $response->getStatusCode());

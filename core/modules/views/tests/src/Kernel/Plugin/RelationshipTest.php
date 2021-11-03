@@ -144,6 +144,7 @@ class RelationshipTest extends RelationshipJoinTestBase {
    * Tests rendering of a view with a relationship.
    */
   public function testRelationshipRender() {
+    $this->setUpCurrentUser([], ['view usernames']);
     $connection = Database::getConnection();
     $author1 = $this->createUser();
     $connection->update('views_test_data')

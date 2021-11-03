@@ -54,11 +54,32 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    * Ensures user labels are accessible for everyone.
    */
   public function testUserLabelAccess() {
-    // Set up a non-admin user.
+    $anonymous_user = User::getAnonymousUser();
+    $other_user = $this->createUser();
+
+    // Set up a non-admin user without view usernames permission.
     \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2]));
 
-    $anonymous_user = User::getAnonymousUser();
-    $user = $this->createUser();
+    // The current user is allowed to view the anonymous user label.
+    $this->assertEntityAccess([
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => TRUE,
+    ], $anonymous_user);
+
+    // The current user is allowed to view user labels.
+    $this->assertEntityAccess([
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+      'view label' => FALSE,
+    ], $other_user);
+
+    // Set up a non-admin user with "view usernames" permission.
+    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 3], ['view usernames']));
 
     // The current user is allowed to view the anonymous user label.
     $this->assertEntityAccess([
@@ -76,7 +97,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
       'delete' => FALSE,
       'view' => FALSE,
       'view label' => TRUE,
-    ], $user);
+    ], $other_user);
 
     // Switch to an anonymous user account.
     $account_switcher = \Drupal::service('account_switcher');
@@ -97,8 +118,8 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
       'update' => FALSE,
       'delete' => FALSE,
       'view' => FALSE,
-      'view label' => TRUE,
-    ], $user);
+      'view label' => FALSE,
+    ], $other_user);
 
     // Restore user account.
     $account_switcher->switchBack();
