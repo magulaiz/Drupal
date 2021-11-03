@@ -57,7 +57,7 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *
  * @FormElement("table")
  */
-class Table extends FormElement {
+class Table extends RenderElement {
 
   /**
    * {@inheritdoc}
@@ -69,7 +69,7 @@ class Table extends FormElement {
       '#rows' => [],
       '#empty' => '',
       // Properties for tableselect support.
-      '#input' => TRUE,
+      '#input' => FALSE,
       '#tree' => TRUE,
       '#tableselect' => FALSE,
       '#sticky' => FALSE,
