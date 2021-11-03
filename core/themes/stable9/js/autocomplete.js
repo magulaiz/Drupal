@@ -12,18 +12,20 @@
         instance = _e$detail.instance,
         options = _e$detail.options;
     Drupal.jQueryAutocompleteStableMarkup.options = {
-      inputClass: 'ui-autocomplete-input',
-      ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-      loadingClass: 'ui-autocomplete-loading',
-      itemClass: 'ui-menu-item'
+      classes: {
+        input: 'ui-autocomplete-input',
+        listbox: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
+        inputLoading: 'ui-autocomplete-loading',
+        option: 'ui-menu-item'
+      }
     };
     Drupal.jQueryAutocompleteStableMarkup.init(instance, options);
   });
 
   Drupal.jQueryAutocompleteStableMarkup.init = function (instance, options) {
     instance.options = instance.initOptions(instance.options, Drupal.autocompleteShim.stableOptions, Drupal.jQueryAutocompleteStableMarkup.options, options);
-    instance.implementInput();
-    instance.implementList();
+    instance.applyClasses('input');
+    instance.applyClasses('listbox');
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
       var listBoxId = instance.listboxWrapper.getAttribute('id');

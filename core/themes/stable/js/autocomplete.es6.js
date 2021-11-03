@@ -9,17 +9,19 @@
     const { instance, options } = e.detail;
 
     Drupal.jQueryAutocompleteStableMarkup.options = {
-      // Add jQuery UI classes so the autocomplete is styled the same as its
-      // jQuery UI predecessor.
-      inputClass: 'ui-autocomplete-input',
-      ulClass: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
-      loadingClass: 'ui-autocomplete-loading',
-      // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
-      // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
-      // items in`<a>` tags, so this class is moved to the `<li>` which provides
-      // a visually identical autocomplete experience to the previous jQuery UI
-      // autocomplete.
-      itemClass: 'ui-menu-item',
+      classes: {
+        // Add jQuery UI classes so the autocomplete is styled the same as its
+        // jQuery UI predecessor.
+        input: 'ui-autocomplete-input',
+        listbox: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front',
+        inputLoading: 'ui-autocomplete-loading',
+        // In jQuery UI autocomplete, the ui-menu-item-wrapper class is added to
+        // the `<a>` tag inside each list item. A11yAutocomplete does not wrap
+        // items in`<a>` tags, so this class is moved to the `<li>` which provides
+        // a visually identical autocomplete experience to the previous jQuery UI
+        // autocomplete.
+        option: 'ui-menu-item',
+      },
     };
     Drupal.jQueryAutocompleteStableMarkup.init(instance, options);
   });
@@ -33,8 +35,8 @@
     );
 
     // Apply class changes.
-    instance.implementInput();
-    instance.implementList();
+    instance.applyClasses('input');
+    instance.applyClasses('listbox');
 
     if (!instance.input.hasAttribute('data-autocomplete-list-appended')) {
       const listBoxId = instance.listboxWrapper.getAttribute('id');

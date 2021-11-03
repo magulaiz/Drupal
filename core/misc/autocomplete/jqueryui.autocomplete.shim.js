@@ -48,10 +48,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
   Drupal.autocompleteShim.defaultOptions = {};
 
   Drupal.autocompleteShim.jqueryUiShimInit = function (instance, options) {
+    var BCMarkupOptions = {};
     var usingBCMarkup = Drupal.hasOwnProperty('jQueryAutocompleteStableMarkup');
 
     if (usingBCMarkup) {
-      Object.assign(Drupal.autocompleteShim.defaultOptions, Drupal.jQueryAutocompleteStableMarkup.options);
+      BCMarkupOptions = Drupal.jQueryAutocompleteStableMarkup.options;
     }
 
     var isContentEditable = instance.input.hasAttribute('contenteditable');
@@ -61,9 +62,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       attributesToOptions.source = JSON.parse(attributesToOptions.source);
     }
 
-    instance.options = instance.initOptions(instance.options, Drupal.autocompleteShim.defaultOptions, options, attributesToOptions);
-    instance.implementInput();
-    instance.implementList();
+    instance.options = instance.initOptions(instance.options, Drupal.autocompleteShim.defaultOptions, BCMarkupOptions, options, attributesToOptions);
+    instance.applyClasses('input');
+    instance.applyClasses('listbox');
     instance.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
 
@@ -169,12 +170,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
     instance.suggestionItem = function jQuerySuggestionItem(text, index) {
       var li = suggestionItem(text, index);
-
-      if (this.options.itemClass.length > 0) {
-        this.options.itemClass.split(' ').forEach(function (className) {
-          return li.classList.add(className);
-        });
-      }
 
       if (instance.hasOwnProperty('addBcListItemClasses')) {
         instance.addBcListItemClasses(li, index);
@@ -366,26 +361,20 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
                   Object.keys(optionValue).forEach(function (key) {
                     if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
                       var element = key === 'ui-autocomplete' ? instance.listboxWrapper : instance.input;
-                      optionValue[key].split(' ').forEach(function (className) {
-                        element.classList.add(className);
-                      });
-                      element.classList.remove(key);
+                      instance.addClasses(element, optionValue[key]);
+                      instance.removeClasses(element, key);
                     }
                   });
                   break;
 
                 case 'classes.ui-autocomplete':
-                  optionValue.split(' ').forEach(function (className) {
-                    instance.listboxWrapper.classList.add(className);
-                  });
-                  instance.listboxWrapper.classList.remove('ui-autocomplete');
+                  instance.addClasses(instance.listboxWrapper, optionValue);
+                  instance.removeClasses(instance.listboxWrapper, 'ui-autocomplete');
                   break;
 
                 case 'classes.ui-autocomplete-input':
-                  optionValue.split(' ').forEach(function (className) {
-                    instance.input.classList.add(className);
-                  });
-                  instance.input.classList.remove('ui-autocomplete-input');
+                  instance.addClasses(instance.input, optionValue);
+                  instance.removeClasses(instance.input, 'ui-autocomplete-input');
                   break;
 
                 case 'disabled':

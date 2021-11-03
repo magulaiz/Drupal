@@ -89,9 +89,11 @@ class AutocompleteTestForm extends FormBase {
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
         'data-autocomplete' => JSON::encode([
-          'inputClass' => 'class-added-to-input another-class-added-to-input',
-          'ulClass' => 'class-added-to-ul another-class-added-to-ul',
-          'itemClass' => 'class-added-to-item another-class-added-to-item',
+          'classes' => [
+            'input' => 'class-added-to-input another-class-added-to-input',
+            'listbox' => 'class-added-to-ul another-class-added-to-ul',
+            'option' => 'class-added-to-item another-class-added-to-item',
+          ],
         ]),
       ],
     ];
@@ -101,9 +103,9 @@ class AutocompleteTestForm extends FormBase {
       '#default_value' => '',
       '#autocomplete_route_name' => 'drupal_autocomplete.country_autocomplete',
       '#attributes' => [
-        'data-autocomplete-input-class' => 'class-added-to-input another-class-added-to-input',
-        'data-autocomplete-ul-class' => 'class-added-to-ul another-class-added-to-ul',
-        'data-autocomplete-item-class' => 'class-added-to-item another-class-added-to-item',
+        'data-autocomplete-classes-input' => 'class-added-to-input another-class-added-to-input',
+        'data-autocomplete-classes-listbox' => 'class-added-to-ul another-class-added-to-ul',
+        'data-autocomplete-classes-option' => 'class-added-to-item another-class-added-to-item',
       ],
     ];
 

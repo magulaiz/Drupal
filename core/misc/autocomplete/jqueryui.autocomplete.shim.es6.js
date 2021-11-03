@@ -48,14 +48,12 @@
    *   The options sent to autocomplete init.
    */
   Drupal.autocompleteShim.jqueryUiShimInit = (instance, options) => {
+    let BCMarkupOptions = {};
     const usingBCMarkup = Drupal.hasOwnProperty(
       'jQueryAutocompleteStableMarkup',
     );
     if (usingBCMarkup) {
-      Object.assign(
-        Drupal.autocompleteShim.defaultOptions,
-        Drupal.jQueryAutocompleteStableMarkup.options,
-      );
+      BCMarkupOptions = Drupal.jQueryAutocompleteStableMarkup.options;
     }
     const isContentEditable = instance.input.hasAttribute('contenteditable');
     const attributesToOptions = instance.attributesToOptions();
@@ -69,13 +67,14 @@
     instance.options = instance.initOptions(
       instance.options,
       Drupal.autocompleteShim.defaultOptions,
+      BCMarkupOptions,
       options,
       attributesToOptions,
     );
 
     // Apply class changes.
-    instance.implementInput();
-    instance.implementList();
+    instance.applyClasses('input');
+    instance.applyClasses('listbox');
 
     instance.liveRegion = document.querySelector('#drupal-live-announce');
 
@@ -284,12 +283,6 @@
     const suggestionItem = instance.suggestionItem.bind(instance);
     instance.suggestionItem = function jQuerySuggestionItem(text, index) {
       const li = suggestionItem(text, index);
-
-      if (this.options.itemClass.length > 0) {
-        this.options.itemClass
-          .split(' ')
-          .forEach((className) => li.classList.add(className));
-      }
 
       // Everything prior to this is logic that also happens in the
       // A11yAutocomplete suggestionItems() method. Below is logic specific
@@ -602,29 +595,29 @@
                         key === 'ui-autocomplete'
                           ? instance.listboxWrapper
                           : instance.input;
-                      optionValue[key].split(' ').forEach((className) => {
-                        element.classList.add(className);
-                      });
+                      instance.addClasses(element, optionValue[key]);
                       // Remove the default class.
-                      element.classList.remove(key);
+                      instance.removeClasses(element, key);
                     }
                   });
                   break;
                 case 'classes.ui-autocomplete':
                   // Add the new class(es).
-                  optionValue.split(' ').forEach((className) => {
-                    instance.listboxWrapper.classList.add(className);
-                  });
+                  instance.addClasses(instance.listboxWrapper, optionValue);
                   // Remove the default class.
-                  instance.listboxWrapper.classList.remove('ui-autocomplete');
+                  instance.removeClasses(
+                    instance.listboxWrapper,
+                    'ui-autocomplete',
+                  );
                   break;
                 case 'classes.ui-autocomplete-input':
                   // Add the new class(es).
-                  optionValue.split(' ').forEach((className) => {
-                    instance.input.classList.add(className);
-                  });
+                  instance.addClasses(instance.input, optionValue);
                   // Remove the default class.
-                  instance.input.classList.remove('ui-autocomplete-input');
+                  instance.removeClasses(
+                    instance.input,
+                    'ui-autocomplete-input',
+                  );
                   break;
                 case 'disabled':
                   instance.options.disabled = optionValue;
