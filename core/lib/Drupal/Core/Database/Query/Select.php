@@ -502,7 +502,8 @@ class Select extends Query implements SelectInterface {
    * Executes the select database query.
    *
    * @return null|string|int
-   *
+   *   If validation fails, simply return NULL, otherwise returns string or int
+   *   according to query's return.
    */
   public function execute() {
     // If validation fails, simply return NULL.
