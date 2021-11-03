@@ -303,8 +303,8 @@ class ImageItem extends FileItem {
   /**
    * {@inheritdoc}
    */
-  public function preSave() {
-    parent::preSave();
+  public function onChange($property_name, $notify = TRUE) {
+    parent::onChange($property_name, $notify);
 
     $width = $this->width;
     $height = $this->height;
@@ -323,6 +323,7 @@ class ImageItem extends FileItem {
       trigger_error(sprintf("Missing file with ID %s.", $this->target_id), E_USER_WARNING);
     }
   }
+
 
   /**
    * {@inheritdoc}
