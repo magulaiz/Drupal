@@ -326,7 +326,7 @@ class ImageItem extends FileItem {
    */
   public function preSave() {
     parent::preSave();
-    if (!$this->entity && $this->entity instanceof EntityInterface) {
+    if (!($this->entity && $this->entity instanceof EntityInterface)) {
       trigger_error(sprintf("Missing file with ID %s.", $this->target_id), E_USER_WARNING);
     }
   }
