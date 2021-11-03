@@ -232,7 +232,7 @@ class EntityResource {
    *   Thrown when the entity does not pass validation.
    */
   public function createIndividual(ResourceType $resource_type, Request $request) {
-    $parsed_entity = $this->getEntityFromRequestBody($resource_type, $request);
+    $parsed_entity = $this->deserialize($resource_type, $request, JsonApiDocumentTopLevel::class);
 
     if ($parsed_entity instanceof FieldableEntityInterface) {
       // Only check 'edit' permissions for fields that were actually submitted
@@ -311,9 +311,9 @@ class EntityResource {
       throw new BadRequestHttpException('Updating a resource object that has a working copy is not yet supported. See https://www.drupal.org/project/drupal/issues/2795279.');
     }
 
-    $parsed_entity = $this->getEntityFromRequestBody($resource_type, $request);
+    $parsed_entity = $this->deserialize($resource_type, $request, JsonApiDocumentTopLevel::class);
 
-    $body = static::getRequestBody($request);
+    $body = Json::decode($request->getContent());
     $data = $body['data'];
     if ($data['id'] != $entity->uuid()) {
       throw new BadRequestHttpException(sprintf(
@@ -323,7 +323,8 @@ class EntityResource {
       ));
     }
 
-    $field_names = static::getRequestFieldNames($resource_type, $request);
+    $data += ['attributes' => [], 'relationships' => []];
+    $field_names = array_map([$resource_type, 'getInternalName'], array_merge(array_keys($data['attributes']), array_keys($data['relationships'])));
 
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
@@ -802,80 +803,6 @@ class EntityResource {
     static::validate($entity);
     $entity->save();
     return $this->getRelationship($resource_type, $entity, $related, $request, 204);
-  }
-
-  /**
-   * Returns the parsed entity.
-   *
-   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
-   *   The base JSON:API resource type for the request to be served.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   A non-stored entity object.
-   */
-  protected function getEntityFromRequestBody(ResourceType $resource_type, Request $request): EntityInterface {
-    $parsed_entity = static::getRequestAttribute($request, 'jsonapi_parsed_entity', function (Request $request) use ($resource_type) {
-      return $this->deserialize($resource_type, $request, JsonApiDocumentTopLevel::class);
-    });
-    assert($parsed_entity instanceof EntityInterface);
-    return $parsed_entity;
-  }
-
-  /**
-   * Returns the names of the fields affected by the specified request.
-   *
-   * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
-   *   The base JSON:API resource type for the request to be served.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return string[]
-   *   An array of field names.
-   */
-  protected static function getRequestFieldNames(ResourceType $resource_type, Request $request): array {
-    return static::getRequestAttribute($request, 'jsonapi_field_names', function (Request $request) use ($resource_type) {
-      $body = static::getRequestBody($request);
-      $data = $body['data'];
-      $data += ['attributes' => [], 'relationships' => []];
-      return array_map([$resource_type, 'getInternalName'], array_merge(array_keys($data['attributes']), array_keys($data['relationships'])));
-    });
-  }
-
-  /**
-   * Returns the request body.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   *
-   * @return mixed
-   *   The decoded request body.
-   */
-  protected static function getRequestBody(Request $request) {
-    return static::getRequestAttribute($request, 'jsonapi_body_decoded', function (Request $request) {
-      return Json::decode($request->getContent());
-    });
-  }
-
-  /**
-   * Returns the specified request attribute and populates it if it is missing.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param string $key
-   *   The attribute key.
-   * @param callable $value_callback
-   *   A callback to be used to compute the value, if missing.
-   *
-   * @return mixed
-   *   The attribute value.
-   */
-  protected static function getRequestAttribute(Request $request, string $key, callable $value_callback) {
-    if (!$request->attributes->has($key)) {
-      $request->attributes->set($key, $value_callback($request));
-    }
-    return $request->attributes->get($key);
   }
 
   /**

@@ -416,7 +416,6 @@ class NodeTest extends ResourceTestBase {
         'bin' => 'jsonapi_normalizations',
       ],
     ]);
-
     $cached_fields = $cache['#data']['fields'];
     $this->assertSameSize($field_names, $cached_fields);
     array_walk($field_names, function ($field_name) use ($cached_fields) {
