@@ -224,6 +224,18 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   }
 
   /**
+   * Tests that submitting the form doesn't throw any errors.
+   */
+  public function testFormSubmit() {
+    $form_state = new FormState();
+    $form = \Drupal::formBuilder()->getForm($this);
+    $this->render($form);
+    $this->submitForm($form, $form_state);
+
+    $this->assertEmpty($form_state->getErrors(), 'There were submissions errors.');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
