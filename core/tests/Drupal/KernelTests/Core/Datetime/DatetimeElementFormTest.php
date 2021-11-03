@@ -105,6 +105,24 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       '#date_time_element' => 'HTML Time',
     ];
 
+    // Element inside of a table element.
+    $form['table_element'] = [
+      '#type' => 'table',
+      '#header' => [
+        'Datetime',
+      ],
+    ];
+
+    $form['table_element'][] = [
+      'datetime_in_table_element' => [
+        '#type' => 'datetime',
+        '#date_date_format' => 'Y-m-d',
+        '#date_time_format' => 'H:i:s',
+        '#date_date_element' => 'HTML Date',
+        '#date_time_element' => 'HTML Time',
+      ],
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => t('Submit'),
