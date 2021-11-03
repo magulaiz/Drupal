@@ -26,7 +26,7 @@
     };
 
     function openDialog(settings) {
-      settings = $.extend({}, drupalSettings.dialog, options, settings);
+      settings = $.extend(Drupal.CoreDialog.defaultSettings(), drupalSettings.dialog, options, settings);
       $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
       $element.dialog(settings);
       dialog.open = true;
@@ -39,6 +39,10 @@
       dialog.returnValue = value;
       dialog.open = false;
       $(window).trigger('dialog:afterclose', [dialog, $element]);
+
+      if ($element.closest('[data-drupal-dialog-wrapper]').length !== 0) {
+        $element.closest('[data-drupal-dialog-wrapper]').remove();
+      }
     }
 
     dialog.show = function () {

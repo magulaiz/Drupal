@@ -32,6 +32,18 @@ css.escape:
   js:
     assets/vendor/css-escape/css.escape.js: { weight: -20 }
 
+dialog.polyfill:
+  remote: https://github.com/GoogleChrome/dialog-polyfill
+  version: "0.5.6"
+  license:
+    url: https://raw.githubusercontent.com/GoogleChrome/dialog-polyfill/v0.5.6/LICENSE
+  js:
+    assets/vendor/google-chrome/dialog-polyfill/dialog-polyfill.js: {}
+  css:
+    component:
+      assets/vendor/google-chrome/dialog-polyfill/dialog-polyfill.css: {}
+      misc/dialog/dialog.polyfill.css: {}
+
 drupal:
   version: VERSION
   js:
@@ -216,35 +228,16 @@ drupal.dialog:
   js:
     misc/dialog/dialog.js: {}
     misc/dialog/dialog.position.js: {}
-    misc/dialog/dialog.jquery-ui.js: {}
+    misc/dialog/dialog.core.js: {}
+
     # The remaining JavaScript assets previously came from core/jquery.ui, a
     # deprecated library.
     # All weights are based on on the requirements defined within each file.
     # @todo replace with solution in https://drupal.org/node/2158943
-    assets/vendor/jquery.ui/ui/widgets/dialog-min.js: { weight: -11.4, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/button-min.js: { weight: -11.5, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/checkboxradio-min.js: { weight: -11.6, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/draggable-min.js: { weight: -11.6, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/resizable-min.js: { weight: -11.6, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/controlgroup-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/form-reset-mixin-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/mouse-min.js: { weight: -11.7, minified: true }
+    # DIALOG PROTOTYPE: all of these can be removed if its determined resizable
+    # is not needed. Many of these can probably be removed even if resizable is
+    # present, but that can happen when we've moved beyond prototyping.
     assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
   # All CSS assets previously came from core/jquery.ui, a deprecated library.
   # @todo replace with solution found in https://drupal.org/node/2158943
   css:
@@ -264,6 +257,9 @@ drupal.dialog:
     - core/drupal.debounce
     - core/drupal.displace
     - core/tabbable.jquery.shim
+    - core/tabbable
+    - core/dialog.polyfill
+    - core/drupal.string.includes
     - core/drupal.jquery.position
 
 drupal.dialog.ajax:
@@ -380,6 +376,11 @@ drupal.states:
     - core/drupalSettings
     - core/once
     - core/jquery.once.bc
+
+drupal.string.includes:
+  version: VERSION
+  js:
+    misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:
   version: VERSION
