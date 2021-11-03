@@ -344,7 +344,6 @@ class ImageItem extends FileItem {
     }
   }
 
-
   /**
    * {@inheritdoc}
    */
