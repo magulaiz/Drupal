@@ -330,7 +330,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $entity->$field_name = NULL;
     }
 
-    if (isset($this->configuration['new_revision']) && $this->configuration['new_revision'] && $entity instanceof RevisionableInterface && $this->storage instanceof RevisionableStorageInterface) {
+    if (!empty($this->configuration['new_revision']) && $entity instanceof RevisionableInterface && $this->storage instanceof RevisionableStorageInterface) {
       $entity = $this->storage->createRevision($entity);
     }
 
