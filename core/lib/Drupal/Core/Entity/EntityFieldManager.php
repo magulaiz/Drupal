@@ -8,6 +8,7 @@ use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -170,6 +171,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->keyValueFactory = $key_value_factory;
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
+    // @see https://www.drupal.org/project/drupal/issues/3247724
+    if (InstallerKernel::installationAttempted()) {
+      $this->useCaches(FALSE);
+    }
     if (!$entity_last_installed_schema_repository) {
       @trigger_error('The entity.last_installed_schema.repository service must be passed to EntityFieldManager::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
       $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
