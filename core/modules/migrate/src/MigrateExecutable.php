@@ -220,6 +220,16 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $this->processPipeline($row, $destination_property_name, $plugins, NULL);
           }
           $save = TRUE;
+          if ($row->shouldSkip()) {
+            if ($row->saveToMapOnSkip()) {
+              $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
+            }
+            if ($message = trim($row->skipMessage())) {
+              $msg = sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $message);
+              $this->saveMessage($msg, MigrationInterface::MESSAGE_INFORMATIONAL);
+            }
+            $save = FALSE;
+          }
         }
         catch (MigrateException $e) {
           $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
@@ -388,6 +398,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
+      if ($row->shouldSkip()) {
+        return;
+      }
       $this->processPipeline($row, $destination, $plugins, $value);
     }
   }
@@ -438,7 +451,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
         }
         $value = $new_value;
-        if ($break) {
+        if ($break || $row->shouldSkip()) {
           break;
         }
       }
@@ -457,6 +470,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
 
         $multiple = $plugin->multiple();
+      }
+      if ($row->shouldSkip()) {
+        return;
       }
     }
     // Ensure all values, including nulls, are migrated.

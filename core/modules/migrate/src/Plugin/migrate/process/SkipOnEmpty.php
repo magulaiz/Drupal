@@ -6,7 +6,6 @@ use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
-use Drupal\migrate\MigrateSkipRowException;
 
 /**
  * Skips processing the current row when the input value is empty.
@@ -84,8 +83,8 @@ class SkipOnEmpty extends ProcessPluginBase {
    */
   public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     if (!$value) {
-      $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
-      throw new MigrateSkipRowException($message);
+      $row->skip($this->configuration['message'] ?? '');
+      return NULL;
     }
     return $value;
   }

@@ -3,8 +3,8 @@
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateSkipProcessException;
-use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\SkipOnEmpty;
+use Drupal\migrate\Row;
 
 /**
  * Tests the skip on empty process plugin.
@@ -38,10 +38,11 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
    * @covers ::row
    */
   public function testRowSkipsOnEmpty() {
+    $row = $this->prophesize(Row::class);
+    $row->skip('')->shouldBeCalled();
     $configuration['method'] = 'row';
-    $this->expectException(MigrateSkipRowException::class);
     (new SkipOnEmpty($configuration, 'skip_on_empty', []))
-      ->transform('', $this->migrateExecutable, $this->row, 'destination_property');
+      ->transform('', $this->migrateExecutable, $row->reveal(), 'destination_property');
   }
 
   /**
@@ -52,20 +53,7 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
     $value = (new SkipOnEmpty($configuration, 'skip_on_empty', []))
       ->transform(' ', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame(' ', $value);
-  }
-
-  /**
-   * Tests that a skip row exception without a message is raised.
-   *
-   * @covers ::row
-   */
-  public function testRowSkipWithoutMessage() {
-    $configuration = [
-      'method' => 'row',
-    ];
-    $process = new SkipOnEmpty($configuration, 'skip_on_empty', []);
-    $this->expectException(MigrateSkipRowException::class);
-    $process->transform('', $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertFalse($this->row->shouldSkip());
   }
 
   /**
@@ -78,10 +66,10 @@ class SkipOnEmptyTest extends MigrateProcessTestCase {
       'method' => 'row',
       'message' => 'The value is empty',
     ];
+    $row = $this->prophesize(Row::class);
+    $row->skip($configuration['message'])->shouldBeCalled();
     $process = new SkipOnEmpty($configuration, 'skip_on_empty', []);
-    $this->expectException(MigrateSkipRowException::class);
-    $this->expectExceptionMessage('The value is empty');
-    $process->transform('', $this->migrateExecutable, $this->row, 'destination_property');
+    $process->transform('', $this->migrateExecutable, $row->reveal(), 'destination_property');
   }
 
 }
