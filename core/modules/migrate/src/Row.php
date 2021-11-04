@@ -484,7 +484,7 @@ class Row {
    *   The skip message.
    */
   public function skipMessage(): string {
-    return $this->skipMessage();
+    return $this->skipMessage;
   }
 
   /**

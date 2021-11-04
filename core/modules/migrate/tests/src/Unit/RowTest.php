@@ -435,7 +435,7 @@ class RowTest extends UnitTestCase {
    * @covers ::shouldSkip
    * @covers ::skipMessage
    */
-  protected function testRowSkipWithoutMessage() {
+  public function testRowSkipWithoutMessage() {
     $row = new Row();
     $row->skip();
     $this->assertTrue($row->shouldSkip());
@@ -450,9 +450,9 @@ class RowTest extends UnitTestCase {
    * @covers ::shouldSkip
    * @covers ::skipMessage
    */
-  protected function testRowSkipWithMessage() {
+  public function testRowSkipWithMessage() {
     $row = new Row();
-    $message = $this->randomGenerator->string(20);
+    $message = "This row should be skipped.";
     $row->skip($message);
     $this->assertTrue($row->shouldSkip());
     $this->assertEquals($message, $row->skipMessage());
@@ -466,7 +466,7 @@ class RowTest extends UnitTestCase {
    * @covers ::shouldSkip
    * @covers ::skipMessage
    */
-  protected function testRowSkipWithoutSave() {
+  public function testRowSkipWithoutSave() {
     $row = new Row();
     $row->skip('', FALSE);
     $this->assertTrue($row->shouldSkip());
