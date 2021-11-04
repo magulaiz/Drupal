@@ -180,7 +180,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
     $this->migration->setStatus(MigrationInterface::STATUS_IMPORTING);
     $source = $this->getSource();
-    if (!empty($this->getIdList())) {
+    if (!empty($this->idlist)) {
       $migrate_source = $this->migration->getSourcePlugin();
       if ($migrate_source instanceof MigrateIdFilterInterface) {
         $migrate_source->setIdList($this->getIdList());
