@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
-use Drupal\Core\Entity\TranslatableRevisionableStorageInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -330,7 +330,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
       $entity->$field_name = NULL;
     }
 
-    if (isset($this->configuration['new_revision']) && $this->configuration['new_revision'] && $entity instanceof RevisionableInterface && $this->storage instanceof TranslatableRevisionableStorageInterface) {
+    if (isset($this->configuration['new_revision']) && $this->configuration['new_revision'] && $entity instanceof RevisionableInterface && $this->storage instanceof RevisionableStorageInterface) {
       $entity = $this->storage->createRevision($entity);
     }
 
