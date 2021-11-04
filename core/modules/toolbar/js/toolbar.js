@@ -19,49 +19,48 @@
     }
   });
   var ToolbarBehaviors = {
-    onTabClick: function onTabClick() {
-      console.log('vanilla: onTabClick()');
+    onTabClick: function onTabClick(e) {
+      console.log('vanilla: onTabClick()', e);
     },
-    renderToolbarVisualView: function renderToolbarVisualView() {
-      console.log('vanilla: render() in ToolbarVisualView');
+    renderToolbarVisualView: function renderToolbarVisualView(e) {
+      console.log('vanilla: render() in ToolbarVisualView', e);
     },
-    renderMenuVisualView: function renderMenuVisualView() {
-      console.log('vanilla: render() in MenuVisualView');
+    renderMenuVisualView: function renderMenuVisualView(e) {
+      console.log('vanilla: render() in MenuVisualView', e);
     },
-    updateTabs: function updateTabs() {
-      console.log('vanilla: updateTabs() in ToolbarVisualView');
+    updateTabs: function updateTabs(e) {
+      console.log('vanilla: updateTabs() in ToolbarVisualView', e);
     },
-    onActiveTrayChange: function onActiveTrayChange() {
-      console.log('vanilla: onActiveTrayChange in ToolbarVisualView');
+    onActiveTrayChange: function onActiveTrayChange(e) {
+      console.log('vanilla: onActiveTrayChange in ToolbarVisualView', e);
     },
-    renderBodyVisual: function renderBodyVisual() {
-      console.log('vanilla: render() in BodyVisualView');
+    renderBodyVisual: function renderBodyVisual(e) {
+      console.log('vanilla: render() in BodyVisualView', e);
     },
-    updateTrayOrientation: function updateTrayOrientation() {
-      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView');
+    updateTrayOrientation: function updateTrayOrientation(e) {
+      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView', e);
     },
-    updateBarAttributes: function updateBarAttributes() {
-      console.log('vanilla: updateBarAttributes() in ToolbarVisualView');
+    updateBarAttributes: function updateBarAttributes(e) {
+      console.log('vanilla: updateBarAttributes() in ToolbarVisualView', e);
     },
-    updateToolbarHeight: function updateToolbarHeight() {
-      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView');
+    updateToolbarHeight: function updateToolbarHeight(e) {
+      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView', e);
     },
-    triggerDisplace: function triggerDisplace() {
-      console.log('vanilla: triggerDisplace() in ToolbarVisualView');
+    triggerDisplace: function triggerDisplace(e) {
+      console.log('vanilla: triggerDisplace() in ToolbarVisualView', e);
     },
-    adjustPlacement: function adjustPlacement() {
-      console.log('vanilla: adjustPlacement() in ToolbarVisualView');
+    adjustPlacement: function adjustPlacement(e) {
+      console.log('vanilla: adjustPlacement() in ToolbarVisualView', e);
     },
-    onOrientationToggleClick: function onOrientationToggleClick() {
-      console.log('vanilla: onOrientationToggleClick()');
+    onOrientationToggleClick: function onOrientationToggleClick(e) {
+      console.log('vanilla: onOrientationToggleClick()', e);
     },
-    onOrientationChange: function onOrientationChange() {
-      console.log('vanilla: onOrientationChange() in ToolbarAuralView');
+    onOrientationChange: function onOrientationChange(e) {
+      console.log('vanilla: onOrientationChange() in ToolbarAuralView', e);
     },
-    loadSubtrees: function loadSubtrees() {
-      console.log('vanilla: loadSubtrees()');
-    },
-    isBlah: false
+    loadSubtrees: function loadSubtrees(e) {
+      console.log('vanilla: loadSubtrees()', e);
+    }
   };
   Drupal.behaviors.toolbar = {
     attach: function attach(context) {
@@ -71,38 +70,38 @@
 
       once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
         var toolbarTab = document.querySelector('.toolbar-bar .toolbar-tab .trigger');
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.onTabClick();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.onTabClick(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.renderToolbarVisualView();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.renderToolbarVisualView(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.updateTabs();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateTabs(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.onActiveTrayChange();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.onActiveTrayChange(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.renderBodyVisual();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.renderBodyVisual(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.updateTrayOrientation();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateTrayOrientation(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.updateBarAttributes();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateBarAttributes(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.updateToolbarHeight();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateToolbarHeight(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.triggerDisplace();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.triggerDisplace(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.adjustPlacement();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.adjustPlacement(e);
         });
-        toolbarTab.addEventListener('click', function () {
-          return ToolbarBehaviors.loadSubtrees();
+        toolbarTab.addEventListener('click', function (e) {
+          return ToolbarBehaviors.loadSubtrees(e);
         });
         var model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
@@ -134,32 +133,35 @@
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
         var toolbarOrientationButton = document.querySelector('.toolbar-toggle-orientation button');
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.onOrientationToggleClick();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.onOrientationToggleClick(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.renderToolbarVisualView();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.renderToolbarVisualView(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.updateTabs();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateTabs(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.updateTrayOrientation();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateTrayOrientation(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.updateBarAttributes();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateBarAttributes(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.updateToolbarHeight();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.updateToolbarHeight(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.triggerDisplace();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.triggerDisplace(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.onOrientationChange();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.onOrientationChange(e);
         });
-        toolbarOrientationButton.addEventListener('click', function () {
-          return ToolbarBehaviors.adjustPlacement();
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.adjustPlacement(e);
+        });
+        toolbarOrientationButton.addEventListener('click', function (e) {
+          return ToolbarBehaviors.loadSubtrees(e);
         });
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;

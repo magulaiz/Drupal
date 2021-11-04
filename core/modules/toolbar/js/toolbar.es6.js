@@ -24,50 +24,49 @@
   );
 
   const ToolbarBehaviors = {
-    onTabClick() {
-      console.log('vanilla: onTabClick()');
+    // 'this' is toolbarbehaviors
+    onTabClick(e) {
+      console.log('vanilla: onTabClick()', e);
     },
-    renderToolbarVisualView() {
-      console.log('vanilla: render() in ToolbarVisualView');
+    renderToolbarVisualView(e) {
+      console.log('vanilla: render() in ToolbarVisualView', e);
     },
-    renderMenuVisualView() {
-      console.log('vanilla: render() in MenuVisualView');
+    renderMenuVisualView(e) {
+      console.log('vanilla: render() in MenuVisualView', e);
     },
-    updateTabs() {
-      console.log('vanilla: updateTabs() in ToolbarVisualView');
+    updateTabs(e) {
+      console.log('vanilla: updateTabs() in ToolbarVisualView', e);
     },
-    onActiveTrayChange() {
-      console.log('vanilla: onActiveTrayChange in ToolbarVisualView');
+    onActiveTrayChange(e) {
+      console.log('vanilla: onActiveTrayChange in ToolbarVisualView', e);
     },
-    renderBodyVisual() {
-      console.log('vanilla: render() in BodyVisualView');
+    renderBodyVisual(e) {
+      console.log('vanilla: render() in BodyVisualView', e);
     },
-    updateTrayOrientation() {
-      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView');
+    updateTrayOrientation(e) {
+      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView', e);
     },
-    updateBarAttributes() {
-      console.log('vanilla: updateBarAttributes() in ToolbarVisualView');
+    updateBarAttributes(e) {
+      console.log('vanilla: updateBarAttributes() in ToolbarVisualView', e);
     },
-    updateToolbarHeight() {
-      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView');
+    updateToolbarHeight(e) {
+      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView', e);
     },
-    triggerDisplace() {
-      console.log('vanilla: triggerDisplace() in ToolbarVisualView');
+    triggerDisplace(e) {
+      console.log('vanilla: triggerDisplace() in ToolbarVisualView', e);
     },
-    adjustPlacement() {
-      console.log('vanilla: adjustPlacement() in ToolbarVisualView');
+    adjustPlacement(e) {
+      console.log('vanilla: adjustPlacement() in ToolbarVisualView', e);
     },
-    // gap
-    onOrientationToggleClick() {
-      console.log('vanilla: onOrientationToggleClick()');
+    onOrientationToggleClick(e) {
+      console.log('vanilla: onOrientationToggleClick()', e);
     },
-    onOrientationChange() {
-      console.log('vanilla: onOrientationChange() in ToolbarAuralView');
+    onOrientationChange(e) {
+      console.log('vanilla: onOrientationChange() in ToolbarAuralView', e);
     },
-    loadSubtrees() {
-      console.log('vanilla: loadSubtrees()');
+    loadSubtrees(e) {
+      console.log('vanilla: loadSubtrees()', e);
     },
-    isBlah: false,
   };
 
   /**
@@ -95,39 +94,39 @@
         const toolbarTab = document.querySelector(
           '.toolbar-bar .toolbar-tab .trigger',
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.onTabClick(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.onTabClick(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.renderToolbarVisualView(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.renderToolbarVisualView(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.updateTabs(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateTabs(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.onActiveTrayChange(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.onActiveTrayChange(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.renderBodyVisual(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.renderBodyVisual(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.updateTrayOrientation(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateTrayOrientation(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.updateBarAttributes(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateBarAttributes(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.updateToolbarHeight(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateToolbarHeight(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.triggerDisplace(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.triggerDisplace(e),
         );
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.adjustPlacement(),
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.adjustPlacement(e),
         );
-        // TODO: only when vertical
-        toolbarTab.addEventListener('click', () =>
-          ToolbarBehaviors.loadSubtrees(),
+        // TODO: only when vertical?
+        toolbarTab.addEventListener('click', (e) =>
+          ToolbarBehaviors.loadSubtrees(e),
         );
 
         // Establish the toolbar models and views.
@@ -188,37 +187,37 @@
         const toolbarOrientationButton = document.querySelector(
           '.toolbar-toggle-orientation button',
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.onOrientationToggleClick(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.onOrientationToggleClick(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.renderToolbarVisualView(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.renderToolbarVisualView(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.updateTabs(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateTabs(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.updateTrayOrientation(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateTrayOrientation(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.updateBarAttributes(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateBarAttributes(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.updateToolbarHeight(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.updateToolbarHeight(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.triggerDisplace(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.triggerDisplace(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.onOrientationChange(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.onOrientationChange(e),
         );
-        toolbarOrientationButton.addEventListener('click', () =>
-          ToolbarBehaviors.adjustPlacement(),
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.adjustPlacement(e),
         );
-        // TODO: only when it's vertical
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.loadSubtrees(),
-        // );
+        // TODO: only when it's vertical?
+        toolbarOrientationButton.addEventListener('click', (e) =>
+          ToolbarBehaviors.loadSubtrees(e),
+        );
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
