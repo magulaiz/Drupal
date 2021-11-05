@@ -7,7 +7,6 @@ abiword
 absolutezero
 accesslog
 accum
-actionid
 adamson
 addedline
 addtogroup
@@ -74,7 +73,6 @@ attrval
 attrvals
 auth's
 authless
-authmap
 authz
 autocompletefocus
 autocompleteresponses
@@ -163,9 +161,7 @@ blockpromoted
 blockquotes
 blockrecipe
 blocktest
-blogapi
 bloggy
-blorf
 blub
 bnode
 bodyformat
@@ -188,7 +184,6 @@ bubbleable
 buildable
 buildinfo
 buildtest
-bundable
 bundleable
 bundleless
 bundlenode
@@ -207,7 +202,6 @@ cachetag
 cachetags
 cafr
 cagatio
-calendarsignup
 callable's
 callables
 callout
@@ -320,13 +314,13 @@ csslintrc
 csstools
 ctags
 ctes
-ctools
 ctund
 cucurbitaceae
 curle
 curlopt
 currenttime
 currentuser
+customevent
 customly
 customrequest
 cweagans
@@ -342,20 +336,16 @@ datefield
 dateformatter
 datelist
 dateonly
-datepicker
 daterange
 datestamp
-datetimecallback
 datetimeiso
 datetimeplus
 datetype
-davysgray
 daycount
 daycounter
 dblog
 dbtng
 dburl
-ddblock
 ddev
 deckard
 deconstructor
@@ -398,7 +388,6 @@ desaturating
 descripcion
 deserialization
 deserializes
-destid
 destructable
 deutsch
 deutscher
@@ -504,13 +493,11 @@ enoki
 enregistrer
 entit
 entitynodeedit
-entityreference
 entitytype
 entityviewedit
 entrypoint
 eridani
 errmode
-errored
 errrf
 eslintignore
 espagnol
@@ -527,7 +514,6 @@ extlink
 extraday
 extrasmall
 extraspace
-fabpot
 faible
 failonerror
 fakepath
@@ -559,12 +545,10 @@ fieldlinks
 fieldnames
 fieldsets
 filecount
-filefield
 filefields
 filelist
 filemime
 filesort
-filespecs
 filestorage
 filesystems
 filetransfer
@@ -575,7 +559,6 @@ findwith
 firstcolumn
 fixnull
 flexbox
-flexslider
 flickr
 flipfit
 floatingspace
@@ -591,8 +574,6 @@ fooalert
 foobarbaz
 foobargorilla
 foobars
-foobartik
-foobaz
 foofoo
 foomm
 foos
@@ -613,7 +594,6 @@ frombracket
 frontpage
 fsdf
 ftest
-fubar
 fudgy
 fulldata
 fulldate
@@ -645,8 +625,6 @@ googleapis
 gotit
 grandgrandchild
 grandgrandchild's
-granularities
-grayblue
 grayskull
 greeking
 gripsmall
@@ -678,7 +656,6 @@ herro
 heure
 heures
 hidpi
-highwater
 hijklmn
 hilfetestmodul
 hilited
@@ -706,15 +683,12 @@ hurlant
 hustlin
 hwldf
 icann
-ichars
 iconwrap
 idconflict
 idekey
 idempotency
 idempotently
 identifier's
-idmap
-ieid
 iframe's
 iframes
 iframeupload
@@ -744,10 +718,8 @@ iopt
 ip's
 isam
 isdst
-isid
 isinstallable
 items's
-iteratable
 itoa
 itok
 itunesentry
@@ -757,7 +729,6 @@ itunesrendererfeed
 ized
 j'aime
 jamo
-janeway
 januar
 januari
 janvier
@@ -767,7 +738,6 @@ jessebeach
 jnoub
 johansson
 johndoe
-johnsmith
 jours
 jqueryui
 json's
@@ -808,7 +778,6 @@ langcode
 langcodes
 langname
 languageswitcher
-larowlan
 latn
 layouted
 lazybuilder
@@ -822,7 +791,6 @@ libmysqlclient
 libyaml
 licious
 lified
-lightdiamond
 lightninggreen
 linebreak
 linebreaks
@@ -874,8 +842,6 @@ makedefaultmessage
 makewarningmessage
 mame
 mank
-mapkey
-mapwith
 mariadb
 maryjane
 marz
@@ -903,7 +869,7 @@ metapackage
 metapackages
 metatag
 metatags
-meΦΩ
+meφω
 miaus
 middlewares
 midgardmvc
@@ -955,12 +921,10 @@ multibuys
 multibyte
 multicardinality
 multifield
-multigroup
 multilanguage
 multipage
 multipass
 multipleforms
-multirow
 multisite
 multistar
 multistep
@@ -1015,8 +979,6 @@ nocase
 nocdata
 nocookie
 nocssjs
-nodeaccess
-nodelink
 nodereference
 nodo
 noemptytag
@@ -1036,7 +998,6 @@ nonworditem
 noquotes
 normalizer's
 noschema
-noslash
 nosniff
 nostart
 notag
@@ -1054,13 +1015,11 @@ ntfs
 nyan
 nyancat
 nyans
-nzdt
 nœud
 objectid
 objectindex
 oembed
 officedocument
-oldsilver
 olivero
 olivero's
 omitscript
@@ -1116,7 +1075,6 @@ pcre
 pcss
 pdo's
 pecl
-peole
 percona
 performant
 perma
@@ -1247,10 +1205,8 @@ rasterized
 rasterizes
 rawurlencoded
 rawurlencoding
-rbaz
 rdfa
 rdfs
-rdftype
 readmore
 readonlydir
 readystate
@@ -1279,7 +1235,6 @@ reindexing
 reinitializes
 reinject
 reinstantiated
-reiss
 removeformat
 renderable
 renderables
@@ -1390,7 +1345,6 @@ sivun
 skiptags
 skos
 skynet
-slackjaw
 slashentry
 slashrendererentry
 slatkin
@@ -1400,7 +1354,6 @@ smalldatetime
 smallint
 someclass
 somecompany
-somefieldname
 somefile
 somelinks
 somemodule
@@ -1417,10 +1370,8 @@ sourcearea's
 sourcedialog
 sourcedialog's
 sourcedir
-sourceid
 spacebar
 spagna
-spamspan
 spdx
 specialchar
 specialchars
@@ -1544,7 +1495,6 @@ templating
 tempstore
 tempuser
 tercera
-terok
 testajax
 testattribute
 testblock
@@ -1563,7 +1513,6 @@ testfetch
 testfield
 testfilename
 testfilter
-testformat
 testfunc
 testfunction
 testget
@@ -1575,7 +1524,6 @@ testlist
 testload
 testname
 testproject
-testproperty
 testservice
 teststring
 testsuite
@@ -1604,12 +1552,10 @@ themers
 themey
 theseer
 theseparator
-thingie
 thirdcolumn
 threadentry
 threadingrendererentry
 threecol
-throttleable
 tids
 timecurrent
 timeframe
@@ -1640,7 +1586,6 @@ toplevel
 topop
 torder
 totalcount
-totoro
 totranslate
 touchevent
 touchevents
@@ -1718,7 +1663,6 @@ unixtimestamp
 unkeyed
 unmanaged
 unmatch
-unmigrated
 unminified
 unmoderated
 unmunge
@@ -1770,7 +1714,6 @@ updatetype
 upload's
 uploaders
 uploadprogress
-uploadsize
 uppercased
 upscaling
 upsert
@@ -1786,10 +1729,8 @@ userreference
 userspace
 usuario
 uuid's
-validatable
 vals
 vampirize
-vancode
 varchar
 veeeery
 vendored
@@ -1835,7 +1776,6 @@ webuser
 wellformedwebentry
 wellformedwebrendererentry
 whitespaces
-whois
 whos
 widget's
 widt
@@ -1844,8 +1784,6 @@ wimoids
 windir
 winnt
 wmlscript
-wonkiness
-wontmatter
 wordprocessingml
 wordsafe
 wordword
@@ -1874,7 +1812,6 @@ xpsdocument
 xsiemax
 xsses
 xtmpl
-xvnsm
 xxgroup
 xyabz
 yamls
@@ -1907,4 +1844,4 @@ zoomout
 zwei
 zxvf
 zzgroup
-Übersetzung
+übersetzung
