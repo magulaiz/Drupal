@@ -73,10 +73,10 @@ class Callback extends ProcessPluginBase {
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
     if (!isset($configuration['callable'])) {
-      throw new \InvalidArgumentException('The "callable" must be set.');
+      throw new MigrateException('The "callable" must be set.');
     }
     elseif (!is_callable($configuration['callable'])) {
-      throw new \InvalidArgumentException('The "callable" must be a valid function or method.');
+      throw new MigrateException('The "callable" must be a valid function or method.');
     }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
