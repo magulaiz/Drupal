@@ -105,7 +105,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): SymfonyRequestContext {
     return $this->context;
   }
 

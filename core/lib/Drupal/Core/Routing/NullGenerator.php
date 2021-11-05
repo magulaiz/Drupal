@@ -65,7 +65,7 @@ class NullGenerator extends UrlGenerator {
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): SymfonyRequestContext {
   }
 
   /**
