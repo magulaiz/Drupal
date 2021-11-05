@@ -27,6 +27,7 @@
 namespace Drupal\Component\Annotation\Doctrine;
 
 use Doctrine\Common\Annotations\Reader;
+use Drupal\Component\Annotation\AnnotationInterface as T;
 
 /**
  * Simple Annotation Reader.
@@ -96,7 +97,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotations(\ReflectionClass $class)
+    public function getClassAnnotations(\ReflectionClass $class): array
     {
         return $this->parser->parse($class->getDocComment(), 'class '.$class->getName());
     }
@@ -104,7 +105,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotations(\ReflectionMethod $method)
+    public function getMethodAnnotations(\ReflectionMethod $method): array
     {
         return $this->parser->parse($method->getDocComment(), 'method '.$method->getDeclaringClass()->name.'::'.$method->getName().'()');
     }
@@ -112,7 +113,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotations(\ReflectionProperty $property)
+    public function getPropertyAnnotations(\ReflectionProperty $property): array
     {
         return $this->parser->parse($property->getDocComment(), 'property '.$property->getDeclaringClass()->name.'::$'.$property->getName());
     }
@@ -120,7 +121,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(\ReflectionClass $class, $annotationName): ?T
     {
         foreach ($this->getClassAnnotations($class) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -134,7 +135,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName): ?T
     {
         foreach ($this->getMethodAnnotations($method) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -148,7 +149,7 @@ final class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName): ?T
     {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
             if ($annot instanceof $annotationName) {

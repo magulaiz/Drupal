@@ -82,6 +82,10 @@ trait DeprecationListenerTrait {
       // Skip EasyRdf deprecations for PHP 8.1 - fixed by
       // https://github.com/easyrdf/easyrdf/pull/384.
       '%Return type of EasyRdf\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
+      // Skip non-Symfony DebugClassLoader forward compatibility warnings.
+      '%Method "(?!Symfony)[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message%',
+      // Skip DebugClassLoader false positives.
+//      '%The "Drupal\\\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\\\[^"]+", not defining it is deprecated%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
@@ -128,6 +132,8 @@ trait DeprecationListenerTrait {
       "The \"PHPUnit\Framework\TestSuite\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\TestSuites\TestSuiteBase\".",
       // PHPUnit 9.
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
+      // Guzzle/PSR-7
+      "Method \"Psr\Http\Message\StreamInterface::getMetadata()\" will return \"mixed\" as of its next major version. Doing the same in implementation \"GuzzleHttp\Psr7\Stream\" will be required when upgrading.",
     ];
   }
 

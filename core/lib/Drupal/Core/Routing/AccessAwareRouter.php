@@ -77,7 +77,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): SymfonyRequestContext {
     if ($this->router instanceof RequestContextAwareInterface) {
       return $this->router->getContext();
     }

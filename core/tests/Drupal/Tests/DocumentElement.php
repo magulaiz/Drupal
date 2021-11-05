@@ -48,7 +48,7 @@ class DocumentElement extends TraversableElement {
   /**
    * {@inheritdoc}
    */
-  public function getText() {
+  public function getText(): string {
     if ($this->getDriver() instanceof BrowserKitDriver) {
       // Work around https://github.com/minkphp/MinkBrowserKitDriver/issues/153.
       // To simulate what the user sees, it removes:
