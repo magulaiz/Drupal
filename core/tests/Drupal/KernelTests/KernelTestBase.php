@@ -278,6 +278,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->databasePrefix = $test_db->getDatabasePrefix();
     drupal_valid_test_ua($this->databasePrefix);
 
+    $existingSettings = [];
+    try {
+      Settings::getInstance();
+      $existingSettings = Settings::getAll();
+    }
+    catch (\BadMethodCallException $e) {
+      // No settings overrides.
+    }
     $settings = [
       'hash_salt' => static::class,
       'file_public_path' => $this->siteDirectory . '/files',
@@ -285,7 +293,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       'twig_cache' => FALSE,
       // @see \Drupal\KernelTests\KernelTestBase::register()
     ];
-    new Settings($settings);
+    new Settings($existingSettings + $settings);
 
     $this->setUpFilesystem();
 
