@@ -109,7 +109,7 @@ abstract class Query implements PlaceholderInterface {
    * @return \Drupal\Core\Database\StatementInterface|null
    *   A prepared statement, or NULL if the query is not valid.
    *
-   * @deprecated in drupal:9.3.0 and will be removed from drupal:10.0.0.
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
    *  No replacement is provided. Just implement normally in the child class.
    *
    * @see https://www.drupal.org/node/3247516
