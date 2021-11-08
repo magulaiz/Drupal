@@ -95,7 +95,13 @@ class MediaTranslationTest extends MediaKernelTestBase {
     $translation->set($source_field_name, $translated_image->id());
     $translation->setName('Capricious and arbitrary');
     $translation->save();
-    // The arbitrary title should be preserved.
+    // Change of source will override mapped field.
+    $this->assertSame('image-1.png', $translation->getName());
+
+    // The arbitrary title should be preserved when saved without changing the
+    // source.
+    $translation->setName('Capricious and arbitrary');
+    $translation->save();
     $this->assertSame('Capricious and arbitrary', $translation->getName());
 
     // The original version should be unaffected by Dutch shenanigans.

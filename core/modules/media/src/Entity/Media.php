@@ -367,10 +367,12 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         ->getStorage('media')
         ->loadUnchanged($id);
     }
+    $original = $this->original;
 
     $media_source = $this->getSource();
     foreach ($this->translations as $langcode => $data) {
       if ($this->hasTranslation($langcode)) {
+        $this->original = ($original && $original->hasTranslation($langcode)) ? $original->getTranslation($langcode) : $original;
         $translation = $this->getTranslation($langcode);
         // Try to set fields provided by the media source and mapped in
         // media type config.
@@ -393,6 +395,7 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         }
       }
     }
+    $this->original = $original;
   }
 
   /**
