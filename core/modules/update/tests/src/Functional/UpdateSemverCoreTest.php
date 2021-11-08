@@ -344,6 +344,10 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
    * Checks the messages at admin/modules when an update is missing.
    */
   public function testModulePageRegularUpdate() {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer site configuration',
+      'administer modules',
+    ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
     $this->config('update.settings')
