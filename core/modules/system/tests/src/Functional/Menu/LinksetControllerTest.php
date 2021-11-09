@@ -206,8 +206,8 @@ final class LinksetControllerTest extends BrowserTestBase {
       'user.permissions',
     ]);
     $expected_cacheability->addCacheTags([
-      'config:user.role.anonymous',
       'config:system.menu.main',
+      'config:user.role.anonymous',
       'http_response',
       'node:1',
       'node:2',
@@ -247,12 +247,12 @@ final class LinksetControllerTest extends BrowserTestBase {
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts(['user.permissions']);
     $expected_cacheability->addCacheTags([
+      'config:system.menu.main',
+      'config:user.role.anonymous',
+      'http_response',
       'node:1',
       'node:2',
       'node:3',
-      'config:user.role.anonymous',
-      'config:system.menu.main',
-      'http_response',
     ]);
     // Warm the cache, then get a response and ensure it was warmed.
     $this->doRequest(Request::create('/system/menu/main/linkset'));
@@ -306,8 +306,8 @@ final class LinksetControllerTest extends BrowserTestBase {
       'user.roles:authenticated',
     ]);
     $expected_cacheability->addCacheTags([
-      'config:user.role.anonymous',
       'config:system.menu.account',
+      'config:user.role.anonymous',
       'http_response',
     ]);
     $response = $this->doRequest(Request::create('/system/menu/account/linkset'));
