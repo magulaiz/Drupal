@@ -88,9 +88,6 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
         ],
       ],
     ])->save();
-
-//    $this->entityTypeManager->clearCachedDefinitions();
-//    $this->container->get('typed_data_manager')->clearCachedDefinitions();
   }
 
   /**
@@ -183,7 +180,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
    *
    * @covers ::validate
    */
-  public function testEntityreferenceValidation() {
+  public function testEntityReferenceValidation() {
     $entity_target = $this->entityStorage->create(['name' => $this->randomMachineName()]);
     $entity_target->save();
 
