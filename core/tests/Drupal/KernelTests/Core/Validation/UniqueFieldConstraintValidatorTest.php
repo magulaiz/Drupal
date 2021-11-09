@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\KernelTests\Core\TypedData;
+namespace Drupal\KernelTests\Core\Validation;
 
 use Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldConstraint;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
@@ -15,7 +15,7 @@ use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
  * @coversDefaultClass \Drupal\Core\Validation\Plugin\Validation\Constraint\UniqueFieldValueValidator
  * @group Validation
  */
-class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
+class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -89,8 +89,8 @@ class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
       ],
     ])->save();
 
-    $this->entityTypeManager->clearCachedDefinitions();
-    $this->container->get('typed_data_manager')->clearCachedDefinitions();
+//    $this->entityTypeManager->clearCachedDefinitions();
+//    $this->container->get('typed_data_manager')->clearCachedDefinitions();
   }
 
   /**
@@ -123,10 +123,6 @@ class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
    * @dataProvider validationDataProvider
    */
   public function testValidation($fieldType, $fieldValue) {
-    /**
-     * @var \Symfony\Component\Validator\ConstraintViolationList $violations
-     * @var \Symfony\Component\Validator\ConstraintViolation $violation
-     */
 
     $fieldName = 'field_' . $fieldType;
 
@@ -135,9 +131,11 @@ class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
     $entity_1->{$fieldName}->getFieldDefinition()->addConstraint('UniqueField');
 
     $entity_1->{$fieldName} = $fieldValue;
+
+    /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
     $violations = $entity_1->validate();
 
-    $this->assertEquals(0, $violations->count(), 'No validation violations.');
+    $this->assertCount(0, $violations, 'No validation violations.');
     $entity_1->save();
 
     $entity_2 = $this->entityStorage->create(['name' => $this->randomMachineName()]);
@@ -151,8 +149,9 @@ class UniqueFieldValueValidatorTest extends EntityKernelTestBase {
     $violations = $entity_2->validate();
     $this->assertEquals(1, $violations->count(), 'One validation violation.');
 
-    // Make sure the information provided by a violation is correct.
+    /** @var \Symfony\Component\Validator\ConstraintViolation $violation */
     $violation = $violations->get(0);
+    // Make sure the information provided by a violation is correct.
     $this->assertEquals($this->msgTpl, $violation->getMessageTemplate(), 'Proper violation message provided.');
   }
 
