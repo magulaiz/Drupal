@@ -29,8 +29,9 @@ class BlockTest extends BlockTestBase {
     $title = $this->randomMachineName(8);
     // Enable a standard block.
     $default_theme = $this->config('system.theme')->get('default');
+    $block_id = strtolower($this->randomMachineName(8));
     $edit = [
-      'id' => strtolower($this->randomMachineName(8)),
+      'id' => $block_id,
       'region' => 'sidebar_first',
       'settings[label]' => $title,
       'settings[label_display]' => TRUE,
@@ -38,16 +39,16 @@ class BlockTest extends BlockTestBase {
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
     $edit['visibility[request_path][pages]'] = '/user*';
-    $edit['visibility[request_path][negate]'] = TRUE;
+    $edit['visibility[request_path][page_options]'] = 'hide_on_pages';
     $edit['visibility[user_role][roles][' . RoleInterface::AUTHENTICATED_ID . ']'] = TRUE;
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
-    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-page-options-all-pages');
 
     $this->submitForm($edit, 'Save block');
     $this->assertSession()->pageTextContains('The block configuration has been saved.');
 
     $this->clickLink('Configure');
-    $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
+    $this->assertSession()->checkboxChecked('edit-visibility-request-path-page-options-hide-on-pages');
 
     // Confirm that the block is displayed on the front page.
     $this->drupalGet('');
@@ -66,6 +67,48 @@ class BlockTest extends BlockTestBase {
     // Confirm that an empty block is not displayed.
     $this->assertSession()->pageTextNotContains('Powered by Drupal');
     $this->assertSession()->responseNotContains('sidebar-first');
+
+    $this->drupalLogin($this->adminUser);
+    $edit = [];
+    $edit['visibility[request_path][page_options]'] = 'all_pages';
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->submitForm($edit, 'Save block');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+
+    // Confirm that the block is displayed on the front and user page.
+    $this->drupalGet('');
+    $this->assertSession()->pageTextContains($title);
+    $this->drupalGet('user');
+    $this->assertSession()->pageTextContains($title);
+
+    $edit['visibility[request_path][page_options]'] = 'specific_pages';
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->submitForm($edit, 'Save block');
+    $this->assertSession()->pageTextContains('Specify at least one page.');
+    $edit['visibility[request_path][page_options]'] = 'specific_pages';
+    $edit['visibility[request_path][pages]'] = '/user*';
+    $this->submitForm($edit, 'Save block');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+
+    // Confirm that the block is NOT displayed on the front page.
+    $this->drupalGet('');
+    $this->assertSession()->pageTextNotContains($title);
+    // Confirm that the block is displayed on the user page.
+    $this->drupalGet('user');
+    $this->assertSession()->pageTextContains($title);
+
+    $edit['visibility[request_path][page_options]'] = 'hide_on_pages';
+    $edit['visibility[request_path][pages]'] = '/user*';
+    $this->drupalGet('admin/structure/block/manage/' . $block_id);
+    $this->submitForm($edit, 'Save block');
+    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+
+    // Confirm that the block is displayed on the front page.
+    $this->drupalGet('');
+    $this->assertSession()->pageTextContains($title);
+    // Confirm that the block is NOT displayed on the user page.
+    $this->drupalGet('user');
+    $this->assertSession()->pageTextNotContains($title);
   }
 
   /**
@@ -118,14 +161,16 @@ class BlockTest extends BlockTestBase {
       'id' => strtolower($this->randomMachineName(8)),
       'region' => 'sidebar_first',
       'settings[label]' => $title,
-      'visibility[request_path][negate]' => TRUE,
+      'visibility[request_path][page_options]' => 'hide_on_pages',
     ];
-    // Set the block to be hidden on any user path, and to be shown only to
-    // authenticated users.
+    // Test that the form won't be submitted.
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->pageTextContains('The block configuration has been saved.');
+    $this->assertSession()->pageTextContains('Specify at least one page.');
 
+    // Set pages to all pages.
+    $edit['visibility[request_path][pages]'] = '/*';
+    $this->submitForm($edit, 'Save block');
     // Confirm that block was not displayed according to block visibility
     // rules.
     $this->drupalGet('user');
