@@ -144,7 +144,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertEquals($entity_2->{$fieldName}->value, $entity_1->{$fieldName}->value, 'Field values are equal');
 
     $violations = $entity_2->validate();
-    $this->assertEquals(1, $violations->count(), 'One validation violation.');
+    $this->assertCount(1, $violations, 'One validation violation.');
 
     /** @var \Symfony\Component\Validator\ConstraintViolation $violation */
     $violation = $violations->get(0);
@@ -190,7 +190,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
 
     $entity_1->field_entity_reference = $entity_target;
     $violations = $entity_1->validate();
-    $this->assertEquals(0, $violations->count(), 'No validation violations.');
+    $this->assertCount(0, $violations, 'No validation violations.');
     $entity_1->save();
 
     $entity_2 = $this->entityStorage->create(['name' => $this->randomMachineName()]);
@@ -202,7 +202,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertEquals($entity_2->field_entity_reference->value, $entity_1->field_entity_reference->value, 'Field values are equal');
 
     $violations = $entity_2->validate();
-    $this->assertEquals(1, $violations->count(), 'One validation violation.');
+    $this->assertCount(1, $violations, 'One validation violation.');
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations->get(0);
@@ -225,7 +225,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
     $entity_1->{$fieldName} = $fieldValue;
     $violations = $entity_1->validate();
 
-    $this->assertEquals(0, $violations->count(), 'No validation violations.');
+    $this->assertCount(0, $violations, 'No validation violations.');
     $entity_1->save();
 
     $entity_2 = $this->entityStorage->create(['name' => $this->randomMachineName()]);
@@ -237,7 +237,7 @@ class UniqueFieldConstraintValidatorTest extends EntityKernelTestBase {
     $this->assertEquals($entity_2->{$fieldName}->value, $entity_1->{$fieldName}->value, 'Field values are equal');
 
     $violations = $entity_2->validate();
-    $this->assertEquals(1, $violations->count(), 'One validation violation.');
+    $this->assertCount(1, $violations, 'One validation violation.');
 
     // Make sure the information provided by a violation is correct.
     $violation = $violations->get(0);
