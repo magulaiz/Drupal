@@ -21,7 +21,7 @@ namespace Drupal\Core\Database;
  *
  * @see https://www.drupal.org/node/3177488
  */
-class Statement extends \PDOStatement implements StatementInterface {
+class Statement extends \PDOStatement {
 
   /**
    * Reference to the database connection object for this statement.
@@ -181,7 +181,7 @@ class Statement extends \PDOStatement implements StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
+  public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, $column_index = NULL, $constructor_arguments = NULL) {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
