@@ -82,4 +82,4 @@ parametersSchema:
 
 services:
   -
-    class: PHPStan\Drupal\ServiceMap
+    class: mglaman\PHPStanDrupal\Drupal\ServiceMap
