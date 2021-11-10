@@ -185,16 +185,15 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       // we must move these properties from $content and merge them into the
       // top-level element.
 
-      $build += [
-        '#contextual_links' => [],
-        '#attributes' => [],
-      ];
-      $build['#contextual_links'] += $content['#contextual_links'] ?? [];
-      // Merge attributes when there is no top level element.
-      if (!isset($content['#type']) && !isset($content['#theme'])) {
-        $build['#attributes'] += $content['#attributes'] ?? [];
+      if (isset($content['#contextual_links'])) {
+        $build['#contextual_links'] += $content['#contextual_links'];
+        unset($content['#contextual_links']);
       }
-      unset($content['#contextual_links'], $content['#attributes']);
+      if (!isset($content['#type']) && !isset($content['#theme']) && isset($content['#attributes'])) {
+        $build['#attributes'] += $content['#attributes'];
+        unset($content['#attributes']);
+      }
+      $build['content'] = $content;
     }
     // Either the block's content is completely empty, or it consists only of
     // cacheability metadata.
