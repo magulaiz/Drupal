@@ -67,7 +67,8 @@ abstract class LayoutRebuildConfirmFormBase extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return $this->sectionStorage->getLayoutBuilderUrl();
+    $url = $this->sectionStorage->getLayoutBuilderUrl();
+    return $url->mergeOptions($this->getOverviewOptions());
   }
 
   /**

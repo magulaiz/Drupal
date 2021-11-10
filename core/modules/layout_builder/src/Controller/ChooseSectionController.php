@@ -24,6 +24,7 @@ class ChooseSectionController implements ContainerInjectionInterface {
   use AjaxHelperTrait;
   use LayoutBuilderContextTrait;
   use LayoutBuilderHighlightTrait;
+  use LayoutRebuildTrait;
   use StringTranslationTrait;
 
   /**
@@ -84,7 +85,8 @@ class ChooseSectionController implements ContainerInjectionInterface {
             'section_storage' => $section_storage->getStorageId(),
             'delta' => $delta,
             'plugin_id' => $plugin_id,
-          ]
+          ],
+          $this->getOverviewOptions()
         ),
       ];
       if ($this->isAjax()) {
