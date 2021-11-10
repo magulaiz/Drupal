@@ -10,7 +10,9 @@ build:
       # Core's code quality is checked by container_command.commit_checks.
       # For testing only, run PHPStan across the entire codebase.
       container_command:
-        commands: "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
+        commands:
+          - "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze --generate-baseline"
+          - "cat phpstan-baseline.neon"
         halt-on-fail: true
     testing:
       # Run code quality checks.
