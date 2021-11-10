@@ -12,7 +12,7 @@ build:
       container_command:
         commands:
           - "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze --generate-baseline"
-          - "cat phpstan-baseline.neon"
+          - "cat ${SOURCE_DIR}/phpstan-baseline.neon"
         halt-on-fail: true
     testing:
       # Run code quality checks.
