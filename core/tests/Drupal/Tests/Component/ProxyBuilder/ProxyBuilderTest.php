@@ -444,7 +444,7 @@ class TestServiceComplexMethod {
 class TestServiceNullableTypehintSelf {
 
   public function typehintSelf(?self $parameter): ?self {
-    return null;
+    return NULL;
   }
 
 }
