@@ -180,15 +180,21 @@ class BlockViewBuilder extends EntityViewBuilder implements TrustedCallbackInter
       // alternate block rendering approaches in contrib (for instance, Panels).
       // However, the use of a child element is an implementation detail of this
       // particular block rendering approach. Semantically, the content returned
-      // by the plugin "is the" block, and in particular, #contextual_links is
-      // information about the *entire* block. To set block attributes block
-      // plugins can use #wrapper_attributes. Therefore, we must move these
-      // properties from $content and merge them into the top-level element.
+      // by the plugin "is the" block, and in particular, #attributes and
+      // #contextual_links is information about the *entire* block. Therefore,
+      // we must move these properties from $content and merge them into the
+      // top-level element.
 
+      $build += [
+        '#contextual_links' => [],
+        '#attributes' => [],
+      ];
       $build['#contextual_links'] += $content['#contextual_links'] ?? [];
-      $build['#attributes'] += $content['#wrapper_attributes'] ?? [];
-      unset($content['#contextual_links'], $content['#wrapper_attributes']);
-      $build['content'] = $content;
+      // Merge attributes when there is no top level element.
+      if (!isset($content['#type']) && !isset($content['#theme'])) {
+        $build['#attributes'] += $content['#attributes'] ?? [];
+      }
+      unset($content['#contextual_links'], $content['#attributes']);
     }
     // Either the block's content is completely empty, or it consists only of
     // cacheability metadata.

@@ -170,8 +170,5 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
     return;
   }
 
-  // Blocks are special here, as they "wrap" their content.
-  $entity_type_id = $entity->getEntityTypeId();
-  $property = $entity_type_id === 'block' || $entity_type_id === 'block_content' ? '#wrapper_attributes' : '#attributes';
-  $build[$property]['data-quickedit-entity-id'] = $entity_type_id . '/' . $entity->id();
+  $build['#attributes']['data-quickedit-entity-id'] = $entity->getEntityTypeId() . '/' . $entity->id();
 }
