@@ -17,7 +17,7 @@ parameters:
   paths:
     - .
     - ../composer
-  excludes_analyse:
+  excludePaths:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
     - 'modules/migrate_drupal/tests/fixtures/*.php'
