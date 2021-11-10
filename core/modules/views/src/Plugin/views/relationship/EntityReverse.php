@@ -69,8 +69,8 @@ class EntityReverse extends RelationshipPluginBase {
       $first['extra'] = $this->definition['join_extra'];
     }
 
-    if (!empty($this->definition['join_id'])) {
-      $id = $this->definition['join_id'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
       $id = 'standard';
@@ -93,8 +93,8 @@ class EntityReverse extends RelationshipPluginBase {
       $second['type'] = 'INNER';
     }
 
-    if (!empty($this->definition['join_id'])) {
-      $id = $this->definition['join_id'];
+    if (!empty($def['join_id'])) {
+      $id = $def['join_id'];
     }
     else {
       $id = 'standard';
