@@ -51,7 +51,9 @@ class MimeTypePassTest extends UnitTestCase {
 
 class NewMimeTypeGuesser implements MimeTypeGuesserInterface {
 
-  public function guessMimeType(string $string): string {}
+  public function guessMimeType(string $string): string {
+    return '';
+  }
 
   public function isGuesserSupported(): bool {
     return TRUE;

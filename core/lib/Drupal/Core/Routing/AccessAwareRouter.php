@@ -130,6 +130,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
     if ($this->router instanceof RouterInterface) {
       return $this->router->getRouteCollection();
     }
+    throw new \RuntimeException('Invalid router');
   }
 
   /**
@@ -139,6 +140,7 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
     if ($this->router instanceof UrlGeneratorInterface) {
       return $this->router->generate($name, $parameters, $referenceType);
     }
+    throw new \RuntimeException('Invalid router');
   }
 
   /**
