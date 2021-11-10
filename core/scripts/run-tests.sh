@@ -480,7 +480,7 @@ function simpletest_script_init() {
   // using the presence of 'drupalci' in the sqlite argument.
   // @todo https://www.drupal.org/project/drupalci_testbot/issues/2860941 Use
   //   better environment variable to detect DrupalCI.
-  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'])) {
+  if (!$args['execute-test'] && preg_match('/drupalci/', $args['sqlite'] ?? '')) {
     // Update PHPUnit if needed and possible. There is a later check once the
     // autoloader is in place to ensure we're on the correct version. We need to
     // do this before the autoloader is in place to ensure that it is correct.
@@ -644,9 +644,7 @@ function simpletest_script_setup_database($new = FALSE) {
     $databases['test-runner']['default'] = [
       'driver' => 'sqlite',
       'database' => $sqlite,
-      'prefix' => [
-        'default' => '',
-      ],
+      'prefix' => '',
     ];
     // Create the test runner SQLite database, unless it exists already.
     if ($new && !file_exists($sqlite)) {
@@ -1313,7 +1311,7 @@ function simpletest_script_reporter_write_xml_results() {
 function simpletest_script_reporter_timer_stop() {
   echo "\n";
   $end = Timer::stop('run-tests');
-  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval($end['time'] / 1000);
+  echo "Test run duration: " . \Drupal::service('date.formatter')->formatInterval((int) ($end['time'] / 1000));
   echo "\n\n";
 }
 
