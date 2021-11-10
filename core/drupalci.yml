@@ -11,9 +11,8 @@ build:
       # For testing only, run PHPStan across the entire codebase.
       container_command:
         commands:
-          - "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze --generate-baseline"
-          - "cat ${SOURCE_DIR}/core/phpstan-baseline.neon"
-        halt-on-fail: true
+          - "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
+        halt-on-fail: false
     testing:
       # Run code quality checks.
       container_command.commit-checks:
