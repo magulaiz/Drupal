@@ -181,7 +181,7 @@ class Statement extends \PDOStatement {
   /**
    * {@inheritdoc}
    */
-  public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, $column_index = NULL, $constructor_arguments = NULL) {
+  public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, mixed ...$args) {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
@@ -193,11 +193,11 @@ class Statement extends \PDOStatement {
         return parent::fetchAll($mode);
 
       case 2:
-        return parent::fetchAll($mode, $column_index);
+        return parent::fetchAll($mode, $args[0]);
 
       case 3:
       default:
-        return parent::fetchAll($mode, $column_index, $constructor_arguments);
+        return parent::fetchAll($mode, $args[0], $args[1]);
     }
   }
 
