@@ -411,7 +411,6 @@ drupal.states:
 drupal.string.includes:
   version: VERSION
   js:
-    # @todo add nomodule if https://drupal.org/node/3181050 has landed.
     misc/polyfills/string.includes.js: { weight: -20 }
 
 drupal.tabbingmanager:

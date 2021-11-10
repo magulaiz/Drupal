@@ -13,12 +13,8 @@ if (!String.prototype.includes) {
       throw TypeError('first argument must not be a RegExp');
     }
 
-    if (typeof start !== 'number') {
+    if (start === undefined) {
       start = 0;
-    }
-
-    if (start + search.length > this.length) {
-      return false;
     }
 
     return this.indexOf(search, start) !== -1;
