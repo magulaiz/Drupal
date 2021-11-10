@@ -35,8 +35,11 @@
       instance.listboxWrapper = document.querySelector("#".concat(listBoxId));
     }
 
-    instance._renderItem = function (ul, item, index) {
-      var li = instance.suggestionItem("<a>".concat(instance.options.templates.suggestion(item), "</a>"), index);
+    instance._renderItem = function (ul, item) {
+      var li = instance.suggestionItem({
+        label: "<a>".concat(item.label, "</a>"),
+        index: instance.jQuerySuggestionCounter
+      });
       return $(li).appendTo(ul);
     };
 

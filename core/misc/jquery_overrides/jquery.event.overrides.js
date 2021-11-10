@@ -32,6 +32,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     return null;
   };
 
+  var normalizeItem = function normalizeItem(item) {
+    if (typeof item === 'string') {
+      return {
+        label: item,
+        value: item
+      };
+    }
+
+    item.label = item.label || item.value || item;
+    item.value = item.value || item.label || item;
+    return item;
+  };
+
   var processAutocompleteEvents = function processAutocompleteEvents(types, selector, data, fn, one, that) {
     var eventsToAddListenersTo = {};
     var autocompleteEvents = {
@@ -79,20 +92,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           var ui = {};
 
           if (eventName === 'autocompleteresponse') {
+            e.detail.list.forEach(function (item, index) {
+              e.detail.list[index] = normalizeItem(item);
+            });
             ui.content = e.detail.list;
           }
 
           if (eventName === 'autocompletechange') {
             e.originalEvent = $.Event('blur');
+            instance.selected = instance.selected ? normalizeItem(instance.selected) : instance.selected;
             ui.item = instance.selected;
           }
 
           if (eventName === 'autocompletefocus') {
+            e.detail.selected = normalizeItem(e.detail.selected);
             ui.item = e.detail.selected;
             e.originalEvent = $.Event('menufocus');
           }
 
           if (eventName === 'autocompleteselect') {
+            e.detail.selected = normalizeItem(e.detail.selected);
             ui.item = e.detail.selected;
             e.originalEvent = $.Event('menuselect');
           }
