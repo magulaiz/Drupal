@@ -45,7 +45,8 @@
          */
         const toggleBlockEntry = (index, li) => {
           const $li = $(li);
-          const textMatch = $li.find('a').text().toLowerCase().indexOf(query) !== -1;
+          const textMatch =
+            $li.find('a').text().toLowerCase().indexOf(query) !== -1;
           $li.toggle(textMatch);
         };
 
@@ -63,9 +64,7 @@
 
           // Only display categories containing visible links.
           $categories
-            .find(
-              '.js-layout-builder-category:not(:has(li:visible))',
-            )
+            .find('.js-layout-builder-category:not(:has(li:visible))')
             .hide();
 
           announce(
