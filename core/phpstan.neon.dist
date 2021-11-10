@@ -33,7 +33,7 @@ parameters:
     - 'modules/migrate_drupal/tests/fixtures/*.php'
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
-		- '../sites/simpletest/*.php'
+    - '../sites/simpletest/*.php'
 
   reportUnmatchedIgnoredErrors: false
 
