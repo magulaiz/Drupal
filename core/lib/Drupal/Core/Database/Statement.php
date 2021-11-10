@@ -161,7 +161,7 @@ class Statement extends \PDOStatement {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+  public function setFetchMode(int $mode, mixed ...$args) {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
@@ -170,11 +170,11 @@ class Statement extends \PDOStatement {
         return parent::setFetchMode($mode);
 
       case 2:
-        return parent::setFetchMode($mode, $a1);
+        return parent::setFetchMode($mode, $args[0]);
 
       case 3:
       default:
-        return parent::setFetchMode($mode, $a1, $a2);
+        return parent::setFetchMode($mode, $args[0], $args[1] ?? []);
     }
   }
 
