@@ -67,11 +67,11 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItem = function (ul, item) {
-      const li = instance.suggestionItem({
-        label: `<a>${item.label}</a>`,
-        index: instance.jQuerySuggestionCounter,
-      });
+    instance._renderItem = function (ul, item, index) {
+      const li = instance.suggestionItem(
+        `<a>${instance.options.templates.suggestion(item)}</a>`,
+        index,
+      );
       return $(li).appendTo(ul);
     };
 

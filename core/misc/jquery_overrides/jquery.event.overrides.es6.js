@@ -38,24 +38,6 @@
   };
 
   /**
-   * Replicate jQuery UI autocomplete normalization.
-   *
-   * @param {object|string} item
-   *  The suggestion object.
-   * @return {{label: string, value: string}}
-   *  The normalized suggestion.
-   */
-  const normalizeItem = (item) => {
-    if (typeof item === 'string') {
-      return { label: item, value: item };
-    }
-    item.label = item.label || item.value || item;
-    item.value = item.value || item.label || item;
-    // Return the original item to allow modifications to propagate.
-    return item;
-  };
-
-  /**
    * Autocomplete-specific logic used by the jQuery `on()` override.
    *
    * This is performed in a separate function so the `on()` override can better
@@ -138,27 +120,18 @@
           // @todo, how much of originalEvent needs to be backwards compatible?
           const ui = {};
           if (eventName === 'autocompleteresponse') {
-            // We need to keep the reference of the original array, do not
-            // create a new one with .map(), normalize items in place.
-            const list = e.detail.list;
-            for (let i = 0; i < list.length; i++) {
-              e.detail.list[i] = normalizeItem(list[i]);
-            }
             ui.content = e.detail.list;
           }
           if (eventName === 'autocompletechange') {
             e.originalEvent = $.Event('blur');
-            // Do not normalize falsy values.
-            ui.item = instance.selected
-              ? normalizeItem(instance.selected)
-              : instance.selected;
+            ui.item = instance.selected;
           }
           if (eventName === 'autocompletefocus') {
-            ui.item = normalizeItem(e.detail.selected);
+            ui.item = e.detail.selected;
             e.originalEvent = $.Event('menufocus');
           }
           if (eventName === 'autocompleteselect') {
-            ui.item = normalizeItem(e.detail.selected);
+            ui.item = e.detail.selected;
             e.originalEvent = $.Event('menuselect');
           }
           if (eventName === 'autocompleteclose') {
