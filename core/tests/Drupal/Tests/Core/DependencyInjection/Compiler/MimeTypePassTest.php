@@ -53,7 +53,9 @@ class NewMimeTypeGuesser implements MimeTypeGuesserInterface {
 
   public function guessMimeType(string $string): string {}
 
-  public function isGuesserSupported(): bool {}
+  public function isGuesserSupported(): bool {
+    return TRUE;
+  }
 
 }
 
