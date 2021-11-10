@@ -72,6 +72,19 @@
       attributesToOptions,
     );
 
+    /**
+     * This function is used after the library normalization.
+     *
+     * @param {object|string} item
+     * @return {{label: string, value: string}}
+     */
+    const jQueryUIAutocompleteNormalizeItem = ({ label, value, item }) => {
+      if (typeof item === 'string') {
+        return { label, value };
+      }
+      return { ...item, label, value };
+    };
+
     // Apply class changes.
     instance.applyClasses('input');
     instance.applyClasses('listbox');
@@ -199,27 +212,19 @@
      * changed at the end to be compatible with jQuery UI extension points.
      *
      * @param {string[]|object.<string, string[]>} suggestionItems
-     *   The typed value querying autocomplete.
+     *   The list of normalized results to display.
      */
     function jQueryDisplayResults(suggestionItems) {
       this.suggestions = suggestionItems;
       this.listboxWrapper.innerHTML = '';
-      /**
-       * Fires after suggestion items are retrieved, but before they are added to the DOM.
-       *
-       * @event A11yAutocomplete#autocomplete-response
-       * @property {Class} autocomplete - The autocomplete instance.
-       * @property {Object[]} list - an array of suggestions as objects with 'label'
-       *  and 'value' properties.
-       */
-      this.triggerEvent('autocomplete-response', {
-        list: this.suggestions,
-      });
       if (this.suggestions.length) {
         if (this.options.sort !== false) {
           this.suggestions = this.sortSuggestions(this.suggestions);
         }
-        this._renderMenu(this.listboxWrapper, this.suggestions);
+        this._renderMenu(
+          this.listboxWrapper,
+          this.suggestions.map(jQueryUIAutocompleteNormalizeItem),
+        );
       }
       if (
         // Make sure the input is in focus to be able to display the result list.
@@ -256,10 +261,12 @@
      */
     // eslint-disable-next-line func-names
     instance._renderMenu = function (ul, items) {
+      instance.jQuerySuggestionCounter = 0;
       const that = this;
       // eslint-disable-next-line func-names
       $.each(items, function (index, item) {
-        that._renderItemData(ul, item, index);
+        instance.jQuerySuggestionCounter = index;
+        that._renderItemData(ul, item);
       });
     };
 
@@ -277,16 +284,13 @@
      *   Typically a jQuery Object for an `<li>` element.
      */
     // eslint-disable-next-line func-names
-    instance._renderItemData = function (ul, item, index) {
-      return this._renderItem(ul, item, index).data(
-        'ui-autocomplete-item',
-        item,
-      );
+    instance._renderItemData = function (ul, item) {
+      return this._renderItem(ul, item).data('ui-autocomplete-item', item);
     };
 
     const suggestionItem = instance.suggestionItem.bind(instance);
-    instance.suggestionItem = function jQuerySuggestionItem(text, index) {
-      const li = suggestionItem(text, index);
+    instance.suggestionItem = function jQuerySuggestionItem({ label, index }) {
+      const li = suggestionItem({ label, index });
 
       // Everything prior to this is logic that also happens in the
       // A11yAutocomplete suggestionItems() method. Below is logic specific
@@ -317,11 +321,11 @@
        *   Typically a jQuery Object for an `<li>` element.
        */
       // eslint-disable-next-line func-names
-      instance._renderItem = function (ul, item, index) {
-        const li = instance.suggestionItem(
-          instance.options.templates.suggestion(item),
-          index,
-        );
+      instance._renderItem = function (ul, item) {
+        const li = instance.suggestionItem({
+          label: item.label,
+          index: instance.jQuerySuggestionCounter,
+        });
         return $(li).appendTo(ul);
       };
     }
