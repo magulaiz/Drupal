@@ -20,6 +20,7 @@ parameters:
   excludePaths:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
+    - lib/Drupal/Core/Database/Statement.php
     - 'modules/migrate_drupal/tests/fixtures/*.php'
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
