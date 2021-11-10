@@ -1661,7 +1661,7 @@ function _filter_url_trim($text, $length = NULL) {
   }
 
   // Use +3 for '...' string length.
-  if ($_length && strlen($text) > $_length + 3) {
+  if ($_length && strlen((string) $text) > $_length + 3) {
     $text = substr($text, 0, $_length) . '...';
   }
 
