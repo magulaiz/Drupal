@@ -221,7 +221,11 @@
         }
         this._renderMenu(this.listboxWrapper, this.suggestions);
       }
-      if (this.suggestions.length === 0) {
+      if (
+        // Make sure the input is in focus to be able to display the result list.
+        document.activeElement !== this.input ||
+        this.suggestions.length === 0
+      ) {
         this.close();
       } else {
         this.open();

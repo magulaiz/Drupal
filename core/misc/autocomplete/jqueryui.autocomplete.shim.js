@@ -141,7 +141,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         this._renderMenu(this.listboxWrapper, this.suggestions);
       }
 
-      if (this.suggestions.length === 0) {
+      if (document.activeElement !== this.input || this.suggestions.length === 0) {
         this.close();
       } else {
         this.open();
