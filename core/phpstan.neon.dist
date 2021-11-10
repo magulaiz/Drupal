@@ -1,7 +1,12 @@
 # Configuration file for PHPStan static code checking, see https://phpstan.org .
 # PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+	- phpstan-baseline.neon
+
 parameters:
+
   level: 0
+
   fileExtensions:
     - engine
     - inc
@@ -10,13 +15,17 @@ parameters:
     - php
     - profile
     - theme
+
   bootstrapFiles:
     - ../vendor/mglaman/phpstan-drupal/drupal-autoloader.php
+
   drupal:
     drupal_root: '%currentWorkingDirectory%'
+
   paths:
     - .
     - ../composer
+
   excludePaths:
     - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
@@ -24,7 +33,9 @@ parameters:
     - 'modules/migrate_drupal/tests/fixtures/*.php'
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
+
   reportUnmatchedIgnoredErrors: false
+
   ignoreErrors:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static#"

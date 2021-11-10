@@ -1,0 +1,291 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Class Symfony\\\\Component\\\\HttpFoundation\\\\InputBag not found\\.$#"
+			count: 1
+			path: includes/bootstrap.inc
+
+		-
+			message: "#^Undefined variable\\: \\$base$#"
+			count: 1
+			path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+
+		-
+			message: "#^Undefined variable\\: \\$overrides$#"
+			count: 1
+			path: lib/Drupal/Component/Transliteration/PhpTransliteration.php
+
+		-
+			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 3
+			path: lib/Drupal/Core/Action/ActionManager.php
+
+		-
+			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Action/ActionManager.php
+
+		-
+			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 2
+			path: lib/Drupal/Core/Block/BlockManager.php
+
+		-
+			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Block/BlockManager.php
+
+		-
+			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 3
+			path: lib/Drupal/Core/Condition/ConditionManager.php
+
+		-
+			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Condition/ConditionManager.php
+
+		-
+			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 3
+			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
+
+		-
+			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Field/FieldTypePluginManager.php
+
+		-
+			message: "#^Call to an undefined static method Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\:\\:getMainRequest\\(\\)\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Http/RequestStack.php
+
+		-
+			message: "#^Class Symfony\\\\Component\\\\HttpFoundation\\\\InputBag not found\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Http/TrustedHostsRequestFactory.php
+
+		-
+			message: "#^Function twig_escape_filter not found\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Template/TwigExtension.php
+
+		-
+			message: "#^Class Drupal\\\\simpletest\\\\TestBase not found\\.$#"
+			count: 1
+			path: lib/Drupal/Core/Test/RunTests/TestFileParser.php
+
+		-
+			message: "#^Undefined variable\\: \\$info$#"
+			count: 1
+			path: modules/color/color.module
+
+		-
+			message: "#^Access to constant DEFAULT_COLLECTION on an unknown class Drupal\\\\config_override_test\\\\StorageInterface\\.$#"
+			count: 1
+			path: modules/config/tests/config_override_test/src/ConfigOverrider.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
+
+		-
+			message: "#^Function uploadprogress_get_info not found\\.$#"
+			count: 1
+			path: modules/file/src/Controller/FileWidgetAjaxController.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonCookieTest.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonTestBase\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonTestBase.php
+
+		-
+			message: "#^Call to an undefined static method static\\(Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\)\\:\\:migrateDumpAlter\\(\\)\\.$#"
+			count: 1
+			path: modules/migrate/tests/src/Kernel/MigrateTestBase.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/CommentAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/CommentAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/EntityReferenceFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/EntityReferenceFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/FileFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/FileFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/ImageFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/ImageFieldAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/NodeAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/NodeAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/StandardProfileTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/StandardProfileTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/TaxonomyAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/TaxonomyAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/UserAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Functional/UserAttributesTest.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Kernel/Field/FieldRdfaTestBase.php
+
+		-
+			message: "#^Instantiated class EasyRdf_Parser_Rdfa not found\\.$#"
+			count: 1
+			path: modules/rdf/tests/src/Kernel/Field/FieldRdfaTestBase.php
+
+		-
+			message: "#^Class Drupal\\\\block\\\\Entity\\\\Block referenced with incorrect case\\: Drupal\\\\block\\\\entity\\\\Block\\.$#"
+			count: 2
+			path: modules/settings_tray/settings_tray.module
+
+		-
+			message: "#^Result of function usleep \\(void\\) is used\\.$#"
+			count: 1
+			path: modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php
+
+		-
+			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
+			count: 1
+			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\user\\\\Functional\\\\RestRegisterUserTest\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/user/tests/src/Functional/RestRegisterUserTest.php
+
+		-
+			message: "#^Undefined variable\\: \\$arg$#"
+			count: 1
+			path: modules/views/src/Plugin/views/argument_validator/None.php
+
+		-
+			message: "#^Undefined variable\\: \\$def$#"
+			count: 2
+			path: modules/views/src/Plugin/views/relationship/EntityReverse.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'ClassWithConstants\\.SOME_KEY' \\(\\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY, \\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\False not found\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Null not found\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\True not found\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
+
+		-
+			message: "#^Function container_test_file_service_test_service_function not found\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Component/DependencyInjection/ContainerTest.php
+
+		-
+			message: "#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Composer/ComposerTest.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\Core\\\\Database\\\\Driver not found\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Database/ConnectionTest.php
+
+		-
+			message: "#^Array has 2 duplicate keys with value 'default' \\('default', 'default'\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Mail/MailManagerTest.php
+
+		-
+			message: "#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 3
+			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
+
+		-
+			message: "#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php
+
+		-
+			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\ErrorHandler\\:\\:handleError\\(\\)\\.$#"
+			count: 1
+			path: tests/Drupal/Tests/Listeners/DrupalListener.php
