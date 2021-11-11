@@ -5453,16 +5453,16 @@
         },
         {
             "name": "mglaman/phpstan-drupal",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mglaman/phpstan-drupal.git",
-                "reference": "ffdf3686f3cc3d8c3b3cfece7896dfc5e77d9e51"
+                "reference": "d66a20f0a3ba7ca855cb41446b24a1072753ed88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/ffdf3686f3cc3d8c3b3cfece7896dfc5e77d9e51",
-                "reference": "ffdf3686f3cc3d8c3b3cfece7896dfc5e77d9e51",
+                "url": "https://api.github.com/repos/mglaman/phpstan-drupal/zipball/d66a20f0a3ba7ca855cb41446b24a1072753ed88",
+                "reference": "d66a20f0a3ba7ca855cb41446b24a1072753ed88",
                 "shasum": ""
             },
             "require": {
@@ -5534,7 +5534,7 @@
             "description": "Drupal extension and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/mglaman/phpstan-drupal/issues",
-                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.0.0"
+                "source": "https://github.com/mglaman/phpstan-drupal/tree/1.0.1"
             },
             "funding": [
                 {
@@ -5550,7 +5550,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-01T15:20:04+00:00"
+            "time": "2021-11-10T22:05:42+00:00"
         },
         {
             "name": "mikey179/vfsstream",
