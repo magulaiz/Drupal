@@ -31,17 +31,15 @@ trait StorageCopyTrait {
       $target_collection = $target->createCollection($collection);
       $names = $source_collection->listAll();
       // First we delete all the config which shouldn't be in the target.
-      $flipped = array_flip($names);
-      foreach ($target_collection->listAll() as $name) {
-        if (!isset($flipped[$name])) {
-          $target_collection->delete($name);
-        }
+      foreach (array_diff($target_collection->listAll(), $names) as $name) {
+        $target_collection->delete($name);
       }
-      // Then we loop over the
+      // Then we loop over the config which needs to be there.
       foreach ($names as $name) {
         $data = $source_collection->read($name);
         if ($data !== FALSE) {
           if ($target_collection->read($name) !== $data) {
+            // Update the target collection if the data is different.
             $target_collection->write($name, $data);
           }
         }
