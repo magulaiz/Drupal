@@ -16,6 +16,8 @@ parameters:
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
     - '../sites/simpletest/*.php'
+    - tests/Drupal/Tests/Core/Form/FormStateTest.php
+    - lib/Drupal/Core/Extension/ModuleHandler.php
 
   reportUnmatchedIgnoredErrors: false
 
