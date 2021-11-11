@@ -47,8 +47,7 @@
       return this._subtrees;
     },
     set subtrees(value) {
-      console.log('line 50', this.activeTab);
-      console.log('set subtrees value', value);
+      console.log('set subtrees activetab is', this.activeTab);
       this._subtrees = value;
       this.renderMenu();
       this.renderBody();
@@ -79,22 +78,25 @@
       return this._activeTab;
     },
     set activeTab(value) {
-      console.log(value);
+      console.log('activeTab is being set: ', value);
       if (value !== this.activeTab) {
         // Deactivate the previous tab if there was one
-        if (this.activeTab != null) {
-          this.activeTab.classList.remove('is-active');
-          this.activeTab.ariaPressed = false;
+        if (this.activeTab) {
+          const tabElement = document.querySelector(this.activeTab);
+          console.log('tabelement: ', tabElement);
+          tabElement.classList.remove('is-active');
+          tabElement.ariaPressed = false;
         }
         // Deactivate the previous tray if there was one.
-        if (this.activeTray != null) {
-          this.activeTray.classList.remove('is-active');
+        if (this.activeTray) {
+          const trayElement = document.querySelector(this.activeTray);
+          trayElement.classList.remove('is-active');
         }
         this._activeTab = value;
         this.renderToolbar();
         this.updateToolbarHeight();
         // Broadcast model changes to other modules.
-        $(document).trigger('drupalToolbarTabChange', this.tab);
+        $(document).trigger('drupalToolbarTabChange', this.activeTab);
       }
     },
 
@@ -109,6 +111,8 @@
       return this._activeTray;
     },
     set activeTray(value) {
+      console.log('what is activetray before set: ', this.activeTray);
+      console.log('what is the activetray trying to be: ,', value);
       if (value !== this.activeTray) {
         this._activeTray = value;
         this.renderBody();
@@ -280,6 +284,8 @@
 
     onTabClick(e) {
       console.log('vanilla: onTabClick()');
+      e.preventDefault();
+      e.stopPropagation();
       // If this tab has a tray associated with it, it is considered an
       // activatable tab.
       if (e.target.hasAttribute('data-toolbar-tray')) {
@@ -288,16 +294,13 @@
 
         // Set the event target as the active item if it is not already.
         if (!activeTab || clickedTab !== activeTab) {
-          toolbarBehaviors.activeTab = clickedTab;
+          console.log('clickedTAB: ', clickedTab);
+          this.activeTab = clickedTab;
         }
-
-        e.preventDefault();
-        e.stopPropagation();
       }
     },
     renderToolbar() {
       console.log('vanilla: renderToolbar()');
-      console.log('how activetab changes in render: ', this.activeTab);
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -316,10 +319,7 @@
       // @see Drupal.behaviors.toolbar.attach() where admin menu subtrees
       // loading is invoked during initialization after media query conditions
       // have been processed.
-      if (
-        toolbarBehaviors.orientation === 'vertical' ||
-        toolbarBehaviors.activeTab
-      ) {
+      if (this.orientation === 'vertical' || this.activeTab) {
         this.loadSubtrees();
       }
       // might not need to return a toolbarvisualview
@@ -343,20 +343,19 @@
     /**
      * Updates the display of the tabs: toggles a tab and the associated tray.
      */
-    updateTabs() {
+    updateTabs(trayName) {
       console.log('vanilla: updateTabs() in ToolbarVisualView');
-      console.log(toolbarBehaviors.activeTab);
-      const tab = document.getElementById(toolbarBehaviors.activeTab);
+
+      const tab = this.activeTab;
 
       // Activate the selected tab.
-      if (tab) {
-        console.log('line 353', tab, tab.classList);
-        $(tab).addClass('is-active');
+      if (tab.length > 0) {
+        const tabElement = document.querySelector(tab);
+        tabElement.classList.add('is-active');
         // Mark the tab as pressed.
-        tab.ariaPressed = true;
-        console.log('line 355', tab);
+        tabElement.ariaPressed = true;
 
-        const name = tab.getAttribute('data-toolbar-tray');
+        // const name = this.activeTab;
         // Store the active tab name or remove the setting.
         const { id } = tab;
         if (id) {
@@ -365,21 +364,28 @@
             JSON.stringify(id),
           );
         }
+
+        const name = document
+          .querySelector(this.activeTab)
+          .getAttribute('data-toolbar-tray');
+        console.log('tab element and name', tabElement, name);
+
         // Activate the associated tray.
-        const tray = document.querySelector(
-          `[data-toolbar-tray="${name}"].toolbar-tray`,
-        );
-        console.log('tray', tray);
-        if (tray) {
-          $(tray).addClass('is-active');
-          toolbarBehaviors.activeTray = tray;
+        const tray = `[data-toolbar-tray="${name}"].toolbar-tray`;
+        const trayElement = document.querySelector(tray);
+        console.log('tray:', tray);
+        console.log('trayElement:', trayElement);
+
+        if (trayElement) {
+          trayElement.classList.add('is-active');
+          this.activeTray = tray;
         } else {
           // There is no active tray.
-          toolbarBehaviors.activeTray = null;
+          this.activeTray = null;
         }
       } else {
         // There is no active tray.
-        toolbarBehaviors.activeTray = null;
+        this.activeTray = null;
         localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
     },
@@ -388,7 +394,7 @@
       console.log(
         'vanilla: onActiveTrayChange in ToolbarAuralView this needs to be filled out',
       );
-      const relevantTray = tray === null ? toolbarBehaviors.activeTray : tray;
+      const relevantTray = tray === null ? this.activeTray : tray;
       // Current activeTray and previous activeTray are empty, no state change
       // to announce.
       if (!relevantTray) {
@@ -453,7 +459,7 @@
       toolbar
         .querySelectorAll('.toolbar-toggle-orientation')
         .forEach((tray) => {
-          if (toolbarBehaviors.isTrayToggleVisible) {
+          if (this.isTrayToggleVisible) {
             tray.hidden = false;
           } else {
             tray.hidden = true;
@@ -509,14 +515,13 @@
         $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       const toolbarTrayHorizontalOuterHeight =
         $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
-      toolbarBehaviors.height =
-        toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
+      this.height = toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
 
       $('body').css({
-        'padding-top': toolbarBehaviors.height,
+        'padding-top': this.height,
       });
       $('html').css({
-        'scroll-padding-top': toolbarBehaviors.height,
+        'scroll-padding-top': this.height,
       });
 
       this.triggerDisplace();
@@ -534,13 +539,12 @@
       console.log('vanilla: adjustPlacement() in ToolbarVisualView');
       const toolbar = document.querySelector('#toolbar-administration');
 
-      if (!toolbarBehaviors.isOriented) {
+      if (!this.isOriented) {
         toolbar.querySelectorAll('.toolbar-tray').forEach((tray) => {
           tray.classList.remove('toolbar-tray-horizontal');
           tray.classList.add('toolbar-tray-vertical');
         });
       }
-      console.log('line 539', this.activeTab);
     },
     onOrientationToggleClick() {
       console.log('vanilla: onOrientationToggleClick()');
@@ -559,7 +563,7 @@
     },
     loadSubtrees() {
       console.log('vanilla: loadSubtrees()');
-      const $activeTab = $(toolbarBehaviors.activeTab);
+      const $activeTab = $(this.activeTab);
       const { orientation } = toolbarBehaviors;
       // Only load and render the admin menu subtrees if:
       //   (1) They have not been loaded yet.
@@ -567,13 +571,11 @@
       //       presence of the data-drupal-subtrees attribute.
       //   (3) The orientation of the tray is vertical.
       if (
-        !toolbarBehaviors.areSubtreesLoaded &&
+        !this.areSubtreesLoaded &&
         typeof $activeTab.data('drupal-subtrees') !== 'undefined' &&
         orientation === 'vertical'
       ) {
-        console.log($activeTab.data('drupal-subtrees'));
-        console.log(orientation);
-        console.log('condition where subtrees should be loaded');
+        // console.log($activeTab.data('drupal-subtrees'));
         const { subtreesHash } = drupalSettings.toolbar;
         const { theme } = drupalSettings.ajaxPageState;
         const endpoint = Drupal.url(`toolbar/subtrees/${subtreesHash}`);
@@ -583,7 +585,7 @@
         const cachedSubtrees = JSON.parse(
           localStorage.getItem(`Drupal.toolbar.subtrees.${theme}`),
         );
-        const isVertical = toolbarBehaviors.orientation === 'vertical';
+        const isVertical = this.orientation === 'vertical';
         // If we have the subtrees in localStorage and the subtree hash has not
         // changed, then use the cached data.
         if (
@@ -633,9 +635,8 @@
         return;
       }
       // Process the administrative toolbar.
-      once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
+      once('toolbar', '#toolbar-administration', context).forEach(() => {
         // Add the tray orientation toggles.
-
         const bar = document.querySelector('#toolbar-administration');
         const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
         const toggleHTML = document.createElement('div');
@@ -646,6 +647,7 @@
             Drupal.theme('toolbarOrientationToggle'),
           );
         });
+
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
         // not the first 'Home' toolbar tab).
@@ -653,42 +655,41 @@
           toolbarBehaviors.orientation === 'horizontal' &&
           toolbarBehaviors.activeTab === null
         ) {
-          console.log('hit');
-          toolbarBehaviors.activeTab = document.querySelector(
-            '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
-          );
-          console.log('active tab after hit: ', toolbarBehaviors.activeTab);
+          toolbarBehaviors.activeTab =
+            '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
         }
+        console.log(this.activeTray);
 
         // Trigger an activeTab change so that listening scripts can respond on
         // page load. This will call render.
         // TODO: dsjf
         // toolbarBehaviors.renderToolbar();
 
-        const toolbarTab = document.querySelector(
-          '.toolbar-bar .toolbar-tab .trigger',
-        );
-        toolbarTab.addEventListener('click', (e) =>
-          toolbarBehaviors.onTabClick(e),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.renderToolbar(),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.onActiveTrayChange(),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.renderBody(),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.updateToolbarHeight(),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.triggerDisplace(),
-        );
-        toolbarTab.addEventListener('click', () =>
-          toolbarBehaviors.adjustPlacement(),
-        );
+        document
+          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('click', (e) =>
+              toolbarBehaviors.onTabClick(e),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.renderToolbar(),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.onActiveTrayChange(),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.renderBody(),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.updateToolbarHeight(),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.triggerDisplace(),
+            );
+            toolbarTab.addEventListener('click', () =>
+              toolbarBehaviors.adjustPlacement(),
+            );
+          });
 
         // TODO:
         // Establish the toolbar models and views.
