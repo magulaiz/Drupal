@@ -27,5 +27,5 @@ parameters:
     - "#^Access to an undefined property#"
     - "#^Call to an undefined method#"
     - "#^Cannot unset offset#"
-		- "#should return .* but return statement is missing#"
-		- "#Drupal calls should be avoided in classes, use dependency injection instead#"
+    - "#should return .* but return statement is missing#"
+    - "#Drupal calls should be avoided in classes, use dependency injection instead#"
