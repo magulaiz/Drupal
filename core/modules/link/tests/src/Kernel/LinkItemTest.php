@@ -162,7 +162,8 @@ class LinkItemTest extends FieldKernelTestBase {
 
     // Check that setting LinkItem value NULL doesn't generate any error or
     // warning.
-    $entity->field_test = NULL;
+    // @phpstan-ignore-next-line
+    $entity->field_test[0] = NULL;
     $this->assertNull($entity->field_test[0]->getValue());
 
     // Test the generateSampleValue() method for generic, external, and internal
