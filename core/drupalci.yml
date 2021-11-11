@@ -11,7 +11,6 @@ build:
       # For testing only, run PHPStan across the entire codebase.
       container_command:
         commands:
-          - "cd ${SOURCE_DIR} && composer require composer/composer:^2 symfony/contracts psr/log"
           - "cd ${SOURCE_DIR}/core && sudo -u www-data ../vendor/bin/phpstan analyze"
         halt-on-fail: false
     testing:
