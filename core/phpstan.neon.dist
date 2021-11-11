@@ -7,29 +7,12 @@ parameters:
 
   level: 0
 
-  fileExtensions:
-    - engine
-    - inc
-    - install
-    - module
-    - php
-    - profile
-    - theme
-
-  bootstrapFiles:
-    - ../vendor/mglaman/phpstan-drupal/drupal-autoloader.php
-
-  drupal:
-    drupal_root: '%currentWorkingDirectory%'
-
   paths:
     - .
     - ../composer
 
   excludePaths:
-    - '*.api.php'
     - 'lib/Drupal/Component/Diff/Engine/*.php'
-    - 'modules/migrate_drupal/tests/fixtures/*.php'
     - modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/fruit/ExtendingNonInstalledClass.php
     - tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
     - '../sites/simpletest/*.php'
@@ -45,12 +28,3 @@ parameters:
     - "#^Call to an undefined method#"
     - "#^Cannot unset offset#"
     - "#should return .* but return statement is missing#"
-
-parametersSchema:
-  drupal: structure([
-    drupal_root: string()
-  ])
-
-services:
-  -
-    class: mglaman\PHPStanDrupal\Drupal\ServiceMap
