@@ -21,7 +21,7 @@
   $.extend(Drupal.ProgressBar.prototype, {
     setProgress: function setProgress(percentage, message, label) {
       if (percentage >= 0 && percentage <= 100) {
-        $(this.element).find('div.progress__bar').forEach(function (el) {
+        [].forEach.call($(this.element).find('div.progress__bar'), function (el) {
           el.style.width = "".concat(percentage, "%");
         });
         $(this.element).find('div.progress__percentage').html("".concat(percentage, "%"));
