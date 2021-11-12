@@ -20,7 +20,9 @@
 
       var $colorPreview = $form.find('.color-preview');
       var $colorPalette = $form.find('.js-color-palette');
-      $colorPreview.css('backgroundColor', $colorPalette.find('input[name="palette[bg]"]').val());
+      [].forEach.call($colorPreview, function (el) {
+        el.style.backgroundColor = $colorPalette.find('input[name="palette[bg]"]').val();
+      });
       $colorPreview.find('.color-preview-main h2, .color-preview .preview-content').css('color', $colorPalette.find('input[name="palette[text]"]').val());
       $colorPreview.find('.color-preview-content a').css('color', $colorPalette.find('input[name="palette[link]"]').val());
       var $colorPreviewBlock = $colorPreview.find('.color-preview-sidebar .color-preview-block');
