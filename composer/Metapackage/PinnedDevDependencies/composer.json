@@ -21,7 +21,7 @@
         "friends-of-behat/mink-browserkit-driver": "v1.5.0",
         "instaclick/php-webdriver": "1.4.10",
         "justinrainbow/json-schema": "5.2.11",
-        "mglaman/phpstan-drupal": "1.0.2",
+        "mglaman/phpstan-drupal": "1.0.3",
         "mikey179/vfsstream": "v1.6.10",
         "myclabs/deep-copy": "1.10.2",
         "nette/finder": "v2.5.2",
