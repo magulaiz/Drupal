@@ -42,7 +42,6 @@ class RoleAccessCheck implements AccessInterface {
     }
     else {
       $explode_or = array_filter(array_map('trim', explode('+', $rid_string)));
-
       $intersection = array_intersect($explode_or, $account->getRoles());
       $reason = sprintf('The %s role is required', $rid_string);
       if (count($explode_or) > 1) {
