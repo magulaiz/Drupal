@@ -111,7 +111,7 @@
       var $container = Drupal.offCanvas.getContainer($element);
       var $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
       var width = $container.outerWidth();
-      var mainCanvasPadding = $mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()));
+      var mainCanvasPadding = window.getComputedStyle($mainCanvasWrapper[0])["padding-".concat(Drupal.offCanvas.getEdge())];
 
       if (position === 'side' && width !== mainCanvasPadding) {
         $mainCanvasWrapper[0].style["padding-".concat(Drupal.offCanvas.getEdge())] = "".concat(width, "px");

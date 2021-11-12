@@ -267,10 +267,10 @@
       const $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
 
       const width = $container.outerWidth();
-      // eslint-disable-next-line jquery/no-css
-      const mainCanvasPadding = $mainCanvasWrapper.css(
-        `padding-${Drupal.offCanvas.getEdge()}`,
-      );
+      const mainCanvasPadding = window.getComputedStyle($mainCanvasWrapper[0])[
+        `padding-${Drupal.offCanvas.getEdge()}`
+      ];
+
       if (position === 'side' && width !== mainCanvasPadding) {
         $mainCanvasWrapper[0].style[
           `padding-${Drupal.offCanvas.getEdge()}`
