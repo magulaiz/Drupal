@@ -57,7 +57,7 @@
   font-weight: 600;
 }
 .button.button--danger:hover,
-.button.button--danger:focus  {
+.button.button--danger:focus {
   font-weight: normal;
 }
 .button:hover {
