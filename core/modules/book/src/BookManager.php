@@ -747,7 +747,7 @@ class BookManager implements BookManagerInterface {
       return $cache->data;
     }
 
-    $min_depth = ($parameters['min_depth'] ?? 1);
+    $min_depth = $parameters['min_depth'] ?? 1;
     $result = $this->bookOutlineStorage->getBookMenuTree($bid, $parameters, $min_depth, static::BOOK_MAX_DEPTH);
 
     // Build an ordered array of links using the query result object.
@@ -756,7 +756,7 @@ class BookManager implements BookManagerInterface {
       $link = (array) $link;
       $links[$link['nid']] = $link;
     }
-    $active_trail = ($parameters['active_trail'] ?? []);
+    $active_trail = $parameters['active_trail'] ?? [];
     $data['tree'] = $this->buildBookOutlineData($links, $active_trail, $min_depth);
     $data['node_links'] = [];
     $this->bookTreeCollectNodeLinks($data['tree'], $data['node_links']);

@@ -60,10 +60,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
     if ($parts[0] != 'entity') {
       throw new \InvalidArgumentException('Data type must be in the form of "entity:ENTITY_TYPE:BUNDLE."');
     }
-    return static::create(
-      $parts[1] ?? NULL,
-      $parts[2] ?? NULL
-    );
+    return static::create($parts[1] ?? NULL, $parts[2] ?? NULL);
   }
 
   /**
