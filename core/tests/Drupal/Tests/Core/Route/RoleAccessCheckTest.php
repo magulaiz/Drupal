@@ -3,6 +3,7 @@
 namespace Drupal\Tests\Core\Route;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Core\Session\UserSession;
@@ -115,7 +116,7 @@ class RoleAccessCheckTest extends UnitTestCase {
 
     // Setup expected values; specify which paths can be accessed by which user.
     return [
-      ['role_test_1', [$account_1, $account_12], [$account_2, $account_none]],
+      ['role_test_1', [$account_1, $account_12], [$account_2, $account_none], 'The such role is required'],
       ['role_test_2', [$account_2, $account_12], [$account_1, $account_none]],
       ['role_test_3', [$account_12], [$account_1, $account_2, $account_none]],
       ['role_test_4', [$account_12], [$account_1, $account_2, $account_none]],
@@ -133,13 +134,15 @@ class RoleAccessCheckTest extends UnitTestCase {
    *   A list of accounts which should have access to the given path.
    * @param array $deny_accounts
    *   A list of accounts which should not have access to the given path.
+   * @param string $expected_reason
+   *   Expected reason.
    *
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::getTestRouteCollection
    * @see \Drupal\Tests\Core\Route\RouterRoleTest::roleAccessProvider
    *
    * @dataProvider roleAccessProvider
    */
-  public function testRoleAccess($path, $grant_accounts, $deny_accounts) {
+  public function testRoleAccess($path, $grant_accounts, $deny_accounts, string $expected_reason) {
     $cache_contexts_manager = $this->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);
     $cache_contexts_manager->reveal();
@@ -159,6 +162,8 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($deny_accounts as $account) {
       $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->getRoles()), $path);
       $has_access = $role_access_check->access($collection->get($path), $account);
+      assert($has_access instanceof AccessResultReasonInterface);
+      $this->assertEquals($expected_reason, $has_access->getReason());
       $this->assertEquals(AccessResult::neutral()->addCacheContexts(['user.roles']), $has_access, $message);
     }
   }
