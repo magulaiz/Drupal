@@ -154,37 +154,37 @@ class RoleAccessCheckTest extends UnitTestCase {
         'role_test_3',
         [$account_123],
         [$account_1, $account_2, $account_no_roles, $account_anonymous],
-        'All of the role_test_1 AND role_test_2 roles are required',
+        'All of the role_test_1 and role_test_2 roles are required',
       ],
       [
         'role_test_4',
         [$account_123],
         [$account_1, $account_2, $account_no_roles, $account_anonymous],
-        'All of the role_test_1 AND role_test_2 roles are required',
+        'All of the role_test_1 and role_test_2 roles are required',
       ],
       [
         'role_test_5',
         [$account_1, $account_2, $account_123],
         [$account_no_roles, $account_anonymous],
-        'One of the role_test_1 OR role_test_2 roles are required',
+        'One of the role_test_1 or role_test_2 roles are required',
       ],
       [
         'role_test_6',
         [$account_1, $account_2, $account_123],
         [$account_no_roles, $account_anonymous],
-        'One of the role_test_1 OR role_test_2 roles are required',
+        'One of the role_test_1 or role_test_2 roles are required',
       ],
       [
         'role_test_7',
         [$account_123],
         [$account_1, $account_2, $account_no_roles, $account_anonymous],
-        'All of the role_test_1, role_test_2 AND role_test_3 roles are required',
+        'All of the role_test_1, role_test_2 and role_test_3 roles are required',
       ],
       [
         'role_test_8',
         [$account_1, $account_2, $account_123],
         [$account_no_roles, $account_anonymous],
-        'One of the role_test_1, role_test_2 OR role_test_3 roles are required',
+        'One of the role_test_1, role_test_2 or role_test_3 roles are required',
       ],
     ];
   }
