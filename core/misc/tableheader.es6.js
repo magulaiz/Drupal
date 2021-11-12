@@ -211,12 +211,9 @@
         // Clone the table header so it inherits original jQuery properties.
         const $stickyHeader = this.$originalHeader.clone(true);
         // Hide the table to avoid a flash of the header clone upon page load.
-        this.$stickyTable = $('<table class="sticky-header"></table>')
-          .css({
-            visibility: 'hidden',
-            position: 'fixed',
-            top: '0px',
-          })
+        this.$stickyTable = $(
+          '<table class="sticky-header" style="visibility: hidden; position: fixed; top: 0;"></table>',
+        )
           .append($stickyHeader)
           .insertBefore(this.$originalTable);
 
@@ -286,10 +283,9 @@
         this.checkStickyVisible();
         // Track horizontal positioning relative to the viewport.
         this.stickyPosition(null, scrollValue('scrollLeft'));
-        this.$stickyTable.css(
-          'visibility',
-          this.stickyVisible ? 'visible' : 'hidden',
-        );
+        this.$stickyTable[0].style.visibility = this.stickyVisible
+          ? 'visible'
+          : 'hidden';
       },
 
       /**
@@ -320,12 +316,15 @@
           $stickyCell = this.$stickyHeaderCells.eq($that.index());
           display = $that.css('display');
           if (display !== 'none') {
-            $stickyCell.css({ width: $that.css('width'), display });
+            $stickyCell[0].style.width = window.getComputedStyle(
+              $that[0],
+            ).width;
+            $stickyCell[0].style.display = display;
           } else {
-            $stickyCell.css('display', 'none');
+            $stickyCell[0].style.display = 'none';
           }
         }
-        this.$stickyTable.css('width', this.$originalTable.outerWidth());
+        this.$stickyTable[0].style.width = this.$originalTable.outerWidth();
       },
     },
   );

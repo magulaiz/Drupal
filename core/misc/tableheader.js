@@ -88,11 +88,7 @@
     createSticky: function createSticky() {
       this.$html = $('html');
       var $stickyHeader = this.$originalHeader.clone(true);
-      this.$stickyTable = $('<table class="sticky-header"></table>').css({
-        visibility: 'hidden',
-        position: 'fixed',
-        top: '0px'
-      }).append($stickyHeader).insertBefore(this.$originalTable);
+      this.$stickyTable = $('<table class="sticky-header" style="visibility: hidden; position: fixed; top: 0;"></table>').append($stickyHeader).insertBefore(this.$originalTable);
       this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
       this.recalculateSticky();
     },
@@ -126,7 +122,7 @@
     onScroll: function onScroll(e) {
       this.checkStickyVisible();
       this.stickyPosition(null, scrollValue('scrollLeft'));
-      this.$stickyTable.css('visibility', this.stickyVisible ? 'visible' : 'hidden');
+      this.$stickyTable[0].style.visibility = this.stickyVisible ? 'visible' : 'hidden';
     },
     recalculateSticky: function recalculateSticky(event) {
       this.tableHeight = this.$originalTable[0].clientHeight;
@@ -144,16 +140,14 @@
         display = $that.css('display');
 
         if (display !== 'none') {
-          $stickyCell.css({
-            width: $that.css('width'),
-            display: display
-          });
+          $stickyCell[0].style.width = window.getComputedStyle($that[0]).width;
+          $stickyCell[0].style.display = display;
         } else {
-          $stickyCell.css('display', 'none');
+          $stickyCell[0].style.display = 'none';
         }
       }
 
-      this.$stickyTable.css('width', this.$originalTable.outerWidth());
+      this.$stickyTable[0].style.width = this.$originalTable.outerWidth();
     }
   });
   Drupal.TableHeader = TableHeader;
