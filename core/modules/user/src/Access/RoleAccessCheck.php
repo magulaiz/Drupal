@@ -34,22 +34,22 @@ class RoleAccessCheck implements AccessInterface {
     $explode_and = array_filter(array_map('trim', explode(',', $rid_string)));
     if (count($explode_and) > 1) {
       $diff = array_diff($explode_and, $account->getRoles());
-      $last = array_pop($explode_and);
-      $reason = sprintf('All of the %s AND %s roles are required', implode(', ', $explode_and), $last);
       if (empty($diff)) {
         return AccessResult::allowed()->addCacheContexts(['user.roles']);
       }
+      $last = array_pop($explode_and);
+      $reason = sprintf('All of the %s and %s roles are required', implode(', ', $explode_and), $last);
     }
     else {
       $explode_or = array_filter(array_map('trim', explode('+', $rid_string)));
       $intersection = array_intersect($explode_or, $account->getRoles());
+      if (!empty($intersection)) {
+        return AccessResult::allowed()->addCacheContexts(['user.roles']);
+      }
       $reason = sprintf('The %s role is required', $rid_string);
       if (count($explode_or) > 1) {
         $last = array_pop($explode_or);
-        $reason = sprintf('One of the %s OR %s roles are required', implode(', ', $explode_or), $last);
-      }
-      if (!empty($intersection)) {
-        return AccessResult::allowed()->addCacheContexts(['user.roles']);
+        $reason = sprintf('One of the %s or %s roles are required', implode(', ', $explode_or), $last);
       }
     }
     // If there is no allowed role, give other access checks a chance.
