@@ -129,7 +129,8 @@
      *
      * @type {number}
      */
-    this.rtl = $(this.table).css('direction') === 'rtl' ? -1 : 1;
+    this.rtl =
+      window.getComputedStyle($(this.table)[0]).direction === 'rtl' ? -1 : 1;
 
     /**
      *
