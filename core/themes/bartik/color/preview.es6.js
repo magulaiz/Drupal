@@ -30,12 +30,21 @@
       });
 
       // Text preview.
-      [].forEach.call($colorPreview.find('.color-preview-main h2, .color-preview .preview-content'), (el) => {
-        el.style.color = $colorPalette.find('input[name="palette[text]"]').val());
-      });
+      [].forEach.call(
+        $colorPreview.find(
+          '.color-preview-main h2, .color-preview .preview-content',
+        ),
+        (el) => {
+          el.style.color = $colorPalette
+            .find('input[name="palette[text]"]')
+            .val();
+        },
+      );
 
       [].forEach.call($colorPreview.find('.color-preview-content a'), (el) => {
-        el.style.color = $colorPalette.find('input[name="palette[link]"]').val();
+        el.style.color = $colorPalette
+          .find('input[name="palette[link]"]')
+          .val();
       });
 
       // Sidebar block.
@@ -43,14 +52,23 @@
         '.color-preview-sidebar .color-preview-block',
       );
       [].forEach.call($colorPreviewBlock, (el) => {
-        el.style.backgroundColor = $colorPalette.find('input[name="palette[sidebar]"]').val();
-        el.style.borderColor = $colorPalette.find('input[name="palette[sidebarborders]"]').val();
+        el.style.backgroundColor = $colorPalette
+          .find('input[name="palette[sidebar]"]')
+          .val();
+        el.style.borderColor = $colorPalette
+          .find('input[name="palette[sidebarborders]"]')
+          .val();
       });
 
       // Footer wrapper background.
-      [].forEach.call($colorPreview.find('.color-preview-footer-wrapper'), (el) => {
-        el.style.backgroundColor = $colorPalette.find('input[name="palette[footer]"]').val();
-      });
+      [].forEach.call(
+        $colorPreview.find('.color-preview-footer-wrapper'),
+        (el) => {
+          el.style.backgroundColor = $colorPalette
+            .find('input[name="palette[footer]"]')
+            .val();
+        },
+      );
 
       // CSS3 Gradients.
       const gradientStart = $colorPalette
