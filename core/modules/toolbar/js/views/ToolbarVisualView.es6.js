@@ -83,12 +83,10 @@
           toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight,
         );
 
-        $('body').css({
-          'padding-top': this.model.get('height'),
-        });
-        $('html').css({
-          'scroll-padding-top': this.model.get('height'),
-        });
+        document.querySelector('body').style.paddingTop =
+          this.model.get('height');
+        document.querySelector('html').style.scrollPaddingTop =
+          this.model.get('height');
 
         this.triggerDisplace();
       },
