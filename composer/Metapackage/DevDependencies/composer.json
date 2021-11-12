@@ -15,7 +15,7 @@
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "instaclick/php-webdriver": "^1.4.1",
         "justinrainbow/json-schema": "^5.2",
-        "mglaman/phpstan-drupal": "^1.0.1",
+        "mglaman/phpstan-drupal": "^1.0.2",
         "mikey179/vfsstream": "^1.6.8",
         "phpspec/prophecy": "^1.12",
         "phpstan/extension-installer": "^1",
