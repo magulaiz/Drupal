@@ -614,11 +614,6 @@ drupal.string.includes:
   js:
     misc/polyfills/string.includes.js: { weight: -20 }
 
-drupal.string.includes:
-  version: VERSION
-  js:
-    misc/polyfills/string.includes.js: { weight: -20 }
-
 drupal.tabbingmanager:
   version: VERSION
   js:
