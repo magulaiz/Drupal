@@ -47,7 +47,6 @@
       return this._subtrees;
     },
     set subtrees(value) {
-      console.log('set subtrees activetab is', this.activeTab);
       this._subtrees = value;
       this.renderMenu();
       this.renderBody();
@@ -73,31 +72,46 @@
      *
      * @type {string}
      */
-    _activeTab: JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')),
+    _activeTab: JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))
+      ? `#${JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))}`
+      : null,
     get activeTab() {
       return this._activeTab;
     },
     set activeTab(value) {
-      console.log('activeTab is being set: ', value);
       if (value !== this.activeTab) {
         // Deactivate the previous tab if there was one
         if (this.activeTab) {
           const tabElement = document.querySelector(this.activeTab);
-          console.log('tabelement: ', tabElement);
           tabElement.classList.remove('is-active');
-          tabElement.ariaPressed = false;
+          tabElement.setAttribute('aria-pressed', 'false');
         }
         // Deactivate the previous tray if there was one.
         if (this.activeTray) {
           const trayElement = document.querySelector(this.activeTray);
           trayElement.classList.remove('is-active');
         }
-        this._activeTab = value;
-        this.renderToolbar();
-        this.updateToolbarHeight();
-        // Broadcast model changes to other modules.
-        $(document).trigger('drupalToolbarTabChange', this.activeTab);
+      } else {
+        // Make the tab inactive if the active tab was clicked
+        const tabElement = document.querySelector(this.activeTab);
+        tabElement.classList.remove('is-active');
+        tabElement.setAttribute('aria-pressed', 'false');
+        // Deactivate the previous tray if there was one.
+        if (this.activeTray) {
+          const name = document
+            .querySelector(this.activeTab)
+            .getAttribute('data-toolbar-tray');
+          // Deactivate the associated tray.
+          const tray = `[data-toolbar-tray="${name}"].toolbar-tray`;
+          const trayElement = document.querySelector(tray);
+          trayElement.classList.remove('is-active');
+        }
       }
+      this._activeTab = value;
+      this.renderToolbar();
+      this.updateToolbarHeight();
+      // Broadcast model changes to other modules.
+      $(document).trigger('drupalToolbarTabChange', this.activeTab);
     },
 
     /**
@@ -111,8 +125,6 @@
       return this._activeTray;
     },
     set activeTray(value) {
-      console.log('what is activetray before set: ', this.activeTray);
-      console.log('what is the activetray trying to be: ,', value);
       if (value !== this.activeTray) {
         this._activeTray = value;
         this.renderBody();
@@ -135,7 +147,6 @@
 
     set isOriented(value) {
       if (value !== this.isOriented) {
-        console.log('set isOriented');
         this._isOriented = value;
         this.renderToolbar();
         this.updateToolbarHeight();
@@ -205,7 +216,6 @@
     set orientation(value) {
       // put it here (broadcast) check to see if its actually changed
       if (value !== this.orientation && value !== null) {
-        console.log('set orientation');
         this._orientation = value;
         this.renderToolbar();
         this.updateToolbarHeight();
@@ -235,7 +245,6 @@
     },
     set isTrayToggleVisible(value) {
       if (value !== this.isTrayToggleVisible && value !== null) {
-        console.log('set isTrayToggleVisible');
         this._isTrayToggleVisible = value;
         this.renderToolbar();
       }
@@ -291,11 +300,14 @@
       if (e.target.hasAttribute('data-toolbar-tray')) {
         const { activeTab } = toolbarBehaviors;
         const clickedTab = e.currentTarget;
+        const clicked = clickedTab.getAttribute('data-toolbar-tray');
 
         // Set the event target as the active item if it is not already.
-        if (!activeTab || clickedTab !== activeTab) {
+        if (!activeTab || `#${clickedTab.id}` !== activeTab) {
           console.log('clickedTAB: ', clickedTab);
-          this.activeTab = clickedTab;
+          this.activeTab = `#${clickedTab.id}`;
+        } else {
+          this.activeTab = null;
         }
       }
     },
@@ -349,44 +361,43 @@
       const tab = this.activeTab;
 
       // Activate the selected tab.
-      if (tab.length > 0) {
-        const tabElement = document.querySelector(tab);
-        tabElement.classList.add('is-active');
-        // Mark the tab as pressed.
-        tabElement.ariaPressed = true;
+      if (tab) {
+        if (tab.length > 0) {
+          const tabElement = document.querySelector(tab);
+          tabElement.classList.add('is-active');
+          // Mark the tab as pressed.
+          tabElement.setAttribute('aria-pressed', 'true');
+          tabElement.ariaPressed = true;
 
-        // const name = this.activeTab;
-        // Store the active tab name or remove the setting.
-        const { id } = tab;
-        if (id) {
-          localStorage.setItem(
-            'Drupal.toolbar.activeTabID',
-            JSON.stringify(id),
-          );
-        }
+          // Store the active tab name or remove the setting.
+          const { id } = tabElement;
+          if (id) {
+            console.log('set activetab', id);
+            localStorage.setItem(
+              'Drupal.toolbar.activeTabID',
+              JSON.stringify(id),
+            );
+          }
 
-        const name = document
-          .querySelector(this.activeTab)
-          .getAttribute('data-toolbar-tray');
-        console.log('tab element and name', tabElement, name);
+          const name = document
+            .querySelector(this.activeTab)
+            .getAttribute('data-toolbar-tray');
+          // Activate the associated tray.
+          const tray = `[data-toolbar-tray="${name}"].toolbar-tray`;
+          const trayElement = document.querySelector(tray);
 
-        // Activate the associated tray.
-        const tray = `[data-toolbar-tray="${name}"].toolbar-tray`;
-        const trayElement = document.querySelector(tray);
-        console.log('tray:', tray);
-        console.log('trayElement:', trayElement);
-
-        if (trayElement) {
-          trayElement.classList.add('is-active');
-          this.activeTray = tray;
+          if (trayElement) {
+            trayElement.classList.add('is-active');
+            this.activeTray = tray;
+          } else {
+            // There is no active tray.
+            this.activeTray = null;
+          }
         } else {
           // There is no active tray.
           this.activeTray = null;
+          localStorage.removeItem('Drupal.toolbar.activeTabID');
         }
-      } else {
-        // There is no active tray.
-        this.activeTray = null;
-        localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
     },
     // TODO: check aural works
@@ -575,7 +586,6 @@
         typeof $activeTab.data('drupal-subtrees') !== 'undefined' &&
         orientation === 'vertical'
       ) {
-        // console.log($activeTab.data('drupal-subtrees'));
         const { subtreesHash } = drupalSettings.toolbar;
         const { theme } = drupalSettings.ajaxPageState;
         const endpoint = Drupal.url(`toolbar/subtrees/${subtreesHash}`);
@@ -658,7 +668,6 @@
           toolbarBehaviors.activeTab =
             '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
         }
-        console.log(this.activeTray);
 
         // Trigger an activeTab change so that listening scripts can respond on
         // page load. This will call render.
@@ -670,24 +679,6 @@
           .forEach((toolbarTab) => {
             toolbarTab.addEventListener('click', (e) =>
               toolbarBehaviors.onTabClick(e),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.renderToolbar(),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.onActiveTrayChange(),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.renderBody(),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.updateToolbarHeight(),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.triggerDisplace(),
-            );
-            toolbarTab.addEventListener('click', () =>
-              toolbarBehaviors.adjustPlacement(),
             );
           });
 
@@ -918,7 +909,6 @@
      *   A MediaQueryList object.
      */
     mediaQueryChangeHandler(model, label, mql) {
-      console.log('mediaQueryChangeHandler in toolbar.es6');
       switch (label) {
         case 'toolbar.narrow':
           toolbarBehaviors.isOriented = mql.matches;

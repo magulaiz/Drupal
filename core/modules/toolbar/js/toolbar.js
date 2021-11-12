@@ -26,7 +26,6 @@
     },
 
     set subtrees(value) {
-      console.log('set subtrees activetab is', this.activeTab);
       this._subtrees = value;
       this.renderMenu();
       this.renderBody();
@@ -42,33 +41,45 @@
       this._validate = value;
     },
 
-    _activeTab: JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')),
+    _activeTab: JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')) ? "#".concat(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))) : null,
 
     get activeTab() {
       return this._activeTab;
     },
 
     set activeTab(value) {
-      console.log('activeTab is being set: ', value);
-
       if (value !== this.activeTab) {
         if (this.activeTab) {
           var tabElement = document.querySelector(this.activeTab);
-          console.log('tabelement: ', tabElement);
           tabElement.classList.remove('is-active');
-          tabElement.ariaPressed = false;
+          tabElement.setAttribute('aria-pressed', 'false');
         }
 
         if (this.activeTray) {
           var trayElement = document.querySelector(this.activeTray);
           trayElement.classList.remove('is-active');
         }
+      } else {
+        var _tabElement = document.querySelector(this.activeTab);
 
-        this._activeTab = value;
-        this.renderToolbar();
-        this.updateToolbarHeight();
-        $(document).trigger('drupalToolbarTabChange', this.activeTab);
+        _tabElement.classList.remove('is-active');
+
+        _tabElement.setAttribute('aria-pressed', 'false');
+
+        if (this.activeTray) {
+          var name = document.querySelector(this.activeTab).getAttribute('data-toolbar-tray');
+          var tray = "[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray");
+
+          var _trayElement = document.querySelector(tray);
+
+          _trayElement.classList.remove('is-active');
+        }
       }
+
+      this._activeTab = value;
+      this.renderToolbar();
+      this.updateToolbarHeight();
+      $(document).trigger('drupalToolbarTabChange', this.activeTab);
     },
 
     _activeTray: null,
@@ -78,9 +89,6 @@
     },
 
     set activeTray(value) {
-      console.log('what is activetray before set: ', this.activeTray);
-      console.log('what is the activetray trying to be: ,', value);
-
       if (value !== this.activeTray) {
         this._activeTray = value;
         this.renderBody();
@@ -96,7 +104,6 @@
 
     set isOriented(value) {
       if (value !== this.isOriented) {
-        console.log('set isOriented');
         this._isOriented = value;
         this.renderToolbar();
         this.updateToolbarHeight();
@@ -143,7 +150,6 @@
 
     set orientation(value) {
       if (value !== this.orientation && value !== null) {
-        console.log('set orientation');
         this._orientation = value;
         this.renderToolbar();
         this.updateToolbarHeight();
@@ -160,7 +166,6 @@
 
     set isTrayToggleVisible(value) {
       if (value !== this.isTrayToggleVisible && value !== null) {
-        console.log('set isTrayToggleVisible');
         this._isTrayToggleVisible = value;
         this.renderToolbar();
       }
@@ -200,10 +205,13 @@
       if (e.target.hasAttribute('data-toolbar-tray')) {
         var activeTab = toolbarBehaviors.activeTab;
         var clickedTab = e.currentTarget;
+        var clicked = clickedTab.getAttribute('data-toolbar-tray');
 
-        if (!activeTab || clickedTab !== activeTab) {
+        if (!activeTab || "#".concat(clickedTab.id) !== activeTab) {
           console.log('clickedTAB: ', clickedTab);
-          this.activeTab = clickedTab;
+          this.activeTab = "#".concat(clickedTab.id);
+        } else {
+          this.activeTab = null;
         }
       }
     },
@@ -234,32 +242,33 @@
       console.log('vanilla: updateTabs() in ToolbarVisualView');
       var tab = this.activeTab;
 
-      if (tab.length > 0) {
-        var tabElement = document.querySelector(tab);
-        tabElement.classList.add('is-active');
-        tabElement.ariaPressed = true;
-        var id = tab.id;
+      if (tab) {
+        if (tab.length > 0) {
+          var tabElement = document.querySelector(tab);
+          tabElement.classList.add('is-active');
+          tabElement.setAttribute('aria-pressed', 'true');
+          tabElement.ariaPressed = true;
+          var id = tabElement.id;
 
-        if (id) {
-          localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
-        }
+          if (id) {
+            console.log('set activetab', id);
+            localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
+          }
 
-        var name = document.querySelector(this.activeTab).getAttribute('data-toolbar-tray');
-        console.log('tab element and name', tabElement, name);
-        var tray = "[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray");
-        var trayElement = document.querySelector(tray);
-        console.log('tray:', tray);
-        console.log('trayElement:', trayElement);
+          var name = document.querySelector(this.activeTab).getAttribute('data-toolbar-tray');
+          var tray = "[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray");
+          var trayElement = document.querySelector(tray);
 
-        if (trayElement) {
-          trayElement.classList.add('is-active');
-          this.activeTray = tray;
+          if (trayElement) {
+            trayElement.classList.add('is-active');
+            this.activeTray = tray;
+          } else {
+            this.activeTray = null;
+          }
         } else {
           this.activeTray = null;
+          localStorage.removeItem('Drupal.toolbar.activeTabID');
         }
-      } else {
-        this.activeTray = null;
-        localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
     },
     onActiveTrayChange: function onActiveTrayChange(model, tray) {
@@ -409,8 +418,6 @@
   };
   Drupal.behaviors.toolbar = {
     attach: function attach(context) {
-      var _this2 = this;
-
       if (!window.matchMedia('only screen').matches) {
         return;
       }
@@ -428,28 +435,9 @@
           toolbarBehaviors.activeTab = '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
         }
 
-        console.log(_this2.activeTray);
         document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
           toolbarTab.addEventListener('click', function (e) {
             return toolbarBehaviors.onTabClick(e);
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.renderToolbar();
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.onActiveTrayChange();
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.renderBody();
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.updateToolbarHeight();
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.triggerDisplace();
-          });
-          toolbarTab.addEventListener('click', function () {
-            return toolbarBehaviors.adjustPlacement();
           });
         });
         toolbarBehaviors.locked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
@@ -507,8 +495,6 @@
     mql: {},
     setSubtrees: new $.Deferred(),
     mediaQueryChangeHandler: function mediaQueryChangeHandler(model, label, mql) {
-      console.log('mediaQueryChangeHandler in toolbar.es6');
-
       switch (label) {
         case 'toolbar.narrow':
           toolbarBehaviors.isOriented = mql.matches;
