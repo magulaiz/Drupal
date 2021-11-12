@@ -472,13 +472,6 @@
           mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, toolbarBehaviors, label));
           Drupal.toolbar.mediaQueryChangeHandler.call(null, toolbarBehaviors, label, mql);
         });
-        var menuModel = new Drupal.toolbar.MenuModel();
-        Drupal.toolbar.models.menuModel = menuModel;
-        Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
-          el: $(toolbar).find('.toolbar-menu-administration').get(0),
-          model: menuModel,
-          strings: options.strings
-        });
         Drupal.toolbar.setSubtrees.done(function (subtrees) {
           toolbarBehaviors.subtrees = subtrees;
           var theme = drupalSettings.ajaxPageState.theme;

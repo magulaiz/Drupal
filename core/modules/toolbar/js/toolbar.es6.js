@@ -327,8 +327,6 @@
       if (this.orientation === 'vertical' || this.activeTab) {
         this.loadSubtrees();
       }
-      // might not need to return a toolbarvisualview
-      // return this;
     },
     renderMenu() {
       const { subtrees } = toolbarBehaviors;
@@ -738,17 +736,6 @@
         // change states of isFixed, activeTray
         // model.trigger('change:isFixed', model, model.get('isFixed'));
         // model.trigger('change:activeTray', model, model.get('activeTray'));
-
-        // Render collapsible menus.
-        const menuModel = new Drupal.toolbar.MenuModel();
-        Drupal.toolbar.models.menuModel = menuModel;
-        Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
-          {
-            el: $(toolbar).find('.toolbar-menu-administration').get(0),
-            model: menuModel,
-            strings: options.strings,
-          },
-        );
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked

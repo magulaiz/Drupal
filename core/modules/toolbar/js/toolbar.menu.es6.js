@@ -54,7 +54,6 @@
      *   A jQuery Event object.
      */
     function toggleClickHandler(event) {
-      console.log('toggleClickHandler');
       const $toggle = $(event.target);
       const $item = $toggle.closest('li');
       // Toggle the list item.

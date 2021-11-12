@@ -23,7 +23,6 @@
     }
 
     function toggleClickHandler(event) {
-      console.log('toggleClickHandler');
       var $toggle = $(event.target);
       var $item = $toggle.closest('li');
       toggleList($item);
