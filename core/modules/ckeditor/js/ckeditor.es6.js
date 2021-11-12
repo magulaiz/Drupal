@@ -246,10 +246,8 @@
       }
 
       // Remove any previous loading indicator.
-      $target
-        .css('position', 'relative')
-        .find('.ckeditor-dialog-loading')
-        .remove();
+      $target[0].style.position = 'relative';
+      $target.find('.ckeditor-dialog-loading').remove();
 
       // Add a consistent dialog class.
       const classes = dialogSettings.dialogClass

@@ -119,7 +119,8 @@
         $target = $target.find('.cke_contents');
       }
 
-      $target.css('position', 'relative').find('.ckeditor-dialog-loading').remove();
+      $target[0].style.position = 'relative';
+      $target.find('.ckeditor-dialog-loading').remove();
       var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
       classes.push('ui-dialog--narrow');
       dialogSettings.dialogClass = classes.join(' ');
