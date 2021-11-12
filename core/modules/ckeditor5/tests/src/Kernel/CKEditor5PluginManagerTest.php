@@ -509,7 +509,7 @@ ckeditor5_invalid_plugin_foo_bar:
 YAML,
       NULL,
     ];
-    yield 'explicitly conditionless' => [
+    yield 'explicitly unconditional' => [
       <<<YAML
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5:
