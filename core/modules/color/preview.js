@@ -10,9 +10,15 @@
     callback: function callback(context, settings, form, farb, height, width) {
       var accum;
       var delta;
-      form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
-      form.find('#text').css('color', form.find('.color-palette input[name="palette[text]"]').val());
-      form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
+      [].forEach.call(form.find('.color-preview'), function (el) {
+        el.style.backgroundColor = form.find('.color-palette input[name="palette[base]"]').val();
+      });
+      [].forEach.call(form.find('#text'), function (el) {
+        el.style.color = form.find('.color-palette input[name="palette[text]"]').val();
+      });
+      [].forEach.call(form.find('#text a, #text h2'), function (el) {
+        el.style.color = form.find('.color-palette input[name="palette[link]"]').val();
+      });
 
       function gradientLineColor(i, element) {
         Object.keys(accum || {}).forEach(function (k) {
