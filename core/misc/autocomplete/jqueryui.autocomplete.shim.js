@@ -157,7 +157,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this._renderMenu(this.listboxWrapper, this.suggestions.map(jQueryUIAutocompleteNormalizeItem));
       }
 
-      if (document.activeElement !== this.input || this.suggestions.length === 0) {
+      if (this.suggestions.length === 0) {
         this.close();
       } else {
         this.open();

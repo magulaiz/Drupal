@@ -1664,8 +1664,6 @@ module.exports = {
           source: data,
           delay: 25,
         });
-        // Make sure the focus is in the input.
-        element[0].focus();
         const menu = element.autocomplete('widget');
         if (usingA11yAutocomplete) {
           element.val('ja');
@@ -2187,8 +2185,7 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
       didMove = true;
     };
   }
-  // Makes sure the input is focused when interacting with the listbox.
-  element[0].focus();
+
   element.simulate('keydown', {
     keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
   });
@@ -2231,7 +2228,7 @@ function arrowsNavigateElement(id, isKeyUp, shouldMove) {
     delay: 0,
     minLength: 0,
   });
-  element[0].focus();
+
   element.on('keypress', () => {
     didMove = document.activeElement.tagName === 'LI';
   });
