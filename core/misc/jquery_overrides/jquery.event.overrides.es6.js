@@ -127,8 +127,6 @@
     // If there are any jQuery UI autocomplete events, they must be shimmed to
     // Drupal autocomplete events.
     if (autocompleteEventsToShim.length) {
-      const id = that.attr('id');
-      const instance = Drupal.Autocomplete.instances[id]._internal_object;
       const config = {};
       if (one === 1) {
         config.once = true;
@@ -149,6 +147,7 @@
           }
           if (eventName === 'autocompletechange') {
             e.originalEvent = $.Event('blur');
+            const instance = e.detail.autocomplete._internal_object;
             // Do not normalize falsy values.
             instance.selected = instance.selected
               ? normalizeItem(instance.selected)
@@ -182,7 +181,7 @@
           return eventReturn;
         };
 
-        instance.input.addEventListener(
+        that[0].addEventListener(
           autocompleteEvents[eventName],
           shimmedEventHandler,
           config,

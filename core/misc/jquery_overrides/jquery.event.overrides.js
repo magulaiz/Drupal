@@ -77,8 +77,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var autocompleteEventsToShim = Object.keys(eventsToAddListenersTo);
 
     if (autocompleteEventsToShim.length) {
-      var id = that.attr('id');
-      var instance = Drupal.Autocomplete.instances[id]._internal_object;
       var config = {};
 
       if (one === 1) {
@@ -100,6 +98,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
           if (eventName === 'autocompletechange') {
             e.originalEvent = $.Event('blur');
+            var instance = e.detail.autocomplete._internal_object;
             instance.selected = instance.selected ? normalizeItem(instance.selected) : instance.selected;
             ui.item = instance.selected;
           }
@@ -133,7 +132,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           return eventReturn;
         };
 
-        instance.input.addEventListener(autocompleteEvents[eventName], shimmedEventHandler, config);
+        that[0].addEventListener(autocompleteEvents[eventName], shimmedEventHandler, config);
       });
     }
   };
