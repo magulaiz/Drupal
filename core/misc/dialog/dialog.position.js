@@ -69,7 +69,8 @@
         $element.dialog('option', {
           resizable: false,
           draggable: false
-        }).dialog('widget').css('position', 'fixed');
+        }).dialog('widget');
+        $element[0].style.position = 'fixed';
         $(window).on('resize.dialogResize scroll.dialogResize', eventData, autoResize).trigger('resize.dialogResize');
         $(document).on('drupalViewportOffsetChange.dialogResize', eventData, autoResize);
       }
