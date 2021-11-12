@@ -113,8 +113,8 @@
       Object.keys(settings.gradients || {}).forEach(function (i) {
         $(once('color', '.color-preview')).append("<div id=\"gradient-".concat(i, "\"></div>"));
         var gradient = $(".color-preview #gradient-".concat(i));
-        height.push(parseInt(gradient.css('height'), 10) / 10);
-        width.push(parseInt(gradient.css('width'), 10) / 10);
+        height.push(parseInt(window.getComputedStyle(gradient[0]).height, 10) / 10);
+        width.push(parseInt(window.getComputedStyle(gradient[0]).width, 10) / 10);
 
         for (j = 0; j < (settings.gradients[i].direction === 'vertical' ? height[i] : width[i]); ++j) {
           gradient.append('<div class="gradient-line"></div>');
