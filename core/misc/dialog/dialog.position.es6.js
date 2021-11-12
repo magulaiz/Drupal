@@ -118,10 +118,10 @@
       const autoResize = debounce(resetSize, 20);
       const eventData = { settings, $element };
       if (settings.autoResize === true || settings.autoResize === 'true') {
-        $element
+        const uiDialog = $element
           .dialog('option', { resizable: false, draggable: false })
           .dialog('widget');
-        $element[0].style.position = 'fixed';
+        uiDialog[0].style.position = 'fixed';
         $(window)
           .on('resize.dialogResize scroll.dialogResize', eventData, autoResize)
           .trigger('resize.dialogResize');

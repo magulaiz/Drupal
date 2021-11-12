@@ -66,11 +66,11 @@
       };
 
       if (settings.autoResize === true || settings.autoResize === 'true') {
-        $element.dialog('option', {
+        var uiDialog = $element.dialog('option', {
           resizable: false,
           draggable: false
         }).dialog('widget');
-        $element[0].style.position = 'fixed';
+        uiDialog[0].style.position = 'fixed';
         $(window).on('resize.dialogResize scroll.dialogResize', eventData, autoResize).trigger('resize.dialogResize');
         $(document).on('drupalViewportOffsetChange.dialogResize', eventData, autoResize);
       }
