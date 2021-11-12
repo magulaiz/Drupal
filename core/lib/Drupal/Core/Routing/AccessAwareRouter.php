@@ -137,9 +137,6 @@ class AccessAwareRouter implements AccessAwareRouterInterface {
    * {@inheritdoc}
    */
   public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string {
-    if (!$this->router instanceof UrlGeneratorInterface) {
-      throw new \RuntimeException('Router must implement \Drupal\Core\Routing\UrlGeneratorInterface in order to generate URLs');
-    }
     return $this->router->generate($name, $parameters, $referenceType);
   }
 
