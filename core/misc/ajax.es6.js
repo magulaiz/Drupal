@@ -1399,7 +1399,11 @@
      *   The XMLHttpRequest status.
      */
     css(ajax, response, status) {
-      $(response.selector).css(response.argument);
+      document.querySelectorAll(response.selector).forEach((el) => {
+        Object.entries(response.argument).forEach(([property, value]) => {
+          el.style[property] = value;
+        });
+      });
     },
 
     /**
