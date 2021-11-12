@@ -62,9 +62,7 @@
       var $container = Drupal.offCanvas.getContainer($element);
       var $offsets = $container.find('> :not(#drupal-off-canvas, .ui-resizable-handle)');
       var offset = 0;
-      $element.css({
-        height: 'auto'
-      });
+      $element[0].style.height = 'auto';
       var modalHeight = $container.height();
       $offsets.each(function (i, e) {
         offset += $(e).outerHeight();
@@ -82,7 +80,7 @@
       }
 
       if (position === 'top') {
-        $element.css('min-height', "".concat(Drupal.offCanvas.minimumHeight, "px"));
+        $element[0].style.minHeight = "".concat(Drupal.offCanvas.minimumHeight, "px");
       }
 
       displace();
@@ -96,10 +94,8 @@
         }
       };
       var height = position === 'side' ? "".concat($(window).height() - (offsets.top + offsets.bottom), "px") : event.data.settings.height;
-      container.css({
-        position: 'fixed',
-        height: height
-      });
+      container[0].style.position = 'fixed';
+      container[0].style.height = height;
       $element.dialog('option', adjustedOptions).trigger('dialogContentResize.off-canvas');
       Drupal.offCanvas.position = position;
     },
@@ -118,7 +114,7 @@
       var mainCanvasPadding = $mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()));
 
       if (position === 'side' && width !== mainCanvasPadding) {
-        $mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()), "".concat(width, "px"));
+        $mainCanvasWrapper[0].style["padding-".concat(Drupal.offCanvas.getEdge())] = "".concat(width, "px");
         $container.attr("data-offset-".concat(Drupal.offCanvas.getEdge()), width);
         displace();
       }
@@ -126,7 +122,7 @@
       var height = $container.outerHeight();
 
       if (position === 'top') {
-        $mainCanvasWrapper.css('padding-top', "".concat(height, "px"));
+        $mainCanvasWrapper[0].style.paddingTop = "".concat(height, "px");
         $container.attr('data-offset-top', height);
         displace();
       }
@@ -138,8 +134,8 @@
       return document.documentElement.dir === 'rtl' ? 'left' : 'right';
     },
     resetPadding: function resetPadding() {
-      Drupal.offCanvas.$mainCanvasWrapper.css("padding-".concat(Drupal.offCanvas.getEdge()), 0);
-      Drupal.offCanvas.$mainCanvasWrapper.css('padding-top', 0);
+      Drupal.offCanvas.$mainCanvasWrapper[0].style["padding-".concat(Drupal.offCanvas.getEdge())] = 0;
+      Drupal.offCanvas.$mainCanvasWrapper[0].style.paddingTop = 0;
       displace();
     }
   };

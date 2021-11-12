@@ -181,7 +181,7 @@
       let offset = 0;
 
       // Let scroll element take all the height available.
-      $element.css({ height: 'auto' });
+      $element[0].style.height = 'auto';
       const modalHeight = $container.height();
 
       $offsets.each((i, e) => {
@@ -213,7 +213,7 @@
       }
       // Set a minimum height on $element
       if (position === 'top') {
-        $element.css('min-height', `${Drupal.offCanvas.minimumHeight}px`);
+        $element[0].style.minHeight = `${Drupal.offCanvas.minimumHeight}px`;
       }
 
       displace();
@@ -235,10 +235,8 @@
         position === 'side'
           ? `${$(window).height() - (offsets.top + offsets.bottom)}px`
           : event.data.settings.height;
-      container.css({
-        position: 'fixed',
-        height,
-      });
+      container[0].style.position = 'fixed';
+      container[0].style.height = height;
 
       $element
         .dialog('option', adjustedOptions)
@@ -269,21 +267,21 @@
       const $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
 
       const width = $container.outerWidth();
+      // eslint-disable-next-line jquery/no-css
       const mainCanvasPadding = $mainCanvasWrapper.css(
         `padding-${Drupal.offCanvas.getEdge()}`,
       );
       if (position === 'side' && width !== mainCanvasPadding) {
-        $mainCanvasWrapper.css(
-          `padding-${Drupal.offCanvas.getEdge()}`,
-          `${width}px`,
-        );
+        $mainCanvasWrapper[0].style[
+          `padding-${Drupal.offCanvas.getEdge()}`
+        ] = `${width}px`;
         $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
         displace();
       }
 
       const height = $container.outerHeight();
       if (position === 'top') {
-        $mainCanvasWrapper.css('padding-top', `${height}px`);
+        $mainCanvasWrapper[0].style.paddingTop = `${height}px`;
         $container.attr('data-offset-top', height);
         displace();
       }
@@ -315,11 +313,10 @@
      * Resets main canvas wrapper and toolbar padding / margin.
      */
     resetPadding() {
-      Drupal.offCanvas.$mainCanvasWrapper.css(
-        `padding-${Drupal.offCanvas.getEdge()}`,
-        0,
-      );
-      Drupal.offCanvas.$mainCanvasWrapper.css('padding-top', 0);
+      Drupal.offCanvas.$mainCanvasWrapper[0].style[
+        `padding-${Drupal.offCanvas.getEdge()}`
+      ] = 0;
+      Drupal.offCanvas.$mainCanvasWrapper[0].style.paddingTop = 0;
       displace();
     },
   };
