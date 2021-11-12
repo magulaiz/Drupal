@@ -12,12 +12,10 @@
       this.listenTo(this.model, 'change:isFixed change:isViewportOverflowConstrained', this.isToolbarFixed);
     },
     isToolbarFixed: function isToolbarFixed() {
-      console.log('backbone: isToolbarFixed() in BodyVisualView.es6');
       var isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
       $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
     },
     render: function render() {
-      console.log('backbone: render() in BodyVisualView.es6');
       $('body').toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
   });

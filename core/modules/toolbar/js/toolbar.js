@@ -31,16 +31,6 @@
       this.renderBody();
     },
 
-    _validate: null,
-
-    get validate() {
-      return this._validate;
-    },
-
-    set validate(value) {
-      this._validate = value;
-    },
-
     _activeTab: JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')) ? "#".concat(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))) : null,
 
     get activeTab() {
@@ -92,6 +82,7 @@
       if (value !== this.activeTray) {
         this._activeTray = value;
         this.renderBody();
+        this.onActiveTrayChange(value);
         $(document).trigger('drupalToolbarTrayChange', this.activeTray);
       }
     },
@@ -153,11 +144,23 @@
         this._orientation = value;
         this.renderToolbar();
         this.updateToolbarHeight();
+        this.onOrientationChange();
         $(document).trigger('drupalToolbarOrientationChange', this.orientation);
       }
     },
 
     _locked: false,
+
+    get locked() {
+      return this._locked;
+    },
+
+    set locked(value) {
+      if (value !== this.locked && value !== null) {
+        this._locked = value;
+      }
+    },
+
     _isTrayToggleVisible: true,
 
     get isTrayToggleVisible() {
@@ -198,7 +201,6 @@
     },
 
     onTabClick: function onTabClick(e) {
-      console.log('vanilla: onTabClick()');
       e.preventDefault();
       e.stopPropagation();
 
@@ -208,7 +210,6 @@
         var clicked = clickedTab.getAttribute('data-toolbar-tray');
 
         if (!activeTab || "#".concat(clickedTab.id) !== activeTab) {
-          console.log('clickedTAB: ', clickedTab);
           this.activeTab = "#".concat(clickedTab.id);
         } else {
           this.activeTab = null;
@@ -216,7 +217,6 @@
       }
     },
     renderToolbar: function renderToolbar() {
-      console.log('vanilla: renderToolbar()');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -227,7 +227,6 @@
       }
     },
     renderMenu: function renderMenu() {
-      console.log('vanilla: render() in MenuVisualView');
       var subtrees = toolbarBehaviors.subtrees;
       var menu = document.querySelector('.toolbar-menu-administration');
       Object.keys(subtrees || {}).forEach(function (id) {
@@ -238,8 +237,7 @@
         $(menu).children('.toolbar-menu').drupalToolbarMenu();
       }
     },
-    updateTabs: function updateTabs(trayName) {
-      console.log('vanilla: updateTabs() in ToolbarVisualView');
+    updateTabs: function updateTabs() {
       var tab = this.activeTab;
 
       if (tab) {
@@ -251,7 +249,6 @@
           var id = tabElement.id;
 
           if (id) {
-            console.log('set activetab', id);
             localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
           }
 
@@ -271,21 +268,21 @@
         }
       }
     },
-    onActiveTrayChange: function onActiveTrayChange(model, tray) {
-      console.log('vanilla: onActiveTrayChange in ToolbarAuralView this needs to be filled out');
-      var relevantTray = tray === null ? this.activeTray : tray;
+    onActiveTrayChange: function onActiveTrayChange() {
+      var relevantTray = this.activeTray;
 
       if (!relevantTray) {
         return;
       }
 
-      var action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
-      var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
+      var action = this.activeTray === null ? Drupal.t('closed') : Drupal.t('opened');
+      var trayNameElement = document.querySelector(relevantTray);
+      var trayName = trayNameElement.querySelector('.toolbar-tray-name');
       var text;
 
       if (trayNameElement !== null) {
         text = Drupal.t('Tray "@tray" @action.', {
-          '@tray': trayNameElement.textContent,
+          '@tray': trayName.textContent,
           '@action': action
         });
       } else {
@@ -297,13 +294,11 @@
       Drupal.announce(text);
     },
     renderBody: function renderBody() {
-      console.log('vanilla: renderBody');
       $('body').toggleClass('toolbar-tray-open', !!this.activeTray);
     },
     updateTrayOrientation: function updateTrayOrientation() {
       var _this = this;
 
-      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView');
       var orientation = toolbarBehaviors.orientation;
       var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
       $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -332,7 +327,6 @@
       $(trays).filter('.toolbar-tray-horizontal.is-active').attr('data-offset-top', '');
     },
     updateBarAttributes: function updateBarAttributes() {
-      console.log('vanilla: updateBarAttributes() in ToolbarVisualView');
       var isOriented = toolbarBehaviors.isOriented;
       var toolbar = document.querySelector('#toolbar-administration');
 
@@ -349,7 +343,6 @@
       }
     },
     updateToolbarHeight: function updateToolbarHeight() {
-      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView');
       var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
       this.height = toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
@@ -362,14 +355,11 @@
       this.triggerDisplace();
     },
     triggerDisplace: function triggerDisplace() {
-      console.log('vanilla: triggerDisplace() in ToolbarVisualView');
-
       _.defer(function () {
         Drupal.displace(true);
       });
     },
     adjustPlacement: function adjustPlacement() {
-      console.log('vanilla: adjustPlacement() in ToolbarVisualView');
       var toolbar = document.querySelector('#toolbar-administration');
 
       if (!this.isOriented) {
@@ -379,19 +369,32 @@
         });
       }
     },
-    onOrientationToggleClick: function onOrientationToggleClick() {
-      console.log('vanilla: onOrientationToggleClick()');
+    onOrientationToggleClick: function onOrientationToggleClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var orientation = this.orientation;
+      var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
+      var locked = antiOrientation === 'vertical';
+
+      if (locked) {
+        localStorage.setItem('Drupal.toolbar.trayVerticalLocked', 'true');
+      } else {
+        localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
+      }
+
+      this.orientation = antiOrientation;
+      this.locked = locked;
     },
     onOrientationChange: function onOrientationChange() {
-      console.log('vanilla: onOrientationChange() in ToolbarAuralView');
+      Drupal.announce(Drupal.t('Tray orientation changed to @orientation.', {
+        '@orientation': this.orientation
+      }));
     },
     isToolbarFixed: function isToolbarFixed() {
-      console.log('backbone: isToolbarFixed() in BodyVisualView.es6');
       var isViewportOverflowConstrained = this.isViewportOverflowConstrained;
       $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.isFixed);
     },
     loadSubtrees: function loadSubtrees() {
-      console.log('vanilla: loadSubtrees()');
       var $activeTab = $(this.activeTab);
       var orientation = toolbarBehaviors.orientation;
 
@@ -414,6 +417,10 @@
           localStorage.setItem("Drupal.toolbar.subtreesHash.".concat(theme), subtreesHash);
         }
       }
+    },
+    touchEndToClick: function touchEndToClick(e) {
+      e.preventDefault();
+      e.target.click();
     }
   };
   Drupal.behaviors.toolbar = {
@@ -440,6 +447,21 @@
             return toolbarBehaviors.onTabClick(e);
           });
         });
+        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (button) {
+          button.addEventListener('click', function (e) {
+            return toolbarBehaviors.onOrientationToggleClick(e);
+          });
+        });
+        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
+          toolbarTab.addEventListener('touchend', function (e) {
+            return toolbarBehaviors.touchEndToClick(e);
+          });
+        });
+        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (toolbarTab) {
+          toolbarTab.addEventListener('touchend', function (e) {
+            return toolbarBehaviors.touchEndToClick(e);
+          });
+        });
         toolbarBehaviors.locked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
         toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
         Drupal.toolbar.models.toolbarModel = toolbarBehaviors;
@@ -450,7 +472,6 @@
           mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, toolbarBehaviors, label));
           Drupal.toolbar.mediaQueryChangeHandler.call(null, toolbarBehaviors, label, mql);
         });
-        var toolbarOrientationButton = document.querySelector('.toolbar-toggle-orientation button');
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
@@ -502,7 +523,6 @@
 
           if (!mql.matches || !toolbarBehaviors.orientation) {
             toolbarBehaviors.orientation = 'vertical';
-            toolbarBehaviors.validate = true;
           }
 
           break;
@@ -513,7 +533,6 @@
 
         case 'toolbar.wide':
           toolbarBehaviors.orientation = mql.matches && !toolbarBehaviors.locked ? 'horizontal' : 'vertical';
-          toolbarBehaviors.validate = true;
           toolbarBehaviors.isTrayToggleVisible = mql.matches;
           break;
 

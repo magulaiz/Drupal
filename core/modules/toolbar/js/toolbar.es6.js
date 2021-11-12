@@ -51,20 +51,6 @@
       this.renderMenu();
       this.renderBody();
     },
-
-    /**
-     * validate something something
-     *
-     * @type {bool}
-     */
-    _validate: null,
-    get validate() {
-      return this._validate;
-    },
-    set validate(value) {
-      this._validate = value;
-    },
-
     /**
      * The active toolbar tab. All other tabs should be inactive under
      * normal circumstances. It will remain active across page loads. The
@@ -128,6 +114,7 @@
       if (value !== this.activeTray) {
         this._activeTray = value;
         this.renderBody();
+        this.onActiveTrayChange(value);
         // Broadcast model changes to other modules.
         $(document).trigger('drupalToolbarTrayChange', this.activeTray);
       }
@@ -219,6 +206,7 @@
         this._orientation = value;
         this.renderToolbar();
         this.updateToolbarHeight();
+        this.onOrientationChange();
         // Broadcast model changes to other modules.
         $(document).trigger('drupalToolbarOrientationChange', this.orientation);
       }
@@ -233,6 +221,14 @@
      * @type {bool}
      */
     _locked: false,
+    get locked() {
+      return this._locked;
+    },
+    set locked(value) {
+      if (value !== this.locked && value !== null) {
+        this._locked = value;
+      }
+    },
 
     /**
      * Indicates whether the tray orientation toggle is visible.
@@ -292,7 +288,6 @@
     },
 
     onTabClick(e) {
-      console.log('vanilla: onTabClick()');
       e.preventDefault();
       e.stopPropagation();
       // If this tab has a tray associated with it, it is considered an
@@ -304,7 +299,6 @@
 
         // Set the event target as the active item if it is not already.
         if (!activeTab || `#${clickedTab.id}` !== activeTab) {
-          console.log('clickedTAB: ', clickedTab);
           this.activeTab = `#${clickedTab.id}`;
         } else {
           this.activeTab = null;
@@ -312,7 +306,6 @@
       }
     },
     renderToolbar() {
-      console.log('vanilla: renderToolbar()');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -338,7 +331,6 @@
       // return this;
     },
     renderMenu() {
-      console.log('vanilla: render() in MenuVisualView');
       const { subtrees } = toolbarBehaviors;
       const menu = document.querySelector('.toolbar-menu-administration');
       // Add subtrees.
@@ -355,11 +347,8 @@
     /**
      * Updates the display of the tabs: toggles a tab and the associated tray.
      */
-    updateTabs(trayName) {
-      console.log('vanilla: updateTabs() in ToolbarVisualView');
-
+    updateTabs() {
       const tab = this.activeTab;
-
       // Activate the selected tab.
       if (tab) {
         if (tab.length > 0) {
@@ -368,24 +357,20 @@
           // Mark the tab as pressed.
           tabElement.setAttribute('aria-pressed', 'true');
           tabElement.ariaPressed = true;
-
           // Store the active tab name or remove the setting.
           const { id } = tabElement;
           if (id) {
-            console.log('set activetab', id);
             localStorage.setItem(
               'Drupal.toolbar.activeTabID',
               JSON.stringify(id),
             );
           }
-
           const name = document
             .querySelector(this.activeTab)
             .getAttribute('data-toolbar-tray');
           // Activate the associated tray.
           const tray = `[data-toolbar-tray="${name}"].toolbar-tray`;
           const trayElement = document.querySelector(tray);
-
           if (trayElement) {
             trayElement.classList.add('is-active');
             this.activeTray = tray;
@@ -400,23 +385,21 @@
         }
       }
     },
-    // TODO: check aural works
-    onActiveTrayChange(model, tray) {
-      console.log(
-        'vanilla: onActiveTrayChange in ToolbarAuralView this needs to be filled out',
-      );
-      const relevantTray = tray === null ? this.activeTray : tray;
+    onActiveTrayChange() {
+      const relevantTray = this.activeTray;
       // Current activeTray and previous activeTray are empty, no state change
       // to announce.
       if (!relevantTray) {
         return;
       }
-      const action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
-      const trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
+      const action =
+        this.activeTray === null ? Drupal.t('closed') : Drupal.t('opened');
+      const trayNameElement = document.querySelector(relevantTray);
+      const trayName = trayNameElement.querySelector('.toolbar-tray-name');
       let text;
       if (trayNameElement !== null) {
         text = Drupal.t('Tray "@tray" @action.', {
-          '@tray': trayNameElement.textContent,
+          '@tray': trayName.textContent,
           '@action': action,
         });
       } else {
@@ -425,7 +408,6 @@
       Drupal.announce(text);
     },
     renderBody() {
-      console.log('vanilla: renderBody');
       $('body')
         // Toggle the toolbar-tray-open class on the body element. The class is
         // applied when a toolbar tray is active. Padding might be applied to
@@ -435,22 +417,17 @@
     /**
      * Updates the orientation of the active tray if necessary.
      */
-    // TODO: remove jquery maybe
     updateTrayOrientation() {
-      console.log('vanilla: updateTrayOrientation() in ToolbarVisualView');
       const { orientation } = toolbarBehaviors;
-
       // The antiOrientation is used to render the view of action buttons like
       // the tray orientation toggle.
       const antiOrientation =
         orientation === 'vertical' ? 'horizontal' : 'vertical';
-
       // Toggle toolbar's parent classes before other toolbar classes to avoid
       // potential flicker and re-rendering.
       $('body')
         .toggleClass('toolbar-vertical', orientation === 'vertical')
         .toggleClass('toolbar-horizontal', orientation === 'horizontal');
-
       const removeClass =
         antiOrientation === 'horizontal'
           ? 'toolbar-tray-horizontal'
@@ -500,7 +477,6 @@
         .attr('data-offset-top', '');
     },
     updateBarAttributes() {
-      console.log('vanilla: updateBarAttributes() in ToolbarVisualView');
       const { isOriented } = toolbarBehaviors;
       const toolbar = document.querySelector('#toolbar-administration');
       if (isOriented) {
@@ -521,7 +497,6 @@
       }
     },
     updateToolbarHeight() {
-      console.log('vanilla: updateToolbarHeight() in ToolbarVisualView');
       const toolbarTabOuterHeight =
         $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       const toolbarTrayHorizontalOuterHeight =
@@ -538,7 +513,6 @@
       this.triggerDisplace();
     },
     triggerDisplace() {
-      console.log('vanilla: triggerDisplace() in ToolbarVisualView');
       _.defer(() => {
         Drupal.displace(true);
       });
@@ -547,7 +521,6 @@
      * Sets the tops of the trays so that they align with the bottom of the bar.
      */
     adjustPlacement() {
-      console.log('vanilla: adjustPlacement() in ToolbarVisualView');
       const toolbar = document.querySelector('#toolbar-administration');
 
       if (!this.isOriented) {
@@ -557,14 +530,32 @@
         });
       }
     },
-    onOrientationToggleClick() {
-      console.log('vanilla: onOrientationToggleClick()');
+    onOrientationToggleClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const orientation = this.orientation;
+      // Determine the toggle-to orientation.
+      const antiOrientation =
+        orientation === 'vertical' ? 'horizontal' : 'vertical';
+      const locked = antiOrientation === 'vertical';
+      // Remember the locked state.
+      if (locked) {
+        localStorage.setItem('Drupal.toolbar.trayVerticalLocked', 'true');
+      } else {
+        localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
+      }
+      // Update the model.
+      this.orientation = antiOrientation;
+      this.locked = locked;
     },
     onOrientationChange() {
-      console.log('vanilla: onOrientationChange() in ToolbarAuralView');
+      Drupal.announce(
+        Drupal.t('Tray orientation changed to @orientation.', {
+          '@orientation': this.orientation,
+        }),
+      );
     },
     isToolbarFixed() {
-      console.log('backbone: isToolbarFixed() in BodyVisualView.es6');
       // When the toolbar is fixed, it will not scroll with page scrolling.
       const { isViewportOverflowConstrained } = this;
       $('body').toggleClass(
@@ -573,7 +564,6 @@
       );
     },
     loadSubtrees() {
-      console.log('vanilla: loadSubtrees()');
       const $activeTab = $(this.activeTab);
       const { orientation } = toolbarBehaviors;
       // Only load and render the admin menu subtrees if:
@@ -622,6 +612,11 @@
         }
       }
     },
+    touchEndToClick(e) {
+      // Prevents delay and simulated mouse events
+      e.preventDefault();
+      e.target.click();
+    },
   };
 
   /**
@@ -669,11 +664,7 @@
             '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
         }
 
-        // Trigger an activeTab change so that listening scripts can respond on
-        // page load. This will call render.
-        // TODO: dsjf
-        // toolbarBehaviors.renderToolbar();
-
+        // Add event listeners to toolbar
         document
           .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
           .forEach((toolbarTab) => {
@@ -682,24 +673,33 @@
             );
           });
 
-        // TODO:
-        // Establish the toolbar models and views.
-        // const model = new Drupal.toolbar.ToolbarModel({
-        //   locked: JSON.parse(
-        //     localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
-        //   ),
-        //   activeTab: document.getElementById(
-        //     JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')),
-        //   ),
-        //   height: $('#toolbar-administration').outerHeight(),
-        // });
+        document
+          .querySelectorAll('.toolbar-toggle-orientation button')
+          .forEach((button) => {
+            button.addEventListener('click', (e) =>
+              toolbarBehaviors.onOrientationToggleClick(e),
+            );
+          });
+
+        document
+          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('touchend', (e) =>
+              toolbarBehaviors.touchEndToClick(e),
+            );
+          });
+
+        document
+          .querySelectorAll('.toolbar-toggle-orientation button')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('touchend', (e) =>
+              toolbarBehaviors.touchEndToClick(e),
+            );
+          });
 
         toolbarBehaviors.locked = JSON.parse(
           localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
         );
-        // toolbarBehaviors.activeTab = JSON.parse(
-        //   localStorage.getItem('Drupal.toolbar.activeTabID'),
-        // );
 
         toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
 
@@ -732,64 +732,12 @@
           );
         });
 
-        // Drupal.toolbar.views.toolbarVisualView =
-        //   new Drupal.toolbar.ToolbarVisualView({
-        //     el: toolbar,
-        //     model,
-        //     strings: options.strings,
-        //   });
-
-        // Drupal.toolbar.views.toolbarAuralView =
-        //   new Drupal.toolbar.ToolbarAuralView({
-        //     el: toolbar,
-        //     model,
-        //     strings: options.strings,
-        //   });
-
-        // Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
-        //   {
-        //     el: toolbar,
-        //     model,
-        //   },
-        // );
-
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
         // TODO: see whats different on mobile view without these
         // change states of isFixed, activeTray
         // model.trigger('change:isFixed', model, model.get('isFixed'));
         // model.trigger('change:activeTray', model, model.get('activeTray'));
-
-        const toolbarOrientationButton = document.querySelector(
-          '.toolbar-toggle-orientation button',
-        );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.onOrientationToggleClick(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.renderToolbarVisualView(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.updateTabs(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.updateTrayOrientation(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.updateBarAttributes(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.updateToolbarHeight(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.triggerDisplace(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.onOrientationChange(),
-        // );
-        // toolbarOrientationButton.addEventListener('click', () =>
-        //   ToolbarBehaviors.adjustPlacement(),
-        // );
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
@@ -918,7 +866,7 @@
           // vertical.
           if (!mql.matches || !toolbarBehaviors.orientation) {
             toolbarBehaviors.orientation = 'vertical';
-            toolbarBehaviors.validate = true;
+            // toolbarBehaviors.validate = true;
           }
           break;
 
@@ -929,7 +877,7 @@
         case 'toolbar.wide':
           toolbarBehaviors.orientation =
             mql.matches && !toolbarBehaviors.locked ? 'horizontal' : 'vertical';
-          toolbarBehaviors.validate = true;
+          // toolbarBehaviors.validate = true;
           // The tray orientation toggle visibility does not need to be
           // validated.
           toolbarBehaviors.isTrayToggleVisible = mql.matches;

@@ -21,7 +21,6 @@
        * {@inheritdoc}
        */
       render() {
-        console.log('backbone: render() in MenuVisualView.es6');
         const subtrees = this.model.get('subtrees');
         // Add subtrees.
         Object.keys(subtrees || {}).forEach((id) => {

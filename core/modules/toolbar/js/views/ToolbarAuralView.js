@@ -13,13 +13,11 @@
       this.listenTo(this.model, 'change:activeTray', this.onActiveTrayChange);
     },
     onOrientationChange: function onOrientationChange(model, orientation) {
-      console.log('backbone: onOrientationChange() in ToolbarAuralView.es6');
       Drupal.announce(Drupal.t('Tray orientation changed to @orientation.', {
         '@orientation': orientation
       }));
     },
     onActiveTrayChange: function onActiveTrayChange(model, tray) {
-      console.log('backbone: onActiveTrayChange() in ToolbarAuralView.es6');
       var relevantTray = tray === null ? model.previous('activeTray') : tray;
 
       if (!relevantTray) {

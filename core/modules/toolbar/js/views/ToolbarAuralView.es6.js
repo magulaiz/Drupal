@@ -38,7 +38,6 @@
        *   The new value of the orientation attribute in the model.
        */
       onOrientationChange(model, orientation) {
-        console.log('backbone: onOrientationChange() in ToolbarAuralView.es6');
         Drupal.announce(
           Drupal.t('Tray orientation changed to @orientation.', {
             '@orientation': orientation,
@@ -55,7 +54,6 @@
        *   The new value of the tray attribute in the model.
        */
       onActiveTrayChange(model, tray) {
-        console.log('backbone: onActiveTrayChange() in ToolbarAuralView.es6');
         const relevantTray =
           tray === null ? model.previous('activeTray') : tray;
         // Current activeTray and previous activeTray are empty, no state change
