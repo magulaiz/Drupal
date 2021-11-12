@@ -74,10 +74,8 @@
 
       function callback(input, color, propagate, colorScheme) {
         var matched;
-        $(input).css({
-          backgroundColor: color,
-          color: farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff'
-        });
+        $(input)[0].style.backgroundColor = color;
+        $(input)[0].color = farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff';
 
         if ($(input).val() && $(input).val() !== color) {
           $(input).val(color);
