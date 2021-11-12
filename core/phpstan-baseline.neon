@@ -241,44 +241,9 @@ parameters:
 			path: modules/aggregator/tests/src/Functional/AggregatorCronTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/aggregator/tests/src/Functional/AggregatorTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/aggregator/tests/src/Functional/Hal/FeedHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/aggregator/tests/src/Functional/Hal/ItemHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/aggregator/tests/src/Functional/Rest/FeedResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/aggregator/tests/src/Functional/Rest/ItemResourceTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/aggregator/tests/src/Kernel/Views/IntegrationTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block/tests/src/Functional/BlockTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block/tests/src/Functional/Rest/BlockResourceTestBase.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -294,26 +259,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/block_content/tests/src/Functional/BlockContentSaveTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/BlockContentTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/Rest/BlockContentResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/Rest/BlockContentTypeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/block_content/tests/src/Functional/Views/BlockContentTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -376,44 +321,9 @@ parameters:
 			path: modules/comment/tests/src/Functional/CommentBlockTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentPreviewTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/CommentTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/comment/tests/src/Functional/CommentTranslationUITest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Hal/CommentHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Rest/CommentResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Rest/CommentTypeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Views/CommentEditTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/comment/tests/src/Functional/Views/CommentTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -426,16 +336,6 @@ parameters:
 			path: modules/config/tests/config_override_test/src/ConfigOverrider.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/config/tests/config_test/tests/src/Functional/Rest/ConfigTestResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/config/tests/src/Functional/ConfigImportAllTest.php
-
-		-
 			message: "#^Drupal\\\\config_translation\\\\ConfigMapperManager must override __construct if using YAML plugins\\.$#"
 			count: 1
 			path: modules/config_translation/src/ConfigMapperManager.php
@@ -444,26 +344,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/config_translation/src/FormElement/DateFormat.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationInstallTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/contact/tests/src/Functional/Rest/ContactFormResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/contact/tests/src/Functional/Rest/MessageResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/content_moderation/tests/src/Functional/ModerationStateTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -476,32 +356,7 @@ parameters:
 			path: modules/content_translation/src/Controller/ContentTranslationController.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationMetadataFieldsTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationPendingRevisionTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationStandardFieldsTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: modules/content_translation/tests/src/Functional/ContentTranslationUITestBase.php
 
@@ -509,11 +364,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/datetime/tests/src/Functional/DateTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -546,34 +396,9 @@ parameters:
 			path: modules/dblog/tests/src/Kernel/DbLogTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/editor/tests/src/Functional/Rest/EditorResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/field/tests/src/Functional/FieldTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/field/tests/src/Functional/NestedFormTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/field/tests/src/Functional/Rest/FieldConfigResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/field/tests/src/Functional/Rest/FieldStorageConfigResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/field/tests/src/Functional/Views/FieldTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -606,24 +431,9 @@ parameters:
 			path: modules/file/tests/src/Functional/FileFieldRevisionTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileFieldTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileManagedTestBase.php
-
-		-
 			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
 			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/Formatter/FileMediaFormatterTestBase.php
 
 		-
 			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonCookieTest\\)\\:\\:\\$entityTypeId\\.$#"
@@ -634,16 +444,6 @@ parameters:
 			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\file\\\\Functional\\\\Hal\\\\FileUploadHalJsonTestBase\\)\\:\\:\\$entityTypeId\\.$#"
 			count: 1
 			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/Hal/FileUploadHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/Rest/FileResourceTestBase.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -663,17 +463,7 @@ parameters:
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: modules/filter/tests/src/Functional/Rest/FilterFormatResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: modules/hal/tests/src/Functional/Update/HalSettingsDeletionUpdateTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/help_topics/tests/src/Functional/HelpTopicTranslatedTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -698,52 +488,7 @@ parameters:
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: modules/image/tests/src/Functional/ImageFieldTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/image/tests/src/Functional/Rest/ImageStyleResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/image/tests/src/FunctionalJavascript/ImageFieldTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/jsonapi/tests/src/Functional/ResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/language/tests/src/Functional/Rest/ConfigurableLanguageResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/language/tests/src/Functional/Rest/ContentLanguageSettingsResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Functional/Rest/LayoutBuilderEntityViewDisplayResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Functional/Rest/LayoutRestTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: modules/layout_builder/tests/src/Functional/Update/LayoutBuilderContextMappingUpdatePathTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/FunctionalJavascript/InlineBlockTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -781,11 +526,6 @@ parameters:
 			path: modules/locale/tests/src/Functional/LocaleUpdateBase.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/locale/tests/src/Functional/LocaleUpdateBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/locale/tests/src/Functional/LocaleUpdateCronTest.php
@@ -799,36 +539,6 @@ parameters:
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: modules/locale/tests/src/Functional/LocaleUpdatePathTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/media/tests/src/Functional/MediaFunctionalTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/media/tests/src/Functional/Rest/MediaResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/media/tests/src/Functional/Rest/MediaTypeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/media/tests/src/FunctionalJavascript/MediaJavascriptTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/media/tests/src/FunctionalJavascript/MediaSourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/menu_link_content/tests/src/Functional/Rest/MenuLinkContentResourceTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -856,81 +566,6 @@ parameters:
 			path: modules/migrate_drupal_ui/src/Form/ReviewForm.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/CredentialFormTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeExecuteTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/NoMultilingualReviewPageTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/SourceProviderTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d6/IdConflictTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d6/MultilingualReviewPageTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d6/NoMultilingualReviewPageTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d6/NodeClassicTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d6/Upgrade6Test.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d7/IdConflictTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d7/MultilingualReviewPageTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d7/NoMultilingualReviewPageTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/d7/Upgrade7Test.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeAdminTest.php
@@ -956,24 +591,9 @@ parameters:
 			path: modules/node/tests/src/Functional/NodeSaveTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeTranslationUITest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/Rest/NodeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/Rest/NodeTypeResourceTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -986,44 +606,14 @@ parameters:
 			path: modules/node/tests/src/Functional/Views/NodeIntegrationTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/Views/NodeTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 5
 			path: modules/node/tests/src/Functional/Views/Wizard/NodeRevisionWizardTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/options/tests/src/Functional/OptionsDynamicValuesTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/page_cache/tests/src/Functional/PageCacheTagsIntegrationTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/path/tests/src/Functional/PathTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/path_alias/src/AliasManager.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/path_alias/tests/src/Functional/Hal/PathAliasHalJsonTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/path_alias/tests/src/Functional/Rest/PathAliasResourceTestBase.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -1081,11 +671,6 @@ parameters:
 			path: modules/rdf/tests/src/Functional/NodeAttributesTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rdf/tests/src/Functional/Rest/RdfMappingResourceTestBase.php
-
-		-
 			message: "#^Instantiated class EasyRdf_Graph not found\\.$#"
 			count: 1
 			path: modules/rdf/tests/src/Functional/StandardProfileTest.php
@@ -1133,47 +718,12 @@ parameters:
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: modules/responsive_image/tests/src/Functional/Rest/ResponsiveImageStyleResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/EntityResource/ModeratedNode/ModeratedNodeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/FileUploadResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/ResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/rest/tests/src/Functional/Rest/RestResourceConfigResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: modules/rest/tests/src/Functional/Update/RestSettingsDeletionUpdateTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/search/src/SearchIndex.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/search/tests/src/Functional/Rest/SearchPageResourceTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1199,26 +749,6 @@ parameters:
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: modules/settings_tray/tests/src/FunctionalJavascript/SettingsTrayTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/shortcut/tests/src/Functional/Rest/ShortcutResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/shortcut/tests/src/Functional/Rest/ShortcutSetResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/shortcut/tests/src/Functional/ShortcutTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/statistics/tests/src/Functional/StatisticsTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1256,26 +786,6 @@ parameters:
 			path: modules/system/tests/modules/entity_test/src/Plugin/Field/FieldType/ChangedTestItem.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestBundleResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestLabelResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestMapFieldResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/modules/entity_test/tests/src/Functional/Rest/EntityTestResourceTestBase.php
-
-		-
 			message: "#^Result of function usleep \\(void\\) is used\\.$#"
 			count: 1
 			path: modules/system/tests/modules/hold_test/src/EventSubscriber/HoldTestSubscriber.php
@@ -1286,59 +796,9 @@ parameters:
 			path: modules/system/tests/modules/module_installer_config_test/src/Entity/TestConfigType.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Cache/CacheTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Cache/PageCacheTagsTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Common/NoJavaScriptAnonymousTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Database/DatabaseTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityCacheTagsTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Entity/EntityWithUriCacheTagsTestBase.php
-
-		-
 			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
 			count: 1
 			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Menu/BreadcrumbTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Module/ModuleTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Rest/ActionResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/Functional/Rest/MenuResourceTestBase.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -1381,11 +841,6 @@ parameters:
 			path: modules/system/tests/src/Functional/Update/StableUninstallUpdateTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/system/tests/src/FunctionalJavascript/OffCanvasTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/system/tests/src/Kernel/System/CronQueueTest.php
@@ -1396,44 +851,9 @@ parameters:
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/Rest/TermResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/Rest/VocabularyResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/TaxonomyTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/taxonomy/tests/src/Functional/Views/TaxonomyTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/toolbar/src/Controller/ToolbarController.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/tour/tests/src/Functional/Rest/TourResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/tour/tests/src/Functional/TourTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/tour/tests/src/Functional/TourTestBasic.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -1444,11 +864,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 4
 			path: modules/update/src/UpdateProcessor.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/update/tests/src/Functional/UpdateTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1469,16 +884,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/user/src/EventSubscriber/UserRequestSubscriber.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/Rest/RoleResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/Rest/UserResourceTestBase.php
 
 		-
 			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\user\\\\Functional\\\\RestRegisterUserTest\\)\\:\\:\\$entityTypeId\\.$#"
@@ -1521,27 +926,12 @@ parameters:
 			path: modules/user/tests/src/Functional/UserRegistrationTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/Views/AccessTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/Views/UserChangedTest.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/Views/UserTestBase.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: modules/user/tests/src/FunctionalJavascript/UserPasswordResetTest.php
 
@@ -1603,22 +993,12 @@ parameters:
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: modules/views/tests/src/Functional/Rest/ViewResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: modules/views/tests/src/Functional/Update/GlossaryStatusFilterTest.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
 			path: modules/views/tests/src/Functional/Update/ViewsSortIdentifiersUpdateTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/views/tests/src/Functional/ViewTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1634,11 +1014,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/views/tests/src/Functional/Wizard/SortingTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/views/tests/src/Functional/Wizard/WizardTestBase.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1671,54 +1046,9 @@ parameters:
 			path: modules/views/views.views_execution.inc
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/views_ui/tests/src/Functional/UITestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/workflows/tests/src/Functional/Rest/WorkflowResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: modules/workspaces/tests/src/Functional/EntityResource/WorkspaceResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: profiles/demo_umami/modules/demo_umami_content/tests/src/Functional/UninstallDefaultContentTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: profiles/demo_umami/tests/src/Functional/DemoUmamiProfileTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: profiles/demo_umami/tests/src/Functional/UmamiMultilingualInstallTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: profiles/standard/tests/src/Functional/StandardTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: profiles/standard/tests/src/FunctionalJavascript/StandardJavascriptTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: rebuild.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalJavascriptTests/WebDriverTestBase.php
 
 		-
 			message: "#^The \"%%alias_id%%\" alias is deprecated in drupal\\:9\\.0\\.0 and is removed from drupal\\:20\\.0\\.0\\. This is a test\\.$#"
@@ -1733,82 +1063,12 @@ parameters:
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: tests/Drupal/FunctionalTests/Image/ToolkitTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/ConfigAfterInstallerTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigMultilingualTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
 			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigProfileHookInstall.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
 			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/InstallerTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Installer/StandardInstallerTest.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/BaseFieldOverrideResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/DateFormatResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/EntityFormDisplayResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/EntityFormModeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/EntityViewDisplayResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Rest/EntityViewModeResourceTestBase.php
-
-		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/FunctionalTests/Update/UpdatePathTestBase.php
 
 		-
 			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
@@ -1896,11 +1156,6 @@ parameters:
 			path: tests/Drupal/Tests/BrowserTestBase.php
 
 		-
-			message: "#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/BrowserTestBase.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'ClassWithConstants\\.SOME_KEY' \\(\\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY, \\\\Drupal\\\\Tests\\\\Component\\\\Annotation\\\\Doctrine\\\\Fixtures\\\\ClassWithConstants\\:\\:SOME_KEY\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Component/Annotation/Doctrine/DocParserTest.php
@@ -1964,3 +1219,8 @@ parameters:
 			message: "#^Call to an undefined static method PHPUnit\\\\Util\\\\ErrorHandler\\:\\:handleError\\(\\)\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Listeners/DrupalListener.php
+
+		-
+			message: "#^Class Drupal\\\\Tests\\\\Listeners\\\\ResultPrinterBase not found\\.$#"
+			count: 2
+			path: tests/Drupal/Tests/Listeners/HtmlOutputPrinter.php
