@@ -54,6 +54,7 @@ class RoleAccessCheck implements AccessInterface {
         $reason = sprintf('The %s role is required', $rid_string);
       }
     }
+
     // If there is no allowed role, give other access checks a chance.
     return AccessResult::neutral($reason)->addCacheContexts(['user.roles']);
   }
