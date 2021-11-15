@@ -132,7 +132,8 @@
     var label = $.trim($target.closest('td').next().html());
 
     if ($target.is(':checked')) {
-      this.$selected_div.show().css('display', 'block');
+      this.$selected_div.show();
+      this.$selected_div[0].style.display = 'block';
       this.checkedItems.push(label);
     } else {
       var position = $.inArray(label, this.checkedItems);
@@ -442,11 +443,11 @@
             if ($existingOperatorLabel.length) {
               $existingOperatorLabel.replaceWith(operatorLabel);
             } else {
-                $firstCell.append(operatorLabel);
-              }
-          } else {
-              $existingOperatorLabel.remove();
+              $firstCell.append(operatorLabel);
             }
+          } else {
+            $existingOperatorLabel.remove();
+          }
         }
       }
     },
