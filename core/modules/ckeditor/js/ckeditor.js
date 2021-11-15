@@ -150,7 +150,9 @@
     }
   };
   $(window).on('dialogcreate', function (e, dialog, $element, settings) {
-    $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
+    [].forEach.call($('.ui-dialog--narrow'), function (el) {
+      el.style.zIndex = CKEDITOR.config.baseFloatZIndex + 1;
+    });
   });
   $(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
     $('.ckeditor-dialog-loading').animate({

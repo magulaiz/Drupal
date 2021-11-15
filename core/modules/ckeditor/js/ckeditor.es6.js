@@ -292,7 +292,9 @@
 
   // Moves the dialog to the top of the CKEDITOR stack.
   $(window).on('dialogcreate', (e, dialog, $element, settings) => {
-    $('.ui-dialog--narrow').css('zIndex', CKEDITOR.config.baseFloatZIndex + 1);
+    [].forEach.call($('.ui-dialog--narrow'), (el) => {
+      el.style.zIndex = CKEDITOR.config.baseFloatZIndex + 1;
+    });
   });
 
   // Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
