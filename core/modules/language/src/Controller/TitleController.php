@@ -45,10 +45,10 @@ class TitleController extends ControllerBase {
    */
   public function setTitle(): string {
     if ($this->moduleHandler->moduleExists('content_translation')) {
-      return t('Content language and translation');
+      return $this->t('Content language and translation');
     }
     else {
-      return t('Content language');
+      return $this->t('Content language');
     }
   }
 
