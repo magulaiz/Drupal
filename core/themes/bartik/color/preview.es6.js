@@ -86,7 +86,9 @@
         );
 
       [].forEach.call($colorPreview.find('.color-preview-site-name'), (el) => {
-        el.style.color = $colorPalette.find('input[name="palette[titleslogan]"]').val();
+        el.style.color = $colorPalette
+          .find('input[name="palette[titleslogan]"]')
+          .val();
       });
     },
   };
