@@ -242,12 +242,15 @@
         if (typeof offsetLeft === 'number') {
           css.left = `${this.tableOffset.left - offsetLeft}px`;
         }
-        this.$html.css(
-          'scroll-padding-top',
+        this.$html[0].style.scrollPaddingTop =
           displace.offsets.top +
-            (this.stickyVisible ? this.$stickyTable.height() : 0),
-        );
-        return this.$stickyTable.css(css);
+          (this.stickyVisible ? this.$stickyTable.height() : 0);
+
+        Object.entries(css).forEach(([property, value]) => {
+          this.$stickyTable[0].style[property] = value;
+        });
+
+        return this.$stickyTable;
       },
 
       /**
