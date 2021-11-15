@@ -245,9 +245,8 @@
         // 1) Freeze the width (if it's not already set); don't use animations.
         if (this.$el[0].style.width === '') {
           this._widthAttributeIsEmpty = true;
-          this.$el
-            .addClass('quickedit-animate-disable-width')
-            .css('width', this.$el.width());
+          this.$el.addClass('quickedit-animate-disable-width');
+          this.$el[0].style.width = this.$el.width();
         }
 
         // 2) Add padding; use animations.
@@ -257,18 +256,17 @@
           self.$el.removeClass('quickedit-animate-disable-width');
 
           // Pad the editable.
-          self.$el
-            .css({
-              position: 'relative',
-              top: `${posProp.top - 5}px`,
-              left: `${posProp.left - 5}px`,
-              'padding-top': `${posProp['padding-top'] + 5}px`,
-              'padding-left': `${posProp['padding-left'] + 5}px`,
-              'padding-right': `${posProp['padding-right'] + 5}px`,
-              'padding-bottom': `${posProp['padding-bottom'] + 5}px`,
-              'margin-bottom': `${posProp['margin-bottom'] - 10}px`,
-            })
-            .data('quickedit-padded', true);
+          self.$el[0].style.position = 'relative';
+          self.$el[0].style.top = `${posProp.top - 5}px`;
+          self.$el[0].style.left = `${posProp.left - 5}px`;
+          self.$el[0].style.paddingTop = `${posProp['padding-top'] + 5}px`;
+          self.$el[0].style.paddingLeft = `${posProp['padding-left'] + 5}px`;
+          self.$el[0].style.paddingRight = `${posProp['padding-right'] + 5}px`;
+          self.$el[0].style.paddingBottom = `${
+            posProp['padding-bottom'] + 5
+          }px`;
+          self.$el[0].style.marginBottom = `${posProp['margin-bottom'] - 10}px`;
+          self.$el.data('quickedit-padded', true);
         }, 0);
       },
 
@@ -284,7 +282,8 @@
 
         // 1) Set the empty width again.
         if (this._widthAttributeIsEmpty) {
-          this.$el.addClass('quickedit-animate-disable-width').css('width', '');
+          this.$el.addClass('quickedit-animate-disable-width');
+          this.$el[0].style.width = '';
         }
 
         // 2) Remove padding; use animations (these will run simultaneously with)
@@ -295,16 +294,16 @@
           self.$el.removeClass('quickedit-animate-disable-width');
 
           // Unpad the editable.
-          self.$el.css({
-            position: 'relative',
-            top: `${posProp.top + 5}px`,
-            left: `${posProp.left + 5}px`,
-            'padding-top': `${posProp['padding-top'] - 5}px`,
-            'padding-left': `${posProp['padding-left'] - 5}px`,
-            'padding-right': `${posProp['padding-right'] - 5}px`,
-            'padding-bottom': `${posProp['padding-bottom'] - 5}px`,
-            'margin-bottom': `${posProp['margin-bottom'] + 10}px`,
-          });
+          self.$el[0].style.position = 'relative';
+          self.$el[0].style.top = `${posProp.top + 5}px`;
+          self.$el[0].style.left = `${posProp.left + 5}px`;
+          self.$el[0].style.paddingTop = `${posProp['padding-top'] - 5}px`;
+          self.$el[0].style.paddingLeft = `${posProp['padding-left'] - 5}px`;
+          self.$el[0].style.paddingRight = `${posProp['padding-right'] - 5}px`;
+          self.$el[0].style.paddingBottom = `${
+            posProp['padding-bottom'] - 5
+          }px`;
+          self.$el[0].style.marginBottom = `${posProp['margin-bottom'] + 10}px`;
         }, 0);
         // Remove the marker that indicates that this field has padding. This is
         // done outside the timed out function above so that we don't get numerous
@@ -343,7 +342,10 @@
         const propCount = props.length;
         for (let i = 0; i < propCount; i++) {
           p = props[i];
-          r[p] = parseInt(this._replaceBlankPosition($e.css(p)), 10);
+          r[p] = parseInt(
+            this._replaceBlankPosition(window.getComputedStyle($e[0])[p]),
+            10,
+          );
         }
         return r;
       },
