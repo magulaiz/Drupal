@@ -44,9 +44,7 @@
       $trigger.removeClass('visually-hidden');
       height = $nestedContextual.height();
       $trigger.addClass('visually-hidden');
-      $nestedContextual.css({
-        top: $nestedContextual.position().top + height
-      });
+      $nestedContextual[0].style.top = $nestedContextual.position().top + height;
     }
   }
 
