@@ -235,10 +235,9 @@
         position === 'side'
           ? `${$(window).height() - (offsets.top + offsets.bottom)}px`
           : event.data.settings.height;
-      // @todo get this to work.
-      container.css({
-        position: 'fixed',
-        height,
+      [].forEach.call(container, (el) => {
+        el.style.position = 'fixed';
+        el.style.height = height;
       });
 
       $element
