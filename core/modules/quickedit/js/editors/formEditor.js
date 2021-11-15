@@ -70,10 +70,11 @@
       this.$formContainer = $formContainer;
       $formContainer.find('.quickedit-form').addClass('quickedit-editable quickedit-highlighted quickedit-editing').attr('role', 'dialog');
 
-      if (this.$el.css('display') === 'inline') {
+      if (window.getComputedStyle(this.$el[0]).display === 'inline') {
         $formContainer.prependTo(this.$el.offsetParent());
         var pos = this.$el.position();
-        $formContainer.css('left', pos.left).css('top', pos.top);
+        $formContainer[0].style.left = pos.left;
+        $formContainer[0].style.top = pos.top;
       } else {
         $formContainer.insertBefore(this.$el);
       }
@@ -95,8 +96,8 @@
           if (state === 'invalid') {
             fieldModel.set('state', 'activating');
           } else {
-              fieldModel.set('state', 'changed');
-            }
+            fieldModel.set('state', 'changed');
+          }
         }).on('keypress.quickedit', 'input', function (event) {
           if (event.keyCode === 13) {
             return false;
