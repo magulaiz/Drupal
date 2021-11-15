@@ -11,6 +11,7 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
+# - PHPStan checks PHP files.
 # - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
@@ -281,6 +282,19 @@ for FILE in $FILES; do
       printf "ESLint: $FILE ${green}passed${reset}\n"
     fi
     cd $TOP_LEVEL
+  fi
+
+  ############################################################################
+  ### PHPSTAN
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme)$ ]]; then
+    vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist" "$TOP_LEVEL/$FILE"
+    if [ "$?" -ne "0" ]; then
+      # If there are failures set the status to a number other than 0.
+      STATUS=1
+    else
+      printf "PHPStan: $FILE ${green}passed${reset}\n"
+    fi
   fi
 
   ############################################################################
