@@ -232,7 +232,9 @@ class Datetime extends DateElementBase {
     // If we have two value elements, we need a fieldset.
     if ($element['#date_date_element'] !== 'none' && $element['#date_time_element'] !== 'none') {
       // We need a fieldset to hold both and to use the #title for the legend.
-      $element['#theme_wrappers'][] = 'fieldset';
+      $element['#theme_wrappers']['fieldset'] = [
+        '#id' =>  $element['#id'] . '--wrapper',
+      ];
       $element['#theme'] = 'datetime_form';
       $in_fieldset = TRUE;
     }
