@@ -1932,8 +1932,8 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         const $elx = $('#elx');
-        $elx[0].style.marginTop = 6;
-        $elx[0].style.marginLeft = 4;
+        $elx[0].style.marginTop = '6px';
+        $elx[0].style.marginLeft = '4px';
         $elx.position({
           my: 'left top',
           at: 'right bottom',
@@ -1983,8 +1983,8 @@ module.exports = {
         const $ = jQuery;
         const toReturn = {};
         const $elx = $('#elx');
-        $elx[0].style.marginTop = 6;
-        $elx[0].style.marginLeft = 4;
+        $elx[0].style.marginTop = '6px';
+        $elx[0].style.marginLeft = '4px';
         $elx.position({
           my: 'left top',
           at: 'right bottom',
@@ -2181,10 +2181,10 @@ module.exports = {
 
         const $scrollX = $('#scrollX');
 
-        $scrollX[0].style.width = 100;
-        $scrollX[0].style.height = 100;
-        $scrollX[0].style.left = 0;
-        $scrollX[0].style.top = 0;
+        $scrollX[0].style.width = '100px';
+        $scrollX[0].style.height = '100px';
+        $scrollX[0].style.left = '0';
+        $scrollX[0].style.top = '0';
 
         const $elx = $('#elx').position({
           my: 'left top',
