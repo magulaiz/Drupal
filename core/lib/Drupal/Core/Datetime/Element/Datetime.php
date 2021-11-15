@@ -297,7 +297,7 @@ class Datetime extends DateElementBase {
         $element['date']['#title'] = t('Date');
         $element['date']['#title_display'] = 'invisible';
       }
-      // Otherwise, the date element is all we have, so move the properities
+      // Otherwise, the date element is all we have, so move the properties
       // we need from the root element into the date element.
       else {
         foreach ($property_keys as $key) {
@@ -342,7 +342,7 @@ class Datetime extends DateElementBase {
         $element['time']['#title'] = t('Time');
         $element['time']['#title_display'] = 'invisible';
       }
-      // Otherwise, the time element is all we have, so move the properities
+      // Otherwise, the time element is all we have, so move the properties
       // we need from the root element into the date element.
       else {
         foreach ($property_keys as $key) {
