@@ -158,7 +158,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       for (var i = 0; i < il; i++) {
         $that = $(this.$originalHeaderCells[i]);
         $stickyCell = this.$stickyHeaderCells.eq($that.index());
-        display = $that.css('display');
+        display = window.getComputedStyle($that[0]).display;
 
         if (display !== 'none') {
           $stickyCell[0].style.width = window.getComputedStyle($that[0]).width;
