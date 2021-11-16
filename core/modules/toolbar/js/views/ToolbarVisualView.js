@@ -33,8 +33,8 @@
       var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
       this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
-      document.querySelector('body').style.paddingTop = this.model.get('height');
-      document.querySelector('html').style.scrollPaddingTop = this.model.get('height');
+      $('body')[0].style.paddingTop = "this.model.get('height')px";
+      $('html')[0].style.scrollPaddingTop = "this.model.get('height')px";
       this.triggerDisplace();
     },
     triggerDisplace: function triggerDisplace() {
