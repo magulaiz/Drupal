@@ -166,6 +166,18 @@ ckeditor5.htmlSupport:
   dependencies:
     - core/ckeditor5
 
+ckeditor5.htmlEmbed:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "31.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v31.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/html-embed.js: { preprocess: false, minified: true }
+  dependencies:
+    - core/ckeditor5
+
 ckeditor5.alignment:
   remote: https://github.com/ckeditor/ckeditor5
   version: "31.0.0"

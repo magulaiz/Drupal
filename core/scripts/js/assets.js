@@ -318,6 +318,14 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       library: 'ckeditor5.table',
     },
     {
+      pack: '@ckeditor/ckeditor5-html-embed',
+      folder: 'ckeditor5',
+      files: [
+        { from: 'build/html-embed.js', to: 'html-embed.js' }
+      ],
+      library: 'ckeditor5.htmlEmbed',
+    },
+    {
       pack: '@ckeditor/ckeditor5-html-support',
       folder: 'ckeditor5',
       files: [
