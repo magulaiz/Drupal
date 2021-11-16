@@ -79,10 +79,7 @@
         const toolbarTrayHorizontalOuterHeight =
           $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
         const height = toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight;
-        this.model.set(
-          'height',
-          height
-        );
+        this.model.set('height', height);
 
         document.querySelector('body').style.paddingTop = `${height}px`;
         document.querySelector('html').style.scrollPaddingTop = `${height}px`;
