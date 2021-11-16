@@ -216,7 +216,7 @@ class CommentAdminOverview extends FormBase {
             '#type' => 'link',
             '#title' => $commented_entity->label(),
             '#access' => $commented_entity->access('view'),
-            '#url' => $commented_entity->toUrl(),
+            '#url' => $commented_entity->hasLinkTemplate('canonical') ? $commented_entity->toUrl() : Url::fromUserInput('#'),
           ],
         ],
         'changed' => $this->dateFormatter->format($comment->getChangedTimeAcrossTranslations(), 'short'),
