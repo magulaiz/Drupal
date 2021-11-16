@@ -235,8 +235,13 @@
         position === 'side'
           ? `${$(window).height() - (offsets.top + offsets.bottom)}px`
           : event.data.settings.height;
-      container[0].style.position = 'fixed';
-      container[0].style.height = `${height}px`;
+
+      // @todo refactor this without breaking layout builder tests.
+      // eslint-disable-next-line jquery/no-css
+      container.css({
+        position: 'fixed',
+        height,
+      });
 
       $element
         .dialog('option', adjustedOptions)
