@@ -476,7 +476,11 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'width',
           value: (viewElement) => {
-            return `${viewElement.getAttribute('width')}px`;
+            if ( !isNaN(viewElement.getAttribute('width'))  ) {
+              return `${viewElement.getAttribute('width')}px`;
+            } else {
+              return `${viewElement.getAttribute('width')}`;
+            }
           },
         },
       })
@@ -488,7 +492,11 @@ export default class DrupalImageEditing extends Plugin {
         model: {
           key: 'height',
           value: (viewElement) => {
-            return `${viewElement.getAttribute('height')}px`;
+            if ( !isNaN(viewElement.getAttribute('height'))) {
+              return `${viewElement.getAttribute('height')}px`;
+            } else {
+              return `${viewElement.getAttribute('height')}`;
+            }
           },
         },
       });
