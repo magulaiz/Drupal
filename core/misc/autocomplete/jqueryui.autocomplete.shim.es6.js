@@ -8,11 +8,11 @@
     overrides: {},
   };
 
+  // Attach jQuery UI shim when autocomplete is initialized by
+  // Drupal.Autocomplete.
   document.addEventListener('drupal-autocomplete-init', (e) => {
     const { instance, options } = e.detail;
-    if (instance.input.classList.contains('form-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
-    }
+    Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
   });
 
   /**

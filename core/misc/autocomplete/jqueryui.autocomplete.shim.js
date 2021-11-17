@@ -33,10 +33,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     var _e$detail = e.detail,
         instance = _e$detail.instance,
         options = _e$detail.options;
-
-    if (instance.input.classList.contains('form-autocomplete')) {
-      Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
-    }
+    Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
   });
 
   var applyWidgetOverrides = function applyWidgetOverrides(instance, propertyToOverride, overrideWith) {
