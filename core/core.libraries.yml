@@ -33,6 +33,7 @@ autocomplete.jqueryui.shim:
     - core/drupal
     - core/jquery
     - core/drupal.jquery.position
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3083715.
 
 backbone:
   remote: https://github.com/jashkenas/backbone
