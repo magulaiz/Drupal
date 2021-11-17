@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\Yaml\Yaml;
 
-// cspell:ignore layercake everyblock justblockquote
+// cspell:ignore layercake everyblock justblockquote autoformat
 
 /**
  * Tests different ways of enabling CKEditor 5 plugins.
@@ -884,6 +884,7 @@ PHP,
     // Case 1: no extra CKEditor 5 plugins.
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
+      'ckeditor5_autoformat',
       'ckeditor5_bold',
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
@@ -896,6 +897,7 @@ PHP,
       'ckeditor5/drupal.ckeditor5',
       'ckeditor5/drupal.ckeditor5.emphasis',
       'ckeditor5/drupal.ckeditor5.internal',
+      'core/ckeditor5.autoformat',
       'core/ckeditor5.basic',
       'core/ckeditor5.internal',
       'core/ckeditor5.pasteFromOffice',
@@ -981,6 +983,7 @@ PHP,
     $editor = Editor::load('full_html');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [
+      'ckeditor5_autoformat',
       'ckeditor5_bold',
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
@@ -994,6 +997,7 @@ PHP,
       'ckeditor5/drupal.ckeditor5',
       'ckeditor5/drupal.ckeditor5.emphasis',
       'ckeditor5/drupal.ckeditor5.internal',
+      'core/ckeditor5.autoformat',
       'core/ckeditor5.basic',
       'core/ckeditor5.htmlSupport',
       'core/ckeditor5.internal',
