@@ -800,7 +800,7 @@ module.exports = {
         const replacement = '<div>test</div>';
         // Remove the visually-hidden assistive tech span added by Drupal
         // autocomplete.
-        jQuery('#assistive-hint-0').remove();
+        jQuery(`#${element.attr('aria-describedby')}`).remove();
         const parent = element.parent();
         element.replaceWith(replacement);
         return parent.html().toLowerCase().trim() === replacement;
