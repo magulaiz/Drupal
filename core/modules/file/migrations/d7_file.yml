@@ -14,12 +14,12 @@ source:
     # represents the fully qualified path relative to which URIs in the files
     # table are specified. This can be a local file directory containing the
     # source site, e.g. /var/www/docroot, or the site address,
-    # e.g. https://example.com. This value is supposed to be concatenated
-    # with file path (typically sites/default/files) and used as a source
+    # e.g. https://example.com. This value will be concatenated
+    # with the file path (typically sites/default/files) and used as the source
     # location for the files.
     #
     # Suppose that the source files have been moved by other means to
-    # location on the destination site.
+    # a location on the destination site.
     # Source site:
     #   Location of files: /var/www/html/legacy/sites/default/files
     #   Public scheme: sites/default/files
