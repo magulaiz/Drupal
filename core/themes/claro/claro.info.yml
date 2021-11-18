@@ -90,7 +90,7 @@ libraries-override:
   node/drupal.node.preview:
     css:
       theme:
-        css/node.preview.css: false
+        css/node.preview.css: css/components/node-preview.css
 
   node/form:
     css:
@@ -172,8 +172,6 @@ libraries-extend:
     - claro/media_library.theme
   media_library/widget:
     - claro/media_library.theme
-  node/drupal.node.preview:
-    - claro/drupal.node.preview
 
 quickedit_stylesheets:
   - css/components/quickedit.css
