@@ -377,7 +377,7 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
       // screenreaders on initial focus. If an input already has a description
       // associated with it, the additional content must be added to the
       // existing description in a visually hidden container.
-      $inserted_screenreader_only_description = $description->find('css', '[data-autocomplete-assistive-hint]');
+      $inserted_screenreader_only_description = $description->find('css', "#$id-assistive-hint");
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
         // This input has a pre-existing description, so check for the visually
@@ -385,14 +385,17 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
         $this->assertNotNull($inserted_screenreader_only_description);
         $expected_description = 'This also tests appending minChar screenreader hints to descriptions Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
         $expected_screenreader_only_description = 'Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
-        $this->assertEquals($expected_description, $description->getText());
+        $description_text = [];
+        foreach ($this->getAllDescriptions($input) as $desc) {
+          $description_text[] = $desc->getText();
+        }
+        $this->assertEquals($expected_description, implode(' ', $description_text));
         $this->assertEquals($expected_screenreader_only_description, $inserted_screenreader_only_description->getText());
       }
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-separate-data-attributes') {
         // This input does not have a pre-existing description, so a visually
         // hidden one is added solely for assistive tech.
-        $this->assertNull($inserted_screenreader_only_description);
         $this->assertTrue($description->hasClass('visually-hidden'));
         $expected_description = 'Type 2 or more characters for results. When autocomplete results are available use up and down arrows to review and enter to select. Touch device users, explore by touch or with swipe gestures.';
         $this->assertEquals($expected_description, $description->getText());
@@ -405,10 +408,14 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
 
       /* cspell:disable-next-line */
       if ($id === 'edit-two-minchar-data-autocomplete') {
-        $inserted_screenreader_only_description = $description->find('css', '[data-autocomplete-assistive-hint]');
-        $this->assertNull($inserted_screenreader_only_description);
+        try {
+          $inserted_screenreader_only_description = $page->findById("$id-assistive-hint");
+          $this->assertFalse(TRUE, "Assistive hint was found on the page.");
+        } catch (\Exception $e) {
+          $this->assertTrue(TRUE, "Assistive hint not found on the page.");
+        }
         $expected_description = 'This also tests appending minChar screenreader hints to descriptions';
-        $this->assertEquals($expected_description, $description->getText());
+        $this->assertEquals($expected_description, $this->getDescription($input)->getText());
       }
 
       /* cspell:disable-next-line */
@@ -624,9 +631,32 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
    */
   public function getDescription(NodeElement $input) {
     $aria_describedby = $input->getAttribute('aria-describedby');
+    $aria_describedby_ids = preg_split("/\s+/", trim($aria_describedby));
+    // The autocomplete script added the last id.
+    $aria_describedby = array_pop($aria_describedby_ids);
     $description = $this->getSession()->getPage()->findById($aria_describedby);
     $this->assertNotNull($description);
     return $description;
   }
 
+  /**
+   * Gets all descriptions associated with an input.
+   *
+   * @param \Behat\Mink\Element\NodeElement $input
+   *   The autocomplete input element.
+   *
+   * @return \Behat\Mink\Element\NodeElement[]
+   *   All elements referenced in the aria-describedby attribute.
+   */
+  public function getAllDescriptions(NodeElement $input) {
+    $aria_describedby = $input->getAttribute('aria-describedby');
+    $aria_describedby_ids = preg_split("/\s+/", trim($aria_describedby));
+    $descriptions = [];
+    foreach ($aria_describedby_ids as $id) {
+      $description = $this->getSession()->getPage()->findById($id);
+      $this->assertNotNull($description);
+      $descriptions[] = $description;
+    }
+    return $descriptions;
+  }
 }
