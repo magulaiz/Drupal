@@ -525,3 +525,11 @@ export default class DrupalImageEditing extends Plugin {
       .add(downcastBlockImageLink());
   }
 }
+
+// A simple helper method to detect number strings.
+// I allows full number notation, so omitting 0 is not allowed:
+function isNumberString( value ) {
+  const parsedValue = parseFloat( value );
+
+  return !Number.isNaN( parsedValue ) && value === String( parsedValue );
+}
