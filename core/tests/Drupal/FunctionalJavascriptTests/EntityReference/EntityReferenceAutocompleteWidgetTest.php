@@ -411,7 +411,8 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
         try {
           $inserted_screenreader_only_description = $page->findById("$id-assistive-hint");
           $this->assertFalse(TRUE, "Assistive hint was found on the page.");
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
           $this->assertTrue(TRUE, "Assistive hint not found on the page.");
         }
         $expected_description = 'This also tests appending minChar screenreader hints to descriptions';
@@ -659,4 +660,5 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
     }
     return $descriptions;
   }
+
 }
