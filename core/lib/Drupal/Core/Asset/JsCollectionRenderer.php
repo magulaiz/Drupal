@@ -80,6 +80,11 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
           if (!isset($js_asset['preprocessed'])) {
             $element['#attributes']['src'] .= $query_string_separator . ($js_asset['cache'] ? $query_string : REQUEST_TIME);
           }
+          // @todo make it configurable to add query string for below.
+          // For now we add it to all the files which allow preprocessing.
+          elseif (!empty($js_asset['preprocess'])) {
+            $element['#attributes']['src'] .= $query_string_separator . $default_query_string;
+          }
           break;
 
         case 'external':
