@@ -501,6 +501,7 @@ class UrlTest extends UnitTestCase {
    * Tests the access() method for routed URLs.
    *
    * @param bool $access
+   *   The access value.
    *
    * @covers ::access
    * @covers ::accessManager
@@ -532,6 +533,7 @@ class UrlTest extends UnitTestCase {
    * Tests the renderAccess() method.
    *
    * @param bool $access
+   *   The access value.
    *
    * @covers ::renderAccess
    * @dataProvider accessProvider
@@ -842,7 +844,9 @@ class UrlTest extends UnitTestCase {
    * Creates a mock access manager for the access tests.
    *
    * @param bool $access
+   *   The access value.
    * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   The account to test.
    *
    * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -873,6 +877,7 @@ class TestUrl extends Url {
    * Sets the access manager.
    *
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   *   The access manager.
    */
   public function setAccessManager(AccessManagerInterface $access_manager) {
     $this->accessManager = $access_manager;
