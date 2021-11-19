@@ -127,21 +127,26 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#weight' => $event->getComponent()->getWeight(),
       ];
 
-      // Place the $content returned by the block plugin into a 'content' child
-      // element, as a way to allow the plugin to have complete control of its
-      // properties and rendering (for instance, its own #theme) without
-      // conflicting with the properties used above, or alternate ones used by
-      // alternate block rendering approaches in contributed modules. However,
-      // the use of a child element is an implementation detail of this
-      // particular block rendering approach. Semantically, the content returned
-      // by the block plugin, and in particular, attributes and contextual links
-      // are information that belong to the entire block. Therefore, we must
-      // move these properties from $content and merge them into the top-level
-      // element.
-      if (isset($content['#attributes'])) {
-        $build['#attributes'] = $content['#attributes'];
-        unset($content['#attributes']);
+      if (!$is_content_empty) {
+        // Place the $content returned by the block plugin into a 'content'
+        // child element, as a way to allow the plugin to have complete control
+        // of its properties and rendering (for instance, its own #theme)
+        // without conflicting with the properties used above, or alternate ones
+        // used by alternate block rendering approaches in contributed modules.
+        // However, the use of a child element is an implementation detail of
+        // this particular block rendering approach. Semantically, the content
+        // returned by the block plugin, and in particular, attributes and
+        // contextual links are information that belong to the entire block.
+        // Therefore, we must move these properties from $content and merge
+        // them into the top-level element.
+        if (isset($content['#attributes'])) {
+          $build['#attributes'] = $content['#attributes'];
+          unset($content['#attributes']);
+        }
       }
+
+      $build['content'] = $content;
+
       // Hide contextual links for inline blocks until the UX issues surrounding
       // editing them directly are resolved.
       // @see https://www.drupal.org/project/drupal/issues/3075308
