@@ -101,13 +101,13 @@ class Name extends InOperator {
 
     if ($this->options['is_grouped'] && isset($this->options['group_info']['group_items'][$input])) {
       $this->operator = $this->options['group_info']['group_items'][$input]['operator'];
-      $input = $this->options['group_info']['group_items'][$input]['value'];
+      $this->validated_exposed_input = $this->options['group_info']['group_items'][$input]['value'];
+      return;
     }
 
     $uids = [];
-    $values = $form_state->getValue($identifier);
-    if ($values && (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All')))) {
-      foreach ($values as $value) {
+    if ($input && (!$this->options['is_grouped'] || ($this->options['is_grouped'] && ($input != 'All')))) {
+      foreach ($input as $value) {
         $uids[] = $value['target_id'];
       }
     }
