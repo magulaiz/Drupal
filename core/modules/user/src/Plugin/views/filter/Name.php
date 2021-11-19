@@ -45,14 +45,33 @@ class Name extends InOperator {
   }
 
   protected function valueValidate($form, FormStateInterface $form_state) {
-    $uids = [];
-    if ($values = $form_state->getValue(['options', 'value'])) {
-      foreach ($values as $value) {
-        $uids[] = $value['target_id'];
+    // Autocomplete puts the values in target_id. Move the values to the
+    // expected depth.
+    // @todo Consider creating a trait/whatever to avoid duplicate code here
+    // and \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid.
+    if ($this->isAGroup()) {
+      if ($group_values = $form_state->getValue(['options', 'group_info', 'group_items'])) {
+        foreach ($group_values as $group_id => $item) {
+          $uids = [];
+          if (!empty($item['value'])) {
+            foreach ($item['value'] as $value) {
+              $uids[] = $value['target_id'];
+            }
+          }
+          $form_state->setValue(['options', 'group_info', 'group_items', $group_id, 'value'], $uids);
+        }
       }
-      sort($uids);
     }
-    $form_state->setValue(['options', 'value'], $uids);
+    else {
+      $uids = [];
+      if (!empty($form_state->getValue(['options', 'value']))) {
+        foreach ($form_state->getValue(['options', 'value']) as $value) {
+          $uids[] = $value['target_id'];
+        }
+        sort($uids);
+      }
+      $form_state->setValue(['options', 'value'], $uids);
+    }
   }
 
   public function acceptExposedInput($input) {
@@ -128,6 +147,21 @@ class Name extends InOperator {
     }
 
     return parent::adminSummary();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildExposedFiltersGroupForm(&$form, FormStateInterface $form_state) {
+    // Rewrite the numeric values for textfields to entity labels for
+    // autocomplete.
+    foreach ($this->options['group_info']['group_items'] as $key => $item) {
+      if (!empty($item['value'])) {
+        $users = User::loadMultiple(($item['value']));
+        $this->options['group_info']['group_items'][$key]['value'] = EntityAutocomplete::getEntityLabels($users);
+      }
+    }
+    parent::buildExposedFiltersGroupForm($form, $form_state);
   }
 
 }
