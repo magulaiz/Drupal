@@ -65,8 +65,13 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     $expected_link_headers = [
       '</foo?bar=&lt;baz&gt;&amp;baz=false>; rel="alternate"',
       '</foo/bar>; hreflang="nl"; rel="alternate"',
+      '</foo/bar>; hreflang="de"; rel="alternate"',
     ];
     $this->assertEquals($expected_link_headers, $this->getSession()->getResponseHeaders()['Link']);
+
+    // Check that duplicate alternate URLs with different hreflangs are allowed.
+    $test_link = $this->xpath('//head/link[@rel="alternate"][@href="/foo/bar"]');
+    $this->assertEquals(2, count($test_link), 'Duplicate alternate URLs are allowed.');
   }
 
   /**
@@ -98,10 +103,9 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
    * Helper function to make assertions about added HTTP headers.
    */
   protected function assertTeapotHeaders() {
-    $headers = $this->getSession()->getResponseHeaders();
-    $this->assertEquals($headers['X-Test-Teapot'], ['Teapot Mode Active']);
-    $this->assertEquals($headers['X-Test-Teapot-Replace'], ['Teapot replaced']);
-    $this->assertEquals($headers['X-Test-Teapot-No-Replace'], ['This value is not replaced', 'This one is added']);
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot', 'Teapot Mode Active');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-Replace', 'Teapot replaced');
+    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced');
   }
 
   /**

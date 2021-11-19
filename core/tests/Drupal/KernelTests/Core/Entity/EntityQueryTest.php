@@ -140,7 +140,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
           // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
-          //   list($field_name, $langcode, $values) = $units[$key]; causes
+          //   [$field_name, $langcode, $values] = $units[$key]; causes
           //   problems in PHP 7.3. Revert to better variable names once
           //   https://bugs.php.net/bug.php?id=76937 is fixed.
           $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
@@ -768,14 +768,16 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
+    field_test_memorize();
+
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    global $efq_test_metadata;
-    $this->assertEquals('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
+    $mem = field_test_memorize();
+    $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**

@@ -302,7 +302,6 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     // If this form is an AJAX request, disable all form redirects.
-    $request = $this->requestStack->getCurrentRequest();
     if ($ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST)) {
       $form_state->disableRedirect();
     }
@@ -1281,7 +1280,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         // value. Avoid image buttons (which come with garbage value), so we
         // only get value for the button actually clicked.
         if (!isset($element['#value']) && empty($element['#has_garbage_value'])) {
-          $element['#value'] = isset($element['#default_value']) ? $element['#default_value'] : '';
+          $element['#value'] = $element['#default_value'] ?? '';
         }
       }
     }

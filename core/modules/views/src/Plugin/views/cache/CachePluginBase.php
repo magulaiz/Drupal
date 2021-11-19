@@ -110,7 +110,7 @@ abstract class CachePluginBase extends PluginBase {
       case 'results':
         $data = [
           'result' => $this->prepareViewResult($this->view->result),
-          'total_rows' => isset($this->view->total_rows) ? $this->view->total_rows : 0,
+          'total_rows' => $this->view->total_rows ?? 0,
           'current_page' => $this->view->getCurrentPage(),
         ];
         $expire = ($this->cacheSetMaxAge($type) === Cache::PERMANENT) ? Cache::PERMANENT : (int) $this->view->getRequest()->server->get('REQUEST_TIME') + $this->cacheSetMaxAge($type);
@@ -214,7 +214,7 @@ abstract class CachePluginBase extends PluginBase {
         'build_info' => $build_info,
       ];
       // @todo https://www.drupal.org/node/2433591 might solve it to not require
-      //    the pager information here.
+      //   the pager information here.
       $key_data['pager'] = [
         'page' => $this->view->getCurrentPage(),
         'items_per_page' => $this->view->getItemsPerPage(),

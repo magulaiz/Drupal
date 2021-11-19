@@ -338,6 +338,9 @@ class Datelist extends DateElementBase {
    *   Array of keys from the input array that have no value, may be empty.
    */
   protected static function checkEmptyInputs($input, $parts) {
+    // The object key does not represent an input value, see
+    // \Drupal\Core\Datetime\Element\Datelist::valueCallback().
+    unset($input['object']);
     // Filters out empty array values, any valid value would have a string length.
     $filtered_input = array_filter($input, 'strlen');
     return array_diff($parts, array_keys($filtered_input));
@@ -347,7 +350,9 @@ class Datelist extends DateElementBase {
    * Rounds minutes and seconds to nearest requested value.
    *
    * @param $date
+   *   The date.
    * @param $increment
+   *   The value to round to.
    *
    * @return
    */

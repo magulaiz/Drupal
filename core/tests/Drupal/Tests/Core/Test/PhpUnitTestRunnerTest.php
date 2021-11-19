@@ -26,7 +26,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     // Create a mock runner.
     $runner = $this->getMockBuilder(PhpUnitTestRunner::class)
       ->disableOriginalConstructor()
-      ->setMethods(['xmlLogFilepath', 'runCommand'])
+      ->onlyMethods(['xmlLogFilepath', 'runCommand'])
       ->getMock();
 
     // Set some expectations for xmlLogFilepath().
@@ -71,7 +71,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    */
   public function testPhpUnitCommand() {
     $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
-    $this->assertRegExp('/phpunit/', $runner->phpUnitCommand());
+    $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
 
   /**
