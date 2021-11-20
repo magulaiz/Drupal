@@ -26,7 +26,12 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   public function testModuleList() {
     $module_list = ['system'];
-
+    $connection = \Drupal::database();
+    $database_module = $connection->getProvider();
+    if ($database_module !== 'core') {
+        $module_list[] = $database_module;
+    }
+    sort($module_list);
     $this->assertModuleList($module_list, 'Initial');
 
     // Try to install a new module.
