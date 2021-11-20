@@ -128,7 +128,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     $connection = \Drupal::database();
     $database_module = $connection->getProvider();
     if ($database_module !== 'core') {
-        $this->allModules[] = $database_module;
+      $this->allModules[] = $database_module;
     }
     sort($this->allModules);
     $this->container->get('module_installer')->install($this->allModules);
