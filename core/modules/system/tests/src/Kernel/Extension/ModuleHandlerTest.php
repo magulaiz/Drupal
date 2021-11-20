@@ -29,7 +29,7 @@ class ModuleHandlerTest extends KernelTestBase {
     $connection = \Drupal::database();
     $database_module = $connection->getProvider();
     if ($database_module !== 'core') {
-        $module_list[] = $database_module;
+      $module_list[] = $database_module;
     }
     sort($module_list);
     $this->assertModuleList($module_list, 'Initial');
