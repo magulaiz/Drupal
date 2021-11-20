@@ -74,6 +74,11 @@ class StableLibraryOverrideTest extends KernelTestBase {
     $this->allModules[] = 'system';
     $this->allModules[] = 'user';
     $this->allModules[] = 'path_alias';
+    $connection = \Drupal::database();
+    $database_module = $connection->getProvider();
+    if ($database_module !== 'core') {
+        $this->allModules[] = $database_module;
+    }
     sort($this->allModules);
     $this->container->get('module_installer')->install($this->allModules);
 
