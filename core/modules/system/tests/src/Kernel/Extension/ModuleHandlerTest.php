@@ -23,11 +23,12 @@ class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * The basic functionality of retrieving enabled modules.
+   *
+   * @todo Remove the database_module when #3129043 is merged.
    */
   public function testModuleList() {
     $module_list = ['system'];
-    $connection = \Drupal::database();
-    $database_module = $connection->getProvider();
+    $database_module = \Drupal::database()->getProvider();
     if ($database_module !== 'core') {
       $module_list[] = $database_module;
     }

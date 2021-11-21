@@ -25,6 +25,8 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
 
   /**
    * Tests that drupal_flush_all_caches() uses core.extension properly.
+   *
+   * @todo Remove the database_module when #3129043 is merged.
    */
   public function testDrupalFlushAllCachesModuleList() {
     $this->assertFalse(function_exists('system_test_help'));
@@ -35,8 +37,7 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     $this->containerBuilds = 0;
     drupal_flush_all_caches();
     $module_list = ['system_test', 'system'];
-    $connection = \Drupal::database();
-    $database_module = $connection->getProvider();
+    $database_module = \Drupal::database()->getProvider();
     if ($database_module !== 'core') {
       $module_list[] = $database_module;
     }
@@ -51,8 +52,6 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
     $this->containerBuilds = 0;
     drupal_flush_all_caches();
     $module_list = ['system'];
-    $connection = \Drupal::database();
-    $database_module = $connection->getProvider();
     if ($database_module !== 'core') {
       $module_list[] = $database_module;
     }
