@@ -54,6 +54,8 @@ class StableLibraryOverrideTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove the database_module when #3129043 is merged.
    */
   protected function setUp(): void {
     parent::setUp();
@@ -74,8 +76,7 @@ class StableLibraryOverrideTest extends KernelTestBase {
     $this->allModules[] = 'system';
     $this->allModules[] = 'user';
     $this->allModules[] = 'path_alias';
-    $connection = \Drupal::database();
-    $database_module = $connection->getProvider();
+    $database_module = \Drupal::database()->getProvider();
     if ($database_module !== 'core') {
       $this->allModules[] = $database_module;
     }
