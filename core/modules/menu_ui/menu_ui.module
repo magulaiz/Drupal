@@ -246,7 +246,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['menu'] = [
     '#type' => 'details',
     '#title' => t('Menu settings'),
-    '#access' => \Drupal::currentUser()->hasPermission('administer menu'),
+    '#access' => TRUE,
     '#open' => (bool) $defaults['id'],
     '#group' => 'advanced',
     '#attached' => [
