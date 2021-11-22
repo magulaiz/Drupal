@@ -16,6 +16,8 @@ class MigrateException extends \Exception {
    * The value is a Migration::MESSAGE_* constant.
    *
    * @var int
+   *
+   * @see \Drupal\migrate\Plugin\MigrationInterface
    */
   protected $level;
 
@@ -25,6 +27,8 @@ class MigrateException extends \Exception {
    * The value is a MigrateMap::STATUS_* constant.
    *
    * @var int
+   *
+   * @see \Drupal\migrate\Plugin\MigrateIdMapInterface
    */
   protected $status;
 
