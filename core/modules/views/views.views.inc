@@ -386,7 +386,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     else {
       // https://www.drupal.org/node/2451657#comment-11462881
       \Drupal::logger('views')->error(
-        'A non-existent config entity name returned by FieldStorageConfigInterface::getBundles(): entity type: %entity_type, bundle: %bundle, field name: %field',
+        'A non-existent config entity name returned by FieldStorageConfigInterface::getBundles(): entity type: %entity_type, bundle: %bundle, field name: %field. You can trigger a rebuild of the entity bundle field map if needed, see Drupal\Core\Entity\EntityFieldManagerInterface::rebuildBundleFieldMap() for instructions.',
         [
           '%entity_type' => $entity_type->id(),
           '%bundle' => $bundle,

@@ -530,6 +530,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // scale, as the time to query would grow exponentially with more fields
         // and bundles. A cache would be deleted during cache clears, which is
         // the only time it is needed, so a key value collection is used.
+        // See ::rebuildBundleFieldMap() for triggering a rebuild.
         $bundle_field_maps = $this->keyValueFactory->get('entity.definitions.bundle_field_map')->getAll();
         foreach ($bundle_field_maps as $entity_type_id => $bundle_field_map) {
           foreach ($bundle_field_map as $field_name => $map_entry) {
@@ -565,6 +566,29 @@ class EntityFieldManager implements EntityFieldManagerInterface {
       $this->fieldMapByFieldType[$field_type] = $filtered_map;
     }
     return $this->fieldMapByFieldType[$field_type];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public function rebuildBundleFieldMap() {
+    $map = [];
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
+      if (!$entity_type->entityClassImplements(FieldableEntityInterface::class)) {
+        continue;
+      }
+      foreach ($this->entityTypeBundleInfo->getBundleInfo($entity_type_id) as $bundle => $bundle_info) {
+        foreach ($this->getFieldDefinitions($entity_type_id, $bundle) as $field_name => $field_definition) {
+          if (!$field_definition->getFieldStorageDefinition()->isBaseField()) {
+            $map[$entity_type_id][$field_name]['type'] = $field_definition->getType();
+            $map[$entity_type_id][$field_name]['bundles'][$bundle] = $bundle;
+          }
+        }
+      }
+    }
+
+    $persistent_map = $this->keyValueFactory->get('entity.definitions.bundle_field_map');
+    $persistent_map->setMultiple($map);
   }
 
   /**

@@ -99,6 +99,18 @@ interface EntityFieldManagerInterface {
   public function getFieldMapByFieldType($field_type);
 
   /**
+   * Rebuild the bundle field map per entity.
+   *
+   * This can be used to rebuild the field map on demand. This should not be
+   * run frequently as it is a potentially slow running task. Use
+   * \Drupal::service('entity_field.manager')->rebuildBundleFieldMap() to
+   * run this.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/3129179
+   */
+  public function rebuildBundleFieldMap();
+
+  /**
    * Clears static and persistent field definition caches.
    */
   public function clearCachedFieldDefinitions();
