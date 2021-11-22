@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Provides logic for initializing autocomplete inputs with A11y_Autocomplete.
+ */
+
 (($, Drupal, drupalSettings, A11yAutocomplete, once) => {
   Drupal.Autocomplete = {};
   Drupal.Autocomplete.instances = {};
