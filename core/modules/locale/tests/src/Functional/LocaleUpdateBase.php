@@ -191,6 +191,7 @@ EOF;
     $translations_one = ['January' => 'Januar_1', 'February' => 'Februar_1', 'March' => 'Marz_1'];
     $translations_two = ['February' => 'Februar_2', 'March' => 'Marz_2', 'April' => 'April_2'];
     $translations_three = ['April' => 'April_3', 'May' => 'Mai_3', 'June' => 'Juni_3'];
+    // cspell:ignore Juli
     $translations_four = ['July' => 'Juli_4', 'August' => 'August_4', 'September' => 'September_4'];
 
     // Add a number of files to the local file system to serve as remote

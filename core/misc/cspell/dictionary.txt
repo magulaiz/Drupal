@@ -700,7 +700,6 @@ jqueryui
 jsonapi
 jsonlint
 jssdk
-juli
 jumplinks
 juni
 junidecode
