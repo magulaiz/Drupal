@@ -383,7 +383,6 @@ drupal.autocomplete:
     - core/drupal.announce
     - core/once
     - core/drupal.customevent
-    - core/drupal.fetch
     - core/drupal.array.includes
     - core/drupal.string.includes
     - core/autocomplete.jqueryui.shim
@@ -563,18 +562,6 @@ drupal.entity-form:
     misc/entity-form.js: {}
   dependencies:
     - core/drupal.form
-
-drupal.fetch:
-  version: "3.4.0"
-  license:
-    name: MIT
-    url: https://raw.githubusercontent.com/github/fetch/v3.4.1/LICENSE
-    gpl-compatible: true
-  js:
-    # @todo add nomodule once https://drupal.org/node/3181050 has landed.
-    assets/vendor/fetch/fetch.umd.js: {}
-  dependencies:
-    - core/es6-promise
 
 drupal.form:
   version: VERSION
