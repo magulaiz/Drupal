@@ -6,7 +6,7 @@ use Drupal\contact\Entity\ContactForm;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
- * Resource test vase for the contact_form entity.
+ * Resource test base for the contact_form entity.
  */
 abstract class ContactFormResourceTestBase extends ConfigEntityResourceTestBase {
 

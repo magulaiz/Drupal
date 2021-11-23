@@ -12,7 +12,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
- * Provides a default main form class for view forms.
+ * Provides a default main form class for Views forms.
  */
 class ViewsFormMainForm implements FormInterface, TrustedCallbackInterface {
 

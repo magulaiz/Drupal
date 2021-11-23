@@ -9,7 +9,7 @@ use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Provides test assertions for testing views-level cache tags.
+ * Provides test assertions for testing Views cache tags.
  */
 trait AssertViewsCacheTagsTrait {
 

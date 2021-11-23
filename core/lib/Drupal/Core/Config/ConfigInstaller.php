@@ -9,7 +9,7 @@ use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * The config installer to install configuration.
+ * The config installer.
  */
 class ConfigInstaller implements ConfigInstallerInterface {
 

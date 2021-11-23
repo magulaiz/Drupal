@@ -1066,7 +1066,7 @@ class TestAccessClass implements TrustedCallbackInterface {
 }
 
 /**
- * Mock callable for testing the pre_render.
+ * Mock callable for testing the pre_render callback.
  */
 class TestCallables implements TrustedCallbackInterface {
 

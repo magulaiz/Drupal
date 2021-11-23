@@ -8,7 +8,7 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
- * Resource test vase for the field_config entity.
+ * Resource test base for the field_config entity.
  */
 abstract class FieldConfigResourceTestBase extends ConfigEntityResourceTestBase {
 
