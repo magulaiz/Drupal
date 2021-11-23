@@ -1822,7 +1822,8 @@ function t($string, array $args = array(), array $options = array()) {
 function format_string($string, array $args = array()) {
   // Transform arguments before inserting them.
   foreach ($args as $key => $value) {
-    switch ($key[0]) {
+    $function = is_string($key) ? $key[0] : '!';
+    switch ($function) {
       case '@':
         // Escaped only.
         $args[$key] = check_plain($value);
