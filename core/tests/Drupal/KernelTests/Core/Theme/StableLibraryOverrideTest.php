@@ -54,8 +54,6 @@ class StableLibraryOverrideTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove the database_module when #3129043 is merged.
    */
   protected function setUp(): void {
     parent::setUp();
