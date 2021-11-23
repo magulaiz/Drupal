@@ -743,7 +743,7 @@
   if (!$.ui.hasOwnProperty('autocomplete')) {
     $.ui.autocomplete = () => {
       console.warn(
-        '$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
+        '$.ui.autocomplete no longer exists due to its removal in Drupal 9.4.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
       );
     };
   }

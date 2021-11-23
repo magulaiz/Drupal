@@ -56,6 +56,13 @@ class AutocompleteShimTestController extends ControllerBase {
           'class' => ['form-autocomplete'],
         ],
       ],
+      'direct_jquery_input' => [
+        '#type' => 'html_tag',
+        '#tag' => 'input',
+        '#attributes' => [
+          'id' => 'direct-jquery',
+        ],
+      ],
       '#attached' => [
         'library' => [
           'core/drupal.autocomplete',
