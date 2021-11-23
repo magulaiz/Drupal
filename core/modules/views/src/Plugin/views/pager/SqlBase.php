@@ -30,6 +30,13 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   protected $pagerParameters;
 
   /**
+   * The pager elements.
+   *
+   * @var array
+   */
+  protected static array $pagerElements = [];
+
+  /**
    * Constructs a SqlBase object.
    *
    * @param array $configuration
@@ -66,7 +73,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
     $options = parent::defineOptions();
     $options['items_per_page'] = ['default' => 10];
     $options['offset'] = ['default' => 0];
-    $options['id'] = ['default' => 0];
+    $options['id'] = ['default' => $this->getPagerElement()];
     $options['total_pages'] = ['default' => ''];
     $options['expose'] = [
       'contains' => [
@@ -289,6 +296,22 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
   }
 
   /**
+   * This function is the heart of this override class. It stores pager ID in a
+   * static array, so it doesn't hand out duplicate pager IDs.
+   */
+  private function getPagerElement(): int {
+    if ($this->view === NULL || $this->view->dom_id === NULL) {
+      return 0;
+    }
+    if (\array_key_exists($this->view->dom_id, static::$pagerElements)) {
+      return static::$pagerElements[$this->view->dom_id];
+    }
+    static::$pagerElements[$this->view->dom_id] = $this->pagerManager->getMaxPagerElementId() + 1;
+    $this->pagerManager->reservePagerElementId(static::$pagerElements[$this->view->dom_id]);
+    return static::$pagerElements[$this->view->dom_id];
+  }
+
+  /**
    * Set the current page.
    *
    * @param $number
@@ -301,7 +324,7 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
       return;
     }
 
-    $this->current_page = max(0, $this->pagerParameters->findPage($this->options['id']));
+    $this->current_page = max(0, $this->pagerParameters->findPage($this->getPagerElement()));
   }
 
   public function getPagerTotal() {
@@ -321,6 +344,8 @@ abstract class SqlBase extends PagerPluginBase implements CacheableDependencyInt
    * page is out of range.
    */
   public function updatePageInfo() {
+    $this->options['id'] = $this->getPagerElement();
+    
     if (!empty($this->options['total_pages'])) {
       if (($this->options['total_pages'] * $this->options['items_per_page']) < $this->total_items) {
         $this->total_items = $this->options['total_pages'] * $this->options['items_per_page'];
