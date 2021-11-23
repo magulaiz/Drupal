@@ -23,8 +23,6 @@ class ModuleHandlerTest extends KernelTestBase {
 
   /**
    * The basic functionality of retrieving enabled modules.
-   *
-   * @todo Remove the database_module when #3129043 is merged.
    */
   public function testModuleList() {
     $module_list = ['system'];
