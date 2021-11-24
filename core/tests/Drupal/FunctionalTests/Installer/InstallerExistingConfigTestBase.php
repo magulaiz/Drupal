@@ -69,6 +69,16 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       }
       $archiver->extractList($files, $config_sync_directory);
     }
+
+    // Add the module that is providing the database driver to the list of
+    // modules that can not be uninstalled in the core.extension configuration.
+    if (file_exists($config_sync_directory . '/core.extension.yml')) {
+      $core_extension = Yaml::decode(file_get_contents($config_sync_directory . '/core.extension.yml'));
+      $module = Database::getConnection()->getProvider();
+      $core_extension['module'][$module] = 0;
+      $core_extension['module'] = module_config_sort($core_extension['module']);
+      file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
+    }
   }
 
   /**
