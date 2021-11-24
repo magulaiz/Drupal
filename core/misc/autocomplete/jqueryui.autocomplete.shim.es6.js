@@ -400,6 +400,7 @@
   // jQuery UI autocomplete.
   $.fn.extend({
     autocomplete(...args) {
+      // cspell:ignore lauriii
       // @todo it was mentioned by lauriii on Nov 24 2021 that
       //   .form-autocomplete is not part of the logic to determine shim use.
       //   This bit of code is currently doing that. So should it change?

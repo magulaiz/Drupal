@@ -41,8 +41,7 @@ module.exports = {
       .waitForElementPresent('#autocomplete-wrap1', 1000);
   },
   after(browser) {
-    browser
-      .drupalUninstall();
+    browser.drupalUninstall();
   },
   'blacklist deprecation': (browser) => {
     browser.execute(
