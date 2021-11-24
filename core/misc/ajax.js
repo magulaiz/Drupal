@@ -677,12 +677,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var allUniqueBundleIDs = response.data.map(function (script) {
         var uniqueBundleID = script.src + ajax.instanceIndex;
         loadjs(script.src, uniqueBundleID, {
-          async: !!script.async,
+          async: false,
           before: function before(path, scriptEl) {
-            if (script.defer) {
-              scriptEl.defer = true;
-            }
-
+            Object.keys(script).forEach(function (attributeKey) {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
             parentEl.appendChild(scriptEl);
             return false;
           }
