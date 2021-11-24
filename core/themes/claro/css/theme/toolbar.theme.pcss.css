@@ -16,6 +16,7 @@
 }
 
 .toolbar-toggle-orientation > .toolbar-lining {
+  height: 100%;
   text-align: right; /* LTR */
 }
 [dir="rtl"] .toolbar-toggle-orientation > .toolbar-lining {

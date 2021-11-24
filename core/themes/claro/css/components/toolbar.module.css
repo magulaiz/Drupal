@@ -259,6 +259,7 @@ body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   top: auto;
   right: 0; /* LTR */
   bottom: 0;
+  height: 100%;
 }
 
 [dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {

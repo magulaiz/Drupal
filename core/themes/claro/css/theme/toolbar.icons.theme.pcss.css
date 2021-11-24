@@ -9,7 +9,7 @@
   position: relative;
   padding-left: var(--toolbar-icon-item-padding-start); /* LTR */
 }
-[dir="rtl"] .toolbar-tray.toolbar-icon {
+[dir="rtl"] .toolbar-tray .toolbar-icon {
   padding-right: var(--toolbar-icon-item-padding-start);
   padding-left: var(--toolbar-tab-padding--horizontal);
 }
@@ -31,10 +31,6 @@
 [dir="rtl"] .toolbar .toolbar-icon::before {
   right: 0.6667em;
   left: auto;
-}
-.toolbar-icon-toggle-vertical.toolbar-icon {
-  margin-top: 1px;
-  margin-bottom: 1px;
 }
 button.toolbar-icon {
   border: 0;
@@ -296,6 +292,9 @@ button.toolbar-icon {
   height: var(--toolbar-orientation-toggle-size);
   padding: 0;
   text-indent: -999em;
+}
+.toolbar .toolbar-toggle-orientation button.toolbar-icon-toggle-vertical {
+  height: 100%;
 }
 .toolbar .toolbar-toggle-orientation button::before {
   right: 0;

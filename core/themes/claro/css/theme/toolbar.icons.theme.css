@@ -15,7 +15,7 @@
   padding-left: calc(2.5rem - 1px); /* LTR */
 }
 
-[dir="rtl"] .toolbar-tray.toolbar-icon {
+[dir="rtl"] .toolbar-tray .toolbar-icon {
   padding-right: calc(2.5rem - 1px);
   padding-left: calc(1rem - 1px);
 }
@@ -38,11 +38,6 @@
 [dir="rtl"] .toolbar .toolbar-icon::before {
   right: 0.6667em;
   left: auto;
-}
-
-.toolbar-icon-toggle-vertical.toolbar-icon {
-  margin-top: 1px;
-  margin-bottom: 1px;
 }
 
 button.toolbar-icon {
@@ -342,6 +337,10 @@ button.toolbar-icon {
   height: 2.75rem;
   padding: 0;
   text-indent: -999em;
+}
+
+.toolbar .toolbar-toggle-orientation button.toolbar-icon-toggle-vertical {
+  height: 100%;
 }
 
 .toolbar .toolbar-toggle-orientation button::before {

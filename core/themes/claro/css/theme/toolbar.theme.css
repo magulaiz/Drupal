@@ -21,6 +21,7 @@
 }
 
 .toolbar-toggle-orientation > .toolbar-lining {
+  height: 100%;
   text-align: right; /* LTR */
 }
 
@@ -32,17 +33,17 @@
   display: flex;
   flex-wrap: wrap;
   color: #fff;
-  background: #222330;
+  background: #232429;
   box-shadow: none;
 }
 
 .toolbar-tray {
-  color: #222330;
+  color: #232429;
   background: #fff;
 }
 
 .toolbar-tray-vertical {
-  color: #222330;
+  color: #232429;
   border: 0; /* No border for unoriented mode (below 16.5em). */
   background: #fff;
   box-shadow: none;
@@ -53,16 +54,16 @@
 }
 
 .toolbar-tray-vertical.is-active {
-  border-right: 1px solid #d4d4d8;
+  border-right: 1px solid #d3d4d9;
 }
 
 [dir="rtl"] .toolbar-tray-vertical.is-active {
-  border-left: 1px solid #d4d4d8;
+  border-left: 1px solid #d3d4d9;
 }
 
 .toolbar-horizontal .toolbar-tray,
 [dir="rtl"] .toolbar-horizontal .toolbar-tray {
-  color: #222330;
+  color: #232429;
   border-bottom: 1px solid #d8d9e0;
   background: #fff;
   box-shadow: none;
@@ -92,18 +93,18 @@
 .toolbar-item:hover,
 .toolbar-item.is-active:hover {
   color: #fff;
-  background: #82828c;
+  background: #828388;
 }
 
 .toolbar-item:active,
 .toolbar-item.is-active:active {
   color: #fff;
-  background: #8e929c;
+  background: #919297;
 }
 
 .toolbar-item.is-active {
   color: #fff;
-  background: #545560;
+  background: #55565b;
 }
 
 @media only screen and (min-width: 48em) {
@@ -167,7 +168,7 @@
   position: relative;
   padding: 0.764rem 1.5rem;
   text-decoration: none;
-  color: #545560;
+  color: #55565b;
   background: #fff;
   line-height: 1.25rem;
   -webkit-font-smoothing: antialiased;
@@ -184,18 +185,18 @@
 
 .toolbar .level-2 a,
 .toolbar .level-2 .toolbar-handle {
-  color: #545560;
-  background: #fafbfd;
+  color: #55565b;
+  background: #f9faff;
 }
 
 .toolbar .level-3 a,
 .toolbar .level-3 .toolbar-handle {
-  color: #545560;
+  color: #55565b;
   background: #f3f4f9;
 }
 
 .toolbar .level-4 a {
-  color: #545560;
+  color: #55565b;
   background: #d8d9e0;
 }
 
@@ -210,7 +211,7 @@
 
 .level-2.menu-item--active-trail > .toolbar-box a {
   color: #003cc5;
-  background: #fafbfd;
+  background: #f9faff;
 }
 
 .level-3.menu-item--active-trail > .toolbar-box a {
@@ -258,16 +259,16 @@
 }
 
 .level-1 > .toolbar-menu {
-  border-top: 1px solid #d4d4d8;
+  border-top: 1px solid #d3d4d9;
 }
 
 .level-2 .toolbar-menu {
-  border: 1px solid #d4d4d8;
+  border: 1px solid #d3d4d9;
   border-width: 1px 0;
 }
 
 .toolbar-tray-vertical .toolbar-menu__menu-item {
-  border: 1px solid #d4d4d8;
+  border: 1px solid #d3d4d9;
   border-width: 0 0 1px;
 }
 
