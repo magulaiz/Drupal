@@ -255,11 +255,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       if (oldAutocomplete && (!this.length || !this[0].classList.contains('form-autocomplete'))) {
+        if (typeof this.data('ui-autocomplete') === 'undefined') {}
+
         return oldAutocomplete.apply(this, args);
       }
 
       Drupal.deprecationError({
-        message: 'The autocomplete() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
+        message: 'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
       });
       var id = this.attr('id');
       var optionMapping = {
@@ -484,7 +486,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
   if (!$.ui.hasOwnProperty('autocomplete')) {
     $.ui.autocomplete = function () {
-      console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.3.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
+      console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.4.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
     };
+
+    $.ui.autocomplete.shimmed = true;
   }
 })(jQuery, Drupal);

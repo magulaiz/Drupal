@@ -400,15 +400,32 @@
   // jQuery UI autocomplete.
   $.fn.extend({
     autocomplete(...args) {
+      // @todo it was mentioned by lauriii on Nov 24 2021 that
+      //   .form-autocomplete is not part of the logic to determine shim use.
+      //   This bit of code is currently doing that. So should it change?
       if (
         oldAutocomplete &&
         (!this.length || !this[0].classList.contains('form-autocomplete'))
       ) {
+        // Check if autocomplete is initialized.
+        if (typeof this.data('ui-autocomplete') === 'undefined') {
+          // @todo there are scenarios where jQuery UI autocomplete is being
+          //    - used directly
+          //    AND
+          //    - it is via a widget extending autocomplete
+          //  But because this override exists, those uses result in the error:
+          //  `cannot call methods on autocomplete prior to initialization;
+          //  attempted to call method 'widget'
+          //  The following line eliminates THAT error:
+          //  oldAutocomplete.apply(this);
+          //  However, it introduces a new one, so it's not clear if that is progress.
+        }
+
         return oldAutocomplete.apply(this, args);
       }
       Drupal.deprecationError({
         message:
-          'The autocomplete() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
+          'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
       });
       const id = this.attr('id');
 
@@ -739,12 +756,17 @@
 
   // If $.ui.autocomplete exists, it needs to remain there for modules that want
   // to use jQuery UI autocomplete via contrib module or the deprecated
-  // core/jquery.ui.autocomplete library;
+  // core/jquery.ui.autocomplete library.
   if (!$.ui.hasOwnProperty('autocomplete')) {
     $.ui.autocomplete = () => {
       console.warn(
         '$.ui.autocomplete no longer exists due to its removal in Drupal 9.4.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715',
       );
     };
+    // If $.ui.autocomplete is not present, that implicitly confirms that the
+    // page will have no direct usages of jQuery UI autocomplete. With this
+    // assurance, we add a flag used by jquery.ui.widget.overrides to let it
+    // know it's safe to override autocomplete-specific uses of widget().
+    $.ui.autocomplete.shimmed = true;
   }
 })(jQuery, Drupal);

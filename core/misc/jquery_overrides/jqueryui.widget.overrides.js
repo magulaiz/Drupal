@@ -25,7 +25,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       args[_key] = arguments[_key];
     }
 
-    if ($.ui.autocomplete) {
+    if ($.ui.autocomplete && $.ui.autocomplete.hasOwnProperty('shimmed')) {
       if (args[1] === $.ui.autocomplete && _typeof(args[2]) === 'object') {
         var supportedProperties = ['options', '_renderItem', '_renderMenu', '_resizeMenu'];
         var unsupported = Object.keys(args[2]).filter(function (key) {

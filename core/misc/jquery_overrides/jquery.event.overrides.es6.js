@@ -196,6 +196,10 @@
 
       // Autocomplete events must receive additional processing as jQuery UI
       // autocomplete is no longer part of Drupal core.
+      // @todo - this override should not happen when jQuery UI autocomplete is
+      // directly invoked, only when the shimmed version is used. I had wrapped
+      // this in an `if (this.hasClass('form-autocomplete')) {}`, but it sounds
+      // like this is being handled differently.
       processAutocompleteEvents(types, selector, data, fn, one, this);
 
       // Run jQuery's default on().

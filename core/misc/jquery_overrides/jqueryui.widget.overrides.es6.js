@@ -14,7 +14,7 @@
   $.widget = function (...args) {
     let runDefaultWidget = true;
 
-    if ($.ui.autocomplete) {
+    if ($.ui.autocomplete && $.ui.autocomplete.hasOwnProperty('shimmed')) {
       if (args[1] === $.ui.autocomplete && typeof args[2] === 'object') {
         const supportedProperties = [
           'options',

@@ -5,3 +5,19 @@ autocomplete_test_page:
     _title: 'autocomplete testing'
   requirements:
     _access: 'TRUE'
+
+autocomplete_test_page_including_direct:
+  path: '/autocomplete-shim-test-with-additional-direct-jquery'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::buildWithAdditionalDirectJquery'
+    _title: 'autocomplete testing with direct jquery use'
+  requirements:
+    _access: 'TRUE'
+
+autocomplete_test_page_bypass_a11y:
+  path: '/autocomplete-shim-test-bypass-a11y'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::bypassA11y'
+    _title: 'autocomplete testing bypasses a11y autocomplete'
+  requirements:
+    _access: 'TRUE'

@@ -2,8 +2,6 @@
 
 import jqueryUIAutocompleteShimTest from './jqueryUIAutocompleteShimTest';
 
-console.log(jqueryUIAutocompleteShimTest);
-
 module.exports = Object.assign(jqueryUIAutocompleteShimTest, {
   before(browser) {
     browser.drupalInstall().drupalLoginAsAdmin(() => {

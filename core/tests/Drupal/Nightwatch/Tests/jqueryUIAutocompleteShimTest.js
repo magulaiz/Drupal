@@ -41,7 +41,8 @@ module.exports = {
       .waitForElementPresent('#autocomplete-wrap1', 1000);
   },
   after(browser) {
-    browser.drupalUninstall();
+    browser
+      .drupalUninstall();
   },
   'blacklist deprecation': (browser) => {
     browser.execute(
@@ -88,6 +89,21 @@ module.exports = {
       },
     );
   },
+  'test deprecation': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const element = jQuery('#autocomplete').autocomplete();
+        return {};
+      },
+      [],
+      (result) => {
+        browser.assert.deprecationErrorExists(
+          'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
+        );
+      },
+    );
+  },
   'test autocomplete': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
@@ -113,9 +129,6 @@ module.exports = {
           result.value.menuHasClasses,
           true,
           'menu has expected classes',
-        );
-        browser.assert.deprecationErrorExists(
-          'The autocomplete() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
         );
       },
     );

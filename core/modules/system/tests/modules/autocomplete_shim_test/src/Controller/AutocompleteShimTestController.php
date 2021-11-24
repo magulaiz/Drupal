@@ -10,12 +10,12 @@ use Drupal\Core\Controller\ControllerBase;
 class AutocompleteShimTestController extends ControllerBase {
 
   /**
-   * Provides a page with the shimmed jQuery UI autocomplete library.
+   * Provides a page that loads A11y autocomplete, but all inputs use jQuery.
    *
    * @return array
    *   The render array.
    */
-  public function build() {
+  public function bypassA11y() {
     return [
       'container1' => [
         '#type' => 'container',
@@ -35,7 +35,7 @@ class AutocompleteShimTestController extends ControllerBase {
           '#tag' => 'input',
           '#attributes' => [
             'id' => 'autocomplete',
-            'class' => ['foo', 'form-autocomplete'],
+            'class' => ['foo'],
           ],
         ],
       ],
@@ -45,7 +45,6 @@ class AutocompleteShimTestController extends ControllerBase {
           'id' => 'autocomplete-contenteditable',
           'tabindex' => 0,
           'contenteditable' => '',
-          'class' => ['form-autocomplete'],
         ],
       ],
       'textarea' => [
@@ -53,24 +52,55 @@ class AutocompleteShimTestController extends ControllerBase {
         '#tag' => 'textarea',
         '#attributes' => [
           'id' => ['autocomplete-textarea'],
-          'class' => ['form-autocomplete'],
-        ],
-      ],
-      'direct_jquery_input' => [
-        '#type' => 'html_tag',
-        '#tag' => 'input',
-        '#attributes' => [
-          'id' => 'direct-jquery',
         ],
       ],
       '#attached' => [
         'library' => [
           'core/drupal.autocomplete',
+          'core/jquery.ui.autocomplete',
           // Attach jquery.simulate for use by Nightwatch tests.
           'jquery_simulate/jquery.simulate',
         ],
       ],
     ];
+  }
+
+  /**
+   * Provides a page with the shimmed jQuery UI autocomplete library.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function build() {
+    $build = $this->bypassA11y();
+    $build['container2']['input']['#attributes']['class'][] = 'form-autocomplete';
+    $build['container_contenteditable']['#attributes']['class'][] = 'form-autocomplete';
+    $build['textarea']['#attributes']['class'][] = 'form-autocomplete';
+    $build['#attached']['library'] = [
+      'core/drupal.autocomplete',
+      // Attach jquery.simulate for use by Nightwatch tests.
+      'jquery_simulate/jquery.simulate',
+    ];
+    return $build;
+  }
+
+  /**
+   * The test form with an added input that directly calls jQuery autocomplete.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function buildWithAdditionalDirectJquery() {
+    $build = $this->build();
+    $build['direct_jquery_input'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'input',
+      '#attributes' => [
+        'id' => 'direct-jquery',
+      ],
+    ];
+
+    return $build;
   }
 
 }
