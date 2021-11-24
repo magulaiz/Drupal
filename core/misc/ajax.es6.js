@@ -1646,11 +1646,22 @@
         // @see Drupal.behaviors.AJAX.detach
         const uniqueBundleID = script.src + ajax.instanceIndex;
         loadjs(script.src, uniqueBundleID, {
-          async: !!script.async,
+          // By default, dynamically added scripts are marked as async. Only
+          // explicitly marked async scripts should be loaded async.
+          async: false,
           before(path, scriptEl) {
-            if (script.defer) {
-              scriptEl.defer = true;
-            }
+            // This allows all attributes to be added, like defer, async and
+            // crossorigin.
+            Object.keys(script).forEach((attributeKey) => {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+
+            // By default, loadjs appends the script to the head. However, we
+            // want to add the script to the parent specified. This is just for
+            // consistency, because it doesn't actually matter for the script
+            // where it is added. Developers however expect library assets to
+            // show up where they declared them, so this makes things consistent
+            // with the assets that are not loaded with ajax.
             parentEl.appendChild(scriptEl);
             // Return `false` to bypass loadjs' default DOM insertion mechanism.
             return false;
