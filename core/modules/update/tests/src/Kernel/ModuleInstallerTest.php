@@ -27,5 +27,5 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->container->get('module_installer')->install(['help']);
     $this->assertNull($keyvalue->get('key'));
   }
-  
+
 }
