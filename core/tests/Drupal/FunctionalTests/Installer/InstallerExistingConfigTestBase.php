@@ -4,6 +4,7 @@ namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Archiver\ArchiveTar;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Installer\Form\SelectProfileForm;
 
 /**
