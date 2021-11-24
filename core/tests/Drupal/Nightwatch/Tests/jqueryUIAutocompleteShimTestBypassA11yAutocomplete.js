@@ -1,3 +1,4 @@
+// cSpell:words unshimmed
 // Runs jqueryUIAutocompleteShimTest.js but on a page where the input is not
 // initialized to use the shim. jQuery UI autocomplete is instead used directly.
 // Functionality is not re-routed to the shim. This is needed
