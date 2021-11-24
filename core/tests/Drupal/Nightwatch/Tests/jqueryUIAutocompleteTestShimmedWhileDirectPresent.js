@@ -1,30 +1,29 @@
-// Runs jqueryUIAutocompleteShimTest.js but on a page where the input is not
-// initialized to use the shim. jQuery UI autocomplete is instead used directly.
-// Functionality is not re-routed to the shim. This is needed
-// to confirm it's possible to use a contrib jQuery UI autocomplete while shim
-// overrides are present.
-
+// This file Runs the tests in jqueryUIAutocompleteShimTest.js with the
+// following use case:
+// - It is on a page where both a shimmed and unshimmed input are present.
+// - The tests are all performed on the shimmed input.
 import jqueryUIAutocompleteShimTest from './jqueryUIAutocompleteShimTest';
 
 const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
   beforeEach(browser) {
     browser
-      .drupalRelativeURL('/autocomplete-shim-test-bypass-a11y')
-      .waitForElementPresent('#autocomplete-wrap1', 1000);
-  },
-  after(browser) {
-    browser.drupalUninstall();
-  },
-  'the input is not shimmed': (browser) => {
-    browser
+      .drupalRelativeURL(
+        '/autocomplete-shim-test-with-additional-direct-jquery',
+      )
+      .waitForElementPresent('#autocomplete-wrap1', 1000)
       .execute(
         // eslint-disable-next-line func-names, prefer-arrow-callback
         function () {
           jQuery('#direct-jquery').autocomplete();
         },
       )
-      .waitForElementPresent('#autocomplete.ui-autocomplete-input', 1000)
-      .waitForElementNotPresent('#autocomplete[data-autocomplete-input]', 1000);
+      .waitForElementPresent('#direct-jquery.ui-autocomplete-input', 1000)
+      .waitForElementPresent('#autocomplete[data-autocomplete-input]');
+  },
+  after(browser) {
+    browser
+      .waitForElementNotPresent('[data-autocomplete-wrapper]', 1000)
+      .drupalUninstall();
   },
 });
 

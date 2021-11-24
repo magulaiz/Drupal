@@ -92,6 +92,7 @@ class AutocompleteShimTestController extends ControllerBase {
    */
   public function buildWithAdditionalDirectJquery() {
     $build = $this->build();
+    $build['#attached']['library'][] = 'core/jquery.ui.autocomplete';
     $build['direct_jquery_input'] = [
       '#type' => 'html_tag',
       '#tag' => 'input',
@@ -99,6 +100,22 @@ class AutocompleteShimTestController extends ControllerBase {
         'id' => 'direct-jquery',
       ],
     ];
+
+    return $build;
+  }
+
+  /**
+   * For testing a direct jQuery autocomplete input while shimmed is present.
+   *
+   * @return array
+   *   The render array.
+   */
+  public function buildWithAdditionalDirectJqueryAsPrimaryInput() {
+    $build = $this->buildWithAdditionalDirectJquery();
+    // The shimmed and non shimmed input trade ids so the same nightwatch test
+    // can run but test a different input.
+    $build['direct_jquery_input']['#attributes']['id'] = 'autocomplete';
+    $build['container2']['input']['#attributes']['id'] = 'direct-jquery';
 
     return $build;
   }

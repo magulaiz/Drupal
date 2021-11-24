@@ -2,7 +2,6 @@
 // are present to confirm that tests that pass with jQuery UI autocomplete
 // also pass with the shimmed core autocomplete.
 /* eslint-disable no-use-before-define */
-
 module.exports = {
   '@tags': ['core'],
   before(browser) {
