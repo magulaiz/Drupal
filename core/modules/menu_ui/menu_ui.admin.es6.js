@@ -27,13 +27,19 @@
    * Function to set the options of the menu parent item dropdown.
    */
   Drupal.menuUiUpdateParentList = function () {
-    const $menu = $('#edit-menu');
+    const $menu = $('#edit-menu-options');
+    const $linkEnabled = $('#edit-link-enabled');
     const values = [];
 
     $menu.find('input:checked').each(function () {
       // Get the names of all checked menus.
       values.push(Drupal.checkPlain($(this).val()));
     });
+    // Uncheck and hide link enabled checkbox if no menus selected.
+    if (values.length === 0) {
+      $linkEnabled.prop('checked', false);
+    }
+    $linkEnabled.closest('div').attr('hidden', values.length === 0);
 
     $.ajax({
       url: `${window.location.protocol}//${window.location.host}${Drupal.url(

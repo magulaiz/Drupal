@@ -195,7 +195,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       'menu_name' => $menu_name,
       'parent' => '',
       'weight' => 0,
-      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link', 0)
+      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link_enabled', (int) !empty($menu_name)),
     ];
   }
   return $defaults;

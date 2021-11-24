@@ -85,6 +85,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     // Add a menu link and save a new default (published) revision.
     $edit = [
       'menu[enabled]' => 1,
+      'menu[link_enabled]' => 1,
       'menu[title]' => 'Test menu link',
       'moderation_state[0][state]' => 'published',
     ];
@@ -120,6 +121,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     // Try to delete the menu link and save a new non-default (draft) revision.
     $edit = [
       'menu[enabled]' => 0,
+      'menu[link_enabled]' => 0,
       'moderation_state[0][state]' => 'draft',
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -170,6 +172,7 @@ class MenuUiContentModerationTest extends BrowserTestBase {
     // and ensure it's not immediately published.
     $edit = [
       'menu[enabled]' => 1,
+      'menu[link_enabled]' => 1,
       'menu[title]' => 'Second test menu link',
       'moderation_state[0][state]' => 'draft',
     ];
