@@ -195,6 +195,7 @@ function menu_ui_get_menu_link_defaults(NodeInterface $node) {
       'menu_name' => $menu_name,
       'parent' => '',
       'weight' => 0,
+      'enabled' => $node_type->getThirdPartySetting('menu_ui', 'link', 0)
     ];
   }
   return $defaults;
@@ -397,6 +398,11 @@ function menu_ui_form_node_type_form_alter(&$form, FormStateInterface $form_stat
   ];
   $options_cacheability->applyTo($form['menu']['menu_parent']);
 
+  $form['menu']['link_enabled'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Enable menu link (default)'),
+    '#default_value' => $type->getThirdPartySetting('menu_ui', 'link_enabled', 1),
+  ];
   $form['#validate'][] = 'menu_ui_form_node_type_form_validate';
   $form['#entity_builders'][] = 'menu_ui_form_node_type_form_builder';
 }
@@ -429,6 +435,7 @@ function menu_ui_form_node_type_form_validate(&$form, FormStateInterface $form_s
 function menu_ui_form_node_type_form_builder($entity_type, NodeTypeInterface $type, &$form, FormStateInterface $form_state) {
   $type->setThirdPartySetting('menu_ui', 'available_menus', array_values(array_filter($form_state->getValue('menu_options'))));
   $type->setThirdPartySetting('menu_ui', 'parent', $form_state->getValue('menu_parent'));
+  $type->setThirdPartySetting('menu_ui', 'link_enabled', $form_state->getValue('link_enabled'));
 }
 
 /**
