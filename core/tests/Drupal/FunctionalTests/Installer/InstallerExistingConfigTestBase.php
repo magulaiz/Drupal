@@ -76,9 +76,11 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
     if (file_exists($config_sync_directory . '/core.extension.yml')) {
       $core_extension = Yaml::decode(file_get_contents($config_sync_directory . '/core.extension.yml'));
       $module = Database::getConnection()->getProvider();
-      $core_extension['module'][$module] = 0;
-      $core_extension['module'] = module_config_sort($core_extension['module']);
-      file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
+      if ($module !== 'core') {
+        $core_extension['module'][$module] = 0;
+        $core_extension['module'] = module_config_sort($core_extension['module']);
+        file_put_contents($config_sync_directory . '/core.extension.yml', Yaml::encode($core_extension));
+      }
     }
   }
 
