@@ -19,17 +19,18 @@
   };
 
   Drupal.menuUiUpdateParentList = function () {
-    const $menu = $('#edit-menu-options');
-    const $linkEnabled = $('#edit-link-enabled');
+    var $menu = $('#edit-menu-options');
+    var $linkEnabled = $('#edit-link-enabled');
     var values = [];
     $menu.find('input:checked').each(function () {
       values.push(Drupal.checkPlain($(this).val()));
     });
 
-    // Uncheck and hide link enabled checkbox if no menus selected.
     if (values.length === 0) {
       $linkEnabled.prop('checked', false);
     }
+
+    $linkEnabled.closest('div').attr('hidden', values.length === 0);
     $.ajax({
       url: "".concat(window.location.protocol, "//").concat(window.location.host).concat(Drupal.url('admin/structure/menu/parents')),
       type: 'POST',
