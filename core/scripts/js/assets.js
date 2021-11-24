@@ -146,6 +146,14 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       ],
     },
     {
+      pack: '@drupal/autocomplete',
+      folder: 'a11y_autocomplete',
+      files: [
+        { from: 'dist/a11y.autocomplete.min.js', to: 'a11y.autocomplete.min.js' },
+        { from: 'dist/a11y.autocomplete.css', to: 'a11y.autocomplete.css' },
+      ],
+    },
+    {
       pack: 'picturefill',
       files: [{ from: 'dist/picturefill.min.js', to: 'picturefill.min.js' }],
     },
