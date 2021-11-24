@@ -1,3 +1,4 @@
+// cSpell:words unshimmed
 // This file Runs the tests in jqueryUIAutocompleteShimTest.js with the
 // following use case:
 // - It is on a page where both a shimmed and unshimmed input are present.
