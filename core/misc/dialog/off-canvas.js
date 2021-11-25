@@ -94,10 +94,8 @@
         }
       };
       var height = position === 'side' ? "".concat($(window).height() - (offsets.top + offsets.bottom), "px") : event.data.settings.height;
-      container.css({
-        position: 'fixed',
-        height: height
-      });
+      container[0].style.position = 'fixed';
+      container[0].style.height = "".concat(height);
       $element.dialog('option', adjustedOptions).trigger('dialogContentResize.off-canvas');
       Drupal.offCanvas.position = position;
     },
