@@ -37,7 +37,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     this.oldY = null;
     this.changed = false;
     this.maxDepth = 0;
-    this.rtl = window.getComputedStyle($(this.table)[0]).direction === 'rtl' ? -1 : 1;
+    this.rtl = window.getComputedStyle(this.table).direction === 'rtl' ? -1 : 1;
     this.striping = $(this.table).data('striping') === 1;
     this.scrollSettings = {
       amount: 4,

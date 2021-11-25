@@ -111,12 +111,12 @@
       Drupal.offCanvas.resetPadding();
       var $element = event.data.$element;
       var $container = Drupal.offCanvas.getContainer($element);
-      var $mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper;
+      var mainCanvasWrapper = Drupal.offCanvas.$mainCanvasWrapper[0];
       var width = $container.outerWidth();
-      var mainCanvasPadding = window.getComputedStyle($mainCanvasWrapper[0])["padding-".concat(Drupal.offCanvas.getEdge())];
+      var mainCanvasPadding = window.getComputedStyle(mainCanvasWrapper)["padding-".concat(Drupal.offCanvas.getEdge())];
 
       if (position === 'side' && width !== mainCanvasPadding) {
-        $mainCanvasWrapper[0].style["padding-".concat(Drupal.offCanvas.getEdge())] = "".concat(width, "px");
+        mainCanvasWrapper.style["padding-".concat(Drupal.offCanvas.getEdge())] = "".concat(width, "px");
         $container.attr("data-offset-".concat(Drupal.offCanvas.getEdge()), width);
         displace();
       }
@@ -124,7 +124,7 @@
       var height = $container.outerHeight();
 
       if (position === 'top') {
-        $mainCanvasWrapper[0].style.paddingTop = "".concat(height, "px");
+        mainCanvasWrapper.style.paddingTop = "".concat(height, "px");
         $container.attr('data-offset-top', height);
         displace();
       }

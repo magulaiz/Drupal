@@ -133,8 +133,8 @@
       function callback(input, color, propagate, colorScheme) {
         let matched;
         // Set background/foreground colors.
-        $(input)[0].style.backgroundColor = color;
-        $(input)[0].color =
+        input.style.backgroundColor = color;
+        input.color =
           farb.RGBToHSL(farb.unpack(color))[2] > 0.5 ? '#000' : '#fff';
 
         // Change input value.
