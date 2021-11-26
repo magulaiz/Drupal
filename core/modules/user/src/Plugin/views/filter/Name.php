@@ -34,7 +34,7 @@ class Name extends InOperator {
       '#target_type' => 'user',
       '#tags' => TRUE,
       '#default_value' => $default_value,
-      '#process_default_value' => $this->isExposed(),
+      '#process_default_value' => FALSE,
     ];
 
     $user_input = $form_state->getUserInput();
