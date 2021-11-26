@@ -80,4 +80,17 @@ interface ContextHandlerInterface {
    */
   public function applyContextMapping(ContextAwarePluginInterface $plugin, $contexts, $mappings = []);
 
+  /**
+   * Builds a form element for assigning a context to a given slot.
+   *
+   * @param \Drupal\Core\Plugin\ContextAwarePluginInterface $plugin
+   *   The context-aware plugin.
+   * @param \Drupal\Component\Plugin\Context\ContextInterface[] $contexts
+   *   An array of contexts.
+   *
+   * @return array
+   *   A form element for assigning context.
+   */
+  public function getContextAssignmentElement(ContextAwarePluginInterface $plugin, array $contexts);
+
 }
