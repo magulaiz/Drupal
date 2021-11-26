@@ -16,6 +16,11 @@ use Drupal\views\Plugin\views\filter\InOperator;
 #[ViewsFilter("user_name")]
 class Name extends InOperator {
 
+  /**
+   * Stores the exposed input for this filter.
+   */
+  public $validated_exposed_input;
+
   protected $alwaysMultiple = TRUE;
 
   /**
