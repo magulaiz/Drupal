@@ -138,26 +138,4 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
   }
 
-  /**
-   * Asserts that blocks in a given order in the page.
-   *
-   * @param string[] $items
-   *   An ordered list of strings that should appear in the blocks.
-   *
-   * @internal
-   */
-  protected function assertOrderInPage(array $items): void {
-    $session = $this->getSession();
-    $page = $session->getPage();
-    $blocks = $page->findAll('css', '[data-layout-content-preview-placeholder-label]');
-
-    // Filter will only return value if block contains expected text.
-    $blocks_with_expected_text = array_filter($blocks, function ($block, $key) use ($items) {
-      $block_text = $block->getText();
-      return strpos($block_text, $items[$key]) !== FALSE;
-    }, ARRAY_FILTER_USE_BOTH);
-
-    $this->assertSameSize($items, $blocks_with_expected_text);
-  }
-
 }
