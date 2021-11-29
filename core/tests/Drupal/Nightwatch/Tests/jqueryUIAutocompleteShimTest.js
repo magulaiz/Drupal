@@ -46,9 +46,9 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete');
-        element.attr('data-autocomplete-first-character-blacklist', '!');
-        Drupal.Autocomplete.initialize(element[0]);
+        const $element = jQuery('#autocomplete');
+        $element.attr('data-autocomplete-first-character-blacklist', '!');
+        Drupal.Autocomplete.initialize($element[0]);
       },
       [],
       () => {
@@ -106,10 +106,10 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete').autocomplete();
-        const menu = element.autocomplete('widget');
+        const $element = jQuery('#autocomplete');
+        const menu = $element.autocomplete('widget');
         return {
-          inputHasClasses: element.hasClass('ui-autocomplete-input'),
+          inputHasClasses: $element.hasClass('ui-autocomplete-input'),
           menuHasClasses:
             menu.hasClass('ui-autocomplete') &&
             menu.hasClass('ui-widget') &&
@@ -136,26 +136,26 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const toReturn = {};
-        const element = jQuery('#autocomplete')
-          .autocomplete({
+        const $element = jQuery('#autocomplete')
+          .autocomplete('option', {
             source: ['java', 'javascript'],
           })
           .val('ja')
           .autocomplete('search');
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
 
         let event = new KeyboardEvent('keydown', {
           keyCode: jQuery.ui.keyCode.DOWN,
           cancelable: true,
         });
-        element[0].dispatchEvent(event);
+        $element[0].dispatchEvent(event);
         toReturn.menuItemIsActive =
           menu.find('.ui-menu-item-wrapper.ui-state-active').length === 1;
         event = new KeyboardEvent('keydown', {
           keyCode: jQuery.ui.keyCode.ENTER,
           cancelable: true,
         });
-        element[0].dispatchEvent(event);
+        $element[0].dispatchEvent(event);
         toReturn.isDefaultPrevented = event.defaultPrevented;
         return toReturn;
       },
@@ -178,8 +178,8 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete')
-          .autocomplete({
+        const $element = jQuery('#autocomplete')
+          .autocomplete('option', {
             autoFocus: false,
             source: ['java', 'javascript'],
           })
@@ -188,7 +188,7 @@ module.exports = {
 
         const event = jQuery.Event('keydown');
         event.keyCode = jQuery.ui.keyCode.ENTER;
-        element.trigger(event);
+        $element.trigger(event);
         return {
           opposite: event.isDefaultPrevented(),
           isDefaultPrevented: !event.isDefaultPrevented(),
@@ -678,23 +678,26 @@ module.exports = {
       function (done) {
         const toReturn = {};
         const customVal = 'custom value';
-        const element = jQuery('#autocomplete-contenteditable').autocomplete({
-          delay: 0,
-          source: ['javascript'],
-          focus(event, ui) {
-            if (ui.item.value === 'javascript') {
-              toReturn.itemGainedFocus = ui.item.value === 'javascript';
-            }
-            jQuery(this).text(customVal);
-            event.preventDefault();
+        const $element = jQuery('#autocomplete-contenteditable').autocomplete(
+          'option',
+          {
+            delay: 0,
+            source: ['javascript'],
+            focus(event, ui) {
+              if (ui.item.value === 'javascript') {
+                toReturn.itemGainedFocus = ui.item.value === 'javascript';
+              }
+              jQuery(this).text(customVal);
+              event.preventDefault();
+            },
           },
-        });
-        element.simulate('focus').autocomplete('search', 'ja');
+        );
+        $element.simulate('focus').autocomplete('search', 'ja');
 
         setTimeout(() => {
-          element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
-          element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
-          toReturn.itemHasExpectedValue = element.text() === customVal;
+          $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
+          $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
+          toReturn.itemHasExpectedValue = $element.text() === customVal;
           done(toReturn);
         });
       },
@@ -722,24 +725,27 @@ module.exports = {
         function () {
           // eslint-disable-next-line no-new-func
           const customVal = 'custom value';
-          const element = jQuery('#autocomplete-contenteditable').autocomplete({
-            delay: 0,
-            source: ['javascript'],
-            focus(event, ui) {
-              if (ui.item.value === 'javascript') {
-                event.target.classList.add('the-item-gained-focus');
-              }
-              jQuery(this).text(customVal);
-              event.preventDefault();
+          const $element = jQuery('#autocomplete-contenteditable').autocomplete(
+            'option',
+            {
+              delay: 0,
+              source: ['javascript'],
+              focus(event, ui) {
+                if (ui.item.value === 'javascript') {
+                  event.target.classList.add('the-item-gained-focus');
+                }
+                jQuery(this).text(customVal);
+                event.preventDefault();
+              },
             },
-          });
-          element.simulate('focus').autocomplete('search', 'ja');
+          );
+          $element.simulate('focus').autocomplete('search', 'ja');
 
           setTimeout(() => {
-            element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
-            element.simulate('keydown', { keyCode: jQuery.ui.keyCode.ESCAPE });
-            if (element.text() === customVal) {
-              element.addClass('has-expected-value');
+            $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
+            $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.ESCAPE });
+            if ($element.text() === customVal) {
+              $element.addClass('has-expected-value');
             }
           });
         },
@@ -760,7 +766,7 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source(request, response) {
             // eslint-disable-next-line func-names
             setTimeout(function () {
@@ -772,21 +778,24 @@ module.exports = {
           },
         });
 
-        const element2 = jQuery('#autocomplete-textarea').autocomplete({
-          source(request, response) {
-            // eslint-disable-next-line func-names
-            setTimeout(function () {
-              response([request.term]);
-            });
+        const $element2 = jQuery('#autocomplete-textarea').autocomplete(
+          'option',
+          {
+            source(request, response) {
+              // eslint-disable-next-line func-names
+              setTimeout(function () {
+                response([request.term]);
+              });
+            },
+            response() {
+              toReturn.secondItemResponded = true;
+              done(toReturn);
+            },
           },
-          response() {
-            toReturn.secondItemResponded = true;
-            done(toReturn);
-          },
-        });
+        );
 
-        element.autocomplete('search', 'test');
-        element2.autocomplete('search', 'test');
+        $element.autocomplete('search', 'test');
+        $element2.autocomplete('search', 'test');
       },
       [],
       (result) => {
@@ -827,23 +836,23 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: ['java', 'javascript'],
           delay: 0,
         });
-        const menu = element.autocomplete('instance').menu.element;
+        const menu = $element.autocomplete('instance').menu.element;
 
         // In the jQuery version of this test, the search was triggered via
         // `element.val('j').simulate('keydown')`. This needs to be changed
         // due to Drupal autocomplete listening to the 'input' event, which
         // is not supported by simulate().
-        element.autocomplete('search', 'j');
+        $element.autocomplete('search', 'j');
         setTimeout(() => {
           toReturn.menuDisplaysInitially = menu.is(':visible');
           jQuery('#autocomplete-textarea').focus();
           setTimeout(() => {
             toReturn.menuHiddenAfterBlur = !menu.is(':visible');
-            element.autocomplete('search', 'j');
+            $element.autocomplete('search', 'j');
             setTimeout(() => {
               toReturn.displaysAfterSameValue = menu.is(':visible');
               done(toReturn);
@@ -873,16 +882,16 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: ['java', 'javascript'],
           delay: 0,
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
 
         jQuery('body').on('mousedown', (event) => {
           event.preventDefault();
         });
-        element.val('j').autocomplete('search', 'j');
+        $element.val('j').autocomplete('search', 'j');
         setTimeout(() => {
           toReturn.menuDisplaysInitially = menu.is(':visible');
           jQuery('body').simulate('mousedown');
@@ -933,7 +942,7 @@ module.exports = {
           toReturn[settings.type].justASelector = settings.selector;
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
-          toReturn[settings.type].element.autocomplete({
+          toReturn[settings.type].element.autocomplete('option', {
             autoFocus: false,
             delay: 0,
             source: data,
@@ -1112,16 +1121,16 @@ module.exports = {
           'Scala',
           'Scheme',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           delay: 0,
           source: data,
           change(event, ui) {
             done(ui.item === null);
           },
         });
-        element[0].dispatchEvent(new FocusEvent('focus'));
-        element.val('ja');
-        element[0].dispatchEvent(new FocusEvent('blur'));
+        $element[0].dispatchEvent(new FocusEvent('focus'));
+        $element.val('ja');
+        $element[0].dispatchEvent(new FocusEvent('blur'));
       },
       [],
       (result) => {
@@ -1146,36 +1155,36 @@ module.exports = {
           'Scheme',
         ];
         let first = true;
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           delay: 0,
           source: data,
           search() {
             if (first) {
-              toReturn.valOnFirstSearch = element.val() === 'ja';
+              toReturn.valOnFirstSearch = $element.val() === 'ja';
               first = false;
               return false;
             }
-            toReturn.valOnSecondSearch = element.val() === 'java';
+            toReturn.valOnSecondSearch = $element.val() === 'java';
           },
           open() {
             toReturn.menuOpened = true;
           },
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
         // With Drupal autocomplete, triggering a search does not
         // happen with keydown.
         if (usingA11yAutocomplete) {
-          element.autocomplete('search', 'ja');
+          $element.autocomplete('search', 'ja');
         } else {
-          element.val('ja').trigger('keydown');
+          $element.val('ja').trigger('keydown');
         }
 
         setTimeout(() => {
           toReturn.menuHiddenAfterFirstSearch = menu.is(':hidden');
           if (usingA11yAutocomplete) {
-            element.autocomplete('search', 'java');
+            $element.autocomplete('search', 'java');
           } else {
-            element.val('java').trigger('keydown');
+            $element.val('java').trigger('keydown');
           }
           setTimeout(() => {
             toReturn.menuVisibleAfterSecondSearch = menu.is(':visible');
@@ -2231,7 +2240,7 @@ module.exports = {
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
-  const element = jQuery(id).autocomplete({
+  const $element = jQuery(id).autocomplete('option', {
     source: ['a'],
     delay: 0,
     minLength: 0,
@@ -2242,17 +2251,17 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
     Drupal.Autocomplete.instances[
-      element.attr('id')
+      $element.attr('id')
     ]._internal_object.highlightItem = function () {
       didMove = true;
     };
   } else {
-    element.autocomplete('instance')._move = () => {
+    $element.autocomplete('instance')._move = () => {
       didMove = true;
     };
   }
 
-  element.simulate('keydown', {
+  $element.simulate('keydown', {
     keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
   });
   return didMove === shouldMove;
@@ -2289,20 +2298,21 @@ function arrowsMoveFocus(id, isKeyUp) {
 
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
-  const element = jQuery(id).autocomplete({
+  const $element = jQuery(id);
+  $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
     minLength: 0,
   });
 
-  element.on('keypress', () => {
+  $element.on('keypress', () => {
     didMove = document.activeElement.tagName === 'LI';
   });
-  element.simulate('keydown', {
+  $element.simulate('keydown', {
     keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
   });
 
-  element.simulate('keypress');
+  $element.simulate('keypress');
   return shouldMove === (document.activeElement.tagName !== 'LI');
 }
 
@@ -2310,10 +2320,10 @@ function sourceTest(source, async, done) {
   const toReturn = {};
   toReturn.errors = [];
 
-  const element = jQuery('#autocomplete').autocomplete({
+  const $element = jQuery('#autocomplete').autocomplete('option', {
     source,
   });
-  const menu = element.autocomplete('widget');
+  const menu = $element.autocomplete('widget');
 
   function itemMatch(item, name) {
     return item.value === name && item.label === name;
@@ -2335,7 +2345,7 @@ function sourceTest(source, async, done) {
       toReturn.errors.push('Item 2 expected value');
     }
 
-    element.autocomplete('destroy');
+    $element.autocomplete('destroy');
     if (async) {
       toReturn.isAsync = true;
       done(toReturn);
@@ -2345,9 +2355,9 @@ function sourceTest(source, async, done) {
   }
   if (async) {
     jQuery(document).on('ajaxStop', result);
-    element[0].addEventListener('autocomplete-open', result);
+    $element[0].addEventListener('autocomplete-open', result);
   }
-  element.val('j').autocomplete('search');
+  $element.val('j').autocomplete('search');
   if (!async) {
     result();
     return toReturn;
