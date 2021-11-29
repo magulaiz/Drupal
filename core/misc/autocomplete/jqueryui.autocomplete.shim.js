@@ -86,6 +86,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     instance.applyClasses('input');
     instance.applyClasses('listbox');
+    instance.input.setAttribute('data-autocomplete-shim-enabled', '');
     instance.liveRegion = document.querySelector('#drupal-live-announce');
     instance.options.isMultiline = instance.input.tagName === 'TEXTAREA' || instance.input.tagName !== 'INPUT' && isContentEditable;
 
@@ -259,7 +260,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         args[_key] = arguments[_key];
       }
 
-      if (oldAutocomplete && (!this.length || !this[0].classList.contains('form-autocomplete'))) {
+      if (oldAutocomplete && (!this.length || !this[0].hasAttribute('data-autocomplete-shim-enabled'))) {
         if (typeof this.data('ui-autocomplete') === 'undefined') {}
 
         return oldAutocomplete.apply(this, args);

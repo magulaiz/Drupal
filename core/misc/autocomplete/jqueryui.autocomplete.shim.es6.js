@@ -97,6 +97,8 @@
     instance.applyClasses('input');
     instance.applyClasses('listbox');
 
+    instance.input.setAttribute('data-autocomplete-shim-enabled', '');
+
     instance.liveRegion = document.querySelector('#drupal-live-announce');
 
     instance.options.isMultiline =
@@ -400,21 +402,15 @@
 
   const oldAutocomplete = $.fn.autocomplete;
 
-  // This fully replaces jQuery UI's autocomplete() function. This reproduces
-  // the API surface of jQuery UI autocomplete, but uses A11yAutocomplete for
-  // the functionality. This is applied to any input with the
-  // `form-autocomplete` class. If an input does not have that class, and
-  // jQuery UI autocomplete is available, the input will use an un-shimmed
-  // jQuery UI autocomplete.
+  // This provides jQuery UI's autocomplete() function for A11yAutocomplete
+  // instances. This reproduces the API surface of jQuery UI autocomplete, but
+  // uses A11yAutocomplete for the functionality.
   $.fn.extend({
     autocomplete(...args) {
-      // cspell:ignore lauriii
-      // @todo it was mentioned by lauriii on Nov 24 2021 that
-      //   .form-autocomplete is not part of the logic to determine shim use.
-      //   This bit of code is currently doing that. So should it change?
       if (
         oldAutocomplete &&
-        (!this.length || !this[0].classList.contains('form-autocomplete'))
+        (!this.length ||
+          !this[0].hasAttribute('data-autocomplete-shim-enabled'))
       ) {
         // Check if autocomplete is initialized.
         if (typeof this.data('ui-autocomplete') === 'undefined') {
