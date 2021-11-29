@@ -558,7 +558,7 @@
             // If args[2] doesn't exist, and args[1] is an object, treat each
             // args[1] object property as an individual autocomplete option that
             // should be set to the corresponding value.
-            if (typeof args[2] === 'undefined' && args[1] === 'object') {
+            if (typeof args[2] === 'undefined' && typeof args[1] === 'object') {
               // Individually set each option specified in the object.
               Object.keys(args[1]).forEach((key) => {
                 this.autocomplete('option', key, args[1][key]);

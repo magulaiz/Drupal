@@ -2202,6 +2202,31 @@ module.exports = {
       },
     );
   },
+  'option: set as object': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $element = jQuery('#autocomplete');
+        const expectedSource = ['foo'];
+        Drupal.Autocomplete.initialize($element[0]);
+        $element.autocomplete('option', {
+          source: expectedSource,
+        });
+        const source = $element.autocomplete('option', 'source');
+        return {
+          sourceExpectedValues: source === expectedSource,
+        };
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.value.sourceExpectedValues,
+          true,
+          'source has expected values',
+        );
+      },
+    );
+  },
 };
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
