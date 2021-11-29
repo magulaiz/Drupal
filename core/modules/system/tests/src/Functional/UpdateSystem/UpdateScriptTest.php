@@ -372,6 +372,7 @@ class UpdateScriptTest extends BrowserTestBase {
     // Add the info.yml file back and confirm we are able to go through the
     // update process uninterrupted.
     file_put_contents($file_path, Yaml::encode($extension_info));
+    drupal_flush_all_caches();
     $this->assertUpdateWithNoError($test_error_text, $extension_type, $extension_machine_name);
   }
 

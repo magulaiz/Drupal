@@ -476,15 +476,11 @@ services:
   Drupal\Core\Form\FormCacheInterface: '@form_cache'
   keyvalue:
     class: Drupal\Core\KeyValueStore\KeyValueFactory
-    autowire: true
-    arguments:
-      $options: '%factory.keyvalue%'
+    arguments: ['@service_container', '%factory.keyvalue%']
   Drupal\Core\KeyValueStore\KeyValueFactoryInterface: '@keyvalue'
   keyvalue.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseFactory
-    autowire: true
-    arguments:
-      $serializer: '@serialization.phpserialize'
+    arguments: ['@serialization.phpserialize', '@database']
   keyvalue.expirable:
     class: Drupal\Core\KeyValueStore\KeyValueExpirableFactory
     autowire: true
@@ -544,7 +540,7 @@ services:
   Drupal\Core\Site\Settings: '@settings'
   state:
     class: Drupal\Core\State\State
-    autowire: true
+    arguments: ['@keyvalue']
   Drupal\Core\State\StateInterface: '@state'
   queue:
     class: Drupal\Core\Queue\QueueFactory
