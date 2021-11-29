@@ -150,6 +150,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       folder: 'a11y_autocomplete',
       files: [
         { from: 'dist/a11y.autocomplete.min.js', to: 'a11y.autocomplete.min.js' },
+        { from: 'dist/a11y.autocomplete.min.js.map', to: 'a11y.autocomplete.min.js.map' },
         { from: 'dist/a11y.autocomplete.css', to: 'a11y.autocomplete.css' },
       ],
     },
