@@ -313,33 +313,6 @@ class TableDragTest extends WebDriverTestBase {
   }
 
   /**
-   * Asserts that several pieces of markup are in a given order in the page.
-   *
-   * @param string[] $items
-   *   An ordered list of strings.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   When any of the given string is not found.
-   *
-   * @todo Remove this and use the WebAssert method when #2817657 is done.
-   *
-   * @internal
-   */
-  protected function assertOrder(array $items): void {
-    $session = $this->getSession();
-    $text = $session->getPage()->getHtml();
-    $strings = [];
-    foreach ($items as $item) {
-      if (($pos = strpos($text, $item)) === FALSE) {
-        throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
-      }
-      $strings[$pos] = $item;
-    }
-    ksort($strings);
-    $this->assertSame($items, array_values($strings), "Strings found on the page but incorrectly ordered.");
-  }
-
-  /**
    * Tests nested draggable tables through keyboard.
    */
   public function testNestedDraggableTables() {
