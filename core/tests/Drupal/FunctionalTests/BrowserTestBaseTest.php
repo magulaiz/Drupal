@@ -1015,7 +1015,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->orderInString([
       'item3',
       'item1',
-      'item2'
+      'item2',
     ], '(*&^^ item3.,.><> item1@...... item2');
 
     // Check again with a repeating substring.
@@ -1032,7 +1032,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertSession()->orderInString([
         'item2',
         'item1',
-        'item3'
+        'item3',
       ], 'item1item3item2');
       $this->fail('Expected ExpectationFailedException exception has not been thrown.');
     }
@@ -1052,7 +1052,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->assertSession()->responseContentHasOrder([
       'item3',
       'item1',
-      'item2'
+      'item2',
     ]);
     $this->assertSession()->pageTextHasOrder(['item3', 'item2', 'item1']);
 
@@ -1061,7 +1061,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
       $this->assertSession()->responseContentHasOrder([
         'item5',
         'item1',
-        'item8'
+        'item8',
       ]);
       $this->fail('Expected ElementNotFoundException exception has not been thrown.');
     }
