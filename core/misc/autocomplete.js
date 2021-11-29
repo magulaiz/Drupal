@@ -116,28 +116,52 @@
 
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
-      var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+      var optionsToOriginalMethods = {
+        source: sourceData,
+        focus: focusHandler,
+        search: searchHandler,
+        select: selectHandler,
+        renderItem: renderItem,
+        splitValues: autocompleteSplitValues,
+        extractLastTerm: extractLastTerm,
+        minLength: 1,
+        firstCharacterBlacklist: '',
+        isComposing: false,
+        ajax: {
+          dataType: 'json',
+          jsonp: false
+        }
+      };
+      document.addEventListener('autocomplete-created', function (e) {
+        var autocompleteInput = e.detail.autocomplete._internal_object.input;
+        Object.keys(Drupal.autocomplete.options).forEach(function (option) {
+          if (optionsToOriginalMethods.hasOwnProperty(option)) {
+            if (optionsToOriginalMethods[option] !== Drupal.autocomplete.options[option]) {
+              var optionName = option === 'renderItem' ? '_renderItem' : option;
+              console.log('@todo test coverage to ensure these overrides of jQuery UI autocomplete API are applied to the instance');
+              $(autocompleteInput).autocomplete(optionName, Drupal.autocomplete.options[option]);
+            }
+          }
+        });
+        Object.keys(Drupal.autocomplete).forEach(function (key) {
+          if (key !== 'options' && optionsToOriginalMethods[key] !== Drupal.autocomplete[key]) {
+            if (key === 'ajax') {
+              if (JSON.stringify(optionsToOriginalMethods[key]) !== JSON.stringify(Drupal.autocomplete[key])) {
+                console.log('@todo shim Drupal.autocommlete.ajax');
+              }
 
-      if ($autocomplete.length) {
-        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist || ''
+              return;
+            }
+
+            if (['splitValues', 'extractLastTerm'].includes(key)) {
+              console.log('@todo shim the overrides to splitValues and extractLastTerm');
+              return;
+            }
+
+            console.log("@todo shim the overrides for Drupal.autocomplete.".concat(key));
+          }
         });
-        $autocomplete.autocomplete(autocomplete.options).each(function () {
-          $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
-        });
-        $autocomplete.on('compositionstart.autocomplete', function () {
-          autocomplete.options.isComposing = true;
-        });
-        $autocomplete.on('compositionend.autocomplete', function () {
-          autocomplete.options.isComposing = false;
-        });
-      }
-    },
-    detach: function detach(context, settings, trigger) {
-      if (trigger === 'unload') {
-        $(once.remove('autocomplete', 'input.form-autocomplete', context)).autocomplete('destroy');
-      }
+      });
     }
   };
   autocomplete = {

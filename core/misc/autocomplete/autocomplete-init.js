@@ -56,13 +56,14 @@
     return autocomplete;
   };
 
-  Drupal.behaviors.autocomplete = {
+  Drupal.behaviors.autocompleteInit = {
     attach: function attach() {
       if (once('autocomplete-lifecycle', 'body').length) {
         document.addEventListener('autocomplete-destroy', function (e) {
           delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
         });
         document.addEventListener('autocomplete-created', function (e) {
+          console.log('autocomplete created in -init');
           Drupal.Autocomplete.instances[e.detail.autocomplete.id] = e.detail.autocomplete;
         });
       }

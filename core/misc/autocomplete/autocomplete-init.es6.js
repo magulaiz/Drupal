@@ -113,13 +113,14 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches the autocomplete behaviors.
    */
-  Drupal.behaviors.autocomplete = {
+  Drupal.behaviors.autocompleteInit = {
     attach() {
       if (once('autocomplete-lifecycle', 'body').length) {
         document.addEventListener('autocomplete-destroy', (e) => {
           delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
         });
         document.addEventListener('autocomplete-created', (e) => {
+          console.log('autocomplete created in -init');
           Drupal.Autocomplete.instances[e.detail.autocomplete.id] =
             e.detail.autocomplete;
         });

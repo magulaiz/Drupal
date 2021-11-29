@@ -373,6 +373,9 @@ drupal.autocomplete:
   version: VERSION
   js:
     misc/autocomplete/autocomplete-init.js: {}
+    # Set weight to -1 to ensure event listeners exist prior to any instance
+    # of the event being dispatched.
+    misc/autocomplete.js: { weight: -1 }
   css:
     component:
       misc/autocomplete/autocomplete.css: {}

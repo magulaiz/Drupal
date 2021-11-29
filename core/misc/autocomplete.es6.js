@@ -211,39 +211,74 @@
    */
   Drupal.behaviors.autocomplete = {
     attach(context) {
-      // Act on textfields with the "form-autocomplete" class.
-      const $autocomplete = $(
-        once('autocomplete', 'input.form-autocomplete', context),
-      );
-      if ($autocomplete.length) {
-        // Allow options to be overridden per instance.
-        const blacklist = $autocomplete.attr(
-          'data-autocomplete-first-character-blacklist',
-        );
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist || '',
-        });
-        // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options).each(function () {
-          $(this).data('ui-autocomplete')._renderItem =
-            autocomplete.options.renderItem;
+      const optionsToOriginalMethods = {
+        source: sourceData,
+        focus: focusHandler,
+        search: searchHandler,
+        select: selectHandler,
+        renderItem,
+        splitValues: autocompleteSplitValues,
+        extractLastTerm,
+        minLength: 1,
+        firstCharacterBlacklist: '',
+        isComposing: false,
+        ajax: {
+          dataType: 'json',
+          jsonp: false,
+        },
+      };
+      document.addEventListener('autocomplete-created', (e) => {
+        const autocompleteInput = e.detail.autocomplete._internal_object.input;
+
+        // Loop through the jQuery autocomplete options that are settable via
+        // Drupal.autocomplete and route those overrides to the shim.
+        Object.keys(Drupal.autocomplete.options).forEach((option) => {
+          if (optionsToOriginalMethods.hasOwnProperty(option)) {
+            if (
+              optionsToOriginalMethods[option] !==
+              Drupal.autocomplete.options[option]
+            ) {
+              const optionName =
+                option === 'renderItem' ? '_renderItem' : option;
+              console.log(
+                '@todo test coverage to ensure these overrides of jQuery UI autocomplete API are applied to the instance',
+              );
+              $(autocompleteInput).autocomplete(
+                optionName,
+                Drupal.autocomplete.options[option],
+              );
+            }
+          }
         });
 
-        // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
-        $autocomplete.on('compositionstart.autocomplete', () => {
-          autocomplete.options.isComposing = true;
+        Object.keys(Drupal.autocomplete).forEach((key) => {
+          if (
+            key !== 'options' &&
+            optionsToOriginalMethods[key] !== Drupal.autocomplete[key]
+          ) {
+            if (key === 'ajax') {
+              // Stringify for easy object comparison.
+              if (
+                JSON.stringify(optionsToOriginalMethods[key]) !==
+                JSON.stringify(Drupal.autocomplete[key])
+              ) {
+                console.log('@todo shim Drupal.autocommlete.ajax');
+              }
+              return;
+            }
+
+            if (['splitValues', 'extractLastTerm'].includes(key)) {
+              console.log(
+                '@todo shim the overrides to splitValues and extractLastTerm',
+              );
+              return;
+            }
+            console.log(
+              `@todo shim the overrides for Drupal.autocomplete.${key}`,
+            );
+          }
         });
-        $autocomplete.on('compositionend.autocomplete', () => {
-          autocomplete.options.isComposing = false;
-        });
-      }
-    },
-    detach(context, settings, trigger) {
-      if (trigger === 'unload') {
-        $(
-          once.remove('autocomplete', 'input.form-autocomplete', context),
-        ).autocomplete('destroy');
-      }
+      });
     },
   };
 
