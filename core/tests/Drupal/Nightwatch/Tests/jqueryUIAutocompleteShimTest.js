@@ -2172,6 +2172,36 @@ module.exports = {
       },
     );
   },
+  // Ensures that the instructions for contrib usages of autocomplete in
+  // https://www.drupal.org/node/3083715 are working.
+  'option: get value, autocomplete contrib shim': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const element = jQuery('#autocomplete');
+        const expectedSource = ['foo'];
+        const autocomplete = new A11yAutocomplete(element[0], {
+          source: expectedSource,
+        });
+        Drupal.autocompleteShim.jqueryUiShimInit(
+          autocomplete._internal_object,
+          {},
+        );
+        const source = element.autocomplete('option', 'source');
+        return {
+          sourceExpectedValues: source === expectedSource,
+        };
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.value.sourceExpectedValues,
+          true,
+          'source has expected values',
+        );
+      },
+    );
+  },
 };
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {

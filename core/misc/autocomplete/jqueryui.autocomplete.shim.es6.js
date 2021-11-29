@@ -6,13 +6,20 @@
 (($, Drupal) => {
   Drupal.autocompleteShim = {
     overrides: {},
+    instances: {},
   };
 
   // Attach jQuery UI shim when autocomplete is initialized by
-  // Drupal.Autocomplete.
+  // Drupal.Autocomplete.initialize
   document.addEventListener('drupal-autocomplete-init', (e) => {
     const { instance, options } = e.detail;
     Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
+  });
+
+  document.addEventListener('autocomplete-destroy', (e) => {
+    // Ensure that instances are removed from the Drupal.autocompleteShim when
+    // an instance is destroyed.
+    delete Drupal.autocompleteShim.instances[e.detail.autocomplete.id];
   });
 
   /**
@@ -48,6 +55,7 @@
    *   The options sent to autocomplete init.
    */
   Drupal.autocompleteShim.jqueryUiShimInit = (instance, options) => {
+    Drupal.autocompleteShim.instances[instance.input.id] = instance;
     let BCMarkupOptions = {};
     const usingBCMarkup = Drupal.hasOwnProperty(
       'jQueryAutocompleteStableMarkup',
@@ -446,10 +454,10 @@
       // initialized and the string represents a method the autocomplete should
       // execute.
       if (typeof args[0] === 'string') {
-        if (!Drupal.Autocomplete.instances[id]) {
+        if (!Drupal.autocompleteShim.instances[id]) {
           return;
         }
-        const instance = Drupal.Autocomplete.instances[id]._internal_object;
+        const instance = Drupal.autocompleteShim.instances[id];
         const method = args[0];
 
         switch (method) {
@@ -706,7 +714,10 @@
             } else if (typeof args[1] === 'string') {
               // If args[1] is a string, it is the name of an option. Return the
               // value of that option.
-              return instance.options(args[1]);
+              if (optionMapping[args[1]]) {
+                return instance.options[optionMapping[args[1]]];
+              }
+              return instance.options[args[1]];
             }
             break;
           default:
@@ -719,7 +730,8 @@
         }
       } else {
         const id = this.attr('id');
-        if (!Drupal.Autocomplete.instances[id]) {
+        // @todo remove this?
+        if (!Drupal.autocompleteShim.instances[id]) {
           // This condition means argument 1 was not a string. This means a new
           // autocomplete instance should be initialized.
           Drupal.Autocomplete.initialize(this[0]);
@@ -736,8 +748,7 @@
               const { widgetOverrides } = args[0];
               Object.keys(widgetOverrides).forEach((propertyToOverride) => {
                 const overrideWith = widgetOverrides[propertyToOverride];
-                const instance =
-                  Drupal.Autocomplete.instances[id]._internal_object;
+                const instance = Drupal.autocompleteShim.instances[id];
                 applyWidgetOverrides(
                   instance,
                   propertyToOverride,

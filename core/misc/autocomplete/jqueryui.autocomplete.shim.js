@@ -27,13 +27,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 (function ($, Drupal) {
   Drupal.autocompleteShim = {
-    overrides: {}
+    overrides: {},
+    instances: {}
   };
   document.addEventListener('drupal-autocomplete-init', function (e) {
     var _e$detail = e.detail,
         instance = _e$detail.instance,
         options = _e$detail.options;
     Drupal.autocompleteShim.jqueryUiShimInit(instance, options);
+  });
+  document.addEventListener('autocomplete-destroy', function (e) {
+    delete Drupal.autocompleteShim.instances[e.detail.autocomplete.id];
   });
 
   var applyWidgetOverrides = function applyWidgetOverrides(instance, propertyToOverride, overrideWith) {
@@ -45,6 +49,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   Drupal.autocompleteShim.defaultOptions = {};
 
   Drupal.autocompleteShim.jqueryUiShimInit = function (instance, options) {
+    Drupal.autocompleteShim.instances[instance.input.id] = instance;
     var BCMarkupOptions = {};
     var usingBCMarkup = Drupal.hasOwnProperty('jQueryAutocompleteStableMarkup');
 
@@ -275,11 +280,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
 
       if (typeof args[0] === 'string') {
-        if (!Drupal.Autocomplete.instances[id]) {
+        if (!Drupal.autocompleteShim.instances[id]) {
           return;
         }
 
-        var instance = Drupal.Autocomplete.instances[id]._internal_object;
+        var instance = Drupal.autocompleteShim.instances[id];
         var method = args[0];
 
         switch (method) {
@@ -445,7 +450,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   break;
               }
             } else if (typeof args[1] === 'string') {
-              return instance.options(args[1]);
+              if (optionMapping[args[1]]) {
+                return instance.options[optionMapping[args[1]]];
+              }
+
+              return instance.options[args[1]];
             }
 
             break;
@@ -460,7 +469,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       } else {
         var _id = this.attr('id');
 
-        if (!Drupal.Autocomplete.instances[_id]) {
+        if (!Drupal.autocompleteShim.instances[_id]) {
           Drupal.Autocomplete.initialize(this[0]);
         }
 
@@ -470,7 +479,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
               var widgetOverrides = args[0].widgetOverrides;
               Object.keys(widgetOverrides).forEach(function (propertyToOverride) {
                 var overrideWith = widgetOverrides[propertyToOverride];
-                var instance = Drupal.Autocomplete.instances[_id]._internal_object;
+                var instance = Drupal.autocompleteShim.instances[_id];
                 applyWidgetOverrides(instance, propertyToOverride, overrideWith);
               });
             } else {
