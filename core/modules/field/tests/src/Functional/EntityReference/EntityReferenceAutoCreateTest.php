@@ -124,7 +124,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
       'test_field[0][target_id]' => $new_title,
     ];
-    $this->drupalPostForm("node/add/$this->referencingType", $edit, 'Save');
+    $this->drupalGet("node/add/{$this->referencingType}");
+    $this->submitForm($edit, 'Save');
 
     // Assert referenced node was created.
     $query = clone $base_query;
@@ -145,8 +146,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
 
     // Now try to view the node and check that the referenced node is shown.
     $this->drupalGet('node/' . $referencing_node->id());
-    $this->assertText($referencing_node->label());
-    $this->assertText($referenced_node->label());
+    $this->assertSession()->pageTextContains($referencing_node->label());
+    $this->assertSession()->pageTextContains($referenced_node->label());
   }
 
   /**
@@ -190,9 +191,12 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomString(),
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
+
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
     /** @var \Drupal\taxonomy\Entity\Term $term */
-    $term = taxonomy_term_load_multiple_by_name($term_name);
+    $term = $term_storage->loadByProperties(['name' => $term_name]);
     $term = reset($term);
 
     // The new term is expected to be stored in the second vocabulary.
@@ -214,9 +218,10 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $this->randomString(),
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
     /** @var \Drupal\taxonomy\Entity\Term $term */
-    $term = taxonomy_term_load_multiple_by_name($term_name);
+    $term = $term_storage->loadByProperties(['name' => $term_name]);
     $term = reset($term);
 
     // The second term is expected to be stored in the first vocabulary.
@@ -226,17 +231,19 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     //   a way to catch and assert user-triggered errors.
 
     // Test the case when the field config settings are inconsistent.
+    // @code
     // unset($handler_settings['auto_create_bundle']);
     // $field_config->setSetting('handler_settings', $handler_settings);
     // $field_config->save();
     //
     // $this->drupalGet('node/add/' . $this->referencingType);
     // $error_message = sprintf(
-    //  "Create referenced entities if they don't already exist option is enabled but a specific destination bundle is not set. You should re-visit and fix the settings of the '%s' (%s) field.",
-    //  $field_config->getLabel(),
-    //  $field_config->getName()
+    //   "Create referenced entities if they don't already exist option is enabled but a specific destination bundle is not set. You should re-visit and fix the settings of the '%s' (%s) field.",
+    //   $field_config->getLabel(),
+    //   $field_config->getName()
     // );
     // $this->assertErrorLogged($error_message);
+    // @endcode
   }
 
   /**
@@ -267,7 +274,8 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       'title[0][value]' => $node_title,
     ];
 
-    $this->drupalPostForm('node/add/' . $this->referencingType, $edit, 'Save');
+    $this->drupalGet('node/add/' . $this->referencingType);
+    $this->submitForm($edit, 'Save');
 
     // Assert referenced entity was created.
     $result = \Drupal::entityQuery('entity_test_no_bundle_with_label')

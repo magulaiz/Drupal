@@ -92,7 +92,6 @@ class OffCanvasTest extends OffCanvasTestBase {
     $web_assert->linkExists('Off_canvas link!');
     // Click off-canvas link inside off-canvas dialog
     $page->clickLink('Off_canvas link!');
-    /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');
 
@@ -106,7 +105,6 @@ class OffCanvasTest extends OffCanvasTestBase {
     $web_assert->linkExists('Off_canvas link!');
     // Click off-canvas link inside off-canvas dialog
     $page->clickLink('Off_canvas link!');
-    /*  @var \Behat\Mink\Element\NodeElement $dialog */
     $this->waitForOffCanvasToOpen();
     $web_assert->elementTextContains('css', '.ui-dialog[aria-describedby="drupal-off-canvas"]', 'Thing 2 says hello');
   }
@@ -152,8 +150,10 @@ class OffCanvasTest extends OffCanvasTestBase {
    *   The index of the link to test.
    * @param string $position
    *   The position of the dialog to test.
+   *
+   * @internal
    */
-  protected function assertOffCanvasDialog($link_index, $position) {
+  protected function assertOffCanvasDialog(int $link_index, string $position): void {
     $page = $this->getSession()->getPage();
     $web_assert = $this->assertSession();
     $link_text = "Open $position panel $link_index";

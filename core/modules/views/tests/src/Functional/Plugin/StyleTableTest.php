@@ -36,7 +36,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table caption/summary/description.
+   * Tests table caption/summary/description.
    */
   public function testAccessibilitySettings() {
     $this->drupalGet('test-table');
@@ -87,7 +87,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test table fields in columns.
+   * Tests table fields in columns.
    */
   public function testFieldInColumns() {
     $this->drupalGet('test-table');
@@ -119,7 +119,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that a number with the value of "0" is displayed in the table.
+   * Tests that a number with the value of "0" is displayed in the table.
    */
   public function testNumericFieldVisible() {
     // Adds a new datapoint in the views_test_data table to have a person with
@@ -146,7 +146,7 @@ class StyleTableTest extends ViewTestBase {
   }
 
   /**
-   * Test that empty columns are hidden when empty_column is set.
+   * Tests that empty columns are hidden when empty_column is set.
    */
   public function testEmptyColumn() {
     // Empty the 'job' data.
@@ -157,8 +157,8 @@ class StyleTableTest extends ViewTestBase {
     $this->drupalGet('test-table');
 
     // Test that only one of the job columns still shows.
-    $result = $this->xpath('//thead/tr/th/a[text()="Job"]');
-    $this->assertCount(1, $result, 'Ensure that empty column header is hidden.');
+    // Ensure that empty column header is hidden.
+    $this->assertSession()->elementsCount('xpath', '//thead/tr/th/a[text()="Job"]', 1);
 
     $result = $this->xpath('//tbody/tr/td[contains(concat(" ", @class, " "), " views-field-job-1 ")]');
     $this->assertCount(0, $result, 'Ensure the empty table cells are hidden.');
@@ -210,7 +210,7 @@ class StyleTableTest extends ViewTestBase {
     ];
 
     // Ensure that we don't find the caption containing unsafe markup.
-    $this->assertNoRaw($unsafe_markup);
+    $this->assertSession()->responseNotContains($unsafe_markup);
     // Ensure that the summary isn't shown.
     $this->assertEmpty($this->xpath('//caption/details'));
 
@@ -234,7 +234,7 @@ class StyleTableTest extends ViewTestBase {
     ];
 
     // Ensure that we don't find the caption containing unsafe markup.
-    $this->assertNoRaw($unsafe_markup);
+    $this->assertSession()->responseNotContains($unsafe_markup);
 
     // Ensure that all expected captions are found.
     foreach ($expected_captions as $raw_caption) {

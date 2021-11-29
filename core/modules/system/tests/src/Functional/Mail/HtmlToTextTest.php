@@ -41,18 +41,20 @@ class HtmlToTextTest extends BrowserTestBase {
   /**
    * Helper function to test \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    *
-   * @param $html
+   * @param string $html
    *   The source HTML string to be converted.
-   * @param $text
+   * @param string $text
    *   The expected result of converting $html to text.
-   * @param $message
+   * @param string $message
    *   A text message to display in the assertion message.
-   * @param $allowed_tags
+   * @param array|null $allowed_tags
    *   (optional) An array of allowed tags, or NULL to default to the full
    *   set of tags supported by
    *   \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   *
+   * @internal
    */
-  protected function assertHtmlToText($html, $text, $message, $allowed_tags = NULL) {
+  protected function assertHtmlToText(string $html, string $text, string $message, ?array $allowed_tags = NULL): void {
     preg_match_all('/<([a-z0-6]+)/', mb_strtolower($html), $matches);
     $tested_tags = implode(', ', array_unique($matches[1]));
     $message .= ' (' . $tested_tags . ')';
@@ -61,7 +63,7 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
-   * Test supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
+   * Tests supported tags of \Drupal\Core\Mail\MailFormatHelper::htmlToText().
    */
   public function testTags() {
     global $base_path, $base_url;
@@ -190,7 +192,7 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
-   * Test that whitespace is collapsed.
+   * Tests that whitespace is collapsed.
    */
   public function testDrupalHtmltoTextCollapsesWhitespace() {
     $input = "<p>Drupal  Drupal\n\nDrupal<pre>Drupal  Drupal\n\nDrupal</pre>Drupal  Drupal\n\nDrupal</p>";
@@ -205,7 +207,7 @@ class HtmlToTextTest extends BrowserTestBase {
   }
 
   /**
-   * Test that text separated by block-level tags in HTML get separated by
+   * Tests that text separated by block-level tags in HTML get separated by
    * (at least) a newline in the plaintext version.
    */
   public function testDrupalHtmlToTextBlockTagToNewline() {
@@ -234,7 +236,7 @@ class HtmlToTextTest extends BrowserTestBase {
 EOT;
     $input = str_replace(["\r", "\n"], '', $input);
     $output = MailFormatHelper::htmlToText($input);
-    $this->assertNotRegExp('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
+    $this->assertDoesNotMatchRegularExpression('/\][^\n]*\[/s', $output, 'Block-level HTML tags should force newlines');
     $output_upper = mb_strtoupper($output);
     $upper_input = mb_strtoupper($input);
     $upper_output = MailFormatHelper::htmlToText($upper_input);
@@ -242,7 +244,7 @@ EOT;
   }
 
   /**
-   * Test that headers are properly separated from surrounding text.
+   * Tests that headers are properly separated from surrounding text.
    */
   public function testHeaderSeparation() {
     $html = 'Drupal<h1>Drupal</h1>Drupal';
@@ -267,7 +269,7 @@ EOT;
   }
 
   /**
-   * Test that footnote references are properly generated.
+   * Tests that footnote references are properly generated.
    */
   public function testFootnoteReferences() {
     global $base_path, $base_url;
@@ -296,7 +298,7 @@ EOT;
   }
 
   /**
-   * Test that combinations of paragraph breaks, line breaks, linefeeds,
+   * Tests that combinations of paragraph breaks, line breaks, linefeeds,
    * and spaces are properly handled.
    */
   public function testDrupalHtmlToTextParagraphs() {

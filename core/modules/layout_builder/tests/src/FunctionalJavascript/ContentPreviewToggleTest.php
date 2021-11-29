@@ -56,11 +56,11 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $body_field_placeholder_label = '"Body" field';
     $content_preview_body_text = 'I should only be visible if content preview is enabled.';
 
-    $this->drupalPostForm(
-      'admin/structure/types/manage/bundle_for_this_particular_test/display/default',
-      ['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE],
-      'Save'
-    );
+    $this->drupalGet('admin/structure/types/manage/bundle_for_this_particular_test/display/default');
+    $this->submitForm([
+      'layout[enabled]' => TRUE,
+      'layout[allow_custom]' => TRUE,
+    ], 'Save');
 
     $this->createNode([
       'type' => 'bundle_for_this_particular_test',
@@ -123,8 +123,10 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
 
   /**
    * Checks if contextual links are working properly.
+   *
+   * @internal
    */
-  protected function assertContextualLinks() {
+  protected function assertContextualLinks(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -134,6 +136,28 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $this->assertNotEmpty($this->assertSession()->waitForButton('Close'));
     $page->pressButton('Close');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
+  }
+
+  /**
+   * Asserts that blocks in a given order in the page.
+   *
+   * @param string[] $items
+   *   An ordered list of strings that should appear in the blocks.
+   *
+   * @internal
+   */
+  protected function assertOrderInPage(array $items): void {
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $blocks = $page->findAll('css', '[data-layout-content-preview-placeholder-label]');
+
+    // Filter will only return value if block contains expected text.
+    $blocks_with_expected_text = array_filter($blocks, function ($block, $key) use ($items) {
+      $block_text = $block->getText();
+      return strpos($block_text, $items[$key]) !== FALSE;
+    }, ARRAY_FILTER_USE_BOTH);
+
+    $this->assertSameSize($items, $blocks_with_expected_text);
   }
 
 }

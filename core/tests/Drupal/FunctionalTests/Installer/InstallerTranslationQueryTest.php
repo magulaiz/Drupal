@@ -62,8 +62,8 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
-    $this->assertNoText('English');
+    $this->assertSession()->pageTextContains('German');
+    $this->assertSession()->pageTextNotContains('English');
   }
 
   /**

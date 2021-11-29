@@ -47,7 +47,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that cache tags are properly persisted.
+   * Tests that cache tags are properly persisted.
    *
    * Since tag based invalidation works, we know that our tag properly
    * persisted.
@@ -84,7 +84,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that the page cache doesn't depend on cacheability headers.
+   * Tests that the page cache doesn't depend on cacheability headers.
    */
   public function testPageCacheTagsIndependentFromCacheabilityHeaders() {
     // Disable the cacheability headers.
@@ -137,7 +137,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify that HTML page was cached.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     // Verify that the correct HTML response was returned.
-    $this->assertRaw('<p>oh hai this is html.</p>');
+    $this->assertSession()->responseContains('<p>oh hai this is html.</p>');
 
     $this->drupalGet($accept_header_cache_url_with_json);
     // Verify that JSON response was not yet cached.
@@ -146,7 +146,7 @@ class PageCacheTest extends BrowserTestBase {
     // Verify that JSON response was cached.
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     // Verify that the correct JSON response was returned.
-    $this->assertRaw('{"content":"oh hai this is json"}');
+    $this->assertSession()->responseContains('{"content":"oh hai this is json"}');
 
     // Enable REST support for nodes and hal+json.
     \Drupal::service('module_installer')->install(['node', 'rest', 'hal', 'basic_auth']);
@@ -325,7 +325,7 @@ class PageCacheTest extends BrowserTestBase {
 
     // 1. anonymous user, without permission.
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -335,7 +335,7 @@ class PageCacheTest extends BrowserTestBase {
     // 2. anonymous user, with permission.
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
     $this->drupalGet($route_access_url);
@@ -346,7 +346,7 @@ class PageCacheTest extends BrowserTestBase {
     $auth_user = $this->drupalCreateUser();
     $this->drupalLogin($auth_user);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: no!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: no!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -356,7 +356,7 @@ class PageCacheTest extends BrowserTestBase {
     // 4. authenticated user, with permission.
     user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
     $this->drupalGet($content_url);
-    $this->assertText('Permission to pet llamas: yes!');
+    $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
     $this->drupalGet($route_access_url);
@@ -468,7 +468,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test the setting of forms to be immutable.
+   * Tests the setting of forms to be immutable.
    */
   public function testFormImmutability() {
     // Install the module that provides the test form.
@@ -480,7 +480,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: TRUE");
+    $this->assertSession()->pageTextContains("Immutable: TRUE");
 
     // The immutable flag is set unconditionally by system_form_alter(), set
     // a flag to tell page_cache_form_test_module_implements_alter() to disable
@@ -491,7 +491,7 @@ class PageCacheTest extends BrowserTestBase {
 
     $this->drupalGet('page_cache_form_test_immutability');
 
-    $this->assertText("Immutable: FALSE");
+    $this->assertSession()->pageTextContains("Immutable: FALSE");
   }
 
   /**
@@ -577,7 +577,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test a cacheable response with custom cache control.
+   * Tests a cacheable response with custom cache control.
    */
   public function testCacheableWithCustomCacheControl() {
     $config = $this->config('system.performance');
@@ -590,7 +590,7 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Test that URLs are cached in a not normalized form.
+   * Tests that URLs are cached in a not normalized form.
    */
   public function testNoUrlNormalization() {
 
@@ -610,7 +610,7 @@ class PageCacheTest extends BrowserTestBase {
       ],
     ];
 
-    foreach ($tests as list($url_raw, $url_normalized)) {
+    foreach ($tests as [$url_raw, $url_normalized]) {
       // Initialize cache on raw URL.
       $headers = $this->getHeaders($url_raw);
       $this->assertEquals('MISS', $headers['X-Drupal-Cache']);
@@ -651,7 +651,7 @@ class PageCacheTest extends BrowserTestBase {
     $headers = [];
     foreach (explode("\n", $output) as $header) {
       if (strpos($header, ':')) {
-        list($key, $value) = explode(':', $header, 2);
+        [$key, $value] = explode(':', $header, 2);
         $headers[trim($key)] = trim($value);
       }
     }

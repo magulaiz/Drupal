@@ -136,7 +136,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
       $this->installEntitySchema($entity_type_id);
     }
 
-    /* @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
+    /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
     $update_manager = $this->container->get('entity.definition_update_manager');
     $entity_type = $update_manager->getEntityType($entity_type_id);
 
@@ -214,7 +214,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
 
     // Now test updating a field with data.
-    /* @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $storage->create()->save();
     $this->assertTrue($storage->countFieldData($field, TRUE));
@@ -337,7 +337,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_id_count = 0;
 
     foreach (array_keys($schema) as $storage_definition_name) {
-      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      [$entity_type_id] = explode('.', $storage_definition_name);
       if (in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }
@@ -358,7 +358,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_id_count = 0;
 
     foreach (array_keys($schema) as $storage_definition_name) {
-      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      [$entity_type_id] = explode('.', $storage_definition_name);
       if (in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }

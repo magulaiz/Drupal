@@ -1,10 +1,11 @@
 # This is the DrupalCI testbot build file for Drupal core.
 # Learn to make one for your own drupal.org project:
 # https://www.drupal.org/drupalorg/docs/drupal-ci/customizing-drupalci-testing
+# Until https://www.drupal.org/project/project_issue_file_test/issues/3038596 is
+# fixed this file needs to change when a new core branch is made. Latest branch
+# is 9.4.x.
 build:
   assessment:
-    validate_codebase:
-      # Core's code quality is checked by container_command.commit_checks.
     testing:
       # Run code quality checks.
       container_command.commit-checks:
@@ -45,4 +46,4 @@ build:
         halt-on-fail: false
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
-      nightwatchjs:
+      nightwatchjs: {}

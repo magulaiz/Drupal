@@ -58,7 +58,7 @@ class CommentRestExportTest extends CommentTestBase {
   }
 
   /**
-   * Test comment row.
+   * Tests comment row.
    */
   public function testCommentRestExport() {
     $this->drupalGet(sprintf('node/%d/comments', $this->nodeUserCommented->id()), ['query' => ['_format' => 'hal_json']]);
@@ -70,8 +70,8 @@ class CommentRestExportTest extends CommentTestBase {
 
     // Ensure field-level access is respected - user shouldn't be able to see
     // mail or hostname fields.
-    $this->assertNoText('someone@example.com');
-    $this->assertNoText('public.example.com');
+    $this->assertSession()->responseNotContains('someone@example.com');
+    $this->assertSession()->responseNotContains('public.example.com');
   }
 
 }

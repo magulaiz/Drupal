@@ -4,6 +4,7 @@ namespace Drupal\Tests\image\Kernel\Migrate\d6;
 
 use Drupal\Core\Database\Database;
 use Drupal\image\Entity\ImageStyle;
+use Drupal\image\ImageEffectPluginCollection;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -42,7 +43,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test basic passing migrations.
+   * Tests basic passing migrations.
    */
   public function testPassingMigration() {
     $this->executeMigration('d6_imagecache_presets');
@@ -79,7 +80,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that missing actions causes failures.
+   * Tests that missing actions causes failures.
    */
   public function testMissingEffectPlugin() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
@@ -107,7 +108,7 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Test that missing action's causes failures.
+   * Tests that missing action's causes failures.
    */
   public function testInvalidCropValues() {
     Database::getConnection('default', 'migrate')->insert("imagecache_action")
@@ -141,27 +142,27 @@ class MigrateImageCacheTest extends MigrateDrupal6TestBase {
   /**
    * Assert that a given image effect is migrated.
    *
-   * @param array $collection
+   * @param \Drupal\image\ImageEffectPluginCollection $collection
    *   Collection of effects
-   * @param $id
+   * @param string $id
    *   Id that should exist in the collection.
-   * @param $config
+   * @param array $config
    *   Expected configuration for the collection.
    *
-   * @return bool
+   * @internal
    */
-  protected function assertImageEffect($collection, $id, $config) {
+  protected function assertImageEffect(ImageEffectPluginCollection $collection, string $id, array $config): void {
     /** @var \Drupal\image\ConfigurableImageEffectBase $effect */
     foreach ($collection as $effect) {
       $effect_config = $effect->getConfiguration();
 
       if ($effect_config['id'] == $id && $effect_config['data'] == $config) {
-        // We found this effect so succeed and return.
-        return TRUE;
+        // We found this effect so the assertion is successful.
+        return;
       }
     }
     // The loop did not find the effect so we it was not imported correctly.
-    return $this->fail('Effect ' . $id . ' did not import correctly');
+    $this->fail('Effect ' . $id . ' did not import correctly');
   }
 
 }

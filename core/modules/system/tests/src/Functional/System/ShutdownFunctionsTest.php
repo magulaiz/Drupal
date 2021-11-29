@@ -32,7 +32,7 @@ class ShutdownFunctionsTest extends BrowserTestBase {
   }
 
   /**
-   * Test shutdown functions.
+   * Tests shutdown functions.
    */
   public function testShutdownFunctions() {
     $arg1 = $this->randomMachineName();
@@ -54,7 +54,7 @@ class ShutdownFunctionsTest extends BrowserTestBase {
       // Make sure exceptions displayed through
       // \Drupal\Core\Utility\Error::renderExceptionSafe() are correctly
       // escaped.
-      $this->assertRaw('Drupal is &lt;blink&gt;awesome&lt;/blink&gt;.');
+      $this->assertSession()->responseContains('Drupal is &lt;blink&gt;awesome&lt;/blink&gt;.');
     }
   }
 

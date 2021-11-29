@@ -58,7 +58,7 @@ class PageTest extends BrowserTestBase {
     // Run initial step only first.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('batch-test/test-title');
-    $this->assertText('Batch Test');
+    $this->assertSession()->pageTextContains('Batch Test');
 
     // Leave the batch process running.
     $this->maximumMetaRefreshCount = NULL;
@@ -66,7 +66,7 @@ class PageTest extends BrowserTestBase {
 
     // The stack should contain the title shown on the progress page.
     $this->assertEquals(['Batch Test'], batch_test_stack(), 'The batch title is shown on the batch page.');
-    $this->assertText('Redirection successful.');
+    $this->assertSession()->pageTextContains('Redirection successful.');
   }
 
   /**
@@ -78,13 +78,13 @@ class PageTest extends BrowserTestBase {
     $this->drupalGet('batch-test/test-title');
     // Check that the initial progress message appears correctly and is not
     // double escaped.
-    $this->assertRaw('<div class="progress__description">Initializing.<br />&nbsp;</div>');
-    $this->assertNoRaw('&amp;nbsp;');
+    $this->assertSession()->responseContains('<div class="progress__description">Initializing.<br />&nbsp;</div>');
+    $this->assertSession()->responseNotContains('&amp;nbsp;');
     // Now also go to the next step.
     $this->maximumMetaRefreshCount = 1;
     $this->drupalGet('batch-test/test-title');
     // Check that the progress message for second step appears correctly.
-    $this->assertRaw('<div class="progress__description">Completed 1 of 1.</div>');
+    $this->assertSession()->responseContains('<div class="progress__description">Completed 1 of 1.</div>');
   }
 
 }

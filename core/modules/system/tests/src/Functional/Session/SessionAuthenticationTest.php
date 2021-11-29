@@ -103,8 +103,10 @@ class SessionAuthenticationTest extends BrowserTestBase {
    *   A response object containing the session values and the user ID.
    * @param string $expected
    *   The expected session value.
+   *
+   * @internal
    */
-  protected function assertSessionData($response, $expected) {
+  protected function assertSessionData(string $response, string $expected): void {
     $response = json_decode($response, TRUE);
     $this->assertEquals(['test_value' => $expected], $response['session'], 'The session data matches the expected value.');
 
@@ -136,7 +138,8 @@ class SessionAuthenticationTest extends BrowserTestBase {
     $this->drupalGet($cookie_url);
     $this->assertEmpty($this->getSessionCookies());
     $edit = ['name' => $this->user->getAccountName(), 'pass' => $this->user->passRaw];
-    $this->drupalPostForm($cookie_url, $edit, 'Log in');
+    $this->drupalGet($cookie_url);
+    $this->submitForm($edit, 'Log in');
     $this->assertNotEmpty($this->getSessionCookies());
   }
 

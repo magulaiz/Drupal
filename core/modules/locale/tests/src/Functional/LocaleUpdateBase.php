@@ -89,7 +89,8 @@ abstract class LocaleUpdateBase extends BrowserTestBase {
    */
   protected function addLanguage($langcode) {
     $edit = ['predefined_langcode' => $langcode];
-    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalGet('admin/config/regional/language/add');
+    $this->submitForm($edit, 'Add language');
     $this->container->get('language_manager')->reset();
     $this->assertNotEmpty(\Drupal::languageManager()->getLanguage($langcode), new FormattableMarkup('Language %langcode added.', ['%langcode' => $langcode]));
   }
@@ -138,8 +139,8 @@ EOF;
       'uri' => $path . '/' . $filename,
       'filemime' => 'text/x-gettext-translation',
       'timestamp' => $timestamp,
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), $po_header . $text);
     touch(\Drupal::service('file_system')->realpath($file->getFileUri()), $timestamp);
     $file->save();

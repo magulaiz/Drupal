@@ -171,7 +171,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test that media in ER fields use the Rendered Entity formatter by default.
+   * Tests that media in ER fields use the Rendered Entity formatter by default.
    */
   public function testRenderedEntityReferencedMedia() {
     $page = $this->getSession()->getPage();
@@ -324,19 +324,21 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     // Create a media field through the user interface to ensure that the
     // help text handling does not break the default value entry on the field
     // settings form.
-    // Using drupalPostForm() to avoid dealing with JavaScript on the previous
+    // Using submitForm() to avoid dealing with JavaScript on the previous
     // page in the field creation.
     $edit = [
       'new_storage_type' => 'field_ui:entity_reference:media',
       'label' => "Media (cardinality $cardinality)",
       'field_name' => 'media_reference',
     ];
-    $this->drupalPostForm("admin/structure/types/manage/{$content_type->id()}/fields/add-field", $edit, 'Save and continue');
+    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/add-field");
+    $this->submitForm($edit, 'Save and continue');
     $edit = [];
     foreach ($media_types as $type) {
       $edit["settings[handler_settings][target_bundles][$type]"] = TRUE;
     }
-    $this->drupalPostForm("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference", $edit, "Save settings");
+    $this->drupalGet("admin/structure/types/manage/{$content_type->id()}/fields/node.{$content_type->id()}.field_media_reference");
+    $this->submitForm($edit, "Save settings");
     \Drupal::entityTypeManager()
       ->getStorage('entity_form_display')
       ->load('node.' . $content_type->id() . '.default')
@@ -473,8 +475,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   A list of the help texts to check.
    * @param string $selector
    *   (optional) The selector to search.
+   *
+   * @internal
    */
-  public function assertHelpTexts(array $texts, $selector = '') {
+  public function assertHelpTexts(array $texts, string $selector = ''): void {
     $assert_session = $this->assertSession();
     foreach ($texts as $text) {
       // We only want to escape single quotes, so use str_replace() rather than
@@ -494,8 +498,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *
    * @param string[] $texts
    *   A list of the help texts to check.
+   *
+   * @internal
    */
-  public function assertNoHelpTexts(array $texts) {
+  public function assertNoHelpTexts(array $texts): void {
     $assert_session = $this->assertSession();
     foreach ($texts as $text) {
       $assert_session->pageTextNotContains($text);
@@ -512,8 +518,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    * @param string[] $attributes
    *   An associative array of any expected attributes, keyed by the
    *   attribute name.
+   *
+   * @internal
    */
-  protected function assertHelpLink(NodeElement $element, $text, array $attributes = []) {
+  protected function assertHelpLink(NodeElement $element, string $text, array $attributes = []): void {
     // Find all the links inside the element.
     $link = $element->findLink($text);
 
@@ -530,8 +538,10 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
    *   The element to search.
    * @param string $text
    *   The link text.
+   *
+   * @internal
    */
-  protected function assertNoHelpLink(NodeElement $element, $text) {
+  protected function assertNoHelpLink(NodeElement $element, string $text): void {
     $assert_session = $this->assertSession();
     // Assert that the link and its text are not present anywhere on the page.
     $assert_session->elementNotExists('named', ['link', $text], $element);
@@ -539,7 +549,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Test the media collection route.
+   * Tests the media collection route.
    */
   public function testMediaCollectionRoute() {
     /** @var \Drupal\Core\Entity\EntityStorageInterface $media_storage */

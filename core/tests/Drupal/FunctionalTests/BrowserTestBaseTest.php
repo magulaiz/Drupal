@@ -57,6 +57,9 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $text = $this->getTextContent();
     $this->assertStringContainsString('Test page text.', $text);
     $this->assertStringNotContainsString('</html>', $text);
+    // Ensure Drupal Javascript settings are not part of the page text.
+    $this->assertArrayHasKey('currentPathIsAdmin', $this->getDrupalSettings()['path']);
+    $this->assertStringNotContainsString('currentPathIsAdmin', $text);
 
     // Response includes cache tags that we can assert.
     $this->assertSession()->responseHeaderExists('X-Drupal-Cache-Tags');
@@ -296,8 +299,8 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
     $sanitized = Html::escape($dangerous);
-    $this->assertNoText($dangerous);
-    $this->assertText($sanitized);
+    $this->assertSession()->responseNotContains($dangerous);
+    $this->assertSession()->responseContains($sanitized);
   }
 
   /**
@@ -317,6 +320,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * @group legacy
    */
   public function testAssertText() {
+    $this->expectDeprecation('AssertLegacyTrait::assertText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738');
     $this->expectDeprecation('Calling AssertLegacyTrait::assertText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseContains() or $this->assertSession()->pageTextContains() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
@@ -329,6 +333,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * @group legacy
    */
   public function testAssertNoText() {
+    $this->expectDeprecation('AssertLegacyTrait::assertNoText() is deprecated in drupal:8.2.0 and is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738');
     $this->expectDeprecation('Calling AssertLegacyTrait::assertNoText() with more than one argument is deprecated in drupal:8.2.0 and the method is removed from drupal:10.0.0. Use $this->assertSession()->responseNotContains() or $this->assertSession()->pageTextNotContains() instead. See https://www.drupal.org/node/3129738');
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
@@ -812,7 +817,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   /**
-   * Test the protections provided by .htkey.
+   * Tests the protections provided by .htkey.
    */
   public function testHtkey() {
     // Remove the Simpletest private key file so we can test the protection
@@ -889,6 +894,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * @group legacy
    */
   public function testLegacyDrupalPostForm(): void {
+    $this->expectDeprecation('UiHelperTrait::drupalPostForm() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $submit as an object is deprecated in drupal:9.2.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->expectDeprecation('Calling Drupal\Tests\UiHelperTrait::drupalPostForm() with $edit set to NULL is deprecated in drupal:9.1.0 and the method is removed in drupal:10.0.0. Use $this->submitForm() instead. See https://www.drupal.org/node/3168858');
     $this->drupalPostForm('form-test/object-builder', NULL, t('Save'));
@@ -991,7 +997,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // value. It should be sufficient to test just a couple of properties.
     $this->assertStringContainsString('<span class=sf-dump-note>', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">id</span>: "<span class=sf-dump-str title="9 characters">test_role</span>"', $body);
-    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: <span class=sf-dump-const>null</span>', $body);
+    $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">label</span>: "<span class=sf-dump-str title="9 characters">Test role</span>"', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">permissions</span>: []', $body);
     $this->assertStringContainsString('  #<span class=sf-dump-protected title="Protected property">uuid</span>: "', $body);
     $this->assertStringContainsString('</samp>}', $body);
@@ -1006,7 +1012,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
    */
   public function testSubstringsOrder() {
     // Check that asserting order in an arbitrary string works.
-    $this->assertSession()->orderInString(['item3', 'item1', 'item2'], '(*&^^ item3.,.><> item1@...... item2');
+    $this->assertSession()->orderInString([
+      'item3',
+      'item1',
+      'item2'
+    ], '(*&^^ item3.,.><> item1@...... item2');
 
     // Check again with a repeating substring.
     $this->assertSession()->orderInString([
@@ -1019,7 +1029,11 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     // Check that passing existing substrings in the wrong order fails.
     try {
-      $this->assertSession()->orderInString(['item2', 'item1', 'item3'], 'item1item3item2');
+      $this->assertSession()->orderInString([
+        'item2',
+        'item1',
+        'item3'
+      ], 'item1item3item2');
       $this->fail('Expected ExpectationFailedException exception has not been thrown.');
     }
     catch (ExpectationFailedException $exception) {
@@ -1035,17 +1049,35 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $this->drupalGet('test-order-in-page');
 
     // Check that asserting order in page markup and page text works.
-    $this->assertSession()->responseContentHasOrder(['item3', 'item1', 'item2']);
+    $this->assertSession()->responseContentHasOrder([
+      'item3',
+      'item1',
+      'item2'
+    ]);
     $this->assertSession()->pageTextHasOrder(['item3', 'item2', 'item1']);
 
     // Check that passing non-existent substrings throws an exception.
     try {
-      $this->assertSession()->responseContentHasOrder(['item5', 'item1', 'item8']);
+      $this->assertSession()->responseContentHasOrder([
+        'item5',
+        'item1',
+        'item8'
+      ]);
       $this->fail('Expected ElementNotFoundException exception has not been thrown.');
     }
     catch (ElementNotFoundException $exception) {
       $this->assertSame("Substring(s): 'item5', 'item8' not found.", $exception->getMessage());
     }
+  }
+
+  /**
+   * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
+   */
+  public function testSimpleTestBaseUrlValidation() {
+    putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
+    $this->expectException(\Exception::class);
+    $this->expectExceptionMessage('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
+    $this->setupBaseUrl();
   }
 
 }

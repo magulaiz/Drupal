@@ -140,7 +140,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
         if ($bit) {
           // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
-          //   list($field_name, $langcode, $values) = $units[$key]; causes
+          //   [$field_name, $langcode, $values] = $units[$key]; causes
           //   problems in PHP 7.3. Revert to better variable names once
           //   https://bugs.php.net/bug.php?id=76937 is fixed.
           $entity->getTranslation($units[$key][1])->{$units[$key][0]}[] = $units[$key][2];
@@ -155,7 +155,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test basic functionality.
+   * Tests basic functionality.
    */
   public function testEntityQuery() {
     $greetings = $this->greetings;
@@ -377,7 +377,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test sort().
+   * Tests sort().
    *
    * Warning: this is complicated.
    */
@@ -473,7 +473,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test tablesort().
+   * Tests tablesort().
    */
   public function testTableSort() {
     // While ordering on bundles do not give us a definite order, we can still
@@ -528,7 +528,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test that count queries are separated across entity types.
+   * Tests that count queries are separated across entity types.
    */
   public function testCount() {
     // Create a field with the same name in a different entity type.
@@ -620,7 +620,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test queries with delta conditions.
+   * Tests queries with delta conditions.
    */
   public function testDelta() {
     $figures = $this->figures;
@@ -720,7 +720,10 @@ class EntityQueryTest extends EntityKernelTestBase {
 
   }
 
-  protected function assertResult() {
+  /**
+   * @internal
+   */
+  protected function assertResult(): void {
     $assert = [];
     $expected = func_get_args();
     if ($expected && is_array($expected[0])) {
@@ -732,16 +735,21 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->assertSame($assert, $this->queryResults);
   }
 
-  protected function assertRevisionResult($keys, $expected) {
+  /**
+   * @internal
+   */
+  protected function assertRevisionResult(array $keys, array $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
       $assert[$keys[$key]] = strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
-    return $assert;
   }
 
-  protected function assertBundleOrder($order) {
+  /**
+   * @internal
+   */
+  protected function assertBundleOrder(string $order): void {
     // This loop is for bundle1 entities.
     for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;
@@ -763,23 +771,25 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test adding a tag and metadata to the Entity query object.
+   * Tests adding a tag and metadata to the Entity query object.
    *
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData() {
+    field_test_memorize();
+
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
       ->addTag('efq_metadata_test')
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    global $efq_test_metadata;
-    $this->assertEquals('bar', $efq_test_metadata, 'Tag and metadata propagated to the SQL query object.');
+    $mem = field_test_memorize();
+    $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 
   /**
-   * Test case sensitive and in-sensitive query conditions.
+   * Tests case sensitive and in-sensitive query conditions.
    */
   public function testCaseSensitivity() {
     $bundle = $this->randomMachineName();
@@ -1022,7 +1032,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test base fields with multiple columns.
+   * Tests base fields with multiple columns.
    */
   public function testBaseFieldMultipleColumns() {
     $this->enableModules(['taxonomy']);
@@ -1081,7 +1091,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test pending revisions.
+   * Tests pending revisions.
    */
   public function testPendingRevisions() {
     // Ensure entity 14 is returned.
@@ -1190,7 +1200,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test against SQL inject of condition field. This covers a
+   * Tests against SQL inject of condition field. This covers a
    * database driver's EntityQuery\Condition class.
    */
   public function testInjectionInCondition() {

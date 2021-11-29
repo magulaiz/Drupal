@@ -101,16 +101,11 @@ class ArgumentDefaultTest extends ViewTestBase {
     $edit = [
       'options[default_argument_type]' => $argument_type,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid', $edit, 'Apply');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_argument_default_current_user/default/argument/uid');
+    $this->submitForm($edit, 'Apply');
 
     // Note, the undefined index error has two spaces after it.
-    $error = [
-      '%type' => 'Notice',
-      '@message' => 'Undefined index:  ' . $argument_type,
-      '%function' => 'views_handler_argument->validateOptionsForm()',
-    ];
-    $message = t('%type: @message in %function', $error);
-    $this->assertNoRaw($message);
+    $this->assertSession()->pageTextNotContains("Notice: Undefined index:  {$argument_type} in views_handler_argument->validateOptionsForm()");
   }
 
   /**
@@ -140,7 +135,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   // function testArgumentDefaultPhp() {}
 
   /**
-   * Test node default argument.
+   * Tests node default argument.
    */
   public function testArgumentDefaultNode() {
     // Create a user that has permission to place a view block.

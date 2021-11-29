@@ -49,14 +49,17 @@ class ArgumentValidatorTest extends UITestBase {
    * both with and without specify_validation turned on.
    *
    * @param bool $specify_validation
+   *   The form validation.
    */
   protected function saveArgumentHandlerWithValidationOptions($specify_validation) {
     $options = [
       'options[validate][type]' => 'entity---node',
       'options[specify_validation]' => $specify_validation,
     ];
-    $this->drupalPostForm('admin/structure/views/nojs/handler/test_argument/default/argument/id', $options, 'Apply');
-    $this->drupalPostForm('admin/structure/views/view/test_argument', [], 'Save');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_argument/default/argument/id');
+    $this->submitForm($options, 'Apply');
+    $this->drupalGet('admin/structure/views/view/test_argument');
+    $this->submitForm([], 'Save');
   }
 
 }

@@ -55,10 +55,10 @@ class LanguageSelectElementTest extends BrowserTestBase {
     foreach ($ids as $id => $flags) {
       $this->assertSession()->fieldExists($id);
       $options = [];
-      /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
+      /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
       $language_manager = $this->container->get('language_manager');
       foreach ($language_manager->getLanguages($flags) as $langcode => $language) {
-        $options[$langcode] = $language->isLocked() ? t('- @name -', ['@name' => $language->getName()]) : $language->getName();
+        $options[$langcode] = $language->isLocked() ? "- {$language->getName()} -" : $language->getName();
       }
       $this->_testLanguageSelectElementOptions($id, $options);
     }

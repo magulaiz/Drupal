@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
@@ -74,6 +73,7 @@ abstract class BrowserTestBase extends TestCase {
   use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
+  use ExtensionListTestTrait;
 
   /**
    * The database prefix of this test run.
@@ -233,9 +233,6 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function initMink() {
     $driver = $this->getDefaultDriverInstance();
-    if ($driver instanceof GoutteDriver) {
-      @trigger_error('Using \Behat\Mink\Driver\GoutteDriver is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. The dependencies behat/mink-goutte-driver and fabpot/goutte will be removed. See https://www.drupal.org/node/3177235', E_USER_DEPRECATED);
-    }
 
     if ($driver instanceof BrowserKitDriver) {
       // Turn off curl timeout. Having a timeout is not a problem in a normal
@@ -427,9 +424,9 @@ abstract class BrowserTestBase extends TestCase {
   protected function cleanupEnvironment() {
     // Remove all prefixed tables.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix']['default'];
+    $original_prefix = $original_connection_info['default']['prefix'];
     $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix']['default'];
+    $test_prefix = $test_connection_info['default']['prefix'];
     if ($original_prefix != $test_prefix) {
       $tables = Database::getConnection()->schema()->findTables('%');
       foreach ($tables as $table) {
@@ -515,7 +512,7 @@ abstract class BrowserTestBase extends TestCase {
    *   exception.
    */
   protected function getHttpClient() {
-    /* @var $mink_driver \Behat\Mink\Driver\DriverInterface */
+    /** @var \Behat\Mink\Driver\DriverInterface $mink_driver */
     $mink_driver = $this->getSession()->getDriver();
     if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
@@ -539,7 +536,7 @@ abstract class BrowserTestBase extends TestCase {
       $select = $this->assertSession()->selectExists($select, $container);
     }
     $options = [];
-    /* @var \Behat\Mink\Element\NodeElement $option */
+    /** @var \Behat\Mink\Element\NodeElement $option */
     foreach ($select->findAll('xpath', '//option') as $option) {
       $label = $option->getText();
       $value = $option->getAttribute('value') ?: $label;
@@ -706,22 +703,22 @@ abstract class BrowserTestBase extends TestCase {
   }
 
   /**
-   * Transforms a nested array into a flat array suitable for drupalPostForm().
+   * Transforms a nested array into a flat array suitable for submitForm().
    *
    * @param array $values
    *   A multi-dimensional form values array to convert.
    *
    * @return array
-   *   The flattened $edit array suitable for BrowserTestBase::drupalPostForm().
+   *   The flattened $edit array suitable for BrowserTestBase::submitForm().
    */
   protected function translatePostValues(array $values) {
     $edit = [];
     // The easiest and most straightforward way to translate values suitable for
-    // BrowserTestBase::drupalPostForm() is to actually build the POST data
+    // BrowserTestBase::submitForm() is to actually build the POST data
     // string and convert the resulting key/value pairs back into a flat array.
     $query = http_build_query($values);
     foreach (explode('&', $query) as $item) {
-      list($key, $value) = explode('=', $item);
+      [$key, $value] = explode('=', $item);
       $edit[urldecode($key)] = urldecode($value);
     }
     return $edit;

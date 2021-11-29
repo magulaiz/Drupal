@@ -25,13 +25,11 @@ class InstallerTest extends InstallerTestBase {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that we are logged-in after installation.
-    $this->assertText($this->rootUser->getAccountName());
+    $this->assertSession()->pageTextContains($this->rootUser->getAccountName());
 
     // Verify that the confirmation message appears.
     require_once $this->root . '/core/includes/install.inc';
-    $this->assertRaw(t('Congratulations, you installed @drupal!', [
-      '@drupal' => drupal_install_profile_distribution_name(),
-    ]));
+    $this->assertSession()->pageTextContains('Congratulations, you installed Drupal!');
 
     // Ensure that the timezone is correct for sites under test after installing
     // interactively.
@@ -53,8 +51,8 @@ class InstallerTest extends InstallerTestBase {
   protected function setUpLanguage() {
     // Test that \Drupal\Core\Render\BareHtmlPageRenderer adds assets and
     // metatags as expected to the first page of the installer.
-    $this->assertRaw("core/themes/seven/css/components/buttons.css");
-    $this->assertRaw('<meta charset="utf-8" />');
+    $this->assertSession()->responseContains("core/themes/seven/css/components/buttons.css");
+    $this->assertSession()->responseContains('<meta charset="utf-8" />');
 
     // Assert that the expected title is present.
     $this->assertEquals('Choose language', $this->cssSelect('main h2')[0]->getText());
@@ -88,10 +86,8 @@ class InstallerTest extends InstallerTestBase {
 
     // Assert that we use the by core supported database drivers by default and
     // not the ones from the driver_test module.
-    $elements = $this->xpath('//label[@for="edit-driver-mysql"]');
-    $this->assertEquals('MySQL, MariaDB, Percona Server, or equivalent', current($elements)->getText());
-    $elements = $this->xpath('//label[@for="edit-driver-pgsql"]');
-    $this->assertEquals('PostgreSQL', current($elements)->getText());
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-mysql"]', 'MySQL, MariaDB, Percona Server, or equivalent');
+    $this->assertSession()->elementTextEquals('xpath', '//label[@for="edit-driver-pgsql"]', 'PostgreSQL');
 
     parent::setUpSettings();
   }
@@ -106,8 +102,8 @@ class InstallerTest extends InstallerTestBase {
     // Test that SiteConfigureForm::buildForm() has made the site directory and
     // the settings file non-writable.
     $site_directory = $this->container->getParameter('app.root') . '/' . $this->siteDirectory;
-    $this->assertDirectoryNotIsWritable($site_directory);
-    $this->assertFileNotIsWritable($site_directory . '/settings.php');
+    $this->assertDirectoryIsNotWritable($site_directory);
+    $this->assertFileIsNotWritable($site_directory . '/settings.php');
 
     parent::setUpSite();
   }
