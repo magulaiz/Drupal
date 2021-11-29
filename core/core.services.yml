@@ -1463,14 +1463,12 @@ services:
     autowire: true
   ajax_response.attachments_processor:
     class: Drupal\Core\Ajax\AjaxResponseAttachmentsProcessor
-    tags:
     autowire: true
     arguments:
       $css_collection_renderer: '@asset.css.collection_renderer'
       $js_collection_renderer: '@asset.js.collection_renderer'
   html_response.attachments_processor:
     class: Drupal\Core\Render\HtmlResponseAttachmentsProcessor
-    tags:
     autowire: true
     arguments:
       $css_collection_renderer: '@asset.css.collection_renderer'
