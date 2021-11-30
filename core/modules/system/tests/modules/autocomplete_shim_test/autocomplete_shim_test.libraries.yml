@@ -1,0 +1,8 @@
+jquery_ui_autocomplete_init:
+  version: VERSION
+  js:
+    autocomplete_shim_test.js: {}
+  dependencies:
+    - core/once
+    - core/jquery.ui.autocomplete
+    - core/drupal

@@ -54,12 +54,22 @@ class AutocompleteShimTestController extends ControllerBase {
           'id' => ['autocomplete-textarea'],
         ],
       ],
+      // Ensure that the page has always at least one a11y_autocomplete
+      // instance.
+      'a11y_autocomplete' => [
+        '#type' => 'html_tag',
+        '#tag' => 'input',
+        '#attributes' => [
+          'class' => ['form-autocomplete'],
+        ],
+      ],
       '#attached' => [
         'library' => [
           'core/drupal.autocomplete',
           'core/jquery.ui.autocomplete',
           // Attach jquery.simulate for use by Nightwatch tests.
           'jquery_simulate/jquery.simulate',
+          'autocomplete_shim_test/jquery_ui_autocomplete_init',
         ],
       ],
     ];
