@@ -407,11 +407,19 @@
   // uses A11yAutocomplete for the functionality.
   $.fn.extend({
     autocomplete(...args) {
+      // Check if the shim should be used on the element.
       if (
-        oldAutocomplete &&
-        (!this.length ||
-          !this[0].hasAttribute('data-autocomplete-shim-enabled'))
+        !this.length ||
+        !this[0].hasAttribute('data-autocomplete-shim-enabled')
       ) {
+        // If the shim is loaded but not the original jQuery UI library show
+        // an error when code is executed on a non-shimmed element.
+        if (!oldAutocomplete) {
+          console.error(
+            'The jQuery UI Autocomplete library is not loaded on the page. Make sure the dependency to the core/jquery.ui.autocomplete is declared for the element using it.',
+          );
+          return;
+        }
         // Check if autocomplete is initialized.
         if (typeof this.data('ui-autocomplete') === 'undefined') {
           // @todo there are scenarios where jQuery UI autocomplete is being

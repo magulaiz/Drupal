@@ -260,7 +260,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         args[_key] = arguments[_key];
       }
 
-      if (oldAutocomplete && (!this.length || !this[0].hasAttribute('data-autocomplete-shim-enabled'))) {
+      if (!this.length || !this[0].hasAttribute('data-autocomplete-shim-enabled')) {
+        if (!oldAutocomplete) {
+          console.error('The jQuery UI Autocomplete library is not loaded on the page. Make sure the dependency to the core/jquery.ui.autocomplete is declared for the element using it.');
+          return;
+        }
+
         if (typeof this.data('ui-autocomplete') === 'undefined') {}
 
         return oldAutocomplete.apply(this, args);
