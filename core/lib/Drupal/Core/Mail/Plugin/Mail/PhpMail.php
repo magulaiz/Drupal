@@ -87,6 +87,8 @@ class PhpMail implements MailInterface {
     $headers = new Headers();
     foreach ($message['headers'] as $name => $value) {
       if (in_array(strtolower($name), self::MAILBOX_LIST_HEADERS, TRUE)) {
+        // Split values by comma, but ignore commas encapsulated in double
+        // quotes.
         $value = str_getcsv($value, ',');
       }
       $headers->addHeader($name, $value);
