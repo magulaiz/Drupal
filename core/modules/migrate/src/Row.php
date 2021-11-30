@@ -160,7 +160,7 @@ class Row {
    * Returns the whole source array.
    *
    * @return array
-   *   An array of source plugins.
+   *   An array of source values.
    */
   public function getSource() {
     return $this->source;
