@@ -7,7 +7,7 @@
  * This has based on MDN Web Docs code samples. Code samples in the MDN Web Docs
  * are licensed under CC0.
  *
- * @see https://web.archive.org/web/20190116034756/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes#Polyfill
+ * @see https://web.archive.org/web/20161012020930/https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
  * @see https://developer.mozilla.org/en-US/docs/MDN/About#Code_samples_and_snippets
  */
 if (!Array.prototype.includes) {
