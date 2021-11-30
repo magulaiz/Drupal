@@ -91,7 +91,7 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete').autocomplete();
+        const $element = jQuery('#autocomplete').autocomplete();
         return {};
       },
       [],
@@ -678,20 +678,19 @@ module.exports = {
       function (done) {
         const toReturn = {};
         const customVal = 'custom value';
-        const $element = jQuery('#autocomplete-contenteditable').autocomplete(
-          'option',
-          {
-            delay: 0,
-            source: ['javascript'],
-            focus(event, ui) {
-              if (ui.item.value === 'javascript') {
-                toReturn.itemGainedFocus = ui.item.value === 'javascript';
-              }
-              jQuery(this).text(customVal);
-              event.preventDefault();
-            },
+        const $element = jQuery('#autocomplete-contenteditable');
+        Drupal.Autocomplete.initialize($element[0]);
+        $element.autocomplete('option', {
+          delay: 0,
+          source: ['javascript'],
+          focus(event, ui) {
+            if (ui.item.value === 'javascript') {
+              toReturn.itemGainedFocus = ui.item.value === 'javascript';
+            }
+            jQuery(this).text(customVal);
+            event.preventDefault();
           },
-        );
+        });
         $element.simulate('focus').autocomplete('search', 'ja');
 
         setTimeout(() => {
@@ -725,20 +724,19 @@ module.exports = {
         function () {
           // eslint-disable-next-line no-new-func
           const customVal = 'custom value';
-          const $element = jQuery('#autocomplete-contenteditable').autocomplete(
-            'option',
-            {
-              delay: 0,
-              source: ['javascript'],
-              focus(event, ui) {
-                if (ui.item.value === 'javascript') {
-                  event.target.classList.add('the-item-gained-focus');
-                }
-                jQuery(this).text(customVal);
-                event.preventDefault();
-              },
+          const $element = jQuery('#autocomplete-contenteditable');
+          Drupal.Autocomplete.initialize($element[0]);
+          $element.autocomplete('option', {
+            delay: 0,
+            source: ['javascript'],
+            focus(event, ui) {
+              if (ui.item.value === 'javascript') {
+                event.target.classList.add('the-item-gained-focus');
+              }
+              jQuery(this).text(customVal);
+              event.preventDefault();
             },
-          );
+          });
           $element.simulate('focus').autocomplete('search', 'ja');
 
           setTimeout(() => {
@@ -766,7 +764,9 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const toReturn = {};
-        const $element = jQuery('#autocomplete').autocomplete('option', {
+        const $element = jQuery('#autocomplete');
+        Drupal.Autocomplete.initialize($element[0]);
+        $element.autocomplete('option', {
           source(request, response) {
             // eslint-disable-next-line func-names
             setTimeout(function () {
@@ -778,21 +778,20 @@ module.exports = {
           },
         });
 
-        const $element2 = jQuery('#autocomplete-textarea').autocomplete(
-          'option',
-          {
-            source(request, response) {
-              // eslint-disable-next-line func-names
-              setTimeout(function () {
-                response([request.term]);
-              });
-            },
-            response() {
-              toReturn.secondItemResponded = true;
-              done(toReturn);
-            },
+        const $element2 = jQuery('#autocomplete-textarea');
+        Drupal.Autocomplete.initialize($element2[0]);
+        $element2.autocomplete('option', {
+          source(request, response) {
+            // eslint-disable-next-line func-names
+            setTimeout(function () {
+              response([request.term]);
+            });
           },
-        );
+          response() {
+            toReturn.secondItemResponded = true;
+            done(toReturn);
+          },
+        });
 
         $element.autocomplete('search', 'test');
         $element2.autocomplete('search', 'test');
@@ -816,13 +815,13 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete').autocomplete();
+        const $element = jQuery('#autocomplete').autocomplete();
         const replacement = '<div>test</div>';
         // Remove the visually-hidden assistive tech span added by Drupal
         // autocomplete.
-        jQuery(`#${element.attr('aria-describedby')}`).remove();
-        const parent = element.parent();
-        element.replaceWith(replacement);
+        jQuery(`#${$element.attr('aria-describedby')}`).remove();
+        const parent = $element.parent();
+        $element.replaceWith(replacement);
         return parent.html().toLowerCase().trim() === replacement;
       },
       [],
@@ -942,6 +941,7 @@ module.exports = {
           toReturn[settings.type].justASelector = settings.selector;
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
+          Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
           toReturn[settings.type].element.autocomplete('option', {
             autoFocus: false,
             delay: 0,
@@ -1227,7 +1227,7 @@ module.exports = {
           'Scheme',
         ];
         const customVal = 'custom value';
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           delay: 0,
           source: data,
           focus() {
@@ -1235,11 +1235,11 @@ module.exports = {
             return false;
           },
         });
-        element.autocomplete('search', 'ja');
+        $element.autocomplete('search', 'ja');
         setTimeout(() => {
-          element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
+          $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
           setTimeout(() => {
-            done(element.val() === customVal);
+            done($element.val() === customVal);
           });
         });
       },
@@ -1266,7 +1266,7 @@ module.exports = {
           'Scheme',
         ];
         const customVal = 'custom value';
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           delay: 0,
           source: data,
           select() {
@@ -1275,12 +1275,12 @@ module.exports = {
           },
         });
         if (usingA11yAutocomplete) {
-          element.autocomplete('search', 'ja');
+          $element.autocomplete('search', 'ja');
         } else {
-          element.val('ja').trigger('keydown');
+          $element.val('ja').trigger('keydown');
         }
         setTimeout(() => {
-          element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
+          $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.DOWN });
           // Events don't translate from input to list items with Drupal
           // autocomplete, so the keydown happens directly to the focused
           // element.
@@ -1289,11 +1289,11 @@ module.exports = {
               keyCode: jQuery.ui.keyCode.ENTER,
             });
           } else {
-            element.simulate('keydown', { keyCode: jQuery.ui.keyCode.ENTER });
+            $element.simulate('keydown', { keyCode: jQuery.ui.keyCode.ENTER });
           }
 
           setTimeout(() => {
-            done(element.val() === customVal);
+            done($element.val() === customVal);
           });
         });
       },
@@ -1308,7 +1308,7 @@ module.exports = {
       // eslint-disable-next-line func-names
       function (done) {
         const toReturn = {};
-        const ac = jQuery('#autocomplete').autocomplete({
+        const ac = jQuery('#autocomplete').autocomplete('option', {
           delay: 0,
           source(request, response) {
             toReturn.triggerRequest = true; // trigger request
@@ -1363,26 +1363,26 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: data,
           minLength: 0,
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
         toReturn.menuHiddenOnInit = menu.is(':hidden');
-        element.autocomplete('search');
+        $element.autocomplete('search');
         toReturn.menuVisibleAfterSearch = menu.is(':visible');
         toReturn.allItemsForABlankSearch =
           menu.find('.ui-menu-item').length === data.length;
 
-        element.val('has').autocomplete('search');
+        $element.val('has').autocomplete('search');
         toReturn.oneItemForSetInputValue =
           menu.find('.ui-menu-item').text() === 'haskell';
 
-        element.autocomplete('search', 'ja');
+        $element.autocomplete('search', 'ja');
         toReturn.onlyJavaAndJavaScriptForJa =
           menu.find('.ui-menu-item').length === 2;
 
-        element.autocomplete('close');
+        $element.autocomplete('close');
         toReturn.menuHiddenAfterClose = menu.is(':hidden');
         return toReturn;
       },
@@ -1411,8 +1411,8 @@ module.exports = {
       // eslint-disable-next-line func-names
       function () {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete();
-        const widgetElement = element.autocomplete('widget');
+        const $element = jQuery('#autocomplete');
+        const widgetElement = $element.autocomplete('widget');
         toReturn.oneElement = widgetElement.length === 1;
         toReturn.uiMenuClass = widgetElement.hasClass('ui-menu');
         return toReturn;
@@ -1437,8 +1437,8 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
-        const element = jQuery('#autocomplete').autocomplete();
-        return element.autocomplete('widget').parent()[0] === document.body;
+        const $element = jQuery('#autocomplete');
+        return $element.autocomplete('widget').parent()[0] === document.body;
       },
       [],
       (result) => {
@@ -1446,54 +1446,55 @@ module.exports = {
       },
     );
   },
+  // @todo convert this
   'appendTo: explicit': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
         const toReturn = {};
         const detached = jQuery('<div>');
-        const element = jQuery('#autocomplete');
+        const $element = jQuery('#autocomplete');
 
-        element.autocomplete({
+        $element.autocomplete({
           appendTo: '.autocomplete-wrap',
         });
         toReturn.firstFoundElement =
-          element.autocomplete('widget').parent()[0] ===
+          $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap1')[0];
 
         toReturn.onlyAppendsToOne =
           jQuery('#autocomplete-wrap2 .ui-autocomplete').length === 0;
 
-        element.autocomplete('destroy');
+        $element.autocomplete('destroy');
 
-        element
+        $element
           .autocomplete()
           .autocomplete('option', 'appendTo', '#autocomplete-wrap1');
         toReturn.modifiedAfterInit =
-          element.autocomplete('widget').parent()[0] ===
+          $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap1')[0];
 
-        element.autocomplete('destroy');
-        element.autocomplete({
+        $element.autocomplete('destroy');
+        $element.autocomplete({
           appendTo: detached,
         });
 
         toReturn.detachedJqueryObject =
-          element.autocomplete('widget').parent()[0] === detached[0];
+          $element.autocomplete('widget').parent()[0] === detached[0];
 
-        element.autocomplete('destroy');
+        $element.autocomplete('destroy');
 
-        element.autocomplete({
+        $element.autocomplete({
           appendTo: detached[0],
         });
         toReturn.detachedDomElement =
-          element.autocomplete('widget').parent()[0] === detached[0];
+          $element.autocomplete('widget').parent()[0] === detached[0];
 
-        element.autocomplete('destroy');
+        $element.autocomplete('destroy');
 
-        element.autocomplete().autocomplete('option', 'appendTo', detached);
+        $element.autocomplete().autocomplete('option', 'appendTo', detached);
         toReturn.detachedViaOption =
-          element.autocomplete('widget').parent()[0] === detached[0];
+          $element.autocomplete('widget').parent()[0] === detached[0];
 
         return toReturn;
       },
@@ -1517,28 +1518,29 @@ module.exports = {
       },
     );
   },
+  // @todo convert this
   'appendTo: ui-front': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
       function () {
         const toReturn = {};
-        const element = jQuery('#autocomplete');
+        const $element = jQuery('#autocomplete');
         // Remove the already initialized autocomplete on #autocomplete because
         // of the form-autocomplete class.
-        element.autocomplete('destroy');
+        $element.autocomplete('destroy');
 
         jQuery('#autocomplete-wrap2').addClass('ui-front');
-        element.autocomplete();
+        $element.autocomplete();
         toReturn.nullInsideUiFront =
-          element.autocomplete('widget').parent()[0] ===
+          $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap2')[0];
-        element.autocomplete('destroy');
+        $element.autocomplete('destroy');
 
-        element.autocomplete({
+        $element.autocomplete({
           appendTo: jQuery(),
         });
         toReturn.emptyObjectInsideUiFront =
-          element.autocomplete('widget').parent()[0] ===
+          $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap2')[0];
 
         return toReturn;
@@ -1581,22 +1583,22 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           autoFocus: false,
           delay: 0,
           source: data,
           open() {
             done(
-              element
+              $element
                 .autocomplete('widget')
                 .find('.ui-menu-item-wrapper.ui-state-active').length === 0,
             );
           },
         });
         if (usingA11yAutocomplete) {
-          element.autocomplete('search', 'ja');
+          $element.autocomplete('search', 'ja');
         } else {
-          element.val('ja').trigger('keydown');
+          $element.val('ja').trigger('keydown');
         }
       },
       [],
@@ -1631,14 +1633,14 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           autoFocus: true,
           delay: 0,
           source: data,
           open() {
             setTimeout(() => {
               done(
-                element
+                $element
                   .autocomplete('widget')
                   .find('.ui-menu-item-wrapper.ui-state-active').length === 1,
               );
@@ -1646,9 +1648,9 @@ module.exports = {
           },
         });
         if (usingA11yAutocomplete) {
-          element.autocomplete('search', 'ja');
+          $element.autocomplete('search', 'ja');
         } else {
-          element.val('ja').trigger('keydown');
+          $element.val('ja').trigger('keydown');
         }
       },
       [],
@@ -1680,16 +1682,16 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: data,
           delay: 25,
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
         if (usingA11yAutocomplete) {
-          element.val('ja');
-          element[0].dispatchEvent(new KeyboardEvent('input'));
+          $element.val('ja');
+          $element[0].dispatchEvent(new KeyboardEvent('input'));
         } else {
-          element.val('ja').trigger('keydown');
+          $element.val('ja').trigger('keydown');
         }
 
         toReturn.menuClosedImmediatelyAfterSearch = menu.is(':hidden');
@@ -1736,18 +1738,18 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: data,
           delay: 0,
         });
-        const menu = element.autocomplete('disable').autocomplete('widget');
-        element.val('ja').trigger('keydown');
+        const menu = $element.autocomplete('disable').autocomplete('widget');
+        $element.val('ja').trigger('keydown');
         toReturn.menuIsHidden = menu.is(':hidden');
-        toReturn.noUiStateDisabled = !element.hasClass('ui-state-disabled');
+        toReturn.noUiStateDisabled = !$element.hasClass('ui-state-disabled');
         toReturn.uiAutocompleteDisabled = menu.hasClass(
           'ui-autocomplete-disabled',
         );
-        toReturn.noAriaDisabled = !element.attr('aria-disabled');
+        toReturn.noAriaDisabled = !$element.attr('aria-disabled');
 
         setTimeout(() => {
           toReturn.menuStillHidden = menu.is(':hidden');
@@ -1793,14 +1795,14 @@ module.exports = {
           'perl',
         ];
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: data,
         });
-        const menu = element.autocomplete('widget');
-        element.autocomplete('search', '');
+        const menu = $element.autocomplete('widget');
+        $element.autocomplete('search', '');
         toReturn.menuIsHidden = menu.is(':hidden');
-        element.autocomplete('option', 'minLength', 0);
-        element.autocomplete('search', '');
+        $element.autocomplete('option', 'minLength', 0);
+        $element.autocomplete('search', '');
         toReturn.menuIsVisible = menu.is(':visible');
         return toReturn;
       },
@@ -1826,7 +1828,7 @@ module.exports = {
       // eslint-disable-next-line func-names
       function (done) {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           minLength: 2,
           source(req, res) {
             toReturn.correctSearchTerm = req.term === '12';
@@ -1836,13 +1838,13 @@ module.exports = {
             });
           },
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
         toReturn.menuIsHiddenFirst = menu.is(':hidden');
         // Here the search actions are triggered too close to each other.
         // The listbox doesn't have time to open to check visibility.
-        element.autocomplete('search', '12');
+        $element.autocomplete('search', '12');
         toReturn.menuIsHiddenSecond = menu.is(':hidden');
-        element.autocomplete('search', '1');
+        $element.autocomplete('search', '1');
 
         setTimeout(() => {
           toReturn.menuHiddenAfterSearches = menu.is(':hidden');
@@ -1872,22 +1874,22 @@ module.exports = {
       function () {
         const toReturn = {};
         const _res = [];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           minLength: 2,
           source(req, res) {
             _res.push(res);
           },
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
 
         // Trigger a valid search
         toReturn.menuIsHiddenFirst = menu.is(':hidden');
-        element.autocomplete('search', '12');
+        $element.autocomplete('search', '12');
         toReturn.menuIsHiddenSecond = menu.is(':hidden');
-        element.autocomplete('search', '1');
+        $element.autocomplete('search', '1');
 
         // Trigger a valid search
-        element.autocomplete('search', '13');
+        $element.autocomplete('search', '13');
 
         // React as if the first search was cancelled (default ajax behavior)
         _res[0]([]);
@@ -1934,12 +1936,12 @@ module.exports = {
           'haskell',
           'perl',
         ];
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: data,
         });
-        const menu = element.autocomplete('widget');
+        const menu = $element.autocomplete('widget');
 
-        element.val('ja').autocomplete('search');
+        $element.val('ja').autocomplete('search');
 
         /* cspell:disable-next-line */
         return menu.find('.ui-menu-item').text() === 'javajavascript';
@@ -2118,17 +2120,17 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const toReturn = {};
-        const element = jQuery('#autocomplete').autocomplete({
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source: ['java', 'javascript', 'haskell'],
         });
-        const menu = element.autocomplete('widget');
-        element.val('ja').autocomplete('search');
+        const menu = $element.autocomplete('widget');
+        $element.val('ja').autocomplete('search');
         /* cspell:disable */
         toReturn.expectedItems1 =
           menu.find('.ui-menu-item').text() === 'javajavascript';
         /* cspell:enable */
-        element.autocomplete('option', 'source', ['php', 'asp']);
-        element.val('ph').autocomplete('search');
+        $element.autocomplete('option', 'source', ['php', 'asp']);
+        $element.val('ph').autocomplete('search');
         toReturn.expectedItems2 = menu.find('.ui-menu-item').text() === 'php';
         return toReturn;
       },
@@ -2164,12 +2166,12 @@ module.exports = {
             });
           },
         });
-        const element = $('#autocomplete').categoryComplete({
+        const $element = $('#autocomplete').categoryComplete({
           source: [{ label: 'Large Penguin', category: 'People' }],
         });
-        element.categoryComplete('search', 'a');
+        $element.categoryComplete('search', 'a');
 
-        return element.autocomplete('widget').find('li').attr('aria-label');
+        return $element.autocomplete('widget').find('li').attr('aria-label');
       },
       [],
       (result) => {
@@ -2187,16 +2189,16 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const element = jQuery('#autocomplete');
+        const $element = jQuery('#autocomplete');
         const expectedSource = ['foo'];
-        const autocomplete = new A11yAutocomplete(element[0], {
+        const autocomplete = new A11yAutocomplete($element[0], {
           source: expectedSource,
         });
         Drupal.autocompleteShim.jqueryUiShimInit(
           autocomplete._internal_object,
           {},
         );
-        const source = element.autocomplete('option', 'source');
+        const source = $element.autocomplete('option', 'source');
         return {
           sourceExpectedValues: source === expectedSource,
         };
@@ -2240,7 +2242,9 @@ module.exports = {
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
-  const $element = jQuery(id).autocomplete('option', {
+  const $element = jQuery(id);
+  Drupal.Autocomplete.initialize($element[0]);
+  $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
     minLength: 0,
@@ -2269,7 +2273,9 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
 
 function arrowsMoveFocus(id, isKeyUp) {
   let didMove = false;
-  const element = jQuery(id).autocomplete({
+  const $element = jQuery(id);
+  Drupal.Autocomplete.initialize($element[0]);
+  $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
     minLength: 0,
@@ -2280,17 +2286,17 @@ function arrowsMoveFocus(id, isKeyUp) {
     Drupal.Autocomplete.hasOwnProperty('instances')
   ) {
     Drupal.Autocomplete.instances[
-      element.attr('id')
+      $element.attr('id')
     ]._internal_object.highlightItem = function () {
       didMove = true;
     };
   } else {
-    element.autocomplete('instance')._move = () => {
+    $element.autocomplete('instance')._move = () => {
       didMove = true;
     };
   }
-  element.autocomplete('search');
-  element.simulate('keydown', {
+  $element.autocomplete('search');
+  $element.simulate('keydown', {
     keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
   });
   return didMove;
@@ -2299,6 +2305,7 @@ function arrowsMoveFocus(id, isKeyUp) {
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
+  Drupal.Autocomplete.initialize($element[0]);
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
