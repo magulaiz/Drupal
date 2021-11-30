@@ -48,7 +48,14 @@ module.exports = {
       function () {
         const $element = jQuery('#autocomplete');
         $element.attr('data-autocomplete-first-character-blacklist', '!');
-        Drupal.Autocomplete.initialize($element[0]);
+        if (
+          Drupal.hasOwnProperty('Autocomplete') &&
+          Drupal.Autocomplete.hasOwnProperty('instances')
+        ) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
       },
       [],
       () => {
@@ -679,7 +686,14 @@ module.exports = {
         const toReturn = {};
         const customVal = 'custom value';
         const $element = jQuery('#autocomplete-contenteditable');
-        Drupal.Autocomplete.initialize($element[0]);
+        if (
+          Drupal.hasOwnProperty('Autocomplete') &&
+          Drupal.Autocomplete.hasOwnProperty('instances')
+        ) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
         $element.autocomplete('option', {
           delay: 0,
           source: ['javascript'],
@@ -725,7 +739,14 @@ module.exports = {
           // eslint-disable-next-line no-new-func
           const customVal = 'custom value';
           const $element = jQuery('#autocomplete-contenteditable');
-          Drupal.Autocomplete.initialize($element[0]);
+          if (
+            Drupal.hasOwnProperty('Autocomplete') &&
+            Drupal.Autocomplete.hasOwnProperty('instances')
+          ) {
+            Drupal.Autocomplete.initialize($element[0]);
+          } else {
+            $element.autocomplete();
+          }
           $element.autocomplete('option', {
             delay: 0,
             source: ['javascript'],
@@ -765,7 +786,14 @@ module.exports = {
       function (done) {
         const toReturn = {};
         const $element = jQuery('#autocomplete');
-        Drupal.Autocomplete.initialize($element[0]);
+        if (
+          Drupal.hasOwnProperty('Autocomplete') &&
+          Drupal.Autocomplete.hasOwnProperty('instances')
+        ) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
         $element.autocomplete('option', {
           source(request, response) {
             // eslint-disable-next-line func-names
@@ -779,7 +807,14 @@ module.exports = {
         });
 
         const $element2 = jQuery('#autocomplete-textarea');
-        Drupal.Autocomplete.initialize($element2[0]);
+        if (
+          Drupal.hasOwnProperty('Autocomplete') &&
+          Drupal.Autocomplete.hasOwnProperty('instances')
+        ) {
+          Drupal.Autocomplete.initialize($element2[0]);
+        } else {
+          $element2.autocomplete();
+        }
         $element2.autocomplete('option', {
           source(request, response) {
             // eslint-disable-next-line func-names
@@ -941,7 +976,11 @@ module.exports = {
           toReturn[settings.type].justASelector = settings.selector;
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
-          Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
+          if (usingA11yAutocomplete) {
+            Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
+          } else {
+            toReturn[settings.type].element.autocomplete();
+          }
           toReturn[settings.type].element.autocomplete('option', {
             autoFocus: false,
             delay: 0,
@@ -2219,7 +2258,6 @@ module.exports = {
       function () {
         const $element = jQuery('#autocomplete');
         const expectedSource = ['foo'];
-        Drupal.Autocomplete.initialize($element[0]);
         $element.autocomplete('option', {
           source: expectedSource,
         });
@@ -2243,7 +2281,14 @@ module.exports = {
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  Drupal.Autocomplete.initialize($element[0]);
+  if (
+    Drupal.hasOwnProperty('Autocomplete') &&
+    Drupal.Autocomplete.hasOwnProperty('instances')
+  ) {
+    Drupal.Autocomplete.initialize($element[0]);
+  } else {
+    $element.autocomplete();
+  }
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
@@ -2274,7 +2319,14 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
 function arrowsMoveFocus(id, isKeyUp) {
   let didMove = false;
   const $element = jQuery(id);
-  Drupal.Autocomplete.initialize($element[0]);
+  if (
+    Drupal.hasOwnProperty('Autocomplete') &&
+    Drupal.Autocomplete.hasOwnProperty('instances')
+  ) {
+    Drupal.Autocomplete.initialize($element[0]);
+  } else {
+    $element.autocomplete();
+  }
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
@@ -2305,7 +2357,14 @@ function arrowsMoveFocus(id, isKeyUp) {
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  Drupal.Autocomplete.initialize($element[0]);
+  if (
+    Drupal.hasOwnProperty('Autocomplete') &&
+    Drupal.Autocomplete.hasOwnProperty('instances')
+  ) {
+    Drupal.Autocomplete.initialize($element[0]);
+  } else {
+    $element.autocomplete();
+  }
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
