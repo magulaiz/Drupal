@@ -111,11 +111,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if (!empty($forbidden_minimum_tags)) {
       $offending_filter = static::findHtmlRestrictorFilterForbiddingTags($text_format, $minimum_tags);
       $this->context->buildViolation($constraint->forbiddenElementsMessage)
-<<<<<<< HEAD
-        ->setParameter('%filter_label', $offending_filter->getLabel())
-=======
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
->>>>>>> origin/9.4.x
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
         ->addViolation();
     }
@@ -126,11 +122,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if (!empty($not_allowed_minimum_tags)) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $minimum_tags);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
-<<<<<<< HEAD
-        ->setParameter('%filter_label', $offending_filter->getLabel())
-=======
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
->>>>>>> origin/9.4.x
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
         ->addViolation();
     }
