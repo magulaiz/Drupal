@@ -340,7 +340,7 @@
     // the default behavior which expects a text input.
     if (isContentEditable) {
       // eslint-disable-next-line func-names
-      instance.getValue = function () {
+      instance.inputValue = function () {
         return this.input.textContent;
       };
     }

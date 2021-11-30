@@ -216,7 +216,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     if (isContentEditable) {
-      instance.getValue = function () {
+      instance.inputValue = function () {
         return this.input.textContent;
       };
     }
