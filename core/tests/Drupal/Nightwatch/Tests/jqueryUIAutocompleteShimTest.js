@@ -1087,8 +1087,8 @@ module.exports = {
       [
         [
           {
-            type: 'input',
-            selector: '#autocomplete',
+            type: 'textarea',
+            selector: '#autocomplete-textarea',
             valueMethod: 'val',
           },
           {
@@ -1097,8 +1097,8 @@ module.exports = {
             valueMethod: 'text',
           },
           {
-            type: 'textarea',
-            selector: '#autocomplete-textarea',
+            type: 'input',
+            selector: '#autocomplete',
             valueMethod: 'val',
           },
         ],
