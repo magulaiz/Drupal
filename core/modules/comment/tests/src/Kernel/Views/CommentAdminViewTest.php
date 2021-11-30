@@ -78,6 +78,7 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
     $admin_role = Role::create([
       'id' => 'admin',
       'permissions' => ['administer comments', 'skip comment approval'],
+      'label' => 'Admin',
     ]);
     $admin_role->save();
     // Create the admin user.
@@ -151,10 +152,10 @@ class CommentAdminViewTest extends ViewsKernelTestBase {
   protected function doTestFilters($display_id) {
     $comment = $this->comments[0];
     $comment_anonymous = $this->comments[1];
-    /* @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
+    /** @var \Drupal\Core\Session\AccountSwitcherInterface $account_switcher */
     $account_switcher = \Drupal::service('account_switcher');
 
-    /* @var \Drupal\Core\Render\RendererInterface $renderer */
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
     $account_switcher->switchTo($this->adminUser);

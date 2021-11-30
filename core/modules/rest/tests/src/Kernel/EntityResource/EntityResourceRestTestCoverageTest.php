@@ -4,6 +4,7 @@ namespace Drupal\Tests\rest\Kernel\EntityResource;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
 
@@ -46,7 +47,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
         empty($module->info['hidden']) &&
         $module->status == FALSE &&
         $module->info['package'] !== 'Testing' &&
-        $module->info['package'] !== 'Core (Experimental)';
+        $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL;
     });
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));

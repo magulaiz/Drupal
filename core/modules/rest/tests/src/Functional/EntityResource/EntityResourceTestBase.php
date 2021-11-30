@@ -266,7 +266,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Test a GET request for an entity, plus edge cases to ensure good DX.
+   * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
   public function testGet() {
     $this->initAuthentication();
@@ -427,7 +427,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
     static::recursiveKSort($actual);
-    $this->assertSame($expected, $actual);
+    $this->assertEqualsCanonicalizing($expected, $actual);
 
     // Not only assert the normalization, also assert deserialization of the
     // response results in the expected object.

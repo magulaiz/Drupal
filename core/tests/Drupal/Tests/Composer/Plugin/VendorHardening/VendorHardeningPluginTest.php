@@ -48,7 +48,7 @@ class VendorHardeningPluginTest extends TestCase {
       ->willReturn(['tests']);
 
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstallPathForPackage'])
+      ->onlyMethods(['getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstallPathForPackage')
@@ -70,7 +70,7 @@ class VendorHardeningPluginTest extends TestCase {
 
     $plugin->cleanPackage($package->reveal());
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -78,7 +78,7 @@ class VendorHardeningPluginTest extends TestCase {
    */
   public function testCleanPathsForPackage() {
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstallPathForPackage'])
+      ->onlyMethods(['getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstallPathForPackage')
@@ -98,7 +98,7 @@ class VendorHardeningPluginTest extends TestCase {
     $ref_clean->setAccessible(TRUE);
     $ref_clean->invokeArgs($plugin, [$package->reveal(), ['tests']]);
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -119,7 +119,7 @@ class VendorHardeningPluginTest extends TestCase {
       ->willReturn('drupal/package');
 
     $plugin = $this->getMockBuilder(VendorHardeningPlugin::class)
-      ->setMethods(['getInstalledPackages', 'getInstallPathForPackage'])
+      ->onlyMethods(['getInstalledPackages', 'getInstallPathForPackage'])
       ->getMock();
     $plugin->expects($this->once())
       ->method('getInstalledPackages')
@@ -141,7 +141,7 @@ class VendorHardeningPluginTest extends TestCase {
 
     $plugin->cleanAllPackages();
 
-    $this->assertFileNotExists(vfsStream::url('vendor/drupal/package/tests'));
+    $this->assertFileDoesNotExist(vfsStream::url('vendor/drupal/package/tests'));
   }
 
   /**
@@ -153,7 +153,7 @@ class VendorHardeningPluginTest extends TestCase {
     // Set up mocks so that writeAccessRestrictionFiles() can eventually use
     // the IOInterface object.
     $composer = $this->getMockBuilder(Composer::class)
-      ->setMethods(['getPackage'])
+      ->onlyMethods(['getPackage'])
       ->getMock();
     $composer->expects($this->once())
       ->method('getPackage')
@@ -164,8 +164,8 @@ class VendorHardeningPluginTest extends TestCase {
 
     $this->assertDirectoryExists($dir);
 
-    $this->assertFileNotExists($dir . '/.htaccess');
-    $this->assertFileNotExists($dir . '/web.config');
+    $this->assertFileDoesNotExist($dir . '/.htaccess');
+    $this->assertFileDoesNotExist($dir . '/web.config');
 
     $plugin->writeAccessRestrictionFiles($dir);
 
