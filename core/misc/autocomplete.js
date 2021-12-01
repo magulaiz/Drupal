@@ -122,6 +122,7 @@
         search: searchHandler,
         select: selectHandler,
         renderItem: renderItem,
+        cache: {},
         splitValues: autocompleteSplitValues,
         extractLastTerm: extractLastTerm,
         minLength: 1,
@@ -136,29 +137,57 @@
         var autocompleteInput = e.detail.autocomplete._internal_object.input;
         Object.keys(Drupal.autocomplete.options).forEach(function (option) {
           if (optionsToOriginalMethods.hasOwnProperty(option)) {
+            Drupal.deprecationError({
+              message: 'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715'
+            });
+
             if (optionsToOriginalMethods[option] !== Drupal.autocomplete.options[option]) {
               var optionName = option === 'renderItem' ? '_renderItem' : option;
-              console.log('@todo test coverage to ensure these overrides of jQuery UI autocomplete API are applied to the instance');
-              $(autocompleteInput).autocomplete(optionName, Drupal.autocomplete.options[option]);
+
+              if (optionName !== 'isComposing') {
+                $(autocompleteInput).autocomplete(optionName, Drupal.autocomplete.options[option]);
+              }
             }
           }
         });
         Object.keys(Drupal.autocomplete).forEach(function (key) {
-          if (key !== 'options' && optionsToOriginalMethods[key] !== Drupal.autocomplete[key]) {
-            if (key === 'ajax') {
-              if (JSON.stringify(optionsToOriginalMethods[key]) !== JSON.stringify(Drupal.autocomplete[key])) {
-                console.log('@todo shim Drupal.autocommlete.ajax');
-              }
+          if (key === 'options') {
+            return;
+          }
 
-              return;
+          var originalValue = ['ajax', 'cache'].includes(key) ? JSON.stringify(optionsToOriginalMethods[key]) : optionsToOriginalMethods[key];
+          var newValue = ['ajax', 'cache'].includes(key) ? JSON.stringify(Drupal.autocomplete[key]) : Drupal.autocomplete[key];
+
+          if (originalValue !== newValue) {
+            var instance = e.detail.autocomplete._internal_object;
+            Drupal.deprecationError({
+              message: 'Overriding autocomplete behavior via Drupal.autocomplete is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions instead. See https://www.drupal.org/node/3083715'
+            });
+
+            switch (key) {
+              case 'ajax':
+                break;
+
+              case 'cache':
+                break;
+
+              case 'splitValues':
+                instance.splitValues = function () {
+                  return Drupal.autocomplete[key](this.inputValue());
+                };
+
+                break;
+
+              case 'extractLastTerm':
+                instance.extractLastInputValue = function () {
+                  return Drupal.autocomplete[key](this.inputValue());
+                };
+
+                break;
+
+              default:
+                break;
             }
-
-            if (['splitValues', 'extractLastTerm'].includes(key)) {
-              console.log('@todo shim the overrides to splitValues and extractLastTerm');
-              return;
-            }
-
-            console.log("@todo shim the overrides for Drupal.autocomplete.".concat(key));
           }
         });
       });

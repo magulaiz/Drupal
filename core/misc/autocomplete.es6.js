@@ -217,6 +217,7 @@
         search: searchHandler,
         select: selectHandler,
         renderItem,
+        cache: {},
         splitValues: autocompleteSplitValues,
         extractLastTerm,
         minLength: 1,
@@ -234,48 +235,71 @@
         // Drupal.autocomplete and route those overrides to the shim.
         Object.keys(Drupal.autocomplete.options).forEach((option) => {
           if (optionsToOriginalMethods.hasOwnProperty(option)) {
+            Drupal.deprecationError({
+              message:
+                'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
+            });
             if (
               optionsToOriginalMethods[option] !==
               Drupal.autocomplete.options[option]
             ) {
               const optionName =
                 option === 'renderItem' ? '_renderItem' : option;
-              console.log(
-                '@todo test coverage to ensure these overrides of jQuery UI autocomplete API are applied to the instance',
-              );
-              $(autocompleteInput).autocomplete(
-                optionName,
-                Drupal.autocomplete.options[option],
-              );
+
+              // The isComposing property does not need to be shimmed. In the
+              // A11y_Autocomplete inplementation, IME use does not trigger
+              // search until composition is complete.
+              if (optionName !== 'isComposing') {
+                $(autocompleteInput).autocomplete(
+                  optionName,
+                  Drupal.autocomplete.options[option],
+                );
+              }
             }
           }
         });
 
         Object.keys(Drupal.autocomplete).forEach((key) => {
-          if (
-            key !== 'options' &&
-            optionsToOriginalMethods[key] !== Drupal.autocomplete[key]
-          ) {
-            if (key === 'ajax') {
-              // Stringify for easy object comparison.
-              if (
-                JSON.stringify(optionsToOriginalMethods[key]) !==
-                JSON.stringify(Drupal.autocomplete[key])
-              ) {
-                console.log('@todo shim Drupal.autocommlete.ajax');
-              }
-              return;
-            }
+          if (key === 'options') {
+            return;
+          }
+          const originalValue = ['ajax', 'cache'].includes(key)
+            ? JSON.stringify(optionsToOriginalMethods[key])
+            : optionsToOriginalMethods[key];
+          const newValue = ['ajax', 'cache'].includes(key)
+            ? JSON.stringify(Drupal.autocomplete[key])
+            : Drupal.autocomplete[key];
 
-            if (['splitValues', 'extractLastTerm'].includes(key)) {
-              console.log(
-                '@todo shim the overrides to splitValues and extractLastTerm',
-              );
-              return;
+          if (originalValue !== newValue) {
+            const instance = e.detail.autocomplete._internal_object;
+            Drupal.deprecationError({
+              message:
+                'Overriding autocomplete behavior via Drupal.autocomplete is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions instead. See https://www.drupal.org/node/3083715',
+            });
+            switch (key) {
+              case 'ajax':
+                // @todo warning specific to this property.
+                break;
+              case 'cache':
+                // @todo warning specific to this property.
+                break;
+              case 'splitValues':
+                // @todo warning specific to this property.
+                // eslint-disable-next-line func-names
+                instance.splitValues = function () {
+                  return Drupal.autocomplete[key](this.inputValue());
+                };
+                break;
+              case 'extractLastTerm':
+                // @todo warning specific to this property.
+                // eslint-disable-next-line func-names
+                instance.extractLastInputValue = function () {
+                  return Drupal.autocomplete[key](this.inputValue());
+                };
+                break;
+              default:
+                break;
             }
-            console.log(
-              `@todo shim the overrides for Drupal.autocomplete.${key}`,
-            );
           }
         });
       });

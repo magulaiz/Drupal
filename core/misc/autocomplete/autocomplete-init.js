@@ -63,7 +63,6 @@
           delete Drupal.Autocomplete.instances[e.detail.autocomplete.id];
         });
         document.addEventListener('autocomplete-created', function (e) {
-          console.log('autocomplete created in -init');
           Drupal.Autocomplete.instances[e.detail.autocomplete.id] = e.detail.autocomplete;
         });
       }

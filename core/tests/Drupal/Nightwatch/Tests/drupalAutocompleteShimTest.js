@@ -1,0 +1,254 @@
+module.exports = {
+  '@tags': ['core'],
+  before(browser) {
+    browser.drupalInstall().drupalLoginAsAdmin(() => {
+      browser
+        .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'jQuery Simulate')
+        .waitForElementVisible(
+          'input[name="modules[jquery_simulate][enable]"]',
+          1000,
+        )
+        .click('input[name="modules[jquery_simulate][enable]"]')
+        .click('input[type="submit"]')
+        .drupalRelativeURL('/admin/modules')
+        .setValue('input[type="search"]', 'autocomplete Shim Test')
+        .waitForElementVisible(
+          'input[name="modules[autocomplete_shim_test][enable]"]',
+          1000,
+        )
+        .click('input[name="modules[autocomplete_shim_test][enable]"]')
+        .click('input[type="submit"]');
+    });
+  },
+  beforeEach(browser) {
+    browser
+      // Go to page with an input that can be initialized after page load.
+      // This makes it easier to test Drupal.autocomplete overrides.
+      .drupalRelativeURL(
+        '/autocomplete-shim-test-with-additional-direct-jquery',
+      )
+      .waitForElementPresent('#autocomplete-wrap1', 1000);
+  },
+  after(browser) {
+    browser.drupalUninstall();
+  },
+  splitValues: (browser) => {
+    browser.executeAsync(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function (done) {
+        const toReturn = {};
+        // Override splitValues to split with pipes instead of commas.
+        // eslint-disable-next-line func-names
+        Drupal.autocomplete.splitValues = function (value) {
+          const result = [];
+          let quote = false;
+          let current = '';
+          const valueLength = value.length;
+          let character;
+
+          for (let i = 0; i < valueLength; i++) {
+            character = value.charAt(i);
+            if (character === '"') {
+              current += character;
+              quote = !quote;
+            } else if (character === '|' && !quote) {
+              result.push(current.trim());
+              current = '';
+            } else {
+              current += character;
+            }
+          }
+          if (value.length > 0) {
+            result.push(current.trim());
+          }
+
+          return result;
+        };
+        const items = [
+          'apple',
+          'anteater',
+          'artifact',
+          'ampersand',
+          'boy',
+          'bing',
+          'brat',
+          'city',
+        ];
+        const input = document.querySelector('#direct-jquery');
+        Drupal.Autocomplete.initialize(input);
+        const instance = Drupal.Autocomplete.instances['direct-jquery'];
+        instance._internal_object.options.source = (term, response) => {
+          response(items.filter((item) => item.includes(term)));
+        };
+        instance._internal_object.options.searchDelay = 0;
+
+        const event = new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        input.value = 'a';
+        input.dispatchEvent(event);
+        setTimeout(() => {
+          let searchResults = '';
+          toReturn.numResultsSearchA =
+            Array.from(input.parentNode.querySelectorAll('li')).filter(
+              (item) => {
+                if (!item.hidden) {
+                  searchResults += item.innerText;
+                  return true;
+                }
+                return false;
+              },
+            ).length === 5;
+          toReturn.searchResultsA =
+            searchResults === 'appleanteaterartifactampersandbrat';
+          input.value = 'a,a';
+          input.dispatchEvent(event);
+          setTimeout(() => {
+            toReturn.numResultsSearchComma =
+              Array.from(input.parentNode.querySelectorAll('li')).filter(
+                (item) => !item.hidden,
+              ).length === 0;
+            input.value = 'a|a';
+            input.dispatchEvent(event);
+            setTimeout(() => {
+              let searchResultsPipe = '';
+              toReturn.numResultsSearchPipe =
+                Array.from(input.parentNode.querySelectorAll('li')).filter(
+                  // eslint-disable-next-line max-nested-callbacks
+                  (item) => {
+                    if (!item.hidden) {
+                      searchResultsPipe += item.innerText;
+                      return true;
+                    }
+                    return false;
+                  },
+                ).length === 5;
+              toReturn.searchResultsPipe =
+                searchResultsPipe === 'appleanteaterartifactampersandbrat';
+              done(toReturn);
+            });
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          numResultsSearchA: '5 results searching for "a"',
+          searchResultsA: 'the expected results searching for "a"',
+          numResultsSearchComma: '0 results searching for "a,a"',
+          numResultsSearchPipe: '5 results searching for a|a',
+          searchResultsPipe: 'the expected results searching for "a|a"',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  extractLastTerm: (browser) => {
+    browser.executeAsync(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function (done) {
+        const toReturn = {};
+        // Override splitValues to split with pipes instead of commas.
+        // eslint-disable-next-line func-names
+        Drupal.autocomplete.extractLastTerm = function (term) {
+          return `${this.splitValues(term).pop()}r`;
+        };
+        const items = [
+          'apple',
+          'anteater',
+          'artifact',
+          'ampersand',
+          'boy',
+          'bing',
+          'brat',
+          'brass',
+          'city',
+        ];
+        const input = document.querySelector('#direct-jquery');
+        Drupal.Autocomplete.initialize(input);
+        const instance = Drupal.Autocomplete.instances['direct-jquery'];
+        instance._internal_object.options.source = (term, response) => {
+          response(items.filter((item) => item.includes(term)));
+        };
+        instance._internal_object.options.searchDelay = 0;
+
+        const event = new Event('input', {
+          bubbles: true,
+          cancelable: true,
+        });
+
+        input.value = 'a';
+        input.dispatchEvent(event);
+        setTimeout(() => {
+          let searchResults = '';
+          toReturn.numResultsSearchA =
+            Array.from(input.parentNode.querySelectorAll('li')).filter(
+              (item) => {
+                if (!item.hidden) {
+                  searchResults += item.innerText;
+                  return true;
+                }
+                return false;
+              },
+            ).length === 1;
+          toReturn.searchResultsA = searchResults === 'artifact';
+          input.value = 'c';
+          input.dispatchEvent(event);
+          setTimeout(() => {
+            toReturn.numResultsSearchC =
+              Array.from(input.parentNode.querySelectorAll('li')).filter(
+                (item) => !item.hidden,
+              ).length === 0;
+            toReturn.words = input.parentNode.querySelector('ul').innerText;
+            input.value = 'b';
+            input.dispatchEvent(event);
+            setTimeout(() => {
+              let searchResultsPipe = '';
+              toReturn.numResultsSearchB =
+                Array.from(input.parentNode.querySelectorAll('li')).filter(
+                  // eslint-disable-next-line max-nested-callbacks
+                  (item) => {
+                    if (!item.hidden) {
+                      searchResultsPipe += item.innerText;
+                      return true;
+                    }
+                    return false;
+                  },
+                ).length === 2;
+              toReturn.searchResultsB = searchResultsPipe === 'bratbrass';
+
+              // toReturn.searchResultsPipe = searchResultsPipe === 'bratbrass';
+              done(toReturn);
+            });
+          });
+        });
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          numResultsSearchA: '1 results searching for "a"',
+          searchResultsA: 'the expected results searching for "a"',
+          numResultsSearchC: '0 results searching for "c"',
+          numResultsSearchB: '2 results searching for b',
+          searchResultsB: 'the expected results searching for "b"',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+};
