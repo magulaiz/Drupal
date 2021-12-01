@@ -59,35 +59,25 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
    * - '8.0.3' is marked as 'Release type' 'Unsupported'.
    */
   public function testNoUpdatesAvailable() {
-//    foreach ([0, 1] as $minor_version) {
-//      foreach ([0, 1] as $patch_version) {
-//        foreach (['-alpha1', '-beta1', ''] as $extra_version) {
-//          $this->setProjectInstalledVersion("8.$minor_version.$patch_version" . $extra_version);
-//          $this->refreshUpdateStatus([$this->updateProject => "$minor_version.$patch_version" . $extra_version]);
-//          $this->standardTests();
-//          // The XML test fixtures for this method all contain the '8.2.0'
-//          // release but because '8.2.0' is not in a supported branch it will
-//          // not be in the available updates.
-//          $this->assertUpdateTableElementNotContains('8.2.0');
-//          $this->assertUpdateTableTextContains('Up to date');
-//          $this->assertUpdateTableTextNotContains('Update available');
-//          $this->assertUpdateTableTextNotContains('Security update required!');
-//          $this->assertUpdateTableElementContains('check.svg');
-//        }
-//      }
-//    }
-    $this->setProjectInstalledVersion("8.0.1" );
-    $this->refreshUpdateStatus([$this->updateProject => "1.1"]);
-    $this->standardTests();
-    // The XML test fixtures for this method all contain the '8.2.0'
-    // release but because '8.2.0' is not in a supported branch it will
-    // not be in the available updates.
-    file_put_contents("/Users/kunal.sachdev/www/8.2.0-alpha1.html", $this->getSession()->getPage()->getContent());
-    $this->assertUpdateTableElementNotContains('8.2.0');
-    $this->assertUpdateTableTextContains('Up to date');
-    $this->assertUpdateTableTextNotContains('Update available');
-    $this->assertUpdateTableTextNotContains('Security update required!');
-    $this->assertUpdateTableElementContains('check.svg');
+    foreach ([0, 1] as $minor_version) {
+      foreach ([0, 1] as $patch_version) {
+        foreach (['-alpha1', '-beta1', ''] as $extra_version) {
+          $this->setProjectInstalledVersion("8.$minor_version.$patch_version" . $extra_version);
+          $this->refreshUpdateStatus([$this->updateProject => "$minor_version.$patch_version" . $extra_version]);
+          $this->standardTests();
+          // The XML test fixtures for this method all contain the '8.2.0'
+          // release but because '8.2.0' is not in a supported branch it will
+          // not be in the available updates.
+          file_put_contents("/Users/kunal.sachdev/www/8.2.1-alpha1.html", $this->getSession()->getPage()->getContent());
+          $this->assertUpdateTableElementNotContains('8.3.0.');
+          $this->assertVersionUpdateLinks('Latest version:', '8.2.1-alpha1');
+          $this->assertUpdateTableTextContains('Up to date');
+          $this->assertUpdateTableTextNotContains('Update available');
+          $this->assertUpdateTableTextNotContains('Security update required!');
+          $this->assertUpdateTableElementContains('check.svg');
+        }
+      }
+    }
   }
 
   /**
