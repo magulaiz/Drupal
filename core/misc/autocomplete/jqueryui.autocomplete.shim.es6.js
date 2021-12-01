@@ -407,8 +407,11 @@
   // uses A11yAutocomplete for the functionality.
   $.fn.extend({
     autocomplete(...args) {
-      // Check if the shim should be used on the element.
+      // If args[0] is a string, the autocomplete instance is already
+      // initialized and the string represents a method the autocomplete should
+      // execute.
       if (
+        typeof args[0] !== 'string' ||
         !this.length ||
         !this[0].hasAttribute('data-autocomplete-shim-enabled')
       ) {
@@ -436,6 +439,7 @@
 
         return oldAutocomplete.apply(this, args);
       }
+
       Drupal.deprecationError({
         message:
           'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
@@ -454,316 +458,277 @@
         source: null,
       };
 
-      // If args[0] is a string, the autocomplete instance is already
-      // initialized and the string represents a method the autocomplete should
-      // execute.
-      if (typeof args[0] === 'string') {
-        if (!Drupal.autocompleteShim.instances[id]) {
-          return;
-        }
-        const instance = Drupal.autocompleteShim.instances[id];
-        const method = args[0];
+      if (!Drupal.autocompleteShim.instances[id]) {
+        return;
+      }
 
-        switch (method) {
-          case 'widget':
-            // The widget option returns the autocomplete item list.
-            return $(instance.listboxWrapper);
-          case 'instance':
-            // This is the one method that will not return an exact replica
-            // of what jQuery UI would return, as jQuery UI autocomplete
-            // returns an object that is very jQuery-integrated. The properties
-            // that do not have non-jQuery equivalents are null.
-            // eslint-disable-next-line no-case-declarations
-            const instanceToReturn = {
-              document: $(document),
-              element: $(instance.input),
-              menu: {
-                element: $(instance.listboxWrapper),
-              },
-              liveRegion: $(instance.liveRegion),
-              isMultiLine: instance.options.isMultiLine,
-              isNewMenu: null,
-              options: instance.options,
-              window,
-            };
+      const instance = Drupal.autocompleteShim.instances[id];
+      const method = args[0];
 
-            // Add a warning for instance properties that can't be provided via
-            // shim.
-            [
-              'bindings',
-              'eventNamespace',
-              'classesElementLookup',
-              'focusable',
-              'hoverable',
-              'uuid',
-              'source',
-              'valueMethod',
-            ].forEach((property) => {
-              Object.defineProperty(instanceToReturn, property, {
-                get() {
-                  // eslint-disable-next-line no-console
-                  return console.warn(
-                    `The ${property} property is not supported beginning with 9.3, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715`,
-                  );
-                },
-              });
-            });
+      switch (method) {
+        case 'widget':
+          // The widget option returns the autocomplete item list.
+          return $(instance.listboxWrapper);
+        case 'instance':
+          // This is the one method that will not return an exact replica
+          // of what jQuery UI would return, as jQuery UI autocomplete
+          // returns an object that is very jQuery-integrated. The properties
+          // that do not have non-jQuery equivalents are null.
+          // eslint-disable-next-line no-case-declarations
+          const instanceToReturn = {
+            document: $(document),
+            element: $(instance.input),
+            menu: {
+              element: $(instance.listboxWrapper),
+            },
+            liveRegion: $(instance.liveRegion),
+            isMultiLine: instance.options.isMultiLine,
+            isNewMenu: null,
+            options: instance.options,
+            window,
+          };
 
-            return instanceToReturn;
-          case 'disable':
-            this.autocomplete('option', 'disabled', true);
-            break;
-          case 'enable':
-            this.autocomplete('option', 'disabled', false);
-            break;
-          case 'search':
-            // The 'search' method performs a search as if the input received
-            // input events.
-
-            // A11yAutocomplete expects the input to be focused when a search
-            // occurs, even if it's programmatically triggered.
-            instance.input.focus();
-
-            // If the args[1] argument is present, it will be the search term.
-            if (typeof args[1] === 'string') {
-              // The input's value property must always be set as it's used
-              // internally by A11yAutocomplete.
-              [, instance.input.value] = args;
-
-              // For contenteditable elements, the textContent property must
-              // also match the provided value for it to be visible.
-              if (instance.input.hasAttribute('contenteditable')) {
-                [, instance.input.textContent] = args;
-              }
-            } else if (instance.input.hasAttribute('contenteditable')) {
-              // The input's value property must always be set as it's used
-              // internally by A11yAutocomplete.
-              instance.input.value = instance.input.textContent;
-            }
-
-            // If there is no typed value and no minimum character limit, the
-            // 'search' option will display the results of a predefined list,
-            // when such a list is available.
-            if (
-              instance.input.value.length === 0 &&
-              instance.options.minChars === 0 &&
-              Array.isArray(instance.options.source) &&
-              instance.options.source.length > 0
-            ) {
-              // Do not need to execute applySelectionConstraints because there
-              // are no values to filter.
-              const normalizedResults = instance.normalizeSuggestionItems(
-                instance.options.source,
-              );
-              instance.displayResults(normalizedResults);
-            } else {
-              // If args[1] isn't a string, just trigger a search using whatever
-              // is currently in the input.
-              instance.doSearch($.Event('keydown'));
-            }
-            break;
-          case 'option':
-            // If args[2] doesn't exist, and args[1] is an object, treat each
-            // args[1] object property as an individual autocomplete option that
-            // should be set to the corresponding value.
-            if (typeof args[2] === 'undefined' && typeof args[1] === 'object') {
-              // Individually set each option specified in the object.
-              Object.keys(args[1]).forEach((key) => {
-                this.autocomplete('option', key, args[1][key]);
-              });
-            }
-
-            // If args[2] has a value, then this is setting an option.
-            if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
-              const [, optionName, optionValue] = args;
-              const listBoxId = instance.listboxWrapper.getAttribute('id');
-
-              switch (optionName) {
-                case 'appendTo':
-                  // The option value can be a selector string, element, or jQuery
-                  // object. Convert to element.
-                  // eslint-disable-next-line no-case-declarations
-                  let appendTo = null;
-                  if (typeof optionValue === 'string') {
-                    appendTo = document.querySelector(optionValue);
-                  } else if (optionValue instanceof jQuery) {
-                    appendTo = optionValue.length > 0 ? optionValue[0] : null;
-                  } else {
-                    appendTo = optionValue;
-                  }
-                  if (!appendTo) {
-                    const closestUiFront = $(instance.input).closest(
-                      '.ui-front, dialog',
-                    );
-                    if (closestUiFront.length > 0) {
-                      [appendTo] = closestUiFront;
-                    }
-                  }
-
-                  if (appendTo) {
-                    if (!appendTo.contains(instance.listboxWrapper)) {
-                      appendTo.appendChild(instance.listboxWrapper);
-                    }
-                    instance.listboxWrapper = appendTo.querySelector(
-                      `#${listBoxId}`,
-                    );
-                  }
-
-                  // Add attribute that flags the shim initializer to skip the
-                  // default behavior of appending the list to `document.body`.
-                  instance.input.setAttribute(
-                    'data-autocomplete-list-appended',
-                    true,
-                  );
-                  break;
-                case 'classes':
-                  // This option accepts an object keyed by the default class
-                  // of the element receiving the new class, and the value is
-                  // the class/classes that should replace that default.
-                  Object.keys(optionValue).forEach((key) => {
-                    if (
-                      key === 'ui-autocomplete' ||
-                      key === 'ui-autocomplete-input'
-                    ) {
-                      const element =
-                        key === 'ui-autocomplete'
-                          ? instance.listboxWrapper
-                          : instance.input;
-                      instance.addClasses(element, optionValue[key]);
-                      // Remove the default class.
-                      instance.removeClasses(element, key);
-                    }
-                  });
-                  break;
-                case 'classes.ui-autocomplete':
-                  // Add the new class(es).
-                  instance.addClasses(instance.listboxWrapper, optionValue);
-                  // Remove the default class.
-                  instance.removeClasses(
-                    instance.listboxWrapper,
-                    'ui-autocomplete',
-                  );
-                  break;
-                case 'classes.ui-autocomplete-input':
-                  // Add the new class(es).
-                  instance.addClasses(instance.input, optionValue);
-                  // Remove the default class.
-                  instance.removeClasses(
-                    instance.input,
-                    'ui-autocomplete-input',
-                  );
-                  break;
-                case 'disabled':
-                  instance.options.disabled = optionValue;
-                  $(instance.listboxWrapper).toggleClass(
-                    'ui-autocomplete-disabled',
-                    optionValue,
-                  );
-                  break;
-                case 'position':
-                  $(instance.listboxWrapper).position({
-                    of: instance.input,
-                    my: 'left top',
-                    at: 'left bottom',
-                    collision: 'none',
-                    ...optionValue,
-                  });
-                  break;
-                case 'source':
-                  // In jQuery UI autocomplete, 'source' can be one of three
-                  // types:
-                  // - Function: A callback function that can be used to connect
-                  //   any data source to Autocomplete
-                  // - String: An URL to an endpoint that returns JSON.
-                  // - Array: An array of list items. Can be an array of strings
-                  //   or of objects with `label` and/or `value` properties.
-                  if (typeof optionValue === 'function') {
-                    instance.options.source = (search, results) => {
-                      optionValue({ term: search }, results);
-                    };
-                  } else if (typeof optionValue === 'string') {
-                    instance.options.source =
-                      Drupal.Autocomplete.ajaxSearchProvider(optionValue);
-                  } else {
-                    instance.options.source = optionValue;
-                  }
-                  break;
-                default:
-                  // If the option is an event name, then the optionValue is
-                  // a handler for that event.
-                  if (
-                    [
-                      'change',
-                      'close',
-                      'create',
-                      'focus',
-                      'open',
-                      'response',
-                      'search',
-                      'select',
-                    ].includes(optionName)
-                  ) {
-                    this.on(`autocomplete${optionName}`, optionValue);
-                  }
-
-                  // Some jQuery UI autocomplete options have 1:1 equivalents.
-                  // Those cases are identified and mapped here.
-                  if (optionMapping.hasOwnProperty(optionName)) {
-                    instance.options[optionMapping[optionName]] = optionValue;
-                    // Duplicate the option with jQuery UI naming for BC.
-                    instance.options[optionName] = optionValue;
-                  }
-                  break;
-              }
-            } else if (typeof args[1] === 'string') {
-              // If args[1] is a string, it is the name of an option. Return the
-              // value of that option.
-              if (optionMapping[args[1]]) {
-                return instance.options[optionMapping[args[1]]];
-              }
-              return instance.options[args[1]];
-            }
-            break;
-          default:
-            // Some jQuery UI methods have identically A11yAutocomplete methods
-            // that provide the same functionality and can simply be called.
-            if (typeof instance[method] === 'function') {
-              instance[method]();
-            }
-            break;
-        }
-      } else {
-        const id = this.attr('id');
-        // @todo remove this?
-        if (!Drupal.autocompleteShim.instances[id]) {
-          // This condition means argument 1 was not a string. This means a new
-          // autocomplete instance should be initialized.
-          Drupal.Autocomplete.initialize(this[0]);
-        }
-
-        // If argument 1 is an object, they are options that should be set on
-        // the newly created autocomplete.
-        if (typeof args[0] === 'object') {
-          Object.keys(args[0]).forEach((key) => {
-            // The widgetOverrides key is treated differently as it's not an
-            // option, but a list of instance methods/properties to be
-            // overridden.
-            if (key === 'widgetOverrides') {
-              const { widgetOverrides } = args[0];
-              Object.keys(widgetOverrides).forEach((propertyToOverride) => {
-                const overrideWith = widgetOverrides[propertyToOverride];
-                const instance = Drupal.autocompleteShim.instances[id];
-                applyWidgetOverrides(
-                  instance,
-                  propertyToOverride,
-                  overrideWith,
+          // Add a warning for instance properties that can't be provided via
+          // shim.
+          [
+            'bindings',
+            'eventNamespace',
+            'classesElementLookup',
+            'focusable',
+            'hoverable',
+            'uuid',
+            'source',
+            'valueMethod',
+          ].forEach((property) => {
+            Object.defineProperty(instanceToReturn, property, {
+              get() {
+                // eslint-disable-next-line no-console
+                return console.warn(
+                  `The ${property} property is not supported beginning with 9.3, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715`,
                 );
-              });
-            } else {
-              this.autocomplete('option', key, args[0][key]);
-            }
+              },
+            });
           });
-        }
+
+          return instanceToReturn;
+        case 'disable':
+          this.autocomplete('option', 'disabled', true);
+          break;
+        case 'enable':
+          this.autocomplete('option', 'disabled', false);
+          break;
+        case 'search':
+          // The 'search' method performs a search as if the input received
+          // input events.
+
+          // A11yAutocomplete expects the input to be focused when a search
+          // occurs, even if it's programmatically triggered.
+          instance.input.focus();
+
+          // If the args[1] argument is present, it will be the search term.
+          if (typeof args[1] === 'string') {
+            // The input's value property must always be set as it's used
+            // internally by A11yAutocomplete.
+            [, instance.input.value] = args;
+
+            // For contenteditable elements, the textContent property must
+            // also match the provided value for it to be visible.
+            if (instance.input.hasAttribute('contenteditable')) {
+              [, instance.input.textContent] = args;
+            }
+          } else if (instance.input.hasAttribute('contenteditable')) {
+            // The input's value property must always be set as it's used
+            // internally by A11yAutocomplete.
+            instance.input.value = instance.input.textContent;
+          }
+
+          // If there is no typed value and no minimum character limit, the
+          // 'search' option will display the results of a predefined list,
+          // when such a list is available.
+          if (
+            instance.input.value.length === 0 &&
+            instance.options.minChars === 0 &&
+            Array.isArray(instance.options.source) &&
+            instance.options.source.length > 0
+          ) {
+            // Do not need to execute applySelectionConstraints because there
+            // are no values to filter.
+            const normalizedResults = instance.normalizeSuggestionItems(
+              instance.options.source,
+            );
+            instance.displayResults(normalizedResults);
+          } else {
+            // If args[1] isn't a string, just trigger a search using whatever
+            // is currently in the input.
+            instance.doSearch($.Event('keydown'));
+          }
+          break;
+        case 'option':
+          // If args[2] doesn't exist, and args[1] is an object, treat each
+          // args[1] object property as an individual autocomplete option that
+          // should be set to the corresponding value.
+          if (typeof args[2] === 'undefined' && typeof args[1] === 'object') {
+            // Individually set each option specified in the object.
+            Object.keys(args[1]).forEach((key) => {
+              this.autocomplete('option', key, args[1][key]);
+            });
+          }
+
+          // If args[2] has a value, then this is setting an option.
+          if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
+            const [, optionName, optionValue] = args;
+            const listBoxId = instance.listboxWrapper.getAttribute('id');
+
+            switch (optionName) {
+              case 'appendTo':
+                // The option value can be a selector string, element, or jQuery
+                // object. Convert to element.
+                // eslint-disable-next-line no-case-declarations
+                let appendTo = null;
+                if (typeof optionValue === 'string') {
+                  appendTo = document.querySelector(optionValue);
+                } else if (optionValue instanceof jQuery) {
+                  appendTo = optionValue.length > 0 ? optionValue[0] : null;
+                } else {
+                  appendTo = optionValue;
+                }
+                if (!appendTo) {
+                  const closestUiFront = $(instance.input).closest(
+                    '.ui-front, dialog',
+                  );
+                  if (closestUiFront.length > 0) {
+                    [appendTo] = closestUiFront;
+                  }
+                }
+
+                if (appendTo) {
+                  if (!appendTo.contains(instance.listboxWrapper)) {
+                    appendTo.appendChild(instance.listboxWrapper);
+                  }
+                  instance.listboxWrapper = appendTo.querySelector(
+                    `#${listBoxId}`,
+                  );
+                }
+
+                // Add attribute that flags the shim initializer to skip the
+                // default behavior of appending the list to `document.body`.
+                instance.input.setAttribute(
+                  'data-autocomplete-list-appended',
+                  true,
+                );
+                break;
+              case 'classes':
+                // This option accepts an object keyed by the default class
+                // of the element receiving the new class, and the value is
+                // the class/classes that should replace that default.
+                Object.keys(optionValue).forEach((key) => {
+                  if (
+                    key === 'ui-autocomplete' ||
+                    key === 'ui-autocomplete-input'
+                  ) {
+                    const element =
+                      key === 'ui-autocomplete'
+                        ? instance.listboxWrapper
+                        : instance.input;
+                    instance.addClasses(element, optionValue[key]);
+                    // Remove the default class.
+                    instance.removeClasses(element, key);
+                  }
+                });
+                break;
+              case 'classes.ui-autocomplete':
+                // Add the new class(es).
+                instance.addClasses(instance.listboxWrapper, optionValue);
+                // Remove the default class.
+                instance.removeClasses(
+                  instance.listboxWrapper,
+                  'ui-autocomplete',
+                );
+                break;
+              case 'classes.ui-autocomplete-input':
+                // Add the new class(es).
+                instance.addClasses(instance.input, optionValue);
+                // Remove the default class.
+                instance.removeClasses(instance.input, 'ui-autocomplete-input');
+                break;
+              case 'disabled':
+                instance.options.disabled = optionValue;
+                $(instance.listboxWrapper).toggleClass(
+                  'ui-autocomplete-disabled',
+                  optionValue,
+                );
+                break;
+              case 'position':
+                $(instance.listboxWrapper).position({
+                  of: instance.input,
+                  my: 'left top',
+                  at: 'left bottom',
+                  collision: 'none',
+                  ...optionValue,
+                });
+                break;
+              case 'source':
+                // In jQuery UI autocomplete, 'source' can be one of three
+                // types:
+                // - Function: A callback function that can be used to connect
+                //   any data source to Autocomplete
+                // - String: An URL to an endpoint that returns JSON.
+                // - Array: An array of list items. Can be an array of strings
+                //   or of objects with `label` and/or `value` properties.
+                if (typeof optionValue === 'function') {
+                  instance.options.source = (search, results) => {
+                    optionValue({ term: search }, results);
+                  };
+                } else if (typeof optionValue === 'string') {
+                  instance.options.source =
+                    Drupal.Autocomplete.ajaxSearchProvider(optionValue);
+                } else {
+                  instance.options.source = optionValue;
+                }
+                break;
+              default:
+                // If the option is an event name, then the optionValue is
+                // a handler for that event.
+                if (
+                  [
+                    'change',
+                    'close',
+                    'create',
+                    'focus',
+                    'open',
+                    'response',
+                    'search',
+                    'select',
+                  ].includes(optionName)
+                ) {
+                  this.on(`autocomplete${optionName}`, optionValue);
+                }
+
+                // Some jQuery UI autocomplete options have 1:1 equivalents.
+                // Those cases are identified and mapped here.
+                if (optionMapping.hasOwnProperty(optionName)) {
+                  instance.options[optionMapping[optionName]] = optionValue;
+                  // Duplicate the option with jQuery UI naming for BC.
+                  instance.options[optionName] = optionValue;
+                }
+                break;
+            }
+          } else if (typeof args[1] === 'string') {
+            // If args[1] is a string, it is the name of an option. Return the
+            // value of that option.
+            if (optionMapping[args[1]]) {
+              return instance.options[optionMapping[args[1]]];
+            }
+            return instance.options[args[1]];
+          }
+          break;
+        default:
+          // Some jQuery UI methods have identically A11yAutocomplete methods
+          // that provide the same functionality and can simply be called.
+          if (typeof instance[method] === 'function') {
+            instance[method]();
+          }
+          break;
       }
 
       return this;
