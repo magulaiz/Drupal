@@ -196,9 +196,9 @@
 
       // Autocomplete events must receive additional processing as jQuery UI
       // autocomplete is no longer part of Drupal core.
-      if (this.attr('data-autocomplete-shim-enabled')) {
-        processAutocompleteEvents(types, selector, data, fn, one, this);
-      }
+      // @todo only do this for shimmed inputs
+      // @todo does the selector argument work?
+      processAutocompleteEvents(types, selector, data, fn, one, this);
 
       // Run jQuery's default on().
       return oldOn.apply(this, args);

@@ -148,11 +148,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           data = args[2],
           fn = args[3],
           one = args[4];
-
-      if (this.attr('data-autocomplete-shim-enabled')) {
-        processAutocompleteEvents(types, selector, data, fn, one, this);
-      }
-
+      processAutocompleteEvents(types, selector, data, fn, one, this);
       return oldOn.apply(this, args);
     }
   });

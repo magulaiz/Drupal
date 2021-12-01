@@ -98,7 +98,7 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const $element = jQuery('#autocomplete').autocomplete();
+        const $element = jQuery('#autocomplete').autocomplete('widget');
         return {};
       },
       [],
@@ -850,7 +850,7 @@ module.exports = {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
-        const $element = jQuery('#autocomplete').autocomplete();
+        const $element = jQuery('#autocomplete');
         const replacement = '<div>test</div>';
         // Remove the visually-hidden assistive tech span added by Drupal
         // autocomplete.
@@ -874,7 +874,9 @@ module.exports = {
           source: ['java', 'javascript'],
           delay: 0,
         });
-        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         const menu = $element.autocomplete('instance').menu.element;
 
         if (usingA11yAutocomplete) {
@@ -975,9 +977,9 @@ module.exports = {
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
 
-          const usingA11yAutocomplete = toReturn[settings.type].element.attr(
-            'data-autocomplete-input',
-          );
+          const usingA11yAutocomplete = toReturn[
+            settings.type
+          ].element[0].hasAttribute('data-autocomplete-input');
 
           if (usingA11yAutocomplete) {
             Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
@@ -1209,7 +1211,9 @@ module.exports = {
             toReturn.menuOpened = true;
           },
         });
-        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         const menu = $element.autocomplete('widget');
         // With Drupal autocomplete, triggering a search does not
         // happen with keydown.
@@ -1311,7 +1315,9 @@ module.exports = {
             return false;
           },
         });
-        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'ja');
         } else {
@@ -1682,7 +1688,9 @@ module.exports = {
             });
           },
         });
-        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'ja');
         } else {
@@ -1719,7 +1727,9 @@ module.exports = {
           source: data,
           delay: 25,
         });
-        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         const menu = $element.autocomplete('widget');
         if (usingA11yAutocomplete) {
           $element.val('ja');
