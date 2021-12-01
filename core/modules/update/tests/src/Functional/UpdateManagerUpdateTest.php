@@ -194,6 +194,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
     $incompatible_table_locator = '[data-drupal-selector="edit-not-compatible"]';
 
     $this->refreshUpdateStatus(['drupal' => $core_fixture, 'aaa_update_test' => $a_fixture, 'bbb_update_test' => $b_fixture]);
+    $this->drupalGet('admin/reports/updates/update');
 
     if ($compatible) {
       // Verify the number of rows in the table.
