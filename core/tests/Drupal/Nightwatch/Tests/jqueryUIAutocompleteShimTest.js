@@ -874,12 +874,10 @@ module.exports = {
           source: ['java', 'javascript'],
           delay: 0,
         });
+        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
         const menu = $element.autocomplete('instance').menu.element;
 
-        if (
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances')
-        ) {
+        if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'j');
         } else {
           $element.val('j').simulate('keydown');
@@ -959,9 +957,6 @@ module.exports = {
     browser.executeAsync(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (settingsArray, done) {
-        const usingA11yAutocomplete =
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances');
         const toReturn = {};
         const data = [
           'Clojure',
@@ -979,6 +974,11 @@ module.exports = {
           toReturn[settings.type].justASelector = settings.selector;
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
+
+          const usingA11yAutocomplete = toReturn[settings.type].element.attr(
+            'data-autocomplete-input',
+          );
+
           if (usingA11yAutocomplete) {
             Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
           } else {
@@ -1183,9 +1183,6 @@ module.exports = {
   'cancel search': (browser) => {
     browser.executeAsync(
       function (done) {
-        const usingA11yAutocomplete =
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances');
         const toReturn = {};
         const data = [
           'Clojure',
@@ -1212,6 +1209,7 @@ module.exports = {
             toReturn.menuOpened = true;
           },
         });
+        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
         const menu = $element.autocomplete('widget');
         // With Drupal autocomplete, triggering a search does not
         // happen with keydown.
@@ -1295,9 +1293,6 @@ module.exports = {
     browser.executeAsync(
       // eslint-disable-next-line func-names
       function (done) {
-        const usingA11yAutocomplete =
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances');
         const data = [
           'Clojure',
           'COBOL',
@@ -1316,6 +1311,7 @@ module.exports = {
             return false;
           },
         });
+        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
         if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'ja');
         } else {
@@ -1657,9 +1653,6 @@ module.exports = {
     browser.executeAsync(
       // eslint-disable-next-line func-names
       function (done) {
-        const usingA11yAutocomplete =
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances');
         const data = [
           'c++',
           'java',
@@ -1689,6 +1682,7 @@ module.exports = {
             });
           },
         });
+        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
         if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'ja');
         } else {
@@ -1706,9 +1700,6 @@ module.exports = {
       // eslint-disable-next-line func-names
       function (done) {
         const toReturn = {};
-        const usingA11yAutocomplete =
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances');
         const data = [
           'c++',
           'java',
@@ -1728,6 +1719,7 @@ module.exports = {
           source: data,
           delay: 25,
         });
+        const usingA11yAutocomplete = $element.attr('data-autocomplete-input');
         const menu = $element.autocomplete('widget');
         if (usingA11yAutocomplete) {
           $element.val('ja');
