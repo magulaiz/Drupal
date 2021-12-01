@@ -247,7 +247,7 @@
                 option === 'renderItem' ? '_renderItem' : option;
 
               // The isComposing property does not need to be shimmed. In the
-              // A11y_Autocomplete inplementation, IME use does not trigger
+              // A11y_Autocomplete implementation, IME use does not trigger
               // search until composition is complete.
               if (optionName !== 'isComposing') {
                 $(autocompleteInput).autocomplete(

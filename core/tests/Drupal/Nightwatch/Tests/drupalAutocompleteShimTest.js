@@ -1,3 +1,6 @@
+// cSpell:ignore bratbrass appleanteaterartifactampersandbrat
+// Test the shimmed and deprecated Drupal.autocomplete.
+
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -225,8 +228,6 @@ module.exports = {
                   },
                 ).length === 2;
               toReturn.searchResultsB = searchResultsPipe === 'bratbrass';
-
-              // toReturn.searchResultsPipe = searchResultsPipe === 'bratbrass';
               done(toReturn);
             });
           });
