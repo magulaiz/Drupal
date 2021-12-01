@@ -63,7 +63,6 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     \Drupal::state()->set('update_test.mock_date', $mock_date);
     $this->setProjectInstalledVersion($installed_version);
     $this->refreshUpdateStatus(['drupal' => $fixture]);
-    $this->drupalGet('admin/reports/status');
 
     if (empty($requirements_section_heading)) {
       $this->assertSession()->pageTextNotContains('Drupal core security coverage');

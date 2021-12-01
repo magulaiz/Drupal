@@ -134,7 +134,6 @@ class UpdateUploadTest extends UpdateTestBase {
     $this->refreshUpdateStatus($xml_mapping);
 
     // Run the updates for the new module.
-    $this->drupalGet('admin/reports/updates/update');
     $this->submitForm(['projects[update_test_new_module]' => TRUE], 'Download these updates');
     $this->submitForm(['maintenance_mode' => FALSE], 'Continue');
     $this->assertSession()->pageTextContains('Update was completed successfully.');
