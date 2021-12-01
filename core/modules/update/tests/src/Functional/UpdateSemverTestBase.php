@@ -68,7 +68,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
           // The XML test fixtures for this method all contain the '8.2.0'
           // release but because '8.2.0' is not in a supported branch it will
           // not be in the available updates.
-          file_put_contents("/Users/kunal.sachdev/www/8.2.1-alpha1.html", $this->getSession()->getPage()->getContent());
           $this->assertUpdateTableElementNotContains('8.3.0.');
           $this->assertVersionUpdateLinks('Latest version:', '8.2.1-alpha1');
           $this->assertUpdateTableTextContains('Up to date');
