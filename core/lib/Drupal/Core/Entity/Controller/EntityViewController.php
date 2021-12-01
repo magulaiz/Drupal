@@ -102,6 +102,10 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
         // @todo https://www.drupal.org/project/drupal/issues/3015623
         //   Eventually delete this code and always use the first approach.
         if (isset($page[$label_field])) {
+          // Allow templates and theme functions to generate different markup
+          // for the page title, which must be inline markup as it will be placed
+          // inside <h1>.  See field--node--title.html.twig.
+          $page[$label_field]['#is_page_title'] = TRUE;
           $page['#title'] = $this->renderer->render($page[$label_field]);
         }
       }

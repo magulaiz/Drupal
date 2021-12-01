@@ -120,7 +120,7 @@ class NodeDisplayConfigurableTest extends NodeTestBase {
    *
    * @internal
    */
-  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes): void {
+  protected function assertNodeHtml(NodeInterface $node, UserInterface $user, bool $is_inline, string $metadata_region, bool $field_classes, bool $title_classes) {
     $assert = $this->assertSession();
 
     $html_element = $is_inline ? 'span' : 'div';
