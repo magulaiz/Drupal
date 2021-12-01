@@ -876,11 +876,14 @@ module.exports = {
         });
         const menu = $element.autocomplete('instance').menu.element;
 
-        // In the jQuery version of this test, the search was triggered via
-        // `element.val('j').simulate('keydown')`. This needs to be changed
-        // due to Drupal autocomplete listening to the 'input' event, which
-        // is not supported by simulate().
-        $element.autocomplete('search', 'j');
+        if (
+          Drupal.hasOwnProperty('Autocomplete') &&
+          Drupal.Autocomplete.hasOwnProperty('instances')
+        ) {
+          $element.autocomplete('search', 'j');
+        } else {
+          $element.val('j').simulate('keydown');
+        }
         setTimeout(() => {
           toReturn.menuDisplaysInitially = menu.is(':visible');
           jQuery('#autocomplete-textarea').focus();
