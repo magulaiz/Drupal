@@ -977,9 +977,8 @@ module.exports = {
           toReturn[settings.type].element = jQuery(settings.selector);
           toReturn[settings.type].menu = {};
 
-          const usingA11yAutocomplete = toReturn[
-            settings.type
-          ].element[0].hasAttribute('data-autocomplete-input');
+          // @todo initialize contenteditable and textarea and change this.
+          const usingA11yAutocomplete = true;
 
           if (usingA11yAutocomplete) {
             Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
@@ -1499,9 +1498,20 @@ module.exports = {
         const detached = jQuery('<div>');
         const $element = jQuery('#autocomplete');
 
-        $element.autocomplete({
-          appendTo: '.autocomplete-wrap',
-        });
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+          $element.autocomplete('option', {
+            appendTo: '.autocomplete-wrap',
+          });
+        } else {
+          $element.autocomplete({
+            appendTo: '.autocomplete-wrap',
+          });
+        }
+
         toReturn.firstFoundElement =
           $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap1')[0];
@@ -1511,32 +1521,54 @@ module.exports = {
 
         $element.autocomplete('destroy');
 
-        $element
-          .autocomplete()
-          .autocomplete('option', 'appendTo', '#autocomplete-wrap1');
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
+        $element.autocomplete('option', 'appendTo', '#autocomplete-wrap1');
         toReturn.modifiedAfterInit =
           $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap1')[0];
 
-        $element.autocomplete('destroy');
-        $element.autocomplete({
-          appendTo: detached,
-        });
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+          $element.autocomplete('option', {
+            appendTo: detached,
+          });
+        } else {
+          $element.autocomplete({
+            appendTo: detached,
+          });
+        }
 
         toReturn.detachedJqueryObject =
           $element.autocomplete('widget').parent()[0] === detached[0];
 
         $element.autocomplete('destroy');
 
-        $element.autocomplete({
-          appendTo: detached[0],
-        });
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+          $element.autocomplete('option', {
+            appendTo: detached[0],
+          });
+        } else {
+          $element.autocomplete({
+            appendTo: detached[0],
+          });
+        }
         toReturn.detachedDomElement =
           $element.autocomplete('widget').parent()[0] === detached[0];
 
         $element.autocomplete('destroy');
 
-        $element.autocomplete().autocomplete('option', 'appendTo', detached);
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
+
+        $element.autocomplete('option', 'appendTo', detached);
         toReturn.detachedViaOption =
           $element.autocomplete('widget').parent()[0] === detached[0];
 
@@ -1569,20 +1601,33 @@ module.exports = {
       function () {
         const toReturn = {};
         const $element = jQuery('#autocomplete');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
         // Remove the already initialized autocomplete on #autocomplete because
         // of the form-autocomplete class.
         $element.autocomplete('destroy');
 
         jQuery('#autocomplete-wrap2').addClass('ui-front');
-        $element.autocomplete();
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
         toReturn.nullInsideUiFront =
           $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap2')[0];
         $element.autocomplete('destroy');
 
-        $element.autocomplete({
-          appendTo: jQuery(),
-        });
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+          $element.autocomplete('option', 'appendTo', jQuery());
+        } else {
+          $element.autocomplete({
+            appendTo: jQuery(),
+          });
+        }
+
         toReturn.emptyObjectInsideUiFront =
           $element.autocomplete('widget').parent()[0] ===
           jQuery('#autocomplete-wrap2')[0];
@@ -2286,10 +2331,9 @@ module.exports = {
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
+  // @todo initialize autocomplete on textarea and contenteditable and change this.
+  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
+  if (usingA11yAutocomplete) {
     Drupal.Autocomplete.initialize($element[0]);
   } else {
     $element.autocomplete();
@@ -2300,10 +2344,7 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
     minLength: 0,
   });
   // override highlight item
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
+  if (usingA11yAutocomplete) {
     Drupal.Autocomplete.instances[
       $element.attr('id')
     ]._internal_object.highlightItem = function () {
@@ -2324,10 +2365,9 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
 function arrowsMoveFocus(id, isKeyUp) {
   let didMove = false;
   const $element = jQuery(id);
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
+  // @todo initialize autocomplete on textarea and contenteditable and change this.
+  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
+  if (usingA11yAutocomplete) {
     Drupal.Autocomplete.initialize($element[0]);
   } else {
     $element.autocomplete();
@@ -2338,10 +2378,7 @@ function arrowsMoveFocus(id, isKeyUp) {
     minLength: 0,
   });
   // override highlight item
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
+  if (usingA11yAutocomplete) {
     Drupal.Autocomplete.instances[
       $element.attr('id')
     ]._internal_object.highlightItem = function () {
@@ -2362,10 +2399,9 @@ function arrowsMoveFocus(id, isKeyUp) {
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  if (
-    Drupal.hasOwnProperty('Autocomplete') &&
-    Drupal.Autocomplete.hasOwnProperty('instances')
-  ) {
+  // @todo initialize autocomplete on textarea and contenteditable and change this.
+  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
+  if (usingA11yAutocomplete) {
     Drupal.Autocomplete.initialize($element[0]);
   } else {
     $element.autocomplete();
