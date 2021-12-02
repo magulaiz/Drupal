@@ -228,79 +228,88 @@
           jsonp: false,
         },
       };
-      document.addEventListener('autocomplete-created', (e) => {
-        const autocompleteInput = e.detail.autocomplete._internal_object.input;
+      once('legacy-autocomplete', 'body').forEach(() => {
+        document.addEventListener('autocomplete-created', (e) => {
+          const autocompleteInput =
+            e.detail.autocomplete._internal_object.input;
 
-        // Loop through the jQuery autocomplete options that are settable via
-        // Drupal.autocomplete and route those overrides to the shim.
-        Object.keys(Drupal.autocomplete.options).forEach((option) => {
-          if (optionsToOriginalMethods.hasOwnProperty(option)) {
-            Drupal.deprecationError({
-              message:
-                'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
-            });
-            if (
-              optionsToOriginalMethods[option] !==
-              Drupal.autocomplete.options[option]
-            ) {
-              const optionName =
-                option === 'renderItem' ? '_renderItem' : option;
+          // Loop through the jQuery autocomplete options that are settable via
+          // Drupal.autocomplete and route those overrides to the shim.
+          Object.keys(Drupal.autocomplete.options).forEach((option) => {
+            if (optionsToOriginalMethods.hasOwnProperty(option)) {
+              Drupal.deprecationError({
+                message:
+                  'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
+              });
+              if (
+                optionsToOriginalMethods[option] !==
+                Drupal.autocomplete.options[option]
+              ) {
+                const optionName =
+                  option === 'renderItem' ? '_renderItem' : option;
 
-              // The isComposing property does not need to be shimmed. In the
-              // A11y_Autocomplete implementation, IME use does not trigger
-              // search until composition is complete.
-              if (optionName !== 'isComposing') {
-                $(autocompleteInput).autocomplete(
-                  optionName,
-                  Drupal.autocomplete.options[option],
-                );
+                // The isComposing property does not need to be shimmed.
+                // - It is not a jQuery autocomplete property, and in the
+                // - The issue it exists to address is not a concern with the
+                //   A11y_Autocomplete implementation. IME use does not trigger
+                //   search until composition is complete.
+                if (optionName !== 'isComposing') {
+                  $(autocompleteInput).autocomplete(
+                    optionName,
+                    Drupal.autocomplete.options[option],
+                  );
+                }
               }
             }
-          }
-        });
+          });
 
-        Object.keys(Drupal.autocomplete).forEach((key) => {
-          if (key === 'options') {
-            return;
-          }
-          const originalValue = ['ajax', 'cache'].includes(key)
-            ? JSON.stringify(optionsToOriginalMethods[key])
-            : optionsToOriginalMethods[key];
-          const newValue = ['ajax', 'cache'].includes(key)
-            ? JSON.stringify(Drupal.autocomplete[key])
-            : Drupal.autocomplete[key];
-
-          if (originalValue !== newValue) {
-            const instance = e.detail.autocomplete._internal_object;
-            Drupal.deprecationError({
-              message:
-                'Overriding autocomplete behavior via Drupal.autocomplete is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions instead. See https://www.drupal.org/node/3083715',
-            });
-            switch (key) {
-              case 'ajax':
-                // @todo warning specific to this property.
-                break;
-              case 'cache':
-                // @todo warning specific to this property.
-                break;
-              case 'splitValues':
-                // @todo warning specific to this property.
-                // eslint-disable-next-line func-names
-                instance.splitValues = function () {
-                  return Drupal.autocomplete[key](this.inputValue());
-                };
-                break;
-              case 'extractLastTerm':
-                // @todo warning specific to this property.
-                // eslint-disable-next-line func-names
-                instance.extractLastInputValue = function () {
-                  return Drupal.autocomplete[key](this.inputValue());
-                };
-                break;
-              default:
-                break;
+          Object.keys(Drupal.autocomplete).forEach((key) => {
+            if (key === 'options') {
+              return;
             }
-          }
+
+            // For Aj
+            const originalValue = ['ajax', 'cache'].includes(key)
+              ? JSON.stringify(optionsToOriginalMethods[key])
+              : optionsToOriginalMethods[key];
+            const newValue = ['ajax', 'cache'].includes(key)
+              ? JSON.stringify(Drupal.autocomplete[key])
+              : Drupal.autocomplete[key];
+
+            if (originalValue !== newValue) {
+              const instance = e.detail.autocomplete._internal_object;
+              switch (key) {
+                case 'ajax':
+                  // @todo warning specific to this property.
+                  break;
+                case 'cache':
+                  // @todo warning specific to this property.
+                  break;
+                case 'splitValues':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.splitValues is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the splitValues method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
+                  // eslint-disable-next-line func-names,max-nested-callbacks
+                  instance.splitValues = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+                  break;
+                case 'extractLastTerm':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.extractLastTerm is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the inputValue method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
+                  // eslint-disable-next-line func-names
+                  instance.extractLastInputValue = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
         });
       });
     },
