@@ -2238,12 +2238,14 @@ module.exports = {
       },
     );
   },
-  'ARIA, aria-label announcement': (browser) => {
+  'widget factory extend ui.autocomplete with custom _renderMenu': (
+    browser,
+  ) => {
     browser.execute(
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function () {
         const $ = jQuery;
-        $.widget('custom.categoryComplete', $.ui.autocomplete, {
+        $.widget('ui.autocomplete', $.ui.autocomplete, {
           // eslint-disable-next-line object-shorthand
           _renderMenu(ul, items) {
             const that = this;
@@ -2255,10 +2257,23 @@ module.exports = {
             });
           },
         });
-        const $element = $('#autocomplete').categoryComplete({
+        const $element = $('#autocomplete');
+        const usingA11yAutocomplete = $element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
+        $element.autocomplete('option', {
           source: [{ label: 'Large Penguin', category: 'People' }],
         });
-        $element.categoryComplete('search', 'a');
+        if (usingA11yAutocomplete) {
+          $element.autocomplete('search', 'a');
+        } else {
+          $element.val('a').simulate('keydown');
+        }
 
         return $element.autocomplete('widget').find('li').attr('aria-label');
       },
