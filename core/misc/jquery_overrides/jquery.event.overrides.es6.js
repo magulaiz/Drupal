@@ -36,7 +36,7 @@
   };
 
   /**
-   * Create a callback that tranforms arguments from events comming from
+   * Create a callback that transforms arguments from events coming from
    * @drupal/autocomplete into arguments expected by jQuery UI Autocomplete
    * event listeners.
    *

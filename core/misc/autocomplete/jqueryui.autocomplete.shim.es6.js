@@ -2,7 +2,7 @@
  * @file
  * Defines a backwards-compatible shim for jquery.ui.autocomplete.
  */
-
+// cSpell:words qunit
 (($, Drupal) => {
   Drupal.autocompleteShim = {
     overrides: {},
@@ -121,10 +121,7 @@
     function shimmedInputKeyDown(e) {
       instance.options.suppressKeyPress = false;
       const { keyCode } = e;
-      const upDownKeyCodes = [
-        this.keyCode.UP,
-        this.keyCode.DOWN,
-      ];
+      const upDownKeyCodes = [this.keyCode.UP, this.keyCode.DOWN];
       // Update the suppressKeyPress option, which is checked by the keyPress
       // event listener, which calls `preventDefault()` on the event when true.
       if (upDownKeyCodes.includes(keyCode)) {

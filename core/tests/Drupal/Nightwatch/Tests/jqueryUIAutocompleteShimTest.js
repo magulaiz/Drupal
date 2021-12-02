@@ -1,6 +1,7 @@
 // These are Nightwatch equivalents of jQuery UI's autocomplete tests. These
 // are present to confirm that tests that pass with jQuery UI autocomplete
 // also pass with the shimmed core autocomplete.
+// cSpell:words qunit
 /* eslint-disable no-use-before-define */
 module.exports = {
   '@tags': ['core'],
@@ -2308,45 +2309,49 @@ module.exports = {
         } else {
           toReturn.element.autocomplete();
         }
-        jQuery(document).on({
-          autocompletesearch(event) {
-            // toReturn[settings.type].originalEventIsKeydown = true;
-            toReturn.originalEventIsKeydown =
-              event.originalEvent.type === 'keydown';
+        jQuery(document).on(
+          {
+            autocompletesearch(event) {
+              // toReturn[settings.type].originalEventIsKeydown = true;
+              toReturn.originalEventIsKeydown =
+                event.originalEvent.type === 'keydown';
+            },
+            autocompleteresponse(event, ui) {
+              // Stringify ui.content to avoid side effects of calling splice
+              // immediately after.
+              const uiContent = JSON.parse(JSON.stringify(ui.content));
+              toReturn.responseUiContent = uiContent;
+              ui.content.splice(0, 1);
+            },
+            autocompleteopen() {
+              toReturn.menuOpenOnOpen = toReturn.menu.is(':visible');
+            },
+            autocompletefocus(event, ui) {
+              toReturn.focusOriginalEvent =
+                event.originalEvent.type === 'menufocus';
+              toReturn.uiItemOnFocus = ui.item;
+              event.target.classList.add('focus-event-completed');
+            },
+            autocompleteclose(event) {
+              toReturn.closeOriginalEvent =
+                event.originalEvent.type === 'menuselect';
+              toReturn.menuClosedOnClosed = toReturn.menu.is(':hidden');
+            },
+            autocompleteselect(event, ui) {
+              toReturn.selectOriginalEvent =
+                event.originalEvent.type === 'menuselect';
+              toReturn.selectUiItem = ui.item;
+            },
+            autocompletechange(event, ui) {
+              toReturn.changeOriginalEvent =
+                event.originalEvent.type === 'blur';
+              toReturn.changeUiItem = ui.item;
+              toReturn.menuClosedOnChange = toReturn.menu.is(':hidden');
+              done(toReturn);
+            },
           },
-          autocompleteresponse(event, ui) {
-            // Stringify ui.content to avoid side effects of calling splice
-            // immediately after.
-            const uiContent = JSON.parse(JSON.stringify(ui.content));
-            toReturn.responseUiContent = uiContent;
-            ui.content.splice(0, 1);
-          },
-          autocompleteopen() {
-            toReturn.menuOpenOnOpen = toReturn.menu.is(':visible');
-          },
-          autocompletefocus(event, ui) {
-            toReturn.focusOriginalEvent =
-              event.originalEvent.type === 'menufocus';
-            toReturn.uiItemOnFocus = ui.item;
-            event.target.classList.add('focus-event-completed');
-          },
-          autocompleteclose(event) {
-            toReturn.closeOriginalEvent =
-              event.originalEvent.type === 'menuselect';
-            toReturn.menuClosedOnClosed = toReturn.menu.is(':hidden');
-          },
-          autocompleteselect(event, ui) {
-            toReturn.selectOriginalEvent =
-              event.originalEvent.type === 'menuselect';
-            toReturn.selectUiItem = ui.item;
-          },
-          autocompletechange(event, ui) {
-            toReturn.changeOriginalEvent = event.originalEvent.type === 'blur';
-            toReturn.changeUiItem = ui.item;
-            toReturn.menuClosedOnChange = toReturn.menu.is(':hidden');
-            done(toReturn);
-          },
-        }, selector);
+          selector,
+        );
         toReturn.element.autocomplete('option', {
           autoFocus: false,
           delay: 0,
