@@ -2344,22 +2344,21 @@ function arrowsMoveFocus(id, isKeyUp) {
 
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
-  const $element = jQuery(id);
-  $element.autocomplete('option', {
+  const $element = jQuery(id).autocomplete('option', {
     source: ['a'],
     delay: 0,
     minLength: 0,
   });
 
-  $element.on('keypress', () => {
-    didMove = document.activeElement.tagName === 'LI';
+  $element.on('keypress', (e) => {
+    didMove = !e.isDefaultPrevented();
   });
   $element.simulate('keydown', {
     keyCode: isKeyUp ? jQuery.ui.keyCode.UP : jQuery.ui.keyCode.DOWN,
   });
 
   $element.simulate('keypress');
-  return shouldMove === (document.activeElement.tagName !== 'LI');
+  return shouldMove === didMove;
 }
 
 function sourceTest(source, async, done) {
