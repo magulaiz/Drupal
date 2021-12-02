@@ -44,12 +44,17 @@ const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
             });
           },
         });
-        const $element = $('#autocomplete').categoryComplete({
+        const $element = $('#autocomplete');
+        $element.autocomplete('destroy');
+        $element.categoryComplete({
           source: [{ label: 'Large Penguin', category: 'People' }],
         });
-        $element.val('a').simulate('keydown');
+        $element.categoryComplete('search', 'a');
 
-        return $element.autocomplete('widget').find('li').attr('aria-label');
+        return $element
+          .categoryComplete('widget')
+          .find('li')
+          .attr('aria-label');
       },
       [],
       (result) => {

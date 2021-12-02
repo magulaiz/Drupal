@@ -2035,6 +2035,7 @@ module.exports = {
         const usingA11yAutocomplete = $element[0].hasAttribute(
           'data-autocomplete-input',
         );
+        $element.autocomplete('destroy');
         if (usingA11yAutocomplete) {
           Drupal.Autocomplete.initialize($element[0]);
         } else {
@@ -2043,11 +2044,7 @@ module.exports = {
         $element.autocomplete('option', {
           source: [{ label: 'Large Penguin', category: 'People' }],
         });
-        if (usingA11yAutocomplete) {
-          $element.autocomplete('search', 'a');
-        } else {
-          $element.val('a').simulate('keydown');
-        }
+        $element.autocomplete('search', 'a');
 
         return $element.autocomplete('widget').find('li').attr('aria-label');
       },
