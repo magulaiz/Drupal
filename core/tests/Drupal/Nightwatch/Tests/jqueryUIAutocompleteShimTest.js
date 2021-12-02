@@ -2322,13 +2322,9 @@ module.exports = {
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  // @todo initialize autocomplete on textarea and contenteditable and change this.
-  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
-  if (usingA11yAutocomplete) {
-    Drupal.Autocomplete.initialize($element[0]);
-  } else {
-    $element.autocomplete();
-  }
+  const usingA11yAutocomplete = $element[0].hasAttribute(
+    'data-autocomplete-input',
+  );
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
@@ -2356,13 +2352,9 @@ function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
 function arrowsMoveFocus(id, isKeyUp) {
   let didMove = false;
   const $element = jQuery(id);
-  // @todo initialize autocomplete on textarea and contenteditable and change this.
-  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
-  if (usingA11yAutocomplete) {
-    Drupal.Autocomplete.initialize($element[0]);
-  } else {
-    $element.autocomplete();
-  }
+  const usingA11yAutocomplete = $element[0].hasAttribute(
+    'data-autocomplete-input',
+  );
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,
@@ -2390,13 +2382,6 @@ function arrowsMoveFocus(id, isKeyUp) {
 function arrowsNavigateElement(id, isKeyUp, shouldMove) {
   let didMove = false;
   const $element = jQuery(id);
-  // @todo initialize autocomplete on textarea and contenteditable and change this.
-  const usingA11yAutocomplete = true; // $element[0].hasAttribute('data-autocomplete-input');
-  if (usingA11yAutocomplete) {
-    Drupal.Autocomplete.initialize($element[0]);
-  } else {
-    $element.autocomplete();
-  }
   $element.autocomplete('option', {
     source: ['a'],
     delay: 0,

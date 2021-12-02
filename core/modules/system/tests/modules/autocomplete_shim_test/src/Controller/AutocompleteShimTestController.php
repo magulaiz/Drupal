@@ -60,7 +60,7 @@ class AutocompleteShimTestController extends ControllerBase {
           'core/jquery.ui.autocomplete',
           // Attach jquery.simulate for use by Nightwatch tests.
           'jquery_simulate/jquery.simulate',
-          'autocomplete_shim_test/jquery_ui_autocomplete_init',
+          'autocomplete_shim_test/init.jquery.ui',
         ],
       ],
     ];
@@ -81,6 +81,7 @@ class AutocompleteShimTestController extends ControllerBase {
       'core/drupal.autocomplete',
       // Attach jquery.simulate for use by Nightwatch tests.
       'jquery_simulate/jquery.simulate',
+      'autocomplete_shim_test/init.a11y.autocomplete',
     ];
     return $build;
   }
