@@ -398,7 +398,6 @@ drupal.array.find:
 drupal.array.includes:
   version: VERSION
   js:
-    # @todo add nomodule once https://drupal.org/node/3181050 has landed.
     misc/polyfills/array.includes.js: { weight: -20 }
 
 drupal.batch:
