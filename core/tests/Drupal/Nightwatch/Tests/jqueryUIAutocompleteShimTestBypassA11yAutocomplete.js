@@ -76,5 +76,6 @@ delete modifiedShimTest['unsupported use of custom widget'];
 // .form-autocomplete, as they are given the option of accessing a non-core
 // autocomplete without warnings.
 delete modifiedShimTest['test deprecation'];
+delete modifiedShimTest['blacklist deprecation'];
 
 module.exports = modifiedShimTest;

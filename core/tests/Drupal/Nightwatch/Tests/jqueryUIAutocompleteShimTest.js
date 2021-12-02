@@ -856,7 +856,7 @@ module.exports = {
         }
         setTimeout(() => {
           toReturn.menuDisplaysInitially = menu.is(':visible');
-          jQuery('#autocomplete-textarea').focus();
+          $element.trigger('blur');
           setTimeout(() => {
             toReturn.menuHiddenAfterBlur = !menu.is(':visible');
             $element.autocomplete('search', 'j');
