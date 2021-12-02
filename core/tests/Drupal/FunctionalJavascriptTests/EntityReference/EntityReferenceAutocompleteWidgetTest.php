@@ -573,39 +573,6 @@ class EntityReferenceAutocompleteWidgetTest extends WebDriverTestBase {
   }
 
   /**
-   * Test a form that includes shimmed and non-shimmed autocomplete inputs.
-   */
-  public function testPartialShimUse() {
-    $this->markTestSkipped('This needs to work differently now that markup and API BC are separate, and the shim is loaded on any element with #autocomplete_route_name that renders with a data-autocomplete-path attribute.');
-
-    $this->drupalGet('drupal_autocomplete/selective-shim-form');
-    $page = $this->getSession()->getPage();
-
-    $shimmed_id = 'edit-shimmed';
-    $not_shimmed_id = 'edit-not-shimmed';
-    $shimmed_input = $page->findById($shimmed_id);
-    $not_shimmed_input = $page->findById($not_shimmed_id);
-
-    // Confirm shimmed input is structured as expected.
-    $this->setAutocompleteValue($shimmed_input, $shimmed_id, 'c');
-    $shimmed_list = $this->getList($shimmed_input);
-    $shimmed_list_parent = $shimmed_list->getParent();
-    $this->assertEquals('body', $shimmed_list_parent->getTagName());
-    $this->assertFalse($shimmed_list_parent->hasAttribute('data-autocomplete-wrapper'));
-    /* cspell:disable-next-line */
-    $this->assertEquals('Cambodia (KH) Cameroon (CM) Canada (CA) Canary Islands (IC) Cape Verde (CV) Caribbean Netherlands (BQ) Cayman Islands (KY) Central African Republic (CF) Ceuta & Melilla (EA) Chad (TD) Chile (CL) China (CN) Christmas Island (CX) Clipperton Island (CP) Cocos (Keeling) Islands (CC) Colombia (CO) Comoros (KM) Congo - Brazzaville (CG) Congo - Kinshasa (CD) Cook Islands (CK)', $shimmed_list->getText());
-    $this->setAutocompleteValue($shimmed_input, $shimmed_id, ' ', FALSE);
-
-    // Confirm non-shimmed input is structured as expected.
-    $this->setAutocompleteValue($not_shimmed_input, $not_shimmed_id, 'f');
-    $not_shimmed_list = $this->getList($not_shimmed_input);
-    $not_shimmed_list_parent = $not_shimmed_list->getParent();
-    $this->assertEquals('div', $not_shimmed_list_parent->getTagName());
-    $this->assertTrue($not_shimmed_list_parent->hasAttribute('data-autocomplete-wrapper'));
-    $this->assertEquals('Falkland Islands (FK) Faroe Islands (FO) Fiji (FJ) Finland (FI) France (FR) French Guiana (GF) French Polynesia (PF) French Southern Territories (TF) Micronesia (FM)', $not_shimmed_list->getText());
-  }
-
-  /**
    * Gets the suggestion list associated with an input.
    *
    * @param \Behat\Mink\Element\NodeElement $input
