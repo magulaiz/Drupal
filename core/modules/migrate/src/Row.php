@@ -160,8 +160,8 @@ class Row {
    * Retrieves all source properties.
    *
    * @return array
-   *   An array containing all source property values,
-   *   keyed by the property name.
+   *   An array containing all source property values, keyed by the property
+   *   name.
    */
   public function getSource() {
     return $this->source;
