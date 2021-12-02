@@ -2134,7 +2134,7 @@ module.exports = {
 ].forEach(({ type, selector, valueMethod }) => {
   module.exports[`All events - ${type}`] = (browser) => {
     browser.executeAsync(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
+      // eslint-disable-next-line func-names, prefer-arrow-callback,no-shadow
       function ({ selector, valueMethod }, done) {
         const toReturn = {};
         const data = [
@@ -2281,8 +2281,6 @@ module.exports = {
     );
   };
 
-  // @doto fix All events delegated - input menu
-  return;
   module.exports[`All events delegated - ${type}`] = (browser) => {
     browser.executeAsync(
       // eslint-disable-next-line func-names, prefer-arrow-callback
@@ -2437,7 +2435,6 @@ module.exports = {
       },
     );
   };
-
 });
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
@@ -2508,6 +2505,11 @@ function arrowsNavigateElement(id, isKeyUp, shouldMove) {
     minLength: 0,
   });
 
+  // This is how the original jQuery UI Qunit tests determined if highlighting
+  // moved. This does not directly check for changed highlighting, but for an
+  // event suppression that coincides with keyboard navigation moving the
+  // highlighted element.
+  // @see https://bugs.jqueryui.com/ticket/7269.
   $element.on('keypress', (e) => {
     didMove = !e.isDefaultPrevented();
   });

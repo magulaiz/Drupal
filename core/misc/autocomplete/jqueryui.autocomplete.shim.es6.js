@@ -119,10 +119,21 @@
      *   The keydown event.
      */
     function shimmedInputKeyDown(e) {
+      instance.options.suppressKeyPress = false;
+      const { keyCode } = e;
+      const upDownKeyCodes = [
+        this.keyCode.UP,
+        this.keyCode.DOWN,
+      ];
+      // Update the suppressKeyPress option, which is checked by the keyPress
+      // event listener, which calls `preventDefault()` on the event when true.
+      if (upDownKeyCodes.includes(keyCode)) {
+        instance.options.suppressKeyPress = true;
+      }
+
       if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
       }
-      const { keyCode } = e;
       if (this.isOpened) {
         // Escape behavior is identical to A11yAutocomplete.
         if (keyCode === this.keyCode.ESC) {
@@ -132,7 +143,7 @@
         // In jQuery UI, when the input is focused and a list is open,
         // the list can be accessed via up or down arrows. Only the down arrow
         // accomplishes this in A11yAutocomplete.
-        if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
+        if (upDownKeyCodes.includes(keyCode)) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
 
@@ -172,7 +183,7 @@
         !this.isOpened &&
         Array.isArray(this.options.source) &&
         this.options.source.length > 0 &&
-        (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)
+        upDownKeyCodes.includes(keyCode)
       ) {
         e.preventDefault();
 
@@ -384,6 +395,21 @@
     // jQuery UI has a mousedown listener on the list that prevents default.
     instance.listboxWrapper.addEventListener('mousedown', (e) => {
       e.preventDefault();
+    });
+
+    // jQuery UI suppresses keypress events in some instances to address a bug
+    // specific to Opera and Firefox, where holding down arrow keys would not
+    // result in traversing the list of items. This has since been fixed in both
+    // browsers, but the keypress event suppression is used in some jQuery UI
+    // Qunit tests, so it remains part of the shim.
+    // @see see https://bugs.jqueryui.com/ticket/7269
+    instance.input.addEventListener('keypress', function (e) {
+      if (instance.options.suppressKeyPress) {
+        instance.options.suppressKeyPress = false;
+        if (!instance.options.isMultiline || instance.isOpened) {
+          e.preventDefault();
+        }
+      }
     });
 
     // If the widget itself has been overridden via $.widget, map each

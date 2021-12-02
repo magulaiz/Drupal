@@ -95,18 +95,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
 
     function shimmedInputKeyDown(e) {
+      instance.options.suppressKeyPress = false;
+      var keyCode = e.keyCode;
+      var upDownKeyCodes = [this.keyCode.UP, this.keyCode.DOWN];
+
+      if (upDownKeyCodes.includes(keyCode)) {
+        instance.options.suppressKeyPress = true;
+      }
+
       if (instance.options.isMultiline) {
         this.input.value = this.input.textContent;
       }
-
-      var keyCode = e.keyCode;
 
       if (this.isOpened) {
         if (keyCode === this.keyCode.ESC) {
           this.close();
         }
 
-        if (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP) {
+        if (upDownKeyCodes.includes(keyCode)) {
           e.preventDefault();
           this.preventCloseOnBlur = true;
           var selector = keyCode === this.keyCode.DOWN ? 'li[role="option"]' : 'li[role="option"]:last-child';
@@ -122,7 +128,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         }
       }
 
-      if (this.input.nodeName === 'INPUT' && !this.isOpened && Array.isArray(this.options.source) && this.options.source.length > 0 && (keyCode === this.keyCode.DOWN || keyCode === this.keyCode.UP)) {
+      if (this.input.nodeName === 'INPUT' && !this.isOpened && Array.isArray(this.options.source) && this.options.source.length > 0 && upDownKeyCodes.includes(keyCode)) {
         e.preventDefault();
         this.preventCloseOnBlur = true;
         var typed = this.extractLastInputValue();
@@ -244,6 +250,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
     instance.listboxWrapper.addEventListener('mousedown', function (e) {
       e.preventDefault();
+    });
+    instance.input.addEventListener('keypress', function (e) {
+      if (instance.options.suppressKeyPress) {
+        instance.options.suppressKeyPress = false;
+
+        if (!instance.options.isMultiline || instance.isOpened) {
+          e.preventDefault();
+        }
+      }
     });
     Object.keys(Drupal.autocompleteShim.overrides).forEach(function (propertyToOverride) {
       var overrideWith = Drupal.autocompleteShim.overrides[propertyToOverride];
