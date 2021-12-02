@@ -48,10 +48,7 @@ module.exports = {
       function () {
         const $element = jQuery('#autocomplete');
         $element.attr('data-autocomplete-first-character-blacklist', '!');
-        if (
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances')
-        ) {
+        if ($element[0].hasAttribute('data-autocomplete-input')) {
           Drupal.Autocomplete.initialize($element[0]);
         } else {
           $element.autocomplete();
@@ -685,26 +682,20 @@ module.exports = {
       function (done) {
         const toReturn = {};
         const customVal = 'custom value';
-        const $element = jQuery('#autocomplete-contenteditable');
-        if (
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances')
-        ) {
-          Drupal.Autocomplete.initialize($element[0]);
-        } else {
-          $element.autocomplete();
-        }
-        $element.autocomplete('option', {
-          delay: 0,
-          source: ['javascript'],
-          focus(event, ui) {
-            if (ui.item.value === 'javascript') {
-              toReturn.itemGainedFocus = ui.item.value === 'javascript';
-            }
-            jQuery(this).text(customVal);
-            event.preventDefault();
+        const $element = jQuery('#autocomplete-contenteditable').autocomplete(
+          'option',
+          {
+            delay: 0,
+            source: ['javascript'],
+            focus(event, ui) {
+              if (ui.item.value === 'javascript') {
+                toReturn.itemGainedFocus = ui.item.value === 'javascript';
+              }
+              jQuery(this).text(customVal);
+              event.preventDefault();
+            },
           },
-        });
+        );
         $element.simulate('focus').autocomplete('search', 'ja');
 
         setTimeout(() => {
@@ -738,26 +729,20 @@ module.exports = {
         function () {
           // eslint-disable-next-line no-new-func
           const customVal = 'custom value';
-          const $element = jQuery('#autocomplete-contenteditable');
-          if (
-            Drupal.hasOwnProperty('Autocomplete') &&
-            Drupal.Autocomplete.hasOwnProperty('instances')
-          ) {
-            Drupal.Autocomplete.initialize($element[0]);
-          } else {
-            $element.autocomplete();
-          }
-          $element.autocomplete('option', {
-            delay: 0,
-            source: ['javascript'],
-            focus(event, ui) {
-              if (ui.item.value === 'javascript') {
-                event.target.classList.add('the-item-gained-focus');
-              }
-              jQuery(this).text(customVal);
-              event.preventDefault();
+          const $element = jQuery('#autocomplete-contenteditable').autocomplete(
+            'option',
+            {
+              delay: 0,
+              source: ['javascript'],
+              focus(event, ui) {
+                if (ui.item.value === 'javascript') {
+                  event.target.classList.add('the-item-gained-focus');
+                }
+                jQuery(this).text(customVal);
+                event.preventDefault();
+              },
             },
-          });
+          );
           $element.simulate('focus').autocomplete('search', 'ja');
 
           setTimeout(() => {
@@ -785,16 +770,7 @@ module.exports = {
       // eslint-disable-next-line func-names, prefer-arrow-callback
       function (done) {
         const toReturn = {};
-        const $element = jQuery('#autocomplete');
-        if (
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances')
-        ) {
-          Drupal.Autocomplete.initialize($element[0]);
-        } else {
-          $element.autocomplete();
-        }
-        $element.autocomplete('option', {
+        const $element = jQuery('#autocomplete').autocomplete('option', {
           source(request, response) {
             // eslint-disable-next-line func-names
             setTimeout(function () {
@@ -806,27 +782,21 @@ module.exports = {
           },
         });
 
-        const $element2 = jQuery('#autocomplete-textarea');
-        if (
-          Drupal.hasOwnProperty('Autocomplete') &&
-          Drupal.Autocomplete.hasOwnProperty('instances')
-        ) {
-          Drupal.Autocomplete.initialize($element2[0]);
-        } else {
-          $element2.autocomplete();
-        }
-        $element2.autocomplete('option', {
-          source(request, response) {
-            // eslint-disable-next-line func-names
-            setTimeout(function () {
-              response([request.term]);
-            });
+        const $element2 = jQuery('#autocomplete-textarea').autocomplete(
+          'option',
+          {
+            source(request, response) {
+              // eslint-disable-next-line func-names
+              setTimeout(function () {
+                response([request.term]);
+              });
+            },
+            response() {
+              toReturn.secondItemResponded = true;
+              done(toReturn);
+            },
           },
-          response() {
-            toReturn.secondItemResponded = true;
-            done(toReturn);
-          },
-        });
+        );
 
         $element.autocomplete('search', 'test');
         $element2.autocomplete('search', 'test');
