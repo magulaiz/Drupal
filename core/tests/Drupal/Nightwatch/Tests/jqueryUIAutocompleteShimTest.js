@@ -2184,14 +2184,10 @@ module.exports = {
         toReturn.element = jQuery(selector);
         toReturn.menu = {};
 
-        // @todo initialize contenteditable and textarea and change this.
-        const usingA11yAutocomplete = true;
+        const usingA11yAutocomplete = toReturn.element[0].hasAttribute(
+          'data-autocomplete-input',
+        );
 
-        if (usingA11yAutocomplete) {
-          Drupal.Autocomplete.initialize(toReturn.element[0]);
-        } else {
-          toReturn.element.autocomplete();
-        }
         toReturn.element.autocomplete('option', {
           autoFocus: false,
           delay: 0,
