@@ -955,202 +955,6 @@ module.exports = {
       },
     );
   },
-  'All events': (browser) => {
-    browser.executeAsync(
-      // eslint-disable-next-line func-names, prefer-arrow-callback
-      function (settingsArray, done) {
-        const toReturn = {};
-        const data = [
-          'Clojure',
-          'COBOL',
-          'ColdFusion',
-          'Java',
-          'JavaScript',
-          'Scala',
-          'Scheme',
-        ];
-
-        function createTestingAutocomplete(settings, index) {
-          toReturn[settings.type] = {};
-          toReturn[settings.type].index = index;
-          toReturn[settings.type].justASelector = settings.selector;
-          toReturn[settings.type].element = jQuery(settings.selector);
-          toReturn[settings.type].menu = {};
-
-          // @todo initialize contenteditable and textarea and change this.
-          const usingA11yAutocomplete = true;
-
-          if (usingA11yAutocomplete) {
-            Drupal.Autocomplete.initialize(toReturn[settings.type].element[0]);
-          } else {
-            toReturn[settings.type].element.autocomplete();
-          }
-          toReturn[settings.type].element.autocomplete('option', {
-            autoFocus: false,
-            delay: 0,
-            source: data,
-            search(event) {
-              // toReturn[settings.type].originalEventIsKeydown = true;
-              toReturn[settings.type].originalEventIsKeydown =
-                event.originalEvent.type === 'keydown';
-            },
-            response(event, ui) {
-              // Stringify ui.content to avoid side effects of calling splice
-              // immediately after.
-              const uiContent = JSON.parse(JSON.stringify(ui.content));
-              toReturn[settings.type].responseUiContent = uiContent;
-              ui.content.splice(0, 1);
-            },
-            open() {
-              toReturn[settings.type].menuOpenOnOpen =
-                toReturn[settings.type].menu.is(':visible');
-            },
-            focus(event, ui) {
-              toReturn[settings.type].focusOriginalEvent =
-                event.originalEvent.type === 'menufocus';
-              toReturn[settings.type].uiItemOnFocus = ui.item;
-              event.target.classList.add('focus-event-completed');
-            },
-            close(event) {
-              toReturn[settings.type].closeOriginalEvent =
-                event.originalEvent.type === 'menuselect';
-              toReturn[settings.type].menuClosedOnClosed =
-                toReturn[settings.type].menu.is(':hidden');
-            },
-            select(event, ui) {
-              toReturn[settings.type].selectOriginalEvent =
-                event.originalEvent.type === 'menuselect';
-              toReturn[settings.type].selectUiItem = ui.item;
-            },
-            change(event, ui) {
-              toReturn[settings.type].changeOriginalEvent =
-                event.originalEvent.type === 'blur';
-              toReturn[settings.type].changeUiItem = ui.item;
-              toReturn[settings.type].menuClosedOnChange =
-                toReturn[settings.type].menu.is(':hidden');
-            },
-          });
-          toReturn[settings.type].menu =
-            toReturn[settings.type].element.autocomplete('widget');
-
-          // With Drupal autocomplete, triggering a search does not
-          // happen with keydown.
-          if (usingA11yAutocomplete) {
-            toReturn[settings.type].usingDrupal = true;
-            toReturn[settings.type].element.autocomplete('search', 'j');
-          } else {
-            toReturn[settings.type].element
-              .simulate('focus')
-              [settings.valueMethod]('j')
-              .trigger('keydown');
-          }
-
-          setTimeout(() => {
-            toReturn[settings.type].menuVisibleAfterDelay =
-              toReturn[settings.type].menu.is(':visible');
-            toReturn[settings.type].element[0].dispatchEvent(
-              new KeyboardEvent('keydown', {
-                keyCode: jQuery.ui.keyCode.DOWN,
-                cancelable: true,
-              }),
-            );
-            setTimeout(() => {
-              // The jQuery tests simulated typing enter on the input, but
-              // this is changed to the list due to how Drupal autocomplete
-              // listens to UI events. This is actually a more accurate
-              // accurate simulation of what happens in the UI.
-              toReturn[settings.type].menu[0].dispatchEvent(
-                new KeyboardEvent('keydown', {
-                  keyCode: jQuery.ui.keyCode.ENTER,
-                  cancelable: true,
-                }),
-              );
-              setTimeout(() => {
-                toReturn[settings.type].element.simulate('blur');
-
-                if (index === 2) {
-                  // eslint-disable-next-line max-nested-callbacks
-                  setTimeout(() => {
-                    done(toReturn);
-                  }, 1000);
-                } else {
-                  // eslint-disable-next-line max-nested-callbacks
-                  setTimeout(() => {
-                    createTestingAutocomplete(
-                      settingsArray[index + 1],
-                      index + 1,
-                    );
-                  });
-                }
-              });
-            });
-          });
-        }
-        createTestingAutocomplete(settingsArray[0], 0);
-      },
-      [
-        [
-          {
-            type: 'textarea',
-            selector: '#autocomplete-textarea',
-            valueMethod: 'val',
-          },
-          {
-            type: 'contenteditable',
-            selector: '#autocomplete-contenteditable',
-            valueMethod: 'text',
-          },
-          {
-            type: 'input',
-            selector: '#autocomplete',
-            valueMethod: 'val',
-          },
-        ],
-      ],
-      (result) => {
-        const expectedTrue = {
-          originalEventIsKeydown: 'search originalEvent',
-          menuOpenOnOpen: 'menu open on open',
-          focusOriginalEvent: 'focus originalEvent',
-          closeOriginalEvent: 'close originalEvent',
-          menuClosedOnClosed: 'menu closed on close',
-          selectOriginalEvent: 'select originalEvent',
-          changeOriginalEvent: 'change originalEvent',
-          menuClosedOnChange: 'menu closed on change',
-          menuVisibleAfterDelay: 'menu is visible after delay',
-        };
-        ['input', 'contenteditable', 'textarea'].forEach((type) => {
-          Object.keys(expectedTrue).forEach((property) => {
-            browser.assert.equal(
-              result.value[type][property],
-              true,
-              `${type}: ${expectedTrue[property]}`,
-            );
-          });
-
-          ['uiItemOnFocus', 'selectUiItem', 'changeUiItem'].forEach(
-            (property) => {
-              browser.assert.deepEqual(
-                result.value[type][property],
-                { label: 'Java', value: 'Java' },
-                `${type}: ${property} property`,
-              );
-            },
-          );
-
-          browser.assert.deepEqual(
-            result.value[type].responseUiContent,
-            [
-              { label: 'Clojure', value: 'Clojure' },
-              { label: 'Java', value: 'Java' },
-              { label: 'JavaScript', value: 'JavaScript' },
-            ],
-            `${type}: response ui.content`,
-          );
-        });
-      },
-    );
-  },
   'change without selection': (browser) => {
     browser.executeAsync(
       // eslint-disable-next-line func-names
@@ -2342,6 +2146,178 @@ module.exports = {
     );
   },
 };
+
+// Events testing.
+[
+  {
+    type: 'input',
+    selector: '#autocomplete',
+    valueMethod: 'val',
+  },
+  {
+    type: 'textarea',
+    selector: '#autocomplete-textarea',
+    valueMethod: 'val',
+  },
+  {
+    type: 'contenteditable',
+    selector: '#autocomplete-contenteditable',
+    valueMethod: 'text',
+  },
+].forEach(({ type, selector, valueMethod }) => {
+  module.exports[`All events - ${type}`] = (browser) => {
+    browser.executeAsync(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function ({ selector, valueMethod }, done) {
+        const toReturn = {};
+        const data = [
+          'Clojure',
+          'COBOL',
+          'ColdFusion',
+          'Java',
+          'JavaScript',
+          'Scala',
+          'Scheme',
+        ];
+
+        toReturn.justASelector = selector;
+        toReturn.element = jQuery(selector);
+        toReturn.menu = {};
+
+        // @todo initialize contenteditable and textarea and change this.
+        const usingA11yAutocomplete = true;
+
+        if (usingA11yAutocomplete) {
+          Drupal.Autocomplete.initialize(toReturn.element[0]);
+        } else {
+          toReturn.element.autocomplete();
+        }
+        toReturn.element.autocomplete('option', {
+          autoFocus: false,
+          delay: 0,
+          source: data,
+          search(event) {
+            // toReturn[settings.type].originalEventIsKeydown = true;
+            toReturn.originalEventIsKeydown =
+              event.originalEvent.type === 'keydown';
+          },
+          response(event, ui) {
+            // Stringify ui.content to avoid side effects of calling splice
+            // immediately after.
+            const uiContent = JSON.parse(JSON.stringify(ui.content));
+            toReturn.responseUiContent = uiContent;
+            ui.content.splice(0, 1);
+          },
+          open() {
+            toReturn.menuOpenOnOpen = toReturn.menu.is(':visible');
+          },
+          focus(event, ui) {
+            toReturn.focusOriginalEvent =
+              event.originalEvent.type === 'menufocus';
+            toReturn.uiItemOnFocus = ui.item;
+            event.target.classList.add('focus-event-completed');
+          },
+          close(event) {
+            toReturn.closeOriginalEvent =
+              event.originalEvent.type === 'menuselect';
+            toReturn.menuClosedOnClosed = toReturn.menu.is(':hidden');
+          },
+          select(event, ui) {
+            toReturn.selectOriginalEvent =
+              event.originalEvent.type === 'menuselect';
+            toReturn.selectUiItem = ui.item;
+          },
+          change(event, ui) {
+            toReturn.changeOriginalEvent = event.originalEvent.type === 'blur';
+            toReturn.changeUiItem = ui.item;
+            toReturn.menuClosedOnChange = toReturn.menu.is(':hidden');
+            done(toReturn);
+          },
+        });
+        toReturn.menu = toReturn.element.autocomplete('widget');
+
+        // With Drupal autocomplete, triggering a search does not
+        // happen with keydown.
+        if (usingA11yAutocomplete) {
+          toReturn.usingDrupal = true;
+          toReturn.element.autocomplete('search', 'j');
+        } else {
+          toReturn.element
+            .simulate('focus')
+            [valueMethod]('j')
+            .trigger('keydown');
+        }
+
+        setTimeout(() => {
+          toReturn.menuVisibleAfterDelay = toReturn.menu.is(':visible');
+          toReturn.element[0].dispatchEvent(
+            new KeyboardEvent('keydown', {
+              keyCode: jQuery.ui.keyCode.DOWN,
+              cancelable: true,
+            }),
+          );
+          setTimeout(() => {
+            // The jQuery tests simulated typing enter on the input, but
+            // this is changed to the list due to how Drupal autocomplete
+            // listens to UI events. This is actually a more accurate
+            // accurate simulation of what happens in the UI.
+            toReturn.menu[0].dispatchEvent(
+              new KeyboardEvent('keydown', {
+                keyCode: jQuery.ui.keyCode.ENTER,
+                cancelable: true,
+              }),
+            );
+            setTimeout(() => {
+              toReturn.element.simulate('blur');
+            });
+          });
+        });
+      },
+      [{ selector, valueMethod }],
+      (result) => {
+        const expectedTrue = {
+          originalEventIsKeydown: 'search originalEvent',
+          menuOpenOnOpen: 'menu open on open',
+          focusOriginalEvent: 'focus originalEvent',
+          closeOriginalEvent: 'close originalEvent',
+          menuClosedOnClosed: 'menu closed on close',
+          selectOriginalEvent: 'select originalEvent',
+          changeOriginalEvent: 'change originalEvent',
+          menuClosedOnChange: 'menu closed on change',
+          menuVisibleAfterDelay: 'menu is visible after delay',
+        };
+
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+
+        ['uiItemOnFocus', 'selectUiItem', 'changeUiItem'].forEach(
+          (property) => {
+            browser.assert.deepEqual(
+              result.value[property],
+              { label: 'Java', value: 'Java' },
+              `${property} property`,
+            );
+          },
+        );
+
+        browser.assert.deepEqual(
+          result.value.responseUiContent,
+          [
+            { label: 'Clojure', value: 'Clojure' },
+            { label: 'Java', value: 'Java' },
+            { label: 'JavaScript', value: 'JavaScript' },
+          ],
+          `response ui.content`,
+        );
+      },
+    );
+  };
+});
 
 function arrowsInvokeSearch(id, isKeyUp, shouldMove) {
   let didMove = false;
