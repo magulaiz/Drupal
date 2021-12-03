@@ -15,3 +15,13 @@ init.a11y.autocomplete:
     - core/once
     - core/drupal
     - core/drupal.autocomplete
+
+init.mixed.test.jquery:
+  version: VERSION
+  js:
+    autocomplete_shim_test_mixed_jquery.js: {}
+  dependencies:
+    - core/once
+    - core/drupal
+    - core/drupal.autocomplete
+

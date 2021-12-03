@@ -785,7 +785,6 @@ module.exports = {
           'data-autocomplete-input',
         );
         const menu = $element.autocomplete('instance').menu.element;
-
         if (usingA11yAutocomplete) {
           $element.autocomplete('search', 'j');
         } else {
@@ -795,7 +794,8 @@ module.exports = {
           toReturn.menuDisplaysInitially = menu.is(':visible');
           $element.trigger('blur');
           setTimeout(() => {
-            toReturn.menuHiddenAfterBlur = !menu.is(':visible');
+            toReturn.menuHiddenAfterBlur =
+              !menu.is(':visible') || menu[0].hidden;
             $element.autocomplete('search', 'j');
             setTimeout(() => {
               toReturn.displaysAfterSameValue = menu.is(':visible');
@@ -840,7 +840,8 @@ module.exports = {
           toReturn.menuDisplaysInitially = menu.is(':visible');
           jQuery('body').simulate('mousedown');
           setTimeout(() => {
-            toReturn.menuClosedAfterClickingElseWhere = menu.is(':hidden');
+            toReturn.menuClosedAfterClickingElseWhere =
+              menu.is(':hidden') || menu[0].hidden;
             done(toReturn);
           });
         });
@@ -934,7 +935,8 @@ module.exports = {
         }
 
         setTimeout(() => {
-          toReturn.menuHiddenAfterFirstSearch = menu.is(':hidden');
+          toReturn.menuHiddenAfterFirstSearch =
+            menu.is(':hidden') || menu[0].hidden;
           if (usingA11yAutocomplete) {
             $element.autocomplete('search', 'java');
           } else {
@@ -1122,7 +1124,7 @@ module.exports = {
           minLength: 0,
         });
         const menu = $element.autocomplete('widget');
-        toReturn.menuHiddenOnInit = menu.is(':hidden');
+        toReturn.menuHiddenOnInit = menu.is(':hidden') || menu[0].hidden;
         $element.autocomplete('search');
         toReturn.menuVisibleAfterSearch = menu.is(':visible');
         toReturn.allItemsForABlankSearch =
@@ -1137,7 +1139,7 @@ module.exports = {
           menu.find('.ui-menu-item').length === 2;
 
         $element.autocomplete('close');
-        toReturn.menuHiddenAfterClose = menu.is(':hidden');
+        toReturn.menuHiddenAfterClose = menu.is(':hidden') || menu[0].hidden;
         return toReturn;
       },
       [],
@@ -1494,7 +1496,8 @@ module.exports = {
           $element.val('ja').trigger('keydown');
         }
 
-        toReturn.menuClosedImmediatelyAfterSearch = menu.is(':hidden');
+        toReturn.menuClosedImmediatelyAfterSearch =
+          menu.is(':hidden') || menu[0].hidden;
 
         setTimeout(() => {
           toReturn.menuIsOpenAfterDelay = menu.is(':visible');
@@ -1544,7 +1547,7 @@ module.exports = {
         });
         const menu = $element.autocomplete('disable').autocomplete('widget');
         $element.val('ja').trigger('keydown');
-        toReturn.menuIsHidden = menu.is(':hidden');
+        toReturn.menuIsHidden = menu.is(':hidden') || menu[0].hidden;
         toReturn.noUiStateDisabled = !$element.hasClass('ui-state-disabled');
         toReturn.uiAutocompleteDisabled = menu.hasClass(
           'ui-autocomplete-disabled',
@@ -1552,7 +1555,7 @@ module.exports = {
         toReturn.noAriaDisabled = !$element.attr('aria-disabled');
 
         setTimeout(() => {
-          toReturn.menuStillHidden = menu.is(':hidden');
+          toReturn.menuStillHidden = menu.is(':hidden') || menu[0].hidden;
           done(toReturn);
         });
       },
@@ -1600,7 +1603,7 @@ module.exports = {
         });
         const menu = $element.autocomplete('widget');
         $element.autocomplete('search', '');
-        toReturn.menuIsHidden = menu.is(':hidden');
+        toReturn.menuIsHidden = menu.is(':hidden') || menu[0].hidden;
         $element.autocomplete('option', 'minLength', 0);
         $element.autocomplete('search', '');
         toReturn.menuIsVisible = menu.is(':visible');
@@ -1639,15 +1642,16 @@ module.exports = {
           },
         });
         const menu = $element.autocomplete('widget');
-        toReturn.menuIsHiddenFirst = menu.is(':hidden');
+        toReturn.menuIsHiddenFirst = menu.is(':hidden') || menu[0].hidden;
         // Here the search actions are triggered too close to each other.
         // The listbox doesn't have time to open to check visibility.
         $element.autocomplete('search', '12');
-        toReturn.menuIsHiddenSecond = menu.is(':hidden');
+        toReturn.menuIsHiddenSecond = menu.is(':hidden') || menu[0].hidden;
         $element.autocomplete('search', '1');
 
         setTimeout(() => {
-          toReturn.menuHiddenAfterSearches = menu.is(':hidden');
+          toReturn.menuHiddenAfterSearches =
+            menu.is(':hidden') || menu[0].hidden;
           done(toReturn);
         });
       },
@@ -1683,9 +1687,9 @@ module.exports = {
         const menu = $element.autocomplete('widget');
 
         // Trigger a valid search
-        toReturn.menuIsHiddenFirst = menu.is(':hidden');
+        toReturn.menuIsHiddenFirst = menu.is(':hidden') || menu[0].hidden;
         $element.autocomplete('search', '12');
-        toReturn.menuIsHiddenSecond = menu.is(':hidden');
+        toReturn.menuIsHiddenSecond = menu.is(':hidden') || menu[0].hidden;
         $element.autocomplete('search', '1');
 
         // Trigger a valid search
@@ -2120,7 +2124,8 @@ module.exports = {
           close(event) {
             toReturn.closeOriginalEvent =
               event.originalEvent.type === 'menuselect';
-            toReturn.menuClosedOnClosed = toReturn.menu.is(':hidden');
+            toReturn.menuClosedOnClosed =
+              toReturn.menu.is(':hidden') || toReturn.menu[0].hidden;
           },
           select(event, ui) {
             toReturn.selectOriginalEvent =
@@ -2130,7 +2135,8 @@ module.exports = {
           change(event, ui) {
             toReturn.changeOriginalEvent = event.originalEvent.type === 'blur';
             toReturn.changeUiItem = ui.item;
-            toReturn.menuClosedOnChange = toReturn.menu.is(':hidden');
+            toReturn.menuClosedOnChange =
+              toReturn.menu.is(':hidden') || toReturn.menu[0].hidden;
             done(toReturn);
           },
         });
@@ -2150,12 +2156,9 @@ module.exports = {
 
         setTimeout(() => {
           toReturn.menuVisibleAfterDelay = toReturn.menu.is(':visible');
-          toReturn.element[0].dispatchEvent(
-            new KeyboardEvent('keydown', {
-              keyCode: jQuery.ui.keyCode.DOWN,
-              cancelable: true,
-            }),
-          );
+          toReturn.element.simulate('keydown', {
+            keyCode: jQuery.ui.keyCode.DOWN,
+          });
           setTimeout(() => {
             // The jQuery tests simulated typing enter on the input, but
             // this is changed to the list due to how Drupal autocomplete
@@ -2176,15 +2179,15 @@ module.exports = {
       [{ selector, valueMethod }],
       (result) => {
         const expectedTrue = {
-          originalEventIsKeydown: 'search originalEvent',
-          menuOpenOnOpen: 'menu open on open',
-          focusOriginalEvent: 'focus originalEvent',
-          closeOriginalEvent: 'close originalEvent',
-          menuClosedOnClosed: 'menu closed on close',
-          selectOriginalEvent: 'select originalEvent',
-          changeOriginalEvent: 'change originalEvent',
-          menuClosedOnChange: 'menu closed on change',
-          menuVisibleAfterDelay: 'menu is visible after delay',
+          originalEventIsKeydown: `${type}: search originalEvent`,
+          menuOpenOnOpen: `${type}: menu open on open`,
+          focusOriginalEvent: `${type}: focus originalEvent`,
+          closeOriginalEvent: `${type}: close originalEvent`,
+          menuClosedOnClosed: `${type}: menu closed on close`,
+          selectOriginalEvent: `${type}: select originalEvent`,
+          changeOriginalEvent: `${type}: change originalEvent`,
+          menuClosedOnChange: `${type}: menu closed on change`,
+          menuVisibleAfterDelay: `${type}: menu is visible after delay`,
         };
 
         Object.keys(expectedTrue).forEach((property) => {

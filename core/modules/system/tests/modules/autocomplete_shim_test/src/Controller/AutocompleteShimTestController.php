@@ -131,8 +131,17 @@ class AutocompleteShimTestController extends ControllerBase {
     $build = $this->buildWithAdditionalDirectJquery();
     // The shimmed and non shimmed input trade ids so the same nightwatch test
     // can run but test a different input.
-    $build['direct_jquery_input']['#attributes']['id'] = 'autocomplete';
-    $build['container2']['input']['#attributes']['id'] = 'direct-jquery';
+    $build['container2']['input']['#attributes']['class'] = ['foo'];
+
+    $build['#attached'] = [
+      'library' => [
+        'core/drupal.autocomplete',
+        'core/jquery.ui.autocomplete',
+        // Attach jquery.simulate for use by Nightwatch tests.
+        'jquery_simulate/jquery.simulate',
+        'autocomplete_shim_test/init.mixed.test.jquery',
+      ],
+    ];
 
     return $build;
   }

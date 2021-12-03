@@ -348,7 +348,7 @@
       instance.inputValue = function () {
         return this.input.textContent;
       };
-      instance.replaceInputValue = function(element) {
+      instance.replaceInputValue = function (element) {
         const itemIndex = element
           .closest('[data-autocomplete-item]')
           .getAttribute('data-autocomplete-item');
