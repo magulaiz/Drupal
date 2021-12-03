@@ -434,8 +434,7 @@
       // initialized and the string represents a method the autocomplete should
       // execute.
       if (
-        typeof args[0] !== 'string' ||
-        !this.length ||
+        (typeof args[0] !== 'string' || !this.length) &&
         !this[0].hasAttribute('data-autocomplete-shim-enabled')
       ) {
         // If the shim is loaded but not the original jQuery UI library show

@@ -29,7 +29,7 @@ module.exports = {
       // Go to page with an input that can be initialized after page load.
       // This makes it easier to test Drupal.autocomplete overrides.
       .drupalRelativeURL(
-        '/autocomplete-shim-test-with-additional-direct-jquery',
+        '/autocomplete-shim-test',
       )
       .waitForElementPresent('#autocomplete-wrap1', 1000);
   },
@@ -78,9 +78,9 @@ module.exports = {
           'brat',
           'city',
         ];
-        const input = document.querySelector('#direct-jquery');
+        const input = document.querySelector('#autocomplete');
         Drupal.Autocomplete.initialize(input);
-        const instance = Drupal.Autocomplete.instances['direct-jquery'];
+        const instance = Drupal.Autocomplete.instances.autocomplete;
         instance._internal_object.options.source = (term, response) => {
           response(items.filter((item) => item.includes(term)));
         };
@@ -176,9 +176,9 @@ module.exports = {
           'brass',
           'city',
         ];
-        const input = document.querySelector('#direct-jquery');
+        const input = document.querySelector('#autocomplete');
         Drupal.Autocomplete.initialize(input);
-        const instance = Drupal.Autocomplete.instances['direct-jquery'];
+        const instance = Drupal.Autocomplete.instances.autocomplete;
         instance._internal_object.options.source = (term, response) => {
           response(items.filter((item) => item.includes(term)));
         };
@@ -249,6 +249,70 @@ module.exports = {
             expectedTrue[property],
           );
         });
+      },
+    );
+  },
+  'unsupported use of custom widget': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $ = jQuery;
+        $.widget('custom.categoryComplete', $.ui.autocomplete, {
+          // eslint-disable-next-line object-shorthand
+          _create() {
+            // create is not supported, so this should trigger an error.
+          },
+        });
+        return {};
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.status,
+          -1,
+          'Unsupported uses custom widget extending autocomplete throws error',
+        );
+        browser.assert.ok(
+          result.value.message.includes(
+            'Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: _create',
+          ),
+          'custom widget error specifies unusable properties',
+        );
+      },
+    );
+  },
+  'test deprecation': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $element = jQuery('#autocomplete').autocomplete('widget');
+        return {};
+      },
+      [],
+      (result) => {
+        browser.assert.deprecationErrorExists(
+          'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715',
+        );
+      },
+    );
+  },
+  'blacklist deprecation': (browser) => {
+    browser.execute(
+      // eslint-disable-next-line func-names, prefer-arrow-callback
+      function () {
+        const $element = jQuery('#autocomplete');
+        $element.attr('data-autocomplete-first-character-blacklist', '!');
+        if ($element[0].hasAttribute('data-autocomplete-input')) {
+          Drupal.Autocomplete.initialize($element[0]);
+        } else {
+          $element.autocomplete();
+        }
+      },
+      [],
+      () => {
+        browser.assert.deprecationErrorExists(
+          'The data-autocomplete-first-character-blacklist attribute is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use data-autocomplete-first-character-ignore-list instead See https://www.drupal.org/node/3250730',
+        );
       },
     );
   },

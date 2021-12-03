@@ -28,13 +28,4 @@ const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
   },
 });
 
-// Remove tests because unsupported widget use warnings will not happen on
-// pages where jQuery UI autocomplete is loaded.
-delete modifiedShimTest['unsupported use of custom widget'];
-
-// Remove deprecation test. The warning should not fire on inputs without
-// .form-autocomplete, as they are given the option of accessing a non-core
-// autocomplete without warnings.
-delete modifiedShimTest['test deprecation'];
-
 module.exports = modifiedShimTest;
