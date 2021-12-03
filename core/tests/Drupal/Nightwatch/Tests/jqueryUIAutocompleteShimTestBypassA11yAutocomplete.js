@@ -7,7 +7,7 @@
 
 import jqueryUIAutocompleteShimTest from './jqueryUIAutocompleteShimTest';
 
-const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
+const modifiedShimTestBypassA11y = Object.assign(jqueryUIAutocompleteShimTest, {
   beforeEach(browser) {
     browser
       .drupalRelativeURL('/autocomplete-shim-test-bypass-a11y')
@@ -18,12 +18,6 @@ const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
   },
   'the input is not shimmed': (browser) => {
     browser
-      .execute(
-        // eslint-disable-next-line func-names, prefer-arrow-callback
-        function () {
-          jQuery('#direct-jquery').autocomplete();
-        },
-      )
       .waitForElementPresent('#autocomplete.ui-autocomplete-input', 1000)
       .waitForElementNotPresent('#autocomplete[data-autocomplete-input]', 1000);
   },
@@ -68,4 +62,4 @@ const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
   },
 });
 
-module.exports = modifiedShimTest;
+module.exports = modifiedShimTestBypassA11y;

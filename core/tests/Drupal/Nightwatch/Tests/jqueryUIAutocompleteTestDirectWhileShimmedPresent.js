@@ -5,7 +5,7 @@
 // - The tests are all performed on the unshimmed input.
 import jqueryUIAutocompleteShimTest from './jqueryUIAutocompleteShimTest';
 
-const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
+const modifiedShimTestTestDirect = Object.assign(jqueryUIAutocompleteShimTest, {
   beforeEach(browser) {
     browser
       .drupalRelativeURL(
@@ -22,4 +22,4 @@ const modifiedShimTest = Object.assign(jqueryUIAutocompleteShimTest, {
   },
 });
 
-module.exports = modifiedShimTest;
+module.exports = modifiedShimTestTestDirect;
