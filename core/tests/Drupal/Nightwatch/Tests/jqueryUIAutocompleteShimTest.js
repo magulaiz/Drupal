@@ -2085,7 +2085,7 @@ module.exports = {
         ];
 
         toReturn.justASelector = selector;
-        toReturn.element = jQuery(selector).autocomplete();
+        toReturn.element = jQuery(selector);
         toReturn.menu = {};
 
         const usingA11yAutocomplete = toReturn.element[0].hasAttribute(
