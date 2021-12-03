@@ -28,9 +28,7 @@ module.exports = {
     browser
       // Go to page with an input that can be initialized after page load.
       // This makes it easier to test Drupal.autocomplete overrides.
-      .drupalRelativeURL(
-        '/autocomplete-shim-test',
-      )
+      .drupalRelativeURL('/autocomplete-shim-test')
       .waitForElementPresent('#autocomplete-wrap1', 1000);
   },
   after(browser) {
