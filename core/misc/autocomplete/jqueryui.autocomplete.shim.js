@@ -103,10 +103,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         instance.options.suppressKeyPress = true;
       }
 
-      if (instance.options.isMultiline) {
-        this.input.value = this.input.textContent;
-      }
-
       if (this.isOpened) {
         if (keyCode === this.keyCode.ESC) {
           this.close();
@@ -224,6 +220,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     if (isContentEditable) {
       instance.inputValue = function () {
         return this.input.textContent;
+      };
+
+      instance.replaceInputValue = function (element) {
+        var itemIndex = element.closest('[data-autocomplete-item]').getAttribute('data-autocomplete-item');
+        var _this$suggestions$ite = this.suggestions[itemIndex],
+            value = _this$suggestions$ite.value,
+            item = _this$suggestions$ite.item;
+        this.selected = item;
+        var separator = this.separator();
+
+        if (separator.length > 0) {
+          var before = this.previousItems(separator);
+          this.input.textContent = "".concat(before).concat(value);
+        } else {
+          this.input.textContent = value;
+        }
       };
     }
 

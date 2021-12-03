@@ -128,9 +128,6 @@
         instance.options.suppressKeyPress = true;
       }
 
-      if (instance.options.isMultiline) {
-        this.input.value = this.input.textContent;
-      }
       if (this.isOpened) {
         // Escape behavior is identical to A11yAutocomplete.
         if (keyCode === this.keyCode.ESC) {
@@ -351,7 +348,33 @@
       instance.inputValue = function () {
         return this.input.textContent;
       };
+      instance.replaceInputValue = function(element) {
+        const itemIndex = element
+          .closest('[data-autocomplete-item]')
+          .getAttribute('data-autocomplete-item');
+        /** @type {A11yAutocomplete~Suggestion} */
+        const { value, item } = this.suggestions[itemIndex];
+        this.selected = item;
+        const separator = this.separator();
+        if (separator.length > 0) {
+          const before = this.previousItems(separator);
+          this.input.textContent = `${before}${value}`;
+        } else {
+          this.input.textContent = value;
+        }
+      };
     }
+
+    // const originalReplaceInputValue =
+
+    // instance.input.addEventListener('autocomplete-select', (e) => {
+    //   if (
+    //     e.target.tagName !== 'INPUT' &&
+    //     e.target.hasAttribute('contenteditable')
+    //   ) {
+    //     debugger;
+    //   }
+    // });
 
     /**
      * Replicates a jQuery function of the same name.
