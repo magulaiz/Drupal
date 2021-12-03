@@ -52,8 +52,6 @@ class Name extends InOperator {
   protected function valueValidate($form, FormStateInterface $form_state) {
     // Autocomplete puts the values in target_id. Move the values to the
     // expected depth.
-    // @todo Consider creating a trait/whatever to avoid duplicate code here
-    // and \Drupal\taxonomy\Plugin\views\filter\TaxonomyIndexTid.
     if ($this->isAGroup()) {
       if ($group_values = $form_state->getValue(['options', 'group_info', 'group_items'])) {
         foreach ($group_values as $group_id => $item) {
