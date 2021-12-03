@@ -155,11 +155,8 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $edit['options[group_info][default_group]'] = '3';
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->statusCodeEquals(200);
-
     $this->submitForm([], 'Update preview');
-
-    $this->assertSession()->pageTextContains($this->accounts[1]->id());
-    $this->assertSession()->pageTextContains($this->accounts[2]->id());
+    $this->assertIds([$this->accounts[1]->id(), $this->accounts[2]->id()]);
   }
 
   /**
@@ -219,6 +216,24 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     foreach ($this->accounts as $account) {
       $this->assertSession()->pageTextContains($account->id());
     }
+  }
+
+  /**
+   * Ensures that a given list of items appear on the view result.
+   *
+   * @param array $expected_ids
+   *   An array of IDs.
+   */
+  protected function assertIds(array $expected_ids = []): void {
+    // First verify the count.
+    $elements = $this->cssSelect('.views-row span.field-content');
+    $this->assertCount(count($expected_ids), $elements);
+
+    $actual_ids = [];
+    foreach ($elements as $element) {
+      $actual_ids[] = (int) $element->getText();
+    }
+    $this->assertEquals($expected_ids, $actual_ids);
   }
 
 }
