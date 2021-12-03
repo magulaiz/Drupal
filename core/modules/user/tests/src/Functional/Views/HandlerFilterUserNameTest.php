@@ -167,6 +167,10 @@ class HandlerFilterUserNameTest extends ViewTestBase {
 
     $options = [];
 
+    $uids = array_map(function ($account) {
+      return $account->id();
+    }, $this->accounts);
+
     // Pass in an invalid username, the validation should catch it.
     $users = [$this->randomMachineName()];
     $users = array_map('strtolower', $users);
@@ -180,10 +184,9 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     // be empty.
     $options['query']['uid'] = [['target_id' => 9999]];
     $this->drupalGet($path, $options);
-    // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
-    }
+    // The actual result should contain all user ids, including admin and
+    // anonymous users.
+    $this->assertIds(array_merge([0, 1], $uids));
 
     // Pass in an invalid username and a valid username.
     $users = [$this->randomMachineName(), $this->names[0]];
@@ -201,9 +204,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
-    }
+    $this->assertIds($uids);
 
     // Pass in just valid user IDs in the entity_autocomplete target_id format.
     $options['query']['uid'] = array_map(function ($account) {
@@ -213,9 +214,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->drupalGet($path, $options);
     $this->assertSession()->pageTextNotContains('Unable to find user');
     // The actual result should contain all of the user ids.
-    foreach ($this->accounts as $account) {
-      $this->assertSession()->pageTextContains($account->id());
-    }
+    $this->assertIds($uids);
   }
 
   /**
