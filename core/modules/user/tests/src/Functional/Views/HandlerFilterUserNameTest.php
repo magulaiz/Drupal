@@ -139,20 +139,20 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     // Create a grouped filter.
     $this->drupalGet($filter_settings_path);
     $edit = [];
-    $edit["options[group_info][group_items][1][title]"] = 'User 0';
-    $edit["options[group_info][group_items][1][operator]"] = 'in';
-    $edit["options[group_info][group_items][1][value]"] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()})";
+    $edit['options[group_info][group_items][1][title]'] = 'User 0';
+    $edit['options[group_info][group_items][1][operator]'] = 'in';
+    $edit['options[group_info][group_items][1][value]'] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()})";
 
-    $edit["options[group_info][group_items][2][title]"] = 'User 0 or 1';
-    $edit["options[group_info][group_items][2][operator]"] = 'in';
-    $edit["options[group_info][group_items][2][value]"] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()}), {$this->accounts[1]->label()} ({$this->accounts[1]->id()})";
+    $edit['options[group_info][group_items][2][title]'] = 'User 0 or 1';
+    $edit['options[group_info][group_items][2][operator]'] = 'in';
+    $edit['options[group_info][group_items][2][value]'] = "{$this->accounts[0]->label()} ({$this->accounts[0]->id()}), {$this->accounts[1]->label()} ({$this->accounts[1]->id()})";
 
-    $edit["options[group_info][group_items][3][title]"] = 'User 1 or 2';
-    $edit["options[group_info][group_items][3][operator]"] = 'in';
-    $edit["options[group_info][group_items][3][value]"] = "{$this->accounts[1]->label()} ({$this->accounts[1]->id()}), {$this->accounts[2]->label()} ({$this->accounts[2]->id()})";
+    $edit['options[group_info][group_items][3][title]'] = 'User 1 or 2';
+    $edit['options[group_info][group_items][3][operator]'] = 'in';
+    $edit['options[group_info][group_items][3][value]'] = "{$this->accounts[1]->label()} ({$this->accounts[1]->id()}), {$this->accounts[2]->label()} ({$this->accounts[2]->id()})";
 
     // Default to the 2nd group.
-    $edit["options[group_info][default_group]"] = '3';
+    $edit['options[group_info][default_group]'] = '3';
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->statusCodeEquals(200);
 
