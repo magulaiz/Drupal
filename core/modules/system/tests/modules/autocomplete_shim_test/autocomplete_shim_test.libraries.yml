@@ -24,4 +24,3 @@ init.mixed.test.jquery:
     - core/once
     - core/drupal
     - core/drupal.autocomplete
-
