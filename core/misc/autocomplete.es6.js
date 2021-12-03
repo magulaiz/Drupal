@@ -237,14 +237,14 @@
           // Drupal.autocomplete and route those overrides to the shim.
           Object.keys(Drupal.autocomplete.options).forEach((option) => {
             if (optionsToOriginalMethods.hasOwnProperty(option)) {
-              Drupal.deprecationError({
-                message:
-                  'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
-              });
               if (
                 optionsToOriginalMethods[option] !==
                 Drupal.autocomplete.options[option]
               ) {
+                Drupal.deprecationError({
+                  message:
+                    'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
+                });
                 const optionName =
                   option === 'renderItem' ? '_renderItem' : option;
 
@@ -280,10 +280,16 @@
               const instance = e.detail.autocomplete._internal_object;
               switch (key) {
                 case 'ajax':
-                  // @todo warning specific to this property.
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.ajax is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the source method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
                   break;
                 case 'cache':
-                  // @todo warning specific to this property.
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.cache is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. It is now handled automatically and should not be manually configured. See https://www.drupal.org/node/3083715',
+                  });
                   break;
                 case 'splitValues':
                   Drupal.deprecationError({
