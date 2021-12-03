@@ -109,7 +109,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    *   The JSON:API resource type of the resource object.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be represented by this resource object.
-   * @param \Drupal\jsonapi\JsonApiResource\LinkCollection|null $links
+   * @param \Drupal\jsonapi\JsonApiResource\LinkCollection $links
    *   (optional) Any links for the resource object, if a `self` link is not
    *   provided, one will be automatically added if the resource is locatable
    *   and is not an internal entity.
