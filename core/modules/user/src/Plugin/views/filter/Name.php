@@ -19,7 +19,7 @@ class Name extends InOperator {
   /**
    * Stores the exposed input for this filter.
    */
-  public $validated_exposed_input;
+  protected $validated_exposed_input;
 
   protected $alwaysMultiple = TRUE;
 
