@@ -63,6 +63,13 @@ class AutocompleteShimTestController extends ControllerBase {
           'autocomplete_shim_test/init.jquery.ui',
         ],
       ],
+      'click_target' => [
+        '#type' => 'html_tag',
+        '#tag' => 'button',
+        '#attributes' => [
+          'id' => ['click-target'],
+        ],
+      ],
     ];
   }
 
