@@ -322,7 +322,6 @@ class EntityResource {
         $data['id']
       ));
     }
-
     $data += ['attributes' => [], 'relationships' => []];
     $field_names = array_map([$resource_type, 'getInternalName'], array_merge(array_keys($data['attributes']), array_keys($data['relationships'])));
 
