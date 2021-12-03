@@ -157,6 +157,11 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->submitForm([], 'Update preview');
     $this->assertIds([$this->accounts[1]->id(), $this->accounts[2]->id()]);
+
+    // Check default value formatting.
+    $this->drupalGet($filter_settings_path);
+    $this->assertSession()->fieldValueEquals('options[group_info][group_items][1][value]', "{$this->accounts[0]->label()} ({$this->accounts[0]->id()})");
+    $this->assertSession()->fieldValueEquals('options[group_info][group_items][2][value]', "{$this->accounts[0]->label()} ({$this->accounts[0]->id()}), {$this->accounts[1]->label()} ({$this->accounts[1]->id()})");
   }
 
   /**
