@@ -91,6 +91,11 @@ class Callback extends ProcessPluginBase {
       }
       return call_user_func($this->configuration['callable'], ...$value);
     }
+
+    if ($value === NULL) {
+      return call_user_func($this->configuration['callable']);
+    }
+
     return call_user_func($this->configuration['callable'], $value);
   }
 
