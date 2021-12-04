@@ -4,6 +4,9 @@ namespace Drupal\update;
 
 use Drupal\Core\Extension\ExtensionVersion;
 
+/**
+ * Calculates the update status of a project.
+ */
 class ProjectStatusCalculator {
 
 
@@ -17,18 +20,29 @@ class ProjectStatusCalculator {
    */
   protected $updateServerProjectInfo;
 
+  /**
+   * @param array $project_data
+   * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   */
   private function __construct(array $project_data, UpdateServerProjectInfo $projectInfo) {
     $this->projectData = $project_data;
     $this->updateServerProjectInfo = $projectInfo;
   }
 
+  /**
+   * Creates a ProjectStatusCalculator object.
+   *
+   * @param array $projectData
+   * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   *
+   * @return \Drupal\update\ProjectStatusCalculator
+   */
   public static function createFromProjectData(array $projectData, UpdateServerProjectInfo $projectInfo): ProjectStatusCalculator {
     return new static($projectData, $projectInfo);
   }
 
   public function getStatus(): int {
     $server_status = $this->updateServerProjectInfo->getProjectStatus();
-
   }
 
   public function getDevReleaseForTargetMajor(): ?array {
@@ -175,7 +189,7 @@ class ProjectStatusCalculator {
     }
     $target_major = $this->getTargetMajor();
     $releases = [];
-    foreach ($this->getInstallableReleases(FALSE) as $version => $release_info) {
+    foreach ($this->getInstallableReleases() as $version => $release_info) {
       $release_major_version = ExtensionVersion::createFromVersionString($version)->getMajorVersion();
       $release = ProjectRelease::createFromArray($release_info);
       if ($release_major_version > $target_major) {
@@ -188,6 +202,9 @@ class ProjectStatusCalculator {
         // they must remove the lower version from the supported major
         // versions at the same time, in which case we won't hit this code.
         continue;
+      }
+      if ($version === $this->projectData['existing_version']) {
+        break;
       }
       // If we're running a dev snapshot and have a timestamp, stop
       // searching for security updates once we hit an official release
@@ -205,6 +222,7 @@ class ProjectStatusCalculator {
           continue;
         }
       }
+
       if ($release->isSecurityRelease()) {
         $releases[$version] = $release_info;
       }
@@ -216,7 +234,7 @@ class ProjectStatusCalculator {
    * @param bool $until_existing
    * @return mixed[]
    */
-  private function getInstallableReleases(bool $until_existing = TRUE): array {
+  private function getInstallableReleases(): array {
     $releases = [];
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       try {
@@ -243,7 +261,7 @@ class ProjectStatusCalculator {
       if ($this->releaseIsInstallable($release)) {
         $releases[$version] = $release_info;
       }
-      if ($until_existing && $version === $this->projectData['existing_version']) {
+      if ($version === $this->projectData['existing_version']) {
         break;
       }
     }
