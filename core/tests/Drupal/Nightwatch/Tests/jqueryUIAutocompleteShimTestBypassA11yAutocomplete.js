@@ -13,11 +13,10 @@ const modifiedShimTestBypassA11y = Object.assign(jqueryUIAutocompleteShimTest, {
       .drupalRelativeURL('/autocomplete-shim-test-bypass-a11y')
       .waitForElementPresent('#autocomplete-wrap1', 1000);
   },
-  after(browser) {
-    browser.drupalUninstall();
-  },
   'the input is not shimmed': (browser) => {
     browser
+      .drupalRelativeURL('/autocomplete-shim-test-bypass-a11y')
+      .waitForElementPresent('#autocomplete-wrap1', 1000)
       .waitForElementPresent('#autocomplete.ui-autocomplete-input', 1000)
       .waitForElementNotPresent('#autocomplete[data-autocomplete-input]', 1000);
   },

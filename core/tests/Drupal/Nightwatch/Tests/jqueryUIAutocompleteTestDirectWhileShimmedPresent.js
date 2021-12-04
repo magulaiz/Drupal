@@ -15,11 +15,6 @@ const modifiedShimTestTestDirect = Object.assign(jqueryUIAutocompleteShimTest, {
       .waitForElementPresent('#direct-jquery[data-autocomplete-input]', 1000)
       .waitForElementNotPresent('#autocomplete.form-autocomplete');
   },
-  after(browser) {
-    browser
-      .waitForElementNotPresent('[data-autocomplete-wrapper]', 1000)
-      .drupalUninstall();
-  },
 });
 
 module.exports = modifiedShimTestTestDirect;

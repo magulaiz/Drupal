@@ -23,11 +23,6 @@ const modifiedShimTestTestShimmed = Object.assign(
         .waitForElementPresent('#direct-jquery.ui-autocomplete-input', 1000)
         .waitForElementPresent('#autocomplete[data-autocomplete-input]');
     },
-    after(browser) {
-      browser
-        .waitForElementNotPresent('[data-autocomplete-wrapper]', 1000)
-        .drupalUninstall();
-    },
     'widget factory extend ui.autocomplete with custom _renderMenu': (
       browser,
     ) => {
