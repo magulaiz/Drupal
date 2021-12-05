@@ -170,6 +170,21 @@ class ViewAjaxController implements ContainerInjectionInterface {
         // such as tablesorts, exposed filters and paging assume GET.
         $param_union = $request_clone->request->all() + $request_clone->query->all();
         unset($param_union['ajax_page_state']);
+        // Remove exposed filters from $query_all (they're in the $request_all).
+        $view->initHandlers();
+        if (!empty($view->filter)) {
+          foreach ($view->filter as $filter) {
+            if ($filter->isExposed()) {
+              $identifier = $filter->options['expose']['identifier'];
+              if (isset($param_union[$identifier])) {
+                unset($param_union[$identifier]);
+              }
+            }
+          }
+        }
+        if (isset($param_union['page'])) {
+          unset($param_union['page']);
+        }
         $request_clone->query->replace($param_union);
 
         // Overwrite the destination.
