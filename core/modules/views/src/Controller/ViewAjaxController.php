@@ -125,7 +125,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       }, $args);
 
       $path = $request->request->get('view_path');
-      $target_url = base_path() . $request->request->get('view_base_path');
+      $target_url = $GLOBALS['base_path'] . $request->request->get('view_base_path');
       $dom_id = $request->request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->request->get('pager_element');
