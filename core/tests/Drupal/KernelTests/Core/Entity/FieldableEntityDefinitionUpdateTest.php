@@ -129,7 +129,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @covers ::updateFieldableEntityType
    * @dataProvider providerTestFieldableEntityTypeUpdates
    */
-  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported) {
+  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported, $start_with_id_0) {
     // The 'entity_test_update' entity type is neither revisionable nor
     // translatable by default, so we need to get it into the initial testing
     // state. This also covers the "no existing data" scenario for fieldable
@@ -143,7 +143,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
 
     // Add a few entities so we can test the data copying step.
-    $this->insertData($initial_rev, $initial_mul);
+    $this->insertData($initial_rev, $initial_mul, $start_with_id_0);
 
     $updated_entity_type = $this->getUpdatedEntityTypeDefinition($new_rev, $new_mul);
     $updated_field_storage_definitions = $this->getUpdatedFieldStorageDefinitions($new_rev, $new_mul);
@@ -177,7 +177,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
 
     // Check that we can still save new entities after the schema has been
     // updated.
-    $this->insertData($new_rev, $new_mul);
+    $this->insertData($new_rev, $new_mul, $start_with_id_0);
 
     // Check that the backup tables have been kept in place.
     $this->assertBackupTables();
@@ -194,6 +194,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => FALSE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
       ],
       'non_rev non_mul to rev non_mul' => [
         'initial_rev' => FALSE,
@@ -201,6 +202,15 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => FALSE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
+      ],
+      'non_rev non_mul to rev non_mul with_id_0' => [
+        'initial_rev' => FALSE,
+        'initial_mul' => FALSE,
+        'new_rev' => TRUE,
+        'new_mul' => FALSE,
+        'data_migration_supported' => TRUE,
+        'start_with_id_0' => TRUE,
       ],
       'non_rev non_mul to rev mul' => [
         'initial_rev' => FALSE,
@@ -208,6 +218,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => TRUE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
       ],
       'non_rev non_mul to non_rev mul' => [
         'initial_rev' => FALSE,
@@ -215,6 +226,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => TRUE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
       ],
       'rev non_mul to non_rev non_mul' => [
         'initial_rev' => TRUE,
@@ -222,6 +234,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => FALSE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'rev non_mul to non_rev mul' => [
         'initial_rev' => TRUE,
@@ -229,6 +242,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => TRUE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'rev non_mul to rev mul' => [
         'initial_rev' => TRUE,
@@ -236,6 +250,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => TRUE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
       ],
       'non_rev mul to non_rev non_mul' => [
         'initial_rev' => FALSE,
@@ -243,6 +258,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => FALSE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'non_rev mul to rev non_mul' => [
         'initial_rev' => FALSE,
@@ -250,6 +266,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => FALSE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'non_rev mul to rev mul' => [
         'initial_rev' => FALSE,
@@ -257,6 +274,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => TRUE,
         'data_migration_supported' => TRUE,
+        'start_with_id_0' => FALSE,
       ],
       'rev mul to non_rev non_mul' => [
         'initial_rev' => TRUE,
@@ -264,6 +282,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => FALSE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'rev mul to rev non_mul' => [
         'initial_rev' => TRUE,
@@ -271,6 +290,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => TRUE,
         'new_mul' => FALSE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
       'rev mul to non_rev mul' => [
         'initial_rev' => TRUE,
@@ -278,6 +298,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
         'new_rev' => FALSE,
         'new_mul' => TRUE,
         'data_migration_supported' => FALSE,
+        'start_with_id_0' => FALSE,
       ],
     ];
   }
@@ -289,13 +310,16 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    *   Whether the entity type is revisionable or not.
    * @param bool $translatable
    *   Whether the entity type is translatable or not.
+   * @param bool $start_ids_with_0
+   *   Wether the first id should be 0 (e.g. user entity type) or 1 (usually the case)
    */
-  protected function insertData($revisionable, $translatable) {
+  protected function insertData($revisionable, $translatable, $start_ids_with_0 = FALSE) {
     // Add three test entities in order to make the "data copy" step run at
     // least three times.
     /** @var \Drupal\Core\Entity\TranslatableRevisionableStorageInterface|\Drupal\Core\Entity\EntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($this->entityTypeId);
-    $next_id = $storage->getQuery()->count()->execute() + 1;
+    $next_id = $storage->getQuery()->count()->execute();
+    $next_id += $start_ids_with_0 ? 0 : 1;
 
     // Create test entities with two translations and two revisions.
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
