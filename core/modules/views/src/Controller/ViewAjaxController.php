@@ -171,7 +171,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $query_all = $request->query->all();
         // Remove exposed filters from $query_all (they're in the $request_all).
         $view->initHandlers();
-        if (!empty($view->filter)){
+        if (!empty($view->filter)) {
           foreach ($view->filter as $filter) {
             if ($filter->isExposed()) {
               $identifier = $filter->options['expose']['identifier'];
