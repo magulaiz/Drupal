@@ -226,4 +226,8 @@
   Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
     Drupal.AjaxCommands.prototype.scrollTop(ajax, response);
   };
+
+  Drupal.AjaxCommands.prototype.setBrowserUrl = function (ajax, response) {
+    window.history.replaceState(null, '', response.url);
+  };
 })(jQuery, Drupal, drupalSettings);

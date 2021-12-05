@@ -15,6 +15,7 @@ use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
 use Drupal\Core\Ajax\ScrollTopCommand;
+use Drupal\views\Ajax\SetBrowserUrl;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -209,6 +210,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
         $preview = $view->preview($display_id, $args);
         $response->addCommand(new ReplaceCommand(".js-view-dom-id-$dom_id", $preview));
         $response->addCommand(new PrependCommand(".js-view-dom-id-$dom_id", ['#type' => 'status_messages']));
+        $response->addCommand(new SetBrowserUrl($origin_destination));
 
         return $response;
       }
