@@ -263,6 +263,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
     $request->request->set('view_args', 'arg1/arg2');
+    $request->request->set('view_path', '/test-page');
 
     [$view, $executable] = $this->setupValidMocks();
     $executable->expects($this->once())
@@ -282,6 +283,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request = new Request();
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
+    $request->request->set('view_path', '/test-page');
     // Simulate a request that has a second, empty argument.
     $request->request->set('view_args', 'arg1/');
 
@@ -304,6 +306,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request->request->set('view_name', 'test_view');
     $request->request->set('view_display_id', 'page_1');
     $request->request->set('view_args', 'arg1 &amp; arg2/arg3');
+    $request->request->set('view_path', '/test-page');
 
     [$view, $executable] = $this->setupValidMocks();
     $executable->expects($this->once())
@@ -326,6 +329,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $dom_id = $this->randomMachineName(20);
     $request->request->set('view_dom_id', $dom_id);
     $request->request->set('pager_element', '0');
+    $request->request->set('view_path', '/test-page');
 
     [$view, $executable] = $this->setupValidMocks();
 
