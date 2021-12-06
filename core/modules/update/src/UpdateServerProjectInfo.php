@@ -15,7 +15,7 @@ class UpdateServerProjectInfo {
   }
 
   public static function createFromArray(array $available): UpdateServerProjectInfo {
-    return new static($available);
+    return new UpdateServerProjectInfo($available);
   }
 
 
