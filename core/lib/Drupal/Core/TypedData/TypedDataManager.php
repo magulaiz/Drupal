@@ -90,6 +90,9 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
     }
     $typed_data = $class::createInstance($data_definition, $configuration['name'], $configuration['parent']);
     $typed_data->setTypedDataManager($this);
+    if ($typed_data->isDeprecated()) {
+      @trigger_error($typed_data->getDeprecationMessage(), E_USER_DEPRECATED);
+    }
     return $typed_data;
   }
 
