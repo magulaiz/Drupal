@@ -8,6 +8,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Layout functionality.
  *
  * @group Layout
+ * @group legacy
  */
 class LayoutDeprecationTest extends KernelTestBase {
 
@@ -21,14 +22,21 @@ class LayoutDeprecationTest extends KernelTestBase {
   ];
 
   /**
-   * Test plugin deprecation.
-   *
-   * @group legacy
+   * Test deprecation of plugin defined by yaml.
    */
   public function testLayoutDeprecation() {
     $this->expectDeprecation('This layout is now deprecated. Bye!');
     $this->container->get('plugin.manager.core.layout')
       ->createInstance('layout_deprecation_test', []);
+  }
+
+  /**
+   * Test deprecation of plugin defined by annotations.
+   */
+  public function testLayoutDeprecated() {
+    $this->expectDeprecation('layout_deprecated is deprecated');
+    $this->container->get('plugin.manager.core.layout')
+      ->createInstance('layout_deprecated', []);
   }
 
 }
