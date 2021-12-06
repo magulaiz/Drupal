@@ -40,7 +40,7 @@ class CallbackTest extends MigrateProcessTestCase {
    * @dataProvider providerCallbackNullValue
    */
   public function testCallbackNullValue($callable) {
-    $configuration = ['callable' => $callable];
+    $configuration = ['callable' => $callable, 'no_args' => TRUE];
     $this->plugin = new Callback($configuration, 'map', []);
     $value = $this->plugin->transform(NULL, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame(M_PI, $value);
