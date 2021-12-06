@@ -38,7 +38,7 @@ class ProjectStatusCalculator {
    * @return \Drupal\update\ProjectStatusCalculator
    */
   public static function createFromProjectData(array $projectData, UpdateServerProjectInfo $projectInfo): ProjectStatusCalculator {
-    return new static($projectData, $projectInfo);
+    return new ProjectStatusCalculator($projectData, $projectInfo);
   }
 
   public function getStatus(): int {
