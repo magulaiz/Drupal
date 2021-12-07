@@ -204,16 +204,15 @@ class ProjectStatusCalculator {
     foreach ($this->updateServerProjectInfo->getSupportBranches() as $supported_branch) {
       try {
         $target_major = ExtensionVersion::createFromSupportBranch($supported_branch)->getMajorVersion();
-        break;
+        // We should `break;` here but this is a bug see
+        // https://www.drupal.org/project/i/3227518.
       }
       catch (\UnexpectedValueException $exception) {
         continue;
       }
     }
-    if (!isset($target_major) || $target_major < $existing_major) {
-      return $existing_major;
-    }
-    return NULL;
+    // Never target a lower major.
+    return max($existing_major, $target_major ?? 0);
   }
 
   /**
