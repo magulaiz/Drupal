@@ -1331,7 +1331,16 @@ function user_filter_format_disable(FilterFormatInterface $filter_format) {
  * Implements hook_entity_operation().
  */
 function user_entity_operation(EntityInterface $entity) {
-  // Add Manage permissions link if this entity type is the bundle of another.
+  // Add Manage permissions link if this entity type is the bundle of another
+  // and that type defines the permissions link template.
+  if (!$bundle_of = $entity->getEntityType()->getBundleOf()) {
+    return [];
+  }
+
+  if (!\Drupal::entityTypeManager()->getDefinition($bundle_of)->hasLinkTemplate('permission-form')) {
+    return [];
+  }
+
   if (!$bundle_entity_type = $entity->bundle()) {
     return [];
   }
