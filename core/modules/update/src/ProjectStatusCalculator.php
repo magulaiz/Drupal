@@ -380,21 +380,25 @@ class ProjectStatusCalculator {
 
     $server_project_status = $this->updateServerProjectInfo->getProjectStatus();
     if (isset($this->projectData['existing_version']) && !$this->isInSupportedBranch($this->projectData['existing_version'])) {
-      $status = UpdateManagerInterface::NOT_SUPPORTED;
+      return UpdateManagerInterface::NOT_SUPPORTED;
     }
     if ($existing_release_info = $this->getExistingRelease()) {
       $existing_release = ProjectRelease::createFromArray($existing_release_info);
       if ($existing_release->isInsecure()) {
-        $status = UpdateManagerInterface::NOT_SECURE;
+        return UpdateManagerInterface::NOT_SECURE;
       }
       elseif (!$existing_release->isPublished()) {
-        $status = UpdateManagerInterface::REVOKED;
+        return UpdateManagerInterface::REVOKED;
       }
       elseif ($existing_release->isUnsupported()) {
-        $status = UpdateManagerInterface::NOT_SUPPORTED;
+        return UpdateManagerInterface::NOT_SUPPORTED;
       }
     }
-    return $status;
+    $recommended_release = $this->getRecommendReleaseForTargetMajor();
+    if (!$recommended_release) {
+      return UpdateFetcherInterface::UNKNOWN;
+    }
+    return NULL;
   }
 
   private function getExistingRelease() {
