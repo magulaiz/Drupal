@@ -35,6 +35,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid",
  *     "langcode" = "langcode"
  *   },
+ *   links = {
+ *     "permission-form" = "/admin/structure/contact/manage/{contact_form}/permissions",
+ *   },
  *   bundle_entity_type = "contact_form",
  *   field_ui_base_route = "entity.contact_form.edit_form",
  * )

@@ -62,6 +62,7 @@ use Drupal\user\StatusItem;
  *     "canonical" = "/taxonomy/term/{taxonomy_term}",
  *     "delete-form" = "/taxonomy/term/{taxonomy_term}/delete",
  *     "edit-form" = "/taxonomy/term/{taxonomy_term}/edit",
+ *     "permission-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview/permissions",
  *     "create" = "/taxonomy/term",
  *   },
  *   permission_granularity = "bundle",

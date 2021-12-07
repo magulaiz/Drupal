@@ -59,6 +59,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "delete-form" = "/comment/{comment}/delete",
  *     "delete-multiple-form" = "/admin/content/comment/delete",
  *     "edit-form" = "/comment/{comment}/edit",
+ *     "permission-form" = "/admin/structure/comment/manage/{comment_type}/permissions",
  *     "create" = "/comment",
  *   },
  *   bundle_entity_type = "comment_type",
