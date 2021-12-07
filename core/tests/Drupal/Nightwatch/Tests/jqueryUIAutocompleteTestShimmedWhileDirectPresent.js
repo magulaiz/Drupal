@@ -26,9 +26,9 @@ const modifiedShimTestTestShimmed = Object.assign(
     'widget factory extend ui.autocomplete with custom _renderMenu': (
       browser,
     ) => {
-      browser.executeAsync(
+      browser.execute(
         // eslint-disable-next-line func-names, prefer-arrow-callback
-        function (done) {
+        function () {
           const $ = jQuery;
           $('#autocomplete-wrap1').append('<input id="autocomplete-extend" />');
 
@@ -46,24 +46,20 @@ const modifiedShimTestTestShimmed = Object.assign(
           });
           const $element = $('#autocomplete-extend');
           Drupal.Autocomplete.initialize($element[0]);
-          $element.autocomplete();
-          setTimeout(() => {
-            $element.autocomplete('option', {
-              source: [{ label: 'Large Penguin', category: 'People' }],
-            });
-            $element.autocomplete('search', 'a');
-
-            done($element.autocomplete('widget').find('li').attr('aria-label'));
+          $element.autocomplete('option', {
+            source: [{ label: 'Large Penguin', category: 'People' }],
           });
+          $element.autocomplete('search', 'a');
+
+          return $element.autocomplete('widget').find('li').attr('aria-label');
         },
         [],
         (result) => {
-          // @todo GET THE TEST WORKING AND UNCOMMENT THIS THING.
-          // browser.assert.equal(
-          //   result.value,
-          //   'People : Large Penguin',
-          //   'Aria attribute updated as a result of extension point override',
-          // );
+          browser.assert.equal(
+            result.value,
+            'People : Large Penguin',
+            'Aria attribute updated as a result of extension point override',
+          );
         },
       );
     },

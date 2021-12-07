@@ -5,12 +5,6 @@
 * @preserve
 **/
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 (function ($) {
@@ -19,62 +13,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   var oldWidgetBridge = $.widget.bridge;
 
   $.widget = function () {
-    var runDefaultWidget = true;
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if ($.ui.autocomplete && $.ui.autocomplete.hasOwnProperty('shimmed')) {
-      if (args[1] === $.ui.autocomplete && _typeof(args[2]) === 'object') {
+    if ($.ui.autocomplete) {
+      if ((arguments.length <= 0 ? undefined : arguments[0]) === 'ui.autocomplete' && (arguments.length <= 1 ? undefined : arguments[1]) === $.ui.autocomplete && _typeof(arguments.length <= 2 ? undefined : arguments[2]) === 'object') {
         var supportedProperties = ['options', '_renderItem', '_renderMenu', '_resizeMenu'];
-        var unsupported = Object.keys(args[2]).filter(function (key) {
+        var unsupported = Object.keys(arguments.length <= 2 ? undefined : arguments[2]).filter(function (key) {
           return !supportedProperties.includes(key);
         });
 
-        if (unsupported.length > 0) {
-          if ('filter' in $.ui.autocomplete && 'escapeRegex' in $.ui.autocomplete) {
-            var boundOldWidget = oldWidget.bind(this);
-            return boundOldWidget.apply(void 0, args);
-          }
-
-          throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported: ".concat(unsupported.join(', ')));
-        }
-
-        runDefaultWidget = false;
-
-        if (args[0] === 'ui.autocomplete') {
-          Drupal.autocompleteShim.overrides = args[2];
+        if (unsupported.length === 0) {
+          Drupal.autocompleteShim.overrides = arguments.length <= 2 ? undefined : arguments[2];
         } else {
-          var widgetName = args[0].split('.').slice(-1).pop();
-
-          var _ref = args[2].hasOwnProperty('options') ? args[2] : {
-            options: {}
-          },
-              options = _ref.options;
-
-          delete args[2].options;
-          options.widgetOverrides = args[2];
-          var toExtend = {};
-
-          toExtend[widgetName] = function () {
-            if (_typeof(arguments.length <= 0 ? undefined : arguments[0]) === 'object') {
-              this.autocomplete(_objectSpread(_objectSpread({}, options), arguments.length <= 0 ? undefined : arguments[0]));
-              return this;
-            }
-
-            return this.autocomplete.apply(this, arguments);
-          };
-
-          $.fn.extend(toExtend);
+          throw new Error("Unsupported use of $.widget to extend autocomplete. The following constructor properties are not supported by the Drupal Autocomplete backwards compatibility layer: ".concat(unsupported.join(', ')));
         }
       }
     }
 
-    if (runDefaultWidget) {
-      var oldWidgetBound = oldWidget.bind(this);
-      return oldWidgetBound.apply(void 0, args);
-    }
+    var oldWidgetBound = oldWidget.bind(this);
+    var oldWidgetResult = oldWidgetBound.apply(void 0, arguments);
+    Drupal.autocompleteShim.overrideJqueryUi();
+    return oldWidgetResult;
   };
 
   $.widget.extend = oldWidgetExtend;

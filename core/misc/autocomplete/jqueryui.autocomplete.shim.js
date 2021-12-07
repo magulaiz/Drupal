@@ -278,236 +278,238 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     });
   };
 
-  var oldAutocomplete = $.fn.autocomplete;
-  $.fn.extend({
-    autocomplete: function autocomplete() {
-      var _this2 = this;
+  Drupal.autocompleteShim.overrideJqueryUi = function () {
+    var oldAutocomplete = $.fn.autocomplete;
+    $.fn.extend({
+      autocomplete: function autocomplete() {
+        var _this2 = this;
 
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
 
-      if (typeof args[0] !== 'string' || !this.length || !this[0].hasAttribute('data-autocomplete-shim-enabled')) {
-        if (!oldAutocomplete) {
-          console.error('The jQuery UI Autocomplete library is not loaded on the page. Make sure the dependency to the core/jquery.ui.autocomplete is declared for the element using it.');
+        if (typeof args[0] !== 'string' || !this.length || !this[0].hasAttribute('data-autocomplete-shim-enabled')) {
+          if (!oldAutocomplete) {
+            console.error('The jQuery UI Autocomplete library is not loaded on the page. Make sure the dependency to the core/jquery.ui.autocomplete is declared for the element using it.');
+            return;
+          }
+
+          if (typeof this.data('ui-autocomplete') === 'undefined') {}
+
+          return oldAutocomplete.apply(this, args);
+        }
+
+        Drupal.deprecationError({
+          message: 'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
+        });
+        var id = this.attr('id');
+        var optionMapping = {
+          autoFocus: 'autoFocus',
+          classes: null,
+          delay: 'searchDelay',
+          disabled: 'disabled',
+          minLength: 'minChars',
+          position: null,
+          source: null
+        };
+
+        if (!Drupal.autocompleteShim.instances[id]) {
           return;
         }
 
-        if (typeof this.data('ui-autocomplete') === 'undefined') {}
+        var instance = Drupal.autocompleteShim.instances[id];
+        var method = args[0];
 
-        return oldAutocomplete.apply(this, args);
-      }
+        switch (method) {
+          case 'widget':
+            return $(instance.listboxWrapper);
 
-      Drupal.deprecationError({
-        message: 'The autocomplete() function is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the API provided by core/a11y_autocomplete instead. See https://www.drupal.org/node/3083715'
-      });
-      var id = this.attr('id');
-      var optionMapping = {
-        autoFocus: 'autoFocus',
-        classes: null,
-        delay: 'searchDelay',
-        disabled: 'disabled',
-        minLength: 'minChars',
-        position: null,
-        source: null
-      };
+          case 'instance':
+            var instanceToReturn = {
+              document: $(document),
+              element: $(instance.input),
+              menu: {
+                element: $(instance.listboxWrapper)
+              },
+              liveRegion: $(instance.liveRegion),
+              isMultiLine: instance.options.isMultiLine,
+              isNewMenu: null,
+              options: instance.options,
+              window: window
+            };
+            ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'source', 'valueMethod'].forEach(function (property) {
+              Object.defineProperty(instanceToReturn, property, {
+                get: function get() {
+                  return console.warn("The ".concat(property, " property is not supported beginning with 9.3, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
+                }
+              });
+            });
+            return instanceToReturn;
 
-      if (!Drupal.autocompleteShim.instances[id]) {
-        return;
-      }
+          case 'disable':
+            this.autocomplete('option', 'disabled', true);
+            break;
 
-      var instance = Drupal.autocompleteShim.instances[id];
-      var method = args[0];
+          case 'enable':
+            this.autocomplete('option', 'disabled', false);
+            break;
 
-      switch (method) {
-        case 'widget':
-          return $(instance.listboxWrapper);
+          case 'search':
+            instance.input.focus();
 
-        case 'instance':
-          var instanceToReturn = {
-            document: $(document),
-            element: $(instance.input),
-            menu: {
-              element: $(instance.listboxWrapper)
-            },
-            liveRegion: $(instance.liveRegion),
-            isMultiLine: instance.options.isMultiLine,
-            isNewMenu: null,
-            options: instance.options,
-            window: window
-          };
-          ['bindings', 'eventNamespace', 'classesElementLookup', 'focusable', 'hoverable', 'uuid', 'source', 'valueMethod'].forEach(function (property) {
-            Object.defineProperty(instanceToReturn, property, {
-              get: function get() {
-                return console.warn("The ".concat(property, " property is not supported beginning with 9.3, as jQuery UI Autocomplete is no longer part of core. See https://www.drupal.org/node/3083715"));
+            if (typeof args[1] === 'string') {
+              instance.input.value = args[1];
+
+              if (instance.input.hasAttribute('contenteditable')) {
+                instance.input.textContent = args[1];
               }
-            });
-          });
-          return instanceToReturn;
-
-        case 'disable':
-          this.autocomplete('option', 'disabled', true);
-          break;
-
-        case 'enable':
-          this.autocomplete('option', 'disabled', false);
-          break;
-
-        case 'search':
-          instance.input.focus();
-
-          if (typeof args[1] === 'string') {
-            instance.input.value = args[1];
-
-            if (instance.input.hasAttribute('contenteditable')) {
-              instance.input.textContent = args[1];
-            }
-          } else if (instance.input.hasAttribute('contenteditable')) {
-            instance.input.value = instance.input.textContent;
-          }
-
-          if (instance.input.value.length === 0 && instance.options.minChars === 0 && Array.isArray(instance.options.source) && instance.options.source.length > 0) {
-            var normalizedResults = instance.normalizeSuggestionItems(instance.options.source);
-            instance.displayResults(normalizedResults);
-          } else {
-            instance.doSearch($.Event('keydown'));
-          }
-
-          break;
-
-        case 'option':
-          if (typeof args[2] === 'undefined' && _typeof(args[1]) === 'object') {
-            Object.keys(args[1]).forEach(function (key) {
-              _this2.autocomplete('option', key, args[1][key]);
-            });
-          }
-
-          if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
-            var optionName = args[1],
-                optionValue = args[2];
-            var listBoxId = instance.listboxWrapper.getAttribute('id');
-
-            switch (optionName) {
-              case 'appendTo':
-                var appendTo = null;
-
-                if (typeof optionValue === 'string') {
-                  appendTo = document.querySelector(optionValue);
-                } else if (optionValue instanceof jQuery) {
-                  appendTo = optionValue.length > 0 ? optionValue[0] : null;
-                } else {
-                  appendTo = optionValue;
-                }
-
-                if (!appendTo) {
-                  var closestUiFront = $(instance.input).closest('.ui-front, dialog');
-
-                  if (closestUiFront.length > 0) {
-                    var _closestUiFront = _slicedToArray(closestUiFront, 1);
-
-                    appendTo = _closestUiFront[0];
-                  }
-                }
-
-                if (appendTo) {
-                  if (!appendTo.contains(instance.listboxWrapper)) {
-                    appendTo.appendChild(instance.listboxWrapper);
-                  }
-
-                  instance.listboxWrapper = appendTo.querySelector("#".concat(listBoxId));
-                }
-
-                instance.input.setAttribute('data-autocomplete-list-appended', true);
-                break;
-
-              case 'classes':
-                Object.keys(optionValue).forEach(function (key) {
-                  if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
-                    var element = key === 'ui-autocomplete' ? instance.listboxWrapper : instance.input;
-                    instance.addClasses(element, optionValue[key]);
-                    instance.removeClasses(element, key);
-                  }
-                });
-                break;
-
-              case 'classes.ui-autocomplete':
-                instance.addClasses(instance.listboxWrapper, optionValue);
-                instance.removeClasses(instance.listboxWrapper, 'ui-autocomplete');
-                break;
-
-              case 'classes.ui-autocomplete-input':
-                instance.addClasses(instance.input, optionValue);
-                instance.removeClasses(instance.input, 'ui-autocomplete-input');
-                break;
-
-              case 'disabled':
-                instance.options.disabled = optionValue;
-                $(instance.listboxWrapper).toggleClass('ui-autocomplete-disabled', optionValue);
-                break;
-
-              case 'position':
-                $(instance.listboxWrapper).position(_objectSpread({
-                  of: instance.input,
-                  my: 'left top',
-                  at: 'left bottom',
-                  collision: 'none'
-                }, optionValue));
-                break;
-
-              case 'source':
-                if (typeof optionValue === 'function') {
-                  instance.options.source = function (search, results) {
-                    optionValue({
-                      term: search
-                    }, results);
-                  };
-                } else if (typeof optionValue === 'string') {
-                  instance.options.source = Drupal.Autocomplete.ajaxSearchProvider(optionValue);
-                } else {
-                  instance.options.source = optionValue;
-                }
-
-                break;
-
-              default:
-                if (['change', 'close', 'create', 'focus', 'open', 'response', 'search', 'select'].includes(optionName)) {
-                  this.on("autocomplete".concat(optionName), optionValue);
-                }
-
-                if (optionMapping.hasOwnProperty(optionName)) {
-                  instance.options[optionMapping[optionName]] = optionValue;
-                  instance.options[optionName] = optionValue;
-                }
-
-                break;
-            }
-          } else if (typeof args[1] === 'string') {
-            if (optionMapping[args[1]]) {
-              return instance.options[optionMapping[args[1]]];
+            } else if (instance.input.hasAttribute('contenteditable')) {
+              instance.input.value = instance.input.textContent;
             }
 
-            return instance.options[args[1]];
-          }
+            if (instance.input.value.length === 0 && instance.options.minChars === 0 && Array.isArray(instance.options.source) && instance.options.source.length > 0) {
+              var normalizedResults = instance.normalizeSuggestionItems(instance.options.source);
+              instance.displayResults(normalizedResults);
+            } else {
+              instance.doSearch($.Event('keydown'));
+            }
 
-          break;
+            break;
 
-        default:
-          if (typeof instance[method] === 'function') {
-            instance[method]();
-          }
+          case 'option':
+            if (typeof args[2] === 'undefined' && _typeof(args[1]) === 'object') {
+              Object.keys(args[1]).forEach(function (key) {
+                _this2.autocomplete('option', key, args[1][key]);
+              });
+            }
 
-          break;
+            if (typeof args[2] !== 'undefined' && typeof args[1] === 'string') {
+              var optionName = args[1],
+                  optionValue = args[2];
+              var listBoxId = instance.listboxWrapper.getAttribute('id');
+
+              switch (optionName) {
+                case 'appendTo':
+                  var appendTo = null;
+
+                  if (typeof optionValue === 'string') {
+                    appendTo = document.querySelector(optionValue);
+                  } else if (optionValue instanceof jQuery) {
+                    appendTo = optionValue.length > 0 ? optionValue[0] : null;
+                  } else {
+                    appendTo = optionValue;
+                  }
+
+                  if (!appendTo) {
+                    var closestUiFront = $(instance.input).closest('.ui-front, dialog');
+
+                    if (closestUiFront.length > 0) {
+                      var _closestUiFront = _slicedToArray(closestUiFront, 1);
+
+                      appendTo = _closestUiFront[0];
+                    }
+                  }
+
+                  if (appendTo) {
+                    if (!appendTo.contains(instance.listboxWrapper)) {
+                      appendTo.appendChild(instance.listboxWrapper);
+                    }
+
+                    instance.listboxWrapper = appendTo.querySelector("#".concat(listBoxId));
+                  }
+
+                  instance.input.setAttribute('data-autocomplete-list-appended', true);
+                  break;
+
+                case 'classes':
+                  Object.keys(optionValue).forEach(function (key) {
+                    if (key === 'ui-autocomplete' || key === 'ui-autocomplete-input') {
+                      var element = key === 'ui-autocomplete' ? instance.listboxWrapper : instance.input;
+                      instance.addClasses(element, optionValue[key]);
+                      instance.removeClasses(element, key);
+                    }
+                  });
+                  break;
+
+                case 'classes.ui-autocomplete':
+                  instance.addClasses(instance.listboxWrapper, optionValue);
+                  instance.removeClasses(instance.listboxWrapper, 'ui-autocomplete');
+                  break;
+
+                case 'classes.ui-autocomplete-input':
+                  instance.addClasses(instance.input, optionValue);
+                  instance.removeClasses(instance.input, 'ui-autocomplete-input');
+                  break;
+
+                case 'disabled':
+                  instance.options.disabled = optionValue;
+                  $(instance.listboxWrapper).toggleClass('ui-autocomplete-disabled', optionValue);
+                  break;
+
+                case 'position':
+                  $(instance.listboxWrapper).position(_objectSpread({
+                    of: instance.input,
+                    my: 'left top',
+                    at: 'left bottom',
+                    collision: 'none'
+                  }, optionValue));
+                  break;
+
+                case 'source':
+                  if (typeof optionValue === 'function') {
+                    instance.options.source = function (search, results) {
+                      optionValue({
+                        term: search
+                      }, results);
+                    };
+                  } else if (typeof optionValue === 'string') {
+                    instance.options.source = Drupal.Autocomplete.ajaxSearchProvider(optionValue);
+                  } else {
+                    instance.options.source = optionValue;
+                  }
+
+                  break;
+
+                default:
+                  if (['change', 'close', 'create', 'focus', 'open', 'response', 'search', 'select'].includes(optionName)) {
+                    this.on("autocomplete".concat(optionName), optionValue);
+                  }
+
+                  if (optionMapping.hasOwnProperty(optionName)) {
+                    instance.options[optionMapping[optionName]] = optionValue;
+                    instance.options[optionName] = optionValue;
+                  }
+
+                  break;
+              }
+            } else if (typeof args[1] === 'string') {
+              if (optionMapping[args[1]]) {
+                return instance.options[optionMapping[args[1]]];
+              }
+
+              return instance.options[args[1]];
+            }
+
+            break;
+
+          default:
+            if (typeof instance[method] === 'function') {
+              instance[method]();
+            }
+
+            break;
+        }
+
+        return this;
       }
+    });
+  };
 
-      return this;
-    }
-  });
+  Drupal.autocompleteShim.overrideJqueryUi();
 
   if (!$.ui.hasOwnProperty('autocomplete')) {
     $.ui.autocomplete = function () {
       console.warn('$.ui.autocomplete no longer exists due to its removal in Drupal 9.4.0. Existing uses of $().autocomplete() will continue to work. See https://www.drupal.org/node/3083715');
     };
-
-    $.ui.autocomplete.shimmed = true;
   }
 })(jQuery, Drupal);
