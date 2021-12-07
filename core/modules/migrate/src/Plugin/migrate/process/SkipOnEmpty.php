@@ -58,7 +58,7 @@ use Drupal\migrate\MigrateSkipRowException;
  *
  * @MigrateProcessPlugin(
  *   id = "skip_on_empty",
- *   handle_multiple = "true"
+ *   handle_multiples = "true"
  * )
  */
 class SkipOnEmpty extends ProcessPluginBase {
