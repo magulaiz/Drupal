@@ -464,7 +464,7 @@
         });
         toolbarBehaviors.locked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
         toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
-        Drupal.toolbar.models.toolbarModel = toolbarBehaviors;
+        Drupal.toolbar.toolbarBehaviors = toolbarBehaviors;
         Object.keys(options.breakpoints).forEach(function (label) {
           var mq = options.breakpoints[label];
           var mql = window.matchMedia(mq);
@@ -504,8 +504,6 @@
     }
   };
   Drupal.toolbar = {
-    views: {},
-    models: {},
     mql: {},
     setSubtrees: new $.Deferred(),
     mediaQueryChangeHandler: function mediaQueryChangeHandler(model, label, mql) {

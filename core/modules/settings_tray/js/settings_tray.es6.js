@@ -34,7 +34,7 @@
    * Close any active toolbar tray before entering edit mode.
    */
   function closeToolbarTrays() {
-    $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
+    $(Drupal.toolbar.toolbarBehaviors.activeTab()).trigger('click');
   }
 
   /**

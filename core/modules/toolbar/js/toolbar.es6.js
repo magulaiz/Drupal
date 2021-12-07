@@ -701,8 +701,7 @@
 
         toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
 
-        // Drupal.toolbar.models.toolbarModel = model;
-        Drupal.toolbar.models.toolbarModel = toolbarBehaviors;
+        Drupal.toolbar.toolbarBehaviors = toolbarBehaviors;
 
         // TODO:
         // Attach a listener to the configured media query breakpoints.
@@ -806,14 +805,14 @@
      *
      * @type {object.<string, Backbone.View>}
      */
-    views: {},
+    // views: {},
 
     /**
      * A hash of Model instances.
      *
      * @type {object.<string, Backbone.Model>}
      */
-    models: {},
+    // models: {},
 
     /**
      * A hash of MediaQueryList objects tracked by the toolbar.
