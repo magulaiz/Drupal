@@ -40,7 +40,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
         'hidden' => FALSE,
       ],
       // Ensure Drupal core on the same version for all test runs.
-      'drupal' => [
+      '#all' => [
         'project' => 'drupal',
         'version' => '8.0.0',
         'hidden' => FALSE,
