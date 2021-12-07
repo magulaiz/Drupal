@@ -231,11 +231,16 @@ class ProjectStatusCalculator {
   }
 
   /**
-   * @param bool $until_existing
+   * Gets all the instablable releases up to and including the existing version.
+   *
    * @return mixed[]
+   *   The releases.
    */
   private function getInstallableReleases(): array {
-    $releases = [];
+    static $releases = NULL;
+    if (isset($releases)) {
+      return $releases;
+    }
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       try {
         $release = ProjectRelease::createFromArray($release_info);
