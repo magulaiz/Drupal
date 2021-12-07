@@ -10,6 +10,106 @@
  * Messages.
  */
 
+:root {
+  --font-sans: "metropolis", sans-serif;
+  --font-serif: "Lora", "georgia", serif;
+  --font-size-base: 1rem;
+  --font-size-l: 1.125rem;
+  --font-size-s: 0.875rem;
+  --font-size-xs: 0.8125rem;
+  --font-size-xxs: 0.75rem;
+  --line-height-base: 1.6875rem;
+  --line-height-s: 1.125rem;
+  --max-width: 84.375rem;
+  --max-bg-color: 98.125rem;
+  --sp: 1.125rem;
+  --content-left: 5.625rem;
+  --container-padding: var(--sp);
+  --container-padding-nav: var(--sp2);
+  --site-header-height-wide: var(--sp10);
+  --toolbar-height: 2.4375rem;
+  --toolbar-tray-height: 2.5rem;
+  --toolbar-tray-vertical-width: 14.9375rem;
+
+  --scrollbar-width: 0.9375rem;
+  --grid-gap: var(--sp);
+  --grid-gap--md: var(--sp2);
+  --grid-gap--lg: var(--grid-gap--md);
+  --grid-gap--nav: var(--grid-gap--md);
+  --grid-gap--max: var(--grid-gap--md);
+  --grid-col-count: 6;
+  --grid-col-count--md: 14;
+  --grid-col-count--lg: var(--grid-col-count--md);
+  --grid-col-count--nav: var(--grid-col-count--md);
+  --grid-col-count--max: var(--grid-col-count--md);
+  --grid-gap-count: calc(var(--grid-col-count) - 1);
+  --grid-gap-count--md: calc(var(--grid-col-count--md) - 1);
+  --grid-gap-count--lg: var(--grid-gap-count--md);
+  --grid-gap-count--nav: var(--grid-gap-count--md);
+  --grid-gap-count--max: var(--grid-gap-count--md);
+  --grid-full-width: calc(100vw - var(--sp2));
+  --grid-full-width--md: var(--grid-full-width);
+  --grid-full-width--lg: calc(var(--grid-full-width) - var(--scrollbar-width));
+  --grid-full-width--nav: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  --grid-full-width--max: calc(var(--max-width) - var(--sp4));
+  --grid-col-width: calc((var(--grid-full-width) - var(--grid-gap-count)*var(--grid-gap))/var(--grid-col-count));
+  --grid-col-width--md: calc((var(--grid-full-width--md) - var(--grid-gap-count--md)*var(--grid-gap--md))/var(--grid-col-count--md));
+  --grid-col-width--lg: calc((var(--grid-full-width--lg) - var(--grid-gap-count--lg)*var(--grid-gap--lg))/var(--grid-col-count--lg));
+  --grid-col-width--nav: calc((var(--grid-full-width--nav) - var(--grid-gap-count--nav)*var(--grid-gap--nav))/var(--grid-col-count--nav));
+  --grid-col-width--max: calc((var(--grid-full-width--max) - var(--grid-gap-count--max)*var(--grid-gap--max))/var(--grid-col-count--max));
+  --sp0-25: calc(var(--sp)*0.25);
+  --sp0-5: calc(var(--sp)*0.5);
+  --sp0-75: calc(var(--sp)*0.75);
+  --sp1: calc(var(--sp)*1);
+  --sp1-5: calc(var(--sp)*1.5);
+  --sp2: calc(var(--sp)*2);
+  --sp2-5: calc(var(--sp)*2.5);
+  --sp3: calc(var(--sp)*3);
+  --sp4: calc(var(--sp)*4);
+  --sp5: calc(var(--sp)*5);
+  --sp6: calc(var(--sp)*6);
+  --sp7: calc(var(--sp)*7);
+  --sp8: calc(var(--sp)*8);
+  --sp9: calc(var(--sp)*9);
+  --sp10: calc(var(--sp)*10);
+  --sp11: calc(var(--sp)*11);
+  --sp12: calc(var(--sp)*12);
+  --color--black: #000;
+  --color--gray-0: #0d1214;
+  --color--gray-5: #0c0d0e;
+  --color--gray-8: #171e23;
+  --color--gray-10: #313637;
+  --color--gray-20: #6e7172;
+  --color--gray-25: #5d7585;
+  --color--gray-28: #7d919d;
+  --color--gray-30: #7e96a7;
+  --color--gray-40: #98abb9;
+  --color--gray-45: #afb8be;
+  --color--gray-50: #9ea0a1;
+  --color--gray-70: #d7e1e8;
+  --color--gray-75: #e3e3e5;
+  --color--gray-80: #e7edf1;
+  --color--gray-90: #f1f4f7;
+  --color--gray-95: #f7f9fa;
+  --color--blue-10: #0f6292;
+  --color--blue-20: #0d77b5;
+  --color--blue-30: #3d92c4;
+  --color--blue-50: #2494db;
+  --color--blue-70: #53b0eb;
+  --color--blue-90: #ddeffb;
+  --color--white: #fff;
+  --color--red: #e33f1e;
+  --color--gold: #fdca40;
+  --color--green: #3fa21c;
+  --header-height-wide-when-fixed: calc(var(--sp)*6);
+  --mobile-nav-width: 31.25rem;
+  --border-radius: 0.1875rem;
+}
+
+:root {
+  --messages-icon-size: 2rem;
+}
+
 [dir="ltr"] .messages-list {
   padding-left: 0;
 }
@@ -27,36 +127,36 @@
 }
 
 .messages-list {
-  margin-top: 1.125rem;
-  margin-bottom: 1.125rem;
+  margin-top: var(--sp1);
+  margin-bottom: var(--sp1);
   padding-top: 0;
   padding-bottom: 0;
   list-style: none;
 }
 
 [dir="ltr"] .messages {
-  padding-left: 1.6875rem;
+  padding-left: var(--sp1-5);
 }
 
 [dir="rtl"] .messages {
-  padding-right: 1.6875rem;
+  padding-right: var(--sp1-5);
 }
 
 [dir="ltr"] .messages {
-  padding-right: 1.6875rem;
+  padding-right: var(--sp1-5);
 }
 
 [dir="rtl"] .messages {
-  padding-left: 1.6875rem;
+  padding-left: var(--sp1-5);
 }
 
 .messages {
-  min-height: 4.25rem;
-  padding-top: 1.125rem;
-  padding-bottom: 1.125rem;
-  color: #fff;
+  min-height: calc(var(--messages-icon-size) + var(--sp1)*2);
+  padding-top: var(--sp1);
+  padding-bottom: var(--sp1);
+  color: var(--color--white);
   outline: solid 1px transparent;
-  background-color: #0d1214
+  background-color: var(--color--gray-0)
 }
 
 .messages * {
@@ -113,11 +213,11 @@
 }
 
 .messages:not(.hidden) ~ .messages {
-  margin-top: 1.125rem;
+  margin-top: var(--sp1);
 }
 
 .messages__item + .messages__item {
-  margin-top: 0.5625rem;
+  margin-top: var(--sp0-5);
 }
 
 .messages__container {
@@ -125,11 +225,11 @@
 }
 
 [dir="ltr"] .messages__header {
-  margin-right: 1.125rem;
+  margin-right: var(--sp1);
 }
 
 [dir="rtl"] .messages__header {
-  margin-left: 1.125rem;
+  margin-left: var(--sp1);
 }
 
 .messages__header {
@@ -151,11 +251,11 @@
 }
 
 [dir="ltr"] .messages__button {
-  margin-left: 1.125rem;
+  margin-left: var(--sp1);
 }
 
 [dir="rtl"] .messages__button {
-  margin-right: 1.125rem;
+  margin-right: var(--sp1);
 }
 
 .messages__button {
@@ -203,7 +303,7 @@
     width: 2.0625rem;
     height: 0;
     content: "";
-    border-top: solid 2px #7e96a7;
+    border-top: solid 2px var(--color--gray-30);
   }
 
 .messages__close:before {
@@ -216,11 +316,11 @@
 
 .messages__close:hover::before,
     .messages__close:hover::after {
-      border-color: #fff;
+      border-color: var(--color--white);
     }
 
 .messages__close:focus {
-    outline: 2px solid #53b0eb;
+    outline: 2px solid var(--color--blue-70);
     outline-offset: 2px;
   }
 
@@ -229,23 +329,23 @@
 }
 
 .messages--error .messages__icon svg {
-  fill: #e33f1e;
+  fill: var(--color--red);
 }
 
 .messages--warning .messages__icon svg {
-  fill: #fdca40;
+  fill: var(--color--gold);
 }
 
 .messages--status .messages__icon svg {
-  fill: #3fa21c;
+  fill: var(--color--green);
 }
 
 .messages--info .messages__icon svg {
-  fill: #53b0eb;
+  fill: var(--color--blue-70);
 }
 
 .messages a {
-  color: #fff;
+  color: var(--color--white);
 }
 
 .messages pre {
@@ -253,13 +353,13 @@
 }
 
 [dir="ltr"] .js-form-managed-file .messages {
-  border-left: solid 6px #e33f1e;
+  border-left: solid 6px var(--color--red);
 }
 
 [dir="rtl"] .js-form-managed-file .messages {
-  border-right: solid 6px #e33f1e;
+  border-right: solid 6px var(--color--red);
 }
 
 .js-form-managed-file .messages {
-  margin-bottom: 1.125rem;
+  margin-bottom: var(--sp1);
 }

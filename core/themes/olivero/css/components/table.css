@@ -10,36 +10,132 @@
  * User generated tables.
  */
 
+:root {
+  --font-sans: "metropolis", sans-serif;
+  --font-serif: "Lora", "georgia", serif;
+  --font-size-base: 1rem;
+  --font-size-l: 1.125rem;
+  --font-size-s: 0.875rem;
+  --font-size-xs: 0.8125rem;
+  --font-size-xxs: 0.75rem;
+  --line-height-base: 1.6875rem;
+  --line-height-s: 1.125rem;
+  --max-width: 84.375rem;
+  --max-bg-color: 98.125rem;
+  --sp: 1.125rem;
+  --content-left: 5.625rem;
+  --container-padding: var(--sp);
+  --container-padding-nav: var(--sp2);
+  --site-header-height-wide: var(--sp10);
+  --toolbar-height: 2.4375rem;
+  --toolbar-tray-height: 2.5rem;
+  --toolbar-tray-vertical-width: 14.9375rem;
+
+  --scrollbar-width: 0.9375rem;
+  --grid-gap: var(--sp);
+  --grid-gap--md: var(--sp2);
+  --grid-gap--lg: var(--grid-gap--md);
+  --grid-gap--nav: var(--grid-gap--md);
+  --grid-gap--max: var(--grid-gap--md);
+  --grid-col-count: 6;
+  --grid-col-count--md: 14;
+  --grid-col-count--lg: var(--grid-col-count--md);
+  --grid-col-count--nav: var(--grid-col-count--md);
+  --grid-col-count--max: var(--grid-col-count--md);
+  --grid-gap-count: calc(var(--grid-col-count) - 1);
+  --grid-gap-count--md: calc(var(--grid-col-count--md) - 1);
+  --grid-gap-count--lg: var(--grid-gap-count--md);
+  --grid-gap-count--nav: var(--grid-gap-count--md);
+  --grid-gap-count--max: var(--grid-gap-count--md);
+  --grid-full-width: calc(100vw - var(--sp2));
+  --grid-full-width--md: var(--grid-full-width);
+  --grid-full-width--lg: calc(var(--grid-full-width) - var(--scrollbar-width));
+  --grid-full-width--nav: calc(100vw - var(--scrollbar-width) - var(--content-left) - var(--sp4));
+  --grid-full-width--max: calc(var(--max-width) - var(--sp4));
+  --grid-col-width: calc((var(--grid-full-width) - var(--grid-gap-count)*var(--grid-gap))/var(--grid-col-count));
+  --grid-col-width--md: calc((var(--grid-full-width--md) - var(--grid-gap-count--md)*var(--grid-gap--md))/var(--grid-col-count--md));
+  --grid-col-width--lg: calc((var(--grid-full-width--lg) - var(--grid-gap-count--lg)*var(--grid-gap--lg))/var(--grid-col-count--lg));
+  --grid-col-width--nav: calc((var(--grid-full-width--nav) - var(--grid-gap-count--nav)*var(--grid-gap--nav))/var(--grid-col-count--nav));
+  --grid-col-width--max: calc((var(--grid-full-width--max) - var(--grid-gap-count--max)*var(--grid-gap--max))/var(--grid-col-count--max));
+  --sp0-25: calc(var(--sp)*0.25);
+  --sp0-5: calc(var(--sp)*0.5);
+  --sp0-75: calc(var(--sp)*0.75);
+  --sp1: calc(var(--sp)*1);
+  --sp1-5: calc(var(--sp)*1.5);
+  --sp2: calc(var(--sp)*2);
+  --sp2-5: calc(var(--sp)*2.5);
+  --sp3: calc(var(--sp)*3);
+  --sp4: calc(var(--sp)*4);
+  --sp5: calc(var(--sp)*5);
+  --sp6: calc(var(--sp)*6);
+  --sp7: calc(var(--sp)*7);
+  --sp8: calc(var(--sp)*8);
+  --sp9: calc(var(--sp)*9);
+  --sp10: calc(var(--sp)*10);
+  --sp11: calc(var(--sp)*11);
+  --sp12: calc(var(--sp)*12);
+  --color--black: #000;
+  --color--gray-0: #0d1214;
+  --color--gray-5: #0c0d0e;
+  --color--gray-8: #171e23;
+  --color--gray-10: #313637;
+  --color--gray-20: #6e7172;
+  --color--gray-25: #5d7585;
+  --color--gray-28: #7d919d;
+  --color--gray-30: #7e96a7;
+  --color--gray-40: #98abb9;
+  --color--gray-45: #afb8be;
+  --color--gray-50: #9ea0a1;
+  --color--gray-70: #d7e1e8;
+  --color--gray-75: #e3e3e5;
+  --color--gray-80: #e7edf1;
+  --color--gray-90: #f1f4f7;
+  --color--gray-95: #f7f9fa;
+  --color--blue-10: #0f6292;
+  --color--blue-20: #0d77b5;
+  --color--blue-30: #3d92c4;
+  --color--blue-50: #2494db;
+  --color--blue-70: #53b0eb;
+  --color--blue-90: #ddeffb;
+  --color--white: #fff;
+  --color--red: #e33f1e;
+  --color--gold: #fdca40;
+  --color--green: #3fa21c;
+  --header-height-wide-when-fixed: calc(var(--sp)*6);
+  --mobile-nav-width: 31.25rem;
+  --border-radius: 0.1875rem;
+}
+
 .forum table,
 .text-content table,
 .views-table,
 .draggable-table {
-  margin-top: 2.25rem;
-  margin-bottom: 2.25rem;
+  margin-top: var(--sp2);
+  margin-bottom: var(--sp2);
   border-spacing: 0;
-  color: #313637;
+  color: var(--color--gray-10);
   border: 0;
   border-collapse: collapse;
-  font-family: "metropolis", sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
-  line-height: 1.6875rem
+  line-height: var(--sp1-5)
 }
 
 [dir="ltr"] .forum table caption,[dir="ltr"]  .text-content table caption,[dir="ltr"]  .views-table caption,[dir="ltr"]  .draggable-table caption {
-    text-align: left
+    text-align: left;
 }
 
 [dir="rtl"] .forum table caption,[dir="rtl"]  .text-content table caption,[dir="rtl"]  .views-table caption,[dir="rtl"]  .draggable-table caption {
-    text-align: right
+    text-align: right;
 }
 
 .forum table caption, .text-content table caption, .views-table caption, .draggable-table caption {
-    margin-bottom: 1.125rem;
-    color: #313637;
-    font-family: "Lora", "georgia", serif;
+    margin-bottom: var(--sp1);
+    color: var(--color--gray-10);
+    font-family: var(--font-serif);
     font-size: 0.875rem;
     font-style: italic;
-    line-height: 1.125rem;
+    line-height: var(--sp);
   }
 
 .forum table tr:last-child td, .text-content table tr:last-child td, .views-table tr:last-child td, .draggable-table tr:last-child td {
@@ -54,7 +150,7 @@
   .views-table th,[dir="ltr"] 
   .draggable-table td,[dir="ltr"] 
   .draggable-table th {
-    padding-left: 0
+    padding-left: 0;
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
@@ -65,7 +161,7 @@
   .views-table th,[dir="rtl"] 
   .draggable-table td,[dir="rtl"] 
   .draggable-table th {
-    padding-right: 0
+    padding-right: 0;
 }
 
 [dir="ltr"] .forum table td,[dir="ltr"] 
@@ -76,7 +172,7 @@
   .views-table th,[dir="ltr"] 
   .draggable-table td,[dir="ltr"] 
   .draggable-table th {
-    padding-right: 1.125rem
+    padding-right: var(--sp1);
 }
 
 [dir="rtl"] .forum table td,[dir="rtl"] 
@@ -87,7 +183,7 @@
   .views-table th,[dir="rtl"] 
   .draggable-table td,[dir="rtl"] 
   .draggable-table th {
-    padding-left: 1.125rem
+    padding-left: var(--sp1);
 }
 
 .forum table td,
@@ -98,44 +194,44 @@
   .views-table th,
   .draggable-table td,
   .draggable-table th {
-    padding-top: 1.125rem;
-    padding-bottom: 1.125rem;
+    padding-top: var(--sp1);
+    padding-bottom: var(--sp1);
     vertical-align: top;
   }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    margin-right: 0
+    margin-right: 0;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    margin-left: 0
+    margin-left: 0;
 }
 
 [dir="ltr"] .forum table th,[dir="ltr"]  .text-content table th,[dir="ltr"]  .views-table th,[dir="ltr"]  .draggable-table th {
-    text-align: left
+    text-align: left;
 }
 
 [dir="rtl"] .forum table th,[dir="rtl"]  .text-content table th,[dir="rtl"]  .views-table th,[dir="rtl"]  .draggable-table th {
-    text-align: right
+    text-align: right;
 }
 
 .forum table th, .text-content table th, .views-table th, .draggable-table th {
     margin-top: 0;
     margin-bottom: 0;
     letter-spacing: 0.02em;
-    color: #0d1214;
-    border-bottom: 2px solid #2494db;
-    font-family: "metropolis", sans-serif;
+    color: var(--color--gray-0);
+    border-bottom: 2px solid var(--color--blue-50);
+    font-family: var(--font-sans);
     font-size: 0.875rem;
-    line-height: 1.125rem
+    line-height: var(--sp)
 
     /**
      * Fixes for styles injected by CKEditor
@@ -143,19 +239,19 @@
   }
 
 [dir="ltr"] .forum table th.text-align-left,[dir="ltr"]  .text-content table th.text-align-left,[dir="ltr"]  .views-table th.text-align-left,[dir="ltr"]  .draggable-table th.text-align-left {
-      text-align: left
+      text-align: left;
 }
 
 [dir="rtl"] .forum table th.text-align-left,[dir="rtl"]  .text-content table th.text-align-left,[dir="rtl"]  .views-table th.text-align-left,[dir="rtl"]  .draggable-table th.text-align-left {
-      text-align: right
+      text-align: right;
 }
 
 [dir="ltr"] .forum table th.text-align-right,[dir="ltr"]  .text-content table th.text-align-right,[dir="ltr"]  .views-table th.text-align-right,[dir="ltr"]  .draggable-table th.text-align-right {
-      text-align: right
+      text-align: right;
 }
 
 [dir="rtl"] .forum table th.text-align-right,[dir="rtl"]  .text-content table th.text-align-right,[dir="rtl"]  .views-table th.text-align-right,[dir="rtl"]  .draggable-table th.text-align-right {
-      text-align: left
+      text-align: left;
 }
 
 .forum table th.text-align-center, .text-content table th.text-align-center, .views-table th.text-align-center, .draggable-table th.text-align-center {
@@ -168,7 +264,7 @@
 
 .forum table td, .text-content table td, .views-table td, .draggable-table td {
     white-space: normal;
-    border-bottom: 2px solid #98abb9;
+    border-bottom: 2px solid var(--color--gray-40);
   }
 
 .forum table th.checkbox,
@@ -197,7 +293,7 @@
 .sticky-header {
   z-index: 0;
   margin: 0;
-  border-bottom: 4px solid #2494db;
+  border-bottom: 4px solid var(--color--blue-50);
 }
 
 /* Properly align VBO checkboxes. */

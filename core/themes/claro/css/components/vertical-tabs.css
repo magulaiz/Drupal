@@ -12,14 +12,200 @@
  * Replaces /core/misc/vertical-tabs.css.
  */
 
+:root {
+  --color-absolutezero: #003cc5;
+  --color-white: #fff;
+  --color-text: var(--color-gray);
+  --color-text-light: var(--color-gray-500);
+  --color-gray-050-o-40: rgba(243, 244, 249, 0.4);
+  --color-gray-200-o-80: rgba(212, 212, 218, 0.8);
+  --color-maximumred: #d72222;
+  --color-sunglow: #ffd23f;
+  --color-sunglow-shaded: #977405;
+  --color-lightninggreen: #26a769;
+  --color-focus: var(--color-lightninggreen);
+  --color-absolutezero-hover: #0036b1;
+  --color-absolutezero-active: #00339a;
+  --color-maximumred-hover: #c11f1f;
+  --color-maximumred-active: #ab1b1b;
+  --color-bgblue-hover: #f0f5fd;
+  --color-bgblue-active: #e6ecf8;
+  --color-bgred-hover: #fdf5f5;
+  --color-bgred-active: #fceded;
+  --color-gray: #232429;
+  --color-gray-900: #393a3f;
+  --color-gray-800: #55565b;
+  --color-gray-700: #75767b;
+  --color-gray-600: #828388;
+  --color-gray-500: #919297;
+  --color-gray-400: #adaeb3;
+  --color-gray-300: #c1c2c7;
+  --color-gray-200: #d3d4d9;
+  --color-gray-100: #dedfe4;
+  --color-gray-050: #f3f4f9;
+  --color-gray-025: #f9faff;
+  --color-fg: var(--color-text);
+  --color-bg: var(--color-white);
+  --color-link: var(--color-absolutezero);
+  --color-link-hover: var(--color-absolutezero-hover);
+  --color-link-active: var(--color-absolutezero-active);
+  --color-divider: rgba(142, 146, 156, 0.5);
+  --font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  --line-height: 1.5;
+  --line-height-heading: 1.3;
+  --line-height-form-label: 1.125rem;
+  --font-size-base: 1rem;
+  --font-size-h1: 2.027rem;
+  --font-size-h2: 1.802rem;
+  --font-size-h3: 1.602rem;
+  --font-size-h4: 1.424rem;
+  --font-size-h5: 1.266rem;
+  --font-size-h6: 1.125rem;
+  --font-size-s: 0.889rem;
+  --font-size-xs: 0.79rem;
+  --font-size-xxs: 0.702rem;
+  --font-size-label: var(--font-size-s);
+  --font-size-description: var(--font-size-xs);
+  --space-xl: 3rem;
+  --space-l: 1.5rem;
+  --space-m: 1rem;
+  --space-s: 0.75rem;
+  --space-xs: 0.5rem;
+  --speed-transition: 0.2s;
+  --transition: all var(--speed-transition) ease-out;
+  --base-border-radius: 2px;
+  --focus-border-size: 0.1875rem;
+  --focus-border-offset-size: 2px;
+  --outline-size: 2px;
+  --focus-outline: var(--outline-size) dotted transparent;
+  --focus-box-shadow: 0 0 0 var(--focus-border-offset-size) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size)) var(--color-focus);
+  --shadow-z3: 0 0.875rem 1.875rem rgba(0, 0, 0, 0.1);
+  --input-fg-color: var(--color-fg);
+  --input-bg-color: var(--color-bg);
+  --input-fg-color--description: var(--color-gray-800);
+  --input-fg-color--placeholder: var(--color-gray-500);
+  --input-border-color: var(--color-gray-500);
+  --input--hover-border-color: var(--color-text);
+  --input--focus-border-color: var(--color-absolutezero);
+  --input--focus-shadow-color: rgba(0, 74, 220, 0.3);
+  --input--error-color: var(--color-maximumred);
+  --input--error-border-color: var(--color-maximumred);
+  --input--disabled-color: rgba(84, 85, 96, 0.6);
+  --input--disabled-fg-color: var(--color-gray-600);
+  --input--disabled-bg-color: #f2f2f3;
+  --input--disabled-border-color: #bababf;
+  --input--disabled-border-opacity: 0.5;
+  --input-border-radius-size: 0.125rem;
+  --input-border-size: 1px;
+  --input--error-border-size: 2px;
+  --input-padding-vertical: calc(var(--space-s) - var(--input-border-size));
+  --input-padding-horizontal: calc(var(--space-m) - var(--input-border-size));
+  --input-font-size: var(--font-size-base);
+  --input-line-height: var(--space-l);
+  --input-padding-vertical--small: calc(var(--space-xs) - var(--input-border-size)*2);
+  --input-padding-horizontal--small: calc(var(--space-m) - var(--input-border-size));
+  --input-font-size--small: var(--font-size-xs);
+  --input-line-height--small: 1.3125rem;
+  --input--extrasmall-padding-vertical: calc(0.15rem - var(--input-border-size));
+  --input--extrasmall-padding-horizontal: calc(var(--space-xs) - var(--input-border-size));
+  --input--extrasmall-font-size: var(--font-size-s);
+  --input--extrasmall-line-height: calc(var(--space-m) + 0.2rem);
+  --input--required-mark-size: 0.4375rem;
+  --input--label-spacing: 1.6875rem;
+  --details-bg-color: rgba(243, 244, 249, 0.4);
+  --details-border-color: var(--color-gray-100);
+  --details-summary-shadow-color: var(--color-focus);
+  --details-summary-focus-border-size: var(--focus-border-size);
+  --details-desktop-wrapper-padding-start: calc(var(--space-m) + var(--space-s) + var(--space-xs));
+  --details-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
+  --details-border-size: 1px;
+  --details-border-size-radius: 2px;
+  --details-accordion-border-size-radius: var(--base-border-radius);
+  --details-spread-box-shadow-radius: 2px;
+  --details-bg-color-transition-duration: 0.12s;
+  --details-box-shadow-transition-duration: 0.2s;
+  --details-transform-transition-duration: 0.12s;
+  --details-line-height: 1.295rem;
+  --button--focus-border-color: #5a8bed;
+  --button-border-radius-size: var(--base-border-radius);
+  --button-fg-color: var(--color-text);
+  --button-bg-color: var(--color-gray-200);
+  --button--hover-bg-color: var(--color-gray-300);
+  --button--active-bg-color: var(--color-gray-400);
+  --button--disabled-bg-color: #ebebed;
+  --button--disabled-fg-color: var(--color-gray-500);
+  --button-fg-color--primary: var(--color-white);
+  --button-bg-color--primary: var(--color-absolutezero);
+  --button--hover-bg-color--primary: var(--color-absolutezero-hover);
+  --button--active-bg-color--primary: var(--color-absolutezero-active);
+  --button--focus-bg-color--primary: var(--button-bg-color--primary);
+  --button--disabled-bg-color--primary: var(--color-gray-200);
+  --button--disabled-fg-color--primary: var(--color-gray-600);
+  --button-fg-color--danger: var(--color-white);
+  --button-bg-color--danger: var(--color-maximumred);
+  --button--hover-bg-color--danger: var(--color-maximumred-hover);
+  --button--active-bg-color--danger: var(--color-maximumred-active);
+  --jui-dropdown-fg-color: var(--color-gray-800);
+  --jui-dropdown-bg-color: var(--color-white);
+  --jui-dropdown--active-fg-color: var(--color-white);
+  --jui-dropdown--active-bg-color: var(--color-absolutezero);
+  --jui-dropdown-border-color: rgba(216, 217, 224, 0.8);
+  --jui-dropdown-shadow-color: rgba(34, 35, 48, 0.1);
+  --jui-dialog-title-color: var(--color-white);
+  --jui-dialog-title-bg-color: var(--color-text);
+  --jui-dialog-title-font-size: var(--font-size-h4);
+  --jui-dialog-close-button-size: calc(var(--space-m)*2);
+  --jui-dialog-close-button-border-radius: 50%;
+  --jui-dialog-close-button-reserved-space: calc(var(--space-m)*4);
+  --jui-dialog-off-canvas-close-button-reserved-space: calc(var(--space-m)*3);
+  --jui-dialog-border-radius: 0.25rem;
+  --jui-dialog-box-shadow: 0 0 var(--space-m) calc(var(--space-m)/-4) var(--color-text);
+  --jui-dialog--focus-outline: 2px dotted transparent;
+  --jui-dialog--focus-box-shadow: 0 0 0 0.1875rem var(--color-focus);
+  --jui-dialog-z-index: 1260;
+  --jui-dialog-off-canvas-z-index: 501;
+  --progress-bar-border-size: 1px;
+  --progress-bar-small-size: calc(var(--space-xs) - var(--progress-bar-border-size)*2);
+  --progress-bar-small-size-radius: var(--space-xs);
+  --progress-bar-spacing-size: var(--space-xs);
+  --progress-bar-transition: width 0.5s ease-out;
+  --progress-bar-label-color: var(--color-text);
+  --progress-bar-description-color: var(--color-gray-800);
+  --progress-bar-description-font-size: var(--font-size-xs);
+  --progress-track-border-color: var(--color-gray-500);
+  --progress-track-bg-color: var(--color-gray-200);
+  --tabledrag-handle-icon-size: 1.0625rem;
+  --ajax-progress-margin-horizontal: var(--space-s);
+  --breadcrumb-height: 1.25rem;
+  --vertical-tabs-margin-vertical: var(--space-s);
+  --vertical-tabs-border-radius: var(--details-accordion-border-size-radius);
+  --vertical-tabs-shadow: var(--details-box-shadow);
+  --vertical-tabs-border-color: var(--details-border-color);
+  --vertical-tabs-border-size: 1px;
+  --vertical-tabs-border: var(--vertical-tabs-border-size) solid var(--vertical-tabs-border-color);
+  --vertical-tabs-menu-item-shadow-extraspace: 0.5rem;
+  --vertical-tabs-menu-item--top-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-2);
+  --vertical-tabs-menu-item--right-margin: calc(var(--vertical-tabs-border-size)*-1);
+  --vertical-tabs-menu-item--bottom-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
+  --vertical-tabs-menu-item--left-margin: calc(var(--vertical-tabs-menu-item-shadow-extraspace)*-1);
+  --vertical-tabs-menu-separator-color: var(--color-gray-200);
+  --vertical-tabs-menu-separator-size: 1px;
+  --vertical-tabs-menu-width: 20em;
+  --vertical-tabs-pane-width: calc(100% - var(--vertical-tabs-menu-width));
+  --vertical-tabs-menu-link-focus-border-size: var(--details-summary-focus-border-size);
+  --vertical-tabs-menu-link--active-border-size: 0.25rem;
+  --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
+  --vertical-tabs-menu--z-index: 0;
+}
+
 /**
  * Main wrapper of vertical tabs.
  * This wrapper div is added by JavaScript.
  */
 
 .vertical-tabs {
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
   border-top: 1px solid transparent; /* Need to hide the pane wrapper clearfix's height */
 }
 
@@ -37,11 +223,11 @@
   position: relative;
   display: none;
   float: left; /* LTR */
-  width: 20em;
+  width: var(--vertical-tabs-menu-width);
   margin: 0;
-  padding-top: 0.5rem;
+  padding-top: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
-  color: #232429;
+  color: var(--color-text);
 }
 
 [dir="rtl"] .vertical-tabs__menu {
@@ -52,7 +238,7 @@
 @media screen and (min-width: 85em) {
   .vertical-tabs__menu {
     display: block;
-    width: 20em;
+    width: var(--vertical-tabs-menu-width);
   }
 }
 
@@ -62,14 +248,14 @@
 
 .vertical-tabs__menu-item {
   overflow: hidden;
-  margin: -1rem -1px -0.5rem -0.5rem; /* LTR */
-  padding: 0.5rem 0 0.5rem 0.5rem; /* LTR */
+  margin: var(--vertical-tabs-menu-item--top-margin) var(--vertical-tabs-menu-item--right-margin) var(--vertical-tabs-menu-item--bottom-margin) var(--vertical-tabs-menu-item--left-margin); /* LTR */
+  padding: var(--vertical-tabs-menu-item-shadow-extraspace) 0 var(--vertical-tabs-menu-item-shadow-extraspace) var(--vertical-tabs-menu-item-shadow-extraspace); /* LTR */
 }
 
 [dir="rtl"] .vertical-tabs__menu-item {
-  margin-right: -0.5rem;
-  margin-left: -1px;
-  padding-right: 0.5rem;
+  margin-right: var(--vertical-tabs-menu-item--left-margin);
+  margin-left: var(--vertical-tabs-menu-item--right-margin);
+  padding-right: var(--vertical-tabs-menu-item-shadow-extraspace);
   padding-left: 0;
 }
 
@@ -84,8 +270,8 @@
   z-index: 1; /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: -1px;
-  border-top: 1px solid #d3d4d9;
+  margin-top: calc(var(--vertical-tabs-menu-separator-size)*-1);
+  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
 
 /**
@@ -100,7 +286,7 @@
 
 .vertical-tabs__menu-item::after {
   z-index: 2;
-  border-color: #fff;
+  border-color: var(--color-white);
 }
 
 /**
@@ -136,24 +322,23 @@
 .vertical-tabs__menu-link {
   position: relative;
   display: block;
-  margin-top: -1px;
-  padding: 0.75rem 0.75rem 0.75rem calc(1.5rem - 0.25rem); /* LTR */
+  margin-top: calc(var(--vertical-tabs-border-size)*-1);
+  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
   text-decoration: none;
   word-wrap: break-word;
   -webkit-hyphens: auto;
-  -ms-hyphens: auto;
   hyphens: auto;
-  color: #232429;
-  border: 1px solid transparent;
-  border-width: 1px 0 1px 4px; /* LTR */
-  border-radius: 2px 0 0 2px; /* LTR */
+  color: var(--color-text);
+  border: var(--vertical-tabs-border-size) solid transparent;
+  border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
+  border-radius: var(--vertical-tabs-border-radius) 0 0 var(--vertical-tabs-border-radius); /* LTR */
 }
 
 [dir="rtl"] .vertical-tabs__menu-link {
-  padding-right: calc(1.5rem - 0.25rem);
-  padding-left: 0.75rem;
-  border-width: 1px 4px 1px 0;
-  border-radius: 0 2px 2px 0;
+  padding-right: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding-left: var(--space-s);
+  border-width: var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size) var(--vertical-tabs-border-size) 0;
+  border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
 }
 
 @media screen and (-ms-high-contrast: active) {
@@ -172,7 +357,7 @@
 
 .vertical-tabs__menu-link:hover {
   text-decoration: none;
-  color: #003cc5;
+  color: var(--color-absolutezero);
 }
 
 /* This pseudo element provides the background for the hover state. */
@@ -180,22 +365,22 @@
 .vertical-tabs__menu-link::before {
   position: absolute;
   z-index: 0; /* This should be on a lower level than the menu-item separator lines. */
-  top: -1px;
+  top: calc(var(--vertical-tabs-border-size)*-1);
   right: 0; /* LTR */
-  bottom: -1px;
-  left: -0.25rem; /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size)*-1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size)*-1); /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 
 [dir="rtl"] .vertical-tabs__menu-link::before {
-  right: -0.25rem;
+  right: calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   left: 0;
 }
 
 .vertical-tabs__menu-link:hover::before {
-  background: #f0f5fd;
+  background: var(--color-bgblue-hover);
 }
 
 .vertical-tabs__menu-link:focus::after {
@@ -204,36 +389,36 @@
   right: 0;
   bottom: 0;
   left: 0;
-  margin: -1px -0.25rem;
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
   content: "";
   pointer-events: none;
-  border: 3px solid #26a769;
-  border-radius: 2px;
+  border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
+  border-radius: var(--vertical-tabs-border-radius);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
-  color: #003cc5;
-  border-color: #dedfe4 transparent;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-absolutezero);
+  border-color: var(--vertical-tabs-border-color) transparent;
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
-  color: #0036b1;
-  background-color: #f0f5fd;
+  color: var(--color-absolutezero-hover);
+  background-color: var(--color-bgblue-hover);
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-left: 4px solid #003cc5; /* LTR */
-  border-radius: 2px 0 0 2px; /* LTR */
+  border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
+  border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
 
 [dir=rtl] .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
-  border-right: 4px solid #003cc5;
+  border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-left: 0;
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
 }
 
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
@@ -265,8 +450,8 @@
 
 .vertical-tabs__menu-link-summary {
   display: block;
-  color: #55565b;
-  font-size: 0.889rem;
+  color: var(--color-gray-800);
+  font-size: var(--font-size-s);
   font-weight: normal;
 }
 
@@ -276,13 +461,13 @@
 
 .vertical-tabs__items {
   box-sizing: border-box;
-  margin-top: 0.75rem;
-  margin-bottom: 0.75rem;
-  color: #232429;
-  border: 1px solid #dedfe4;
-  border-radius: 2px;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: var(--vertical-tabs-margin-vertical);
+  margin-bottom: var(--vertical-tabs-margin-vertical);
+  color: var(--color-text);
+  border: var(--vertical-tabs-border);
+  border-radius: var(--vertical-tabs-border-radius);
+  background-color: var(--color-white);
+  box-shadow: var(--vertical-tabs-shadow);
 }
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
@@ -305,14 +490,14 @@
 
 @media screen and (min-width: 85em) {
   .vertical-tabs__items--processed {
-    margin-left: 20em; /* LTR */
+    margin-left: var(--vertical-tabs-menu-width); /* LTR */
     border-top-left-radius: 0; /* LTR */
   }
 
   .js[dir="rtl"] .vertical-tabs__items--processed {
-    margin-right: 20em;
+    margin-right: var(--vertical-tabs-menu-width);
     margin-left: 0;
-    border-top-left-radius: 2px;
+    border-top-left-radius: var(--vertical-tabs-border-radius);
     border-top-right-radius: 0;
   }
 }
@@ -326,19 +511,19 @@
 
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
-  margin: -1px -1px 0;
+  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-border-size)*-1) 0;
   border-radius: 0;
 }
 
 .vertical-tabs__item--first {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-top-left-radius: var(--details-accordion-border-size-radius);
+  border-top-right-radius: var(--details-accordion-border-size-radius);
 }
 
 .vertical-tabs__item--last {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
+  margin-bottom: calc(var(--vertical-tabs-border-size)*-1);
+  border-bottom-right-radius: var(--details-accordion-border-size-radius);
+  border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
 @media screen and (min-width: 85em) {
