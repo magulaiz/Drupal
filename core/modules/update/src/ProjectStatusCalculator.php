@@ -11,18 +11,26 @@ class ProjectStatusCalculator {
 
 
   /**
+   * Project data from Drupal\update\UpdateManagerInterface::getProjects().
+   *
    * @var array
    */
   protected $projectData;
 
   /**
+   * The update server project information.
+   *
    * @var \Drupal\update\UpdateServerProjectInfo
    */
   protected $updateServerProjectInfo;
 
   /**
+   * Constructs a ProjectStatusCalculator object.
+   *
    * @param array $project_data
+   *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
    * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   *   The update server project information.
    */
   private function __construct(array $project_data, UpdateServerProjectInfo $projectInfo) {
     $this->projectData = $project_data;
@@ -33,20 +41,25 @@ class ProjectStatusCalculator {
    * Creates a ProjectStatusCalculator object.
    *
    * @param array $projectData
+   *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
    * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   *   The update server project information.
    *
    * @return \Drupal\update\ProjectStatusCalculator
+   *   The ProjectStatusCalculator instance.
    */
   public static function createFromProjectData(array $projectData, UpdateServerProjectInfo $projectInfo): ProjectStatusCalculator {
     return new ProjectStatusCalculator($projectData, $projectInfo);
   }
 
-  public function getStatus(): int {
-    $server_status = $this->updateServerProjectInfo->getProjectStatus();
-  }
-
+  /**
+   * Gets the develop release if any for the target major.
+   *
+   * @return array|null
+   *   The development release if available, otherwise NULL.
+   */
   public function getDevReleaseForTargetMajor(): ?array {
-    if (!$this->isProjectUsable()) {
+    if (!$this->isProjectRecommendable()) {
       return NULL;
     }
     $target_major = $this->getTargetMajor();
@@ -60,8 +73,14 @@ class ProjectStatusCalculator {
     return NULL;
   }
 
+  /**
+   * Gets the latest release if any for the target major.
+   *
+   * @return array|null
+   *   The latest release if available, otherwise NULL.
+   */
   public function getLatestReleaseForTargetMajor(): ?array {
-    if (!$this->isProjectUsable()) {
+    if (!$this->isProjectRecommendable()) {
       return NULL;
     }
     $target_major = $this->getTargetMajor();
@@ -73,8 +92,14 @@ class ProjectStatusCalculator {
     return NULL;
   }
 
+  /**
+   * Gets the recommended release for target major.
+   *
+   * @return array|null
+   *   The recommended release if available, otherwise NULL.
+   */
   public function getRecommendReleaseForTargetMajor(): ?array {
-    if (!$this->isProjectUsable()) {
+    if (!$this->isProjectRecommendable()) {
       return NULL;
     }
     $target_major = $this->getTargetMajor();
@@ -111,11 +136,13 @@ class ProjectStatusCalculator {
   }
 
   /**
+   * Gets releases that are majors greater than the target major.
+   *
    * @return array[]
-   *   An array of release key by major version.
+   *   An array of releases keyed by major version.
    */
   public function getReleasesInMajorsGreaterThanTarget(): array {
-    if (!$this->isProjectUsable()) {
+    if (!$this->isProjectRecommendable()) {
       return [];
     }
     $target_major = $this->getTargetMajor();
@@ -129,6 +156,12 @@ class ProjectStatusCalculator {
     return $releases;
   }
 
+  /**
+   * Gets the existing version if any.
+   *
+   * @return \Drupal\Core\Extension\ExtensionVersion|null
+   *   The existing version if available, otherwise NULL.
+   */
   private function getExistingVersion(): ?ExtensionVersion {
     if (isset($this->projectData['existing_version'])) {
       try {
@@ -141,14 +174,30 @@ class ProjectStatusCalculator {
     return NULL;
   }
 
-  private function getTargetMajor(): ?string  {
+  /**
+   * Gets the target major.
+   *
+   * If the project itself is valid, the function decides what major release
+   * series to consider. The project defines its currently supported branches in
+   * its Drupal.org for the project, so the first step is to make sure the
+   * development branch of the current version is still supported. If so, then
+   * the major version of the current version is used. If the current version is
+   * not in a supported branch, the next supported branch is used to determine
+   * the major version to use. There's also a check to make sure that this
+   * function never recommends an earlier release than the currently installed
+   * major version.
+   *
+   * @return string|null
+   *   The target major if available, otherwise NULL.
+   */
+  private function getTargetMajor(): ?string {
     $existing_version = $this->getExistingVersion();
     if (!$existing_version) {
       return NULL;
     }
     $existing_major = $existing_version->getMajorVersion();
     if (!empty($this->projectData['existing_version'])) {
-      if ($this->isInsupportedBranch($this->projectData['existing_version'])) {
+      if ($this->isInSupportedBranch($this->projectData['existing_version'])) {
         return $existing_major;
       }
     }
@@ -167,7 +216,16 @@ class ProjectStatusCalculator {
     return NULL;
   }
 
-  private function isInsupportedBranch(string $version) {
+  /**
+   * Determines if a version is a supported branch.
+   *
+   * @param string $version
+   *   The version.
+   *
+   * @return bool
+   *   TRUE if the version is supported branch of the project. otherwise false.
+   */
+  private function isInSupportedBranch(string $version) {
     foreach ($this->updateServerProjectInfo->getSupportBranches() as $supported_branch) {
       if (strpos($version, $supported_branch) === 0) {
         return TRUE;
@@ -176,15 +234,34 @@ class ProjectStatusCalculator {
     return FALSE;
   }
 
+  /**
+   * Determines if a release is installable.
+   *
+   * A release is considered installable if it is published, in a supported
+   * branch, is supported itself and is not insecure.
+   *
+   * @param \Drupal\update\ProjectRelease $release
+   *   The project release.
+   *
+   * @return bool
+   *   TRUE if the release is installable, otherwise FALSE.
+   */
   private function releaseIsInstallable(ProjectRelease $release): bool {
     return $release->isPublished() &&
-      $this->isInsupportedBranch($release->getVersion()) &&
+      $this->isInSupportedBranch($release->getVersion()) &&
       !$release->isUnsupported() &&
       !$release->isInsecure();
   }
 
+  /**
+   * Gets the security releases.
+   *
+   * @return array[]
+   *   An array where the keys are version numbers and values are arrays of
+   *   release information.
+   */
   public function getSecurityReleases(): array {
-    if (!$this->isProjectUsable()) {
+    if (!$this->isProjectRecommendable()) {
       return [];
     }
     $target_major = $this->getTargetMajor();
@@ -193,7 +270,8 @@ class ProjectStatusCalculator {
       $release_major_version = ExtensionVersion::createFromVersionString($version)->getMajorVersion();
       $release = ProjectRelease::createFromArray($release_info);
       if ($release_major_version > $target_major) {
-        // *** Original note about why we don't care about security releases in later majors.
+        // Original note about why we don't care about security releases in
+        // later majors:
         // Otherwise, this release can't matter to us, since it's neither
         // from the release series we're currently using nor the recommended
         // release. We don't even care about security updates for this
@@ -231,9 +309,9 @@ class ProjectStatusCalculator {
   }
 
   /**
-   * Gets all the instablable releases up to and including the existing version.
+   * Gets all the installable releases up to and including the existing version.
    *
-   * @return mixed[]
+   * @return array[]
    *   The releases.
    */
   private function getInstallableReleases(): array {
@@ -246,8 +324,9 @@ class ProjectStatusCalculator {
         $release = ProjectRelease::createFromArray($release_info);
       }
       catch (\UnexpectedValueException $exception) {
-        // Ignore releases that are in an invalid format. Although this is highly
-        // unlikely we should still process releases in the correct format.
+        // Ignore releases that are in an invalid format. Although this is
+        // highly unlikely we should still process releases in the correct
+        // format.
         watchdog_exception(
           'update',
           $exception,
@@ -274,11 +353,12 @@ class ProjectStatusCalculator {
   }
 
   /**
-   * Determines if we can recommend any thing in the project.
+   * Determines if we can recommend any release in the project.
    *
    * @return bool
+   *   TRUE if the project can have any release recommended, otherwise false.
    */
-  private function isProjectUsable() {
+  private function isProjectRecommendable() {
     $unusable_project_statuses = [
       'insecure',
       'unpublished',
@@ -295,6 +375,5 @@ class ProjectStatusCalculator {
     }
     return TRUE;
   }
-
 
 }
