@@ -34,6 +34,10 @@ class RouteSubscriber extends RouteSubscriberBase {
    */
   protected function alterRoutes(RouteCollection $collection) {
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
+      if (!$link_template = $entity_type->getLinkTemplate('permission-form')) {
+        continue;
+      }
+
       if (!$route_name = $entity_type->get('field_ui_base_route')) {
         continue;
       }
@@ -48,7 +52,7 @@ class RouteSubscriber extends RouteSubscriberBase {
       }
 
       $route = new Route(
-        $entity_route->getPath() . '/permissions',
+        $link_template,
         [
           '_title' => 'Manage permissions',
           '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',
