@@ -87,6 +87,7 @@ trait DeprecationListenerTrait {
       '%The "Drupal\\\\[^"]+" method will require a new "[^"]+" argument in the next major version of its interface "Drupal\\\\[^"]+", not defining it is deprecated%',
       // Symfony 5.4
       '%Method "Symfony\\\\Component\\\\Serializer\\\\Normalizer\\\\NormalizerInterface::normalize\(\)" might add "array\|string\|int\|float\|bool\|\\\\ArrayObject\|null" as a native return type declaration in the future. Do the same in implementation "(?!Drupal\\\\)[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%',
+      '%Method "Symfony\\\\[^"]+" might add "[^"]+" as a native return type declaration in the future. Do the same in (child class|implementation) "Drupal\\\\[^"]+" now to avoid errors or add an explicit @return annotation to suppress this message.%',
     ];
     return (bool) preg_filter($dynamic_skipped_deprecations, '$0', $message);
   }
@@ -112,16 +113,12 @@ trait DeprecationListenerTrait {
       // The following deprecation messages are skipped for testing purposes.
       '\Drupal\Tests\SkippedDeprecationTest deprecation',
       'Return type of PhpDeprecation::getIterator() should either be compatible with IteratorAggregate::getIterator(): Traversable, or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice',
-      // The following Symfony deprecations are introduced in the Symfony 4
-      // development cycle. They will need to be resolved prior to Symfony 5
+      // The following Symfony deprecations are introduced in the Symfony 5
+      // development cycle. They will need to be resolved prior to Symfony 6
       // compatibility.
-      'The "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\MimeTypes" instead.',
-      'The "Drupal\Core\File\MimeType\MimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.',
-      'The "Symfony\Component\HttpFoundation\File\MimeType\FileBinaryMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileBinaryMimeTypeGuesser" instead.',
-      'The "Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser" class is deprecated since Symfony 4.3, use "Symfony\Component\Mime\FileinfoMimeTypeGuesser" instead.',
-      'The "Drupal\Tests\Core\DependencyInjection\Compiler\LegacyMimeTypeGuesser" class implements "Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface" that is deprecated since Symfony 4.3, use {@link MimeTypesInterface} instead.',
-      'The "Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher::dispatch()" method will require a new "string|null $eventName" argument in the next major version of its interface "Symfony\Contracts\EventDispatcher\EventDispatcherInterface", not defining it is deprecated.',
-      'The "Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher::dispatch()" method will require a new "string|null $eventName" argument in the next major version of its parent class "Symfony\Contracts\EventDispatcher\EventDispatcherInterface", not defining it is deprecated.',
+      'Since symfony/http-foundation 5.1: Passing a non-scalar value as 2nd argument to "Symfony\Component\HttpFoundation\InputBag::get()" is deprecated, pass a scalar or null instead.',
+      'Since symfony/http-foundation 5.1: Retrieving a non-string value from "Symfony\Component\HttpFoundation\InputBag::get()" is deprecated, and will throw a "Symfony\Component\HttpFoundation\Exception\BadRequestException" exception in Symfony 6.0, use "Symfony\Component\HttpFoundation\InputBag::all($key)" instead.',
+      'Since symfony/validator 5.2: The "allowEmptyString" option of the "Symfony\Component\Validator\Constraints\Length" constraint is deprecated.',
       // The following deprecation is listed for Twig 2 compatibility when unit
       // testing using \Symfony\Component\ErrorHandler\DebugClassLoader.
       'The "Twig\Environment::getTemplateClass()" method is considered internal. It may change without further notice. You should not extend it from "Drupal\Core\Template\TwigEnvironment".',
