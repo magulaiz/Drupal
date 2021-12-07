@@ -328,34 +328,27 @@ function update_calculate_project_update_status(&$project_data, $available) {
       $project_data['releases'][$version] = $newer_release;
     }
   }
-  // First, if this is the existing release, check a few conditions.
-  if (isset($available['releases'][$project_data['existing_version']])) {
-    $existing_release = ProjectRelease::createFromArray($available['releases'][$project_data['existing_version']]);
-    if ($existing_release->isInsecure()) {
-      $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
+
+  $project_data['status'] = $status_calculator->getStatus();
+  if ($project_data['status'] === UpdateManagerInterface::REVOKED) {
+    if (empty($project_data['extra'])) {
+      $project_data['extra'] = [];
     }
-    elseif (!$existing_release->isPublished()) {
-      $project_data['status'] = UpdateManagerInterface::REVOKED;
-      if (empty($project_data['extra'])) {
-        $project_data['extra'] = [];
-      }
-      $project_data['extra'][] = [
-        'class' => ['release-revoked'],
-        'label' => t('Release revoked'),
-        'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-      ];
+    $project_data['extra'][] = [
+      'class' => ['release-revoked'],
+      'label' => t('Release revoked'),
+      'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+    ];
+  }
+  elseif ($project_data['status'] === UpdateManagerInterface::NOT_SUPPORTED) {
+    if (empty($project_data['extra'])) {
+      $project_data['extra'] = [];
     }
-    elseif ($existing_release->isUnsupported()) {
-      $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
-      if (empty($project_data['extra'])) {
-        $project_data['extra'] = [];
-      }
-      $project_data['extra'][] = [
-        'class' => ['release-not-supported'],
-        'label' => t('Release not supported'),
-        'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-      ];
-    }
+    $project_data['extra'][] = [
+      'class' => ['release-not-supported'],
+      'label' => t('Release not supported'),
+      'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+    ];
   }
 
   if (isset($project_data['status'])) {
