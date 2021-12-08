@@ -10,7 +10,20 @@
  * Content below region layout.
  */
 
-@media (--md) {
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+@media (min-width: 43.75rem) {
 
 .region--content-below {
     display: flex;
@@ -42,7 +55,7 @@
 }
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
     .region--content-below > * {
       flex-basis: calc(33.33% - var(--grid-gap--md)*0.667)
     }

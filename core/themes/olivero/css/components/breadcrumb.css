@@ -10,6 +10,19 @@
  * Breadcrumb region.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .breadcrumb {
   position: relative;
   font-size: 0.875rem;
@@ -36,14 +49,14 @@
     background: linear-gradient(to left, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%) /* LTR */
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .breadcrumb:after {
       content: none
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .breadcrumb {
     position: static
@@ -87,7 +100,7 @@
   -webkit-overflow-scrolling: touch
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .breadcrumb__content {
     margin-right: 0
@@ -141,7 +154,7 @@
   white-space: nowrap
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .breadcrumb__list {
     margin-left: 0
@@ -213,7 +226,7 @@
     margin-left: var(--sp3)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .breadcrumb__item:last-child {
       margin-right: 0

@@ -10,6 +10,19 @@
  * Node specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .node__meta {
   display: flex;
   align-items: center;
@@ -23,7 +36,7 @@
     font-weight: bold;
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .node__meta {
     margin-bottom: var(--sp2)
@@ -70,7 +83,7 @@
   padding-bottom: var(--sp1-5)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node__content {
     padding-bottom: var(--sp3)

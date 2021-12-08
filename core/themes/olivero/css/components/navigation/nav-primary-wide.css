@@ -10,7 +10,20 @@
  * Nav Primary (wide widths).
  */
 
-@media (--nav) {
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
+@media (min-width: 75rem) {
     body:not(.is-always-mobile-nav) .primary-nav__menu-item {
       flex-wrap: nowrap /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
     }
@@ -310,7 +323,7 @@ body:not(.is-always-mobile-nav) {
  * menus will never overflow viewport.
  */
 
-@media (--nav) {
+@media (min-width: 75rem) {
   body:not(.is-always-mobile-nav) {
     /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
   }
@@ -339,14 +352,14 @@ body:not(.is-always-mobile-nav) {
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
 
-@media (--nav) {
+@media (min-width: 75rem) {
     html.js body:not(.is-always-mobile-nav) .primary-nav__menu--level-2,
     html.js body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
       transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
     }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
         [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner:after {
           transform-origin: right;
         }

@@ -10,6 +10,19 @@
  * Provides the layout styles for four-column layout section.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .layout--fourcol-section {
   display: flex;
   flex-wrap: wrap
@@ -20,7 +33,7 @@
     margin-bottom: var(--grid-gap)
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .layout--fourcol-section > .layout__region {
       flex-basis: calc(50% - var(--grid-gap--md)*0.5);
@@ -35,7 +48,7 @@
   /* Two column layout. */
 }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
     .layout--fourcol-section > .layout__region--first,
     .layout--fourcol-section > .layout__region--second {
       margin-bottom: var(--grid-gap--md);
@@ -67,7 +80,7 @@
   /* Four column layout. */
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
     .layout--fourcol-section > .layout__region {
       flex-basis: calc(25% - var(--grid-gap--md)*0.75);
     }

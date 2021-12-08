@@ -10,6 +10,19 @@
  * Styles for primary navigation when JavaScript is disabled.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 :root {
   --no-js-nav-column-width: 18.75rem;
   --no-js-nav-column-gap: var(--sp2);
@@ -21,7 +34,7 @@ html:not(.js) {
    */
 }
 
-@media (--max-nav) {
+@media (max-width: 75rem) {
     html:not(.js) .primary-nav__menu--level-1 {
       column-width: var(--no-js-nav-column-width);
       grid-column-gap: var(--no-js-nav-column-gap);
@@ -104,7 +117,7 @@ html:not(.js) {
       }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 html:not(.js) {
     /**

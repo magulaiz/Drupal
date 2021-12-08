@@ -10,6 +10,19 @@
  * Nav Button Mobile.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .mobile-nav-button {
   margin-left: auto
 }
@@ -68,7 +81,7 @@
     color: inherit; /* Override Safari's default UA styles. */
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button {
     padding-left: var(--sp)
@@ -96,7 +109,7 @@
   word-wrap: normal
 }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .mobile-nav-button__label {
     margin-right: 0.75rem

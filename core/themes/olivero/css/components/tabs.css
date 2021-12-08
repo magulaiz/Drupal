@@ -5,6 +5,19 @@
  * @preserve
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 :root {
   --tab-active-border-size: 0.375rem;
 }
@@ -52,7 +65,7 @@
   list-style: none
 }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .tabs {
     flex-direction: row;
@@ -70,7 +83,7 @@
     display: flex;
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .tabs__tab {
     display: flex;
@@ -88,7 +101,7 @@ html:not(.js) .tabs__tab,
   display: block
 }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .tabs--secondary .tabs__tab {
     display: flex
@@ -131,7 +144,7 @@ html:not(.js) .tabs__tab,
   text-transform: none
 }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .tabs--secondary .tabs__link {
     border-top-color: transparent;
@@ -180,7 +193,7 @@ html:not(.js) .tabs__tab,
     content: "";
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
     [dir="ltr"] .tabs__link.is-active:after {
       left: 0;
   }
@@ -238,7 +251,7 @@ html:not(.js) .tabs__tab,
     outline: none;
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .tabs__trigger {
     display: none

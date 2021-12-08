@@ -10,6 +10,19 @@
  * Node Teaser specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */
   margin-bottom: var(--sp1-5)
@@ -41,7 +54,7 @@
     margin: 0
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__top-wrapper {
       position: relative /* Anchor the image */
@@ -68,7 +81,7 @@
       flex-basis: calc(100% - var(--sp)*4.5)
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .primary-image + .node__title {
         flex-basis: auto
@@ -86,7 +99,7 @@
       border-radius: 50%
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .primary-image img {
         width: var(--grid-col-width--lg);
@@ -94,7 +107,7 @@
     }
       }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .node--view-mode-teaser .primary-image img {
         width: var(--grid-col-width--nav);
@@ -102,7 +115,7 @@
     }
       }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 .node--view-mode-teaser .primary-image img {
         width: var(--grid-col-width--max);
@@ -110,7 +123,7 @@
     }
       }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
       left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
@@ -127,7 +140,7 @@
   }
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
       left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
@@ -138,7 +151,7 @@
   }
     }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .node--view-mode-teaser .primary-image {
       left: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
@@ -157,7 +170,7 @@
     line-height: var(--line-height-base)
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .node__title {
       font-size: var(--sp2);
@@ -205,14 +218,14 @@
     background-color: transparent
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser .field--tag-ref {
       margin-top: var(--sp2)
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .node--view-mode-teaser {
     margin-bottom: var(--sp3)

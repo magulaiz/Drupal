@@ -10,6 +10,19 @@
  * Embedded Media.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 figure {
   background: var(--color--gray-95);
 }
@@ -41,7 +54,7 @@ figcaption {
   line-height: var(--sp)
 }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] figcaption {
     padding-left: var(--sp);
@@ -88,7 +101,7 @@ figcaption {
   margin-bottom: var(--sp3)
 }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .align-right {
     float: right;
@@ -123,7 +136,7 @@ figcaption {
 
 /* Pull out of grid if nested in content narrow layout. */
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -136,7 +149,7 @@ figcaption {
   }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -149,7 +162,7 @@ figcaption {
   }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -162,7 +175,7 @@ figcaption {
   }
   }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .align-right,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-right {
@@ -198,7 +211,7 @@ figcaption {
   margin-bottom: var(--sp3)
 }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .align-left {
     float: left;
@@ -233,7 +246,7 @@ figcaption {
 
 /* Pull out of grid if nested in content narrow layout. */
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
@@ -246,7 +259,7 @@ figcaption {
   }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
@@ -259,7 +272,7 @@ figcaption {
   }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {
@@ -272,7 +285,7 @@ figcaption {
   }
   }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .align-left,[dir="ltr"] 
 .layout--pass--content-narrow > * .align-left {

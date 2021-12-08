@@ -10,6 +10,19 @@
  * Search results specific styles.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .search-results {
   padding-left: 0
 }
@@ -33,7 +46,7 @@
   list-style: none
 }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .search-results {
     margin-bottom: var(--sp3)
@@ -79,7 +92,7 @@
       color: var(--color--blue-20);
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .search-result__title {
     margin-bottom: var(--sp1);
@@ -96,7 +109,7 @@
   padding-bottom: calc(var(--sp1-5) - 2px)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .search-result__snippet {
     padding-bottom: var(--sp3)
@@ -136,7 +149,7 @@
     margin-bottom: 0;
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .search-results__item {
     margin-bottom: var(--sp3)

@@ -10,6 +10,19 @@
  * Header Search Wide Block.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 /* Override contextual links so we can position against .site-header. */
 
 .block-search-wide.contextual-region {
@@ -436,7 +449,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
     transform-origin: right;
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body:not(.is-always-mobile-nav) .block-search-wide__wrapper,
   body:not(.is-always-mobile-nav) .block-search-wide__button {

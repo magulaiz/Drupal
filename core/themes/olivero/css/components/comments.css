@@ -10,6 +10,19 @@
  * Comment section and individual comments.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);
@@ -127,7 +140,7 @@
   padding-top: var(--sp2)
 }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .comment {
     padding-left: 0;
@@ -224,7 +237,7 @@
   }
     }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .add-comment__picture,[dir="ltr"] 
 .comment__picture {
@@ -243,7 +256,7 @@
 }
   }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented .comment__picture {
     left: calc(var(--sp4)*-1);
@@ -322,7 +335,7 @@
     content: ""
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented > .comment:not(:last-of-type):not(.has-children):before {
       left: calc(var(--comment-indentation--md)*-1 + var(--sp));
@@ -333,7 +346,7 @@
   }
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .indented {
     margin-left: var(--comment-indentation--md);
@@ -401,7 +414,7 @@
     content: "\0020 +";
   }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .show-hide-btn {
     margin-left: 0;

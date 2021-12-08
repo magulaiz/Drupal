@@ -10,6 +10,19 @@
  * Button that expands second level nav when clicked.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .primary-nav__button-toggle {
   padding-left: 0
 }
@@ -94,7 +107,7 @@
     pointer-events: none;
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
     [dir="ltr"] body:not(.is-always-mobile-nav) .primary-nav__button-toggle {
       margin-right: calc(var(--sp2)*-1)
   }

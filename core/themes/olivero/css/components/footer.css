@@ -10,6 +10,19 @@
  * Footer regions.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .site-footer {
   position: relative; /* stack above left social bar */
   color: var(--color--gray-50);
@@ -48,7 +61,7 @@
       text-decoration: none;
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
   [dir="ltr"] body:not(.is-always-mobile-nav) .site-footer {
     border-left: solid var(--content-left) var(--color--black)
   }

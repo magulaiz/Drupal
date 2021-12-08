@@ -10,6 +10,19 @@
  * Responsive styles for views grid horizontal layout.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 :root {
   --views-grid-layout-gap: var(--sp);
 }
@@ -45,7 +58,7 @@
       /* 2 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-2 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -82,7 +95,7 @@
       /* 2 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-3 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -110,7 +123,7 @@
       /* 3 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-3 > * {
         flex-basis: calc(33.33333% - var(--views-grid-layout-gap)*0.66667)
@@ -147,7 +160,7 @@
       /* 2 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-4 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -175,7 +188,7 @@
       /* 4 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-4 > * {
         flex-basis: calc(25% - var(--views-grid-layout-gap)*0.75)
@@ -212,7 +225,7 @@
       /* 2 column layout. */
     }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-5 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -240,7 +253,7 @@
       /* 3 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .views-view-grid--horizontal.cols-5 > * {
         flex-basis: calc(33.33333% - var(--views-grid-layout-gap)*0.66667)
@@ -268,7 +281,7 @@
       /* 5 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-5 > * {
         flex-basis: calc(20% - var(--views-grid-layout-gap)*0.8)
@@ -305,7 +318,7 @@
       /* 2 column layout. */
     }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-6 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -333,7 +346,7 @@
       /* 3 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .views-view-grid--horizontal.cols-6 > * {
         flex-basis: calc(33.33333% - var(--views-grid-layout-gap)*0.66667)
@@ -361,7 +374,7 @@
       /* 6 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-6 > * {
         flex-basis: calc(16.66667% - var(--views-grid-layout-gap)*0.83333)
@@ -398,7 +411,7 @@
       /* 2 column layout. */
     }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-7 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -426,7 +439,7 @@
       /* 3 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .views-view-grid--horizontal.cols-7 > * {
         flex-basis: calc(33.33333% - var(--views-grid-layout-gap)*0.66667)
@@ -454,7 +467,7 @@
       /* 7 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-7 > * {
         flex-basis: calc(14.28571% - var(--views-grid-layout-gap)*0.85714)
@@ -491,7 +504,7 @@
       /* 2 column layout. */
     }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .views-view-grid--horizontal.cols-8 > * {
         margin-right: var(--views-grid-layout-gap);
@@ -519,7 +532,7 @@
       /* 4 column layout. */
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .views-view-grid--horizontal.cols-8 > * {
         flex-basis: calc(25% - var(--views-grid-layout-gap)*0.75)
@@ -547,7 +560,7 @@
       /* 8 column layout. */
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .views-view-grid--horizontal.cols-8 > * {
         flex-basis: calc(12.5% - var(--views-grid-layout-gap)*0.875)

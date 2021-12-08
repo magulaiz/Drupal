@@ -10,20 +10,33 @@
  * Special grid system for sidebar.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .sidebar-grid > .site-main {
     grid-column: 1 / 7;
     align-self: flex-start;
     -ms-grid-row-align: start
   }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .sidebar-grid > .site-main {
       grid-column: 1 / 15
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .sidebar-grid > .site-main {
       display: grid;
@@ -50,14 +63,14 @@
     grid-column: 1 / 7
   }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .sidebar-grid .region--sidebar {
       grid-column: 3 / 13
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .sidebar-grid .region--sidebar {
       -ms-grid-row: 1;

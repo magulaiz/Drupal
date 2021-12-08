@@ -13,11 +13,24 @@
  * toggles fixing the header to the top of the viewport.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .sticky-header-toggle {
   display: none
 }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .sticky-header-toggle {
     display: flex;
@@ -42,14 +55,14 @@
     }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body:not(.is-always-mobile-nav) .is-fixed .sticky-header-toggle {
     visibility: visible
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body.is-always-mobile-nav .sticky-header-toggle {
     visibility: hidden

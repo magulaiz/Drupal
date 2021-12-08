@@ -10,11 +10,24 @@
  * Button which expands the navigation at wide viewport widths.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .wide-nav-expand {
   display: none
 }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .wide-nav-expand {
     display: flex;
@@ -37,14 +50,14 @@
     }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
     visibility: visible
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body.is-always-mobile-nav .wide-nav-expand {
     visibility: hidden

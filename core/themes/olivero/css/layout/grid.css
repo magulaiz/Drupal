@@ -10,6 +10,19 @@
  * Grid system.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .grid-full {
   display: grid;
   grid-template-rows: 1fr;
@@ -23,7 +36,7 @@
     display: block;
   }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .grid-full {
     grid-template-columns: repeat(var(--grid-col-count--md), minmax(0, 1fr));
@@ -37,7 +50,7 @@
     - Element that's inheriting the layout--content-narrow styles from its parent region.
 */
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
@@ -45,7 +58,7 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .layout--content-narrow .grid-full,
 .layout--pass--content-narrow > * .grid-full {
@@ -59,7 +72,7 @@
     - Element that's inheriting the layout--content-medium styles from its parent region.
 */
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {
@@ -67,7 +80,7 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .layout--content-medium .grid-full,
 .layout--pass--content-medium > * .grid-full {

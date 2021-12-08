@@ -10,6 +10,19 @@
  * Text input elements.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [type="color"],
 [type="date"],
 [type="datetime-local"],
@@ -77,7 +90,7 @@ textarea {
     min-height: var(--sp2-5);
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [type="color"],
 [type="date"],

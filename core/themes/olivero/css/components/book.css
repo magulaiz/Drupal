@@ -10,6 +10,19 @@
  * Book module styling.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .book-pager {
   margin-left: 0;
 }
@@ -56,21 +69,21 @@
   display: inline-block
 }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .book-pager__item {
     flex: 0 0 33.33%
 }
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .book-pager__item--center {
     text-align: center
 }
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 [dir="ltr"] .book-pager__item--next {
     margin-left: auto;

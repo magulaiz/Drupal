@@ -10,12 +10,25 @@
  * Vertical Tabs.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 :root {
   --vertical-tabs-menu-width: 15rem;
   --vertical-tabs-menu-border-width: 1px;
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs {
     display: flex
@@ -48,7 +61,7 @@
   border-color: var(--color--gray-80)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__menu {
     width: var(--vertical-tabs-menu-width);
@@ -60,7 +73,7 @@
   margin-top: calc(var(--vertical-tabs-menu-border-width)*-1)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__panes {
     width: calc(100% - var(--vertical-tabs-menu-width));
@@ -68,7 +81,7 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .vertical-tabs__pane {
     min-height: 100%
@@ -124,7 +137,7 @@
   background-color: var(--color--white)
 }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .vertical-tabs__menu-item.is-selected {
     margin-right: calc(var(--vertical-tabs-menu-border-width)*-1);

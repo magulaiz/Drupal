@@ -10,6 +10,19 @@
  * Header Search Narrow Block.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .block-search-narrow {
   margin-left: calc(var(--sp)*-1);
   margin-right: calc(var(--sp)*-1);
@@ -88,7 +101,7 @@
     }
       }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .block-search-narrow input[type="search"] {
       padding-left: var(--sp2)
@@ -225,7 +238,7 @@
         }
       }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .block-search-narrow .search-form__submit {
       width: 5rem
@@ -279,7 +292,7 @@
   }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body:not(.is-always-mobile-nav) .block-search-narrow {
     display: none

@@ -5,11 +5,6 @@
  * @preserve
  */
 
-/**
- * @file
- * Styles for views.
- */
-
 /*
  * Media query breakpoints.
  * Processed by postcss/postcss-custom-media.
@@ -22,18 +17,3 @@
 /* Grid shifts from 6 to 14 columns. */
 
 /* Width of the entire grid maxes out. */
-
-.view > * {
-    margin-bottom: var(--sp2)
-  }
-
-.view > *:last-child {
-      margin-bottom: 0;
-    }
-
-@media (min-width: 43.75rem) {
-
-.view > * {
-      margin-bottom: var(--sp3)
-  }
-    }

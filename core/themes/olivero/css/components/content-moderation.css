@@ -10,6 +10,19 @@
  * Styles for content moderation toolbar.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .entity-moderation-form {
   padding-left: var(--sp)
 }
@@ -37,7 +50,7 @@
     background-color: var(--color--white);
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .entity-moderation-form {
     flex-direction: row
@@ -68,7 +81,7 @@
     align-self: flex-start
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .entity-moderation-form__item:last-child {
       align-self: flex-end
@@ -94,7 +107,7 @@
   }
     }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
       margin-left: calc(var(--grid-col-width--md)*-2 + var(--grid-gap--md)*-2)
@@ -111,7 +124,7 @@
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
       margin-left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
@@ -126,7 +139,7 @@
   }
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
       margin-left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
@@ -141,7 +154,7 @@
   }
     }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .layout--content-narrow .entity-moderation-form,[dir="ltr"]  .layout--pass--content-narrow > * .entity-moderation-form,[dir="ltr"]  .layout--content-medium .entity-moderation-form,[dir="ltr"]  .layout--pass--content-medium > * .entity-moderation-form {
       margin-left: 0

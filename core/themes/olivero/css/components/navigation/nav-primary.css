@@ -10,6 +10,19 @@
  * Nav Primary.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .primary-nav__menu {
   flex-wrap: wrap;
   list-style: none;
@@ -296,7 +309,7 @@
     opacity: 1;
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .primary-nav__menu--level-2 {
     margin-left: calc(var(--sp3)*-1);

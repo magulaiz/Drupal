@@ -10,6 +10,19 @@
  * Wide image component.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .wide-image {
   margin-left: 0
 }
@@ -31,7 +44,7 @@
   margin-bottom: var(--sp2)
 }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .wide-image {
     margin-left: calc(var(--grid-col-width--md)*-1 + var(--grid-gap--md)*-1)
@@ -48,7 +61,7 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 [dir="ltr"] .wide-image {
     margin-left: calc(var(--grid-col-width--lg)*-1 + var(--grid-gap--lg)*-1)
@@ -63,7 +76,7 @@
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .wide-image {
     margin-left: calc(var(--grid-col-width--nav)*-1 + var(--grid-gap--nav)*-1)
@@ -78,7 +91,7 @@
 }
   }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] .wide-image {
     margin-left: calc(var(--grid-col-width--max)*-1 + var(--grid-gap--max)*-1)
@@ -95,28 +108,28 @@
 
 /* Ensure that image doesn't overlap sidebar. */
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .sidebar-grid .wide-image {
     width: calc(var(--grid-col-width--lg)*9 + var(--grid-gap--lg)*8)
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .sidebar-grid .wide-image {
     width: calc(var(--grid-col-width--nav)*9 + var(--grid-gap--nav)*8)
 }
   }
 
-@media (--xl) {
+@media (min-width: 81.25rem) {
 
 .sidebar-grid .wide-image {
     width: calc(var(--grid-col-width--nav)*10 + var(--grid-gap--nav)*9)
 }
   }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 .sidebar-grid .wide-image {
     width: calc(var(--grid-col-width--max)*10 + var(--grid-gap--max)*9)

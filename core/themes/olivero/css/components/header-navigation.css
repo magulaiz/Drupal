@@ -10,6 +10,19 @@
  * Navigation in header.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .header-nav {
   left: 100%
 }
@@ -66,14 +79,14 @@
 }
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .header-nav {
     border-top-width: var(--sp5)
 }
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 [dir="ltr"] .header-nav {
     padding-left: var(--sp3)
@@ -89,7 +102,7 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .header-nav {
     grid-column: 5 / 14
@@ -111,7 +124,7 @@ body.toolbar-vertical .header-nav {
   border-top-width: calc(var(--toolbar-height) + var(--sp3))
 }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 body.toolbar-vertical .header-nav {
     border-top-width: calc(var(--toolbar-height) + var(--sp5))
@@ -120,7 +133,7 @@ body.toolbar-vertical .header-nav {
 
 /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 body.toolbar-vertical .header-nav,
 body.toolbar-horizontal.toolbar-fixed .header-nav {
@@ -130,14 +143,14 @@ body.toolbar-horizontal.toolbar-fixed .header-nav {
 
 /* Toolbar is horizontal fixed, and tray is open. */
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 body.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .header-nav {
     border-top-width: calc(var(--toolbar-height) + var(--toolbar-tray-height) + var(--sp7))
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] body:not(.is-always-mobile-nav) .header-nav {
     padding-left: 0
@@ -179,7 +192,7 @@ body.is-always-mobile-nav {
   /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
 }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body.is-always-mobile-nav.toolbar-vertical .header-nav,
   body.is-always-mobile-nav.toolbar-horizontal.toolbar-fixed .header-nav {
@@ -192,14 +205,14 @@ body.is-always-mobile-nav {
   /* Toolbar is horizontal fixed, and tray is open. */
 }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 body.is-always-mobile-nav.toolbar-horizontal.toolbar-fixed.toolbar-tray-open .header-nav {
       border-top-width: calc(var(--toolbar-height) + var(--toolbar-tray-height) + var(--sp11))
   }
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] body.is-always-mobile-nav .header-nav {
       padding-right: var(--sp)
@@ -217,7 +230,7 @@ body.is-always-mobile-nav .header-nav {
   }
     }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 [dir="ltr"] body.is-always-mobile-nav .header-nav {
       padding-right: calc(100vw - var(--max-width) - var(--content-left) + var(--sp))

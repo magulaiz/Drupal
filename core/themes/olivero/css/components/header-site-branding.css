@@ -10,6 +10,19 @@
  * Site branding in header.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 [dir="ltr"] .site-branding {
   margin-left: calc(var(--container-padding)*-1);
   margin-right: var(--sp)
@@ -49,14 +62,14 @@
   background-image: linear-gradient(160deg, var(--color--blue-50) 0%, #0d7ab8 78.66%)
 }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .site-branding {
     min-height: var(--sp4)
 }
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .site-branding {
     min-height: var(--sp6);
@@ -64,14 +77,14 @@
 }
   }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .site-branding {
     min-width: calc(var(--grid-col-width--lg)*2 + var(--grid-gap--lg)*2 + var(--container-padding))
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .site-branding {
     margin-left: calc(var(--container-padding-nav)*-1)
@@ -105,7 +118,7 @@
 }
   }
 
-@media (--grid-max) {
+@media (min-width: 90rem) {
 
 .site-branding {
     min-width: calc(var(--grid-col-width--max)*2 + var(--grid-gap--max)*2 + var(--container-padding-nav))
@@ -133,7 +146,7 @@
     text-decoration: none;
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 [dir="ltr"] .site-branding__inner {
     padding-left: 0
@@ -169,21 +182,21 @@
     max-height: var(--sp2)
   }
 
-@media (--sm) {
+@media (min-width: 31.25rem) {
 
 .site-branding__logo img {
       max-height: var(--sp3)
   }
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .site-branding__logo img {
       max-height: var(--sp4)
   }
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .site-branding__logo img {
       max-height: calc(var(--header-height-wide-when-fixed) - var(--sp))
@@ -200,7 +213,7 @@
     color: inherit;
   }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .site-branding__text {
     font-size: 1.75rem;
@@ -208,7 +221,7 @@
 }
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .site-branding__text {
     letter-spacing: 0.02em;

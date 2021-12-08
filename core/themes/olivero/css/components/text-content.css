@@ -10,6 +10,19 @@
  * Text Content.
  */
 
+/*
+ * Media query breakpoints.
+ * Processed by postcss/postcss-custom-media.
+ */
+
+/* Navigation related breakpoints */
+
+/* Grid related breakpoints */
+
+/* Grid shifts from 6 to 14 columns. */
+
+/* Width of the entire grid maxes out. */
+
 .text-content,
 .cke_editable {
   color: var(--color--gray-10);
@@ -66,7 +79,7 @@
       margin-bottom: 0;
     }
 
-@media (--md) {
+@media (min-width: 43.75rem) {
 
 .text-content p, .cke_editable p {
       margin-top: var(--sp2);
@@ -177,7 +190,7 @@
       background: var(--color--gray-95);
     }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2rem;
@@ -185,7 +198,7 @@
   }
     }
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .text-content blockquote, .cke_editable blockquote {
       font-size: 2.5rem;
@@ -193,7 +206,7 @@
   }
     }
 
-@media (--grid-md) {
+@media (min-width: 43.75rem) {
 
 .text-content,
 .cke_editable {
@@ -230,7 +243,7 @@
  * Decrease font-size for blockquote placed in sidebar region.
  */
 
-@media (--lg) {
+@media (min-width: 62.5rem) {
 
 .region--sidebar .text-content blockquote {
     font-size: 1.5rem;
