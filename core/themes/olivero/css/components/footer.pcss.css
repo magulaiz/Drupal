@@ -3,8 +3,6 @@
  * Footer regions.
  */
 
-@import "../base/variables.pcss.css";
-
 .site-footer {
   position: relative; /* stack above left social bar */
   color: var(--color--gray-50);

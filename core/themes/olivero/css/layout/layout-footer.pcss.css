@@ -3,8 +3,6 @@
  * Grid system definition for the footer top and footer bottom layouts.
  */
 
-@import "../base/variables.pcss.css";
-
 .site-footer__inner {
   padding-block: var(--sp2);
 

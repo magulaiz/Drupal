@@ -3,8 +3,6 @@
  * Base Layout.
  */
 
-@import "../base/variables.pcss.css";
-
 .container {
   width: 100%;
   max-width: var(--max-width);

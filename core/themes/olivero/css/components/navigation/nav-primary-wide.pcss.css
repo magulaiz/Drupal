@@ -3,8 +3,6 @@
  * Nav Primary (wide widths).
  */
 
-@import "../../base/variables.pcss.css";
-
 body:not(.is-always-mobile-nav) {
   @media (--nav) {
     & .primary-nav__menu-item {

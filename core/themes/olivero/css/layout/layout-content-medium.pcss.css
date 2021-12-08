@@ -3,8 +3,6 @@
  * Grid system definition for the content wide layout.
  */
 
-@import "../base/variables.pcss.css";
-
 .layout--content-medium,
 .layout--pass--content-medium > * {
   grid-column: 1 / 7;

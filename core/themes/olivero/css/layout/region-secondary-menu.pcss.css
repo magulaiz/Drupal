@@ -3,8 +3,6 @@
  * Secondary menu region layout styling.
  */
 
-@import "../base/variables.pcss.css";
-
 .region--secondary-menu {
   display: flex;
   margin-block-start: var(--sp2);

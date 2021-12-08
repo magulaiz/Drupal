@@ -3,8 +3,6 @@
  * Buttons.
  */
 
-@import "../base/variables.pcss.css";
-
 .button {
   display: inline-block;
   height: var(--sp3);

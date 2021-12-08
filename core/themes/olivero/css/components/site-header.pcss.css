@@ -3,8 +3,6 @@
  * Site header.
  */
 
-@import "../base/variables.pcss.css";
-
 .site-header {
   position: relative;
 

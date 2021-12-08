@@ -3,8 +3,6 @@
  * Provides default layout styles for all layout sections.
  */
 
-@import "../base/variables.pcss.css";
-
 .layout {
   margin-block-end: var(--sp);
 
