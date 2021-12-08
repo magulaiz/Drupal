@@ -50,7 +50,7 @@ class UpdateSemverContribTest extends UpdateSemverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function standardTests() {
+  protected function standardTests(): void {
     parent::standardTests();
     // Ensure we are always testing with the same version of Drupal Core.
     $core_update_table_selector = 'table.update:nth-of-type(1)';
