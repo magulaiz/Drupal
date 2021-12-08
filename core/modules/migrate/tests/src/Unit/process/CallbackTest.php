@@ -35,9 +35,9 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test callback with valid "callable" and null value.
+   * Test callback with valid "callable" and no arguments.
    *
-   * @dataProvider providerCallbackNullValue
+   * @dataProvider providerCallbackNoArgs
    */
   public function testCallbackNullValue($callable) {
     $configuration = ['callable' => $callable, 'no_args' => TRUE];
@@ -47,9 +47,9 @@ class CallbackTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Data provider for ::testCallbackNullValue().
+   * Data provider for ::testCallbackNoArgs().
    */
-  public function providerCallbackNullValue() {
+  public function providerCallbackNoArgs() {
     return [
       'function' => ['pi'],
       'class method' => [[self::class, 'pi']],
@@ -155,7 +155,7 @@ class CallbackTest extends MigrateProcessTestCase {
    * @return float
    *   The approximation of pi.
    *
-   * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallbackNullValue()
+   * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallbackNoArgs()
    */
   public static function pi() {
     return pi();
