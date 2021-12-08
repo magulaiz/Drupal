@@ -3,6 +3,8 @@
  * Book module styling.
  */
 
+@import "../base/variables.pcss.css";
+
 .book-pager {
   display: flex;
   flex-wrap: wrap;

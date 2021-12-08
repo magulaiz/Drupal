@@ -3,6 +3,8 @@
  * Text input elements.
  */
 
+@import "../base/variables.pcss.css";
+
 [type="color"],
 [type="date"],
 [type="datetime-local"],

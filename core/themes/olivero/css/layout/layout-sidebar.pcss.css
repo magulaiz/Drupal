@@ -3,6 +3,8 @@
  * Special grid system for sidebar.
  */
 
+@import "../base/variables.pcss.css";
+
 .sidebar-grid {
   & > .site-main {
     grid-column: 1 / 7;

@@ -3,6 +3,8 @@
  * Progress bar specific styles.
  */
 
+@import "../base/variables.pcss.css";
+
 .progress__track {
   overflow: hidden;
   height: var(--sp);

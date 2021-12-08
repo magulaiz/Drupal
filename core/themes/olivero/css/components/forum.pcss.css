@@ -3,6 +3,8 @@
  * Forum specific styles.
  */
 
+@import "../base/variables.pcss.css";
+
 .forum {
   & table {
     width: 100%;

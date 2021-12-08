@@ -3,6 +3,8 @@
  * Button which expands the navigation at wide viewport widths.
  */
 
+@import "../../base/variables.pcss.css";
+
 .wide-nav-expand {
   display: none;
 

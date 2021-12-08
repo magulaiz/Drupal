@@ -3,6 +3,8 @@
  * Checkbox and radio input elements.
  */
 
+@import "../base/variables.pcss.css";
+
 input[type="checkbox"],
 input[type="radio"] {
   display: inline-block;

@@ -3,6 +3,8 @@
  * Secondary navigation styling.
  */
 
+@import "../../base/variables.pcss.css";
+
 .secondary-nav {
   letter-spacing: 0.02em;
   font-size: var(--font-size-s);

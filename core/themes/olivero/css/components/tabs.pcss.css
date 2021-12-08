@@ -1,3 +1,5 @@
+@import "../base/variables.pcss.css";
+
 :root {
   --tab-active-border-size: 6px;
 }

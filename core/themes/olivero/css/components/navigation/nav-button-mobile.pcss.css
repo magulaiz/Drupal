@@ -3,6 +3,8 @@
  * Nav Button Mobile.
  */
 
+@import "../../base/variables.pcss.css";
+
 .mobile-nav-button {
   position: relative;
   z-index: 110; /* Appear above mobile nav. */

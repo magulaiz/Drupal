@@ -3,6 +3,8 @@
  * Settings tray specific styles.
  */
 
+@import "../base/variables.pcss.css";
+
 #drupal-off-canvas {
   & .form-type-boolean {
     margin-inline-start: 0;

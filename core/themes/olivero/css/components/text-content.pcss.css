@@ -3,6 +3,8 @@
  * Text Content.
  */
 
+@import "../base/variables.pcss.css";
+
 .text-content,
 .cke_editable {
   color: var(--color--gray-10);

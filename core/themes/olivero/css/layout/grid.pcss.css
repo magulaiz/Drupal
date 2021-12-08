@@ -3,6 +3,8 @@
  * Grid system.
  */
 
+@import "../base/variables.pcss.css";
+
 .grid-full {
   display: grid;
   grid-template-rows: 1fr;

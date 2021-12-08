@@ -3,6 +3,8 @@
  * Header Search Wide Block.
  */
 
+@import "../base/variables.pcss.css";
+
 /* Override contextual links so we can position against .site-header. */
 .block-search-wide.contextual-region {
   position: static;

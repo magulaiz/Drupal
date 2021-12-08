@@ -3,6 +3,8 @@
  * Node specific styles.
  */
 
+@import "../base/variables.pcss.css";
+
 .node__meta {
   display: flex;
   align-items: center;

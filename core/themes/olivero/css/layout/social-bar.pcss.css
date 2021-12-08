@@ -4,6 +4,8 @@
  .
  */
 
+@import "../base/variables.pcss.css";
+
 .social-bar {
   @media (--nav) {
     flex-shrink: 0;

@@ -3,6 +3,8 @@
  * Powered by block specific styles.
  */
 
+@import "../base/variables.pcss.css";
+
 .block-system-powered-by-block {
   letter-spacing: 0.02em;
   font-size: 14px;

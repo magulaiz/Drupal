@@ -3,6 +3,8 @@
  * Styles for menu placed in sidebar region.
  */
 
+@import "../../base/variables.pcss.css";
+
 .menu--sidebar {
   list-style: none;
 

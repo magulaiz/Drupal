@@ -3,6 +3,8 @@
  * RSS feed.
  */
 
+@import "../base/variables.pcss.css";
+
 .feed-icon {
   display: flex;
   align-items: center;

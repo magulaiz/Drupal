@@ -3,6 +3,8 @@
  * User generated tables.
  */
 
+@import "../base/variables.pcss.css";
+
 .forum table,
 .text-content table,
 .views-table,

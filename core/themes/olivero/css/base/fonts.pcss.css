@@ -3,6 +3,8 @@
  * Base Fonts.
  */
 
+@import "variables.pcss.css";
+
 @font-face {
   font-family: "metropolis";
   src:
