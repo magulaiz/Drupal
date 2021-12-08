@@ -365,17 +365,6 @@
       };
     }
 
-    // const originalReplaceInputValue =
-
-    // instance.input.addEventListener('autocomplete-select', (e) => {
-    //   if (
-    //     e.target.tagName !== 'INPUT' &&
-    //     e.target.hasAttribute('contenteditable')
-    //   ) {
-    //     debugger;
-    //   }
-    // });
-
     /**
      * Replicates a jQuery function of the same name.
      *
@@ -468,19 +457,6 @@
               'The jQuery UI Autocomplete library is not loaded on the page. Make sure the dependency to the core/jquery.ui.autocomplete is declared for the element using it.',
             );
             return;
-          }
-          // Check if autocomplete is initialized.
-          if (typeof this.data('ui-autocomplete') === 'undefined') {
-            // @todo there are scenarios where jQuery UI autocomplete is being
-            //    - used directly
-            //    AND
-            //    - it is via a widget extending autocomplete
-            //  But because this override exists, those uses result in the error:
-            //  `cannot call methods on autocomplete prior to initialization;
-            //  attempted to call method 'widget'
-            //  The following line eliminates THAT error:
-            //  oldAutocomplete.apply(this);
-            //  However, it introduces a new one, so it's not clear if that is progress.
           }
 
           return oldAutocomplete.apply(this, args);

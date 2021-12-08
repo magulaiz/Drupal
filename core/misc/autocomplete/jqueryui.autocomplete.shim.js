@@ -294,8 +294,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             return;
           }
 
-          if (typeof this.data('ui-autocomplete') === 'undefined') {}
-
           return oldAutocomplete.apply(this, args);
         }
 
