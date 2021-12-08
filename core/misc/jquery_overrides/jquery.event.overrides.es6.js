@@ -52,7 +52,13 @@
    */
   function shimHandler({ handler, type: eventName }) {
     return function shimHandlerCallback(e) {
-      // @todo, how much of originalEvent needs to be backwards compatible?
+      // Note the several of the event handlers include populating the
+      // `originalEvent` property of the event object. This is not populated by
+      // the actual original event, which would not fit the expectations of
+      // jQuery UI's tests. Instead, it is populated with "blank" events of the
+      // expected type. There is no reason to believe originalEvent is used
+      // outside of tests, but we acknowledge the backwards compatibility of
+      // originalEvent is limited to it being the expected event type.
       const ui = {};
       if (eventName === 'autocompleteresponse') {
         // We need to keep the reference of the original array, do not

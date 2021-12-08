@@ -35,8 +35,13 @@
    *   What to override the class property with.
    */
   const applyWidgetOverrides = (instance, propertyToOverride, overrideWith) => {
-    // @todo this currently overrides extension points, but it may be necessary
-    //   to allow fully overriding everything.
+    // This makes it possible to override the following extension points:
+    // _renderItem, _renderMenu, _resizeMenu, _renderItemData
+    // These are all render methods considered to be part of the jQuery UI
+    // autocomplete API. Note there are additional extension points that are
+    // part of the jQuery UI Widget class that autocomplete extends. Those
+    // extension points are not supported by this shim.
+    // @see https://api.jqueryui.com/autocomplete/
     if (propertyToOverride.substr(0, 1) === '_') {
       instance[propertyToOverride] = overrideWith;
     }

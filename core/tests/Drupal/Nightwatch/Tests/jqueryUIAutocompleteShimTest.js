@@ -1090,7 +1090,6 @@ module.exports = {
           true,
           'request was triggered ',
         );
-        // @todo fix this test, hiding for now because refactor and original code have the same issue.
         browser.assert.equal(
           !result.value.hasOwnProperty('openedAfterBlur'),
           true,
@@ -1202,7 +1201,6 @@ module.exports = {
       },
     );
   },
-  // @todo convert this
   'appendTo: explicit': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
@@ -1307,7 +1305,6 @@ module.exports = {
       },
     );
   },
-  // @todo convert this
   'appendTo: ui-front': (browser) => {
     browser.execute(
       // eslint-disable-next-line func-names
@@ -1625,7 +1622,6 @@ module.exports = {
       },
     );
   },
-  // @todo fix this test. Possibly move upstream.
   'minLength, exceed then drop below': (browser) => {
     browser.executeAsync(
       // eslint-disable-next-line func-names
