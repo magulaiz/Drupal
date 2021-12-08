@@ -18,7 +18,7 @@
   ]
 %}
 {% if items.previous or items.next %}
-  <nav{{ attributes.addClass('pager').setAttribute('role', 'navigation').setAttribute('aria-label', 'Pagination'|t) }}>
+  <nav{{ attributes.addClass('pager').setAttribute('aria-label', 'Pagination'|t) }}>
     <ul{{ content_attributes.addClass('pager__items', 'js-pager__items') }}>
       {% if items.previous %}
         {% apply spaceless %}
