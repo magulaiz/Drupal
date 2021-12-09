@@ -109,13 +109,13 @@ class SectionRenderTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      '#attributes' => [],
       'content' => $block_content,
       '#cache' => [
         'contexts' => [],
         'tags' => [],
         'max-age' => -1,
       ],
+      '#attributes' => [],
     ];
 
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
@@ -249,13 +249,13 @@ class SectionRenderTest extends UnitTestCase {
       '#plugin_id' => 'block_plugin_id',
       '#base_plugin_id' => 'block_plugin_id',
       '#derivative_plugin_id' => NULL,
-      '#attributes' => [],
       'content' => $block_content,
       '#cache' => [
         'contexts' => [],
         'tags' => [],
         'max-age' => -1,
       ],
+      '#attributes' => [],
     ];
 
     $block = $this->prophesize(BlockPluginInterface::class)
