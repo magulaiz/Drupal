@@ -111,7 +111,7 @@ abstract class Query implements PlaceholderInterface {
    *
    * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
    *  No replacement is provided. Child classes should continue to implement the
-   *  ::execute() method providing their own PHPDoc. 
+   *  ::execute() method providing their own PHPDoc.
    *
    * @see https://www.drupal.org/node/3247516
    */
