@@ -5,11 +5,14 @@
 * @preserve
 **/
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-Drupal.toolbar = {
-  models: {}
-};
 Drupal.toolbar.models.toolbarModel = {
   get: function get(property) {
     console.log("The get function for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.toolbarBehaviors.").concat(property, " instead."));
@@ -34,23 +37,21 @@ Drupal.toolbar.models.toolbarModel = {
 
 Drupal.toolbar.MenuModel = function () {
   console.log('MenuModel for Toolbar is not supported beginning with Drupal 10. Instead use Drupal.toolbar.toolbarBehaviors');
-  return Drupal.toolbar.toolbarBehaviors;
-};
+  return _objectSpread(_objectSpread({}, Drupal.toolbar.toolbarBehaviors), {}, {
+    set: function set() {
+      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        args[_key2] = arguments[_key2];
+      }
 
-Drupal.toolbar.MenuModel.prototype.set = function () {
-  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
-
-  console.log('is it hitting');
-
-  if (_typeof(args[0]) === 'object') {
-    Object.keys(args[0]).forEach(function (key) {
-      console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
-      Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
-    });
-  } else if (args[1].length) {
-    console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
-    Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
-  }
+      if (_typeof(args[0]) === 'object') {
+        Object.keys(args[0]).forEach(function (key) {
+          console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
+          Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+        });
+      } else if (args[1].length) {
+        console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
+        Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
+      }
+    }
+  });
 };
