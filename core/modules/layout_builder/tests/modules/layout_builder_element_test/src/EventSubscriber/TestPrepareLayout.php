@@ -77,7 +77,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
       // Node 1 or 2: Append a block to the layout.
       if (in_array($entity->id(), ['1', '2'])) {
         $section = new Section('layout_onecol');
-        $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
+        $section->appendComponent(SectionComponent::create('fake-uuid', 'content', [
           'id' => 'static_block',
           'label' => 'Test static block title',
           'label_display' => 'visible',
@@ -110,7 +110,7 @@ class TestPrepareLayout implements EventSubscriberInterface {
       // Node 1, 2, or 3: Append a block to the layout.
       if (in_array($entity->id(), ['1', '2', '3'])) {
         $section = new Section('layout_onecol');
-        $section->appendComponent(new SectionComponent('fake-uuid', 'content', [
+        $section->appendComponent(SectionComponent::create('fake-uuid', 'content', [
           'id' => 'static_block_two',
           'label' => 'Test second static block title',
           'label_display' => 'visible',

@@ -119,7 +119,7 @@ class OverridesSectionStorageTest extends KernelTestBase {
   public function providerTestAccess() {
     $section_data = [
       new Section('layout_onecol', [], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        'first-uuid' => SectionComponent::create('first-uuid', 'content', ['id' => 'foo']),
       ]),
     ];
 
