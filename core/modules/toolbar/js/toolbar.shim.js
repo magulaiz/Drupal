@@ -5,44 +5,52 @@
 * @preserve
 **/
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Drupal.toolbar = {
   models: {}
 };
 Drupal.toolbar.models.toolbarModel = {
   get: function get(property) {
-    switch (property) {
-      case 'activeTab':
-        console.log("The get property for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.models.toolbarModel.").concat(property, " instead."));
-        return Drupal.toolbar.models.toolbarModel.activeTab();
-
-      case 'orientation':
-        console.log("The get property for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.models.toolbarModel.").concat(property, " instead."));
-        return Drupal.toolbar.models.toolbarModel.orientation();
-
-      default:
-        console.log("The get property for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.models.toolbarModel.").concat(property, " instead."));
-    }
+    console.log("The get function for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.toolbarBehaviors.").concat(property, " instead."));
+    return Drupal.toolbar.toolbarBehaviors[property];
   },
-  set: function set(a) {
-    if (arguments.length <= 1 ? 0 : arguments.length - 1) {
-      if (a === 'activeTab') {
-        console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(a, " can be set directly using Drupal.toolbar.models.toolbarModel.").concat(a, " instead."));
-        Drupal.toolbar.toolbarBehaviors.activeTab = arguments.length <= 1 ? undefined : arguments[1];
-      }
-    } else {
-      var prop = Object.keys(a)[0];
-      var value = a[prop];
+  set: function set() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-      if (prop === 'activeTab') {
-        console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(prop, " can be set directly using Drupal.toolbar.models.toolbarModel.").concat(prop, " instead."));
-        Drupal.toolbar.toolbarBehaviors.activeTab = value;
-      }
+    if (_typeof(args[0]) === 'object') {
+      Object.keys(args[0]).forEach(function (key) {
+        console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
+        Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+      });
+    } else if (args[1].length) {
+      console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
+      Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
     }
   }
 };
-Drupal.toolbar.MenuModel = {
-  subtrees: {}
+
+Drupal.toolbar.MenuModel = function () {
+  console.log('MenuModel for Toolbar is not supported beginning with Drupal 10. Instead use Drupal.toolbar.toolbarBehaviors');
+  return Drupal.toolbar.toolbarBehaviors;
 };
-Drupal.toolbar.ToolbarVisualView = {
-  prototype: Drupal.toolbar.toolbarBehaviors
+
+Drupal.toolbar.MenuModel.prototype.set = function () {
+  for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  console.log('is it hitting');
+
+  if (_typeof(args[0]) === 'object') {
+    Object.keys(args[0]).forEach(function (key) {
+      console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
+      Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+    });
+  } else if (args[1].length) {
+    console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
+    Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
+  }
 };

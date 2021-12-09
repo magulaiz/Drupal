@@ -4,53 +4,52 @@ Drupal.toolbar = {
 
 Drupal.toolbar.models.toolbarModel = {
   get(property) {
-    switch (property) {
-      case 'activeTab':
-        console.log(
-          `The get property for Toolbar is not supported beginning with Drupal 10. But ${property} can be accessed directly using Drupal.toolbar.models.toolbarModel.${property} instead.`,
-        );
-        return Drupal.toolbar.models.toolbarModel.activeTab();
-      case 'orientation':
-        console.log(
-          `The get property for Toolbar is not supported beginning with Drupal 10. But ${property} can be accessed directly using Drupal.toolbar.models.toolbarModel.${property} instead.`,
-        );
-        return Drupal.toolbar.models.toolbarModel.orientation();
-      default:
-        console.log(
-          `The get property for Toolbar is not supported beginning with Drupal 10. But ${property} can be accessed directly using Drupal.toolbar.models.toolbarModel.${property} instead.`,
-        );
-    }
+    console.log(
+      `The get function for Toolbar is not supported beginning with Drupal 10. But ${property} can be accessed directly using Drupal.toolbar.toolbarBehaviors.${property} instead.`,
+    );
+    return Drupal.toolbar.toolbarBehaviors[property];
   },
   // Use rest parameters to allow set be used with one or more arguments.
-  set(a, ...theArgs) {
-    // Check if there is more than one argument passed to the function
-    if (theArgs.length) {
-      if (a === 'activeTab') {
+  set(...args) {
+    if (typeof args[0] === 'object') {
+      // Individually set each option specified in the object.
+      Object.keys(args[0]).forEach((key) => {
         console.log(
-          `The set property for Toolbar is not supported beginning with Drupal 10. But ${a} can be set directly using Drupal.toolbar.models.toolbarModel.${a} instead.`,
+          `The set function for Toolbar is not supported beginning with Drupal 10. But ${key} can be set directly using Drupal.toolbar.toolbarBehaviors.${key} instead.`,
         );
-        Drupal.toolbar.toolbarBehaviors.activeTab = theArgs[0];
-      }
-    } else {
-      // Only one argument is passed into the function
-      const prop = Object.keys(a)[0];
-      const value = a[prop];
-      if (prop === 'activeTab') {
-        console.log(
-          `The set property for Toolbar is not supported beginning with Drupal 10. But ${prop} can be set directly using Drupal.toolbar.models.toolbarModel.${prop} instead.`,
-        );
-        Drupal.toolbar.toolbarBehaviors.activeTab = value;
-      }
+        Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+      });
+      // If there is a second argument
+    } else if (args[1].length) {
+      console.log(
+        `The set function for Toolbar is not supported beginning with Drupal 10. But ${args[0]} can be set directly using Drupal.toolbar.toolbarBehaviors.${args[0]} instead.`,
+      );
+      Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
     }
   },
 };
 
-Drupal.toolbar.MenuModel = {
-  subtrees: {},
+Drupal.toolbar.MenuModel = () => {
+  console.log(
+    'MenuModel for Toolbar is not supported beginning with Drupal 10. Instead use Drupal.toolbar.toolbarBehaviors',
+  );
+  return Drupal.toolbar.toolbarBehaviors;
 };
 
-// ??????
-Drupal.toolbar.ToolbarVisualView = {
- // console.log('ToolbarVisualView is not supported beginning with Drupal 10.'),
-  prototype: Drupal.toolbar.toolbarBehaviors,
+Drupal.toolbar.MenuModel.prototype.set = (...args) => {
+  console.log('is it hitting');
+  if (typeof args[0] === 'object') {
+    // Individually set each option specified in the object.
+    Object.keys(args[0]).forEach((key) => {
+      console.log(
+        `The set property for Toolbar is not supported beginning with Drupal 10. But ${key} can be set directly using Drupal.toolbar.toolbarBehaviors.${key} instead.`,
+      );
+      Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+    });
+  } else if (args[1].length) {
+    console.log(
+      `The set property for Toolbar is not supported beginning with Drupal 10. But ${args[0]} can be set directly using Drupal.toolbar.toolbarBehaviors.${args[0]} instead.`,
+    );
+    Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
+  }
 };
