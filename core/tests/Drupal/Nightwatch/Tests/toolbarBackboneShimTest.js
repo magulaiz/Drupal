@@ -21,7 +21,7 @@ module.exports = {
   beforeEach(browser) {
     browser
       .drupalRelativeURL('/')
-      .waitForElementPresent('.toolbar-item.is-active', 10000000000);
+      .waitForElementPresent('.toolbar-item.is-active', 10000);
   },
   after(browser) {
     browser.drupalUninstall();
