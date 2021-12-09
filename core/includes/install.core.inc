@@ -1892,7 +1892,7 @@ function install_finished(&$install_state) {
  *   An array of information about the current installation state.
  */
 function install_invoke_finished_hooks(&$install_state) {
-  \Drupal::moduleHandler()->invokeAll('site_install_finished', $install_state);
+  \Drupal::moduleHandler()->invokeAll('site_install_finished', array_values($install_state));
 }
 
 /**
