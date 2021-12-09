@@ -200,7 +200,11 @@ function update_calculate_project_data($available) {
  * returning, or the rest of the Update Manager will break in unexpected ways.
  *
  * @param $project_data
- *   An array containing information about a specific project.
+ *   An array containing information about a specific project. The follow values
+ *   may be set by this function:
+ *   - 'recommended': (string) This is the recommended version that the project
+ *     should be on. This is could be the existing version, in which there is no
+ *     update needed.
  * @param $available
  *   Data about available project releases of a specific project.
  */
