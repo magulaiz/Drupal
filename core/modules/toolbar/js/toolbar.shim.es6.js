@@ -1,4 +1,5 @@
-
+// TODO: need to uncomment this but rn toolbar doesn't work with it here
+// ask how to add this 'models' when there is already an existing Drupal.toolbar in toolbar.es6
 // Drupal.toolbar = {
 //   models: {},
 // };
