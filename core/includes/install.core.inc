@@ -873,6 +873,7 @@ function install_tasks($install_state) {
       'run' => $needs_translations ? INSTALL_TASK_RUN_IF_NOT_COMPLETED : INSTALL_TASK_SKIP,
     ],
     'install_finished' => [],
+    'install_invoke_finished_hooks' => [],
   ];
 
   // Allow the installation profile to modify the full list of tasks.
@@ -1882,6 +1883,16 @@ function install_finished(&$install_state) {
 
   // Record when this install ran.
   \Drupal::state()->set('install_time', $_SERVER['REQUEST_TIME']);
+}
+
+/**
+ * Invokes hooks related to site installation being finished.
+ *
+ * @param $install_state
+ *   An array of information about the current installation state.
+ */
+function install_invoke_finished_hooks(&$install_state) {
+  \Drupal::moduleHandler()->invokeAll('site_install_finished', $install_state);
 }
 
 /**
