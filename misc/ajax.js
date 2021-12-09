@@ -340,10 +340,14 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
 
   // Prevent duplicate HTML ids in the returned markup.
   // @see drupal_html_id()
-  options.data['ajax_html_ids[]'] = [];
-  $('[id]').each(function () {
-    options.data['ajax_html_ids[]'].push(this.id);
-  });
+  // Permit this step to be skipped for large pages/forms.
+  var no_html_ids = Drupal.settings['no_html_ids'] || false;
+  if (!no_html_ids) {
+    options.data['ajax_html_ids[]'] = [];
+    $('[id]').each(function () {
+      options.data['ajax_html_ids[]'].push(this.id);
+    });
+  }
 
   // Allow Drupal to return new JavaScript and CSS files to load without
   // returning the ones already loaded.
