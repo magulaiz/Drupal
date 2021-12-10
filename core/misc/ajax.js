@@ -143,7 +143,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var $linkElement = $(ajaxLink);
       var elementSettings = {
         progress: {
-          type: 'throbber'
+          type: $linkElement.data('progress-type') || 'throbber'
         },
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
