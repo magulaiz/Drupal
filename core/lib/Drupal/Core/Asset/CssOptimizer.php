@@ -83,8 +83,9 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Store base path.
     $this->rewriteFileURIBasePath = $css_base_path . '/';
 
-    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
-    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
+    // Anchor all paths in the CSS with its base URL, ignoring external,
+    // absolute, and fragment URLs (# or %23).
+    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|\#|\%23+)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
   }
 
   /**
@@ -189,8 +190,9 @@ class CssOptimizer implements AssetOptimizerInterface {
     $directory = $directory == '.' ? '' : $directory . '/';
 
     // Alter all internal asset paths. Leave external paths alone. We don't need
-    // to normalize absolute paths here because that will be done later.
-    return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
+    // to normalize absolute paths here because that will be done later. Also
+    // ignore fragment URLs (# or %23).
+    return preg_replace('/url\(\s*([\'"]?)(?![a-z]+:|\/+|\#|\%23+)([^\'")]+)([\'"]?)\s*\)/i', 'url(\1' . $directory . '\2\3)', $file);
   }
 
   /**
