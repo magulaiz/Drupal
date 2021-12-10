@@ -51,18 +51,19 @@ class LocalTasksTest extends BrowserTestBase {
    * @param int $level
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
+   *
+   * @internal
    */
-  protected function assertLocalTasks(array $routes, $level = 0) {
+  protected function assertLocalTasks(array $routes, int $level = 0): void {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ]);
     $this->assertGreaterThan(0, count($elements), 'Local tasks found.');
     foreach ($routes as $index => $route_info) {
-      list($route_name, $route_parameters) = $route_info;
+      [$route_name, $route_parameters] = $route_info;
       $expected = Url::fromRoute($route_name, $route_parameters)->toString();
       $this->assertEquals($expected, $elements[$index]->getAttribute('href'), "Task " . ($index + 1) . "number href " . $elements[$index]->getAttribute('href') . " equals $expected.");
     }
-    $this->assertEquals(count($routes), count($elements), 'Only expected local tasks are found.');
   }
 
   /**
@@ -71,15 +72,14 @@ class LocalTasksTest extends BrowserTestBase {
    * @param string $title
    *   The expected title.
    *
-   * @return bool
-   *   TRUE if the local task exists on the page.
+   * @internal
    */
-  protected function assertLocalTaskAppears($title) {
+  protected function assertLocalTaskAppears(string $title): void {
     // SimpleXML gives us the unescaped text, not the actual escaped markup,
     // so use a pattern instead to check the raw content.
     // This behavior is a bug in libxml, see
     // https://bugs.php.net/bug.php?id=49437.
-    return $this->assertSession()->responseMatches('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
+    $this->assertSession()->responseMatches('@<a [^>]*>' . preg_quote($title, '@') . '</a>@');
   }
 
   /**
@@ -88,8 +88,10 @@ class LocalTasksTest extends BrowserTestBase {
    * @param int $level
    *   (optional) The local tasks level to assert; 0 for primary, 1 for
    *   secondary. Defaults to 0.
+   *
+   * @internal
    */
-  protected function assertNoLocalTasks($level = 0) {
+  protected function assertNoLocalTasks(int $level = 0): void {
     $elements = $this->xpath('//*[contains(@class, :class)]//a', [
       ':class' => $level == 0 ? 'tabs primary' : 'tabs secondary',
     ]);
@@ -225,7 +227,6 @@ class LocalTasksTest extends BrowserTestBase {
       ['menu_test.local_task_test_tasks_view', []],
       ['menu_test.local_task_test_tasks_edit', []],
       ['menu_test.local_task_test_tasks_settings', []],
-      ['menu_test.local_task_test_tasks_settings_dynamic', []],
     ]);
 
     // Verify that local tasks in the second level doesn't appear.
@@ -261,26 +262,21 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalCreateContentType(['type' => 'page']);
 
-    // Only the Edit task. The block avoids showing a single tab.
-    $this->drupalGet('/admin/config/people/accounts');
-    $this->assertNoLocalTasks();
-
-    // Only the Edit and Manage permission tabs.
     $this->drupalGet('/admin/structure/types/manage/page');
-    $this->assertLocalTasks([
-      ['entity.node_type.edit_form', ['node_type' => 'page']],
-      ['entity.node_type.permission_form', ['node_type' => 'page']],
-    ]);
+
+    // Only the Edit task. The block avoids showing a single tab.
+    $this->assertNoLocalTasks();
 
     // Field UI adds the usual Manage fields etc tabs.
     \Drupal::service('module_installer')->install(['field_ui']);
+
     $this->drupalGet('/admin/structure/types/manage/page');
+
     $this->assertLocalTasks([
       ['entity.node_type.edit_form', ['node_type' => 'page']],
       ['entity.node.field_ui_fields', ['node_type' => 'page']],
       ['entity.entity_form_display.node.default', ['node_type' => 'page']],
       ['entity.entity_view_display.node.default', ['node_type' => 'page']],
-      ['entity.node_type.permission_form', ['node_type' => 'page']],
     ]);
   }
 

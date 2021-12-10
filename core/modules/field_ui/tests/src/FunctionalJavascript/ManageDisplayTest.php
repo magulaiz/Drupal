@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\field_ui\FunctionalJavascript;
 
+use Behat\Mink\Element\NodeElement;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
@@ -387,10 +388,12 @@ class ManageDisplayTest extends WebDriverTestBase {
    *   The select field to validate.
    * @param array $expected_options
    *   An array of expected options.
-   * @param null $selected
+   * @param string|null $selected
    *   The default value to validate.
+   *
+   * @internal
    */
-  protected function assertFieldSelectOptions($field, array $expected_options, $selected = NULL) {
+  protected function assertFieldSelectOptions(NodeElement $field, array $expected_options, ?string $selected = NULL): void {
     /** @var \Behat\Mink\Element\NodeElement[] $select_options */
     $select_options = $field->findAll('xpath', 'option');
 
@@ -454,7 +457,7 @@ class ManageDisplayTest extends WebDriverTestBase {
     $field_field_name->setValue($field_name);
     $assert_session->assertWaitOnAjaxRequest();
 
-    $page->findButton(t('Save and continue'))->click();
+    $page->findButton('Save and continue')->click();
 
     $assert_session->pageTextContains("These settings apply to the $label field everywhere it is used.");
     $breadcrumb_link = $page->findLink($label);
