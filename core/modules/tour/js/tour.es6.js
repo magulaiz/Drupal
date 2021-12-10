@@ -77,7 +77,7 @@
       this._models = value;
     },
 
-    /**`
+    /**
      * @namespace Drupal.tour.views
      */
     _views: {},
