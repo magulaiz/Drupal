@@ -1492,7 +1492,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function toUrl($rel = 'canonical', array $options = []) {
-    if (\Drupal::languageManager()->isMultilingual() && $this instanceof TranslatableDataInterface && $rel == 'canonical' && !isset($options['language']) && !$this->isLanguageAware()) {
+    if ($this->languageManager()->isMultilingual() && $this instanceof TranslatableDataInterface && !in_array($rel, ['collection', 'add-page', 'add-form'], TRUE) && !isset($options['language']) && !$this->isLanguageAware()) {
       $currentLanguage = $this->languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
       $options['language'] = $currentLanguage;
 
