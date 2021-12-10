@@ -139,8 +139,8 @@ trait DeprecationListenerTrait {
       // Guzzle/PSR-7
       "Method \"Psr\Http\Message\StreamInterface::getMetadata()\" will return \"mixed\" as of its next major version. Doing the same in implementation \"GuzzleHttp\Psr7\Stream\" will be required when upgrading.",
       // Tour.
-      'Drupal.tour.models is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932',
-      'Drupal.tour.views is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932',
+      'Javascript Deprecation: Drupal.tour.models is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932',
+      'Javascript Deprecation: Drupal.tour.views is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932',
     ];
   }
 
