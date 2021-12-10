@@ -4,6 +4,7 @@ namespace Drupal\content_moderation;
 
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the content moderation state schema handler.
@@ -34,6 +35,26 @@ class ContentModerationStateStorageSchema extends SqlContentEntityStorageSchema 
       $schema[$revision_data_table]['unique keys'] += [
         'content_moderation_state__lookup' => $unique_keys,
       ];
+    }
+
+    return $schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSharedTableFieldSchema(FieldStorageDefinitionInterface $storage_definition, $table_name, array $column_mapping) {
+    $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
+    $field_name = $storage_definition->getName();
+
+    if ($table_name == $this->storage->getRevisionDataTable()) {
+      switch ($field_name) {
+        // Add index to moderation state to improve performance for the
+        // views plugins that join using this column.
+        case 'moderation_state':
+          $this->addSharedTableFieldIndex($storage_definition, $schema);
+          break;
+      }
     }
 
     return $schema;
