@@ -53,7 +53,8 @@
     },
   };
 
-  const deprecatedMessageSuffix = 'is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932'
+  const deprecatedMessageSuffix =
+    'is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932';
 
   /**
    * @namespace
