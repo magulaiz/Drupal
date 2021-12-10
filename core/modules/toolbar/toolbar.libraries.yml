@@ -2,11 +2,9 @@ toolbar:
   version: VERSION
   js:
     # Core.
-    # Add a separate shim.
-    js/toolbar.shim.js: { }
-    # Reduce the weight of this one so it loads before the shim that
-    # modifies it
-    js/toolbar.js: { weight: -1 }
+    js/toolbar.js: {}
+    # Add a separate shim
+    js/toolbar.shim.js: {}
     # Models.
     js/models/MenuModel.js: {}
     js/models/ToolbarModel.js: {}

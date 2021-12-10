@@ -13,45 +13,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-Drupal.toolbar.models.toolbarModel = {
-  get: function get(property) {
-    console.log("The get function for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.toolbarBehaviors.").concat(property, " instead."));
-    return Drupal.toolbar.toolbarBehaviors[property];
-  },
-  set: function set() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if (_typeof(args[0]) === 'object') {
-      Object.keys(args[0]).forEach(function (key) {
-        console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
-        Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
-      });
-    } else if (args[1].length) {
-      console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
-      Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
-    }
-  }
-};
-
-Drupal.toolbar.MenuModel = function () {
-  console.log('MenuModel for Toolbar is not supported beginning with Drupal 10. Instead use Drupal.toolbar.toolbarBehaviors');
-  return _objectSpread(_objectSpread({}, Drupal.toolbar.toolbarBehaviors), {}, {
+(function (Drupal) {
+  Drupal.toolbar.models = {};
+  Drupal.toolbar.models.toolbarModel = {
+    get: function get(property) {
+      console.log("The get function for Toolbar is not supported beginning with Drupal 10. But ".concat(property, " can be accessed directly using Drupal.toolbar.toolbarBehaviors.").concat(property, " instead."));
+      return Drupal.toolbar.toolbarBehaviors[property];
+    },
     set: function set() {
-      for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-        args[_key2] = arguments[_key2];
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
       if (_typeof(args[0]) === 'object') {
         Object.keys(args[0]).forEach(function (key) {
-          console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
+          console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
           Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
         });
       } else if (args[1].length) {
-        console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
+        console.log("The set function for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
         Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
       }
     }
-  });
-};
+  };
+
+  Drupal.toolbar.MenuModel = function () {
+    console.log('MenuModel for Toolbar is not supported beginning with Drupal 10. Instead use Drupal.toolbar.toolbarBehaviors');
+    return _objectSpread(_objectSpread({}, Drupal.toolbar.toolbarBehaviors), {}, {
+      set: function set() {
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        if (_typeof(args[0]) === 'object') {
+          Object.keys(args[0]).forEach(function (key) {
+            console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(key, " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(key, " instead."));
+            Drupal.toolbar.toolbarBehaviors[key] = args[0][key];
+          });
+        } else if (args[1].length) {
+          console.log("The set property for Toolbar is not supported beginning with Drupal 10. But ".concat(args[0], " can be set directly using Drupal.toolbar.toolbarBehaviors.").concat(args[0], " instead."));
+          Drupal.toolbar.toolbarBehaviors[args[0]] = args[1];
+        }
+      }
+    });
+  };
+})(Drupal);
