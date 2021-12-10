@@ -200,22 +200,4 @@ class FilterDateTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('You selected the "Is equal to" operator as the default value but is not included in the list of limited operators.');
   }
 
-  /**
-   * Ensures that a given list of items appear on the view result.
-   *
-   * @param array $expected_ids
-   *   An array of IDs.
-   */
-  protected function assertIds(array $expected_ids = []): void {
-    // First verify the count.
-    $elements = $this->cssSelect('.view-content span.field-content');
-    $this->assertCount(count($expected_ids), $elements);
-
-    $actual_ids = [];
-    foreach ($elements as $element) {
-      $actual_ids[] = (int) $element->getText();
-    }
-    $this->assertEquals($expected_ids, $actual_ids);
-  }
-
 }
