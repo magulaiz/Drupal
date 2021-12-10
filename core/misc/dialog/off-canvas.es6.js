@@ -237,7 +237,8 @@
           : event.data.settings.height;
 
       container[0].style.position = 'fixed';
-      container[0].style.height = Number.isNaN(height) ? height : `${height}px`;
+      container[0].style.height =
+        typeof height === 'number' ? `${height}px` : height;
 
       $element
         .dialog('option', adjustedOptions)
