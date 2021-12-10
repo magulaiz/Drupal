@@ -514,7 +514,9 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * It is recommended that you implement this hook if you want to perform some
  * actions after site is installed.
  *
- * This hook is invoked at the end of installation profile.
+ * This hook is invoked at the end of installation profile. Where multiple
+ * modules implement hooks, they will be executed in order of their module
+ * weight.
  *
  * @param $install_state
  *   An array of information about the current installation state.
