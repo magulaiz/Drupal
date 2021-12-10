@@ -3,7 +3,7 @@
  * Attaches behaviors for the Tour module's toolbar tab.
  */
 
-((Drupal, settings, document, Shepherd) => {
+(($, Drupal, settings, document, Shepherd) => {
   const queryString = decodeURI(window.location.search);
 
   /**
@@ -17,17 +17,42 @@
      */
     currentTour: [],
     /**
-     * Indicates whether the tour is currently running.
-     *
-     * @type {boolean}
-     */
-    isActive: false,
-    /**
      * Indicates which tour is the active one (necessary to cleanly stop).
      *
      * @type {Array}
+     *
+     * @internal
      */
-    activeTour: [],
+    _activeTour: [],
+    /**
+     * Indicates whether the tour is currently running.
+     *
+     * @type {boolean}
+     *
+     * @internal
+     */
+    _isActive: false,
+
+    /**
+     * Public getter for _isActive.
+     *
+     * @return {boolean}
+     *   Whether or not the tour is active.
+     */
+    get isActive() {
+      return this._isActive;
+    },
+
+    /**
+     * Public setter for _isActive.
+     *
+     * @param {boolean} value
+     *   Represents if the tour is active.
+     */
+    set isActive(value) {
+      this._isActive = value;
+      $(document).trigger(value ? 'drupalTourStarted' : 'drupalTourStopped');
+    },
   };
 
   /**
@@ -91,7 +116,7 @@
    */
   function toggleTour() {
     if (Drupal.tour.isActive) {
-      Drupal.tour.activeTour.cancel();
+      Drupal.tour._activeTour.cancel();
       return;
     }
     _removeIrrelevantTourItems(Drupal.tour.currentTour);
@@ -190,7 +215,7 @@
     });
     shepherdTour.start();
     Drupal.tour.isActive = true;
-    Drupal.tour.activeTour = shepherdTour;
+    Drupal.tour._activeTour = shepherdTour;
   }
 
   /**
@@ -307,4 +332,4 @@
    */
   Drupal.theme.tourItemContent = (tourStepConfig) =>
     `${tourStepConfig.body}<div class="tour-progress">${tourStepConfig.counter}</div>`;
-})(Drupal, drupalSettings, document, window.Shepherd);
+})(jQuery, Drupal, drupalSettings, document, window.Shepherd);

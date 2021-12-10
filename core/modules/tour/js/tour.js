@@ -5,12 +5,22 @@
 * @preserve
 **/
 
-(function (Drupal, settings, document, Shepherd) {
+(function ($, Drupal, settings, document, Shepherd) {
   var queryString = decodeURI(window.location.search);
   Drupal.tour = Drupal.tour || {
     currentTour: [],
-    isActive: false,
-    activeTour: []
+    _activeTour: [],
+    _isActive: false,
+
+    get isActive() {
+      return this._isActive;
+    },
+
+    set isActive(value) {
+      this._isActive = value;
+      $(document).trigger(value ? 'drupalTourStarted' : 'drupalTourStopped');
+    }
+
   };
 
   function _removeIrrelevantTourItems(tourItems) {
@@ -40,7 +50,8 @@
 
   function toggleTour() {
     if (Drupal.tour.isActive) {
-      Drupal.tour.activeTour.cancel();
+      Drupal.tour._activeTour.cancel();
+
       return;
     }
 
@@ -100,7 +111,7 @@
     });
     shepherdTour.start();
     Drupal.tour.isActive = true;
-    Drupal.tour.activeTour = shepherdTour;
+    Drupal.tour._activeTour = shepherdTour;
   }
 
   Drupal.behaviors.tour = {
@@ -131,4 +142,4 @@
   Drupal.theme.tourItemContent = function (tourStepConfig) {
     return "".concat(tourStepConfig.body, "<div class=\"tour-progress\">").concat(tourStepConfig.counter, "</div>");
   };
-})(Drupal, drupalSettings, document, window.Shepherd);
+})(jQuery, Drupal, drupalSettings, document, window.Shepherd);
