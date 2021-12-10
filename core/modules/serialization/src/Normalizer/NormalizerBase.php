@@ -99,6 +99,9 @@ abstract class NormalizerBase implements SerializerAwareInterface, CacheableNorm
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function hasCacheableSupportsMethod(): bool {
     return TRUE;
   }
