@@ -201,13 +201,13 @@
     })) {
       initializeField(fieldElement, fieldID, entityID, entityInstanceID);
     } else {
-        fieldsAvailableQueue.push({
-          el: fieldElement,
-          fieldID: fieldID,
-          entityID: entityID,
-          entityInstanceID: entityInstanceID
-        });
-      }
+      fieldsAvailableQueue.push({
+        el: fieldElement,
+        fieldID: fieldID,
+        entityID: entityID,
+        entityInstanceID: entityInstanceID
+      });
+    }
   }
 
   function deleteContainedModelsAndQueues($context) {

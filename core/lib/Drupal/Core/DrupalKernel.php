@@ -635,7 +635,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $this->containerNeedsDumping = FALSE;
         $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
       }
-      $this->moduleList = isset($extensions['module']) ? $extensions['module'] : [];
+      $this->moduleList = $extensions['module'] ?? [];
     }
     $module_filenames = $this->getModuleFileNames();
     $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
@@ -690,7 +690,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE) {
+  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
     // Ensure sane PHP environment variables.
     static::bootEnvironment();
 
@@ -778,7 +778,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // Now find modules.
       $this->moduleData = $profiles + $listing->scan('module');
     }
-    return isset($this->moduleData[$module]) ? $this->moduleData[$module] : FALSE;
+    return $this->moduleData[$module] ?? FALSE;
   }
 
   /**

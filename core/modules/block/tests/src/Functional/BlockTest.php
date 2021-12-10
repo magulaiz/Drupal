@@ -169,7 +169,7 @@ class BlockTest extends BlockTestBase {
       $this->assertSession()->elementTextEquals('xpath', $xpath, 'Place block');
 
       $link = $this->getSession()->getPage()->find('xpath', $xpath);
-      list($path, $query_string) = explode('?', $link->getAttribute('href'), 2);
+      [$path, $query_string] = explode('?', $link->getAttribute('href'), 2);
       parse_str($query_string, $query_parts);
       $this->assertEquals($weight, $query_parts['weight'], 'Found the expected weight query string.');
 
@@ -546,10 +546,10 @@ class BlockTest extends BlockTestBase {
    * Tests block_user_role_delete.
    */
   public function testBlockUserRoleDelete() {
-    $role1 = Role::create(['id' => 'test_role1', 'name' => $this->randomString()]);
+    $role1 = Role::create(['id' => 'test_role1', 'label' => 'Test role 1']);
     $role1->save();
 
-    $role2 = Role::create(['id' => 'test_role2', 'name' => $this->randomString()]);
+    $role2 = Role::create(['id' => 'test_role2', 'label' => 'Test role 2']);
     $role2->save();
 
     $block = Block::create([

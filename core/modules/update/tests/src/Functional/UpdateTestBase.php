@@ -3,7 +3,6 @@
 namespace Drupal\Tests\update\Functional;
 
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
@@ -64,8 +63,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     // test child site.
     $request = \Drupal::request();
     $update_root = $this->container->get('update.root') . '/' . DrupalKernel::findSitePath($request);
-    $this->container->set('update.root', $update_root);
-    \Drupal::setContainer($this->container);
+    $this->container->get('update.root')->set($update_root);
 
     // Create the directories within the root path within which the Update
     // Manager will install projects.
@@ -108,7 +106,8 @@ abstract class UpdateTestBase extends BrowserTestBase {
   protected function standardTests() {
     $this->assertSession()->responseContains('<h3>Drupal core</h3>');
     // Verify that the link to the Drupal project appears.
-    $this->assertSession()->responseContains(Link::fromTextAndUrl(t('Drupal'), Url::fromUri('http://example.com/project/drupal'))->toString());
+    $this->assertSession()->linkExists('Drupal');
+    $this->assertSession()->linkByHrefExists('http://example.com/project/drupal');
     $this->assertSession()->pageTextNotContains('No available releases found');
     $this->assertSession()->pageTextContains('Last checked:');
   }

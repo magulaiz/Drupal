@@ -8,7 +8,7 @@
 (function ($, Drupal, debounce) {
   $.fn.drupalGetSummary = function () {
     var callback = this.data('summaryCallback');
-    return this[0] && callback ? $.trim(callback(this[0])) : '';
+    return this[0] && callback ? callback(this[0]).trim() : '';
   };
 
   $.fn.drupalSetSummary = function (callback) {
@@ -50,10 +50,9 @@
   }
 
   function fieldsList(form) {
-    var $fieldList = $(form).find('[name]').map(function (index, element) {
-      return element.getAttribute('id');
+    return [].map.call(form.querySelectorAll('[name][id]'), function (el) {
+      return el.id;
     });
-    return $.makeArray($fieldList);
   }
 
   Drupal.behaviors.formUpdated = {

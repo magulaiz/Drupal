@@ -40,10 +40,6 @@ global-styling:
       css/components/links.css: {}
       css/components/messages.css: {}
       css/components/navigation/nav-button-mobile.css: {}
-      css/components/navigation/nav-primary-button.css: {}
-      css/components/navigation/nav-primary.css: {}
-      css/components/navigation/nav-primary-wide.css: {}
-      css/components/navigation/nav-secondary.css: {}
       css/components/node.css: {}
       css/components/node-teaser.css: {}
       css/components/page-title.css: {}
@@ -58,8 +54,7 @@ global-styling:
   js:
     js/checkbox.js: {}
     js/navigation-utils.js: {}
-    js/navigation.js: {}
-    js/second-level-navigation.js: {}
+
   dependencies:
     - core/drupal.element.closest
     - core/drupal.element.matches
@@ -117,6 +112,12 @@ dropbutton:
   css:
     component:
       css/components/dropbutton.css: {}
+
+drupal.dialog:
+  version: VERSION
+  css:
+    theme:
+      css/components/ui-dialog.css: {}
 
 drupal.node.preview:
   version: VERSION
@@ -190,6 +191,12 @@ local-actions:
     component:
       css/components/action-links.css: {}
 
+maintenance-page:
+  version: VERSION
+  css:
+    component:
+      css/components/maintenance-page.css: {}
+
 menu-sidebar:
   version: VERSION
   css:
@@ -200,6 +207,25 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
+  dependencies:
+    - core/drupal.array.includes
+
+navigation-primary:
+  version: VERSION
+  css:
+    component:
+      css/components/navigation/nav-primary.css: {}
+      css/components/navigation/nav-primary-button.css: {}
+      css/components/navigation/nav-primary-wide.css: {}
+  js:
+    js/navigation.js: {}
+    js/second-level-navigation.js: {}
+
+navigation-secondary:
+  version: VERSION
+  css:
+    component:
+      css/components/navigation/nav-secondary.css: {}
 
 powered-by-block:
   version: VERSION
