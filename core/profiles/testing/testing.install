@@ -8,7 +8,7 @@
 /**
  * Implements hook_site_install_finished().
  *
- * Perform test action after the install has completed.
+ * Perform test action after the installation has completed.
  */
 function testing_site_install_finished($install_state) {
   \Drupal::messenger()->addMessage('Perform action after the installation.');
