@@ -73,7 +73,7 @@ abstract class Connection {
   /**
    * The name of the Statement class for this connection.
    *
-   * @var string
+   * @var string|null
    *
    * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database
    *   drivers should use or extend StatementWrapper instead, and encapsulate
@@ -86,7 +86,7 @@ abstract class Connection {
   /**
    * The name of the StatementWrapper class for this connection.
    *
-   * @var string
+   * @var string|null
    */
   protected $statementWrapperClass = NULL;
 
@@ -435,6 +435,28 @@ abstract class Connection {
    */
   public function getConnectionOptions() {
     return $this->connectionOptions;
+  }
+
+  /**
+   * Allows the connection to access additional databases.
+   *
+   * Database systems usually group tables in 'databases' or 'schemas', that
+   * can be accessed with syntax like 'SELECT * FROM database.table'. Normally
+   * Drupal accesses tables in a single database/schema, but in some cases it
+   * may be necessary to access tables from other databases/schemas in the same
+   * database server. This method can be called to ensure that the additional
+   * database/schema is accessible.
+   *
+   * For MySQL, PostgreSQL and most other databases no action need to be taken
+   * to query data in another database or schema. For SQLite this is however
+   * necessary and the database driver for SQLite will override this method.
+   *
+   * @param string $database
+   *   The database to be attached to the connection.
+   *
+   * @internal
+   */
+  public function attachDatabase(string $database): void {
   }
 
   /**
@@ -936,7 +958,7 @@ abstract class Connection {
           return $stmt->rowCount();
 
         case Database::RETURN_INSERT_ID:
-          $sequence_name = isset($options['sequence_name']) ? $options['sequence_name'] : NULL;
+          $sequence_name = $options['sequence_name'] ?? NULL;
           return $this->connection->lastInsertId($sequence_name);
 
         case Database::RETURN_NULL:

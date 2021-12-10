@@ -59,7 +59,7 @@ class UrlTest extends KernelTestBase {
     ];
 
     foreach ($cases as $case) {
-      list($title, $uri, $options, $expected_cacheability, $expected_attachments) = $case;
+      [$title, $uri, $options, $expected_cacheability, $expected_attachments] = $case;
       $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
       $link = [
         '#type' => 'link',
@@ -166,6 +166,7 @@ class UrlTest extends KernelTestBase {
    * Checks for class existence in link.
    *
    * @param $attribute
+   *   Attribute to be checked.
    * @param $link
    *   URL to search.
    * @param $class

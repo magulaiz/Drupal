@@ -1074,6 +1074,11 @@ services:
     class: Drupal\Core\Entity\Enhancer\EntityRouteEnhancer
     tags:
       - { name: route_enhancer, priority: 20 }
+  route_enhancer.entity_bundle:
+    class: Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: route_enhancer }
   route_enhancer.entity_revision:
     class: Drupal\Core\Routing\Enhancer\EntityRevisionRouteEnhancer
     tags:
@@ -1351,7 +1356,6 @@ services:
     class: Drupal\Core\PathProcessor\PathProcessorFront
     tags:
       - { name: path_processor_inbound, priority: 200 }
-      - { name: path_processor_outbound, priority: 200 }
     arguments: ['@config.factory']
   route_processor_current:
     class: Drupal\Core\RouteProcessor\RouteProcessorCurrent

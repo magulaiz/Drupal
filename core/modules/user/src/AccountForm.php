@@ -374,7 +374,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // Set existing password if set in the form state.
-    $current_pass = trim($form_state->getValue('current_pass'));
+    $current_pass = trim($form_state->getValue('current_pass', ''));
     if (strlen($current_pass) > 0) {
       $account->setExistingPassword($current_pass);
     }
@@ -418,7 +418,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       'preferred_admin_langcode',
     ];
     foreach ($violations->getByFields($field_names) as $violation) {
-      list($field_name) = explode('.', $violation->getPropertyPath(), 2);
+      [$field_name] = explode('.', $violation->getPropertyPath(), 2);
       $form_state->setErrorByName($field_name, $violation->getMessage());
     }
     parent::flagViolations($violations, $form, $form_state);

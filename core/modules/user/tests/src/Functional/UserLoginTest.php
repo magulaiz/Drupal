@@ -188,15 +188,16 @@ class UserLoginTest extends BrowserTestBase {
    *
    * @param \Drupal\user\Entity\User $account
    *   A user object with name and passRaw attributes for the login attempt.
-   * @param mixed $flood_trigger
+   * @param string $flood_trigger
    *   (optional) Whether or not to expect that the flood control mechanism
    *    will be triggered. Defaults to NULL.
    *   - Set to 'user' to expect a 'too many failed logins error.
-   *   - Set to any value to expect an error for too many failed logins per IP
-   *   .
+   *   - Set to any value to expect an error for too many failed logins per IP.
    *   - Set to NULL to expect a failed login.
+   *
+   * @internal
    */
-  public function assertFailedLogin($account, $flood_trigger = NULL) {
+  public function assertFailedLogin(User $account, string $flood_trigger = NULL): void {
     $database = \Drupal::database();
     $edit = [
       'name' => $account->getAccountName(),
@@ -216,6 +217,7 @@ class UserLoginTest extends BrowserTestBase {
         ->fetchField();
       if ($flood_trigger == 'user') {
         $this->assertSession()->pageTextMatches("/There (has|have) been more than \w+ failed login attempt.* for this account. It is temporarily blocked. Try again later or request a new password./");
+        $this->assertSession()->elementExists('css', 'body.maintenance-page');
         $this->assertSession()->linkExists("request a new password");
         $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass')->toString());
         $this->assertEquals('Flood control blocked login attempt for uid %uid from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per user.');
@@ -223,6 +225,7 @@ class UserLoginTest extends BrowserTestBase {
       else {
         // No uid, so the limit is IP-based.
         $this->assertSession()->pageTextContains("Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or request a new password.");
+        $this->assertSession()->elementExists('css', 'body.maintenance-page');
         $this->assertSession()->linkExists("request a new password");
         $this->assertSession()->linkByHrefExists(Url::fromRoute('user.pass')->toString());
         $this->assertEquals('Flood control blocked login attempt from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per IP.');
