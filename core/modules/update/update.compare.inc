@@ -202,9 +202,24 @@ function update_calculate_project_data($available) {
  * @param $project_data
  *   An array containing information about a specific project. The follow values
  *   may be set by this function:
+ *   - 'existing_version': (string) This is the current installed version.
  *   - 'recommended': (string) This is the recommended version that the project
- *     should be on. This is could be the existing version, in which there is no
+ *     should be on. This could be the existing version, in which there is no
  *     update needed.
+ *   - 'latest_version': (object) This is the most recent version for the target
+ *      major version.
+ *   - 'dev_version': (object) Development release.
+ *   - 'latest_dev': (object) If current version is a dev version, 'latest_dev'
+ *      have the latest dev version.
+ *   - 'also': (array) This is a list of the latest official release from any
+ *      higher major versions than recommended that have been released. It is
+ *      showed as "Also available".
+ *   - 'extra': (array) This contains extra details about the existing version.
+ *   - 'status': Project status (one of the UpdateManagerInterface constants).
+ *   - 'reason': (string) This is the reason behind the specific 'status'.
+ *   - 'fetch_status': It is set when the 'status' is set to
+ *      UpdateFetcherInterface::FETCH_PENDING.
+ *   - 'install_type': Project Install type. It can be 'official','dev',etc.
  * @param $available
  *   Data about available project releases of a specific project.
  */
