@@ -21,8 +21,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  * @endcode
  *
  * In this example the public files are retrieved from the source database.
- * The site path is specified because it's not default one (sites/default).
- * For complete example, refer to the "Public files" migration.
+ * The site path is specified because it's not the default one (sites/default).
+ * For complete example, refer to the d6_file.yml migration.
  *
  * For additional configuration keys, refer to the parent classes.
  *
