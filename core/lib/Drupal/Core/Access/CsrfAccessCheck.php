@@ -3,7 +3,6 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\Authentication\AuthenticationCollectorInterface;
-use Drupal\Core\Authentication\AuthenticationManager;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Authentication\CsrfSafeAuthenticationProviderInterface;
 use Drupal\Core\Routing\Access\AccessInterface as RoutingAccessInterface;
@@ -39,7 +38,7 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    *
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token generator.
-   * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface $authentication_collector
+   * @param \Drupal\Core\Authentication\AuthenticationCollectorInterface|null $authentication_collector
    *   The authentication provider collector.
    */
   public function __construct(CsrfTokenGenerator $csrf_token, ?AuthenticationCollectorInterface $authentication_collector = NULL) {
@@ -100,7 +99,7 @@ class CsrfAccessCheck implements RoutingAccessInterface {
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match object.
    *
-   * @return \Drupal\Core\Access\AccessResultInterface|NULL
+   * @return \Drupal\Core\Access\AccessResultInterface|null
    *   An allowed access result, with cacheability metadata appended, or NULL.
    */
   protected function csrfCheckDisabled(Route $route, Request $request, RouteMatchInterface $route_match) {
