@@ -56,12 +56,12 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
         continue;
       }
 
-      if (!$bundle_entity_type = $entity_type->getBundleEntityType()) {
+      if (!$bundle_type_id = $entity_type->getBundleEntityType()) {
         continue;
       }
 
-      $this->derivatives["permissions_$bundle_entity_type"] = [
-        'route_name' => "entity.$bundle_entity_type.permission_form",
+      $this->derivatives["permissions_$bundle_type_id"] = [
+        'route_name' => "entity.$bundle_type_id.permission_form",
         'weight' => 10,
         'title' => $this->t('Manage permissions'),
         'base_route' => $base_route,
