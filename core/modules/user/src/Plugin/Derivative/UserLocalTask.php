@@ -51,12 +51,18 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $this->derivatives = [];
 
-    foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
-      if (!$base_route = $entity_type->get('field_ui_base_route')) {
+    $entity_definitions = $this->entityTypeManager->getDefinitions();
+    foreach ($entity_definitions as $bundle_type_id => $bundle_entity_type) {
+      if (!$bundle_entity_type->hasLinkTemplate('permission-form')) {
         continue;
       }
 
-      if (!$bundle_type_id = $entity_type->getBundleEntityType()) {
+      if (!$entity_type_id = $bundle_entity_type->getBundleOf()) {
+        continue;
+      }
+
+      $entity_type = $entity_definitions[$entity_type_id];
+      if (!$base_route = $entity_type->get('field_ui_base_route')) {
         continue;
       }
 
