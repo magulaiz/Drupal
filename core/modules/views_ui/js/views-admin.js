@@ -109,7 +109,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
@@ -131,7 +131,7 @@
     var $target = $(event.target);
     var label = $target.closest('td').next().html().trim();
 
-    if ($target.is(':checked')) {
+    if (event.target.checked) {
       this.$selected_div.show().css('display', 'block');
       this.checkedItems.push(label);
     } else {
@@ -186,7 +186,7 @@
         var $this = $(this);
         var $trigger = $this.children('a[href="#"]');
 
-        if ($this.children('.action-list').is(':visible')) {
+        if ($this.children('.action-list')[0].visible) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });
@@ -203,7 +203,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
@@ -292,7 +292,7 @@
         $('#preview-args').parent().hide();
       }
 
-      if ($(once('edit-displays-live-preview', '#edit-displays-live-preview')).is(':checked')) {
+      if ($(once('edit-displays-live-preview', '#edit-displays-live-preview'))[0].checked) {
         $(once('edit-displays-live-preview', '#preview-submit')).trigger('click');
       }
     }
@@ -394,7 +394,7 @@
           if (previousRow.length && !previousRow.hasClass('group-message') && !previousRow.hasClass('draggable')) {
             var next = thisRow.next();
 
-            if (next.is('tr')) {
+            if (next[0].tagName === 'TR') {
               this.swap('after', next);
             }
           }
@@ -420,7 +420,7 @@
         var groupName = groupRow.className.replace(/([^ ]+[ ]+)*group-([^ ]+)-message([ ]+[^ ]+)*/, '$2');
         var groupField = $('select.views-group-select', this.rowObject.element);
 
-        if (!groupField.is(".views-group-select-".concat(groupName))) {
+        if (!groupField[0].matches(".views-group-select-".concat(groupName))) {
           var oldGroupName = groupField.attr('class').replace(/([^ ]+[ ]+)*views-group-select-([^ ]+)([ ]+[^ ]+)*/, '$2');
           groupField.removeClass("views-group-select-".concat(oldGroupName)).addClass("views-group-select-".concat(groupName));
           groupField.val(groupName);
@@ -467,7 +467,7 @@
           $currentEmptyRow = $row.next('tr');
           $currentEmptyRow.removeClass('group-populated').addClass('group-empty');
           $operatorCell.attr('rowspan', 2);
-        } else if ($row.hasClass('draggable') && $row.is(':visible')) {
+        } else if ($row.hasClass('draggable') && rows[i].visible) {
           draggableCount++;
           $currentEmptyRow.removeClass('group-empty').addClass('group-populated');
           $operatorCell.attr('rowspan', draggableCount + 1);
@@ -485,10 +485,10 @@
         var $checkboxes = $selectAll.closest('.form-checkboxes').find('.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]');
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
-          $checkboxes.prop('checked', $(this).is(':checked'));
+          $checkboxes.prop('checked', this.checked);
         });
         $checkboxes.on('click', function () {
-          if ($(this).is('checked') === false) {
+          if (this.checked === false) {
             $selectAllCheckbox.prop('checked', false);
           }
         });

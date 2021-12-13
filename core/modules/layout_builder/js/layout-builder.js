@@ -172,7 +172,7 @@
       };
 
       $('#layout-builder-content-preview', context).on('change', function (event) {
-        var isChecked = $(event.currentTarget).is(':checked');
+        var isChecked = event.currentTarget.checked;
         localStorage.setItem(contentPreviewId, JSON.stringify(isChecked));
 
         if (isChecked) {

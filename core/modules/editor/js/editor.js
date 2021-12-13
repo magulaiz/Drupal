@@ -129,7 +129,7 @@
           $(field).off('.editor');
         });
 
-        if ($this.is('select')) {
+        if (editor.tagName === 'SELECT') {
           $this.on('change.editorAttach', {
             field: field
           }, onTextFormatChange);

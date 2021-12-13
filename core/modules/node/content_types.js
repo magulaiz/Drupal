@@ -20,7 +20,7 @@
           vals.push(Drupal.checkPlain($(this).text()));
         });
 
-        if (!$(context).find('#edit-options-status').is(':checked')) {
+        if (!$(context).find('#edit-options-status')[0].checked) {
           vals.unshift(Drupal.t('Not published'));
         }
 
@@ -41,7 +41,7 @@
           vals.push(Drupal.checkPlain($(this).text()));
         });
 
-        if (!$editContext.find('#edit-display-submitted').is(':checked')) {
+        if (!$editContext.find('#edit-display-submitted')[0].checked) {
           vals.unshift(Drupal.t("Don't display post information"));
         }
 

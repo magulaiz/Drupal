@@ -262,7 +262,7 @@
       const $context = $(context);
       let $form = $context;
       // The add handler form may have an id of views-ui-add-handler-form--n.
-      if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       if (once('views-ui-add-handler-form', $form).length) {
@@ -314,7 +314,7 @@
     const $target = $(event.target);
     const label = $target.closest('td').next().html().trim();
     // Add/remove the checked item to the list.
-    if ($target.is(':checked')) {
+    if (event.target.checked) {
       this.$selected_div.show().css('display', 'block');
       this.checkedItems.push(label);
     } else {
@@ -413,7 +413,7 @@
       $('li.add', $menu).on('mouseleave', function (event) {
         const $this = $(this);
         const $trigger = $this.children('a[href="#"]');
-        if ($this.children('.action-list').is(':visible')) {
+        if ($this.children('.action-list')[0].visible) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });
@@ -450,7 +450,7 @@
       const $context = $(context);
       let $form = $context;
       // The add handler form may have an id of views-ui-add-handler-form--n.
-      if (!$context.is('form[id^="views-ui-add-handler-form"]')) {
+      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
       // Make sure we don't add more than one event handler to the same form.
@@ -621,9 +621,8 @@
 
       // Executes an initial preview.
       if (
-        $(once('edit-displays-live-preview', '#edit-displays-live-preview')).is(
-          ':checked',
-        )
+        $(once('edit-displays-live-preview', '#edit-displays-live-preview'))[0]
+          .checked
       ) {
         $(once('edit-displays-live-preview', '#preview-submit')).trigger(
           'click',
@@ -932,7 +931,7 @@
             ) {
               // Move the dragged row down one.
               const next = thisRow.next();
-              if (next.is('tr')) {
+              if (next[0].tagName === 'TR') {
                 this.swap('after', next);
               }
             }
@@ -974,7 +973,7 @@
             'select.views-group-select',
             this.rowObject.element,
           );
-          if (!groupField.is(`.views-group-select-${groupName}`)) {
+          if (!groupField[0].matches(`.views-group-select-${groupName}`)) {
             const oldGroupName = groupField
               .attr('class')
               .replace(
@@ -1066,7 +1065,7 @@
             // The cell with the dropdown operator should span the title row and
             // the "this group is empty" row.
             $operatorCell.attr('rowspan', 2);
-          } else if ($row.hasClass('draggable') && $row.is(':visible')) {
+          } else if ($row.hasClass('draggable') && rows[i].visible) {
             // We've found a visible filter row, so we now know the group isn't
             // empty.
             draggableCount++;
@@ -1109,12 +1108,12 @@
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
           // Update all checkbox beside the select all checkbox.
-          $checkboxes.prop('checked', $(this).is(':checked'));
+          $checkboxes.prop('checked', this.checked);
         });
 
         // Uncheck the select all checkbox if any of the others are unchecked.
         $checkboxes.on('click', function () {
-          if ($(this).is('checked') === false) {
+          if (this.checked === false) {
             $selectAllCheckbox.prop('checked', false);
           }
         });

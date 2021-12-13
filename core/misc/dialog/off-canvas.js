@@ -12,7 +12,7 @@
     minDisplaceWidth: 768,
     $mainCanvasWrapper: $('[data-off-canvas-main-canvas]'),
     isOffCanvas: function isOffCanvas($element) {
-      return $element.is('#drupal-off-canvas');
+      return $element[0].id === 'drupal-off-canvas';
     },
     removeOffCanvasEvents: function removeOffCanvasEvents($element) {
       $element.off('.off-canvas');

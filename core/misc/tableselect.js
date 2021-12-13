@@ -41,7 +41,7 @@
     };
 
     $table.find('th.select-all').prepend($(Drupal.theme('checkbox')).attr('title', strings.selectAll)).on('click', function (event) {
-      if ($(event.target).is('input[type="checkbox"]')) {
+      if (event.target.matches('input[type="checkbox"]')) {
         checkboxes.each(function () {
           var $checkbox = $(this);
           var stateChanged = $checkbox.prop('checked') !== event.target.checked;

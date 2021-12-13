@@ -15,7 +15,7 @@
           vals.push(Drupal.checkPlain($(this).find('label').text()));
         });
 
-        if (!$(context).find('#edit-options-status').is(':checked')) {
+        if (!$(context).find('#edit-options-status')[0].checked) {
           vals.unshift(Drupal.t('Not published'));
         }
 

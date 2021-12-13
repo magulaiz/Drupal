@@ -396,7 +396,7 @@
       };
 
       $('#layout-builder-content-preview', context).on('change', (event) => {
-        const isChecked = $(event.currentTarget).is(':checked');
+        const isChecked = event.currentTarget.checked;
 
         localStorage.setItem(contentPreviewId, JSON.stringify(isChecked));
 

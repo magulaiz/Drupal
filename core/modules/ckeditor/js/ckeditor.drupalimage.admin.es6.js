@@ -32,7 +32,7 @@
               ? `(${$maxWidth.val()}x${$maxHeight.val()})`
               : '';
 
-          if (!$status.is(':checked')) {
+          if (!$status[0].checked) {
             return Drupal.t('Uploads disabled');
           }
 

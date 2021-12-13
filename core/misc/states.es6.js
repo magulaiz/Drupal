@@ -569,7 +569,7 @@
       collapsed(e) {
         return typeof e !== 'undefined' && 'value' in e
           ? e.value
-          : !this.is('[open]');
+          : !this[0].hasAttribute('open');
       },
     },
   };
@@ -728,7 +728,7 @@
 
   $document.on('state:collapsed', (e) => {
     if (e.trigger) {
-      if ($(e.target).is('[open]') === e.value) {
+      if (e.target.hasAttribute('open') === e.value) {
         $(e.target).find('> summary').trigger('click');
       }
     }

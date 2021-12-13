@@ -56,11 +56,11 @@
             }
           }
 
-          if ($this.next('tr').is(':not(.draggable)') || $this.next('tr').length === 0) {
+          if (!$this.next('tr')[0].matches('.draggable') || $this.next('tr').length === 0) {
             $this.removeClass('region-populated').addClass('region-empty');
-          } else if ($this.is('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
-          }
+          } else if (this.matches('.region-empty')) {
+              $this.removeClass('region-empty').addClass('region-populated');
+            }
         });
       }
 
@@ -68,7 +68,7 @@
         table.find('.color-success').removeClass('color-success');
         var $rowObject = $(rowObject);
 
-        if (!$rowObject.is('.drag-previous')) {
+        if (!rowObject.matches('.drag-previous')) {
           table.find('.drag-previous').removeClass('drag-previous');
           $rowObject.addClass('drag-previous');
         }
@@ -101,7 +101,7 @@
           regionField.trigger('change');
         }
 
-        if (!regionField.is(".block-region-".concat(regionName))) {
+        if (!regionField[0].matches(".block-region-".concat(regionName))) {
           var weightField = $rowElement.find('select.block-weight');
           var oldRegionName = weightField[0].className.replace(/([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/, '$2');
           regionField.removeClass("block-region-".concat(oldRegionName)).addClass("block-region-".concat(regionName));

@@ -86,7 +86,7 @@
             i = input.i;
 
             for (j = i + 1;; ++j) {
-              if (!locks[j - 1] || $(locks[j - 1]).is('.is-unlocked')) {
+              if (!locks[j - 1] || locks[j - 1].matches('.is-unlocked')) {
                 break;
               }
 
@@ -95,7 +95,7 @@
             }
 
             for (j = i - 1;; --j) {
-              if (!locks[j] || $(locks[j]).is('.is-unlocked')) {
+              if (!locks[j] || locks[j].matches('.is-unlocked')) {
                 break;
               }
 
@@ -162,12 +162,12 @@
 
             if (toggleClick) {
               $(this).addClass('is-unlocked').html(Drupal.t('Lock'));
-              $(hooks[i - 1]).attr('class', locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-up' : 'color-palette__hook');
-              $(hooks[i]).attr('class', locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-down' : 'color-palette__hook');
+              $(hooks[i - 1]).attr('class', locks[i - 2] && !locks[i - 2].matches('.is-unlocked') ? 'color-palette__hook is-up' : 'color-palette__hook');
+              $(hooks[i]).attr('class', locks[i] && !locks[i].matches('.is-unlocked') ? 'color-palette__hook is-down' : 'color-palette__hook');
             } else {
               $(this).removeClass('is-unlocked').html(Drupal.t('Unlock'));
-              $(hooks[i - 1]).attr('class', locks[i - 2] && $(locks[i - 2]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-down');
-              $(hooks[i]).attr('class', locks[i] && $(locks[i]).is(':not(.is-unlocked)') ? 'color-palette__hook is-both' : 'color-palette__hook is-up');
+              $(hooks[i - 1]).attr('class', locks[i - 2] && !locks[i - 2].matches('.is-unlocked') ? 'color-palette__hook is-both' : 'color-palette__hook is-down');
+              $(hooks[i]).attr('class', locks[i] && !locks[i].matches('.is-unlocked') ? 'color-palette__hook is-both' : 'color-palette__hook is-up');
             }
 
             toggleClick = !toggleClick;

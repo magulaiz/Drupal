@@ -197,7 +197,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     if (!this.url) {
       var $element = $(this.element);
 
-      if ($element.is('a')) {
+      if (this.element.tagName === 'A') {
         this.url = $element.attr('href');
       } else if (this.element && element.form) {
         this.url = this.$form.attr('action');

@@ -18,9 +18,7 @@
         .find('.menu-link-form')
         .drupalSetSummary((context) => {
           const $context = $(context);
-          if (
-            $context.find('.js-form-item-menu-enabled input').is(':checked')
-          ) {
+          if ($context.find('.js-form-item-menu-enabled input')[0].checked) {
             return Drupal.checkPlain(
               $context.find('.js-form-item-menu-title input').val(),
             );
@@ -60,7 +58,7 @@
         // If there is a link title already, mark it as overridden. The user
         // expects that toggling the checkbox twice will take over the node's
         // title.
-        if ($checkbox.is(':checked') && $linkTitle.val().length) {
+        if ($checkbox[0].checked && $linkTitle.val().length) {
           $linkTitle.data('menuLinkAutomaticTitleOverridden', true);
         }
         // Whenever the value is changed manually, disable this behavior.
@@ -69,7 +67,7 @@
         });
         // Global trigger on checkbox (do not fill-in a value when disabled).
         $checkbox.on('change', () => {
-          if ($checkbox.is(':checked')) {
+          if ($checkbox[0].checked) {
             if (!$linkTitle.data('menuLinkAutomaticTitleOverridden')) {
               $linkTitle.val($title.val());
             }
@@ -84,7 +82,7 @@
         $title.on('keyup', () => {
           if (
             !$linkTitle.data('menuLinkAutomaticTitleOverridden') &&
-            $checkbox.is(':checked')
+            $checkbox[0].checked
           ) {
             $linkTitle.val($title.val());
             $linkTitle.val($title.val()).trigger('formUpdated');
