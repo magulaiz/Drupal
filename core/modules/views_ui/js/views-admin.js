@@ -442,11 +442,11 @@
             if ($existingOperatorLabel.length) {
               $existingOperatorLabel.replaceWith(operatorLabel);
             } else {
-              $firstCell.append(operatorLabel);
-            }
+                $firstCell.append(operatorLabel);
+              }
           } else {
-            $existingOperatorLabel.remove();
-          }
+              $existingOperatorLabel.remove();
+            }
         }
       }
     },
