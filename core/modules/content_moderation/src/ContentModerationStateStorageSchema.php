@@ -48,12 +48,10 @@ class ContentModerationStateStorageSchema extends SqlContentEntityStorageSchema 
     $field_name = $storage_definition->getName();
 
     if ($table_name == $this->storage->getRevisionDataTable()) {
-      switch ($field_name) {
-        // Add index to moderation state to improve performance for the
-        // views plugins that join using this column.
-        case 'moderation_state':
-          $this->addSharedTableFieldIndex($storage_definition, $schema);
-          break;
+      // Add index to moderation state to improve performance for the
+      // views plugins that join using this column.
+      if ($field_name === 'moderation_state') {
+        $this->addSharedTableFieldIndex($storage_definition, $schema);
       }
     }
 
