@@ -37,7 +37,23 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _classCallCheck(this, _class);
 
       _this = _super.call(this);
-      console.log('i am the constructor for toolbarmodel.');
+      console.log('i am the constructor for toolbarmodel.', _assertThisInitialized(_this));
+      _this.activeTab = null;
+      _this.activeTray = null;
+      _this.isOriented = false;
+      _this.isFixed = false;
+      _this.areSubtreesLoaded = false;
+      _this.isViewportOverflowConstrained = false;
+      _this.orientation = 'horizontal';
+      _this.locked = false;
+      _this.isTrayToggleVisible = true;
+      _this.height = null;
+      _this.offsets = {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      };
       return _this;
     }
 

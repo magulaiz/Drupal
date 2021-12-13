@@ -11,19 +11,10 @@
    *
    * @augments Backbone.Model
    */
-  Drupal.toolbar.MenuModel = Drupal.Model.extend(
-    /** @lends Drupal.toolbar.MenuModel# */ {
-      /**
-       * @type {object}
-       *
-       * @prop {object} subtrees
-       */
-      defaults: /** @lends Drupal.toolbar.MenuModel# */ {
-        /**
-         * @type {object}
-         */
-        subtrees: {},
-      },
-    },
-  );
+  Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {
+    constructor() {
+      super();
+      this.subtrees = {};
+    }
+  };
 })(Backbone, Drupal);

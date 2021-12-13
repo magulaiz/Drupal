@@ -4,8 +4,7 @@
  */
 
 (function (Backbone, Drupal) {
-  Drupal.toolbar.ToolbarAuralView = Backbone.View.extend(
-    /** @lends Drupal.toolbar.ToolbarAuralView# */ {
+  Drupal.toolbar.ToolbarAuralView = class extends Drupal.DrupalView {
       /**
        * Backbone view for the aural feedback of the toolbar.
        *
@@ -18,16 +17,22 @@
        * @param {object} options.strings
        *   Various strings to use in the view.
        */
-      initialize(options) {
-        this.strings = options.strings;
+      constructor(options) {
+        super();
+        this.model = options.model;
+        this.addChangeListener(`model-${this.model.modelId}-change-orientation`, this.onOrientationChange);
+      }
 
-        this.listenTo(
-          this.model,
-          'change:orientation',
-          this.onOrientationChange,
-        );
-        this.listenTo(this.model, 'change:activeTray', this.onActiveTrayChange);
-      },
+      // initialize(options) {
+      //   this.strings = options.strings;
+      //
+      //   this.listenTo(
+      //     this.model,
+      //     'change:orientation',
+      //     this.onOrientationChange,
+      //   );
+      //   this.listenTo(this.model, 'change:activeTray', this.onActiveTrayChange);
+      // }
 
       /**
        * Announces an orientation change.
@@ -38,12 +43,13 @@
        *   The new value of the orientation attribute in the model.
        */
       onOrientationChange(model, orientation) {
+        console.log('orientation change', this.model.get('orientation'));
         Drupal.announce(
           Drupal.t('Tray orientation changed to @orientation.', {
             '@orientation': orientation,
           }),
         );
-      },
+      }
 
       /**
        * Announces a changed active tray.
@@ -74,7 +80,6 @@
           text = Drupal.t('Tray @action.', { '@action': action });
         }
         Drupal.announce(text);
-      },
-    },
-  );
+      }
+    };
 })(Backbone, Drupal);

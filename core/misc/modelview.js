@@ -38,14 +38,16 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _classCallCheck(this, _class);
 
-      console.log('i am the constructor in lil model.');
-      return _possibleConstructorReturn(_this);
+      _this = _super.call(this);
+      _this.modelId = (Math.random() + 1).toString(36).substring(7);
+      console.log('i am the constructor in lil model with id.', _this.modelId);
+      return _this;
     }
 
     _createClass(_class, [{
       key: "get",
       value: function get(property) {
-        return this.get(property);
+        return this[property];
       }
     }, {
       key: "set",
@@ -58,11 +60,24 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
         if (_typeof(args[0]) === 'object') {
           Object.keys(args[0]).forEach(function (key) {
-            _this2[key] = args[0][key];
+            _this2.set(key, args[0][key]);
           });
-        } else if (args[1].length) {
+        } else if (args[1]) {
           this[args[0]] = args[1];
+          this.triggerEvent("model-".concat(this.modelId, "-change"));
+          this.triggerEvent("model-".concat(this.modelId, "-change-").concat(args[0]));
         }
+      }
+    }, {
+      key: "triggerEvent",
+      value: function triggerEvent(type) {
+        var cancelable = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+        console.log('trigger event type', type);
+        var event = new CustomEvent(type, {
+          bubbles: true,
+          cancelable: cancelable
+        });
+        return document.dispatchEvent(event);
       }
     }]);
 
@@ -79,9 +94,20 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _classCallCheck(this, _class2);
 
+      _this3 = _super2.call(this);
       console.log('i am the constructor in lil view.');
-      return _possibleConstructorReturn(_this3);
+
+      if (_typeof(arguments.length <= 0 ? undefined : arguments[0]) === 'object') {}
+
+      return _this3;
     }
+
+    _createClass(_class2, [{
+      key: "addChangeListener",
+      value: function addChangeListener(callback, modelProperty) {
+        if (!property) {} else {}
+      }
+    }]);
 
     return _class2;
   }(Backbone.View);
