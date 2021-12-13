@@ -208,9 +208,10 @@ function update_calculate_project_data($available) {
  *     update needed.
  *   - 'latest_version': (object) This is the most recent version for the target
  *      major version.
- *   - 'dev_version': (object) Development release.
- *   - 'latest_dev': (object) If existing version is a dev version, 'latest_dev'
- *      will have the latest dev version.
+ *   - 'dev_version': (string) Development release.
+ *   - 'latest_dev': (string) This value is only set if the installed version is
+ *      a dev version. This will be set to the value of latest_version or
+ *      dev_version depending on which release is the most recent one.
  *   - 'also': (array) This is a list of the latest official releases from any
  *      higher major versions. It is
  *      shown as "Also available".
