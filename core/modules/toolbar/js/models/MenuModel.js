@@ -4,3 +4,11 @@
 * https://www.drupal.org/node/2815083
 * @preserve
 **/
+
+(function (Backbone, Drupal) {
+  Drupal.toolbar.MenuModel = Drupal.Model.extend({
+    defaults: {
+      subtrees: {}
+    }
+  });
+})(Backbone, Drupal);

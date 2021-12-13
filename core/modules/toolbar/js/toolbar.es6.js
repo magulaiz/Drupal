@@ -531,7 +531,7 @@
     onOrientationToggleClick(e) {
       e.preventDefault();
       e.stopPropagation();
-      const orientation = this.orientation;
+      const { orientation } = this;
       // Determine the toggle-to orientation.
       const antiOrientation =
         orientation === 'vertical' ? 'horizontal' : 'vertical';
@@ -638,72 +638,81 @@
         return;
       }
       // Process the administrative toolbar.
-      once('toolbar', '#toolbar-administration', context).forEach(() => {
-        // Add the tray orientation toggles.
-        const bar = document.querySelector('#toolbar-administration');
-        const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        const toggleHTML = document.createElement('div');
-        toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
-        Array.from(trays).forEach((item) => {
-          item.insertAdjacentHTML(
-            'beforeend',
-            Drupal.theme('toolbarOrientationToggle'),
-          );
+      once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
+        // Establish the toolbar models and views.
+        const model = new Drupal.toolbar.ToolbarModel({
+          locked: JSON.parse(
+            localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
+          ),
+          activeTab: document.getElementById(
+            JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID')),
+          ),
+          height: $('#toolbar-administration').outerHeight(),
         });
+        // Add the tray orientation toggles.
+        // const bar = document.querySelector('#toolbar-administration');
+        // const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
+        // const toggleHTML = document.createElement('div');
+        // toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
+        // Array.from(trays).forEach((item) => {
+        //   item.insertAdjacentHTML(
+        //     'beforeend',
+        //     Drupal.theme('toolbarOrientationToggle'),
+        //   );
+        // });
+        //
+        // // If the toolbar's orientation is horizontal and no active tab is
+        // // defined then show the tray of the first toolbar tab by default (but
+        // // not the first 'Home' toolbar tab).
+        // if (
+        //   toolbarBehaviors.orientation === 'horizontal' &&
+        //   toolbarBehaviors.activeTab === null
+        // ) {
+        //   toolbarBehaviors.activeTab =
+        //     '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
+        // }
+        //
+        // // Add event listeners to toolbar
+        // document
+        //   .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+        //   .forEach((toolbarTab) => {
+        //     toolbarTab.addEventListener('click', (e) =>
+        //       toolbarBehaviors.onTabClick(e),
+        //     );
+        //   });
+        //
+        // document
+        //   .querySelectorAll('.toolbar-toggle-orientation button')
+        //   .forEach((button) => {
+        //     button.addEventListener('click', (e) =>
+        //       toolbarBehaviors.onOrientationToggleClick(e),
+        //     );
+        //   });
+        //
+        // document
+        //   .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+        //   .forEach((toolbarTab) => {
+        //     toolbarTab.addEventListener('touchend', (e) =>
+        //       toolbarBehaviors.touchEndToClick(e),
+        //     );
+        //   });
+        //
+        // document
+        //   .querySelectorAll('.toolbar-toggle-orientation button')
+        //   .forEach((toolbarTab) => {
+        //     toolbarTab.addEventListener('touchend', (e) =>
+        //       toolbarBehaviors.touchEndToClick(e),
+        //     );
+        //   });
+        //
+        // toolbarBehaviors.locked = JSON.parse(
+        //   localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
+        // );
+        //
+        // toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
 
-        // If the toolbar's orientation is horizontal and no active tab is
-        // defined then show the tray of the first toolbar tab by default (but
-        // not the first 'Home' toolbar tab).
-        if (
-          toolbarBehaviors.orientation === 'horizontal' &&
-          toolbarBehaviors.activeTab === null
-        ) {
-          toolbarBehaviors.activeTab =
-            '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
-        }
+        Drupal.toolbar.models.toolbarModel = model;
 
-        // Add event listeners to toolbar
-        document
-          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('click', (e) =>
-              toolbarBehaviors.onTabClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((button) => {
-            button.addEventListener('click', (e) =>
-              toolbarBehaviors.onOrientationToggleClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              toolbarBehaviors.touchEndToClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              toolbarBehaviors.touchEndToClick(e),
-            );
-          });
-
-        toolbarBehaviors.locked = JSON.parse(
-          localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
-        );
-
-        toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
-
-        Drupal.toolbar.toolbarBehaviors = toolbarBehaviors;
-
-        // TODO:
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
         Object.keys(options.breakpoints).forEach((label) => {
@@ -713,41 +722,60 @@
           // Curry the model and the label of the media query breakpoint to
           // the mediaQueryChangeHandler function.
           mql.addListener(
-            Drupal.toolbar.mediaQueryChangeHandler.bind(
-              null,
-              toolbarBehaviors,
-              label,
-            ),
+            Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label),
           );
           // Fire the mediaQueryChangeHandler for each configured breakpoint
           // so that they process once.
-          Drupal.toolbar.mediaQueryChangeHandler.call(
-            null,
-            toolbarBehaviors,
-            label,
-            mql,
-          );
+          Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
         });
+
+        Drupal.toolbar.views.toolbarVisualView =
+          new Drupal.toolbar.ToolbarVisualView({
+            el: toolbar,
+            model,
+            strings: options.strings,
+          });
+        Drupal.toolbar.views.toolbarAuralView =
+          new Drupal.toolbar.ToolbarAuralView({
+            el: toolbar,
+            model,
+            strings: options.strings,
+          });
+        Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
+          {
+            el: toolbar,
+            model,
+          },
+        );
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
-        // TODO: see whats different on mobile view without these
-        // change states of isFixed, activeTray
-        // model.trigger('change:isFixed', model, model.get('isFixed'));
-        // model.trigger('change:activeTray', model, model.get('activeTray'));
+        model.trigger('change:isFixed', model, model.get('isFixed'));
+        model.trigger('change:activeTray', model, model.get('activeTray'));
+
+        // Render collapsible menus.
+        const menuModel = new Drupal.toolbar.MenuModel();
+        Drupal.toolbar.models.menuModel = menuModel;
+        Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
+          {
+            el: $(toolbar).find('.toolbar-menu-administration').get(0),
+            model: menuModel,
+            strings: options.strings,
+          },
+        );
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked
         // asynchronously.
         Drupal.toolbar.setSubtrees.done((subtrees) => {
-          toolbarBehaviors.subtrees = subtrees;
-          const { theme } = drupalSettings.ajaxPageState;
+          menuModel.set('subtrees', subtrees);
+          const theme = drupalSettings.ajaxPageState.theme;
           localStorage.setItem(
             `Drupal.toolbar.subtrees.${theme}`,
             JSON.stringify(subtrees),
           );
           // Indicate on the toolbarModel that subtrees are now loaded.
-          toolbarBehaviors.areSubtreesLoaded = true;
+          model.set('areSubtreesLoaded', true);
         });
 
         // Trigger an initial attempt to load menu subitems. This first attempt
@@ -757,14 +785,41 @@
         // orientation. Thus we give the Toolbar a chance to determine if it
         // should be set to horizontal orientation before attempting to load
         // menu subtrees.
-        // Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
-        toolbarBehaviors.loadSubtrees();
+        Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
+        // toolbarBehaviors.loadSubtrees();
 
         $(document)
           // Update the model when the viewport offset changes.
           .on('drupalViewportOffsetChange.toolbar', (event, offsets) => {
-            toolbarBehaviors.offsets = offsets;
+            model.set('offsets', offsets);
           });
+
+        // Broadcast model changes to other modules.
+        model
+          .on('change:orientation', (model, orientation) => {
+            $(document).trigger('drupalToolbarOrientationChange', orientation);
+          })
+          .on('change:activeTab', (model, tab) => {
+            $(document).trigger('drupalToolbarTabChange', tab);
+          })
+          .on('change:activeTray', (model, tray) => {
+            $(document).trigger('drupalToolbarTrayChange', tray);
+          });
+
+        // If the toolbar's orientation is horizontal and no active tab is
+        // defined then show the tray of the first toolbar tab by default (but
+        // not the first 'Home' toolbar tab).
+        if (
+          Drupal.toolbar.models.toolbarModel.get('orientation') ===
+            'horizontal' &&
+          Drupal.toolbar.models.toolbarModel.get('activeTab') === null
+        ) {
+          Drupal.toolbar.models.toolbarModel.set({
+            activeTab: $(
+              '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
+            ).get(0),
+          });
+        }
 
         $(window).on({
           'dialog:aftercreate': (event, dialog, $element, settings) => {
@@ -805,14 +860,14 @@
      *
      * @type {object.<string, Backbone.View>}
      */
-    // views: {},
+    views: {},
 
     /**
      * A hash of Model instances.
      *
      * @type {object.<string, Backbone.Model>}
      */
-    // models: {},
+    models: {},
 
     /**
      * A hash of MediaQueryList objects tracked by the toolbar.
@@ -845,28 +900,37 @@
     mediaQueryChangeHandler(model, label, mql) {
       switch (label) {
         case 'toolbar.narrow':
-          toolbarBehaviors.isOriented = mql.matches;
-          toolbarBehaviors.isTrayToggleVisible = false;
+          model.set({
+            isOriented: mql.matches,
+            isTrayToggleVisible: false,
+          });
           // If the toolbar doesn't have an explicit orientation yet, or if the
           // narrow media query doesn't match then set the orientation to
           // vertical.
-          if (!mql.matches || !toolbarBehaviors.orientation) {
-            toolbarBehaviors.orientation = 'vertical';
-            // toolbarBehaviors.validate = true;
+          if (!mql.matches || !model.get('orientation')) {
+            model.set({ orientation: 'vertical' }, { validate: true });
           }
           break;
 
         case 'toolbar.standard':
-          toolbarBehaviors.isFixed = mql.matches;
+          model.set({
+            isFixed: mql.matches,
+          });
           break;
 
         case 'toolbar.wide':
-          toolbarBehaviors.orientation =
-            mql.matches && !toolbarBehaviors.locked ? 'horizontal' : 'vertical';
-          // toolbarBehaviors.validate = true;
+          model.set(
+            {
+              orientation:
+                mql.matches && !model.get('locked') ? 'horizontal' : 'vertical',
+            },
+            { validate: true },
+          );
           // The tray orientation toggle visibility does not need to be
           // validated.
-          toolbarBehaviors.isTrayToggleVisible = mql.matches;
+          model.set({
+            isTrayToggleVisible: mql.matches,
+          });
           break;
 
         default:

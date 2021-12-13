@@ -31,8 +31,8 @@
     }
 
     function linkClickHandler(event) {
-      if (!Drupal.toolbar.toolbarBehaviors.isFixed()) {
-        Drupal.toolbar.toolbarBehaviors.activeTab = null;
+      if (!Drupal.toolbar.models.toolbarModel.get('isFixed')) {
+        Drupal.toolbar.models.toolbarModel.set('activeTab', null);
       }
 
       event.stopPropagation();

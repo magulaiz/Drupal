@@ -584,6 +584,14 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
+drupal.modelview:
+  version: VERSION
+  js:
+    misc/modelview.js: { weight: -1 }
+  dependencies:
+    - core/backbone
+    - core/drupal
+
 drupal.nodelist.foreach:
   version: VERSION
   js:

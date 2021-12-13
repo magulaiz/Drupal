@@ -27,6 +27,7 @@ toolbar:
     - core/drupal.ajax
     - core/drupal.announce
     - core/backbone
+    - core/drupal.modelview
     - core/once
     - core/jquery.once.bc
     - core/drupal.displace

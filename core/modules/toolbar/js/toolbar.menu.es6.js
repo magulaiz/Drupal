@@ -75,8 +75,8 @@
       // to take them to that destination but for the menu tray to be closed
       // after clicking: otherwise the toolbar itself is obstructing the view
       // of the destination they chose.
-      if (!Drupal.toolbar.toolbarBehaviors.isFixed()) {
-        Drupal.toolbar.toolbarBehaviors.activeTab = null;
+      if (!Drupal.toolbar.models.toolbarModel.get('isFixed')) {
+        Drupal.toolbar.models.toolbarModel.set('activeTab', null);
       }
       // Stopping propagation to make sure that once a toolbar-box is clicked
       // (the whitespace part), the page is not redirected anymore.

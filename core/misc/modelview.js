@@ -9,6 +9,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -23,11 +27,9 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-(function (Backbone, Drupal) {
-  console.log('drupal model', Drupal.DrupalModel);
-
-  Drupal.toolbar.ToolbarModel = function (_Drupal$DrupalModel) {
-    _inherits(_class, _Drupal$DrupalModel);
+(function (Drupal) {
+  Drupal.DrupalModel = function (_Backbone$Model) {
+    _inherits(_class, _Backbone$Model);
 
     var _super = _createSuper(_class);
 
@@ -36,11 +38,51 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _classCallCheck(this, _class);
 
-      _this = _super.call(this);
-      console.log('i am the constructor for toolbarmodel.');
-      return _this;
+      console.log('i am the constructor in lil model.');
+      return _possibleConstructorReturn(_this);
     }
 
+    _createClass(_class, [{
+      key: "get",
+      value: function get(property) {
+        return this.get(property);
+      }
+    }, {
+      key: "set",
+      value: function set() {
+        var _this2 = this;
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        if (_typeof(args[0]) === 'object') {
+          Object.keys(args[0]).forEach(function (key) {
+            _this2[key] = args[0][key];
+          });
+        } else if (args[1].length) {
+          this[args[0]] = args[1];
+        }
+      }
+    }]);
+
     return _class;
-  }(Drupal.DrupalModel);
-})(Backbone, Drupal);
+  }(Backbone.Model);
+
+  Drupal.DrupalView = function (_Backbone$View) {
+    _inherits(_class2, _Backbone$View);
+
+    var _super2 = _createSuper(_class2);
+
+    function _class2() {
+      var _this3;
+
+      _classCallCheck(this, _class2);
+
+      console.log('i am the constructor in lil view.');
+      return _possibleConstructorReturn(_this3);
+    }
+
+    return _class2;
+  }(Backbone.View);
+})(Drupal);
