@@ -31,7 +31,7 @@
           // without the "Administer content" permission the checkbox won't appear,
           // but the revision log will if the content type is set to auto-revision.
           if (
-            revisionCheckbox[0].checked ||
+            (revisionCheckbox.length && revisionCheckbox[0].checked) ||
             (!revisionCheckbox.length &&
               $revisionContext.find('.js-form-item-revision-log textarea')
                 .length)
