@@ -119,8 +119,10 @@ final class ProjectCoreCompatibility {
     // Get the various releases that will need to have core compatibility
     // messages added to them.
     $releases_to_set = [];
-    foreach ($project_data['releases'] as &$release) {
-      $releases_to_set[] = &$release;
+    if (!empty($project_data['releases'])) {
+      foreach ($project_data['releases'] as &$release) {
+        $releases_to_set[] = &$release;
+      }
     }
     if (!empty($project_data['security updates'])) {
       foreach ($project_data['security updates'] as &$security_update) {
