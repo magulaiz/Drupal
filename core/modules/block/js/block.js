@@ -122,8 +122,8 @@
         if (regionItems.length) {
           regionItems.last().after(row);
         } else {
-          regionMessage.after(row);
-        }
+            regionMessage.after(row);
+          }
 
         updateBlockWeights(table, select[0].value);
         checkEmptyRegions(table, tableDrag.rowObject);
