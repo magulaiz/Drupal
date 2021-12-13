@@ -36,22 +36,29 @@
       return document.dispatchEvent(event);
     }
   };
+
   Drupal.DrupalView = class extends Backbone.View {
     constructor(...args) {
       super();
       console.log('i am the constructor in lil view.');
-      if (typeof args[0] === 'object') {
-
-      }
+      // if (typeof args[0] === 'object') {
+      // }
     }
+
     addChangeListener(callback, modelProperty) {
-      if(!property) {
+      if (!modelProperty) {
         // listen for document `model-${this.model-modelId}-change` to respond with callback
+        document.addEventListener(
+          `model-${this.model.modelId}-change`,
+          callback,
+        );
       } else {
         // listen for document `model-${this.model-modelId}-change-${modelProperty}` to respond with callback
+        document.addEventListener(
+          `model-${this.model.modelId}-change-${modelProperty}`,
+          callback,
+        );
       }
     }
-    // call this.addChangeListener('subtrees', this.renderMenu)
-    // this.addChangeListener('subtrees', this.renderBody)
   };
 })(Drupal);

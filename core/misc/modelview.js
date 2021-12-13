@@ -96,16 +96,17 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this3 = _super2.call(this);
       console.log('i am the constructor in lil view.');
-
-      if (_typeof(arguments.length <= 0 ? undefined : arguments[0]) === 'object') {}
-
       return _this3;
     }
 
     _createClass(_class2, [{
       key: "addChangeListener",
       value: function addChangeListener(callback, modelProperty) {
-        if (!property) {} else {}
+        if (!modelProperty) {
+          document.addEventListener("model-".concat(this.model.modelId, "-change"), callback);
+        } else {
+          document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback);
+        }
       }
     }]);
 

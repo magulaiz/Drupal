@@ -41,7 +41,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this = _super.call(this);
       _this.model = options.model;
 
-      _this.addChangeListener("model-".concat(_this.model.modelId, "-change-orientation"), _this.onOrientationChange);
+      _this.addChangeListener(_this.onOrientationChange, "model-".concat(_this.model.modelId, "-change-orientation"));
+
+      _this.addChangeListener(_this.onActiveTrayChange, "model-".concat(_this.model.modelId, "-change-activeTray"));
 
       return _this;
     }
@@ -56,8 +58,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       }
     }, {
       key: "onActiveTrayChange",
-      value: function onActiveTrayChange(model, tray) {
-        var relevantTray = tray === null ? model.previous('activeTray') : tray;
+      value: function onActiveTrayChange(tray) {
+        var relevantTray = tray === null ? this.model.previous('activeTray') : tray;
 
         if (!relevantTray) {
           return;

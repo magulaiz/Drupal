@@ -14,6 +14,7 @@
   Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {
     constructor() {
       super();
+      console.log('i am the constructor for menumodel.', this);
       this.subtrees = {};
     }
   };
