@@ -314,7 +314,7 @@ class ProjectStatusCalculator {
    *   The releases.
    */
   private function getInstallableReleases(): array {
-    static $releases = NULL;
+    static $releases = [];
     if (isset($releases)) {
       return $releases;
     }
