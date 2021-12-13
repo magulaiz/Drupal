@@ -200,33 +200,36 @@ function update_calculate_project_data($available) {
  * returning, or the rest of the Update Manager will break in unexpected ways.
  *
  * @param $project_data
- *   An array containing information about a specific project. The following values
- *   may be set by this function:
- *   - 'existing_version': (string) This is the current installed version.
- *   - 'recommended': (string) This is the recommended version that the project
- *     should be on. This could be the existing version, in which case there is no
- *     update needed.
- *   - 'latest_version': (object) This is the most recent version for the target
+ *   An array containing information about a specific project. See comment above
+ *   for an explanation of how 'target major' is determined. The following
+ *   values may be set by this function:
+ *   - 'existing_version': (string) The currently installed version.
+ *   - 'recommended': (string) The recommended version that the project
+ *      should be on. This could be the existing version, in which case there is
+ *      no update needed.
+ *   - 'latest_version': (string) The most recent version for the target major
+ *      version.
+ *   - 'dev_version': (string) Most recent development release for the target
  *      major version.
- *   - 'dev_version': (string) Development release.
  *   - 'latest_dev': (string) This value is only set if the installed version is
  *      a dev version. This will be set to the value of latest_version or
  *      dev_version depending on which release is the most recent one.
  *   - 'also': (array) This is a list of the latest official releases from any
- *      higher major versions. It is
- *      shown as "Also available".
- *   - 'extra': (array) This contains extra details about the existing version.
+ *      higher major versions.
+ *   - 'extra': (array) Extra details about the existing version.
  *      It has following sub-keys:
- *      - class: (array) This has class associated with the release, for eg
+ *      - class: (array) The CSS classes associated with the release, e.g.
  *        ['release-not-supported'].
- *      - label: (string) This gives a label to the version, for eg
- *        'Project not supported','Project revoked'.
- *      - data: (string) This has an explanation with respect to the label.
- *   - 'status': The overall status of the project (one of the UpdateManagerInterface constants).
- *   - 'reason': (string) This is the reason behind the specific 'status'.
- *   - 'fetch_status': It is set when the 'status' is set to
- *      UpdateFetcherInterface::FETCH_PENDING.
- *   - 'install_type': Project install type. It can be 'official', 'dev', etc.
+ *      - label: (string) The version label, e.g. 'Project not supported',
+ *        'Project revoked'.
+ *      - data: (string) An explanation with respect to the label.
+ *   - 'status': The overall status of the project (one of the
+ *      UpdateManagerInterface constants).
+ *   - 'reason': (string) The reason behind the specific 'status'.
+ *   - 'fetch_status': Set to UpdateFetcherInterface::FETCH_PENDING when the
+ *     'status' is set to UpdateFetcherInterface::FETCH_PENDING.
+ *   - 'install_type': Project install type. It can be 'official', 'dev', or
+ *      'unknown'.
  * @param $available
  *   Data about available project releases of a specific project.
  */
