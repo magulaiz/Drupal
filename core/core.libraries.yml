@@ -327,17 +327,10 @@ drupal.announce:
 
 loadjs:
   remote: https://github.com/muicss/loadjs
-<<<<<<< HEAD
-  version: 4.2.0
-  license:
-    name: MIT
-    url: https://github.com/muicss/loadjs/blob/master/LICENSE.txt
-=======
   version: "4.2.0"
   license:
     name: MIT
     url: https://raw.githubusercontent.com/muicss/loadjs/4.2.0/LICENSE.txt
->>>>>>> origin/9.4.x
     gpl-compatible: true
   js:
     assets/vendor/loadjs/loadjs.min.js: { minified: true }
