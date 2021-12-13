@@ -682,25 +682,30 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var deferred = $.Deferred();
       var parentEl = document.querySelector(response.selector || 'body');
       var settings = ajax.settings || drupalSettings;
-      var scriptsSrc = response.data.map(function (script) {
+      var allUniqueBundleIDs = response.data.map(function (script) {
         var uniqueBundleID = script.src + ajax.instanceIndex;
         loadjs(script.src, uniqueBundleID, {
-          async: !!script.async,
+          async: false,
           before: function before(path, scriptEl) {
-            if (script.defer) {
-              scriptEl.defer = true;
-            }
-
+            Object.keys(script).forEach(function (attributeKey) {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
             parentEl.appendChild(scriptEl);
             return false;
           }
         });
         return uniqueBundleID;
       });
-      loadjs.ready(scriptsSrc, {
+      loadjs.ready(allUniqueBundleIDs, {
         success: function success() {
           Drupal.attachBehaviors(parentEl, settings);
           deferred.resolve();
+        },
+        error: function error(depsNotFound) {
+          var message = Drupal.t("The following files could not be loaded: @deps", {
+            '@deps': depsNotFound.join(', ')
+          });
+          deferred.reject(message);
         }
       });
       return deferred.promise();

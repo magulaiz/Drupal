@@ -1665,19 +1665,28 @@
       const deferred = $.Deferred();
       const parentEl = document.querySelector(response.selector || 'body');
       const settings = ajax.settings || drupalSettings;
-      const scriptsSrc = response.data.map((script) => {
+      const allUniqueBundleIDs = response.data.map((script) => {
         // loadjs requires a unique ID, AJAX instances' `instanceIndex` are
         // guaranteed to be unique.
         // @see Drupal.behaviors.AJAX.detach
         const uniqueBundleID = script.src + ajax.instanceIndex;
         loadjs(script.src, uniqueBundleID, {
-          async: !!script.async,
+          // By default, dynamically added scripts are marked as async. Only
+          // explicitly marked async scripts should be loaded async.
+          async: false,
           before(path, scriptEl) {
-            if (script.defer) {
-              scriptEl.defer = true;
-            }
-            // To avoid synchronous XMLHttpRequest on the main thread and break
-            // load dependency, it should not use jQuery.
+            // This allows all attributes to be added, like defer, async and
+            // crossorigin.
+            Object.keys(script).forEach((attributeKey) => {
+              scriptEl.setAttribute(attributeKey, script[attributeKey]);
+            });
+
+            // By default, loadjs appends the script to the head. However, we
+            // want to add the script to the parent specified. This is just for
+            // consistency, because it doesn't actually matter for the script
+            // where it is added. Developers however expect library assets to
+            // show up where they declared them, so this makes things consistent
+            // with the assets that are not loaded with ajax.
             parentEl.appendChild(scriptEl);
             // Return `false` to bypass loadjs' default DOM insertion mechanism.
             return false;
@@ -1685,7 +1694,7 @@
         });
         return uniqueBundleID;
       });
-      loadjs.ready(scriptsSrc, {
+      loadjs.ready(allUniqueBundleIDs, {
         success() {
           Drupal.attachBehaviors(parentEl, settings);
           // All JS files were loaded and new and old behaviors have
@@ -1693,8 +1702,15 @@
           // execute.
           deferred.resolve();
         },
+        error(depsNotFound) {
+          const message = Drupal.t(
+            `The following files could not be loaded: @deps`,
+            { '@deps': depsNotFound.join(', ') },
+          );
+          deferred.reject(message);
+        },
       });
-      // Returns the promise so that the next commands waits on the completion
+      // Returns the promise so that the next AJAX command waits on the completion
       // of this one to execute, ensuring the JS is loaded before executing.
       return deferred.promise();
     },
