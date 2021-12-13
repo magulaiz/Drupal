@@ -210,11 +210,17 @@ function update_calculate_project_data($available) {
  *      major version.
  *   - 'dev_version': (object) Development release.
  *   - 'latest_dev': (object) If existing version is a dev version, 'latest_dev'
- *      have the latest dev version.
+ *      will have the latest dev version.
  *   - 'also': (array) This is a list of the latest official releases from any
  *      higher major versions. It is
  *      shown as "Also available".
  *   - 'extra': (array) This contains extra details about the existing version.
+ *      It has following sub-keys:
+ *      - class: (array) This has class associated with the release, for eg
+ *        ['release-not-supported'].
+ *      - label: (string) This gives a label to the version, for eg
+ *        'Project not supported','Project revoked'.
+ *      - data: (string) This has an explanation with respect to the label.
  *   - 'status': The overall status of the project (one of the UpdateManagerInterface constants).
  *   - 'reason': (string) This is the reason behind the specific 'status'.
  *   - 'fetch_status': It is set when the 'status' is set to
