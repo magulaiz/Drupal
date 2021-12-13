@@ -109,7 +109,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
+      if (!(context.tagName === 'FORM' && context.id.startsWith('views-ui-add-handler-form'))) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
@@ -203,7 +203,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!context.matches('form[id^="views-ui-add-handler-form"]')) {
+      if (!(context.tagName === 'FORM' && context.id.startsWith('views-ui-add-handler-form'))) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
