@@ -43,7 +43,7 @@
         document.querySelectorAll('.toolbar-toggle-orientation button')
           .forEach((toolbarTab) => {
             toolbarTab.addEventListener('touchend', (e) =>
-              toolbarBehaviors.touchEndToClick(e),
+              this.touchEndToClick(e),
             );
           });
 
