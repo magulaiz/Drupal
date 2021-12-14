@@ -33,7 +33,7 @@
        *   The jQuery event for the keyup event that triggered the filter.
        */
       function filterBlockList(e) {
-        const query = e.target.value.toLowerCase();
+        const query = $(e.target).val().toLowerCase();
 
         /**
          * Shows or hides the block entry based on the query.
@@ -45,9 +45,8 @@
          */
         function toggleBlockEntry(index, label) {
           const $label = $(label);
-          const $row = $(label).parent().parent();
-          const labelMatch = label.textContent.toLowerCase().includes(query);
-
+          const $row = $label.parent().parent();
+          const labelMatch = $label.text().toLowerCase().includes(query);
           let categoryMatch = false;
 
           if (!labelMatch) {
@@ -57,7 +56,6 @@
 
           $row.toggle(labelMatch || categoryMatch);
         }
-
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
           $filterRows.each(toggleBlockEntry);
@@ -100,13 +98,17 @@
           context,
         ).forEach((container) => {
           const $container = $(container);
-          window.scrollTo({
-            top:
-              $('.js-block-placed').offset().top -
-              $container.offset().top +
-              $container.scrollTop(),
-            behavior: 'smooth',
-          });
+          // Just scrolling the document.body will not work in Firefox. The html
+          // element is needed as well.
+          $('html, body').animate(
+            {
+              scrollTop:
+                $('.js-block-placed').offset().top -
+                $container.offset().top +
+                $container.scrollTop(),
+            },
+            500,
+          );
         });
       }
     },
