@@ -9,6 +9,12 @@ use Drupal\Core\Extension\ExtensionVersion;
  */
 class ProjectStatusCalculator {
 
+  /**
+   * The releases for the project that can be installed safely.
+   *
+   * @var array
+   */
+  private $installableReleases;
 
   /**
    * Project data from Drupal\update\UpdateManagerInterface::getProjects().
@@ -314,11 +320,10 @@ class ProjectStatusCalculator {
    *   The releases.
    */
   private function getInstallableReleases(): array {
-    static $releases;
-    if (isset($releases)) {
-      return $releases;
+    if (isset($this->installableReleases)) {
+      return $this->installableReleases;
     }
-    $releases = [];
+    $this->installableReleases = [];
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       try {
         $release = ProjectRelease::createFromArray($release_info);
@@ -343,13 +348,13 @@ class ProjectStatusCalculator {
         continue;
       }
       if ($this->releaseIsInstallable($release)) {
-        $releases[$version] = $release_info;
+        $this->installableReleases[$version] = $release_info;
       }
       if ($version === $this->projectData['existing_version']) {
         break;
       }
     }
-    return $releases;
+    return $this->installableReleases;
   }
 
   /**
