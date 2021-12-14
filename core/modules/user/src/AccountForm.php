@@ -452,10 +452,9 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
 
     parent::submitForm($form, $form_state);
 
-    $user = $this->getEntity($form_state);
     // If there's a session set to the users id, remove the password reset tag
     // since a new password was saved.
-    $this->getRequest()->getSession()->remove('pass_reset_' . $user->id());
+    $this->getRequest()->getSession()->remove('pass_reset_' . $account->id());
   }
 
   /**
