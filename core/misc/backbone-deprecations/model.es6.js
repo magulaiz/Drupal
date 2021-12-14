@@ -3,7 +3,7 @@
  * Backbone deprecations.
  */
 
-(($, Drupal) => {
+((Backbone, Drupal) => {
   const deprecatedModelPrototypeProperties = [
     'on',
     'listenTo',
@@ -55,15 +55,14 @@
     const overrides = {};
 
     if (typeof Backbone.Model.prototype[property] === 'function') {
-      // Try to add deprecation messages to backbone functions.
+      // Add deprecation messages to backbone functions.
       const originalFunction = Backbone.Model.prototype[property];
-      // Backbone.Model.prototype[property] = function (...args) {
-      //   if (property === 'get') {
-      //     debugger;
-      //   }
-      //   console.log(`you called ${property}, dude`);
-      //   return originalFunction.apply(...args);
-      // };
+      Backbone.Model.prototype[property] = function (...args) {
+        Drupal.deprecationError({
+          message: `Backbone.model.${property} is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.`,
+        });
+        return originalFunction.apply(this, args);
+      };
     }
   });
 })(Backbone, Drupal);

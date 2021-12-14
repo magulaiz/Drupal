@@ -9,8 +9,10 @@ backbone:
     gpl-compatible: true
   js:
     assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
+    misc/backbone-deprecations/model.js: {}
   dependencies:
     - core/underscore
+    - core/drupal
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4

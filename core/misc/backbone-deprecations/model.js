@@ -5,13 +5,25 @@
 * @preserve
 **/
 
-(function ($, Drupal) {
+(function (Backbone, Drupal) {
   var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'preinitialize', 'initialize', 'toJSON', 'sync', 'get', 'escape', 'has', 'matches', 'set', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previous', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
   deprecatedModelPrototypeProperties.forEach(function (property) {
     var overrides = {};
 
     if (typeof Backbone.Model.prototype[property] === 'function') {
       var originalFunction = Backbone.Model.prototype[property];
+
+      Backbone.Model.prototype[property] = function () {
+        Drupal.deprecationError({
+          message: "Backbone.model.".concat(property, " is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.")
+        });
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return originalFunction.apply(this, args);
+      };
     }
   });
 })(Backbone, Drupal);
