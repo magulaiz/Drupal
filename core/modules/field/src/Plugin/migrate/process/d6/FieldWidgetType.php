@@ -79,11 +79,12 @@ class FieldWidgetType extends ProcessPluginBase implements ContainerFactoryPlugi
   /**
    * Returns widget for a given source widget type.
    *
-   * @param $source_widget_type
+   * @param string $source_widget_type
+   *   The source widget type.
    *
    * @return string|null
    */
-  protected function getWidget($source_widget_type) {
+  protected function getWidget(string $source_widget_type) {
     $map = [
       'number' => 'number',
       'email_textfield' => 'email_default',
