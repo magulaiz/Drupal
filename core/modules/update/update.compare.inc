@@ -360,7 +360,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
   // If we don't know what to recommend, there's nothing we can report.
   // Bail out early.
   if (!isset($project_data['recommended'])) {
-    $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
     $project_data['reason'] = t('No available releases found');
     return;
   }
@@ -369,33 +368,12 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['latest_dev'] = $latest_dev_release_info['version'];
   }
 
-  // Figure out the status, based on what we've seen and the install type.
-  switch ($project_data['install_type']) {
-    case 'official':
-      if ($project_data['existing_version'] === $project_data['recommended'] || $project_data['existing_version'] === $project_data['latest_version']) {
-        $project_data['status'] = UpdateManagerInterface::CURRENT;
-      }
-      else {
-        $project_data['status'] = UpdateManagerInterface::NOT_CURRENT;
-      }
-      break;
-
-    case 'dev':
-      $latest = $available['releases'][$project_data['latest_dev']];
-      if (empty($project_data['datestamp'])) {
-        $project_data['status'] = UpdateFetcherInterface::NOT_CHECKED;
-        $project_data['reason'] = t('Unknown release date');
-      }
-      elseif (($project_data['datestamp'] + 100 > $latest['date'])) {
-        $project_data['status'] = UpdateManagerInterface::CURRENT;
-      }
-      else {
-        $project_data['status'] = UpdateManagerInterface::NOT_CURRENT;
-      }
-      break;
-
-    default:
-      $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
-      $project_data['reason'] = t('Invalid info');
+  // Figure out the reason, based on what we've seen and the install type.
+  $project_install_type = $status_calculator->getInstallType();
+  if ($project_install_type === 'dev' && $project_data['status'] === UpdateFetcherInterface::NOT_CHECKED) {
+    $project_data['reason'] = t('Unknown release date');
+  }
+  elseif ($project_install_type !== 'official') {
+    $project_data['reason'] = t('Invalid info');
   }
 }

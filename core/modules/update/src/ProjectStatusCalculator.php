@@ -417,9 +417,42 @@ class ProjectStatusCalculator {
         $status = UpdateManagerInterface::NOT_SUPPORTED;
       }
     }
-    $recommended_release = $this->getRecommendReleaseForTargetMajor();
-    if (!$recommended_release) {
+
+    if ($status) {
+      return $status;
+    }
+
+    $recommended_release_info = $this->getRecommendReleaseForTargetMajor();
+    if (!$recommended_release_info) {
       return UpdateFetcherInterface::UNKNOWN;
+    }
+
+    switch ($this->getInstallType()) {
+      case 'official':
+        $latest_release_info = $this->getLatestReleaseForTargetMajor();
+        if ($existing_release_info && ($existing_release_info['version'] === $recommended_release_info['version'] || $existing_release_info['version'] === $latest_release_info['version'])) {
+          $status = UpdateManagerInterface::CURRENT;
+        }
+        else {
+          $status = UpdateManagerInterface::NOT_CURRENT;
+        }
+        break;
+
+      case 'dev':
+        $latest_dev_release_info = ProjectRelease::createFromArray($this->getLatestDev());
+        if (empty($this->projectData['datestamp'])) {
+          $status = UpdateFetcherInterface::NOT_CHECKED;
+        }
+        elseif ($this->projectData['datestamp'] + 100 > $latest_dev_release_info->getDate()) {
+          $status = UpdateManagerInterface::CURRENT;
+        }
+        else {
+          $status = UpdateManagerInterface::NOT_CURRENT;
+        }
+        break;
+
+      default:
+        $status = UpdateFetcherInterface::UNKNOWN;
     }
     return $status;
   }
@@ -467,7 +500,7 @@ class ProjectStatusCalculator {
    * @return string
    *   The install type.
    */
-  private function getInstallType(): string {
+  public function getInstallType(): string {
     return $this->projectData['install_type'];
   }
 
