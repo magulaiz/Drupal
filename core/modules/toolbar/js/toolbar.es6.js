@@ -650,66 +650,66 @@
           height: $('#toolbar-administration').outerHeight(),
         });
         // Add the tray orientation toggles.
-        // const bar = document.querySelector('#toolbar-administration');
-        // const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        // const toggleHTML = document.createElement('div');
-        // toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
-        // Array.from(trays).forEach((item) => {
-        //   item.insertAdjacentHTML(
-        //     'beforeend',
-        //     Drupal.theme('toolbarOrientationToggle'),
-        //   );
-        // });
-        //
-        // // If the toolbar's orientation is horizontal and no active tab is
-        // // defined then show the tray of the first toolbar tab by default (but
-        // // not the first 'Home' toolbar tab).
-        // if (
-        //   toolbarBehaviors.orientation === 'horizontal' &&
-        //   toolbarBehaviors.activeTab === null
-        // ) {
-        //   toolbarBehaviors.activeTab =
-        //     '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
-        // }
-        //
-        // // Add event listeners to toolbar
-        // document
-        //   .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-        //   .forEach((toolbarTab) => {
-        //     toolbarTab.addEventListener('click', (e) =>
-        //       toolbarBehaviors.onTabClick(e),
-        //     );
-        //   });
-        //
-        // document
-        //   .querySelectorAll('.toolbar-toggle-orientation button')
-        //   .forEach((button) => {
-        //     button.addEventListener('click', (e) =>
-        //       toolbarBehaviors.onOrientationToggleClick(e),
-        //     );
-        //   });
-        //
-        // document
-        //   .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-        //   .forEach((toolbarTab) => {
-        //     toolbarTab.addEventListener('touchend', (e) =>
-        //       toolbarBehaviors.touchEndToClick(e),
-        //     );
-        //   });
-        //
-        // document
-        //   .querySelectorAll('.toolbar-toggle-orientation button')
-        //   .forEach((toolbarTab) => {
-        //     toolbarTab.addEventListener('touchend', (e) =>
-        //       toolbarBehaviors.touchEndToClick(e),
-        //     );
-        //   });
-        //
-        // toolbarBehaviors.locked = JSON.parse(
-        //   localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
-        // );
-        //
-        // toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
+        const bar = document.querySelector('#toolbar-administration');
+        const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
+        const toggleHTML = document.createElement('div');
+        toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
+        Array.from(trays).forEach((item) => {
+          item.insertAdjacentHTML(
+            'beforeend',
+            Drupal.theme('toolbarOrientationToggle'),
+          );
+        });
+
+        // If the toolbar's orientation is horizontal and no active tab is
+        // defined then show the tray of the first toolbar tab by default (but
+        // not the first 'Home' toolbar tab).
+        if (
+          toolbarBehaviors.orientation === 'horizontal' &&
+          toolbarBehaviors.activeTab === null
+        ) {
+          toolbarBehaviors.activeTab =
+            '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
+        }
+
+        // Add event listeners to toolbar
+        document
+          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('click', (e) =>
+              toolbarBehaviors.onTabClick(e),
+            );
+          });
+
+        document
+          .querySelectorAll('.toolbar-toggle-orientation button')
+          .forEach((button) => {
+            button.addEventListener('click', (e) =>
+              toolbarBehaviors.onOrientationToggleClick(e),
+            );
+          });
+
+        document
+          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('touchend', (e) =>
+              toolbarBehaviors.touchEndToClick(e),
+            );
+          });
+
+        document
+          .querySelectorAll('.toolbar-toggle-orientation button')
+          .forEach((toolbarTab) => {
+            toolbarTab.addEventListener('touchend', (e) =>
+              toolbarBehaviors.touchEndToClick(e),
+            );
+          });
+
+        toolbarBehaviors.locked = JSON.parse(
+          localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
+        );
+
+        toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
 
         Drupal.toolbar.models.toolbarModel = model;
 

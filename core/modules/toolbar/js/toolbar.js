@@ -435,6 +435,40 @@
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
           height: $('#toolbar-administration').outerHeight()
         });
+        var bar = document.querySelector('#toolbar-administration');
+        var trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
+        var toggleHTML = document.createElement('div');
+        toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
+        Array.from(trays).forEach(function (item) {
+          item.insertAdjacentHTML('beforeend', Drupal.theme('toolbarOrientationToggle'));
+        });
+
+        if (toolbarBehaviors.orientation === 'horizontal' && toolbarBehaviors.activeTab === null) {
+          toolbarBehaviors.activeTab = '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
+        }
+
+        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
+          toolbarTab.addEventListener('click', function (e) {
+            return toolbarBehaviors.onTabClick(e);
+          });
+        });
+        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (button) {
+          button.addEventListener('click', function (e) {
+            return toolbarBehaviors.onOrientationToggleClick(e);
+          });
+        });
+        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
+          toolbarTab.addEventListener('touchend', function (e) {
+            return toolbarBehaviors.touchEndToClick(e);
+          });
+        });
+        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (toolbarTab) {
+          toolbarTab.addEventListener('touchend', function (e) {
+            return toolbarBehaviors.touchEndToClick(e);
+          });
+        });
+        toolbarBehaviors.locked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
+        toolbarBehaviors.height = $('#toolbar-administration').outerHeight();
         Drupal.toolbar.models.toolbarModel = model;
         Object.keys(options.breakpoints).forEach(function (label) {
           var mq = options.breakpoints[label];
