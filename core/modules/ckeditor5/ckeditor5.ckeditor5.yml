@@ -2,8 +2,6 @@
 # @see this module's README.md for details on defining CKEditor 5 plugins in
 # Drupal.
 
-# cspell:ignore autoformat
-
 ckeditor5_essentials:
   ckeditor5:
     plugins:

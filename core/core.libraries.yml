@@ -1,7 +1,5 @@
 # All libraries are defined in alphabetical order.
 
-# cspell:ignore imageupload autoformat
-
 backbone:
   remote: https://github.com/jashkenas/backbone
   version: "1.4.0"
