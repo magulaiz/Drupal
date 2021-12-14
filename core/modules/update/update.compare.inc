@@ -365,17 +365,8 @@ function update_calculate_project_update_status(&$project_data, $available) {
     return;
   }
 
-  // If we're running a dev snapshot, compare the date of the dev snapshot
-  // with the latest official version, and record the absolute latest in
-  // 'latest_dev' so we can correctly decide if there's a newer release
-  // than our current snapshot.
-  if ($project_data['install_type'] == 'dev') {
-    if (isset($project_data['dev_version']) && $available['releases'][$project_data['dev_version']]['date'] > $available['releases'][$project_data['latest_version']]['date']) {
-      $project_data['latest_dev'] = $project_data['dev_version'];
-    }
-    else {
-      $project_data['latest_dev'] = $project_data['latest_version'];
-    }
+  if ($latest_dev = $status_calculator->getLatestDev()) {
+    $project_data['latest_dev'] = $latest_dev;
   }
 
   // Figure out the status, based on what we've seen and the install type.
