@@ -81,6 +81,7 @@ autoescape
 autoescaped
 autoescaping
 autofilling
+autoformat
 autofix
 autogenerate
 autogenerator
