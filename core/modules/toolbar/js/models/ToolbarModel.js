@@ -24,8 +24,6 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Backbone, Drupal) {
-  console.log('drupal model', Drupal.DrupalModel);
-
   Drupal.toolbar.ToolbarModel = function (_Drupal$DrupalModel) {
     _inherits(_class, _Drupal$DrupalModel);
 
@@ -37,7 +35,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _classCallCheck(this, _class);
 
       _this = _super.call(this);
-      console.log('i am the constructor for toolbarmodel.', _assertThisInitialized(_this));
       _this.activeTab = null;
       _this.activeTray = null;
       _this.isOriented = false;

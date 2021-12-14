@@ -20,6 +20,8 @@
     constructor(options) {
       super();
       this.model = options.model;
+      this.strings = options.strings;
+      this.el = options.el;
       this.addChangeListener(
         this.onOrientationChange,
         `model-${this.model.modelId}-change-orientation`,

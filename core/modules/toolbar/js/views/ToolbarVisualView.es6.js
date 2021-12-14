@@ -7,55 +7,7 @@
   Drupal.toolbar.ToolbarVisualView = class extends Drupal.DrupalView {
       /** @lends Drupal.toolbar.ToolbarVisualView# */
 
-    /**
-     * Event map for the `ToolbarVisualView`.
-     *
-     * @return {object}
-     *   A map of events.
-     */
-    events() {
-      // Prevents delay and simulated mouse events.
-      const touchEndToClick = function (event) {
-        event.preventDefault();
-        event.target.click();
-      };
-      return {
-        //TODO: fix this
-        // Add event listeners to toolbar
-        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('click', (e) =>
-              this.onTabClick(e),
-            );
-          });
-        document.querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((button) => {
-            button.addEventListener('click', (e) =>
-              this.onOrientationToggleClick(e),
-            );
-          });
-        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              this.touchEndToClick(e),
-            );
-          });
-        document.querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              this.touchEndToClick(e),
-            );
-          });
 
-        //   return {
-        //     'click .toolbar-bar .toolbar-tab .trigger': 'onTabClick',
-        //     'click .toolbar-toggle-orientation button':
-        //       'onOrientationToggleClick',
-        //     'touchend .toolbar-bar .toolbar-tab .trigger': touchEndToClick,
-        //     'touchend .toolbar-toggle-orientation button': touchEndToClick,
-        //   };
-      }
-    }
 
     /**
      * Backbone view for the toolbar element. Listens to mouse & touch.
@@ -72,6 +24,32 @@
     constructor(options) {
       super();
       this.model = options.model;
+      this.strings = options.strings;
+      this.el = options.el;
+      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+        .forEach((toolbarTab) => {
+          toolbarTab.addEventListener('click', (e) =>
+            this.onTabClick(e),
+          );
+        });
+      document.querySelectorAll('.toolbar-toggle-orientation button')
+        .forEach((button) => {
+          button.addEventListener('click', (e) =>
+            this.onOrientationToggleClick(e),
+          );
+        });
+      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+        .forEach((toolbarTab) => {
+          toolbarTab.addEventListener('touchend', (e) =>
+            this.touchEndToClick(e),
+          );
+        });
+      document.querySelectorAll('.toolbar-toggle-orientation button')
+        .forEach((toolbarTab) => {
+          toolbarTab.addEventListener('touchend', (e) =>
+            this.touchEndToClick(e),
+          );
+        });
       this.addChangeListener(
         this.render,
         `model-${this.model.modelId}-change-activeTab`,
@@ -109,6 +87,11 @@
         `model-${this.model.modelId}-change-isOriented`,
       );
     }
+
+    touchEndToClick(event) {
+      event.preventDefault();
+      event.target.click();
+    };
     // initialize(options)
     // {
     //   this.strings = options.strings;

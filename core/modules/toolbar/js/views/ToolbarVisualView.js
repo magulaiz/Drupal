@@ -40,6 +40,28 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this = _super.call(this);
       _this.model = options.model;
+      _this.strings = options.strings;
+      _this.el = options.el;
+      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
+        toolbarTab.addEventListener('click', function (e) {
+          return _this.onTabClick(e);
+        });
+      });
+      document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (button) {
+        button.addEventListener('click', function (e) {
+          return _this.onOrientationToggleClick(e);
+        });
+      });
+      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
+        toolbarTab.addEventListener('touchend', function (e) {
+          return _this.touchEndToClick(e);
+        });
+      });
+      document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (toolbarTab) {
+        toolbarTab.addEventListener('touchend', function (e) {
+          return _this.touchEndToClick(e);
+        });
+      });
 
       _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-activeTab"));
 
@@ -63,12 +85,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }
 
     _createClass(_class, [{
-      key: "events",
-      value: function events() {
-        var touchEndToClick = function touchEndToClick(event) {
-          event.preventDefault();
-          event.target.click();
-        };
+      key: "touchEndToClick",
+      value: function touchEndToClick(event) {
+        event.preventDefault();
+        event.target.click();
       }
     }, {
       key: "updateToolbarHeight",

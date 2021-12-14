@@ -11,11 +11,9 @@
    *
    * @augments Backbone.Model
    */
-  console.log('drupal model', Drupal.DrupalModel);
   Drupal.toolbar.ToolbarModel = class extends Drupal.DrupalModel {
     constructor() {
       super();
-      console.log('i am the constructor for toolbarmodel.', this);
       this.activeTab = null;
       /**
        * Represents whether a tray is open or not. Stored as an ID selector e.g.
