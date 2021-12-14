@@ -376,30 +376,42 @@ class ProjectStatusCalculator {
     return TRUE;
   }
 
+  /**
+   * Gets the project status.
+   *
+   * @todo Unify this with the logic in update_calculate_project_update_status
+   *   determines status from the $available['project_status']. This will be
+   *   tricky because the status from there could mean we don't go look at actual
+   *   releases. The means for example we need to know if UpdateManagerInterface::NOT_SECURE
+   *   came from $available['project_status'].
+   *
+   * @return int|null
+   */
   public function getStatus(): ?int {
     $status = NULL;
-
-    $server_project_status = $this->updateServerProjectInfo->getProjectStatus();
+    // @todo confirm the order of statuses checked.
     if (isset($this->projectData['existing_version']) && !$this->isInSupportedBranch($this->projectData['existing_version'])) {
-      return UpdateManagerInterface::NOT_SUPPORTED;
+      $status = UpdateManagerInterface::NOT_SUPPORTED;
     }
+    // The status determined by the release information directly should override
+    // the status set above.
     if ($existing_release_info = $this->getExistingRelease()) {
       $existing_release = ProjectRelease::createFromArray($existing_release_info);
       if ($existing_release->isInsecure()) {
-        return UpdateManagerInterface::NOT_SECURE;
+        $status = UpdateManagerInterface::NOT_SECURE;
       }
       elseif (!$existing_release->isPublished()) {
-        return UpdateManagerInterface::REVOKED;
+        $status = UpdateManagerInterface::REVOKED;
       }
       elseif ($existing_release->isUnsupported()) {
-        return UpdateManagerInterface::NOT_SUPPORTED;
+        $status = UpdateManagerInterface::NOT_SUPPORTED;
       }
     }
     $recommended_release = $this->getRecommendReleaseForTargetMajor();
     if (!$recommended_release) {
       return UpdateFetcherInterface::UNKNOWN;
     }
-    return NULL;
+    return $status;
   }
 
   private function getExistingRelease() {
