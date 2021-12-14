@@ -323,9 +323,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['security updates'] = array_values($security_releases);
   }
   if ($releases_newer_than_target_major = $status_calculator->getReleasesInMajorsGreaterThanTarget()) {
-    $project_data['also'] = $releases_newer_than_target_major;
-    foreach ($releases_newer_than_target_major as $version => $newer_release) {
-      $project_data['releases'][$version] = $newer_release;
+    foreach ($releases_newer_than_target_major as $major_version => $newer_release) {
+      $newer_release_version = $newer_release['version'];
+      $project_data['also'][$major_version] = $newer_release_version;
+      $project_data['releases'][$newer_release_version] = $newer_release;
     }
   }
 
