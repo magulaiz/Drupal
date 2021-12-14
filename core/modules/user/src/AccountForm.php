@@ -484,7 +484,8 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
           _user_mail_notify('mail_change_notification', $account);
         }
         $this->messenger()->addWarning($this->t('You must confirm your email address. Further instructions have been sent to your new email address.'));
-      } else {
+      }
+      else {
         // Process change immediately if no verification email is configured.
         $account->setEmail($new_mail);
         $account->save();
