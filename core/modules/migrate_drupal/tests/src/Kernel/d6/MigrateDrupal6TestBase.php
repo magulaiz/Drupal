@@ -82,6 +82,8 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
   protected function migrateFields() {
     $this->migrateContentTypes();
     $this->executeMigrations([
+      'd6_filter_format',
+      'd6_user_role',
       'd6_field',
       'd6_field_instance',
       'd6_field_instance_widget_settings',

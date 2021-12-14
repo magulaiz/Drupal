@@ -80,4 +80,70 @@ class FileFieldTest extends UnitTestCase {
     $this->assertSame($expected_type, $this->plugin->getFieldType($row));
   }
 
+  /**
+   * @covers ::transformFieldInstanceSettings
+   * @dataProvider transformFieldStorageSettingsProvider
+   */
+  public function testTransformFieldInstanceSettings($widget_type, $widget_settings, $global_setting, $expected) {
+    $row = new Row();
+    $row->setSourceProperty('widget_type', $widget_type);
+    $row->setSourceProperty('widget_settings', $widget_settings);
+    $row->setSourceProperty('global_settings', $global_setting);
+    $this->assertSame($expected, $this->plugin->transformFieldInstanceSettings($row));
+  }
+
+  /**
+   * Data provider fortesTransformFieldInstanceSettings().
+   */
+  public function transformFieldStorageSettingsProvider() {
+    return [
+      [
+        'filefield_widget',
+        [
+          'file_extensions' => 'txt',
+          'file_path' => 'path',
+          'max_filesize_per_file' => '10K',
+          'max_filesize_per_node' => '10M',
+        ],
+        [
+          'description_field' => 'a description',
+        ],
+        [
+          'file_extensions' => 'txt',
+          'file_directory' => 'path',
+          'description_field' => 'a description',
+          'max_filesize' => '10KB',
+        ],
+      ],
+      [
+        'imagefield_widget',
+        [
+          'file_extensions' => 'png',
+          'file_path' => 'path',
+          'max_filesize_per_file' => '50K',
+          'alt' => 'foo',
+          'custom_alt' => 0,
+          'title' => 'Title',
+          'custom_title' => 0,
+          'max_resolution' => '50',
+          'min_resolution' => '50',
+          'max_filesize_per_node' => '10M',
+          'progress_indicator' => 'bar',
+        ],
+        [],
+        [
+          'file_extensions' => 'png',
+          'file_directory' => 'path',
+          'max_filesize' => '50KB',
+          'alt_field' => 'foo',
+          'alt_field_required' => 0,
+          'title_field' => 'Title',
+          'title_field_required' => 0,
+          'max_resolution' => '50',
+          'min_resolution' => '50',
+        ],
+      ],
+    ];
+  }
+
 }

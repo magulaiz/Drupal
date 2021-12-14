@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal\Plugin\migrate\field\d7;
 
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
@@ -51,6 +52,30 @@ class NodeReference extends ReferenceBase {
       'node_reference_node' => 'entity_reference_entity_view',
       'node_reference_path' => 'entity_reference_label',
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    $instance_settings['handler'] = 'default:node';
+
+    $instance_settings['handler_settings'] = [
+      'sort' => [
+        'field' => '_none',
+        'direction' => 'ASC',
+      ],
+      'target_bundles' => array_filter($field_data['settings']['referenceable_types'] ?? []),
+    ];
+    return $instance_settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    $settings['target_type'] = 'node';
+    return $settings;
   }
 
 }

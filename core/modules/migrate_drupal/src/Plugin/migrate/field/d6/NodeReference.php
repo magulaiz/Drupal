@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\field\d6;
 
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
+use Drupal\migrate\Row;
 
 /**
  * MigrateField Plugin for Drupal 6 node reference fields.
@@ -40,6 +41,31 @@ class NodeReference extends ReferenceBase {
    */
   protected function entityId() {
     return 'nid';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    $source_settings = $row->getSourceProperty('global_settings');
+    $settings['handler'] = 'default:node';
+    $settings['handler_settings']['target_bundles'] = [];
+
+    if (isset($source_settings['referenceable_types'])) {
+      $node_types = array_filter($source_settings['referenceable_types']);
+      if (!empty($node_types)) {
+        $settings['handler_settings']['target_bundles'] = $this->lookupMigrations('d6_node_type', $node_types);
+      }
+    }
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    $settings['target_type'] = 'node';
+    return $settings;
   }
 
 }

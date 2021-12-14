@@ -2,7 +2,10 @@
 
 namespace Drupal\Tests\taxonomy\Unit\Plugin\migrate\field;
 
+use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
+use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\taxonomy\Plugin\migrate\field\TaxonomyTermReference;
 use Prophecy\Argument;
@@ -27,7 +30,10 @@ class TaxonomyTermReferenceFieldTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->plugin = new TaxonomyTermReference([], 'taxonomy', []);
+    $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class)->reveal();
+    $migrate_process_plugin_manager = $this->prophesize(MigratePluginManager::class)->reveal();
+
+    $this->plugin = new TaxonomyTermReference([], 'taxonomy', [], $migration_plugin_manager, $migrate_process_plugin_manager);
 
     $migration = $this->prophesize(MigrationInterface::class);
 
@@ -57,6 +63,14 @@ class TaxonomyTermReferenceFieldTest extends UnitTestCase {
       ],
     ];
     $this->assertSame($expected, $this->migration->getProcess());
+  }
+
+  /**
+   * @covers ::transformFieldStorageSettings
+   */
+  public function testTransformFieldStorageSettings() {
+    $row = new Row();
+    $this->assertSame(['target_type' => 'taxonomy_term'], $this->plugin->transformFieldStorageSettings($row));
   }
 
 }

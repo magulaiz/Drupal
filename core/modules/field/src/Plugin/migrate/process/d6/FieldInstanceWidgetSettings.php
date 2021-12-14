@@ -57,6 +57,7 @@ class FieldInstanceWidgetSettings extends ProcessPluginBase {
       ],
       'email_textfield' => [
         'placeholder' => '',
+        'size' => $size,
       ],
       'link' => [
         'placeholder_url' => '',

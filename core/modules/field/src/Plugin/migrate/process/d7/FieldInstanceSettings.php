@@ -2,9 +2,13 @@
 
 namespace Drupal\field\Plugin\migrate\process\d7;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 // cspell:ignore entityreference
 
@@ -13,96 +17,63 @@ use Drupal\migrate\Row;
  *   id = "d7_field_instance_settings"
  * )
  */
-class FieldInstanceSettings extends ProcessPluginBase {
+class FieldInstanceSettings extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The field plugin manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $fieldPluginManager;
+
+  /**
+   * Constructs a FieldSettings plugin.
+   *
+   * @param array $configuration
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin ID.
+   * @param mixed $plugin_definition
+   *   The plugin definition.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $field_plugin_manager
+   *   The field plugin manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $field_plugin_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->fieldPluginManager = $field_plugin_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.migrate.field')
+    );
+  }
 
   /**
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
+    $original_field_type = $row->getSourceProperty('type');
+    if ($original_field_type == 'text') {
+      $original_field_type = 'd7_' . $original_field_type;
+    }
+    try {
+      return $this->fieldPluginManager->createInstance($original_field_type, ['core' => 7])
+        ->transformFieldInstanceSettings($row);
+    }
+    catch (PluginNotFoundException $e) {
+    }
+
     [$instance_settings, $widget_settings, $field_definition] = $value;
     $widget_type = $widget_settings['type'];
 
     $field_data = unserialize($field_definition['data']);
-
-    // Get taxonomy term reference handler settings from allowed values.
-    if ($row->getSourceProperty('type') == 'taxonomy_term_reference') {
-      $instance_settings['handler_settings']['sort'] = [
-        'field' => '_none',
-      ];
-      $allowed_values = $row->get('@allowed_values');
-      foreach ($allowed_values as $allowed_value) {
-        foreach ($allowed_value as $vocabulary) {
-          $instance_settings['handler_settings']['target_bundles'][$vocabulary] = $vocabulary;
-        }
-      }
-    }
-
-    // Get entityreference handler settings from source field configuration.
-    if ($row->getSourceProperty('type') == "entityreference") {
-      $field_settings = $field_data['settings'];
-      $instance_settings['handler'] = 'default:' . $field_settings['target_type'];
-      // Transform the sort settings to D8 structure.
-      $sort = [
-        'field' => '_none',
-        'direction' => 'ASC',
-      ];
-      if (!empty(array_filter($field_settings['handler_settings']['sort']))) {
-        if ($field_settings['handler_settings']['sort']['type'] == "property") {
-          $sort = [
-            'field' => $field_settings['handler_settings']['sort']['property'],
-            'direction' => $field_settings['handler_settings']['sort']['direction'],
-          ];
-        }
-        elseif ($field_settings['handler_settings']['sort']['type'] == "field") {
-          $sort = [
-            'field' => $field_settings['handler_settings']['sort']['field'],
-            'direction' => $field_settings['handler_settings']['sort']['direction'],
-          ];
-        }
-      }
-      if (empty($field_settings['handler_settings']['target_bundles'])) {
-        $field_settings['handler_settings']['target_bundles'] = NULL;
-      }
-      $field_settings['handler_settings']['sort'] = $sort;
-      $instance_settings['handler_settings'] = $field_settings['handler_settings'];
-    }
-
-    if ($row->getSourceProperty('type') == 'node_reference') {
-      $instance_settings['handler'] = 'default:node';
-
-      $instance_settings['handler_settings'] = [
-        'sort' => [
-          'field' => '_none',
-          'direction' => 'ASC',
-        ],
-        'target_bundles' => array_filter($field_data['settings']['referenceable_types'] ?? []),
-      ];
-    }
-
-    if ($row->getSourceProperty('type') == 'user_reference') {
-      $instance_settings['handler'] = 'default:user';
-
-      $instance_settings['handler_settings'] = [
-        'include_anonymous' => TRUE,
-        'filter' => [
-          'type' => '_none',
-        ],
-        'sort' => [
-          'field' => '_none',
-          'direction' => 'ASC',
-        ],
-        'auto_create' => FALSE,
-      ];
-
-      if ($row->hasSourceProperty('roles')) {
-        $instance_settings['handler_settings']['filter']['type'] = 'role';
-        foreach ($row->get('roles') as $role) {
-          $instance_settings['handler_settings']['filter']['role'] = [
-            $role['name'] => $role['name'],
-          ];
-        }
-      }
-    }
 
     // Get the labels for the list_boolean type.
     if ($row->getSourceProperty('type') === 'list_boolean') {

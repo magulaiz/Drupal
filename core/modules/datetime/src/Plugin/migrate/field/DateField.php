@@ -132,4 +132,23 @@ class DateField extends FieldPluginBase {
     return $field_type;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    if ($row->get('plugin') == 'd6_field') {
+      return [];
+    }
+    $value = $row->getSourceProperty('settings');
+    $collected_date_attributes = is_numeric(array_keys($value['granularity'])[0])
+      ? $value['granularity']
+      : array_keys(array_filter($value['granularity']));
+
+    $value['datetime_type'] = 'datetime';
+    if (empty(array_intersect($collected_date_attributes, ['hour', 'minute', 'second']))) {
+      $value['datetime_type'] = 'date';
+    }
+    return $value;
+  }
+
 }

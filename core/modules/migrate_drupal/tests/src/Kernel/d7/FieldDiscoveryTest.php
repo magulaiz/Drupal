@@ -287,7 +287,9 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
               'map' => [
                 'd7_text' => 'd7_text_default',
                 'number_default' => 'number_default_default',
-                'taxonomy_term_reference' => 'taxonomy_term_reference_default',
+                'taxonomy_term_reference_select' => 'options_select',
+                'taxonomy_term_reference_buttons' => 'options_buttons',
+                'taxonomy_term_reference_autocomplete' => 'entity_reference_autocomplete_tags',
                 'image' => 'image_default',
                 'image_miw' => 'image_image',
                 'link_field' => 'link_default',
