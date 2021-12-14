@@ -4,8 +4,8 @@ namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
-use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate field instances.
@@ -129,11 +129,11 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('User reference', $field->label());
     $this->assertSame('default:user', $field->getSetting('handler'));
     $expected = [
-      'include_anonymous' => FALSE,
+      'target_bundles' => NULL,
       'filter' => [
         'type' => '_none',
       ],
-      'target_bundles' => NULL,
+      'include_anonymous' => FALSE,
     ];
     $this->assertSame($expected, $field->getSetting('handler_settings'));
 
@@ -142,14 +142,14 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('User reference 2', $field->label());
     $this->assertSame('default:user', $field->getSetting('handler'));
     $expected = [
-      'include_anonymous' => FALSE,
+      'target_bundles' => NULL,
       'filter' => [
         'type' => 'role',
         'role' => [
           'migrate_test_role_1' => 'migrate_test_role_1',
         ],
       ],
-      'target_bundles' => NULL,
+      'include_anonymous' => FALSE,
     ];
     $this->assertSame($expected, $field->getSetting('handler_settings'));
 
@@ -209,12 +209,12 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('Commanding Officer', $field->label());
     $this->assertSame('default:user', $field->getSetting('handler'));
     $expected = [
-      'include_anonymous' => FALSE,
+      'target_bundles' => NULL,
       'filter' => [
         'type' => 'role',
         'role' => ['authenticated' => 'authenticated'],
       ],
-      'target_bundles' => NULL,
+      'include_anonymous' => FALSE,
     ];
     $this->assertSame($expected, $field->getSetting('handler_settings'));
     $this->assertSame('user', $field->getSetting('target_type'));
