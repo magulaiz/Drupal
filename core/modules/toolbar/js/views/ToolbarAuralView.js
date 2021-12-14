@@ -43,19 +43,19 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this.strings = options.strings;
       _this.el = options.el;
 
-      _this.addChangeListener(_this.onOrientationChange, "model-".concat(_this.model.modelId, "-change-orientation"));
+      _this.addChangeListener(_this.onOrientationChange, "orientation");
 
-      _this.addChangeListener(_this.onActiveTrayChange, "model-".concat(_this.model.modelId, "-change-activeTray"));
+      _this.addChangeListener(_this.onActiveTrayChange, "activeTray");
 
       return _this;
     }
 
     _createClass(_class, [{
       key: "onOrientationChange",
-      value: function onOrientationChange(model, orientation) {
-        console.log('orientation change', this.model.get('orientation'));
+      value: function onOrientationChange() {
+        console.log('onOrientationChange function');
         Drupal.announce(Drupal.t('Tray orientation changed to @orientation.', {
-          '@orientation': orientation
+          '@orientation': this.model.orientation
         }));
       }
     }, {

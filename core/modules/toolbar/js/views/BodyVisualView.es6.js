@@ -16,18 +16,12 @@
     constructor(options) {
       super();
       this.model = options.model;
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-activeTray`,
-      );
+      this.addChangeListener(this.render, `activeTray`);
       this.addChangeListener(
         this.isToolbarFixed,
-        `model-${this.model.modelId}-change-isViewportOverflowConstrained`,
+        `isViewportOverflowConstrained`,
       );
-      this.addChangeListener(
-        this.isToolbarFixed,
-        `model-${this.model.modelId}-change-isToolbarFixed`,
-      );
+      this.addChangeListener(this.isToolbarFixed, `isFixed`);
     }
     // initialize() {
     //   this.listenTo(this.model, 'change:activeTray ', this.render);

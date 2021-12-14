@@ -103,9 +103,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       key: "addChangeListener",
       value: function addChangeListener(callback, modelProperty) {
         if (!modelProperty) {
-          document.addEventListener("model-".concat(this.model.modelId, "-change"), callback);
+          document.addEventListener("model-".concat(this.model.modelId, "-change"), callback());
         } else {
-          document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback);
+          document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback());
         }
       }
     }]);

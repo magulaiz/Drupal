@@ -50,13 +50,13 @@
         // listen for document `model-${this.model-modelId}-change` to respond with callback
         document.addEventListener(
           `model-${this.model.modelId}-change`,
-          callback,
+          callback(),
         );
       } else {
         // listen for document `model-${this.model-modelId}-change-${modelProperty}` to respond with callback
         document.addEventListener(
           `model-${this.model.modelId}-change-${modelProperty}`,
-          callback,
+          callback(),
         );
       }
     }

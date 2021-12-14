@@ -41,11 +41,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this = _super.call(this);
       _this.model = options.model;
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-activeTray"));
+      _this.addChangeListener(_this.render, "activeTray");
 
-      _this.addChangeListener(_this.isToolbarFixed, "model-".concat(_this.model.modelId, "-change-isViewportOverflowConstrained"));
+      _this.addChangeListener(_this.isToolbarFixed, "isViewportOverflowConstrained");
 
-      _this.addChangeListener(_this.isToolbarFixed, "model-".concat(_this.model.modelId, "-change-isToolbarFixed"));
+      _this.addChangeListener(_this.isToolbarFixed, "isFixed");
 
       return _this;
     }

@@ -22,14 +22,8 @@
       this.model = options.model;
       this.strings = options.strings;
       this.el = options.el;
-      this.addChangeListener(
-        this.onOrientationChange,
-        `model-${this.model.modelId}-change-orientation`,
-      );
-      this.addChangeListener(
-        this.onActiveTrayChange,
-        `model-${this.model.modelId}-change-activeTray`,
-      );
+      this.addChangeListener(this.onOrientationChange, `orientation`);
+      this.addChangeListener(this.onActiveTrayChange, `activeTray`);
     }
 
     // initialize(options) {
@@ -51,11 +45,11 @@
      * @param {string} orientation
      *   The new value of the orientation attribute in the model.
      */
-    onOrientationChange(model, orientation) {
-      console.log('orientation change', this.model.get('orientation'));
+    onOrientationChange() {
+      console.log('onOrientationChange function');
       Drupal.announce(
         Drupal.t('Tray orientation changed to @orientation.', {
-          '@orientation': orientation,
+          '@orientation': this.model.orientation,
         }),
       );
     }

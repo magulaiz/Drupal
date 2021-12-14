@@ -5,9 +5,7 @@
 
 (function ($, Drupal, drupalSettings, Backbone) {
   Drupal.toolbar.ToolbarVisualView = class extends Drupal.DrupalView {
-      /** @lends Drupal.toolbar.ToolbarVisualView# */
-
-
+    /** @lends Drupal.toolbar.ToolbarVisualView# */
 
     /**
      * Backbone view for the toolbar element. Listens to mouse & touch.
@@ -26,72 +24,47 @@
       this.model = options.model;
       this.strings = options.strings;
       this.el = options.el;
-      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+      document
+        .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
         .forEach((toolbarTab) => {
-          toolbarTab.addEventListener('click', (e) =>
-            this.onTabClick(e),
-          );
+          toolbarTab.addEventListener('click', (e) => this.onTabClick(e));
         });
-      document.querySelectorAll('.toolbar-toggle-orientation button')
+      document
+        .querySelectorAll('.toolbar-toggle-orientation button')
         .forEach((button) => {
           button.addEventListener('click', (e) =>
             this.onOrientationToggleClick(e),
           );
         });
-      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
+      document
+        .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
         .forEach((toolbarTab) => {
           toolbarTab.addEventListener('touchend', (e) =>
             this.touchEndToClick(e),
           );
         });
-      document.querySelectorAll('.toolbar-toggle-orientation button')
+      document
+        .querySelectorAll('.toolbar-toggle-orientation button')
         .forEach((toolbarTab) => {
           toolbarTab.addEventListener('touchend', (e) =>
             this.touchEndToClick(e),
           );
         });
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-activeTab`,
-      );
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-orientation`,
-      );
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-isOriented`,
-      );
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-isTrayToggleVisible`,
-      );
-      this.addChangeListener(
-        this.onMediaQueryChange,
-        `model-${this.model.modelId}-change-mqMatches`,
-      );
-      this.addChangeListener(
-        this.adjustPlacement,
-        `model-${this.model.modelId}-change-offsets`,
-      );
-      this.addChangeListener(
-        this.updateToolbarHeight(),
-        `model-${this.model.modelId}-change-activeTab`,
-      );
-      this.addChangeListener(
-        this.updateToolbarHeight(),
-        `model-${this.model.modelId}-change-orientation`,
-      );
-      this.addChangeListener(
-        this.updateToolbarHeight(),
-        `model-${this.model.modelId}-change-isOriented`,
-      );
+      this.addChangeListener(this.render, `activeTab`);
+      this.addChangeListener(this.render, `orientation`);
+      this.addChangeListener(this.render, `isOriented`);
+      this.addChangeListener(this.render, `isTrayToggleVisible`);
+      this.addChangeListener(this.onMediaQueryChange, `mqMatches`);
+      this.addChangeListener(this.adjustPlacement, `offsets`);
+      this.addChangeListener(this.updateToolbarHeight, `activeTab`);
+      this.addChangeListener(this.updateToolbarHeight, `orientation`);
+      this.addChangeListener(this.updateToolbarHeight, `isOriented`);
     }
 
     touchEndToClick(event) {
       event.preventDefault();
       event.target.click();
-    };
+    }
     // initialize(options)
     // {
     //   this.strings = options.strings;
@@ -127,6 +100,7 @@
      * @augments Backbone.View
      */
     updateToolbarHeight() {
+      console.log('updateToolbarHeight called in ToolbarVisualView');
       const toolbarTabOuterHeight =
         $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       const toolbarTrayHorizontalOuterHeight =
@@ -162,6 +136,7 @@
      *   The `ToolbarVisualView` instance.
      */
     render() {
+      console.log('RENDER IN TOOLBAR VISUAL VIEW IS CALLED');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
@@ -252,6 +227,7 @@
      * Updates the display of the tabs: toggles a tab and the associated tray.
      */
     updateTabs() {
+      console.log('updateTabs() in toolbarvisualview is called');
       const $tab = $(this.model.get('activeTab'));
       // Deactivate the previous tab.
       $(this.model.previous('activeTab'))
@@ -367,6 +343,7 @@
      * Sets the tops of the trays so that they align with the bottom of the bar.
      */
     adjustPlacement() {
+      console.log('adjustPlacement in ToolbarVisualView called');
       const $trays = this.$el.find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
         $trays

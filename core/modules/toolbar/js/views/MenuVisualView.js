@@ -41,7 +41,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this = _super.call(this);
       _this.model = options.model;
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-subtrees"));
+      _this.addChangeListener(_this.render, "subtrees");
 
       return _this;
     }

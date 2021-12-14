@@ -63,23 +63,23 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         });
       });
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-activeTab"));
+      _this.addChangeListener(_this.render, "activeTab");
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-orientation"));
+      _this.addChangeListener(_this.render, "orientation");
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-isOriented"));
+      _this.addChangeListener(_this.render, "isOriented");
 
-      _this.addChangeListener(_this.render, "model-".concat(_this.model.modelId, "-change-isTrayToggleVisible"));
+      _this.addChangeListener(_this.render, "isTrayToggleVisible");
 
-      _this.addChangeListener(_this.onMediaQueryChange, "model-".concat(_this.model.modelId, "-change-mqMatches"));
+      _this.addChangeListener(_this.onMediaQueryChange, "mqMatches");
 
-      _this.addChangeListener(_this.adjustPlacement, "model-".concat(_this.model.modelId, "-change-offsets"));
+      _this.addChangeListener(_this.adjustPlacement, "offsets");
 
-      _this.addChangeListener(_this.updateToolbarHeight(), "model-".concat(_this.model.modelId, "-change-activeTab"));
+      _this.addChangeListener(_this.updateToolbarHeight, "activeTab");
 
-      _this.addChangeListener(_this.updateToolbarHeight(), "model-".concat(_this.model.modelId, "-change-orientation"));
+      _this.addChangeListener(_this.updateToolbarHeight, "orientation");
 
-      _this.addChangeListener(_this.updateToolbarHeight(), "model-".concat(_this.model.modelId, "-change-isOriented"));
+      _this.addChangeListener(_this.updateToolbarHeight, "isOriented");
 
       return _this;
     }
@@ -93,6 +93,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateToolbarHeight",
       value: function updateToolbarHeight() {
+        console.log('updateToolbarHeight called in ToolbarVisualView');
         var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
         var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
         this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
@@ -114,6 +115,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "render",
       value: function render() {
+        console.log('RENDER IN TOOLBAR VISUAL VIEW IS CALLED');
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();
@@ -162,6 +164,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateTabs",
       value: function updateTabs() {
+        console.log('updateTabs() in toolbarvisualview is called');
         var $tab = $(this.model.get('activeTab'));
         $(this.model.previous('activeTab')).removeClass('is-active').prop('aria-pressed', false);
         $(this.model.previous('activeTray')).removeClass('is-active');
@@ -222,6 +225,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "adjustPlacement",
       value: function adjustPlacement() {
+        console.log('adjustPlacement in ToolbarVisualView called');
         var $trays = this.$el.find('.toolbar-tray');
 
         if (!this.model.get('isOriented')) {

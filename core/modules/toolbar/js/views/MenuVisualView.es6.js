@@ -16,10 +16,7 @@
     constructor(options) {
       super();
       this.model = options.model;
-      this.addChangeListener(
-        this.render,
-        `model-${this.model.modelId}-change-subtrees`,
-      );
+      this.addChangeListener(this.render, `subtrees`);
     }
     // initialize() {
     //   this.listenTo(this.model, 'change:subtrees', this.render);
