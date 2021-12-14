@@ -365,8 +365,8 @@ function update_calculate_project_update_status(&$project_data, $available) {
     return;
   }
 
-  if ($latest_dev = $status_calculator->getLatestDev()) {
-    $project_data['latest_dev'] = $latest_dev;
+  if ($latest_dev_release_info = $status_calculator->getLatestDev()) {
+    $project_data['latest_dev'] = $latest_dev_release_info['version'];
   }
 
   // Figure out the status, based on what we've seen and the install type.
