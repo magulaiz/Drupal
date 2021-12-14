@@ -316,6 +316,11 @@ class ProjectStatusCalculator {
   /**
    * Gets all the installable releases up to and including the existing version.
    *
+   * @todo Right now this returns the current version regardless of whether this
+   *   passes ::releaseIsInstallable(). This is because currently
+   *   update_calculate_project_update_status() will consider the current
+   *   version regardless of whether it passes this condition.
+   *
    * @return array[]
    *   The releases.
    */
@@ -347,7 +352,7 @@ class ProjectStatusCalculator {
       catch (\UnexpectedValueException $exception) {
         continue;
       }
-      if ($this->releaseIsInstallable($release)) {
+      if ($this->releaseIsInstallable($release) || $version === $this->projectData['existing_version']) {
         $this->installableReleases[$version] = $release_info;
       }
       if ($version === $this->projectData['existing_version']) {
