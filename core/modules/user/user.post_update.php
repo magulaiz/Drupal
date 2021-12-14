@@ -46,6 +46,7 @@ function user_post_update_update_roles(&$sandbox = NULL) {
       ['%role_list' => implode(', ', $cleaned_roles)]
     );
   }
+}
 
 /**
  * Update config for change mail notifications.
