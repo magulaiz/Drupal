@@ -224,7 +224,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         catch (MigrateException $e) {
           $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
-          $msg = sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $e->getMessage());
+          $msg = sprintf("%s:%s:%s", $this->migration->getPluginId(), $destination_property_name, $e->getMessage());
           $this->saveMessage($msg, $e->getLevel());
           $save = FALSE;
         }
@@ -412,7 +412,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
     $multiple = FALSE;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
-    foreach ($plugins as $plugin) {
+    foreach ($plugins as $index => $plugin) {
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
@@ -432,6 +432,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $new_value[] = NULL;
             $break = TRUE;
           }
+          catch (MigrateException $e) {
+            // Prepend the process plugin id and index to the message.
+            $message = sprintf("%s:%s: %s", $index, $plugin->getPluginId(), $e->getMessage());
+            throw new MigrateException($message);
+          }
         }
         $value = $new_value;
         if ($break) {
@@ -446,6 +451,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $value = NULL;
           break;
         }
+        catch (MigrateException $e) {
+          // Prepend the process plugin id and index to the message.
+          $message = sprintf("%s:%s: %s", $index, $plugin->getPluginId(), $e->getMessage());
+          throw new MigrateException($message);
+        }
+
         $multiple = $plugin->multiple();
       }
     }
