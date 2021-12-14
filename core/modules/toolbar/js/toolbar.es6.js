@@ -652,14 +652,21 @@
         // Add the tray orientation toggles.
         const bar = document.querySelector('#toolbar-administration');
         const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        const toggleHTML = document.createElement('div');
-        toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
-        Array.from(trays).forEach((item) => {
-          item.insertAdjacentHTML(
-            'beforeend',
-            Drupal.theme('toolbarOrientationToggle'),
-          );
+        // const toggleHTML = document.createElement('div');
+        // toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
+        // Array.from(trays).forEach((item) => {
+        //   item.insertAdjacentHTML(
+        //     'beforeend',
+        //     Drupal.theme('toolbarOrientationToggle'),
+        //   );
+        // });
+
+
+        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach((toolbarLining) => {
+          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
         });
+
+
 
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
@@ -747,6 +754,8 @@
             model,
           },
         );
+
+        toolbar
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.

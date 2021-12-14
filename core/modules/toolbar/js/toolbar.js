@@ -437,10 +437,8 @@
         });
         var bar = document.querySelector('#toolbar-administration');
         var trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        var toggleHTML = document.createElement('div');
-        toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
-        Array.from(trays).forEach(function (item) {
-          item.insertAdjacentHTML('beforeend', Drupal.theme('toolbarOrientationToggle'));
+        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
+          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
         });
 
         if (toolbarBehaviors.orientation === 'horizontal' && toolbarBehaviors.activeTab === null) {
@@ -491,6 +489,7 @@
           el: toolbar,
           model: model
         });
+        toolbar;
         model.trigger('change:isFixed', model, model.get('isFixed'));
         model.trigger('change:activeTray', model, model.get('activeTray'));
         var menuModel = new Drupal.toolbar.MenuModel();
