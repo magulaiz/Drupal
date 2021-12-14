@@ -314,10 +314,11 @@ class ProjectStatusCalculator {
    *   The releases.
    */
   private function getInstallableReleases(): array {
-    static $releases = [];
+    static $releases;
     if (isset($releases)) {
       return $releases;
     }
+    $releases = [];
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       try {
         $release = ProjectRelease::createFromArray($release_info);
