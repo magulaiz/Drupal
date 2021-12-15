@@ -13,7 +13,7 @@
         var $revisionContext = $(context);
         var revisionCheckbox = $revisionContext.find('.js-form-item-revision input');
 
-        if (revisionCheckbox[0] && revisionCheckbox[0].checked || !revisionCheckbox.length && $revisionContext.find('.js-form-item-revision-log textarea').length) {
+        if (revisionCheckbox.length && revisionCheckbox[0].checked || !revisionCheckbox.length && $revisionContext.find('.js-form-item-revision-log textarea').length) {
           return Drupal.t('New revision');
         }
 
@@ -25,10 +25,10 @@
         var $checkbox = $translationContext.find('.js-form-item-translation-translate input');
 
         if ($checkbox.length) {
-          translate = $checkbox[0] && $checkbox[0].checked ? Drupal.t('Needs to be updated') : Drupal.t('Does not need to be updated');
+          translate = $checkbox[0].checked ? Drupal.t('Needs to be updated') : Drupal.t('Does not need to be updated');
         } else {
           $checkbox = $translationContext.find('.js-form-item-translation-retranslate input');
-          translate = $checkbox[0] && $checkbox[0].checked ? Drupal.t('Flag other translations as outdated') : Drupal.t('Do not flag other translations as outdated');
+          translate = $checkbox[0].checked ? Drupal.t('Flag other translations as outdated') : Drupal.t('Do not flag other translations as outdated');
         }
 
         return translate;
