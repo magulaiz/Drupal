@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-((Drupal) => {
+((Drupal, Backbone) => {
   Drupal.DrupalModel = class extends Backbone.Model {
     constructor() {
       super();
@@ -44,6 +44,18 @@
       // }
     }
 
+    /**
+     * Set the element and re-delegate the view's events on the new element.
+     *
+     * @param {Element|jQuery} element
+     *   The new element for the view.
+     *
+     * @todo some logic from Backbone should be moved here.
+     */
+    setElement(element) {
+      return super.setElement(element);
+    }
+
     addChangeListener(callback, modelProperty) {
       if (!modelProperty) {
         // listen for document `model-${this.model-modelId}-change` to respond with callback
@@ -63,4 +75,4 @@
       }
     }
   };
-})(Drupal);
+})(Drupal, Backbone);

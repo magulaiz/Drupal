@@ -16,6 +16,7 @@
     constructor(options) {
       super();
       this.model = options.model;
+      this.setElement(options.el);
       this.addChangeListener(this.render, `activeTray`);
       this.addChangeListener(
         this.isToolbarFixed,

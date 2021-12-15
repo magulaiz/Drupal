@@ -41,7 +41,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this = _super.call(this);
       _this.model = options.model;
       _this.strings = options.strings;
-      _this.el = options.el;
+
+      _this.setElement(options.el);
+
       var eventConfig = [{
         selector: '.toolbar-bar .toolbar-tab .trigger',
         eventType: 'click',

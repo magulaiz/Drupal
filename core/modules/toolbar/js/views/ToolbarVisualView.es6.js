@@ -23,7 +23,7 @@
       super();
       this.model = options.model;
       this.strings = options.strings;
-      this.el = options.el;
+      this.setElement(options.el);
 
       const eventConfig = [
         {
