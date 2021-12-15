@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Routing;
 
 use Drupal\Core\ParamConverter\ParamConverterInterface;
+use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\Routing\Route;
 
@@ -15,6 +16,13 @@ use Symfony\Component\Routing\Route;
 class LayoutSectionStorageParamConverter implements ParamConverterInterface {
 
   /**
+   * The layout tempstore repository.
+   *
+   * @var \Drupal\layout_builder\LayoutTempstoreRepositoryInterface
+   */
+  protected $layoutTempstoreRepository;
+
+  /**
    * The section storage manager.
    *
    * @var \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface
@@ -24,10 +32,13 @@ class LayoutSectionStorageParamConverter implements ParamConverterInterface {
   /**
    * Constructs a new LayoutSectionStorageParamConverter.
    *
+   * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
+   *   The layout tempstore repository.
    * @param \Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface $section_storage_manager
    *   The section storage manager.
    */
-  public function __construct(SectionStorageManagerInterface $section_storage_manager) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, SectionStorageManagerInterface $section_storage_manager) {
+    $this->layoutTempstoreRepository = $layout_tempstore_repository;
     $this->sectionStorageManager = $section_storage_manager;
   }
 
@@ -44,7 +55,14 @@ class LayoutSectionStorageParamConverter implements ParamConverterInterface {
     // Load an empty instance and derive the available contexts.
     $contexts = $this->sectionStorageManager->loadEmpty($type)->deriveContextsFromRoute($value, $definition, $name, $defaults);
     // Attempt to load a full instance based on the context.
-    return $this->sectionStorageManager->load($type, $contexts);
+    if ($section_storage = $this->sectionStorageManager->load($type, $contexts)) {
+      // Pass the plugin through the tempstore repository if the route desires.
+      if (!empty($definition['layout_builder_tempstore'])) {
+        $section_storage = $this->layoutTempstoreRepository->get($section_storage);
+      }
+
+      return $section_storage;
+    }
   }
 
   /**
