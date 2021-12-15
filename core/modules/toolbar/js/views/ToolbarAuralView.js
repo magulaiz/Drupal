@@ -60,8 +60,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       }
     }, {
       key: "onActiveTrayChange",
-      value: function onActiveTrayChange(tray) {
-        var relevantTray = tray === null ? this.model.previous('activeTray') : tray;
+      value: function onActiveTrayChange() {
+        var tray = this.model.get('activeTray');
+        var relevantTray = tray === null ? this.model.get('previousActiveTray') : tray;
 
         if (!relevantTray) {
           return;

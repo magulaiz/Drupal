@@ -42,24 +42,29 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this.model = options.model;
       _this.strings = options.strings;
       _this.el = options.el;
-      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
-        toolbarTab.addEventListener('click', function (e) {
-          return _this.onTabClick(e);
-        });
-      });
-      document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (button) {
-        button.addEventListener('click', function (e) {
-          return _this.onOrientationToggleClick(e);
-        });
-      });
-      document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
-        toolbarTab.addEventListener('touchend', function (e) {
-          return _this.touchEndToClick(e);
-        });
-      });
-      document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (toolbarTab) {
-        toolbarTab.addEventListener('touchend', function (e) {
-          return _this.touchEndToClick(e);
+      var eventConfig = [{
+        selector: '.toolbar-bar .toolbar-tab .trigger',
+        eventType: 'click',
+        callback: _this.onTabClick
+      }, {
+        selector: '.toolbar-toggle-orientation button',
+        eventType: 'click',
+        callback: _this.onTabClick
+      }, {
+        selector: '.toolbar-bar .toolbar-tab .trigger',
+        eventType: 'touchend',
+        callback: _this.onOrientationToggleClick
+      }, {
+        selector: '.toolbar-toggle-orientation button',
+        eventType: 'touchend',
+        callback: _this.touchEndToClick
+      }];
+      eventConfig.forEach(function (config) {
+        var callback = config.callback.bind(_assertThisInitialized(_this));
+        document.querySelectorAll(config.selector).forEach(function (item) {
+          item.addEventListener(config.eventType, function (e) {
+            return callback(e);
+          });
         });
       });
 
@@ -70,8 +75,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this.addChangeListener(_this.render, "isOriented");
 
       _this.addChangeListener(_this.render, "isTrayToggleVisible");
-
-      _this.addChangeListener(_this.onMediaQueryChange, "mqMatches");
 
       _this.addChangeListener(_this.adjustPlacement, "offsets");
 
@@ -115,7 +118,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "render",
       value: function render() {
-        console.log('RENDER IN TOOLBAR VISUAL VIEW IS CALLED');
         this.updateTabs();
         this.updateTrayOrientation();
         this.updateBarAttributes();

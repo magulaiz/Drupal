@@ -24,73 +24,53 @@
       this.model = options.model;
       this.strings = options.strings;
       this.el = options.el;
-      document
-        .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-        .forEach((toolbarTab) => {
-          toolbarTab.addEventListener('click', (e) => this.onTabClick(e));
+
+      const eventConfig = [
+        {
+          selector: '.toolbar-bar .toolbar-tab .trigger',
+          eventType: 'click',
+          callback: this.onTabClick,
+        },
+        {
+          selector: '.toolbar-toggle-orientation button',
+          eventType: 'click',
+          callback: this.onTabClick,
+        },
+        {
+          selector: '.toolbar-bar .toolbar-tab .trigger',
+          eventType: 'touchend',
+          callback: this.onOrientationToggleClick,
+        },
+        {
+          selector: '.toolbar-toggle-orientation button',
+          eventType: 'touchend',
+          callback: this.touchEndToClick,
+        },
+      ];
+      eventConfig.forEach((config) => {
+        const callback = config.callback.bind(this);
+        document.querySelectorAll(config.selector).forEach((item) => {
+          item.addEventListener(config.eventType, (e) => callback(e));
         });
-      document
-        .querySelectorAll('.toolbar-toggle-orientation button')
-        .forEach((button) => {
-          button.addEventListener('click', (e) =>
-            this.onOrientationToggleClick(e),
-          );
-        });
-      document
-        .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-        .forEach((toolbarTab) => {
-          toolbarTab.addEventListener('touchend', (e) =>
-            this.touchEndToClick(e),
-          );
-        });
-      document
-        .querySelectorAll('.toolbar-toggle-orientation button')
-        .forEach((toolbarTab) => {
-          toolbarTab.addEventListener('touchend', (e) =>
-            this.touchEndToClick(e),
-          );
-        });
+      });
+
       this.addChangeListener(this.render, `activeTab`);
       this.addChangeListener(this.render, `orientation`);
       this.addChangeListener(this.render, `isOriented`);
       this.addChangeListener(this.render, `isTrayToggleVisible`);
-      this.addChangeListener(this.onMediaQueryChange, `mqMatches`);
+      // @todo it doesn't look like onMediaQueryChange exists in HEAD either...
+      // this.addChangeListener(this.onMediaQueryChange, `mqMatches`);
       this.addChangeListener(this.adjustPlacement, `offsets`);
       this.addChangeListener(this.updateToolbarHeight, `activeTab`);
       this.addChangeListener(this.updateToolbarHeight, `orientation`);
       this.addChangeListener(this.updateToolbarHeight, `isOriented`);
+      // Add the tray orientation toggles now in toolbar.es6.js
     }
 
     touchEndToClick(event) {
       event.preventDefault();
       event.target.click();
     }
-    // initialize(options)
-    // {
-    //   this.strings = options.strings;
-    //
-    //   this.listenTo(
-    //     this.model,
-    //     'change:activeTab change:orientation change:isOriented change:isTrayToggleVisible',
-    //     this.render,
-    //   );
-    //   this.listenTo(this.model, 'change:mqMatches', this.onMediaQueryChange);
-    //   this.listenTo(this.model, 'change:offsets', this.adjustPlacement);
-    //   this.listenTo(
-    //     this.model,
-    //     'change:activeTab change:orientation change:isOriented',
-    //     this.updateToolbarHeight,
-    //   );
-    //
-    //   // Add the tray orientation toggles.
-    //   this.$el
-    //     .find('.toolbar-tray .toolbar-lining')
-    //     .append(Drupal.theme('toolbarOrientationToggle'));
-    //
-    //   // Trigger an activeTab change so that listening scripts can respond on
-    //   // page load. This will call render.
-    //   this.model.trigger('change:activeTab');
-    // }
 
     /**
      * Update the toolbar element height.
@@ -136,7 +116,6 @@
      *   The `ToolbarVisualView` instance.
      */
     render() {
-      console.log('RENDER IN TOOLBAR VISUAL VIEW IS CALLED');
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();

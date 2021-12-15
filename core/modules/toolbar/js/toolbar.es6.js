@@ -652,21 +652,6 @@
         // Add the tray orientation toggles.
         const bar = document.querySelector('#toolbar-administration');
         const trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        // const toggleHTML = document.createElement('div');
-        // toggleHTML.textContent = Drupal.theme('toolbarOrientationToggle');
-        // Array.from(trays).forEach((item) => {
-        //   item.insertAdjacentHTML(
-        //     'beforeend',
-        //     Drupal.theme('toolbarOrientationToggle'),
-        //   );
-        // });
-
-
-        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach((toolbarLining) => {
-          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
-        });
-
-
 
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
@@ -685,30 +670,6 @@
           .forEach((toolbarTab) => {
             toolbarTab.addEventListener('click', (e) =>
               toolbarBehaviors.onTabClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((button) => {
-            button.addEventListener('click', (e) =>
-              toolbarBehaviors.onOrientationToggleClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-bar .toolbar-tab .trigger')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              toolbarBehaviors.touchEndToClick(e),
-            );
-          });
-
-        document
-          .querySelectorAll('.toolbar-toggle-orientation button')
-          .forEach((toolbarTab) => {
-            toolbarTab.addEventListener('touchend', (e) =>
-              toolbarBehaviors.touchEndToClick(e),
             );
           });
 
@@ -742,6 +703,17 @@
             model,
             strings: options.strings,
           });
+
+        // Used to happen in ToolbarVisualView.init();
+        toolbar
+          .querySelectorAll('.toolbar-tray .toolbar-lining')
+          .forEach((toolbarLining) => {
+            console.log('add toggle to', toolbarLining);
+            $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
+          });
+
+        model.triggerEvent(`model-${model.modelId}-change-activeTab`);
+
         Drupal.toolbar.views.toolbarAuralView =
           new Drupal.toolbar.ToolbarAuralView({
             el: toolbar,
@@ -755,12 +727,16 @@
           },
         );
 
-        toolbar
+        // toolbar
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
-        model.trigger('change:isFixed', model, model.get('isFixed'));
-        model.trigger('change:activeTray', model, model.get('activeTray'));
+
+        // Replace use of model.trigger('change:isFixed', model, model.get('isFixed'));
+        model.triggerEvent(`model-${model.modelId}-change-isFixed`);
+
+        // Replace use of model.trigger('change:activeTray', model, model.get('activeTray'));
+        model.triggerEvent(`model-${model.modelId}-change-activeTray`);
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
@@ -823,11 +799,10 @@
             'horizontal' &&
           Drupal.toolbar.models.toolbarModel.get('activeTab') === null
         ) {
-          Drupal.toolbar.models.toolbarModel.set({
-            activeTab: $(
-              '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
-            ).get(0),
-          });
+          Drupal.toolbar.models.toolbarModel.set(
+            'activeTab',
+            $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0),
+          );
         }
 
         $(window).on({

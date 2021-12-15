@@ -40,7 +40,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this = _super.call(this);
       _this.modelId = (Math.random() + 1).toString(36).substring(7);
-      console.log('i am the constructor in lil model with id.', _this.modelId);
       return _this;
     }
 
@@ -105,7 +104,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         if (!modelProperty) {
           document.addEventListener("model-".concat(this.model.modelId, "-change"), callback());
         } else {
-          document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback());
+          if (!callback) {
+            debugger;
+          }
+
+          document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback.bind(this));
         }
       }
     }]);

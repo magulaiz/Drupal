@@ -62,10 +62,12 @@
      * @param {HTMLElement} tray
      *   The new value of the tray attribute in the model.
      */
-    onActiveTrayChange(tray) {
+    onActiveTrayChange() {
+      // debugger;
+      const tray = this.model.get('activeTray');
       const relevantTray =
         // TODO: .previous replacement?
-        tray === null ? this.model.previous('activeTray') : tray;
+        tray === null ? this.model.get('previousActiveTray') : tray;
       // Current activeTray and previous activeTray are empty, no state change
       // to announce.
       if (!relevantTray) {

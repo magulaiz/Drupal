@@ -437,9 +437,6 @@
         });
         var bar = document.querySelector('#toolbar-administration');
         var trays = bar.querySelectorAll('.toolbar-tray .toolbar-lining');
-        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
-          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
-        });
 
         if (toolbarBehaviors.orientation === 'horizontal' && toolbarBehaviors.activeTab === null) {
           toolbarBehaviors.activeTab = '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a';
@@ -448,21 +445,6 @@
         document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
           toolbarTab.addEventListener('click', function (e) {
             return toolbarBehaviors.onTabClick(e);
-          });
-        });
-        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (button) {
-          button.addEventListener('click', function (e) {
-            return toolbarBehaviors.onOrientationToggleClick(e);
-          });
-        });
-        document.querySelectorAll('.toolbar-bar .toolbar-tab .trigger').forEach(function (toolbarTab) {
-          toolbarTab.addEventListener('touchend', function (e) {
-            return toolbarBehaviors.touchEndToClick(e);
-          });
-        });
-        document.querySelectorAll('.toolbar-toggle-orientation button').forEach(function (toolbarTab) {
-          toolbarTab.addEventListener('touchend', function (e) {
-            return toolbarBehaviors.touchEndToClick(e);
           });
         });
         toolbarBehaviors.locked = JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked'));
@@ -480,6 +462,11 @@
           model: model,
           strings: options.strings
         });
+        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
+          console.log('add toggle to', toolbarLining);
+          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
+        });
+        model.triggerEvent("model-".concat(model.modelId, "-change-activeTab"));
         Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
           el: toolbar,
           model: model,
@@ -489,9 +476,8 @@
           el: toolbar,
           model: model
         });
-        toolbar;
-        model.trigger('change:isFixed', model, model.get('isFixed'));
-        model.trigger('change:activeTray', model, model.get('activeTray'));
+        model.triggerEvent("model-".concat(model.modelId, "-change-isFixed"));
+        model.triggerEvent("model-".concat(model.modelId, "-change-activeTray"));
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
@@ -518,9 +504,7 @@
         });
 
         if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
-          Drupal.toolbar.models.toolbarModel.set({
-            activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
-          });
+          Drupal.toolbar.models.toolbarModel.set('activeTab', $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0));
         }
 
         $(window).on({

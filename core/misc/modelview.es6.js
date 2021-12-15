@@ -4,7 +4,6 @@
     constructor() {
       super();
       this.modelId = (Math.random() + 1).toString(36).substring(7);
-      console.log('i am the constructor in lil model with id.', this.modelId);
     }
 
     get(property) {
@@ -53,10 +52,13 @@
           callback(),
         );
       } else {
+        if (!callback) {
+          debugger;
+        }
         // listen for document `model-${this.model-modelId}-change-${modelProperty}` to respond with callback
         document.addEventListener(
           `model-${this.model.modelId}-change-${modelProperty}`,
-          callback(),
+          callback.bind(this),
         );
       }
     }
