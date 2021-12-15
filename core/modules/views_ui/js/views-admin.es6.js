@@ -269,8 +269,8 @@
       // The add handler form may have an id of views-ui-add-handler-form--n.
       if (
         !(
-          context.tagName === 'FORM' &&
-          context.id.startsWith('views-ui-add-handler-form')
+          context instanceof HTMLElement &&
+          context.matches('form[id^="views-ui-add-handler-form"]')
         )
       ) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
@@ -462,8 +462,8 @@
       // The add handler form may have an id of views-ui-add-handler-form--n.
       if (
         !(
-          context.tagName === 'FORM' &&
-          context.id.startsWith('views-ui-add-handler-form')
+          context instanceof HTMLElement &&
+          context.matches('form[id^="views-ui-add-handler-form"]')
         )
       ) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
@@ -635,10 +635,10 @@
       }
 
       // Executes an initial preview.
-      if (
-        $(once('edit-displays-live-preview', '#edit-displays-live-preview'))[0]
-          .checked
-      ) {
+      const $livePreview = $(
+        once('edit-displays-live-preview', '#edit-displays-live-preview'),
+      );
+      if ($livePreview.length && $livePreview[0].checked) {
         $(once('edit-displays-live-preview', '#preview-submit')).trigger(
           'click',
         );

@@ -117,7 +117,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!(context.tagName === 'FORM' && context.id.startsWith('views-ui-add-handler-form'))) {
+      if (!(context instanceof HTMLElement && context.matches('form[id^="views-ui-add-handler-form"]'))) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
@@ -211,7 +211,7 @@
       var $context = $(context);
       var $form = $context;
 
-      if (!(context.tagName === 'FORM' && context.id.startsWith('views-ui-add-handler-form'))) {
+      if (!(context instanceof HTMLElement && context.matches('form[id^="views-ui-add-handler-form"]'))) {
         $form = $context.find('form[id^="views-ui-add-handler-form"]');
       }
 
@@ -300,7 +300,9 @@
         $('#preview-args').parent().hide();
       }
 
-      if ($(once('edit-displays-live-preview', '#edit-displays-live-preview'))[0].checked) {
+      var $livePreview = $(once('edit-displays-live-preview', '#edit-displays-live-preview'));
+
+      if ($livePreview.length && $livePreview[0].checked) {
         $(once('edit-displays-live-preview', '#preview-submit')).trigger('click');
       }
     }
