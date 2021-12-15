@@ -30,3 +30,10 @@ function layout_builder_removed_post_updates() {
     'layout_builder_post_update_tempstore_route_enhancer' => '10.0.0',
   ];
 }
+
+/**
+ * Clear caches due to removing the route enhancer.
+ */
+function layout_builder_post_update_remove_tempstore_route_enhancer() {
+  // Empty post-update hook.
+}
