@@ -231,7 +231,7 @@
           );
         }
         // Activate the associated tray.
-        const $tray = this.$el.find(
+        const $tray = $(this.el).find(
           `[data-toolbar-tray="${name}"].toolbar-tray`,
         );
         if ($tray.length) {
@@ -284,7 +284,7 @@
         antiOrientation === 'horizontal'
           ? 'toolbar-tray-horizontal'
           : 'toolbar-tray-vertical';
-      const $trays = this.$el
+      const $trays = $(this.el)
         .find('.toolbar-tray')
         .removeClass(removeClass)
         .addClass(`toolbar-tray-${orientation}`);
@@ -292,7 +292,7 @@
       // Update the tray orientation toggle button.
       const iconClass = `toolbar-icon-toggle-${orientation}`;
       const iconAntiClass = `toolbar-icon-toggle-${antiOrientation}`;
-      const $orientationToggle = this.$el
+      const $orientationToggle = $(this.el)
         .find('.toolbar-toggle-orientation')
         .toggle(this.model.get('isTrayToggleVisible'));
       $orientationToggle
@@ -323,7 +323,7 @@
      */
     adjustPlacement() {
       console.log('adjustPlacement in ToolbarVisualView called');
-      const $trays = this.$el.find('.toolbar-tray');
+      const $trays = $(this.el).find('.toolbar-tray');
       if (!this.model.get('isOriented')) {
         $trays
           .removeClass('toolbar-tray-horizontal')

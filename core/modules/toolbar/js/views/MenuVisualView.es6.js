@@ -31,13 +31,13 @@
       const subtrees = this.model.get('subtrees');
       // Add subtrees.
       Object.keys(subtrees || {}).forEach((id) => {
-        $(once('toolbar-subtrees', this.$el.find(`#toolbar-link-${id}`))).after(
+        $(once('toolbar-subtrees', $(this.el).find(`#toolbar-link-${id}`))).after(
           subtrees[id],
         );
       });
       // Render the main menu as a nested, collapsible accordion.
       if ('drupalToolbarMenu' in $.fn) {
-        this.$el.children('.toolbar-menu').drupalToolbarMenu();
+        $(this.el).children('.toolbar-menu').drupalToolbarMenu();
       }
     }
   };

@@ -182,7 +182,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
           }
 
-          var $tray = this.$el.find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
+          var $tray = $(this.el).find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
 
           if ($tray.length) {
             $tray.addClass('is-active');
@@ -215,10 +215,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
         $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
         var removeClass = antiOrientation === 'horizontal' ? 'toolbar-tray-horizontal' : 'toolbar-tray-vertical';
-        var $trays = this.$el.find('.toolbar-tray').removeClass(removeClass).addClass("toolbar-tray-".concat(orientation));
+        var $trays = $(this.el).find('.toolbar-tray').removeClass(removeClass).addClass("toolbar-tray-".concat(orientation));
         var iconClass = "toolbar-icon-toggle-".concat(orientation);
         var iconAntiClass = "toolbar-icon-toggle-".concat(antiOrientation);
-        var $orientationToggle = this.$el.find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
+        var $orientationToggle = $(this.el).find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
         $orientationToggle.find('button').val(antiOrientation).attr('title', this.strings[antiOrientation]).text(this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
         var dir = document.documentElement.dir;
         var edge = dir === 'rtl' ? 'right' : 'left';
@@ -230,7 +230,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       key: "adjustPlacement",
       value: function adjustPlacement() {
         console.log('adjustPlacement in ToolbarVisualView called');
-        var $trays = this.$el.find('.toolbar-tray');
+        var $trays = $(this.el).find('.toolbar-tray');
 
         if (!this.model.get('isOriented')) {
           $trays.removeClass('toolbar-tray-horizontal').addClass('toolbar-tray-vertical');

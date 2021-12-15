@@ -22,11 +22,9 @@
     'initialize',
     'toJSON',
     'sync',
-    'get',
     'escape',
     'has',
     'matches',
-    'set',
     'unset',
     'clear',
     'hasChanged',
@@ -64,5 +62,11 @@
         return originalFunction.apply(this, args);
       };
     }
+  });
+
+  Backbone.View.prototype = Drupal.deprecatedProperty({
+    target: Backbone.View.prototype,
+    deprecatedProperty: '$el',
+    message: 'Backbone.View.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use DrupalView.el instead.',
   });
 })(Backbone, Drupal);

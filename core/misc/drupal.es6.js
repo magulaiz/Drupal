@@ -563,7 +563,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    */
   Drupal.deprecationError = ({ message }) => {
     if (
-      drupalSettings.suppressDeprecationErrors === false &&
+      //drupalSettings.suppressDeprecationErrors === false &&
       typeof console !== 'undefined' &&
       console.warn
     ) {

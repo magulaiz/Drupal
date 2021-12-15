@@ -56,11 +56,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         console.log('render in menuvisualview is called');
         var subtrees = this.model.get('subtrees');
         Object.keys(subtrees || {}).forEach(function (id) {
-          $(once('toolbar-subtrees', _this2.$el.find("#toolbar-link-".concat(id)))).after(subtrees[id]);
+          $(once('toolbar-subtrees', $(_this2.el).find("#toolbar-link-".concat(id)))).after(subtrees[id]);
         });
 
         if ('drupalToolbarMenu' in $.fn) {
-          this.$el.children('.toolbar-menu').drupalToolbarMenu();
+          $(this.el).children('.toolbar-menu').drupalToolbarMenu();
         }
       }
     }]);

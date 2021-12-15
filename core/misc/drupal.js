@@ -175,7 +175,7 @@ window.Drupal = {
   Drupal.deprecationError = function (_ref) {
     var message = _ref.message;
 
-    if (drupalSettings.suppressDeprecationErrors === false && typeof console !== 'undefined' && console.warn) {
+    if (typeof console !== 'undefined' && console.warn) {
       console.warn("[Deprecation] ".concat(message));
     }
   };

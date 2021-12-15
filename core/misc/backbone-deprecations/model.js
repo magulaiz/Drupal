@@ -6,7 +6,7 @@
 **/
 
 (function (Backbone, Drupal) {
-  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'preinitialize', 'initialize', 'toJSON', 'sync', 'get', 'escape', 'has', 'matches', 'set', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previous', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'preinitialize', 'initialize', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previous', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
   deprecatedModelPrototypeProperties.forEach(function (property) {
     var overrides = {};
 
@@ -25,5 +25,10 @@
         return originalFunction.apply(this, args);
       };
     }
+  });
+  Backbone.View.prototype = Drupal.deprecatedProperty({
+    target: Backbone.View.prototype,
+    deprecatedProperty: '$el',
+    message: 'Backbone.View.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use DrupalView.el instead.'
   });
 })(Backbone, Drupal);
