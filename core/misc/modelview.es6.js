@@ -15,8 +15,6 @@
     'validationError',
     'idAttribute',
     'cidPrefix',
-    'preinitialize',
-    'initialize',
     'toJSON',
     'sync',
     'escape',
@@ -51,6 +49,17 @@
     constructor() {
       super();
       this.modelId = (Math.random() + 1).toString(36).substring(7);
+
+      if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
+        Drupal.deprecationError({
+          message: `Drupal.DrupalModel.preinitialize is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use constructor() instead.`,
+        });
+      }
+      if (this.initialize !== Backbone.Model.prototype.initialize) {
+        Drupal.deprecationError({
+          message: `Drupal.DrupalModel.initialize is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use constructor() instead.`,
+        });
+      }
     }
 
     get(property) {
