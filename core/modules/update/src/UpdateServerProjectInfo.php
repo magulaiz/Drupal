@@ -7,9 +7,8 @@ namespace Drupal\update;
  */
 class UpdateServerProjectInfo {
 
-
   /**
-   * The project data from the server.
+   * The project data from the update server.
    *
    * @var array[]
    */
@@ -28,14 +27,14 @@ class UpdateServerProjectInfo {
   /**
    * Creates a UpdateServerProjectInfo object.
    *
-   * @param array $available
+   * @param array $data
    *   The project data from the Update XML.
    *
    * @return \Drupal\update\UpdateServerProjectInfo
    *   The UpdateServerProjectInfo instances.
    */
-  public static function createFromArray(array $available): UpdateServerProjectInfo {
-    return new UpdateServerProjectInfo($available);
+  public static function createFromArray(array $data): UpdateServerProjectInfo {
+    return new UpdateServerProjectInfo($data);
   }
 
   /**
@@ -50,6 +49,9 @@ class UpdateServerProjectInfo {
 
   /**
    * Gets the supported branches.
+   *
+   * @link https://www.drupal.org/drupalorg/docs/apis/update-status-xml#s-top-level-project-element
+   *   Drupal.org Update XML documentation @endlink for format information.
    *
    * @return string[]
    *   The supported branches.
@@ -66,6 +68,8 @@ class UpdateServerProjectInfo {
    *
    * @return array[]
    *   The project releases.
+   *   @link https://www.drupal.org/drupalorg/docs/apis/update-status-xml#s-releases-element
+   *   Drupal.org Update XML documentation @endlink for element information.
    */
   public function getReleases(): array {
     return $this->data['releases'] ?? [];
