@@ -95,8 +95,8 @@
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
-        model.trigger('change:isFixed', model, model.get('isFixed'));
-        model.trigger('change:activeTray', model, model.get('activeTray'));
+        model.triggerEvent(`model-${model.modelId}-change-isFixed`);
+        model.triggerEvent(`model-${model.modelId}-change-activeTray`);
 
         // Render collapsible menus.
         const menuModel = new Drupal.toolbar.MenuModel();
@@ -138,18 +138,6 @@
             model.set('offsets', offsets);
           });
 
-        // Broadcast model changes to other modules.
-        model
-          .on('change:orientation', (model, orientation) => {
-            $(document).trigger('drupalToolbarOrientationChange', orientation);
-          })
-          .on('change:activeTab', (model, tab) => {
-            $(document).trigger('drupalToolbarTabChange', tab);
-          })
-          .on('change:activeTray', (model, tray) => {
-            $(document).trigger('drupalToolbarTrayChange', tray);
-          });
-
         // If the toolbar's orientation is horizontal and no active tab is
         // defined then show the tray of the first toolbar tab by default (but
         // not the first 'Home' toolbar tab).
@@ -164,6 +152,35 @@
             ).get(0),
           });
         }
+
+        // Broadcast model changes to other modules.
+        document.addEventListener(
+          `model-${model.modelId}-change-orientation`,
+          () => {
+            $(document).trigger(
+              'drupalToolbarOrientationChange',
+              model.get('orientation'),
+            );
+          },
+        );
+        document.addEventListener(
+          `model-${model.modelId}-change-activeTab`,
+          () => {
+            $(document).trigger(
+              'drupalToolbarTabChange',
+              model.get('activeTab'),
+            );
+          },
+        );
+        document.addEventListener(
+          `model-${model.modelId}-change-activeTray`,
+          () => {
+            $(document).trigger(
+              'drupalToolbarTrayChange',
+              model.get('activeTray'),
+            );
+          },
+        );
 
         $(window).on({
           'dialog:aftercreate': (event, dialog, $element, settings) => {

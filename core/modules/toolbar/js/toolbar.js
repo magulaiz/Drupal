@@ -52,8 +52,8 @@
           el: toolbar,
           model: model
         });
-        model.trigger('change:isFixed', model, model.get('isFixed'));
-        model.trigger('change:activeTray', model, model.get('activeTray'));
+        model.triggerEvent("model-".concat(model.modelId, "-change-isFixed"));
+        model.triggerEvent("model-".concat(model.modelId, "-change-activeTray"));
         var menuModel = new Drupal.toolbar.MenuModel();
         Drupal.toolbar.models.menuModel = menuModel;
         Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
@@ -71,13 +71,6 @@
         $(document).on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
           model.set('offsets', offsets);
         });
-        model.on('change:orientation', function (model, orientation) {
-          $(document).trigger('drupalToolbarOrientationChange', orientation);
-        }).on('change:activeTab', function (model, tab) {
-          $(document).trigger('drupalToolbarTabChange', tab);
-        }).on('change:activeTray', function (model, tray) {
-          $(document).trigger('drupalToolbarTrayChange', tray);
-        });
 
         if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
           Drupal.toolbar.models.toolbarModel.set({
@@ -85,6 +78,15 @@
           });
         }
 
+        document.addEventListener("model-".concat(model.modelId, "-change-orientation"), function () {
+          $(document).trigger('drupalToolbarOrientationChange', model.get('orientation'));
+        });
+        document.addEventListener("model-".concat(model.modelId, "-change-activeTab"), function () {
+          $(document).trigger('drupalToolbarTabChange', model.get('activeTab'));
+        });
+        document.addEventListener("model-".concat(model.modelId, "-change-activeTray"), function () {
+          $(document).trigger('drupalToolbarTrayChange', model.get('activeTray'));
+        });
         $(window).on({
           'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
             var $toolbar = $('#toolbar-bar');
