@@ -221,8 +221,8 @@
           }
           // This region has become empty.
           if (
-            !$this.next('tr')[0].matches('.draggable') ||
-            $this.next('tr').length === 0
+            $this.next('tr').length === 0 ||
+            !$this.next('tr')[0].matches('.draggable')
           ) {
             $this.removeClass('region-populated').addClass('region-empty');
           }

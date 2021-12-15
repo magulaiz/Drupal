@@ -102,7 +102,7 @@
           }
         }
 
-        if (!$this.next('tr')[0].matches('.draggable') || $this.next('tr').length === 0) {
+        if ($this.next('tr').length === 0 || !$this.next('tr')[0].matches('.draggable')) {
           $this.removeClass('region-populated').addClass('region-empty');
         } else if (this.matches('.region-empty')) {
           $this.removeClass('region-empty').addClass('region-populated');

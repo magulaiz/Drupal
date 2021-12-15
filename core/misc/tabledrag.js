@@ -9,6 +9,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 (function ($, Drupal, drupalSettings) {
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
+
+  var isVisible = function isVisible(elem) {
+    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  };
+
+  var isHidden = function isHidden(elem) {
+    return !isVisible(elem);
+  };
+
   Drupal.behaviors.tableDrag = {
     attach: function attach(context, settings) {
       function initTableDrag(table, base) {
@@ -269,7 +278,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var $previousRow = $(self.rowObject.element).prev('tr').eq(0);
             var previousRow = $previousRow.get(0);
 
-            while (previousRow && previousRow.hidden) {
+            while (previousRow && isHidden(previousRow)) {
               $previousRow = $(previousRow).prev('tr').eq(0);
               previousRow = $previousRow.get(0);
             }
@@ -285,7 +294,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 while (previousRow && $previousRow.find('.js-indentation').length) {
                   $previousRow = $(previousRow).prev('tr').eq(0);
                   previousRow = $previousRow.get(0);
-                  groupHeight += previousRow.hidden ? 0 : previousRow.offsetHeight;
+                  groupHeight += isHidden(previousRow) ? 0 : previousRow.offsetHeight;
                 }
 
                 if (previousRow) {
@@ -317,7 +326,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
             var nextRow = $nextRow.get(0);
 
-            while (nextRow && nextRow.hidden) {
+            while (nextRow && isHidden(nextRow)) {
               $nextRow = $(nextRow).next('tr').eq(0);
               nextRow = $nextRow.get(0);
             }
@@ -333,7 +342,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
                 if (nextGroup) {
                   $(nextGroup.group).each(function () {
-                    groupHeight += this.hidden ? 0 : this.offsetHeight;
+                    groupHeight += isHidden(this) ? 0 : this.offsetHeight;
                   });
                   var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                   self.rowObject.swap('after', nextGroupRow);
@@ -562,7 +571,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           };
         }
 
-        while (row.hidden && $row.prev('tr')[0].hidden) {
+        while (isHidden(row) && isHidden($row.prev('tr')[0])) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
@@ -607,7 +616,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var nextRow = $nextRow.get(0);
       sourceRow = changedRow;
 
-      if (previousRow.matches('.draggable') && $previousRow.find(".".concat(group)).length) {
+      if (previousRow && previousRow.matches('.draggable') && $previousRow.find(".".concat(group)).length) {
         if (this.indentEnabled) {
           if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = previousRow;
@@ -615,7 +624,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         } else {
           sourceRow = previousRow;
         }
-      } else if (nextRow.matches('.draggable') && $nextRow.find(".".concat(group)).length) {
+      } else if (nextRow && nextRow.matches('.draggable') && $nextRow.find(".".concat(group)).length) {
         if (this.indentEnabled) {
           if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = nextRow;

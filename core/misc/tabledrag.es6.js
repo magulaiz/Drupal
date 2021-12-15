@@ -19,6 +19,11 @@
     localStorage.getItem('Drupal.tableDrag.showWeight'),
   );
 
+  // @todo find a better place for this. This is just for testing.
+  const isVisible = (elem) =>
+    !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  const isHidden = (elem) => !isVisible(elem);
+
   /**
    * Drag and drop table rows with field manipulation.
    *
@@ -279,7 +284,7 @@
    * 'Drupal.tableDrag.showWeight' localStorage value.
    */
   Drupal.tableDrag.prototype.initColumns = function () {
-    const $table = this.$table;
+    const { $table } = this;
     let hidden;
     let cell;
     let columnIndex;
@@ -545,7 +550,7 @@
         case 63232: {
           let $previousRow = $(self.rowObject.element).prev('tr').eq(0);
           let previousRow = $previousRow.get(0);
-          while (previousRow && previousRow.hidden) {
+          while (previousRow && isHidden(previousRow)) {
             $previousRow = $(previousRow).prev('tr').eq(0);
             previousRow = $previousRow.get(0);
           }
@@ -564,7 +569,7 @@
               ) {
                 $previousRow = $(previousRow).prev('tr').eq(0);
                 previousRow = $previousRow.get(0);
-                groupHeight += previousRow.hidden
+                groupHeight += isHidden(previousRow)
                   ? 0
                   : previousRow.offsetHeight;
               }
@@ -603,7 +608,7 @@
         case 63233: {
           let $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
           let nextRow = $nextRow.get(0);
-          while (nextRow && nextRow.hidden) {
+          while (nextRow && isHidden(nextRow)) {
             $nextRow = $(nextRow).next('tr').eq(0);
             nextRow = $nextRow.get(0);
           }
@@ -625,7 +630,7 @@
               );
               if (nextGroup) {
                 $(nextGroup.group).each(function () {
-                  groupHeight += this.hidden ? 0 : this.offsetHeight;
+                  groupHeight += isHidden(this) ? 0 : this.offsetHeight;
                 });
                 const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
@@ -965,7 +970,7 @@
         // We may have found the row the mouse just passed over, but it doesn't
         // take into account hidden rows. Skip backwards until we find a
         // draggable row.
-        while (row.hidden && $row.prev('tr')[0].hidden) {
+        while (isHidden(row) && isHidden($row.prev('tr')[0])) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
@@ -1019,6 +1024,7 @@
       const nextRow = $nextRow.get(0);
       sourceRow = changedRow;
       if (
+        previousRow &&
         previousRow.matches('.draggable') &&
         $previousRow.find(`.${group}`).length
       ) {
@@ -1033,6 +1039,7 @@
           sourceRow = previousRow;
         }
       } else if (
+        nextRow &&
         nextRow.matches('.draggable') &&
         $nextRow.find(`.${group}`).length
       ) {
@@ -1204,7 +1211,7 @@
       scrollY = window.pageYOffset ? window.pageYOffset : window.scrollY;
     }
     this.scrollY = scrollY;
-    const trigger = this.scrollSettings.trigger;
+    const { trigger } = this.scrollSettings;
     let delta = 0;
 
     // Return a scroll speed relative to the edge of the screen.
