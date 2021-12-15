@@ -183,10 +183,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateTabs",
       value: function updateTabs() {
-        console.log('updateTabs() in toolbarvisualview is called');
         var $tab = $(this.model.get('activeTab'));
         $(this.model.previous('activeTab')).removeClass('is-active').prop('aria-pressed', false);
-        $(this.model.previous('activeTray')).removeClass('is-active');
 
         if ($tab.length > 0) {
           $tab.addClass('is-active').prop('aria-pressed', true);
@@ -197,7 +195,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
           }
 
-          var $tray = $(this.el).find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
+          var $tray = this.$el.find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
 
           if ($tray.length) {
             $tray.addClass('is-active');
@@ -209,6 +207,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           this.model.set('activeTray', null);
           localStorage.removeItem('Drupal.toolbar.activeTabID');
         }
+
+        $(this.model.previous('activeTray')).removeClass('is-active');
       }
     }, {
       key: "updateBarAttributes",

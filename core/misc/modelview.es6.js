@@ -24,7 +24,6 @@
     'clear',
     'hasChanged',
     'changedAttributes',
-    'previous',
     'previousAttributes',
     'fetch',
     'save',
@@ -51,6 +50,7 @@
       this.modelId = (Math.random() + 1).toString(36).substring(7);
       this.allowSetChanged = true;
       this.changed = {};
+      this.previousItems = {};
 
       if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -81,7 +81,11 @@
         // If there is a second argument
       } else if (args[1]) {
         // eslint-disable-next-line prefer-destructuring
-        this[args[0]] = args[1];
+        const [property, value] = args;
+
+        this.previousItems[property] = this[property];
+        this[property] = value;
+
         if (this.allowSetChanged) {
           this.changed = {};
           this.changed[args[0]] = args[1];
@@ -92,13 +96,17 @@
     }
 
     triggerEvent(type, cancelable = false) {
-      console.log('trigger event type', type);
+      // console.log('trigger event type', type);
       const event = new CustomEvent(type, {
         bubbles: true,
         cancelable,
       });
 
       return document.dispatchEvent(event);
+    }
+
+    previous(property) {
+      return this.previousItems[property];
     }
   };
   deprecatedModelPrototypeProperties.forEach((property) => {

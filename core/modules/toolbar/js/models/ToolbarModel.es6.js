@@ -21,8 +21,7 @@
        *
        * @type {string}
        */
-      this._activeTray = null;
-      this.previousActiveTray = null;
+      this.activeTray = null;
 
       /**
        * Indicates whether the toolbar is displayed in an oriented fashion,
@@ -112,15 +111,6 @@
         }
       });
       console.log('this Toolbarmodel', this);
-    }
-    set activeTray(value) {
-      if (value !== this._activeTray) {
-        this.previousActiveTray = this._activeTray;
-      }
-      this._activeTray = value;
-    }
-    get activeTray() {
-      return this._activeTray;
     }
   };
 })(Drupal);

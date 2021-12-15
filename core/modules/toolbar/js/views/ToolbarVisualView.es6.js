@@ -221,14 +221,11 @@
      * Updates the display of the tabs: toggles a tab and the associated tray.
      */
     updateTabs() {
-      console.log('updateTabs() in toolbarvisualview is called');
       const $tab = $(this.model.get('activeTab'));
       // Deactivate the previous tab.
       $(this.model.previous('activeTab'))
         .removeClass('is-active')
         .prop('aria-pressed', false);
-      // Deactivate the previous tray.
-      $(this.model.previous('activeTray')).removeClass('is-active');
 
       // Activate the selected tab.
       if ($tab.length > 0) {
@@ -246,7 +243,7 @@
           );
         }
         // Activate the associated tray.
-        const $tray = $(this.el).find(
+        const $tray = this.$el.find(
           `[data-toolbar-tray="${name}"].toolbar-tray`,
         );
         if ($tray.length) {
@@ -261,8 +258,10 @@
         this.model.set('activeTray', null);
         localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
-    }
 
+      // Deactivate the previous tray.
+      $(this.model.previous('activeTray')).removeClass('is-active');
+    }
     /**
      * Update the attributes of the toolbar bar element.
      */

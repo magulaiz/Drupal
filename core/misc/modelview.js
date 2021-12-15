@@ -32,7 +32,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Drupal, Backbone) {
-  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previous', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
 
   Drupal.DrupalModel = function (_Backbone$Model) {
     _inherits(_class, _Backbone$Model);
@@ -48,6 +48,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this.modelId = (Math.random() + 1).toString(36).substring(7);
       _this.allowSetChanged = true;
       _this.changed = {};
+      _this.previousItems = {};
 
       if (_this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -86,7 +87,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           });
           this.allowSetChanged = true;
         } else if (args[1]) {
-          this[args[0]] = args[1];
+          var property = args[0],
+              value = args[1];
+          this.previousItems[property] = this[property];
+          this[property] = value;
 
           if (this.allowSetChanged) {
             this.changed = {};
@@ -101,12 +105,16 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       key: "triggerEvent",
       value: function triggerEvent(type) {
         var cancelable = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-        console.log('trigger event type', type);
         var event = new CustomEvent(type, {
           bubbles: true,
           cancelable: cancelable
         });
         return document.dispatchEvent(event);
+      }
+    }, {
+      key: "previous",
+      value: function previous(property) {
+        return this.previousItems[property];
       }
     }]);
 
