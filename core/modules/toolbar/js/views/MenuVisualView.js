@@ -53,7 +53,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       value: function render() {
         var _this2 = this;
 
-        console.log('render in menuvisualview is called');
         var subtrees = this.model.get('subtrees');
         Object.keys(subtrees || {}).forEach(function (id) {
           $(once('toolbar-subtrees', $(_this2.el).find("#toolbar-link-".concat(id)))).after(subtrees[id]);

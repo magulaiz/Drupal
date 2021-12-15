@@ -592,6 +592,7 @@ drupal.modelview:
   dependencies:
     - core/backbone
     - core/drupal
+    - core/jquery
 
 drupal.nodelist.foreach:
   version: VERSION

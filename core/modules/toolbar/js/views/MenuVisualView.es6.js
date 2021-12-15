@@ -19,15 +19,11 @@
       this.setElement(options.el);
       this.addChangeListener(this.render, `subtrees`);
     }
-    // initialize() {
-    //   this.listenTo(this.model, 'change:subtrees', this.render);
-    // }
 
     /**
      * {@inheritdoc}
      */
     render() {
-      console.log('render in menuvisualview is called');
       const subtrees = this.model.get('subtrees');
       // Add subtrees.
       Object.keys(subtrees || {}).forEach((id) => {

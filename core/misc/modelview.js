@@ -31,7 +31,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-(function (Drupal, Backbone) {
+(function (Drupal, Backbone, $) {
   var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
 
   Drupal.DrupalModel = function (_Backbone$Model) {
@@ -150,7 +150,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _classCallCheck(this, _class2);
 
       _this3 = _super2.call(this);
-      console.log('i am the constructor in lil view.');
+      _this3._$el = null;
       return _this3;
     }
 
@@ -182,4 +182,27 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     deprecatedProperty: '$el',
     message: 'Drupal.DrupalView.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalView.el instead.'
   });
-})(Drupal, Backbone);
+
+  Drupal.DrupalView.prototype._removeElement = function () {
+    $(this.el).remove();
+  };
+
+  Drupal.DrupalView.prototype.delegate = function (el) {
+    $(this.el).on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    return this;
+  };
+
+  Drupal.DrupalView.prototype.undelegateEvents = function () {
+    if (this.el) $(this.el).off('.delegateEvents' + this.cid);
+    return this;
+  };
+
+  Drupal.DrupalView.prototype.undelegate = function (eventName, selector, listener) {
+    $(this.el).off(eventName + '.delegateEvents' + this.cid, selector, listener);
+    return this;
+  };
+
+  Drupal.DrupalView.prototype._setAttributes = function (attributes) {
+    $(this.el).attr(attributes);
+  };
+})(Drupal, Backbone, jQuery);

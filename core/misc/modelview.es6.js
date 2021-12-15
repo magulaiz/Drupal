@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-((Drupal, Backbone) => {
+((Drupal, Backbone, $) => {
 
   const deprecatedModelPrototypeProperties = [
     'on',
@@ -125,9 +125,7 @@
   Drupal.DrupalView = class extends Backbone.View {
     constructor(...args) {
       super();
-      console.log('i am the constructor in lil view.');
-      // if (typeof args[0] === 'object') {
-      // }
+      this._$el = null;
     }
 
     /**
@@ -161,9 +159,32 @@
       }
     }
   };
+
+
   Drupal.DrupalView.prototype = Drupal.deprecatedProperty({
     target: Drupal.DrupalView.prototype,
     deprecatedProperty: '$el',
     message: 'Drupal.DrupalView.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalView.el instead.',
   });
-})(Drupal, Backbone);
+
+  // The following 5 overrides are needed to eliminate internal use of the
+  // deprecated $el property.
+  Drupal.DrupalView.prototype._removeElement = function() {
+    $(this.el).remove();
+  };
+  Drupal.DrupalView.prototype.delegate = function(el) {
+    $(this.el).on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    return this;
+  };
+  Drupal.DrupalView.prototype.undelegateEvents = function() {
+    if (this.el) $(this.el).off('.delegateEvents' + this.cid);
+    return this;
+  };
+  Drupal.DrupalView.prototype.undelegate = function(eventName, selector, listener) {
+    $(this.el).off(eventName + '.delegateEvents' + this.cid, selector, listener);
+    return this;
+  };
+  Drupal.DrupalView.prototype._setAttributes = function(attributes) {
+    $(this.el).attr(attributes);
+  }
+})(Drupal, Backbone, jQuery);

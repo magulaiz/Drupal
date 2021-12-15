@@ -57,7 +57,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       key: "addToolbarToggle",
       value: function addToolbarToggle() {
         this.el.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
-          console.log('add toggle to', toolbarLining);
           $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
         });
       }
@@ -195,7 +194,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             localStorage.setItem('Drupal.toolbar.activeTabID', JSON.stringify(id));
           }
 
-          var $tray = this.$el.find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
+          var $tray = $(this.el).find("[data-toolbar-tray=\"".concat(name, "\"].toolbar-tray"));
 
           if ($tray.length) {
             $tray.addClass('is-active');

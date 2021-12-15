@@ -33,7 +33,6 @@
       this.el
         .querySelectorAll('.toolbar-tray .toolbar-lining')
         .forEach((toolbarLining) => {
-          console.log('add toggle to', toolbarLining);
           $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
         });
     }
@@ -243,7 +242,7 @@
           );
         }
         // Activate the associated tray.
-        const $tray = this.$el.find(
+        const $tray = $(this.el).find(
           `[data-toolbar-tray="${name}"].toolbar-tray`,
         );
         if ($tray.length) {
