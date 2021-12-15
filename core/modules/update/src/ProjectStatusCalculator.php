@@ -485,25 +485,19 @@ class ProjectStatusCalculator {
    *   The latest develop release if available otherwise NULL.
    */
   public function getLatestDev(): ?array {
-    // If we're running a dev snapshot, compare the date of the dev snapshot
-    // with the latest official version, and record the absolute latest in
-    // 'latest_dev' so we can correctly decide if there's a newer release
-    // than our current snapshot.
-    if ($this->getInstallType() === 'dev') {
-      $dev_release_info = $this->getDevReleaseForTargetMajor();
-      $latest_release_info = $this->getLatestReleaseForTargetMajor();
-      if ($dev_release_info && $latest_release_info) {
-        $dev_release = ProjectRelease::createFromArray($dev_release_info);
-        $latest_release = ProjectRelease::createFromArray($latest_release_info);
-        $dev_date = $dev_release->getDate();
-        $latest_date = $latest_release->getDate();
-        if ($dev_date && $latest_date && $dev_date > $latest_date) {
-          return $dev_release_info;
-        }
+    $dev_release_info = $this->getDevReleaseForTargetMajor();
+    $latest_release_info = $this->getLatestReleaseForTargetMajor();
+    if ($dev_release_info && $latest_release_info) {
+      $dev_release = ProjectRelease::createFromArray($dev_release_info);
+      $latest_release = ProjectRelease::createFromArray($latest_release_info);
+      $dev_date = $dev_release->getDate();
+      $latest_date = $latest_release->getDate();
+      if ($dev_date && $latest_date && $dev_date > $latest_date) {
+        return $dev_release_info;
       }
-      else {
-        return $latest_release_info;
-      }
+    }
+    else {
+      return $latest_release_info;
     }
     return NULL;
   }

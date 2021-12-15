@@ -362,7 +362,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     return;
   }
 
-  if ($latest_dev_release_info = $status_calculator->getLatestDev()) {
+  // If we're running a dev snapshot record the absolute latest version in
+  // 'latest_dev' so we can correctly decide if there's a newer release than our
+  // current snapshot.
+  if ($status_calculator->getInstallType() === 'dev' && $latest_dev_release_info = $status_calculator->getLatestDev()) {
     $project_data['latest_dev'] = $latest_dev_release_info['version'];
   }
 
