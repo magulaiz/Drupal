@@ -293,16 +293,9 @@ class ProjectStatusCalculator {
       }
       // If we're running a dev snapshot and have a timestamp, stop
       // searching for security updates once we hit an official release
-      // older than what we've got. Allow 100 seconds of leeway to handle
-      // differences between the datestamp in the .info.yml file and the
-      // timestamp of the tarball itself (which are usually off by 1 or 2
-      // seconds) so that we don't flag that as a new release.
+      // older than what we've got.
       if ($this->projectData['install_type'] === 'dev') {
-        if (empty($project_data['datestamp'])) {
-          // We don't have current timestamp info, so we can't know.
-          continue;
-        }
-        elseif ($release->getDate() && $project_data['datestamp'] + 100 > $release->getDate()) {
+        if ($this->isReleaseDateLessThanProjectDate($release)) {
           // We're newer than this, so we can skip it.
           continue;
         }
@@ -446,11 +439,11 @@ class ProjectStatusCalculator {
         break;
 
       case 'dev':
-        $latest_dev_release_info = ProjectRelease::createFromArray($this->getLatestDev());
+        $latest_dev_release = ProjectRelease::createFromArray($this->getLatestDev());
         if (empty($this->projectData['datestamp'])) {
           $status = UpdateFetcherInterface::NOT_CHECKED;
         }
-        elseif ($this->projectData['datestamp'] + 100 > $latest_dev_release_info->getDate()) {
+        elseif ($this->isReleaseDateLessThanProjectDate($latest_dev_release)) {
           $status = UpdateManagerInterface::CURRENT;
         }
         else {
@@ -510,6 +503,23 @@ class ProjectStatusCalculator {
    */
   public function getInstallType(): string {
     return $this->projectData['install_type'];
+  }
+
+  /**
+   * Determines if a release's date is less than the project date.
+   *
+   * @param \Drupal\update\ProjectRelease $release
+   *   The release.
+   *
+   * @return bool
+   *   TRUE if the release date is less than the project date, otherwise FALSE.
+   */
+  private function isReleaseDateLessThanProjectDate(ProjectRelease $release): bool {
+    // Allow 100 seconds of leeway to handle differences between the datestamp
+    // in the .info.yml file and the timestamp of the tarball itself (which are
+    // usually off by 1 or 2 seconds) so that we don't flag that as a new
+    // release.
+    return empty($this->projectData['datestamp']) || ($release->getDate() && $this->projectData['datestamp'] + 100 > $release->getDate());
   }
 
 }
