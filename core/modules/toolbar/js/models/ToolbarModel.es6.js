@@ -110,7 +110,6 @@
           this.set(key, options.key);
         }
       });
-      console.log('this Toolbarmodel', this);
     }
   };
 })(Drupal);

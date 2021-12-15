@@ -259,8 +259,11 @@
         localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
 
-      // Deactivate the previous tray.
-      $(this.model.previous('activeTray')).removeClass('is-active');
+      // Deactivate the previous tray if the tab has changed.
+      const previousTray = this.model.previous('activeTray');
+      if (previousTray && previousTray.id !== $tab.attr('data-toolbar-tray')) {
+        $(this.model.previous('activeTray')).removeClass('is-active');
+      }
     }
     /**
      * Update the attributes of the toolbar bar element.

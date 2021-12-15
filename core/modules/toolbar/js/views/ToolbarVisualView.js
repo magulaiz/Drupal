@@ -208,7 +208,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           localStorage.removeItem('Drupal.toolbar.activeTabID');
         }
 
-        $(this.model.previous('activeTray')).removeClass('is-active');
+        var previousTray = this.model.previous('activeTray');
+
+        if (previousTray && previousTray.id !== $tab.attr('data-toolbar-tray')) {
+          $(this.model.previous('activeTray')).removeClass('is-active');
+        }
       }
     }, {
       key: "updateBarAttributes",

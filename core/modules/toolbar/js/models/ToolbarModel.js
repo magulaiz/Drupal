@@ -56,7 +56,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           _this.set(key, options.key);
         }
       });
-      console.log('this Toolbarmodel', _assertThisInitialized(_this));
       return _this;
     }
 
