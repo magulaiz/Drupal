@@ -486,14 +486,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // timestamp of the tarball itself (which are usually off by 1 or 2
     // seconds) so that we don't flag that as a new release.
     if ($project_data['install_type'] == 'dev') {
-      if (empty($project_data['datestamp'])) {
-        // We don't have current timestamp info, so we can't know.
-        continue;
-      }
-      elseif ($release->getDate() && $project_data['datestamp'] + 100 > $release->getDate()) {
-        // We're newer than this, so we can skip it.
-        continue;
-      }
+      continue;
     }
 
     if ($release->isSecurityRelease()) {
