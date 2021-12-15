@@ -32,6 +32,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Drupal, Backbone) {
+  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'preinitialize', 'initialize', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previous', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+
   Drupal.DrupalModel = function (_Backbone$Model) {
     _inherits(_class, _Backbone$Model);
 
@@ -87,6 +89,24 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     return _class;
   }(Backbone.Model);
 
+  deprecatedModelPrototypeProperties.forEach(function (property) {
+    if (typeof Drupal.DrupalModel.prototype[property] === 'function') {
+      var originalFunction = Drupal.DrupalModel.prototype[property];
+
+      Drupal.DrupalModel.prototype[property] = function () {
+        Drupal.deprecationError({
+          message: "Drupal.DrupalModel.".concat(property, " is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.")
+        });
+
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
+        }
+
+        return originalFunction.apply(this, args);
+      };
+    }
+  });
+
   Drupal.DrupalView = function (_Backbone$View) {
     _inherits(_class2, _Backbone$View);
 
@@ -124,4 +144,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     return _class2;
   }(Backbone.View);
+
+  Drupal.DrupalView.prototype = Drupal.deprecatedProperty({
+    target: Drupal.DrupalView.prototype,
+    deprecatedProperty: '$el',
+    message: 'Drupal.DrupalView.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalView.el instead.'
+  });
 })(Drupal, Backbone);
