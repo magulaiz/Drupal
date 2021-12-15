@@ -216,58 +216,58 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   // If the project status is marked as something bad, there's nothing else
   // to consider.
-  if (isset($available['project_status'])) {
-    switch ($available['project_status']) {
-      case 'insecure':
-        $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'label' => t('Project not secure'),
-          'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately uninstalling everything included by this project is strongly recommended!'),
-        ];
-        break;
+  $server_project_info = UpdateServerProjectInfo::createFromArray($available);
+  $server_project_status = $server_project_info->getStatus();
+  switch ($server_project_status) {
+    case 'insecure':
+      $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'label' => t('Project not secure'),
+        'data' => t('This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!'),
+      ];
+      break;
 
-      case 'unpublished':
-      case 'revoked':
-        $project_data['status'] = UpdateManagerInterface::REVOKED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'label' => t('Project revoked'),
-          'data' => t('This project has been revoked, and is no longer available for download. Uninstalling everything included by this project is strongly recommended!'),
-        ];
-        break;
+    case 'unpublished':
+    case 'revoked':
+      $project_data['status'] = UpdateManagerInterface::REVOKED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'label' => t('Project revoked'),
+        'data' => t('This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+      ];
+      break;
 
-      case 'unsupported':
-        $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'label' => t('Project not supported'),
-          'data' => t('This project is no longer supported, and is no longer available for download. Uninstalling everything included by this project is strongly recommended!'),
-        ];
-        break;
+    case 'unsupported':
+      $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'label' => t('Project not supported'),
+        'data' => t('This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!'),
+      ];
+      break;
 
-      case 'not-fetched':
-        $project_data['status'] = UpdateFetcherInterface::NOT_FETCHED;
-        $project_data['reason'] = t('Failed to get available update data.');
-        break;
+    case 'not-fetched':
+      $project_data['status'] = UpdateFetcherInterface::NOT_FETCHED;
+      $project_data['reason'] = t('Failed to get available update data.');
+      break;
 
-      default:
-        // Assume anything else (e.g. 'published') is valid and we should
-        // perform the rest of the logic in this function.
-        break;
-    }
+    default:
+      // Assume anything else (e.g. 'published') is valid and we should
+      // perform the rest of the logic in this function.
+      break;
   }
 
   if (!empty($project_data['status'])) {
     // We already know the status for this project, so there's nothing else to
     // compute. Record the project status into $project_data and we're done.
-    $project_data['project_status'] = $available['project_status'];
+    $project_data['project_status'] = $server_project_status;
     return;
   }
 
@@ -306,7 +306,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     return;
   }
 
-  $status_calculator = ProjectStatusCalculator::createFromProjectData($project_data, UpdateServerProjectInfo::createFromArray($available));
+  $status_calculator = ProjectStatusCalculator::createFromProjectData($project_data, $server_project_info);
   if ($recommended_release = $status_calculator->getRecommendReleaseForTargetMajor()) {
     $project_data['recommended'] = $recommended_release['version'];
     $project_data['releases'][$recommended_release['version']] = $recommended_release;
