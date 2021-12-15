@@ -462,7 +462,7 @@ class ProjectStatusCalculator {
       $releases = $this->updateServerProjectInfo->getReleases();
       return $releases[$this->projectData['existing_version']] ?? NULL;
     }
-    return  NULL;
+    return NULL;
   }
 
   /**

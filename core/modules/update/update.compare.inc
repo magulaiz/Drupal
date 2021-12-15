@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Extension\ExtensionVersion;
-use Drupal\update\ProjectRelease;
 use Drupal\update\ProjectStatusCalculator;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
