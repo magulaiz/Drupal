@@ -4,6 +4,11 @@
  */
 
 (function ($, Drupal, drupalSettings) {
+  // @todo find a better place for this. This is just for testing.
+  const isVisible = (elem) =>
+    !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  const isHidden = (elem) => !isVisible(elem);
+
   /**
    * @namespace
    */
@@ -413,7 +418,7 @@
       $('li.add', $menu).on('mouseleave', function (event) {
         const $this = $(this);
         const $trigger = $this.children('a[href="#"]');
-        if ($this.children('.action-list')[0].visible) {
+        if (isVisible($this.children('.action-list')[0])) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });

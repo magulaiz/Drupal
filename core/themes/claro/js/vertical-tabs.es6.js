@@ -60,6 +60,11 @@
  */
 
 (($, Drupal) => {
+  // @todo find a better place for this. This is just for testing.
+  const isVisible = (elem) =>
+    !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  const isHidden = (elem) => !isVisible(elem);
+
   /**
    * Show the parent vertical tab pane of a targeted page fragment.
    *
@@ -279,7 +284,7 @@
 
       if (triggerFocus) {
         const $summary = this.details.find('> summary');
-        if ($summary[0].visible) {
+        if (isVisible($summary[0])) {
           $summary.trigger('focus');
         }
       }

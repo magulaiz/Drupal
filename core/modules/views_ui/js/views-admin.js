@@ -6,6 +6,14 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
+  var isVisible = function isVisible(elem) {
+    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  };
+
+  var isHidden = function isHidden(elem) {
+    return !isVisible(elem);
+  };
+
   Drupal.viewsUi = {};
   Drupal.behaviors.viewsUiEditView = {
     attach: function attach() {
@@ -186,7 +194,7 @@
         var $this = $(this);
         var $trigger = $this.children('a[href="#"]');
 
-        if ($this.children('.action-list')[0].visible) {
+        if (isVisible($this.children('.action-list')[0])) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });
