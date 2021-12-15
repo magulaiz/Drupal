@@ -44,7 +44,7 @@ class UpdateServerProjectInfo {
    * @return string|null
    *   The project status if available, otherwise NULL.
    */
-  public function getProjectStatus(): ?string {
+  public function getStatus(): ?string {
     return $this->data['project_status'] ?? NULL;
   }
 

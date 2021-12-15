@@ -376,7 +376,7 @@ class ProjectStatusCalculator {
       'unsupported',
       'not-fetched',
     ];
-    if (in_array($this->updateServerProjectInfo->getProjectStatus(), $unusable_project_statuses)) {
+    if (in_array($this->updateServerProjectInfo->getStatus(), $unusable_project_statuses)) {
       return FALSE;
     }
     $existing_version = $this->getExistingVersion();
