@@ -20,6 +20,8 @@ class ProjectStatusCalculator {
    * Project data from Drupal\update\UpdateManagerInterface::getProjects().
    *
    * @var array
+   *
+   * @see \Drupal\update\UpdateManagerInterface::getProjects()
    */
   protected $projectData;
 
@@ -142,7 +144,7 @@ class ProjectStatusCalculator {
   }
 
   /**
-   * Gets releases that are majors greater than the target major.
+   * Gets latest releases that are in majors greater than the target major.
    *
    * @return array[]
    *   An array of releases keyed by major version.
@@ -163,7 +165,7 @@ class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the existing version if any.
+   * Gets the existing version, if any.
    *
    * @return \Drupal\Core\Extension\ExtensionVersion|null
    *   The existing version if available, otherwise NULL.
@@ -389,13 +391,18 @@ class ProjectStatusCalculator {
   /**
    * Gets the project status.
    *
-   * @todo Unify this with the logic in update_calculate_project_update_status
-   *   determines status from the $available['project_status']. This will be
-   *   tricky because the status from there could mean we don't go look at actual
-   *   releases. The means for example we need to know if UpdateManagerInterface::NOT_SECURE
-   *   came from $available['project_status'].
+   * @todo Maybe, unify this with the logic in
+   *   update_calculate_project_update_status() determines status from the
+   *   $available['project_status']. This will be tricky because the status from
+   *   there could mean we don't go look at actual releases. The means for
+   *   example we need to know if UpdateManagerInterface::NOT_SECURE came from
+   *   $available['project_status'].
    *
    * @return int|null
+   *   The status of the project if it can be determined, otherwise, NULL. The
+   *   status will either of the constants on
+   *   \Drupal\update\UpdateManagerInterface or
+   *   \Drupal\update\UpdateFetcherInterface.
    */
   public function getStatus(): ?int {
     $status = NULL;
@@ -457,7 +464,13 @@ class ProjectStatusCalculator {
     return $status;
   }
 
-  private function getExistingRelease() {
+  /**
+   * Gets the existing release, if any.
+   *
+   * @return array|null
+   *   The existing release if available, otherwise NULL.
+   */
+  private function getExistingRelease(): ?array {
     if (isset($this->projectData['existing_version'])) {
       $releases = $this->updateServerProjectInfo->getReleases();
       return $releases[$this->projectData['existing_version']] ?? NULL;
@@ -469,6 +482,7 @@ class ProjectStatusCalculator {
    * Gets the latest development release.
    *
    * @return array|null
+   *   The latest develop release if available otherwise NULL.
    */
   public function getLatestDev(): ?array {
     // If we're running a dev snapshot, compare the date of the dev snapshot
