@@ -24,7 +24,21 @@
       this.model = options.model;
       this.strings = options.strings;
       this.setElement(options.el);
+      this.addToolbarToggle();
+      this.addEventListeners();
+      this.addChangeListeners();
+    }
 
+    addToolbarToggle() {
+      this.el
+        .querySelectorAll('.toolbar-tray .toolbar-lining')
+        .forEach((toolbarLining) => {
+          console.log('add toggle to', toolbarLining);
+          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
+        });
+    }
+
+    addEventListeners() {
       const eventConfig = [
         {
           selector: '.toolbar-bar .toolbar-tab .trigger',
@@ -34,12 +48,12 @@
         {
           selector: '.toolbar-toggle-orientation button',
           eventType: 'click',
-          callback: this.onTabClick,
+          callback: this.onOrientationToggleClick,
         },
         {
           selector: '.toolbar-bar .toolbar-tab .trigger',
           eventType: 'touchend',
-          callback: this.onOrientationToggleClick,
+          callback: this.touchEndToClick,
         },
         {
           selector: '.toolbar-toggle-orientation button',
@@ -53,7 +67,9 @@
           item.addEventListener(config.eventType, (e) => callback(e));
         });
       });
+    }
 
+    addChangeListeners() {
       this.addChangeListener(this.render, `activeTab`);
       this.addChangeListener(this.render, `orientation`);
       this.addChangeListener(this.render, `isOriented`);
@@ -64,7 +80,6 @@
       this.addChangeListener(this.updateToolbarHeight, `activeTab`);
       this.addChangeListener(this.updateToolbarHeight, `orientation`);
       this.addChangeListener(this.updateToolbarHeight, `isOriented`);
-      // Add the tray orientation toggles now in toolbar.es6.js
     }
 
     touchEndToClick(event) {

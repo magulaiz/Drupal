@@ -704,13 +704,7 @@
             strings: options.strings,
           });
 
-        // Used to happen in ToolbarVisualView.init();
-        toolbar
-          .querySelectorAll('.toolbar-tray .toolbar-lining')
-          .forEach((toolbarLining) => {
-            console.log('add toggle to', toolbarLining);
-            $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
-          });
+
 
         model.triggerEvent(`model-${model.modelId}-change-activeTab`);
 

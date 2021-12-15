@@ -462,10 +462,6 @@
           model: model,
           strings: options.strings
         });
-        toolbar.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
-          console.log('add toggle to', toolbarLining);
-          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
-        });
         model.triggerEvent("model-".concat(model.modelId, "-change-activeTab"));
         Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
           el: toolbar,

@@ -44,52 +44,67 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this.setElement(options.el);
 
-      var eventConfig = [{
-        selector: '.toolbar-bar .toolbar-tab .trigger',
-        eventType: 'click',
-        callback: _this.onTabClick
-      }, {
-        selector: '.toolbar-toggle-orientation button',
-        eventType: 'click',
-        callback: _this.onTabClick
-      }, {
-        selector: '.toolbar-bar .toolbar-tab .trigger',
-        eventType: 'touchend',
-        callback: _this.onOrientationToggleClick
-      }, {
-        selector: '.toolbar-toggle-orientation button',
-        eventType: 'touchend',
-        callback: _this.touchEndToClick
-      }];
-      eventConfig.forEach(function (config) {
-        var callback = config.callback.bind(_assertThisInitialized(_this));
-        document.querySelectorAll(config.selector).forEach(function (item) {
-          item.addEventListener(config.eventType, function (e) {
-            return callback(e);
-          });
-        });
-      });
+      _this.addToolbarToggle();
 
-      _this.addChangeListener(_this.render, "activeTab");
+      _this.addEventListeners();
 
-      _this.addChangeListener(_this.render, "orientation");
-
-      _this.addChangeListener(_this.render, "isOriented");
-
-      _this.addChangeListener(_this.render, "isTrayToggleVisible");
-
-      _this.addChangeListener(_this.adjustPlacement, "offsets");
-
-      _this.addChangeListener(_this.updateToolbarHeight, "activeTab");
-
-      _this.addChangeListener(_this.updateToolbarHeight, "orientation");
-
-      _this.addChangeListener(_this.updateToolbarHeight, "isOriented");
+      _this.addChangeListeners();
 
       return _this;
     }
 
     _createClass(_class, [{
+      key: "addToolbarToggle",
+      value: function addToolbarToggle() {
+        this.el.querySelectorAll('.toolbar-tray .toolbar-lining').forEach(function (toolbarLining) {
+          console.log('add toggle to', toolbarLining);
+          $(toolbarLining).append(Drupal.theme('toolbarOrientationToggle'));
+        });
+      }
+    }, {
+      key: "addEventListeners",
+      value: function addEventListeners() {
+        var _this2 = this;
+
+        var eventConfig = [{
+          selector: '.toolbar-bar .toolbar-tab .trigger',
+          eventType: 'click',
+          callback: this.onTabClick
+        }, {
+          selector: '.toolbar-toggle-orientation button',
+          eventType: 'click',
+          callback: this.onOrientationToggleClick
+        }, {
+          selector: '.toolbar-bar .toolbar-tab .trigger',
+          eventType: 'touchend',
+          callback: this.touchEndToClick
+        }, {
+          selector: '.toolbar-toggle-orientation button',
+          eventType: 'touchend',
+          callback: this.touchEndToClick
+        }];
+        eventConfig.forEach(function (config) {
+          var callback = config.callback.bind(_this2);
+          document.querySelectorAll(config.selector).forEach(function (item) {
+            item.addEventListener(config.eventType, function (e) {
+              return callback(e);
+            });
+          });
+        });
+      }
+    }, {
+      key: "addChangeListeners",
+      value: function addChangeListeners() {
+        this.addChangeListener(this.render, "activeTab");
+        this.addChangeListener(this.render, "orientation");
+        this.addChangeListener(this.render, "isOriented");
+        this.addChangeListener(this.render, "isTrayToggleVisible");
+        this.addChangeListener(this.adjustPlacement, "offsets");
+        this.addChangeListener(this.updateToolbarHeight, "activeTab");
+        this.addChangeListener(this.updateToolbarHeight, "orientation");
+        this.addChangeListener(this.updateToolbarHeight, "isOriented");
+      }
+    }, {
       key: "touchEndToClick",
       value: function touchEndToClick(event) {
         event.preventDefault();
