@@ -216,12 +216,12 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         var isOriented = this.model.get('isOriented');
 
         if (isOriented) {
-          this.$el.find('.toolbar-bar').attr('data-offset-top', '');
+          $(this.el).find('.toolbar-bar').attr('data-offset-top', '');
         } else {
-          this.$el.find('.toolbar-bar').removeAttr('data-offset-top');
+          $(this.el).find('.toolbar-bar').removeAttr('data-offset-top');
         }
 
-        this.$el.toggleClass('toolbar-oriented', isOriented);
+        $(this.el).toggleClass('toolbar-oriented', isOriented);
       }
     }, {
       key: "updateTrayOrientation",
