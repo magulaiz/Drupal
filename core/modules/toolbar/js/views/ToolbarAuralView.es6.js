@@ -63,7 +63,6 @@
      *   The new value of the tray attribute in the model.
      */
     onActiveTrayChange() {
-      // debugger;
       const tray = this.model.get('activeTray');
       const relevantTray =
         // TODO: .previous replacement?

@@ -49,6 +49,8 @@
     constructor() {
       super();
       this.modelId = (Math.random() + 1).toString(36).substring(7);
+      this.allowSetChanged = true;
+      this.changed = {};
 
       if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -68,14 +70,22 @@
 
     set(...args) {
       if (typeof args[0] === 'object') {
+        this.allowSetChanged = false;
+        this.changed = args[0];
         // Individually set each option specified in the object.
         Object.keys(args[0]).forEach((key) => {
           this.set(key, args[0][key]);
         });
+        this.allowSetChanged = true;
+
         // If there is a second argument
       } else if (args[1]) {
         // eslint-disable-next-line prefer-destructuring
         this[args[0]] = args[1];
+        if (this.allowSetChanged) {
+          this.changed = {};
+          this.changed[args[0]] = args[1];
+        }
         this.triggerEvent(`model-${this.modelId}-change`);
         this.triggerEvent(`model-${this.modelId}-change-${args[0]}`);
       }

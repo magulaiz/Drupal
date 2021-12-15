@@ -46,6 +46,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this = _super.call(this);
       _this.modelId = (Math.random() + 1).toString(36).substring(7);
+      _this.allowSetChanged = true;
+      _this.changed = {};
 
       if (_this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -77,11 +79,20 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         }
 
         if (_typeof(args[0]) === 'object') {
+          this.allowSetChanged = false;
+          this.changed = args[0];
           Object.keys(args[0]).forEach(function (key) {
             _this2.set(key, args[0][key]);
           });
+          this.allowSetChanged = true;
         } else if (args[1]) {
           this[args[0]] = args[1];
+
+          if (this.allowSetChanged) {
+            this.changed = {};
+            this.changed[args[0]] = args[1];
+          }
+
           this.triggerEvent("model-".concat(this.modelId, "-change"));
           this.triggerEvent("model-".concat(this.modelId, "-change-").concat(args[0]));
         }
