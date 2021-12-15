@@ -143,7 +143,7 @@
   };
   $(window).on({
     'dialog:beforecreate': function dialogBeforecreate(event, dialog, $element, settings) {
-      if ($element[0].id === '#drupal-off-canvas') {
+      if ($element[0].id === 'drupal-off-canvas') {
         $('body .settings-tray-active-editable').removeClass('settings-tray-active-editable');
         var $activeElement = $("#".concat(settings.settingsTrayActiveEditableId));
 
@@ -153,7 +153,7 @@
       }
     },
     'dialog:beforeclose': function dialogBeforeclose(event, dialog, $element) {
-      if ($element[0].id === '#drupal-off-canvas') {
+      if ($element[0].id === 'drupal-off-canvas') {
         $('body .settings-tray-active-editable').removeClass('settings-tray-active-editable');
       }
     }
