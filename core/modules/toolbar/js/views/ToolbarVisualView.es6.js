@@ -3,7 +3,7 @@
  * A Backbone view for the toolbar element. Listens to mouse & touch.
  */
 
-(function ($, Drupal, drupalSettings, Backbone) {
+(function ($, Drupal, drupalSettings) {
   Drupal.toolbar.ToolbarVisualView = class extends Drupal.DrupalView {
     /** @lends Drupal.toolbar.ToolbarVisualView# */
 
@@ -391,4 +391,4 @@
       }
     }
   };
-})(jQuery, Drupal, drupalSettings, Backbone);
+})(jQuery, Drupal, drupalSettings);

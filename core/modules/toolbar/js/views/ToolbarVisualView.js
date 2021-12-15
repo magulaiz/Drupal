@@ -27,7 +27,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-(function ($, Drupal, drupalSettings, Backbone) {
+(function ($, Drupal, drupalSettings) {
   Drupal.toolbar.ToolbarVisualView = function (_Drupal$DrupalView) {
     _inherits(_class, _Drupal$DrupalView);
 
@@ -266,4 +266,4 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     return _class;
   }(Drupal.DrupalView);
-})(jQuery, Drupal, drupalSettings, Backbone);
+})(jQuery, Drupal, drupalSettings);

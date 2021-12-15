@@ -3,7 +3,7 @@
  * A Backbone view for the body element.
  */
 
-(function ($, Drupal, Backbone) {
+(function ($, Drupal) {
   Drupal.toolbar.BodyVisualView = class extends Drupal.DrupalView {
     /** @lends Drupal.toolbar.BodyVisualView# */
     /**
@@ -57,4 +57,4 @@
         .toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
     }
   };
-})(jQuery, Drupal, Backbone);
+})(jQuery, Drupal);

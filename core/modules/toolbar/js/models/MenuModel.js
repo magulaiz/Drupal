@@ -23,7 +23,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-(function (Backbone, Drupal) {
+(function (Drupal) {
   Drupal.toolbar.MenuModel = function (_Drupal$DrupalModel) {
     _inherits(_class, _Drupal$DrupalModel);
 
@@ -42,4 +42,4 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     return _class;
   }(Drupal.DrupalModel);
-})(Backbone, Drupal);
+})(Drupal);

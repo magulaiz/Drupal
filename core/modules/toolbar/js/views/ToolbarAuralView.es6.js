@@ -3,7 +3,7 @@
  * A Backbone view for the aural feedback of the toolbar.
  */
 
-(function (Backbone, Drupal) {
+(function (Drupal) {
   Drupal.toolbar.ToolbarAuralView = class extends Drupal.DrupalView {
     /**
      * Backbone view for the aural feedback of the toolbar.
@@ -87,4 +87,4 @@
       Drupal.announce(text);
     }
   };
-})(Backbone, Drupal);
+})(Drupal);

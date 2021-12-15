@@ -3,7 +3,7 @@
  * A Backbone view for the collapsible menus.
  */
 
-(function ($, Backbone, Drupal) {
+(function ($, Drupal) {
   Drupal.toolbar.MenuVisualView = class extends Drupal.DrupalView {
     /** @lends Drupal.toolbar.MenuVisualView# */
     /**
@@ -41,4 +41,4 @@
       }
     }
   };
-})(jQuery, Backbone, Drupal);
+})(jQuery, Drupal);

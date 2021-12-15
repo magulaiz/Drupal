@@ -3,7 +3,7 @@
  * A Backbone Model for the toolbar.
  */
 
-(function (Backbone, Drupal) {
+(function (Drupal) {
   /**
    * Backbone model for the toolbar.
    *
@@ -123,4 +123,4 @@
       return this._activeTray;
     }
   };
-})(Backbone, Drupal);
+})(Drupal);
