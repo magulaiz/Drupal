@@ -7,8 +7,8 @@
 build:
   assessment:
     testing:
-      run_tests.functional:
-        types: 'PHPUnit-Functional'
+      run_tests.kernel:
+        types: 'PHPUnit-Kernel'
         testgroups: '--class "\Drupal\Tests\update\Kernel\CompareOldNew"'
         suppress-deprecations: false
         halt-on-fail: false
