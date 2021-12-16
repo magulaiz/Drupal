@@ -169,12 +169,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
         }
 
+        this.model.lockedOverride = true;
         this.model.set({
           locked: locked,
           orientation: antiOrientation
-        }, {
-          validate: true,
-          override: true
         });
         event.preventDefault();
         event.stopPropagation();
@@ -224,6 +222,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateTrayOrientation",
       value: function updateTrayOrientation() {
+        console.log('called updateTrayOrientation');
         var orientation = this.model.get('orientation');
         var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
         $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -232,6 +231,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         var iconClass = "toolbar-icon-toggle-".concat(orientation);
         var iconAntiClass = "toolbar-icon-toggle-".concat(antiOrientation);
         var $orientationToggle = $(this.el).find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
+        console.log("".concat(this.model.get('isTrayToggleVisible').attr('id'), " toggle vis"), this.model.get('isTrayToggleVisible'));
         $orientationToggle.find('button').val(antiOrientation).attr('title', this.strings[antiOrientation]).text(this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
         var dir = document.documentElement.dir;
         var edge = dir === 'rtl' ? 'right' : 'left';

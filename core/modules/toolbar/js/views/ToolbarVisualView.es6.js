@@ -200,16 +200,15 @@
       } else {
         localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
       }
+
+
+      this.model.lockedOverride = true;
       // Update the model.
       this.model.set(
         {
           locked,
           orientation: antiOrientation,
-        },
-        {
-          validate: true,
-          override: true,
-        },
+        }
       );
 
       event.preventDefault();
@@ -278,6 +277,7 @@
      * Updates the orientation of the active tray if necessary.
      */
     updateTrayOrientation() {
+      console.log('called updateTrayOrientation');
       const orientation = this.model.get('orientation');
 
       // The antiOrientation is used to render the view of action buttons like
@@ -306,6 +306,7 @@
       const $orientationToggle = $(this.el)
         .find('.toolbar-toggle-orientation')
         .toggle(this.model.get('isTrayToggleVisible'));
+      console.log(`${this.model.get('isTrayToggleVisible').attr('id')} toggle vis`, this.model.get('isTrayToggleVisible'))
       $orientationToggle
         .find('button')
         .val(antiOrientation)

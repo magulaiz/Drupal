@@ -66,13 +66,6 @@
       this.isViewportOverflowConstrained = false;
 
       /**
-       * The orientation of the active tray.
-       *
-       * @type {string}
-       */
-      this.orientation = 'horizontal';
-
-      /**
        * A tray is locked if a user toggled it to vertical. Otherwise a tray
        * will switch between vertical and horizontal orientation based on the
        * configured breakpoints. The locked state will be maintained across page
@@ -81,6 +74,15 @@
        * @type {bool}
        */
       this.locked = false;
+
+      /**
+       * Set to true to allow orientation changes on a locked tray.
+       *
+       * The value will switch back to false after the orientation changes.
+       * 
+       * @type {boolean}
+       */
+      this.lockedOverride = false;
 
       /**
        * Indicates whether the tray orientation toggle is visible.
@@ -114,11 +116,43 @@
         bottom: 0,
         left: 0,
       };
+
+      /**
+       * The orientation of the active tray.
+       *
+       * Made public as `orientation` via dedicated get and set functions .
+       *
+       * @type {string}
+       */
+      this._orientation = 'horizontal';
+
       Object.keys(options).forEach((key) => {
         if (this[key] && options[key] !== this[key]) {
           this.set(key, options.key);
         }
       });
+    }
+
+    get orientation() {
+      console.log('get orientation');
+      return this._orientation;
+    }
+
+    set orientation(value) {
+      console.log('set orientation');
+
+      // Prevent the orientation being set to horizontal if it is locked, unless
+      // lockedOverride was set to TRUE.
+      if (value === 'horizontal' && this.get('locked') && !this.lockedOverride) {
+        console.log('BLOCKED ORIENTATION CHANGE')
+        return;
+      }
+      console.log('allow orientation change', this)
+      this._orientation = value;
+
+      // Return lockedOverride to the default value of false immediately after
+      // updating orientation.
+      this.lockedOverride = false;
     }
   };
 })(Drupal);

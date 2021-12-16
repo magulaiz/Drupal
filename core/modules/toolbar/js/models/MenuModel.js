@@ -35,7 +35,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _classCallCheck(this, _class);
 
       _this = _super.call(this);
-      console.log('i am the constructor for menumodel.', _assertThisInitialized(_this));
       _this.subtrees = {};
       return _this;
     }

@@ -9,6 +9,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
@@ -41,8 +45,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this.isFixed = false;
       _this.areSubtreesLoaded = false;
       _this.isViewportOverflowConstrained = false;
-      _this.orientation = 'horizontal';
       _this.locked = false;
+      _this.lockedOverride = false;
       _this.isTrayToggleVisible = true;
       _this.height = null;
       _this.offsets = {
@@ -51,6 +55,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         bottom: 0,
         left: 0
       };
+      _this._orientation = 'horizontal';
       Object.keys(options).forEach(function (key) {
         if (_this[key] && options[key] !== _this[key]) {
           _this.set(key, options.key);
@@ -58,6 +63,26 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       });
       return _this;
     }
+
+    _createClass(_class, [{
+      key: "orientation",
+      get: function get() {
+        console.log('get orientation');
+        return this._orientation;
+      },
+      set: function set(value) {
+        console.log('set orientation');
+
+        if (value === 'horizontal' && this.get('locked') && !this.lockedOverride) {
+          console.log('BLOCKED ORIENTATION CHANGE');
+          return;
+        }
+
+        console.log('allow orientation change', this);
+        this._orientation = value;
+        this.lockedOverride = false;
+      }
+    }]);
 
     return _class;
   }(Drupal.DrupalModel);
