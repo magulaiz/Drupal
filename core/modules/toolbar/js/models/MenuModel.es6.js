@@ -9,7 +9,7 @@
    *
    * @constructor
    *
-   * @augments Drupal.Model
+   * @augments Drupal.DrupalModel
    */
   Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {
     constructor() {

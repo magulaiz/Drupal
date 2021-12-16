@@ -1,20 +1,29 @@
 /**
  * @file
- * A Backbone Model for the toolbar.
+ * Model for the toolbar.
  */
 
 (function (Drupal) {
   /**
-   * Backbone model for the toolbar.
+   * Model for the toolbar.
    *
    * @constructor
    *
-   * @augments Backbone.Model
+   * @augments Drupal.DrupalModel
    */
   Drupal.toolbar.ToolbarModel = class extends Drupal.DrupalModel {
     constructor(options) {
       super();
+
+      /**
+       * The active toolbar tab. All other tabs should be inactive under
+       * normal circumstances. It will remain active across page loads. The
+       * active item is stored as an ID selector e.g. '#toolbar-item--1'.
+       *
+       * @type {string}
+       */
       this.activeTab = null;
+
       /**
        * Represents whether a tray is open or not. Stored as an ID selector e.g.
        * '#toolbar-item--1-tray'.
