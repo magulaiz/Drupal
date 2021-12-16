@@ -184,6 +184,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       value: function updateTabs() {
         var $tab = $(this.model.get('activeTab'));
         $(this.model.previous('activeTab')).removeClass('is-active').prop('aria-pressed', false);
+        $(this.model.previous('activeTray')).removeClass('is-active');
 
         if ($tab.length > 0) {
           $tab.addClass('is-active').prop('aria-pressed', true);
@@ -205,12 +206,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         } else {
           this.model.set('activeTray', null);
           localStorage.removeItem('Drupal.toolbar.activeTabID');
-        }
-
-        var previousTray = this.model.previous('activeTray');
-
-        if (previousTray && previousTray.id !== $tab.attr('data-toolbar-tray')) {
-          $(this.model.previous('activeTray')).removeClass('is-active');
         }
       }
     }, {

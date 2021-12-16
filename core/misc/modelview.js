@@ -32,7 +32,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Drupal, Backbone, $) {
-  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', '_validate', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
 
   Drupal.DrupalModel = function (_Backbone$Model) {
     _inherits(_class, _Backbone$Model);
@@ -47,8 +47,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       _this = _super.call(this);
       _this.modelId = (Math.random() + 1).toString(36).substring(7);
       _this.allowSetChanged = true;
+      _this.values = {};
       _this.changed = {};
-      _this.previousItems = {};
+      _this._previousValues = {};
 
       if (_this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -68,38 +69,87 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     _createClass(_class, [{
       key: "get",
       value: function get(property) {
-        return this[property];
+        return this.values[property];
       }
     }, {
       key: "set",
-      value: function set() {
-        var _this2 = this;
-
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
+      value: function set(key, val, options) {
+        if (key == null) {
+          return this;
         }
 
-        if (_typeof(args[0]) === 'object') {
-          this.allowSetChanged = false;
-          this.changed = args[0];
-          Object.keys(args[0]).forEach(function (key) {
-            _this2.set(key, args[0][key]);
-          });
-          this.allowSetChanged = true;
-        } else if (args[1]) {
-          var property = args[0],
-              value = args[1];
-          this.previousItems[property] = this[property];
-          this[property] = value;
+        var attrs;
 
-          if (this.allowSetChanged) {
-            this.changed = {};
-            this.changed[args[0]] = args[1];
+        if (_typeof(key) === 'object') {
+          attrs = key;
+          options = val;
+        } else {
+          (attrs = {})[key] = val;
+        }
+
+        options || (options = {});
+
+        if (!this._validate(attrs, options)) {
+          return false;
+        }
+
+        var unset = options.unset;
+        var silent = options.silent;
+        var changes = [];
+        var changing = this._changing;
+        this._changing = true;
+
+        if (!changing) {
+          this._previousValues = Object.assign({}, this.values);
+          this.changed = {};
+        }
+
+        var current = this.values;
+        var changed = this.changed;
+        var prev = this._previousValues;
+
+        for (var attr in attrs) {
+          val = attrs[attr];
+          if (!_.isEqual(current[attr], val)) changes.push(attr);
+
+          if (!_.isEqual(prev[attr], val)) {
+            changed[attr] = val;
+          } else {
+            delete changed[attr];
           }
 
-          this.triggerEvent("model-".concat(this.modelId, "-change"));
-          this.triggerEvent("model-".concat(this.modelId, "-change-").concat(args[0]));
+          unset ? delete current[attr] : current[attr] = val;
         }
+
+        if (this.idAttribute in attrs) {
+          this.id = this.get(this.idAttribute);
+        }
+
+        if (!silent) {
+          if (changes.length) this._pending = options;
+
+          for (var i = 0; i < changes.length; i++) {
+            this.triggerEvent("model-".concat(this.modelId, "-change"));
+            this.triggerEvent("model-".concat(this.modelId, "-change-").concat(changes[i]));
+            this.trigger('change:' + changes[i], this, current[changes[i]], options);
+          }
+        }
+
+        if (changing) {
+          return this;
+        }
+
+        if (!silent) {
+          while (this._pending) {
+            options = this._pending;
+            this._pending = false;
+            this.trigger('change', this, options);
+          }
+        }
+
+        this._pending = false;
+        this._changing = false;
+        return this;
       }
     }, {
       key: "triggerEvent",
@@ -114,7 +164,15 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "previous",
       value: function previous(property) {
-        return this.previousItems[property];
+        return this._previousValues[property];
+      }
+    }, {
+      key: "attributes",
+      get: function get() {
+        Drupal.deprecationError({
+          message: 'Drupal.DrupalModel.attributes is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.values instead.'
+        });
+        return this.values;
       }
     }]);
 
@@ -130,8 +188,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           message: "Drupal.DrupalModel.".concat(property, " is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.")
         });
 
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-          args[_key2] = arguments[_key2];
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
         }
 
         return originalFunction.apply(this, args);
@@ -145,13 +203,13 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     var _super2 = _createSuper(_class2);
 
     function _class2() {
-      var _this3;
+      var _this2;
 
       _classCallCheck(this, _class2);
 
-      _this3 = _super2.call(this);
-      _this3._$el = null;
-      return _this3;
+      _this2 = _super2.call(this);
+      _this2._$el = null;
+      return _this2;
     }
 
     _createClass(_class2, [{

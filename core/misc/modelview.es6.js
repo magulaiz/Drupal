@@ -33,7 +33,6 @@
     'clone',
     'isNew',
     'isValid',
-    '_validate',
     'keys',
     'values',
     'pairs',
@@ -60,8 +59,9 @@
       super();
       this.modelId = (Math.random() + 1).toString(36).substring(7);
       this.allowSetChanged = true;
+      this.values = {};
       this.changed = {};
-      this.previousItems = {};
+      this._previousValues = {};
 
       if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -76,34 +76,89 @@
     }
 
     get(property) {
-      return this[property];
+      return this.values[property];
     }
 
-    set(...args) {
-      if (typeof args[0] === 'object') {
-        this.allowSetChanged = false;
-        this.changed = args[0];
-        // Individually set each option specified in the object.
-        Object.keys(args[0]).forEach((key) => {
-          this.set(key, args[0][key]);
-        });
-        this.allowSetChanged = true;
-
-        // If there is a second argument
-      } else if (args[1]) {
-        // eslint-disable-next-line prefer-destructuring
-        const [property, value] = args;
-
-        this.previousItems[property] = this[property];
-        this[property] = value;
-
-        if (this.allowSetChanged) {
-          this.changed = {};
-          this.changed[args[0]] = args[1];
-        }
-        this.triggerEvent(`model-${this.modelId}-change`);
-        this.triggerEvent(`model-${this.modelId}-change-${args[0]}`);
+    // @todo documentation + consider adding deprecations to simplify this.
+    set(key, val, options) {
+      if (key == null) {
+        return this;
       }
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      let attrs;
+      if (typeof key === 'object') {
+        attrs = key;
+        options = val;
+      } else {
+        (attrs = {})[key] = val;
+      }
+
+      options || (options = {});
+
+      // Run validation.
+      if (!this._validate(attrs, options)) {
+        return false;
+      }
+
+      // Extract attributes and options.
+      const unset = options.unset;
+      const silent = options.silent;
+      const changes = [];
+      const changing = this._changing;
+      this._changing = true;
+
+      if (!changing) {
+        this._previousValues = Object.assign({}, this.values);
+        this.changed = {};
+      }
+
+      const current = this.values;
+      const changed = this.changed;
+      const prev = this._previousValues;
+
+      // For each `set` attribute, update or delete the current value.
+      for (const attr in attrs) {
+        val = attrs[attr];
+        if (!_.isEqual(current[attr], val)) changes.push(attr);
+        if (!_.isEqual(prev[attr], val)) {
+          changed[attr] = val;
+        } else {
+          delete changed[attr];
+        }
+        unset ? delete current[attr] : current[attr] = val;
+      }
+
+      // Update the `id`.
+      if (this.idAttribute in attrs) {
+        this.id = this.get(this.idAttribute);
+      }
+
+      // Trigger all relevant attribute changes.
+      if (!silent) {
+        if (changes.length) this._pending = options;
+        for (var i = 0; i < changes.length; i++) {
+          this.triggerEvent(`model-${this.modelId}-change`);
+          this.triggerEvent(`model-${this.modelId}-change-${changes[i]}`);
+          this.trigger('change:' + changes[i], this, current[changes[i]], options);
+        }
+      }
+
+      // You might be wondering why there's a `while` loop here. Changes can
+      // be recursively nested within `"change"` events.
+      if (changing) {
+        return this;
+      }
+      if (!silent) {
+        while (this._pending) {
+          options = this._pending;
+          this._pending = false;
+          this.trigger('change', this, options);
+        }
+      }
+      this._pending = false;
+      this._changing = false;
+      return this;
     }
 
     triggerEvent(type, cancelable = false) {
@@ -117,7 +172,14 @@
     }
 
     previous(property) {
-      return this.previousItems[property];
+      return this._previousValues[property];
+    }
+
+    get attributes() {
+      Drupal.deprecationError({
+        message: 'Drupal.DrupalModel.attributes is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.values instead.',
+      });
+      return this.values;
     }
   };
   deprecatedModelPrototypeProperties.forEach((property) => {

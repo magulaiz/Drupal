@@ -225,6 +225,7 @@
       $(this.model.previous('activeTab'))
         .removeClass('is-active')
         .prop('aria-pressed', false);
+      $(this.model.previous('activeTray')).removeClass('is-active');
 
       // Activate the selected tab.
       if ($tab.length > 0) {
@@ -256,12 +257,6 @@
         // There is no active tray.
         this.model.set('activeTray', null);
         localStorage.removeItem('Drupal.toolbar.activeTabID');
-      }
-
-      // Deactivate the previous tray if the tab has changed.
-      const previousTray = this.model.previous('activeTray');
-      if (previousTray && previousTray.id !== $tab.attr('data-toolbar-tray')) {
-        $(this.model.previous('activeTray')).removeClass('is-active');
       }
     }
     /**
