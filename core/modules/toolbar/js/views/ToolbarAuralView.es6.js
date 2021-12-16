@@ -65,7 +65,7 @@
     onActiveTrayChange() {
       const tray = this.model.get('activeTray');
       const relevantTray =
-        tray === null ? model.previous('activeTray') : tray;
+        tray === null ? this.model.previous('activeTray') : tray;
       // Current activeTray and previous activeTray are empty, no state change
       // to announce.
       if (!relevantTray) {
