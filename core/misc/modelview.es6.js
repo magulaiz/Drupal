@@ -44,6 +44,17 @@
     'isEmpty',
   ];
 
+  /**
+   * Data object used for used for storing state of interactive UIs.
+   *
+   * This is a subset of Backbone Model.
+   *
+   * @type {{new(): Drupal.DrupalModel, modelId, allowSetChanged: boolean, changed: {}, previousItems: {}, prototype: DrupalModel}}
+   *
+   * @internal
+   *   This class is provided for BC but it will likely be removed in the
+   *   future.
+   */
   Drupal.DrupalModel = class extends Backbone.Model {
     constructor() {
       super();
@@ -122,6 +133,15 @@
     }
   });
 
+  /**
+   * Data object for rendering interactive UIs.
+   *
+   * @type {{new(...[*]): Drupal.DrupalView, _$el: null, prototype: *, _removeElement, delegate, undelegateEvents, undelegate, _setAttributes}}
+   *
+   * @internal
+   *   This class is provided for BC but it will likely be removed in the
+   *   future.
+   */
   Drupal.DrupalView = class extends Backbone.View {
     constructor(...args) {
       super();
