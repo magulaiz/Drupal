@@ -245,6 +245,23 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Test that twig errors are displayed correctly.
+   */
+  public function testMessageParsing() {
+    $this->drupalLogin($this->adminUser);
+    // Log a common twig error with {{ }} and { } variables.
+    \Drupal::service('logger.factory')->get("php")
+      ->error('Incorrect parameter {{foo}} in path {path}: {value}',
+        ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
+      );
+    // View the log page to verify it's correct.
+    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertSession()
+      ->responseContains('Incorrect parameter {bar} in path /baz: horse');
+  }
+
+  /**
    * Verifies setting of the database log row limit.
    *
    * @param int $row_limit
@@ -360,8 +377,8 @@ class DbLogTest extends BrowserTestBase {
   private function verifyEvents() {
     // Invoke events.
     $this->doUser();
-    $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->doNode('article');
     $this->doNode('page');
     $this->doNode('forum');
@@ -444,7 +461,7 @@ class DbLogTest extends BrowserTestBase {
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
     $this->drupalGet('user/' . $user->id() . '/cancel');
-    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
+    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Confirm');
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -802,8 +819,10 @@ class DbLogTest extends BrowserTestBase {
    *   The database log message to check.
    * @param string $message
    *   The message to pass to simpletest.
+   *
+   * @internal
    */
-  protected function assertLogMessage($log_message, $message) {
+  protected function assertLogMessage(string $log_message, string $message): void {
     $message_text = Unicode::truncate($log_message, 56, TRUE, TRUE);
     $this->assertSession()->linkExists($message_text, 0, $message);
   }

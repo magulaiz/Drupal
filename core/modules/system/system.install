@@ -393,7 +393,7 @@ function system_requirements($phase) {
   // Verify there are no database entries in settings.php with table prefix in
   // array format.
   if ($phase === 'runtime' || $phase === 'update') {
-    if (_system_check_array_table_prefixes(\Drupal::getContainer()->getParameter('app.root'), \Drupal::getContainer()->getParameter('site.path')) === TRUE) {
+    if (_system_check_array_table_prefixes() === TRUE) {
       $requirements['database_table_prefixes'] = [
         'title' => t('Database table prefixes'),
         'value' => t("There is at least one database entry in the \$database array in settings.php that has a 'prefix' value in the format of an array. Per-table prefixes are no longer supported. Change your settings.php file to ensure the value of every 'prefix' entry is a single string."),
@@ -469,6 +469,21 @@ function system_requirements($phase) {
       ];
       $requirements['database_system_version']['severity'] = REQUIREMENT_ERROR;
       $requirements['database_system_version']['description'] = $error_message;
+    }
+  }
+
+  // Test with PostgreSQL databases for the status of the pg_trgm extension.
+  if ($phase === 'runtime') {
+    if (Database::isActiveConnection() && (Database::getConnection()->driver() == 'pgsql') && !Database::getConnection()->schema()->extensionExists('pg_trgm')) {
+      $requirements['pgsql_extension_pg_trgm'] = [
+        'severity' => REQUIREMENT_WARNING,
+        'title' => t('PostgreSQL pg_trgm extension'),
+        'value' => t('Not created'),
+        'description' => t('The <a href=":pg_trgm">pg_trgm</a> PostgreSQL extension is not present. The extension will be required by Drupal 10 to improve performance when using PostgreSQL. See <a href=":requirements">Drupal database server requirements</a> for more information.', [
+          ':pg_trgm' => 'https://www.postgresql.org/docs/current/pgtrgm.html',
+          ':requirements' => 'https://www.drupal.org/docs/system-requirements/database-server-requirements',
+        ]),
+      ];
     }
   }
 
@@ -1525,16 +1540,10 @@ function _system_advisories_requirements(array &$requirements): void {
 /**
  * Checks if there are 'prefix' entries in array format for tables.
  */
-function _system_check_array_table_prefixes($app_root, $site_path) {
-  if (is_readable($app_root . '/' . $site_path . '/settings.php')) {
-    include $app_root . '/' . $site_path . '/settings.php';
-  }
-  if (empty($databases)) {
-    return FALSE;
-  }
-  foreach ($databases as $database) {
-    foreach ($database as $target) {
-      if (isset($target['prefix']) && is_array($target['prefix'])) {
+function _system_check_array_table_prefixes() {
+  foreach (Database::getAllConnectionInfo() as $targets) {
+    foreach ($targets as $target) {
+      if (isset($target['extra_prefix']) && is_array($target['extra_prefix'])) {
         return TRUE;
       }
     }

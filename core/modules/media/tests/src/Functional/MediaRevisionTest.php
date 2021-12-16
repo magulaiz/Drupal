@@ -106,7 +106,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->drupalGet('/media/1/edit');
     $assert->checkboxChecked('Create new revision');
     $page = $this->getSession()->getPage();
-    $page->fillField('Name', 'Foobaz');
+    $page->fillField('Name', 'Foo');
     $page->pressButton('Save');
     $this->assertRevisionCount($media, 2);
 
@@ -115,7 +115,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged(1);
     $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
-    $assert->pageTextContains('Foobaz');
+    $assert->pageTextContains('Foo');
   }
 
   /**
@@ -155,7 +155,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->drupalGet('/media/1/edit');
     $assert->checkboxChecked('Create new revision');
     $page = $this->getSession()->getPage();
-    $page->fillField('Name', 'Foobaz');
+    $page->fillField('Name', 'Foo');
     $page->pressButton('Save');
     $this->assertRevisionCount($media, 2);
 
@@ -164,7 +164,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged(1);
     $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
-    $assert->pageTextContains('Foobaz');
+    $assert->pageTextContains('Foo');
   }
 
   /**
@@ -190,8 +190,10 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
    *   The entity in question.
    * @param int $expected_revisions
    *   The expected number of revisions.
+   *
+   * @internal
    */
-  protected function assertRevisionCount(EntityInterface $entity, $expected_revisions) {
+  protected function assertRevisionCount(EntityInterface $entity, int $expected_revisions): void {
     $entity_type = $entity->getEntityType();
 
     $count = $this->container
