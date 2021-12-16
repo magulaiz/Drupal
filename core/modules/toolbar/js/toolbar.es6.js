@@ -93,6 +93,8 @@
           },
         );
 
+        Drupal.toolbar.views.toolbarVisualView.render();
+
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
         model.triggerEvent(`model-${model.modelId}-change-isFixed`);

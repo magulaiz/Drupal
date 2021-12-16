@@ -24,17 +24,8 @@
       );
       this.addChangeListener(this.isToolbarFixed, `isFixed`);
     }
-    // initialize() {
-    //   this.listenTo(this.model, 'change:activeTray ', this.render);
-    //   this.listenTo(
-    //     this.model,
-    //     'change:isFixed change:isViewportOverflowConstrained',
-    //     this.isToolbarFixed,
-    //   );
-    // },
 
     isToolbarFixed() {
-      console.log('is toolbarfixed is called');
       // When the toolbar is fixed, it will not scroll with page scrolling.
       const isViewportOverflowConstrained = this.model.get(
         'isViewportOverflowConstrained',

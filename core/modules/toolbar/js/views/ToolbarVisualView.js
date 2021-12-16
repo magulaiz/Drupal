@@ -112,7 +112,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateToolbarHeight",
       value: function updateToolbarHeight() {
-        console.log('updateToolbarHeight called in ToolbarVisualView');
         var toolbarTabOuterHeight = $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
         var toolbarTrayHorizontalOuterHeight = $('.is-active.toolbar-tray-horizontal').outerHeight() || 0;
         this.model.set('height', toolbarTabOuterHeight + toolbarTrayHorizontalOuterHeight);
@@ -222,7 +221,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }, {
       key: "updateTrayOrientation",
       value: function updateTrayOrientation() {
-        console.log('called updateTrayOrientation');
         var orientation = this.model.get('orientation');
         var antiOrientation = orientation === 'vertical' ? 'horizontal' : 'vertical';
         $('body').toggleClass('toolbar-vertical', orientation === 'vertical').toggleClass('toolbar-horizontal', orientation === 'horizontal');
@@ -231,7 +229,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         var iconClass = "toolbar-icon-toggle-".concat(orientation);
         var iconAntiClass = "toolbar-icon-toggle-".concat(antiOrientation);
         var $orientationToggle = $(this.el).find('.toolbar-toggle-orientation').toggle(this.model.get('isTrayToggleVisible'));
-        console.log("".concat(this.model.get('isTrayToggleVisible').attr('id'), " toggle vis"), this.model.get('isTrayToggleVisible'));
         $orientationToggle.find('button').val(antiOrientation).attr('title', this.strings[antiOrientation]).text(this.strings[antiOrientation]).removeClass(iconClass).addClass(iconAntiClass);
         var dir = document.documentElement.dir;
         var edge = dir === 'rtl' ? 'right' : 'left';

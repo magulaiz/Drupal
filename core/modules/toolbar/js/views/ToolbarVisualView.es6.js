@@ -94,7 +94,6 @@
      * @augments Backbone.View
      */
     updateToolbarHeight() {
-      console.log('updateToolbarHeight called in ToolbarVisualView');
       const toolbarTabOuterHeight =
         $('#toolbar-bar').find('.toolbar-tab').outerHeight() || 0;
       const toolbarTrayHorizontalOuterHeight =
@@ -277,7 +276,6 @@
      * Updates the orientation of the active tray if necessary.
      */
     updateTrayOrientation() {
-      console.log('called updateTrayOrientation');
       const orientation = this.model.get('orientation');
 
       // The antiOrientation is used to render the view of action buttons like
@@ -306,7 +304,6 @@
       const $orientationToggle = $(this.el)
         .find('.toolbar-toggle-orientation')
         .toggle(this.model.get('isTrayToggleVisible'));
-      console.log(`${this.model.get('isTrayToggleVisible').attr('id')} toggle vis`, this.model.get('isTrayToggleVisible'))
       $orientationToggle
         .find('button')
         .val(antiOrientation)

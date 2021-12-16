@@ -52,6 +52,7 @@
           el: toolbar,
           model: model
         });
+        Drupal.toolbar.views.toolbarVisualView.render();
         model.triggerEvent("model-".concat(model.modelId, "-change-isFixed"));
         model.triggerEvent("model-".concat(model.modelId, "-change-activeTray"));
         var menuModel = new Drupal.toolbar.MenuModel();

@@ -55,7 +55,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     _createClass(_class, [{
       key: "isToolbarFixed",
       value: function isToolbarFixed() {
-        console.log('is toolbarfixed is called');
         var isViewportOverflowConstrained = this.model.get('isViewportOverflowConstrained');
         $('body').toggleClass('toolbar-fixed', isViewportOverflowConstrained || this.model.get('isFixed'));
       }
