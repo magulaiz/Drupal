@@ -9,6 +9,6 @@ build:
     testing:
       run_tests.functional:
         types: 'PHPUnit-Functional'
-        testgroups: '--module update'
+        testgroups: '--class "\Drupal\Tests\update\Kernel\CompareOldNew"'
         suppress-deprecations: false
         halt-on-fail: false
