@@ -88,6 +88,13 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         }
 
         options || (options = {});
+        ['upset', 'silent', 'validate'].forEach(function (option) {
+          if (options.hasOwnProperty(option)) {
+            Drupal.deprecationError({
+              message: "options.".concat(option, " is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.")
+            });
+          }
+        });
 
         if (!this._validate(attrs, options)) {
           return false;

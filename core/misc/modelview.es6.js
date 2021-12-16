@@ -95,6 +95,14 @@
 
       options || (options = {});
 
+      ['upset', 'silent', 'validate'].forEach((option) => {
+        if (options.hasOwnProperty(option)) {
+          Drupal.deprecationError({
+            message: `options.${option} is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.`,
+          });
+        }
+      })
+
       // Run validation.
       if (!this._validate(attrs, options)) {
         return false;
