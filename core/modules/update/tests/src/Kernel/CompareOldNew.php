@@ -64,8 +64,8 @@ class CompareOldNew extends KernelTestBase {
   }
 
   public function testNewOld() {
-    $core_versions = static::getAllPreviousCoreVersions('9.9.11');
-    //$core_versions = static::getAllPreviousCoreVersions('8.0.2');
+    //$core_versions = static::getAllPreviousCoreVersions('9.9.11');
+    $core_versions = static::getAllPreviousCoreVersions('8.3.3');
     $core_files = $this->getCoreFixtures();
     $this->container->get('module_handler')->loadInclude('update', 'compare.inc');
     $this->container->get('module_handler')->loadInclude('update', 'compare-9.4.inc');
