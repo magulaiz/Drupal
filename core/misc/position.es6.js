@@ -434,7 +434,10 @@
     const collision = (options.collision || 'flip').split(' ');
     const offsets = {};
 
-    const target = $(options.of);
+    const target =
+      typeof options.of === 'string'
+        ? $(document).find(options.of)
+        : $(options.of);
     const dimensions = getDimensions(target);
     const targetWidth = dimensions.width;
     const targetHeight = dimensions.height;
