@@ -31,6 +31,8 @@ class CompareOldNew extends KernelTestBase {
     // The Update module's default configuration must be installed for our
     // fake release metadata to be fetched.
     $this->installConfig('update');
+    $this->installConfig('update_test');
+
   }
 
   /**
@@ -63,6 +65,7 @@ class CompareOldNew extends KernelTestBase {
 
   public function testNewOld() {
     $core_versions = static::getAllPreviousCoreVersions('9.9.11');
+    //$core_versions = static::getAllPreviousCoreVersions('8.0.2');
     $core_files = $this->getCoreFixtures();
     $this->container->get('module_handler')->loadInclude('update', 'compare.inc');
     $this->container->get('module_handler')->loadInclude('update', 'compare-9.4.inc');
@@ -141,6 +144,7 @@ class CompareOldNew extends KernelTestBase {
 
   private function getCoreFixtures() {
     $path = realpath(__DIR__ . '/../../fixtures/release-history');
+    //return glob($path . '/drupal.1.0*.xml');
     return glob($path . '/drupal.*.xml');
 
   }
