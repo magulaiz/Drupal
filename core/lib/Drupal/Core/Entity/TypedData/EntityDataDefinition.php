@@ -67,7 +67,7 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    if (!isset($this->propertyDefinitions)) {
+    if ($this->propertyDefinitions === []) {
       if ($entity_type_id = $this->getEntityTypeId()) {
         // Return an empty array for entities that are not content entities.
         $entity_type_class = \Drupal::entityTypeManager()->getDefinition($entity_type_id)->getClass();
@@ -85,10 +85,6 @@ class EntityDataDefinition extends ComplexDataDefinitionBase implements EntityDa
             $this->propertyDefinitions = \Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id);
           }
         }
-      }
-      else {
-        // No entity type given.
-        $this->propertyDefinitions = [];
       }
     }
     return $this->propertyDefinitions;

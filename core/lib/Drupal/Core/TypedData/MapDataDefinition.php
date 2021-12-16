@@ -38,9 +38,6 @@ class MapDataDefinition extends ComplexDataDefinitionBase {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    if (!isset($this->propertyDefinitions)) {
-      $this->propertyDefinitions = [];
-    }
     return $this->propertyDefinitions;
   }
 

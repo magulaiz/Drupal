@@ -12,7 +12,7 @@ abstract class ComplexDataDefinitionBase extends DataDefinition implements Compl
    *
    * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
    */
-  protected $propertyDefinitions;
+  protected $propertyDefinitions = [];
 
   /**
    * {@inheritdoc}
