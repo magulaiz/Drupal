@@ -8,7 +8,6 @@
     'stopListening',
     'once',
     'listenToOnce',
-    'trigger',
     'bind',
     'unbind',
     'changed',
@@ -140,7 +139,7 @@
         for (var i = 0; i < changes.length; i++) {
           this.triggerEvent(`model-${this.modelId}-change`);
           this.triggerEvent(`model-${this.modelId}-change-${changes[i]}`);
-          this.trigger('change:' + changes[i], this, current[changes[i]], options);
+          super.trigger('change:' + changes[i], this, current[changes[i]], options);
         }
       }
 
@@ -153,7 +152,7 @@
         while (this._pending) {
           options = this._pending;
           this._pending = false;
-          this.trigger('change', this, options);
+          super.trigger('change', this, options);
         }
       }
       this._pending = false;
@@ -173,6 +172,13 @@
 
     previous(property) {
       return this._previousValues[property];
+    }
+
+    trigger(...args) {
+      Drupal.deprecationError({
+        message: `Drupal.DrupalModel.trigger is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.triggerEvent instead.`,
+      });
+      return super.trigger.apply(this, args);
     }
 
     get attributes() {

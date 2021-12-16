@@ -5,10 +5,6 @@
 * @preserve
 **/
 
-function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
-
-function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16,6 +12,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -32,7 +32,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Drupal, Backbone, $) {
-  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'trigger', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
+  var deprecatedModelPrototypeProperties = ['on', 'listenTo', 'off', 'stopListening', 'once', 'listenToOnce', 'bind', 'unbind', 'changed', 'validationError', 'idAttribute', 'cidPrefix', 'toJSON', 'sync', 'escape', 'has', 'matches', 'unset', 'clear', 'hasChanged', 'changedAttributes', 'previousAttributes', 'fetch', 'save', 'destroy', 'url', 'parse', 'clone', 'isNew', 'isValid', 'keys', 'values', 'pairs', 'invert', 'pick', 'omit', 'chain', 'isEmpty'];
 
   Drupal.DrupalModel = function (_Backbone$Model) {
     _inherits(_class, _Backbone$Model);
@@ -131,7 +131,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           for (var i = 0; i < changes.length; i++) {
             this.triggerEvent("model-".concat(this.modelId, "-change"));
             this.triggerEvent("model-".concat(this.modelId, "-change-").concat(changes[i]));
-            this.trigger('change:' + changes[i], this, current[changes[i]], options);
+
+            _get(_getPrototypeOf(_class.prototype), "trigger", this).call(this, 'change:' + changes[i], this, current[changes[i]], options);
           }
         }
 
@@ -143,7 +144,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           while (this._pending) {
             options = this._pending;
             this._pending = false;
-            this.trigger('change', this, options);
+
+            _get(_getPrototypeOf(_class.prototype), "trigger", this).call(this, 'change', this, options);
           }
         }
 
@@ -167,6 +169,19 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         return this._previousValues[property];
       }
     }, {
+      key: "trigger",
+      value: function trigger() {
+        Drupal.deprecationError({
+          message: "Drupal.DrupalModel.trigger is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.triggerEvent instead."
+        });
+
+        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+
+        return _get(_getPrototypeOf(_class.prototype), "trigger", this).apply(this, args);
+      }
+    }, {
       key: "attributes",
       get: function get() {
         Drupal.deprecationError({
@@ -188,8 +203,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           message: "Drupal.DrupalModel.".concat(property, " is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.")
         });
 
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-          args[_key] = arguments[_key];
+        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+          args[_key2] = arguments[_key2];
         }
 
         return originalFunction.apply(this, args);
