@@ -133,7 +133,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         }
 
         if (!silent) {
-          if (changes.length) this._pending = options;
+          if (changes.length) {
+            this._pending = options;
+          }
 
           for (var i = 0; i < changes.length; i++) {
             this.triggerEvent("model-".concat(this.modelId, "-change"));

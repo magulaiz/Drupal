@@ -1,6 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
 ((Drupal, Backbone, $) => {
-
   const deprecatedModelPrototypeProperties = [
     'on',
     'listenTo',
@@ -101,7 +100,7 @@
             message: `options.${option} is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.`,
           });
         }
-      })
+      });
 
       // Run validation.
       if (!this._validate(attrs, options)) {
@@ -133,7 +132,7 @@
         } else {
           delete changed[attr];
         }
-        unset ? delete current[attr] : current[attr] = val;
+        unset ? delete current[attr] : (current[attr] = val);
       }
 
       // Update the `id`.
@@ -143,11 +142,18 @@
 
       // Trigger all relevant attribute changes.
       if (!silent) {
-        if (changes.length) this._pending = options;
+        if (changes.length) {
+          this._pending = options;
+        }
         for (var i = 0; i < changes.length; i++) {
           this.triggerEvent(`model-${this.modelId}-change`);
           this.triggerEvent(`model-${this.modelId}-change-${changes[i]}`);
-          super.trigger('change:' + changes[i], this, current[changes[i]], options);
+          super.trigger(
+            'change:' + changes[i],
+            this,
+            current[changes[i]],
+            options,
+          );
         }
       }
 
@@ -191,7 +197,8 @@
 
     get attributes() {
       Drupal.deprecationError({
-        message: 'Drupal.DrupalModel.attributes is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.values instead.',
+        message:
+          'Drupal.DrupalModel.attributes is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.values instead.',
       });
       return this.values;
     }
@@ -256,31 +263,39 @@
     }
   };
 
-
   Drupal.DrupalView.prototype = Drupal.deprecatedProperty({
     target: Drupal.DrupalView.prototype,
     deprecatedProperty: '$el',
-    message: 'Drupal.DrupalView.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalView.el instead.',
+    message:
+      'Drupal.DrupalView.$el is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalView.el instead.',
   });
 
   // The following 5 overrides are needed to eliminate internal use of the
   // deprecated $el property.
-  Drupal.DrupalView.prototype._removeElement = function() {
+  Drupal.DrupalView.prototype._removeElement = function () {
     $(this.el).remove();
   };
-  Drupal.DrupalView.prototype.delegate = function(el) {
+  Drupal.DrupalView.prototype.delegate = function (el) {
     $(this.el).on(eventName + '.delegateEvents' + this.cid, selector, listener);
     return this;
   };
-  Drupal.DrupalView.prototype.undelegateEvents = function() {
+  Drupal.DrupalView.prototype.undelegateEvents = function () {
     if (this.el) $(this.el).off('.delegateEvents' + this.cid);
     return this;
   };
-  Drupal.DrupalView.prototype.undelegate = function(eventName, selector, listener) {
-    $(this.el).off(eventName + '.delegateEvents' + this.cid, selector, listener);
+  Drupal.DrupalView.prototype.undelegate = function (
+    eventName,
+    selector,
+    listener,
+  ) {
+    $(this.el).off(
+      eventName + '.delegateEvents' + this.cid,
+      selector,
+      listener,
+    );
     return this;
   };
-  Drupal.DrupalView.prototype._setAttributes = function(attributes) {
+  Drupal.DrupalView.prototype._setAttributes = function (attributes) {
     $(this.el).attr(attributes);
-  }
+  };
 })(Drupal, Backbone, jQuery);
