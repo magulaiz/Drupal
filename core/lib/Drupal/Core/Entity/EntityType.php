@@ -132,7 +132,9 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The name of the entity type's base table.
    *
-   * The base table is used by simple entity types to store all base field data.
+   * The base table is used by mulitple entity types like single cardinality,
+   * translatable, untranslatable and revisionable to store base fields such as
+   * UUID or ID data.
    *
    * @var string|null
    */
