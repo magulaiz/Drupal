@@ -1031,7 +1031,7 @@ phpdocumentor
 phpfile
 phpserialize
 phpspec
-phpstand
+phpstan
 phpunit
 phpunit's
 pianura
