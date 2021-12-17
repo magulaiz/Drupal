@@ -33,54 +33,37 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     var _super = _createSuper(_class);
 
-    function _class(options) {
-      var _this;
-
+    function _class(values, options) {
       _classCallCheck(this, _class);
 
-      _this = _super.call(this);
-      _this.activeTab = null;
-      _this.activeTray = null;
-      _this.isOriented = false;
-      _this.isFixed = false;
-      _this.areSubtreesLoaded = false;
-      _this.isViewportOverflowConstrained = false;
-      _this.locked = false;
-      _this.lockedOverride = false;
-      _this.isTrayToggleVisible = true;
-      _this.height = null;
-      _this.offsets = {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0
+      var defaults = {
+        activeTab: null,
+        activeTray: null,
+        isOriented: false,
+        isFixed: false,
+        areSubtreesLoaded: false,
+        isViewportOverflowConstrained: false,
+        locked: false,
+        lockedOverride: false,
+        isTrayToggleVisible: true,
+        height: null,
+        offsets: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        },
+        orientation: 'horizontal'
       };
-      _this._orientation = 'horizontal';
-      Object.keys(options).forEach(function (key) {
-        if (_this[key] && options[key] !== _this[key]) {
-          _this.set(key, options.key);
-        }
-      });
-      return _this;
+      return _super.call(this, Object.assign({}, defaults, values), options);
     }
 
     _createClass(_class, [{
-      key: "orientation",
-      get: function get() {
-        console.log('get orientation');
-        return this._orientation;
-      },
-      set: function set(value) {
-        console.log('set orientation');
-
-        if (value === 'horizontal' && this.get('locked') && !this.lockedOverride) {
-          console.log('BLOCKED ORIENTATION CHANGE');
-          return;
+      key: "validate",
+      value: function validate(attributes, options) {
+        if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {
+          return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
         }
-
-        console.log('allow orientation change', this);
-        this._orientation = value;
-        this.lockedOverride = false;
       }
     }]);
 

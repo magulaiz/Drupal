@@ -200,15 +200,12 @@
         localStorage.removeItem('Drupal.toolbar.trayVerticalLocked');
       }
 
-
       this.model.lockedOverride = true;
       // Update the model.
-      this.model.set(
-        {
-          locked,
-          orientation: antiOrientation,
-        }
-      );
+      this.model.set({
+        locked,
+        orientation: antiOrientation,
+      });
 
       event.preventDefault();
       event.stopPropagation();
