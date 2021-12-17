@@ -132,6 +132,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The name of the entity type's base table.
    *
+   * The base table is used by simple entity types to store all base field data.
+   *
    * @var string|null
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
@@ -139,6 +141,10 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
 
   /**
    * The name of the entity type's revision data table.
+   *
+   * The revision data table is required for translatable entity types if the
+   * entity type also supports revisions. The revision data table stores
+   * base field revision data per language for revisionable fields.
    *
    * @var string|null
    */
@@ -148,6 +154,8 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The name of the entity type's revision table.
    *
+   * The revision table stores basic entity key revisions and revision metadata.
+   *
    * @var string|null
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
@@ -155,6 +163,9 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
 
   /**
    * The name of the entity type's data table.
+   *
+   * The data table is required for translatable entity types. The data table
+   * stores base field data per language.
    *
    * @var string|null
    */
