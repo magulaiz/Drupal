@@ -477,7 +477,7 @@
           $currentEmptyRow = $row.next('tr');
           $currentEmptyRow.removeClass('group-populated').addClass('group-empty');
           $operatorCell.attr('rowspan', 2);
-        } else if ($row.hasClass('draggable') && rows[i].visible) {
+        } else if ($row.hasClass('draggable') && isVisible(rows[i])) {
           draggableCount++;
           $currentEmptyRow.removeClass('group-empty').addClass('group-populated');
           $operatorCell.attr('rowspan', draggableCount + 1);
