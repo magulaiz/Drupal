@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ExtensionVersion;
 /**
  * Calculates the update status of a project.
  */
-class ProjectStatusCalculator {
+final class ProjectStatusCalculator {
 
   /**
    * The releases for the project that can be installed safely.
@@ -23,14 +23,14 @@ class ProjectStatusCalculator {
    *
    * @see \Drupal\update\UpdateManagerInterface::getProjects()
    */
-  protected $projectData;
+  private $projectData;
 
   /**
    * The update server project information.
    *
    * @var \Drupal\update\UpdateServerProjectInfo
    */
-  protected $updateServerProjectInfo;
+  private $updateServerProjectInfo;
 
   /**
    * Constructs a ProjectStatusCalculator object.
