@@ -21,7 +21,7 @@ namespace Drupal\Core\Database;
  *
  * @see https://www.drupal.org/node/3177488
  */
-class Statement extends \PDOStatement implements StatementInterface {
+class Statement extends \PDOStatement {
 
   /**
    * Reference to the database connection object for this statement.
@@ -161,7 +161,7 @@ class Statement extends \PDOStatement implements StatementInterface {
   /**
    * {@inheritdoc}
    */
-  public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
+  public function setFetchMode(int $mode, mixed ...$args) {
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
@@ -170,18 +170,18 @@ class Statement extends \PDOStatement implements StatementInterface {
         return parent::setFetchMode($mode);
 
       case 2:
-        return parent::setFetchMode($mode, $a1);
+        return parent::setFetchMode($mode, $args[0]);
 
       case 3:
       default:
-        return parent::setFetchMode($mode, $a1, $a2);
+        return parent::setFetchMode($mode, $args[0], $args[1] ?? []);
     }
   }
 
   /**
    * {@inheritdoc}
    */
-  public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
+  public function fetchAll(int $mode = \PDO::FETCH_DEFAULT, mixed ...$args) {
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
@@ -193,11 +193,11 @@ class Statement extends \PDOStatement implements StatementInterface {
         return parent::fetchAll($mode);
 
       case 2:
-        return parent::fetchAll($mode, $column_index);
+        return parent::fetchAll($mode, $args[0]);
 
       case 3:
       default:
-        return parent::fetchAll($mode, $column_index, $constructor_arguments);
+        return parent::fetchAll($mode, $args[0], $args[1]);
     }
   }
 

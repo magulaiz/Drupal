@@ -34,7 +34,10 @@
         "symfony/lock": "^4.4",
         "symfony/browser-kit": "^4.4",
         "symfony/dom-crawler": "^4.4 !=4.4.5",
-        "easyrdf/easyrdf": "^0.9 || ^1.0"
+        "easyrdf/easyrdf": "^0.9 || ^1.0",
+        "phpstan/phpstan": "^1.2",
+        "mglaman/phpstan-drupal": "^1.1",
+        "phpstan/extension-installer": "^1.1"
     },
     "replace": {
         "paragonie/random_compat": "9.99.99",
