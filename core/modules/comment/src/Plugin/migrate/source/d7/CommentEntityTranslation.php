@@ -114,11 +114,15 @@ class CommentEntityTranslation extends FieldableEntity {
 
     if (!$this->moduleExists('comment')) {
       // If we make it to here, the comment module isn't installed.
-      throw new RequirementsException('The module comment is not enabled in the source site');
+      throw new RequirementsException('The module comment is not enabled in the source site', [
+        'missing_source_module' => 'comment',
+      ]);
     }
     if (!$this->moduleExists('node')) {
       // Node module is also a requirement.
-      throw new RequirementsException('The module node is not enabled in the source site');
+      throw new RequirementsException('The module node is not enabled in the source site', [
+        'missing_source_module' => 'node',
+      ]);
     }
   }
 

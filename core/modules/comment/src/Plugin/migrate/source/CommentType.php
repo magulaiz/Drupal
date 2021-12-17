@@ -86,7 +86,7 @@ class CommentType extends DrupalSqlBase {
       // Drupal 6 and Drupal 7 comment configuration migrations migrate comment
       // types and comment fields for node comments only.
       throw new RequirementsException('The node module is not enabled in the source site.', [
-        'source_module_additional' => 'node',
+        'missing_source_module' => 'node',
       ]);
     }
   }
