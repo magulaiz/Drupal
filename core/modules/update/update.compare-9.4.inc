@@ -3,6 +3,10 @@
 /**
  * @file
  * Code required only when comparing available updates to existing data.
+ *
+ * @todo This file has to be deleted before commit. This file is exact copy the
+ *   file from 9.4.x with '_9_4_' added to the end of the file names. See
+ *   core/modules/update/tests/src/Kernel/CompareOldNew.php.
  */
 
 use Drupal\Core\Extension\ExtensionVersion;

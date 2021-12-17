@@ -13,6 +13,8 @@ use GuzzleHttp\Psr7\Utils;
 /**
  * Just a temporary test prove new method produces exact same as old.
  *
+ * @todo This file has to be deleted before commit.
+ *
  * @group update
  */
 class CompareOldNew extends KernelTestBase {
