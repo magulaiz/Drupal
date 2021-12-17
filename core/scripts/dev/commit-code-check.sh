@@ -11,11 +11,11 @@
 # - File modes.
 # - No changes to core/node_modules directory.
 # - PHPCS checks PHP and YAML files.
-# - PHPStan checks PHP files.
 # - ESLint checks JavaScript and YAML files.
 # - Checks .es6.js and .js files are equivalent.
 # - Stylelint checks CSS files.
 # - Checks .pcss.css and .css files are equivalent.
+# - Run phpstan on the entire codebase.
 
 # cSpell:disable
 
@@ -156,7 +156,7 @@ fi
 cd "$TOP_LEVEL/core"
 
 # Ensure JavaScript development dependencies are installed.
-yarn check -s 2>/dev/null
+# yarn check -s 2>/dev/null
 if [ "$?" -ne "0" ]; then
   printf "Drupal's JavaScript development dependencies are not installed. Run 'yarn install' inside the core directory.\n"
   DEPENDENCIES_NEED_INSTALLING=1;
@@ -282,19 +282,6 @@ for FILE in $FILES; do
       printf "ESLint: $FILE ${green}passed${reset}\n"
     fi
     cd $TOP_LEVEL
-  fi
-
-  ############################################################################
-  ### PHPSTAN
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme)$ ]]; then
-    vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist" "$TOP_LEVEL/$FILE"
-    if [ "$?" -ne "0" ]; then
-      # If there are failures set the status to a number other than 0.
-      STATUS=1
-    else
-      printf "PHPStan: $FILE ${green}passed${reset}\n"
-    fi
   fi
 
   ############################################################################
@@ -461,6 +448,19 @@ for FILE in $FILES; do
   printf -- '-%.0s' {1..100}
   printf "\n"
 done
+
+############################################################################
+### PHPSTAN
+############################################################################
+cd "$TOP_LEVEL/core"
+../vendor/bin/phpstan analyze --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
+if [ "$?" -ne "0" ]; then
+  # If there are failures change the FINAL_STATUS.
+  FINAL_STATUS=0
+else
+  printf "PHPStan: ${green}passed${reset}\n"
+fi
+cd $TOP_LEVEL
 
 if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
   printf "${red}Drupal code quality checks failed.${reset}\n"
