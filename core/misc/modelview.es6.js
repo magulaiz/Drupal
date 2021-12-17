@@ -53,27 +53,14 @@
    *   future.
    */
   Drupal.DrupalModel = class extends Backbone.Model {
-    constructor(values, options) {
-      // Backbone needs to handle most of the initialization to ensure that
-      // initialization happens in expected sequence.
-      super(values, options);
+    constructor() {
+      super();
+      this.modelId = (Math.random() + 1).toString(36).substring(7);
       this.allowSetChanged = true;
+      this.values = {};
+      this.changed = {};
       this._previousValues = {};
 
-      if (options) {
-        if (options.hasOwnProperty('collection')) {
-          Drupal.deprecationError({
-            message:
-              'options.collection is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.',
-          });
-        }
-        if (options.hasOwnProperty('parse')) {
-          Drupal.deprecationError({
-            message:
-              'options.parse is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.',
-          });
-        }
-      }
       if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
           message: `Drupal.DrupalModel.preinitialize is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use constructor() instead.`,
@@ -206,34 +193,6 @@
         message: `Drupal.DrupalModel.trigger is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.triggerEvent instead.`,
       });
       return super.trigger.apply(this, args);
-    }
-
-    get values() {
-      // @todo remove this getter after this class is no longer extending
-      //   Backbone.
-      if (!this._values) {
-        this._values = {};
-      }
-
-      return this._values;
-    }
-    set values(values) {
-      this._values = values;
-    }
-
-    get modelId() {
-      return super.cid;
-    }
-    set modelId(modelId) {
-      super.cid = modelId;
-    }
-
-    get cid() {
-      Drupal.deprecationError({
-        message:
-          'Drupal.DrupalModel.cid is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.modelId instead.',
-      });
-      return super.cid;
     }
 
     get attributes() {

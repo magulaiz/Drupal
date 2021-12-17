@@ -11,8 +11,10 @@
    *
    * @augments Drupal.DrupalModel
    */
-  Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {}
-  Drupal.toolbar.MenuModel.prototype.defaults = {
-    subtrees: {}
-  }
+  Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {
+    constructor() {
+      super();
+      this.subtrees = {};
+    }
+  };
 })(Drupal);
