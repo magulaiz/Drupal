@@ -1036,16 +1036,16 @@
               if ($existingOperatorLabel.length) {
                 $existingOperatorLabel.replaceWith(operatorLabel);
               }
-                // Otherwise, append the operator label to the end of the table
+              // Otherwise, append the operator label to the end of the table
               // cell.
               else {
                 $firstCell.append(operatorLabel);
               }
             }
-              // If the next row doesn't contain a filter, then this is the last row
-              // in the group. We don't want to display the operator there (since
-              // operators should only display between two related filters, e.g.
-              // "filter1 AND filter2 AND filter3"). So we remove any existing label
+            // If the next row doesn't contain a filter, then this is the last row
+            // in the group. We don't want to display the operator there (since
+            // operators should only display between two related filters, e.g.
+            // "filter1 AND filter2 AND filter3"). So we remove any existing label
             // that this row has.
             else {
               $existingOperatorLabel.remove();
