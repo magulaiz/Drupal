@@ -1,0 +1,22 @@
+layout_builder_tempstore_access_test.section_count:
+  path: '/layout_builder_tempstore_access_test/section_storage/{section_storage_type}/{section_storage}'
+  defaults:
+   _controller: '\Drupal\layout_builder_tempstore_access_test\Controller\SectionCountController::build'
+   _title: 'Section count'
+  requirements:
+    _layout_builder_tempstore_access_test: 'TRUE'
+  options:
+    parameters:
+      section_storage:
+        layout_builder_section_storage: TRUE
+layout_builder_tempstore_access_test.section_count_tempstore:
+  path: '/layout_builder_tempstore_access_test/tempstore/{section_storage_type}/{section_storage}'
+  defaults:
+   _controller: '\Drupal\layout_builder_tempstore_access_test\Controller\SectionCountController::build'
+   _title: 'Section count'
+  requirements:
+    _layout_builder_tempstore_access_test: 'TRUE'
+  options:
+    parameters:
+      section_storage:
+        layout_builder_tempstore: TRUE

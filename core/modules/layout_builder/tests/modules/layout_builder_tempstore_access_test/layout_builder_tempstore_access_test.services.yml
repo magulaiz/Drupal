@@ -1,0 +1,5 @@
+services:
+  access_check.layout_builder_tempstore_access_test:
+    class: Drupal\layout_builder_tempstore_access_test\Access\SectionStorageEmptyAccessCheck
+    tags:
+      - { name: access_check, applies_to: _layout_builder_tempstore_access_test }
