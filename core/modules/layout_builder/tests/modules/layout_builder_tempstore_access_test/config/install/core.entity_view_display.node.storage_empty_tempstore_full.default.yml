@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.storage_empty_tempstore_full
+  module:
+    - user
+id: node.storage_empty_tempstore_full.default
+targetEntityType: node
+bundle: storage_empty_tempstore_full
+mode: default
+content: {  }
+hidden:
+  links: true
