@@ -224,7 +224,7 @@
        */
       _populate() {
         const transliterated = this.getTransliterated();
-        const { suffix } = this;
+        const suffix = this.suffix;
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
           const maxlength = $(this).attr('maxlength') - suffix.length;
@@ -545,7 +545,7 @@
         let $description;
         let $option;
         const options = [];
-        const { length } = $allOptions;
+        const length = $allOptions.length;
         for (let i = 0; i < length; i++) {
           $option = $($allOptions[i]);
           $title = $option.find('.title');
@@ -779,7 +779,7 @@
 
         // Find each (visually hidden) button for removing a filter group and
         // insert a link next to it.
-        const { length } = this.removeGroupButtons;
+        const length = this.removeGroupButtons.length;
         let i;
         for (i = 0; i < length; i++) {
           const $removeGroupButton = $(this.removeGroupButtons[i]);
@@ -865,7 +865,7 @@
         );
         newRow.find('td').append(this.operator);
         newRow.insertBefore(titleRow);
-        const { length } = titleRows;
+        const length = titleRows.length;
         // Starting with the third group, copy the operator to a new row above the
         // group title.
         for (let i = 2; i < length; i++) {
@@ -1064,7 +1064,7 @@
         let draggableCount;
         let $operatorCell;
         const rows = $(this.table).find('tr');
-        const { length } = rows;
+        const length = rows.length;
         for (let i = 0; i < length; i++) {
           $row = $(rows[i]);
           if ($row.hasClass('views-group-title')) {
