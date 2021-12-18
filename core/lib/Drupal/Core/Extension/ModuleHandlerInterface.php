@@ -175,15 +175,17 @@ interface ModuleHandlerInterface {
   /**
    * Determines which modules are implementing a hook.
    *
-   * @deprecated Will be removed before 9.0.0. Use the self::invoke*() methods
-   *   instead. To pass arguments by reference or process return values, use
-   *   self::invoke*With*().
-   *
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
    *
    * @return array
    *   An array with the names of the modules which are implementing this hook.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the
+   *   self::invoke*() methods instead. To pass arguments by reference or
+   *   process return values, use self::invoke*With*().
+   *
+   * @see https://www.drupal.org/node/3000490
    */
   public function getImplementations($hook);
 
@@ -226,7 +228,7 @@ interface ModuleHandlerInterface {
    *   - callable $hook
    *     The hook name.
    *
-   * @return mixed The return value of the hook implementation.
+   * @return mixed
    *   The return value of the hook implementation.
    */
   public function invokeWith($module, $hook, callable $invoker);
