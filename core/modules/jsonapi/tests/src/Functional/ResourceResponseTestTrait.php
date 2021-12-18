@@ -516,8 +516,11 @@ trait ResourceResponseTestTrait {
     }
     if ($via_link) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
-      $error['links']['via']['meta']['resourceId'] = $entity->uuid();
-      $error['links']['via']['meta']['resourceVersion'] = $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL;
+
+      if (!$relationship_field_name) {
+        $error['links']['via']['meta']['resourceId'] = $entity->uuid();
+        $error['links']['via']['meta']['resourceVersion'] = $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL;
+      }
     }
 
     return (new CacheableResourceResponse([
