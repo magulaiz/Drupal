@@ -1,0 +1,4 @@
+services:
+  jsonapi_test_entity_revisions_normalization_cache.entity_resource:
+    class: Drupal\jsonapi_test_entity_revisions_normalization_cache\Controller\EntityResource
+    parent: jsonapi.entity_resource

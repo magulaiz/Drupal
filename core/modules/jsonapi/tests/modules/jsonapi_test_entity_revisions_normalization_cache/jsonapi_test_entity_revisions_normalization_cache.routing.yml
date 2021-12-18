@@ -1,0 +1,8 @@
+jsonapi_test_entity_revisions_normalization_cache:
+  path: '/jsonapi_test_entity_revisions_normalization_cache/{entity_type_id}/{entity_ids}/{type}'
+  defaults:
+    _controller: 'Drupal\jsonapi_test_entity_revisions_normalization_cache\Controller\JsonApiEntityController::test'
+  requirements:
+    _access: 'TRUE'
+  methods:
+    - GET
