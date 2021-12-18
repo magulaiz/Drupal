@@ -3043,7 +3043,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $expected_document_403 = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => $detail,
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => (string) $latest_revision_id,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(
+      403,
+      $expected_document_403,
+      $actual_response,
+      $expected_cacheability->getCacheTags(),
+      $expected_cacheability->getCacheContexts(),
+      FALSE,
+      'MISS'
+    );
 
     // Ensure that targeting a revision does not bypass access.
     $actual_response = $this->request('GET', $original_revision_id_url, $request_options);
@@ -3052,7 +3083,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $this->assertResourceErrorResponse(403, $detail, $url, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
+    $expected_document_403 = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => $detail,
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(
+      403,
+      $expected_document_403,
+      $actual_response,
+      $expected_cacheability->getCacheTags(),
+      $expected_cacheability->getCacheContexts(),
+      FALSE,
+      'MISS'
+    );
 
     $this->setUpRevisionAuthorization('GET');
 
@@ -3236,7 +3298,38 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cache_contexts = $expected_cacheability->getCacheContexts();
       $detail = 'The current user is not allowed to GET the selected resource. The user does not have access to the requested version.';
       $message = $result instanceof AccessResultReasonInterface ? trim($detail . ' ' . $result->getReason()) : $detail;
-      $this->assertResourceErrorResponse(403, $message, $url, $actual_response, '/data', $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+      $expected_document_403 = [
+        'jsonapi' => static::$jsonApiMember,
+        'errors' => [
+          [
+            'title' => 'Forbidden',
+            'status' => '403',
+            'detail' => $message,
+            'links' => [
+              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+              'via' => [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $this->entity->uuid(),
+                  'resourceVersion' => (string) $forward_revision_id,
+                ],
+              ],
+            ],
+            'source' => [
+              'pointer' => '/data',
+            ],
+          ],
+        ],
+      ];
+      $this->assertResourceResponse(
+        403,
+        $expected_document_403,
+        $actual_response,
+        $expected_cache_tags,
+        $expected_cache_contexts,
+        FALSE,
+        'MISS'
+      );
       // On the collection URL, we should expect to see the draft omitted from
       // the collection.
       $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);
