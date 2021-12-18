@@ -2322,13 +2322,59 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (field_rest_test).',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/field_rest_test',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'id'));
     $response = $this->request('PATCH', $url, $request_options);
     $id_field_name = $this->entity->getEntityType()->getKey('id');
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.", $url, $response, "/data/attributes/$id_field_name");
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => "The current user is not allowed to PATCH the selected field ($id_field_name). The entity ID cannot be changed.",
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => "/data/attributes/$id_field_name",
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     if ($this->entity->getEntityType()->hasKey('uuid')) {
       // DX: 400 when entity trying to update an entity's UUID field.
@@ -2343,7 +2389,30 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // when the value for that field matches the current value. This is allowed
     // in principle, but leads to information disclosure.
     $response = $this->request('PATCH', $url, $request_options);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (field_rest_test).',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->entity->uuid(),
+                'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/field_rest_test',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
 
     // DX: 403 when sending PATCH request with updated read-only fields.
     [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
@@ -2353,7 +2422,30 @@ abstract class ResourceTestBase extends BrowserTestBase {
     foreach (static::$patchProtectedFieldNames as $patch_protected_field_name => $reason) {
       $request_options[RequestOptions::BODY] = Json::encode($this->normalize($modified_entity, $url));
       $response = $this->request('PATCH', $url, $request_options);
-      $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (" . $patch_protected_field_name . ")." . ($reason !== NULL ? ' ' . $reason : ''), $url->setAbsolute(), $response, '/data/attributes/' . $patch_protected_field_name);
+      $expected_document = [
+        'jsonapi' => static::$jsonApiMember,
+        'errors' => [
+          [
+            'title' => 'Forbidden',
+            'status' => '403',
+            'detail' => trim("The current user is not allowed to PATCH the selected field ($patch_protected_field_name). $reason"),
+            'links' => [
+              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+              'via' => [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $this->entity->uuid(),
+                  'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
+                ],
+              ],
+            ],
+            'source' => [
+              'pointer' => "/data/attributes/$patch_protected_field_name",
+            ],
+          ],
+        ],
+      ];
+      $this->assertResourceResponse(403, $expected_document, $response);
       $modified_entity->get($patch_protected_field_name)->setValue($original_values[$patch_protected_field_name]);
     }
 
