@@ -11,8 +11,6 @@ final class FunctionInvoker {
 
   /**
    * @var callable
-   *   function(callable $hook_implementation, string $module, string $hook),
-   *   where
    *   - $hook_implementation: the name of the function that implements the hook.
    *   - $module: the name of the module implementing the hook.
    *   - $hook: the hook's name.
@@ -23,11 +21,9 @@ final class FunctionInvoker {
    * Creates a new instance.
    *
    * @param callable $invoker
-   *   function(callable $hook_implementation, string $module, string $hook),
-   *   where
-   *   - $hook_implementation: the name of the function that implements the hook.
-   *   - $module: the name of the module implementing the hook.
-   *   - $hook: the hook's name.
+   *   - $hook_implementation: The name of the function that implements the hook.
+   *   - $module: The name of the module implementing the hook.
+   *   - $hook: The hook's name.
    */
   public function __construct(callable $invoker) {
     $this->invoker = $invoker;
