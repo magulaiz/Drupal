@@ -6,6 +6,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
+use Drupal\Core\Extension\Hook\FunctionInvoker;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -325,6 +326,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getImplementations($hook) {
+    @trigger_error(sprintf('Calling %s::getImplementations() directly has been deprecated since Drupal 8.7.0. If you needed this for custom hook invocations, use %s::invoke*With() instead. You can find more detailed information about this change at https://www.drupal.org/node/3000490.', ModuleHandlerInterface::class, ModuleHandlerInterface::class), E_USER_DEPRECATED);
     $implementations = $this->getImplementationInfo($hook);
     return array_keys($implementations);
   }
@@ -384,12 +386,33 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function invoke($module, $hook, array $args = []) {
+  public function invokeWith($module, $hook, callable $invoker) {
     if (!$this->implementsHook($module, $hook)) {
       return;
     }
-    $function = $module . '_' . $hook;
-    return call_user_func_array($function, $args);
+    // @todo Use (or emulate) and cache Closure::fromCallable.
+    return $invoker($module, $hook);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function invokeAllWith($hook, callable $invoker) {
+    $implementations = $this->getImplementations($hook);
+    foreach ($implementations as $module) {
+      // @todo Use (or emulate) and cache Closure::fromCallable.
+      $invoker($module, $hook);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function invoke($module, $hook, array $args = []) {
+    $invoker = new FunctionInvoker(function (callable $hook_implementation) use ($args) {
+      return call_user_func_array($hook_implementation, $args);
+    });
+    return $this->invokeWith($module, $hook, $invoker);
   }
 
   /**
@@ -397,18 +420,16 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invokeAll($hook, array $args = []) {
     $return = [];
-    $implementations = $this->getImplementations($hook);
-    foreach ($implementations as $module) {
-      $function = $module . '_' . $hook;
-      $result = call_user_func_array($function, $args);
+    $invoker = new FunctionInvoker(function (callable $hook_implementation) use ($args, &$return) {
+      $result = call_user_func_array($hook_implementation, $args);
       if (isset($result) && is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
       elseif (isset($result)) {
         $return[] = $result;
       }
-    }
-
+    });
+    $this->invokeAllWith($hook, $invoker);
     return $return;
   }
 

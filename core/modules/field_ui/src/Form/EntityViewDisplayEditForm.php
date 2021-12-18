@@ -2,6 +2,7 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\PluginSettingsInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -169,15 +170,23 @@ class EntityViewDisplayEditForm extends EntityDisplayFormBase {
     $settings_form = [];
     // Invoke hook_field_formatter_third_party_settings_form(), keying resulting
     // subforms by module name.
-    foreach ($this->moduleHandler->getImplementations('field_formatter_third_party_settings_form') as $module) {
-      $settings_form[$module] = $this->moduleHandler->invoke($module, 'field_formatter_third_party_settings_form', [
+    $this->moduleHandler->invokeAllWith('field_formatter_third_party_settings_form', new FunctionInvoker(function (
+      callable $hook_implementation,
+ $module) use (
+&$settings_form,
+ &$plugin,
+ &$field_definition,
+ &$form,
+ &$form_state
+    ) {
+      $settings_form[$module] = $hook_implementation(
         $plugin,
         $field_definition,
         $this->entity->getMode(),
         $form,
-        $form_state,
-      ]);
-    }
+        $form_state
+      );
+    }));
     return $settings_form;
   }
 

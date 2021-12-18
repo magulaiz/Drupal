@@ -6,6 +6,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
@@ -231,10 +232,9 @@ class ViewsData {
       return $data->data;
     }
     else {
-      $modules = $this->moduleHandler->getImplementations('views_data');
       $data = [];
-      foreach ($modules as $module) {
-        $views_data = $this->moduleHandler->invoke($module, 'views_data');
+      $this->moduleHandler->invokeAllWith('views_data', new FunctionInvoker(function ($hook_implementation, $module) use (&$data) {
+        $views_data = $hook_implementation();
         // Set the provider key for each base table.
         foreach ($views_data as &$table) {
           if (isset($table['table']) && !isset($table['table']['provider'])) {
@@ -242,7 +242,8 @@ class ViewsData {
           }
         }
         $data = NestedArray::mergeDeep($data, $views_data);
-      }
+
+      }));
       $this->moduleHandler->alter('views_data', $data);
 
       $this->processEntityTypes($data);

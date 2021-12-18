@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
@@ -229,8 +230,12 @@ class Cron implements CronInterface {
     $logger = $time_logging_enabled ? $this->logger : new NullLogger();
 
     // Iterate through the modules calling their cron handlers (if any):
-    foreach ($this->moduleHandler->getImplementations('cron') as $module) {
-
+    $this->moduleHandler->invokeAllWith('cron', new FunctionInvoker(function (
+      callable $hook_implementation,
+ $module) use (
+&$module_previous,
+ $logger
+    ) {
       if (!$module_previous) {
         $logger->info('Starting execution of @module_cron().', [
           '@module' => $module,
@@ -247,7 +252,7 @@ class Cron implements CronInterface {
 
       // Do not let an exception thrown by one module disturb another.
       try {
-        $this->moduleHandler->invoke($module, 'cron');
+        $hook_implementation();
       }
       catch (\Exception $e) {
         watchdog_exception('cron', $e);
@@ -255,7 +260,8 @@ class Cron implements CronInterface {
 
       Timer::stop('cron_' . $module);
       $module_previous = $module;
-    }
+    }));
+
     if ($module_previous) {
       $logger->info('Execution of @module_previous_cron() took @time.', [
         '@module_previous' => $module_previous,

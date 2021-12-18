@@ -81,7 +81,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
 
         case 'alter':
           $data = [];
-          $this->moduleHandler->invoke('views_test_data', $hook, [$data]);
+          $this->moduleHandler->alter($hook, $data);
           break;
 
         default:
