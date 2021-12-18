@@ -175,6 +175,10 @@ interface ModuleHandlerInterface {
   /**
    * Determines which modules are implementing a hook.
    *
+   * @deprecated Will be removed before 9.0.0. Use the self::invoke*() methods
+   *   instead. To pass arguments by reference or process return values, use
+   *   self::invoke*With*().
+   *
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
    *
@@ -206,6 +210,46 @@ interface ModuleHandlerInterface {
    *   implemented in that module.
    */
   public function implementsHook($module, $hook);
+
+  /**
+   * Invokes a hook in a particular module using a callable.
+   *
+   * @param string $module
+   *   The name of the module (without the .module extension).
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param callable $invoker
+   *   The callable that invokes the module's hook implementation, with
+   *   parameters:
+   *   - string $module
+   *     The module name.
+   *   - callable $hook
+   *     The hook name.
+   *
+   * @return mixed The return value of the hook implementation.
+   *   The return value of the hook implementation.
+   */
+  public function invokeWith($module, $hook, callable $invoker);
+
+  /**
+   * Invokes a hook in all enabled modules that implement it using a callable.
+   *
+   * @param string $hook
+   *   The name of the hook to invoke.
+   * @param callable $invoker
+   *   The callable that invokes the modules' hook implementations, with
+   *   - string $module
+   *     The module name.
+   *   - callable $hook
+   *     The hook name.
+   *
+   * @return array
+   *   An array of return values of the hook implementations. If modules return
+   *   arrays from their implementations, those are merged into one array
+   *   recursively. Note: integer keys in arrays will be lost, as the merge is
+   *   done using array_merge_recursive().
+   */
+  public function invokeAllWith($hook, callable $invoker);
 
   /**
    * Invokes a hook in a particular module.
