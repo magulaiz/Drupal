@@ -10,7 +10,7 @@
     attach: function attach(context) {
       var _this = this;
 
-      once('permissions', 'table#permissions').forEach(function (table) {
+      Drupal.once('permissions', 'table#permissions').forEach(function (table) {
         var $table = $(table);
         var $ancestor;
         var method;

@@ -513,7 +513,7 @@
    */
   Drupal.behaviors.ckeditor5Admin = {
     attach(context) {
-      once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(
+      Drupal.once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(
         (container) => {
           const selectedTextarea = context.querySelector(
             '#ckeditor5-toolbar-buttons-selected',
@@ -584,7 +584,7 @@
       // that can catch blur-causing events before the blur happens. If the
       // tooltip is hidden before the blur event, the outline will disappear
       // correctly.
-      once(
+      Drupal.once(
         'safari-focus-fix',
         document.querySelectorAll('.ckeditor5-toolbar-item'),
       ).forEach((item) => {
@@ -677,7 +677,7 @@
 
       // Add an attribute to the parent form for storing UI states, so this
       // information can be retrieved after AJAX rebuilds.
-      once(
+      Drupal.once(
         'ui-state-storage',
         document.querySelector(
           '#filter-format-edit-form, #filter-format-add-form',
@@ -717,11 +717,11 @@
         });
       };
 
-      once(
+      Drupal.once(
         'plugin-settings',
         document.querySelector('#plugin-settings-wrapper'),
       ).forEach(maintainActiveVerticalTab);
-      once(
+      Drupal.once(
         'filter-settings',
         document.querySelector('#filter-settings-wrapper'),
       ).forEach(maintainActiveVerticalTab);
@@ -731,7 +731,7 @@
         '#ckeditor5-toolbar-buttons-selected',
       );
 
-      once('textarea-listener', selectedButtons).forEach((textarea) => {
+      Drupal.once('textarea-listener', selectedButtons).forEach((textarea) => {
         textarea.addEventListener('change', (e) => {
           const buttonName = document.activeElement.getAttribute('data-id');
           if (!buttonName) {

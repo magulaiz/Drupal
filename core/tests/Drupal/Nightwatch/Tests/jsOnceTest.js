@@ -23,7 +23,7 @@ module.exports = {
       // prettier-ignore
       .execute(
         function () {
-          return once('js_once_test', '[data-drupal-item]');
+          return Drupal.once('js_once_test', '[data-drupal-item]');
         },
         (result) => {
           browser.assert.strictEqual(
@@ -36,7 +36,7 @@ module.exports = {
       // Check that follow-up calls to once return an empty array.
       .execute(
         function () {
-          return once('js_once_test', '[data-drupal-item]');
+          return Drupal.once('js_once_test', '[data-drupal-item]');
         },
         (result) => {
           browser.assert.strictEqual(
@@ -48,7 +48,7 @@ module.exports = {
       )
       .execute(
         function () {
-          return once(
+          return Drupal.once(
             'js_once_test_extra',
             '[data-drupal-item="1"],[data-drupal-item="2"]',
           );
@@ -63,7 +63,7 @@ module.exports = {
       )
       .execute(
         function () {
-          return once(
+          return Drupal.once(
             'js_once_test_extra',
             '[data-drupal-item="1"],[data-drupal-item="2"]',
           );
@@ -140,7 +140,7 @@ module.exports = {
       .execute(
         function () {
           // A core script calls once on some elements.
-          once('js_once_test', '[data-drupal-item]');
+          Drupal.once('js_once_test', '[data-drupal-item]');
           // A contrib module not yet using @drupal/once calls jQuery Once.
           return jQuery('[data-drupal-item]').once('js_once_test');
         },
@@ -148,7 +148,7 @@ module.exports = {
           browser.assert.strictEqual(
             result.value.length,
             0,
-            'Calls to once() are taken into account when using jQuery.once()',
+            'Calls to Drupal.once() are taken into account when using jQuery.once()',
           );
         },
       )
@@ -159,19 +159,19 @@ module.exports = {
           // processing.
           jQuery('[data-drupal-item]').once('js_once_test_extra');
           // A core script calls once on some elements.
-          return once('js_once_test_extra', '[data-drupal-item]');
+          return Drupal.once('js_once_test_extra', '[data-drupal-item]');
         },
         (result) => {
           browser.assert.strictEqual(
             result.value.length,
             5,
-            '5 items returned by once() after a call to jQuery.once()',
+            '5 items returned by Drupal.once() after a call to jQuery.once()',
           );
         },
       )
       .execute(
         function () {
-          once('js_once_test_remove', '[data-drupal-item]');
+          Drupal.once('js_once_test_remove', '[data-drupal-item]');
           // A core script calls once on some elements.
           once.remove('js_once_test_remove', '[data-drupal-item]');
           // A contrib module not yet using @drupal/once calls the jQuery Once
@@ -190,7 +190,7 @@ module.exports = {
       // design.
       .execute(
         function () {
-          once('js_once_test_remove_fail', '[data-drupal-item]');
+          Drupal.once('js_once_test_remove_fail', '[data-drupal-item]');
           // Calling jQuery.removeOnce before @drupal/once will lead to
           // duplicate processing.
           jQuery('[data-drupal-item]').removeOnce('js_once_test_remove_fail');

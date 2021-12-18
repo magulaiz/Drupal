@@ -15,7 +15,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   Drupal.behaviors.date = {
     attach: function attach(context, settings) {
       if (Modernizr.inputtypes.date === false) {
-        once('datepicker', '[data-drupal-field-elements="date-time"]').forEach(function (dateTime) {
+        Drupal.once('datepicker', '[data-drupal-field-elements="date-time"]').forEach(function (dateTime) {
           var dateInput = dateTime.querySelector('input[type="date"]');
           var timeInput = dateTime.querySelector('input[type="time"]');
           var help = Drupal.theme.dateTimeHelp({
@@ -30,7 +30,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           });
           Drupal.DatepickerPolyfill.attachDescription(dateTime, help);
         });
-        once('datepicker', '[data-drupal-field-elements="date"]').forEach(function (date) {
+        Drupal.once('datepicker', '[data-drupal-field-elements="date"]').forEach(function (date) {
           var dateInput = date.querySelector('input[type="date"]');
           var help = Drupal.theme.dateHelp({
             dateDesc: dateInput.dataset.help

@@ -14,8 +14,8 @@
       });
 
       if (ids.length) {
-        $(once('copy-field-values', 'body')).on('value:copy', this.valueTargetCopyHandler);
-        $(once('copy-field-values', "#".concat(ids.join(', #')))).on('blur', this.valueSourceBlurHandler);
+        $(Drupal.once('copy-field-values', 'body')).on('value:copy', this.valueTargetCopyHandler);
+        $(Drupal.once('copy-field-values', "#".concat(ids.join(', #')))).on('blur', this.valueSourceBlurHandler);
       }
     },
     detach: function detach(context, settings, trigger) {

@@ -20,7 +20,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach: function attach(context) {
       var $menu = $('.js-media-library-menu');
-      $(once('media-library-menu-item', $menu.find('a'))).on('keypress', function (e) {
+      $(Drupal.once('media-library-menu-item', $menu.find('a'))).on('keypress', function (e) {
         if (e.which === 32) {
           e.preventDefault();
           e.stopPropagation();
@@ -85,7 +85,7 @@
     attach: function attach(context) {
       var $view = $(context).hasClass('.js-media-library-view') ? $(context) : $('.js-media-library-view', context);
       $view.closest('.views-element-container').attr('id', 'media-library-view');
-      $(once('media-library-views-display-link', '.views-display-link-widget, .views-display-link-widget_table', context)).on('click', function (e) {
+      $(Drupal.once('media-library-views-display-link', '.views-display-link-widget, .views-display-link-widget_table', context)).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $link = $(e.currentTarget);
@@ -163,7 +163,7 @@
         $('.js-media-library-selected-count').html(selectItemsText);
       }
 
-      $(once('media-item-change', $mediaItems)).on('change', function (e) {
+      $(Drupal.once('media-item-change', $mediaItems)).on('change', function (e) {
         var id = e.currentTarget.value;
         var position = currentSelection.indexOf(id);
 
@@ -178,7 +178,7 @@
         $form.find('#media-library-modal-selection').val(currentSelection.join()).trigger('change');
         $('.js-media-library-add-form-current-selection').val(currentSelection.join());
       });
-      $(once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
+      $(Drupal.once('media-library-selection-change', $form.find('#media-library-modal-selection'))).on('change', function (e) {
         updateSelectionCount(settings.media_library.selection_remaining);
 
         if (currentSelection.length === settings.media_library.selection_remaining) {

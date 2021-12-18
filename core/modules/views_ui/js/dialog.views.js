@@ -32,8 +32,8 @@
 
   Drupal.behaviors.viewsModalContent = {
     attach: function attach(context) {
-      $(once('viewsDialog', 'body')).on('dialogContentResize.viewsDialog', '.ui-dialog-content', handleDialogResize);
-      $(once('detailsUpdate', '.scroll', context)).on('click', 'summary', function (e) {
+      $(Drupal.once('viewsDialog', 'body')).on('dialogContentResize.viewsDialog', '.ui-dialog-content', handleDialogResize);
+      $(Drupal.once('detailsUpdate', '.scroll', context)).on('click', 'summary', function (e) {
         $(e.currentTarget).trigger('dialogContentResize');
       });
     },

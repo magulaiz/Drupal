@@ -31,12 +31,12 @@
         // Listen to value:copy events on all dependent fields.
         // We have to use body and not document because of the way jQuery events
         // bubble up the DOM tree.
-        $(once('copy-field-values', 'body')).on(
+        $(Drupal.once('copy-field-values', 'body')).on(
           'value:copy',
           this.valueTargetCopyHandler,
         );
         // Listen on all source elements.
-        $(once('copy-field-values', `#${ids.join(', #')}`)).on(
+        $(Drupal.once('copy-field-values', `#${ids.join(', #')}`)).on(
           'blur',
           this.valueSourceBlurHandler,
         );

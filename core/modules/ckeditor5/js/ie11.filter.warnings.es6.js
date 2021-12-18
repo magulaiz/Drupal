@@ -14,7 +14,7 @@
       const isIE11 = Modernizr.mq(
         '(-ms-high-contrast: active), (-ms-high-contrast: none)',
       );
-      const editorSelect = once(
+      const editorSelect = Drupal.once(
         'editor-select',
         document.querySelector(
           '#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor',

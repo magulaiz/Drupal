@@ -323,7 +323,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
   Drupal.behaviors.ckeditor5Admin = {
     attach: function attach(context) {
-      once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(function (container) {
+      Drupal.once('ckeditor5-admin-toolbar', '#ckeditor5-toolbar-app').forEach(function (container) {
         var selectedTextarea = context.querySelector('#ckeditor5-toolbar-buttons-selected');
         var available = Object.entries(JSON.parse(context.querySelector('#ckeditor5-toolbar-buttons-available').innerHTML)).map(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
@@ -369,7 +369,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
         render(container, selected, available, dividers);
       });
-      once('safari-focus-fix', document.querySelectorAll('.ckeditor5-toolbar-item')).forEach(function (item) {
+      Drupal.once('safari-focus-fix', document.querySelectorAll('.ckeditor5-toolbar-item')).forEach(function (item) {
         item.addEventListener('keydown', function (e) {
           var keyCodeDirections = {
             9: 'tab',
@@ -414,7 +414,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         return form.hasAttribute('data-drupal-ui-state') ? JSON.parse(form.getAttribute('data-drupal-ui-state'))[property] : null;
       };
 
-      once('ui-state-storage', document.querySelector('#filter-format-edit-form, #filter-format-add-form')).forEach(function (form) {
+      Drupal.once('ui-state-storage', document.querySelector('#filter-format-edit-form, #filter-format-add-form')).forEach(function (form) {
         form.setAttribute('data-drupal-ui-state', JSON.stringify({}));
       });
 
@@ -438,10 +438,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         });
       };
 
-      once('plugin-settings', document.querySelector('#plugin-settings-wrapper')).forEach(maintainActiveVerticalTab);
-      once('filter-settings', document.querySelector('#filter-settings-wrapper')).forEach(maintainActiveVerticalTab);
+      Drupal.once('plugin-settings', document.querySelector('#plugin-settings-wrapper')).forEach(maintainActiveVerticalTab);
+      Drupal.once('filter-settings', document.querySelector('#filter-settings-wrapper')).forEach(maintainActiveVerticalTab);
       var selectedButtons = document.querySelector('#ckeditor5-toolbar-buttons-selected');
-      once('textarea-listener', selectedButtons).forEach(function (textarea) {
+      Drupal.once('textarea-listener', selectedButtons).forEach(function (textarea) {
         textarea.addEventListener('change', function (e) {
           var buttonName = document.activeElement.getAttribute('data-id');
 

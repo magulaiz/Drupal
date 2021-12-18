@@ -35,7 +35,7 @@
   Drupal.behaviors.commentNewIndicator = {
     attach: function attach(context) {
       var nodeIDs = [];
-      var placeholders = once('history', '[data-comment-timestamp]', context).filter(function (placeholder) {
+      var placeholders = Drupal.once('history', '[data-comment-timestamp]', context).filter(function (placeholder) {
         var $placeholder = $(placeholder);
         var commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
         var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');

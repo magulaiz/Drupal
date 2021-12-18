@@ -78,7 +78,7 @@
    */
   Drupal.behaviors.navTabs = {
     attach(context) {
-      once(
+      Drupal.once(
         'nav-tabs',
         '[data-drupal-nav-tabs].is-collapsible',
         context,

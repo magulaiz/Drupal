@@ -55,9 +55,11 @@
    */
   Drupal.behaviors.comments = {
     attach(context) {
-      once('comments', '[data-drupal-selector="comments"]', context).forEach(
-        init,
-      );
+      Drupal.once(
+        'comments',
+        '[data-drupal-selector="comments"]',
+        context,
+      ).forEach(init);
     },
   };
 })(Drupal, once);

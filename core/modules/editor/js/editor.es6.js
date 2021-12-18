@@ -204,7 +204,7 @@
         return;
       }
 
-      once('editor', '[data-editor-for]', context).forEach((editor) => {
+      Drupal.once('editor', '[data-editor-for]', context).forEach((editor) => {
         const $this = $(editor);
         const field = findFieldForFormatSelector($this);
 

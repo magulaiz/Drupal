@@ -16,12 +16,12 @@
    */
   Drupal.behaviors.dateFormat = {
     attach(context) {
-      const source = once(
+      const source = Drupal.once(
         'dateFormat',
         '[data-drupal-date-formatter="source"]',
         context,
       );
-      const target = once(
+      const target = Drupal.once(
         'dateFormat',
         '[data-drupal-date-formatter="preview"]',
         context,

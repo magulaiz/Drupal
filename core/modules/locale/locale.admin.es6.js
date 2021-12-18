@@ -16,7 +16,10 @@
    */
   Drupal.behaviors.localeTranslateDirty = {
     attach() {
-      const form = once('localetranslatedirty', '#locale-translate-edit-form');
+      const form = Drupal.once(
+        'localetranslatedirty',
+        '#locale-translate-edit-form',
+      );
       if (form.length) {
         const $form = $(form);
         // Display a notice if any row changed.
@@ -30,7 +33,7 @@
         // Highlight changed row.
         $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           const $row = $(this);
-          const rowToMark = once('localemark', $row);
+          const rowToMark = Drupal.once('localemark', $row);
           const marker = Drupal.theme('localeTranslateChangedMarker');
 
           $row.addClass('changed');
@@ -64,7 +67,10 @@
    */
   Drupal.behaviors.hideUpdateInformation = {
     attach(context, settings) {
-      const table = once('expand-updates', '#locale-translation-status-form');
+      const table = Drupal.once(
+        'expand-updates',
+        '#locale-translation-status-form',
+      );
       if (table.length) {
         const $table = $(table);
         const $tbodies = $table.find('tbody');

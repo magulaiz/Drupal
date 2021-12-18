@@ -39,7 +39,7 @@
   }
 
   function tableHeaderInitHandler(e) {
-    once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(function (table) {
+    Drupal.once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(function (table) {
       TableHeader.tables.push(new TableHeader(table));
     });
     forTables('onScroll');

@@ -28,7 +28,7 @@
       }
 
       // Bind hide/show and rearrange customization checkboxes.
-      $(once('negotiation-language-admin-bind', $configForm)).on(
+      $(Drupal.once('negotiation-language-admin-bind', $configForm)).on(
         'change',
         inputSelector,
         (event) => {

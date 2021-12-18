@@ -8,7 +8,7 @@
 (function ($, Modernizr, Drupal) {
   Drupal.behaviors.claroDetails = {
     attach: function attach(context) {
-      $(once('claroDetails', context === document ? 'html' : context)).on('click', function (event) {
+      $(Drupal.once('claroDetails', context === document ? 'html' : context)).on('click', function (event) {
         if (event.target.nodeName === 'SUMMARY') {
           $(event.target).trigger('focus');
         }
@@ -21,7 +21,7 @@
         return;
       }
 
-      $(once('claroDetailsToggleShim', 'details .details-title', context)).on('keypress', function (event) {
+      $(Drupal.once('claroDetailsToggleShim', 'details .details-title', context)).on('keypress', function (event) {
         var keyCode = event.keyCode || event.charCode;
 
         if (keyCode === 32) {

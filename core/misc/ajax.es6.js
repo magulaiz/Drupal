@@ -34,11 +34,13 @@
         }
         // Use jQuery selector instead of a native selector for
         // backwards compatibility.
-        once('drupal-ajax', $(elementSettings.selector)).forEach((el) => {
-          elementSettings.element = el;
-          elementSettings.base = base;
-          Drupal.ajax(elementSettings);
-        });
+        Drupal.once('drupal-ajax', $(elementSettings.selector)).forEach(
+          (el) => {
+            elementSettings.element = el;
+            elementSettings.base = base;
+            Drupal.ajax(elementSettings);
+          },
+        );
       }
 
       // Load all Ajax behaviors specified in the settings.
@@ -49,7 +51,7 @@
       Drupal.ajax.bindAjaxLinks(document.body);
 
       // This class means to submit the form to the action using Ajax.
-      once('ajax', '.use-ajax-submit').forEach((el) => {
+      Drupal.once('ajax', '.use-ajax-submit').forEach((el) => {
         const elementSettings = {};
 
         // Ajax submits specified in this manner automatically submit to the
@@ -287,7 +289,7 @@
    */
   Drupal.ajax.bindAjaxLinks = (element) => {
     // Bind Ajax behaviors to all items showing the class.
-    once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
+    Drupal.once('ajax', '.use-ajax', element).forEach((ajaxLink) => {
       const $linkElement = $(ajaxLink);
 
       const elementSettings = {

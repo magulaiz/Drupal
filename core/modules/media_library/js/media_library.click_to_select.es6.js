@@ -14,7 +14,7 @@
   Drupal.behaviors.ClickToSelect = {
     attach(context) {
       $(
-        once(
+        Drupal.once(
           'media-library-click-to-select',
           '.js-click-to-select-trigger',
           context,
@@ -30,7 +30,7 @@
       });
 
       $(
-        once(
+        Drupal.once(
           'media-library-click-to-select',
           '.js-click-to-select-checkbox input',
           context,
@@ -50,7 +50,7 @@
 
       // Adds hover class to the click-to-select element.
       $(
-        once(
+        Drupal.once(
           'media-library-click-to-select-hover',
           '.js-click-to-select-trigger, .js-click-to-select-checkbox',
           context,

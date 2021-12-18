@@ -8,7 +8,7 @@
 (function (Drupal) {
   Drupal.behaviors.focusFirstTest = {
     attach: function attach() {
-      once('focusin', document.body).forEach(function (element) {
+      Drupal.once('focusin', document.body).forEach(function (element) {
         element.addEventListener('focusin', function (e) {
           document.querySelectorAll('[data-has-focus]').forEach(function (wasFocused) {
             wasFocused.removeAttribute('data-has-focus');

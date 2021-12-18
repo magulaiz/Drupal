@@ -28,16 +28,16 @@
         show: Drupal.t('Show media item weights'),
         hide: Drupal.t('Hide media item weights')
       };
-      $(once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)).on('click', function (e) {
+      $(Drupal.once('media-library-toggle', '.js-media-library-widget-toggle-weight', context)).on('click', function (e) {
         e.preventDefault();
         $(e.currentTarget).toggleClass('active').text($(e.currentTarget).hasClass('active') ? strings.hide : strings.show).closest('.js-media-library-widget').find('.js-media-library-item-weight').parent().toggle();
       }).text(strings.show);
-      $(once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();
+      $(Drupal.once('media-library-toggle', '.js-media-library-item-weight', context)).parent().hide();
     }
   };
   Drupal.behaviors.MediaLibraryWidgetDisableButton = {
     attach: function attach(context) {
-      once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context).forEach(function (button) {
+      Drupal.once('media-library-disable', '.js-media-library-open-button[data-disabled-focus="true"]', context).forEach(function (button) {
         $(button).focus();
         setTimeout(function () {
           $(button).attr('disabled', 'disabled');

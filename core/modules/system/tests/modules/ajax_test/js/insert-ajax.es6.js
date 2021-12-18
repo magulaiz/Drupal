@@ -7,7 +7,7 @@
 (function ($, window, Drupal) {
   Drupal.behaviors.insertTest = {
     attach(context) {
-      $(once('ajax-insert', '.ajax-insert')).on('click', (event) => {
+      $(Drupal.once('ajax-insert', '.ajax-insert')).on('click', (event) => {
         event.preventDefault();
         const ajaxSettings = {
           url: event.currentTarget.getAttribute('href'),
@@ -21,7 +21,7 @@
         myAjaxObject.execute();
       });
 
-      $(once('ajax-insert', '.ajax-insert-inline')).on('click', (event) => {
+      $(Drupal.once('ajax-insert', '.ajax-insert-inline')).on('click', (event) => {
         event.preventDefault();
         const ajaxSettings = {
           url: event.currentTarget.getAttribute('href'),

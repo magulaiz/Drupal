@@ -19,7 +19,7 @@
 
   Drupal.behaviors.tableResponsive = {
     attach: function attach(context, settings) {
-      once('tableresponsive', 'table.responsive-enabled', context).forEach(function (table) {
+      Drupal.once('tableresponsive', 'table.responsive-enabled', context).forEach(function (table) {
         TableResponsive.tables.push(new TableResponsive(table));
       });
     }

@@ -138,7 +138,7 @@
   Drupal.behaviors.oliveroNavigation = {
     attach(context) {
       const headerId = 'header';
-      const header = once('navigation', `#${headerId}`, context).shift();
+      const header = Drupal.once('navigation', `#${headerId}`, context).shift();
       const navWrapperId = 'header-nav';
 
       if (header) {

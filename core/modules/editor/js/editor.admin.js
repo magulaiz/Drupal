@@ -360,7 +360,7 @@
   };
   Drupal.behaviors.initializeFilterConfiguration = {
     attach: function attach(context, settings) {
-      once('filter-editor-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
+      Drupal.once('filter-editor-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
         var $checkbox = $(checkbox);
         var nameAttribute = $checkbox.attr('name');
         var filterID = nameAttribute.substring(8, nameAttribute.indexOf(']'));

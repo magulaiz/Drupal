@@ -91,7 +91,7 @@
         const options = settings.machineName[sourceId];
 
         const $source = $(
-          once(
+          Drupal.once(
             'machine-name',
             $context.find(sourceId).addClass('machine-name-source'),
           ),

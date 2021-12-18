@@ -127,7 +127,7 @@
         }
       }
 
-      $(once('form-single-submit', 'body')).on(
+      $(Drupal.once('form-single-submit', 'body')).on(
         'submit.singleSubmit',
         'form:not([method~="GET"])',
         onFormSubmit,
@@ -185,7 +185,10 @@
       const $context = $(context);
       const contextIsForm = $context.is('form');
       const $forms = $(
-        once('form-updated', contextIsForm ? $context : $context.find('form')),
+        Drupal.once(
+          'form-updated',
+          contextIsForm ? $context : $context.find('form'),
+        ),
       );
       let formFields;
 
@@ -245,7 +248,7 @@
     attach(context, settings) {
       const userInfo = ['name', 'mail', 'homepage'];
       const $forms = $(
-        once('user-info-from-browser', '[data-user-info-from-browser]'),
+        Drupal.once('user-info-from-browser', '[data-user-info-from-browser]'),
       );
       if ($forms.length) {
         userInfo.forEach((info) => {

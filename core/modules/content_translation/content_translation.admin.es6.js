@@ -82,7 +82,7 @@
     attach(context) {
       // Initially hide all field rows for non translatable bundles and all
       // column rows for non translatable fields.
-      once(
+      Drupal.once(
         'translation-entity-admin-hide',
         // Keep jQuery because of the use of `:input`.
         $(context).find('table .bundle-settings .translatable :input'),
@@ -104,7 +104,7 @@
       // When a bundle is made translatable all of its fields should inherit
       // this setting. Instead when it is made non translatable its fields are
       // hidden, since their translatability no longer matters.
-      $(once('translation-entity-admin-bind', 'body'))
+      $(Drupal.once('translation-entity-admin-bind', 'body'))
         .on('click', 'table .bundle-settings .translatable :input', (e) => {
           const $target = $(e.target);
           const $bundleSettings = $target.closest('.bundle-settings');

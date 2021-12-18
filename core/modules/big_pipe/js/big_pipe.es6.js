@@ -93,7 +93,7 @@
       return false;
     }
 
-    once(
+    Drupal.once(
       'big-pipe',
       'script[data-big-pipe-replacement-for-placeholder-with-id]',
       context,

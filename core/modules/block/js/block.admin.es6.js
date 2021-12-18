@@ -22,7 +22,7 @@
    */
   Drupal.behaviors.blockFilterByText = {
     attach(context, settings) {
-      const $input = $(once('block-filter-text', 'input.block-filter-text'));
+      const $input = $(Drupal.once('block-filter-text', 'input.block-filter-text'));
       const $table = $($input.attr('data-element'));
       let $filterRows;
 
@@ -86,7 +86,7 @@
     attach(context, settings) {
       // Ensure that the block we are attempting to scroll to actually exists.
       if (settings.blockPlacement && $('.js-block-placed').length) {
-        once(
+        Drupal.once(
           'block-highlight',
           '[data-drupal-selector="edit-blocks"]',
           context,

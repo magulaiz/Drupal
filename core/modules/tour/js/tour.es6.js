@@ -25,7 +25,7 @@
    */
   Drupal.behaviors.tour = {
     attach(context) {
-      once('tour', 'body').forEach(() => {
+      Drupal.once('tour', 'body').forEach(() => {
         const model = new Drupal.tour.models.StateModel();
         // eslint-disable-next-line no-new
         new Drupal.tour.views.ToggleTourView({

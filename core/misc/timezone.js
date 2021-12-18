@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.setTimezone = {
     attach: function attach(context, settings) {
-      var timezone = once('timezone', '.timezone-detect', context);
+      var timezone = Drupal.once('timezone', '.timezone-detect', context);
 
       if (timezone.length) {
         var $timezone = $(timezone);

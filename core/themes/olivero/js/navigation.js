@@ -83,7 +83,7 @@
   Drupal.behaviors.oliveroNavigation = {
     attach: function attach(context) {
       var headerId = 'header';
-      var header = once('navigation', "#".concat(headerId), context).shift();
+      var header = Drupal.once('navigation', "#".concat(headerId), context).shift();
       var navWrapperId = 'header-nav';
 
       if (header) {

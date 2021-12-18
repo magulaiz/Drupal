@@ -8,7 +8,7 @@
 (function ($, Drupal, once) {
   Drupal.behaviors.claroAutoCompete = {
     attach: function attach(context) {
-      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(function (value) {
+      Drupal.once('claroAutoComplete', 'input.form-autocomplete', context).forEach(function (value) {
         var $input = $(value);
         var timeout = 400;
         var classRemoveTimeout;

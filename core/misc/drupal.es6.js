@@ -128,7 +128,7 @@ window.Drupal = { behaviors: {}, locale: {} };
    * behaviors to the new content.
    *
    * Behaviors should use `var elements =
-   * once('behavior-name', selector, context);` to ensure the behavior is
+   * Drupal.once('behavior-name', selector, context);` to ensure the behavior is
    * attached only once to a given element. (Doing so enables the reprocessing
    * of given elements, which may be needed on occasion despite the ability to
    * limit behavior attachment to a particular element.)

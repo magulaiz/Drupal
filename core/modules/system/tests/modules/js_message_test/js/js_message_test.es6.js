@@ -36,7 +36,7 @@
    */
   behaviors.js_message_test = {
     attach() {
-      $(once('messages-details', '[data-drupal-messages-area]')).on(
+      $(Drupal.once('messages-details', '[data-drupal-messages-area]')).on(
         'click',
         '[data-action]',
         (e) => {
@@ -61,7 +61,7 @@
           }
         },
       );
-      $(once('add-multiple', '[data-action="add-multiple"]')).on(
+      $(Drupal.once('add-multiple', '[data-action="add-multiple"]')).on(
         'click',
         () => {
           /**
@@ -80,7 +80,7 @@
           });
         },
       );
-      $(once('remove-multiple', '[data-action="remove-multiple"]')).on(
+      $(Drupal.once('remove-multiple', '[data-action="remove-multiple"]')).on(
         'click',
         () => {
           messageObjects.multiple.forEach((messageIndex) =>
@@ -89,7 +89,7 @@
           messageObjects.multiple = [];
         },
       );
-      $(once('add-multiple-error', '[data-action="add-multiple-error"]')).on(
+      $(Drupal.once('add-multiple-error', '[data-action="add-multiple-error"]')).on(
         'click',
         () => {
           // Use the same number of elements to facilitate things on the PHP side.
@@ -102,7 +102,7 @@
           );
         },
       );
-      $(once('remove-type', '[data-action="remove-type"]')).on('click', () => {
+      $(Drupal.once('remove-type', '[data-action="remove-type"]')).on('click', () => {
         Array.prototype.map
           .call(
             document.querySelectorAll('[data-drupal-message-id^="error"]'),
@@ -110,10 +110,10 @@
           )
           .forEach((id) => messageObjects.default.zone.remove(id));
       });
-      $(once('clear-all', '[data-action="clear-all"]')).on('click', () => {
+      $(Drupal.once('clear-all', '[data-action="clear-all"]')).on('click', () => {
         messageObjects.default.zone.clear();
       });
-      $(once('id-no-status', '[data-action="id-no-status"]')).on(
+      $(Drupal.once('id-no-status', '[data-action="id-no-status"]')).on(
         'click',
         () => {
           messageObjects.default.zone.add('Msg-id-no-status', {

@@ -30,7 +30,7 @@
     newFeatures: {},
     attach: function attach(context, settings) {
       var that = this;
-      once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(function (formItem) {
+      Drupal.once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(function (formItem) {
         that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
         that.userTags = that._parseSetting(formItem.value);

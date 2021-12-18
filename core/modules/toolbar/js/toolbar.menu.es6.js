@@ -165,7 +165,7 @@
 
     // Return the jQuery object.
     return this.each(function (selector) {
-      const menu = once('toolbar-menu', this);
+      const menu = Drupal.once('toolbar-menu', this);
       if (menu.length) {
         const $menu = $(menu);
         // Bind event handlers.

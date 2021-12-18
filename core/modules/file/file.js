@@ -12,7 +12,7 @@
       var elements;
 
       function initFileValidation(selector) {
-        $(once('fileValidate', $context.find(selector))).on('change.fileValidate', {
+        $(Drupal.once('fileValidate', $context.find(selector))).on('change.fileValidate', {
           extensions: elements[selector]
         }, Drupal.file.validateExtension);
       }
@@ -38,7 +38,7 @@
   };
   Drupal.behaviors.fileAutoUpload = {
     attach: function attach(context) {
-      $(once('auto-file-upload', 'input[type="file"]', context)).on('change.autoFileUpload', Drupal.file.triggerUploadButton);
+      $(Drupal.once('auto-file-upload', 'input[type="file"]', context)).on('change.autoFileUpload', Drupal.file.triggerUploadButton);
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {

@@ -47,7 +47,7 @@
   };
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach: function attach(context) {
-      var autosubmit = once('autosubmit', '[data-drupal-autosubmit]', context);
+      var autosubmit = Drupal.once('autosubmit', '[data-drupal-autosubmit]', context);
 
       if (autosubmit.length) {
         $(autosubmit).on('formUpdated.preview', function () {

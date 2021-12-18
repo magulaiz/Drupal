@@ -13,7 +13,7 @@
   Drupal.behaviors.MediaLibrarySelectAll = {
     attach(context) {
       const $view = $(
-        once(
+        Drupal.once(
           'media-library-select-all',
           '.js-media-library-view[data-view-display-id="page"]',
           context,

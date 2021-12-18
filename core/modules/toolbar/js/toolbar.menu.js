@@ -83,7 +83,7 @@
     }
 
     return this.each(function (selector) {
-      var menu = once('toolbar-menu', this);
+      var menu = Drupal.once('toolbar-menu', this);
 
       if (menu.length) {
         var $menu = $(menu);

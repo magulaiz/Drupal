@@ -38,10 +38,10 @@
 
   Drupal.behaviors.dropButton = {
     attach: function attach(context, settings) {
-      var dropbuttons = once('dropbutton', '.dropbutton-wrapper', context);
+      var dropbuttons = Drupal.once('dropbutton', '.dropbutton-wrapper', context);
 
       if (dropbuttons.length) {
-        var body = once('dropbutton-click', 'body');
+        var body = Drupal.once('dropbutton-click', 'body');
 
         if (body.length) {
           $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);

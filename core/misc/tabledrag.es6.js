@@ -47,7 +47,7 @@
       }
 
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        initTableDrag($(once('tabledrag', `#${base}`, context)), base);
+        initTableDrag($(Drupal.once('tabledrag', `#${base}`, context)), base);
       });
     },
   };

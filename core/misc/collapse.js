@@ -56,7 +56,7 @@
         return;
       }
 
-      once('collapse', 'details', context).forEach(function (detail) {
+      Drupal.once('collapse', 'details', context).forEach(function (detail) {
         detail.classList.add('collapse-processed');
         CollapsibleDetails.instances.push(new CollapsibleDetails(detail));
       });

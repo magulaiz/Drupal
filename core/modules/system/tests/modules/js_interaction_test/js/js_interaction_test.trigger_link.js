@@ -9,14 +9,14 @@
   var behaviors = _ref.behaviors;
   behaviors.js_interaction_test_trigger_link = {
     attach: function attach() {
-      var removeBlockerTrigger = once('remove-blocker-trigger', '.remove-blocker-trigger').shift();
+      var removeBlockerTrigger = Drupal.once('remove-blocker-trigger', '.remove-blocker-trigger').shift();
       removeBlockerTrigger.addEventListener('click', function (event) {
         event.preventDefault();
         setTimeout(function () {
           document.querySelector('.blocker-element').remove();
         }, 100);
       });
-      var enableFieldTrigger = once('enable-field-trigger', '.enable-field-trigger').shift();
+      var enableFieldTrigger = Drupal.once('enable-field-trigger', '.enable-field-trigger').shift();
       enableFieldTrigger.addEventListener('click', function (event) {
         event.preventDefault();
         setTimeout(function () {

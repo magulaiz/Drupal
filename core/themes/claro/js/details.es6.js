@@ -15,9 +15,9 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      // The second argument of once() needs to be an instance of Element, but
+      // The second argument of Drupal.once() needs to be an instance of Element, but
       // document is an instance of Document, replace it with the html Element.
-      $(once('claroDetails', context === document ? 'html' : context)).on(
+      $(Drupal.once('claroDetails', context === document ? 'html' : context)).on(
         'click',
         (event) => {
           if (event.target.nodeName === 'SUMMARY') {
@@ -44,7 +44,7 @@
         return;
       }
 
-      $(once('claroDetailsToggleShim', 'details .details-title', context)).on(
+      $(Drupal.once('claroDetailsToggleShim', 'details .details-title', context)).on(
         'keypress',
         (event) => {
           const keyCode = event.keyCode || event.charCode;

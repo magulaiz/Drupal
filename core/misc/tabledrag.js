@@ -18,7 +18,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        initTableDrag($(once('tabledrag', "#".concat(base), context)), base);
+        initTableDrag($(Drupal.once('tabledrag', "#".concat(base), context)), base);
       });
     }
   };

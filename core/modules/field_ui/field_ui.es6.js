@@ -12,7 +12,7 @@
    */
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach(context) {
-      const form = once(
+      const form = Drupal.once(
         'field_ui_add',
         '[data-drupal-selector="field-ui-field-storage-add-form"]',
         context,
@@ -83,7 +83,7 @@
    */
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach(context, settings) {
-      once(
+      Drupal.once(
         'field-display-overview',
         'table#field-display-overview',
         context,

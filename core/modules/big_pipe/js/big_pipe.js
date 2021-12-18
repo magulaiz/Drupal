@@ -47,7 +47,7 @@
       return false;
     }
 
-    once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context).forEach(bigPipeProcessPlaceholderReplacement);
+    Drupal.once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context).forEach(bigPipeProcessPlaceholderReplacement);
 
     if (context.querySelector('script[data-big-pipe-event="stop"]')) {
       if (timeoutID) {

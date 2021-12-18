@@ -41,7 +41,7 @@
         }
       }
 
-      $(once('form-single-submit', 'body')).on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
+      $(Drupal.once('form-single-submit', 'body')).on('submit.singleSubmit', 'form:not([method~="GET"])', onFormSubmit);
     }
   };
 
@@ -60,7 +60,7 @@
     attach: function attach(context) {
       var $context = $(context);
       var contextIsForm = $context.is('form');
-      var $forms = $(once('form-updated', contextIsForm ? $context : $context.find('form')));
+      var $forms = $(Drupal.once('form-updated', contextIsForm ? $context : $context.find('form')));
       var formFields;
 
       if ($forms.length) {
@@ -99,7 +99,7 @@
   Drupal.behaviors.fillUserInfoFromBrowser = {
     attach: function attach(context, settings) {
       var userInfo = ['name', 'mail', 'homepage'];
-      var $forms = $(once('user-info-from-browser', '[data-user-info-from-browser]'));
+      var $forms = $(Drupal.once('user-info-from-browser', '[data-user-info-from-browser]'));
 
       if ($forms.length) {
         userInfo.forEach(function (info) {

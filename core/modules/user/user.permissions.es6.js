@@ -14,7 +14,7 @@
    */
   Drupal.behaviors.permissions = {
     attach(context) {
-      once('permissions', 'table#permissions').forEach((table) => {
+      Drupal.once('permissions', 'table#permissions').forEach((table) => {
         // On a site with many roles and permissions, this behavior initially
         // has to perform thousands of DOM manipulations to inject checkboxes
         // and hide them. By detaching the table from the DOM, all operations

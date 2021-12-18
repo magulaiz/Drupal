@@ -218,7 +218,7 @@
       };
 
       // Add the behavior to each region select list.
-      $(once('block-region-select', 'select.block-region-select', context)).on(
+      $(Drupal.once('block-region-select', 'select.block-region-select', context)).on(
         'change',
         function (event) {
           // Make our new row and select field.

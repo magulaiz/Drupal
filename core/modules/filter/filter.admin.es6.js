@@ -15,7 +15,7 @@
   Drupal.behaviors.filterStatus = {
     attach(context, settings) {
       const $context = $(context);
-      once(
+      Drupal.once(
         'filter-status',
         '#filters-status-wrapper input.form-checkbox',
         context,

@@ -87,7 +87,7 @@
    */
   Drupal.behaviors.nodePreviewSwitchViewMode = {
     attach(context) {
-      const autosubmit = once(
+      const autosubmit = Drupal.once(
         'autosubmit',
         '[data-drupal-autosubmit]',
         context,
