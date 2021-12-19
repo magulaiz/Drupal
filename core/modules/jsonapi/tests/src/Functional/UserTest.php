@@ -393,7 +393,30 @@ class UserTest extends ResourceTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     // Ensure the email address has not changed.
     $this->assertEquals('admin@example.com', $this->entityStorage->loadUnchanged(1)->getEmail());
-    $this->assertResourceErrorResponse(403, 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.', $url, $response, '/data/attributes/uid');
+    $expected_document = [
+      'jsonapi' => static::$jsonApiMember,
+      'errors' => [
+        [
+          'title' => 'Forbidden',
+          'status' => '403',
+          'detail' => 'The current user is not allowed to PATCH the selected field (uid). The entity ID cannot be changed.',
+          'links' => [
+            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
+            'via' => [
+              'href' => $url->setAbsolute()->toString(),
+              'meta' => [
+                'resourceId' => $this->account->uuid(),
+                'resourceVersion' => NULL,
+              ],
+            ],
+          ],
+          'source' => [
+            'pointer' => '/data/attributes/uid',
+          ],
+        ],
+      ],
+    ];
+    $this->assertResourceResponse(403, $expected_document, $response);
   }
 
   /**
