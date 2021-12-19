@@ -57,7 +57,6 @@ function hook_layout_builder_view_context_alter(array &$contexts, SectionStorage
 
   /** @var \Drupal\Core\Entity\EntityInterface $layout_entity */
   $layout_entity = $layout_entity_context->getContextData()->getValue();
-  $sample_generator = \Drupal::service('layout_builder.sample_entity_generator');
 
   if ($layout_entity instanceof AccountInterface) {
     $profile_types = [
@@ -69,6 +68,8 @@ function hook_layout_builder_view_context_alter(array &$contexts, SectionStorage
         $entity = $layout_entity->get("profile_{$type}")->entity;
       }
       elseif ($sample) {
+        /** @var \Drupal\layout_builder\Entity\SampleEntityGeneratorInterface $sample_generator */
+        $sample_generator = \Drupal::service('layout_builder.sample_entity_generator');
         $entity = $sample_generator->get('profile', $type);
       }
 
