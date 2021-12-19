@@ -66,7 +66,13 @@
             .toggle();
         })
         .text(strings.show);
-      $(Drupal.once('media-library-toggle', '.js-media-library-item-weight', context))
+      $(
+        Drupal.once(
+          'media-library-toggle',
+          '.js-media-library-item-weight',
+          context,
+        ),
+      )
         .parent()
         .hide();
     },

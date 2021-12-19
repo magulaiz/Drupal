@@ -621,9 +621,12 @@
 
       // Executes an initial preview.
       if (
-        $(Drupal.once('edit-displays-live-preview', '#edit-displays-live-preview')).is(
-          ':checked',
-        )
+        $(
+          Drupal.once(
+            'edit-displays-live-preview',
+            '#edit-displays-live-preview',
+          ),
+        ).is(':checked')
       ) {
         $(Drupal.once('edit-displays-live-preview', '#preview-submit')).trigger(
           'click',

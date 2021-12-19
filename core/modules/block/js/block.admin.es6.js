@@ -22,7 +22,9 @@
    */
   Drupal.behaviors.blockFilterByText = {
     attach(context, settings) {
-      const $input = $(Drupal.once('block-filter-text', 'input.block-filter-text'));
+      const $input = $(
+        Drupal.once('block-filter-text', 'input.block-filter-text'),
+      );
       const $table = $($input.attr('data-element'));
       let $filterRows;
 

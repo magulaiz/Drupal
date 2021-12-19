@@ -169,14 +169,13 @@
    */
   Drupal.behaviors.livePreview = {
     attach(context) {
-      $(Drupal.once('views-ajax', 'input#edit-displays-live-preview', context)).on(
-        'click',
-        function () {
-          if ($(this).is(':checked')) {
-            $('#preview-submit').trigger('click');
-          }
-        },
-      );
+      $(
+        Drupal.once('views-ajax', 'input#edit-displays-live-preview', context),
+      ).on('click', function () {
+        if ($(this).is(':checked')) {
+          $('#preview-submit').trigger('click');
+        }
+      });
     },
   };
 

@@ -30,9 +30,9 @@
       let focused = null;
 
       // Add Farbtastic.
-      $(Drupal.once('color', $('<div class="color-placeholder"></div>'))).prependTo(
-        form,
-      );
+      $(
+        Drupal.once('color', $('<div class="color-placeholder"></div>')),
+      ).prependTo(form);
       const farb = $.farbtastic('.color-placeholder');
 
       // Decode reference colors to HSL.
