@@ -53,51 +53,23 @@
    *   future.
    */
   Drupal.DrupalModel = class extends Backbone.Model {
-    constructor(values, options) {
+    constructor() {
       super();
       this.modelId = (Math.random() + 1).toString(36).substring(7);
       this.allowSetChanged = true;
       this.values = {};
-
-      if (options) {
-        if (options.hasOwnProperty('collection')) {
-          Drupal.deprecationError({
-            message:
-              'options.collection is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.',
-          });
-          if (options.collection) {
-            this.collection = options.collection;
-          }
-        }
-        if (options.hasOwnProperty('parse')) {
-          Drupal.deprecationError({
-            message:
-              'options.parse is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.',
-          });
-          if (options.parse) {
-            values = this.parse(values, options) || {};
-          }
-        }
-      }
-
-      this._previousValues = {};
-      this.set(values, options);
       this.changed = {};
+      this._previousValues = {};
 
       if (this.preinitialize !== Backbone.Model.prototype.preinitialize) {
-        console.error(
-          'Drupal.DrupalModel.preinitialize is removed from drupal:9.4.0. Use constructor() instead.',
-        );
+        Drupal.deprecationError({
+          message: `Drupal.DrupalModel.preinitialize is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use constructor() instead.`,
+        });
       }
       if (this.initialize !== Backbone.Model.prototype.initialize) {
-        console.error(
-          'Drupal.DrupalModel.preinitialize is removed from drupal:9.4.0. Use constructor() instead.',
-        );
-      }
-      if (this.defaults) {
-        console.error(
-          'Drupal.DrupalModel.defaults is removed from drupal:9.4.0. Use constructor() instead.',
-        );
+        Drupal.deprecationError({
+          message: `Drupal.DrupalModel.initialize is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use constructor() instead.`,
+        });
       }
     }
 
@@ -229,21 +201,6 @@
           'Drupal.DrupalModel.attributes is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.values instead.',
       });
       return this.values;
-    }
-
-    get cid() {
-      Drupal.deprecationError({
-        message:
-          'Drupal.DrupalModel.cid is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.modelId instead.',
-      });
-      return this.modelId;
-    }
-    set cid(modelId) {
-      Drupal.deprecationError({
-        message:
-          'Drupal.DrupalModel.cid is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.modelId instead.',
-      });
-      this.modelId = modelId;
     }
   };
   deprecatedModelPrototypeProperties.forEach((property) => {

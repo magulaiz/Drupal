@@ -12,11 +12,9 @@
    * @augments Drupal.DrupalModel
    */
   Drupal.toolbar.MenuModel = class extends Drupal.DrupalModel {
-    constructor(values, options) {
-      const defaults = {
-        subtrees: {}
-      };
-      super(Object.assign({}, defaults, values), options);
+    constructor() {
+      super();
+      this.subtrees = {};
     }
   };
 })(Drupal);

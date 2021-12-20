@@ -29,13 +29,14 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     var _super = _createSuper(_class);
 
-    function _class(values, options) {
+    function _class() {
+      var _this;
+
       _classCallCheck(this, _class);
 
-      var defaults = {
-        subtrees: {}
-      };
-      return _super.call(this, Object.assign({}, defaults, values), options);
+      _this = _super.call(this);
+      _this.subtrees = {};
+      return _this;
     }
 
     return _class;
