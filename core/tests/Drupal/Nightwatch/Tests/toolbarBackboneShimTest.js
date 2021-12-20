@@ -33,7 +33,6 @@ module.exports = {
           'access content',
           'administer permissions',
           'administer users',
-
         ],
       })
       .drupalLogin({ name: 'user', password: '123' })
@@ -117,7 +116,7 @@ module.exports = {
     browser.executeAsync(
       function (done) {
         toReturn = {};
-        const {models} = Drupal.toolbar;
+        const { models } = Drupal.toolbar;
         toReturn.hasMenuModel = models.hasOwnProperty('menuModel');
         toReturn.menuModelType = typeof models.menuModel === 'object';
         toReturn.hasToolbarModel = models.hasOwnProperty('toolbarModel');
@@ -125,7 +124,7 @@ module.exports = {
 
         setTimeout(() => {
           const tab = document.querySelector('#toolbar-item-user');
-          tab.dispatchEvent(new MouseEvent('click', {bubbles: true}));
+          tab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
           toReturn.toolbarModelChangedTab =
             models.toolbarModel.get('activeTab').outerHTML ===
@@ -223,7 +222,6 @@ module.exports = {
 
           done(toReturn);
         }, 100);
-
       },
       [],
       (result) => {
