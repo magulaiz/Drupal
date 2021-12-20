@@ -1755,10 +1755,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
     if (!$access->isAllowed()) {
-      $via_link = Url::fromRoute(
+      $url = Url::fromRoute(
         sprintf('jsonapi.%s.%s.relationship.get', static::$resourceTypeName, $relationship_field_name),
         ['entity' => $entity->uuid()]
       );
+      $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
       return static::getAccessDeniedResponse($this->entity, $access, $via_link, $relationship_field_name, 'The current user is not allowed to view this relationship.', FALSE);
     }
     $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $entity);
@@ -3164,7 +3165,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_collection_document = $expected_response->getResponseData();
       $expected_collection_document['data'] = [];
       $expected_cacheability = $expected_response->getCacheableMetadata();
-      $access_denied_response = static::getAccessDeniedResponse($entity, $result, $url, NULL, $detail)->getResponseData();
+      $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
+      $access_denied_response = static::getAccessDeniedResponse($entity, $result, $via_link, NULL, $detail)->getResponseData();
       static::addOmittedObject($expected_collection_document, static::errorsToOmittedObject($access_denied_response['errors']));
       $this->assertResourceResponse(200, $expected_collection_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
     }

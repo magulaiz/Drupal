@@ -272,7 +272,6 @@ class NodeTest extends ResourceTestBase {
    *
    * For a positive test, see the similar test coverage for Term.
    *
-   * @group jsonapitest
    * @see \Drupal\Tests\jsonapi\Functional\TermTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
    */

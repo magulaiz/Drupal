@@ -133,10 +133,11 @@ trait ResourceResponseTestTrait {
           if (!$entity->access('view') && $entity->access('view label') && $field_access instanceof AccessResultReasonInterface && empty($field_access->getReason())) {
             $field_access->setReason("The user only has authorization for the 'view label' operation.");
           }
-          $via_link = Url::fromRoute(
+          $url = Url::fromRoute(
             sprintf('jsonapi.%s.%s.related', $entity->getEntityTypeId() . '--' . $entity->bundle(), $public_field_name),
             ['entity' => $entity->uuid()]
           );
+          $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
           $collected_responses[] = static::getAccessDeniedResponse($entity, $field_access, $via_link, $field_name, 'The current user is not allowed to view this relationship.', $field_name);
           break;
         }
@@ -149,10 +150,17 @@ trait ResourceResponseTestTrait {
             $resource_identifier = static::toResourceIdentifier($target_entity);
             if (!static::collectionHasResourceIdentifier($resource_identifier, $data['already_checked'])) {
               $data['already_checked'][] = $resource_identifier;
-              $via_link = Url::fromRoute(
+              $url = Url::fromRoute(
                 sprintf('jsonapi.%s.individual', $resource_identifier['type']),
                 ['entity' => $resource_identifier['id']]
               );
+              $via_link = [
+                'href' => $url->setAbsolute()->toString(),
+                'meta' => [
+                  'resourceId' => $resource_identifier['id'],
+                  'resourceVersion' => NULL,
+                ],
+              ];
               $collected_responses[] = static::getAccessDeniedResponse($entity, $target_access, $via_link, NULL, NULL, '/data');
             }
             break;
@@ -484,7 +492,7 @@ trait ResourceResponseTestTrait {
    *   The entity for which to generate the forbidden response.
    * @param \Drupal\Core\Access\AccessResultInterface $access
    *   The denied AccessResult. This can carry a reason and cacheability data.
-   * @param \Drupal\Core\Url $via_link
+   * @param \Drupal\Core\Url|array $via_link
    *   The source URL for the errors of the response.
    * @param string|null $relationship_field_name
    *   (optional) The field name to which the forbidden result applies. Useful
@@ -498,7 +506,9 @@ trait ResourceResponseTestTrait {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The forbidden ResourceResponse.
    */
-  protected static function getAccessDeniedResponse(EntityInterface $entity, AccessResultInterface $access, Url $via_link, $relationship_field_name = NULL, $detail = NULL, $pointer = NULL) {
+  protected static function getAccessDeniedResponse(EntityInterface $entity, AccessResultInterface $access, $via_link, $relationship_field_name = NULL, $detail = NULL, $pointer = NULL) {
+    assert(is_array($via_link) || $via_link instanceof Url);
+
     $detail = ($detail) ? $detail : 'The current user is not allowed to GET the selected resource.';
     if ($access instanceof AccessResultReasonInterface && ($reason = $access->getReason())) {
       $detail .= ' ' . $reason;
@@ -514,13 +524,10 @@ trait ResourceResponseTestTrait {
     if ($pointer || $pointer !== FALSE && $relationship_field_name) {
       $error['source']['pointer'] = ($pointer) ? $pointer : $relationship_field_name;
     }
-    if ($via_link) {
+    if ($via_link instanceof Url) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
-
-      if (!$relationship_field_name) {
-        $error['links']['via']['meta']['resourceId'] = $entity->uuid();
-        $error['links']['via']['meta']['resourceVersion'] = $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL;
-      }
+    } else if (is_array($via_link)) {
+      $error['links']['via'] = $via_link;
     }
 
     return (new CacheableResourceResponse([
