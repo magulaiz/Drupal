@@ -7,6 +7,20 @@
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _construct(Parent, args, Class) { if (_isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -28,8 +42,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 (function (Drupal) {
-  Drupal.toolbar.ToolbarModel = function (_Drupal$DrupalModel) {
-    _inherits(_class, _Drupal$DrupalModel);
+  Drupal.toolbar._ToolbarModel = function (_Drupal$DrupalModel$e) {
+    _inherits(_class, _Drupal$DrupalModel$e);
 
     var _super = _createSuper(_class);
 
@@ -40,45 +54,43 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     }
 
     _createClass(_class, [{
-      key: "orientation",
-      get: function get() {
-        console.log('get orientation');
-        return this._orientation;
-      },
-      set: function set(value) {
-        console.log('set orientation');
-
-        if (value === 'horizontal' && this.get('locked') && !this.lockedOverride) {
-          console.log('BLOCKED ORIENTATION CHANGE');
-          return;
+      key: "validate",
+      value: function validate(attributes, options) {
+        if (attributes.orientation === 'horizontal' && this.get('locked') && !options.override) {
+          return Drupal.t('The toolbar cannot be set to a horizontal orientation when it is locked.');
         }
-
-        console.log('allow orientation change', this);
-        this._orientation = value;
-        this.lockedOverride = false;
       }
     }]);
 
     return _class;
-  }(Drupal.DrupalModel);
+  }(Drupal.DrupalModel.extend({
+    defaults: {
+      activeTab: null,
+      activeTray: null,
+      isOriented: false,
+      isFixed: false,
+      areSubtreesLoaded: false,
+      isViewportOverflowConstrained: false,
+      locked: false,
+      lockedOverride: false,
+      isTrayToggleVisible: true,
+      height: null,
+      offsets: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+      orientation: 'horizontal'
+    }
+  }));
 
-  Drupal.toolbar.ToolbarModel.prototype.defaults = {
-    activeTab: null,
-    activeTray: null,
-    isOriented: false,
-    isFixed: false,
-    areSubtreesLoaded: false,
-    isViewportOverflowConstrained: false,
-    locked: false,
-    lockedOverride: false,
-    isTrayToggleVisible: true,
-    height: null,
-    offsets: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    },
-    _orientation: 'horizontal'
-  };
+  Drupal.toolbar.ToolbarModel = new Proxy(Drupal.toolbar._ToolbarModel, {
+    construct: function construct(target, args) {
+      Drupal.deprecationError({
+        message: 'Drupal.toolbar.ToolbarModel will be marked as internal in drupal:10.0.0.'
+      });
+      return _construct(target, _toConsumableArray(args));
+    }
+  });
 })(Drupal);

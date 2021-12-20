@@ -46,7 +46,7 @@
       // Process the administrative toolbar.
       once('toolbar', '#toolbar-administration', context).forEach((toolbar) => {
         // Establish the toolbar models and views.
-        const model = new Drupal.toolbar.ToolbarModel({
+        const model = new Drupal.toolbar._ToolbarModel({
           locked: JSON.parse(
             localStorage.getItem('Drupal.toolbar.trayVerticalLocked'),
           ),
@@ -56,7 +56,15 @@
           height: $('#toolbar-administration').outerHeight(),
         });
 
-        Drupal.toolbar.models.toolbarModel = model;
+        Drupal.toolbar.models.toolbarModel = new Proxy(model, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.models.toolbarModel will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
+          },
+        });
 
         // Attach a listener to the configured media query breakpoints.
         // Executes it before Drupal.toolbar.views to avoid extra rendering.
@@ -74,26 +82,52 @@
           Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
         });
 
-        Drupal.toolbar.views.toolbarVisualView =
-          new Drupal.toolbar.ToolbarVisualView({
-            el: toolbar,
-            model,
-            strings: options.strings,
-          });
-        Drupal.toolbar.views.toolbarAuralView =
-          new Drupal.toolbar.ToolbarAuralView({
-            el: toolbar,
-            model,
-            strings: options.strings,
-          });
-        Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView(
-          {
-            el: toolbar,
-            model,
-          },
-        );
+        const toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
+          el: toolbar,
+          model,
+          strings: options.strings,
+        });
 
-        Drupal.toolbar.views.toolbarVisualView.render();
+        Drupal.toolbar.views.toolbarVisualView = new Proxy(toolbarVisualView, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.views.toolbarVisualView will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
+          },
+        });
+
+        const toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
+          el: toolbar,
+          model,
+          strings: options.strings,
+        });
+        Drupal.toolbar.views.toolbarAuralView = new Proxy(toolbarAuralView, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.views.toolbarAuralView will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
+          },
+        });
+
+        const bodyVisualView = new Drupal.toolbar.BodyVisualView({
+          el: toolbar,
+          model,
+        });
+        Drupal.toolbar.views.bodyVisualView = new Proxy(bodyVisualView, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.views.bodyVisualView will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
+          },
+        });
+
+        toolbarVisualView.render();
 
         // Force layout render to fix mobile view. Only needed on load, not
         // for every media query match.
@@ -101,15 +135,30 @@
         model.triggerEvent(`model-${model.modelId}-change-activeTray`);
 
         // Render collapsible menus.
-        const menuModel = new Drupal.toolbar.MenuModel();
-        Drupal.toolbar.models.menuModel = menuModel;
-        Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView(
-          {
-            el: $(toolbar).find('.toolbar-menu-administration').get(0),
-            model: menuModel,
-            strings: options.strings,
+        const menuModel = new Drupal.toolbar._MenuModel();
+        Drupal.toolbar.models.menuModel = new Proxy(menuModel, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.models.menuModel will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
           },
-        );
+        });
+        const menuVisualView = new Drupal.toolbar.MenuVisualView({
+          el: $(toolbar).find('.toolbar-menu-administration').get(0),
+          model: menuModel,
+          strings: options.strings,
+        });
+        Drupal.toolbar.views.menuVisualView = new Proxy(menuVisualView, {
+          get(target, prop, receiver) {
+            Drupal.deprecationError({
+              message:
+                'Drupal.toolbar.views.menuVisualView will be marked as internal in drupal:10.0.0.',
+            });
+            return Reflect.get(...arguments);
+          },
+        });
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
         // This is handled with a deferred so that the function may be invoked
@@ -132,7 +181,7 @@
         // orientation. Thus we give the Toolbar a chance to determine if it
         // should be set to horizontal orientation before attempting to load
         // menu subtrees.
-        Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
+        toolbarVisualView.loadSubtrees();
 
         $(document)
           // Update the model when the viewport offset changes.
@@ -144,11 +193,10 @@
         // defined then show the tray of the first toolbar tab by default (but
         // not the first 'Home' toolbar tab).
         if (
-          Drupal.toolbar.models.toolbarModel.get('orientation') ===
-            'horizontal' &&
-          Drupal.toolbar.models.toolbarModel.get('activeTab') === null
+          model.get('orientation') === 'horizontal' &&
+          model.get('activeTab') === null
         ) {
-          Drupal.toolbar.models.toolbarModel.set({
+          model.set({
             activeTab: $(
               '.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a',
             ).get(0),
