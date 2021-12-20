@@ -1,3 +1,5 @@
+// Unit tests for the new toolbar api
+
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -9,10 +11,6 @@ module.exports = {
         .click('input[name="modules[breakpoint][enable]"]')
         .click('input[name="modules[toolbar][enable]"]')
         .click('input[type="submit"]');
-      // browser
-      //   .drupalRelativeURL('/admin/people/permissions')
-      //   .click('input[name="anonymous[access toolbar]"]')
-      //   .click('input[type="submit"]');
     });
     browser
       .drupalCreateUser({
@@ -25,7 +23,6 @@ module.exports = {
           'administer menu',
           'administer modules',
           'administer site configuration',
-          // 'Administer modules',
           'administer account settings',
           'administer software updates',
           'access content',
@@ -34,6 +31,11 @@ module.exports = {
         ],
       })
       .drupalLogin({ name: 'user', password: '123' })
+      .drupalRelativeURL('/')
+      .waitForElementPresent('.toolbar-item.is-active', 10000);
+  },
+  beforeEach(browser) {
+    browser
       .drupalRelativeURL('/')
       .waitForElementPresent('.toolbar-item.is-active', 10000);
   },
@@ -50,11 +52,11 @@ module.exports = {
         toReturn.hasToolbarModel = models.hasOwnProperty('toolbarModel');
         toReturn.toolbarModelType = typeof models.toolbarModel === 'object';
         toReturn.toolbarModelActiveTab =
-          models.toolbarModel.get('activeTab').outerHTML ===
-          '<a href="/admin" title="Admin menu" class="toolbar-icon toolbar-icon-menu trigger toolbar-item is-active" data-drupal-subtrees="" id="toolbar-item-administration" data-toolbar-tray="toolbar-item-administration-tray" role="button" aria-pressed="false">Manage</a>';
+          models.toolbarModel.get('activeTab').id ===
+          'toolbar-item-administration';
         toReturn.toolbarModelActiveTray =
-          models.toolbarModel.get('activeTray').outerHTML ===
-          '<div id="toolbar-item-administration-tray" data-toolbar-tray="toolbar-item-administration-tray" class="toolbar-tray is-active toolbar-tray-horizontal" data-offset-top=""><nav class="toolbar-lining clearfix" role="navigation" aria-label="Administration menu"><h3 class="toolbar-tray-name visually-hidden">Administration menu</h3><div class="toolbar-menu-administration"></div><div class="toolbar-toggle-orientation" style="display: block;"><div class="toolbar-lining"><button class="toolbar-icon toolbar-icon-toggle-vertical" type="button" value="vertical" title="Vertical orientation">Vertical orientation</button></div></div></nav></div>';
+          models.toolbarModel.get('activeTray').id ===
+          'toolbar-item-administration-tray';
         toReturn.toolbarModelisOriented =
           models.toolbarModel.get('isOriented') === true;
         toReturn.toolbarModelisFixed =
@@ -69,9 +71,12 @@ module.exports = {
           models.toolbarModel.get('locked') === null;
         toReturn.toolbarModelisTrayToggleVisible =
           models.toolbarModel.get('isTrayToggleVisible') === true;
-        toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 40;
-        // toReturn.toolbarModelOffsets =
-        //   models.toolbarModel.get('offsets') === { bottom: 0, left: 0, right: 0, top: 40 };
+        toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 79;
+        toReturn.toolbarModelHeightt = models.toolbarModel.get('height');
+        toReturn.toolbarModelOffsetss = models.toolbarModel.get('offsets');
+        toReturn.toolbarModelOffsets =
+          models.toolbarModel.get('offsets') ===
+          { bottom: 0, left: 0, right: 0, top: 79 };
         toReturn.toolbarModelSubtrees =
           models.toolbarModel.get('subtrees') === {};
         return toReturn;
@@ -125,11 +130,10 @@ module.exports = {
           tab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
           toReturn.toolbarModelChangedTab =
-            models.toolbarModel.get('activeTab').outerHTML ===
-            '<a href="/user" title="My account" class="toolbar-icon toolbar-icon-user trigger toolbar-item is-active" id="toolbar-item-user" data-toolbar-tray="toolbar-item-user-tray" role="button" aria-pressed="false">user</a>';
+            models.toolbarModel.get('activeTab').id === 'toolbar-item-user';
           toReturn.toolbarModelChangedTray =
-            models.toolbarModel.get('activeTray').outerHTML ===
-            '<div id="toolbar-item-user-tray" data-toolbar-tray="toolbar-item-user-tray" class="toolbar-tray toolbar-tray-horizontal is-active" data-offset-top=""><nav class="toolbar-lining clearfix" role="navigation" aria-label="User account actions"><h3 class="toolbar-tray-name visually-hidden">User account actions</h3><ul class="toolbar-menu"><li><a href="/user" title="User account">View profile</a></li><li><a href="/user/2/edit" title="Edit user account">Edit profile</a></li><li><a href="/user/logout">Log out</a></li></ul><div class="toolbar-toggle-orientation" style="display: block;"><div class="toolbar-lining"><button class="toolbar-icon toolbar-icon-toggle-vertical" type="button" value="vertical" title="Vertical orientation">Vertical orientation</button></div></div></nav></div>';
+            models.toolbarModel.get('activeTray').id ===
+            'toolbar-item-user-tray';
           done(toReturn);
         }, 100);
       },
@@ -155,6 +159,7 @@ module.exports = {
       function (done) {
         toReturn = {};
         const { models } = Drupal.toolbar;
+
         const orientationToggle = document.querySelector(
           '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
         );
@@ -171,7 +176,6 @@ module.exports = {
       },
       [],
       (result) => {
-        console.log('resultssssssss: ', result);
         const expectedTrue = {
           toolbarOrientation: 'get("orientation") has expected result',
           toolbarChangeOrientation: 'changing orientation has expected result',
@@ -186,47 +190,39 @@ module.exports = {
         });
       },
     );
-    // browser.waitForElementVisible('#I-DO-NOT-EXIST', 1000000000000000);
   },
   'Open submenu': (browser) => {
     browser.executeAsync(
       function (done) {
         toReturn = {};
         const { models } = Drupal.toolbar;
-        const orientationToggle = document.querySelector(
-          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-        );
-        toReturn.toolbarOrientationn = models.toolbarModel.get('orientation');
+        Drupal.toolbar.models.toolbarModel.set('orientation', 'vertical');
         toReturn.toolbarOrientation =
-          models.toolbarModel.get('orientation') === 'horizontal';
-        orientationToggle.dispatchEvent(
-          new MouseEvent('click', { bubbles: true }),
+          models.toolbarModel.get('orientation') === 'vertical';
+        const manageTab = document.querySelector(
+          '#toolbar-item-administration',
         );
+        Drupal.toolbar.models.toolbarModel.set('activeTab', manageTab);
+        const menuDropdown = document.querySelector(
+          '#toolbar-item-administration-tray button',
+        );
+        menuDropdown.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
         setTimeout(() => {
-          toReturn.toolbarChangeOrientation =
-            models.toolbarModel.get('orientation') === 'vertical';
-          const menuDropdown = document.querySelector(
-            '#toolbar-item-administration-tray > nav > div.toolbar-menu-administration > ul > li.menu-item.menu-item--collapsed.level-1 > div > button',
-          );
-          menuDropdown.dispatchEvent(
-            new MouseEvent('click', { bubbles: true }),
-          );
           const statReportElement = document.querySelector(
             '#toolbar-link-system-status',
           );
           toReturn.submenuItemmm = statReportElement.textContent;
           toReturn.submenuItem =
             statReportElement.textContent === 'Status report';
-
           done(toReturn);
         }, 100);
+
       },
       [],
       (result) => {
-        console.log('resultssssssss: ', result);
         const expectedTrue = {
           toolbarOrientation: 'get("orientation") has expected result',
-          toolbarChangeOrientation: 'changing orientation has expected result',
           submenuItem: 'opening submenu has expected result',
         };
 
@@ -239,6 +235,5 @@ module.exports = {
         });
       },
     );
-    // browser.waitForElementVisible('#I-DO-NOT-EXIST', 1000000000000000);
   },
 };
