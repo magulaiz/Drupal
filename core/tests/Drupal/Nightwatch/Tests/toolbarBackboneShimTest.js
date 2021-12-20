@@ -16,7 +16,6 @@ module.exports = {
       .drupalCreateUser({
         name: 'user',
         password: '123',
-        // add more permissions to have more stuff in the toolbar.
         permissions: [
           'access site reports',
           'access toolbar',
@@ -35,6 +34,10 @@ module.exports = {
       .waitForElementPresent('.toolbar-item.is-active', 10000);
   },
   beforeEach(browser) {
+    // To clear active tab/tray from previous tests
+    browser.execute(function () {
+      localStorage.clear();
+    });
     browser
       .drupalRelativeURL('/')
       .waitForElementPresent('.toolbar-item.is-active', 10000);
@@ -217,7 +220,6 @@ module.exports = {
             statReportElement.textContent === 'Status report';
           done(toReturn);
         }, 100);
-
       },
       [],
       (result) => {
