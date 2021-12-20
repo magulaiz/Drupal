@@ -14,8 +14,6 @@ module.exports = {
       //   .click('input[name="anonymous[access toolbar]"]')
       //   .click('input[type="submit"]');
     });
-  },
-  beforeEach(browser) {
     browser
       .drupalCreateUser({
         name: 'user',
@@ -42,7 +40,13 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Change tab': (browser) => {},
+  'Change tab': (browser) => {
+    browser.drupalRelativeURL('/')
+      .waitForElementPresent('#toolbar-item-user-tray');
+    browser.expect.element('#toolbar-item-user-tray').to.have.property('className').not.contain('is-active');
+    browser.click('#toolbar-item-user');
+    browser.expect.element('#toolbar-item-user-tray').to.have.property('className').contain('is-active').before(500);
+  },
   'Change orientation': (browser) => {},
   'Toggle tray': (browser) => {},
   'Toggle submenu': (browser) => {},

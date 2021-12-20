@@ -14,8 +14,6 @@ module.exports = {
       //   .click('input[name="anonymous[access toolbar]"]')
       //   .click('input[type="submit"]');
     });
-  },
-  beforeEach(browser) {
     browser
       .drupalCreateUser({
         name: 'user',
