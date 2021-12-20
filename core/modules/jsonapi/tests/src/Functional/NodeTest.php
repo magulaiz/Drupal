@@ -272,6 +272,7 @@ class NodeTest extends ResourceTestBase {
    *
    * For a positive test, see the similar test coverage for Term.
    *
+   * @group jsonapitest
    * @see \Drupal\Tests\jsonapi\Functional\TermTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
    */
@@ -298,30 +299,8 @@ class NodeTest extends ResourceTestBase {
 
     // PATCH request: 403 when creating URL aliases unauthorized.
     $response = $this->request('PATCH', $url, $request_options);
-    $expected_document = [
-      'jsonapi' => static::$jsonApiMember,
-      'errors' => [
-        [
-          'title' => 'Forbidden',
-          'status' => '403',
-          'detail' => "The current user is not allowed to PATCH the selected field (path). The following permissions are required: 'create url aliases' OR 'administer url aliases'.",
-          'links' => [
-            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
-            'via' => [
-              'href' => $url->setAbsolute()->toString(),
-              'meta' => [
-                'resourceId' => $this->entity->uuid(),
-                'resourceVersion' => $this->entity->getRevisionId(),
-              ],
-            ],
-          ],
-          'source' => [
-            'pointer' => '/data/attributes/path',
-          ],
-        ],
-      ],
-    ];
-    $this->assertResourceResponse(403, $expected_document, $response);
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
+    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (path). The following permissions are required: 'create url aliases' OR 'administer url aliases'.", $via_link, $response, '/data/attributes/path');
 
     // Grant permission to create URL aliases.
     $this->grantPermissionsToTestedRole(['create url aliases']);
