@@ -13,6 +13,12 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+function set(target, property, value, receiver) { if (typeof Reflect !== "undefined" && Reflect.set) { set = Reflect.set; } else { set = function set(target, property, value, receiver) { var base = _superPropBase(target, property); var desc; if (base) { desc = Object.getOwnPropertyDescriptor(base, property); if (desc.set) { desc.set.call(receiver, value); return true; } else if (!desc.writable) { return false; } } desc = Object.getOwnPropertyDescriptor(receiver, property); if (desc) { if (!desc.writable) { return false; } desc.value = value; Object.defineProperty(receiver, property, desc); } else { _defineProperty(receiver, property, value); } return true; }; } return set(target, property, value, receiver); }
+
+function _set(target, property, value, receiver, isStrict) { var s = set(target, property, value, receiver || target); if (!s && isStrict) { throw new Error('failed to set property'); } return value; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
 
 function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }
@@ -39,17 +45,28 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     var _super = _createSuper(_class);
 
-    function _class() {
+    function _class(values, options) {
       var _this;
 
       _classCallCheck(this, _class);
 
-      _this = _super.call(this);
-      _this.modelId = (Math.random() + 1).toString(36).substring(7);
+      _this = _super.call(this, values, options);
       _this.allowSetChanged = true;
-      _this.values = {};
-      _this.changed = {};
       _this._previousValues = {};
+
+      if (options) {
+        if (options.hasOwnProperty('collection')) {
+          Drupal.deprecationError({
+            message: 'options.collection is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.'
+          });
+        }
+
+        if (options.hasOwnProperty('parse')) {
+          Drupal.deprecationError({
+            message: 'options.parse is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0.'
+          });
+        }
+      }
 
       if (_this.preinitialize !== Backbone.Model.prototype.preinitialize) {
         Drupal.deprecationError({
@@ -189,6 +206,34 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         }
 
         return _get(_getPrototypeOf(_class.prototype), "trigger", this).apply(this, args);
+      }
+    }, {
+      key: "values",
+      get: function get() {
+        if (!this._values) {
+          this._values = {};
+        }
+
+        return this._values;
+      },
+      set: function set(values) {
+        this._values = values;
+      }
+    }, {
+      key: "modelId",
+      get: function get() {
+        return _get(_getPrototypeOf(_class.prototype), "cid", this);
+      },
+      set: function set(modelId) {
+        _set(_getPrototypeOf(_class.prototype), "cid", modelId, this, true);
+      }
+    }, {
+      key: "cid",
+      get: function get() {
+        Drupal.deprecationError({
+          message: 'Drupal.DrupalModel.cid is deprecated in drupal:9.4.0 and will be removed from drupal:10.0.0. Use Drupal.DrupalModel.modelId instead.'
+        });
+        return _get(_getPrototypeOf(_class.prototype), "cid", this);
       }
     }, {
       key: "attributes",

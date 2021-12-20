@@ -30,15 +30,15 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     var _super = _createSuper(_class);
 
     function _class() {
-      var _this;
-
       _classCallCheck(this, _class);
 
-      _this = _super.call(this);
-      _this.subtrees = {};
-      return _this;
+      return _super.apply(this, arguments);
     }
 
     return _class;
   }(Drupal.DrupalModel);
+
+  Drupal.toolbar.MenuModel.prototype.defaults = {
+    subtrees: {}
+  };
 })(Drupal);

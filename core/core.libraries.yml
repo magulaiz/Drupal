@@ -8,7 +8,7 @@ backbone:
     url: https://raw.githubusercontent.com/jashkenas/backbone/1.4.0/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/backbone/backbone-min.js: { weight: -19, minified: true }
+    assets/vendor/backbone/backbone.js: { weight: -19, minified: true }
   dependencies:
     - core/underscore
     - core/drupal
