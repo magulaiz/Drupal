@@ -1,0 +1,31 @@
+# Configuration file for PHPStan static code checking, see https://phpstan.org .
+# PHPStan is triggered on Drupal CI in commit-code-check.sh.
+includes:
+	- ./phpstan-baseline.neon
+
+parameters:
+
+  phpVersion: 80000
+
+  level: 0
+
+  paths:
+    - .
+    - ../composer
+
+  excludePaths:
+    - '../sites/simpletest/*.php'
+
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    - "#^Unsafe usage of new static#"
+
+    # Ignore common errors for now.
+    - "#^Access to an undefined property#"
+    - "#^Call to an undefined method#"
+    - "#^Cannot unset offset#"
+    - "#should return .* but return statement is missing#"
+    - "#Drupal calls should be avoided in classes, use dependency injection instead#"
+    - "#^Plugin definitions cannot be altered.#"
+    - "#^Missing cache backend declaration for performance.#"
+    - "#cache tag might be unclear and does not contain the cache key in it.#"

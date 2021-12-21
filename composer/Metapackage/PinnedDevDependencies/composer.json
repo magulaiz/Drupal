@@ -21,8 +21,11 @@
         "friends-of-behat/mink-browserkit-driver": "v1.5.0",
         "instaclick/php-webdriver": "1.4.10",
         "justinrainbow/json-schema": "5.2.11",
+        "mglaman/phpstan-drupal": "1.1.2",
         "mikey179/vfsstream": "v1.6.10",
         "myclabs/deep-copy": "1.10.2",
+        "nette/finder": "v2.5.3",
+        "nette/utils": "v3.2.6",
         "nikic/php-parser": "v4.13.2",
         "phar-io/manifest": "2.0.3",
         "phar-io/version": "3.1.0",
@@ -31,6 +34,8 @@
         "phpdocumentor/type-resolver": "1.5.1",
         "phpspec/prophecy": "v1.15.0",
         "phpspec/prophecy-phpunit": "v2.0.1",
+        "phpstan/extension-installer": "1.1.0",
+        "phpstan/phpstan": "1.2.0",
         "phpunit/php-code-coverage": "9.2.10",
         "phpunit/php-file-iterator": "3.0.6",
         "phpunit/php-invoker": "3.1.1",
@@ -66,6 +71,7 @@
         "symfony/lock": "v4.4.33",
         "symfony/phpunit-bridge": "v5.4.0",
         "theseer/tokenizer": "1.2.1",
+        "webflo/drupal-finder": "1.2.2",
         "webmozart/assert": "1.10.0"
     }
 }

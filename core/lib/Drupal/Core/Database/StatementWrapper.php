@@ -352,6 +352,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
         return $this->clientStatement->bindColumn($column, $param, $type, $maxlen);
 
       case 5:
+      default:
         return $this->clientStatement->bindColumn($column, $param, $type, $maxlen, $driverdata);
 
     }
@@ -399,6 +400,7 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
         return $this->clientStatement->bindParam($parameter, $variable, $data_type, $length);
 
       case 5:
+      default:
         return $this->clientStatement->bindParam($parameter, $variable, $data_type, $length, $driver_options);
 
     }

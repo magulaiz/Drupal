@@ -19,6 +19,7 @@ class ErrorContainer extends Container {
       $callable = function (ErrorContainer $container) {
       };
       $callable(1);
+      return NULL;
     }
     else {
       return parent::get($id, $invalidBehavior);
