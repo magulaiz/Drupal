@@ -1,3 +1,4 @@
+// cspell:ignore preinitialize
 // eslint-disable-next-line max-classes-per-file
 ((Drupal, Backbone, $) => {
   const deprecatedModelPrototypeProperties = [

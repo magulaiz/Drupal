@@ -585,10 +585,10 @@ drupal.message:
     - core/drupal
     - core/drupal.announce
 
-drupal.modelview:
+drupal.model-view:
   version: VERSION
   js:
-    misc/modelview.js: { weight: -1 }
+    misc/modelView.js: { weight: -1 }
   dependencies:
     - core/backbone
     - core/drupal

@@ -662,6 +662,7 @@ inator
 indexname
 ingoa
 inited
+initialised
 inno
 inputtypes
 insidekeyword
