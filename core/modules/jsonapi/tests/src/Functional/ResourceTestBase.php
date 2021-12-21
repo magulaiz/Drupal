@@ -2329,7 +2329,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // DX: 403 when entity contains field without 'edit' access.
     $response = $this->request('PATCH', $url, $request_options);
     $link_via = $this->getViaLinkArrayWithMeta($url, $this->entity);
-    $this->assertResourceErrorResponse(403, "The current user is not allowed to POST the selected field (field_rest_test).", $link_via, $response, '/data/attributes/field_rest_test');
+    $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $link_via, $response, '/data/attributes/field_rest_test');
 
     // DX: 403 when entity trying to update an entity's ID field.
     $request_options[RequestOptions::BODY] = Json::encode($this->makeNormalizationInvalid($this->getPatchDocument(), 'id'));
