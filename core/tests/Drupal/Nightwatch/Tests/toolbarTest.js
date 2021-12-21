@@ -37,9 +37,7 @@ module.exports = {
     browser.execute(function () {
       localStorage.clear();
     });
-    browser
-      .drupalRelativeURL('/')
-      .waitForElementPresent('.toolbar-item.is-active', 10000);
+    browser.drupalRelativeURL('/');
   },
   after(browser) {
     browser.drupalUninstall();
@@ -169,7 +167,7 @@ module.exports = {
       .element('#toolbar-link-entity-user-admin_form')
       .text.to.equal('Account settings');
   },
-  'Narrow toolbar': (browser) => {
+  'Narrow toolbar width breakpoint': (browser) => {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
@@ -178,23 +176,84 @@ module.exports = {
       .to.have.property('className')
       .contain('is-active')
       .contain('toolbar-tray-horizontal');
-    // browser.resizeWindow(x, y)
-
+    browser.expect
+      .element('#toolbar-administration')
+      .to.have.property('className')
+      .contain('toolbar-oriented');
+    browser.resizeWindow(263, 900);
     browser.expect
       .element('#toolbar-item-administration-tray')
       .to.have.property('className')
       .contain('is-active')
       .contain('toolbar-tray-vertical')
       .before(100);
-
+    browser.expect
+      .element('#toolbar-administration')
+      .to.have.property('className')
+      .not.contain('toolbar-oriented')
+      .before(100);
   },
-  'Standard width toolbar': (browser) => {
-    browser.resizeWindow(x, y)
+  'Standard width toolbar breakpoint': (browser) => {
+    browser.resizeWindow(1000, 900);
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    );
+    browser.expect
+      .element('.body')
+      .to.have.property('className')
+      .contain('toolbar-fixed');
+    browser.resizeWindow(609, 900);
+    browser.expect
+      .element('#toolbar-item-administration-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-vertical')
+      .before(100);
+    browser.expect
+      .element('.body')
+      .to.have.property('className')
+      .not.contain('toolbar-fixed').before(300);
   },
-  'Wide toolbar': (browser) => {},
+  'Wide toolbar breakpoint': (browser) => {
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    );
+    browser.resizeWindow(975, 900);
+    browser.expect
+      .element('#toolbar-item-administration-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-vertical')
+      .before(100);
+  },
   'Back to site link': (browser) => {},
   'Aural view test': (browser) => {},
   'Toolbar events': (browser) => {},
-  'Locked toolbar vertical wide viewport': (browser) => {},
-  'Settings are retained on retained': (browser) => {},
+  'Locked toolbar vertical wide viewport': (browser) => {
+    browser.resizeWindow(1000, 900);
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    );
+    browser.expect
+      .element(
+        '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+      )
+      .to.have.css('display')
+      .which.not.equals('none');
+    browser.resizeWindow(975, 900);
+    browser.expect
+      .element('#toolbar-item-administration-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-vertical')
+      .before(100);
+    browser.expect
+      .element(
+        '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+      )
+      .to.have.css('display')
+      .which.equals('none')
+      .before(400);
+  },
+  'Settings are retained on refresh': (browser) => {},
 };
