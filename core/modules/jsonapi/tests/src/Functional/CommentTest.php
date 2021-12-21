@@ -20,7 +20,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Comment" content entity type.
  *
  * @group jsonapi
- * @group jsonapitest
  */
 class CommentTest extends ResourceTestBase {
 

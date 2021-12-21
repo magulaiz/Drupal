@@ -526,7 +526,8 @@ trait ResourceResponseTestTrait {
     }
     if ($via_link instanceof Url) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
-    } else if (is_array($via_link)) {
+    }
+    elseif (is_array($via_link)) {
       $error['links']['via'] = $via_link;
     }
 

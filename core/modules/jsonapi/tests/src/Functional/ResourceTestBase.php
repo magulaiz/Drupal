@@ -844,7 +844,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $expected_error['detail'] = $expected_message;
     if ($via_link instanceof Url) {
       $expected_error['links']['via']['href'] = $via_link->setAbsolute()->toString();
-    } else if (is_array($via_link)) {
+    }
+    elseif (is_array($via_link)) {
       $expected_error['links']['via'] = $via_link;
     }
 
@@ -3589,14 +3590,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
-   * Generate an array with link formation containing meta information
+   * Generate an array with link formation containing meta information.
    *
    * @param \Drupal\Core\Url $url
    *   Url used for the link.
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity this via link refers to.
-   *
    * @param string|null $revision_id
    *   Overwrite the revision id
    *
