@@ -105,7 +105,9 @@
         (attrs = {})[key] = val;
       }
 
-      options || (options = {});
+      if (!options) {
+        options = {};
+      }
 
       ['upset', 'silent', 'validate'].forEach((option) => {
         if (options.hasOwnProperty(option)) {
@@ -137,7 +139,7 @@
       const prev = this._previousValues;
 
       // For each `set` attribute, update or delete the current value.
-      for (const attr in attrs) {
+      Object.keys(attrs).forEach((attr) => {
         val = attrs[attr];
         if (!_.isEqual(current[attr], val)) changes.push(attr);
         if (!_.isEqual(prev[attr], val)) {
@@ -145,8 +147,12 @@
         } else {
           delete changed[attr];
         }
-        unset ? delete current[attr] : (current[attr] = val);
-      }
+        if (unset) {
+          delete current[attr];
+        } else {
+          current[attr] = val;
+        }
+      });
 
       // Update the `id`.
       if (this.idAttribute in attrs) {
@@ -187,8 +193,8 @@
       return this;
     }
 
+    // eslint-disable-next-line class-methods-use-this
     triggerEvent(type, cancelable = false) {
-      // console.log('trigger event type', type);
       const event = new CustomEvent(type, {
         bubbles: true,
         cancelable,
@@ -294,9 +300,6 @@
           callback(),
         );
       } else {
-        if (!callback) {
-          debugger;
-        }
         // listen for document `model-${this.model-modelId}-change-${modelProperty}` to respond with callback
         document.addEventListener(
           `model-${this.model.modelId}-change-${modelProperty}`,
@@ -318,7 +321,11 @@
   Drupal.DrupalView.prototype._removeElement = function () {
     $(this.el).remove();
   };
-  Drupal.DrupalView.prototype.delegate = function (el) {
+  Drupal.DrupalView.prototype.delegate = function (
+    eventName,
+    selector,
+    listener,
+  ) {
     $(this.el).on(`${eventName}.delegateEvents${this.cid}`, selector, listener);
     return this;
   };

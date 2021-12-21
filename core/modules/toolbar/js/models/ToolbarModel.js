@@ -47,10 +47,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
     var _super = _createSuper(_class);
 
-    function _class(values, options) {
+    function _class() {
       _classCallCheck(this, _class);
 
-      return _super.call(this, values, options);
+      return _super.apply(this, arguments);
     }
 
     _createClass(_class, [{

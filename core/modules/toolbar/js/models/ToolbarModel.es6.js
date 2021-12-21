@@ -131,10 +131,6 @@
       },
     })
   ) {
-    constructor(values, options) {
-      super(values, options);
-    }
-
     /**
      * {@inheritdoc}
      *

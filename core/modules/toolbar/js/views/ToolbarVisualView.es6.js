@@ -38,6 +38,10 @@
     }
 
     addEventListeners() {
+      const touchEndToClick = (event) => {
+        event.preventDefault();
+        event.target.click();
+      };
       const eventConfig = [
         {
           selector: '.toolbar-bar .toolbar-tab .trigger',
@@ -52,12 +56,12 @@
         {
           selector: '.toolbar-bar .toolbar-tab .trigger',
           eventType: 'touchend',
-          callback: this.touchEndToClick,
+          callback: touchEndToClick,
         },
         {
           selector: '.toolbar-toggle-orientation button',
           eventType: 'touchend',
-          callback: this.touchEndToClick,
+          callback: touchEndToClick,
         },
       ];
       eventConfig.forEach((config) => {
@@ -79,11 +83,6 @@
       this.addChangeListener(this.updateToolbarHeight, `activeTab`);
       this.addChangeListener(this.updateToolbarHeight, `orientation`);
       this.addChangeListener(this.updateToolbarHeight, `isOriented`);
-    }
-
-    touchEndToClick(event) {
-      event.preventDefault();
-      event.target.click();
     }
 
     /**
@@ -116,6 +115,7 @@
     // Trigger a recalculation of viewport displacing elements. Use setTimeout
     // to ensure this recalculation happens after changes to visual elements
     // have processed.
+    // eslint-disable-next-line class-methods-use-this
     triggerDisplace() {
       _.defer(() => {
         Drupal.displace(true);

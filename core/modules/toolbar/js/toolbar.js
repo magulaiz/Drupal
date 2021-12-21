@@ -31,7 +31,7 @@
           height: $('#toolbar-administration').outerHeight()
         });
         Drupal.toolbar.models.toolbarModel = new Proxy(model, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.models.toolbarModel will be marked as internal in drupal:10.0.0.'
             });
@@ -51,7 +51,7 @@
           strings: options.strings
         });
         Drupal.toolbar.views.toolbarVisualView = new Proxy(toolbarVisualView, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.views.toolbarVisualView will be marked as internal in drupal:10.0.0.'
             });
@@ -64,7 +64,7 @@
           strings: options.strings
         });
         Drupal.toolbar.views.toolbarAuralView = new Proxy(toolbarAuralView, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.views.toolbarAuralView will be marked as internal in drupal:10.0.0.'
             });
@@ -76,7 +76,7 @@
           model: model
         });
         Drupal.toolbar.views.bodyVisualView = new Proxy(bodyVisualView, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.views.bodyVisualView will be marked as internal in drupal:10.0.0.'
             });
@@ -88,7 +88,7 @@
         model.triggerEvent("model-".concat(model.modelId, "-change-activeTray"));
         var menuModel = new Drupal.toolbar._MenuModel();
         Drupal.toolbar.models.menuModel = new Proxy(menuModel, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.models.menuModel will be marked as internal in drupal:10.0.0.'
             });
@@ -101,7 +101,7 @@
           strings: options.strings
         });
         Drupal.toolbar.views.menuVisualView = new Proxy(menuVisualView, {
-          get: function get(target, prop, receiver) {
+          get: function get() {
             Drupal.deprecationError({
               message: 'Drupal.toolbar.views.menuVisualView will be marked as internal in drupal:10.0.0.'
             });

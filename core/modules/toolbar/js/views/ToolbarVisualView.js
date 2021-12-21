@@ -65,6 +65,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
       value: function addEventListeners() {
         var _this2 = this;
 
+        var touchEndToClick = function touchEndToClick(event) {
+          event.preventDefault();
+          event.target.click();
+        };
+
         var eventConfig = [{
           selector: '.toolbar-bar .toolbar-tab .trigger',
           eventType: 'click',
@@ -76,11 +81,11 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         }, {
           selector: '.toolbar-bar .toolbar-tab .trigger',
           eventType: 'touchend',
-          callback: this.touchEndToClick
+          callback: touchEndToClick
         }, {
           selector: '.toolbar-toggle-orientation button',
           eventType: 'touchend',
-          callback: this.touchEndToClick
+          callback: touchEndToClick
         }];
         eventConfig.forEach(function (config) {
           var callback = config.callback.bind(_this2);
@@ -102,12 +107,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         this.addChangeListener(this.updateToolbarHeight, "activeTab");
         this.addChangeListener(this.updateToolbarHeight, "orientation");
         this.addChangeListener(this.updateToolbarHeight, "isOriented");
-      }
-    }, {
-      key: "touchEndToClick",
-      value: function touchEndToClick(event) {
-        event.preventDefault();
-        event.target.click();
       }
     }, {
       key: "updateToolbarHeight",

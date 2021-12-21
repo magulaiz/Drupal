@@ -108,7 +108,10 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
           (attrs = {})[key] = val;
         }
 
-        options || (options = {});
+        if (!options) {
+          options = {};
+        }
+
         ['upset', 'silent', 'validate'].forEach(function (option) {
           if (options.hasOwnProperty(option)) {
             Drupal.deprecationError({
@@ -135,8 +138,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         var current = this.values;
         var changed = this.changed;
         var prev = this._previousValues;
-
-        for (var attr in attrs) {
+        Object.keys(attrs).forEach(function (attr) {
           val = attrs[attr];
           if (!_.isEqual(current[attr], val)) changes.push(attr);
 
@@ -146,8 +148,12 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             delete changed[attr];
           }
 
-          unset ? delete current[attr] : current[attr] = val;
-        }
+          if (unset) {
+            delete current[attr];
+          } else {
+            current[attr] = val;
+          }
+        });
 
         if (this.idAttribute in attrs) {
           this.id = this.get(this.idAttribute);
@@ -296,10 +302,6 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         if (!modelProperty) {
           document.addEventListener("model-".concat(this.model.modelId, "-change"), callback());
         } else {
-          if (!callback) {
-            debugger;
-          }
-
           document.addEventListener("model-".concat(this.model.modelId, "-change-").concat(modelProperty), callback.bind(this));
         }
       }
@@ -318,7 +320,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
     $(this.el).remove();
   };
 
-  Drupal.DrupalView.prototype.delegate = function (el) {
+  Drupal.DrupalView.prototype.delegate = function (eventName, selector, listener) {
     $(this.el).on("".concat(eventName, ".delegateEvents").concat(this.cid), selector, listener);
     return this;
   };
