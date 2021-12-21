@@ -33,6 +33,9 @@ module.exports = {
       .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
+    // Set the resolution to the default desktop resolution. Ensure the default
+    // toolbar is horizontal in headless mode.
+    browser.resizeWindow(1920, 1080)
     // To clear active tab/tray from previous tests
     browser.execute(function () {
       localStorage.clear();
