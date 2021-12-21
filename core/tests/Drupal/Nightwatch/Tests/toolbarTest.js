@@ -30,12 +30,14 @@ module.exports = {
       })
       .drupalLogin({ name: 'user', password: '123' })
       .drupalRelativeURL('/')
-      .waitForElementPresent('.toolbar-item.is-active', 10000);
+      .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
     // To clear active tab/tray from previous tests
     browser.execute(function () {
       localStorage.clear();
+      // Clear escapeAdmin url values.
+      sessionStorage.clear();
     });
     browser.drupalRelativeURL('/');
   },
