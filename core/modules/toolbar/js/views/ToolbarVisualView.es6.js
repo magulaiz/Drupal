@@ -254,6 +254,7 @@
         localStorage.removeItem('Drupal.toolbar.activeTabID');
       }
     }
+
     /**
      * Update the attributes of the toolbar bar element.
      */

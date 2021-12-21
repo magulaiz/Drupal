@@ -128,7 +128,7 @@
       this._changing = true;
 
       if (!changing) {
-        this._previousValues = Object.assign({}, this.values);
+        this._previousValues = { ...this.values };
         this.changed = {};
       }
 
@@ -158,11 +158,11 @@
         if (changes.length) {
           this._pending = options;
         }
-        for (var i = 0; i < changes.length; i++) {
+        for (let i = 0; i < changes.length; i++) {
           this.triggerEvent(`model-${this.modelId}-change`);
           this.triggerEvent(`model-${this.modelId}-change-${changes[i]}`);
           super.trigger(
-            'change:' + changes[i],
+            `change:${changes[i]}`,
             this,
             current[changes[i]],
             options,
@@ -217,6 +217,7 @@
 
       return this._values;
     }
+
     set values(values) {
       this._values = values;
     }
@@ -224,6 +225,7 @@
     get modelId() {
       return super.cid;
     }
+
     set modelId(modelId) {
       super.cid = modelId;
     }
@@ -317,11 +319,11 @@
     $(this.el).remove();
   };
   Drupal.DrupalView.prototype.delegate = function (el) {
-    $(this.el).on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    $(this.el).on(`${eventName}.delegateEvents${this.cid}`, selector, listener);
     return this;
   };
   Drupal.DrupalView.prototype.undelegateEvents = function () {
-    if (this.el) $(this.el).off('.delegateEvents' + this.cid);
+    if (this.el) $(this.el).off(`.delegateEvents${this.cid}`);
     return this;
   };
   Drupal.DrupalView.prototype.undelegate = function (
@@ -330,7 +332,7 @@
     listener,
   ) {
     $(this.el).off(
-      eventName + '.delegateEvents' + this.cid,
+      `${eventName}.delegateEvents${this.cid}`,
       selector,
       listener,
     );

@@ -5,6 +5,10 @@
 * @preserve
 **/
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -124,7 +128,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
         this._changing = true;
 
         if (!changing) {
-          this._previousValues = Object.assign({}, this.values);
+          this._previousValues = _objectSpread({}, this.values);
           this.changed = {};
         }
 
@@ -158,7 +162,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             this.triggerEvent("model-".concat(this.modelId, "-change"));
             this.triggerEvent("model-".concat(this.modelId, "-change-").concat(changes[i]));
 
-            _get(_getPrototypeOf(_class.prototype), "trigger", this).call(this, 'change:' + changes[i], this, current[changes[i]], options);
+            _get(_getPrototypeOf(_class.prototype), "trigger", this).call(this, "change:".concat(changes[i]), this, current[changes[i]], options);
           }
         }
 
@@ -315,17 +319,17 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
   };
 
   Drupal.DrupalView.prototype.delegate = function (el) {
-    $(this.el).on(eventName + '.delegateEvents' + this.cid, selector, listener);
+    $(this.el).on("".concat(eventName, ".delegateEvents").concat(this.cid), selector, listener);
     return this;
   };
 
   Drupal.DrupalView.prototype.undelegateEvents = function () {
-    if (this.el) $(this.el).off('.delegateEvents' + this.cid);
+    if (this.el) $(this.el).off(".delegateEvents".concat(this.cid));
     return this;
   };
 
   Drupal.DrupalView.prototype.undelegate = function (eventName, selector, listener) {
-    $(this.el).off(eventName + '.delegateEvents' + this.cid, selector, listener);
+    $(this.el).off("".concat(eventName, ".delegateEvents").concat(this.cid), selector, listener);
     return this;
   };
 
