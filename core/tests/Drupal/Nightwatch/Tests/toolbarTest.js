@@ -117,21 +117,24 @@ module.exports = {
       .contain('is-active')
       .contain('toolbar-tray-vertical')
       .before(100);
-    // browser.expect
-    //   .element('#toolbar-item-administration-tray li:nth-child(4) button')
-    //   .to.have.property('className')
-    //   .not.contain('open')
-    //   .before(500);
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray li:nth-child(4) button',
+    );
+    browser.expect
+      .element('#toolbar-item-administration-tray li:nth-child(4) button')
+      .to.have.property('className')
+      .not.contain('open')
+      .before(500);
     browser.expect
       .element('#toolbar-item-administration-tray li:nth-child(4)')
       .to.have.property('className')
       .not.contain('open');
     browser.click('#toolbar-item-administration-tray li:nth-child(4) button');
-    // browser.expect
-    //   .element('#toolbar-item-administration-tray li:nth-child(4) button')
-    //   .to.have.property('className')
-    //   .contain('open')
-    //   .before(100);
+    browser.expect
+      .element('#toolbar-item-administration-tray li:nth-child(4) button')
+      .to.have.property('className')
+      .contain('open')
+      .before(100);
     browser.expect
       .element('#toolbar-item-administration-tray li:nth-child(4)')
       .to.have.property('className')
@@ -144,18 +147,17 @@ module.exports = {
       .element('#toolbar-link-system-admin_config_system')
       .text.to.equal('System');
     // Check sub-submenu
+    browser.waitForElementPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2',
+    );
     browser.expect
       .element('#toolbar-item-administration-tray li.menu-item.level-2')
       .to.have.property('className')
       .not.contain('open');
     browser.expect
-      .element('#toolbar-item-administration-tray li.menu-item.level-2')
+      .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
       .to.have.property('className')
       .not.contain('open');
-    // browser.expect
-    //   .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
-    //   .to.have.property('className')
-    //   .not.contain('open');
     browser.click(
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
     );
@@ -164,10 +166,10 @@ module.exports = {
       .to.have.property('className')
       .contain('open')
       .before(200);
-    // browser.expect
-    //   .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
-    //   .to.have.property('className')
-    //   .contain('open');
+    browser.expect
+      .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
+      .to.have.property('className')
+      .contain('open');
     browser.expect
       .element('#toolbar-link-entity-user-admin_form')
       .text.to.equal('Account settings');
@@ -204,7 +206,7 @@ module.exports = {
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
     browser.expect
-      .element('.body')
+      .element('body')
       .to.have.property('className')
       .contain('toolbar-fixed');
     browser.resizeWindow(609, 900);
@@ -215,7 +217,7 @@ module.exports = {
       .contain('toolbar-tray-vertical')
       .before(100);
     browser.expect
-      .element('.body')
+      .element('body')
       .to.have.property('className')
       .not.contain('toolbar-fixed').before(300);
   },
@@ -239,12 +241,17 @@ module.exports = {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
+    // browser.expect
+    //   .element(
+    //     '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    //   )
+    //   .to.have.css('display')
+    //   .which.not.equals('none');
     browser.expect
       .element(
         '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
       )
-      .to.have.css('display')
-      .which.not.equals('none');
+      .to.be.visible.before(100);
     browser.resizeWindow(975, 900);
     browser.expect
       .element('#toolbar-item-administration-tray')
@@ -252,13 +259,18 @@ module.exports = {
       .contain('is-active')
       .contain('toolbar-tray-vertical')
       .before(100);
+    // browser.expect
+    //   .element(
+    //     '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    //   )
+    //   .to.have.css('display')
+    //   .which.equals('none')
+    //   .before(400);
     browser.expect
       .element(
         '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
       )
-      .to.have.css('display')
-      .which.equals('none')
-      .before(400);
+      .to.not.be.visible.before(100);
   },
   'Settings are retained on refresh': (browser) => {},
 };

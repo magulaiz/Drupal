@@ -81,6 +81,7 @@ module.exports = {
           models.toolbarModel.get('offsets') ===
           { bottom: 0, left: 0, right: 0, top: 79 };
         toReturn.toolbarModelSubtrees =
+          //fix these
           models.toolbarModel.get('subtrees') === {};
         return toReturn;
       },
