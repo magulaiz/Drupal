@@ -15,11 +15,14 @@ trait TaxonomyTestTrait {
   /**
    * Returns a new vocabulary with random properties.
    *
+   * @param array $values
+   *   (optional) An array of values to set, keyed by property name.
+   *
    * @return \Drupal\taxonomy\VocabularyInterface
    *   A vocabulary used for testing.
    */
-  public function createVocabulary() {
-    $vocabulary = Vocabulary::create([
+  public function createVocabulary(array $values = []) {
+    $vocabulary = Vocabulary::create($values + [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => mb_strtolower($this->randomMachineName()),
@@ -41,7 +44,7 @@ trait TaxonomyTestTrait {
    * @return \Drupal\taxonomy\TermInterface
    *   The new taxonomy term object.
    */
-  public function createTerm(VocabularyInterface $vocabulary, $values = []) {
+  public function createTerm(VocabularyInterface $vocabulary, array $values = []) {
     $term = Term::create($values + [
       'name' => $this->randomMachineName(),
       'description' => [
