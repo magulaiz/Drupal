@@ -33,9 +33,7 @@ module.exports = {
       .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
-    // Set the resolution to the default desktop resolution. Ensure the default
-    // toolbar is horizontal in headless mode.
-    browser.resizeWindow(1920, 1080)
+    browser.resizeWindow(1920, 1080);
     // To clear active tab/tray from previous tests
     browser.execute(function () {
       localStorage.clear();
@@ -219,7 +217,8 @@ module.exports = {
     browser.expect
       .element('body')
       .to.have.property('className')
-      .not.contain('toolbar-fixed').before(300);
+      .not.contain('toolbar-fixed')
+      .before(300);
   },
   'Wide toolbar breakpoint': (browser) => {
     browser.waitForElementPresent(
@@ -234,19 +233,65 @@ module.exports = {
       .before(100);
   },
   'Back to site link': (browser) => {},
-  'Aural view test': (browser) => {},
-  'Toolbar events': (browser) => {},
+  'Aural view test': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        Drupal.announce = done;
+
+        const orientationButton = document.querySelector(
+          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+        );
+        orientationButton.dispatchEvent(
+          new MouseEvent('click', { bubbles: true }),
+        );
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          'Tray orientation changed to vertical.',
+        );
+      },
+    );
+  },
+  'Toolbar events': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        jQuery(document).on(
+          'drupalToolbarOrientationChange',
+          function (event, orientation) {
+            done(orientation);
+          },
+        );
+        const orientationButton = document.querySelector(
+          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+        );
+        orientationButton.dispatchEvent(
+          new MouseEvent('click', { bubbles: true }),
+        );
+      },
+      [],
+      (result) => {
+        browser.assert.equal(result.value, 'vertical');
+      },
+    );
+
+    // browser.executeAsync(
+    //   function (done) {
+    //
+    //   }
+    // )
+    // browser.executeAsync(
+    //   function (done) {
+    //
+    //   }
+    // )
+  },
   'Locked toolbar vertical wide viewport': (browser) => {
     browser.resizeWindow(1000, 900);
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    // browser.expect
-    //   .element(
-    //     '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    //   )
-    //   .to.have.css('display')
-    //   .which.not.equals('none');
     browser.expect
       .element(
         '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
@@ -259,13 +304,6 @@ module.exports = {
       .contain('is-active')
       .contain('toolbar-tray-vertical')
       .before(100);
-    // browser.expect
-    //   .element(
-    //     '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    //   )
-    //   .to.have.css('display')
-    //   .which.equals('none')
-    //   .before(400);
     browser.expect
       .element(
         '#toolbar-item-administration-tray .toolbar-toggle-orientation button',

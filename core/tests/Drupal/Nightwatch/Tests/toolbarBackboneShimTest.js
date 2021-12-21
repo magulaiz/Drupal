@@ -31,16 +31,19 @@ module.exports = {
       })
       .drupalLogin({ name: 'user', password: '123' })
       .drupalRelativeURL('/')
-      .waitForElementPresent('.toolbar-item.is-active', 10000);
+      .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
+    // Set the resolution to the default desktop resolution. Ensure the default
+    // toolbar is horizontal in headless mode.
+    browser.resizeWindow(1920, 1080);
     // To clear active tab/tray from previous tests
     browser.execute(function () {
       localStorage.clear();
+      // Clear escapeAdmin url values.
+      sessionStorage.clear();
     });
-    browser
-      .drupalRelativeURL('/')
-      .waitForElementPresent('.toolbar-item.is-active', 10000);
+    browser.drupalRelativeURL('/');
   },
   after(browser) {
     browser.drupalUninstall();
@@ -77,17 +80,21 @@ module.exports = {
         toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 79;
         toReturn.toolbarModelHeightt = models.toolbarModel.get('height');
         toReturn.toolbarModelOffsetss = models.toolbarModel.get('offsets');
-        toReturn.toolbarModelOffsets =
-          models.toolbarModel.get('offsets') ===
-          { bottom: 0, left: 0, right: 0, top: 79 };
+        toReturn.toolbarModelOffsetsBottom =
+          models.toolbarModel.get('offsets').bottom === 0;
+        toReturn.toolbarModelOffsetsLeft =
+          models.toolbarModel.get('offsets').left === 0;
+        toReturn.toolbarModelOffsetsRight =
+          models.toolbarModel.get('offsets').right === 0;
+        toReturn.toolbarModelOffsetsTop =
+          models.toolbarModel.get('offsets').top === 79;
         toReturn.toolbarModelSubtrees =
-          //fix these
-          models.toolbarModel.get('subtrees') === {};
+          Object.keys(models.menuModel.get('subtrees')).length === 0;
+        toReturn.toolbarModelSubtreesssss = models.menuModel.get('subtrees');
         return toReturn;
       },
       [],
       (result) => {
-        console.log('results: ', result);
         const expectedTrue = {
           hasMenuModel: 'has menu model',
           hasToolbarModel: 'has toolbar model',
@@ -104,9 +111,12 @@ module.exports = {
           toolbarModelisTrayToggleVisible:
             'get("isTrayToggleVisible") has expected result',
           toolbarModelHeight: 'get("height") has expected result',
-          toolbarModelOffsets: 'get("offsets") has expected result',
+          toolbarModelOffsetsBottom:
+            'get("offsets") bottom has expected result',
+          toolbarModelOffsetsLeft: 'get("offsets") left has expected result',
+          toolbarModelOffsetsRight: 'get("offsets") right has expected result',
+          toolbarModelOffsetsTop: 'get("offsets") top has expected result',
           toolbarModelSubtrees: 'get("subtrees") has expected result',
-          toolbarModelChangeActiveTab: 'get("activeTab") has expected result',
         };
         Object.keys(expectedTrue).forEach((property) => {
           browser.assert.equal(
