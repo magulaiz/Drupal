@@ -229,7 +229,6 @@ module.exports = {
       .before(300);
   },
   'Wide toolbar breakpoint': (browser) => {
-    browser.pause();
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
@@ -305,7 +304,7 @@ module.exports = {
     );
 
     browser.executeAsync(
-    function (done) {
+      function (done) {
         jQuery(document).on('drupalToolbarTabChange', function (event, tab) {
           done(tab);
         });
@@ -316,16 +315,37 @@ module.exports = {
       },
       [],
       (result) => {
-        // change to ELEMENT: NUMBER??
-        // use element id attribute?
-        // browser.assert.equal(result.value[0].ELEMENT, '0.13797189634700624-1');
-      },
+        browser.elementIdAttribute(
+          result.value.ELEMENT,
+          'id',
+          function (elementID) {
+            console.log(result.value.ELEMENT);
+            browser.assert.equal(elementID, '#toolbar-item-user');
+          },
+        );
+        console.log(result.value);
+      }, //   function (done) {
+    //     jQuery(document).on('drupalToolbarTrayChange', function (event, tray) {
+    //       done(tab);
+    //     });
+    //     setTimeout(() => {
+    //       const userTab = document.querySelector('#toolbar-item-user');
+    //       userTab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    //     }, 100);
+    //   },
+    //   [],
+    //   (result) => {
+    //     browser.elementIdAttribute(
+    //       result.value.ELEMENT,
+    //       'id',
+    //       function (elementID) {
+    //         console.log(result.value.ELEMENT);
+    //         browser.assert.equal(elementID, '#toolbar-item-user');
+    //       },
+    //     );
+    //     console.log(result.value);
+    //   },
     );
-    // browser.executeAsync(
-    //   function (done) {
-    //
-    //   }
-    // )
   },
   'Locked toolbar vertical wide viewport': (browser) => {
     browser.resizeWindow(1000, 900);
