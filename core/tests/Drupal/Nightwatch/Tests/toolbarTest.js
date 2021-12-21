@@ -34,8 +34,8 @@ module.exports = {
   },
   beforeEach(browser) {
     browser.resizeWindow(1920, 1080);
-    // To clear active tab/tray from previous tests
     browser.execute(function () {
+      // To clear active tab/tray from previous tests
       localStorage.clear();
       // Clear escapeAdmin url values.
       sessionStorage.clear();
@@ -48,10 +48,18 @@ module.exports = {
   'Change tab': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user-tray');
     browser.expect
+      .element('#toolbar-item-user')
+      .to.have.property('className')
+      .not.contain('is-active');
+    browser.expect
       .element('#toolbar-item-user-tray')
       .to.have.property('className')
       .not.contain('is-active');
     browser.click('#toolbar-item-user');
+    browser.expect
+      .element('#toolbar-item-user')
+      .to.have.property('className')
+      .contain('is-active');
     browser.expect
       .element('#toolbar-item-user-tray')
       .to.have.property('className')
@@ -221,6 +229,7 @@ module.exports = {
       .before(300);
   },
   'Wide toolbar breakpoint': (browser) => {
+    browser.pause();
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
@@ -253,6 +262,25 @@ module.exports = {
         );
       },
     );
+    browser.executeAsync(
+      function (done) {
+        Drupal.announce = done;
+
+        const orientationButton = document.querySelector(
+          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+        );
+        orientationButton.dispatchEvent(
+          new MouseEvent('click', { bubbles: true }),
+        );
+      },
+      [],
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          'Tray orientation changed to horizontal.',
+        );
+      },
+    );
   },
   'Toolbar events': (browser) => {
     browser.executeAsync(
@@ -276,11 +304,23 @@ module.exports = {
       },
     );
 
-    // browser.executeAsync(
-    //   function (done) {
-    //
-    //   }
-    // )
+    browser.executeAsync(
+    function (done) {
+        jQuery(document).on('drupalToolbarTabChange', function (event, tab) {
+          done(tab);
+        });
+        setTimeout(() => {
+          const userTab = document.querySelector('#toolbar-item-user');
+          userTab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }, 100);
+      },
+      [],
+      (result) => {
+        // change to ELEMENT: NUMBER??
+        // use element id attribute?
+        // browser.assert.equal(result.value[0].ELEMENT, '0.13797189634700624-1');
+      },
+    );
     // browser.executeAsync(
     //   function (done) {
     //
@@ -310,5 +350,53 @@ module.exports = {
       )
       .to.not.be.visible.before(100);
   },
-  'Settings are retained on refresh': (browser) => {},
+  'Settings are retained on refresh': (browser) => {
+    browser.waitForElementPresent('#toolbar-item-user');
+    const toggleOrientationBtn =
+      '#toolbar-item-user-tray .toolbar-toggle-orientation button';
+    // Set user as active tab
+    browser.expect
+      .element('#toolbar-item-user')
+      .to.have.property('className')
+      .not.contain('is-active');
+    browser.expect
+      .element('#toolbar-item-user-tray')
+      .to.have.property('className')
+      .not.contain('is-active');
+    browser.click('#toolbar-item-user');
+    // Check tray is open
+    browser.expect
+      .element('#toolbar-item-user')
+      .to.have.property('className')
+      .contain('is-active');
+    browser.expect
+      .element('#toolbar-item-user-tray')
+      .to.have.property('className')
+      .contain('is-active');
+    // Set orientation to vertical
+    browser.waitForElementPresent(toggleOrientationBtn);
+    browser.expect
+      .element('#toolbar-item-user-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-horizontal');
+    browser.click(toggleOrientationBtn);
+    browser.expect
+      .element('#toolbar-item-user-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-vertical');
+    browser.refresh();
+    // Check user tray is open
+    browser.expect
+      .element('#toolbar-item-user')
+      .to.have.property('className')
+      .contain('is-active');
+    // Check orientation is vertical
+    browser.expect
+      .element('#toolbar-item-user-tray')
+      .to.have.property('className')
+      .contain('is-active')
+      .contain('toolbar-tray-vertical');
+  },
 };
