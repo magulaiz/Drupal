@@ -50,6 +50,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
       _this.addChangeListeners();
 
+      _this.model.triggerEvent("model-".concat(_this.model.modelId, "-change-activeTab"));
+
       return _this;
     }
 
