@@ -1,7 +1,3 @@
-function testClass(browser, selector, className) {
-
-}
-
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -58,23 +54,18 @@ module.exports = {
     browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
   },
   'Change orientation': (browser) => {
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-horizontal');
-    browser.click(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
+    const orientationButton =
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button';
+    browser.waitForElementPresent(orientationButton);
+    browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
+      'is-active',
+      'toolbar-tray-horizontal',
+    ]);
+    browser.click(orientationButton);
+    browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
+      'is-active',
+      'toolbar-tray-vertical',
+    ]);
   },
   'Toggle tray': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user-tray');
