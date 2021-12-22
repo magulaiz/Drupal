@@ -3606,8 +3606,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     return [
       'href' => $url->setAbsolute()->toString(),
       'meta' => [
-        'resourceId' => $entity->uuid(),
-        'resourceVersion' => $revision_id,
+        'resourceId' => (string) $entity->uuid(),
+        'resourceVersion' => (string) $revision_id,
       ],
     ];
   }
