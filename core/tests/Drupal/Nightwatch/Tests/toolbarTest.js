@@ -390,4 +390,24 @@ module.exports = {
       .contain('is-active')
       .contain('toolbar-tray-vertical');
   },
+  'Check toolbar overlap with page content': (browser) => {
+    browser.execute(
+      () => {
+        const toolbar = document.querySelector('#toolbar-administration');
+        const nextElement = toolbar.nextElementSibling.getBoundingClientRect();
+        const tray = document
+          .querySelector('#toolbar-item-administration-tray')
+          .getBoundingClientRect();
+        // Page content should start after the toolbar height to not overlap.
+        return nextElement.top > tray.top + tray.height;
+      },
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          true,
+          'Toolbar and page content do not overlap',
+        );
+      },
+    );
+  },
 };
