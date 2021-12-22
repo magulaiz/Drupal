@@ -71,8 +71,9 @@ class StoredInstallableReleasesTest extends KernelTestBase {
     $available = update_get_available(TRUE);
     $new = update_calculate_project_data($available);
     self::assertNotEmpty($new['drupal']['releases']);
-    self::assertArrayHasKey('8.0.2',$new['drupal']['releases']);
-    self::assertArrayNotHasKey('8.0.1',$new['drupal']['releases']);
-    self::assertArrayNotHasKey('8.0.0',$new['drupal']['releases']);
+    self::assertArrayHasKey('8.0.2', $new['drupal']['releases']);
+    self::assertArrayNotHasKey('8.0.1', $new['drupal']['releases']);
+    self::assertArrayNotHasKey('8.0.0', $new['drupal']['releases']);
   }
+
 }
