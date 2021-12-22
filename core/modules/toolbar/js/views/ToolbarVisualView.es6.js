@@ -68,6 +68,14 @@
         const callback = config.callback.bind(this);
         document.querySelectorAll(config.selector).forEach((item) => {
           item.addEventListener(config.eventType, (e) => callback(e));
+          $(item).on(config.eventType, (e) => {
+            if (!e.originalEvent) {
+              Drupal.deprecationError({
+                message: 'Triggering jQuery events for Toolbar elements is deprecated in drupal:9.4.0. Use JavaScript events instead.',
+              });
+              callback(e);
+            }
+          });
         });
       });
     }

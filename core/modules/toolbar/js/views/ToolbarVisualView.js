@@ -93,6 +93,14 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
             item.addEventListener(config.eventType, function (e) {
               return callback(e);
             });
+            $(item).on(config.eventType, function (e) {
+              if (!e.originalEvent) {
+                Drupal.deprecationError({
+                  message: 'Triggering jQuery events for Toolbar elements is deprecated in drupal:9.4.0. Use JavaScript events instead.'
+                });
+                callback(e);
+              }
+            });
           });
         });
       }

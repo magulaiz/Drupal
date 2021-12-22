@@ -22,8 +22,8 @@
       this.model = options.model;
       this.strings = options.strings;
       this.setElement(options.el);
-      this.addChangeListener(this.onOrientationChange, `orientation`);
-      this.addChangeListener(this.onActiveTrayChange, `activeTray`);
+      this.addChangeListener(this.onOrientationChange, 'orientation');
+      this.addChangeListener(this.onActiveTrayChange, 'activeTray');
     }
 
     // initialize(options) {
@@ -39,17 +39,11 @@
 
     /**
      * Announces an orientation change.
-     *
-     * @param {Drupal.toolbar.ToolbarModel} model
-     *   The toolbar model in question.
-     * @param {string} orientation
-     *   The new value of the orientation attribute in the model.
      */
     onOrientationChange() {
-      console.log('onOrientationChange function');
       Drupal.announce(
         Drupal.t('Tray orientation changed to @orientation.', {
-          '@orientation': this.model.orientation,
+          '@orientation': this.model.get('orientation'),
         }),
       );
     }
