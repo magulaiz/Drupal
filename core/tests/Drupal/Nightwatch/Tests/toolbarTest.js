@@ -1,3 +1,7 @@
+function testClass(browser, selector, className) {
+
+}
+
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -47,24 +51,11 @@ module.exports = {
   },
   'Change tab': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user-tray');
-    browser.expect
-      .element('#toolbar-item-user')
-      .to.have.property('className')
-      .not.contain('is-active');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .not.contain('is-active');
+    browser.assert.not.cssClassPresent('#toolbar-item-user', 'is-active');
+    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
     browser.click('#toolbar-item-user');
-    browser.expect
-      .element('#toolbar-item-user')
-      .to.have.property('className')
-      .contain('is-active');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .before(100);
+    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
+    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
   },
   'Change orientation': (browser) => {
     browser.waitForElementPresent(
