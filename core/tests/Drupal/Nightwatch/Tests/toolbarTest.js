@@ -70,64 +70,47 @@ module.exports = {
   'Toggle tray': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user-tray');
     browser.click('#toolbar-item-user');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active');
+    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
     browser.click('#toolbar-item-user');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .not.contain('is-active')
-      .before(100);
+    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
     browser.click('#toolbar-item-user');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .before(100);
+    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
   },
   'Toggle submenu and sub-submenu': (browser) => {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-horizontal');
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-horizontal',
+    );
     browser.click(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-vertical',
+    );
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray li:nth-child(4) button',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray li:nth-child(4) button')
-      .to.have.property('className')
-      .not.contain('open')
-      .before(500);
-    browser.expect
-      .element('#toolbar-item-administration-tray li:nth-child(4)')
-      .to.have.property('className')
-      .not.contain('open');
+    browser.assert.not.cssClassPresent(
+      '#toolbar-item-administration-tray li:nth-child(4)',
+      'open',
+    );
+    browser.assert.not.cssClassPresent(
+      '#toolbar-item-administration-tray li:nth-child(4) button',
+      'open',
+    );
     browser.click('#toolbar-item-administration-tray li:nth-child(4) button');
-    browser.expect
-      .element('#toolbar-item-administration-tray li:nth-child(4) button')
-      .to.have.property('className')
-      .contain('open')
-      .before(100);
-    browser.expect
-      .element('#toolbar-item-administration-tray li:nth-child(4)')
-      .to.have.property('className')
-      .contain('open')
-      .before(200);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray li:nth-child(4)',
+      'open',
+    );
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray li:nth-child(4) button',
+      'open',
+    );
     browser.expect
       .element('#toolbar-link-user-admin_index')
       .text.to.equal('People');
@@ -138,26 +121,25 @@ module.exports = {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray li.menu-item.level-2',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray li.menu-item.level-2')
-      .to.have.property('className')
-      .not.contain('open');
-    browser.expect
-      .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
-      .to.have.property('className')
-      .not.contain('open');
+    browser.assert.not.cssClassPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2',
+      'open',
+    );
+    browser.assert.not.cssClassPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2 button',
+      'open',
+    );
     browser.click(
       '#toolbar-item-administration-tray li.menu-item.level-2 button',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray li.menu-item.level-2')
-      .to.have.property('className')
-      .contain('open')
-      .before(200);
-    browser.expect
-      .element('#toolbar-item-administration-tray li.menu-item.level-2 button')
-      .to.have.property('className')
-      .contain('open');
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2',
+      'open',
+    );
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray li.menu-item.level-2 button',
+      'open',
+    );
     browser.expect
       .element('#toolbar-link-entity-user-admin_form')
       .text.to.equal('Account settings');
@@ -166,61 +148,46 @@ module.exports = {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-horizontal');
-    browser.expect
-      .element('#toolbar-administration')
-      .to.have.property('className')
-      .contain('toolbar-oriented');
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-horizontal',
+    );
+    browser.assert.cssClassPresent(
+      '#toolbar-administration',
+      'toolbar-oriented',
+    );
     browser.resizeWindow(263, 900);
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
-    browser.expect
-      .element('#toolbar-administration')
-      .to.have.property('className')
-      .not.contain('toolbar-oriented')
-      .before(100);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-vertical',
+    );
+    browser.assert.not.cssClassPresent(
+      '#toolbar-item-administration',
+      'toolbar-oriented',
+    );
   },
   'Standard width toolbar breakpoint': (browser) => {
     browser.resizeWindow(1000, 900);
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    browser.expect
-      .element('body')
-      .to.have.property('className')
-      .contain('toolbar-fixed');
+    browser.assert.cssClassPresent('body', 'toolbar-fixed');
     browser.resizeWindow(609, 900);
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
-    browser.expect
-      .element('body')
-      .to.have.property('className')
-      .not.contain('toolbar-fixed')
-      .before(300);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-vertical',
+    );
+    browser.assert.not.cssClassPresent('body', 'toolbar-fixed');
   },
   'Wide toolbar breakpoint': (browser) => {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
     browser.resizeWindow(975, 900);
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-vertical',
+    );
   },
   'Back to site link': (browser) => {
     const escapeSelector = '[data-toolbar-escape-admin]';
@@ -351,72 +318,48 @@ module.exports = {
     browser.waitForElementPresent(
       '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
     );
-    browser.expect
-      .element(
-        '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-      )
-      .to.be.visible.before(100);
+    browser.expect.element(
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    ).to.be.visible;
     browser.resizeWindow(975, 900);
-    browser.expect
-      .element('#toolbar-item-administration-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical')
-      .before(100);
-    browser.expect
-      .element(
-        '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-      )
-      .to.not.be.visible.before(100);
+    browser.assert.cssClassPresent(
+      '#toolbar-item-administration-tray',
+      'is-active toolbar-tray-vertical',
+    );
+    browser.expect.element(
+      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
+    ).to.not.be.visible;
   },
   'Settings are retained on refresh': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user');
     const toggleOrientationBtn =
       '#toolbar-item-user-tray .toolbar-toggle-orientation button';
     // Set user as active tab
-    browser.expect
-      .element('#toolbar-item-user')
-      .to.have.property('className')
-      .not.contain('is-active');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .not.contain('is-active');
+    browser.assert.not.cssClassPresent('#toolbar-item-user', 'is-active');
+    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
     browser.click('#toolbar-item-user');
-    // Check tray is open
-    browser.expect
-      .element('#toolbar-item-user')
-      .to.have.property('className')
-      .contain('is-active');
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active');
+    // Check tab and tray are open
+    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
+    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
     // Set orientation to vertical
     browser.waitForElementPresent(toggleOrientationBtn);
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-horizontal');
+    browser.assert.cssClassPresent(
+      '#toolbar-item-user-tray',
+      'is-active toolbar-tray-horizontal',
+    );
     browser.click(toggleOrientationBtn);
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical');
+    browser.assert.cssClassPresent(
+      '#toolbar-item-user-tray',
+      'is-active toolbar-tray-vertical',
+    );
     browser.refresh();
-    // Check user tray is open
-    browser.expect
-      .element('#toolbar-item-user')
-      .to.have.property('className')
-      .contain('is-active');
-    // Check orientation is vertical
-    browser.expect
-      .element('#toolbar-item-user-tray')
-      .to.have.property('className')
-      .contain('is-active')
-      .contain('toolbar-tray-vertical');
+    // Check user tab is active
+    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
+    // Check tray is active and orientation is vertical
+    browser.assert.cssClassPresent(
+      '#toolbar-item-user-tray',
+      'is-active toolbar-tray-vertical',
+    );
   },
   'Check toolbar overlap with page content': (browser) => {
     browser.execute(
