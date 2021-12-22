@@ -1,3 +1,6 @@
+const adminOrientationButton =
+  '#toolbar-item-administration-tray .toolbar-toggle-orientation button';
+
 module.exports = {
   '@tags': ['core'],
   before(browser) {
@@ -54,14 +57,12 @@ module.exports = {
     browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
   },
   'Change orientation': (browser) => {
-    const orientationButton =
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button';
-    browser.waitForElementPresent(orientationButton);
+    browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
       'is-active',
       'toolbar-tray-horizontal',
     ]);
-    browser.click(orientationButton);
+    browser.click(adminOrientationButton);
     browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
       'is-active',
       'toolbar-tray-vertical',
@@ -77,16 +78,12 @@ module.exports = {
     browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
   },
   'Toggle submenu and sub-submenu': (browser) => {
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
+    browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent(
       '#toolbar-item-administration-tray',
       'is-active toolbar-tray-horizontal',
     );
-    browser.click(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
+    browser.click(adminOrientationButton);
     browser.assert.cssClassPresent(
       '#toolbar-item-administration-tray',
       'is-active toolbar-tray-vertical',
@@ -145,9 +142,7 @@ module.exports = {
       .text.to.equal('Account settings');
   },
   'Narrow toolbar width breakpoint': (browser) => {
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
+    browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent(
       '#toolbar-item-administration-tray',
       'is-active toolbar-tray-horizontal',
@@ -168,9 +163,7 @@ module.exports = {
   },
   'Standard width toolbar breakpoint': (browser) => {
     browser.resizeWindow(1000, 900);
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
+    browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent('body', 'toolbar-fixed');
     browser.resizeWindow(609, 900);
     browser.assert.cssClassPresent(
@@ -180,9 +173,7 @@ module.exports = {
     browser.assert.not.cssClassPresent('body', 'toolbar-fixed');
   },
   'Wide toolbar breakpoint': (browser) => {
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
+    browser.waitForElementPresent(adminOrientationButton);
     browser.resizeWindow(975, 900);
     browser.assert.cssClassPresent(
       '#toolbar-item-administration-tray',
@@ -315,20 +306,14 @@ module.exports = {
   },
   'Locked toolbar vertical wide viewport': (browser) => {
     browser.resizeWindow(1000, 900);
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    );
-    browser.expect.element(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    ).to.be.visible;
+    browser.waitForElementPresent(adminOrientationButton);
+    browser.expect.element(adminOrientationButton).to.be.visible;
     browser.resizeWindow(975, 900);
     browser.assert.cssClassPresent(
       '#toolbar-item-administration-tray',
       'is-active toolbar-tray-vertical',
     );
-    browser.expect.element(
-      '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-    ).to.not.be.visible;
+    browser.expect.element(adminOrientationButton).to.not.be.visible;
   },
   'Settings are retained on refresh': (browser) => {
     browser.waitForElementPresent('#toolbar-item-user');
