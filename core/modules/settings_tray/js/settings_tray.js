@@ -21,7 +21,7 @@
   }
 
   function closeToolbarTrays() {
-    $(Drupal.toolbar.models.ToolbarModel.activeTab()).trigger('click');
+    $(Drupal.toolbar.models.toolbarModel.get('activeTab')).trigger('click');
   }
 
   function disableQuickEdit() {
