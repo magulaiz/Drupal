@@ -240,7 +240,14 @@ module.exports = {
       .contain('toolbar-tray-vertical')
       .before(100);
   },
-  'Back to site link': (browser) => {},
+  'Back to site link': (browser) => {
+    const escapeSelector = '[data-toolbar-escape-admin]';
+    browser.drupalRelativeURL('/user');
+    browser.drupalRelativeURL('/admin');
+    // Don't check the visibility as stark doesn't add the .path-admin class
+    // required to display the button.
+    browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
+  },
   'Aural view test': (browser) => {
     browser.executeAsync(
       function (done) {
