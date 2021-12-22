@@ -329,6 +329,7 @@ class NodeTest extends ResourceTestBase {
     // 403 when accessing own unpublished node.
     $response = $this->request('GET', $url, $request_options);
     // @todo Remove $expected + assertResourceResponse() in favor of the commented line below once https://www.drupal.org/project/drupal/issues/2943176 lands.
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
     $expected_document = [
       'jsonapi' => static::$jsonApiMember,
       'errors' => [
@@ -338,13 +339,7 @@ class NodeTest extends ResourceTestBase {
           'detail' => 'The current user is not allowed to GET the selected resource.',
           'links' => [
             'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
-            'via' => [
-              'href' => $url->setAbsolute()->toString(),
-              'meta' => [
-                'resourceId' => $this->entity->uuid(),
-                'resourceVersion' => $this->entity->getRevisionId(),
-              ],
-            ],
+            'via' => $via_link,
           ],
           'source' => [
             'pointer' => '/data',

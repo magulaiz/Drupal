@@ -936,38 +936,9 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if (!static::$anonymousUsersCanViewLabels) {
       $expected_403_cacheability = $this->getExpectedUnauthorizedAccessCacheability();
       $reason = $this->getExpectedUnauthorizedAccessMessage('GET');
-      $expected_document = [
-        'jsonapi' => static::$jsonApiMember,
-        'errors' => [
-          [
-            'title' => 'Forbidden',
-            'status' => '403',
-            'detail' => trim("The current user is not allowed to GET the selected resource. $reason"),
-            'links' => [
-              'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
-              'via' => [
-                'href' => $url->setAbsolute()->toString(),
-                'meta' => [
-                  'resourceId' => $this->entity->uuid(),
-                  'resourceVersion' => $this->entity instanceof RevisionableInterface ? $this->entity->getRevisionId() : NULL,
-                ],
-              ],
-            ],
-            'source' => [
-              'pointer' => '/data',
-            ],
-          ],
-        ],
-      ];
-      $this->assertResourceResponse(
-        403,
-        $expected_document,
-        $response,
-        $expected_403_cacheability->getCacheTags(),
-        $expected_403_cacheability->getCacheContexts(),
-        FALSE,
-        'MISS'
-      );
+      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity);
+      $message = trim("The current user is not allowed to GET the selected resource. $reason");
+      $this->assertResourceErrorResponse(403, $message, $via_link, $response, '/data', $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), FALSE, 'MISS');
       $this->assertArrayNotHasKey('Link', $response->getHeaders());
     }
     else {
@@ -1098,44 +1069,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $message_url = clone $url;
     $path = str_replace($random_uuid, '{entity}', $message_url->setAbsolute()->setOptions(['base_url' => '', 'query' => []])->toString());
     $message = 'The "entity" parameter was not converted for the path "' . $path . '" (route name: "jsonapi.' . static::$resourceTypeName . '.individual")';
-    $expected_document = [
-      'jsonapi' => static::$jsonApiMember,
-      'errors' => [
-        [
-          'title' => Response::$statusTexts[Response::HTTP_NOT_FOUND],
-          'status' => (string) Response::HTTP_NOT_FOUND,
-          'detail' => $message,
-          'links' => [
-            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(Response::HTTP_NOT_FOUND)],
-            'via' => [
-              'href' => $url->setAbsolute()->toString(),
-            ],
-          ],
-        ],
-      ],
-    ];
-    $this->assertResourceResponse(
-      Response::HTTP_NOT_FOUND,
-      $expected_document,
-      $response,
-      ['4xx-response', 'http_response'],
-      ['url.site'],
-      FALSE,
-      'UNCACHEABLE'
-    );
+    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.site'], FALSE, 'UNCACHEABLE');
 
     // DX: when Accept request header is missing, still 404, same response.
     unset($request_options[RequestOptions::HEADERS]['Accept']);
     $response = $this->request('GET', $url, $request_options);
-    $this->assertResourceResponse(
-      Response::HTTP_NOT_FOUND,
-      $expected_document,
-      $response,
-      ['4xx-response', 'http_response'],
-      ['url.site'],
-      FALSE,
-      'UNCACHEABLE'
-    );
+    $this->assertResourceErrorResponse(404, $message, $url, $response, FALSE, ['4xx-response', 'http_response'], ['url.site'], FALSE, 'UNCACHEABLE');
   }
 
   /**
