@@ -1756,11 +1756,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
     if (!$access->isAllowed()) {
-      $url = Url::fromRoute(
+      $via_link = Url::fromRoute(
         sprintf('jsonapi.%s.%s.relationship.get', static::$resourceTypeName, $relationship_field_name),
         ['entity' => $entity->uuid()]
       );
-      $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
       return static::getAccessDeniedResponse($this->entity, $access, $via_link, $relationship_field_name, 'The current user is not allowed to view this relationship.', FALSE);
     }
     $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $entity);
