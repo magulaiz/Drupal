@@ -253,7 +253,6 @@ module.exports = {
           new MouseEvent('click', { bubbles: true }),
         );
       },
-      [],
       (result) => {
         browser.assert.equal(
           result.value,
@@ -272,7 +271,6 @@ module.exports = {
           new MouseEvent('click', { bubbles: true }),
         );
       },
-      [],
       (result) => {
         browser.assert.equal(
           result.value,
@@ -281,7 +279,7 @@ module.exports = {
       },
     );
   },
-  'Toolbar events': (browser) => {
+  'Toolbar event: drupalToolbarOrientationChange': (browser) => {
     browser.executeAsync(
       function (done) {
         jQuery(document).on(
@@ -297,54 +295,38 @@ module.exports = {
           new MouseEvent('click', { bubbles: true }),
         );
       },
-      [],
       (result) => {
         browser.assert.equal(result.value, 'vertical');
       },
     );
-
+  },
+  'Toolbar event: drupalToolbarTabChange': (browser) => {
     browser.executeAsync(
       function (done) {
         jQuery(document).on('drupalToolbarTabChange', function (event, tab) {
-          done(tab);
+          done(tab.id);
         });
-        setTimeout(() => {
-          const userTab = document.querySelector('#toolbar-item-user');
-          userTab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        }, 100);
+        jQuery('#toolbar-item-user').trigger('click');
       },
-      [],
       (result) => {
-        browser.elementIdAttribute(
-          result.value.ELEMENT,
-          'id',
-          function (elementID) {
-            console.log(result.value.ELEMENT);
-            browser.assert.equal(elementID, '#toolbar-item-user');
-          },
-        );
-        console.log(result.value);
-      }, //   function (done) {
-    //     jQuery(document).on('drupalToolbarTrayChange', function (event, tray) {
-    //       done(tab);
-    //     });
-    //     setTimeout(() => {
-    //       const userTab = document.querySelector('#toolbar-item-user');
-    //       userTab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    //     }, 100);
-    //   },
-    //   [],
-    //   (result) => {
-    //     browser.elementIdAttribute(
-    //       result.value.ELEMENT,
-    //       'id',
-    //       function (elementID) {
-    //         console.log(result.value.ELEMENT);
-    //         browser.assert.equal(elementID, '#toolbar-item-user');
-    //       },
-    //     );
-    //     console.log(result.value);
-    //   },
+        browser.assert.equal(result.value, 'toolbar-item-user');
+      },
+    );
+  },
+  'Toolbar event: drupalToolbarTrayChange': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const $adminButton = jQuery('#toolbar-item-administration');
+        // Hide the admin menu first, this event is not firing reliably otherwise.
+        $adminButton.trigger('click');
+        jQuery(document).on('drupalToolbarTrayChange', function (event, tray) {
+          done(tray.id);
+        });
+        $adminButton.trigger('click');
+      },
+      (result) => {
+        browser.assert.equal(result.value, 'toolbar-item-administration-tray');
+      },
     );
   },
   'Locked toolbar vertical wide viewport': (browser) => {
