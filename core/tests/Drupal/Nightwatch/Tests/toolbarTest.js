@@ -230,7 +230,7 @@ module.exports = {
     // to the <body> required to display the button.
     browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
   },
-  'Aural view test': (browser) => {
+  'Aural view test: tray orientation': (browser) => {
     browser.executeAsync(
       function (done) {
         Drupal.announce = done;
@@ -264,6 +264,34 @@ module.exports = {
         browser.assert.equal(
           result.value,
           'Tray orientation changed to horizontal.',
+        );
+      },
+    );
+  },
+  'Aural view test: tray toggle': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        Drupal.announce = done;
+        const $adminButton = jQuery('#toolbar-item-administration');
+        $adminButton.trigger('click');
+      },
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          'Tray "Administration menu" closed.',
+        );
+      },
+    );
+    browser.executeAsync(
+      function (done) {
+        Drupal.announce = done;
+        const $adminButton = jQuery('#toolbar-item-administration');
+        $adminButton.trigger('click');
+      },
+      (result) => {
+        browser.assert.equal(
+          result.value,
+          'Tray "Administration menu" opened.',
         );
       },
     );
