@@ -260,7 +260,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function loadInclude($module, $type, $name = NULL) {
-    $inactive_modules = [];
+    $uninstalled_extension = NULL;
     if ($type === 'install') {
       // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
@@ -273,21 +273,17 @@ class ModuleHandler implements ModuleHandlerInterface {
           'profile',
           'theme_engine',
         ];
-        // Found extension definitions are empty by the default.
-        $definitions = NULL;
         foreach ($extensions_type_order as $extension_type) {
           try {
-            // Let's try to read extension.
-            $definitions = \Drupal::service('extension.list.' . $extension_type)
+            $uninstalled_extension = \Drupal::service('extension.list.' . $extension_type)
               ->get($module);
           }
           catch (UnknownExtensionException $e) {
             // Keep try to load other type of extensions.
           }
-          if ($definitions !== NULL) {
-            // The extension definitions was found, let's keep it for the main
+          if ($uninstalled_extension !== NULL) {
+            // The extension definition was found, let's keep it for the main
             // handler below.
-            $inactive_modules[$module] = $definitions;
             break;
           }
         }
@@ -299,22 +295,32 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    $module_list = $this->moduleList;
-    if (!empty($inactive_modules)) {
-      // Temporarily add the inactive module definition to handle loading
-      // install module file.
-      $module_list = array_merge($module_list, $inactive_modules);
+    $file = $this->getFilePath($name, $type, $this->moduleList[$module] ?? $uninstalled_extension) ?? '';
+    if (is_file($file)) {
+      require_once $file;
+      return $this->includeFileKeys[$key] = $file;
     }
-    if (isset($module_list[$module])) {
-      $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
-      if (is_file($file)) {
-        require_once $file;
-        $this->includeFileKeys[$key] = $file;
-        return $file;
-      }
-      $this->includeFileKeys[$key] = FALSE;
+    return $this->includeFileKeys[$key] = FALSE;
+  }
+
+  /**
+   * File path getter.
+   *
+   * @param string $name
+   *   File name without extension.
+   * @param string $type
+   *   File extension.
+   * @param \Drupal\Core\Extension\Extension|null $extension
+   *   Drupal extension instance.
+   *
+   * @return string|null
+   *   Absolute file path.
+   */
+  protected function getFilePath(string $name, string $type, ?Extension $extension): ?string {
+    if ($extension) {
+      return $this->root . '/' . $extension->getPath() . "/$name.$type";
     }
-    return FALSE;
+    return NULL;
   }
 
   /**
