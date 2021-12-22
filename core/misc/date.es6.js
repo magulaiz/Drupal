@@ -151,4 +151,4 @@
     `<div class="no-native-datepicker-help">
        <span id="${dateId}">${dateDesc}</span> <span id="${timeId}">${timeDesc}</span>
      </div>`;
-})(jQuery, Modernizr, Drupal, once);
+})(Modernizr, Drupal, once);

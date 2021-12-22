@@ -91,4 +91,4 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         timeDesc = _ref2.timeDesc;
     return "<div class=\"no-native-datepicker-help\">\n       <span id=\"".concat(dateId, "\">").concat(dateDesc, "</span> <span id=\"").concat(timeId, "\">").concat(timeDesc, "</span>\n     </div>");
   };
-})(jQuery, Modernizr, Drupal, once);
+})(Modernizr, Drupal, once);
