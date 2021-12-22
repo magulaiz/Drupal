@@ -227,7 +227,7 @@ module.exports = {
     browser.drupalRelativeURL('/user');
     browser.drupalRelativeURL('/admin');
     // Don't check the visibility as stark doesn't add the .path-admin class
-    // required to display the button.
+    // to the <body> required to display the button.
     browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
   },
   'Aural view test': (browser) => {
