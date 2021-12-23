@@ -24,6 +24,11 @@ abstract class DateTestBase extends BrowserTestBase {
   protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * An array of display options.
    *
    * An array of display options to pass to
@@ -99,6 +104,8 @@ abstract class DateTestBase extends BrowserTestBase {
       'administer content types',
       'bypass node access',
       'administer node fields',
+      'administer node form display',
+      'administer node display',
     ]);
     $this->drupalLogin($web_user);
 
