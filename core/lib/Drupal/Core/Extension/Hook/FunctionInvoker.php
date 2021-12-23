@@ -7,7 +7,7 @@ namespace Drupal\Core\Extension\Hook;
  *
  * @see hook_hook_info()
  */
-final class FunctionInvoker {
+class FunctionInvoker {
 
   /**
    * @var callable
@@ -15,7 +15,7 @@ final class FunctionInvoker {
    *   - $module: the name of the module implementing the hook.
    *   - $hook: the hook's name.
    */
-  private $invoker;
+  protected $invoker;
 
   /**
    * Creates a new instance.
