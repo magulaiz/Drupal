@@ -47,12 +47,34 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
   public function getRoutes(EntityTypeInterface $entity_type) {
     $collection = new RouteCollection();
 
+    $entity_type_id = $entity_type->id();
+
+    if ($bundle_permissions_route = $this->getBundlePermissionsRoute($entity_type)) {
+      $collection->add("entity.$entity_type_id.permission_form", $bundle_permissions_route);
+    }
+
+    return $collection;
+  }
+
+  /**
+   * Gets the bundle permissions route.
+   *
+   * Built only for entity types that are bundles of other entity types and
+   * define the 'permission-form' link template.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   *   The entity type.
+   *
+   * @return \Symfony\Component\Routing\Route|null
+   *   The generated route, if available.
+   */
+  protected function getBundlePermissionsRoute(EntityTypeInterface $entity_type): ?Route {
     if (!$entity_type->hasLinkTemplate('permission-form')) {
-      return $collection;
+      return;
     }
 
     if (!$bundle_of_id = $entity_type->getBundleOf()) {
-      return $collection;
+      return;
     }
 
     $entity_type_id = $entity_type->id();
@@ -82,9 +104,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
       ]
     );
 
-    $collection->add("entity.$entity_type_id.permission_form", $route);
-
-    return $collection;
+    return $route;
   }
 
 }
