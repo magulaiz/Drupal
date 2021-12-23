@@ -51,7 +51,7 @@ module.exports = {
   'Drupal.Toolbar.models': (browser) => {
     browser.execute(
       function () {
-        toReturn = {};
+        const toReturn = {};
         const { models } = Drupal.toolbar;
         toReturn.hasMenuModel = models.hasOwnProperty('menuModel');
         toReturn.menuModelType = typeof models.menuModel === 'object';
@@ -63,19 +63,19 @@ module.exports = {
         toReturn.toolbarModelActiveTray =
           models.toolbarModel.get('activeTray').id ===
           'toolbar-item-administration-tray';
-        toReturn.toolbarModelisOriented =
+        toReturn.toolbarModelIsOriented =
           models.toolbarModel.get('isOriented') === true;
-        toReturn.toolbarModelisFixed =
+        toReturn.toolbarModelIsFixed =
           models.toolbarModel.get('isFixed') === true;
-        toReturn.toolbarModelareSubtreesLoaded =
+        toReturn.toolbarModelAreSubtreesLoaded =
           models.toolbarModel.get('areSubtreesLoaded') === false;
-        toReturn.toolbarModelisViewportOverflowConstrained =
+        toReturn.toolbarModelIsViewportOverflowConstrained =
           models.toolbarModel.get('isViewportOverflowConstrained') === false;
         toReturn.toolbarModelOrientation =
           models.toolbarModel.get('orientation') === 'horizontal';
         toReturn.toolbarModelLocked =
           models.toolbarModel.get('locked') === null;
-        toReturn.toolbarModelisTrayToggleVisible =
+        toReturn.toolbarModelIsTrayToggleVisible =
           models.toolbarModel.get('isTrayToggleVisible') === true;
         toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 79;
         toReturn.toolbarModelOffsetsBottom =
@@ -97,15 +97,15 @@ module.exports = {
           hasToolbarModel: 'has toolbar model',
           toolbarModelActiveTab: 'get("activeTab") has expected result',
           toolbarModelActiveTray: 'get("activeTray") has expected result',
-          toolbarModelisOriented: 'get("isOriented") has expected result',
-          toolbarModelisFixed: 'get("isFixed") has expected result',
-          toolbarModelareSubtreesLoaded:
+          toolbarModelIsOriented: 'get("isOriented") has expected result',
+          toolbarModelIsFixed: 'get("isFixed") has expected result',
+          toolbarModelAreSubtreesLoaded:
             'get("areSubtreesLoaded") has expected result',
-          toolbarModelisViewportOverflowConstrained:
+          toolbarModelIsViewportOverflowConstrained:
             'get("isViewportOverflowConstrained") has expected result',
           toolbarModelOrientation: 'get("orientation") has expected result',
           toolbarModelLocked: 'get("locked") has expected result',
-          toolbarModelisTrayToggleVisible:
+          toolbarModelIsTrayToggleVisible:
             'get("isTrayToggleVisible") has expected result',
           toolbarModelHeight: 'get("height") has expected result',
           toolbarModelOffsetsBottom:
@@ -129,7 +129,7 @@ module.exports = {
   'Change tab': (browser) => {
     browser.executeAsync(
       function (done) {
-        toReturn = {};
+        const toReturn = {};
         const { models } = Drupal.toolbar;
         toReturn.hasMenuModel = models.hasOwnProperty('menuModel');
         toReturn.menuModelType = typeof models.menuModel === 'object';
@@ -168,7 +168,7 @@ module.exports = {
   'Change orientation': (browser) => {
     browser.executeAsync(
       function (done) {
-        toReturn = {};
+        const toReturn = {};
         const { models } = Drupal.toolbar;
 
         const orientationToggle = document.querySelector(
@@ -205,7 +205,7 @@ module.exports = {
   'Open submenu': (browser) => {
     browser.executeAsync(
       function (done) {
-        toReturn = {};
+        const toReturn = {};
         const { models } = Drupal.toolbar;
         Drupal.toolbar.models.toolbarModel.set('orientation', 'vertical');
         toReturn.toolbarOrientation =
@@ -223,7 +223,6 @@ module.exports = {
           const statReportElement = document.querySelector(
             '#toolbar-link-system-status',
           );
-          toReturn.submenuItemmm = statReportElement.textContent;
           toReturn.submenuItem =
             statReportElement.textContent === 'Status report';
           done(toReturn);

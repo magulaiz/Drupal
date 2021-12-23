@@ -308,12 +308,14 @@ module.exports = {
   'Locked toolbar vertical wide viewport': (browser) => {
     browser.resizeWindow(1000, 900);
     browser.waitForElementPresent(adminOrientationButton);
+    // eslint-disable-next-line no-unused-expressions
     browser.expect.element(adminOrientationButton).to.be.visible;
     browser.resizeWindow(975, 900);
     browser.assert.cssClassPresent(
       itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
+    // eslint-disable-next-line no-unused-expressions
     browser.expect.element(adminOrientationButton).to.not.be.visible;
   },
   'Settings are retained on refresh': (browser) => {
