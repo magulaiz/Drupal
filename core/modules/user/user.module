@@ -1338,7 +1338,7 @@ function user_entity_operation(EntityInterface $entity) {
   }
 
   $bundle_entity_type = $entity->bundle();
-  $route = "entity.$bundle_entity_type.permission_form";
+  $route = "entity.$bundle_entity_type.permissions_form";
   if (empty(\Drupal::service('router.route_provider')->getRoutesByNames([$route]))) {
     return [];
   }

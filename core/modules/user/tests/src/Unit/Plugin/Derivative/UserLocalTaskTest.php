@@ -64,7 +64,7 @@ class UserLocalTaskTest extends UnitTestCase {
   public function testGetDerivativeDefinitions() {
     $expected = [
       'permissions_entity_bundle_of_id' => [
-        'route_name' => 'entity.entity_bundle_of_id.permission_form',
+        'route_name' => 'entity.entity_bundle_of_id.permissions_form',
         'weight' => 10,
         'title' => $this->getStringTranslationStub()->translate('Manage permissions'),
         'base_route' => 'field_ui.base_route',
