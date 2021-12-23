@@ -44,20 +44,20 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
   /**
    * {@inheritdoc}
    */
-  public function getRoutes(EntityTypeInterface $bundle_entity_type) {
+  public function getRoutes(EntityTypeInterface $entity_type) {
     $route_collection = new RouteCollection();
 
-    if (!$bundle_entity_type->hasLinkTemplate('permission-form')) {
+    if (!$entity_type->hasLinkTemplate('permission-form')) {
       return $route_collection;
     }
 
-    if (!$entity_type_id = $bundle_entity_type->getBundleOf()) {
+    if (!$entity_type_id = $entity_type->getBundleOf()) {
       return $route_collection;
     }
 
-    $bundle_type_id = $bundle_entity_type->id();
+    $bundle_type_id = $entity_type->id();
     $route = new Route(
-      $bundle_entity_type->getLinkTemplate('permission-form'),
+      $entity_type->getLinkTemplate('permission-form'),
       [
         '_title' => 'Manage permissions',
         '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',
