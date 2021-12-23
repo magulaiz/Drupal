@@ -45,24 +45,24 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
    * {@inheritdoc}
    */
   public function getRoutes(EntityTypeInterface $entity_type) {
-    $route_collection = new RouteCollection();
+    $collection = new RouteCollection();
 
     if (!$entity_type->hasLinkTemplate('permission-form')) {
-      return $route_collection;
+      return $collection;
     }
 
     if (!$bundle_of_id = $entity_type->getBundleOf()) {
-      return $route_collection;
+      return $collection;
     }
 
-    $bundle_type_id = $entity_type->id();
+    $entity_type_id = $entity_type->id();
     $route = new Route(
       $entity_type->getLinkTemplate('permission-form'),
       [
         '_title' => 'Manage permissions',
         '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',
         'entity_type_id' => $bundle_of_id,
-        'bundle_entity_type' => $bundle_type_id,
+        'bundle_entity_type' => $entity_type_id,
       ],
       [
         '_permission' => 'administer permissions',
@@ -73,8 +73,8 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
         // set the bundle parameter.
         '_field_ui' => TRUE,
         'parameters' => [
-          $bundle_type_id => [
-            'type' => "entity:$bundle_type_id",
+          $entity_type_id => [
+            'type' => "entity:$entity_type_id",
             'with_config_overrides' => TRUE,
           ],
         ],
@@ -82,9 +82,9 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
       ]
     );
 
-    $route_collection->add("entity.$bundle_type_id.permission_form", $route);
+    $collection->add("entity.$entity_type_id.permission_form", $route);
 
-    return $route_collection;
+    return $collection;
   }
 
 }
