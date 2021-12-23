@@ -78,8 +78,6 @@ module.exports = {
         toReturn.toolbarModelisTrayToggleVisible =
           models.toolbarModel.get('isTrayToggleVisible') === true;
         toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 79;
-        toReturn.toolbarModelHeightt = models.toolbarModel.get('height');
-        toReturn.toolbarModelOffsetss = models.toolbarModel.get('offsets');
         toReturn.toolbarModelOffsetsBottom =
           models.toolbarModel.get('offsets').bottom === 0;
         toReturn.toolbarModelOffsetsLeft =
@@ -90,7 +88,6 @@ module.exports = {
           models.toolbarModel.get('offsets').top === 79;
         toReturn.toolbarModelSubtrees =
           Object.keys(models.menuModel.get('subtrees')).length === 0;
-        toReturn.toolbarModelSubtreesssss = models.menuModel.get('subtrees');
         return toReturn;
       },
       [],
