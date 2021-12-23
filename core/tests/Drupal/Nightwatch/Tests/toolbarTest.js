@@ -1,5 +1,9 @@
-const adminOrientationButton =
-  '#toolbar-item-administration-tray .toolbar-toggle-orientation button';
+const itemAdministration = '#toolbar-item-administration';
+const itemAdministrationTray = '#toolbar-item-administration-tray';
+const adminOrientationButton = `${itemAdministrationTray} .toolbar-toggle-orientation button`;
+const itemUser = '#toolbar-item-user';
+const itemUserTray = '#toolbar-item-user-tray';
+const userOrientationBtn = `${itemUserTray} .toolbar-toggle-orientation button`;
 
 module.exports = {
   '@tags': ['core'],
@@ -49,43 +53,43 @@ module.exports = {
     browser.drupalUninstall();
   },
   'Change tab': (browser) => {
-    browser.waitForElementPresent('#toolbar-item-user-tray');
-    browser.assert.not.cssClassPresent('#toolbar-item-user', 'is-active');
-    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
-    browser.click('#toolbar-item-user');
-    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
-    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
+    browser.waitForElementPresent(itemUserTray);
+    browser.assert.not.cssClassPresent(itemUser, 'is-active');
+    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
+    browser.click(itemUser);
+    browser.assert.cssClassPresent(itemUser, 'is-active');
+    browser.assert.cssClassPresent(itemUserTray, 'is-active');
   },
   'Change orientation': (browser) => {
     browser.waitForElementPresent(adminOrientationButton);
-    browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
-      'is-active',
-      'toolbar-tray-horizontal',
-    ]);
-    browser.click(adminOrientationButton);
-    browser.assert.cssClassPresent('#toolbar-item-administration-tray', [
-      'is-active',
-      'toolbar-tray-vertical',
-    ]);
-  },
-  'Toggle tray': (browser) => {
-    browser.waitForElementPresent('#toolbar-item-user-tray');
-    browser.click('#toolbar-item-user');
-    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
-    browser.click('#toolbar-item-user');
-    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
-    browser.click('#toolbar-item-user');
-    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
-  },
-  'Toggle submenu and sub-submenu': (browser) => {
-    browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-horizontal',
     );
     browser.click(adminOrientationButton);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
+      'is-active toolbar-tray-vertical',
+    );
+  },
+  'Toggle tray': (browser) => {
+    browser.waitForElementPresent(itemUserTray);
+    browser.click(itemUser);
+    browser.assert.cssClassPresent(itemUserTray, 'is-active');
+    browser.click(itemUser);
+    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
+    browser.click(itemUser);
+    browser.assert.cssClassPresent(itemUserTray, 'is-active');
+  },
+  'Toggle submenu and sub-submenu': (browser) => {
+    browser.waitForElementPresent(adminOrientationButton);
+    browser.assert.cssClassPresent(
+      itemAdministrationTray,
+      'is-active toolbar-tray-horizontal',
+    );
+    browser.click(adminOrientationButton);
+    browser.assert.cssClassPresent(
+      itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
     browser.waitForElementPresent(
@@ -144,7 +148,7 @@ module.exports = {
   'Narrow toolbar width breakpoint': (browser) => {
     browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-horizontal',
     );
     browser.assert.cssClassPresent(
@@ -153,13 +157,10 @@ module.exports = {
     );
     browser.resizeWindow(263, 900);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
-    browser.assert.not.cssClassPresent(
-      '#toolbar-item-administration',
-      'toolbar-oriented',
-    );
+    browser.assert.not.cssClassPresent(itemAdministration, 'toolbar-oriented');
   },
   'Standard width toolbar breakpoint': (browser) => {
     browser.resizeWindow(1000, 900);
@@ -167,7 +168,7 @@ module.exports = {
     browser.assert.cssClassPresent('body', 'toolbar-fixed');
     browser.resizeWindow(609, 900);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
     browser.assert.not.cssClassPresent('body', 'toolbar-fixed');
@@ -176,7 +177,7 @@ module.exports = {
     browser.waitForElementPresent(adminOrientationButton);
     browser.resizeWindow(975, 900);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
   },
@@ -310,39 +311,37 @@ module.exports = {
     browser.expect.element(adminOrientationButton).to.be.visible;
     browser.resizeWindow(975, 900);
     browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray',
+      itemAdministrationTray,
       'is-active toolbar-tray-vertical',
     );
     browser.expect.element(adminOrientationButton).to.not.be.visible;
   },
   'Settings are retained on refresh': (browser) => {
-    browser.waitForElementPresent('#toolbar-item-user');
-    const toggleOrientationBtn =
-      '#toolbar-item-user-tray .toolbar-toggle-orientation button';
+    browser.waitForElementPresent(itemUser);
     // Set user as active tab
-    browser.assert.not.cssClassPresent('#toolbar-item-user', 'is-active');
-    browser.assert.not.cssClassPresent('#toolbar-item-user-tray', 'is-active');
-    browser.click('#toolbar-item-user');
+    browser.assert.not.cssClassPresent(itemUser, 'is-active');
+    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
+    browser.click(itemUser);
     // Check tab and tray are open
-    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
-    browser.assert.cssClassPresent('#toolbar-item-user-tray', 'is-active');
+    browser.assert.cssClassPresent(itemUser, 'is-active');
+    browser.assert.cssClassPresent(itemUserTray, 'is-active');
     // Set orientation to vertical
-    browser.waitForElementPresent(toggleOrientationBtn);
+    browser.waitForElementPresent(userOrientationBtn);
     browser.assert.cssClassPresent(
-      '#toolbar-item-user-tray',
+      itemUserTray,
       'is-active toolbar-tray-horizontal',
     );
-    browser.click(toggleOrientationBtn);
+    browser.click(userOrientationBtn);
     browser.assert.cssClassPresent(
-      '#toolbar-item-user-tray',
+      itemUserTray,
       'is-active toolbar-tray-vertical',
     );
     browser.refresh();
     // Check user tab is active
-    browser.assert.cssClassPresent('#toolbar-item-user', 'is-active');
+    browser.assert.cssClassPresent(itemUser, 'is-active');
     // Check tray is active and orientation is vertical
     browser.assert.cssClassPresent(
-      '#toolbar-item-user-tray',
+      itemUserTray,
       'is-active toolbar-tray-vertical',
     );
   },
