@@ -70,11 +70,11 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
    */
   protected function getBundlePermissionsRoute(EntityTypeInterface $entity_type): ?Route {
     if (!$entity_type->hasLinkTemplate('bundle-permissions-form')) {
-      return;
+      return NULL;
     }
 
     if (!$bundle_of_id = $entity_type->getBundleOf()) {
-      return;
+      return NULL;
     }
 
     $entity_type_id = $entity_type->id();
