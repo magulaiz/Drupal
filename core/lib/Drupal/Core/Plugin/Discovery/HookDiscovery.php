@@ -47,7 +47,7 @@ class HookDiscovery implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = [];
-    $this->moduleHandler->invokeAllWith($this->hook, new FunctionInvoker(function ($hook_implementation, $module) use (&$definitions) {
+    $this->moduleHandler->invokeAllWith($this->hook, new FunctionInvoker(function ($hook_implementation, $module, $hook) use (&$definitions) {
       $module_definitions = $hook_implementation();
       foreach ($module_definitions as $plugin_id => $definition) {
         $definition['id'] = $plugin_id;
