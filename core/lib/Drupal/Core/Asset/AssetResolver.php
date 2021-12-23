@@ -313,11 +313,7 @@ class AssetResolver implements AssetResolverInterface {
       if ($settings_required && $settings_have_changed) {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
-        $this->moduleHandler->invokeAllWith('js_settings_build', new FunctionInvoker(function (
-          callable $hook_implementation) use (
-          &$settings,
-          &$assets
-        ) {
+        $this->moduleHandler->invokeAllWith('js_settings_build', new FunctionInvoker(function (callable $hook_implementation) use (&$settings, &$assets) {
           $hook_implementation($settings, $assets);
         }));
       }
