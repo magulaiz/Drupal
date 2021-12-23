@@ -4,10 +4,6 @@
  */
 
 (function ($, Drupal, drupalSettings) {
-  // @todo find a better place for this. This is just for testing.
-  const isVisible = (elem) =>
-    !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
-  const isHidden = (elem) => !isVisible(elem);
 
   /**
    * @namespace
@@ -423,7 +419,7 @@
       $('li.add', $menu).on('mouseleave', function (event) {
         const $this = $(this);
         const $trigger = $this.children('a[href="#"]');
-        if (isVisible($this.children('.action-list')[0])) {
+        if (Drupal.elementIsVisible($this.children('.action-list')[0])) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });
@@ -1080,7 +1076,10 @@
             // The cell with the dropdown operator should span the title row and
             // the "this group is empty" row.
             $operatorCell.attr('rowspan', 2);
-          } else if ($row.hasClass('draggable') && isVisible(rows[i])) {
+          } else if (
+            $row.hasClass('draggable') &&
+            Drupal.elementIsVisible(rows[i])
+          ) {
             // We've found a visible filter row, so we now know the group isn't
             // empty.
             draggableCount++;

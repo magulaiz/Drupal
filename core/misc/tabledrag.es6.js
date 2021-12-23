@@ -19,11 +19,6 @@
     localStorage.getItem('Drupal.tableDrag.showWeight'),
   );
 
-  // @todo find a better place for this. This is just for testing.
-  const isVisible = (elem) =>
-    !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
-  const isHidden = (elem) => !isVisible(elem);
-
   /**
    * Drag and drop table rows with field manipulation.
    *
@@ -550,7 +545,7 @@
         case 63232: {
           let $previousRow = $(self.rowObject.element).prev('tr').eq(0);
           let previousRow = $previousRow.get(0);
-          while (previousRow && isHidden(previousRow)) {
+          while (previousRow && Drupal.elementIsHidden(previousRow)) {
             $previousRow = $(previousRow).prev('tr').eq(0);
             previousRow = $previousRow.get(0);
           }
@@ -569,7 +564,7 @@
               ) {
                 $previousRow = $(previousRow).prev('tr').eq(0);
                 previousRow = $previousRow.get(0);
-                groupHeight += isHidden(previousRow)
+                groupHeight += Drupal.elementIsHidden(previousRow)
                   ? 0
                   : previousRow.offsetHeight;
               }
@@ -608,7 +603,7 @@
         case 63233: {
           let $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
           let nextRow = $nextRow.get(0);
-          while (nextRow && isHidden(nextRow)) {
+          while (nextRow && Drupal.elementIsHidden(nextRow)) {
             $nextRow = $(nextRow).next('tr').eq(0);
             nextRow = $nextRow.get(0);
           }
@@ -630,7 +625,9 @@
               );
               if (nextGroup) {
                 $(nextGroup.group).each(function () {
-                  groupHeight += isHidden(this) ? 0 : this.offsetHeight;
+                  groupHeight += Drupal.elementIsHidden(this)
+                    ? 0
+                    : this.offsetHeight;
                 });
                 const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
@@ -970,7 +967,10 @@
         // We may have found the row the mouse just passed over, but it doesn't
         // take into account hidden rows. Skip backwards until we find a
         // draggable row.
-        while (isHidden(row) && isHidden($row.prev('tr')[0])) {
+        while (
+          Drupal.elementIsHidden(row) &&
+          Drupal.elementIsHidden($row.prev('tr')[0])
+        ) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }

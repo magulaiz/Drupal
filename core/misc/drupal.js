@@ -221,4 +221,12 @@ window.Drupal = {
   Drupal.theme.placeholder = function (str) {
     return "<em class=\"placeholder\">".concat(Drupal.checkPlain(str), "</em>");
   };
+
+  Drupal.elementIsVisible = function (elem) {
+    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
+  };
+
+  Drupal.elementIsHidden = function (elem) {
+    return !Drupal.elementIsVisible(elem);
+  };
 })(Drupal, window.drupalSettings, window.drupalTranslations, window.console, window.Proxy, window.Reflect);

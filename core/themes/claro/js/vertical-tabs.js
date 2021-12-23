@@ -6,14 +6,6 @@
 **/
 
 (function ($, Drupal) {
-  var isVisible = function isVisible(elem) {
-    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
-  };
-
-  var isHidden = function isHidden(elem) {
-    return !isVisible(elem);
-  };
-
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
     $target.parents('.js-vertical-tabs-pane').each(function (index, pane) {
       $(pane).data('verticalTab').focus();
@@ -130,7 +122,7 @@
       if (triggerFocus) {
         var $summary = this.details.find('> summary');
 
-        if (isVisible($summary[0])) {
+        if (Drupal.elementIsVisible($summary[0])) {
           $summary.trigger('focus');
         }
       }

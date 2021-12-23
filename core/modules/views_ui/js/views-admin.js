@@ -6,14 +6,6 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  var isVisible = function isVisible(elem) {
-    return !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length);
-  };
-
-  var isHidden = function isHidden(elem) {
-    return !isVisible(elem);
-  };
-
   Drupal.viewsUi = {};
   Drupal.behaviors.viewsUiEditView = {
     attach: function attach() {
@@ -194,7 +186,7 @@
         var $this = $(this);
         var $trigger = $this.children('a[href="#"]');
 
-        if (isVisible($this.children('.action-list')[0])) {
+        if (Drupal.elementIsVisible($this.children('.action-list')[0])) {
           Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu($trigger);
         }
       });
@@ -477,7 +469,7 @@
           $currentEmptyRow = $row.next('tr');
           $currentEmptyRow.removeClass('group-populated').addClass('group-empty');
           $operatorCell.attr('rowspan', 2);
-        } else if ($row.hasClass('draggable') && isVisible(rows[i])) {
+        } else if ($row.hasClass('draggable') && Drupal.elementIsVisible(rows[i])) {
           draggableCount++;
           $currentEmptyRow.removeClass('group-empty').addClass('group-populated');
           $operatorCell.attr('rowspan', draggableCount + 1);
