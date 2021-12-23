@@ -41,7 +41,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *   links = {
  *     "delete-form" = "/admin/structure/block/block-content/manage/{block_content_type}/delete",
  *     "edit-form" = "/admin/structure/block/block-content/manage/{block_content_type}",
- *     "permission-form" = "/admin/structure/block/block-content/manage/{block_content_type}/permissions",
+ *     "bundle-permissions-form" = "/admin/structure/block/block-content/manage/{block_content_type}/permissions",
  *     "collection" = "/admin/structure/block/block-content/types",
  *   },
  *   config_export = {

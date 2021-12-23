@@ -60,7 +60,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
    * Gets the bundle permissions route.
    *
    * Built only for entity types that are bundles of other entity types and
-   * define the 'permission-form' link template.
+   * define the 'bundle-permissions-form' link template.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
@@ -69,7 +69,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
    *   The generated route, if available.
    */
   protected function getBundlePermissionsRoute(EntityTypeInterface $entity_type): ?Route {
-    if (!$entity_type->hasLinkTemplate('permission-form')) {
+    if (!$entity_type->hasLinkTemplate('bundle-permissions-form')) {
       return;
     }
 
@@ -79,7 +79,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
 
     $entity_type_id = $entity_type->id();
     $route = new Route(
-      $entity_type->getLinkTemplate('permission-form'),
+      $entity_type->getLinkTemplate('bundle-permissions-form'),
       [
         '_title' => 'Manage permissions',
         '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',

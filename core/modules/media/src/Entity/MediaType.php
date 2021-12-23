@@ -56,7 +56,7 @@ use Drupal\media\MediaTypeInterface;
  *     "add-form" = "/admin/structure/media/add",
  *     "edit-form" = "/admin/structure/media/manage/{media_type}",
  *     "delete-form" = "/admin/structure/media/manage/{media_type}/delete",
- *     "permission-form" = "/admin/structure/media/manage/{media_type}/permissions",
+ *     "bundle-permissions-form" = "/admin/structure/media/manage/{media_type}/permissions",
  *     "collection" = "/admin/structure/media",
  *   },
  * )

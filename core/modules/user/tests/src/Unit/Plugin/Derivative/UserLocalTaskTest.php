@@ -26,21 +26,21 @@ class UserLocalTaskTest extends UnitTestCase {
     parent::setUp();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->hasLinkTemplate('permission-form')->willReturn(FALSE);
+    $prophecy->hasLinkTemplate('bundle-permissions-form')->willReturn(FALSE);
     $entity_no_link_template = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->hasLinkTemplate('permission-form')->willReturn(TRUE);
+    $prophecy->hasLinkTemplate('bundle-permissions-form')->willReturn(TRUE);
     $prophecy->getBundleOf()->willReturn(NULL);
     $entity_no_bundle_of = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->hasLinkTemplate('permission-form')->willReturn(TRUE);
+    $prophecy->hasLinkTemplate('bundle-permissions-form')->willReturn(TRUE);
     $prophecy->getBundleOf()->willReturn('content_entity_type_id');
     $entity_bundle_of = $prophecy->reveal();
 
     $prophecy = $this->prophesize(EntityTypeInterface::class);
-    $prophecy->hasLinkTemplate('permission-form')->willReturn(FALSE);
+    $prophecy->hasLinkTemplate('bundle-permissions-form')->willReturn(FALSE);
     $prophecy->get('field_ui_base_route')->willReturn('field_ui.base_route');
     $content_entity_type = $prophecy->reveal();
 
