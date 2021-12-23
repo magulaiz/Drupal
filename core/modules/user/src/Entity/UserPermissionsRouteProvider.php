@@ -51,7 +51,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
       return $route_collection;
     }
 
-    if (!$entity_type_id = $entity_type->getBundleOf()) {
+    if (!$bundle_of_id = $entity_type->getBundleOf()) {
       return $route_collection;
     }
 
@@ -61,7 +61,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
       [
         '_title' => 'Manage permissions',
         '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',
-        'entity_type_id' => $entity_type_id,
+        'entity_type_id' => $bundle_of_id,
         'bundle_entity_type' => $bundle_type_id,
       ],
       [
