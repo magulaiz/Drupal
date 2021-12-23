@@ -30,7 +30,7 @@
  *
  * @return
  *   The processed form element array.
-*/
+ */
 function callback_form_element_process(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array &$complete_form) {
   // Add a new wrapper around the element.
   $element['#prefix'] = '<div id="my-element-id">';
