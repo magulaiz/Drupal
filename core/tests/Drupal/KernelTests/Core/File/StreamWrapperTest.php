@@ -84,20 +84,16 @@ class StreamWrapperTest extends FileTestBase {
 
     // Test file_uri_target().
     $this->assertEquals('foo/bar.txt', $stream_wrapper_manager::getTarget('public://foo/bar.txt'), 'Got a valid stream target from public://foo/bar.txt.');
-    $this->assertEquals('image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', $stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='), t('Got a valid stream target from a data URI.'));
+    $this->assertEquals('image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==', $stream_wrapper_manager::getTarget('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='));
     $this->assertFalse($stream_wrapper_manager::getTarget('foo/bar.txt'), 'foo/bar.txt is not a valid stream.');
     $this->assertSame($stream_wrapper_manager::getTarget('public://'), '');
     $this->assertSame($stream_wrapper_manager::getTarget('data:'), '');
 
-    // Test file_build_uri() and
-    // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
-    $this->assertEquals('public://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Expected scheme was added.');
+    // Test Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEquals(PublicStream::basePath(), $stream_wrapper_manager->getViaScheme('public')->getDirectoryPath(), 'Expected default directory path was returned.');
     $file_system = \Drupal::service('file_system');
     assert($file_system instanceof FileSystemInterface);
     $this->assertEquals($file_system->getTempDirectory(), $stream_wrapper_manager->getViaScheme('temporary')->getDirectoryPath(), 'Expected temporary directory path was returned.');
-    $config->set('default_scheme', 'private')->save();
-    $this->assertEquals('private://foo/bar.txt', file_build_uri('foo/bar.txt'), 'Got a valid URI from foo/bar.txt.');
 
     // Test FileUrlGeneratorInterface::generateString()
     // TemporaryStream::getExternalUrl() uses Url::fromRoute(), which needs

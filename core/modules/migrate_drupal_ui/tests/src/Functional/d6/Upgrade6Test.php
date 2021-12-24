@@ -22,6 +22,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'book',
     'config_translation',
     'content_translation',
+    'datetime_range',
     'forum',
     'language',
     'migrate_drupal_ui',
@@ -209,8 +210,10 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
    * Tests that follow-up migrations have been run successfully.
+   *
+   * @internal
    */
-  protected function assertFollowUpMigrationResults() {
+  protected function assertFollowUpMigrationResults(): void {
     $node = Node::load(10);
     $this->assertSame('12', $node->get('field_reference')->target_id);
     $this->assertSame('12', $node->get('field_reference_2')->target_id);
