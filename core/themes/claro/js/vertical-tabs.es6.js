@@ -60,7 +60,6 @@
  */
 
 (($, Drupal) => {
-
   /**
    * Show the parent vertical tab pane of a targeted page fragment.
    *
