@@ -2,6 +2,7 @@
 
 namespace Drupal\update\Form;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -19,6 +20,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class UpdateManagerUpdate extends FormBase {
+
+  const VERSION_TYPES = [
+    'recommended' => 'recommended',
+    'installed' => 'existing_version',
+  ];
 
   /**
    * The module handler.
@@ -160,6 +166,32 @@ class UpdateManagerUpdate extends FormBase {
         'installed_version' => $project['existing_version'],
         'recommended_version' => ['data' => $recommended_version],
       ];
+
+      $old_seen_versions = $this->state->get('update.versions.' . $name, []);
+      $new_seen_versions = [];
+
+      foreach (array_reverse(self::VERSION_TYPES, TRUE) as $version_type => $project_key) {
+        if (isset($old_seen_versions[$version_type])) {
+          $seen_version = $old_seen_versions[$version_type];
+
+          if ($seen_version !== $project[$project_key]) {
+            $parents = [$version_type . '_version'];
+
+            if ($version_type === 'recommended') {
+              $parents = array_merge($parents, ['data', '#template']);
+            }
+
+            $value = NestedArray::getValue($entry, $parents);
+            NestedArray::setValue($entry, $parents, "$seen_version > $value");
+          }
+        }
+
+        $new_seen_versions[$version_type] = $project[$project_key];
+      }
+
+      if ($old_seen_versions !== $new_seen_versions) {
+        $this->state->set('update.versions.' . $name, $new_seen_versions);
+      }
 
       switch ($project['status']) {
         case UpdateManagerInterface::NOT_SECURE:
