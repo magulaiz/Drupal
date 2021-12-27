@@ -1252,7 +1252,7 @@ function hook_views_plugins_sort_alter(array &$plugins) {
  */
 function hook_views_display_link_alter(array &$output) {
   if (!empty($output['#options']['view']) && $output['#options']['view'] instanceof \Drupal\views\ViewExecutable && $output['#options']['view']->id() === 'my_view') {
-    $output['#options']['attributes'][] = 'use-ajax';
+    $output['#options']['attributes']['class'][] = 'use-ajax';
     $output['#options']['attributes']['data-dialog-type'] = 'modal';
     $output['#options']['attributes']['data-dialog-options'] = \Drupal\Component\Serialization\Json::encode([
       'height' => '50%',
