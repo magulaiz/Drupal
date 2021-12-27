@@ -34,8 +34,12 @@ function field_update_8501(&$sandbox) {
   // Checking all field types to find entity_reference fields, that should
   // be fixed.
   foreach ($fieldMap as $entityType => $fields) {
-
-    $entityStorage = $entityTypeManager->getStorage($entityType);
+    try {
+      $entityStorage = $entityTypeManager->getStorage($entityType);
+    }
+    catch (\Drupal\Component\Plugin\Exception\PluginNotFoundException $e) {
+      continue;
+    }
     // Skipping entities that have no SQL storage.
     if (!$entityStorage instanceof SqlContentEntityStorage) {
       continue;
@@ -86,14 +90,16 @@ function field_update_8501(&$sandbox) {
         continue;
       }
 
-      dump("$entityType - $fieldName - {$fieldInfo['type']} - target $entityFieldTargetEntityType - size target $targetFieldSize ref $referenceFieldSize");
-
-      $fieldSqlTables = $entityTypeManager->getStorage($entityType)->getTableMapping()->getAllFieldTableNames($fieldName);
+      $fieldSqlTables = $entityStorage->getTableMapping()->getAllFieldTableNames($fieldName);
       foreach ($fieldSqlTables as $fieldSqlTable) {
-        $fieldSqlColumn = is_a($fieldDefinition, 'Drupal\field\Entity\FieldStorageConfig')
-          ? $fieldName . '_target_id'
-          : $fieldName;
-        $dbSchema->changeField($fieldSqlTable, $fieldSqlColumn, $fieldSqlColumn, $fieldDefinitionSchema['columns']['target_id']);
+        $isSameTable = ($fieldDefinition->getCardinality() == 1);
+        $fieldSqlColumn = $isSameTable ? $fieldName : $fieldName . '_target_id';
+        try {
+          $dbSchema->changeField($fieldSqlTable, $fieldSqlColumn, $fieldSqlColumn, $fieldDefinitionSchema['columns']['target_id']);
+        }
+        catch (\Drupal\Core\Database\SchemaObjectDoesNotExistException $e) {
+          // Skipping tables that doesn't exist.
+        }
 
         $fieldSchemaData = \Drupal::keyValue('entity.storage_schema.sql')->get($entityType . '.field_schema_data.' . $fieldSqlColumn, []);
         $fieldSchemaData[$entityType]['fields'][$fieldSqlColumn]['size'] = $targetFieldSize;
