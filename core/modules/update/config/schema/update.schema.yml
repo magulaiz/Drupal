@@ -42,4 +42,4 @@ update.settings:
           label: 'Email notification threshold'
     news:
       type: boolean
-      label: 'News is present'
+      label: 'News mode'
