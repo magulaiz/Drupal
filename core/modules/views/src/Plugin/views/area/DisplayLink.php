@@ -196,7 +196,7 @@ class DisplayLink extends AreaPluginBase {
       $classes[] = 'is-active';
     }
 
-    return [
+    $output = [
       '#type' => 'link',
       '#title' => $this->options['label'],
       '#url' => $this->view->getUrl($this->view->args, $this->options['display_id'])->setOptions(['query' => $query]),
@@ -206,6 +206,11 @@ class DisplayLink extends AreaPluginBase {
         'attributes' => ['class' => $classes],
       ],
     ];
+
+    // Add other modules the opportunity to alter the display link.
+    $this->getModuleHandler()->alter('views_display_link', $output);
+
+    return $output;
   }
 
   /**
