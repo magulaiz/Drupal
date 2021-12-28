@@ -348,7 +348,7 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      $this->moduleHandler->invokeAllWith('theme', function ($module) use (&$cache) {
+      $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
         $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
       });
       // Only cache this registry if all modules are loaded.

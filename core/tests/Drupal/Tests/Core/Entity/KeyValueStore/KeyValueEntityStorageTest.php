@@ -289,7 +289,6 @@ class KeyValueEntityStorageTest extends UnitTestCase {
       ->will($this->returnValue([['id' => 'foo']]));
     $this->keyValueStore->expects($this->never())
       ->method('delete');
-
     $this->moduleHandler->expects($this->exactly(4))
       ->method('invokeAll')
       ->withConsecutive(

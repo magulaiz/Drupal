@@ -200,6 +200,19 @@ interface ModuleHandlerInterface {
   public function resetImplementations();
 
   /**
+   * Determines whether there are any implementations of a hook.
+   *
+   * Use implementsHook to determine if a specific module implements a hook.
+   *
+   * @param string $hook
+   *   The name of the hook (e.g. "help" or "menu").
+   *
+   * @return bool
+   *   Whether there are any implementations of a hook.
+   */
+  public function hasImplementations(string $hook): bool;
+
+  /**
    * Returns whether a given module implements a given hook.
    *
    * @param string $module
@@ -214,44 +227,21 @@ interface ModuleHandlerInterface {
   public function implementsHook($module, $hook);
 
   /**
-   * Invokes a hook in a particular module using a callable.
+   * Executes a callback for each implementation of a hook.
    *
-   * @param string $module
-   *   The name of the module (without the .module extension).
-   * @param string $hook
-   *   The name of the hook to invoke.
-   * @param callable $invoker
-   *   The callable that invokes the module's hook implementation, with
-   *   parameters:
-   *   - string $module
-   *     The module name.
-   *   - callable $hook
-   *     The hook name.
-   *
-   * @return mixed
-   *   The return value of the hook implementation.
-   */
-  public function invokeWith($module, $hook, callable $invoker);
-
-  /**
-   * Invokes a hook in all enabled modules that implement it using a callable.
+   * The callback is passed two arguments, a closure which executes a hook
+   * implementation. And the module name.
    *
    * @param string $hook
    *   The name of the hook to invoke.
-   * @param callable $invoker
-   *   The callable that invokes the modules' hook implementations, with
-   *   - string $module
-   *     The module name.
-   *   - callable $hook
-   *     The hook name.
-   *
-   * @return array
-   *   An array of return values of the hook implementations. If modules return
-   *   arrays from their implementations, those are merged into one array
-   *   recursively. Note: integer keys in arrays will be lost, as the merge is
-   *   done using array_merge_recursive().
+   * @param callable $callback
+   *   A callable that invokes a hook implementation. Such that
+   *   $callback is callable(callable, string): mixed.
+   *   Arguments:
+   *    - Closure to a hook implementation.
+   *    - Implementation module machine name.
    */
-  public function invokeAllWith($hook, callable $invoker);
+  public function invokeAllWith(string $hook, callable $callback): void;
 
   /**
    * Invokes a hook in a particular module.

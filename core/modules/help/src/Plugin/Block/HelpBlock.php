@@ -4,7 +4,6 @@ namespace Drupal\help\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -93,14 +92,14 @@ class HelpBlock extends BlockBase implements ContainerFactoryPluginInterface {
     }
 
     $build = [];
-    $this->moduleHandler->invokeAllWith('help', new FunctionInvoker(function (callable $hook_implementation) use (&$build) {
+    $this->moduleHandler->invokeAllWith('help', function (callable $hookInvoker, string $module) use (&$build) {
       // Don't add empty strings to $build array.
-      if ($help = $hook_implementation($this->routeMatch->getRouteName(), $this->routeMatch)) {
+      if ($help = $hookInvoker($this->routeMatch->getRouteName(), $this->routeMatch)) {
         // Convert strings to #markup render arrays so that they will XSS admin
         // filtered.
         $build[] = is_array($help) ? $help : ['#markup' => $help];
       }
-    }));
+    });
     return $build;
   }
 
