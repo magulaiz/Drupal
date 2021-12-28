@@ -835,7 +835,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   Defaults to FALSE.
    */
   protected function assertResourceErrorResponse($expected_status_code, $expected_message, $via_link, ResponseInterface $response, $pointer = FALSE, $expected_cache_tags = FALSE, $expected_cache_contexts = FALSE, $expected_page_cache_header_value = FALSE, $expected_dynamic_page_cache_header_value = FALSE) {
-    assert(is_null($via_link) || is_array($via_link) || $via_link instanceof Url);
+    assert($via_link === NULL || is_array($via_link) || $via_link instanceof Url);
     $expected_error = [];
     if (!empty(Response::$statusTexts[$expected_status_code])) {
       $expected_error['title'] = Response::$statusTexts[$expected_status_code];
@@ -2899,7 +2899,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($result instanceof AccessResultReasonInterface && ($reason = $result->getReason()) && !empty($reason)) {
       $detail .= ' ' . $reason;
     }
-    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, $latest_revision_id);
+    $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, (string) $latest_revision_id);
     $this->assertResourceErrorResponse(403, $detail, $via_link, $actual_response, '/data', $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
 
     // Ensure that targeting a revision does not bypass access.
@@ -3094,7 +3094,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_cache_contexts = $expected_cacheability->getCacheContexts();
       $detail = 'The current user is not allowed to GET the selected resource. The user does not have access to the requested version.';
       $message = $result instanceof AccessResultReasonInterface ? trim($detail . ' ' . $result->getReason()) : $detail;
-      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, $forward_revision_id);
+      $via_link = $this->getViaLinkArrayWithMeta($url, $this->entity, (string) $forward_revision_id);
       $this->assertResourceErrorResponse(403, $message, $via_link, $actual_response, '/data', $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
 
       // On the collection URL, we should expect to see the draft omitted from
@@ -3528,24 +3528,24 @@ abstract class ResourceTestBase extends BrowserTestBase {
   }
 
   /**
-   * Generate an array with link formation containing meta information.
+   * Returns the `via` link structure.
    *
    * @param \Drupal\Core\Url $url
-   *   Url used for the link.
+   *   The URL for the `href`.
    * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity this via link refers to.
+   *   The entity this link refers to.
    * @param string|null $revision_id
-   *   Overwrite the revision id
+   *   The expected revision ID.
    *
-   * @return array Return an array with link data for via link.
+   * @return array
+   *   The `via` link structure.
    */
   protected function getViaLinkArrayWithMeta(Url $url, EntityInterface $entity, string $revision_id = NULL): array {
-    $revision_id = $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL);
     return [
       'href' => $url->setAbsolute()->toString(),
       'meta' => [
-        'resourceId' => (string) $entity->uuid(),
-        'resourceVersion' => (string) $revision_id,
+        'resourceId' => $entity->uuid(),
+        'resourceVersion' => $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL),
       ],
     ];
   }

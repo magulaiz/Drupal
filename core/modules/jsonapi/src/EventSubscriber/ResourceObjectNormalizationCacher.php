@@ -107,9 +107,7 @@ class ResourceObjectNormalizationCacher implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(TerminateEvent $event) {
-    foreach ($this->toCache as $value) {
-      $this->set(...$value);
-    }
+    array_map([$this, 'set'], $this->toCache);
   }
 
   /**

@@ -154,13 +154,7 @@ trait ResourceResponseTestTrait {
                 sprintf('jsonapi.%s.individual', $resource_identifier['type']),
                 ['entity' => $resource_identifier['id']]
               );
-              $via_link = [
-                'href' => $url->setAbsolute()->toString(),
-                'meta' => [
-                  'resourceId' => $resource_identifier['id'],
-                  'resourceVersion' => NULL,
-                ],
-              ];
+              $via_link = $this->getViaLinkArrayWithMeta($url, $target_entity);
               $collected_responses[] = static::getAccessDeniedResponse($entity, $target_access, $via_link, NULL, NULL, '/data');
             }
             break;
@@ -508,7 +502,6 @@ trait ResourceResponseTestTrait {
    */
   protected static function getAccessDeniedResponse(EntityInterface $entity, AccessResultInterface $access, $via_link, $relationship_field_name = NULL, $detail = NULL, $pointer = NULL) {
     assert(is_array($via_link) || $via_link instanceof Url);
-
     $detail = ($detail) ? $detail : 'The current user is not allowed to GET the selected resource.';
     if ($access instanceof AccessResultReasonInterface && ($reason = $access->getReason())) {
       $detail .= ' ' . $reason;
@@ -527,7 +520,7 @@ trait ResourceResponseTestTrait {
     if ($via_link instanceof Url) {
       $error['links']['via']['href'] = $via_link->setAbsolute()->toString();
     }
-    elseif (is_array($via_link)) {
+    else {
       $error['links']['via'] = $via_link;
     }
 
@@ -607,18 +600,12 @@ trait ResourceResponseTestTrait {
     ];
     foreach ($errors as $error) {
       $link_via = $error['links']['via'];
-      $meta = [
-        'rel' => 'item',
-        'detail' => $error['detail'],
-      ];
-
-      if (isset($link_via['meta'])) {
-        $meta += $link_via['meta'];
-      }
-
       $omitted['links']['item--' . substr(Crypt::hashBase64($link_via['meta']['resourceVersion'] ?? $link_via['href']), 0, 7)] = [
         'href' => $link_via['href'],
-        'meta' => $meta,
+        'meta' => [
+          'rel' => 'item',
+          'detail' => $error['detail'],
+        ] + ($link_via['meta'] ?? []),
       ];
     }
     return $omitted;

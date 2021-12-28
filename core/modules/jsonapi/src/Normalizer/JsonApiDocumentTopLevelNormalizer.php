@@ -279,7 +279,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         // for all of them (the `jsonapi.$resource_type_name.individual`
         // route). The version may be `null` if the entity is non-revisionable
         // In that case, use a random string.
-        assert(array_key_exists('resourceVersion', $via['meta']) && ($via['meta']['resourceVersion'] === NULL || is_numeric($via['meta']['resourceVersion'])));
+        assert($via['meta']['resourceVersion'] === NULL || is_numeric($via['meta']['resourceVersion']));
         $link_key = 'item--' . static::getLinkHash($via['meta']['resourceVersion'] ?? random_bytes(8), $via['href']);
         // Ensure we're not overriding.
         assert(!isset($omission_links['links'][$link_key]));
@@ -288,10 +288,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
           'meta' => [
             'rel' => 'item',
             'detail' => $error['detail'],
-            // Add the IDs to be more developer-friendly.
-            'resourceId' => $via['meta']['resourceId'],
-            'resourceVersion' => $via['meta']['resourceVersion'],
-          ],
+          ] + $via['meta'],
         ];
       }
     }

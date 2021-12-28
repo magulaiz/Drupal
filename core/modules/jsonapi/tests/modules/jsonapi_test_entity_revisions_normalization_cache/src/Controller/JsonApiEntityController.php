@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class JsonApiEntityController extends ControllerBase {
 
   /**
-   * The "jsonapi_test_entity_revisions_normalization_cache.entity_resource".
+   * The `jsonapi_test_entity_revisions_normalization_cache.entity_resource`.
    *
    * @var \Drupal\jsonapi_test_entity_revisions_normalization_cache\Controller\EntityResource
    */
@@ -26,9 +26,9 @@ class JsonApiEntityController extends ControllerBase {
    * JsonApiEntityController constructor.
    *
    * @param \Drupal\jsonapi_test_entity_revisions_normalization_cache\Controller\EntityResource $entity_resource
-   *   The "jsonapi_test_entity_revisions_normalization_cache.entity_resource".
+   *   The `jsonapi_test_entity_revisions_normalization_cache.entity_resource`.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The "entity_type.manager".
+   *   The `entity_type.manager`.
    */
   public function __construct(EntityResource $entity_resource, EntityTypeManagerInterface $entity_type_manager) {
     $this->entityResource = $entity_resource;
@@ -70,7 +70,7 @@ class JsonApiEntityController extends ControllerBase {
 
     switch ($type) {
       case 'revisions':
-        \assert($storage instanceof RevisionableStorageInterface);
+        assert($storage instanceof RevisionableStorageInterface);
         $entities = $storage->loadMultipleRevisions($ids);
         break;
 
@@ -79,7 +79,7 @@ class JsonApiEntityController extends ControllerBase {
         break;
 
       default:
-        throw new \InvalidArgumentException(\sprintf('The "%s" is not supported.', $type));
+        throw new \InvalidArgumentException(sprintf('The "%s" is not supported.', $type));
     }
 
     return $this->entityResource->getCollectionResponse($request, $entities, count($entities), 1, 50);
