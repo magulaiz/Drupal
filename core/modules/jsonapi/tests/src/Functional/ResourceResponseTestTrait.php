@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Url;
 use Drupal\jsonapi\CacheableResourceResponse;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Psr\Http\Message\ResponseInterface;
 
@@ -600,7 +601,7 @@ trait ResourceResponseTestTrait {
     ];
     foreach ($errors as $error) {
       $link_via = $error['links']['via'];
-      $omitted['links']['item--' . substr(Crypt::hashBase64($link_via['meta']['resourceVersion'] ?? $link_via['href']), 0, 7)] = [
+      $omitted['links']['item--' . substr(Crypt::hashBase64($link_via['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] ?? $link_via['href']), 0, 7)] = [
         'href' => $link_via['href'],
         'meta' => [
           'rel' => 'item',

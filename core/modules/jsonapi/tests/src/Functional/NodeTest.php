@@ -6,6 +6,7 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\node\Entity\Node;
@@ -604,11 +605,13 @@ class NodeTest extends ResourceTestBase {
     $assert_omissions($get_normalization($url_custom), array_map(function (int $revision_id): array {
       return [
         'href' => sprintf(
-          '%s/jsonapi/%s/%s/%s',
+          '%s/jsonapi/%s/%s/%s?%s=id%%3A%d',
           $this->baseUrl,
           $this->entity->getEntityTypeId(),
           $this->entity->bundle(),
           $this->entity->uuid(),
+          JsonApiSpec::VERSION_QUERY_PARAMETER,
+          $revision_id,
         ),
         'meta' => [
           'rel' => 'item',
@@ -616,7 +619,7 @@ class NodeTest extends ResourceTestBase {
           /** @see \Drupal\jsonapi\Normalizer\EntityAccessDeniedHttpExceptionNormalizer::buildErrorObjects() */
           /** @see \Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer::normalizeOmissionsLinks() */
           'resourceId' => $this->entity->uuid(),
-          'resourceVersion' => (string) $revision_id,
+          JsonApiSpec::VERSION_QUERY_PARAMETER => (string) $revision_id,
         ],
       ];
     }, $revision_ids));

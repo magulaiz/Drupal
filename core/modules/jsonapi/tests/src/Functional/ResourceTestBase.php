@@ -33,6 +33,7 @@ use Drupal\jsonapi\JsonApiResource\NullIncludedData;
 use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\JsonApiResource\ResourceObjectData;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\jsonapi\Normalizer\HttpExceptionNormalizer;
 use Drupal\jsonapi\JsonApiResource\JsonApiDocumentTopLevel;
 use Drupal\jsonapi\ResourceResponse;
@@ -3542,11 +3543,19 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The `via` link structure.
    */
   protected function getViaLinkArrayWithMeta(Url $url, EntityInterface $entity, string $revision_id = NULL): array {
+    $revision_id = $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL);
+
+    if ($revision_id !== NULL) {
+      $query = $url->getOption('query') ?: [];
+      $query[JsonApiSpec::VERSION_QUERY_PARAMETER] = 'id:' . $revision_id;
+      $url->setOption('query', $query);
+    }
+
     return [
       'href' => $url->setAbsolute()->toString(),
       'meta' => [
         'resourceId' => $entity->uuid(),
-        'resourceVersion' => $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL),
+        JsonApiSpec::VERSION_QUERY_PARAMETER => $revision_id,
       ],
     ];
   }

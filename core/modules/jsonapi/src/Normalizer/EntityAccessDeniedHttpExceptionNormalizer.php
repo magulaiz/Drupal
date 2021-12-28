@@ -4,6 +4,7 @@ namespace Drupal\jsonapi\Normalizer;
 
 use Drupal\Core\Url;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
+use Drupal\jsonapi\JsonApiSpec;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -54,9 +55,15 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
           ? "jsonapi.$resource_type_name.$relationship_field.related"
           : "jsonapi.$resource_type_name.individual";
         $url = Url::fromRoute($route_name, ['entity' => $entity_uuid]);
+        // Provide a link to the *exact* revision.
+        if ($error['revision_id'] !== NULL) {
+          $url->setOption('query', [
+            JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $error['revision_id'],
+          ]);
+        }
         $errors[0]['links']['via']['href'] = $url->setAbsolute()->toString(TRUE)->getGeneratedUrl();
         $errors[0]['links']['via']['meta']['resourceId'] = $entity_uuid;
-        $errors[0]['links']['via']['meta']['resourceVersion'] = $error['revision_id'];
+        $errors[0]['links']['via']['meta'][JsonApiSpec::VERSION_QUERY_PARAMETER] = $error['revision_id'];
       }
       $errors[0]['source']['pointer'] = $pointer;
 
