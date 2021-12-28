@@ -627,4 +627,23 @@ class EntityResource extends JsonApiEntityResource {
     return parent::buildWrappedResponse($primary_data, $request, $includes, $response_code, $headers, $links, $meta);
   }
 
+  /**
+   * Returns the specified request attribute and populates it if it is missing.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   * @param string $key
+   *   The attribute key.
+   * @param callable $value_callback
+   *   A callback to be used to compute the value, if missing.
+   *
+   * @return mixed
+   *   The attribute value.
+   */
+  protected static function getRequestAttribute(Request $request, string $key, callable $value_callback) {
+    if (!$request->attributes->has($key)) {
+      $request->attributes->set($key, $value_callback($request));
+    }
+    return $request->attributes->get($key);
+  }
 }
