@@ -106,7 +106,8 @@ class EntityResource extends JsonApiEntityResource {
     EntityTypeManagerInterface $entity_type_manager,
     EntityFieldManagerInterface $field_manager,
     ResourceTypeRepositoryInterface $resource_type_repository,
-    RendererInterface $renderer, EntityRepositoryInterface $entity_repository,
+    RendererInterface $renderer,
+    EntityRepositoryInterface $entity_repository,
     IncludeResolver $include_resolver,
     EntityAccessChecker $entity_access_checker,
     FieldResolver $field_resolver,
@@ -144,8 +145,8 @@ class EntityResource extends JsonApiEntityResource {
     $entity = $this->getDefaultTranslation($entity);
 
     // If a resource language is explicitly provided, a resource translation was
-    // univocally specified. Otherwise we rely on the "Accept-Language" header
-    // for the fallback logic.
+    // specified. Otherwise we rely on the "Accept-Language" header for the
+    // fallback logic.
     if ($resource_language) {
       $translation = $this->getResourceTranslation($entity, $request);
       if (!$translation) {
@@ -172,7 +173,7 @@ class EntityResource extends JsonApiEntityResource {
       $response->headers->set('Content-Location', $url->getGeneratedUrl());
 
       // @todo Neither internal nor dynamic page cache support the "Accept-Language"
-      //    header currently. Remove this once they do.
+      //   header currently. Remove this once they do.
       \Drupal::service('page_cache_kill_switch')->trigger();
     }
 
