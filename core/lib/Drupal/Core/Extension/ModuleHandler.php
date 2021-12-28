@@ -5,6 +5,7 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
@@ -264,36 +265,39 @@ class ModuleHandler implements ModuleHandlerInterface {
     if ($type === 'install') {
       // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
-      if (!$this->moduleExists($module)) {
-        // In case if there are no enabled extension definition found, let's
-        // try to find the extension's install file to include.
-        $extensions_type_order = [
-          'module',
-          'theme',
-          'profile',
-          'theme_engine',
-        ];
-        foreach ($extensions_type_order as $extension_type) {
-          try {
-            $uninstalled_extension = \Drupal::service('extension.list.' . $extension_type)
-              ->get($module);
-          }
-          catch (UnknownExtensionException $e) {
-            // Keep try to load other type of extensions.
-          }
-          if ($uninstalled_extension !== NULL) {
-            // The extension definition was found, let's keep it for the main
-            // handler below.
-            break;
-          }
-        }
-      }
     }
 
     $name = $name ?: $module;
     $key = $type . ':' . $module . ':' . $name;
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
+    }
+    if (!$this->moduleExists($module)) {
+      // In case if there are no enabled extension definition found, let's
+      // try to find the extension's install file to include.
+      $extensions_type_order = [
+        'module',
+        'theme',
+        'profile',
+        'theme_engine',
+      ];
+      foreach ($extensions_type_order as $extension_type) {
+        try {
+          $uninstalled_extension = \Drupal::service('extension.list.' . $extension_type)
+            ->get($module);
+        }
+        catch (ContainerNotInitializedException $e) {
+          // Container not initialized yet, no info available for an extension.
+        }
+        catch (UnknownExtensionException $e) {
+          // Keep try to load other type of extensions.
+        }
+        if ($uninstalled_extension !== NULL) {
+          // The extension definition was found, let's keep it for the main
+          // handler below.
+          break;
+        }
+      }
     }
     $file = $this->getFilePath($name, $type, $this->moduleList[$module] ?? $uninstalled_extension) ?? '';
     if (is_file($file)) {
