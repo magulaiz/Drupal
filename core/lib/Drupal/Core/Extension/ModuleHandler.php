@@ -325,7 +325,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getImplementations($hook) {
-    @trigger_error(sprintf('Calling %s::getImplementations() directly has been deprecated since Drupal 9.4.0. If you needed this for custom hook invocations, use %s::invoke*With() instead. You can find more detailed information about this change at https://www.drupal.org/node/3000490.', ModuleHandlerInterface::class, ModuleHandlerInterface::class), E_USER_DEPRECATED);
+    @trigger_error(sprintf('Calling %s::getImplementations() directly has been deprecated since Drupal 9.4.0. If you needed this for hook invocations, use %s::invokeAllWith() instead. If you needed this to determine if hook implementations exist, use %s::hasImplementations() instead. You can find more detailed information about this change at https://www.drupal.org/node/3000490.', ModuleHandlerInterface::class, ModuleHandlerInterface::class, ModuleHandlerInterface::class), E_USER_DEPRECATED);
     $implementations = $this->getImplementationInfo($hook);
     return array_keys($implementations);
   }
