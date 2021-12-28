@@ -1911,10 +1911,11 @@ abstract class ResourceTestBase extends BrowserTestBase {
       if (!$entity->access('view') && $entity->access('view label') && $access instanceof AccessResultReasonInterface && empty($access->getReason())) {
         $access->setReason("The user only has authorization for the 'view label' operation.");
       }
-      $via_link = Url::fromRoute(
+      $url = Url::fromRoute(
         sprintf('jsonapi.%s.%s.related', $base_resource_identifier['type'], $relationship_field_name),
         ['entity' => $base_resource_identifier['id']]
       );
+      $via_link = $this->getViaLinkArrayWithMeta($url, $entity);
       $related_response = static::getAccessDeniedResponse($entity, $access, $via_link, $relationship_field_name, $detail, FALSE);
     }
     else {
