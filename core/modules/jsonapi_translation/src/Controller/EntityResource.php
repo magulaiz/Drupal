@@ -493,7 +493,7 @@ class EntityResource extends JsonApiEntityResource {
         return $language;
       }
 
-      throw new UnprocessableEntityHttpException(sprintf('Invalid language "%s" specified', $langcode));
+      throw new UnprocessableEntityHttpException(sprintf('The specified language ("%s") is invalid or has not been configured', $langcode));
     });
     assert(!isset($language) || $language instanceof LanguageInterface);
     return $language;
