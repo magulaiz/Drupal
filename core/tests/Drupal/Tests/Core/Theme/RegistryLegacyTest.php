@@ -116,10 +116,9 @@ class RegistryLegacyTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')
-      ->willReturnCallback(function ($hook, $invoker) {
-        $invoker('theme_legacy_test', $hook);
+      ->willReturnCallback(function (string $hook, callable $callback) {
+        $callback(function () {}, 'theme_legacy_test');
       });
-
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);

@@ -6,7 +6,6 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
-use Drupal\Core\Extension\Hook\FunctionInvoker;
 
 /**
  * Class that manages modules in a Drupal installation.
@@ -326,7 +325,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getImplementations($hook) {
-    @trigger_error(sprintf('Calling %s::getImplementations() directly has been deprecated since Drupal 8.7.0. If you needed this for custom hook invocations, use %s::invoke*With() instead. You can find more detailed information about this change at https://www.drupal.org/node/3000490.', ModuleHandlerInterface::class, ModuleHandlerInterface::class), E_USER_DEPRECATED);
+    @trigger_error(sprintf('Calling %s::getImplementations() directly has been deprecated since Drupal 9.4.0. If you needed this for custom hook invocations, use %s::invoke*With() instead. You can find more detailed information about this change at https://www.drupal.org/node/3000490.', ModuleHandlerInterface::class, ModuleHandlerInterface::class), E_USER_DEPRECATED);
     $implementations = $this->getImplementationInfo($hook);
     return array_keys($implementations);
   }
@@ -366,6 +365,13 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasImplementations(string $hook): bool {
+    return count($this->getImplementationInfo($hook)) > 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function implementsHook($module, $hook) {
     $function = $module . '_' . $hook;
     if (function_exists($function)) {
@@ -386,22 +392,10 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function invokeWith($module, $hook, callable $invoker) {
-    if (!$this->implementsHook($module, $hook)) {
-      return;
-    }
-    // @todo Use (or emulate) and cache Closure::fromCallable.
-    return $invoker($module, $hook);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function invokeAllWith($hook, callable $invoker) {
-    $implementations = $this->getImplementations($hook);
-    foreach ($implementations as $module) {
-      // @todo Use (or emulate) and cache Closure::fromCallable.
-      $invoker($module, $hook);
+  public function invokeAllWith(string $hook, callable $callback): void {
+    foreach (array_keys($this->getImplementationInfo($hook)) as $module) {
+      $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
+      $callback($hookInvoker, $module);
     }
   }
 
@@ -409,10 +403,11 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    $invoker = new FunctionInvoker(function (callable $hook_implementation) use ($args) {
-      return call_user_func_array($hook_implementation, $args);
-    });
-    return $this->invokeWith($module, $hook, $invoker);
+    if (!$this->implementsHook($module, $hook)) {
+      return;
+    }
+    $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
+    return call_user_func_array($hookInvoker, $args);
   }
 
   /**
@@ -420,8 +415,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invokeAll($hook, array $args = []) {
     $return = [];
-    $invoker = new FunctionInvoker(function (callable $hook_implementation) use ($args, &$return) {
-      $result = call_user_func_array($hook_implementation, $args);
+    $this->invokeAllWith($hook, function (callable $hookInvoker, string $module) use ($args, &$return) {
+      $result = call_user_func_array($hookInvoker, $args);
       if (isset($result) && is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
@@ -429,7 +424,6 @@ class ModuleHandler implements ModuleHandlerInterface {
         $return[] = $result;
       }
     });
-    $this->invokeAllWith($hook, $invoker);
     return $return;
   }
 
@@ -499,10 +493,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (!isset($this->alterFunctions[$cid])) {
       $this->alterFunctions[$cid] = [];
       $hook = $type . '_alter';
-      $modules = $this->getImplementations($hook);
+      $modules = array_keys($this->getImplementationInfo($hook));
       if (!isset($extra_types)) {
         // For the more common case of a single hook, we do not need to call
-        // function_exists(), since $this->getImplementations() returns only
+        // function_exists(), since $this->getImplementationInfo() returns only
         // modules with implementations.
         foreach ($modules as $module) {
           $this->alterFunctions[$cid][] = $module . '_' . $hook;
@@ -513,21 +507,21 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules[] = $this->getImplementations($extra_type . '_alter');
+          $extra_modules = array_merge($extra_modules, array_keys($this->getImplementationInfo($extra_type . '_alter')));
         }
         $extra_modules = array_merge([], ...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
-        // appropriate order. $this->getImplementations() can only return
+        // appropriate order. $this->getImplementationInfo() can only return
         // ordered implementations of a single hook. To get the ordered
         // implementations of multiple hooks, we mimic the
-        // $this->getImplementations() logic of first ordering by
+        // $this->getImplementationInfo() logic of first ordering by
         // $this->getModuleList(), and then calling
         // $this->alter('module_implements').
         if (array_diff($extra_modules, $modules)) {
           // Merge the arrays and order by getModuleList().
           $modules = array_intersect(array_keys($this->moduleList), array_merge($modules, $extra_modules));
-          // Since $this->getImplementations() already took care of loading the
+          // Since $this->getImplementationInfo() already took care of loading the
           // necessary include files, we can safely pass FALSE for the array
           // values.
           $implementations = array_fill_keys($modules, FALSE);

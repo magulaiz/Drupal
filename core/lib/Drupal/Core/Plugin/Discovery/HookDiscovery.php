@@ -4,7 +4,6 @@ namespace Drupal\Core\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryTrait;
-use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -47,14 +46,13 @@ class HookDiscovery implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = [];
-    $this->moduleHandler->invokeAllWith($this->hook, new FunctionInvoker(function ($hook_implementation, $module, $hook) use (&$definitions) {
-      $module_definitions = $hook_implementation();
+    $this->moduleHandler->invokeAllWith($this->hook, function (callable $hookInvoker, string $module) use (&$definitions) {
+      $module_definitions = $hookInvoker();
       foreach ($module_definitions as $plugin_id => $definition) {
-        $definition['id'] = $plugin_id;
         $definition['provider'] = $module;
         $definitions[$plugin_id] = $definition;
       }
-    }));
+    });
     return $definitions;
   }
 

@@ -4,7 +4,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
-use Drupal\Core\Extension\Hook\FunctionInvoker;
 
 /**
  * A base entity storage class.
@@ -428,12 +427,12 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
         $entity_class::postLoad($this, $items);
       }
     }
-    $this->moduleHandler()->invokeAllWith('entity_load', new FunctionInvoker(function ($hook_implementation) use (&$entities) {
-      $hook_implementation($entities, $this->entityTypeId);
-    }));
-    $this->moduleHandler()->invokeAllWith($this->entityTypeId . '_load', new FunctionInvoker(function ($hook_implementation) use (&$entities) {
-      $hook_implementation($entities);
-    }));
+    $this->moduleHandler()->invokeAllWith('entity_load', function (callable $hookInvoker, string $module) use (&$entities) {
+      $hookInvoker($entities, $this->entityTypeId);
+    });
+    $this->moduleHandler()->invokeAllWith($this->entityTypeId . '_load', function (callable $hookInvoker, string $module) use (&$entities) {
+      $hookInvoker($entities);
+    });
   }
 
   /**

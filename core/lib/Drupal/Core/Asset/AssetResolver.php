@@ -5,7 +5,6 @@ namespace Drupal\Core\Asset;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Extension\Hook\FunctionInvoker;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -313,9 +312,9 @@ class AssetResolver implements AssetResolverInterface {
       if ($settings_required && $settings_have_changed) {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
-        $this->moduleHandler->invokeAllWith('js_settings_build', new FunctionInvoker(function (callable $hook_implementation) use (&$settings, &$assets) {
-          $hook_implementation($settings, $assets);
-        }));
+        $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hookInvoker, string $module) use (&$settings, $assets) {
+          $hookInvoker($settings, $assets);
+        });
       }
       $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);

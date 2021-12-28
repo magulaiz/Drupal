@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\views\Unit;
 
-use Drupal\Core\Extension\Hook\ClosureInvoker;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsData;
@@ -136,11 +135,8 @@ class ViewsDataTest extends UnitTestCase {
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('views_data')
-      ->willReturnCallback(function ($hook, $invoker) {
-        $invoker = new ClosureInvoker($invoker, function (): array {
-          return $this->viewsData();
-        });
-        $invoker('views_test_data', $hook);
+      ->willReturnCallback(function (string $hook, callable $callback) {
+        $callback(\Closure::fromCallable([$this, 'viewsData']), 'views_test_data');
       });
   }
 
@@ -216,11 +212,8 @@ class ViewsDataTest extends UnitTestCase {
     $this->moduleHandler->expects($this->exactly(2))
       ->method('invokeAllWith')
       ->with('views_data')
-      ->willReturnCallback(function ($hook, $invoker) {
-        $invoker = new ClosureInvoker($invoker, function (): array {
-          return $this->viewsData();
-        });
-        $invoker('views_test_data', $hook);
+      ->willReturnCallback(function ($hook, $callback) {
+        $callback(\Closure::fromCallable([$this, 'viewsData']), 'views_test_data');
       });
     $this->moduleHandler->expects($this->exactly(2))
       ->method('alter')
