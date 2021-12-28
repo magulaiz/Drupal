@@ -295,7 +295,7 @@ class GenerateTheme extends Command {
     $info_parser = new InfoParser($this->root);
     $info = $info_parser->parse($theme->getPathname());
     if (empty($info['starterkit'])) {
-      return false;
+      return FALSE;
     }
     return (bool) $info['starterkit'];
   }
