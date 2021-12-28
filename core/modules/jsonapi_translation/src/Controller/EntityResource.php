@@ -206,7 +206,8 @@ class EntityResource extends JsonApiEntityResource {
           ->getDefinition($resource_type->getEntityTypeId())
           ->getKey('langcode');
 
-        if (!isset($body['data']['attributes'][$langcode_key])) {
+        $field_name = $resource_type->getPublicName($langcode_key);
+        if (!isset($body['data']['attributes'][$field_name])) {
           $parsed_entity = $this->getParsedEntity($resource_type, $request);
           assert($parsed_entity instanceof ContentEntityInterface);
           $parsed_entity->set($langcode_key, $resource_language);
