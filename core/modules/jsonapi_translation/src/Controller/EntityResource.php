@@ -471,21 +471,21 @@ class EntityResource extends JsonApiEntityResource {
   protected function getResourceLanguage(Request $request): ?LanguageInterface {
     $language = $this->getRequestAttribute($request, 'jsonapi_translation_language', function (Request $request) {
       $param_langcode = $request->query->get(static::PARAM_LANGCODE);
-      $header_langcode = $request->headers->get(static::HEADER_CONTENT_LANGUAGE);
+      $header_content_language = $request->headers->get(static::HEADER_CONTENT_LANGUAGE);
 
-      if (!$param_langcode && !$header_langcode) {
+      if (!$param_langcode && !$header_content_language) {
         return NULL;
       }
 
       if ($request->headers->get('Accept-Language')) {
         throw new BadRequestHttpException('Specifying both a request language and the "Accept-Language" header is not supported.');
       }
-      if ($param_langcode && $header_langcode && $param_langcode !== $header_langcode) {
+      if ($param_langcode && $header_content_language && $param_langcode !== $header_content_language) {
         $message = 'Translation resource language mismatch: "%s" ("%s" query string parameter) vs "%s" ("%s" header).';
-        throw new UnprocessableEntityHttpException(sprintf($message, $param_langcode, static::PARAM_LANGCODE, $header_langcode, static::HEADER_CONTENT_LANGUAGE));
+        throw new UnprocessableEntityHttpException(sprintf($message, $param_langcode, static::PARAM_LANGCODE, $header_content_language, static::HEADER_CONTENT_LANGUAGE));
       }
 
-      $langcode = $param_langcode ?: $header_langcode;
+      $langcode = $param_langcode ?: $header_content_language;
       $languages = $this->languageManager->getLanguages();
       $language = $languages[$langcode] ?? NULL;
 
