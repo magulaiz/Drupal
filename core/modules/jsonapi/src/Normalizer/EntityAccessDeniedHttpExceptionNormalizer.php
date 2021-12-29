@@ -56,7 +56,10 @@ class EntityAccessDeniedHttpExceptionNormalizer extends HttpExceptionNormalizer 
           : "jsonapi.$resource_type_name.individual";
         $url = Url::fromRoute($route_name, ['entity' => $entity_uuid]);
         // Provide a link to the *exact* revision.
-        if ($error['revision_id'] !== NULL) {
+        // Note: adding the query parameter to links of non-versionable
+        // resources will cause HTTP 501 on visiting those links.
+        /* @see \Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer::enhance() */
+        if ($error['revision_id'] !== NULL && $resource_type->isVersionable()) {
           $url->setOption('query', [
             JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $error['revision_id'],
           ]);

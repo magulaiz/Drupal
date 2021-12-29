@@ -3545,7 +3545,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   protected function getViaLinkArrayWithMeta(Url $url, EntityInterface $entity, string $revision_id = NULL): array {
     $revision_id = $revision_id ?? ($entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL);
 
-    if ($revision_id !== NULL) {
+    if ($revision_id !== NULL && $this->resourceType->isVersionable()) {
       $query = $url->getOption('query') ?: [];
       $query[JsonApiSpec::VERSION_QUERY_PARAMETER] = 'id:' . $revision_id;
       $url->setOption('query', $query);
