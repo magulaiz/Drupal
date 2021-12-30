@@ -14,12 +14,12 @@ use Drupal\Component\Utility\Html as HtmlUtility;
  *
  * Usage example:
  * @code
- * $form['settings']['active'] = array(
+ * $form['settings']['active'] = [
  *   '#type' => 'radios',
  *   '#title' => $this->t('Poll status'),
  *   '#default_value' => 1,
- *   '#options' => array(0 => $this->t('Closed'), 1 => $this->t('Active')),
- * );
+ *   '#options' => [0 => ['#title'= > $this->t('Closed'), '#attributes => ['data-example' => 'foo-bar']], 1 => $this->t('Active')],
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Checkboxes
@@ -65,23 +65,29 @@ class Radios extends FormElement {
         // Generate the parents as the autogenerator does, so we will have a
         // unique id for each radio button.
         $parents_for_id = array_merge($element['#parents'], [$key]);
-        $element[$key] += [
+        $singleRadio = [
           '#type' => 'radio',
-          '#title' => $choice,
           // The key is sanitized in Drupal\Core\Template\Attribute during output
           // from the theme function.
           '#return_value' => $key,
           // Use default or FALSE. A value of FALSE means that the radio button is
           // not 'checked'.
-          '#default_value' => $element['#default_value'] ?? FALSE,
+          '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : FALSE,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $parents_for_id)),
-          '#ajax' => $element['#ajax'] ?? NULL,
+          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
           // Errors should only be shown on the parent radios element.
           '#error_no_message' => TRUE,
           '#weight' => $weight,
         ];
+
+        if (is_array($choice)) {
+          $singleRadio = NestedArray::mergeDeep($singleRadio, $choice);
+        }
+
+        $singleRadio['#return_value'] = $key;
+        $element[$key] += $singleRadio;
       }
     }
     return $element;
