@@ -646,4 +646,5 @@ class EntityResource extends JsonApiEntityResource {
     }
     return $request->attributes->get($key);
   }
+
 }
