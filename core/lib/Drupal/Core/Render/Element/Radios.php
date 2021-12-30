@@ -72,11 +72,11 @@ class Radios extends FormElement {
           '#return_value' => $key,
           // Use default or FALSE. A value of FALSE means that the radio button is
           // not 'checked'.
-          '#default_value' => isset($element['#default_value']) ? $element['#default_value'] : FALSE,
+          '#default_value' => $element['#default_value'] ?? FALSE,
           '#attributes' => $element['#attributes'],
           '#parents' => $element['#parents'],
           '#id' => HtmlUtility::getUniqueId('edit-' . implode('-', $parents_for_id)),
-          '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+          '#ajax' => $element['#ajax'] ?? NULL,
           // Errors should only be shown on the parent radios element.
           '#error_no_message' => TRUE,
           '#weight' => $weight,
@@ -84,6 +84,9 @@ class Radios extends FormElement {
 
         if (is_array($choice)) {
           $singleRadio = NestedArray::mergeDeep($singleRadio, $choice);
+        }
+        else {
+          $singleRadio['#title'] = $choice;
         }
 
         $singleRadio['#return_value'] = $key;
