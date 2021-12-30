@@ -215,6 +215,10 @@ interface DataDefinitionInterface {
    *
    * @return static
    *   The object itself for chaining.
+   *
+   * @throws \LogicException
+   *   Thrown if constraints are set for a computed property as computed
+   *   properties are ignored during validation.
    */
   public function addConstraint($constraint_name, $options = NULL);
 
