@@ -205,7 +205,7 @@ function template_preprocess_update_project_status(&$variables) {
           // Show only the latest security update for the series. For core, the
           // series is the minor version (8.1.x vs. 8.2.x). For other projects,
           // this is the major version, (8.x-1.x vs. 8.x-2.x).
-          $key = 'sec-' . $security_update[$project['project_type'] === 'core' ? 'version_minor' : 'version_major'];
+          $key = 'sec-' . $project['project_type'] === 'core' ? $project['existing_minor'] : $project['existing_major'];
           if (!isset($versions_inner[$key]) || version_compare($security_update['version'], $versions_inner[$key]['#version']['version']) === 1) {
             $versions_inner[$key] = [
               '#theme' => 'update_version',
