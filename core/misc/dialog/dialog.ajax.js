@@ -82,13 +82,13 @@
 
     // Move the buttons to the jQuery UI dialog buttons area.
     if (typeof response.dialogOptions.drupalAutoButtons === 'undefined') {
-      response.dialogOptions.drupalAutoButton = true;
+      response.dialogOptions.drupalAutoButtons = true;
     } else if (response.dialogOptions.drupalAutoButtons === 'false') {
-      response.dialogOptions.drupalAutoButton = false;
+      response.dialogOptions.drupalAutoButtons = false;
     } else {
       // Force boolean value.
-      response.dialogOptions.drupalAutoButton =
-        !!response.dialogOptions.drupalAutoButton;
+      response.dialogOptions.drupalAutoButtons =
+        !!response.dialogOptions.drupalAutoButtons;
     }
 
     if (response.dialogOptions.drupalAutoButtons) {
