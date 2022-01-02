@@ -1,0 +1,5 @@
+name: 'Dialog drupalAutoButtons Option Test'
+type: module
+description: 'Support module for dialog drupalAutoButtons option tests.'
+package: Testing
+version: VERSION

@@ -125,13 +125,20 @@
     response.method = 'html';
     ajax.commands.insert(ajax, response, status);
 
-    // Move the buttons to the jQuery UI dialog buttons area, if not disabled:
-    // The renderer may have passed `false` as a string.
-    if (!response.dialogOptions.drupalAutoButtons) {
-      response.dialogOptions.drupalAutoButtons = true;
+    response.dialogOptions = response.dialogOptions || {};
+
+    // Move the buttons to the jQuery UI dialog buttons area.
+    if (typeof response.dialogOptions.drupalAutoButtons === 'undefined') {
+      response.dialogOptions.drupalAutoButton = true;
+    } else if (response.dialogOptions.drupalAutoButtons === 'false') {
+      response.dialogOptions.drupalAutoButton = false;
+    } else {
+      // Force boolean value.
+      response.dialogOptions.drupalAutoButton =
+        !!response.dialogOptions.drupalAutoButton;
     }
-    if (response.dialogOptions.drupalAutoButtons && response.dialogOptions.drupalAutoButtons !== 'false') {
-      response.dialogOptions.drupalAutoButtons = true;
+
+    if (response.dialogOptions.drupalAutoButtons) {
       response.dialogOptions.buttons =
         Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }

@@ -78,11 +78,22 @@
     response.method = 'html';
     ajax.commands.insert(ajax, response, status);
 
-    if (!response.dialogOptions.drupalAutoButtons) {
-      response.dialogOptions.drupalAutoButtons = true;
+    response.dialogOptions = response.dialogOptions || {};
+
+    // Move the buttons to the jQuery UI dialog buttons area.
+    if (typeof response.dialogOptions.drupalAutoButtons === 'undefined') {
+      response.dialogOptions.drupalAutoButton = true;
+    } else if (response.dialogOptions.drupalAutoButtons === 'false') {
+      response.dialogOptions.drupalAutoButton = false;
+    } else {
+      // Force boolean value.
+      response.dialogOptions.drupalAutoButton =
+        !!response.dialogOptions.drupalAutoButton;
     }
-    if (response.dialogOptions.drupalAutoButtons && response.dialogOptions.drupalAutoButtons !== 'false') {
-      response.dialogOptions.buttons = Drupal.behaviors.dialog.prepareDialogButtons($dialog);
+
+    if (response.dialogOptions.drupalAutoButtons) {
+      response.dialogOptions.buttons =
+        Drupal.behaviors.dialog.prepareDialogButtons($dialog);
     }
 
     $dialog.on('dialogButtonsChange', function () {
