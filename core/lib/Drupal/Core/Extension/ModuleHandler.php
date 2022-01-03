@@ -260,7 +260,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadInclude($module, $type, $name = NULL) {
+  public function loadInclude($module, $type, $name = NULL, bool $include_from_disabled_module = FALSE) {
     $uninstalled_extension = NULL;
     if ($type === 'install') {
       // Make sure the installation API is available.
@@ -268,18 +268,16 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     $name = $name ?: $module;
-    $key = $type . ':' . $module . ':' . $name;
+    $installed = $include_from_disabled_module ? '' : ':0';
+    $key = $type . ':' . $module . ':' . $name . $installed;
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    if (!$this->moduleExists($module)) {
+    if ($include_from_disabled_module && !$this->moduleExists($module)) {
       // In case if there are no enabled extension definition found, let's
       // try to find the extension's install file to include.
       $extensions_type_order = [
         'module',
-        'theme',
-        'profile',
-        'theme_engine',
       ];
       foreach ($extensions_type_order as $extension_type) {
         try {

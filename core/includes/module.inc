@@ -17,10 +17,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  *   The name of the module's install file, if successful; FALSE otherwise.
  */
 function module_load_install($module) {
-  // Make sure the installation API is available
-  include_once __DIR__ . '/install.inc';
-
-  return \Drupal::moduleHandler()->loadInclude($module, 'install');
+  return \Drupal::moduleHandler()->loadInclude($module, 'install', NULL, TRUE);
 }
 
 /**
