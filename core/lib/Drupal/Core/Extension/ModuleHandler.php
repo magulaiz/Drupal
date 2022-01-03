@@ -278,6 +278,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // try to find the extension's install file to include.
       $extensions_type_order = [
         'module',
+        'profile',
       ];
       foreach ($extensions_type_order as $extension_type) {
         try {
