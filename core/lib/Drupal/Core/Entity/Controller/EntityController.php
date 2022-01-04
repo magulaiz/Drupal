@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -18,6 +19,7 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Provides the add-page and title callbacks for entities.
@@ -63,6 +65,13 @@ class EntityController implements ContainerInjectionInterface {
   protected $renderer;
 
   /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
    * Constructs a new EntityController.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -77,14 +86,17 @@ class EntityController implements ContainerInjectionInterface {
    *   The string translation.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository, RendererInterface $renderer, TranslationInterface $string_translation, UrlGeneratorInterface $url_generator, RouteProviderInterface $route_provider) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityRepository = $entity_repository;
     $this->renderer = $renderer;
     $this->stringTranslation = $string_translation;
     $this->urlGenerator = $url_generator;
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -97,7 +109,8 @@ class EntityController implements ContainerInjectionInterface {
       $container->get('entity.repository'),
       $container->get('renderer'),
       $container->get('string_translation'),
-      $container->get('url_generator')
+      $container->get('url_generator'),
+      $container->get('router.route_provider')
     );
   }
 
@@ -149,13 +162,6 @@ class EntityController implements ContainerInjectionInterface {
       $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
 
-      // Build the message shown when there are no bundles.
-      $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
-      $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_form';
-      $build['#add_bundle_message'] = $this->t('There is no @entity_type yet. @add_link', [
-        '@entity_type' => $bundle_entity_type_label,
-        '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
-      ]);
       // Filter out the bundles the user doesn't have access to.
       $access_control_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
       foreach ($bundles as $bundle_name => $bundle_info) {
@@ -174,11 +180,29 @@ class EntityController implements ContainerInjectionInterface {
 
     $form_route_name = 'entity.' . $entity_type_id . '.add_form';
     // Redirect if there's only one bundle available.
-    if (count($bundles) == 1) {
+    $bundle_count = count($bundles);
+    if ($bundle_count === 1) {
       $bundle_names = array_keys($bundles);
       $bundle_name = reset($bundle_names);
       return $this->redirect($form_route_name, [$bundle_argument => $bundle_name]);
     }
+    // Show a message shown when there are no bundles.
+    elseif ($bundle_count === 0) {
+      $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
+      $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_page';
+      try {
+        $this->routeProvider->getRouteByName($link_route_name);
+      }
+      catch (RouteNotFoundException $e) {
+        $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_form';
+      }
+      $build['#add_bundle_message'] = $this->t('There is no @entity_type yet. @add_link', [
+        '@entity_type' => $bundle_entity_type_label,
+        '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
+      ]);
+      return $build;
+    }
+
     // Prepare the #bundles array for the template.
     foreach ($bundles as $bundle_name => $bundle_info) {
       $build['#bundles'][$bundle_name] = [
