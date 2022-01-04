@@ -89,15 +89,16 @@ class ProjectFieldsTest extends KernelTestBase {
         'fixture' => '/../../fixtures/release-history/drupal.unsupported.0.2.xml',
         'label' => 'Project not supported',
         'exp_error_message' => 'This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
-      ]
+      ],
     ];
   }
+
   /**
    * @dataProvider fixturesProvider
    *
    * Tests the project_status field of the project.
    */
-  public function testProjectStatusField($fixture, $label, $exp_error_message  ) {
+  public function testProjectStatusField($fixture, $label, $exp_error_message) {
     update_storage_clear();
     $this->setReleaseMetadata(__DIR__ . $fixture);
     $available = update_get_available(TRUE);
