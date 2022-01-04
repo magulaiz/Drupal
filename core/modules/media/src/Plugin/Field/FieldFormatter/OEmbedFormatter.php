@@ -193,14 +193,29 @@ class OEmbedFormatter extends FormatterBase {
         ];
       }
       else {
-        $url = Url::fromRoute('media.oembed_iframe', [], [
-          'query' => [
-            'url' => $value,
-            'max_width' => $max_width,
-            'max_height' => $max_height,
-            'hash' => $this->iFrameUrlHelper->getHash($value, $max_width, $max_height),
-          ],
-        ]);
+        if ($resource->getType() === Resource::TYPE_VIDEO && $resource->getProvider()->getName() === 'Vimeo') {
+          $options = [
+            'query' => [
+              'url' => $value,
+              'dnt' => 1,
+              'max_width' => $max_width,
+              'max_height' => $max_height,
+              'hash' => $this->iFrameUrlHelper->getHash($value, $max_width, $max_height),
+            ],
+          ];
+        }
+        else {
+          $options = [
+            'query' => [
+              'url' => $value,
+              'max_width' => $max_width,
+              'max_height' => $max_height,
+              'hash' => $this->iFrameUrlHelper->getHash($value, $max_width, $max_height),
+            ],
+          ];
+        }
+
+        $url = Url::fromRoute('media.oembed_iframe', [], $options);
 
         $domain = $this->config->get('iframe_domain');
         if ($domain) {

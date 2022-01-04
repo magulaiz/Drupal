@@ -62,7 +62,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         [],
         [
           'iframe' => [
-            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899',
+            'src' => ['/media/oembed?url=https%3A//vimeo.com/7073899', 'dnt=1'],
             'width' => '480',
             'height' => '360',
             'title' => 'Drupal Rap Video - Schipulcon09',
@@ -75,7 +75,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         ['max_width' => '100', 'max_height' => '100'],
         [
           'iframe' => [
-            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899',
+            'src' => ['/media/oembed?url=https%3A//vimeo.com/7073899', 'dnt=1'],
             'width' => '100',
             'height' => '100',
             'title' => 'Drupal Rap Video - Schipulcon09',
@@ -88,7 +88,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
         [],
         [
           'iframe' => [
-            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899',
+            'src' => ['/media/oembed?url=https%3A//vimeo.com/7073899&', 'dnt=1'],
             'width' => '480',
             'height' => '360',
             'title' => NULL,
@@ -208,7 +208,9 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
       $element = $assert->elementExists('css', $selector);
       foreach ($attributes as $attribute => $value) {
         if (isset($value)) {
-          $this->assertStringContainsString($value, $element->getAttribute($attribute));
+          foreach ((array) $value as $value_string) {
+            $this->assertStringContainsString($value_string, $element->getAttribute($attribute));
+          }
         }
         else {
           $this->assertFalse($element->hasAttribute($attribute));
