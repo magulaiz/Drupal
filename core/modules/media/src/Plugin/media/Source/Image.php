@@ -120,7 +120,7 @@ class Image extends File {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $name) {
+  protected function getRawMetadata(MediaInterface $media, $name) {
     // Get the file and image data.
     /** @var \Drupal\file\FileInterface $file */
     $file = $media->get($this->configuration['source_field'])->entity;

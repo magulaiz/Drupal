@@ -234,7 +234,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $name) {
+  protected function getRawMetadata(MediaInterface $media, $name) {
     $media_url = $this->getSourceFieldValue($media);
     // The URL may be NULL if the source field is empty, in which case just
     // return NULL.

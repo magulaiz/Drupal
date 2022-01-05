@@ -128,6 +128,21 @@ abstract class MediaSourceBase extends PluginBase implements MediaSourceInterfac
    * {@inheritdoc}
    */
   public function getMetadata(MediaInterface $media, $attribute_name) {
+    return $this->getRawMetadata($media, $attribute_name);
+  }
+
+  /**
+   * Gets the unaltered value for a metadata attribute for a given media item.
+   *
+   * @param \Drupal\media\MediaInterface $media
+   *   A media item.
+   * @param string $attribute_name
+   *   Name of the attribute to fetch.
+   *
+   * @return mixed|null
+   *   Metadata attribute value or NULL if unavailable.
+   */
+  protected function getRawMetadata(MediaInterface $media, $attribute_name) {
     switch ($attribute_name) {
       case 'default_name':
         return 'media:' . $media->bundle() . ':' . $media->uuid();

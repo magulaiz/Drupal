@@ -57,7 +57,7 @@ class File extends MediaSourceBase {
   /**
    * {@inheritdoc}
    */
-  public function getMetadata(MediaInterface $media, $attribute_name) {
+  protected function getRawMetadata(MediaInterface $media, $attribute_name) {
     /** @var \Drupal\file\FileInterface $file */
     $file = $media->get($this->configuration['source_field'])->entity;
     // If the source field is not required, it may be empty.
