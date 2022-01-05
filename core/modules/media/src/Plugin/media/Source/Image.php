@@ -126,7 +126,7 @@ class Image extends File {
     $file = $media->get($this->configuration['source_field'])->entity;
     // If the source field is not required, it may be empty.
     if (!$file) {
-      return parent::getMetadata($media, $name);
+      return parent::getRawMetadata($media, $name);
     }
 
     $uri = $file->getFileUri();
@@ -143,10 +143,10 @@ class Image extends File {
         return $uri;
 
       case 'thumbnail_alt_value':
-        return $media->get($this->configuration['source_field'])->alt ?: parent::getMetadata($media, $name);
+        return $media->get($this->configuration['source_field'])->alt ?: parent::getRawMetadata($media, $name);
     }
 
-    return parent::getMetadata($media, $name);
+    return parent::getRawMetadata($media, $name);
   }
 
   /**

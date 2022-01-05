@@ -48,7 +48,7 @@ class Test extends MediaSourceBase {
       return $attributes[$attribute_name]['value'];
     }
 
-    return parent::getMetadata($media, $attribute_name);
+    return parent::getRawMetadata($media, $attribute_name);
   }
 
   /**

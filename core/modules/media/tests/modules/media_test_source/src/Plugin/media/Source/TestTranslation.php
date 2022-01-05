@@ -30,7 +30,7 @@ class TestTranslation extends Test {
       return $this->t('Test Thumbnail @language', ['@language' => $langcode], ['langcode' => $langcode]);
     }
 
-    return parent::getMetadata($media, $attribute_name);
+    return parent::getRawMetadata($media, $attribute_name);
   }
 
 }
