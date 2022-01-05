@@ -17,10 +17,7 @@ use Drupal\Core\Extension\ExtensionDiscovery;
  *   The name of the module's install file, if successful; FALSE otherwise.
  */
 function module_load_install($module) {
-  // Make sure the installation API is available
-  include_once __DIR__ . '/install.inc';
-
-  return module_load_include('install', $module);
+  return \Drupal::moduleHandler()->loadInclude($module, 'install', NULL, TRUE);
 }
 
 /**
@@ -47,29 +44,17 @@ function module_load_install($module) {
  *   (optional) The base file name (without the $type extension). If omitted,
  *   $module is used; i.e., resulting in "$module.$type" by default.
  *
- * @return
+ * @return string|false
  *   The name of the included file, if successful; FALSE otherwise.
  *
- * @todo The module_handler service has a loadInclude() method which performs
- *   this same task but only for enabled modules. Figure out a way to move this
- *   functionality entirely into the module_handler while keeping the ability to
- *   load the files of disabled modules.
+ * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0.
+ *   Use \Drupal::moduleHandler()->loadInclude($module, $type, $name = NULL);
+ *
+ * @see https://www.drupal.org/node/2948698
  */
 function module_load_include($type, $module, $name = NULL) {
-  if (!isset($name)) {
-    $name = $module;
-  }
-
-  if (\Drupal::hasService('extension.list.module')) {
-    /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-    $module_list = \Drupal::service('extension.list.module');
-    $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$name.$type";
-    if (is_file($file)) {
-      require_once $file;
-      return $file;
-    }
-  }
-  return FALSE;
+  @trigger_error("module_load_include() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, you should use \Drupal::moduleHandler()->loadInclude(). See https://www.drupal.org/project/drupal/issues/697946", E_USER_DEPRECATED);
+  return \Drupal::moduleHandler()->loadInclude($module, $type, $name);
 }
 
 /**

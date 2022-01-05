@@ -140,6 +140,7 @@ interface ModuleHandlerInterface {
    * Loads a module include file.
    *
    * Examples:
+   *
    * @code
    *   // Load node.admin.inc from the node module.
    *   $this->loadInclude('node', 'inc', 'node.admin');
@@ -151,14 +152,17 @@ interface ModuleHandlerInterface {
    *   The module to which the include file belongs.
    * @param string $type
    *   The include file's type (file extension).
-   * @param string $name
+   * @param null $name
    *   (optional) The base file name (without the $type extension). If omitted,
    *   $module is used; i.e., resulting in "$module.$type" by default.
+   * @param bool $include_from_disabled_module
+   *   (optional) The flag which suppose to confirm that the included file is
+   *   from uninstalled extension.
    *
    * @return string|false
    *   The name of the included file, if successful; FALSE otherwise.
    */
-  public function loadInclude($module, $type, $name = NULL);
+  public function loadInclude($module, $type, $name = NULL, bool $include_from_disabled_module = FALSE);
 
   /**
    * Retrieves a list of hooks that are declared through hook_hook_info().

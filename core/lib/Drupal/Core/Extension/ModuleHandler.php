@@ -5,6 +5,7 @@ namespace Drupal\Core\Extension;
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
@@ -259,29 +260,70 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function loadInclude($module, $type, $name = NULL) {
-    if ($type == 'install') {
-      // Make sure the installation API is available
+  public function loadInclude($module, $type, $name = NULL, bool $include_from_disabled_module = FALSE) {
+    $uninstalled_extension = NULL;
+    if ($type === 'install') {
+      // Make sure the installation API is available.
       include_once $this->root . '/core/includes/install.inc';
     }
 
     $name = $name ?: $module;
-    $key = $type . ':' . $module . ':' . $name;
+    $installed = $include_from_disabled_module ? '' : ':0';
+    $key = $type . ':' . $module . ':' . $name . $installed;
     if (isset($this->includeFileKeys[$key])) {
       return $this->includeFileKeys[$key];
     }
-    if (isset($this->moduleList[$module])) {
-      $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
-      if (is_file($file)) {
-        require_once $file;
-        $this->includeFileKeys[$key] = $file;
-        return $file;
-      }
-      else {
-        $this->includeFileKeys[$key] = FALSE;
+    if ($include_from_disabled_module && !$this->moduleExists($module)) {
+      // In case if there are no enabled extension definition found, let's
+      // try to find the extension's install file to include.
+      $extensions_type_order = [
+        'module',
+        'profile',
+      ];
+      foreach ($extensions_type_order as $extension_type) {
+        try {
+          $uninstalled_extension = \Drupal::service('extension.list.' . $extension_type)
+            ->get($module);
+        }
+        catch (ContainerNotInitializedException $e) {
+          // Container not initialized yet, no info available for an extension.
+        }
+        catch (UnknownExtensionException $e) {
+          // Keep try to load other type of extensions.
+        }
+        if ($uninstalled_extension !== NULL) {
+          // The extension definition was found, let's keep it for the main
+          // handler below.
+          break;
+        }
       }
     }
-    return FALSE;
+    $file = $this->getFilePath($name, $type, $this->moduleList[$module] ?? $uninstalled_extension) ?? '';
+    if (is_file($file)) {
+      require_once $file;
+      return $this->includeFileKeys[$key] = $file;
+    }
+    return $this->includeFileKeys[$key] = FALSE;
+  }
+
+  /**
+   * File path getter.
+   *
+   * @param string $name
+   *   File name without extension.
+   * @param string $type
+   *   File extension.
+   * @param \Drupal\Core\Extension\Extension|null $extension
+   *   Drupal extension instance.
+   *
+   * @return string|null
+   *   Absolute file path.
+   */
+  protected function getFilePath(string $name, string $type, ?Extension $extension): ?string {
+    if ($extension) {
+      return $this->root . '/' . $extension->getPath() . "/$name.$type";
+    }
+    return NULL;
   }
 
   /**
