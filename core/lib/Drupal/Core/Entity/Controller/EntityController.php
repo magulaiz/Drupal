@@ -159,7 +159,6 @@ class EntityController implements ContainerInjectionInterface {
     if ($bundle_entity_type_id) {
       $bundle_argument = $bundle_entity_type_id;
       $bundle_entity_type = $this->entityTypeManager->getDefinition($bundle_entity_type_id);
-      $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
       $build['#cache']['tags'] = $bundle_entity_type->getListCacheTags();
 
       // Filter out the bundles the user doesn't have access to.
@@ -188,18 +187,7 @@ class EntityController implements ContainerInjectionInterface {
     }
     // Show a message shown when there are no bundles.
     elseif ($bundle_count === 0) {
-      $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
-      $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_page';
-      try {
-        $this->routeProvider->getRouteByName($link_route_name);
-      }
-      catch (RouteNotFoundException $e) {
-        $link_route_name = 'entity.' . $bundle_entity_type->id() . '.add_form';
-      }
-      $build['#add_bundle_message'] = $this->t('There is no @entity_type yet. @add_link', [
-        '@entity_type' => $bundle_entity_type_label,
-        '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
-      ]);
+      $build['#add_bundle_message'] = $this->buildAddBundleMessage($bundle_entity_type);
       return $build;
     }
 
@@ -367,6 +355,35 @@ class EntityController implements ContainerInjectionInterface {
     }
 
     return $bundles;
+  }
+
+  /**
+   * Builds the message displayed when there is no bundle available.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeInterface $bundle_entity_type
+   *   The entity type providing the bundles for the entity.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   *   The translated message.
+   */
+  protected function buildAddBundleMessage(EntityTypeInterface $bundle_entity_type) {
+    $bundle_entity_type_id = $bundle_entity_type->id();
+    $bundle_entity_type_label = $bundle_entity_type->getSingularLabel();
+
+    $link_text = $this->t('Add a new @entity_type.', ['@entity_type' => $bundle_entity_type_label]);
+    $link_route_name = 'entity.' . $bundle_entity_type_id . '.add_page';
+
+    try {
+      $this->routeProvider->getRouteByName($link_route_name);
+    }
+    catch (RouteNotFoundException $e) {
+      $link_route_name = 'entity.' . $bundle_entity_type_id . '.add_form';
+    }
+
+    return $this->t('There is no @entity_type yet. @add_link', [
+      '@entity_type' => $bundle_entity_type_label,
+      '@add_link' => Link::createFromRoute($link_text, $link_route_name)->toString(),
+    ]);
   }
 
 }
