@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -10,11 +11,11 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 
 /**
- * Tests the fields set in update_calculate_project_data() function.
+ * Test the values set in update_calculate_project_data().
  *
  * @group update
  */
-class ProjectFieldsTest extends KernelTestBase {
+class UpdateCalculateProjectDataTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
@@ -35,10 +36,12 @@ class ProjectFieldsTest extends KernelTestBase {
   }
 
   /**
-   * Sets the current (running) version of core, as known to the Update module.
+   * Sets the installed version of core, as known to the Update module.
    *
    * @param string $version
-   *   The current version of core.
+   *   The core version.
+   *
+   * @see update_test_system_info_alter()
    */
   protected function setCoreVersion(string $version): void {
     $this->config('update_test.settings')
@@ -66,27 +69,30 @@ class ProjectFieldsTest extends KernelTestBase {
    * Provides fixture data for test scenarios testing project status field.
    *
    * The test cases rely on the following fixtures:
-   * - drupal.revoked.0.2.xml : Project_status is 'revoked'.
-   * - drupal.insecure.0.2.xml :  Project_status is 'insecure'.
-   * - drupal.unsupported.0.2.xml : Project_status is 'unsupported'.
+   * - drupal.project_status.revoked.0.2.xml : Project_status is 'revoked'.
+   * - drupal.project_status.insecure.0.2.xml :  Project_status is 'insecure'.
+   * - drupal.project_status.unsupported.0.2.xml : Project_status is 'unsupported'.
    *
    * @return array[]
    *   Test data.
    */
-  public function fixturesProvider(): array {
+  public function providerProjectStatus(): array {
     return [
         'revoked' => [
-          'fixture' => '/../../fixtures/release-history/drupal.revoked.0.2.xml',
+          'fixture' => '/../../fixtures/release-history/drupal.project_status.revoked.0.2.xml',
+          'status' => UpdateManagerInterface::REVOKED,
           'label' => 'Project revoked',
           'exp_error_message' => 'This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
         ],
         'insecure' => [
-          'fixture' => '/../../fixtures/release-history/drupal.insecure.0.2.xml',
+          'fixture' => '/../../fixtures/release-history/drupal.project_status.insecure.0.2.xml',
+          'status' => UpdateManagerInterface::NOT_SECURE,
           'label' => 'Project not secure',
           'exp_error_message' => 'This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!',
         ],
         'unsupported' => [
-        'fixture' => '/../../fixtures/release-history/drupal.unsupported.0.2.xml',
+        'fixture' => '/../../fixtures/release-history/drupal.project_status.unsupported.0.2.xml',
+        'status' => UpdateManagerInterface::NOT_SUPPORTED,
         'label' => 'Project not supported',
         'exp_error_message' => 'This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
       ],
@@ -94,18 +100,22 @@ class ProjectFieldsTest extends KernelTestBase {
   }
 
   /**
-   * @dataProvider fixturesProvider
+   * Tests the project_status of the project.
    *
-   * Tests the project_status field of the project.
+   * @dataProvider providerProjectStatus
+   *
+   * @covers update_calculate_project_update_status
    */
-  public function testProjectStatusField($fixture, $label, $exp_error_message) {
+  public function testProjectStatus($fixture, $status, $label, $exp_error_message) {
     update_storage_clear();
     $this->setReleaseMetadata(__DIR__ . $fixture);
     $available = update_get_available(TRUE);
     $new = update_calculate_project_data($available);
-    self::assertArrayHasKey('extra', $new['drupal']);
-    self::assertEquals($label, $new['drupal']['extra']['0']['label']);
-    self::assertEquals($exp_error_message, $new['drupal']['extra']['0']['data']);
+    $this->assertArrayHasKey('status', $new['drupal']);
+    $this->assertEquals($status, $new['drupal']['status']);
+    $this->assertArrayHasKey('extra', $new['drupal']);
+    $this->assertEquals($label, $new['drupal']['extra']['0']['label']);
+    $this->assertEquals($exp_error_message, $new['drupal']['extra']['0']['data']);
   }
 
 }
