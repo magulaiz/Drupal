@@ -1,9 +1,4 @@
-const itemAdministration = '#toolbar-item-administration';
-const itemAdministrationTray = '#toolbar-item-administration-tray';
-const adminOrientationButton = `${itemAdministrationTray} .toolbar-toggle-orientation button`;
-const itemUser = '#toolbar-item-user';
-const itemUserTray = '#toolbar-item-user-tray';
-const userOrientationBtn = `${itemUserTray} .toolbar-toggle-orientation button`;
+// Unit tests for the new toolbar api
 
 module.exports = {
   '@tags': ['core'],
@@ -24,7 +19,6 @@ module.exports = {
         permissions: [
           'access site reports',
           'access toolbar',
-          'access administration pages',
           'administer menu',
           'administer modules',
           'administer site configuration',
@@ -40,9 +34,11 @@ module.exports = {
       .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
+    // Set the resolution to the default desktop resolution. Ensure the default
+    // toolbar is horizontal in headless mode.
     browser.resizeWindow(1920, 1080);
+    // To clear active tab/tray from previous tests
     browser.execute(function () {
-      // To clear active tab/tray from previous tests
       localStorage.clear();
       // Clear escapeAdmin url values.
       sessionStorage.clear();
@@ -52,323 +48,200 @@ module.exports = {
   after(browser) {
     browser.drupalUninstall();
   },
-  'Change tab': (browser) => {
-    browser.waitForElementPresent(itemUserTray);
-    browser.assert.not.cssClassPresent(itemUser, 'is-active');
-    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
-    browser.click(itemUser);
-    browser.assert.cssClassPresent(itemUser, 'is-active');
-    browser.assert.cssClassPresent(itemUserTray, 'is-active');
-  },
-  'Change orientation': (browser) => {
-    browser.waitForElementPresent(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-horizontal',
-    );
-    browser.click(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-    browser.click(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-horizontal',
-    );
-  },
-  'Toggle tray': (browser) => {
-    browser.waitForElementPresent(itemUserTray);
-    browser.click(itemUser);
-    browser.assert.cssClassPresent(itemUserTray, 'is-active');
-    browser.click(itemUser);
-    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
-    browser.click(itemUser);
-    browser.assert.cssClassPresent(itemUserTray, 'is-active');
-  },
-  'Toggle submenu and sub-submenu': (browser) => {
-    browser.waitForElementPresent(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-horizontal',
-    );
-    browser.click(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray li:nth-child(4) button',
-    );
-    browser.assert.not.cssClassPresent(
-      '#toolbar-item-administration-tray li:nth-child(4)',
-      'open',
-    );
-    browser.assert.not.cssClassPresent(
-      '#toolbar-item-administration-tray li:nth-child(4) button',
-      'open',
-    );
-    browser.click('#toolbar-item-administration-tray li:nth-child(4) button');
-    browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray li:nth-child(4)',
-      'open',
-    );
-    browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray li:nth-child(4) button',
-      'open',
-    );
-    browser.expect
-      .element('#toolbar-link-user-admin_index')
-      .text.to.equal('People');
-    browser.expect
-      .element('#toolbar-link-system-admin_config_system')
-      .text.to.equal('System');
-    // Check sub-submenu
-    browser.waitForElementPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2',
-    );
-    browser.assert.not.cssClassPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2',
-      'open',
-    );
-    browser.assert.not.cssClassPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2 button',
-      'open',
-    );
-    browser.click(
-      '#toolbar-item-administration-tray li.menu-item.level-2 button',
-    );
-    browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2',
-      'open',
-    );
-    browser.assert.cssClassPresent(
-      '#toolbar-item-administration-tray li.menu-item.level-2 button',
-      'open',
-    );
-    browser.expect
-      .element('#toolbar-link-entity-user-admin_form')
-      .text.to.equal('Account settings');
-  },
-  'Narrow toolbar width breakpoint': (browser) => {
-    browser.waitForElementPresent(adminOrientationButton);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-horizontal',
-    );
-    browser.assert.cssClassPresent(
-      '#toolbar-administration',
-      'toolbar-oriented',
-    );
-    browser.resizeWindow(263, 900);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-    browser.assert.not.cssClassPresent(itemAdministration, 'toolbar-oriented');
-  },
-  'Standard width toolbar breakpoint': (browser) => {
-    browser.resizeWindow(1000, 900);
-    browser.waitForElementPresent(adminOrientationButton);
-    browser.assert.cssClassPresent('body', 'toolbar-fixed');
-    browser.resizeWindow(609, 900);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-    browser.assert.not.cssClassPresent('body', 'toolbar-fixed');
-  },
-  'Wide toolbar breakpoint': (browser) => {
-    browser.waitForElementPresent(adminOrientationButton);
-    browser.resizeWindow(975, 900);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-  },
-  'Back to site link': (browser) => {
-    const escapeSelector = '[data-toolbar-escape-admin]';
-    browser.drupalRelativeURL('/user');
-    browser.drupalRelativeURL('/admin');
-    // Don't check the visibility as stark doesn't add the .path-admin class
-    // to the <body> required to display the button.
-    browser.assert.attributeContains(escapeSelector, 'href', '/user/2');
-  },
-  'Aural view test: tray orientation': (browser) => {
-    browser.executeAsync(
-      function (done) {
-        Drupal.announce = done;
-
-        const orientationButton = document.querySelector(
-          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-        );
-        orientationButton.dispatchEvent(
-          new MouseEvent('click', { bubbles: true }),
-        );
-      },
-      (result) => {
-        browser.assert.equal(
-          result.value,
-          'Tray orientation changed to vertical.',
-        );
-      },
-    );
-    browser.executeAsync(
-      function (done) {
-        Drupal.announce = done;
-
-        const orientationButton = document.querySelector(
-          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-        );
-        orientationButton.dispatchEvent(
-          new MouseEvent('click', { bubbles: true }),
-        );
-      },
-      (result) => {
-        browser.assert.equal(
-          result.value,
-          'Tray orientation changed to horizontal.',
-        );
-      },
-    );
-  },
-  'Aural view test: tray toggle': (browser) => {
-    browser.executeAsync(
-      function (done) {
-        Drupal.announce = done;
-        const $adminButton = jQuery('#toolbar-item-administration');
-        $adminButton.trigger('click');
-      },
-      (result) => {
-        browser.assert.equal(
-          result.value,
-          'Tray "Administration menu" closed.',
-        );
-      },
-    );
-    browser.executeAsync(
-      function (done) {
-        Drupal.announce = done;
-        const $adminButton = jQuery('#toolbar-item-administration');
-        $adminButton.trigger('click');
-      },
-      (result) => {
-        browser.assert.equal(
-          result.value,
-          'Tray "Administration menu" opened.',
-        );
-      },
-    );
-  },
-  'Toolbar event: drupalToolbarOrientationChange': (browser) => {
-    browser.executeAsync(
-      function (done) {
-        jQuery(document).on(
-          'drupalToolbarOrientationChange',
-          function (event, orientation) {
-            done(orientation);
-          },
-        );
-        const orientationButton = document.querySelector(
-          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
-        );
-        orientationButton.dispatchEvent(
-          new MouseEvent('click', { bubbles: true }),
-        );
-      },
-      (result) => {
-        browser.assert.equal(result.value, 'vertical');
-      },
-    );
-  },
-  'Toolbar event: drupalToolbarTabChange': (browser) => {
-    browser.executeAsync(
-      function (done) {
-        jQuery(document).on('drupalToolbarTabChange', function (event, tab) {
-          done(tab.id);
-        });
-        jQuery('#toolbar-item-user').trigger('click');
-      },
-      (result) => {
-        browser.assert.equal(result.value, 'toolbar-item-user');
-      },
-    );
-  },
-  'Toolbar event: drupalToolbarTrayChange': (browser) => {
-    browser.executeAsync(
-      function (done) {
-        const $adminButton = jQuery('#toolbar-item-administration');
-        // Hide the admin menu first, this event is not firing reliably otherwise.
-        $adminButton.trigger('click');
-        jQuery(document).on('drupalToolbarTrayChange', function (event, tray) {
-          done(tray.id);
-        });
-        $adminButton.trigger('click');
-      },
-      (result) => {
-        browser.assert.equal(result.value, 'toolbar-item-administration-tray');
-      },
-    );
-  },
-  'Locked toolbar vertical wide viewport': (browser) => {
-    browser.resizeWindow(1000, 900);
-    browser.waitForElementPresent(adminOrientationButton);
-    // eslint-disable-next-line no-unused-expressions
-    browser.expect.element(adminOrientationButton).to.be.visible;
-    browser.resizeWindow(975, 900);
-    browser.assert.cssClassPresent(
-      itemAdministrationTray,
-      'is-active toolbar-tray-vertical',
-    );
-    // eslint-disable-next-line no-unused-expressions
-    browser.expect.element(adminOrientationButton).to.not.be.visible;
-  },
-  'Settings are retained on refresh': (browser) => {
-    browser.waitForElementPresent(itemUser);
-    // Set user as active tab
-    browser.assert.not.cssClassPresent(itemUser, 'is-active');
-    browser.assert.not.cssClassPresent(itemUserTray, 'is-active');
-    browser.click(itemUser);
-    // Check tab and tray are open
-    browser.assert.cssClassPresent(itemUser, 'is-active');
-    browser.assert.cssClassPresent(itemUserTray, 'is-active');
-    // Set orientation to vertical
-    browser.waitForElementPresent(userOrientationBtn);
-    browser.assert.cssClassPresent(
-      itemUserTray,
-      'is-active toolbar-tray-horizontal',
-    );
-    browser.click(userOrientationBtn);
-    browser.assert.cssClassPresent(
-      itemUserTray,
-      'is-active toolbar-tray-vertical',
-    );
-    browser.refresh();
-    // Check user tab is active
-    browser.assert.cssClassPresent(itemUser, 'is-active');
-    // Check tray is active and orientation is vertical
-    browser.assert.cssClassPresent(
-      itemUserTray,
-      'is-active toolbar-tray-vertical',
-    );
-  },
-  'Check toolbar overlap with page content': (browser) => {
+  'Drupal.Toolbar.models': (browser) => {
     browser.execute(
-      () => {
-        const toolbar = document.querySelector('#toolbar-administration');
-        const nextElement = toolbar.nextElementSibling.getBoundingClientRect();
-        const tray = document
-          .querySelector('#toolbar-item-administration-tray')
-          .getBoundingClientRect();
-        // Page content should start after the toolbar height to not overlap.
-        return nextElement.top > tray.top + tray.height;
+      function () {
+        const toReturn = {};
+        const { models } = Drupal.toolbar;
+        toReturn.hasMenuModel = models.hasOwnProperty('menuModel');
+        toReturn.menuModelType = typeof models.menuModel === 'object';
+        toReturn.hasToolbarModel = models.hasOwnProperty('toolbarModel');
+        toReturn.toolbarModelType = typeof models.toolbarModel === 'object';
+        toReturn.toolbarModelActiveTab =
+          models.toolbarModel.get('activeTab').id ===
+          'toolbar-item-administration';
+        toReturn.toolbarModelActiveTray =
+          models.toolbarModel.get('activeTray').id ===
+          'toolbar-item-administration-tray';
+        toReturn.toolbarModelIsOriented =
+          models.toolbarModel.get('isOriented') === true;
+        toReturn.toolbarModelIsFixed =
+          models.toolbarModel.get('isFixed') === true;
+        toReturn.toolbarModelAreSubtreesLoaded =
+          models.toolbarModel.get('areSubtreesLoaded') === false;
+        toReturn.toolbarModelIsViewportOverflowConstrained =
+          models.toolbarModel.get('isViewportOverflowConstrained') === false;
+        toReturn.toolbarModelOrientation =
+          models.toolbarModel.get('orientation') === 'horizontal';
+        toReturn.toolbarModelLocked =
+          models.toolbarModel.get('locked') === null;
+        toReturn.toolbarModelIsTrayToggleVisible =
+          models.toolbarModel.get('isTrayToggleVisible') === true;
+        toReturn.toolbarModelHeight = models.toolbarModel.get('height') === 79;
+        toReturn.toolbarModelOffsetsBottom =
+          models.toolbarModel.get('offsets').bottom === 0;
+        toReturn.toolbarModelOffsetsLeft =
+          models.toolbarModel.get('offsets').left === 0;
+        toReturn.toolbarModelOffsetsRight =
+          models.toolbarModel.get('offsets').right === 0;
+        toReturn.toolbarModelOffsetsTop =
+          models.toolbarModel.get('offsets').top === 79;
+        toReturn.toolbarModelSubtrees =
+          Object.keys(models.menuModel.get('subtrees')).length === 0;
+        return toReturn;
       },
+      [],
       (result) => {
-        browser.assert.equal(
-          result.value,
-          true,
-          'Toolbar and page content do not overlap',
+        const expectedTrue = {
+          hasMenuModel: 'has menu model',
+          hasToolbarModel: 'has toolbar model',
+          toolbarModelActiveTab: 'get("activeTab") has expected result',
+          toolbarModelActiveTray: 'get("activeTray") has expected result',
+          toolbarModelIsOriented: 'get("isOriented") has expected result',
+          toolbarModelIsFixed: 'get("isFixed") has expected result',
+          toolbarModelAreSubtreesLoaded:
+            'get("areSubtreesLoaded") has expected result',
+          toolbarModelIsViewportOverflowConstrained:
+            'get("isViewportOverflowConstrained") has expected result',
+          toolbarModelOrientation: 'get("orientation") has expected result',
+          toolbarModelLocked: 'get("locked") has expected result',
+          toolbarModelIsTrayToggleVisible:
+            'get("isTrayToggleVisible") has expected result',
+          toolbarModelHeight: 'get("height") has expected result',
+          toolbarModelOffsetsBottom:
+            'get("offsets") bottom has expected result',
+          toolbarModelOffsetsLeft: 'get("offsets") left has expected result',
+          toolbarModelOffsetsRight: 'get("offsets") right has expected result',
+          toolbarModelOffsetsTop: 'get("offsets") top has expected result',
+          toolbarModelSubtrees: 'get("subtrees") has expected result',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+
+  'Change tab': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const toReturn = {};
+        const { models } = Drupal.toolbar;
+        toReturn.hasMenuModel = models.hasOwnProperty('menuModel');
+        toReturn.menuModelType = typeof models.menuModel === 'object';
+        toReturn.hasToolbarModel = models.hasOwnProperty('toolbarModel');
+        toReturn.toolbarModelType = typeof models.toolbarModel === 'object';
+
+        setTimeout(() => {
+          const tab = document.querySelector('#toolbar-item-user');
+          tab.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+          toReturn.toolbarModelChangedTab =
+            models.toolbarModel.get('activeTab').id === 'toolbar-item-user';
+          toReturn.toolbarModelChangedTray =
+            models.toolbarModel.get('activeTray').id ===
+            'toolbar-item-user-tray';
+          done(toReturn);
+        }, 100);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          toolbarModelChangedTab: 'get("activeTab") has expected result',
+          toolbarModelChangedTray: 'get("activeTray") has expected result',
+        };
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+
+  'Change orientation': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const toReturn = {};
+        const { models } = Drupal.toolbar;
+
+        const orientationToggle = document.querySelector(
+          '#toolbar-item-administration-tray .toolbar-toggle-orientation button',
         );
+        toReturn.toolbarOrientation =
+          models.toolbarModel.get('orientation') === 'horizontal';
+        orientationToggle.dispatchEvent(
+          new MouseEvent('click', { bubbles: true }),
+        );
+        setTimeout(() => {
+          toReturn.toolbarChangeOrientation =
+            models.toolbarModel.get('orientation') === 'vertical';
+          done(toReturn);
+        }, 100);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          toolbarOrientation: 'get("orientation") has expected result',
+          toolbarChangeOrientation: 'changing orientation has expected result',
+        };
+
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
+      },
+    );
+  },
+  'Open submenu': (browser) => {
+    browser.executeAsync(
+      function (done) {
+        const toReturn = {};
+        const { models } = Drupal.toolbar;
+        Drupal.toolbar.models.toolbarModel.set('orientation', 'vertical');
+        toReturn.toolbarOrientation =
+          models.toolbarModel.get('orientation') === 'vertical';
+        const manageTab = document.querySelector(
+          '#toolbar-item-administration',
+        );
+        Drupal.toolbar.models.toolbarModel.set('activeTab', manageTab);
+        const menuDropdown = document.querySelector(
+          '#toolbar-item-administration-tray button',
+        );
+        menuDropdown.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+        setTimeout(() => {
+          const statReportElement = document.querySelector(
+            '#toolbar-link-system-status',
+          );
+          toReturn.submenuItem =
+            statReportElement.textContent === 'Status report';
+          done(toReturn);
+        }, 100);
+      },
+      [],
+      (result) => {
+        const expectedTrue = {
+          toolbarOrientation: 'get("orientation") has expected result',
+          submenuItem: 'opening submenu has expected result',
+        };
+
+        Object.keys(expectedTrue).forEach((property) => {
+          browser.assert.equal(
+            result.value[property],
+            true,
+            expectedTrue[property],
+          );
+        });
       },
     );
   },
