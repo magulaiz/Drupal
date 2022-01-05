@@ -100,7 +100,7 @@ class Connection extends DatabaseConnection {
     // modes as well.
     //
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
-    
+
     if (empty($connection_options)) {
       $connection_options = '';
     }
