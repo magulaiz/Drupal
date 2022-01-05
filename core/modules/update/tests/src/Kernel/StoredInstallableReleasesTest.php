@@ -10,11 +10,12 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 
 /**
- * Tests the releases stored in update_calculate_project_data() function.
+ * Tests the releases stored in update_calculate_project_data().
  *
  * @group update
  */
 class StoredInstallableReleasesTest extends KernelTestBase {
+
   /**
    * {@inheritdoc}
    */
@@ -31,7 +32,7 @@ class StoredInstallableReleasesTest extends KernelTestBase {
     $this->installConfig('update');
     $this->installConfig('update_test');
     $this->setCoreVersion('9.8.0');
-    $this->setReleaseMetadata(__DIR__ . '/../../fixtures/release-history/drupal.sec.0.2.xml');
+    $this->setReleaseMetadata(__DIR__ . '/../../fixtures/release-history/drupal_8.2_8.1_8.0.xml');
 
   }
 
@@ -64,16 +65,23 @@ class StoredInstallableReleasesTest extends KernelTestBase {
   }
 
   /**
-   * Tests the releases stored.
+   * Tests the releases are stored.
    */
   public function testStoredReleases() {
     update_storage_clear();
     $available = update_get_available(TRUE);
     $new = update_calculate_project_data($available);
-    self::assertNotEmpty($new['drupal']['releases']);
-    self::assertArrayHasKey('8.0.2', $new['drupal']['releases']);
-    self::assertArrayNotHasKey('8.0.1', $new['drupal']['releases']);
-    self::assertArrayNotHasKey('8.0.0', $new['drupal']['releases']);
+    $this->assertArrayHasKey('8.2.3', $new['drupal']['releases']);
+    $this->assertArrayHasKey('8.2.1', $new['drupal']['releases']);
+    $this->assertArrayHasKey('8.1.3', $new['drupal']['releases']);
+    $this->assertArrayHasKey('8.1.1', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.0.2', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.0.1', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.0.0', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.2.2', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.2.0', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.1.2', $new['drupal']['releases']);
+    $this->assertArrayNotHasKey('8.1.0', $new['drupal']['releases']);
   }
 
 }
