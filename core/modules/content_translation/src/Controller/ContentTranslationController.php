@@ -199,8 +199,8 @@ class ContentTranslationController extends ControllerBase {
           // If the user is allowed to edit the entity we point the edit link to
           // the entity form, otherwise if we are not dealing with the original
           // language we point the link to the translation form.
-          $update_access = $entity->access('update', NULL, TRUE);
-          $translation_access = $handler->getTranslationAccess($entity, 'update');
+          $update_access = $translation->access('update', NULL, TRUE);
+          $translation_access = $handler->getTranslationAccess($translation, 'update');
           $cacheability = $cacheability
             ->merge(CacheableMetadata::createFromObject($update_access))
             ->merge(CacheableMetadata::createFromObject($translation_access));
@@ -237,8 +237,8 @@ class ContentTranslationController extends ControllerBase {
 
             if ($delete_route_access->isAllowed()) {
               $source_name = isset($languages[$source]) ? $languages[$source]->getName() : $this->t('n/a');
-              $delete_access = $entity->access('delete', NULL, TRUE);
-              $translation_access = $handler->getTranslationAccess($entity, 'delete');
+              $delete_access = $translation->access('delete', NULL, TRUE);
+              $translation_access = $handler->getTranslationAccess($translation, 'delete');
               $cacheability
                 ->addCacheableDependency($delete_access)
                 ->addCacheableDependency($translation_access);
