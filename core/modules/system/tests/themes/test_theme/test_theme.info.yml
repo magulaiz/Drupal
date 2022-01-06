@@ -61,6 +61,8 @@ libraries-override:
     css:
       component:
         assets/vendor/farbtastic/farbtastic.css: http://example.com/my_theme/css/farbtastic.css
+  # Removing a library used in libraries-extend as the library to add (not extend)
+  classy/user: false
 
 regions:
   content: Content
