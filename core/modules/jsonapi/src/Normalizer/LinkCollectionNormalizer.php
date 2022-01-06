@@ -90,7 +90,7 @@ class LinkCollectionNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof LinkCollection);
     $normalized = [];
     /** @var \Drupal\jsonapi\JsonApiResource\Link $link */
@@ -152,6 +152,13 @@ class LinkCollectionNormalizer extends NormalizerBase {
     // Remove any dashes and underscores from the base64 hash and then return
     // the first 7 characters.
     return substr(str_replace(['-', '_'], '', $b64_hash), 0, 7);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

@@ -2,8 +2,6 @@
  * Generic elements.
  */
 
-@import "./variables.pcss.css";
-
 html {
   font-family: var(--font-family);
   font-size: 100%;
@@ -116,7 +114,7 @@ address {
 }
 u,
 ins {
-  text-decoration: none;
+  text-decoration: underline;
 }
 s,
 strike,

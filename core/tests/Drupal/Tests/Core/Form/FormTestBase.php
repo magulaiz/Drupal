@@ -144,7 +144,7 @@ abstract class FormTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Add functions to the global namespace for testing.
@@ -163,7 +163,7 @@ abstract class FormTestBase extends UnitTestCase {
       ->getMock();
     $this->elementInfo->expects($this->any())
       ->method('getInfo')
-      ->will($this->returnCallback([$this, 'getInfo']));
+      ->willReturnCallback([$this, 'getInfo']);
 
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
@@ -181,11 +181,11 @@ abstract class FormTestBase extends UnitTestCase {
     $form_error_handler = $this->createMock('Drupal\Core\Form\FormErrorHandlerInterface');
     $this->formValidator = $this->getMockBuilder('Drupal\Core\Form\FormValidator')
       ->setConstructorArgs([$this->requestStack, $this->getStringTranslationStub(), $this->csrfToken, $this->logger, $form_error_handler])
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
     $this->formSubmitter = $this->getMockBuilder('Drupal\Core\Form\FormSubmitter')
       ->setConstructorArgs([$this->requestStack, $this->urlGenerator])
-      ->setMethods(['batchGet', 'drupalInstallationAttempted'])
+      ->onlyMethods(['batchGet'])
       ->getMock();
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
 
@@ -195,7 +195,7 @@ abstract class FormTestBase extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     Html::resetSeenIds();
     (new FormState())->clearErrors();
   }

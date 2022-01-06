@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
-use Drupal\Core\Database\Driver\sqlite\Install\Tasks;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -26,7 +26,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();

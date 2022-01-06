@@ -6,6 +6,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\Session\SessionConfigurationInterface;
@@ -136,6 +137,12 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
         if (!empty($options['#fragment'])) {
           $url .= '#' . $options['#fragment'];
         }
+        // In the case of trusted redirect, we have to update the list of
+        // trusted URLs because here we've just modified its target URL
+        // which is in the list.
+        if ($response instanceof TrustedRedirectResponse) {
+          $response->setTrustedTargetUrl($url);
+        }
         $response->setTargetUrl($url);
       }
     }
@@ -147,7 +154,7 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['addCheckToUrl', -1000];
     return $events;
   }

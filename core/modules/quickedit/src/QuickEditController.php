@@ -6,10 +6,12 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Entity\EntityInterface;
@@ -116,15 +118,15 @@ class QuickEditController extends ControllerBase {
    *   The JSON response.
    */
   public function metadata(Request $request) {
-    $fields = $request->request->get('fields');
-    if (!isset($fields)) {
+    if (!$request->request->has('fields')) {
       throw new NotFoundHttpException();
     }
-    $entities = $request->request->get('entities');
+    $fields = $request->request->all('fields');
+    $entities = $request->request->all('entities');
 
     $metadata = [];
     foreach ($fields as $field) {
-      list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
+      [$entity_type, $entity_id, $field_name, $langcode, $view_mode] = explode('/', $field);
 
       // Load the entity.
       if (!$entity_type || !$this->entityTypeManager()->getDefinition($entity_type)) {
@@ -158,6 +160,32 @@ class QuickEditController extends ControllerBase {
   }
 
   /**
+   * Throws an AccessDeniedHttpException if the request fails CSRF validation.
+   *
+   * This is used instead of \Drupal\Core\Access\CsrfAccessCheck, in order to
+   * allow access for anonymous users.
+   *
+   * @todo Refactor this to an access checker.
+   */
+  private static function checkCsrf(Request $request, AccountInterface $account) {
+    $header = 'X-Drupal-Quickedit-CSRF-Token';
+
+    if (!$request->headers->has($header)) {
+      throw new AccessDeniedHttpException();
+    }
+    if ($account->isAnonymous()) {
+      // For anonymous users, just the presence of the custom header is
+      // sufficient protection.
+      return;
+    }
+    // For authenticated users, validate the token value.
+    $token = $request->headers->get($header);
+    if (!\Drupal::csrfToken()->validate($token, $header)) {
+      throw new AccessDeniedHttpException();
+    }
+  }
+
+  /**
    * Returns AJAX commands to load in-place editors' attachments.
    *
    * Given a list of in-place editor IDs as POST parameters, render AJAX
@@ -168,10 +196,10 @@ class QuickEditController extends ControllerBase {
    */
   public function attachments(Request $request) {
     $response = new AjaxResponse();
-    $editors = $request->request->get('editors');
-    if (!isset($editors)) {
+    if (!$request->request->has('editors')) {
       throw new NotFoundHttpException();
     }
+    $editors = $request->request->all('editors');
 
     $response->setAttachments($this->editorSelector->getEditorAttachments($editors));
 
@@ -229,7 +257,7 @@ class QuickEditController extends ControllerBase {
 
       // Re-render the updated field for other view modes (i.e. for other
       // instances of the same logical field on the user's page).
-      $other_view_mode_ids = $request->request->get('other_view_modes') ?: [];
+      $other_view_mode_ids = $request->request->all('other_view_modes');
       $other_view_modes = array_map($render_field_in_view_mode, array_combine($other_view_mode_ids, $other_view_mode_ids));
 
       $response->addCommand(new FieldFormSavedCommand($output, $other_view_modes));
@@ -307,6 +335,8 @@ class QuickEditController extends ControllerBase {
    *   The Ajax response.
    */
   public function entitySave(EntityInterface $entity) {
+    self::checkCsrf(\Drupal::request(), \Drupal::currentUser());
+
     // Take the entity from PrivateTempStore and save in entity storage.
     // fieldForm() ensures that the PrivateTempStore copy exists ahead.
     $tempstore = $this->tempStoreFactory->get('quickedit');

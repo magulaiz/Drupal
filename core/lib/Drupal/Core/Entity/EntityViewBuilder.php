@@ -176,8 +176,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
     // Allow modules to change the view mode.
-    $context = [];
-    $this->moduleHandler()->alter('entity_view_mode', $view_mode, $entity, $context);
+    $this->moduleHandler()->alter('entity_view_mode', $view_mode, $entity);
 
     $build = [
       "#{$this->entityTypeId}" => $entity,
@@ -246,8 +245,8 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    * This function is assigned as a #pre_render callback in ::viewMultiple().
    *
    * By delaying the building of an entity until the #pre_render processing in
-   * drupal_render(), the processing cost of assembling an entity's renderable
-   * array is saved on cache-hit requests.
+   * \Drupal::service('renderer')->render(), the processing cost of assembling
+   * an entity's renderable array is saved on cache-hit requests.
    *
    * @param array $build_list
    *   A renderable  array containing build information and context for an
@@ -482,7 +481,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
     $elements = $this->viewField($clone->{$field_name}, $display);
 
     // Extract the part of the render array we need.
-    $output = isset($elements[0]) ? $elements[0] : [];
+    $output = $elements[0] ?? [];
     if (isset($elements['#access'])) {
       $output['#access'] = $elements['#access'];
     }

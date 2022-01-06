@@ -5,11 +5,11 @@
 * @preserve
 **/
 
-(function (Drupal, once) {
+((Drupal, once) => {
   function init(el) {
-    var tabs = el.querySelector('.tabs');
-    var expandedClass = 'is-expanded';
-    var activeTab = tabs.querySelector('.is-active');
+    const tabs = el.querySelector('.tabs');
+    const expandedClass = 'is-expanded';
+    const activeTab = tabs.querySelector('.is-active');
 
     function isTabsMobileLayout() {
       return tabs.querySelector('.tabs__trigger').clientHeight > 0;
@@ -26,8 +26,8 @@
     }
 
     if (isTabsMobileLayout() && !activeTab.matches('.tabs__tab:first-child')) {
-      var newActiveTab = activeTab.cloneNode(true);
-      var firstTab = tabs.querySelector('.tabs__tab:first-child');
+      const newActiveTab = activeTab.cloneNode(true);
+      const firstTab = tabs.querySelector('.tabs__tab:first-child');
       tabs.insertBefore(newActiveTab, firstTab);
       tabs.removeChild(activeTab);
     }
@@ -35,9 +35,10 @@
     tabs.querySelector('.tabs__trigger').addEventListener('click', handleTriggerClick);
   }
 
-  Drupal.behaviors.tabs = {
-    attach: function attach(context) {
-      once('olivero-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
+  Drupal.behaviors.primaryTabs = {
+    attach(context) {
+      once('olivero-tabs', '[data-drupal-nav-primary-tabs]', context).forEach(init);
     }
+
   };
 })(Drupal, once);

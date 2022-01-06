@@ -3,15 +3,13 @@
  * Styles for Claro's Pagination.
  */
 
-@import "../base/variables.pcss.css";
-
 :root {
   /**
   * Pager.
   */
   --pager-size: 2rem; /* --space-m Ã— 2 */
   --pager-border-width: 0.125rem; /* 2px */
-  --pager-fg-color: var(--color-davysgray);
+  --pager-fg-color: var(--color-gray-800);
   --pager-bg-color: var(--color-white);
   --pager--hover-bg-color: var(--color-bgblue-active);
   --pager--focus-bg-color: var(--color-focus);
@@ -79,6 +77,7 @@
 .pager__link.is-active,
 .pager__item--current {
   color: var(--pager--active-fg-color);
+  border: var(--pager-border-width) solid transparent;
   background: var(--pager--active-bg-color);
 }
 .pager__item--first .pager__link::before {
@@ -148,8 +147,5 @@
 @media (-ms-high-contrast: active) {
   .pager__item a:hover {
     text-decoration: underline;
-  }
-  .pager__link.is-active {
-    border: var(--pager-border-width) solid var(--color-white);
   }
 }

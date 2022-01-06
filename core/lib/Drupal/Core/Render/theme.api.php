@@ -17,11 +17,12 @@
  * hierarchical arrays that include the data to be rendered into HTML (or XML or
  * another output format), and options that affect the markup. Render arrays
  * are ultimately rendered into HTML or other output formats by recursive calls
- * to drupal_render(), traversing the depth of the render array hierarchy. At
- * each level, the theme system is invoked to do the actual rendering. See the
- * documentation of drupal_render() and the
- * @link theme_render Theme system and Render API topic @endlink for more
- * information about render arrays and rendering.
+ * to \Drupal\Core\Render\RendererInterface::render(), traversing the depth of
+ * the render array hierarchy. At each level, the theme system is invoked to do
+ * the actual rendering. See the documentation of
+ * \Drupal\Core\Render\RendererInterface::render() and the @link theme_render
+ * Theme system and Render API topic @endlink for more information about render
+ * arrays and rendering.
  *
  * @section sec_twig_theme Twig Templating Engine
  * Drupal 8 uses the templating engine Twig. Twig offers developers a fast,
@@ -241,13 +242,16 @@
  * hierarchical associative array containing data to be rendered and properties
  * describing how the data should be rendered. A render array that is returned
  * by a function to specify markup to be sent to the web browser or other
- * services will eventually be rendered by a call to drupal_render(), which will
- * recurse through the render array hierarchy if appropriate, making calls into
- * the theme system to do the actual rendering. If a function or method actually
- * needs to return rendered output rather than a render array, the best practice
- * would be to create a render array, render it by calling drupal_render(), and
- * return that result, rather than writing the markup directly. See the
- * documentation of drupal_render() for more details of the rendering process.
+ * services will eventually be rendered by a call to
+ * \Drupal\Core\Render\RendererInterface::render(), which will recurse through
+ * the render array hierarchy if appropriate, making calls into the theme system
+ * to do the actual rendering. If a function or method actually needs to return
+ * rendered output rather than a render array, the best practice would be to
+ * create a render array, render it by calling
+ * \Drupal\Core\Render\RendererInterface::render(), and return that result,
+ * rather than writing the markup directly. See the documentation of
+ * \Drupal\Core\Render\RendererInterface::render() for more details of the
+ * rendering process.
  *
  * Each level in the hierarchy of a render array (including the outermost array)
  * has one or more array elements. Array elements whose names start with '#' are
@@ -849,7 +853,6 @@ function hook_element_plugin_alter(array &$definitions) {
  * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
  *   The assets attached to the current response.
  *
- * @see drupal_js_defaults()
  * @see \Drupal\Core\Asset\AssetResolver
  */
 function hook_js_alter(&$javascript, \Drupal\Core\Asset\AttachedAssetsInterface $assets) {
@@ -1037,7 +1040,8 @@ function hook_css_alter(&$css, \Drupal\Core\Asset\AttachedAssetsInterface $asset
 /**
  * Add attachments (typically assets) to a page before it is rendered.
  *
- * Use this hook when you want to conditionally add attachments to a page.
+ * Use this hook when you want to conditionally add attachments to a page. This
+ * hook can only be implemented by modules.
  *
  * If you want to alter the attachments added by other modules or if your module
  * depends on the elements of other modules, use hook_page_attachments_alter()
@@ -1066,7 +1070,8 @@ function hook_page_attachments(array &$attachments) {
  *
  * Use this hook when you want to remove or alter attachments on the page, or
  * add attachments to the page that depend on another module's attachments (this
- * hook runs after hook_page_attachments().
+ * hook runs after hook_page_attachments(). This hook can be implemented by both
+ * modules and themes.
  *
  * If you try to add anything but #attached and #cache to the array, an
  * exception is thrown.
@@ -1127,7 +1132,7 @@ function hook_page_bottom(array &$page_bottom) {
  *   - 'base_theme': A base theme is being checked for theme implementations.
  *   - 'theme': The actual theme in use is being checked.
  * @param $theme
- *   The actual name of theme, module, etc. that is being being processed.
+ *   The actual name of theme, module, etc. that is being processed.
  * @param $path
  *   The directory path of the theme or module, so that it doesn't need to be
  *   looked up.

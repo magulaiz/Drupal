@@ -9,6 +9,8 @@ use Drupal\Tests\migrate\Unit\TestSqlIdMap;
 use Drupal\migrate\MigrateException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cspell:ignore sourceid
+
 /**
  * Tests that the migrate map table is created.
  *
@@ -47,7 +49,7 @@ class SqlTest extends MigrateTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->database = \Drupal::database();
     $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class)

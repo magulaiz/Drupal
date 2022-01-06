@@ -124,7 +124,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
 
     $content_type = $event->getRequest()->getRequestFormat() == 'html' ? 'text/html' : 'text/plain';
     $content = $this->t('The website encountered an unexpected error. Please try again later.');
-    $content .= $message ? '</br></br>' . $message : '';
+    $content .= $message ? '<br><br>' . $message : '';
     $response = new Response($content, 500, ['Content-Type' => $content_type]);
 
     if ($exception instanceof HttpExceptionInterface) {
@@ -141,7 +141,7 @@ class FinalExceptionSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Run as the final (very late) KernelEvents::EXCEPTION subscriber.
     $events[KernelEvents::EXCEPTION][] = ['onException', -256];
     return $events;

@@ -24,7 +24,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
@@ -58,7 +58,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
       ->setLabel('Required string')
       ->setRequired(TRUE);
     $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
-    drupal_flush_all_caches();
+
     $this->installEntitySchema('entity_test');
     $child = EntityTest::create([
       'name' => 'test2',

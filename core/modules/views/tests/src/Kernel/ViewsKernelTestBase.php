@@ -44,7 +44,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
    *   to setup some additional stuff, like fields, you need to call false and
    *   then call createTestViews for your own.
    */
-  protected function setUp($import_test_views = TRUE) {
+  protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
     $this->installSchema('system', ['sequences']);
@@ -108,10 +108,7 @@ abstract class ViewsKernelTestBase extends KernelTestBase {
   protected function orderResultSet($result_set, $column, $reverse = FALSE) {
     $order = $reverse ? -1 : 1;
     usort($result_set, function ($a, $b) use ($column, $order) {
-      if ($a[$column] == $b[$column]) {
-        return 0;
-      }
-      return $order * (($a[$column] < $b[$column]) ? -1 : 1);
+      return $order * ($a[$column] <=> $b[$column]);
     });
     return $result_set;
   }

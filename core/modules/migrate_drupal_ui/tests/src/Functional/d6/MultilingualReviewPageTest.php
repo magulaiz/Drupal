@@ -4,6 +4,8 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MultilingualReviewPageTestBase;
 
+// cspell:ignore multigroup nodeaccess
+
 /**
  * Tests migrate upgrade review page for Drupal 6.
  *
@@ -18,6 +20,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'datetime_range',
     'language',
     'content_translation',
     'config_translation',

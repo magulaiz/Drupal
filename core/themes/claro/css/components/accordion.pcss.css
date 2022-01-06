@@ -3,8 +3,6 @@
  * Accordion styles.
  */
 
-@import "../base/variables.pcss.css";
-
 .accordion {
   color: var(--color-text);
   border: var(--details-border-size) solid var(--details-border-color);
@@ -36,6 +34,6 @@
 
 .accordion__item .claro-details__summary .summary {
   display: block;
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
   font-weight: normal;
 }

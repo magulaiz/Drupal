@@ -92,7 +92,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set up a HTTP client that accepts relative URLs.
@@ -191,7 +191,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       'administer taxonomy',
     ]);
 
-    drupal_flush_all_caches();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

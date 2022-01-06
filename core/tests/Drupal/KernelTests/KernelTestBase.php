@@ -229,7 +229,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  public static function setUpBeforeClass() {
+  public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
 
@@ -240,7 +240,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
@@ -348,8 +348,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
-    $namespace = $connection_info['default']['namespace'] ?? NULL;
-    $autoload = $connection_info['default']['autoload'] ?? NULL;
+    $namespace = $connection_info['default']['namespace'] ?? '';
+    $autoload = $connection_info['default']['autoload'] ?? '';
     if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
       [$first, $second] = explode('\\', $namespace, 3);
       if ($first === 'Drupal' && strtolower($second) === $second) {
@@ -466,9 +466,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
       foreach ($connection_info as $target => $value) {
         // Replace the full table prefix definition to ensure that no table
         // prefixes of the test runner leak into the test.
-        $connection_info[$target]['prefix'] = [
-          'default' => $this->databasePrefix,
-        ];
+        $connection_info[$target]['prefix'] = $this->databasePrefix;
       }
     }
     return $connection_info;
@@ -618,7 +616,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function assertPostConditions() {
+  protected function assertPostConditions(): void {
     // Execute registered Drupal shutdown functions prior to tearing down.
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();
@@ -638,7 +636,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
       $this->kernel->shutdown();
@@ -646,9 +644,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     // Remove all prefixed tables.
     $original_connection_info = Database::getConnectionInfo('simpletest_original_default');
-    $original_prefix = $original_connection_info['default']['prefix']['default'] ?? NULL;
+    $original_prefix = $original_connection_info['default']['prefix'] ?? NULL;
     $test_connection_info = Database::getConnectionInfo('default');
-    $test_prefix = $test_connection_info['default']['prefix']['default'] ?? NULL;
+    $test_prefix = $test_connection_info['default']['prefix'] ?? NULL;
     if ($original_prefix != $test_prefix) {
       $tables = Database::getConnection()->schema()->findTables('%');
       foreach ($tables as $table) {

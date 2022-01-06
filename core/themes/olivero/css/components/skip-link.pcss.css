@@ -5,7 +5,7 @@
  * Allows keyboard users to quickly skip to the main content of the page.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .skip-link {
   display: block;
@@ -18,6 +18,11 @@
   color: var(--color--white);
   outline: 0;
   background-color: var(--color--gray-0);
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--color--white);
+  }
 
   &:after {
     content: "\0020	➔";

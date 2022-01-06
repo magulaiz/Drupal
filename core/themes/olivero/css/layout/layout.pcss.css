@@ -3,16 +3,12 @@
  * Base Layout.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .container {
   width: 100%;
   max-width: var(--max-width);
   padding-inline: var(--container-padding);
-
-  @media (--nav) {
-    padding-inline: var(--container-padding-nav);
-  }
 }
 
 .page-wrapper {

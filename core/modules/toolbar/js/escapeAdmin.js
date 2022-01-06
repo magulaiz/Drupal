@@ -6,19 +6,21 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  var pathInfo = drupalSettings.path;
-  var escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
-  var windowLocation = window.location;
+  const pathInfo = drupalSettings.path;
+  const escapeAdminPath = sessionStorage.getItem('escapeAdminPath');
+  const windowLocation = window.location;
 
   if (!pathInfo.currentPathIsAdmin && !/destination=/.test(windowLocation.search)) {
     sessionStorage.setItem('escapeAdminPath', windowLocation);
   }
 
   Drupal.behaviors.escapeAdmin = {
-    attach: function attach() {
-      var $toolbarEscape = $('[data-toolbar-escape-admin]').once('escapeAdmin');
+    attach() {
+      const toolbarEscape = once('escapeAdmin', '[data-toolbar-escape-admin]');
 
-      if ($toolbarEscape.length && pathInfo.currentPathIsAdmin) {
+      if (toolbarEscape.length && pathInfo.currentPathIsAdmin) {
+        const $toolbarEscape = $(toolbarEscape);
+
         if (escapeAdminPath !== null) {
           $toolbarEscape.attr('href', escapeAdminPath);
         } else {
@@ -26,5 +28,6 @@
         }
       }
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

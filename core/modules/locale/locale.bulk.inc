@@ -88,7 +88,7 @@ function locale_translate_batch_import_files(array $options, $force = FALSE) {
  *   An array of interface translation files keyed by their URI.
  */
 function locale_translate_get_interface_translation_files(array $projects = [], array $langcodes = []) {
-  module_load_include('compare.inc', 'locale');
+  \Drupal::moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
   $files = [];
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -484,7 +484,7 @@ function locale_translate_file_attach_properties($file, array $options = []) {
   if (isset($matches[5])) {
     $file->project = $matches[2] . $matches[3];
     $file->version = $matches[4];
-    $file->langcode = isset($options['langcode']) ? $options['langcode'] : $matches[5];
+    $file->langcode = $options['langcode'] ?? $matches[5];
   }
   else {
     $file->langcode = LanguageInterface::LANGCODE_NOT_SPECIFIED;
@@ -634,7 +634,7 @@ function locale_config_batch_refresh_name(array $names, array $langcodes, &$cont
  */
 function locale_config_batch_finished($success, array $results) {
   if ($success) {
-    $configuration = isset($results['stats']['config']) ? $results['stats']['config'] : 0;
+    $configuration = $results['stats']['config'] ?? 0;
     if ($configuration) {
       \Drupal::messenger()->addStatus(t('The configuration was successfully updated. There are %number configuration objects updated.', ['%number' => $configuration]));
       \Drupal::logger('locale')->notice('The configuration was successfully updated. %number configuration objects updated.', ['%number' => $configuration]);

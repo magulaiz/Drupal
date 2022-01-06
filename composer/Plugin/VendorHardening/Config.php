@@ -21,7 +21,6 @@ class Config {
    */
   protected static $defaultConfig = [
     'behat/mink' => ['tests', 'driver-testsuite'],
-    'behat/mink-goutte-driver' => ['tests'],
     'behat/mink-selenium2-driver' => ['tests'],
     'composer/composer' => ['bin'],
     'drupal/coder' => [
@@ -31,7 +30,6 @@ class Config {
     'doctrine/instantiator' => ['tests'],
     'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
-    'fabpot/goutte' => ['Goutte/Tests'],
     'friends-of-behat/mink-browserkit-driver' => ['tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
@@ -50,7 +48,6 @@ class Config {
     'phpspec/prophecy' => ['fixtures', 'spec', 'tests'],
     'phpunit/php-code-coverage' => ['tests'],
     'phpunit/php-timer' => ['tests'],
-    'phpunit/php-token-stream' => ['tests'],
     'phpunit/phpunit' => ['tests'],
     'sebastian/code-unit-reverse-lookup' => ['tests'],
     'sebastian/comparator' => ['tests'],
@@ -84,7 +81,6 @@ class Config {
     'symfony/var-dumper' => ['Tests'],
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
-    'symfony-cmf/routing' => ['Test', 'Tests'],
     'theseer/tokenizer' => ['tests'],
     'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];
@@ -141,7 +137,7 @@ class Config {
     // Merge root config with defaults.
     foreach (array_change_key_case(static::$defaultConfig, CASE_LOWER) as $package => $paths) {
       $this->configData[$package] = array_merge(
-        isset($this->configData[$package]) ? $this->configData[$package] : [],
+        $this->configData[$package] ?? [],
         $paths);
     }
     return $this->configData;
@@ -159,7 +155,7 @@ class Config {
   public function getPathsForPackage($package) {
     $package = strtolower($package);
     $paths = $this->getAllCleanupPaths();
-    return isset($paths[$package]) ? $paths[$package] : [];
+    return $paths[$package] ?? [];
   }
 
 }

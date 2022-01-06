@@ -63,7 +63,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
   /**
    * {@inheritdoc}
    */
-  public function normalize($field_item, $format = NULL, array $context = []) {
+  public function normalize($field_item, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     // If this is not a fieldable entity, let the parent implementation handle
     // it, only fieldable entities are supported as embedded resources.
     if (!$this->targetEntityIsFieldable($field_item)) {
@@ -76,7 +76,7 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
     // If the parent entity passed in a langcode, unset it before normalizing
     // the target entity. Otherwise, untranslatable fields of the target entity
     // will include the langcode.
-    $langcode = isset($context['langcode']) ? $context['langcode'] : NULL;
+    $langcode = $context['langcode'] ?? NULL;
     unset($context['langcode']);
     $context['included_fields'] = ['uuid'];
 
@@ -182,6 +182,13 @@ class EntityReferenceItemNormalizer extends FieldItemNormalizer implements UuidR
       }
       return $uuid;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

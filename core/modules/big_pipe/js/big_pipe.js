@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, drupalSettings) {
+(function (Drupal, drupalSettings) {
   function mapTextContentToAjaxResponse(content) {
     if (content === '') {
       return false;
@@ -18,17 +18,17 @@
     }
   }
 
-  function bigPipeProcessPlaceholderReplacement(index, placeholderReplacement) {
-    var placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
-    var content = this.textContent.trim();
+  function bigPipeProcessPlaceholderReplacement(placeholderReplacement) {
+    const placeholderId = placeholderReplacement.getAttribute('data-big-pipe-replacement-for-placeholder-with-id');
+    const content = placeholderReplacement.textContent.trim();
 
     if (typeof drupalSettings.bigPipePlaceholderIds[placeholderId] !== 'undefined') {
-      var response = mapTextContentToAjaxResponse(content);
+      const response = mapTextContentToAjaxResponse(content);
 
       if (response === false) {
-        $(this).removeOnce('big-pipe');
+        once.remove('big-pipe', placeholderReplacement);
       } else {
-        var ajaxObject = Drupal.ajax({
+        const ajaxObject = Drupal.ajax({
           url: '',
           base: false,
           element: false,
@@ -39,15 +39,15 @@
     }
   }
 
-  var interval = drupalSettings.bigPipeInterval || 50;
-  var timeoutID;
+  const interval = drupalSettings.bigPipeInterval || 50;
+  let timeoutID;
 
   function bigPipeProcessDocument(context) {
     if (!context.querySelector('script[data-big-pipe-event="start"]')) {
       return false;
     }
 
-    $(context).find('script[data-big-pipe-replacement-for-placeholder-with-id]').once('big-pipe').each(bigPipeProcessPlaceholderReplacement);
+    once('big-pipe', 'script[data-big-pipe-replacement-for-placeholder-with-id]', context).forEach(bigPipeProcessPlaceholderReplacement);
 
     if (context.querySelector('script[data-big-pipe-event="stop"]')) {
       if (timeoutID) {
@@ -61,7 +61,7 @@
   }
 
   function bigPipeProcess() {
-    timeoutID = setTimeout(function () {
+    timeoutID = setTimeout(() => {
       if (!bigPipeProcessDocument(document)) {
         bigPipeProcess();
       }
@@ -69,11 +69,11 @@
   }
 
   bigPipeProcess();
-  $(window).on('load', function () {
+  window.addEventListener('load', () => {
     if (timeoutID) {
       clearTimeout(timeoutID);
     }
 
     bigPipeProcessDocument(document);
   });
-})(jQuery, Drupal, drupalSettings);
+})(Drupal, drupalSettings);

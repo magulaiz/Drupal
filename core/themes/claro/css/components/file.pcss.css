@@ -3,8 +3,6 @@
  * Extends styles of the file link.
  */
 
-@import "../base/variables.pcss.css";
-
 .file {
   min-height: calc(var(--space-m) + 0.0625rem);
   padding-left: var(--space-l); /* LTR */
@@ -18,5 +16,5 @@
 }
 
 .file__size {
-  color: var(--color-davysgray);
+  color: var(--color-gray-800);
 }

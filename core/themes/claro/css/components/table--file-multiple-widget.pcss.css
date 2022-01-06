@@ -3,8 +3,6 @@
  * Styles for multiple file widget table.
  */
 
-@import "../base/variables.pcss.css";
-
 .table-file-multiple-widget tbody {
   vertical-align: top;
 }
@@ -55,8 +53,8 @@
 
 .table-file-multiple-widget th {
   height: calc(var(--space-m) * 2);
-  color: var(--color-davysgray);
-  background: var(--color-whitesmoke);
+  color: var(--color-gray-800);
+  background: var(--color-gray-050);
   font-size: var(--font-size-s);
 }
 

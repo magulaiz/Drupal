@@ -7,22 +7,27 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.textSummary = {
-    attach: function attach(context, settings) {
-      $(context).find('.js-text-summary').once('text-summary').each(function () {
-        var $widget = $(this).closest('.js-text-format-wrapper');
-        var $summary = $widget.find('.js-text-summary-wrapper');
-        var $summaryLabel = $summary.find('label').eq(0);
-        var $full = $widget.children('.js-form-type-textarea');
-        var $fullLabel = $full.find('label').eq(0);
+    attach(context, settings) {
+      once('text-summary', '.js-text-summary', context).forEach(summary => {
+        const $widget = $(summary).closest('.js-text-format-wrapper');
+        const $summary = $widget.find('.js-text-summary-wrapper');
+        const $summaryLabel = $summary.find('label').eq(0);
+        const $full = $widget.children('.js-form-type-textarea');
+        let $fullLabel = $full.find('label').eq(0);
 
         if ($fullLabel.length === 0) {
           $fullLabel = $('<label></label>').prependTo($full);
         }
 
-        var $link = $("<span class=\"field-edit-link\"> (<button type=\"button\" class=\"link link-edit-summary\">".concat(Drupal.t('Hide summary'), "</button>)</span>"));
-        var $button = $link.find('button');
-        var toggleClick = true;
-        $link.on('click', function (e) {
+        if ($fullLabel.hasClass('visually-hidden')) {
+          $fullLabel.html((index, oldHtml) => `<span class="visually-hidden">${oldHtml}</span>`);
+          $fullLabel.removeClass('visually-hidden');
+        }
+
+        const $link = $(`<span class="field-edit-link"> (<button type="button" class="link link-edit-summary">${Drupal.t('Hide summary')}</button>)</span>`);
+        const $button = $link.find('button');
+        let toggleClick = true;
+        $link.on('click', e => {
           if (toggleClick) {
             $summary.hide();
             $button.html(Drupal.t('Edit summary'));
@@ -42,5 +47,6 @@
         }
       });
     }
+
   };
 })(jQuery, Drupal);

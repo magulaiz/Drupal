@@ -43,7 +43,7 @@ abstract class QuickEditTestBase extends KernelTestBase {
   /**
    * Sets the default field storage backend for fields created during tests.
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fields = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
@@ -65,6 +65,7 @@ abstract class QuickEditTestBase extends KernelTestBase {
    * @param string $label
    *   The field's label (used everywhere: widget label, formatter label).
    * @param array $field_settings
+   *   The field's settings.
    * @param string $widget_type
    *   The widget type.
    * @param array $widget_settings

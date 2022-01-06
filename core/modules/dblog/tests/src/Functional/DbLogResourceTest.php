@@ -50,7 +50,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $auth = isset(static::$auth) ? [static::$auth] : [];
@@ -118,7 +118,7 @@ class DbLogResourceTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {}
+  protected function assertNormalizationEdgeCases($method, Url $url, array $request_options): void {}
 
   /**
    * {@inheritdoc}

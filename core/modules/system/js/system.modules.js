@@ -7,28 +7,33 @@
 
 (function ($, Drupal, debounce) {
   Drupal.behaviors.tableFilterByText = {
-    attach: function attach(context, settings) {
-      var $input = $('input.table-filter-text').once('table-filter-text');
-      var $table = $($input.attr('data-table'));
-      var $rowsAndDetails;
-      var $rows;
-      var $details;
-      var searching = false;
+    attach(context, settings) {
+      const [input] = once('table-filter-text', 'input.table-filter-text');
+
+      if (!input) {
+        return;
+      }
+
+      const $table = $(input.getAttribute('data-table'));
+      let $rowsAndDetails;
+      let $rows;
+      let $details;
+      let searching = false;
 
       function hidePackageDetails(index, element) {
-        var $packDetails = $(element);
-        var $visibleRows = $packDetails.find('tbody tr:visible');
+        const $packDetails = $(element);
+        const $visibleRows = $packDetails.find('tbody tr:visible');
         $packDetails.toggle($visibleRows.length > 0);
       }
 
       function filterModuleList(e) {
-        var query = $(e.target).val();
-        var re = new RegExp("\\b".concat(query), 'i');
+        const query = $(e.target).val();
+        const re = new RegExp(`\\b${query}`, 'i');
 
         function showModuleRow(index, row) {
-          var $row = $(row);
-          var $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
-          var textMatch = $sources.text().search(re) !== -1;
+          const $row = $(row);
+          const $sources = $row.find('.table-filter-text-source, .module-name, .module-description');
+          const textMatch = $sources.text().search(re) !== -1;
           $row.closest('tr').toggle(textMatch);
         }
 
@@ -60,11 +65,12 @@
         $rowsAndDetails = $table.find('tr, details');
         $rows = $table.find('tbody tr');
         $details = $rowsAndDetails.filter('.package-listing');
-        $input.on({
+        $(input).on({
           keyup: debounce(filterModuleList, 200),
           keydown: preventEnterKey
         });
       }
     }
+
   };
 })(jQuery, Drupal, Drupal.debounce);

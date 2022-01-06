@@ -73,6 +73,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * Catches failed parameter conversions and throw a 404 instead.
    *
    * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event.
    */
   public function onException(ExceptionEvent $event) {
     $exception = $event->getThrowable();
@@ -84,7 +85,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::EXCEPTION][] = ['onException', 75];
     return $events;
   }

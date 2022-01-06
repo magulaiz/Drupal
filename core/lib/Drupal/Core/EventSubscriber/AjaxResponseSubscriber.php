@@ -83,7 +83,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
       // @see https://www.drupal.org/node/1009382
       // @see https://www.drupal.org/node/2339491
       // @see Drupal.ajax.prototype.beforeSend()
-      $accept = $event->getRequest()->headers->get('accept');
+      $accept = $event->getRequest()->headers->get('accept', '');
 
       if (strpos($accept, 'text/html') !== FALSE) {
         $response->headers->set('Content-Type', 'text/html; charset=utf-8');
@@ -109,7 +109,7 @@ class AjaxResponseSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['onResponse', -100];
     $events[KernelEvents::REQUEST][] = ['onRequest', 50];
 

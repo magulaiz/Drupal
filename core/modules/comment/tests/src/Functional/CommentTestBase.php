@@ -54,7 +54,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   protected $node;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an article content type only if it does not yet exist, so that
@@ -155,13 +155,13 @@ abstract class CommentTestBase extends BrowserTestBase {
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertSession()->buttonExists(t('Preview'));
+        $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists($submit_button_label);
         $this->submitForm($edit, $submit_button_label);
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertSession()->buttonNotExists(t('Preview'));
+        $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists($submit_button_label);
         $this->submitForm($edit, $submit_button_label);
         break;
@@ -369,7 +369,7 @@ abstract class CommentTestBase extends BrowserTestBase {
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
+      $this->assertSession()->pageTextContains('Deleted 1 comment.');
     }
     else {
       $this->assertSession()->pageTextContains('The update has been performed.');
@@ -393,7 +393,7 @@ abstract class CommentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a comment comment type (bundle).
+   * Creates a comment type (bundle).
    *
    * @param string $label
    *   The comment type label.

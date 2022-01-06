@@ -128,7 +128,7 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   An array of commands ready to be returned as JSON.
    */
   protected function buildAttachmentsCommands(AjaxResponse $response, Request $request) {
-    $ajax_page_state = $request->request->get('ajax_page_state');
+    $ajax_page_state = $request->request->all('ajax_page_state');
 
     // Aggregate CSS/JS if necessary, but only during normal site operation.
     $optimize_css = !defined('MAINTENANCE_MODE') && $this->config->get('css.preprocess');
@@ -138,11 +138,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
 
     // Resolve the attached libraries into asset collections.
     $assets = new AttachedAssets();
-    $assets->setLibraries(isset($attachments['library']) ? $attachments['library'] : [])
+    $assets->setLibraries($attachments['library'] ?? [])
       ->setAlreadyLoadedLibraries(isset($ajax_page_state['libraries']) ? explode(',', $ajax_page_state['libraries']) : [])
-      ->setSettings(isset($attachments['drupalSettings']) ? $attachments['drupalSettings'] : []);
+      ->setSettings($attachments['drupalSettings'] ?? []);
     $css_assets = $this->assetResolver->getCssAssets($assets, $optimize_css);
-    list($js_assets_header, $js_assets_footer) = $this->assetResolver->getJsAssets($assets, $optimize_js);
+    [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js);
 
     // First, AttachedAssets::setLibraries() ensures duplicate libraries are
     // removed: it converts it to a set of libraries if necessary. Second,

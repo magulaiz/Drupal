@@ -104,7 +104,7 @@ class NodeTranslationExceptionSubscriber implements EventSubscriberInterface {
         $old_nid = $parameters['node'];
         $collection = $this->keyValue->get('node_translation_redirect');
         if ($old_nid && $value = $collection->get($old_nid)) {
-          list($nid, $langcode) = $value;
+          [$nid, $langcode] = $value;
           $language = $this->languageManager->getLanguage($langcode);
           $url = $this->urlGenerator->generateFromRoute('entity.node.canonical', ['node' => $nid], ['language' => $language]);
           $response = new RedirectResponse($url, 301);
@@ -117,7 +117,7 @@ class NodeTranslationExceptionSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events = [];
 
     $events[KernelEvents::EXCEPTION] = ['onException'];

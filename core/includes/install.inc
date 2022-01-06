@@ -114,7 +114,7 @@ function drupal_install_profile_distribution_name() {
     $profile = \Drupal::installProfile();
     $info = \Drupal::service('extension.list.profile')->getExtensionInfo($profile);
   }
-  return isset($info['distribution']['name']) ? $info['distribution']['name'] : 'Drupal';
+  return $info['distribution']['name'] ?? 'Drupal';
 }
 
 /**
@@ -132,7 +132,7 @@ function drupal_install_profile_distribution_version() {
   // installation state (it might not be saved anywhere yet).
   if (InstallerKernel::installationAttempted()) {
     global $install_state;
-    return isset($install_state['profile_info']['version']) ? $install_state['profile_info']['version'] : \Drupal::VERSION;
+    return $install_state['profile_info']['version'] ?? \Drupal::VERSION;
   }
   // At all other times, we load the profile via standard methods.
   else {
@@ -171,12 +171,13 @@ function drupal_get_database_types() {
   // The internal database driver name is any valid PHP identifier.
   $mask = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
 
-  // Find drivers in the Drupal\Core and Drupal\Driver namespaces.
+  // Find drivers in the Drupal\Driver namespace.
+  // @todo remove discovering in the Drupal\Driver namespace in D10.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
+  $files = [];
   if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
-    $files += $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
+    $files = $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
   }
   foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
@@ -282,7 +283,7 @@ function drupal_rewrite_settings($settings = [], $settings_file = NULL) {
     $state = 'default';
     foreach (token_get_all($contents) as $token) {
       if (is_array($token)) {
-        list($type, $value) = $token;
+        [$type, $value] = $token;
       }
       else {
         $type = -1;
@@ -625,10 +626,15 @@ function drupal_install_system($install_state) {
   // When the database driver is provided by a module, then install that module.
   // This module must be installed before any other module, as it must be able
   // to override any call to hook_schema() or any "backend_overridable" service.
+  // In edge cases, a driver module may extend from another driver module (for
+  // instance, a module to provide backward compatibility with a database
+  // version no longer supported by core). In order for the extended classes to
+  // be autoloadable, the extending module should list the extended module in
+  // its dependencies, and here the dependencies will be installed as well.
   if ($provider !== 'core') {
     $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
     if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
-      $kernel->getContainer()->get('module_installer')->install([$provider], FALSE);
+      $kernel->getContainer()->get('module_installer')->install([$provider], TRUE);
     }
   }
 

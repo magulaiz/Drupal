@@ -48,7 +48,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof ResourceIdentifier);
     $normalization = [
       'type' => $object->getTypeName(),
@@ -63,7 +63,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     // If we get here, it's via a relationship POST/PATCH.
     /** @var \Drupal\jsonapi\ResourceType\ResourceType $resource_type */
     $resource_type = $context['resource_type'];
@@ -97,7 +97,7 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
           implode(', ', $target_resource_type_names)
         ));
       }
-      return new ResourceIdentifier($value['type'], $value['id'], isset($value['meta']) ? $value['meta'] : []);
+      return new ResourceIdentifier($value['type'], $value['id'], $value['meta'] ?? []);
     }, $data['data']);
     if (!ResourceIdentifier::areResourceIdentifiersUnique($resource_identifiers)) {
       throw new BadRequestHttpException('Duplicate relationships are not permitted. Use `meta.arity` to distinguish resource identifiers with matching `type` and `id` values.');
@@ -140,6 +140,13 @@ class ResourceIdentifierNormalizer extends NormalizerBase implements Denormalize
       $data['data'] = [$data['data']];
     }
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

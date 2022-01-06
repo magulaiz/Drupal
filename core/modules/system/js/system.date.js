@@ -6,28 +6,28 @@
 **/
 
 (function ($, Drupal, drupalSettings) {
-  var dateFormats = drupalSettings.dateFormats;
+  const dateFormats = drupalSettings.dateFormats;
   Drupal.behaviors.dateFormat = {
-    attach: function attach(context) {
-      var $context = $(context);
-      var $source = $context.find('[data-drupal-date-formatter="source"]').once('dateFormat');
-      var $target = $context.find('[data-drupal-date-formatter="preview"]').once('dateFormat');
-      var $preview = $target.find('em');
+    attach(context) {
+      const source = once('dateFormat', '[data-drupal-date-formatter="source"]', context);
+      const target = once('dateFormat', '[data-drupal-date-formatter="preview"]', context);
 
-      if (!$source.length || !$target.length) {
+      if (!source.length || !target.length) {
         return;
       }
 
+      const $target = $(target);
+      const $preview = $target.find('em');
+
       function dateFormatHandler(e) {
-        var baseValue = $(e.target).val() || '';
-        var dateString = baseValue.replace(/\\?(.?)/gi, function (key, value) {
-          return dateFormats[key] ? dateFormats[key] : value;
-        });
+        const baseValue = $(e.target).val() || '';
+        const dateString = baseValue.replace(/\\?(.?)/gi, (key, value) => dateFormats[key] ? dateFormats[key] : value);
         $preview.text(dateString);
         $target.toggleClass('js-hide', !dateString.length);
       }
 
-      $source.on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');
+      $(source).on('keyup.dateFormat change.dateFormat input.dateFormat', dateFormatHandler).trigger('keyup');
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

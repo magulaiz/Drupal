@@ -18,7 +18,7 @@ class FieldNormalizer extends SerializationFieldNormalizer {
   /**
    * {@inheritdoc}
    */
-  public function normalize($field_items, $format = NULL, array $context = []) {
+  public function normalize($field_items, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     $normalized_field_items = [];
 
     // Get the field definition.
@@ -69,6 +69,13 @@ class FieldNormalizer extends SerializationFieldNormalizer {
       }
     }
     return $normalized_field_items;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

@@ -52,7 +52,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
    */
   protected $image;
 
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Set the image factory service.
@@ -83,7 +83,7 @@ abstract class ToolkitTestBase extends BrowserTestBase {
 
   /**
    * Assert that all of the specified image toolkit operations were called
-   * exactly once once, other values result in failure.
+   * exactly once, other values result in failure.
    *
    * @param $expected
    *   Array with string containing with the operation name, e.g. 'load',

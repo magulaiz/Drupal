@@ -17,6 +17,8 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
+// cspell:ignore apng
+
 /**
  * Displays theme configuration for entire site and individual themes.
  *
@@ -314,7 +316,7 @@ class ThemeSettingsForm extends ConfigFormBase {
         }
 
         $element['#description'] = $this->t('Examples: <code>@implicit-public-file</code> (for a file in the public filesystem), <code>@explicit-file</code>, or <code>@local-file</code>.', [
-          '@implicit-public-file' => isset($friendly_path) ? $friendly_path : $default,
+          '@implicit-public-file' => $friendly_path ?? $default,
           '@explicit-file' => StreamWrapperManager::getScheme($original_path) !== FALSE ? $original_path : 'public://' . $default,
           '@local-file' => $local_file,
         ]);
