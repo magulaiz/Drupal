@@ -87,7 +87,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
     ];
 
     // Full node page 1.
-    $url = $node_1->toUrl();
     $this->assertPageCacheContextsAndTags($node_1->toUrl(), $cache_contexts, [
       'http_response',
       'rendered',
@@ -114,7 +113,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'node:' . $node_1->id(),
       'user:' . $author_1->id(),
       'config:filter.format.basic_html',
-      'config:node_type_list',
       'config:color.theme.olivero',
       'config:search.settings',
       'config:system.menu.account',
@@ -156,7 +154,6 @@ class PageCacheTagsIntegrationTest extends BrowserTestBase {
       'user:' . $author_2->id(),
       'config:color.theme.olivero',
       'config:filter.format.full_html',
-      'config:node_type_list',
       'config:search.settings',
       'config:system.menu.account',
       'config:system.menu.main',
