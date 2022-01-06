@@ -259,7 +259,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
         elseif ($url = $this->getMetadata($media, 'url')) {
           return $url;
         }
-        return parent::getMetadata($media, 'default_name');
+        return parent::getRawMetadata($media, 'default_name');
 
       case 'thumbnail_uri':
         return $this->getLocalThumbnailUri($resource) ?: parent::getRawMetadata($media, 'thumbnail_uri');
