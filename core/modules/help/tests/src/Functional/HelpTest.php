@@ -166,7 +166,7 @@ class HelpTest extends BrowserTestBase {
     $module_data = $this->container->get('extension.list.module')->getList();
     \Drupal::moduleHandler()->invokeAllWith(
       'help',
-      function (callable $hookInvoker, string $module) use (&$modules, $module_data) {
+      function (callable $hook, string $module) use (&$modules, $module_data) {
         $modules[$module] = $module_data[$module]->info['name'];
       }
     );

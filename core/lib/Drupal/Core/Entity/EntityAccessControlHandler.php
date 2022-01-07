@@ -344,8 +344,8 @@ class EntityAccessControlHandler extends EntityHandlerBase implements EntityAcce
     $grants = [':default' => $default];
     $this->moduleHandler()->invokeAllWith(
       'entity_field_access',
-      function (callable $hookInvoker, string $module) use ($operation, $field_definition, $account, $items, &$grants) {
-        $grants[$module] = $hookInvoker($operation, $field_definition, $account, $items);
+      function (callable $hook, string $module) use ($operation, $field_definition, $account, $items, &$grants) {
+        $grants[$module] = $hook($operation, $field_definition, $account, $items);
       }
     );
 

@@ -232,8 +232,8 @@ class ViewsData {
     }
     else {
       $data = [];
-      $this->moduleHandler->invokeAllWith('views_data', function (callable $hookInvoker, string $module) use (&$data) {
-        $views_data = $hookInvoker();
+      $this->moduleHandler->invokeAllWith('views_data', function (callable $hook, string $module) use (&$data) {
+        $views_data = $hook();
         // Set the provider key for each base table.
         foreach ($views_data as &$table) {
           if (isset($table['table']) && !isset($table['table']['provider'])) {

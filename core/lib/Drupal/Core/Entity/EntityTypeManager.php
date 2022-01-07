@@ -114,8 +114,8 @@ class EntityTypeManager extends DefaultPluginManager implements EntityTypeManage
    */
   protected function findDefinitions() {
     $definitions = $this->getDiscovery()->getDefinitions();
-    $this->moduleHandler->invokeAllWith('entity_type_build', function (callable $hookInvoker, string $module) use (&$definitions) {
-      $hookInvoker($definitions);
+    $this->moduleHandler->invokeAllWith('entity_type_build', function (callable $hook, string $module) use (&$definitions) {
+      $hook($definitions);
     });
     foreach ($definitions as $plugin_id => $definition) {
       $this->processDefinition($definition, $plugin_id);

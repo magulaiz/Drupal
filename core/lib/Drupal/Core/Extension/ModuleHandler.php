@@ -415,8 +415,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function invokeAll($hook, array $args = []) {
     $return = [];
-    $this->invokeAllWith($hook, function (callable $hookInvoker, string $module) use ($args, &$return) {
-      $result = call_user_func_array($hookInvoker, $args);
+    $this->invokeAllWith($hook, function (callable $hook, string $module) use ($args, &$return) {
+      $result = call_user_func_array($hook, $args);
       if (isset($result) && is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
