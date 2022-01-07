@@ -49,7 +49,7 @@ class ModuleImplementsAlterTest extends KernelTestBase {
       $implemented = FALSE;
       \Drupal::moduleHandler()->invokeAllWith(
         $hook,
-        function (callable $hookInvoker, string $module) use ($moduleImplements, &$implemented) {
+        function (callable $hook, string $module) use ($moduleImplements, &$implemented) {
           if ($module === $moduleImplements) {
             $implemented = TRUE;
           }

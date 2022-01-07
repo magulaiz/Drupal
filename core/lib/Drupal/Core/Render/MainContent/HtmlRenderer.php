@@ -309,8 +309,8 @@ class HtmlRenderer implements MainContentRendererInterface {
     $attachments = [];
     $this->moduleHandler->invokeAllWith(
       'page_attachments',
-      function (callable $hookInvoker, string $module) use (&$attachments) {
-        $hookInvoker($attachments);
+      function (callable $hook, string $module) use (&$attachments) {
+        $hook($attachments);
       }
     );
     if (array_diff(array_keys($attachments), ['#attached', '#cache']) !== []) {
@@ -350,14 +350,14 @@ class HtmlRenderer implements MainContentRendererInterface {
     $page_bottom = [];
     $this->moduleHandler->invokeAllWith(
       'page_top',
-      function (callable $hookInvoker, string $module) use (&$page_top) {
-        $hookInvoker($page_top);
+      function (callable $hook, string $module) use (&$page_top) {
+        $hook($page_top);
       }
     );
     $this->moduleHandler->invokeAllWith(
       'page_bottom',
-      function (callable $hookInvoker, string $module) use (&$page_bottom) {
-        $hookInvoker($page_bottom);
+      function (callable $hook, string $module) use (&$page_bottom) {
+        $hook($page_bottom);
       }
     );
     if (!empty($page_top)) {

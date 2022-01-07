@@ -387,7 +387,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $implementors = [];
     $module_handler->invokeAllWith(
       'hook',
-      function (callable $hookInvoker, string $module) use (&$implementors) {
+      function (callable $hook, string $module) use (&$implementors) {
         $implementors[] = $module;
       }
     );
@@ -430,7 +430,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $implementors = [];
     $module_handler->invokeAllWith(
       'hook',
-      function (callable $hookInvoker, string $module) use (&$implementors) {
+      function (callable $hook, string $module) use (&$implementors) {
         $implementors[] = $module;
       }
     );
@@ -464,7 +464,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('set')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->invokeAllWith('hook', function (callable $hookInvoker, string $module) {});
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
     $module_handler->writeCache();
   }
 
@@ -505,7 +505,7 @@ class ModuleHandlerTest extends UnitTestCase {
   public function testResetImplementations() {
     $module_handler = $this->getModuleHandler();
     // Prime caches
-    $module_handler->invokeAllWith('hook', function (callable $hookInvoker, string $module) {});
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
     $module_handler->getHookInfo();
 
     // Reset all caches internal and external.
@@ -527,7 +527,7 @@ class ModuleHandlerTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('get')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->invokeAllWith('hook', function (callable $hookInvoker, string $module) {});
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
   }
 
   /**

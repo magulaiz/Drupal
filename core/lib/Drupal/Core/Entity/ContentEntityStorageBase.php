@@ -860,15 +860,15 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       // Call hook_entity_storage_load().
       $this->moduleHandler()->invokeAllWith(
         'entity_storage_load',
-        function (callable $hookInvoker, string $module) use (&$entities) {
-          $hookInvoker($entities, $this->entityTypeId);
+        function (callable $hook, string $module) use (&$entities) {
+          $hook($entities, $this->entityTypeId);
         }
       );
       // Call hook_TYPE_storage_load().
       $this->moduleHandler()->invokeAllWith(
         $this->entityTypeId . '_storage_load',
-        function (callable $hookInvoker, string $module) use (&$entities) {
-          $hookInvoker($entities);
+        function (callable $hook, string $module) use (&$entities) {
+          $hook($entities);
         }
       );
     }

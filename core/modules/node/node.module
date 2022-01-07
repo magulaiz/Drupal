@@ -1201,7 +1201,7 @@ function node_modules_installed($modules) {
     $nodeGrantImplementors = [];
     \Drupal::moduleHandler()->invokeAllWith(
       'node_grants',
-      function (callable $hookInvoker, string $module) use (&$nodeGrantImplementors) {
+      function (callable $hook, string $module) use (&$nodeGrantImplementors) {
         $nodeGrantImplementors[] = $module;
       }
     );

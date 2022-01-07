@@ -46,8 +46,8 @@ class InfoHookDecorator implements DiscoveryInterface {
     $definitions = $this->decorated->getDefinitions();
     \Drupal::moduleHandler()->invokeAllWith(
       $this->hook,
-      function (callable $hookInvoker, string $module) use (&$definitions) {
-        $hookInvoker($definitions);
+      function (callable $hook, string $module) use (&$definitions) {
+        $hook($definitions);
       }
     );
     return $definitions;

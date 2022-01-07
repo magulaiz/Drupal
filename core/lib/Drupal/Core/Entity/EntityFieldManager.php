@@ -284,8 +284,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Retrieve base field definitions from modules.
     $this->moduleHandler->invokeAllWith(
       'entity_base_field_info',
-      function (callable $hookInvoker, string $module) use (&$base_field_definitions, $entity_type) {
-        $module_definitions = $hookInvoker($entity_type) ?? [];
+      function (callable $hook, string $module) use (&$base_field_definitions, $entity_type) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -407,8 +407,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Retrieve base field definitions from modules.
     $this->moduleHandler->invokeAllWith(
       'entity_bundle_field_info',
-      function (callable $hookInvoker, string $module) use (&$bundle_field_definitions, $entity_type, $bundle, $base_field_definitions) {
-        $module_definitions = $hookInvoker($entity_type, $bundle, $base_field_definitions) ?? [];
+      function (callable $hook, string $module) use (&$bundle_field_definitions, $entity_type, $bundle, $base_field_definitions) {
+        $module_definitions = $hook($entity_type, $bundle, $base_field_definitions) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -584,8 +584,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Retrieve base field definitions from modules.
     $this->moduleHandler->invokeAllWith(
       'entity_field_storage_info',
-      function (callable $hookInvoker, string $module) use (&$field_definitions, $entity_type, $entity_type_id) {
-        $module_definitions = $hookInvoker($entity_type) ?? [];
+      function (callable $hook, string $module) use (&$field_definitions, $entity_type, $entity_type_id) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {

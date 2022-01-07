@@ -61,7 +61,7 @@ class HookHelpSection extends HelpSectionPluginBase implements ContainerFactoryP
     $topics = [];
     $this->moduleHandler->invokeAllWith(
       'help',
-      function (callable $hookInvoker, string $module) use (&$topics) {
+      function (callable $hook, string $module) use (&$topics) {
         $title = $this->moduleHandler->getName($module);
         $topics[$title] = Link::createFromRoute($title, 'help.page', ['name' => $module]);
       }

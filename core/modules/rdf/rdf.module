@@ -115,8 +115,8 @@ function rdf_get_namespaces() {
   // namespace, do not use \Drupal::moduleHandler()->invokeAll().
   \Drupal::moduleHandler()->invokeAllWith(
     'rdf_namespaces',
-    function (callable $hookInvoker, string $module) use (&$namespaces) {
-      foreach ($hookInvoker() as $prefix => $namespace) {
+    function (callable $hook, string $module) use (&$namespaces) {
+      foreach ($hook() as $prefix => $namespace) {
         if (array_key_exists($prefix, $namespaces) && $namespace !== $namespaces[$prefix]) {
           throw new Exception("Tried to map '$prefix' to '$namespace', but '$prefix' is already mapped to '{$namespaces[$prefix]}'.");
         }
