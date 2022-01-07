@@ -21,7 +21,6 @@ function datetime_range_field_views_data(FieldStorageConfigInterface $field_stor
 
   // Add datetime_range filter for all date range fields.
   foreach ($data as $table_name => $table_data) {
-    $group = $data[$table_name][$field_storage->getName() . '_' . 'value']['group'];
     $filter = $data[$table_name][$field_storage->getName() . '_' . 'value']['filter'];
     $filter['id'] = 'datetime_range';
     $data[$table_name][$field_storage->getName()]['filter'] = $filter;
