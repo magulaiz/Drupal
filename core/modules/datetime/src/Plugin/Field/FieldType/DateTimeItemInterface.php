@@ -22,4 +22,9 @@ interface DateTimeItemInterface {
    */
   const DATE_STORAGE_FORMAT = 'Y-m-d';
 
+  /**
+   * Defines the format that time should be stored in.
+   */
+  const TIME_STORAGE_FORMAT = 'H:i:s';
+
 }
