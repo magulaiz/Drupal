@@ -44,6 +44,8 @@ class FileEventSubscriber implements EventSubscriberInterface {
    *   The config factory.
    * @param \Drupal\Component\Transliteration\TransliterationInterface $transliteration
    *   The transliteration service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   The language manager.
    */
   public function __construct(ConfigFactoryInterface $config_factory, TransliterationInterface $transliteration, LanguageManagerInterface $language_manager) {
     $this->config = $config_factory->get('file.settings');
