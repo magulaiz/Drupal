@@ -81,7 +81,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   }
 
   /**
-   * Tests that only themes with `startkit` flag can be used.
+   * Tests themes that do not exist return an error.
    */
   public function testThemeDoesNotExist(): void {
     $install_command = [
@@ -92,7 +92,7 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
-      'foobarbaz'
+      'foobarbaz',
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
@@ -102,7 +102,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   }
 
   /**
-   * Tests that only themes with `startkit` flag can be used.
+   * Tests that only themes with `starterkit` flag can be used.
    */
   public function testStarterKitFlag(): void {
     // Explicitly not a starter theme.
