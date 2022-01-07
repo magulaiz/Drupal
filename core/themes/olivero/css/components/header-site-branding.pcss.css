@@ -83,7 +83,7 @@
       max-height: var(--sp4);
     }
 
-    @media (--nav) {
+    @media (--olivero-nav) {
       max-height: calc(var(--header-height-wide-when-fixed) - var(--sp));
     }
   }

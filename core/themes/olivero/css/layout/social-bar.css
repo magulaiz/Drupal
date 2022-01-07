@@ -85,7 +85,7 @@
     margin-bottom: var(--sp2)
   }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .rotate > * {
       display: flex;

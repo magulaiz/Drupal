@@ -160,7 +160,7 @@
   }
     }
 
-@media (--nav) {
+@media (min-width: 75rem) {
 
 .site-branding__logo img {
       max-height: calc(var(--header-height-wide-when-fixed) - var(--sp))
