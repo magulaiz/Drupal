@@ -105,6 +105,7 @@ class GenerateThemeTest extends QuickStartTestBase {
    * Tests that only themes with `startkit` flag can be used.
    */
   public function testStarterKitFlag(): void {
+    // Explicitly not a starter theme.
     $install_command = [
       $this->php,
       'core/scripts/drupal',
@@ -119,6 +120,23 @@ class GenerateThemeTest extends QuickStartTestBase {
     $process->setTimeout(60);
     $result = $process->run();
     $this->assertStringContainsString('Theme source theme stark is not a valid starter kit.', trim($process->getErrorOutput()));
+    $this->assertSame(1, $result);
+
+    // Has not defined `starterkit`.
+    $install_command = [
+      $this->php,
+      'core/scripts/drupal',
+      'generate-theme',
+      'test_custom_theme',
+      '--name="Test custom starterkit theme"',
+      '--description="Custom theme generated from a starterkit theme"',
+      '--starterkit',
+      'bartik'
+    ];
+    $process = new Process($install_command, NULL);
+    $process->setTimeout(60);
+    $result = $process->run();
+    $this->assertStringContainsString('Theme source theme bartik is not a valid starter kit.', trim($process->getErrorOutput()));
     $this->assertSame(1, $result);
   }
 
