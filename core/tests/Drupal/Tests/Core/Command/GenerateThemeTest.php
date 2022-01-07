@@ -114,7 +114,7 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
-      'stark'
+      'stark',
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
@@ -131,7 +131,7 @@ class GenerateThemeTest extends QuickStartTestBase {
       '--name="Test custom starterkit theme"',
       '--description="Custom theme generated from a starterkit theme"',
       '--starterkit',
-      'bartik'
+      'bartik',
     ];
     $process = new Process($install_command, NULL);
     $process->setTimeout(60);
