@@ -3,8 +3,6 @@
  * Node Teaser specific styles.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .node--view-mode-teaser {
   position: relative; /* Anchor after pseudo-element. */
   margin-block-end: var(--sp1-5);
@@ -34,7 +32,7 @@
     align-items: center;
     margin: 0;
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       position: relative; /* Anchor the image */
     }
   }
@@ -49,7 +47,7 @@
     & + .node__title {
       flex-basis: calc(100% - calc(4.5 * var(--sp)));
 
-      @media (--lg) {
+      @media (--olivero-lg) {
         flex-basis: auto;
       }
     }
@@ -64,13 +62,13 @@
       object-fit: cover;
       border-radius: 50%;
 
-      @media (--lg) {
+      @media (--olivero-lg) {
         width: var(--grid-col-width);
         height: var(--grid-col-width);
       }
     }
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       position: absolute;
       inset-block-start: 0;
       inset-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
@@ -85,7 +83,7 @@
     font-size: 24px;
     line-height: var(--line-height-base);
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       font-size: var(--sp2);
       line-height: var(--sp3);
     }
@@ -101,12 +99,12 @@
     padding-inline-end: 0;
     background-color: transparent;
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       margin-block-start: var(--sp2);
     }
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-block-end: var(--sp3);
   }
 }

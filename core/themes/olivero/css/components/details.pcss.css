@@ -3,8 +3,6 @@
  * Collapsible details.
  */
 
-@import "../base/media-queries.pcss.css";
-
 :root {
   --details-border-width: 1px;
   --details-summary-transition: background-color 0.12s ease-in-out;
@@ -148,7 +146,7 @@
 .olivero-details__wrapper {
   margin: var(--sp1);
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-block-start: var(--sp1-5);
     margin-block-end: var(--sp1-5);
     margin-inline-start: var(--sp2);

@@ -6,12 +6,10 @@
  * toggles fixing the header to the top of the viewport.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .sticky-header-toggle {
   display: none;
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     display: flex;
     flex-shrink: 0;
     align-items: center;
@@ -35,13 +33,13 @@
 }
 
 body:not(.is-always-mobile-nav) .is-fixed .sticky-header-toggle {
-  @media (--nav) {
+  @media (--olivero-nav) {
     visibility: visible;
   }
 }
 
 body.is-always-mobile-nav .sticky-header-toggle {
-  @media (--nav) {
+  @media (--olivero-nav) {
     visibility: hidden;
   }
 }

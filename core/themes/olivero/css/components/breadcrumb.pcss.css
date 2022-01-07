@@ -3,8 +3,6 @@
  * Breadcrumb region.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .breadcrumb {
   position: relative;
   font-size: 14px;
@@ -21,12 +19,12 @@
     content: "";
     background: linear-gradient(to left, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%); /* LTR */
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       content: none;
     }
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     position: static;
   }
 }
@@ -46,7 +44,7 @@
   padding-inline-start: var(--sp0-5);
   -webkit-overflow-scrolling: touch;
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-inline-end: 0;
   }
 }
@@ -63,7 +61,7 @@
   list-style: none;
   white-space: nowrap;
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     overflow: visible;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -90,7 +88,7 @@
   &:last-child {
     margin-inline-end: var(--sp3);
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       margin-inline-end: 0;
     }
   }

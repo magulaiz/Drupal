@@ -3,8 +3,6 @@
  * Embedded Media.
  */
 
-@import "../base/media-queries.pcss.css";
-
 figure {
   background: var(--color--gray-95);
 }
@@ -20,7 +18,7 @@ figcaption {
   font-style: italic;
   line-height: var(--sp);
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     padding-block: var(--sp);
     padding-inline-start: var(--sp);
     padding-inline-end: var(--sp);
@@ -34,7 +32,7 @@ figcaption {
   margin-inline-start: 0;
   margin-inline-end: 0;
 
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     float: inline-end;
     max-width: 50%;
     margin-block-start: var(--sp);
@@ -48,19 +46,19 @@ figcaption {
 .layout--content-narrow .align-right,
 .layout--pass--content-narrow > * .align-right {
   /* @todo this can be simplified. */
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     margin-inline-end: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-inline-end: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
-  @media (--grid-max) {
+  @media (--olivero-grid-max) {
     margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 }
@@ -73,7 +71,7 @@ figcaption {
   margin-inline-start: 0;
   margin-inline-end: 0;
 
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     float: inline-start;
     max-width: 50%;
     margin-block-start: var(--sp);
@@ -86,7 +84,7 @@ figcaption {
 /* Pull out of grid if nested in content narrow layout. */
 .layout--content-narrow .align-left,
 .layout--pass--content-narrow > * .align-left {
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     margin-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 }

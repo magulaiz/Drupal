@@ -10,19 +10,6 @@
  * Site branding in header.
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 [dir="ltr"] .site-branding {
   margin-left: calc(var(--container-padding)*-1);
   margin-right: var(--sp)
@@ -173,7 +160,7 @@
   }
     }
 
-@media (min-width: 75rem) {
+@media (--nav) {
 
 .site-branding__logo img {
       max-height: calc(var(--header-height-wide-when-fixed) - var(--sp))

@@ -3,11 +3,9 @@
  * Maintenance page.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .maintenance-page {
   & .site-header__initial {
-    @media (--nav) {
+    @media (--olivero-nav) {
       flex-shrink: 0;
       width: var(--content-left);
     }

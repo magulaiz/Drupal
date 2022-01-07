@@ -3,10 +3,8 @@
  * Nav Primary (wide widths).
  */
 
-@import "../../base/media-queries.pcss.css";
-
 body:not(.is-always-mobile-nav) {
-  @media (--nav) {
+  @media (--olivero-nav) {
     & .primary-nav__menu-item {
       flex-wrap: nowrap; /* Ensure that sub navigation toggle button doesn't wrap underneath link. */
 
@@ -213,7 +211,7 @@ body:not(.is-always-mobile-nav) {
  * Take into account Drupal's admin toolbars when ensuring that long level-2
  * menus will never overflow viewport.
  */
-@media (--nav) {
+@media (--olivero-nav) {
   body:not(.is-always-mobile-nav) {
     /* Toolbar is fixed, and tray is vertical or toolbar is horizontal and tray is closed. */
     &.toolbar-vertical,
@@ -245,7 +243,7 @@ body:not(.is-always-mobile-nav) {
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
 html.js body:not(.is-always-mobile-nav) {
-  @media (--nav) {
+  @media (--olivero-nav) {
     & .primary-nav__menu--level-2,
     & .primary-nav__menu-🥕 {
       transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
@@ -255,7 +253,7 @@ html.js body:not(.is-always-mobile-nav) {
 
 [dir="rtl"] {
   & body:not(.is-always-mobile-nav) {
-    @media (--nav) {
+    @media (--olivero-nav) {
       & .primary-nav__menu-link--level-2 {
         & .primary-nav__menu-link-inner:after {
           transform-origin: right;

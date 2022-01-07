@@ -3,8 +3,6 @@
  * Nav Button Mobile.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 .mobile-nav-button {
   position: relative;
   z-index: 110; /* Appear above mobile nav. */
@@ -31,7 +29,7 @@
     color: inherit; /* Override Safari's default UA styles. */
   }
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     display: inline-flex;
     width: auto;
     padding-inline-start: var(--sp);
@@ -48,7 +46,7 @@
   height: 1px;
   word-wrap: normal;
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     position: static;
     overflow: visible;
     clip: auto;

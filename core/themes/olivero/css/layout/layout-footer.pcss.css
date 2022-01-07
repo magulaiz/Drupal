@@ -8,7 +8,7 @@
 .site-footer__inner {
   padding-block: var(--sp2);
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     padding-block: var(--sp4) calc(13 * var(--sp));
   }
 }
@@ -18,7 +18,7 @@
   & > * {
     margin-block-end: var(--sp2);
 
-    @media (--md) {
+    @media (--olivero-md) {
       flex: 1;
       margin-block-end: 0;
 
@@ -28,7 +28,7 @@
     }
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     display: flex;
     flex-wrap: wrap;
   }

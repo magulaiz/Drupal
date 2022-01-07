@@ -3,18 +3,16 @@
  * Grid system definition for the content narrow layout.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .layout--content-narrow,
 .layout--pass--content-narrow > * {
   grid-column: 1 / 7;
   width: 100%;
 
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     grid-column: 2 / 14;
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     grid-column: 3 / 11;
   }
 }
@@ -33,11 +31,11 @@
 .layout--pass--content-medium > * {
   & .layout--content-narrow,
   & .layout--pass--content-narrow > * {
-    @media (--grid-md) {
+    @media (--olivero-grid-md) {
       grid-column: 1 / 13;
     }
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       grid-column: 1 / 9;
     }
   }
@@ -53,13 +51,13 @@
   & .text-content {
     & blockquote {
       &:before {
-        @media (--grid-md) {
+        @media (--olivero-grid-md) {
           inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
         }
       }
 
       &:after {
-        @media (--grid-md) {
+        @media (--olivero-grid-md) {
           inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
           width: var(--sp);
           height: calc(100% - 45px);
@@ -67,7 +65,7 @@
         }
       }
 
-      @media (--grid-md) {
+      @media (--olivero-grid-md) {
         width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
         margin-block: var(--sp3);
         padding-inline-start: 0;
@@ -75,12 +73,12 @@
     }
 
     & pre {
-      @media (--grid-md) {
+      @media (--olivero-grid-md) {
         width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
         margin-block: var(--sp3);
       }
 
-      @media (--lg) {
+      @media (--olivero-lg) {
         width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
         margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
       }

@@ -5,19 +5,6 @@
  * @preserve
  */
 
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 :root {
   --tab-active-border-size: 0.375rem;
 }

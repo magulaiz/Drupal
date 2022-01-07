@@ -3,8 +3,6 @@
  * Styles for primary navigation when JavaScript is disabled.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 :root {
   --no-js-nav-column-width: 300px;
   --no-js-nav-column-gap: var(--sp2);
@@ -14,7 +12,7 @@ html:not(.js) {
   /**
    * Mobile styles for primary navigation when JS is disabled.
    */
-  @media (--max-nav) {
+  @media (--olivero-max-nav) {
     & .primary-nav__menu--level-1 {
       column-width: var(--no-js-nav-column-width);
       column-gap: var(--no-js-nav-column-gap);
@@ -65,7 +63,7 @@ html:not(.js) {
     }
   }
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     /**
      * Styles for 'always on mobile navigation' when JS is disabled.
      */

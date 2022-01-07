@@ -3,8 +3,6 @@
  * Styles for menu placed in sidebar region.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 .menu--sidebar {
   list-style: none;
 

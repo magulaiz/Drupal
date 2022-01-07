@@ -3,8 +3,6 @@
  * Visual styles for ajax-progress throbber.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .ajax-progress {
   display: inline-block;
 }

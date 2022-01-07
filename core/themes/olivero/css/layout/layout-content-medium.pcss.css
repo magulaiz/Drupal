@@ -3,18 +3,16 @@
  * Grid system definition for the content wide layout.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .layout--content-medium,
 .layout--pass--content-medium > * {
   grid-column: 1 / 7;
   width: 100%;
 
-  @media (--grid-md) {
+  @media (--olivero-grid-md) {
     grid-column: 2 / 14;
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     grid-column: 3 / 13;
   }
 }
@@ -28,11 +26,11 @@
 .layout--content-medium {
   & .layout--content-medium,
   & .layout--pass--content-medium > * {
-    @media (--grid-md) {
+    @media (--olivero-grid-md) {
       grid-column: 1 / 13;
     }
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       grid-column: 1 / 11;
     }
   }

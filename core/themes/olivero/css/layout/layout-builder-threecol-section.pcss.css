@@ -3,8 +3,6 @@
  * Provides the layout styles for three-column layout section.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .layout--threecol-section {
   display: flex;
   flex-wrap: wrap;
@@ -13,7 +11,7 @@
     flex: 1 0 100%;
     margin-block-end: var(--grid-gap);
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       flex-grow: 0;
       flex-shrink: 0;
       margin-block-end: 0;
@@ -21,7 +19,7 @@
   }
 }
 
-@media (--lg) {
+@media (--olivero-lg) {
   .layout--threecol-section {
     & > .layout__region--first {
       margin-inline-end: calc(var(--grid-gap) * 0.5);

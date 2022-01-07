@@ -3,8 +3,6 @@
  * Site branding in header.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .site-branding {
   display: flex;
   flex-shrink: 1;
@@ -19,21 +17,21 @@
   /* @todo - #0d7ab8 isn't currently a variable. */
   background-image: linear-gradient(160deg, var(--color--blue-50) 0%, #0d7ab8 78.66%);
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     min-height: var(--sp4);
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     min-width: calc((4 * var(--grid-col-width)) + (4 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 4 column widths. */
     min-height: var(--sp6);
     padding-block-end: var(--sp);
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     min-width: calc((2 * var(--grid-col-width)) + (2 * var(--grid-gap)) + var(--container-padding)); /* Span minimum of 2 column widths. */
   }
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     min-height: var(--site-header-height-wide);
     margin-inline-start: calc(-1 * var(--container-padding));
     padding-block: 0;
@@ -60,7 +58,7 @@
     text-decoration: none;
   }
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     height: var(--header-height-wide-when-fixed);
     padding-block: var(--sp0-5);
     padding-inline-start: 0;
@@ -77,11 +75,11 @@
     max-width: 100%;
     max-height: var(--sp2);
 
-    @media (--sm) {
+    @media (--olivero-sm) {
       max-height: var(--sp3);
     }
 
-    @media (--md) {
+    @media (--olivero-md) {
       max-height: var(--sp4);
     }
 
@@ -100,12 +98,12 @@
     color: inherit;
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     font-size: 28px;
     line-height: 28px;
   }
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     letter-spacing: 0.02em;
     font-size: 32px;
     line-height: var(--sp2);

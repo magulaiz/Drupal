@@ -3,8 +3,6 @@
  * Forum specific styles.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .forum {
   & table {
     width: 100%;

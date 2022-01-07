@@ -3,8 +3,6 @@
  * Header Search Wide Block.
  */
 
-@import "../base/media-queries.pcss.css";
-
 /* Override contextual links so we can position against .site-header. */
 .block-search-wide.contextual-region {
   position: static;
@@ -298,7 +296,7 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 body:not(.is-always-mobile-nav) {
   & .block-search-wide__wrapper,
   & .block-search-wide__button {
-    @media (--nav) {
+    @media (--olivero-nav) {
       display: block;
     }
   }

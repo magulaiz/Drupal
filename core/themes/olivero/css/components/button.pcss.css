@@ -3,8 +3,6 @@
  * Buttons.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .button {
   display: inline-block;
   height: var(--sp3);

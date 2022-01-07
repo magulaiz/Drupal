@@ -2,9 +2,6 @@
  * @file
  * Base Fonts.
  */
-
-@import "media-queries.pcss.css";
-
 @font-face {
   font-family: "metropolis";
   src:

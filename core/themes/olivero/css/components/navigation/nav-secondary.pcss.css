@@ -3,8 +3,6 @@
  * Secondary navigation styling.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 .secondary-nav {
   letter-spacing: 0.02em;
   font-size: var(--font-size-s);
@@ -69,7 +67,7 @@
 }
 
 body:not(.is-always-mobile-nav) {
-  @media (--nav) {
+  @media (--olivero-nav) {
     & .secondary-nav {
       position: relative;
       display: flex;
