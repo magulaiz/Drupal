@@ -82,12 +82,14 @@ class FileEventSubscriber implements EventSubscriberInterface {
     }
 
     // Sanitize the filename according to configuration.
-    $sanitization_options = $this->config->get('filename_sanitization');
-    if ($sanitization_options['transliterate']) {
+    $transliterate = $this->config->get('filename_sanitization.transliterate');
+    $alphanumeric = $this->config->get('filename_sanitization.replace_non_alphanumeric');
+    $replacement = $this->config->get('filename_sanitization.replacement_character');
+    if ($transliterate) {
       $transliterated_filename = $this->transliteration->transliterate(
         $filename,
         $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId(),
-        $sanitization_options['replacement_character']
+        $replacement
       );
       if (mb_strlen($transliterated_filename) > 0) {
         $filename = $transliterated_filename;
@@ -96,17 +98,17 @@ class FileEventSubscriber implements EventSubscriberInterface {
         // If transliteration has resulted in a zero length string enable the
         // 'replace_non_alphanumeric' option and ignore the result of
         // transliteration.
-        $sanitization_options['replace_non_alphanumeric'] = TRUE;
+        $alphanumeric = TRUE;
       }
     }
-    if ($sanitization_options['replace_whitespace']) {
-      $filename = preg_replace('/\s/u', $sanitization_options['replacement_character'], trim($filename));
+    if ($this->config->get('filename_sanitization.replace_whitespace')) {
+      $filename = preg_replace('/\s/u', $replacement, trim($filename));
     }
     // Only honor replace_non_alphanumeric if transliterate is enabled.
-    if ($sanitization_options['transliterate'] && $sanitization_options['replace_non_alphanumeric']) {
-      $filename = preg_replace('/[^0-9A-Za-z_.-]/u', $sanitization_options['replacement_character'], $filename);
+    if ($transliterate && $alphanumeric) {
+      $filename = preg_replace('/[^0-9A-Za-z_.-]/u', $replacement, $filename);
     }
-    if ($sanitization_options['dedupe_separators']) {
+    if ($this->config->get('filename_sanitization.dedupe_separators')) {
       $filename = preg_replace('/(_)_+|(\.)\.+|(-)-+/u', '\\1\\2\\3', $filename);
       // If there is an extension remove dots from the end of the filename to
       // prevent duplicate dots.
@@ -114,7 +116,7 @@ class FileEventSubscriber implements EventSubscriberInterface {
         $filename = rtrim($filename, '.');
       }
     }
-    if ($sanitization_options['lowercase']) {
+    if ($this->config->get('filename_sanitization.lowercase')) {
       // Force lowercase to prevent issues on case-insensitive file systems.
       $filename = mb_strtolower($filename);
     }
