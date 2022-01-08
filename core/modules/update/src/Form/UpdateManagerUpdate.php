@@ -182,7 +182,7 @@ class UpdateManagerUpdate extends FormBase {
             }
 
             $value = NestedArray::getValue($entry, $parents);
-            NestedArray::setValue($entry, $parents, "$seen_version > $value");
+            NestedArray::setValue($entry, $parents, "$seen_version → $value");
           }
         }
 
