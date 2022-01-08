@@ -110,6 +110,9 @@ class UpdateManagerUpdate extends FormBase {
     $form['project_downloads'] = ['#tree' => TRUE];
     $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
     $project_data = update_calculate_project_data($available);
+    $seen_versions = $this->state->get('update.versions', []);
+    $update = FALSE;
+
     foreach ($project_data as $name => $project) {
       // Filter out projects which are up to date already.
       if ($project['status'] == UpdateManagerInterface::CURRENT) {
@@ -167,7 +170,7 @@ class UpdateManagerUpdate extends FormBase {
         'recommended_version' => ['data' => $recommended_version],
       ];
 
-      $old_seen_versions = $this->state->get('update.versions.' . $name, []);
+      $old_seen_versions = &$seen_versions[$name];
       $new_seen_versions = [];
 
       foreach (array_reverse(self::VERSION_TYPES, TRUE) as $version_type => $project_key) {
@@ -190,7 +193,8 @@ class UpdateManagerUpdate extends FormBase {
       }
 
       if ($old_seen_versions !== $new_seen_versions) {
-        $this->state->set('update.versions.' . $name, $new_seen_versions);
+        $old_seen_versions = $new_seen_versions;
+        $update = TRUE;
       }
 
       switch ($project['status']) {
@@ -275,6 +279,10 @@ class UpdateManagerUpdate extends FormBase {
             break;
         }
       }
+    }
+
+    if ($update) {
+      $this->state->set('update.versions', $seen_versions);
     }
 
     if (empty($projects)) {
