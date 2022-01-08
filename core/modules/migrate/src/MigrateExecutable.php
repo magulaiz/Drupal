@@ -411,8 +411,13 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
     $multiple = FALSE;
+    // Keep an count in the loop for use in exception messages. This needs to be
+    // manual rather than using the index of the $plugins array, because we skip
+    // the implicit 'get' plugins which are not in the migration's
+    // configuration.
+    $index = 0;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
-    foreach ($plugins as $index => $plugin) {
+    foreach ($plugins as $plugin) {
       $definition = $plugin->getPluginDefinition();
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
@@ -459,6 +464,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
 
         $multiple = $plugin->multiple();
       }
+
+      $index++;
     }
     // Ensure all values, including nulls, are migrated.
     if ($plugins) {
