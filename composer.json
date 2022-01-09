@@ -37,8 +37,6 @@
         "easyrdf/easyrdf": "^0.9 || ^1.0"
     },
     "replace": {
-        "paragonie/random_compat": "9.99.99",
-        "symfony/polyfill-php70": "*",
         "symfony/polyfill-php72": "*",
         "symfony/polyfill-php73": "*"
     },
@@ -49,6 +47,11 @@
         "autoloader-suffix": "Drupal9",
         "platform": {
             "php": "7.3.0"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "drupal/core-project-message": true,
+            "drupal/core-vendor-hardening": true
         }
     },
     "extra": {
