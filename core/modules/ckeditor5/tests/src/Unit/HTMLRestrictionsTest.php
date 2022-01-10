@@ -165,6 +165,22 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ],
     ];
 
+    yield 'single tag with multiple attributes allowing all values' => [
+      new HTMLRestrictions(['script' => ['src' => TRUE, 'defer' => TRUE]]),
+      ['<script src defer>'],
+      '<script src defer>',
+      [
+        [
+          'name' => 'script',
+          'attributes' => [
+            'src' => TRUE,
+            'defer' => TRUE,
+          ],
+        ],
+      ],
+    ];
+
+
     yield 'realistic' => [
       new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en', 'fr']], 'p' => ['data-*' => TRUE], 'br' => FALSE]),
       ['<a href hreflang="en fr">', '<p data-*>', '<br>'],
