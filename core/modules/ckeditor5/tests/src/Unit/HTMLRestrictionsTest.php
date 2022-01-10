@@ -180,7 +180,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ],
     ];
 
-
     yield 'realistic' => [
       new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en', 'fr']], 'p' => ['data-*' => TRUE], 'br' => FALSE]),
       ['<a href hreflang="en fr">', '<p data-*>', '<br>'],
