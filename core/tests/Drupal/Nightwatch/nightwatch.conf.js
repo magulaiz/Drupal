@@ -9,7 +9,7 @@ const collectedFolders = {
   Assertions: [],
   Pages: [],
 };
-const searchDirectory = 'core/modules/ckeditor5';
+const searchDirectory = 'modules/ckeditor5';
 const defaultIgnore = ['vendor/**'];
 
 glob
