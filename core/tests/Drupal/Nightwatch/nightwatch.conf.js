@@ -9,7 +9,7 @@ const collectedFolders = {
   Assertions: [],
   Pages: [],
 };
-const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || 'core/modules/ckeditor5';
+const searchDirectory = 'core/modules/ckeditor5';
 const defaultIgnore = ['vendor/**'];
 
 glob
