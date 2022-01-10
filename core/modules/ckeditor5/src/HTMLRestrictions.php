@@ -66,6 +66,7 @@ final class HTMLRestrictions implements \Countable {
 
   /**
    * @param $elements_string
+   *   A string representing a list of allowed HTML elements.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
@@ -204,6 +205,7 @@ final class HTMLRestrictions implements \Countable {
    * Gets allowed elements, optionally with wildcards processed.
    *
    * @param bool $retain_wildcard
+   *   Whether to retain the wildcard or not.
    *
    * @return array
    *

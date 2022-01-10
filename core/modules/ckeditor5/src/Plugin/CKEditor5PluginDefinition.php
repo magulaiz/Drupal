@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\Definition\PluginDefinition;
 use Drupal\Component\Plugin\Definition\PluginDefinitionInterface;
