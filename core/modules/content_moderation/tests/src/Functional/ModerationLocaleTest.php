@@ -348,12 +348,9 @@ class ModerationLocaleTest extends ModerationStateTestBase {
     foreach (range(11, 16) as $revision_id) {
       /** @var \Drupal\node\NodeInterface $revision */
       $revision = $storage->loadRevision($revision_id);
-      foreach ($revision->getTranslationLanguages() as $langcode => $language) {
-        if ($revision->isRevisionTranslationAffected()) {
-          $this->drupalGet($revision->toUrl('revision'));
-          $this->assertFalse($this->hasModerationForm(), 'Moderation form is not displayed correctly for revision ' . $revision_id);
-          break;
-        }
+      if ($revision->isRevisionTranslationAffected()) {
+        $this->drupalGet($revision->toUrl('revision'));
+        $this->assertFalse($this->hasModerationForm(), 'Moderation form is not displayed correctly for revision ' . $revision_id);
       }
     }
 

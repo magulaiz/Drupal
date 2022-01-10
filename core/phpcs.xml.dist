@@ -144,8 +144,6 @@
 
   <!-- Drupal Practice sniffs -->
   <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis">
-    <!-- @todo exclude tests -->
-    <exclude-pattern>*/tests/*</exclude-pattern>
     <!-- Do not run this sniff on API files or transliteration data. -->
     <exclude-pattern>*.api.php</exclude-pattern>
     <exclude-pattern>core/lib/Drupal/Component/Transliteration/data/*.php</exclude-pattern>
