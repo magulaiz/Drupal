@@ -71,6 +71,12 @@ class FileEventSubscriber implements EventSubscriberInterface {
    * @see file_form_system_file_system_settings_alter()
    */
   public function sanitizeFilename(FileUploadSanitizeNameEvent $event) {
+    // Don't reset the filename if transliteration is off, let others handle it.
+    $transliterate = $this->config->get('filename_sanitization.transliterate');
+    if (!$transliterate) {
+      return;
+    }
+
     $filename = $event->getFilename();
     $extension = pathinfo($filename, PATHINFO_EXTENSION);
     if ($extension !== '') {
@@ -82,7 +88,6 @@ class FileEventSubscriber implements EventSubscriberInterface {
     }
 
     // Sanitize the filename according to configuration.
-    $transliterate = $this->config->get('filename_sanitization.transliterate');
     $alphanumeric = $this->config->get('filename_sanitization.replace_non_alphanumeric');
     $replacement = $this->config->get('filename_sanitization.replacement_character');
     if ($transliterate) {
