@@ -9,11 +9,11 @@ const collectedFolders = {
   Assertions: [],
   Pages: [],
 };
-const searchDirectory = 'modules/ckeditor5';
+const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
 const defaultIgnore = ['vendor/**'];
 
 glob
-  .sync('tests/Nightwatch/**/*.js', {
+  .sync('**/tests/**/Nightwatch/**/*.js', {
     cwd: path.resolve(process.cwd(), `../${searchDirectory}`),
     ignore: process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES
       ? process.env.DRUPAL_NIGHTWATCH_IGNORE_DIRECTORIES.split(',').concat(
