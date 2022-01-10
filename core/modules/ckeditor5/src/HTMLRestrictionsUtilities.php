@@ -197,36 +197,6 @@ final class HTMLRestrictionsUtilities {
   }
 
   /**
-   * Parses a HTML restrictions string into htmlSupport plugin config structure.
-   *
-   * @param string $elements_string
-   *   A HTML restrictions string.
-   *
-   * @return string[]
-   *   An array of allowed elements, structured in the manner expected by the
-   *   CKEditor 5 htmlSupport plugin constructor.
-   *
-   * @see https://ckeditor5.github.io/docs/nightly/ckeditor5/latest/features/general-html-support.html#configuration
-   */
-  public static function allowedElementsStringToHtmlSupportConfig(string $elements_string): array {
-    $html_restrictions = static::allowedElementsStringToHtmlFilterArray($elements_string);
-    $allowed = [];
-    foreach ($html_restrictions as $tag => $attributes) {
-      $to_allow['name'] = $tag;
-      assert($attributes === FALSE || is_array($attributes));
-      if (is_array($attributes)) {
-        foreach ($attributes as $name => $value) {
-          assert($value === TRUE || Inspector::assertAllStrings($value));
-          $to_allow['attributes'][$name] = $value;
-        }
-      }
-      $allowed[] = $to_allow;
-    }
-
-    return $allowed;
-  }
-
-  /**
    * Gets a list of block level elements.
    *
    * @return array
