@@ -757,6 +757,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    *
    * @dataProvider testCacheableMetadataProvider
    */
+<<<<<<< HEAD
   public function testCacheableMetadata(CacheableMetadata $expected_metadata): void {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);

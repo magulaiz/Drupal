@@ -101,7 +101,7 @@ class StyleSerializerTest extends ViewTestBase {
     // But if we use the basic auth authentication strategy, we should be able
     // to see the page.
     $url = $this->buildUrl('test/serialize/auth_with_perm');
-    $response = \Drupal::httpClient()->get($url, [
+    \Drupal::httpClient()->get($url, [
       'auth' => [$this->adminUser->getAccountName(), $this->adminUser->pass_raw],
       'query' => [
         '_format' => 'json',

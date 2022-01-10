@@ -20,8 +20,8 @@ class TestValidatedReferenceConstraintValidator extends ConstraintValidator {
       return;
     }
     foreach ($items as $item) {
-      $violations = $item->entity->validate();
-      foreach ($violations as $violation) {
+      $violationsCount = count($item->entity->validate());
+      for ($i = 0; $i < $violationsCount; $i++) {
         // Add the reason for the validation failure to the current context.
         $this->context->buildViolation($constraint->message)->addViolation();
       }

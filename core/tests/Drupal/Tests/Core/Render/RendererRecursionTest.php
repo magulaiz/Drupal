@@ -24,7 +24,7 @@ class RendererRecursionTest extends RendererTestBase {
       '#create_placeholder' => TRUE,
     ];
 
-    return [$complex_child_markup, $parent_markup, $complex_child_template];
+    return [$parent_markup, $complex_child_template];
   }
 
   /**

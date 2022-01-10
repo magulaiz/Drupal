@@ -1048,6 +1048,7 @@ class MigrateNodeCompleteTest extends MigrateNodeTestBase {
    */
   protected function expectedRevisionEntityData(): array {
     return [
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       $revision_data = [
         // Node 1, revision 1, und.
         0 =>

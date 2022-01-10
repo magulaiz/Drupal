@@ -38,7 +38,7 @@ class CollectRoutesTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
 
-    $request = $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
+    $this->getMockBuilder('\Symfony\Component\HttpFoundation\Request')
       ->disableOriginalConstructor()
       ->getMock();
 
