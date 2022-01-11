@@ -540,8 +540,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
     case 'dev':
       $latest = $available['releases'][$project_data['latest_dev']];
       if (empty($project_data['datestamp'])) {
-        $project_data['status'] = UpdateFetcherInterface::NOT_CHECKED;
-        $project_data['reason'] = t('Unknown release date');
       }
       elseif (($project_data['datestamp'] + 100 > $latest['date'])) {
         $project_data['status'] = UpdateManagerInterface::CURRENT;
