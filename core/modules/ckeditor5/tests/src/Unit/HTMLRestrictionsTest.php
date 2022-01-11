@@ -429,4 +429,124 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @covers ::union()
+   * @dataProvider  providerUnion
+   */
+  public function testUnion(HTMLRestrictions $a, HTMLRestrictions $b, HTMLRestrictions $expected): void {
+    $this->assertEquals($expected, $a->union($b));
+  }
+
+  public function providerUnion(): \Generator {
+    // Empty set operand cases.
+    yield 'any set union with empty set' => [
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      HTMLRestrictions::emptySet(),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+    ];
+    yield 'empty set union with anything' => [
+      HTMLRestrictions::emptySet(),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+    ];
+
+    // Basic cases.
+    yield 'union of two very restricted tags' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => FALSE]),
+    ];
+    yield 'union of two very unrestricted tags' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'union of one very unrestricted tag with one very restricted tag' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'union of one very unrestricted tag with one very restricted tag — vice versa' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+
+    // Attribute unions.
+    yield 'union of one very unrestricted tag with a slightly restricted tag' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'union of one very unrestricted tag with a slightly restricted tag — vice versa' => [
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'union of one very restricted tag with a slightly restricted tag' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+    ];
+    yield 'union of one very restricted tag with a slightly restricted tag — vice versa' => [
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+    ];
+    yield 'union of two differently slightly restricted tags' => [
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
+    ];
+    yield 'union of two differently slightly restricted tags — vice versa' => [
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['href' => TRUE]]),
+      new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => TRUE]]),
+    ];
+
+    // Attribute value unions.
+    yield 'union of one unrestricted attribute with a restricted attribute' => [
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+    ];
+    yield 'union of one unrestricted attribute with a restricted attribute — vice versa' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+    ];
+    yield 'union of two differently restricted attributes' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
+    ];
+    yield 'union of two differently restricted attributes — vice versa' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE, 'fr' => TRUE]]]),
+    ];
+
+    // Complex examples.
+    yield 'union of one very restricted tag with one slightly restricted tag' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+    ];
+    yield 'union of one very restricted tag with one slightly restricted tag — vice versa' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+    ];
+    yield 'union of one very unrestricted tag with one slightly restricted tag' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'union of one very unrestricted tag with one slightly restricted tag — vice versa' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+  }
+
 }
