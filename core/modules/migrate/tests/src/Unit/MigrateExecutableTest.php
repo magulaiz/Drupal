@@ -187,7 +187,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    * The MigrationException in this case is being thrown from the destination.
    */
   public function testImportWithValidRowWithDestinationMigrateException(): void {
-    $exception_message = $this->getRandomGenerator()->string();
     $source = $this->getMockSource();
 
     $this->getMockBuilder('Drupal\migrate\Row')
@@ -260,12 +259,7 @@ class MigrateExecutableTest extends MigrateTestCase {
   /**
    * Tests the import method with a regular Exception being thrown.
    */
-<<<<<<< HEAD
   public function testImportWithValidRowWithException(): void {
-    $exception_message = $this->getRandomGenerator()->string();
-=======
-  public function testImportWithValidRowWithException() {
->>>>>>> 0913c3e1e4 (WIP)
     $source = $this->getMockSource();
 
     $this->getMockBuilder('Drupal\migrate\Row')
