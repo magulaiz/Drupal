@@ -359,10 +359,56 @@ final class HTMLRestrictions implements \Countable {
     // appear in attribute config arrays. This removes them.
     foreach ($union as $tag => $tag_config) {
       if (is_array($tag_config)) {
-        $union[$tag] = array_filter($tag_config);
-        // HTML tags must not have an empty array of allowed attributes.
-        if ($union[$tag] === []) {
-          $union[$tag] = FALSE;
+        // If the HTML tag restrictions for both operands were both booleans,
+        // then the result of array_merge_recursive() is an array containing two
+        // booleans (because it is designed for arrays, not for also merging
+        // booleans) under the first two numeric keys: 0 and 1. This does not
+        // match the structure expected of HTML restrictions. Combine the two booleans.
+        if (array_key_exists(0, $tag_config) && array_key_exists(1, $tag_config) && is_bool($tag_config[0]) && is_bool($tag_config[1])) {
+          // Twice FALSE.
+          if ($tag_config === [FALSE, FALSE]) {
+            $union[$tag] = FALSE;
+          }
+          // Once or twice TRUE.
+          else {
+            $union[$tag] = TRUE;
+          }
+          continue;
+        }
+
+        // If the HTML tag restrictions for only one of the two operands was a
+        // boolean, then the result of array_merge_recursive() is an array
+        // containing the complete contents of the non-boolean operand plus an
+        // additional key-value pair with the first numeric key: 0.
+        if (array_key_exists(0, $tag_config)) {
+          // If the boolean was FALSE (meaning: "no attributes allowed"), then
+          // the other operand's values should be used in an union: this yields
+          // the most permissive result.
+          if ($tag_config[0] === FALSE) {
+            unset($union[$tag][0]);
+          }
+          // If the boolean was TRUE (meaning: "all attributes allowed"), then
+          // the other operand's values should be ignored in an union: this
+          // yields the most permissive result.
+          elseif ($tag_config[0] === TRUE) {
+            $union[$tag] = TRUE;
+          }
+          continue;
+        }
+
+        // If the HTML tag restrictions are arrays for both operands, similar
+        // logic needs to be applied to the attribute-level restrictions.
+        foreach ($union[$tag] as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          if ($html_tag_attribute_restrictions === TRUE) {
+            continue;
+          }
+
+          if (array_key_exists(0, $html_tag_attribute_restrictions)) {
+            // The "twice FALSE" case cannot occur for attributes.
+            // Once or twice TRUE.
+            assert($html_tag_attribute_restrictions[0] === TRUE || $html_tag_attribute_restrictions[1] === TRUE);
+            $union[$tag][$html_tag_attribute_name] = TRUE;
+          }
         }
       }
     }
