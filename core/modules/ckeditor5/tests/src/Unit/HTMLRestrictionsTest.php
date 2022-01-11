@@ -13,6 +13,79 @@ use Drupal\Tests\UnitTestCase;
  */
 class HTMLRestrictionsTest extends UnitTestCase {
 
+
+  /**
+   * @covers ::__construct
+   * @dataProvider providerConstruct
+   */
+  public function testConstructor(array $elements, ?string $expected_exception_message): void {
+    if ($expected_exception_message !== NULL) {
+      $this->expectException(\InvalidArgumentException::class);
+      $this->expectExceptionMessage($expected_exception_message);
+    }
+    new HTMLRestrictions($elements);
+  }
+
+  public function providerConstruct(): \Generator {
+    // Fundamental structure.
+    yield 'INVALID: list instead of key-value pairs' => [
+      ['<foo>', '<bar>'],
+      'An array of key-value pairs must be provided, with HTML tag names as keys.',
+    ];
+
+    // Invalid HTML tag names.
+    yield 'INVALID: key-value pairs now, but invalid keys due to angular brackets' => [
+      ['<foo>' => '', '<bar> ' => ''],
+      '"<foo>" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.',
+    ];
+    yield 'INVALID: no more angular brackets, but still leading or trailing whitespace' => [
+      ['foo' => '', 'bar ' => ''],
+      'The "bar " HTML tag contains whitespace. Omit the whitespace.',
+    ];
+
+    // Invalid HTML tag attribute name restrictions.
+    yield 'INVALID: keys valid, but not yet the values' => [
+      ['foo' => '', 'bar' => ''],
+      'The value for the "foo" HTML tag is neither a boolean nor an array of attribute restrictions.',
+    ];
+    yield 'INVALID: keys valid, values can be arrays … but not empty arrays' => [
+      ['foo' => [], 'bar' => []],
+      'The value for the "foo" HTML tag is an empty array. This is not permitted, specify FALSE instead to indicate no attributes are allowed. Otherwise, list allowed attributes.',
+    ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions' => [
+      ['foo' => ['baz'], 'bar' => [' qux']],
+      'The "foo" HTML tag has attribute restrictions, but it is not an array of key-value pairs, with HTML tag attribute names as keys.',
+    ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to invalid attribute name' => [
+      ['foo' => ['baz' => ''], 'bar' => [' qux' => '']],
+      'The "bar" HTML tag has an attribute restriction " qux" which contains whitespace. Omit the whitespace.',
+    ];
+
+    // Invalid HTML tag attribute value restrictions.
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to empty strings' => [
+      ['foo' => ['baz' => ''], 'bar' => ['qux' => '']],
+      'The "foo" HTML tag has an attribute restriction "baz" which is neither TRUE nor an array of attribute value restrictions.',
+    ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to an empty array of allowed attribute values' => [
+      ['foo' => ['baz' => TRUE], 'bar' => ['qux' => []]],
+      'The "bar" HTML tag has an attribute restriction "qux" which is set to the empty array. This is not permitted, specify either TRUE to allow all attribute values, or list the attribute value restrictions.',
+    ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to a list of allowed attribute values' => [
+      ['foo' => ['baz' => TRUE], 'bar' => ['qux' => ['a', 'b']]],
+      'The "bar" HTML tag has attribute restriction "qux", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.',
+    ];
+
+    // Valid values.
+    yield 'VALID: keys valid, boolean attribute restriction values: also valid' => [
+      ['foo' => TRUE, 'bar' => FALSE],
+      NULL,
+    ];
+    yield 'INVALID: keys valid, array attribute restriction values: also valid' => [
+      ['foo' => ['baz' => TRUE], 'bar' => ['qux' => ['a' => TRUE, 'b' => TRUE]]],
+      NULL,
+    ];
+  }
+
   /**
    * @covers ::count()
    * @dataProvider providerCount

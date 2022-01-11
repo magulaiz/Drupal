@@ -46,8 +46,120 @@ final class HTMLRestrictions implements \Countable {
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public function __construct(array $elements) {
-    Inspector::assertAllStrings($elements);
+    self::validateAllowedRestrictionsPhase1($elements);
+    self::validateAllowedRestrictionsPhase2($elements);
+    self::validateAllowedRestrictionsPhase3($elements);
+    self::validateAllowedRestrictionsPhase4($elements);
     $this->elements = $elements;
+  }
+
+  /**
+   * Validates allowed elements — phase 1: shape of keys.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private static function validateAllowedRestrictionsPhase1(array $elements): void {
+    if (!is_array($elements) || !Inspector::assertAllStrings(array_keys($elements))) {
+      throw new \InvalidArgumentException('An array of key-value pairs must be provided, with HTML tag names as keys.');
+    }
+    foreach (array_keys($elements) as $html_tag_name) {
+      if (trim($html_tag_name) !== $html_tag_name) {
+        throw new \InvalidArgumentException(sprintf('The "%s" HTML tag contains whitespace. Omit the whitespace.', $html_tag_name));
+      }
+      if ($html_tag_name[0] === '<' || $html_tag_name[-1] === '>') {
+        throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
+      }
+      // @todo conform to HTML element naming rules ………………………… — exception is *
+      //      if (…) {
+      //        throw new \InvalidArgumentException(sprintf('"%s" is not a valid HTML5 element name.', $key));
+      //      }
+    }
+  }
+
+  /**
+   * Validates allowed elements — phase 2: shape of values.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private static function validateAllowedRestrictionsPhase2(array $elements): void {
+    foreach ($elements as $html_tag_name => $html_tag_restrictions) {
+      // The value must be either a boolean (FALSE means no attributes are
+      // allowed, TRUE means all attributes are allowed), or an array of allowed
+      // attribute names.
+      if (is_bool($html_tag_restrictions)) {
+        continue;
+      }
+      if (!is_array($html_tag_restrictions)) {
+        throw new \InvalidArgumentException(sprintf('The value for the "%s" HTML tag is neither a boolean nor an array of attribute restrictions.', $html_tag_name));
+      }
+      if ($html_tag_restrictions === []) {
+        throw new \InvalidArgumentException(sprintf('The value for the "%s" HTML tag is an empty array. This is not permitted, specify FALSE instead to indicate no attributes are allowed. Otherwise, list allowed attributes.', $html_tag_name));
+      }
+    }
+  }
+
+  /**
+   * Validates allowed elements — phase 3: HTML tag attribute restriction keys.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private static function validateAllowedRestrictionsPhase3(array $elements): void {
+    foreach($elements as $html_tag_name => $html_tag_restrictions) {
+      if (!is_array($html_tag_restrictions)) {
+        continue;
+      }
+      if (!Inspector::assertAllStrings(array_keys($html_tag_restrictions))) {
+        throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has attribute restrictions, but it is not an array of key-value pairs, with HTML tag attribute names as keys.', $html_tag_name));
+      }
+
+      foreach ($html_tag_restrictions as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+        if (trim($html_tag_attribute_name) !== $html_tag_attribute_name) {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which contains whitespace. Omit the whitespace.', $html_tag_name, $html_tag_attribute_name));
+        }
+      }
+    }
+  }
+
+  /**
+   * Validates allowed elements — phase 4: HTML tag attr restriction values.
+   *
+   * @param array $elements
+   *   The allowed elements.
+   *
+   * @throws \InvalidArgumentException
+   */
+  private static function validateAllowedRestrictionsPhase4(array $elements): void {
+    foreach($elements as $html_tag_name => $html_tag_restrictions) {
+      if (!is_array($html_tag_restrictions)) {
+        continue;
+      }
+
+      foreach ($html_tag_restrictions as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+        // The value must be either TRUE (meaning all values for this
+        // are allowed), or an array of allowed attribute values.
+        if ($html_tag_attribute_restrictions === TRUE) {
+          continue;
+        }
+        if (!is_array($html_tag_attribute_restrictions)) {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which is neither TRUE nor an array of attribute value restrictions.', $html_tag_name, $html_tag_attribute_name));
+        }
+        if ($html_tag_attribute_restrictions === []) {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which is set to the empty array. This is not permitted, specify either TRUE to allow all attribute values, or list the attribute value restrictions.', $html_tag_name, $html_tag_attribute_name));
+        }
+        if (!Inspector::assertAll(function ($v) { return $v === TRUE; }, $html_tag_attribute_restrictions)) {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has attribute restriction "%s", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.', $html_tag_name, $html_tag_attribute_name));
+        }
+      }
+    }
   }
 
   /**
