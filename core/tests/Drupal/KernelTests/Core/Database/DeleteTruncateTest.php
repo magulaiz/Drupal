@@ -77,7 +77,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
-    $transaction = $this->connection->startTransaction('test_truncate_in_transaction');
+    $this->connection->startTransaction('test_truncate_in_transaction');
     $this->connection->insert('test')
       ->fields([
         'name' => 'Freddie',
@@ -98,7 +98,6 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     // Close the transaction, and check that there are still no records in the
     // table.
-    $transaction = NULL;
     $this->assertFalse($this->connection->inTransaction());
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertEquals(0, $num_records_after);
@@ -111,7 +110,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
-    $transaction = $this->connection->startTransaction('test_truncate_in_transaction');
+    $this->connection->startTransaction('test_truncate_in_transaction');
     $this->connection->insert('test')
       ->fields([
         'name' => 'Freddie',
