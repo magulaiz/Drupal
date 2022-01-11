@@ -151,7 +151,6 @@ class DisplayTest extends DisplayPluginBase {
    */
   public function validate() {
     $errors = parent::validate();
-
     $displayHandlersCount = count($this->view->displayHandlers);
     for ($i = 0; $i < $displayHandlersCount; $i++) {
       $errors[] = 'error';
