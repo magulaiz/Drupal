@@ -374,7 +374,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
     catch (UnexpectedValueException $exception) {
       continue;
     }
-    $release_is_supported = $is_in_supported_branch($release->getVersion()) && !$release->isUnsupported();
     // First, if this is the existing release, check a few conditions.
     if ($project_data['existing_version'] === $version) {
       if ($release->isInsecure()) {
@@ -391,7 +390,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
           'data' => t('Your currently installed release has been revoked, and is no longer available for download. Uninstalling everything included in this release or upgrading is strongly recommended!'),
         ];
       }
-      elseif (!$release_is_supported) {
+      elseif ($release->isUnsupported()) {
         $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
         if (empty($project_data['extra'])) {
           $project_data['extra'] = [];
@@ -406,7 +405,8 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // Other than the currently installed release, ignore unpublished, insecure,
     // or unsupported updates.
     elseif (!$release->isPublished() ||
-            !$release_is_supported ||
+            !$is_in_supported_branch($release->getVersion()) ||
+            $release->isUnsupported() ||
             $release->isInsecure()
     ) {
       continue;
@@ -464,7 +464,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     // Look for the 'recommended' version if we haven't found it yet (see
     // PHPDoc at the top of this function for the definition).
     if (!isset($project_data['recommended'])
-        && $release_major_version == $target_major && $release_is_supported) {
+        && $release_major_version == $target_major) {
       if ($recommended_version_without_extra !== $release_version_without_extra) {
         $recommended_version_without_extra = $release_version_without_extra;
         $recommended_release = $release_info;
@@ -504,7 +504,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
 
   // If we were unable to find a recommended version, then make the latest
   // version the recommended version if possible.
-  if (!isset($project_data['recommended']) && isset($project_data['latest_version']) && $release_is_supported) {
+  if (!isset($project_data['recommended']) && isset($project_data['latest_version'])) {
     $project_data['recommended'] = $project_data['latest_version'];
   }
 
