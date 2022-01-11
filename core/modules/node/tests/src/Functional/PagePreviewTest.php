@@ -230,6 +230,8 @@ class PagePreviewTest extends NodeTestBase {
     $url = parse_url($this->getUrl());
     $paths = explode('/', $url['path']);
     $uuid = array_pop($paths);
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
+    $view_mode = array_pop($paths);
 
     // Switch view mode. We'll remove the body from the teaser view mode.
     \Drupal::service('entity_display.repository')
