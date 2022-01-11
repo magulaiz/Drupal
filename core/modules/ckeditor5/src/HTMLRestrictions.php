@@ -341,6 +341,11 @@ final class HTMLRestrictions implements \Countable {
             $intersection[$tag][$attr] = array_intersect($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
           }
         }
+
+        // HTML tags must not have an empty array of allowed attributes.
+        if ($intersection[$tag] === []) {
+          $intersection[$tag] = FALSE;
+        }
       }
     }
 
@@ -354,6 +359,10 @@ final class HTMLRestrictions implements \Countable {
     foreach ($union as $tag => $tag_config) {
       if (is_array($tag_config)) {
         $union[$tag] = array_filter($tag_config);
+        // HTML tags must not have an empty array of allowed attributes.
+        if ($union[$tag] === []) {
+          $union[$tag] = FALSE;
+        }
       }
     }
     return new static($union);

@@ -253,7 +253,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield 'realistic' => [
-      new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en', 'fr']], 'p' => ['data-*' => TRUE], 'br' => FALSE]),
+      new HTMLRestrictions(['a' => ['href' => TRUE, 'hreflang' => ['en' => TRUE, 'fr' => TRUE]], 'p' => ['data-*' => TRUE], 'br' => FALSE]),
       ['<a href hreflang="en fr">', '<p data-*>', '<br>'],
       '<a href hreflang="en fr"> <p data-*> <br>',
       [
@@ -380,6 +380,16 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     // Attribute intersecting.
+    yield 'attribute restrictions are less permissive: <a *> vs <a>' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => FALSE]),
+    ];
+    yield 'attribute restrictions are more permissive: <a> vs <a *>' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['a' => FALSE]),
+    ];
     yield 'attribute restrictions are more permissive: <a href> vs <a *>' => [
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
       new HTMLRestrictions(['a' => TRUE]),
@@ -403,7 +413,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'attribute restrictions are different: <a href> vs <a hreflang>' => [
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
       new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
-      new HTMLRestrictions(['a' => []]),
+      new HTMLRestrictions(['a' => FALSE]),
     ];
   }
 
