@@ -99,7 +99,7 @@ final class HTMLRestrictions implements \Countable {
     if (!isset($restrictions['allowed'])) {
       // @todo Handle HTML restrictor filters that only set forbidden_tags
       //   https://www.drupal.org/project/ckeditor5/issues/3231336.
-      throw new \DomainException('text formats with only filters that forbid tags (skiplisting) rather than allowing tags (allowlisting) are not yet supported.');
+      throw new \DomainException('text formats with only filters that forbid tags rather than allowing tags are not yet supported.');
     }
 
     $allowed = $restrictions['allowed'];
