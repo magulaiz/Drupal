@@ -11,16 +11,16 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-@trigger_error('ThemeExperimentalConfirmForm is deprecated in drupal 9.2.0 and is removed in drupal 10.0.0. Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API, ModulesListConfirmForm may also be removed in a minor release. See https://www.drupal.org/node/3188194', E_USER_DEPRECATED);
+@trigger_error('ThemeExperimentalConfirmForm is deprecated in drupal 9.4.0 and is removed from drupal 10.0.0. Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API, ThemeExperimentalConfirmForm may also be removed in a minor release. See https://www.drupal.org/node/3188194', E_USER_DEPRECATED);
 
 /**
  * Builds a confirmation form for enabling experimental themes.
  *
  * @internal
  *
- * @deprecated in drupal:9.2.0 and is removed in drupal:10.0.x.
+ * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0.
  *   Use \Drupal\system\Form\ExtensionConfirmForm instead. As internal API,
- *   ModulesListConfirmForm may also be removed in a minor release.
+ *   ThemeExperimentalConfirmForm may also be removed in a minor release.
  *
  * @see https://www.drupal.org/node/3188194
  */
