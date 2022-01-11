@@ -2,8 +2,6 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Config\PreExistingConfigException;
-use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -35,6 +33,7 @@ class ModulesListForm extends FormBase {
 
   use ModuleDependencyMessageTrait;
   use ModulesEnabledTrait;
+  use ExtensionFormTrait;
 
   /**
    * The current user.
@@ -452,21 +451,18 @@ class ModulesListForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Retrieve a list of modules to install and their dependencies.
-    $modules = $this->buildModuleList($form_state);
+    $enabled_modules = array_filter($form_state->getValue('modules'), function ($module) {
+      return !empty($module['enable']);
+    });
+
+    $modules = $this->buildModuleList(array_keys($enabled_modules));
 
     // Redirect to a confirmation form if needed.
     if (!empty($modules['experimental']) || !empty($modules['dependencies'])) {
-
-      $route_name = !empty($modules['experimental']) ? 'system.modules_list_experimental_confirm' : 'system.modules_list_confirm';
       // Write the list of changed module states into a key value store.
       $account = $this->currentUser()->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
-
-      // Redirect to the confirmation form.
-      $form_state->setRedirect($route_name);
-
-      // We can exit here because at least one modules has dependencies
-      // which we have to prompt the user for in a confirmation form.
+      $form_state->setRedirect('system.extension_install_confirm');
       return;
     }
 
