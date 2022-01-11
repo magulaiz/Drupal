@@ -86,12 +86,12 @@ class StoredInstallableReleasesTest extends KernelTestBase {
       '8.2.2',
       '8.2.0',
     ];
-    foreach ($expected_versions as $version){
+    foreach ($expected_versions as $version) {
       $this->assertArrayHasKey($version, $new['drupal']['releases']);
       $this->assertArrayHasKey('status', $new['drupal']['releases'][$version]);
       $this->assertArrayHasKey('version', $new['drupal']['releases'][$version]);
     }
-    foreach ($not_expected_versions as $version){
+    foreach ($not_expected_versions as $version) {
       $this->assertArrayNotHasKey($version, $new['drupal']['releases']);
     }
   }
