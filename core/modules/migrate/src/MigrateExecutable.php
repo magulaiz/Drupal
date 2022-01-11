@@ -465,7 +465,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $multiple = $plugin->multiple();
       }
 
-      $index++;
+      if ($plugin->getPluginId() != 'get') {
+        $index++;
+      }
     }
     // Ensure all values, including nulls, are migrated.
     if ($plugins) {
