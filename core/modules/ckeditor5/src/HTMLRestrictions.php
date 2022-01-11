@@ -7,6 +7,8 @@ namespace Drupal\ckeditor5;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\DiffArray;
 use Drupal\Component\Utility\Html;
+use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\FilterInterface;
 use Masterminds\HTML5\Elements;
 
 /**
@@ -62,6 +64,52 @@ final class HTMLRestrictions implements \Countable {
    */
   public function count(): int {
     return count($this->elements);
+  }
+
+  /**
+   * Constructs a set of HTML restrictions matching the given text format.
+   *
+   * @param \Drupal\filter\Plugin\FilterInterface $filter
+   *   A filter plugin instance to construct a HTML restrictions object for.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   */
+  public static function fromFilterPluginInstance(FilterInterface $filter): HTMLRestrictions {
+    return static::fromObjectWithHtmlRestrictions($filter);
+  }
+
+  /**
+   * Constructs a set of HTML restrictions matching the given text format.
+   *
+   * @param \Drupal\filter\FilterFormatInterface $text_format
+   *   A text format to construct a HTML restrictions object for.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   */
+  public static function fromTextFormat(FilterFormatInterface $text_format): HTMLRestrictions {
+    return static::fromObjectWithHtmlRestrictions($text_format);
+  }
+
+  private static function fromObjectWithHtmlRestrictions(object $object): HTMLRestrictions {
+    if (!method_exists($object, 'getHTMLRestrictions')) {
+      throw new \InvalidArgumentException();
+    }
+
+    $restrictions = $object->getHTMLRestrictions();
+    if (!isset($restrictions['allowed'])) {
+      // @todo Handle HTML restrictor filters that only set forbidden_tags
+      //   https://www.drupal.org/project/ckeditor5/issues/3231336.
+      throw new \DomainException('text formats with only filters that forbid tags (skiplisting) rather than allowing tags (allowlisting) are not yet supported.');
+    }
+
+    $allowed = $restrictions['allowed'];
+    // @todo Validate attributes allowed or forbidden on all elements
+    //   https://www.drupal.org/project/ckeditor5/issues/3231334.
+    if (isset($allowed['*'])) {
+      unset($allowed['*']);
+    }
+
+    return new static($allowed);
   }
 
   /**

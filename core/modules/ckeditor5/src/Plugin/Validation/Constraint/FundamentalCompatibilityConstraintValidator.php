@@ -146,21 +146,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     $provided = $this->pluginManager->getProvidedElements($enabled_plugins, $text_editor);
 
     foreach ($html_restrictor_filters as $filter_plugin_id => $filter) {
-      $restrictions = $filter->getHTMLRestrictions();
-      if (!isset($restrictions['allowed'])) {
-        // @todo Handle HTML restrictor filters that only set forbidden_tags
-        //   https://www.drupal.org/project/ckeditor5/issues/3231336.
-        continue;
-      }
-
-      $allowed = $restrictions['allowed'];
-      // @todo Validate attributes allowed or forbidden on all elements
-      //   https://www.drupal.org/project/ckeditor5/issues/3231334.
-      if (isset($allowed['*'])) {
-        unset($allowed['*']);
-      }
-
-      $allowed = new HTMLRestrictions($allowed);
+      $allowed = HTMLRestrictions::fromFilterPluginInstance($filter);
       $provided = new HTMLRestrictions($provided);
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
