@@ -99,6 +99,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     // Close the transaction, and check that there are still no records in the
     // table.
+    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
     $transaction = NULL;
     $this->assertFalse($this->connection->inTransaction());
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
