@@ -321,12 +321,8 @@ final class HTMLRestrictions implements \Countable {
 
         $attributes_intersection = array_intersect_key($this->elements[$tag], $other->elements[$tag]);
         foreach (array_keys($attributes_intersection) as $attr) {
-          // If either does not allow this attribute, neither does the intersection.
-          if ($this->elements[$tag][$attr] === FALSE || $other->elements[$tag][$attr] === FALSE) {
-            $intersection[$tag][$attr] = FALSE;
-          }
           // If both allow all attribute values, so does the intersection.
-          elseif ($this->elements[$tag][$attr] === TRUE && $other->elements[$tag][$attr] === TRUE) {
+          if ($this->elements[$tag][$attr] === TRUE && $other->elements[$tag][$attr] === TRUE) {
             $intersection[$tag][$attr] = TRUE;
           }
           // If the first allows all attribute values, return the second.
@@ -338,7 +334,12 @@ final class HTMLRestrictions implements \Countable {
             $intersection[$tag][$attr] = $this->elements[$tag][$attr];
           }
           else {
-            $intersection[$tag][$attr] = array_intersect($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
+            $intersection[$tag][$attr] = array_intersect_key($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
+            // It is not permitted to specify an empty attribute value
+            // restrictions array.
+            if (empty($intersection[$tag][$attr])) {
+              unset($intersection[$tag][$attr]);
+            }
           }
         }
 

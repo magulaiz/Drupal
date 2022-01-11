@@ -415,6 +415,18 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
       new HTMLRestrictions(['a' => FALSE]),
     ];
+
+    // Attribute value intersecting.
+    yield 'attribute restrictions are different: <a hreflang="en"> vs <a hreflang="fr">' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
+      new HTMLRestrictions(['a' => FALSE]),
+    ];
+    yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en">' => [
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+    ];
   }
 
 }
