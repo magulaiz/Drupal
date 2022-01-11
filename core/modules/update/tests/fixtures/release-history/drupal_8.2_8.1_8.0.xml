@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+This fixture is used by core/modules/update/tests/src/Kernel/StoredInstallableReleasesTest. 8.1. and 8.2. are supported
+branches and 8.0. is unsupported branch.
+It contains following releases:
+- 8.0.0: Insecure, Unsupported
+- 8.0.1: Unsupported
+- 8.0.2: Unsupported
+- 8.1.0: Insecure
+- 8.1.1: Available Release
+- 8.1.2: Unpublished
+- 8.1.3: Available Release
+- 8.2.0: Insecure
+- 8.2.1: Available Release
+- 8.2.2: Unpublished
+- 8.2.3: Available Release
+-->
 <project xmlns:dc="http://purl.org/dc/elements/1.1/">
 <title>Drupal</title>
 <short_name>drupal</short_name>
