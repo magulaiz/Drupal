@@ -4,11 +4,13 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
+use Drupal\Core\Extension\ExtensionLifecycle;
 
 /**
  * Provides functionality used by module and theme forms.
  */
 trait ExtensionFormTrait {
+  use ModulesEnabledTrait;
 
   /**
    * Helper function for building a list of modules to install.
@@ -41,7 +43,7 @@ trait ExtensionFormTrait {
       elseif (in_array($name, $enable)) {
         $modules['install'][$name] = $data[$name]->info['name'];
         // Identify experimental modules.
-        if ($data[$name]->info['package'] == 'Core (Experimental)') {
+        if ($data[$name]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
           $modules['experimental'][$name] = $data[$name]->info['name'];
         }
       }
@@ -55,7 +57,7 @@ trait ExtensionFormTrait {
           $modules['install'][$dependency] = $data[$dependency]->info['name'];
 
           // Identify experimental modules.
-          if ($data[$dependency]->info['package'] == 'Core (Experimental)') {
+          if ($data[$dependency]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL) {
             $modules['experimental'][$dependency] = $data[$dependency]->info['name'];
           }
         }
@@ -93,19 +95,11 @@ trait ExtensionFormTrait {
     if (!empty($modules['install'])) {
       try {
         $this->moduleInstaller->install(array_keys($modules['install']));
+        $this->messenger()
+          ->addStatus($this->modulesEnabledConfirmationMessage($modules['install']));
       }
       catch (PreExistingConfigException $e) {
-        $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
-        $this->messenger()->addError(
-          $this->formatPlural(
-            count($config_objects),
-            'Unable to install @extension, %config_names already exists in active configuration.',
-            'Unable to install @extension, %config_names already exist in active configuration.',
-            [
-              '%config_names' => implode(', ', $config_objects),
-              '@extension' => $modules['install'][$e->getExtension()],
-            ])
-        );
+        $this->messenger()->addError($this->modulesFailToEnableMessage($modules, $e));
         return;
       }
       catch (UnmetDependenciesException $e) {
@@ -114,6 +108,7 @@ trait ExtensionFormTrait {
         );
         return;
       }
+
       if ($reset_messenger) {
         // Unset the messenger to make sure that we'll get the service from the
         // new container.

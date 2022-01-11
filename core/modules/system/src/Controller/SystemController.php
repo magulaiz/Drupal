@@ -13,7 +13,6 @@ use Drupal\Core\Menu\MenuLinkTreeInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Theme\ThemeAccessCheck;
 use Drupal\Core\Url;
-use Drupal\system\Form\ExtensionFormTrait;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SystemController extends ControllerBase {
 
   use ModuleDependencyMessageTrait;
-  use ExtensionFormTrait;
 
   /**
    * System Manager Service.
