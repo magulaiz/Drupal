@@ -35,7 +35,7 @@ class LegacyServiceTest extends KernelTestBase {
    * Tests the feed.reader.dublincoreentry service.
    */
   public function testFeedReaderDublinCoreEntry() {
-    $this->expectDeprecation('The "feed.reader.dublincoreentry" service is deprecated. You should use \Drupal::service(\'feed.bridge.reader\')->get(\'DublinCore\Entry\') instead. See https://www.drupal.org/node/2979042');
+    $this->expectDeprecation('The "feed.reader.dublincoreentry" service is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. You should use \Drupal::service(\'feed.bridge.reader\')->get(\'DublinCore\Entry\') instead. See https://www.drupal.org/node/2979042');
     $this->assertInstanceOf(AbstractEntry::class, $this->container->get('feed.reader.dublincoreentry'));
   }
 
