@@ -233,14 +233,19 @@ final class HTMLRestrictions implements \Countable {
       $elements_string = implode(' ', $elements_string);
     }
 
+    // Preprocess tag wildcards, such as <$block>.
     preg_match('/<(\$[A-Z,a-z]*)/', $elements_string, $wildcard_matches);
-
     $wildcard = NULL;
     if (!empty($wildcard_matches)) {
       $wildcard = $wildcard_matches[1];
       assert(substr($wildcard, 0, 1) === '$', 'Wildcard tags must begin with "$"');
       $elements_string = str_replace($wildcard, 'WILDCARD', $elements_string);
     }
+
+    // Preprocess attribute wildcards, such as <foo *>. This makes them
+    // detectable in a next phase. (HTML5 does not allow a literal asterisk as
+    // an attribute name, so without this transformation, it'd be lost.)
+    $elements_string = preg_replace('/(\*\s*)>/', '__attribute_wildcard__>', $elements_string);
 
     $elements = [];
     $body_child_nodes = Html::load(str_replace('>', ' />', $elements_string))->getElementsByTagName('body')->item(0)->childNodes;
@@ -253,6 +258,13 @@ final class HTMLRestrictions implements \Countable {
 
       $tag = $wildcard ?? $node->tagName;
       if ($node->hasAttributes()) {
+        // This tag has a notation like "<foo *>", to indicate all attributes
+        // are allowed.
+        if ($node->hasAttribute('__attribute_wildcard__')) {
+          $elements[$tag] = TRUE;
+          continue;
+        }
+
         foreach ($node->attributes as $attribute_name => $attribute) {
           $value = empty($attribute->value) ? TRUE : explode(' ', $attribute->value);
           self::providedElementsAttributes($elements, $tag, $attribute_name, $value);
@@ -491,10 +503,16 @@ final class HTMLRestrictions implements \Countable {
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
     foreach ($this->elements as $tag => $attributes) {
-      $to_allow['name'] = $tag;
+      $to_allow = ['name' => $tag];
       assert($attributes === FALSE || is_array($attributes));
       if (is_array($attributes)) {
         foreach ($attributes as $name => $value) {
+          // Convert the `'hreflang' => ['en' => TRUE, 'fr' => TRUE]` structure
+          // that this class expects to the `['en', 'fr']` structure that the
+          // GHS functionality in CKEditor 5 expects.
+          if (is_array($value)) {
+            $value = array_keys($value);
+          }
           assert($value === TRUE || Inspector::assertAllStrings($value));
           $to_allow['attributes'][$name] = $value;
         }

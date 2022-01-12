@@ -175,7 +175,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
     yield 'tag with single attribute allowing multiple specific values (reverse order)' => [
       '<a target="_blank _self">',
-      ['a' => ['target' => ['_self' => TRUE, '_blank' => TRUE]]],
+      ['a' => ['target' => ['_blank' => TRUE, '_self' => TRUE]]],
     ];
     yield 'tag with two attributes' => [
       '<a target class>',
@@ -338,6 +338,25 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
       new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
+    ];
+
+    // Attribute value diffing.
+    yield 'attribute restrictions are different: <a hreflang="en"> vs <a hreflang="fr">' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['fr' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+    ];
+    yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en">' => [
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
+    ];
+
+    // Complex cases.
+    yield 'attribute restrictions are different: <a hreflang="en"> vs <strong>' => [
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
+      new HTMLRestrictions(['strong' => TRUE]),
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]])
     ];
   }
 
