@@ -13,7 +13,6 @@ use Drupal\Tests\UnitTestCase;
  */
 class HTMLRestrictionsTest extends UnitTestCase {
 
-
   /**
    * @covers ::__construct
    * @dataProvider providerConstruct
