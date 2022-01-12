@@ -109,10 +109,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   public function testImportWithValidRow(): void {
     $source = $this->getMockSource();
 
-    $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -133,10 +129,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testImportWithValidRowWithoutDestinationId(): void {
     $source = $this->getMockSource();
-
-    $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 
@@ -162,10 +154,6 @@ class MigrateExecutableTest extends MigrateTestCase {
   public function testImportWithValidRowNoDestinationValues(): void {
     $source = $this->getMockSource();
 
-    $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
-
     $this->executable->setSource($source);
 
     $this->migration->expects($this->once())
@@ -188,10 +176,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testImportWithValidRowWithDestinationMigrateException(): void {
     $source = $this->getMockSource();
-
-    $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 
@@ -261,10 +245,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    */
   public function testImportWithValidRowWithException(): void {
     $source = $this->getMockSource();
-
-    $this->getMockBuilder('Drupal\migrate\Row')
-      ->disableOriginalConstructor()
-      ->getMock();
 
     $this->executable->setSource($source);
 

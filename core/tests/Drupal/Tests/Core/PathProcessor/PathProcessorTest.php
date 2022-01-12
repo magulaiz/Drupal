@@ -53,12 +53,6 @@ class PathProcessorTest extends UnitTestCase {
 
     // Create a stub configuration.
     $language_prefixes = array_keys($this->languages);
-    // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
-    $config = [
-      'url' => [
-        'prefixes' => array_combine($language_prefixes, $language_prefixes),
-      ],
-    ];
 
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
