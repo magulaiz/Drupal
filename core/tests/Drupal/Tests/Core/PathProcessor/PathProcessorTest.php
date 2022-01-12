@@ -51,9 +51,6 @@ class PathProcessorTest extends UnitTestCase {
     }
     $this->languages = $languages;
 
-    // Create a stub configuration.
-    $language_prefixes = array_keys($this->languages);
-
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
       ->getMock();
