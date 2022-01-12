@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
-use Drupal\ckeditor5\HTMLRestrictionsUtilities;
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -282,21 +282,20 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     // If the text format has HTML restrictions, ensure that a strict superset
     // is allowed after switching to CKEditor 5.
     $html_restrictions = $text_format->getHtmlRestrictions();
-    $allowed_tags = $html_restrictions['allowed'] ?? [];
-    if ($allowed_tags) {
-      unset($allowed_tags['*']);
+    if (is_array($html_restrictions) && array_key_exists('allowed', $html_restrictions)) {
+      $allowed_tags = HTMLRestrictions::fromTextFormat($text_format);
       $enabled_plugins = array_keys($this->manager->getEnabledDefinitions($updated_text_editor));
-      $updated_allowed_tags = $this->manager->getProvidedElements($enabled_plugins, $updated_text_editor);
-      $unsupported_tags_attributes = HTMLRestrictionsUtilities::diffAllowedElements($allowed_tags, $updated_allowed_tags);
-      $superset_tags_attributes = HTMLRestrictionsUtilities::diffAllowedElements($updated_allowed_tags, $allowed_tags);
-      $this->assertSame($expected_superset, implode(' ', HTMLRestrictionsUtilities::toReadableElements($superset_tags_attributes)));
+      $updated_allowed_tags = new HTMLRestrictions($this->manager->getProvidedElements($enabled_plugins, $updated_text_editor));
+      $unsupported_tags_attributes = $allowed_tags->diff($updated_allowed_tags);
+      $superset_tags_attributes = $updated_allowed_tags->diff($allowed_tags);
+      $this->assertSame($expected_superset, $superset_tags_attributes->toFilterHtmlAllowedTagsString());
       $this->assertEmpty($unsupported_tags_attributes, "The following tags/attributes are not allowed in the updated text format:" . print_r($unsupported_tags_attributes, TRUE));
 
       // Update the text format like ckeditor5_form_filter_format_form_alter()
       // would.
       $updated_text_format = clone $text_format;
       $filter_html_config = $text_format->filters('filter_html')->getConfiguration();
-      $filter_html_config['settings']['allowed_html'] = implode(' ', HTMLRestrictionsUtilities::toReadableElements($updated_allowed_tags));
+      $filter_html_config['settings']['allowed_html'] = $updated_allowed_tags->toFilterHtmlAllowedTagsString();
       $updated_text_format->setFilterConfig('filter_html', $filter_html_config);
     }
     else {
