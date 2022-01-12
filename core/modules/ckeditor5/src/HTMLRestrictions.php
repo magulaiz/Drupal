@@ -276,7 +276,7 @@ final class HTMLRestrictions implements \Countable {
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   Returns a new HTML restrictions value object with all the elements that
-   *   are not present in $other.
+   *   are not allowed in $other.
    */
   public function diff(HTMLRestrictions $other): HTMLRestrictions {
     $diff_elements = array_filter(
