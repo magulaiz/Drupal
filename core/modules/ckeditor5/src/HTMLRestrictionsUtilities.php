@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5;
 
 use Drupal\Component\Assertion\Inspector;
-use Drupal\Component\Utility\DiffArray;
 use Drupal\Component\Utility\Html;
 use Masterminds\HTML5\Elements;
 
