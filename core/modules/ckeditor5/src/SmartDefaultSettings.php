@@ -426,8 +426,9 @@ final class SmartDefaultSettings {
 
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($editor));
     $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins);
-    $missing = HTMLRestrictionsUtilities::diffAllowedElements($editor->getFilterFormat()->getHtmlRestrictions()['allowed'], $provided_elements);
-    $supported_tags_with_unsupported_attributes = array_intersect_key($missing, $provided_elements);
+    $provided = new HTMLRestrictions($provided_elements);
+    $missing = HTMLRestrictions::fromTextFormat($format)->diff($provided);
+    $supported_tags_with_unsupported_attributes = array_intersect_key($missing->getAllowedElements(), $provided_elements);
     $supported_tags_with_unsupported_attributes = array_filter($supported_tags_with_unsupported_attributes, function ($tag_config) {
       return is_array($tag_config);
     });
