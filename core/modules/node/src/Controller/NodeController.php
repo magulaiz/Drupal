@@ -193,7 +193,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       // displayed.
       $all_revisions[$vid] = $revision;
       if ($revision->hasTranslation($langcode) && $revision->getTranslation($langcode)->isRevisionTranslationAffected()) {
-        $displayed_revisions[$vid] = $revision;
+        $displayed_revisions[$vid] = $revision->getTranslation($langcode);
         $username = [
           '#theme' => 'username',
           '#account' => $revision->getRevisionUser(),
