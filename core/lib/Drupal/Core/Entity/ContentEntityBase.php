@@ -1146,32 +1146,27 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  public function createDuplicate() {
-    if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {
-      throw new \InvalidArgumentException("The entity object refers to a removed translation ({$this->activeLangcode}) and cannot be manipulated.");
+  public static function preDuplicate(EntityStorageInterface $storage, EntityInterface $entity) {
+    if ($entity->translations[$entity->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {
+      throw new \InvalidArgumentException("The entity object refers to a removed translation ({$entity->activeLangcode}) and cannot be manipulated.");
     }
 
-    $duplicate = clone $this;
+    parent::preDuplicate($storage, $entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postDuplicate(EntityStorageInterface $storage) {
+    parent::postDuplicate($storage);
+
     $entity_type = $this->getEntityType();
-    if ($entity_type->hasKey('id')) {
-      $duplicate->{$entity_type->getKey('id')}->value = NULL;
-    }
-    $duplicate->enforceIsNew();
-
-    // Check if the entity type supports UUIDs and generate a new one if so.
-    if ($entity_type->hasKey('uuid')) {
-      $duplicate->{$entity_type->getKey('uuid')}->value = $this->uuidGenerator()->generate();
-    }
 
     // Check whether the entity type supports revisions and initialize it if so.
     if ($entity_type->isRevisionable()) {
-      $duplicate->{$entity_type->getKey('revision')}->value = NULL;
-      $duplicate->loadedRevisionId = NULL;
+      $this->{$entity_type->getKey('revision')}->value = NULL;
+      $this->loadedRevisionId = NULL;
     }
-
-    $duplicate->duplicateSource = $this;
-
-    return $duplicate;
   }
 
   /**

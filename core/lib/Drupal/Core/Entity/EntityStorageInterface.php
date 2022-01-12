@@ -129,6 +129,17 @@ interface EntityStorageInterface {
   public function create(array $values = []);
 
   /**
+   * Clones an entity object, without permanently saving it.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity instance that will be cloned.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   A new entity object.
+   */
+  public function createDuplicate(EntityInterface $entity);
+
+  /**
    * Deletes permanently saved entities.
    *
    * @param array $entities
