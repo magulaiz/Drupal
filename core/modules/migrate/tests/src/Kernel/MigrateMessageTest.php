@@ -95,7 +95,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $executable->import();
     $this->assertCount(1, $this->messages);
     $id = $this->migration->getPluginId();
-    $this->assertSame("source_message: $id:message:1:concat: 'a message' is not an array", reset($this->messages));
+    $this->assertSame("source_message: $id:message:0:concat: 'a message' is not an array", reset($this->messages));
   }
 
   /**
@@ -112,7 +112,7 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
       'msgid' => '1',
       Sql::SOURCE_IDS_HASH => '170cde81762e22552d1b1578cf3804c89afefe9efbc7cc835185d7141060b032',
       'level' => '1',
-      'message' => "$id:message:1:concat: 'a message' is not an array",
+      'message' => "$id:message:0:concat: 'a message' is not an array",
     ];
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
