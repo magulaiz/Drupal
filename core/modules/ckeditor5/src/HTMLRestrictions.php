@@ -73,9 +73,6 @@ final class HTMLRestrictions implements \Countable {
         throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
       }
       // @todo conform to HTML element naming rules ………………………… — exception is *
-      //      if (…) {
-      //        throw new \InvalidArgumentException(sprintf('"%s" is not a valid HTML5 element name.', $key));
-      //      }
     }
   }
 
@@ -113,7 +110,7 @@ final class HTMLRestrictions implements \Countable {
    * @throws \InvalidArgumentException
    */
   private static function validateAllowedRestrictionsPhase3(array $elements): void {
-    foreach($elements as $html_tag_name => $html_tag_restrictions) {
+    foreach ($elements as $html_tag_name => $html_tag_restrictions) {
       if (!is_array($html_tag_restrictions)) {
         continue;
       }
@@ -138,7 +135,7 @@ final class HTMLRestrictions implements \Countable {
    * @throws \InvalidArgumentException
    */
   private static function validateAllowedRestrictionsPhase4(array $elements): void {
-    foreach($elements as $html_tag_name => $html_tag_restrictions) {
+    foreach ($elements as $html_tag_name => $html_tag_restrictions) {
       if (!is_array($html_tag_restrictions)) {
         continue;
       }
@@ -155,6 +152,7 @@ final class HTMLRestrictions implements \Countable {
         if ($html_tag_attribute_restrictions === []) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which is set to the empty array. This is not permitted, specify either TRUE to allow all attribute values, or list the attribute value restrictions.', $html_tag_name, $html_tag_attribute_name));
         }
+        // @codingStandardsIgnoreLine
         if (!Inspector::assertAll(function ($v) { return $v === TRUE; }, $html_tag_attribute_restrictions)) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has attribute restriction "%s", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.', $html_tag_name, $html_tag_attribute_name));
         }
