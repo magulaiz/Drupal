@@ -48,6 +48,13 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
+   * The source entity used to create a this duplicate.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $duplicateSource;
+
+  /**
    * Constructs an Entity object.
    *
    * @param array $values
@@ -352,17 +359,8 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function createDuplicate() {
-    $duplicate = clone $this;
-    $entity_type = $this->getEntityType();
-    // Reset the entity ID and indicate that this is a new entity.
-    $duplicate->{$entity_type->getKey('id')} = NULL;
-    $duplicate->enforceIsNew();
-
-    // Check if the entity type supports UUIDs and generate a new one if so.
-    if ($entity_type->hasKey('uuid')) {
-      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidGenerator()->generate();
-    }
-    return $duplicate;
+    $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
+    return $storage->createDuplicate($this);
   }
 
   /**
@@ -402,6 +400,39 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDuplicate(EntityStorageInterface $storage, EntityInterface $entity) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postDuplicate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDuplicate() {
+    return !is_null($this->getDuplicateSource());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDuplicateSource() {
+    return $this->duplicateSource ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDuplicateSource(EntityInterface $duplicate_source) {
+    $this->duplicateSource = $duplicate_source;
   }
 
   /**

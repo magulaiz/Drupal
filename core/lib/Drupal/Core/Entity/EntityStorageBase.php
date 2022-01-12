@@ -291,6 +291,51 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   /**
    * {@inheritdoc}
    */
+  public function createDuplicate(EntityInterface $entity) {
+    $entity_class = $this->entityClass;
+    $entity_class::preDuplicate($this, $entity);
+
+    $duplicate = $this->doCreateDuplicate($entity);
+    $duplicate->enforceIsNew();
+
+    $duplicate->postDuplicate($this);
+
+    // Modules might need to add or change the data initially held by the new
+    // entity object, for instance to fill-in default values.
+    $this->invokeHook('duplicate_create', $duplicate);
+
+    return $duplicate;
+  }
+
+  /**
+   * Performs storage-specific duplication of entities.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be duplicated.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   */
+  public function doCreateDuplicate(EntityInterface $entity) {
+    $duplicate = clone $entity;
+    $entity_type = $entity->getEntityType();
+    // Reset the entity ID and indicate that this is a new entity.
+    $duplicate->{$entity_type->getKey('id')} = NULL;
+    $duplicate->enforceIsNew();
+
+    // Add a reference to the original source entity.
+    $duplicate->setDuplicateSource($entity);
+
+    // Assign a new UUID if there is none yet.
+    if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
+      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidService->generate();
+    }
+
+    return $duplicate;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function load($id) {
     assert(!is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $entities = $this->loadMultiple([$id]);
