@@ -166,37 +166,6 @@ final class HTMLRestrictionsUtilities {
   }
 
   /**
-   * Compares two HTML restrictions.
-   *
-   * The structure of the arrays is the same as the allowed tags array
-   * documented in FilterInterface::getHTMLRestrictions().
-   *
-   * @param array $elements_array_1
-   *   The array to compare from.
-   * @param array $elements_array_2
-   *   The array to compare to.
-   *
-   * @return array
-   *   Returns an array with all the values in $elements_array_1 that are not
-   *   present in $elements_array_1, including values that are FALSE
-   *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
-   */
-  public static function diffAllowedElements(array $elements_array_1, array $elements_array_2): array {
-    return array_filter(
-      DiffArray::diffAssocRecursive($elements_array_1, $elements_array_2),
-      // DiffArray::diffAssocRecursive() does not know the semantics of the
-      // HTML restrictions array: unaware that `TAG => FALSE` is a subset of
-      // `TAG => foo` and that in turn is a subset of `TAG => TRUE`.
-      // @see \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions()
-      function ($value, string $tag) use ($elements_array_2) {
-        return $value !== FALSE || !array_key_exists($tag, $elements_array_2);
-      },
-      ARRAY_FILTER_USE_BOTH
-    );
-  }
-
-  /**
    * Gets a list of block level elements.
    *
    * @return array
