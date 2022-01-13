@@ -298,19 +298,27 @@ final class HTMLRestrictions implements \Countable {
       // `TAG => foo` and that in turn is a subset of `TAG => TRUE`.
       // @see \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions()
       function ($value, string $tag) use ($other) {
-        // If the this HTML restrictions object did not allow any attributes,
-        // then the other is at least equally restrictive: drop the DiffArray
-        // result.
+        // If this HTML restrictions object contains a tag that the other did
+        // not contain at all: keep the DiffArray result.
+        if (!array_key_exists($tag, $other->elements)) {
+          return TRUE;
+        }
+
+        // All subsequent checks can assume that $other contains an entry for
+        // this tag.
+
+        // If this HTML restrictions object did not allow any attributes, then
+        // the other is at least equally restrictive: drop the DiffArray result.
         if ($value === FALSE) {
           return FALSE;
         }
-        // If the this HTML restrictions object allows any attributes, then the
+        // If this HTML restrictions object allows any attributes, then the
         // other is at most equally restrictive: keep the DiffArray result.
         elseif ($value === TRUE) {
           return TRUE;
         }
         elseif (is_array($value)) {
-          if (!array_key_exists($tag, $other->elements) || $other->elements[$tag] === FALSE) {
+          if ($other->elements[$tag] === FALSE) {
             return TRUE;
           }
           elseif ($other->elements[$tag] === TRUE) {
@@ -322,7 +330,7 @@ final class HTMLRestrictions implements \Countable {
           }
         }
 
-        return FALSE;
+        throw new \LogicException('This should never be reached.');
       },
       ARRAY_FILTER_USE_BOTH
     );
