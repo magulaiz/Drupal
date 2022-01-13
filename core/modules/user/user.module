@@ -5,11 +5,13 @@
  * Enables the user registration and login system.
  */
 
+use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,6 +22,7 @@ use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
 use Drupal\user\Controller\MailChangeController;
 use Drupal\user\Entity\Role;
@@ -297,7 +300,7 @@ function user_is_blocked($name) {
  * Implements hook_ENTITY_TYPE_view() for user entities.
  */
 function user_user_view(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
-  if ($display->getComponent('member_for')) {
+  if ($account->isAuthenticated() && $display->getComponent('member_for')) {
     $build['member_for'] = [
       '#type' => 'item',
       '#markup' => '<h4 class="label">' . t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
@@ -517,7 +520,7 @@ function user_user_logout(AccountInterface $account) {
  */
 function user_pass_reset_url($account, $options = []) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   return Url::fromRoute('user.reset',
     [
       'uid' => $account->id(),
@@ -550,7 +553,7 @@ function user_pass_reset_url($account, $options = []) {
  */
 function user_cancel_url(UserInterface $account, $options = []) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
+  $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
   $url_options = ['absolute' => TRUE, 'language' => \Drupal::languageManager()->getLanguage($langcode)];
   return Url::fromRoute('user.cancel_confirm', [
     'user' => $account->id(),
@@ -617,11 +620,9 @@ function user_cancel($edit, $uid, $method) {
   }
 
   // Initialize batch (to set title).
-  $batch = [
-    'title' => t('Cancelling account'),
-    'operations' => [],
-  ];
-  batch_set($batch);
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Cancelling account'));
+  batch_set($batch_builder->toArray());
 
   // When the 'user_cancel_delete' method is used, user_delete() is called,
   // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
@@ -633,21 +634,18 @@ function user_cancel($edit, $uid, $method) {
   }
 
   // Finish the batch and actually cancel the account.
-  $batch = [
-    'title' => t('Cancelling user account'),
-    'operations' => [
-      ['_user_cancel', [$edit, $account, $method]],
-    ],
-  ];
+  $batch_builder = (new BatchBuilder())
+    ->setTitle(t('Cancelling user account'))
+    ->addOperation('_user_cancel', [$edit, $account, $method]);
 
   // After cancelling account, ensure that user is logged out.
   if ($account->id() == \Drupal::currentUser()->id()) {
     // Batch API stores data in the session, so use the finished operation to
     // manipulate the current user's session id.
-    $batch['finished'] = '_user_cancel_session_regenerate';
+    $batch_builder->setFinishCallback('_user_cancel_session_regenerate');
   }
 
-  batch_set($batch);
+  batch_set($batch_builder->toArray());
 
   // Batch processing is either handled via Form API or has to be invoked
   // manually.
@@ -682,7 +680,7 @@ function _user_cancel($edit, $account, $method) {
       }
       $account->block();
       $account->save();
-      \Drupal::messenger()->addStatus(t('%name has been disabled.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('Account %name has been disabled.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Blocked user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
 
@@ -693,7 +691,7 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_canceled', $account);
       }
       $account->delete();
-      \Drupal::messenger()->addStatus(t('%name has been deleted.', ['%name' => $account->getDisplayName()]));
+      \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
       $logger->notice('Deleted user: %name %email.', ['%name' => $account->getAccountName(), '%email' => '<' . $account->getEmail() . '>']);
       break;
   }
@@ -744,11 +742,11 @@ function user_cancel_methods() {
       'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'),
     ],
     'user_cancel_reassign' => [
-      'title' => t('Delete the account and make its content belong to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
+      'title' => t('Delete the account and make its content belong to the %anonymous-name user. This action cannot be undone.', ['%anonymous-name' => $anonymous_name]),
       'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', ['%anonymous-name' => $anonymous_name]),
     ],
     'user_cancel_delete' => [
-      'title' => t('Delete the account and its content.'),
+      'title' => t('Delete the account and its content. This action cannot be undone.'),
       'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
       'access' => \Drupal::currentUser()->hasPermission('administer users'),
     ],
@@ -858,6 +856,8 @@ function user_user_role_insert(RoleInterface $role) {
   if (in_array($role->id(), [RoleInterface::AUTHENTICATED_ID, RoleInterface::ANONYMOUS_ID]) || $role->isSyncing()) {
     return;
   }
+
+  assert(Inspector::assertStringable($role->label()), 'Role label is expected to be a string.');
 
   $add_id = 'user_add_role_action.' . $role->id();
   if (!Action::load($add_id)) {
@@ -1323,4 +1323,18 @@ function user_form_system_regional_settings_submit($form, FormStateInterface $fo
     ->set('timezone.user.warn', $form_state->getValue('empty_timezone_message'))
     ->set('timezone.user.default', $form_state->getValue('user_default_timezone'))
     ->save();
+}
+
+/**
+ * Implements hook_filter_format_disable().
+ */
+function user_filter_format_disable(FilterFormatInterface $filter_format) {
+  // Remove the permission from any roles.
+  $permission = $filter_format->getPermissionName();
+  /** @var \Drupal\user\Entity\Role $role */
+  foreach (Role::loadMultiple() as $role) {
+    if ($role->hasPermission($permission)) {
+      $role->revokePermission($permission)->save();
+    }
+  }
 }
