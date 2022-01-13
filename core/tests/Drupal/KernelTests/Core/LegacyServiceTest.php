@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core;
 
 use Drupal\KernelTests\KernelTestBase;
-use Laminas\Feed\Reader\Extension\AbstractEntry;
 
 /**
  * Tests deprecated core services.
