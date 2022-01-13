@@ -293,8 +293,9 @@ class SystemController extends ControllerBase {
       }
 
       $theme->operations = [];
-      if (!empty($theme->status) || !$theme->info['core_incompatible'] && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine && !$theme->incompatible_module && empty($theme->module_dependencies_disabled)) {
+      if (!empty($theme->status) || !$theme->info['core_incompatible'] && !$theme->incompatible_php && !$theme->incompatible_base && !$theme->incompatible_engine && !$theme->incompatible_module) {
         // Create the operations links.
+        $query = [];
         $query['theme'] = $theme->getName();
         if ($this->themeAccess->checkAccess($theme->getName())) {
           $theme->operations[] = [
@@ -333,6 +334,9 @@ class SystemController extends ControllerBase {
           $admin_theme_options[$theme->getName()] = $theme->info['name'] . ($theme->is_experimental ? ' (' . t('Experimental') . ')' : '');
         }
         else {
+          if (!empty($theme->module_dependencies_disabled)) {
+            $query['modules'] = array_keys($theme->module_dependencies_disabled);
+          }
           $theme->operations[] = [
             'title' => $this->t('Install'),
             'url' => Url::fromRoute('system.theme_install'),
