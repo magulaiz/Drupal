@@ -106,6 +106,10 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
+
+    if ($this->uuidKey) {
+      $this->uuidService = \Drupal::service('uuid');
+    }
   }
 
   /**
