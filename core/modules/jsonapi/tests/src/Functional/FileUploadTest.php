@@ -617,7 +617,6 @@ class FileUploadTest extends ResourceTestBase {
     // Allow all file uploads but system.file::allow_insecure_uploads is set to
     // FALSE.
     $this->field->setSetting('file_extensions', '')->save();
-    $this->rebuildAll();
 
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -639,7 +638,6 @@ class FileUploadTest extends ResourceTestBase {
     // Add .php and .txt as allowed extensions. Since 'allow_insecure_uploads'
     // is FALSE, .php files should be renamed to have a .txt extension.
     $this->field->setSetting('file_extensions', 'php txt')->save();
-    $this->rebuildAll();
 
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_2.php"']);
     $expected = $this->getExpectedDocument(2, 'example_2.php_.txt', TRUE);
@@ -652,7 +650,6 @@ class FileUploadTest extends ResourceTestBase {
     // Allow .doc file uploads and ensure even a mis-configured apache will not
     // fallback to php because the filename will be munged.
     $this->field->setSetting('file_extensions', 'doc')->save();
-    $this->rebuildAll();
 
     // Test using a masked exploit file.
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_3.php.doc"']);
@@ -669,7 +666,6 @@ class FileUploadTest extends ResourceTestBase {
     // Test that a dangerous extension such as .php is munged even if it is in
     // the list of allowed extensions.
     $this->field->setSetting('file_extensions', 'doc php')->save();
-    $this->rebuildAll();
 
     // Test using a masked exploit file.
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_4.php.doc"']);
@@ -685,7 +681,6 @@ class FileUploadTest extends ResourceTestBase {
 
     // Dangerous extensions are munged even when all extensions are allowed.
     $this->field->setSetting('file_extensions', '')->save();
-    $this->rebuildAll();
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_5.php.png"']);
     $expected = $this->getExpectedDocument(5, 'example_5.php_.png', TRUE);
     // Override the expected filesize.
@@ -708,8 +703,6 @@ class FileUploadTest extends ResourceTestBase {
     // Add .php as an allowed extension without .txt. Since insecure uploads are
     // are not allowed, .php files will be rejected.
     $this->field->setSetting('file_extensions', 'php')->save();
-    $this->rebuildAll();
-
     $response = $this->fileRequest($uri, $php_string, ['Content-Disposition' => 'filename="example_7.php"']);
     $this->assertResourceErrorResponse(422, "Unprocessable Entity: file validation failed.\nFor security reasons, your upload has been rejected.", $uri, $response);
 
@@ -754,6 +747,27 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->assertResponseData($expected, $response);
     $this->assertFileExists('public://foobar/example.txt');
+  }
+
+  /**
+   * Tests using the file upload POST route no directory configured.
+   */
+  public function testFileUploadNoDirectorySetting() {
+    $this->setUpAuthorization('POST');
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    $uri = Url::fromUri('base:' . static::$postUri);
+
+    $this->field->setSetting('file_directory', '')
+      ->save();
+
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename="example.txt"']);
+    $expected = $this->getExpectedDocument(1, 'example.txt', TRUE);
+    $expected['data']['attributes']['uri']['value'] = 'public://example.txt';
+    $expected['data']['attributes']['uri']['url'] = base_path() . $this->siteDirectory . '/files/example.txt';
+
+    $this->assertResponseData($expected, $response);
+    $this->assertFileExists('public://example.txt');
   }
 
   /**
@@ -905,8 +919,10 @@ class FileUploadTest extends ResourceTestBase {
    *   The expected data.
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The file upload response.
+   *
+   * @internal
    */
-  protected function assertResponseData(array $expected, ResponseInterface $response) {
+  protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
     $actual = Json::decode((string) $response->getBody());
     static::recursiveKSort($actual);

@@ -67,7 +67,7 @@ function node_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dt>' . t('Creating revisions') . '</dt>';
       $output .= '<dd>' . t('The Node module also enables you to create multiple versions of any content, and revert to older versions using the <em>Revision information</em> settings.') . '</dd>';
       $output .= '<dt>' . t('User permissions') . '</dt>';
-      $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-node'])->toString()]) . '</dd>';
+      $output .= '<dd>' . t('The Node module makes a number of permissions available for each content type, which can be set by role on the <a href=":permissions">permissions page</a>.', [':permissions' => Url::fromRoute('user.admin_permissions.module', ['modules' => 'node'])->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
 
@@ -115,6 +115,8 @@ function node_theme() {
     'node_edit_form' => [
       'render element' => 'form',
     ],
+    // @todo Delete the next three entries as part of
+    // https://www.drupal.org/node/3015623
     'field__node__title' => [
       'base hook' => 'field',
     ],
@@ -424,6 +426,30 @@ function node_preprocess_block(&$variables) {
         $variables['attributes']['role'] = 'complementary';
         break;
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node field templates.
+ */
+function node_preprocess_field__node(&$variables) {
+  // Set a variable 'is_inline' in cases where inline markup is required,
+  // without any block elements such as <div>.
+
+  if ($variables['element']['#is_page_title'] ?? FALSE) {
+    // Page title is always inline because it will be displayed inside <h1>.
+    $variables['is_inline'] = TRUE;
+  }
+  elseif (in_array($variables['field_name'], ['created', 'uid', 'title'], TRUE)) {
+    // Display created, uid and title fields inline because they will be
+    // displayed inline by node.html.twig. Skip this if the field
+    // display is configurable and skipping has been enabled.
+    // @todo Delete as part of https://www.drupal.org/node/3015623
+
+    /** @var \Drupal\node\NodeInterface $node */
+    $node = $variables['element']['#object'];
+    $skip_custom_preprocessing = $node->getEntityType()->get('enable_base_field_custom_preprocess_skipping');
+    $variables['is_inline'] = !$skip_custom_preprocessing || !$node->getFieldDefinition($variables['field_name'])->isDisplayConfigurable('view');
   }
 }
 

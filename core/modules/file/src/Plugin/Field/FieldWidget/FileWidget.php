@@ -412,7 +412,7 @@ class FileWidget extends WidgetBase {
       $element['description'] = [
         '#type' => $config->get('description.type'),
         '#title' => t('Description'),
-        '#value' => isset($item['description']) ? $item['description'] : '',
+        '#value' => $item['description'] ?? '',
         '#maxlength' => $config->get('description.length'),
         '#description' => t('The description may be used as the label of the link to the file.'),
         '#required' => !empty($element['#description_field_required']),
@@ -507,7 +507,7 @@ class FileWidget extends WidgetBase {
   }
 
   /**
-   * Retrieves the file description from a field field element.
+   * Retrieves the file description from a field element.
    *
    * This helper static method is used by processMultiple() method.
    *
