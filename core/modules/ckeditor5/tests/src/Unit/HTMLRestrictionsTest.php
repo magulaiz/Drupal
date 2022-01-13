@@ -296,7 +296,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       HTMLRestrictions::emptySet(),
     ];
 
-    // Basic cases.
+    // Tag diffing.
     yield 'set diffing with a set that has an empty intersection' => [
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
       new HTMLRestrictions(['b' => ['href' => TRUE]]),
@@ -311,6 +311,26 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['a' => ['href' => TRUE]]),
       new HTMLRestrictions(['b' => ['href' => TRUE], 'a' => ['href' => TRUE]]),
       HTMLRestrictions::emptySet(),
+    ];
+    yield 'tag restrictions are different: <a> vs <b c>' => [
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
+      new HTMLRestrictions(['a' => FALSE]),
+    ];
+    yield 'tag restrictions are different: <a> vs <b c> — vice versa' => [
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
+    ];
+    yield 'tag restrictions are different: <a *> vs <b c>' => [
+      new HTMLRestrictions(['a' => TRUE]),
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
+      new HTMLRestrictions(['a' => TRUE]),
+    ];
+    yield 'tag restrictions are different: <a *> vs <b c> — vice versa' => [
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
+      new HTMLRestrictions(['a' => FALSE]),
+      new HTMLRestrictions(['b' => ['c' => TRUE]]),
     ];
 
     // Attribute diffing.
