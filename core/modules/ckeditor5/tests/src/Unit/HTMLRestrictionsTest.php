@@ -356,7 +356,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'attribute restrictions are different: <a hreflang="en"> vs <strong>' => [
       new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       new HTMLRestrictions(['strong' => TRUE]),
-      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]])
+      new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
     ];
   }
 
