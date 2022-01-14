@@ -47,6 +47,7 @@ function node_post_update_glossary_view_published() {
       ];
       $view->save();
     }
+  }
 }
 
 /**
