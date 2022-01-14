@@ -411,11 +411,6 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
     $multiple = FALSE;
-    // Keep an count in the loop for use in exception messages. This needs to be
-    // manual rather than using the index of the $plugins array, because we skip
-    // the implicit 'get' plugins which are not in the migration's
-    // configuration.
-    $index = 0;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
     foreach ($plugins as $plugin) {
       $definition = $plugin->getPluginDefinition();
@@ -439,7 +434,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
           catch (MigrateException $e) {
             // Prepend the process plugin id and index to the message.
-            $message = sprintf("%s:%s: %s", $index, $plugin->getPluginId(), $e->getMessage());
+            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
             throw new MigrateException($message);
           }
         }
@@ -458,15 +453,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         catch (MigrateException $e) {
           // Prepend the process plugin id and index to the message.
-          $message = sprintf("%s:%s: %s", $index, $plugin->getPluginId(), $e->getMessage());
+          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
           throw new MigrateException($message);
         }
 
         $multiple = $plugin->multiple();
-      }
-
-      if ($plugin->getPluginId() != 'get') {
-        $index++;
       }
     }
     // Ensure all values, including nulls, are migrated.
