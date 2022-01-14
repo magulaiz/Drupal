@@ -2,7 +2,7 @@
 
 /**
  * @file
- * entity_bundle.module
+ * Hook implementations for the Entity Bundle Test module.
  */
 
 /**
