@@ -456,7 +456,7 @@ final class SmartDefaultSettings {
               foreach ($elements_with_attribute_config as $tag_name => $attribute_config) {
                 // If the 'tag' is a wildcard, add the attribute config to
                 // all qualifying tags.
-                if (substr($tag_name, 0, 1) === '$') {
+                if (FALSE && substr($tag_name, 0, 1) === '$') {
                   // An array of all the tags that match the wildcard value.
                   $wildcard_tags = HTMLRestrictionsUtilities::getWildcardTags($tag_name);
 
