@@ -4,25 +4,10 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-
 /**
  * @file
  * Base Fonts.
  */
-
-/*
- * Media query breakpoints.
- * Processed by postcss/postcss-custom-media.
- */
-
-/* Navigation related breakpoints */
-
-/* Grid related breakpoints */
-
-/* Grid shifts from 6 to 14 columns. */
-
-/* Width of the entire grid maxes out. */
-
 @font-face {
   font-family: "metropolis";
   src:
@@ -32,7 +17,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "metropolis";
   src:
@@ -42,7 +26,6 @@
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
   font-family: "metropolis";
   src:
@@ -52,9 +35,7 @@
   font-style: normal;
   font-display: swap;
 }
-
 /* lora-regular - latin */
-
 @font-face {
   font-family: "Lora";
   src:
@@ -66,9 +47,7 @@
   font-style: normal;
   font-display: swap;
 }
-
 /* lora-italic - latin */
-
 @font-face {
   font-family: "Lora";
   src:
@@ -80,9 +59,7 @@
   font-style: italic;
   font-display: swap;
 }
-
 /* lora-700 - latin */
-
 @font-face {
   font-family: "Lora";
   src:

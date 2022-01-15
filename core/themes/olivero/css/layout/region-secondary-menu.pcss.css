@@ -3,8 +3,6 @@
  * Secondary menu region layout styling.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .region--secondary-menu {
   display: flex;
   margin-block-start: var(--sp2);
@@ -16,7 +14,7 @@
 }
 
 body:not(.is-always-mobile-nav) {
-  @media (--nav) {
+  @media (--olivero-nav) {
     & .region--secondary-menu {
       justify-content: flex-end;
       margin: 0;

@@ -3,8 +3,6 @@
  * Nav Primary.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 .primary-nav__menu {
   flex-wrap: wrap;
   list-style: none;
@@ -162,7 +160,7 @@
     opacity: 1;
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     margin-inline-start: calc(-1 * var(--sp3));
     padding-inline-start: var(--sp3);
   }

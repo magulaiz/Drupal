@@ -7,8 +7,6 @@
  * they reach the --views-grid-item--min-width value.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .views-view-grid {
   --views-grid--layout-gap: var(--sp);
   --views-grid--column-count: 4; /* Will be overridden by an inline style. */

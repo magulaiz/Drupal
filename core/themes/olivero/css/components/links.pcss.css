@@ -3,8 +3,6 @@
  * Links component.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .links.inline {
   margin-inline-start: 0;
   padding-block: 0;
@@ -22,7 +20,7 @@
 }
 
 .node--type-book .links.inline {
-  @media (--md) {
+  @media (--olivero-md) {
     text-align: end;
   }
 }

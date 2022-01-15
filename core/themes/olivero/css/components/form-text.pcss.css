@@ -3,8 +3,6 @@
  * Text input elements.
  */
 
-@import "../base/media-queries.pcss.css";
-
 [type="color"],
 [type="date"],
 [type="datetime-local"],
@@ -66,7 +64,7 @@ textarea {
     min-height: var(--sp2-5);
   }
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     width: auto;
   }
 }

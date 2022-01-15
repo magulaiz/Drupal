@@ -3,8 +3,6 @@
  * Node specific styles.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .node__meta {
   display: flex;
   align-items: center;
@@ -17,7 +15,7 @@
     font-weight: bold;
   }
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     margin-block-end: var(--sp2);
   }
 }
@@ -56,7 +54,7 @@
 .node__content {
   padding-block-end: var(--sp1-5);
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     padding-block-end: var(--sp3);
   }
 }

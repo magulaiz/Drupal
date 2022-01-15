@@ -3,8 +3,6 @@
  * Header Search Narrow Block.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .block-search-narrow {
   margin-inline: calc(-1 * var(--sp));
   margin-block-end: var(--sp2);
@@ -61,7 +59,7 @@
       }
     }
 
-    @media (--md) {
+    @media (--olivero-md) {
       height: calc(4 * var(--sp));
       padding-inline-start: var(--sp2);
       padding-inline-end: var(--sp2);
@@ -133,7 +131,7 @@
       }
     }
 
-    @media (--md) {
+    @media (--olivero-md) {
       width: 80px;
     }
 
@@ -163,7 +161,7 @@
 }
 
 body:not(.is-always-mobile-nav) .block-search-narrow {
-  @media (--nav) {
+  @media (--olivero-nav) {
     display: none;
   }
 }

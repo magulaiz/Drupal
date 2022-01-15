@@ -3,16 +3,14 @@
  * Provides default layout styles for all layout sections.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .layout {
   margin-block-end: var(--sp);
 
-  @media (--md) {
+  @media (--olivero-md) {
     margin-block-end: var(--sp2);
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-block-end: var(--sp3);
   }
 }

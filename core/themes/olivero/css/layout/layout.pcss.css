@@ -3,8 +3,6 @@
  * Base Layout.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .container {
   width: 100%;
   max-width: var(--max-width);
@@ -18,7 +16,7 @@
 
 /* Contains the social sidebar, and the primary content area. */
 .layout-main {
-  @media (--nav) {
+  @media (--olivero-nav) {
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: wrap;
@@ -26,7 +24,7 @@
 }
 
 .main-content {
-  @media (--nav) {
+  @media (--olivero-nav) {
     width: calc(100% - var(--content-left));
     margin-inline-end: auto;
   }
@@ -35,7 +33,7 @@
 .main-content__container {
   padding-block-start: var(--sp3);
 
-  @media (--md) {
+  @media (--olivero-md) {
     padding-block-start: var(--sp5);
   }
 }

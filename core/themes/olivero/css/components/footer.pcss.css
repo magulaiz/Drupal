@@ -3,8 +3,6 @@
  * Footer regions.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .site-footer {
   position: relative; /* stack above left social bar */
   color: var(--color--gray-50);
@@ -32,7 +30,7 @@
   }
 }
 
-@media (--nav) {
+@media (--olivero-nav) {
   body:not(.is-always-mobile-nav) .site-footer {
     border-inline-start: solid var(--content-left) var(--color--black);
   }

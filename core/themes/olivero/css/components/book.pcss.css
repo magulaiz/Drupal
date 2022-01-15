@@ -3,8 +3,6 @@
  * Book module styling.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .book-pager {
   display: flex;
   flex-wrap: wrap;
@@ -21,19 +19,19 @@
 .book-pager__item {
   display: inline-block;
 
-  @media (--sm) {
+  @media (--olivero-sm) {
     flex: 0 0 33.33%;
   }
 }
 
 .book-pager__item--center {
-  @media (--sm) {
+  @media (--olivero-sm) {
     text-align: center;
   }
 }
 
 .book-pager__item--next {
-  @media (--sm) {
+  @media (--olivero-sm) {
     margin-inline-start: auto;
     text-align: end;
   }

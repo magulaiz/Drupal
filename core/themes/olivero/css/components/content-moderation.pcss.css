@@ -3,8 +3,6 @@
  * Styles for content moderation toolbar.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .entity-moderation-form {
   flex-direction: column;
   padding-inline-start: var(--sp);
@@ -17,7 +15,7 @@
     background-color: var(--color--white);
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     flex-direction: row;
   }
 }
@@ -30,7 +28,7 @@
     align-self: flex-start;
     margin-inline-end: 0;
 
-    @media (--md) {
+    @media (--olivero-md) {
       align-self: flex-end;
     }
   }
@@ -48,18 +46,18 @@
       width: max-content;
     }
 
-    @media (--grid-md) {
+    @media (--olivero-grid-md) {
       width: calc(var(--grid-col-count) * var(--grid-col-width) + var(--grid-gap-count) * var(--grid-gap));
       margin-block: var(--sp2) var(--sp4);
       margin-inline-start: calc(-2 * (var(--grid-col-width) + var(--grid-gap)));
     }
 
-    @media (--lg) {
+    @media (--olivero-lg) {
       width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
       margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
     }
 
-    @media (--grid-max) {
+    @media (--olivero-grid-max) {
       width: calc(10 * var(--grid-col-width) + 11 * var(--grid-gap));
       margin-inline-start: 0;
     }

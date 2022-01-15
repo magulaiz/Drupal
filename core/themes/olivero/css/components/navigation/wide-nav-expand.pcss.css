@@ -3,12 +3,10 @@
  * Button which expands the navigation at wide viewport widths.
  */
 
-@import "../../base/media-queries.pcss.css";
-
 .wide-nav-expand {
   display: none;
 
-  @media (--nav) {
+  @media (--olivero-nav) {
     display: flex;
     visibility: hidden;
     flex-shrink: 0;
@@ -30,13 +28,13 @@
 }
 
 body:not(.is-always-mobile-nav) .is-fixed .wide-nav-expand {
-  @media (--nav) {
+  @media (--olivero-nav) {
     visibility: visible;
   }
 }
 
 body.is-always-mobile-nav .wide-nav-expand {
-  @media (--nav) {
+  @media (--olivero-nav) {
     visibility: hidden;
   }
 }

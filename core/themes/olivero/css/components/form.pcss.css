@@ -3,8 +3,6 @@
  * Main form and form item styles.
  */
 
-@import "../base/media-queries.pcss.css";
-
 ::placeholder {
   color: var(--color--gray-30);
 }

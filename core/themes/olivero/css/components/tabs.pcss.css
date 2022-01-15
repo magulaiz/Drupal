@@ -1,5 +1,3 @@
-@import "../base/media-queries.pcss.css";
-
 :root {
   --tab-active-border-size: 6px;
 }
@@ -16,7 +14,7 @@
   padding-inline-end: 0;
   list-style: none;
 
-  @media (--md) {
+  @media (--olivero-md) {
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -31,7 +29,7 @@
     display: flex;
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     display: flex;
     margin: 0;
     margin-block-end: -1px;
@@ -46,7 +44,7 @@ html:not(.js) .tabs__tab,
 .tabs--secondary .tabs__tab {
   display: block;
 
-  @media (--md) {
+  @media (--olivero-md) {
     display: flex;
   }
 }
@@ -71,7 +69,7 @@ html:not(.js) .tabs__tab,
 .tabs--secondary .tabs__link {
   text-transform: none;
 
-  @media (--md) {
+  @media (--olivero-md) {
     border-top-color: transparent;
     border-right-color: transparent;
     border-left-color: transparent;
@@ -103,7 +101,7 @@ html:not(.js) .tabs__tab,
     border-inline-start: var(--tab-active-border-size) solid var(--color--blue-50);
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     &:after {
       inset-inline-start: 0;
       width: 100%;
@@ -137,7 +135,7 @@ html:not(.js) .tabs__tab,
     outline: none;
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     display: none;
   }
 }

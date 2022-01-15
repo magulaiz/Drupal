@@ -3,8 +3,6 @@
  * Search results specific styles.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .search-results {
   margin-block-end: var(--sp2);
   padding-block: 0;
@@ -12,7 +10,7 @@
   padding-inline-end: 0;
   list-style: none;
 
-  @media (--md) {
+  @media (--olivero-md) {
     margin-block-end: var(--sp3);
   }
 }
@@ -40,7 +38,7 @@
     }
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-block-end: var(--sp1);
     font-size: 30px;
     line-height: var(--sp3);
@@ -54,7 +52,7 @@
 .search-result__snippet {
   padding-block-end: calc(var(--sp1-5) - 2px);
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     padding-block-end: var(--sp3);
   }
 }
@@ -91,7 +89,7 @@
     margin-block-end: 0;
   }
 
-  @media (--lg) {
+  @media (--olivero-lg) {
     margin-block-end: var(--sp3);
   }
 }

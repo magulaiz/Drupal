@@ -46,7 +46,10 @@ module.exports = (filePath, callback) => {
           'has-pseudo-class': false,
           'image-set-function': false,
           'prefers-color-scheme-query': false,
-        }
+        },
+        importFrom: [
+          './themes/olivero/css/base/media-queries.pcss.css'
+        ]
       }),
       postcssCalc,
       postcssPixelsToRem({

@@ -3,8 +3,6 @@
  * Tags field styling.
  */
 
-@import "../base/media-queries.pcss.css";
-
 .field--tags {
   display: flex;
   font-family: var(--font-sans);
@@ -23,7 +21,7 @@
     content: ":";
   }
 
-  @media (--md) {
+  @media (--olivero-md) {
     line-height: 2;
   }
 }
