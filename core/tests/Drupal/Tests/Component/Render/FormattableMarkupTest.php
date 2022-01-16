@@ -44,6 +44,16 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
+   * @covers ::__toString
+   */
+  public function testNullReplacementToString() {
+    $string = 'Can I please have a @replacement';
+    $formattable_string = new FormattableMarkup($string, ['@replacement' => NULL]);
+    $text = (string) $formattable_string;
+    $this->assertEquals('Can I please have a ', $text);
+  }
+
+  /**
    * @covers ::count
    */
   public function testCount() {
