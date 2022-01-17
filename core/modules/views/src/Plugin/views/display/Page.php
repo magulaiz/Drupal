@@ -109,6 +109,10 @@ class Page extends PathPluginBase {
     // Explicitly set HTML as the format for Page displays.
     $route->setRequirement('_format', 'html');
 
+    if ($this->getOption('use_admin_theme')) {
+      $route->setOption('_admin_route', TRUE);
+    }
+
     return $route;
   }
 
@@ -167,6 +171,7 @@ class Page extends PathPluginBase {
         'weight' => ['default' => 0],
       ],
     ];
+    $options['use_admin_theme'] = ['default' => FALSE];
 
     return $options;
   }
@@ -248,6 +253,27 @@ class Page extends PathPluginBase {
       $options['menu']['setting'] = $this->t('Parent menu link');
       $options['menu']['links']['tab_options'] = $this->t('Change settings for the parent menu');
     }
+
+    // If the display path starts with 'admin/' the page will be rendered with
+    // the Administration theme regardless of the 'use_admin_theme' option
+    // therefore, we need to set the summary message to reflect this.
+    $display_path = $this->getOption('path');
+    if (!empty($display_path) && stripos($display_path, 'admin/') === 0) {
+      $admin_theme_text = $this->t("Yes (admin path)");
+    }
+    elseif ($this->getOption('use_admin_theme')) {
+      $admin_theme_text = $this->t("Yes");
+    }
+    else {
+      $admin_theme_text = $this->t("No");
+    }
+
+    $options['use_admin_theme'] = [
+      'category' => 'page',
+      'title' => $this->t('Admin theme'),
+      'value' => $admin_theme_text,
+      'desc' => $this->t('Use the administration theme when rendering this display.'),
+    ];
   }
 
   /**
@@ -449,6 +475,21 @@ class Page extends PathPluginBase {
           ],
         ];
         break;
+
+      case 'use_admin_theme':
+        $form['#title'] .= $this->t('Administration theme');
+        $form['use_admin_theme'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Always use admin theme'),
+          '#description' => $this->t('Paths starting with "admin/" use the admin theme even when this option is not checked.'),
+          '#default_value' => $this->getOption('use_admin_theme'),
+        ];
+        $display_path = $this->getOption('path');
+        if (!empty($display_path) && stripos($display_path, 'admin/') === 0) {
+          $form['use_admin_theme']['#default_value'] = TRUE;
+          $form['use_admin_theme']['#attributes'] = ['disabled' => 'disabled'];
+        }
+        break;
     }
   }
 
@@ -498,6 +539,10 @@ class Page extends PathPluginBase {
 
       case 'tab_options':
         $this->setOption('tab_options', $form_state->getValue('tab_options'));
+        break;
+
+      case 'use_admin_theme':
+        $this->setOption('use_admin_theme', $form_state->getValue('use_admin_theme'));
         break;
     }
   }
