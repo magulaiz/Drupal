@@ -69,28 +69,28 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    * Provides fixture data for test scenarios testing project status field.
    *
    * The test cases rely on the following fixtures:
-   * - drupal.project_status.revoked.0.2.xml : Project_status is 'revoked'.
-   * - drupal.project_status.insecure.0.2.xml :  Project_status is 'insecure'.
-   * - drupal.project_status.unsupported.0.2.xml : Project_status is 'unsupported'.
+   * - drupal.project_status.revoked.0.2.xml: Project_status is 'revoked'.
+   * - drupal.project_status.insecure.0.2.xml:  Project_status is 'insecure'.
+   * - drupal.project_status.unsupported.0.2.xml: Project_status is 'unsupported'.
    *
    * @return array[]
    *   Test data.
    */
   public function providerProjectStatus(): array {
     return [
-        'revoked' => [
-          'fixture' => '/../../fixtures/release-history/drupal.project_status.revoked.0.2.xml',
-          'status' => UpdateManagerInterface::REVOKED,
-          'label' => 'Project revoked',
-          'exp_error_message' => 'This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
-        ],
-        'insecure' => [
-          'fixture' => '/../../fixtures/release-history/drupal.project_status.insecure.0.2.xml',
-          'status' => UpdateManagerInterface::NOT_SECURE,
-          'label' => 'Project not secure',
-          'exp_error_message' => 'This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!',
-        ],
-        'unsupported' => [
+      'revoked' => [
+        'fixture' => '/../../fixtures/release-history/drupal.project_status.revoked.0.2.xml',
+        'status' => UpdateManagerInterface::REVOKED,
+        'label' => 'Project revoked',
+        'exp_error_message' => 'This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
+      ],
+      'insecure' => [
+        'fixture' => '/../../fixtures/release-history/drupal.project_status.insecure.0.2.xml',
+        'status' => UpdateManagerInterface::NOT_SECURE,
+        'label' => 'Project not secure',
+        'exp_error_message' => 'This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!',
+      ],
+      'unsupported' => [
         'fixture' => '/../../fixtures/release-history/drupal.project_status.unsupported.0.2.xml',
         'status' => UpdateManagerInterface::NOT_SUPPORTED,
         'label' => 'Project not supported',
@@ -106,7 +106,7 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    *
    * @covers update_calculate_project_update_status
    */
-  public function testProjectStatus($fixture, $status, $label, $exp_error_message) {
+  public function testProjectStatus($fixture, $status, $label, $exp_error_message): void {
     update_storage_clear();
     $this->setReleaseMetadata(__DIR__ . $fixture);
     $available = update_get_available(TRUE);
