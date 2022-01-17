@@ -1,4 +1,39 @@
 # All libraries are defined in alphabetical order.
+a11y_autocomplete:
+  version: VERSION
+  js:
+    assets/vendor/a11y_autocomplete/a11y.autocomplete.min.js: { weight: -2 }
+  css:
+    component:
+      assets/vendor/a11y_autocomplete/a11y.autocomplete.css: {}
+
+autocomplete.jqueryui.shim:
+  version: VERSION
+  js:
+    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
+    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
+    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
+    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
+    misc/jquery_overrides/jqueryui.widget.overrides.js: {}
+    misc/jquery_overrides/jquery.event.overrides.js: {}
+    misc/autocomplete/jqueryui.autocomplete.shim.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/drupal.jquery.position
+  deprecated: The %library_id% asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3083715.
 
 backbone:
   remote: https://github.com/jashkenas/backbone
@@ -337,46 +372,23 @@ loadjs:
 drupal.autocomplete:
   version: VERSION
   js:
+    misc/autocomplete/autocomplete-init.js: {}
+    # Set weight to -1 to ensure event listeners exist prior to any instance
+    # of the event being dispatched.
     misc/autocomplete.js: { weight: -1 }
-    # The remaining JavaScript assets previously came from core/jquery.ui, a
-    # deprecated library.
-    # All weights are based on on the requirements defined within each file.
-    # @todo replace with solution in https://drupal.org/node/3076171
-    assets/vendor/jquery.ui/ui/widgets/autocomplete-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/labels-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/widgets/menu-min.js: { weight: -11.7, minified: true }
-    assets/vendor/jquery.ui/ui/data-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/disable-selection-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/escape-selector-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/focusable-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/form-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/ie-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/jquery-1-7-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/keycode-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/plugin-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-active-element-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/safe-blur-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/scroll-parent-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/unique-id-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/widget-min.js: { weight: -11.8, minified: true }
-    assets/vendor/jquery.ui/ui/version-min.js: { weight: -11.9, minified: true }
-  # All CSS assets previously came from core/jquery.ui, a deprecated library.
-  # @todo replace with solution found in https://drupal.org/node/3076171
   css:
     component:
-      assets/vendor/jquery.ui/themes/base/autocomplete.css: { weight: -11.7 }
-      assets/vendor/jquery.ui/themes/base/menu.css: { weight: -11.7 }
-      assets/vendor/jquery.ui/themes/base/core.css: { weight: -11.8 }
-    theme:
-      assets/vendor/jquery.ui/themes/base/theme.css: { weight: -11.8 }
+      misc/autocomplete/autocomplete.css: {}
   dependencies:
-    - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/drupal.ajax
-    - core/tabbable.jquery.shim
-    - core/drupal.jquery.position
-
+    - core/a11y_autocomplete
+    - core/drupal.announce
+    - core/once
+    - core/drupal.customevent
+    - core/drupal.array.includes
+    - core/drupal.string.includes
+    - core/autocomplete.jqueryui.shim
 
 drupal.array.find:
   version: VERSION

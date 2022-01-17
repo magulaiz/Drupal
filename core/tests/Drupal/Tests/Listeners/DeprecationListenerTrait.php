@@ -138,6 +138,8 @@ trait DeprecationListenerTrait {
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
       // Guzzle/PSR-7
       "Method \"Psr\Http\Message\StreamInterface::getMetadata()\" will return \"mixed\" as of its next major version. Doing the same in implementation \"GuzzleHttp\Psr7\Stream\" will be required when upgrading.",
+      // jQuery UI autocomplete shim.
+      "The core/autocomplete.jqueryui.shim asset library is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3083715.",
     ];
   }
 

@@ -116,28 +116,93 @@
 
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
-      var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+      var optionsToOriginalMethods = {
+        source: sourceData,
+        focus: focusHandler,
+        search: searchHandler,
+        select: selectHandler,
+        renderItem: renderItem,
+        cache: {},
+        splitValues: autocompleteSplitValues,
+        extractLastTerm: extractLastTerm,
+        minLength: 1,
+        firstCharacterBlacklist: '',
+        isComposing: false,
+        ajax: {
+          dataType: 'json',
+          jsonp: false
+        }
+      };
+      once('legacy-autocomplete', 'body').forEach(function () {
+        document.addEventListener('autocomplete-created', function (e) {
+          var autocompleteInput = e.detail.autocomplete._internal_object.input;
+          Object.keys(Drupal.autocomplete.options).forEach(function (option) {
+            if (optionsToOriginalMethods.hasOwnProperty(option)) {
+              if (optionsToOriginalMethods[option] !== Drupal.autocomplete.options[option]) {
+                Drupal.deprecationError({
+                  message: 'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715'
+                });
+                var optionName = option === 'renderItem' ? '_renderItem' : option;
 
-      if ($autocomplete.length) {
-        var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist || ''
+                if (optionName !== 'isComposing') {
+                  $(autocompleteInput).autocomplete(optionName, Drupal.autocomplete.options[option]);
+                }
+              }
+            }
+          });
+          Object.keys(Drupal.autocomplete).forEach(function (key) {
+            if (key === 'options') {
+              return;
+            }
+
+            var originalValue = ['ajax', 'cache'].includes(key) ? JSON.stringify(optionsToOriginalMethods[key]) : optionsToOriginalMethods[key];
+            var newValue = ['ajax', 'cache'].includes(key) ? JSON.stringify(Drupal.autocomplete[key]) : Drupal.autocomplete[key];
+
+            if (originalValue !== newValue) {
+              var instance = e.detail.autocomplete._internal_object;
+
+              switch (key) {
+                case 'ajax':
+                  Drupal.deprecationError({
+                    message: 'Drupal.autocomplete.ajax is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the source method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715'
+                  });
+                  break;
+
+                case 'cache':
+                  Drupal.deprecationError({
+                    message: 'Drupal.autocomplete.cache is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. It is now handled automatically and should not be manually configured. See https://www.drupal.org/node/3083715'
+                  });
+                  break;
+
+                case 'splitValues':
+                  Drupal.deprecationError({
+                    message: 'Drupal.autocomplete.splitValues is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the splitValues method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715'
+                  });
+
+                  instance.splitValues = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+
+                  break;
+
+                case 'extractLastTerm':
+                  Drupal.deprecationError({
+                    message: 'Drupal.autocomplete.extractLastTerm is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the inputValue method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715'
+                  });
+
+                  instance.extractLastInputValue = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+
+                  break;
+
+                default:
+                  break;
+              }
+            }
+          });
         });
-        $autocomplete.autocomplete(autocomplete.options).each(function () {
-          $(this).data('ui-autocomplete')._renderItem = autocomplete.options.renderItem;
-        });
-        $autocomplete.on('compositionstart.autocomplete', function () {
-          autocomplete.options.isComposing = true;
-        });
-        $autocomplete.on('compositionend.autocomplete', function () {
-          autocomplete.options.isComposing = false;
-        });
-      }
-    },
-    detach: function detach(context, settings, trigger) {
-      if (trigger === 'unload') {
-        $(once.remove('autocomplete', 'input.form-autocomplete', context)).autocomplete('destroy');
-      }
+      });
     }
   };
   autocomplete = {

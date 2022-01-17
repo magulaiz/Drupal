@@ -41,7 +41,7 @@ class DeprecatedJqueryUiAssetsTest extends KernelTestBase {
 
       // Confirm that the libraries extending jQuery UI functionality depend on
       // core/jquery.ui directly or via a dependency on core/jquery.ui.widget.
-      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position'])) {
+      if (!in_array($library, ['jquery.ui', 'jquery.ui.dialog', 'jquery.ui.position', 'jquery.ui.autocomplete'])) {
         $has_main_or_widget = (in_array('core/jquery.ui', $library_definition['dependencies']) || in_array('core/jquery.ui.widget', $library_definition['dependencies']));
         $this->assertTrue($has_main_or_widget, "$library must depend on core/jquery.ui or core/jquery.ui.widget");
       }

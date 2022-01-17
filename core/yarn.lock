@@ -1424,6 +1424,11 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.5.tgz#9283c9ce5b289a3c4f61c12757469e59377f81f3"
   integrity sha512-6nFkfkmSeV/rqSaS4oWHgmpnYw194f6hmWF5is6b0J1naJZoiD0NTc9AiUwPHvWsowkjuHErCZT1wa0jg+BLIA==
 
+"@drupal/autocomplete@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@drupal/autocomplete/-/autocomplete-0.0.1.tgz#1f4de847996bd0fba92d82b716cef87da6d804a6"
+  integrity sha512-S8HmRh9xl2Ch5vmzfhu2pNwvta3Iy1JSmE4jD1FTvKVcAut2ndGnqnxxkrVJTz/qngx9GMVUMiJK1Z640Y49pg==
+
 "@drupal/once@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@drupal/once/-/once-1.0.1.tgz#7c1ef480aec6d5fa4b5ae986afa5a607afc38482"

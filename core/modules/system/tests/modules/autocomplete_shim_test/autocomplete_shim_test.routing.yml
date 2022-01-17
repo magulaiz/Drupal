@@ -1,0 +1,31 @@
+autocomplete_test_page:
+  path: '/autocomplete-shim-test'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::build'
+    _title: 'autocomplete testing'
+  requirements:
+    _access: 'TRUE'
+
+autocomplete_test_page_including_direct:
+  path: '/autocomplete-shim-test-with-additional-direct-jquery'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::buildWithAdditionalDirectJquery'
+    _title: 'autocomplete testing with direct jquery use'
+  requirements:
+    _access: 'TRUE'
+
+autocomplete_test_page_direct_is_tested_input:
+  path: '/autocomplete-shim-test-with-additional-direct-jquery-as-primary-input'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::buildWithAdditionalDirectJqueryAsPrimaryInput'
+    _title: 'autocomplete testing of direct jquery use while shimmed input is present'
+  requirements:
+    _access: 'TRUE'
+
+autocomplete_test_page_bypass_a11y:
+  path: '/autocomplete-shim-test-bypass-a11y'
+  defaults:
+    _controller: '\Drupal\autocomplete_shim_test\Controller\AutocompleteShimTestController::bypassA11y'
+    _title: 'autocomplete testing bypasses a11y autocomplete'
+  requirements:
+    _access: 'TRUE'

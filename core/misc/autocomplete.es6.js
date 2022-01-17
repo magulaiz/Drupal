@@ -211,39 +211,113 @@
    */
   Drupal.behaviors.autocomplete = {
     attach(context) {
-      // Act on textfields with the "form-autocomplete" class.
-      const $autocomplete = $(
-        once('autocomplete', 'input.form-autocomplete', context),
-      );
-      if ($autocomplete.length) {
-        // Allow options to be overridden per instance.
-        const blacklist = $autocomplete.attr(
-          'data-autocomplete-first-character-blacklist',
-        );
-        $.extend(autocomplete.options, {
-          firstCharacterBlacklist: blacklist || '',
-        });
-        // Use jQuery UI Autocomplete on the textfield.
-        $autocomplete.autocomplete(autocomplete.options).each(function () {
-          $(this).data('ui-autocomplete')._renderItem =
-            autocomplete.options.renderItem;
-        });
+      const optionsToOriginalMethods = {
+        source: sourceData,
+        focus: focusHandler,
+        search: searchHandler,
+        select: selectHandler,
+        renderItem,
+        cache: {},
+        splitValues: autocompleteSplitValues,
+        extractLastTerm,
+        minLength: 1,
+        firstCharacterBlacklist: '',
+        isComposing: false,
+        ajax: {
+          dataType: 'json',
+          jsonp: false,
+        },
+      };
+      once('legacy-autocomplete', 'body').forEach(() => {
+        document.addEventListener('autocomplete-created', (e) => {
+          const autocompleteInput =
+            e.detail.autocomplete._internal_object.input;
 
-        // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
-        $autocomplete.on('compositionstart.autocomplete', () => {
-          autocomplete.options.isComposing = true;
+          // Loop through the jQuery autocomplete options that are settable via
+          // Drupal.autocomplete and route those overrides to the shim.
+          Object.keys(Drupal.autocomplete.options).forEach((option) => {
+            if (optionsToOriginalMethods.hasOwnProperty(option)) {
+              if (
+                optionsToOriginalMethods[option] !==
+                Drupal.autocomplete.options[option]
+              ) {
+                Drupal.deprecationError({
+                  message:
+                    'Setting autocomplete widget options via Drupal.autocomplete.options is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override Drupal.Autocomplete.defaultOptions using the its new API instead. See https://www.drupal.org/node/3083715',
+                });
+                const optionName =
+                  option === 'renderItem' ? '_renderItem' : option;
+
+                // The isComposing property does not need to be shimmed.
+                // - It is not a jQuery autocomplete property, and in the
+                // - The issue it exists to address is not a concern with the
+                //   A11y_Autocomplete implementation. IME use does not trigger
+                //   search until composition is complete.
+                if (optionName !== 'isComposing') {
+                  $(autocompleteInput).autocomplete(
+                    optionName,
+                    Drupal.autocomplete.options[option],
+                  );
+                }
+              }
+            }
+          });
+
+          Object.keys(Drupal.autocomplete).forEach((key) => {
+            if (key === 'options') {
+              return;
+            }
+
+            // For Aj
+            const originalValue = ['ajax', 'cache'].includes(key)
+              ? JSON.stringify(optionsToOriginalMethods[key])
+              : optionsToOriginalMethods[key];
+            const newValue = ['ajax', 'cache'].includes(key)
+              ? JSON.stringify(Drupal.autocomplete[key])
+              : Drupal.autocomplete[key];
+
+            if (originalValue !== newValue) {
+              const instance = e.detail.autocomplete._internal_object;
+              switch (key) {
+                case 'ajax':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.ajax is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the source method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
+                  break;
+                case 'cache':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.cache is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. It is now handled automatically and should not be manually configured. See https://www.drupal.org/node/3083715',
+                  });
+                  break;
+                case 'splitValues':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.splitValues is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the splitValues method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
+                  // eslint-disable-next-line func-names,max-nested-callbacks
+                  instance.splitValues = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+                  break;
+                case 'extractLastTerm':
+                  Drupal.deprecationError({
+                    message:
+                      'Drupal.autocomplete.extractLastTerm is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Override the inputValue method of A11y_Autocomplete instead. See https://www.drupal.org/node/3083715',
+                  });
+                  // eslint-disable-next-line func-names
+                  instance.extractLastInputValue = function () {
+                    return Drupal.autocomplete[key](this.inputValue());
+                  };
+                  break;
+                default:
+                  break;
+              }
+            }
+          });
         });
-        $autocomplete.on('compositionend.autocomplete', () => {
-          autocomplete.options.isComposing = false;
-        });
-      }
-    },
-    detach(context, settings, trigger) {
-      if (trigger === 'unload') {
-        $(
-          once.remove('autocomplete', 'input.form-autocomplete', context),
-        ).autocomplete('destroy');
-      }
+      });
     },
   };
 

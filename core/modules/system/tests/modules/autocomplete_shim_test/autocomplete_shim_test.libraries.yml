@@ -1,0 +1,26 @@
+init.jquery.ui:
+  version: VERSION
+  js:
+    autocomplete_shim_test_jquery_ui.js: {}
+  dependencies:
+    - core/once
+    - core/jquery.ui.autocomplete
+    - core/drupal
+
+init.a11y.autocomplete:
+  version: VERSION
+  js:
+    autocomplete_shim_test_a11y_autocomplete.js: {}
+  dependencies:
+    - core/once
+    - core/drupal
+    - core/drupal.autocomplete
+
+init.mixed.test.jquery:
+  version: VERSION
+  js:
+    autocomplete_shim_test_mixed_jquery.js: {}
+  dependencies:
+    - core/once
+    - core/drupal
+    - core/drupal.autocomplete

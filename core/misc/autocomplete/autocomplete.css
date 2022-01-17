@@ -1,0 +1,13 @@
+[data-autocomplete-item-list] {
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+[data-autocomplete-item-list] > li {
+  padding: 3px 1em 3px 0.4em;
+  cursor: pointer;
+}
+
+[data-autocomplete-item-list] > li:hover {
+  color: #840;
+}
