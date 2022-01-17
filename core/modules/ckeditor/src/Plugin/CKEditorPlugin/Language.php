@@ -53,9 +53,28 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
       $config = $settings['plugins']['language'];
     }
 
-    $predefined_languages = ($config['language_list'] === 'all') ?
-      LanguageManager::getStandardLanguageList() :
-      LanguageManager::getUnitedNationsLanguageList();
+    switch ($config['language_list']) {
+      case 'all':
+        $predefined_languages = LanguageManager::getStandardLanguageList();
+
+        break;
+
+      case 'enabled':
+        $enabled_languages = \Drupal::languageManager()->getLanguages();
+        $predefined_languages = [];
+        foreach ($enabled_languages as $language) {
+          $predefined_languages[$language->getId()] = [
+            $language->getName(),
+            $language->getDirection() == "rtl" ? LanguageInterface::DIRECTION_RTL : $language
+          ];
+        }
+
+        break;
+
+      case 'un':
+      default:
+        $predefined_languages = LanguageManager::getUnitedNationsLanguageList();
+    }
 
     // Generate the language_list setting as expected by the CKEditor Language
     // plugin, but key the values by the full language name so that we can sort
@@ -104,6 +123,7 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
       $config = $settings['plugins']['language'];
     }
 
+    $enabled_languages = \Drupal::languageManager()->getLanguages();
     $predefined_languages = LanguageManager::getStandardLanguageList();
     $form['language_list'] = [
       '#title' => $this->t('Language list'),
@@ -112,6 +132,7 @@ class Language extends CKEditorPluginBase implements CKEditorPluginConfigurableI
       '#options' => [
         'un' => $this->t("United Nations' official languages"),
         'all' => $this->t('All @count languages', ['@count' => count($predefined_languages)]),
+        'enabled' => $this->t("All @count currently enabled languages", ['@count' => count($enabled_languages)]),
       ],
       '#default_value' => $config['language_list'],
       '#description' => $this->t('The list of languages to show in the language dropdown. The basic list will only show the <a href=":url">six official languages of the UN</a>. The extended list will show all @count languages that are available in Drupal.', [
