@@ -2,7 +2,6 @@
 
 namespace Drupal\block_content;
 
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
@@ -28,4 +27,5 @@ class BlockContentStorageSchema extends SqlContentEntityStorageSchema {
 
     return $schema;
   }
+
 }
