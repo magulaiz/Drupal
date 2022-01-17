@@ -24,7 +24,7 @@ toolbar:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.announce
-    - core/backbone
+    - core/backbone.internal
     - core/once
     - core/jquery.once.bc
     - core/drupal.displace

@@ -7,7 +7,7 @@ tour:
     - core/once
     - core/jquery.once.bc
     - core/drupal
-    - core/backbone
+    - core/backbone.internal
     - core/shepherd
     - tour/tour-styling
 
