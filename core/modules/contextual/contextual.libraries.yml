@@ -22,7 +22,7 @@ drupal.contextual-links:
     - core/drupal
     - core/drupal.ajax
     - core/drupalSettings
-    - core/backbone
+    - core/backbone.internal
     - core/modernizr
     - core/once
     - core/jquery.once.bc
@@ -42,7 +42,7 @@ drupal.contextual-toolbar:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/backbone
+    - core/backbone.internal
     - core/once
     - core/jquery.once.bc
     - core/drupal.tabbingmanager
