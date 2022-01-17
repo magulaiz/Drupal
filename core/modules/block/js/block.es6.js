@@ -52,10 +52,10 @@
       $(
         '[data-drupal-selector="edit-visibility-request-path"]',
       ).drupalSetSummary((context) => {
-        const $pages = $(context).find(
-          'textarea[name="visibility[request_path][pages]"]',
-        );
-        if (!$pages.val()) {
+        const $pages = $(context)
+          .find('input[name="visibility[request_path][page_options]"]:checked')
+          .val();
+        if ($pages === 'all_pages') {
           return Drupal.t('Not restricted');
         }
 
