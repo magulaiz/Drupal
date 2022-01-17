@@ -31,7 +31,6 @@ class StoredInstallableReleasesTest extends KernelTestBase {
     // fake release metadata to be fetched.
     $this->installConfig('update');
     $this->installConfig('update_test');
-    $this->setCoreVersion('8.1.1');
     $this->setReleaseMetadata(__DIR__ . '/../../fixtures/release-history/drupal_8.2_8.1_8.0.xml');
 
   }
@@ -65,20 +64,53 @@ class StoredInstallableReleasesTest extends KernelTestBase {
   }
 
   /**
-   * Tests the releases are stored.
+   * Provides expected installable releases with a specific installed version.
+   *
+   * @return array[]
+   *   Test data.
    */
-  public function testStoredReleases() {
+  public function installableReleaseProvider(): array {
+    return [
+      'Installed version as 8.0.0' => [
+        'installed_version' => '8.0.0',
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.1',
+          '8.0.0',
+        ],
+      ],
+      'Installed version as 8.1.1' => [
+        'installed_version' => '8.1.1',
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.1',
+        ],
+      ],
+      'Installed version as 8.2.3' => [
+        'installed_version' => '8.2.3',
+        'expected_releases' => [
+          '8.2.3',
+        ],
+      ],
+    ];
+  }
+
+  /**
+   * Tests the releases are stored.
+   *
+   * @dataProvider installableReleaseProvider
+   */
+  public function testStoredReleases($installed_version, $expected_releases): void {
+    $this->setCoreVersion($installed_version);
     update_storage_clear();
     $available = update_get_available(TRUE);
     $new = update_calculate_project_data($available);
-    $expected_versions = [
-      '8.2.3',
-      '8.2.1',
-      '8.1.3',
-      '8.1.1',
-    ];
-    $this->assertSame($expected_versions, array_keys($new['drupal']['releases']));
-    foreach ($expected_versions as $version) {
+    $this->assertSame($expected_releases, array_keys($new['drupal']['releases']));
+    foreach ($expected_releases as $version) {
       $this->assertArrayHasKey($version, $new['drupal']['releases']);
       $this->assertEquals($new['drupal']['releases'][$version]['status'], 'published');
       $this->assertEquals($new['drupal']['releases'][$version]['version'], $version);
