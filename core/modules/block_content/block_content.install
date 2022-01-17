@@ -11,3 +11,27 @@
 function block_content_update_last_removed() {
   return 8600;
 }
+
+/**
+ * Apply index to reusable column
+ */
+function block_content_update_9401() {
+  $spec = [
+    'fields' => [
+      'reusable' => [
+        'description' => 'A boolean indicating whether this block is reusable.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'indexes' => [
+        'reusable' => ['reusable'],
+      ],
+    ],
+  ];
+
+  /** @var \Drupal\Core\Database\Schema $schema */
+  $schema = \Drupal::database()->schema();
+  $schema->addIndex('block_content_field_data', 'block_content__reusable', ['reusable'], $spec);
+}
