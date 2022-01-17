@@ -45,7 +45,7 @@
           var $locationHash = $this.find(window.location.hash);
 
           if (window.location.hash && $locationHash.length) {
-            tabFocus = $locationHash.is('.js-vertical-tabs-pane') ? $locationHash : $locationHash.closest('.js-vertical-tabs-pane');
+            tabFocus = $locationHash[0].matches('.js-vertical-tabs-pane') ? $locationHash : $locationHash.closest('.js-vertical-tabs-pane');
           } else {
             tabFocus = $this.find('> .js-vertical-tabs-pane').eq(0);
           }
@@ -122,7 +122,7 @@
       if (triggerFocus) {
         var $summary = this.details.find('> summary');
 
-        if ($summary.is(':visible')) {
+        if (Drupal.elementIsVisible($summary[0])) {
           $summary.trigger('focus');
         }
       }

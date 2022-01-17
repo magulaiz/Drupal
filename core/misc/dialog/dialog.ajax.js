@@ -46,7 +46,7 @@
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
           click: function click(e) {
-            if ($originalButton.is('a')) {
+            if ($originalButton[0].tagName === 'A') {
               $originalButton[0].click();
             } else {
               $originalButton.trigger('mousedown').trigger('mouseup').trigger('click');

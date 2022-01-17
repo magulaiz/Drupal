@@ -201,7 +201,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var targetClass = tableSettingsGroup[delta].target;
       var rowSettings;
 
-      if (field.is(".".concat(targetClass))) {
+      if (field[0].matches(".".concat(targetClass))) {
         rowSettings = {};
         Object.keys(tableSettingsGroup[delta]).forEach(function (n) {
           rowSettings[n] = tableSettingsGroup[delta][n];
@@ -269,7 +269,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var $previousRow = $(self.rowObject.element).prev('tr').eq(0);
             var previousRow = $previousRow.get(0);
 
-            while (previousRow && $previousRow.is(':hidden')) {
+            while (previousRow && Drupal.elementIsHidden(previousRow)) {
               $previousRow = $(previousRow).prev('tr').eq(0);
               previousRow = $previousRow.get(0);
             }
@@ -279,20 +279,20 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               self.rowObject.direction = 'up';
               keyChange = true;
 
-              if ($(item).is('.tabledrag-root')) {
+              if (item.matches('.tabledrag-root')) {
                 groupHeight = 0;
 
                 while (previousRow && $previousRow.find('.js-indentation').length) {
                   $previousRow = $(previousRow).prev('tr').eq(0);
                   previousRow = $previousRow.get(0);
-                  groupHeight += $previousRow.is(':hidden') ? 0 : previousRow.offsetHeight;
+                  groupHeight += Drupal.elementIsHidden(previousRow) ? 0 : previousRow.offsetHeight;
                 }
 
                 if (previousRow) {
                   self.rowObject.swap('before', previousRow);
                   window.scrollBy(0, -groupHeight);
                 }
-              } else if (self.table.tBodies[0].rows[0] !== previousRow || $previousRow.is('.draggable')) {
+              } else if (self.table.tBodies[0].rows[0] !== previousRow || previousRow.matches('.draggable')) {
                 self.rowObject.swap('before', previousRow);
                 self.rowObject.interval = null;
                 self.rowObject.indent(0);
@@ -317,7 +317,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
             var $nextRow = $(self.rowObject.group).eq(-1).next('tr').eq(0);
             var nextRow = $nextRow.get(0);
 
-            while (nextRow && $nextRow.is(':hidden')) {
+            while (nextRow && Drupal.elementIsHidden(nextRow)) {
               $nextRow = $(nextRow).next('tr').eq(0);
               nextRow = $nextRow.get(0);
             }
@@ -327,13 +327,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
               self.rowObject.direction = 'down';
               keyChange = true;
 
-              if ($(item).is('.tabledrag-root')) {
+              if (item.matches('.tabledrag-root')) {
                 groupHeight = 0;
                 var nextGroup = new self.row(nextRow, 'keyboard', self.indentEnabled, self.maxDepth, false);
 
                 if (nextGroup) {
                   $(nextGroup.group).each(function () {
-                    groupHeight += $(this).is(':hidden') ? 0 : this.offsetHeight;
+                    groupHeight += Drupal.elementIsHidden(this) ? 0 : this.offsetHeight;
                   });
                   var nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                   self.rowObject.swap('after', nextGroupRow);
@@ -562,7 +562,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           };
         }
 
-        while ($row.is(':hidden') && $row.prev('tr').is(':hidden')) {
+        while (Drupal.elementIsHidden(row) && Drupal.elementIsHidden($row.prev('tr')[0])) {
           $row = $row.prev('tr:first-of-type');
           row = $row.get(0);
         }
@@ -607,7 +607,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var nextRow = $nextRow.get(0);
       sourceRow = changedRow;
 
-      if ($previousRow.is('.draggable') && $previousRow.find(".".concat(group)).length) {
+      if (previousRow && previousRow.matches('.draggable') && $previousRow.find(".".concat(group)).length) {
         if (this.indentEnabled) {
           if ($previousRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = previousRow;
@@ -615,7 +615,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
         } else {
           sourceRow = previousRow;
         }
-      } else if ($nextRow.is('.draggable') && $nextRow.find(".".concat(group)).length) {
+      } else if (nextRow && nextRow.matches('.draggable') && $nextRow.find(".".concat(group)).length) {
         if (this.indentEnabled) {
           if ($nextRow.find('.js-indentations').length === $changedRow.find('.js-indentations').length) {
             sourceRow = nextRow;
@@ -674,7 +674,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
           {
             var siblings = this.rowObject.findSiblings(rowSettings);
 
-            if ($(targetElement).is('select')) {
+            if (targetElement.tagName === 'SELECT') {
               var values = [];
               $(targetElement).find('option').each(function () {
                 values.push(this.value);
@@ -852,7 +852,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
     }
 
-    if (this.table.tBodies[0].rows[0] === row && $row.is(':not(.draggable)')) {
+    if (this.table.tBodies[0].rows[0] === row && !row.matches('.draggable')) {
       return false;
     }
 
@@ -876,10 +876,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     var maxIndent;
     var minIndent = nextRow ? $(nextRow).find('.js-indentation').length : 0;
 
-    if (!prevRow || $prevRow.is(':not(.draggable)') || $(this.element).is('.tabledrag-root')) {
+    if (!prevRow || !prevRow.matches('.draggable') || this.element.matches('.tabledrag-root')) {
       maxIndent = 0;
     } else {
-      maxIndent = $prevRow.find('.js-indentation').length + ($prevRow.is('.tabledrag-leaf') ? 0 : 1);
+      maxIndent = $prevRow.find('.js-indentation').length + (prevRow.matches('.tabledrag-leaf') ? 0 : 1);
 
       if (this.maxDepth) {
         maxIndent = Math.min(maxIndent, this.maxDepth - (this.groupDepth - this.indents));

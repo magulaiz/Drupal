@@ -15,7 +15,7 @@
         var $filterSettings = $context.find("[data-drupal-selector='".concat($checkbox.attr('id').replace(/-status$/, '-settings'), "']"));
         var filterSettingsTab = $filterSettings.data('verticalTab');
         $checkbox.on('click.filterUpdate', function () {
-          if ($checkbox.is(':checked')) {
+          if (checkbox.checked) {
             $row.show();
 
             if (filterSettingsTab) {
@@ -38,7 +38,7 @@
 
         if (filterSettingsTab) {
           filterSettingsTab.details.drupalSetSummary(function () {
-            return $checkbox.is(':checked') ? Drupal.t('Enabled') : Drupal.t('Disabled');
+            return checkbox.checked ? Drupal.t('Enabled') : Drupal.t('Disabled');
           });
         }
 

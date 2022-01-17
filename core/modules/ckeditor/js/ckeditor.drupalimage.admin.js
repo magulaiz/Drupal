@@ -18,7 +18,7 @@
         var maxFileSize = $maxFileSize.val() ? $maxFileSize.val() : $maxFileSize.attr('placeholder');
         var maxDimensions = $maxWidth.val() && $maxHeight.val() ? "(".concat($maxWidth.val(), "x").concat($maxHeight.val(), ")") : '';
 
-        if (!$status.is(':checked')) {
+        if (!$status[0].checked) {
           return Drupal.t('Uploads disabled');
         }
 

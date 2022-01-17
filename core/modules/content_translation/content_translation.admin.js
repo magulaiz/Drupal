@@ -42,7 +42,7 @@
           $element = $fields.filter(filterFieldsList);
         }
 
-        if ($element.is("input[value=\"".concat(column, "\"]:checked"))) {
+        if ($element[0].matches("input[value=\"".concat(column, "\"]:checked"))) {
           $fields.prop('checked', true).not($element).prop('disabled', true);
         } else {
           $fields.prop('disabled', false);
@@ -56,7 +56,7 @@
         var $input = $(input);
         var $bundleSettings = $input.closest('.bundle-settings');
 
-        if (!$input.is(':checked')) {
+        if (input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
         } else {
           $bundleSettings.nextUntil('.bundle-settings', '.field-settings').find('.translatable :input:not(:checked)').closest('.field-settings').nextUntil(':not(.column-settings)').hide();
@@ -68,7 +68,7 @@
         var $settings = $bundleSettings.nextUntil('.bundle-settings');
         var $fieldSettings = $settings.filter('.field-settings');
 
-        if ($target.is(':checked')) {
+        if (e.target.checked) {
           $bundleSettings.find('.operations :input[name$="[language_alterable]"]').prop('checked', true);
           $fieldSettings.find('.translatable :input').prop('checked', true);
           $settings.show();
@@ -80,7 +80,7 @@
         var $fieldSettings = $target.closest('.field-settings');
         var $columnSettings = $fieldSettings.nextUntil('.field-settings, .bundle-settings');
 
-        if ($target.is(':checked')) {
+        if (e.target.checked) {
           $columnSettings.show();
         } else {
           $columnSettings.hide();

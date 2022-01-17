@@ -76,7 +76,7 @@
 
         $suffix.append($preview);
 
-        if ($target.is(':disabled')) {
+        if ($target[0].disabled) {
           return;
         }
 
