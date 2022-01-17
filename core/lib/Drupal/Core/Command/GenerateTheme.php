@@ -294,10 +294,8 @@ class GenerateTheme extends Command {
   private function isStarterkitTheme(Extension $theme): bool {
     $info_parser = new InfoParser($this->root);
     $info = $info_parser->parse($theme->getPathname());
-    if (empty($info['starterkit'])) {
-      return FALSE;
-    }
-    return (bool) $info['starterkit'];
+
+    return $info['starterkit'] ?? FALSE === TRUE;
   }
 
   /**
