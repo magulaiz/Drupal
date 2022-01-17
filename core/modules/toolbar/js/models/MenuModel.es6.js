@@ -3,27 +3,29 @@
  * A Backbone Model for collapsible menus.
  */
 
-(function (Backbone, Drupal) {
+(function (Drupal) {
   /**
-   * Backbone Model for collapsible menus.
+   * Model for collapsible menus.
    *
    * @constructor
    *
-   * @augments Backbone.Model
+   * @augments Drupal.DrupalModel
    */
-  Drupal.toolbar.MenuModel = Backbone.Model.extend(
-    /** @lends Drupal.toolbar.MenuModel# */ {
-      /**
-       * @type {object}
-       *
-       * @prop {object} subtrees
-       */
-      defaults: /** @lends Drupal.toolbar.MenuModel# */ {
-        /**
-         * @type {object}
-         */
+  Drupal.toolbar._MenuModel = class extends (
+    Drupal.DrupalModel.extend({
+      defaults: {
         subtrees: {},
       },
+    })
+  ) {};
+
+  Drupal.toolbar.MenuModel = new Proxy(Drupal.toolbar._MenuModel, {
+    construct(target, args) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.toolbar.MenuModel will be marked as internal in drupal:10.0.0.',
+      });
+      return new target(...args);
     },
-  );
-})(Backbone, Drupal);
+  });
+})(Drupal);

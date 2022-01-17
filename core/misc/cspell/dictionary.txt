@@ -627,6 +627,7 @@ inator
 indexname
 ingoa
 inited
+initialised
 inno
 inputtypes
 insidekeyword
@@ -1045,6 +1046,7 @@ prefilling
 prefills
 prefixsqlite
 prefoo
+preinitialize
 preinstall
 preload
 preloadable

@@ -1,34 +1,23 @@
 /**
  * @file
- * A Backbone Model for the toolbar.
+ * Model for the toolbar.
  */
 
-(function (Backbone, Drupal) {
+(function (Drupal) {
   /**
-   * Backbone model for the toolbar.
+   * Model for the toolbar.
    *
    * @constructor
    *
-   * @augments Backbone.Model
+   * @augments Drupal.DrupalModel
+   *
+   * @internal
+   *   Drupal.toolbar._ToolbarModel is internal and will be removed in Drupal
+   *   10.0.0.
    */
-  Drupal.toolbar.ToolbarModel = Backbone.Model.extend(
-    /** @lends Drupal.toolbar.ToolbarModel# */ {
-      /**
-       * @type {object}
-       *
-       * @prop activeTab
-       * @prop activeTray
-       * @prop isOriented
-       * @prop isFixed
-       * @prop areSubtreesLoaded
-       * @prop isViewportOverflowConstrained
-       * @prop orientation
-       * @prop locked
-       * @prop isTrayToggleVisible
-       * @prop height
-       * @prop offsets
-       */
-      defaults: /** @lends Drupal.toolbar.ToolbarModel# */ {
+  Drupal.toolbar._ToolbarModel = class extends (
+    Drupal.DrupalModel.extend({
+      defaults: {
         /**
          * The active toolbar tab. All other tabs should be inactive under
          * normal circumstances. It will remain active across page loads. The
@@ -80,13 +69,6 @@
         isViewportOverflowConstrained: false,
 
         /**
-         * The orientation of the active tray.
-         *
-         * @type {string}
-         */
-        orientation: 'horizontal',
-
-        /**
          * A tray is locked if a user toggled it to vertical. Otherwise a tray
          * will switch between vertical and horizontal orientation based on the
          * configured breakpoints. The locked state will be maintained across page
@@ -95,6 +77,15 @@
          * @type {bool}
          */
         locked: false,
+
+        /**
+         * Set to true to allow orientation changes on a locked tray.
+         *
+         * The value will switch back to false after the orientation changes.
+         *
+         * @type {boolean}
+         */
+        lockedOverride: false,
 
         /**
          * Indicates whether the tray orientation toggle is visible.
@@ -128,32 +119,52 @@
           bottom: 0,
           left: 0,
         },
-      },
 
-      /**
-       * {@inheritdoc}
-       *
-       * @param {object} attributes
-       *   Attributes for the toolbar.
-       * @param {object} options
-       *   Options for the toolbar.
-       *
-       * @return {string|undefined}
-       *   Returns an error message if validation failed.
-       */
-      validate(attributes, options) {
-        // Prevent the orientation being set to horizontal if it is locked, unless
-        // override has not been passed as an option.
-        if (
-          attributes.orientation === 'horizontal' &&
-          this.get('locked') &&
-          !options.override
-        ) {
-          return Drupal.t(
-            'The toolbar cannot be set to a horizontal orientation when it is locked.',
-          );
-        }
+        /**
+         * The orientation of the active tray.
+         *
+         * Made public as `orientation` via dedicated get and set functions .
+         *
+         * @type {string}
+         */
+        orientation: 'horizontal',
       },
+    })
+  ) {
+    /**
+     * {@inheritdoc}
+     *
+     * @param {object} attributes
+     *   Attributes for the toolbar.
+     * @param {object} options
+     *   Options for the toolbar.
+     *
+     * @return {string|undefined}
+     *   Returns an error message if validation failed.
+     */
+    validate(attributes, options) {
+      // Prevent the orientation being set to horizontal if it is locked, unless
+      // override has not been passed as an option.
+      if (
+        attributes.orientation === 'horizontal' &&
+        this.get('locked') &&
+        !options.override
+      ) {
+        return Drupal.t(
+          'The toolbar cannot be set to a horizontal orientation when it is locked.',
+        );
+      }
+    }
+  };
+  // Trigger warning in Drupal 9.4.x for any initialization of
+  // Drupal.toolbar.ToolbarModel that are outside of Drupal core.
+  Drupal.toolbar.ToolbarModel = new Proxy(Drupal.toolbar._ToolbarModel, {
+    construct(target, args) {
+      Drupal.deprecationError({
+        message:
+          'Drupal.toolbar.ToolbarModel will be marked as internal in drupal:10.0.0.',
+      });
+      return new target(...args);
     },
-  );
-})(Backbone, Drupal);
+  });
+})(Drupal);

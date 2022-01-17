@@ -5,41 +5,88 @@
 * @preserve
 **/
 
-(function (Backbone, Drupal) {
-  Drupal.toolbar.ToolbarAuralView = Backbone.View.extend({
-    initialize: function initialize(options) {
-      this.strings = options.strings;
-      this.listenTo(this.model, 'change:orientation', this.onOrientationChange);
-      this.listenTo(this.model, 'change:activeTray', this.onActiveTrayChange);
-    },
-    onOrientationChange: function onOrientationChange(model, orientation) {
-      Drupal.announce(Drupal.t('Tray orientation changed to @orientation.', {
-        '@orientation': orientation
-      }));
-    },
-    onActiveTrayChange: function onActiveTrayChange(model, tray) {
-      var relevantTray = tray === null ? model.previous('activeTray') : tray;
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-      if (!relevantTray) {
-        return;
-      }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-      var action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
-      var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
-      var text;
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-      if (trayNameElement !== null) {
-        text = Drupal.t('Tray "@tray" @action.', {
-          '@tray': trayNameElement.textContent,
-          '@action': action
-        });
-      } else {
-        text = Drupal.t('Tray @action.', {
-          '@action': action
-        });
-      }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-      Drupal.announce(text);
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+(function (Drupal) {
+  Drupal.toolbar.ToolbarAuralView = function (_Drupal$DrupalView) {
+    _inherits(_class, _Drupal$DrupalView);
+
+    var _super = _createSuper(_class);
+
+    function _class(options) {
+      var _this;
+
+      _classCallCheck(this, _class);
+
+      _this = _super.call(this);
+      _this.model = options.model;
+      _this.strings = options.strings;
+
+      _this.setElement(options.el);
+
+      _this.addChangeListener(_this.onOrientationChange, 'orientation');
+
+      _this.addChangeListener(_this.onActiveTrayChange, 'activeTray');
+
+      return _this;
     }
-  });
-})(Backbone, Drupal);
+
+    _createClass(_class, [{
+      key: "onOrientationChange",
+      value: function onOrientationChange() {
+        Drupal.announce(Drupal.t('Tray orientation changed to @orientation.', {
+          '@orientation': this.model.get('orientation')
+        }));
+      }
+    }, {
+      key: "onActiveTrayChange",
+      value: function onActiveTrayChange() {
+        var tray = this.model.get('activeTray');
+        var relevantTray = tray === null ? this.model.previous('activeTray') : tray;
+
+        if (!relevantTray) {
+          return;
+        }
+
+        var action = tray === null ? Drupal.t('closed') : Drupal.t('opened');
+        var trayNameElement = relevantTray.querySelector('.toolbar-tray-name');
+        var text;
+
+        if (trayNameElement !== null) {
+          text = Drupal.t('Tray "@tray" @action.', {
+            '@tray': trayNameElement.textContent,
+            '@action': action
+          });
+        } else {
+          text = Drupal.t('Tray @action.', {
+            '@action': action
+          });
+        }
+
+        Drupal.announce(text);
+      }
+    }]);
+
+    return _class;
+  }(Drupal.DrupalView);
+})(Drupal);

@@ -25,12 +25,19 @@
       }
 
       once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
-        var model = new Drupal.toolbar.ToolbarModel({
+        var model = new Drupal.toolbar._ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),
           height: $('#toolbar-administration').outerHeight()
         });
-        Drupal.toolbar.models.toolbarModel = model;
+        Drupal.toolbar.models.toolbarModel = new Proxy(model, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.models.toolbarModel will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
+        });
         Object.keys(options.breakpoints).forEach(function (label) {
           var mq = options.breakpoints[label];
           var mql = window.matchMedia(mq);
@@ -38,28 +45,68 @@
           mql.addListener(Drupal.toolbar.mediaQueryChangeHandler.bind(null, model, label));
           Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
         });
-        Drupal.toolbar.views.toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
+        var toolbarVisualView = new Drupal.toolbar.ToolbarVisualView({
           el: toolbar,
           model: model,
           strings: options.strings
         });
-        Drupal.toolbar.views.toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
+        Drupal.toolbar.views.toolbarVisualView = new Proxy(toolbarVisualView, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.views.toolbarVisualView will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
+        });
+        var toolbarAuralView = new Drupal.toolbar.ToolbarAuralView({
           el: toolbar,
           model: model,
           strings: options.strings
         });
-        Drupal.toolbar.views.bodyVisualView = new Drupal.toolbar.BodyVisualView({
+        Drupal.toolbar.views.toolbarAuralView = new Proxy(toolbarAuralView, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.views.toolbarAuralView will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
+        });
+        var bodyVisualView = new Drupal.toolbar.BodyVisualView({
           el: toolbar,
           model: model
         });
-        model.trigger('change:isFixed', model, model.get('isFixed'));
-        model.trigger('change:activeTray', model, model.get('activeTray'));
-        var menuModel = new Drupal.toolbar.MenuModel();
-        Drupal.toolbar.models.menuModel = menuModel;
-        Drupal.toolbar.views.menuVisualView = new Drupal.toolbar.MenuVisualView({
+        Drupal.toolbar.views.bodyVisualView = new Proxy(bodyVisualView, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.views.bodyVisualView will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
+        });
+        toolbarVisualView.render();
+        model.triggerEvent("model-".concat(model.modelId, "-change-isFixed"));
+        model.triggerEvent("model-".concat(model.modelId, "-change-activeTray"));
+        var menuModel = new Drupal.toolbar._MenuModel();
+        Drupal.toolbar.models.menuModel = new Proxy(menuModel, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.models.menuModel will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
+        });
+        var menuVisualView = new Drupal.toolbar.MenuVisualView({
           el: $(toolbar).find('.toolbar-menu-administration').get(0),
           model: menuModel,
           strings: options.strings
+        });
+        Drupal.toolbar.views.menuVisualView = new Proxy(menuVisualView, {
+          get: function get() {
+            Drupal.deprecationError({
+              message: 'Drupal.toolbar.views.menuVisualView will be marked as internal in drupal:10.0.0.'
+            });
+            return Reflect.get.apply(Reflect, arguments);
+          }
         });
         Drupal.toolbar.setSubtrees.done(function (subtrees) {
           menuModel.set('subtrees', subtrees);
@@ -67,24 +114,26 @@
           localStorage.setItem("Drupal.toolbar.subtrees.".concat(theme), JSON.stringify(subtrees));
           model.set('areSubtreesLoaded', true);
         });
-        Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
+        toolbarVisualView.loadSubtrees();
         $(document).on('drupalViewportOffsetChange.toolbar', function (event, offsets) {
           model.set('offsets', offsets);
         });
-        model.on('change:orientation', function (model, orientation) {
-          $(document).trigger('drupalToolbarOrientationChange', orientation);
-        }).on('change:activeTab', function (model, tab) {
-          $(document).trigger('drupalToolbarTabChange', tab);
-        }).on('change:activeTray', function (model, tray) {
-          $(document).trigger('drupalToolbarTrayChange', tray);
-        });
 
-        if (Drupal.toolbar.models.toolbarModel.get('orientation') === 'horizontal' && Drupal.toolbar.models.toolbarModel.get('activeTab') === null) {
-          Drupal.toolbar.models.toolbarModel.set({
+        if (model.get('orientation') === 'horizontal' && model.get('activeTab') === null) {
+          model.set({
             activeTab: $('.toolbar-bar .toolbar-tab:not(.home-toolbar-tab) a').get(0)
           });
         }
 
+        document.addEventListener("model-".concat(model.modelId, "-change-orientation"), function () {
+          $(document).trigger('drupalToolbarOrientationChange', model.get('orientation'));
+        });
+        document.addEventListener("model-".concat(model.modelId, "-change-activeTab"), function () {
+          $(document).trigger('drupalToolbarTabChange', model.get('activeTab'));
+        });
+        document.addEventListener("model-".concat(model.modelId, "-change-activeTray"), function () {
+          $(document).trigger('drupalToolbarTrayChange', model.get('activeTray'));
+        });
         $(window).on({
           'dialog:aftercreate': function dialogAftercreate(event, dialog, $element, settings) {
             var $toolbar = $('#toolbar-bar');
