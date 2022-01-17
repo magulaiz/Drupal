@@ -7,6 +7,8 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\views\ViewEntityInterface;
+use Drupal\views\Entity\View;
+use Drupal\views\Plugin\views\field\LinkBase;
 use Drupal\views\ViewsConfigUpdater;
 
 /**
@@ -93,4 +95,33 @@ function views_post_update_sort_identifier(?array &$sandbox = NULL): void {
  */
 function views_post_update_provide_revision_table_relationship() {
   // Empty post-update hook.
+}
+
+/**
+ * Add the 'bypass_access_check' option to link fields.
+ */
+function views_post_update_bypass_access_check() {
+  /** @var \Drupal\views\Plugin\ViewsHandlerManager $field_manager */
+  $field_manager = \Drupal::service('plugin.manager.views.field');
+
+  /** @var \Drupal\views\ViewEntityInterface $view */
+  foreach (View::loadMultiple() as $view) {
+    $displays = $view->get('display');
+    $save = FALSE;
+    foreach ($displays as $display_name => &$display) {
+      if (isset($display['display_options']['fields'])) {
+        foreach ($display['display_options']['fields'] as $field_name => &$field) {
+          $field_instance = $field_manager->getHandler($field);
+          // Consider all plugins extending LinkBase.
+          if ($field_instance instanceof LinkBase) {
+            $field['bypass_access_check'] = FALSE;
+            $save = TRUE;
+          }
+        }
+      }
+    }
+    if ($save) {
+      $view->set('display', $displays)->save();
+    }
+  }
 }

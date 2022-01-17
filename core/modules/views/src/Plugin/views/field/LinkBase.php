@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Core\Access\AccessManagerInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -121,6 +122,7 @@ abstract class LinkBase extends FieldPluginBase {
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['text'] = ['default' => $this->getDefaultLabel()];
+    $options['bypass_access_check'] = ['default' => FALSE];
     return $options;
   }
 
@@ -132,6 +134,12 @@ abstract class LinkBase extends FieldPluginBase {
       '#type' => 'textfield',
       '#title' => $this->t('Text to display'),
       '#default_value' => $this->options['text'],
+    ];
+    $form['bypass_access_check'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Bypass access check'),
+      '#description' => $this->t('When checked, the link will be rendered regardless if the user is allowed or not to access the link destination.'),
+      '#default_value' => $this->options['bypass_access_check'],
     ];
     parent::buildOptionsForm($form, $form_state);
 
@@ -163,7 +171,7 @@ abstract class LinkBase extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $row) {
-    $access = $this->checkUrlAccess($row);
+    $access = $this->options['bypass_access_check'] ? AccessResult::allowed() : $this->checkUrlAccess($row);
     $build = ['#markup' => $access->isAllowed() ? $this->renderLink($row) : ''];
     BubbleableMetadata::createFromObject($access)->applyTo($build);
     return $build;

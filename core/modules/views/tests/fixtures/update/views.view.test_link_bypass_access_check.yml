@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - node
+id: test_link_bypass_access_check
+label: test_link_bypass_access_check
+module: views
+description: ''
+base_table: node_field_data
+base_field: nid
+core: 8.x
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    display_options:
+      fields:
+        view_node:
+          id: view_node
+          table: node
+          field: view_node
+          text: view
+          output_url_as_text: false
+          absolute: false
+          entity_type: node
+          plugin_id: entity_link

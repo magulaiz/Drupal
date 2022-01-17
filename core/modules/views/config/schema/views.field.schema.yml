@@ -191,6 +191,9 @@ views.field.entity_link:
     text:
       type: label
       label: 'Text to display'
+    bypass_access_check:
+      type: boolean
+      label: 'Bypass access check'
     output_url_as_text:
       type: boolean
       label: 'Output the URL as text'
