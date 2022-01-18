@@ -2,10 +2,10 @@
 
 namespace Drupal\Tests\aggregator\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\aggregator\Entity\Feed;
 
-abstract class FeedResourceTestBase extends ContentEntityResourceTestBase {
+abstract class FeedResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}

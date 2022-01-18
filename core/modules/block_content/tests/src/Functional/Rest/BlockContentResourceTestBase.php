@@ -5,12 +5,12 @@ namespace Drupal\Tests\block_content\Functional\Rest;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Cache\Cache;
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * ResourceTestBase for BlockContent entity.
  */
-abstract class BlockContentResourceTestBase extends ContentEntityResourceTestBase {
+abstract class BlockContentResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}

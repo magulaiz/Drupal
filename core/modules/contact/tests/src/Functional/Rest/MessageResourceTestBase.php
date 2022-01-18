@@ -5,10 +5,10 @@ namespace Drupal\Tests\contact\Functional\Rest;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\contact\Entity\Message;
 use Drupal\Core\Url;
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-abstract class MessageResourceTestBase extends ContentEntityResourceTestBase {
+abstract class MessageResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}

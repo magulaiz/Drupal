@@ -4,12 +4,12 @@ namespace Drupal\Tests\aggregator\Functional\Rest;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Entity\Item;
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * ResourceTestBase for Item entity.
  */
-abstract class ItemResourceTestBase extends ContentEntityResourceTestBase {
+abstract class ItemResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}

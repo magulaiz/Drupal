@@ -6,7 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -117,7 +117,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       }
 
       $content_entity = is_subclass_of($class_name_full, ContentEntityInterface::class);
-      $content_test = is_subclass_of($class, ContentEntityResourceTestBase::class);
+      $content_test = is_subclass_of($class, EntityResourceTestBase::class);
       if ($content_entity && !$content_test) {
         $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
       }

@@ -3,10 +3,10 @@
 namespace Drupal\Tests\file\Functional\Rest;
 
 use Drupal\file\Entity\File;
-use Drupal\Tests\rest\Functional\EntityResource\ContentEntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
 use Drupal\user\Entity\User;
 
-abstract class FileResourceTestBase extends ContentEntityResourceTestBase {
+abstract class FileResourceTestBase extends EntityResourceTestBase {
 
   /**
    * {@inheritdoc}
