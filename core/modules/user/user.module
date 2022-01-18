@@ -668,7 +668,6 @@ function _user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block':
     case 'user_cancel_block_unpublish':
-    default:
       // Send account blocked notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_blocked', $account);
