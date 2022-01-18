@@ -35,27 +35,113 @@ class LinkTest extends UnitTestCase {
 
   /**
    * @covers ::preRenderLink
+   *
+   * @dataProvider providerTestPrerenderLink
    */
-  public function testPrerenderLink() {
-    $options = [
-      'query' => [
-        'foo' => [
-          100 => 100,
-        ],
-        'bar' => [
-          200 => 200,
-        ],
-      ],
-    ];
-    $url = new Url('<none>', [], $options);
+  public function testPrerenderLink($urlOptions, $elementOptions, $expected) {
+    $url = new Url('<none>');
     $element = [
       '#url' => $url,
       '#title' => 'Test',
-      '#options' => $options,
+      '#options' => $elementOptions,
     ];
-    $this->linkGenerator->generate($element['#title'], $url->setOptions($options))->willReturn(new GeneratedLink());
+    $this->linkGenerator->generate($element['#title'], $url->setOptions($urlOptions))->willReturn(new GeneratedLink());
     Link::preRenderLink($element);
-    $this->assertSame($options, $element['#url']->getOptions());
+    $this->assertSame($expected, $element['#url']->getOptions());
+  }
+
+  /**
+   * Data provider for testPrerenderLink().
+   */
+  public function providerTestPrerenderLink() {
+    $data = [];
+    $data['string keys'] = [
+      [
+      'fragment' => 'test',
+      'query' => [
+        'foo' => 'bar',
+      ],
+      ],
+      [
+        'query' => [
+          'a' => 'b',
+        ],
+      ],
+      [
+        'fragment' => 'test',
+        'query' => [
+          'foo' => 'bar',
+          'a' => 'b',
+        ],
+      ],
+    ];
+
+    $data['strings and unique integer keys'] = [
+      [
+        'query' => [
+          'foo' => [
+            100 => 100,
+            101 => 101,
+          ],
+        ],
+      ],
+      [
+        'query' => [
+          'bar' => [
+            200 => 200,
+            'a' => 'b',
+          ],
+        ],
+        'attributes' => [
+          'class' => [
+            'test',
+          ],
+        ],
+      ],
+      [
+        'query' => [
+          'foo' => [
+            100 => 100,
+            101 => 101,
+          ],
+          'bar' => [
+            200 => 200,
+            'a' => 'b',
+          ],
+        ],
+        'attributes' => [
+          'class' => [
+            'test',
+          ],
+        ],
+      ],
+    ];
+
+    $data['strings and overlapping integer keys'] = [
+      [
+        'attributes' => [
+          'class' => [
+            'foo',
+          ],
+        ],
+      ],
+      [
+        'attributes' => [
+          'class' => [
+            'bar',
+          ],
+        ],
+      ],
+      [
+        'attributes' => [
+          'class' => [
+            'foo',
+            'bar',
+          ],
+        ],
+      ],
+    ];
+    return $data;
   }
 
 }
