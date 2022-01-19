@@ -272,7 +272,7 @@ class ImageWidget extends FileWidget {
       '#type' => 'textfield',
       '#title' => new TranslatableMarkup('Title'),
       '#default_value' => $item['title'] ?? '',
-      '#description' => t('The title is used as a tool tip when the user hovers the mouse over the image.'),
+      '#description' => new TranslatableMarkup('The title is used as a tool tip when the user hovers the mouse over the image.'),
       '#maxlength' => 1024,
       '#weight' => -11,
       '#access' => (bool) $item['fids'] && $element['#title_field'],
