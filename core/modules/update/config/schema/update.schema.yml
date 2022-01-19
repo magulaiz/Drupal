@@ -40,3 +40,6 @@ update.settings:
         threshold:
           type: string
           label: 'Email notification threshold'
+    news:
+      type: boolean
+      label: 'News mode'
