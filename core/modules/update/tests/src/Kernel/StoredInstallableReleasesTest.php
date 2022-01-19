@@ -3,6 +3,7 @@
 namespace Drupal\Tests\update\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\update\UpdateManagerInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -73,6 +74,7 @@ class StoredInstallableReleasesTest extends KernelTestBase {
     return [
       'Installed version as 8.0.0' => [
         'installed_version' => '8.0.0',
+        'expected_project_status' => UpdateManagerInterface::NOT_SECURE,
         'expected_releases' => [
           '8.2.3',
           '8.2.1',
@@ -81,17 +83,71 @@ class StoredInstallableReleasesTest extends KernelTestBase {
           '8.0.0',
         ],
       ],
-      'Installed version as 8.1.1' => [
-        'installed_version' => '8.1.1',
+      'Installed version as 8.0.1' => [
+        'installed_version' => '8.0.1',
+        'expected_project_status' => UpdateManagerInterface::NOT_SUPPORTED,
         'expected_releases' => [
           '8.2.3',
           '8.2.1',
           '8.1.3',
           '8.1.1',
+          '8.0.1',
+        ],
+      ],
+      'Installed version as 8.0.2' => [
+        'installed_version' => '8.0.2',
+        'expected_project_status' => UpdateManagerInterface::NOT_SUPPORTED,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.1',
+          '8.0.2',
+        ],
+      ],
+      'Installed version as 8.1.0' => [
+        'installed_version' => '8.1.0',
+        'expected_project_status' => UpdateManagerInterface::NOT_SECURE,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.1',
+          '8.1.0',
+        ],
+      ],
+      'Installed version as 8.1.1' => [
+        'installed_version' => '8.1.1',
+        'expected_project_status' => UpdateManagerInterface::NOT_CURRENT,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.1',
+        ],
+      ],
+      'Installed version as 8.1.2' => [
+        'installed_version' => '8.1.2',
+        'expected_project_status' => UpdateManagerInterface::REVOKED,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
+          '8.1.2',
+        ],
+      ],
+      'Installed version as 8.1.3' => [
+        'installed_version' => '8.1.3',
+        'expected_project_status' => UpdateManagerInterface::NOT_CURRENT,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.1.3',
         ],
       ],
       'Installed version as 8.1.4' => [
         'installed_version' => '8.1.4',
+        'expected_project_status' => UpdateManagerInterface::NOT_CURRENT,
         'expected_releases' => [
           '8.2.3',
           '8.2.1',
@@ -99,8 +155,34 @@ class StoredInstallableReleasesTest extends KernelTestBase {
           '8.1.1',
         ],
       ],
+      'Installed version as 8.2.0' => [
+        'installed_version' => '8.2.0',
+        'expected_project_status' => UpdateManagerInterface::NOT_SECURE,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+          '8.2.0',
+        ],
+      ],
+      'Installed version as 8.2.1' => [
+        'installed_version' => '8.2.1',
+        'expected_project_status' => UpdateManagerInterface::NOT_CURRENT,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.1',
+        ],
+      ],
+      'Installed version as 8.2.2' => [
+        'installed_version' => '8.2.2',
+        'expected_project_status' => UpdateManagerInterface::REVOKED,
+        'expected_releases' => [
+          '8.2.3',
+          '8.2.2',
+        ],
+      ],
       'Installed version as 8.2.3' => [
         'installed_version' => '8.2.3',
+        'expected_project_status' => UpdateManagerInterface::CURRENT,
         'expected_releases' => [
           '8.2.3',
         ],
@@ -113,16 +195,22 @@ class StoredInstallableReleasesTest extends KernelTestBase {
    *
    * @dataProvider installableReleaseProvider
    */
-  public function testStoredReleases($installed_version, $expected_releases): void {
+  public function testStoredReleases($installed_version, $expected_project_status, $expected_releases): void {
     $this->setCoreVersion($installed_version);
     update_storage_clear();
     $available = update_get_available(TRUE);
-    $new = update_calculate_project_data($available);
-    $this->assertSame($expected_releases, array_keys($new['drupal']['releases']));
+    $project_data = update_calculate_project_data($available);
+    $this->assertEquals($project_data['drupal']['status'], $expected_project_status);
+    $this->assertSame($expected_releases, array_keys($project_data['drupal']['releases']));
     foreach ($expected_releases as $version) {
-      $this->assertArrayHasKey($version, $new['drupal']['releases']);
-      $this->assertEquals($new['drupal']['releases'][$version]['status'], 'published');
-      $this->assertEquals($new['drupal']['releases'][$version]['version'], $version);
+      $this->assertArrayHasKey($version, $project_data['drupal']['releases']);
+      if ($project_data['drupal']['status'] === UpdateManagerInterface::REVOKED && $project_data['drupal']['releases'][$version]['version'] === $installed_version) {
+        $this->assertEquals($project_data['drupal']['releases'][$version]['status'], 'unpublished');
+      }
+      else {
+        $this->assertEquals($project_data['drupal']['releases'][$version]['status'], 'published');
+      }
+      $this->assertEquals($project_data['drupal']['releases'][$version]['version'], $version);
     }
   }
 
