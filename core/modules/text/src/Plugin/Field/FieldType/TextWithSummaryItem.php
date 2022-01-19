@@ -91,15 +91,15 @@ class TextWithSummaryItem extends TextItemBase {
 
     $element['display_summary'] = [
       '#type' => 'checkbox',
-      '#title' => t('Summary input'),
+      '#title' => $this->t('Summary input'),
       '#default_value' => $settings['display_summary'],
-      '#description' => t('This allows authors to input an explicit summary, to be displayed instead of the automatically trimmed text when using the "Summary or trimmed" display type.'),
+      '#description' => $this->t('This allows authors to input an explicit summary, to be displayed instead of the automatically trimmed text when using the "Summary or trimmed" display type.'),
     ];
 
     $element['required_summary'] = [
       '#type' => 'checkbox',
-      '#title' => t('Require summary'),
-      '#description' => t('The summary will also be visible when marked as required.'),
+      '#title' => $this->t('Require summary'),
+      '#description' => $this->t('The summary will also be visible when marked as required.'),
       '#default_value' => $settings['required_summary'],
     ];
 

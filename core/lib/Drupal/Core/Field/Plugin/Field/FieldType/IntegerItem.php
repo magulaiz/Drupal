@@ -69,7 +69,7 @@ class IntegerItem extends NumericItemBase {
         'value' => [
           'Range' => [
             'min' => 0,
-            'minMessage' => t('%name: The integer must be larger or equal to %min.', [
+            'minMessage' => $this->t('%name: The integer must be larger or equal to %min.', [
               '%name' => $this->getFieldDefinition()->getLabel(),
               '%min' => 0,
             ]),

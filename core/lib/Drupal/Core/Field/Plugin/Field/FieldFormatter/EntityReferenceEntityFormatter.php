@@ -130,7 +130,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $elements['view_mode'] = [
       '#type' => 'select',
       '#options' => $this->entityDisplayRepository->getViewModeOptions($this->getFieldSetting('target_type')),
-      '#title' => t('View mode'),
+      '#title' => $this->t('View mode'),
       '#default_value' => $this->getSetting('view_mode'),
       '#required' => TRUE,
     ];

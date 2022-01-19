@@ -108,13 +108,13 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
 
     $element['default_mode'] = [
       '#type' => 'checkbox',
-      '#title' => t('Threading'),
+      '#title' => $this->t('Threading'),
       '#default_value' => $settings['default_mode'],
-      '#description' => t('Show comment replies in a threaded list.'),
+      '#description' => $this->t('Show comment replies in a threaded list.'),
     ];
     $element['per_page'] = [
       '#type' => 'number',
-      '#title' => t('Comments per page'),
+      '#title' => $this->t('Comments per page'),
       '#default_value' => $settings['per_page'],
       '#required' => TRUE,
       '#min' => 1,
@@ -122,28 +122,28 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
     ];
     $element['anonymous'] = [
       '#type' => 'select',
-      '#title' => t('Anonymous commenting'),
+      '#title' => $this->t('Anonymous commenting'),
       '#default_value' => $settings['anonymous'],
       '#options' => [
-        CommentInterface::ANONYMOUS_MAYNOT_CONTACT => t('Anonymous posters may not enter their contact information'),
-        CommentInterface::ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
-        CommentInterface::ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
+        CommentInterface::ANONYMOUS_MAYNOT_CONTACT => $this->t('Anonymous posters may not enter their contact information'),
+        CommentInterface::ANONYMOUS_MAY_CONTACT => $this->t('Anonymous posters may leave their contact information'),
+        CommentInterface::ANONYMOUS_MUST_CONTACT => $this->t('Anonymous posters must leave their contact information'),
       ],
       '#access' => $anonymous_user->hasPermission('post comments'),
     ];
     $element['form_location'] = [
       '#type' => 'checkbox',
-      '#title' => t('Show reply form on the same page as comments'),
+      '#title' => $this->t('Show reply form on the same page as comments'),
       '#default_value' => $settings['form_location'],
     ];
     $element['preview'] = [
       '#type' => 'radios',
-      '#title' => t('Preview comment'),
+      '#title' => $this->t('Preview comment'),
       '#default_value' => $settings['preview'],
       '#options' => [
-        DRUPAL_DISABLED => t('Disabled'),
-        DRUPAL_OPTIONAL => t('Optional'),
-        DRUPAL_REQUIRED => t('Required'),
+        DRUPAL_DISABLED => $this->t('Disabled'),
+        DRUPAL_OPTIONAL => $this->t('Optional'),
+        DRUPAL_REQUIRED => $this->t('Required'),
       ],
     ];
 
@@ -185,7 +185,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
     }
     $element['comment_type'] = [
       '#type' => 'select',
-      '#title' => t('Comment type'),
+      '#title' => $this->t('Comment type'),
       '#options' => $options,
       '#required' => TRUE,
       '#description' => $this->t('Select the Comment type to use for this comment field. Manage the comment types from the <a href=":url">administration overview page</a>.', [':url' => Url::fromRoute('entity.comment_type.collection')->toString()]),
