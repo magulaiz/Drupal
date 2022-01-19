@@ -88,6 +88,15 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       '#description' => $this->t('You can choose to send email only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href=":status_report">status report</a> page, and will also display an error message on administration pages if there is a security update.', [':status_report' => Url::fromRoute('system.status')->toString()]),
     ];
 
+    $form['news'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('News mode'),
+      '#default_value' => $config->get('news'),
+      '#description' => $this->t('Display a message about available updates only
+when installed and/or recommended version of at least one extension has been
+changed.'),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -140,6 +149,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
       ->set('check.interval_days', $form_state->getValue('update_check_frequency'))
       ->set('notification.emails', $form_state->get('notify_emails'))
       ->set('notification.threshold', $form_state->getValue('update_notification_threshold'))
+      ->set('news', $form_state->getValue('news'))
       ->save();
 
     parent::submitForm($form, $form_state);

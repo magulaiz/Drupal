@@ -7,6 +7,7 @@
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\update\Form\UpdateManagerUpdate;
 use Drupal\update\ProjectSecurityData;
 use Drupal\update\ProjectSecurityRequirement;
 use Drupal\update\UpdateFetcherInterface;
@@ -38,8 +39,29 @@ function update_requirements($phase) {
     if ($available = update_get_available(FALSE)) {
       module_load_include('inc', 'update', 'update.compare');
       $data = update_calculate_project_data($available);
-      // First, populate the requirements for core:
-      $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');
+      $check = TRUE;
+
+      if ($news = \Drupal::state()->get('update.news', FALSE)) {
+        $check = FALSE;
+        $seen_versions = \Drupal::state()->get('update.versions', []);
+        $versions = $seen_versions['drupal'] ?? [];
+
+        foreach (UpdateManagerUpdate::VERSION_TYPES as $version_type => $project_key) {
+          if (
+            isset($versions[$version_type], $data['drupal'][$project_key]) &&
+            $versions[$version_type] !== $data['drupal'][$project_key]
+          ) {
+            $check = TRUE;
+            break;
+          }
+        }
+      }
+
+      if ($check) {
+        // First, populate the requirements for core:
+        $requirements['update_core'] = _update_requirement_check($data['drupal'], 'core');
+      }
+
       if (!empty($available['drupal']['releases'])) {
         $security_data = ProjectSecurityData::createFromProjectDataAndReleases($data['drupal'], $available['drupal']['releases'])->getCoverageInfo();
         if ($core_coverage_requirement = ProjectSecurityRequirement::createFromProjectDataAndSecurityCoverageInfo($data['drupal'], $security_data)->getRequirement()) {
@@ -50,13 +72,36 @@ function update_requirements($phase) {
       // We don't want to check drupal a second time.
       unset($data['drupal']);
       if (!empty($data)) {
-        // Now, sort our $data array based on each project's status. The
-        // status constants are numbered in the right order of precedence, so
-        // we just need to make sure the projects are sorted in ascending
-        // order of status, and we can look at the first project we find.
-        uasort($data, '_update_project_status_sort');
-        $first_project = reset($data);
-        $requirements['update_contrib'] = _update_requirement_check($first_project, 'contrib');
+        if ($news) {
+          foreach ($data as $name => $project) {
+            $versions = $seen_versions[$name] ?? [];
+
+            foreach (UpdateManagerUpdate::VERSION_TYPES as $version_type => $project_key) {
+              if (
+                isset($versions[$version_type], $project[$project_key]) &&
+                $versions[$version_type] !== $project[$project_key]
+              ) {
+                $first_project = $project;
+                break;
+              }
+            }
+          }
+        }
+        else {
+          // Now, sort our $data array based on each project's status. The
+          // status constants are numbered in the right order of precedence, so
+          // we just need to make sure the projects are sorted in ascending
+          // order of status, and we can look at the first project we find.
+          uasort($data, '_update_project_status_sort');
+          $first_project = reset($data);
+        }
+
+        if (isset($first_project)) {
+          $requirements['update_contrib'] = _update_requirement_check(
+            $first_project,
+            'contrib'
+          );
+        }
       }
     }
     else {
@@ -84,6 +129,8 @@ function update_install() {
 function update_uninstall() {
   \Drupal::state()->delete('update.last_check');
   \Drupal::state()->delete('update.last_email_notification');
+  \Drupal::state()->delete('update.news');
+  \Drupal::state()->delete('update.versions');
 
   $queue = \Drupal::queue('update_fetch_tasks');
   $queue->deleteQueue();
