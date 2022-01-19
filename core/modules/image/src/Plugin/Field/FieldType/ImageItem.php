@@ -378,7 +378,7 @@ class ImageItem extends FileItem {
       $file = $images[$extension][$min_resolution][$max_resolution][$image_index];
     }
 
-    [$width, $height] = getimagesize($file->getFileUri());
+    list($width, $height) = getimagesize($file->getFileUri());
     $values = [
       'target_id' => $file->id(),
       'alt' => $random->sentences(4),
