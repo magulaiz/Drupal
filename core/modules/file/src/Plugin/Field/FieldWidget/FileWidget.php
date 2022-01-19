@@ -14,7 +14,6 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Element\ManagedFile;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -409,13 +408,8 @@ class FileWidget extends WidgetBase {
       $config = \Drupal::config('file.settings');
       $element['description'] = [
         '#type' => $config->get('description.type'),
-<<<<<<< HEAD
-        '#title' => t('Description'),
-        '#value' => $item['description'] ?? '',
-=======
         '#title' => new TranslatableMarkup('Description'),
-        '#value' => isset($item['description']) ? $item['description'] : '',
->>>>>>> applying patch
+        '#value' => $item['description'] ?? '',
         '#maxlength' => $config->get('description.length'),
         '#description' => new TranslatableMarkup('The description may be used as the label of the link to the file.'),
       ];

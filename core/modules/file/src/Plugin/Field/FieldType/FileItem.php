@@ -262,7 +262,7 @@ class FileItem extends EntityReferenceItem {
     $element['#value'] = trim($element['#value']);
     $form_state->setValue(['settings', 'max_filesize'], $element['#value']);
     if (!empty($element['#value']) && !Bytes::validate($element['#value'])) {
-      $form_state->setError($element,  new TranslatableMarkup('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
+      $form_state->setError($element, new TranslatableMarkup('The "@name" option must contain a valid value. You may either leave the text field empty or enter a string like "512" (bytes), "80 KB" (kilobytes) or "50 MB" (megabytes).', ['@name' => $element['#title']]));
     }
   }
 
