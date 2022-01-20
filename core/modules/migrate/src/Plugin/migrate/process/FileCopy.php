@@ -27,6 +27,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Available configuration keys:
  * - move: (optional) Boolean, if TRUE, move the file, otherwise copy the file.
  *   Defaults to FALSE.
+ * - download_exception: (optional) Error behavior when a file cannot be
+ *   downloaded successfully:
+ *   - 'error': (default) Raise an error and stop the migration.
+ *   - 'skip process': Prevents further processing of the input property.
+ *   - 'skip row': Skips the entire row.
  * - file_exists: (optional) Replace behavior when the destination file already
  *   exists:
  *   - 'replace' - (default) Replace the existing file.
