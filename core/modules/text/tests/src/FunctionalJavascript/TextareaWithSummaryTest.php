@@ -140,7 +140,7 @@ class TextareaWithSummaryTest extends WebDriverTestBase {
     $this->assertCount(1, $summary);
     $this->assertStringContainsStringIgnoringCase($this->t('Edit summary'), $summary[0]->getText());
 
-    // Settting summary visibility config to hidden.
+    // Setting summary visibility config to hidden.
     $field_edit_settings = 'admin/structure/types/manage/article/fields/node.article.field_text_with_summary';
     $this->drupalGet($field_edit_settings);
     $assert_session->waitForField('label')->setValue('Text with summary');
