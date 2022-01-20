@@ -46,8 +46,7 @@
                 // If field cardinality is unlimited.
                 if ($(this).parents().hasClass('field-multiple-table')) {
                   $fullLabel.before($link);
-                }
-                else {
+                } else {
                   $link.appendTo($fullLabel);
                 }
               } else {
@@ -64,7 +63,6 @@
           if ($widget.find('.js-text-summary').val() === '') {
             $link.trigger('click');
           }
-
         });
     },
   };
