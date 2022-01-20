@@ -713,9 +713,9 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $assert_session->fieldValueEquals('attributes[alt]', $cobra_commander_bio);
 
     // Test that setting alt value to two double quotes will signal to the
-    // MediaEmbed filter to unset the attribute on the media image field.
-    // We intentionally add a space space after the two double quotes to test
-    // the string is trimmed to two quotes.
+    // MediaEmbed filter to unset the attribute on the media image field. We
+    // intentionally add a space after the two double quotes to test the string
+    // is trimmed to two quotes.
     $page->fillField('attributes[alt]', '"" ');
     $this->submitDialog();
     $this->getSession()->switchToIFrame('ckeditor');
@@ -1415,11 +1415,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    *
    * @param string $attribute
    *   The attribute to check.
-   * @param mixed $value
+   * @param string|null $value
    *   Either a string value or if NULL, asserts that <drupal-media> element
    *   doesn't have the attribute.
+   *
+   * @internal
    */
-  protected function assertSourceAttributeSame($attribute, $value) {
+  protected function assertSourceAttributeSame(string $attribute, ?string $value): void {
     $this->assertNotEmpty($drupal_media = $this->getDrupalMediaFromSource());
     if ($value === NULL) {
       $this->assertFalse($drupal_media->hasAttribute($attribute));
@@ -1524,8 +1526,10 @@ JS;
    *
    * @param string $label
    *   The `aria-label` attribute value of the context menu item.
+   *
+   * @internal
    */
-  protected function assertContextMenuItemExists($label) {
+  protected function assertContextMenuItemExists(string $label): void {
     $this->assertSession()->elementExists('xpath', '//a[@aria-label="' . $label . '"]');
   }
 
@@ -1534,8 +1538,10 @@ JS;
    *
    * @param string $label
    *   The `aria-label` attribute value of the context menu item.
+   *
+   * @internal
    */
-  protected function assertContextMenuItemNotExists($label) {
+  protected function assertContextMenuItemNotExists(string $label): void {
     $this->assertSession()->elementNotExists('xpath', '//a[@aria-label="' . $label . '"]');
   }
 

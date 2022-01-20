@@ -4,7 +4,6 @@ namespace Drupal\Core\Validation;
 
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Translates strings using Drupal's translation system.
@@ -29,15 +28,6 @@ class DrupalTranslator implements TranslatorInterface {
     if ($id instanceof TranslatableMarkup) {
       return $id;
     }
-
-    // Symfony violation messages may separate singular and plural versions
-    // with "|".
-    $ids = explode('|', $id);
-    if (count($ids) > 1) {
-      $number = $parameters['%count%'] ?? 1;
-      return \Drupal::translation()->formatPlural($number, $ids[0], $ids[1], $this->processParameters($parameters), $this->getOptions($domain, $locale));
-    }
-
     return new TranslatableMarkup($id, $this->processParameters($parameters), $this->getOptions($domain, $locale));
   }
 
@@ -115,7 +105,7 @@ class DrupalTranslator implements TranslatorInterface {
     // We do not support domains, so we ignore this parameter.
     // If locale is left NULL, TranslatableMarkup will default to the interface
     // language.
-    $locale = isset($locale) ? $locale : $this->locale;
+    $locale = $locale ?? $this->locale;
     return ['langcode' => $locale];
   }
 

@@ -206,12 +206,16 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'john.doe_pass');
 
     $this->assertFollowUpMigrationResults();
+
+    $this->assertEmailsSent();
   }
 
   /**
    * Tests that follow-up migrations have been run successfully.
+   *
+   * @internal
    */
-  protected function assertFollowUpMigrationResults() {
+  protected function assertFollowUpMigrationResults(): void {
     $node = Node::load(10);
     $this->assertSame('12', $node->get('field_reference')->target_id);
     $this->assertSame('12', $node->get('field_reference_2')->target_id);
