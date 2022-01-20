@@ -9,6 +9,8 @@
   Drupal.behaviors.textSummary = {
     attach: function attach(context, settings) {
       $(context).find('.js-text-summary').once('text-summary').each(function () {
+        var _this = this;
+
         var $widget = $(this).closest('.js-text-format-wrapper');
         var $summary = $widget.find('.js-text-summary-wrapper');
         var $summaryLabel = $summary.find('label').eq(0);
@@ -26,7 +28,12 @@
           if (toggleClick) {
             $summary.hide();
             $button.html(Drupal.t('Edit summary'));
-            $link.appendTo($fullLabel);
+
+            if ($(_this).parents().hasClass('field-multiple-table')) {
+              $fullLabel.before($link);
+            } else {
+              $link.appendTo($fullLabel);
+            }
           } else {
             $summary.show();
             $button.html(Drupal.t('Hide summary'));
