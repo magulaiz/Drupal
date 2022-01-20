@@ -347,53 +347,6 @@ final class LinksetControllerTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that menu items using a path alias can be resolved as JSON.
-   *
-   * A typical decoupled website client (e.g. a React app) needs to be able to
-   * get a JSON response for the page targeted by a menu link. It also needs to
-   * be able to set a "pretty" URL in the browser.
-   *
-   * Without this module's negotiation middleware, that means link hrefs would
-   * need to contain a "_format={non_html_format}" query string in order to
-   * direct the client to a non-HTML response. However, that URL would not be
-   * "pretty" and would need to be modified before pushing it into the browser's
-   * history. This could also work in reverse as well, but in either case, the
-   * client would need special logic that modified the URL. This would also
-   * break web linking semantics.
-   *
-   * To make client implementations easier, this module implements a negotiation
-   * middleware which enables site owners to configure a format other than HTML
-   * as the default request format based on the request host name. E.g. requests
-   * for "www.example.com" could default to HTML and requests for
-   * "api.example.com" could default to "hal_json". This means that menu link
-   * hrefs can be relative, as in "/dogs/rosie", instead of absolute, as in
-   * "https://www.example.com/dogs/rosie". Whether they're used to fetch a
-   * non-HTML response or pushed into the browser behavior, they'll work without
-   * any special logic.
-   *
-   * This test proves that this works by requesting the main menu, getting a
-   * menu item that uses a path alias, requesting that URL exactly as found, and
-   * then by asserting that the response uses "hal_json" and the response
-   * content contains the expected data.
-   */
-  public function testPathAliasResolution() {
-    $this->assertTrue($this->container->get('module_installer')->install(['serialization', 'hal', 'rest'], TRUE), 'Installed dependencies of the test module.');
-    $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed test module.');
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'), 200, $this->authorAccount);
-    $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
-    $titles = array_column($link_items, 'title');
-    $this->assertContains('About us', $titles);
-    $our_name_link = current(array_filter($link_items, function (array $target) {
-      return $target['title'] === 'About us';
-    }));
-    $this->assertSame('/about', $our_name_link['href']);
-    $response = $this->doRequest(Request::create($our_name_link['href']), 200, $this->authorAccount);
-    $this->assertSame('application/hal+json', $response->getHeaderLine('content-type'));
-    $title = Json::decode((string) $response->getBody())['title'];
-    $this->assertSame('About us', $title[0]['value']);
-  }
-
-  /**
    * Sends a request to the kernel and makes basic response assertions.
    *
    * Only to be used when the expected response is a linkset response.
