@@ -18,6 +18,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * - destination URI, e.g. 'public://images/foo.img'
  *
  * Available configuration keys:
+ * - download_exception: (optional) Error behavior when a file cannot be
+ *   downloaded successfully:
+ *   - 'error': (default) Raise an error and stop the migration.
+ *   - 'skip process': Prevents further processing of the input property.
+ *   - 'skip row': Skips the entire row.
  * - file_exists: (optional) Replace behavior when the destination file already
  *   exists:
  *   - 'replace' - (default) Replace the existing file.
@@ -152,7 +157,8 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
       $this->httpClient->get($source, $this->configuration['guzzle_options']);
     }
     catch (\Exception $e) {
-      throw new MigrateException("{$e->getMessage()} ($source)");
+      $exception_class = $this->configuration['download_exception'];
+      throw new $exception_class("{$e->getMessage()} ($source)");
     }
 
     return $final_destination;
