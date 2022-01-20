@@ -282,7 +282,7 @@ function locale_translate_batch_import_save($context) {
       // translation files are not tracked and are therefore not stored in this
       // table.
       if ($file->project && $file->version) {
-        $file->last_checked = REQUEST_TIME;
+        $file->last_checked = \Drupal::time()->getRequestTime();
         locale_translation_update_file_history($file);
       }
     }

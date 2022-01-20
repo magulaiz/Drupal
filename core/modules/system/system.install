@@ -719,10 +719,10 @@ function system_requirements($phase) {
 
     // Determine severity based on time since cron last ran.
     $severity = REQUIREMENT_INFO;
-    if (REQUEST_TIME - $cron_last > $threshold_error) {
+    if (\Drupal::time()->getRequestTime() - $cron_last > $threshold_error) {
       $severity = REQUIREMENT_ERROR;
     }
-    elseif (REQUEST_TIME - $cron_last > $threshold_warning) {
+    elseif (\Drupal::time()->getRequestTime() - $cron_last > $threshold_warning) {
       $severity = REQUIREMENT_WARNING;
     }
 

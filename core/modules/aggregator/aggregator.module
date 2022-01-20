@@ -168,7 +168,7 @@ function aggregator_cron() {
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
-      $feed->setQueuedTime(REQUEST_TIME);
+      $feed->setQueuedTime(\Drupal::time()->getRequestTime());
       $feed->save();
     }
   }
@@ -176,7 +176,7 @@ function aggregator_cron() {
   // Delete queued timestamp after 6 hours assuming the update has failed.
   $ids = \Drupal::entityQuery('aggregator_feed')
     ->accessCheck(FALSE)
-    ->condition('queued', REQUEST_TIME - (3600 * 6), '<')
+    ->condition('queued', \Drupal::time()->getRequestTime() - (3600 * 6), '<')
     ->execute();
 
   if ($ids) {

@@ -44,7 +44,7 @@ function _update_cron_notify() {
         // Track when the last mail was successfully sent to avoid sending
         // too many emails.
         if ($message['result']) {
-          \Drupal::state()->set('update.last_email_notification', REQUEST_TIME);
+          \Drupal::state()->set('update.last_email_notification', \Drupal::time()->getRequestTime());
         }
       }
     }

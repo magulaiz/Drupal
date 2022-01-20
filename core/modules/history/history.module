@@ -114,11 +114,11 @@ function history_write($nid, $account = NULL) {
         'uid' => $account->id(),
         'nid' => $nid,
       ])
-      ->fields(['timestamp' => REQUEST_TIME])
+      ->fields(['timestamp' => \Drupal::time()->getRequestTime()])
       ->execute();
     // Update static cache.
     $history = &drupal_static('history_read_multiple', []);
-    $history[$nid] = REQUEST_TIME;
+    $history[$nid] = \Drupal::time()->getRequestTime();
   }
 }
 
