@@ -96,7 +96,12 @@ class PathMatcher implements PathMatcherInterface {
       // route match, like on exception responses.
       if ($this->routeMatch->getRouteName()) {
         $url = Url::fromRouteMatch($this->routeMatch);
-        $this->isCurrentFrontPage = ($url->getRouteName() && '/' . $url->getInternalPath() === $this->getFrontPagePath());
+        if ($url->getRouteName() && '/' . $url->getInternalPath() === $this->getFrontPagePath()) {
+          $this->isCurrentFrontPage = TRUE;
+        }
+        if ($url->setAbsolute(FALSE)->toString() === $this->getFrontPagePath()) {
+          $this->isCurrentFrontPage = TRUE;
+        }
       }
     }
     return $this->isCurrentFrontPage;
