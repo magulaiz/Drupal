@@ -566,7 +566,7 @@ class TermTest extends TaxonomyTestBase {
     // Create a new term in a different vocabulary with the same name.
     $new_vocabulary = $this->createVocabulary([
       'id' => 'test_vocab',
-      'name' => 'Test Vocab'
+      'name' => 'Test Vocab',
     ]);
     $new_term = Term::create([
       'name' => $term->getName(),
