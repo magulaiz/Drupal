@@ -6,5 +6,5 @@ includes:
 # Do not add additional configuration to this file. This configuration exists
 # only to allow core/scripts/dev/commit-code-check.sh to run against a subset of
 # the codebase.
-parameters:
-  reportUnmatchedIgnoredErrors: false
+#parameters:
+#  reportUnmatchedIgnoredErrors: false
