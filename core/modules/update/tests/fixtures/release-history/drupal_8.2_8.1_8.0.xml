@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
 This fixture is used by \Drupal\Tests\update\Kernel\StoredInstallableReleasesTest. 8.1. and 8.2. are supported
-branches and 8.0. is unsupported branch.
+branches and 8.0. is an unsupported branch.
 It contains following releases:
 - 8.0.0: Insecure, Unsupported
 - 8.0.1: Unsupported

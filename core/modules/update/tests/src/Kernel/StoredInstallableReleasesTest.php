@@ -67,6 +67,9 @@ class StoredInstallableReleasesTest extends KernelTestBase {
   /**
    * Provides expected installable releases with a specific installed version.
    *
+   * All installed versions are from the xml except '8.1.4', to test for the
+   * case if a release is not present in the xml.
+   *
    * @return array[]
    *   Test data.
    */
@@ -204,7 +207,7 @@ class StoredInstallableReleasesTest extends KernelTestBase {
     $this->assertSame($expected_releases, array_keys($project_data['drupal']['releases']));
     foreach ($expected_releases as $version) {
       $this->assertArrayHasKey($version, $project_data['drupal']['releases']);
-      if ($project_data['drupal']['status'] === UpdateManagerInterface::REVOKED && $project_data['drupal']['releases'][$version]['version'] === $installed_version) {
+      if ($expected_project_status === UpdateManagerInterface::REVOKED && $project_data['drupal']['releases'][$version]['version'] === $installed_version) {
         $this->assertEquals($project_data['drupal']['releases'][$version]['status'], 'unpublished');
       }
       else {
