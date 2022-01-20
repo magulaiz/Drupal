@@ -185,10 +185,10 @@ final class LinksetControllerTest extends BrowserTestBase {
    */
   public function testBasicFunctions() {
     $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/linkset-menu-main.json'));
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));
-    $this->doRequest(Request::create('/system/menu/missing/linkset'), 404);
+    $this->doRequest(Request::create('/system/menu/missing/linkset?format=hal_json'), 404);
   }
 
   /**
@@ -213,9 +213,9 @@ final class LinksetControllerTest extends BrowserTestBase {
       'node:2',
       'node:3',
     ]);
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     $this->assertDrupalResponseCacheability('HIT', $expected_cacheability, $response);
     // Create a new menu item to invalidate the cache.
     $duplicate_title = 'About us (duplicate)';
@@ -226,7 +226,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'menu_name' => 'main',
     ]);
     // Redo the request.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     // Assert that the cache has been invalidated.
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     // Then ensure that the new menu link is in the response.
@@ -255,8 +255,8 @@ final class LinksetControllerTest extends BrowserTestBase {
       'node:3',
     ]);
     // Warm the cache, then get a response and ensure it was warmed.
-    $this->doRequest(Request::create('/system/menu/main/linkset'));
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     $this->assertDrupalResponseCacheability('HIT', $expected_cacheability, $response);
     // Ensure the "Our name" menu link is visible.
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
@@ -267,7 +267,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     assert($our_name_page instanceof NodeInterface);
     $our_name_page->setUnpublished()->save();
     // Redo the request.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'));
     // Assert that the cache was invalidated.
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     // Ensure the "Our name" menu link is no longer visible.
@@ -275,7 +275,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     $titles = array_column($link_items, 'title');
     $this->assertNotContains('Our name', $titles);
     // Redo the request, but authenticate as the unpublished page's author.
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'), 200, $this->authorAccount);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts(['user']);
     $expected_cacheability->addCacheTags([
@@ -310,7 +310,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'config:user.role.anonymous',
       'http_response',
     ]);
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'));
+    $response = $this->doRequest(Request::create('/system/menu/account/linkset?format=hal_json'));
     $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
     $titles = array_column($link_items, 'title');
@@ -318,7 +318,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     $this->assertNotContains('Log out', $titles);
     $this->assertNotContains('My account', $titles);
     // Redo the request, but with an authenticated user.
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest(Request::create('/system/menu/account/linkset?format=hal_json'), 200, $this->authorAccount);
     // The expected cache tags must be updated.
     $expected_cacheability->setCacheTags([
       'config:system.menu.account',
@@ -339,7 +339,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    */
   public function testCustomLinkRelation() {
     $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed modules.');
-    $response = $this->doRequest(Request::create('/system/menu/account/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest(Request::create('/system/menu/account/linkset?format=hal_json'), 200, $this->authorAccount);
     $link_context_object = Json::decode((string) $response->getBody())['linkset'][0];
     $this->assertContains('authenticated-as', array_keys($link_context_object));
     $my_account_link = $link_context_object['authenticated-as'][0];
@@ -379,7 +379,7 @@ final class LinksetControllerTest extends BrowserTestBase {
   public function testPathAliasResolution() {
     $this->assertTrue($this->container->get('module_installer')->install(['serialization', 'hal', 'rest'], TRUE), 'Installed dependencies of the test module.');
     $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed test module.');
-    $response = $this->doRequest(Request::create('/system/menu/main/linkset'), 200, $this->authorAccount);
+    $response = $this->doRequest(Request::create('/system/menu/main/linkset?format=hal_json'), 200, $this->authorAccount);
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
     $titles = array_column($link_items, 'title');
     $this->assertContains('About us', $titles);
