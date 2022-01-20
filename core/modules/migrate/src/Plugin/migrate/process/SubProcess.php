@@ -21,19 +21,11 @@ use Drupal\migrate\Row;
  *     pipeline is ignored.
  *   - include_source: (optional) If TRUE, all source row values and field
  *     values will be copied into the sub-processed row in a new property named
-<<<<<<< HEAD
  *     for the source_key configuration value (see below). Defaults to FALSE.
  *   - source_key: (optional) If include_source is TRUE, this is the name of
  *     the property of the sub-processed row which will contain the row values
- *     and field values. Ignored if include_source is FALSE. Defaults to 
+ *     and field values. Ignored if include_source is FALSE. Defaults to
  *     'source' if no value is provided.
-=======
- *     for the source_key configuration value (see below). Defaults to FALSE. 
- *   - source_key: (optional) If include_source is TRUE, this
- *     is the name of the property of the sub-processed row which will contain
- *     the source configuration and values. Ignored if include_source is
- *     FALSE. Defaults to 'source' if no value is provided.
->>>>>>> fixing include_source documentation at SubProcess.php
  *
  * Example 1:
  *
