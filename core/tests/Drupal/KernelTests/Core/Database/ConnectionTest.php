@@ -246,4 +246,12 @@ class ConnectionTest extends DatabaseTestBase {
     $this->assertSame($namespace, get_class($condition));
   }
 
+  /**
+   * Tests that the method ::hasJson() returns TRUE.
+   */
+  public function testHasJson() {
+    $connection = Database::getConnection('default', 'default');
+    $this->assertTrue($connection->hasJson());
+  }
+
 }
