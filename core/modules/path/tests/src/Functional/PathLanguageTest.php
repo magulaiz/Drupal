@@ -213,7 +213,6 @@ class PathLanguageTest extends PathTestBase {
    * Tests alias functionality when switching entity language.
    */
   public function testAliasLanguageSwitch() {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $english_node = $this->drupalCreateNode(['type' => 'page', 'langcode' => 'en']);
     $english_alias = $this->randomMachineName();
 
@@ -235,7 +234,7 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet('node/' . $english_node->id() . '/edit');
     $this->submitForm($edit, 'Save');
 
-    $this->drupalGet('/fr' . $french_alias);
+    $this->drupalGet('fr/' . $french_alias);
     $this->assertSession()->pageTextContains($english_node->body->value);
     $this->drupalGet('node/' . $english_node->id() . '/edit');
     $this->assertPathAliasNotExists('/' . $english_alias, 'en', NULL, 'English alias is deleted when French version is created.');
