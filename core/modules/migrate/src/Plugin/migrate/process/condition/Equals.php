@@ -35,7 +35,7 @@ class Equals extends ProcessConditionPluginBase {
    * {@inheritdoc}
    */
   public function evaluate($source) {
-    if ($this->configuration['identical']) {
+    if (isset($this->configuration['identical']) && $this->configuration['identical']) {
       return $source === $this->configuration['value'];
     }
     else {
