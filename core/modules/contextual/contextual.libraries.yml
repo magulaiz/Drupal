@@ -22,6 +22,7 @@ drupal.contextual-links:
     - core/drupal
     - core/drupal.ajax
     - core/drupalSettings
+    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
     - core/backbone.internal
     - core/modernizr
     - core/once
@@ -42,6 +43,7 @@ drupal.contextual-toolbar:
   dependencies:
     - core/jquery
     - core/drupal
+    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
     - core/backbone.internal
     - core/once
     - core/jquery.once.bc
