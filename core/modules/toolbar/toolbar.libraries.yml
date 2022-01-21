@@ -24,6 +24,7 @@ toolbar:
     - core/drupalSettings
     - core/drupal.ajax
     - core/drupal.announce
+    # @todo Remove this in https://www.drupal.org/project/drupal/issues/3204015
     - core/backbone.internal
     - core/once
     - core/jquery.once.bc
