@@ -208,7 +208,7 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-# Run PHPStan on all files in one go for better performance. APCu is disabled to
+# Run PHPStan on all files. APCu is disabled to
 # ensure that the composer classmap is not corrupted.
 php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 if [ "$?" -ne "0" ]; then
