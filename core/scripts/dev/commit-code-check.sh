@@ -111,10 +111,6 @@ TOP_LEVEL=$(git rev-parse --show-toplevel)
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
-# This variable will be set to one when the files core/phpstan-baseline.neon or
-# core/phpstan.neon.dist are changed.
-PHPSTAN_DIST_FILE_CHANGED=0
-
 # This variable will be set to one when one of the eslint config file is
 # changed:
 #  - core/.eslintrc.passing.json
@@ -214,7 +210,6 @@ printf "\n"
 
 # Run PHPStan on all files in one go for better performance. APCu is disabled to
 # ensure that the composer classmap is not corrupted.
-printf "\nRunning PHPStan on *all* files.\n"
 php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
