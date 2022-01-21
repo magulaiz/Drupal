@@ -143,10 +143,6 @@ for FILE in $FILES; do
     PHPCS_XML_DIST_FILE_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
-    PHPSTAN_DIST_FILE_CHANGED=1;
-  fi;
-
   if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
     ESLINT_CONFIG_PASSING_FILE_CHANGED=1;
   fi;
@@ -218,13 +214,8 @@ printf "\n"
 
 # Run PHPStan on all files in one go for better performance. APCu is disabled to
 # ensure that the composer classmap is not corrupted.
-if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]]; then
-  printf "\nRunning PHPStan on *all* files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
-else
-  printf "\nRunning PHPStan on changed files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
-fi
+printf "\nRunning PHPStan on *all* files.\n"
+php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 if [ "$?" -ne "0" ]; then
   # If there are failures set the status to a number other than 0.
   FINAL_STATUS=1
