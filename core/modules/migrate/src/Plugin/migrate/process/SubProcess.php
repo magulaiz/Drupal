@@ -23,7 +23,7 @@ use Drupal\migrate\Row;
  *     for the source_key configuration value (see below). Defaults to FALSE.
  *   - source_key: (optional) If include_source is TRUE, this
  *     is the name of the property of the sub-processed row which will contain
- *     the source configuration and values. Ignored if include_source is
+ *     the row values and field values. Ignored if include_source is
  *     FALSE. Defaults to 'source' if no value is provided.
  *
  * Example 1:
