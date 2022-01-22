@@ -367,16 +367,33 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   public function hasImplementations(string $hook, $modules = NULL): bool {
     $implementations = $this->getImplementationInfo($hook);
-    return (NULL === $modules)
+    $hasImplementations = (NULL === $modules)
       ? count($implementations) > 0
-      : count(array_intersect($modules, array_keys($implementations))) > 0;
+      : count(array_intersect((array) $modules, array_keys($implementations))) > 0;
+
+    if ($hasImplementations) {
+      return TRUE;
+    }
+
+    if ($modules !== NULL) {
+      foreach ((array) $modules as $module) {
+        // Some hooks need to be run in a pre-installed phase, where
+        // getImplementationInfo is not yet aware of the new modules.
+        if (function_exists($module . '_' . $hook)) {
+          return TRUE;
+        }
+      }
+    }
+
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function implementsHook($module, $hook) {
-    return $this->hasImplementations($hook, [$module]);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the hasImplementations() methods instead with the $modules argument.', E_USER_DEPRECATED);
+    return $this->hasImplementations($hook, $module);
   }
 
   /**
@@ -393,7 +410,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    if (!$this->hasImplementations($hook, [$module])) {
+    if (!$this->hasImplementations($hook, $module)) {
       return;
     }
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
