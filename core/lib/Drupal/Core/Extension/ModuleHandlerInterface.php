@@ -206,11 +206,16 @@ interface ModuleHandlerInterface {
    *
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
+   * @param string[]|null
+   *   Checks modules if they have any implementations of a hook. Use NULL
+   *   to check if any module has implementations.
    *
    * @return bool
-   *   Whether there are any implementations of a hook.
+   *   If $modules is provided, then TRUE if there are any implementations by
+   *   the module list provided. Or if $modules if not provided, TRUE if there
+   *   are any implementations. Otherwise FALSE.
    */
-  public function hasImplementations(string $hook): bool;
+  public function hasImplementations(string $hook, $modules = NULL): bool;
 
   /**
    * Returns whether a given module implements a given hook.
@@ -223,6 +228,9 @@ interface ModuleHandlerInterface {
    * @return bool
    *   TRUE if the module is both installed and enabled, and the hook is
    *   implemented in that module.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the
+   *   hasImplementations() methods instead with the $modules argument.
    */
   public function implementsHook($module, $hook);
 

@@ -1194,18 +1194,11 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 /**
  * Implements hook_modules_installed().
  */
-function node_modules_installed($modules) {
+function node_modules_installed(array $modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
   if (!node_access_needs_rebuild()) {
-    $nodeGrantImplementors = [];
-    \Drupal::moduleHandler()->invokeAllWith(
-      'node_grants',
-      function (callable $hook, string $module) use (&$nodeGrantImplementors) {
-        $nodeGrantImplementors[] = $module;
-      }
-    );
-    if (count(array_intersect($modules, $nodeGrantImplementors)) > 0) {
+    if (\Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
       node_access_needs_rebuild(TRUE);
     }
   }
@@ -1223,7 +1216,7 @@ function node_modules_uninstalled($modules) {
     // check whether a hook implementation function exists and do not invoke it.
     // Node access also needs to be rebuilt if language module is disabled to
     // remove any language-specific grants.
-    if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->implementsHook($module, 'node_grants') || $module == 'language')) {
+    if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->hasImplementations('node_grants', [$module]) || $module == 'language')) {
       node_access_needs_rebuild(TRUE);
     }
   }

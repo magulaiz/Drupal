@@ -311,13 +311,13 @@ class ModuleHandlerTest extends UnitTestCase {
    */
   public function testImplementsHookModuleEnabled() {
     $module_handler = $this->getModuleHandler();
-    $this->assertTrue($module_handler->implementsHook('module_handler_test', 'hook'), 'Installed module implementation found.');
+    $this->assertTrue($module_handler->hasImplementations('hook', ['module_handler_test']), 'Installed module implementation found.');
 
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
-    $this->assertTrue($module_handler->implementsHook('module_handler_test_added', 'hook'), 'Runtime added module with implementation in include found.');
+    $this->assertTrue($module_handler->hasImplementations('hook', ['module_handler_test_added']), 'Runtime added module with implementation in include found.');
 
     $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_no_hook');
-    $this->assertFalse($module_handler->implementsHook('module_handler_test_no_hook', 'hook', [TRUE]), 'Missing implementation not found.');
+    $this->assertFalse($module_handler->hasImplementations('hook', ['module_handler_test_no_hook']), 'Missing implementation not found.');
   }
 
   /**
