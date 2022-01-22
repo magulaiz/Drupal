@@ -259,6 +259,9 @@ class CommentForm extends ContentEntityForm {
     // No delete action on the comment form.
     unset($element['delete']);
 
+    $element['submit']['#value'] = $comment->hasParentComment() ?
+      $this->t('Reply to comment') :
+      $this->t('Post comment');
     // Mark the submit action as the primary action, when it appears.
     $element['submit']['#button_type'] = 'primary';
 
