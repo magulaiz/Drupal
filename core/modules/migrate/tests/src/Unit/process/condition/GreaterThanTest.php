@@ -2,14 +2,14 @@
 
 namespace Drupal\Tests\migrate\Unit\process\condition;
 
-use Drupal\migrate\Plugin\migrate\process\condition\Equals;
+use Drupal\migrate\Plugin\migrate\process\condition\GreaterThan;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\condition\Equals
+ * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\condition\GreaterThan
  * @group migrate
  */
-class EqualsTest extends UnitTestCase {
+class GreaterThanTest extends UnitTestCase {
 
   /**
    * @covers ::__construct()
@@ -18,7 +18,7 @@ class EqualsTest extends UnitTestCase {
   public function testConfigurationValidation($configuration, $message) {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($message);
-    $condition = new Equals($configuration, 'equals', []);
+    $condition = new GreaterThan($configuration, 'greater_than', []);
   }
 
   /**
@@ -31,17 +31,17 @@ class EqualsTest extends UnitTestCase {
           'value' => 5,
           'property' => 'my_property',
         ],
-        'message' => 'Exactly one of value and property must be set when using the equals process condition.',
+        'message' => 'Exactly one of value and property must be set when using the greater_than process condition.',
       ],
       [
         'configuration' => [],
-        'message' => 'Exactly one of value and property must be set when using the equals process condition.',
+        'message' => 'Exactly one of value and property must be set when using the greater_than process condition.',
       ],
       [
         'configuration' => [
           'property' => 123,
         ],
-        'message' => 'The property configuration must be a string when using the equals process condition.',
+        'message' => 'The property configuration must be a string when using the greater_than process condition.',
       ],
     ];
   }
@@ -59,7 +59,7 @@ class EqualsTest extends UnitTestCase {
         ->method('get')
         ->willReturn($property_value);
     }
-    $condition = new Equals($configuration, 'equals', []);
+    $condition = new GreaterThan($configuration, 'greater_than', []);
     $this->assertSame($expected, $condition->evaluate($source, $row));
   }
 
@@ -70,17 +70,25 @@ class EqualsTest extends UnitTestCase {
     return [
       [
         'configuration' => [
-          'value' => 'string',
+          'value' => 'aaa',
         ],
-        'source' => 'string',
+        'source' => 'aaa',
+        'property_value' => NULL,
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'value' => 'aaa',
+        ],
+        'source' => 'bbb',
         'property_value' => NULL,
         'expected' => TRUE,
       ],
       [
         'configuration' => [
-          'value' => 'string',
+          'value' => 'bbb',
         ],
-        'source' => 'something else',
+        'source' => 'aaa',
         'property_value' => NULL,
         'expected' => FALSE,
       ],
@@ -90,32 +98,15 @@ class EqualsTest extends UnitTestCase {
         ],
         'source' => 123,
         'property_value' => NULL,
-        'expected' => TRUE,
+        'expected' => FALSE,
       ],
       [
         'configuration' => [
           'value' => 123,
         ],
-        'source' => 321,
-        'property_value' => NULL,
-        'expected' => FALSE,
-      ],
-      [
-        'configuration' => [
-          'value' => NULL,
-        ],
-        'source' => FALSE,
+        'source' => 1230,
         'property_value' => NULL,
         'expected' => TRUE,
-      ],
-      [
-        'configuration' => [
-          'value' => NULL,
-          'identical' => TRUE,
-        ],
-        'source' => FALSE,
-        'property_value' => NULL,
-        'expected' => FALSE,
       ],
       [
         'configuration' => [
@@ -123,13 +114,61 @@ class EqualsTest extends UnitTestCase {
         ],
         'source' => [1, 2, 3],
         'property_value' => NULL,
-        'expected' => TRUE,
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'value' => [1, 2, 3, 4],
+        ],
+        'source' => [1, 2, 3],
+        'property_value' => NULL,
+        'expected' => FALSE,
       ],
       [
         'configuration' => [
           'value' => [1, 2, 3],
         ],
-        'source' => [1, 3, 2],
+        'source' => [1, 2, 3, 4],
+        'property_value' => NULL,
+        'expected' => TRUE,
+      ],
+      [
+        'configuration' => [
+          'value' => ['key' => 5],
+        ],
+        'source' => ['key' => 6],
+        'property_value' => NULL,
+        'expected' => TRUE,
+      ],
+      [
+        'configuration' => [
+          'value' => ['key' => 6],
+        ],
+        'source' => ['key' => 5],
+        'property_value' => NULL,
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'value' => ['key' => 6],
+        ],
+        'source' => ['another_key' => 5],
+        'property_value' => NULL,
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'value' => ['key' => 5],
+        ],
+        'source' => ['another_key' => 6],
+        'property_value' => NULL,
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'value' => NULL,
+        ],
+        'source' => FALSE,
         'property_value' => NULL,
         'expected' => FALSE,
       ],
@@ -138,17 +177,16 @@ class EqualsTest extends UnitTestCase {
           'property' => 'my_property',
         ],
         'source' => 45,
-        'property_value' => '45',
-        'expected' => TRUE,
+        'property_value' => 46,
+        'expected' => FALSE,
       ],
       [
         'configuration' => [
           'property' => 'my_property',
-          'identical' => TRUE,
         ],
-        'source' => 45,
-        'property_value' => '45',
-        'expected' => FALSE,
+        'source' => 46,
+        'property_value' => 45,
+        'expected' => TRUE,
       ],
     ];
   }
