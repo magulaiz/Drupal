@@ -98,7 +98,7 @@ class SkipOnCondition extends ProcessPluginBase implements ContainerFactoryPlugi
    *   records with STATUS_IGNORED status in the map.
    */
   public function row($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if ($this->condition->evaluate($value) xor $this->configuration['negate']) {
+    if ($this->condition->evaluate($value, $row) xor $this->configuration['negate']) {
       $message = !empty($this->configuration['message']) ? $this->configuration['message'] : '';
       throw new MigrateSkipRowException($message);
     }
@@ -126,7 +126,7 @@ class SkipOnCondition extends ProcessPluginBase implements ContainerFactoryPlugi
    *   be skipped.
    */
   public function process($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if ($this->condition->evaluate($value) xor $this->configuration['negate']) {
+    if ($this->condition->evaluate($value, $row) xor $this->configuration['negate']) {
       throw new MigrateSkipProcessException();
     }
     return $value;

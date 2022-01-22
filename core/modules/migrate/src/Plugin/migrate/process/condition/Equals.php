@@ -6,40 +6,59 @@ namespace Drupal\migrate\Plugin\migrate\process\condition;
  * Provides an equals condition.
  *
  * Available configuration keys:
- * - value: The value(s) to compare with.
+ * - value: (one of value or property is required) The literal value to which
+ *   to compare the source.
+ * - property: (one of value or property is required) The source or destination
+ *   property key to 'get' and to compare the source.
  * - identical: (optional) Pass TRUE to compare with ===.
  *
  * Examples:
+ *
+ * Skip row if source_field is exactly equal to 0.
  *
  * @code
  * process:
  *   destination_field:
  *     plugin: skip_on_condition
  *     condition: equals
+ *     method: row
  *     configuration:
- *       value: 5
- *       identical: FALSE
+ *       value: 0
+ *       identical: TRUE
+ *     source: source_field
+ * @endcode
+ *
+ * Skip process if source_field is equal to the value of
+ * another_source_field.
+ *
+ * @code
+ * process:
+ *   destination_field:
+ *     plugin: skip_on_condition
+ *     condition: equals
+ *     method: process
+ *     configuration:
+ *       property: another_source_field
  *     source: source_field
  * @endcode
  *
  * @see \Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface
  *
  * @MigrateProcessConditionPlugin(
- *   id = "equals",
- *   requires = {"value"}
+ *   id = "equals"
  * )
  */
-class Equals extends ProcessConditionPluginBase {
+class Equals extends SimpleComparisonBase {
 
   /**
    * {@inheritdoc}
    */
-  public function evaluate($source) {
+  public function compare($source, $value) {
     if (isset($this->configuration['identical']) && $this->configuration['identical']) {
-      return $source === $this->configuration['value'];
+      return $source === $value;
     }
     else {
-      return $source == $this->configuration['value'];
+      return $source == $value;
     }
   }
 

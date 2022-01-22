@@ -6,34 +6,53 @@ namespace Drupal\migrate\Plugin\migrate\process\condition;
  * Provides a less than condition.
  *
  * Available configuration keys:
- * - value: The value to compare with.
+ * - value: (one of value or property is required) The literal value to which
+ *   to compare the source.
+ * - property: (one of value or property is required) The source or destination
+ *   property key to 'get' and to compare the source.
  *
  * Examples:
+ *
+ * Skip the row if source_field is less than 5.
  *
  * @code
  * process:
  *   destination_field:
  *     plugin: skip_on_condition
+ *     method: row
  *     condition: less_than
  *     configuration:
  *       value: 5
  *     source: source_field
  * @endcode
  *
+ * Skip the process if source_field is less than the destination property
+ * field_whatever.
+ *
+ * @code
+ * process:
+ *   destination_field:
+ *     plugin: skip_on_condition
+ *     method: process
+ *     condition: less_than
+ *     configuration:
+ *       property: '@field_whatever'
+ *     source: source_field
+ * @endcode
+ *
  * @see \Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface
  *
  * @MigrateProcessConditionPlugin(
- *   id = "less_than",
- *   requires = {"value"}
+ *   id = "less_than"
  * )
  */
-class LessThan extends ProcessConditionPluginBase {
+class LessThan extends SimpleComparisonBase {
 
   /**
    * {@inheritdoc}
    */
-  public function evaluate($source) {
-    return $source > $this->configuration['value'];
+  public function compare($source, $value) {
+    return $source < $value;
   }
 
 }

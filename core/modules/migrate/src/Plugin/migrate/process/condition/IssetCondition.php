@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\process\condition;
 
+use Drupal\migrate\Row;
+
 /**
  * Provides isset() condition.
  *
@@ -26,7 +28,7 @@ class IssetCondition extends ProcessConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function evaluate($source) {
+  public function evaluate($source, Row $row) {
     return isset($source);
   }
 

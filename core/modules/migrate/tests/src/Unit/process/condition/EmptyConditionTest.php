@@ -16,8 +16,11 @@ class EmptyConditionTest extends UnitTestCase {
    * @dataProvider providerTestEvaluate
    */
   public function testEvaluate($configuration, $source, $expected) {
+    $row = $this->getMockBuilder('Drupal\migrate\Row')
+      ->disableOriginalConstructor()
+      ->getMock();
     $condition = new EmptyCondition($configuration, 'empty', []);
-    $this->assertSame($expected, $condition->evaluate($source));
+    $this->assertSame($expected, $condition->evaluate($source, $row));
   }
 
   /**

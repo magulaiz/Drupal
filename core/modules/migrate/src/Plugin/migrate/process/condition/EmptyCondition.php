@@ -2,6 +2,8 @@
 
 namespace Drupal\migrate\Plugin\migrate\process\condition;
 
+use Drupal\migrate\Row;
+
 /**
  * Provides empty() condition.
  *
@@ -26,7 +28,7 @@ class EmptyCondition extends ProcessConditionPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function evaluate($source) {
+  public function evaluate($source, Row $row) {
     return empty($source);
   }
 

@@ -6,18 +6,24 @@ namespace Drupal\migrate\Plugin\migrate\process\condition;
  * Provides in_array condition.
  *
  * Available configuration keys:
- * - array: The haystack array.
- * - strict: (optional) 'strict' parameter for in_array. Defaults to FALSE.
+ * - value: (one of value or property is required) The literal array in which
+ *   to search for the source.
+ * - property: (one of value or property is required) The source or destination
+ *   property key to 'get' and then search for the source.
+ * - strict: (optional) 'strict' parameter for in_array(). Defaults to FALSE.
  *
  * Examples:
+ *
+ * Skip row if the source_field is 'one', 'two', or 'three'.
  *
  * @code
  * process:
  *   destination_field:
  *     plugin: skip_on_condition
  *     condition: in_array
+ *     method: row
  *     configuration:
- *       array:
+ *       value:
  *         - one
  *         - two
  *         - three
@@ -25,20 +31,33 @@ namespace Drupal\migrate\Plugin\migrate\process\condition;
  *     source: source_field
  * @endcode
  *
+ * Skip process if the value of source_field is found within the
+ * value of another_source_field.
+ *
+ * @code
+ * process:
+ *   destination_field:
+ *     plugin: skip_on_condition
+ *     condition: in_array
+ *     method: process
+ *     configuration:
+ *       property: another_source_field
+ *     source: source_field
+ * @endcode
+ *
  * @see \Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface
  *
  * @MigrateProcessConditionPlugin(
- *   id = "in_array",
- *   requires = {"array"}
+ *   id = "in_array"
  * )
  */
-class InArray extends ProcessConditionPluginBase {
+class InArray extends SimpleComparisonBase {
 
   /**
    * {@inheritdoc}
    */
-  public function evaluate($source) {
-    return in_array($source, (array) $this->configuration['array'], $this->configuration['strict'] ?? FALSE);
+  public function compare($source, $value) {
+    return in_array($source, (array) $value, $this->configuration['strict'] ?? FALSE);
   }
 
 }
