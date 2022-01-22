@@ -67,7 +67,7 @@ class ViewsHooksTest extends ViewsKernelTestBase {
 
     // Test each hook is found in the implementations array and is invoked.
     foreach (static::$hooks as $hook => $type) {
-      $this->assertTrue($this->moduleHandler->hasImplementations($hook, ['views_test_data']), new FormattableMarkup('The hook @hook was registered.', ['@hook' => $hook]));
+      $this->assertTrue($this->moduleHandler->hasImplementations($hook, 'views_test_data'), new FormattableMarkup('The hook @hook was registered.', ['@hook' => $hook]));
 
       if ($hook == 'views_post_render') {
         $this->moduleHandler->invoke('views_test_data', $hook, [$view, &$view->display_handler->output, $view->display_handler->getPlugin('cache')]);

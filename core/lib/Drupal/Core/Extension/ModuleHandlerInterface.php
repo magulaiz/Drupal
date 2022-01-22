@@ -200,20 +200,19 @@ interface ModuleHandlerInterface {
   public function resetImplementations();
 
   /**
-   * Determines whether there are any implementations of a hook.
-   *
-   * Use implementsHook to determine if a specific module implements a hook.
+   * Determines whether there are implementations of a hook.
    *
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
-   * @param string[]|null
-   *   Checks modules if they have any implementations of a hook. Use NULL
-   *   to check if any module has implementations.
+   * @param string|string[]|null $modules
+   *   A single module or multiple modules to check if they have any
+   *   implementations of a hook. Use NULL to check if any enabled module has
+   *   implementations.
    *
    * @return bool
    *   If $modules is provided, then TRUE if there are any implementations by
-   *   the module list provided. Or if $modules if not provided, TRUE if there
-   *   are any implementations. Otherwise FALSE.
+   *   the module(s) provided. Or if $modules if NULL, TRUE if there are any
+   *   implementations. Otherwise FALSE.
    */
   public function hasImplementations(string $hook, $modules = NULL): bool;
 
@@ -231,6 +230,8 @@ interface ModuleHandlerInterface {
    *
    * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the
    *   hasImplementations() methods instead with the $modules argument.
+   *
+   * @see https://www.drupal.org/node/3000490
    */
   public function implementsHook($module, $hook);
 
