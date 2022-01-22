@@ -356,8 +356,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     // when non-database caching backends are used, so there will be more
     // significant gains when a large number of modules are installed or hooks
     // invoked, since this can quickly lead to
-    // \Drupal::moduleHandler()->implementsHook() being called several thousand
-    // times per request.
+    // \Drupal::moduleHandler()->hasImplementations() being called several
+    // thousand times per request.
     $this->cacheBackend->set('module_implements', []);
     $this->cacheBackend->delete('hook_info');
   }
@@ -365,28 +365,18 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasImplementations(string $hook): bool {
-    return count($this->getImplementationInfo($hook)) > 0;
+  public function hasImplementations(string $hook, $modules = NULL): bool {
+    $implementations = $this->getImplementationInfo($hook);
+    return (NULL === $modules)
+      ? count($implementations) > 0
+      : count(array_intersect($modules, array_keys($implementations))) > 0;
   }
 
   /**
    * {@inheritdoc}
    */
   public function implementsHook($module, $hook) {
-    $function = $module . '_' . $hook;
-    if (function_exists($function)) {
-      return TRUE;
-    }
-    // If the hook implementation does not exist, check whether it lives in an
-    // optional include file registered via hook_hook_info().
-    $hook_info = $this->getHookInfo();
-    if (isset($hook_info[$hook]['group'])) {
-      $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
-      if (function_exists($function)) {
-        return TRUE;
-      }
-    }
-    return FALSE;
+    return $this->hasImplementations($hook, [$module]);
   }
 
   /**
@@ -403,7 +393,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function invoke($module, $hook, array $args = []) {
-    if (!$this->implementsHook($module, $hook)) {
+    if (!$this->hasImplementations($hook, [$module])) {
       return;
     }
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
