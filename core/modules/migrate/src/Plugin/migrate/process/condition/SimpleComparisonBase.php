@@ -12,7 +12,9 @@ use Drupal\migrate\Row;
  * If set, the property will be used to 'get' a value from the row.
  *
  * Both the constructor and evaluate methods are final. Extensions of this
- * class will only declare a compare method.
+ * class will only declare a compare method. The compare method should not
+ * throw exceptions. If a condition requires additional configuration validation
+ * or input validation, it is not 'simple' and should not extend this class.
  *
  * @ingroup migration
  */
@@ -53,6 +55,11 @@ abstract class SimpleComparisonBase extends ProcessConditionPluginBase {
 
   /**
    * A simple comparison called from the evaluate function.
+   *
+   * This method should not throw exceptions or perform validation
+   * of configuration or input. If a condition requires additional
+   * configuration validation or input validation, it is not 'simple'
+   * and should not extend this class.
    *
    * @param mixed $source
    *   The source passed to the condition.
