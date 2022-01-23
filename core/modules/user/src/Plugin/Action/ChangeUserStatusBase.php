@@ -6,7 +6,7 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 
 /**
- * Provides a base class for operations to change a user's status
+ * Provides a base class for operations to change a user's status.
  */
 abstract class ChangeUserStatusBase extends ActionBase {
 
