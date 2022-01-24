@@ -247,7 +247,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
     unset($build['#cache']['keys']);
     // - Contextual Links do not make sense for embedded entities; we only allow
     //   the host entity to be contextually managed.
-    $build['#pre_render'][] = static::class . '::disableContextualLinks';
+    $build['#pre_render'][] = [static::class, 'disableContextualLinks'];
     // - default styling may break captioned media embeds; attach asset library
     //   to ensure captions behave as intended. Do not set this at the root
     //   level of the render array, otherwise it will be attached always,

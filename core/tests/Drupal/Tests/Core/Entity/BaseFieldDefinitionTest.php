@@ -353,7 +353,7 @@ class BaseFieldDefinitionTest extends UnitTestCase {
    */
   public function testDefaultValueCallback() {
     $definition = BaseFieldDefinition::create($this->fieldType);
-    $callback = static::class . '::mockDefaultValueCallback';
+    $callback = [static::class, 'mockDefaultValueCallback'];
     // setDefaultValueCallback returns $this.
     $this->assertSame($definition, $definition->setDefaultValueCallback($callback));
   }

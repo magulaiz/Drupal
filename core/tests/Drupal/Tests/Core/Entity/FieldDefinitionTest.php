@@ -270,7 +270,7 @@ class FieldDefinitionTest extends UnitTestCase {
    */
   public function testDefaultValueCallback($factory_name) {
     $definition = $this->initializeFieldUsingFactory($factory_name);
-    $callback = static::class . '::mockDefaultValueCallback';
+    $callback = [static::class, 'mockDefaultValueCallback'];
     // setDefaultValueCallback returns $this.
     $this->assertSame($definition, $definition->setDefaultValueCallback($callback));
     $this->assertSame($callback, $definition->getDefaultValueCallback());
