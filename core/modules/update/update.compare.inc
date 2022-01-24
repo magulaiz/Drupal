@@ -313,7 +313,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['latest_version'] = $latest_release['version'];
     $project_data['releases'][$latest_release['version']] = $latest_release;
   }
-  if ($dev_release = $status_calculator->getDevReleaseForTargetMajor()) {
+  if ($dev_release = $status_calculator->getLatestDevReleaseForTargetMajor()) {
     $project_data['dev_version'] = $dev_release['version'];
     $project_data['releases'][$dev_release['version']] = $latest_release;
   }

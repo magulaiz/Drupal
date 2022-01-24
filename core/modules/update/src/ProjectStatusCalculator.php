@@ -49,7 +49,8 @@ final class ProjectStatusCalculator {
    * Creates a ProjectStatusCalculator object.
    *
    * @param array $project_data
-   *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
+   *   Data for project as returned by
+   *   Drupal\update\UpdateManagerInterface::getProjects().
    * @param \Drupal\update\UpdateServerProjectInfo $project_info
    *   The update server project information.
    *
@@ -61,12 +62,14 @@ final class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the develop release if any for the target major.
+   * Gets the latest development release if any for the target major.
+   *
+   * Development release end with the string "-dev".
    *
    * @return array|null
    *   The development release if available, otherwise NULL.
    */
-  public function getDevReleaseForTargetMajor(): ?array {
+  public function getLatestDevReleaseForTargetMajor(): ?array {
     if (!$this->isProjectRecommendable()) {
       return NULL;
     }
@@ -82,10 +85,12 @@ final class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the latest release if any for the target major.
+   * Gets the latest installable release, if any, for the target major.
    *
    * @return array|null
-   *   The latest release if available, otherwise NULL.
+   *   The latest installable release if available, otherwise NULL.
+   *
+   * @see self::getTargetMajor()
    */
   public function getLatestReleaseForTargetMajor(): ?array {
     if (!$this->isProjectRecommendable()) {
@@ -105,6 +110,8 @@ final class ProjectStatusCalculator {
    *
    * @return array|null
    *   The recommended release if available, otherwise NULL.
+   *
+   * @see self::getTargetMajor()
    */
   public function getRecommendReleaseForTargetMajor(): ?array {
     if (!$this->isProjectRecommendable()) {
@@ -478,7 +485,7 @@ final class ProjectStatusCalculator {
    *   The latest develop release if available otherwise NULL.
    */
   public function getLatestDev(): ?array {
-    $dev_release_info = $this->getDevReleaseForTargetMajor();
+    $dev_release_info = $this->getLatestDevReleaseForTargetMajor();
     $latest_release_info = $this->getLatestReleaseForTargetMajor();
     if ($dev_release_info && $latest_release_info) {
       $dev_release = ProjectRelease::createFromArray($dev_release_info);
