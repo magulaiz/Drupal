@@ -586,6 +586,48 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['a' => TRUE]),
       new HTMLRestrictions(['a' => TRUE]),
     ];
+
+    // Wildcard cases.
+    yield 'wildcard tag: attribute union' => [
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute union — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute value union' => [
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'wildcard tag: attribute value union — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute union' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+    ];
+    yield 'dual wildcard tag: attribute union — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+    ];
+    yield 'dual wildcard tag: attribute value union' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute value union — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+    ];
   }
 
 }
