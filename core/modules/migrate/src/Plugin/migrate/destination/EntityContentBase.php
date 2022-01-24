@@ -31,7 +31,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   defaults to FALSE.
  * - overwrite_properties: (optional) A list of properties that will be
  *   overwritten if an entity with the same ID already exists. Any properties
- *   that are not listed will not be overwritten.
+ *   that are not listed will not be overwritten. This is ignored if the row's
+ *   values caused a new translation to be added to an existing entity.
  * - validate: (optional) Boolean, indicates whether an entity should be
  *   validated, defaults to FALSE.
  *
@@ -309,7 +310,7 @@ class EntityContentBase extends Entity implements HighestIdInterface, MigrateVal
     // If the migration has specified a list of properties to be overwritten,
     // clone the row with an empty set of destination values, and re-add only
     // the specified properties.
-    if (isset($this->configuration['overwrite_properties'])) {
+    if (isset($this->configuration['overwrite_properties']) && !$entity->isNewTranslation()) {
       $empty_destinations = array_intersect($empty_destinations, $this->configuration['overwrite_properties']);
       $clone = $row->cloneWithoutDestination();
       foreach ($this->configuration['overwrite_properties'] as $property) {
