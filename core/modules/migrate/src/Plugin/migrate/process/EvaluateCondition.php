@@ -52,7 +52,7 @@ class EvaluateCondition extends ProcessPluginBase implements ContainerFactoryPlu
   protected $condition;
 
   /**
-   * Constructs a MenuLinkParent object.
+   * Constructs an EvaluateCondition object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

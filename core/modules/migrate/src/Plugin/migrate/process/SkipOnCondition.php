@@ -46,7 +46,7 @@ class SkipOnCondition extends ProcessPluginBase implements ContainerFactoryPlugi
   protected $condition;
 
   /**
-   * Constructs a MenuLinkParent object.
+   * Constructs a SkipOnCondition object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

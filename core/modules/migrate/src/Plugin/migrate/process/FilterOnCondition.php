@@ -55,7 +55,7 @@ class FilterOnCondition extends ProcessPluginBase implements ContainerFactoryPlu
   protected $condition;
 
   /**
-   * Constructs a MenuLinkParent object.
+   * Constructs a FilterOnCondition object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.

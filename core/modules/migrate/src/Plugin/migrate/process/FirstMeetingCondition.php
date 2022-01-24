@@ -55,7 +55,7 @@ class FirstMeetingCondition extends ProcessPluginBase implements ContainerFactor
   protected $condition;
 
   /**
-   * Constructs a MenuLinkParent object.
+   * Constructs a FirstMeetingCondition object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
