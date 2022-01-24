@@ -466,6 +466,48 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
     ];
+
+    // Wildcard cases.
+    yield 'wildcard tag: attribute intersection' => [
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute intersection — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute value intersection' => [
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'wildcard tag: attribute value intersection — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute intersection' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+    ];
+    yield 'dual wildcard tag: attribute intersection — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+    ];
+    yield 'dual wildcard tag: attribute value intersection' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute value intersection — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
   }
 
   /**
