@@ -7,6 +7,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Builder\ImageBuilder;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -151,12 +152,11 @@ class SystemBrandingBlock extends BlockBase implements ContainerFactoryPluginInt
     $build = [];
     $site_config = $this->configFactory->get('system.site');
 
-    $build['site_logo'] = [
-      '#theme' => 'image',
-      '#uri' => theme_get_setting('logo.url'),
-      '#alt' => $this->t('Home'),
-      '#access' => $this->configuration['use_site_logo'],
-    ];
+    $build['site_logo'] = ImageBuilder::create()
+      ->uri(theme_get_setting('logo.url'))
+      ->alt($this->t('Home'))
+      ->access($this->configuration['use_site_logo'])
+      ->toRenderable();
 
     $build['site_name'] = [
       '#markup' => $site_config->get('name'),

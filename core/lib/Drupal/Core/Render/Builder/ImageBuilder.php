@@ -12,7 +12,10 @@ namespace Drupal\Core\Render\Builder;
  */
 class ImageBuilder extends BuilderBase {
 
-  protected $renderable = ['#theme' => 'image'];
+  /**
+   * {@inheritdoc}
+   */
+  protected array $renderable = ['#theme' => 'image'];
 
   /**
    * Set the uri property on the image.
@@ -22,7 +25,7 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setUri($value) {
+  public function uri($value) {
     $this->set('uri', $value);
     return $this;
   }
@@ -35,7 +38,7 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setWidth($value) {
+  public function width($value) {
     $this->set('width', $value);
     return $this;
   }
@@ -48,7 +51,7 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setHeight($value) {
+  public function height($value) {
     $this->set('height', $value);
     return $this;
   }
@@ -61,7 +64,7 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setAlt($value) {
+  public function alt($value) {
     $this->set('alt', $value);
     return $this;
   }
@@ -74,21 +77,8 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setTitle($value) {
+  public function title($value) {
     $this->set('title', $value);
-    return $this;
-  }
-
-  /**
-   * Set the attributes property on the image.
-   *
-   * @param mixed $value
-   *   The value to set.
-   *
-   * @return $this
-   */
-  public function setAttributes($value) {
-    $this->set('attributes', $value);
     return $this;
   }
 
@@ -100,7 +90,7 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setSizes($value) {
+  public function sizes($value) {
     $this->set('sizes', $value);
     return $this;
   }
@@ -113,21 +103,8 @@ class ImageBuilder extends BuilderBase {
    *
    * @return $this
    */
-  public function setSrcset($value) {
+  public function srcset($value) {
     $this->set('srcset', $value);
-    return $this;
-  }
-
-  /**
-   * Set the style_name property on the image.
-   *
-   * @param mixed $value
-   *   The value to set.
-   *
-   * @return $this
-   */
-  public function setStyleName($value) {
-    $this->set('style_name', $value);
     return $this;
   }
 

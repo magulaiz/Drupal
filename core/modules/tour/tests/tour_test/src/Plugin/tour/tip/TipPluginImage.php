@@ -3,6 +3,7 @@
 namespace Drupal\tour_test\Plugin\tour\tip;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Builder\ImageBuilder;
 use Drupal\Core\Utility\Token;
 use Drupal\tour\TipPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -68,11 +69,10 @@ class TipPluginImage extends TipPluginBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getBody(): array {
-    $image = [
-      '#theme' => 'image',
-      '#uri' => $this->get('url'),
-      '#alt' => $this->get('alt'),
-    ];
+    $image = ImageBuilder::create()
+      ->uri($this->get('url'))
+      ->alt($this->get('alt'))
+      ->toRenderable();
 
     return [
       '#type' => 'html_tag',

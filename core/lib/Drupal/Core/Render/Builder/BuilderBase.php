@@ -1,11 +1,7 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Core\Render\Builder\BuilderBase.
- */
-
 namespace Drupal\Core\Render\Builder;
+
 use Drupal\Core\Render\RenderableInterface;
 
 /**
@@ -18,7 +14,7 @@ abstract class BuilderBase implements BuilderBaseInterface, RenderableInterface 
    *
    * @var array
    */
-  protected $renderable = array();
+  protected array $renderable = [];
 
   /**
    * {@inheritdoc}
@@ -45,81 +41,34 @@ abstract class BuilderBase implements BuilderBaseInterface, RenderableInterface 
   /**
    * {@inheritdoc}
    */
-  public function setPrefix($value) {
-    $this->set('prefix', $value);
-    return $this;
+  public function prefix($value) {
+    return $this->set('prefix', $value);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setSuffix($value) {
-    $this->set('suffix', $value);
-    return $this;
+  public function suffix($value) {
+    return $this->set('suffix', $value);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPostRender($value) {
-    $this->set('post_render', $value);
-    return $this;
+  public function access($value) {
+    return $this->set('access', $value);
   }
 
   /**
-   * {@inheritdoc}
+   * Set the attributes property on the image.
+   *
+   * @param mixed $value
+   *   The value to set.
+   *
+   * @return $this
    */
-  public function setPreRender($value) {
-    $this->set('pre_render', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setAccess($value) {
-    $this->set('access', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setAccessCallback($value) {
-    $this->set('access_callback', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setWeight($value) {
-    $this->set('weight', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setCache($value) {
-    $this->set('cache', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setThemeWrappers($value) {
-    $this->set('theme_wrappers', $value);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setAfterBuild($value) {
-    $this->set('after_build', $value);
-    return $this;
+  public function attributes($value) {
+    return $this->set('attributes', $value);
   }
 
 }
