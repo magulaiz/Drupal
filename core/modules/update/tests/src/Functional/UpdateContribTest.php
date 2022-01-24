@@ -269,6 +269,10 @@ class UpdateContribTest extends UpdateTestBase {
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
 
     foreach (['1.1', '1.2', '2.0'] as $version) {
+      // Test pre-stable release '-alpha1' and '-beta1' as well as post-stable
+      // release '-bugfix'. There is no special logic for these strings to
+      // determine if they are pre or post stable but rather it is determined by
+      // the order of the releases in the XML.
       foreach (['-beta1', '-alpha1', '-bugfix', ''] as $extra_version) {
         $full_version = "8.x-$version$extra_version";
         $this->refreshUpdateStatus([
