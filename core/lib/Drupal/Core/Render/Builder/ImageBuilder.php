@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\Core\Render\Builder\ImageBuilder.
- */
-
 namespace Drupal\Core\Render\Builder;
 
 /**
