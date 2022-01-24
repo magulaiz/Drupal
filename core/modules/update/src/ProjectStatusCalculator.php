@@ -37,27 +37,27 @@ final class ProjectStatusCalculator {
    *
    * @param array $project_data
    *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
-   * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   * @param \Drupal\update\UpdateServerProjectInfo $project_info
    *   The update server project information.
    */
-  private function __construct(array $project_data, UpdateServerProjectInfo $projectInfo) {
+  private function __construct(array $project_data, UpdateServerProjectInfo $project_info) {
     $this->projectData = $project_data;
-    $this->updateServerProjectInfo = $projectInfo;
+    $this->updateServerProjectInfo = $project_info;
   }
 
   /**
    * Creates a ProjectStatusCalculator object.
    *
-   * @param array $projectData
+   * @param array $project_data
    *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
-   * @param \Drupal\update\UpdateServerProjectInfo $projectInfo
+   * @param \Drupal\update\UpdateServerProjectInfo $project_info
    *   The update server project information.
    *
    * @return \Drupal\update\ProjectStatusCalculator
    *   The ProjectStatusCalculator instance.
    */
-  public static function createFromProjectData(array $projectData, UpdateServerProjectInfo $projectInfo): ProjectStatusCalculator {
-    return new ProjectStatusCalculator($projectData, $projectInfo);
+  public static function createFromProjectData(array $project_data, UpdateServerProjectInfo $project_info): ProjectStatusCalculator {
+    return new ProjectStatusCalculator($project_data, $project_info);
   }
 
   /**
@@ -122,7 +122,7 @@ final class ProjectStatusCalculator {
         $release_version_without_extra = $version;
       }
 
-      if ($release_module_version->getMajorVersion() == $target_major) {
+      if ($release_module_version->getMajorVersion() === $target_major) {
         if ($recommended_version_without_extra !== $release_version_without_extra) {
           $recommended_version_without_extra = $release_version_without_extra;
           $recommended_release = $release_info;
@@ -232,7 +232,7 @@ final class ProjectStatusCalculator {
    * @return bool
    *   TRUE if the version is supported branch of the project. otherwise false.
    */
-  private function isInSupportedBranch(string $version) {
+  private function isInSupportedBranch(string $version): bool {
     foreach ($this->updateServerProjectInfo->getSupportBranches() as $supported_branch) {
       if (strpos($version, $supported_branch) === 0) {
         return TRUE;
@@ -363,7 +363,7 @@ final class ProjectStatusCalculator {
    * @return bool
    *   TRUE if the project can have any release recommended, otherwise false.
    */
-  private function isProjectRecommendable() {
+  private function isProjectRecommendable(): bool {
     $unusable_project_statuses = [
       'insecure',
       'unpublished',
