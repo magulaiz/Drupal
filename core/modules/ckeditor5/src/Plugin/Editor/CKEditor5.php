@@ -676,9 +676,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $original_settings = $pair->getSettings();
     $enabled_plugins = $this->ckeditor5PluginManager->getEnabledDefinitions($pair);
     $updated_settings = [
-      'toolbar' => $original_settings['toolbar'],
       'plugins' => array_intersect_key($original_settings['plugins'], $enabled_plugins),
-    ];
+    ] + $original_settings;
     $pair->setSettings($updated_settings);
 
     if ($pair->getFilterFormat()->filters('filter_html')->status) {
