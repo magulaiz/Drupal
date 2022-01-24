@@ -2,11 +2,11 @@
 
 namespace Drupal\Tests\rest\Kernel\EntityResource;
 
-use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\rest\Functional\EntityResource\EntityResourceTestBase;
+use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
  * Checks that all core content/config entity types have REST test coverage.
@@ -116,13 +116,13 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
         }
       }
 
-      $content_entity = is_subclass_of($class_name_full, ContentEntityInterface::class);
-      $content_test = is_subclass_of($class, EntityResourceTestBase::class);
-      if ($content_entity && !$content_test) {
-        $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
-      }
-      elseif (!$content_entity && $content_test) {
+      $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
+      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class) || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class);
+      if ($config_entity && !$config_test) {
         $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
+      }
+      elseif (!$config_entity && $config_test) {
+        $problems[] = "$entity_type_id: $class_name is a content entity, but the test is for config entities.";
       }
     }
     $this->assertSame([], $problems);
