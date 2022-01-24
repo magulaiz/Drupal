@@ -33,7 +33,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsNormalization
    */
-  public function testSupportsNormalization() {
+  public function testSupportsNormalization(): void {
     $section_data = $this->prophesize(SectionData::class);
     $this->assertTrue($this->normalizer->supportsNormalization($section_data->reveal()));
   }
@@ -41,7 +41,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
   /**
    * @covers ::supportsDenormalization
    */
-  public function testSupportsDenormalization() {
+  public function testSupportsDenormalization(): void {
     $this->assertTrue($this->normalizer->supportsDenormalization([], SectionData::class));
   }
 
@@ -50,7 +50,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
    *
    * @covers ::normalize
    */
-  public function testNormalize() {
+  public function testNormalize(): void {
     $data = ['foo'];
     $section_data = $this->prophesize(SectionData::class);
     $section = $this->prophesize(Section::class);
@@ -64,7 +64,7 @@ class SectionDataNormalizerTest extends UnitTestCase {
    *
    * @covers ::denormalize
    */
-  public function testDenormalize() {
+  public function testDenormalize(): void {
     $data = [
       'layout_id' => $this->randomMachineName(),
       'layout_settings' => [
