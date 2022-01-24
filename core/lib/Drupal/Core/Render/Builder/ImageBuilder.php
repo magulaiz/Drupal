@@ -26,8 +26,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function uri($value) {
-    $this->set('uri', $value);
-    return $this;
+    return $this->set('uri', $value);
   }
 
   /**
@@ -39,8 +38,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function width($value) {
-    $this->set('width', $value);
-    return $this;
+    return $this->set('width', $value);
   }
 
   /**
@@ -52,8 +50,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function height($value) {
-    $this->set('height', $value);
-    return $this;
+    return $this->set('height', $value);
   }
 
   /**
@@ -65,8 +62,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function alt($value) {
-    $this->set('alt', $value);
-    return $this;
+    return $this->set('alt', $value);
   }
 
   /**
@@ -78,8 +74,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function title($value) {
-    $this->set('title', $value);
-    return $this;
+    return $this->set('title', $value);
   }
 
   /**
@@ -91,8 +86,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function sizes($value) {
-    $this->set('sizes', $value);
-    return $this;
+    return $this->set('sizes', $value);
   }
 
   /**
@@ -104,8 +98,7 @@ class ImageBuilder extends BuilderBase {
    * @return $this
    */
   public function srcset($value) {
-    $this->set('srcset', $value);
-    return $this;
+    return $this->set('srcset', $value);
   }
 
 }
