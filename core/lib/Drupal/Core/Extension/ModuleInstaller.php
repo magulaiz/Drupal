@@ -242,7 +242,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
-        module_load_install($module);
+        $this->moduleHandler->loadInclude($module, 'install');
 
         if (!InstallerKernel::installationAttempted()) {
           // Replace the route provider service with a version that will rebuild
@@ -468,7 +468,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invokeAll('module_preuninstall', [$module]);
 
       // Uninstall the module.
-      module_load_install($module);
+      $this->moduleHandler->loadInclude($module, 'install');
       $this->moduleHandler->invoke($module, 'uninstall', [$sync_status]);
 
       // Remove all configuration belonging to the module.
@@ -561,7 +561,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // Any cache entry might implicitly depend on the uninstalled modules,
     // so clear all of them explicitly.
     $this->moduleHandler->invokeAll('cache_flush');
-    foreach (Cache::getBins() as $service_id => $cache_backend) {
+    foreach (Cache::getBins() as $cache_backend) {
       $cache_backend->deleteAll();
     }
 

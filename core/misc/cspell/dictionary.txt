@@ -1,7 +1,5 @@
 abcdefghijklmno
 abcdefghijklmnopqrstuvwxyz
-abempty
-abiword
 absolutezero
 accesslog
 accum
@@ -10,8 +8,6 @@ addedline
 addtogroup
 adminforms
 adminlabel
-aewesome
-aflopend
 afterclose
 aftercreate
 ahah
@@ -20,9 +16,7 @@ ajaxcallback
 ajaxify
 ajaxing
 akiko
-aliasable
-aliquet
-allowtransparency
+alignable
 allwords
 alphadecimal
 alterjs
@@ -38,7 +32,6 @@ anotherwordenglish
 anotherwordgerman
 antilop
 anyall
-apng
 applix
 archiver
 archivers
@@ -57,7 +50,6 @@ asdf
 asdrsad
 assertable
 asterix
-asubject
 atomentry
 atomfeed
 atomrendererfeed
@@ -75,17 +67,12 @@ autocreate
 autocreated
 autocreation
 autodetect
-autodiscovered
 autoescape
 autoescaped
 autoescaping
-autofilling
 autofix
 autogenerate
 autogenerator
-autoincrement
-autoincrementing
-autoindex
 autoloadable
 autoloaded
 autoloader
@@ -117,7 +104,6 @@ bartik
 bartik's
 basefield
 basepath
-baseroot
 basestrings
 basetheme
 basicpage
@@ -139,11 +125,9 @@ bgred
 bigpipe
 bikeshed
 bikesheds
-bistromathic
 bitmask
 bkmgtpezy
 bkslshv
-blackhat
 blist
 blockarticles
 blockbasic
@@ -182,10 +166,8 @@ bundlenode
 buttonpane
 buttonset
 buytaert
-bzzzzzzzt
 cacheability
 cacheable
-cacheablemetadata
 cachebackend
 cachebackends
 cachebin
@@ -242,12 +224,10 @@ classtype
 cldr
 clearfix
 cleartype
-clicksort
 clicksorter
 clist
 cloner
 closethick
-closur
 cnenzrgre
 cnfi
 cochez
@@ -265,7 +245,6 @@ complote
 compositionend
 compositionstart
 configentity
-configtranslation
 configurability
 configurator
 conneg
@@ -274,7 +253,6 @@ contentblock
 contententry
 contentrendererentry
 contextuals
-contrained
 controlgroup
 corefake
 coretest
@@ -287,8 +265,6 @@ createrole
 createuser
 crema
 crossout
-crudui
-crypted
 crème
 cscript
 csrftoken
@@ -301,8 +277,6 @@ ctund
 cucurbitaceae
 curle
 curlopt
-currenttime
-currentuser
 customevent
 customly
 customrequest
@@ -315,7 +289,6 @@ databasename
 datapoint
 datas
 datatypes
-datefield
 dateformatter
 datelist
 dateonly
@@ -325,7 +298,6 @@ datetimeiso
 datetimeplus
 datetype
 daycount
-daycounter
 dblog
 dbtng
 dburl
@@ -334,7 +306,6 @@ deckard
 deconstructor
 deduplicated
 deduplicates
-defalt
 defaultable
 defgroup
 delayable
@@ -356,7 +327,6 @@ denyall
 dependee
 dependee's
 dependees
-dependening
 depenencies
 deprioritize
 dequeues
@@ -382,8 +352,6 @@ diffchange
 differring
 discoverability
 displaymessage
-displayname
-distincted
 distro
 ditka
 divs
@@ -401,7 +369,6 @@ dramallama
 dramallamas
 drei
 drillable
-driveletter
 drivernumber
 drivertest
 drivertestmysql
@@ -446,7 +413,6 @@ eins
 elbonia
 elementspath
 elems
-elit
 encapsed
 endapply
 endautoescape
@@ -823,7 +789,7 @@ metapackage
 metapackages
 metatag
 metatags
-meφω
+meΦΩ
 miaus
 middlewares
 midgardmvc
@@ -892,6 +858,7 @@ mymodule
 mysite
 mysqladmin
 mysqldump
+mystarterkit
 myverylongurl
 myverylongurlexample
 műveletek
@@ -980,7 +947,6 @@ onewidgetfield
 onoff
 opendocument
 openxmlformats
-oplopend
 optgroups
 optimizable
 optin
@@ -1155,6 +1121,7 @@ realword
 rebuilder
 reclosed
 recolorable
+redeclaration
 redirections
 redstrawberryhiddenfield
 refactorings
@@ -1297,7 +1264,6 @@ somethinggeneric
 soofy
 sortablejs
 sortby
-sorteren
 sourcearea
 sourcearea's
 sourcedialog
@@ -1501,7 +1467,6 @@ titleslogan
 tlds
 tmpfs
 tnid
-toepassen
 toggleable
 togglewrap
 tongatapu
@@ -1668,7 +1633,6 @@ vids
 viewmode
 viewports
 viewsviewfiles
-vivamus
 vmov
 vocabs
 volgende
