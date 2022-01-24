@@ -50,7 +50,7 @@ class Callback extends ProcessConditionPluginBase {
   public function evaluate($source, Row $row) {
     if (!empty($this->configuration['unpack_source'])) {
       if (!is_array($source)) {
-        throw new MigrateException(sprintf("When 'unpack_source' is set, the source must be an array. Instead it was of type '%s'", gettype($value)));
+        throw new MigrateException(sprintf("When 'unpack_source' is set, the source must be an array. Instead it was of type '%s'", gettype($source)));
       }
       return (bool) call_user_func($this->configuration['callable'], ...$source);
     }
