@@ -501,11 +501,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Render/Element/Pager.php
-
-		-
 			message: "#^Cannot unset offset 'options' on array\\{url\\: string\\|null\\}\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Render/Element/RenderElement.php
