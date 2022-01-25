@@ -14,6 +14,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Evaluates the configured condition on each array element and returns
  * TRUE if each element meets the condition.
  *
+ * Available configuration keys:
+ * - condition: The condition plugin to evaluate on each element.
+ * - negate: (optional) Whether to negate the configured condition.
+ *   Defaults to FALSE.
+ * - configuration: (optional) Configuration to pass to the configured
+ *   condition.
+ *
  * Example:
  *
  * Skip a row if every date in the array source_dates is too old.
@@ -58,9 +65,7 @@ class AllElements extends ProcessConditionPluginBase implements ContainerFactory
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $process_condition_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!isset($configuration['condition'])) {
-      throw new \InvalidArgumentException('The "condition" must be set.');
-    }
+    $this->configuration['negate'] = $this->configuration['negate'] ?? FALSE;
     $this->condition = $process_condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);
   }
 

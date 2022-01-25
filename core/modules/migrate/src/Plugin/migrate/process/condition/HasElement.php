@@ -14,6 +14,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Evaluates the configured condition on each array element and returns
  * TRUE if any element meets the condition.
  *
+ * Available configuration keys:
+ * - condition: The condition plugin to evaluate on each element.
+ * - negate: (optional) Whether to negate the configured condition.
+ *   Defaults to FALSE.
+ * - configuration: (optional) Configuration to pass to the configured
+ *   condition.
+ *
  * Example:
  *
  * Skip a row if any date in the array source_dates is too old.
@@ -45,7 +52,7 @@ class HasElement extends ProcessConditionPluginBase implements ContainerFactoryP
   protected $condition;
 
   /**
-   * Constructs an AllElements object.
+   * Constructs a HasElement object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -58,9 +65,7 @@ class HasElement extends ProcessConditionPluginBase implements ContainerFactoryP
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $process_condition_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!isset($configuration['condition'])) {
-      throw new \InvalidArgumentException('The "condition" must be set.');
-    }
+    $this->configuration['negate'] = $this->configuration['negate'] ?? FALSE;
     $this->condition = $process_condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);
   }
 
