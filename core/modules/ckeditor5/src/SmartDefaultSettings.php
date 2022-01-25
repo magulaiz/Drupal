@@ -434,107 +434,38 @@ final class SmartDefaultSettings {
     });
 
     if (!empty($supported_tags_with_unsupported_attributes)) {
-      // This will be populated with plugins that aren't currently enabled, but
-      // provide element configuration that include attributes. I.e. they are
-      // the only plugins that can potentially address unsupported attributes
-      // in supported tags.
-      $disabled_plugins_with_attribute_config = [];
+      $still_needed = new HTMLRestrictions($supported_tags_with_unsupported_attributes);
       $all_plugins_definitions = $this->pluginManager->getDefinitions();
       foreach ($all_plugins_definitions as $plugin_id => $definition) {
         // Only proceed if the plugin has configured elements and the plugin
         // does not have conditions. In the future we could add support for
         // automatically enabling filters, but for now we assume that the filter
         // configuration cannot be modified.
-        if (!in_array($plugin_id, $enabled_plugins) && !$definition->hasConditions()) {
+        if (!in_array($plugin_id, $enabled_plugins) && !$definition->hasConditions() && $definition->hasElements()) {
           $plugins_provided_elements = $this->pluginManager->getProvidedElements([$plugin_id], NULL, TRUE);
-          if (!empty($plugins_provided_elements)) {
-            // Filter elements that do not have attribute configuration.
-            $elements_with_attribute_config = array_filter($plugins_provided_elements, function ($elements) {
-              return $elements !== FALSE;
-            });
-            if (!empty($elements_with_attribute_config)) {
-              foreach ($elements_with_attribute_config as $tag_name => $attribute_config) {
-                // If the 'tag' is a wildcard, add the attribute config to
-                // all qualifying tags.
-                if (substr($tag_name, 0, 1) === '$') {
-                  // An array of all the tags that match the wildcard value.
-                  $wildcard_tags = HTMLRestrictionsUtilities::getWildcardTags($tag_name);
+          $plugin_support = new HTMLRestrictions($plugins_provided_elements);
 
-                  // Matching wildcard tags that are also tags that have
-                  // attribute config that is not yet supported.
-                  $wildcard_tags_in_config_missing_attributes = array_intersect_key(array_flip($wildcard_tags), $supported_tags_with_unsupported_attributes);
-                  foreach (array_keys($wildcard_tags_in_config_missing_attributes) as $wildcard_provided_tag) {
-                    $elements_with_attribute_config[$wildcard_provided_tag] = $attribute_config;
-                  }
-
-                  // Remove the wildcard 'tag', as the tags it represents are
-                  // now accounted for.
-                  unset($elements_with_attribute_config[$tag_name]);
-                }
+          // Do not inspect just $plugin_support, but the union of that with the
+          // already supported elements: wildcard restrictions will only expand
+          // if the concrete tags they support are also present.
+          $potential_future = $provided->union($plugin_support);
+          // This is the heart of the operation: intersect the potential future
+          // with what we need to achieve, then subtract what is already
+          // supported. This yields the net new elements.
+          $net_new = $potential_future->intersect($still_needed)->diff($provided);
+          if ($net_new->count() > 0) {
+            foreach ($net_new->getAllowedElements() as $tag_name => $attributes_config) {
+              foreach ($attributes_config as $attribute_name => $attribute_config) {
+                $plugins_to_enable_to_support_attribute_config[$plugin_id][$attribute_name][$tag_name] = $attribute_config;
               }
-              $disabled_plugins_with_attribute_config[$plugin_id] = $elements_with_attribute_config;
             }
+            // Fewer attributes are still needed.
+            $still_needed = $still_needed->diff($net_new);
           }
         }
       }
 
-      // This will contain plugins to be enabled if they provide support for the
-      // not-yet-supported attributes.
-      $plugins_to_enable_to_support_attribute_config = [];
-      foreach ($supported_tags_with_unsupported_attributes as $tag_name => $attributes_config) {
-        foreach ($attributes_config as $attribute_name => $attribute_config) {
-          // This means the existing config must allow all values of the
-          // attribute.
-          if ($attribute_config === TRUE) {
-            // See if there is a disabled plugin that will provide full use of
-            // the attribute for a given tag.
-            foreach ($disabled_plugins_with_attribute_config as $disabled_plugin_id => $disabled_plugin_elements_config) {
-              if (isset($disabled_plugin_elements_config[$tag_name][$attribute_name]) && $disabled_plugin_elements_config[$tag_name][$attribute_name] === TRUE) {
-                // Add this to the 'plugins to enable' array. Setting this value
-                // to TRUE instead of an array indicates to the message system
-                // that the attribute is allowed for the tag with any value.
-                $plugins_to_enable_to_support_attribute_config[$disabled_plugin_id][$attribute_name][$tag_name] = TRUE;
-
-                // This attribute can be removed from the list of unsupported
-                // attributes for the tag.
-                unset($supported_tags_with_unsupported_attributes[$tag_name][$attribute_name]);
-              }
-            }
-          }
-          else {
-            // This condition is reached if the existing configuration has the
-            // attribute value restricted to specific values.
-            // @todo currently, this will enable plugins that allow ALL values
-            //   for an attribute. This means the attribute+value is now allowed
-            //   but additional attribute values are permitted as well. This may
-            //   need to be more selective
-            //   https://www.drupal.org/project/ckeditor5/issues/3231328.
-            foreach ($attribute_config as $allowed_attribute_value => $noop) {
-              foreach ($disabled_plugins_with_attribute_config as $disabled_plugin_id => $disabled_plugin_config) {
-                if (isset($disabled_plugin_config[$tag_name][$attribute_name])) {
-                  if ($disabled_plugin_config[$tag_name][$attribute_name] === TRUE) {
-                    unset($supported_tags_with_unsupported_attributes[$tag_name][$attribute_name]);
-                    $plugins_to_enable_to_support_attribute_config[$disabled_plugin_id][$attribute_name][$tag_name] = TRUE;
-                  }
-                  elseif (is_array($disabled_plugin_config[$tag_name][$attribute_name])) {
-                    foreach ($disabled_plugin_config[$tag_name][$attribute_name] as $disabled_plugin_attribute_name => $disabled_plugin_allowed_value) {
-                      if ($disabled_plugin_attribute_name === $allowed_attribute_value) {
-                        unset($supported_tags_with_unsupported_attributes[$tag_name][$attribute_name][$allowed_attribute_value]);
-                        if (empty($supported_tags_with_unsupported_attributes[$tag_name][$attribute_name])) {
-                          unset($supported_tags_with_unsupported_attributes[$tag_name][$attribute_name]);
-                        }
-                        $plugins_to_enable_to_support_attribute_config[$disabled_plugin_id][$attribute_name][$tag_name][] = $allowed_attribute_value;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      $supported_tags_with_unsupported_attributes = array_filter($supported_tags_with_unsupported_attributes);
+      $supported_tags_with_unsupported_attributes = $still_needed->getAllowedElements();
 
       // If additional plugins need to be enable to support attribute config,
       // loop through the list to enable the plugins and build a UI message that
@@ -553,7 +484,7 @@ final class SmartDefaultSettings {
                 $enabled_for_attributes_message_content .= " for tag: <$tag_name> to support: $attribute_name";
                 if (is_array($attribute_value_config)) {
                   $enabled_for_attributes_message_content .= " with value(s): ";
-                  foreach ($attribute_value_config as $allowed_value) {
+                  foreach (array_keys($attribute_value_config) as $allowed_value) {
                     $enabled_for_attributes_message_content .= " $allowed_value,";
                   }
                   $enabled_for_attributes_message_content = substr($enabled_for_attributes_message_content, 0, -1) . '), ';
