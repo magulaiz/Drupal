@@ -18,8 +18,15 @@
         function toggleBlockEntry(index, label) {
           var $label = $(label);
           var $row = $label.parent().parent();
-          var textMatch = $label.text().toLowerCase().includes(query);
-          $row.toggle(textMatch);
+          var labelMatch = $label.text().toLowerCase().includes(query);
+          var categoryMatch = false;
+
+          if (!labelMatch) {
+            var $category = $row.find('div.block-filter-category-source');
+            categoryMatch = $category.text().toLowerCase().includes(query);
+          }
+
+          $row.toggle(labelMatch || categoryMatch);
         }
 
         if (query.length >= 2) {

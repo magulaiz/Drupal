@@ -179,7 +179,7 @@ class BlockUiTest extends BrowserTestBase {
       ':category' => 'Block test',
       ':href' => 'admin/structure/block/add/test_block_instantiation/classy',
     ];
-    $pattern = '//tr[.//td/div[text()=:title] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]';
+    $pattern = '//tr[.//td/div[text()=:title] and .//td/div[text()=:category] and .//td//a[contains(@href, :href)]]';
 
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
@@ -225,7 +225,7 @@ class BlockUiTest extends BrowserTestBase {
       ':category' => 'Block test',
       ':href' => $block_url,
     ];
-    $pattern = '//tr[.//td/div[text()=:title] and .//td[text()=:category] and .//td//a[contains(@href, :href)]]';
+    $pattern = '//tr[.//td/div[text()=:title] and .//td/div[text()=:category] and .//td//a[contains(@href, :href)]]';
 
     $this->drupalGet('admin/structure/block');
     $this->clickLink('Place block');
