@@ -144,7 +144,7 @@ class HasElementTest extends UnitTestCase {
   }
 
   /**
-   * covers:: __construct
+   * @covers ::__construct
    */
   public function testConstructor() {
     $row = $this->getMockBuilder('Drupal\migrate\Row')

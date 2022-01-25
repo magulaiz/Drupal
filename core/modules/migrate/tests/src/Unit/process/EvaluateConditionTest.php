@@ -13,25 +13,6 @@ use Drupal\migrate\Plugin\migrate\process\EvaluateCondition;
 class EvaluateConditionTest extends MigrateProcessTestCase {
 
   /**
-   * Tests configuration validation in constructor.
-   */
-  public function testSkipOnConditionConstructor() {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
-      ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
-      ->getMock();
-    $process_condition_manager->expects($this->any())
-      ->method('createInstance')
-      ->will($this->returnValue($condition));
-
-    $configuration = [];
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The "condition" must be set.');
-    (new EvaluateCondition($configuration, 'evaluate_condition', [], $process_condition_manager))
-      ->transform('', $this->migrateExecutable, $this->row, 'destination_property');
-  }
-
-  /**
    * @covers ::row
    * @covers ::process
    * @dataProvider providerTestEvaluateCondition

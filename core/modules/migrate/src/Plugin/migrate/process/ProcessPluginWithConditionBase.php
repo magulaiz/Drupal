@@ -44,7 +44,7 @@ abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implemen
     if (!isset($configuration['condition'])) {
       throw new \InvalidArgumentException('The "condition" must be set.');
     }
-    if (isset($configuration['condition']) && !is_array($configuration)) {
+    if (isset($configuration['configuration']) && !is_array($configuration['configuration'])) {
       throw new \InvalidArgumentException('If "configuration" is set it must be an array.');
     }
     $this->condition = $process_condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);

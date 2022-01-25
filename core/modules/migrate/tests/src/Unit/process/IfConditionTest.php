@@ -13,30 +13,11 @@ use Drupal\migrate\Plugin\migrate\process\IfCondition;
 class IfConditionTest extends MigrateProcessTestCase {
 
   /**
-   * Tests configuration validation in constructor.
-   */
-  public function testIfConstructor() {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
-      ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
-      ->getMock();
-    $process_condition_manager->expects($this->any())
-      ->method('createInstance')
-      ->will($this->returnValue($condition));
-
-    $configuration = [];
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The "condition" must be set.');
-    (new IfCondition($configuration, 'if_condition', [], $process_condition_manager))
-      ->transform('', $this->migrateExecutable, $this->row, 'destination_property');
-  }
-
-  /**
    * @covers ::row
    * @covers ::process
-   * @dataProvider providerTestEvaluateCondition
+   * @dataProvider providerTestIfCondition
    */
-  public function testEvaluateCondition($source, $evaluate, $negate, $expected, $do_get = [], $else_get = []) {
+  public function testIfCondition($source, $evaluate, $negate, $expected, $do_get = [], $else_get = []) {
     $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
       ->getMock();
     $condition->expects($this->once())
@@ -77,9 +58,9 @@ class IfConditionTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Data provider for ::testEvaluateCondition().
+   * Data provider for ::testIfCondition().
    */
-  public function providerTestEvaluateCondition() {
+  public function providerTestIfCondition() {
     return [
       [
         'source' => 123,

@@ -14,25 +14,6 @@ use Drupal\migrate\Plugin\migrate\process\FilterOnCondition;
 class FilterOnConditionTest extends MigrateProcessTestCase {
 
   /**
-   * Tests configuration validation in constructor.
-   */
-  public function testFilterOnConditionConstructor() {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
-      ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
-      ->getMock();
-    $process_condition_manager->expects($this->any())
-      ->method('createInstance')
-      ->will($this->returnValue($condition));
-
-    $configuration = [];
-    $this->expectException(\InvalidArgumentException::class);
-    $this->expectExceptionMessage('The "condition" must be set.');
-    (new FilterOnCondition($configuration, 'filter_on_condition', [], $process_condition_manager))
-      ->transform('', $this->migrateExecutable, $this->row, 'destination_property');
-  }
-
-  /**
    * @covers ::row
    * @covers ::process
    * @dataProvider providerTestFilterOnCondition

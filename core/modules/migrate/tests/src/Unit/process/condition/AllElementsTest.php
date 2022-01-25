@@ -4,7 +4,6 @@ namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\condition\AllElements;
 use Drupal\migrate\Plugin\migrate\process\condition\Equals;
-use Drupal\migrate\Plugin\migrate\process\condition\HasElement;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -146,7 +145,7 @@ class AllElementsTest extends UnitTestCase {
   }
 
   /**
-   * covers:: __construct
+   * @covers ::__construct
    */
   public function testConstructor() {
     $row = $this->getMockBuilder('Drupal\migrate\Row')
