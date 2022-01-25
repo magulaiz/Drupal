@@ -19,14 +19,14 @@ class FilterOnConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestFilterOnCondition
    */
   public function testFilterOnCondition($value, $evaluate, $negate, $expected, $preserve_keys = NULL) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
     $condition->expects($this->exactly(count($evaluate)))
       ->method('evaluate')
       ->willReturnOnConsecutiveCalls(...$evaluate);
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -37,7 +37,7 @@ class FilterOnConditionTest extends MigrateProcessTestCase {
     if (!is_null($preserve_keys)) {
       $configuration['preserve_keys'] = $preserve_keys;
     }
-    $transformed = (new FilterOnCondition($configuration, 'filter_on_condition', [], $process_condition_manager))
+    $transformed = (new FilterOnCondition($configuration, 'filter_on_condition', [], $condition_manager))
       ->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $transformed);
   }
@@ -92,11 +92,11 @@ class FilterOnConditionTest extends MigrateProcessTestCase {
    * Tests input validation.
    */
   public function testFilterOnConditionNotArray() {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -105,7 +105,7 @@ class FilterOnConditionTest extends MigrateProcessTestCase {
     ];
     $this->expectException(MigrateException::class);
     $this->expectExceptionMessage('The input value should be an array.');
-    (new FilterOnCondition($configuration, 'filter_on_condition', [], $process_condition_manager))
+    (new FilterOnCondition($configuration, 'filter_on_condition', [], $condition_manager))
       ->transform('', $this->migrateExecutable, $this->row, 'destination_property');
   }
 

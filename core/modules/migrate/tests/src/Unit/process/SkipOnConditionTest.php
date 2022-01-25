@@ -20,17 +20,17 @@ class SkipOnConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestConstructorValidation
    */
   public function testConstructorValidation($configuration, $message) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->any())
+    $condition_manager->expects($this->any())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($message);
-    $process = new SkipOnCondition($configuration, 'skip_on_condition', [], $process_condition_manager);
+    $process = new SkipOnCondition($configuration, 'skip_on_condition', [], $condition_manager);
   }
 
   /**
@@ -74,14 +74,14 @@ class SkipOnConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestSkipOnCondition
    */
   public function testSkipOnCondition($will_skip, $method, $evaluate, $negate, $message) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
     $condition->expects($this->once())
       ->method('evaluate')
       ->will($this->returnValue($evaluate));
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -100,11 +100,11 @@ class SkipOnConditionTest extends MigrateProcessTestCase {
         $this->expectException(MigrateSkipRowException::class);
         $this->expectExceptionMessage($message);
       }
-      (new SkipOnCondition($configuration, 'skip_on_condition', [], $process_condition_manager))
+      (new SkipOnCondition($configuration, 'skip_on_condition', [], $condition_manager))
         ->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     }
     else {
-      $pass_through = (new SkipOnCondition($configuration, 'skip_on_condition', [], $process_condition_manager))
+      $pass_through = (new SkipOnCondition($configuration, 'skip_on_condition', [], $condition_manager))
         ->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
       $this->assertSame($value, $pass_through);
     }

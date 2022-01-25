@@ -16,7 +16,7 @@ use Drupal\migrate\MigrateSkipRowException;
  *   - row: Skips the entire row when an empty value is encountered.
  *   - process: Prevents further processing of the input property when the value
  *     is empty.
- * - condition: The id of a MigrateProcessCondition plugin.
+ * - condition: The id of a MigrateCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result
@@ -43,11 +43,11 @@ class SkipOnCondition extends ProcessPluginWithConditionBase {
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $process_condition_manager
-   *   The MigrateProcessCondition plugin manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $condition_manager
+   *   The MigrateCondition plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $process_condition_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $process_condition_manager);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $condition_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $condition_manager);
     $methods = ['row', 'process'];
     if (!isset($configuration['method']) || !in_array($configuration['method'], $methods, TRUE)) {
       throw new \InvalidArgumentException('The "method" must be set to either "row" or "process".');

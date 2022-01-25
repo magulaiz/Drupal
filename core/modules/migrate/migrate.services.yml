@@ -21,8 +21,8 @@ services:
   plugin.manager.migrate.id_map:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [id_map, '@container.namespaces', '@cache.discovery', '@module_handler']
-  plugin.manager.migrate.process_condition:
-    class: Drupal\migrate\Plugin\MigrateProcessConditionPluginManager
+  plugin.manager.migrate.condition:
+    class: Drupal\migrate\Plugin\MigrateConditionPluginManager
     parent: default_plugin_manager
   cache.discovery_migration:
     class: Drupal\Core\Cache\CacheBackendInterface

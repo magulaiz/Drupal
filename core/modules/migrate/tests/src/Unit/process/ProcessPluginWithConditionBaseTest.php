@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\migrate\Unit\process;
 
-use Drupal\migrate\Plugin\migrate\process\condition\Equals;
+use Drupal\migrate\Plugin\migrate\condition\Equals;
 use Drupal\migrate\Plugin\migrate\process\ProcessPluginWithConditionBase;
 
 /**
@@ -19,17 +19,17 @@ class ProcessPluginWithConditionBaseTest extends MigrateProcessTestCase {
    * @dataProvider providerTestConstructorValidation
    */
   public function testConstructorValidation($configuration, $message) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->any())
+    $condition_manager->expects($this->any())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage($message);
-    $this->getMockForAbstractClass(ProcessPluginWithConditionBase::class, [$configuration, 'just_a_base', [], $process_condition_manager]);
+    $this->getMockForAbstractClass(ProcessPluginWithConditionBase::class, [$configuration, 'just_a_base', [], $condition_manager]);
   }
 
   /**
@@ -57,9 +57,9 @@ class ProcessPluginWithConditionBaseTest extends MigrateProcessTestCase {
   public function testConditionInstance() {
     $equals_configuration = ['value' => 123];
     $equals = new Equals($equals_configuration, 'equals', []);
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->willReturnMap([['equals', ['value' => 123], $equals]]);
 
@@ -69,7 +69,7 @@ class ProcessPluginWithConditionBaseTest extends MigrateProcessTestCase {
         'value' => 123,
       ],
     ];
-    $process = new ProcessPluginWithConditionBaseTestClass($configuration, 'test', [], $process_condition_manager);
+    $process = new ProcessPluginWithConditionBaseTestClass($configuration, 'test', [], $condition_manager);
     $condition = $process->getCondition();
     $this->assertSame('equals', $condition->getPluginId());
     $this->assertTrue($condition->evaluate(123, $this->row));

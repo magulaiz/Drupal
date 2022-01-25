@@ -18,14 +18,14 @@ class IfConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestIfCondition
    */
   public function testIfCondition($source, $evaluate, $negate, $expected, $do_get = [], $else_get = []) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
     $condition->expects($this->once())
       ->method('evaluate')
       ->will($this->returnValue($evaluate));
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -52,7 +52,7 @@ class IfConditionTest extends MigrateProcessTestCase {
     if (!empty($else_get)) {
       $configuration['else_get'] = $else_get['property'];
     }
-    $evaluated = (new IfCondition($configuration, 'if_condition', [], $process_condition_manager))
+    $evaluated = (new IfCondition($configuration, 'if_condition', [], $condition_manager))
       ->transform($source, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $evaluated);
   }

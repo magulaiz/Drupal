@@ -18,14 +18,14 @@ class FirstMeetingConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestFirstMeetingCondition
    */
   public function testFirstMeetingCondition($value, $evaluate, $negate, $default_value, $expected) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
     $condition->expects($this->exactly(count($evaluate)))
       ->method('evaluate')
       ->willReturnOnConsecutiveCalls(...$evaluate);
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -34,7 +34,7 @@ class FirstMeetingConditionTest extends MigrateProcessTestCase {
       'negate' => $negate,
       'default_value' => $default_value,
     ];
-    $transformed = (new FirstMeetingCondition($configuration, 'first_meeting_condition', [], $process_condition_manager))
+    $transformed = (new FirstMeetingCondition($configuration, 'first_meeting_condition', [], $condition_manager))
       ->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $transformed);
   }

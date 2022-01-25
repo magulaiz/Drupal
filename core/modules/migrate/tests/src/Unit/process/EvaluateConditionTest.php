@@ -18,14 +18,14 @@ class EvaluateConditionTest extends MigrateProcessTestCase {
    * @dataProvider providerTestEvaluateCondition
    */
   public function testEvaluateCondition($evaluate, $negate, $expected) {
-    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
       ->getMock();
     $condition->expects($this->once())
       ->method('evaluate')
       ->will($this->returnValue($evaluate));
-    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+    $condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
       ->getMock();
-    $process_condition_manager->expects($this->once())
+    $condition_manager->expects($this->once())
       ->method('createInstance')
       ->will($this->returnValue($condition));
 
@@ -34,7 +34,7 @@ class EvaluateConditionTest extends MigrateProcessTestCase {
       'condition' => 'foo',
       'negate' => $negate,
     ];
-    $evaluated = (new EvaluateCondition($configuration, 'evaluate_condition', [], $process_condition_manager))
+    $evaluated = (new EvaluateCondition($configuration, 'evaluate_condition', [], $condition_manager))
       ->transform($value, $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($expected, $evaluated);
   }

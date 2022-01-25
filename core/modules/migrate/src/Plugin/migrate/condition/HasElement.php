@@ -1,24 +1,48 @@
 <?php
 
-namespace Drupal\migrate\Plugin\migrate\process;
+namespace Drupal\migrate\Plugin\migrate\condition;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\ProcessPluginBase;
+use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base class to be used by MigrateProcess plugins that rely on a condition.
+ * Provides a has_element condition.
+ *
+ * Evaluates the configured condition on each array element and returns
+ * TRUE if any element meets the condition.
  *
  * Available configuration keys:
- * - condition: (required) The id of a MigrateCondition plugin.
- * - configuration: (optional) Additional configuration to be passed to the
- *   condition plugin. Some condition plugins have required configuration.
- * - negate: (optional) A boolean flag that indicates whether condition result
- *   should be negated. Defaults to FALSE.
+ * - condition: The condition plugin to evaluate on each element.
+ * - negate: (optional) Whether to negate the configured condition.
+ *   Defaults to FALSE.
+ * - configuration: (optional) Configuration to pass to the configured
+ *   condition.
+ *
+ * Example:
+ *
+ * Skip a row if any date in the array source_dates is too old.
+ *
+ * skip:
+ *   plugin: skip_on_condition
+ *   condition: has_element
+ *   configuration:
+ *     condition: older_than
+ *     format: 'U'
+ *     value: -1 week'
+ *   method: row
+ *   source: source_dates
+ *
+ * @see \Drupal\migrate\Plugin\MigrateConditionInterface
+ *
+ * @MigrateConditionPlugin(
+ *   id = "has_element",
+ *   requires = {"condition"}
+ * )
  */
-abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+class HasElement extends ConditionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The condition plugin.
@@ -28,7 +52,7 @@ abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implemen
   protected $condition;
 
   /**
-   * Constructs a ProcessPluginWithConditionBase object.
+   * Constructs a HasElement object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -41,12 +65,7 @@ abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implemen
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $condition_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!isset($configuration['condition'])) {
-      throw new \InvalidArgumentException('The "condition" must be set.');
-    }
-    if (isset($configuration['configuration']) && !is_array($configuration['configuration'])) {
-      throw new \InvalidArgumentException('If "configuration" is set it must be an array.');
-    }
+    $this->configuration['negate'] = $this->configuration['negate'] ?? FALSE;
     $this->condition = $condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);
   }
 
@@ -60,6 +79,18 @@ abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implemen
       $plugin_definition,
       $container->get('plugin.manager.migrate.condition')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function evaluate($source, Row $row) {
+    foreach ((array) $source as $source_value) {
+      if ($this->condition->evaluate($source_value, $row) xor $this->configuration['negate']) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
 }

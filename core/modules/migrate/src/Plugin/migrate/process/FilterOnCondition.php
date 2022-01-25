@@ -10,7 +10,7 @@ use Drupal\migrate\Row;
  * Filters an input array on a condition.
  *
  * Available configuration keys:
- * - condition: The id of a MigrateProcessCondition plugin.
+ * - condition: The id of a MigrateCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result
