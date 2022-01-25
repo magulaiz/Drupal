@@ -2,15 +2,10 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\MigrateSkipProcessException;
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateSkipRowException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Skips processing the current row when the input value matches a condition.
@@ -36,46 +31,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   handle_multiples = TRUE
  * )
  */
-class SkipOnCondition extends ProcessPluginBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * The process_condition plugin.
-   *
-   * @var \Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface
-   */
-  protected $condition;
-
-  /**
-   * Constructs a SkipOnCondition object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $process_condition_manager
-   *   The MigrateProcessCondition plugin manager.
-   */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $process_condition_manager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-    if (!isset($configuration['condition'])) {
-      throw new \InvalidArgumentException('The "condition" must be set.');
-    }
-    $this->condition = $process_condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition, MigrationInterface $migration = NULL) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('plugin.manager.migrate.process_condition')
-    );
-  }
+class SkipOnCondition extends ProcessPluginWithConditionBase {
 
   /**
    * Skips the current row when value is not set.
