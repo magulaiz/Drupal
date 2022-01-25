@@ -18,10 +18,27 @@ class ContextualLinks extends RenderElement {
    */
   public function getInfo() {
     $class = static::class;
+
+    $pre_render = [];
+    $post_render = [];
+
+    $module_handler = static::moduleHandler();
+    if ($module_handler->moduleExists('language')) {
+      $pre_render[] = [
+        '\Drupal\language\ConfigurableLanguageManager',
+        'switchToUserAdminLanguage',
+      ];
+      $post_render[] = [
+        '\Drupal\language\ConfigurableLanguageManager',
+        'restoreLanguage',
+      ];
+    }
+
+    $pre_render[] = [$class, 'preRenderLinks'];
+
     return [
-      '#pre_render' => [
-        [$class, 'preRenderLinks'],
-      ],
+      '#pre_render' => $pre_render,
+      '#post_render' => $post_render,
       '#theme' => 'links__contextual',
       '#links' => [],
       '#attributes' => ['class' => ['contextual-links']],
