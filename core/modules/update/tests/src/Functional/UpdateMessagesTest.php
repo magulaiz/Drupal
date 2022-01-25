@@ -81,7 +81,9 @@ class UpdateMessagesTest extends BrowserTestBase {
     $this->drupalGet('/admin/reports/updates');
     $this->clickLink('Check manually');
     $this->checkForMetaRefresh();
-    $this->assertSecurityWarning();
+    $this->assertNoSecurityWarning();
+    $this->assertNoUpdateNotice();
+    $this->assertSession()->pageTextContainsOnce('Security update required!');
 
     // None of the ignored routes should show the security warning.
     foreach ($this->ignoredRoutes as $route) {
@@ -94,11 +96,13 @@ class UpdateMessagesTest extends BrowserTestBase {
     $this->drupalGet('/admin/appearance');
     $this->clickLink('Install Claro theme');
     $this->assertNoSecurityWarning();
+    $this->assertNoUpdateNotice();
 
     // The status report should only display the security warning once (i.e.,
     // in the actual report, but not in the messages).
     $this->drupalGet('/admin/reports/status');
     $this->assertSecurityWarning();
+    $this->assertNoUpdateNotice();
 
     // The module and theme lists should show the security warning.
     foreach ($this->verboseRoutes as $route) {
