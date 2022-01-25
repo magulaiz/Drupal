@@ -111,8 +111,11 @@ TOP_LEVEL=$(git rev-parse --show-toplevel)
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
-# This variable will be set to one when the files core/phpstan-baseline.neon or
-# core/phpstan.neon.dist are changed.
+# This variable will be set to one when one of the phpstan config files is
+# changed:
+# - core/phpstan-baseline.neon
+# - core/phpstan.neon.dist
+# or when the composer.lock file is changed.
 PHPSTAN_DIST_FILE_CHANGED=0
 
 # This variable will be set to one when one of the eslint config file is
@@ -143,7 +146,7 @@ for FILE in $FILES; do
     PHPCS_XML_DIST_FILE_CHANGED=1;
   fi;
 
-  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
+  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" || $FILE == "composer.lock" ]]; then
     PHPSTAN_DIST_FILE_CHANGED=1;
   fi;
 
