@@ -37,7 +37,7 @@ function file_schema() {
         'type' => 'varchar_ascii',
         'length' => 64,
         'not null' => TRUE,
-        'default' => 0,
+        'default' => '0',
       ],
       'count' => [
         'description' => 'The number of times this file is used by this object.',
