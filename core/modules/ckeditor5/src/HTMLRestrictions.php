@@ -397,6 +397,16 @@ final class HTMLRestrictions implements \Countable {
     return new static($intersection);
   }
 
+  /**
+   * Computes union of two HTML restrictions, with wildcard support.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $other
+   *   The HTML restrictions to compare to.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   Returns a new HTML restrictions value object with all the elements that
+   *   are either allowed in $this or in $other.
+   */
   public function union(HTMLRestrictions $other): HTMLRestrictions {
     $union = array_merge_recursive($this->elements, $other->elements);
     // When recursively merging elements arrays, unkeyed boolean values can
@@ -452,6 +462,15 @@ final class HTMLRestrictions implements \Countable {
             // Once or twice TRUE.
             assert($html_tag_attribute_restrictions[0] === TRUE || $html_tag_attribute_restrictions[1] === TRUE);
             $union[$tag][$html_tag_attribute_name] = TRUE;
+          }
+          else {
+            // Finally, when both operands list the same allowed attribute values,
+            // there can be an array of
+            foreach ($html_tag_attribute_restrictions as $allowed_attribute_value => $merged_result) {
+              if ($merged_result === [0 => TRUE, 1 => TRUE]) {
+                $union[$tag][$html_tag_attribute_name][$allowed_attribute_value] = TRUE;
+              }
+            }
           }
         }
       }
