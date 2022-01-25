@@ -442,9 +442,7 @@ final class SmartDefaultSettings {
         // automatically enabling filters, but for now we assume that the filter
         // configuration cannot be modified.
         if (!in_array($plugin_id, $enabled_plugins) && !$definition->hasConditions() && $definition->hasElements()) {
-          $plugins_provided_elements = $this->pluginManager->getProvidedElements([$plugin_id], NULL, TRUE);
-          $plugin_support = new HTMLRestrictions($plugins_provided_elements);
-
+          $plugin_support = HTMLRestrictions::parse($definition->getElements());
           // Do not inspect just $plugin_support, but the union of that with the
           // already supported elements: wildcard restrictions will only expand
           // if the concrete tags they support are also present.
