@@ -292,7 +292,7 @@ class UpdateContribTest extends UpdateTestBase {
           case '1.1':
             // Both stable and unstable releases are available.
             // A stable release is the latest.
-            if ($extra_version == '' || $extra_version === '-bugfix') {
+            if ($extra_version === '' || $extra_version === '-bugfix') {
               $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
               $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
               $this->assertVersionUpdateLinks('Recommended version', $full_version);
@@ -313,7 +313,7 @@ class UpdateContribTest extends UpdateTestBase {
           case '1.2':
             // Both stable and unstable releases are available.
             // A stable release is the latest.
-            if ($extra_version == '' || $extra_version === '-bugfix') {
+            if ($extra_version === '' || $extra_version === '-bugfix') {
               $assert_session->elementTextNotContains('css', $this->updateTableLocator, 'Up to date');
               $assert_session->elementTextContains('css', $this->updateTableLocator, 'Update available');
               $this->assertVersionUpdateLinks('Recommended version:', $full_version);
