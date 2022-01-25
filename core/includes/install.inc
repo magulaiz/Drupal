@@ -84,7 +84,7 @@ function drupal_load_updates() {
   foreach (\Drupal::service('update.update_hook_registry')->getAllInstalledVersions() as $module => $schema_version) {
     if ($extension_list_module->exists($module) && !$extension_list_module->checkIncompatibility($module)) {
       if ($schema_version > -1) {
-        module_load_install($module);
+        \Drupal::moduleHandler()->loadInclude($module, 'install');
       }
     }
   }
@@ -171,12 +171,13 @@ function drupal_get_database_types() {
   // The internal database driver name is any valid PHP identifier.
   $mask = ExtensionDiscovery::PHP_FUNCTION_PATTERN;
 
-  // Find drivers in the Drupal\Core and Drupal\Driver namespaces.
+  // Find drivers in the Drupal\Driver namespace.
+  // @todo remove discovering in the Drupal\Driver namespace in D10.
   /** @var \Drupal\Core\File\FileSystemInterface $file_system */
   $file_system = \Drupal::service('file_system');
-  $files = $file_system->scanDirectory(DRUPAL_ROOT . '/core/lib/Drupal/Core/Database/Driver', $mask, ['recurse' => FALSE]);
+  $files = [];
   if (is_dir(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database')) {
-    $files += $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
+    $files = $file_system->scanDirectory(DRUPAL_ROOT . '/drivers/lib/Drupal/Driver/Database/', $mask, ['recurse' => FALSE]);
   }
   foreach ($files as $file) {
     if (file_exists($file->uri . '/Install/Tasks.php')) {
@@ -625,10 +626,15 @@ function drupal_install_system($install_state) {
   // When the database driver is provided by a module, then install that module.
   // This module must be installed before any other module, as it must be able
   // to override any call to hook_schema() or any "backend_overridable" service.
+  // In edge cases, a driver module may extend from another driver module (for
+  // instance, a module to provide backward compatibility with a database
+  // version no longer supported by core). In order for the extended classes to
+  // be autoloadable, the extending module should list the extended module in
+  // its dependencies, and here the dependencies will be installed as well.
   if ($provider !== 'core') {
     $autoload = $connection->getConnectionOptions()['autoload'] ?? '';
     if (($pos = strpos($autoload, 'src/Driver/Database/')) !== FALSE) {
-      $kernel->getContainer()->get('module_installer')->install([$provider], FALSE);
+      $kernel->getContainer()->get('module_installer')->install([$provider], TRUE);
     }
   }
 
@@ -1027,7 +1033,12 @@ function drupal_requirements_severity(&$requirements) {
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
-  module_load_install($module);
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+  $module_list = \Drupal::service('extension.list.module');
+  $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$module.install";
+  if (is_file($file)) {
+    require_once $file;
+  }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
