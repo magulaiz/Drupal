@@ -9,7 +9,7 @@ use Drupal\migrate\Row;
  * Returns first value in array meeting condition.
  *
  * Available configuration keys:
- * - condition: (required) The id of a MigrateProcessCondition plugin.
+ * - condition: The id of a MigrateProcessCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result

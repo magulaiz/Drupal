@@ -2,19 +2,14 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Evaluates a condition.
  *
  * Available configuration keys:
- * - condition: (required) The id of a MigrateProcessCondition plugin.
+ * - condition: The id of a MigrateProcessCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result

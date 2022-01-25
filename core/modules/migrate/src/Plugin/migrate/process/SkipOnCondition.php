@@ -2,24 +2,25 @@
 
 namespace Drupal\migrate\Plugin\migrate\process;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\migrate\MigrateSkipProcessException;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\migrate\MigrateSkipRowException;
 
 /**
- * Skips processing the current row when the input value matches a condition.
+ * Skips processing when the input value matches a condition.
  *
  * Available configuration keys:
- * - condition: (required) The id of a MigrateProcessCondition plugin.
+ * - method: What to do if the condition is met. Possible values:
+ *   - row: Skips the entire row when an empty value is encountered.
+ *   - process: Prevents further processing of the input property when the value
+ *     is empty.
+ * - condition: The id of a MigrateProcessCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result
  *   should be negated. Defaults to FALSE.
- * - method: (optional) What to do if the input value is empty. Possible values:
- *   - row: Skips the entire row when an empty value is encountered.
- *   - process: Prevents further processing of the input property when the value
- *     is empty.
  * - message: (optional) A message to be logged in the {migrate_message_*} table
  *   for this row. Messages are only logged for the 'row' method. If not set,
  *   nothing is logged in the message table.
