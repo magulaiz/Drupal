@@ -15,6 +15,60 @@ use Drupal\migrate\Plugin\migrate\process\SkipOnCondition;
 class SkipOnConditionTest extends MigrateProcessTestCase {
 
   /**
+   * Tests configuration validation in constructor.
+   *
+   * @dataProvider providerTestConstructorValidation
+   */
+  public function testConstructorValidation($configuration, $message) {
+    $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateProcessConditionPluginInterface')
+      ->getMock();
+    $process_condition_manager = $this->getMockBuilder('\Drupal\Component\Plugin\PluginManagerInterface')
+      ->getMock();
+    $process_condition_manager->expects($this->any())
+      ->method('createInstance')
+      ->will($this->returnValue($condition));
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage($message);
+    $process = new SkipOnCondition($configuration, 'skip_on_condition', [], $process_condition_manager);
+  }
+
+  /**
+   * Data provider for ::testConstructorValidation().
+   */
+  public function providerTestConstructorValidation() {
+    return [
+      'no condition' => [
+        'configuration' => [
+          'method' => 'row',
+        ],
+        'message' => 'The "condition" must be set.',
+      ],
+      'string config' => [
+        'configuration' => [
+          'method' => 'row',
+          'condition' => 'foo',
+          'configuration' => 'some string',
+        ],
+        'message' => 'If "configuration" is set it must be an array.',
+      ],
+      'no method' => [
+        'configuration' => [
+          'condition' => 'foo',
+        ],
+        'message' => 'The "method" must be set to either "row" or "process".',
+      ],
+      'bad method' => [
+        'configuration' => [
+          'method' => 'invalid',
+          'condition' => 'foo',
+        ],
+        'message' => 'The "method" must be set to either "row" or "process".',
+      ],
+    ];
+  }
+
+  /**
    * @covers ::row
    * @covers ::process
    * @dataProvider providerTestSkipOnCondition

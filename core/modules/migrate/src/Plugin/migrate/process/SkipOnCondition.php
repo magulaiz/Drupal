@@ -35,6 +35,26 @@ use Drupal\migrate\MigrateSkipRowException;
 class SkipOnCondition extends ProcessPluginWithConditionBase {
 
   /**
+   * Constructs a ProcessPluginWithConditionBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $process_condition_manager
+   *   The MigrateProcessCondition plugin manager.
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PluginManagerInterface $process_condition_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $process_condition_manager);
+    $methods = ['row', 'process'];
+    if (!isset($configuration['method']) || !in_array($configuration['method'], $methods, TRUE)) {
+      throw new \InvalidArgumentException('The "method" must be set to either "row" or "process".');
+    }
+  }
+
+  /**
    * Skips the current row when value is not set.
    *
    * @param mixed $value
