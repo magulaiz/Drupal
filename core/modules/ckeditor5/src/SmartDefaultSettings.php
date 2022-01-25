@@ -432,9 +432,9 @@ final class SmartDefaultSettings {
     $supported_tags_with_unsupported_attributes = array_filter($supported_tags_with_unsupported_attributes, function ($tag_config) {
       return is_array($tag_config);
     });
+    $still_needed = new HTMLRestrictions($supported_tags_with_unsupported_attributes);
 
-    if (!empty($supported_tags_with_unsupported_attributes)) {
-      $still_needed = new HTMLRestrictions($supported_tags_with_unsupported_attributes);
+    if (!$still_needed->isEmpty()) {
       $all_plugins_definitions = $this->pluginManager->getDefinitions();
       foreach ($all_plugins_definitions as $plugin_id => $definition) {
         // Only proceed if the plugin has configured elements and the plugin
@@ -464,8 +464,6 @@ final class SmartDefaultSettings {
           }
         }
       }
-
-      $supported_tags_with_unsupported_attributes = $still_needed->getAllowedElements();
 
       // If additional plugins need to be enable to support attribute config,
       // loop through the list to enable the plugins and build a UI message that
@@ -497,14 +495,14 @@ final class SmartDefaultSettings {
         // Some plugins enabled, maybe some missing attributes.
         return [
           substr($enabled_for_attributes_message_content, 0, -2),
-          new HTMLRestrictions($supported_tags_with_unsupported_attributes),
+          $still_needed,
         ];
       }
       else {
         // No plugins enabled, maybe some missing attributes.
         return [
           NULL,
-          new HTMLRestrictions($supported_tags_with_unsupported_attributes),
+          $still_needed,
         ];
       }
     }
