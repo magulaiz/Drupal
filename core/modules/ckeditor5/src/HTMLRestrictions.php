@@ -281,7 +281,7 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
-   * Compares two HTML restrictions.
+   * Computes difference of two HTML restrictions, with wildcard support.
    *
    * @param \Drupal\ckeditor5\HTMLRestrictions $other
    *   The HTML restrictions to compare to.
@@ -291,6 +291,20 @@ final class HTMLRestrictions implements \Countable {
    *   are not allowed in $other.
    */
   public function diff(HTMLRestrictions $other): HTMLRestrictions {
+    return static::applyOperation($this, $other, 'doDiff');
+  }
+
+  /**
+   * Computes difference of two HTML restrictions, without wildcard support.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $other
+   *   The HTML restrictions to compare to.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   Returns a new HTML restrictions value object with all the elements that
+   *   are not allowed in $other.
+   */
+  private function doDiff(HTMLRestrictions $other): HTMLRestrictions {
     $diff_elements = array_filter(
       DiffArray::diffAssocRecursive($this->elements, $other->elements),
       // DiffArray::diffAssocRecursive() does not know the semantics of the HTML
@@ -338,7 +352,31 @@ final class HTMLRestrictions implements \Countable {
     return new static($diff_elements);
   }
 
+  /**
+   * Computes intersection of two HTML restrictions, with wildcard support.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $other
+   *   The HTML restrictions to compare to.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   Returns a new HTML restrictions value object with all the elements that
+   *   are also allowed in $other.
+   */
   public function intersect(HTMLRestrictions $other): HTMLRestrictions {
+    return static::applyOperation($this, $other, 'doIntersect');
+  }
+
+  /**
+   * Computes intersection of two HTML restrictions, without wildcard support.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $other
+   *   The HTML restrictions to compare to.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   Returns a new HTML restrictions value object with all the elements that
+   *   are also allowed in $other.
+   */
+  public function doIntersect(HTMLRestrictions $other): HTMLRestrictions {
     $intersection_based_on_tags = array_intersect_key($this->elements, $other->elements);
     $intersection = [];
     foreach (array_keys($intersection_based_on_tags) as $tag) {
@@ -479,6 +517,97 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
+   * Applies an operation (difference/intersection/union) with wildcard support.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $a
+   *   The first operand.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $b
+   *   The second operand.
+   * @param string $operation_method_name
+   *   The name of the private method on this class to use as the operation.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   The result of the operation.
+   */
+  private static function applyOperation(HTMLRestrictions $a, HTMLRestrictions $b, string $operation_method_name): HTMLRestrictions {
+    // 1. Intersection of wildcard tags that exist in both operands.
+    // For example: <$block id> in both operands.
+    $a_wildcard = static::getWildcardSubset($a);
+    $b_wildcard = static::getWildcardSubset($b);
+    $wildcard_intersection = $a_wildcard->$operation_method_name($b_wildcard);
+
+    // Early return if both operands contain only wildcard tags.
+    if (count($a_wildcard->elements) === count($a->elements) && count($a_wildcard->elements) === count($b->elements)) {
+      return $wildcard_intersection;
+    }
+
+    // 2. Intersection with wildcard tags expanded.
+    // For example: <p class="text-align-center"> in the first operand and
+    // <$block class="text-align-center"> in the second operand.
+    $a_concrete = static::expandedWildcardSuperset($a);
+    $b_concrete = static::expandedWildcardSuperset($b);
+    $concrete_intersection = $a_concrete->$operation_method_name($b_concrete);
+
+    return new HTMLRestrictions($concrete_intersection->elements + $wildcard_intersection->elements);
+  }
+
+  /**
+   * Gets the subset of allowed elements whose tags are wildcards.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $r
+   *   A set of HTML restrictions.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   The subset of the given set of HTML restrictions.
+   */
+  private static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
+    return new HTMLRestrictions(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+  }
+
+  /**
+   * Checks whether given tag is a wildcard.
+   *
+   * @param string $tag_name
+   *   A tag name.
+   *
+   * @return bool
+   *   TRUE if it is a wildcard, otherwise FALSE.
+   */
+  private static function isWildcardTag(string $tag_name): bool {
+    return substr($tag_name, 0, 1) === '$' && array_key_exists($tag_name, static::WILDCARD_ELEMENT_METHODS);
+  }
+
+  /**
+   * Gets the superset of allowed elements, with all wildcard tags expanded.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $r
+   *   A set of HTML restrictions.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   The superset of the given set of HTML restrictions. When expanded, the
+   *   original wildcard tag is consumed.
+   */
+  private static function expandedWildcardSuperset(HTMLRestrictions $r): HTMLRestrictions {
+    $result = clone $r;
+    foreach ($r->elements as $tag_name => $tag_config) {
+      if (static::isWildcardTag($tag_name)) {
+        unset($result->elements[$tag_name]);
+        $wildcard_tags = self::getWildcardTags($tag_name);
+        // Do not expand to all tags supported by the wildcard tag, but only
+        // those which are explicitly supported. Because wildcard tags only
+        // allow declaring support for additional attributes and attribute
+        // values on already supported tags.
+        foreach ($wildcard_tags as $wildcard_tag) {
+          if (isset($result->elements[$wildcard_tag])) {
+            $result->elements[$wildcard_tag] = $tag_config;
+          }
+        }
+      }
+    }
+    return $result;
+  }
+
+  /**
    * Gets allowed elements, optionally with wildcards processed.
    *
    * @param bool $retain_wildcard
@@ -492,7 +621,7 @@ final class HTMLRestrictions implements \Countable {
     $elements = $this->elements;
     // @todo move this to another helper method which returns a new value object with everything processed
     foreach ($elements as $tag_name => $tag_config) {
-      if (substr($tag_name, 0, 1) === '$') {
+      if (static::isWildcardTag($tag_name)) {
         $wildcard_tags = self::getWildcardTags($tag_name);
         foreach ($wildcard_tags as $wildcard_tag) {
 
