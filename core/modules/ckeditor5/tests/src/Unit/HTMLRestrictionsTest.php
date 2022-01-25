@@ -378,6 +378,48 @@ class HTMLRestrictionsTest extends UnitTestCase {
       new HTMLRestrictions(['strong' => TRUE]),
       new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
     ];
+
+    // Wildcard cases.
+    yield 'wildcard tag: attribute diff' => [
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute diff — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['p' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+    ];
+    yield 'wildcard tag: attribute value diff' => [
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+    ];
+    yield 'wildcard tag: attribute value diff — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute diff' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['foo' => TRUE]]),
+    ];
+    yield 'dual wildcard tag: attribute diff — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
+      HTMLRestrictions::emptySet(),
+    ];
+    yield 'dual wildcard tag: attribute value diff' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-justify' => TRUE]]]),
+    ];
+    yield 'dual wildcard tag: attribute value diff — vice versa' => [
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
+      new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
+      HTMLRestrictions::emptySet(),
+    ];
   }
 
   /**
