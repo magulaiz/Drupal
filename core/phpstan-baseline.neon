@@ -636,11 +636,6 @@ parameters:
 			path: modules/ban/src/Plugin/migrate/destination/BlockedIp.php
 
 		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/big_pipe/tests/modules/big_pipe_regression_test/src/BigPipeRegressionTestController.php
-
-		-
 			message: "#^\\#lazy_builder callback 'hello_or_yarhar' at key '0' is not callable\\.$#"
 			count: 1
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php

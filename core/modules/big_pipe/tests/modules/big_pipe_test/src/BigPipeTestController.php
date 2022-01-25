@@ -68,15 +68,15 @@ class BigPipeTestController implements TrustedCallbackInterface {
   public function multiOccurrence() {
     return [
       'item1' => [
-        '#lazy_builder' => [static::class . '::counter', []],
+        '#lazy_builder' => [[static::class, 'counter'], []],
         '#create_placeholder' => TRUE,
       ],
       'item2' => [
-        '#lazy_builder' => [static::class . '::counter', []],
+        '#lazy_builder' => [[static::class, 'counter'], []],
         '#create_placeholder' => TRUE,
       ],
       'item3' => [
-        '#lazy_builder' => [static::class . '::counter', []],
+        '#lazy_builder' => [[static::class, 'counter'], []],
         '#create_placeholder' => TRUE,
       ],
     ];
