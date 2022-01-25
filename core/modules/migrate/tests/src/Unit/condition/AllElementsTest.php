@@ -25,7 +25,7 @@ class AllElementsTest extends UnitTestCase {
       ->getMock();
 
     $map = [];
-    foreach($sub_evaluate_map as $source_then_return) {
+    foreach ($sub_evaluate_map as $source_then_return) {
       $map[] = [$source_then_return[0], $row, $source_then_return[1]];
     }
     $condition = $this->getMockBuilder('\Drupal\migrate\Plugin\MigrateConditionInterface')
