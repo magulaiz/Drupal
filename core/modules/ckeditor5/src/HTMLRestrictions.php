@@ -78,10 +78,13 @@ final class HTMLRestrictions implements \Countable {
       if ($html_tag_name[0] === '<' || $html_tag_name[-1] === '>') {
         throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
       }
+      if (static::isWildcardTag($html_tag_name)) {
+        continue;
+      }
       // HTML elements must have a valid tag name.
       // @see https://html.spec.whatwg.org/multipage/syntax.html#syntax-tag-name
       // @see https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
-      if (!preg_match('/^[a-z][0-9a-z\-]+$/', strtolower($html_tag_name))) {
+      if (!preg_match('/^[a-z]{1}[0-9a-z\-]*$/', strtolower($html_tag_name))) {
         throw new \InvalidArgumentException(sprintf('"%s" is not a valid HTML tag name.', $html_tag_name));
       }
     }
