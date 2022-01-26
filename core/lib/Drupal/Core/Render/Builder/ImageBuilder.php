@@ -51,24 +51,24 @@ class ImageBuilder extends BuilderBase {
   /**
    * Set the alt property on the image.
    *
-   * @param string $value
+   * @param string|null $value
    *   The value to set.
    *
    * @return $this
    */
-  public function alt(string $value): static {
+  public function alt(?string $value): static {
     return $this->set('alt', $value);
   }
 
   /**
    * Set the title property on the image.
    *
-   * @param string $value
+   * @param string|null $value
    *   The value to set.
    *
    * @return $this
    */
-  public function title(string $value): static {
+  public function title(?string $value): static {
     return $this->set('title', $value);
   }
 
