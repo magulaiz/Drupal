@@ -109,7 +109,8 @@ interface TranslatableInterface {
    *   (optional) An array of initial values to be assigned to the translatable
    *   fields. Defaults to none.
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   A new entity translation object.
    *
    * @throws \InvalidArgumentException
    *   If an invalid or existing translation language is specified.
