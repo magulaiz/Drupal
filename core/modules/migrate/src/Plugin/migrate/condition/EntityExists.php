@@ -3,8 +3,9 @@
 namespace Drupal\migrate\Plugin\migrate\condition;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -54,12 +55,17 @@ class EntityExists extends ConditionBase implements ContainerFactoryPluginInterf
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage.
+   * @param Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityStorageInterface $storage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->storage = $storage;
+    try {
+      $this->storage = $entity_type_manager->getStorage($configuration['entity_type']);
+    }
+    catch (\Exception $e) {
+      throw new \InvalidArgumentException('The entity_type configured for entity_exists could not be loaded.');
+    }
   }
 
   /**
@@ -70,7 +76,7 @@ class EntityExists extends ConditionBase implements ContainerFactoryPluginInterf
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')->getStorage($configuration['entity_type'])
+      $container->get('entity_type.manager')
     );
   }
 
@@ -78,10 +84,9 @@ class EntityExists extends ConditionBase implements ContainerFactoryPluginInterf
    * {@inheritdoc}
    */
   public function evaluate($source, Row $row) {
-    if (is_array($source)) {
-      $source = reset($source);
+    if (!is_int($source) && !is_string($source)) {
+      throw new MigrateException("The source value for entity_exists must be an integer or a string.");
     }
-
     $entity = $this->storage->load($source);
     if ($entity instanceof EntityInterface) {
       return TRUE;
