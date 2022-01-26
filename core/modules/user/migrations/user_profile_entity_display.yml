@@ -43,12 +43,13 @@ process:
   options: 'constants/options'
   'options/type': '@type'
   hidden:
-    plugin: static_map
+    plugin: evaluate_condition
+    condition: in_array
     source: visibility
-    default_value: false
-    map:
-      1: true # PROFILE_PRIVATE
-      4: true # PROFILE_HIDDEN
+    configuration:
+      value:
+        - 1 # PROFILE_PRIVATE
+        - 4 # PROFILE_HIDDEN
 destination:
   plugin: component_entity_display
 migration_dependencies:

@@ -32,13 +32,12 @@ process:
       2: false
       3: true
   'third_party_settings/content_translation/enabled':
-    plugin: static_map
+    plugin: evaluate_condition
+    condition: equals
     source: state
-    map:
-      0: false
-      1: true
-      2: false
-      3: false
+    configuration:
+      value: 1
+      identical: true
   target_entity_type_id: 'constants/target_type'
   default_langcode:
     plugin: default_value

@@ -26,14 +26,11 @@ process:
       plugin: skip_on_empty
       method: row
   hidden:
-    plugin: static_map
+    # If comment_subject_field = FALSE, then hidden = TRUE.
+    # If comment_subject_field = TRUE, then hidden = FALSE.
+    plugin: evaluate_condition
+    condition: empty
     source: comment_subject_field
-    map:
-      # If comment_subject_field = FALSE, then hidden = TRUE.
-      0: true
-      # If comment_subject_field = TRUE, then hidden = FALSE.
-      1: false
-    default_value: false
 destination:
   plugin: component_entity_form_display
 migration_dependencies:

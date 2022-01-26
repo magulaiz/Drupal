@@ -22,12 +22,13 @@ process:
       source: module_exists
   status:
     -
-      plugin: static_map
+      plugin: evaluate_condition
+      condition: in_array
       source: status
-      map:
-        node: true
-        user: true
-      default_value: false
+      configuration:
+        value:
+          - node
+          - user
   id:
     -
       plugin: concat

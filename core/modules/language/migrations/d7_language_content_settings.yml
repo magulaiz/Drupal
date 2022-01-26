@@ -26,11 +26,9 @@ process:
       plugin: skip_on_empty
       method: row
   language_alterable:
-    plugin: static_map
+    plugin: evaluate_condition
     source: i18n_lock_node
-    map:
-      0: true
-      1: false
+    condition: empty
   'third_party_settings/content_translation/enabled':
     plugin: static_map
     source: language_content_type
