@@ -126,7 +126,7 @@ process:
         phone_textfield: telephone
   boolean_type:
     plugin: skip_on_condition
-    condtion: equals
+    condition: equals
     negate: true
     source: '@type'
     configuration:
