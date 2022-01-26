@@ -56,6 +56,11 @@ final class HTMLRestrictions implements \Countable {
   /**
    * Validates allowed elements — phase 1: shape of keys.
    *
+   * Confirms the top-level array keys:
+   * - Are strings
+   * - Do not contain whitespace
+   * - Is an html tag name, without angular brackets e.g. `div` not `<div>`
+   *
    * @param array $elements
    *   The allowed elements.
    *
@@ -88,7 +93,10 @@ final class HTMLRestrictions implements \Countable {
     foreach ($elements as $html_tag_name => $html_tag_restrictions) {
       // The value must be either a boolean (FALSE means no attributes are
       // allowed, TRUE means all attributes are allowed), or an array of allowed
-      // attribute names.
+      // The value must be either:
+      // - An array of allowed attribute names OR
+      // - A boolean (where FALSE means no attributes are allowed, and TRUE 
+      //   means all attributes are allowed).
       if (is_bool($html_tag_restrictions)) {
         continue;
       }
