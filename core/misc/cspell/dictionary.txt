@@ -16,6 +16,7 @@ ajaxcallback
 ajaxify
 ajaxing
 akiko
+alignable
 allwords
 alphadecimal
 alterjs
@@ -857,6 +858,7 @@ mymodule
 mysite
 mysqladmin
 mysqldump
+mystarterkit
 myverylongurl
 myverylongurlexample
 műveletek
@@ -1119,6 +1121,7 @@ realword
 rebuilder
 reclosed
 recolorable
+redeclaration
 redirections
 redstrawberryhiddenfield
 refactorings
