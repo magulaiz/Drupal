@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalmediastyleediting splitbutton */
 import { Plugin } from 'ckeditor5/src/core';
+import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
 import {
   addToolbarToDropdown,
   ButtonView,

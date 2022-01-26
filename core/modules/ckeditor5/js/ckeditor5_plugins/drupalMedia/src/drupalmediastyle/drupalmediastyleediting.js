@@ -96,6 +96,7 @@ function viewToModelStyleAttribute(styles) {
     }
 
     // Convert styles with CSS classes one by one.
+    // eslint-disable-next-line no-restricted-syntax
     for (const style of nonDefaultStyles) {
       // Try to consume class corresponding with the style.
       if (style.className) {
@@ -120,6 +121,7 @@ function viewToModelStyleAttribute(styles) {
         attributes: ['data-align'],
       })
     ) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const style of nonDefaultStyles) {
         if (
           style.drupalMediaAlign &&
