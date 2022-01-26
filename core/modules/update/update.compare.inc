@@ -309,22 +309,24 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['recommended'] = $recommended_release['version'];
     $project_data['releases'][$recommended_release['version']] = $recommended_release;
   }
-  if ($latest_release = $status_calculator->getLatestReleaseForTargetMajor()) {
+  if ($latest_release = $status_calculator->getLatestReleaseForMajor()) {
     $project_data['latest_version'] = $latest_release['version'];
     $project_data['releases'][$latest_release['version']] = $latest_release;
   }
-  if ($dev_release = $status_calculator->getLatestDevReleaseForTargetMajor()) {
+  if ($dev_release = $status_calculator->getLatestDevReleaseForMajor()) {
     $project_data['dev_version'] = $dev_release['version'];
     $project_data['releases'][$dev_release['version']] = $latest_release;
   }
   if ($security_releases = $status_calculator->getSecurityReleases()) {
     $project_data['security updates'] = array_values($security_releases);
   }
-  if ($releases_newer_than_target_major = $status_calculator->getReleasesInMajorsGreaterThanTarget()) {
-    foreach ($releases_newer_than_target_major as $major_version => $newer_release) {
-      $newer_release_version = $newer_release['version'];
-      $project_data['also'][$major_version] = $newer_release_version;
-      $project_data['releases'][$newer_release_version] = $newer_release;
+  $target_major = $status_calculator->getTargetMajor();
+  foreach ($status_calculator->getSupportedMajors() as $supported_major) {
+    if ($supported_major > $target_major) {
+      if ($supported_major_release = $status_calculator->getLatestReleaseForMajor($supported_major)) {
+        $project_data['also'][$supported_major] = $supported_major_release['version'];
+        $project_data['releases'][$supported_major_release['version']] = $supported_major_release;
+      }
     }
   }
 
@@ -365,7 +367,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   // If we're running a dev snapshot record the absolute latest version in
   // 'latest_dev' so we can correctly decide if there's a newer release than our
   // current snapshot.
-  if ($status_calculator->getInstallType() === 'dev' && $latest_dev_release_info = $status_calculator->getLatestDev()) {
+  if ($status_calculator->getInstallType() === 'dev' && $latest_dev_release_info = $status_calculator->getLatestDevForMajor()) {
     $project_data['latest_dev'] = $latest_dev_release_info['version'];
   }
 

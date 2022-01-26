@@ -62,21 +62,27 @@ final class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the latest development release if any for the target major.
+   * Gets the latest development release if any for a major version.
    *
    * Development release end with the string "-dev".
    *
+   * @param string|null $major
+   *   (optional) The major version to use. Defaults to NULL. If no major
+   *   version is specified the target major will be used.
+   *
    * @return array|null
    *   The development release if available, otherwise NULL.
+   *
+   * @see self::getTargetMajor()
    */
-  public function getLatestDevReleaseForTargetMajor(): ?array {
+  public function getLatestDevReleaseForMajor(string $major = NULL): ?array {
     if (!$this->isProjectRecommendable()) {
       return NULL;
     }
-    $target_major = $this->getTargetMajor();
+    $major = $major ?? $this->getTargetMajor();
     foreach ($this->getInstallableReleases() as $version => $release_info) {
       $release_module_version = ExtensionVersion::createFromVersionString($version);
-      if ($target_major === $release_module_version->getMajorVersion()
+      if ($major === $release_module_version->getMajorVersion()
         && $release_module_version->getVersionExtra() === 'dev') {
         return $release_info;
       }
@@ -85,20 +91,24 @@ final class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the latest installable release, if any, for the target major.
+   * Gets the latest installable release, if any, for a major version.
+   *
+   * @param string|null $major
+   *   (optional) The major version to use. Defaults to NULL. If no major
+   *   version is specified the target major will be used.
    *
    * @return array|null
    *   The latest installable release if available, otherwise NULL.
    *
    * @see self::getTargetMajor()
    */
-  public function getLatestReleaseForTargetMajor(): ?array {
+  public function getLatestReleaseForMajor(string $major = NULL): ?array {
     if (!$this->isProjectRecommendable()) {
       return NULL;
     }
-    $target_major = $this->getTargetMajor();
+    $major = $major ?? $this->getTargetMajor();
     foreach ($this->getInstallableReleases() as $version => $release_info) {
-      if ($target_major === ExtensionVersion::createFromVersionString($version)->getMajorVersion()) {
+      if ($major === ExtensionVersion::createFromVersionString($version)->getMajorVersion()) {
         return $release_info;
       }
     }
@@ -143,38 +153,11 @@ final class ProjectStatusCalculator {
       }
     }
     // We didn't find a release.
-    $latest_release = $this->getLatestReleaseForTargetMajor();
+    $latest_release = $this->getLatestReleaseForMajor($target_major);
     if ($latest_release) {
       return $latest_release;
     }
     return NULL;
-  }
-
-  /**
-   * Gets latest releases that are in majors greater than the target major.
-   *
-   * @return array[]
-   *   An array of releases keyed by major version. For example if the currently
-   *   installed version of project is 1.2.1 but major versions 2 and 3 are also
-   *   supported and the latest versions for these majors are 2.2.3 and 3.3.2
-   *   then this method would return an array with the first element having the
-   *   key '2' and the value of an array with the 2.2.3 release information
-   *   and the second element having the key '3' and the value of an array with
-   *   the 2.2.3 release information.
-   */
-  public function getReleasesInMajorsGreaterThanTarget(): array {
-    if (!$this->isProjectRecommendable()) {
-      return [];
-    }
-    $target_major = $this->getTargetMajor();
-    $releases = [];
-    foreach ($this->getInstallableReleases() as $version => $release_info) {
-      $release_major_version = ExtensionVersion::createFromVersionString($version)->getMajorVersion();
-      if ($release_major_version > $target_major && !isset($releases[$release_major_version])) {
-        $releases[$release_major_version] = $release_info;
-      }
-    }
-    return $releases;
   }
 
   /**
@@ -211,7 +194,7 @@ final class ProjectStatusCalculator {
    *
    * @see \Drupal\update\UpdateServerProjectInfo::getSupportBranches()
    */
-  private function getTargetMajor(): ?string {
+  public function getTargetMajor(): ?string {
     $existing_version = $this->getExistingVersion();
     if (!$existing_version) {
       return NULL;
@@ -252,6 +235,22 @@ final class ProjectStatusCalculator {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * Gets the supported majors for a project.
+   *
+   * @return string[]
+   *   The supported majors.
+   */
+  public function getSupportedMajors(): array {
+    $supported_branches = $this->updateServerProjectInfo->getSupportBranches();
+    $supported_majors = [];
+    foreach ($supported_branches as $supported_branch) {
+      $branch_version = ExtensionVersion::createFromSupportBranch($supported_branch);
+      $supported_majors[] = $branch_version->getMajorVersion();
+    }
+    return array_unique($supported_majors);
   }
 
   /**
@@ -442,7 +441,7 @@ final class ProjectStatusCalculator {
 
     switch ($this->getInstallType()) {
       case 'official':
-        $latest_release_info = $this->getLatestReleaseForTargetMajor();
+        $latest_release_info = $this->getLatestReleaseForMajor();
         if ($existing_release_info && ($existing_release_info['version'] === $recommended_release_info['version'] || $existing_release_info['version'] === $latest_release_info['version'])) {
           $status = UpdateManagerInterface::CURRENT;
         }
@@ -452,7 +451,7 @@ final class ProjectStatusCalculator {
         break;
 
       case 'dev':
-        $latest_dev_release = ProjectRelease::createFromArray($this->getLatestDev());
+        $latest_dev_release = ProjectRelease::createFromArray($this->getLatestDevForMajor());
         if (empty($this->projectData['datestamp'])) {
           $status = UpdateFetcherInterface::NOT_CHECKED;
         }
@@ -485,14 +484,18 @@ final class ProjectStatusCalculator {
   }
 
   /**
-   * Gets the latest development release.
+   * Gets the latest development release for a major.
+   *
+   * @param string|null $major
+   *   (optional) The major version to use. Defaults to NULL. If no major
+   *   version is specified the target major will be used.
    *
    * @return array|null
    *   The latest develop release if available otherwise NULL.
    */
-  public function getLatestDev(): ?array {
-    $dev_release_info = $this->getLatestDevReleaseForTargetMajor();
-    $latest_release_info = $this->getLatestReleaseForTargetMajor();
+  public function getLatestDevForMajor(string $major = NULL): ?array {
+    $dev_release_info = $this->getLatestDevReleaseForMajor($major);
+    $latest_release_info = $this->getLatestReleaseForMajor($major);
     if ($dev_release_info && $latest_release_info) {
       $dev_release = ProjectRelease::createFromArray($dev_release_info);
       $latest_release = ProjectRelease::createFromArray($latest_release_info);
