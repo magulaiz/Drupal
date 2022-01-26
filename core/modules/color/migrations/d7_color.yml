@@ -24,15 +24,12 @@ process:
         - 2
   # Skip if the variable name ends in 'screenshot'.
   screenshot:
-    -
-      plugin: static_map
-      source: '@element_name'
-      bypass: true
-      map:
-        screenshot: false
-    -
-      plugin: skip_on_empty
-      method: row
+    plugin: skip_on_condition
+    condition: equals
+    source: '@element_name'
+    configuration:
+      value: 'screenshot'
+    method: row
   # Build the configuration name from the variable name, i.e.
   # 'color_themename_element' becomes 'color.theme.themename'
   theme_name:
