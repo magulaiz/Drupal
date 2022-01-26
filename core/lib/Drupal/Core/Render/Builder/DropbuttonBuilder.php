@@ -3,7 +3,7 @@
 namespace Drupal\Core\Render\Builder;
 
 /**
- * Builder class for the 'image' element.
+ * Builder class for the 'dropbutton' element.
  */
 class DropbuttonBuilder extends BuilderBase {
 
