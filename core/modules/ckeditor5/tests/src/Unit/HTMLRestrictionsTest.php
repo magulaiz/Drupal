@@ -39,7 +39,15 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
     yield 'INVALID: no more angular brackets, but still leading or trailing whitespace' => [
       ['foo' => '', 'bar ' => ''],
-      'The "bar " HTML tag contains whitespace. Omit the whitespace.',
+      'The "bar " HTML tag contains trailing or leading whitespace.',
+    ];
+    yield 'INVALID: invalid character range' => [
+      ['🦙' => ''],
+      '"🦙" is not a valid HTML tag name.',
+    ];
+    yield 'INVALID: invalid custom element name' => [
+      ['foo-bar' => '', '1-foo-bar' => ''],
+      '"1-foo-bar" is not a valid HTML tag name.',
     ];
 
     // Invalid HTML tag attribute name restrictions.

@@ -14,7 +14,7 @@ use Masterminds\HTML5\Elements;
 /**
  * Represents a set of HTML restrictions.
  *
- * @todo rename to "supported HTML" or add support for "forbidden" tags
+ * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231334
  *
  * @internal
  */
@@ -56,10 +56,11 @@ final class HTMLRestrictions implements \Countable {
   /**
    * Validates allowed elements — phase 1: shape of keys.
    *
-   * Confirms the top-level array keys:
-   * - Are strings
-   * - Do not contain whitespace
-   * - Is an html tag name, without angular brackets e.g. `div` not `<div>`
+   * Confirms each of the top-level array keys:
+   * - Is a string
+   * - Does not contain leading or trailing whitespace
+   * - Is a tag name, not a tag, e.g. `div` not `<div>`
+   * - Is a valid HTML tag name.
    *
    * @param array $elements
    *   The allowed elements.
@@ -72,12 +73,17 @@ final class HTMLRestrictions implements \Countable {
     }
     foreach (array_keys($elements) as $html_tag_name) {
       if (trim($html_tag_name) !== $html_tag_name) {
-        throw new \InvalidArgumentException(sprintf('The "%s" HTML tag contains whitespace. Omit the whitespace.', $html_tag_name));
+        throw new \InvalidArgumentException(sprintf('The "%s" HTML tag contains trailing or leading whitespace.', $html_tag_name));
       }
       if ($html_tag_name[0] === '<' || $html_tag_name[-1] === '>') {
         throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
       }
-      // @todo conform to HTML element naming rules ………………………… — exception is *
+      // HTML elements must have a valid tag name.
+      // @see https://html.spec.whatwg.org/multipage/syntax.html#syntax-tag-name
+      // @see https://html.spec.whatwg.org/multipage/custom-elements.html#valid-custom-element-name
+      if (!preg_match('/^[a-z][0-9a-z\-]+$/', strtolower($html_tag_name))) {
+        throw new \InvalidArgumentException(sprintf('"%s" is not a valid HTML tag name.', $html_tag_name));
+      }
     }
   }
 
@@ -95,7 +101,7 @@ final class HTMLRestrictions implements \Countable {
       // allowed, TRUE means all attributes are allowed), or an array of allowed
       // The value must be either:
       // - An array of allowed attribute names OR
-      // - A boolean (where FALSE means no attributes are allowed, and TRUE 
+      // - A boolean (where FALSE means no attributes are allowed, and TRUE
       //   means all attributes are allowed).
       if (is_bool($html_tag_restrictions)) {
         continue;
@@ -208,6 +214,24 @@ final class HTMLRestrictions implements \Countable {
     return static::fromObjectWithHtmlRestrictions($text_format);
   }
 
+  /**
+   * Constructs a set of HTML restrictions matching the given object.
+   *
+   * Note: there is no interface for the ::getHTMLRestrictions() method that
+   * both text filter plugins and the text format configuration entity type
+   * implement. To avoid duplicating this logic, this private helper method
+   * exists: to simplify the two public static methods that each accept one of
+   * those two interfaces.
+   *
+   * @param \Drupal\filter\Plugin\FilterInterface|\Drupal\filter\FilterFormatInterface $object
+   *   A text format or filter plugin instance to construct a HTML restrictions
+   *   object for.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *
+   * @see ::fromFilterPluginInstance()
+   * @see ::fromTextFormat()
+   */
   private static function fromObjectWithHtmlRestrictions(object $object): HTMLRestrictions {
     if (!method_exists($object, 'getHTMLRestrictions')) {
       throw new \InvalidArgumentException();
