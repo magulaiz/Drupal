@@ -330,7 +330,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
             );
           }
 
-          // If the new value is not alignement related, do not proceed.
+          // If the new value is not alignment related, do not proceed.
           if (!alignMapping[data.attributeNewValue]) {
             return;
           }

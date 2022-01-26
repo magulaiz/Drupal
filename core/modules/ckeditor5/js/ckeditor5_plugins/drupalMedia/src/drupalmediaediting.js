@@ -144,7 +144,7 @@ export default class DrupalMediaEditing extends Plugin {
             );
           }
 
-          // If the new value is not alignement related, do not proceed.
+          // If the new value is not alignment related, do not proceed.
           if (!alignMapping[data.attributeNewValue]) {
             return;
           }
