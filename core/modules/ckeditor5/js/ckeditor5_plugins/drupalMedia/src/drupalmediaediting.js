@@ -135,6 +135,8 @@ export default class DrupalMediaEditing extends Plugin {
           const viewElement = conversionApi.mapper.toViewElement(data.item);
           const viewWriter = conversionApi.writer;
 
+          // If the prior value is alignment related, it should be removed
+          // whether or not the module property is consumed.
           if (alignMapping[data.attributeOldValue]) {
             viewWriter.removeClass(
               alignMapping[data.attributeOldValue],
@@ -142,14 +144,18 @@ export default class DrupalMediaEditing extends Plugin {
             );
           }
 
+          // If the new value is not alignement related, do not proceed.
           if (!alignMapping[data.attributeNewValue]) {
             return;
           }
 
+          // The the model property is already consumed, do not proceed.
           if (!conversionApi.consumable.consume(data.item, evt.name)) {
             return;
           }
 
+          // Add the alignment class in the view that corresponds to the value
+          // of the model's drupalMediaStyle property.
           viewWriter.addClass(
             alignMapping[data.attributeNewValue],
             viewElement,
