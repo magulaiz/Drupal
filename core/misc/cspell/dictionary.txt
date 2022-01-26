@@ -359,6 +359,7 @@ drupallink
 drupalmedia
 drupalmediaediting
 drupalmediatoolbar
+drupalsummarydelimiter
 drupaltest
 druplicon
 drush
@@ -1343,6 +1344,7 @@ unprefixed
 unpreloaded
 unpromote
 unpromoted
+unprotect
 unpublish
 unpublishes
 unpublishing
