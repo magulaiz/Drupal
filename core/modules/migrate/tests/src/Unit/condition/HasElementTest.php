@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\migrate\Unit\process;
+namespace Drupal\Tests\migrate\Unit\condition;
 
 use Drupal\migrate\Plugin\migrate\condition\Equals;
 use Drupal\migrate\Plugin\migrate\condition\HasElement;

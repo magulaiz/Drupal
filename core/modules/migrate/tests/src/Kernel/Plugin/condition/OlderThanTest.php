@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\migrate\Kernel\condition;
+namespace Drupal\Tests\migrate\Kernel\Plugin\condition;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\migrate\condition\OlderThan;
