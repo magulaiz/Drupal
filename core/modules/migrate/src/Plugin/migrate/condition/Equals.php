@@ -10,7 +10,7 @@ namespace Drupal\migrate\Plugin\migrate\condition;
  *   to compare the source.
  * - property: (one of value or property is required) The source or destination
  *   property key to 'get' and to compare the source.
- * - identical: (optional) Pass TRUE to compare with ===.
+ * - strict: (optional) Pass TRUE to compare with ===.
  *
  * Examples:
  *
@@ -24,7 +24,7 @@ namespace Drupal\migrate\Plugin\migrate\condition;
  *     method: row
  *     configuration:
  *       value: 0
- *       identical: TRUE
+ *       strict: TRUE
  *     source: source_field
  * @endcode
  *
@@ -54,7 +54,7 @@ class Equals extends SimpleComparisonBase {
    * {@inheritdoc}
    */
   public function compare($source, $value) {
-    if (isset($this->configuration['identical']) && $this->configuration['identical']) {
+    if (isset($this->configuration['strict']) && $this->configuration['strict']) {
       return $source === $value;
     }
     else {

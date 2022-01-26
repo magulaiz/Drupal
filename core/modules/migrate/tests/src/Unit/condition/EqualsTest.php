@@ -111,7 +111,7 @@ class EqualsTest extends UnitTestCase {
       [
         'configuration' => [
           'value' => NULL,
-          'identical' => TRUE,
+          'strict' => TRUE,
         ],
         'source' => FALSE,
         'property_value' => NULL,
@@ -144,7 +144,7 @@ class EqualsTest extends UnitTestCase {
       [
         'configuration' => [
           'property' => 'my_property',
-          'identical' => TRUE,
+          'strict' => TRUE,
         ],
         'source' => 45,
         'property_value' => '45',
