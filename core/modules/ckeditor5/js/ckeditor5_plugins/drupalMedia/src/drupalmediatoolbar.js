@@ -31,6 +31,17 @@ export default class DrupalMediaToolbar extends Plugin {
   }
 }
 
+/**
+ * Convert dropdown definitions to keys registered in the ComponentFactory.
+ *
+ * The registration precess should be handled by the plugin which handles the UI
+ * of a particular feature.
+ *
+ * @param {Array.<string|Object>} config
+ *
+ * @return {string[]}
+ *   A normalized toolbar item list.
+ */
 function normalizeDeclarativeConfig(config) {
   return config.map((item) => (isObject(item) ? item.name : item));
 }

@@ -514,6 +514,17 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 }
 
+/**
+ * Convert dropdown definitions to keys registered in the ComponentFactory.
+ *
+ * The registration precess should be handled by the plugin which handles the UI
+ * of a particular feature.
+ *
+ * @param {Array.<string|Object>} config
+ *
+ * @return {string[]}
+ *   A normalized toolbar item list.
+ */
 function normalizeDeclarativeConfig(config) {
   return config.map((item) => (isObject(item) ? item.name : item));
 }
@@ -1922,10 +1933,19 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 
 
 
+/**
+ * The Drupal Media style command.
+ *
+ * This is used to apply Drupal Media style option to a selected Drupal Media.
+ */
 class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5.Command {
+  /**
+   * Constructs a new object.
+   */
   constructor(editor, styles) {
     super(editor);
-    this.styles = new Map(styles.map((style) => {
+    this.styles = new Map(
+      styles.map((style) => {
         return [style.name, style];
       }),
     );
@@ -1951,6 +1971,17 @@ class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5
     }
   }
 
+  /**
+   * Executes the command and applies the style to the selected Drupal Media.
+   *
+   * @example
+   *    editor.execute('drupalMediaStyle', { value: 'alignLeft' });
+   *
+   * @param {Object} options
+   * @param {string} options.value
+   *   The name of the style as configured in the Drupal Media style
+   *   configuration.
+   */
   execute(options = {}) {
     const editor = this.editor;
     const model = editor.model;
@@ -1958,14 +1989,18 @@ class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5
     model.change((writer) => {
       const requestedStyle = options.value;
 
-      const imageElement = getClosestSelectedDrupalMediaElement(
+      const drupalMediaElement = getClosestSelectedDrupalMediaElement(
         model.document.selection,
       );
 
       if (!requestedStyle || this.styles.get(requestedStyle).isDefault) {
-        writer.removeAttribute('drupalMediaStyle', imageElement);
+        writer.removeAttribute('drupalMediaStyle', drupalMediaElement);
       } else {
-        writer.setAttribute('drupalMediaStyle', requestedStyle, imageElement);
+        writer.setAttribute(
+          'drupalMediaStyle',
+          requestedStyle,
+          drupalMediaElement,
+        );
       }
     });
   }
@@ -2017,7 +2052,11 @@ function modelToViewStyleAttribute(styles) {
 
     if (newStyle) {
       if (newStyle.drupalMediaAlign) {
-        viewWriter.setAttribute('data-align', newStyle.drupalMediaAlign, viewElement);
+        viewWriter.setAttribute(
+          'data-align',
+          newStyle.drupalMediaAlign,
+          viewElement,
+        );
       } else {
         viewWriter.addClass(newStyle.className, viewElement);
       }
@@ -2035,7 +2074,7 @@ function modelToViewStyleAttribute(styles) {
  */
 function viewToModelStyleAttribute(styles) {
   // Convert only non–default styles.
-  const nonDefaultStyles = styles.filter(style => !style.isDefault);
+  const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
   return (evt, data, conversionApi) => {
     if (!data.modelRange) {
@@ -2053,7 +2092,12 @@ function viewToModelStyleAttribute(styles) {
 
     // Stop conversion early if the drupalMediaStyle attribute isn't allowed for
     // the element.
-    if (!conversionApi.schema.checkAttribute(modelDrupalMediaElement, 'drupalMediaStyle')) {
+    if (
+      !conversionApi.schema.checkAttribute(
+        modelDrupalMediaElement,
+        'drupalMediaStyle',
+      )
+    ) {
       return;
     }
 
@@ -2061,18 +2105,37 @@ function viewToModelStyleAttribute(styles) {
     for (const style of nonDefaultStyles) {
       // Try to consume class corresponding with the style.
       if (style.className) {
-        if (conversionApi.consumable.consume(viewElement, { classes: style.className })) {
+        if (
+          conversionApi.consumable.consume(viewElement, {
+            classes: style.className,
+          })
+        ) {
           // And convert this style to model attribute.
-          conversionApi.writer.setAttribute('drupalMediaStyle', style.name, modelDrupalMediaElement);
+          conversionApi.writer.setAttribute(
+            'drupalMediaStyle',
+            style.name,
+            modelDrupalMediaElement,
+          );
         }
       }
     }
 
     // Convert data-align attribute to a style.
-    if (conversionApi.consumable.consume(viewElement, { attributes: ['data-align'] })) {
+    if (
+      conversionApi.consumable.consume(viewElement, {
+        attributes: ['data-align'],
+      })
+    ) {
       for (const style of nonDefaultStyles) {
-        if (style.drupalMediaAlign && style.drupalMediaAlign === viewElement.getAttribute('data-align')) {
-          conversionApi.writer.setAttribute('drupalMediaStyle', style.name, modelDrupalMediaElement);
+        if (
+          style.drupalMediaAlign &&
+          style.drupalMediaAlign === viewElement.getAttribute('data-align')
+        ) {
+          conversionApi.writer.setAttribute(
+            'drupalMediaStyle',
+            style.name,
+            modelDrupalMediaElement,
+          );
         }
       }
     }
@@ -2090,24 +2153,25 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
     editor.config.define('drupalMedia.styles', {
       options: [
         {
-        name: 'alignRight',
+          name: 'alignRight',
           title: 'Right aligned media',
           icon: objectRight,
           drupalMediaAlign: 'right',
-      },
-      {
-        name: 'alignLeft',
+        },
+        {
+          name: 'alignLeft',
           title: 'Left aligned media',
           icon: objectLeft,
           drupalMediaAlign: 'left',
-      },
-      {
-        name: 'alignCenter',
+        },
+        {
+          name: 'alignCenter',
           title: 'Centered media',
           icon: objectCenter,
           drupalMediaAlign: 'center',
-      },
-    ]});
+        },
+      ],
+    });
 
     // @todo validate and normalize styles.
     this.normalizedStyles = editor.config.get('drupalMedia.styles').options;
@@ -2132,16 +2196,30 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
     const editor = this.editor;
     const schema = editor.model.schema;
 
-    const modelToViewConverter = modelToViewStyleAttribute(this.normalizedStyles);
-    const viewToModelConverter = viewToModelStyleAttribute(this.normalizedStyles);
+    const modelToViewConverter = modelToViewStyleAttribute(
+      this.normalizedStyles,
+    );
+    const viewToModelConverter = viewToModelStyleAttribute(
+      this.normalizedStyles,
+    );
 
-    editor.editing.downcastDispatcher.on('attribute:drupalMediaStyle', modelToViewConverter);
-    editor.data.downcastDispatcher.on('attribute:drupalMediaStyle', modelToViewConverter);
+    editor.editing.downcastDispatcher.on(
+      'attribute:drupalMediaStyle',
+      modelToViewConverter,
+    );
+    editor.data.downcastDispatcher.on(
+      'attribute:drupalMediaStyle',
+      modelToViewConverter,
+    );
 
     schema.extend('drupalMedia', { allowAttributes: 'drupalMediaStyle' });
 
     // Converter for the img element from view to model.
-    editor.data.upcastDispatcher.on('element:drupal-media', viewToModelConverter, { priority: 'low' });
+    editor.data.upcastDispatcher.on(
+      'element:drupal-media',
+      viewToModelConverter,
+      { priority: 'low' },
+    );
   }
 
   /**
