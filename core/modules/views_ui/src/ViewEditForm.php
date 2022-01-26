@@ -10,6 +10,7 @@ use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Render\Builder\DropbuttonBuilder;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -730,12 +731,11 @@ class ViewEditForm extends ViewFormBase {
     $element['#attributes']['id'] = ['views-display-top'];
 
     // Extra actions for the display
-    $element['extra_actions'] = [
-      '#type' => 'dropbutton',
-      '#attributes' => [
+    $element['extra_actions'] = DropbuttonBuilder::create()
+      ->attributes([
         'id' => 'views-display-extra-actions',
-      ],
-      '#links' => [
+      ])
+      ->links([
         'edit-details' => [
           'title' => $this->t('Edit view name/description'),
           'url' => Url::fromRoute('views_ui.form_edit_details', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display_id]),
@@ -755,8 +755,8 @@ class ViewEditForm extends ViewFormBase {
           'url' => Url::fromRoute('views_ui.form_reorder_displays', ['js' => 'nojs', 'view' => $view->id(), 'display_id' => $display_id]),
           'attributes' => ['class' => ['views-ajax-link']],
         ],
-      ],
-    ];
+      ])
+      ->toRenderable();
 
     if ($view->access('delete')) {
       $element['extra_actions']['#links']['delete'] = [
@@ -1061,13 +1061,12 @@ class ViewEditForm extends ViewFormBase {
     }
 
     // Render the array of links
-    $build['#actions'] = [
-      '#type' => 'dropbutton',
-      '#links' => $actions,
-      '#attributes' => [
+    $build['#actions'] = DropbuttonBuilder::create()
+      ->links($actions)
+      ->attributes([
         'class' => ['views-ui-settings-bucket-operations'],
-      ],
-    ];
+      ])
+      ->toRenderable();
 
     if (!$executable->display_handler->isDefaultDisplay()) {
       if (!$executable->display_handler->isDefaulted($types[$type]['plural'])) {
