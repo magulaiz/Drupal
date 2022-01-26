@@ -100,6 +100,30 @@ class CallbackTest extends UnitTestCase {
         ],
         'expected' => FALSE,
       ],
+      [
+        'configuration' => [
+          'callable' => 'strpos',
+          'unpack_source' => TRUE,
+          'strict' => FALSE,
+        ],
+        'source' => [
+          'my string',
+          'x',
+        ],
+        'expected' => FALSE,
+      ],
+      [
+        'configuration' => [
+          'callable' => 'strpos',
+          'unpack_source' => TRUE,
+          'strict' => TRUE,
+        ],
+        'source' => [
+          'my string',
+          'm',
+        ],
+        'expected' => TRUE,
+      ],
     ];
   }
 
