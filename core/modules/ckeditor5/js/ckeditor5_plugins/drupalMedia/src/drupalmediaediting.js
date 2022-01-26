@@ -17,7 +17,6 @@ export default class DrupalMediaEditing extends Plugin {
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaAlign: 'data-align',
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',

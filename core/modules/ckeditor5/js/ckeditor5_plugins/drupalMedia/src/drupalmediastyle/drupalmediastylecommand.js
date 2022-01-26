@@ -6,7 +6,7 @@ export default class DrupalMediaStyleCommand extends Command {
   constructor(editor, styles) {
     super(editor);
     this.styles = new Map(
-      Object.values(styles).map((style) => {
+      styles.map((style) => {
         return [style.name, style];
       }),
     );
