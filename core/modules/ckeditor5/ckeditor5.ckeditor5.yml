@@ -468,6 +468,29 @@ ckeditor5_imageAlign:
       imageUploadStatus: true
       filter: filter_align
 
+ckeditor5_drupalMediaAlign:
+  ckeditor5:
+    plugins:
+      - drupalMedia.DrupalMediaStyle
+    config:
+      drupalMedia:
+        toolbar:
+          - name: 'drupalMediaStyle:icons'
+            items:
+              - 'drupalMediaStyle:alignLeft'
+              - 'drupalMediaStyle:alignCenter'
+              - 'drupalMediaStyle:alignRight'
+            defaultItem: 'drupalMediaStyle:alignCenter'
+  drupal:
+    label: Media align
+    elements:
+      - <drupal-media data-align>
+    conditions:
+      toolbarItem: drupalMedia
+      filter: filter_align
+
+
+
 ckeditor5_indent:
   ckeditor5:
     plugins: [indent.Indent]

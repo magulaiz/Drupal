@@ -49,3 +49,17 @@ export function getSelectedDrupalMediaWidget(selection) {
 
   return null;
 }
+
+export function getClosestSelectedDrupalMediaElement(selection) {
+  const selectedElement = selection.getSelectedElement();
+
+  return isDrupalMedia(selectedElement)
+    ? selectedElement
+    : selection.getFirstPosition().findAncestor('drupalMedia');
+}
+
+// @todo better way to do this?
+export function isObject(value) {
+  const type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
+}
