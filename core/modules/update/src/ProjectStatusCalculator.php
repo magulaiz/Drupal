@@ -154,7 +154,13 @@ final class ProjectStatusCalculator {
    * Gets latest releases that are in majors greater than the target major.
    *
    * @return array[]
-   *   An array of releases keyed by major version.
+   *   An array of releases keyed by major version. For example if the currently
+   *   installed version of project is 1.2.1 but major versions 2 and 3 are also
+   *   supported and the latest versions for these majors are 2.2.3 and 3.3.2
+   *   then this method would return an array with the first element having the
+   *   key '2' and the value of an array with the 2.2.3 release information
+   *   and the second element having the key '3' and the value of an array with
+   *   the 2.2.3 release information.
    */
   public function getReleasesInMajorsGreaterThanTarget(): array {
     if (!$this->isProjectRecommendable()) {
@@ -193,17 +199,17 @@ final class ProjectStatusCalculator {
    * Gets the target major.
    *
    * If the project itself is valid, the function decides what major release
-   * series to consider. The project defines its currently supported branches in
-   * its Drupal.org for the project, so the first step is to make sure the
-   * development branch of the current version is still supported. If so, then
-   * the major version of the current version is used. If the current version is
-   * not in a supported branch, the next supported branch is used to determine
-   * the major version to use. There's also a check to make sure that this
-   * function never recommends an earlier release than the currently installed
-   * major version.
+   * series to consider. The first step is to make sure the development branch
+   * of the current version is still supported. If so, then the major version of
+   * the current version is used. If the current version is not in a supported
+   * branch, the next supported branch is used to determine the major version to
+   * use. There's also a check to make sure that this function never recommends
+   * an earlier release than the currently installed major version.
    *
    * @return string|null
    *   The target major if available, otherwise NULL.
+   *
+   * @see \Drupal\update\UpdateServerProjectInfo::getSupportBranches()
    */
   private function getTargetMajor(): ?string {
     $existing_version = $this->getExistingVersion();
@@ -378,7 +384,7 @@ final class ProjectStatusCalculator {
       'unsupported',
       'not-fetched',
     ];
-    if (in_array($this->updateServerProjectInfo->getStatus(), $unusable_project_statuses)) {
+    if (in_array($this->updateServerProjectInfo->getStatus(), $unusable_project_statuses, TRUE)) {
       return FALSE;
     }
     $existing_version = $this->getExistingVersion();
