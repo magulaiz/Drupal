@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Command } from 'ckeditor5/src/core';
 
 import { getClosestSelectedDrupalMediaElement } from '../utils';

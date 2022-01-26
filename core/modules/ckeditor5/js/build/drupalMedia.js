@@ -309,6 +309,41 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
       },
     });
 
+    conversion.for('editingDowncast').add((dispatcher) => {
+
+      dispatcher.on('attribute:drupalMediaStyle:drupalMedia',
+        (evt, data, conversionApi) => {
+          const alignMapping = {
+            alignLeft: 'image-style-align-left',
+            alignRight: 'image-style-align-right',
+            alignCenter: 'image-style-align-center',
+          };
+          const viewElement = conversionApi.mapper.toViewElement(data.item);
+          const viewWriter = conversionApi.writer;
+
+          if (alignMapping[data.attributeOldValue]) {
+            viewWriter.removeClass(
+              alignMapping[data.attributeOldValue],
+              viewElement,
+            );
+          }
+
+          if (!alignMapping[data.attributeNewValue]) {
+            return;
+          }
+
+          if (!conversionApi.consumable.consume(data.item, evt.name)) {
+            return;
+          }
+
+          viewWriter.addClass(
+            alignMapping[data.attributeNewValue],
+            viewElement,
+          );
+        },
+      );
+    });
+
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
       conversion.attributeToAttribute({
@@ -477,7 +512,7 @@ function getClosestSelectedDrupalMediaElement(selection) {
 // @todo better way to do this?
 function isObject(value) {
   const type = typeof value;
-  return value != null && (type == 'object' || type == 'function');
+  return value != null && (type === 'object' || type === 'function');
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediatoolbar.js
@@ -486,6 +521,22 @@ function isObject(value) {
 
 
 
+
+/**
+ * Convert dropdown definitions to keys registered in the ComponentFactory.
+ *
+ * The registration precess should be handled by the plugin which handles the UI
+ * of a particular feature.
+ *
+ * @param {Array.<string|Object>} config
+ *   The drupalMedia.toolbar configuration.
+ *
+ * @return {string[]}
+ *   A normalized toolbar item list.
+ */
+function normalizeDeclarativeConfig(config) {
+  return config.map((item) => (isObject(item) ? item.name : item));
+}
 
 /**
  * @internal
@@ -500,7 +551,7 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 
   afterInit() {
-    const editor = this.editor;
+    const { editor } = this;
     const widgetToolbarRepository = editor.plugins.get(delegated_widgetfrom_dll_reference_CKEditor5.WidgetToolbarRepository);
 
     widgetToolbarRepository.register('drupalMedia', {
@@ -512,21 +563,6 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
       getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
     });
   }
-}
-
-/**
- * Convert dropdown definitions to keys registered in the ComponentFactory.
- *
- * The registration precess should be handled by the plugin which handles the UI
- * of a particular feature.
- *
- * @param {Array.<string|Object>} config
- *
- * @return {string[]}
- *   A normalized toolbar item list.
- */
-function normalizeDeclarativeConfig(config) {
-  return config.map((item) => (isObject(item) ? item.name : item));
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativecommand.js
@@ -1097,9 +1133,9 @@ class MediaImageTextAlternative extends delegated_corefrom_dll_reference_CKEdito
   }
 }
 
-;// CONCATENATED MODULE: ../../ckeditor5/packages/ckeditor5-html-support/src/conversionutils.js
+;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-html-support/src/conversionutils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -1929,6 +1965,7 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediastyle/drupalmediastylecommand.js
+/* eslint-disable import/no-extraneous-dependencies */
 
 
 
@@ -2007,6 +2044,7 @@ class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediastyle/drupalmediastyleediting.js
+/* eslint-disable import/no-extraneous-dependencies */
 
 
 
@@ -2014,6 +2052,7 @@ class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5
 const { objectLeft, objectRight, objectCenter } = delegated_corefrom_dll_reference_CKEditor5.icons;
 
 function getStyleDefinitionByName(name, styles) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
     if (style.name === name) {
       return style;
@@ -2397,6 +2436,7 @@ class DrupalMediaStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plug
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediastyle.js
+/* eslint-disable import/no-extraneous-dependencies */
 
 
 

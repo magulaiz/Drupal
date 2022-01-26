@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalMediaStyleCommand from './drupalmediastylecommand';
@@ -5,6 +6,7 @@ import DrupalMediaStyleCommand from './drupalmediastylecommand';
 const { objectLeft, objectRight, objectCenter } = icons;
 
 function getStyleDefinitionByName(name, styles) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
     if (style.name === name) {
       return style;

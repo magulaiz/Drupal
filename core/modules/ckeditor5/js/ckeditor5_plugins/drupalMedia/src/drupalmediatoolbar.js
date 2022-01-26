@@ -5,6 +5,22 @@ import { WidgetToolbarRepository } from 'ckeditor5/src/widget';
 import { getSelectedDrupalMediaWidget, isObject } from './utils';
 
 /**
+ * Convert dropdown definitions to keys registered in the ComponentFactory.
+ *
+ * The registration precess should be handled by the plugin which handles the UI
+ * of a particular feature.
+ *
+ * @param {Array.<string|Object>} config
+ *   The drupalMedia.toolbar configuration.
+ *
+ * @return {string[]}
+ *   A normalized toolbar item list.
+ */
+function normalizeDeclarativeConfig(config) {
+  return config.map((item) => (isObject(item) ? item.name : item));
+}
+
+/**
  * @internal
  */
 export default class DrupalMediaToolbar extends Plugin {
@@ -17,7 +33,7 @@ export default class DrupalMediaToolbar extends Plugin {
   }
 
   afterInit() {
-    const editor = this.editor;
+    const { editor } = this;
     const widgetToolbarRepository = editor.plugins.get(WidgetToolbarRepository);
 
     widgetToolbarRepository.register('drupalMedia', {
@@ -29,19 +45,4 @@ export default class DrupalMediaToolbar extends Plugin {
       getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
     });
   }
-}
-
-/**
- * Convert dropdown definitions to keys registered in the ComponentFactory.
- *
- * The registration precess should be handled by the plugin which handles the UI
- * of a particular feature.
- *
- * @param {Array.<string|Object>} config
- *
- * @return {string[]}
- *   A normalized toolbar item list.
- */
-function normalizeDeclarativeConfig(config) {
-  return config.map((item) => (isObject(item) ? item.name : item));
 }

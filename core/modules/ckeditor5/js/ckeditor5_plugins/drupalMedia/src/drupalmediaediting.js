@@ -123,6 +123,41 @@ export default class DrupalMediaEditing extends Plugin {
       },
     });
 
+    conversion.for('editingDowncast').add((dispatcher) => {
+
+      dispatcher.on('attribute:drupalMediaStyle:drupalMedia',
+        (evt, data, conversionApi) => {
+          const alignMapping = {
+            alignLeft: 'image-style-align-left',
+            alignRight: 'image-style-align-right',
+            alignCenter: 'image-style-align-center',
+          };
+          const viewElement = conversionApi.mapper.toViewElement(data.item);
+          const viewWriter = conversionApi.writer;
+
+          if (alignMapping[data.attributeOldValue]) {
+            viewWriter.removeClass(
+              alignMapping[data.attributeOldValue],
+              viewElement,
+            );
+          }
+
+          if (!alignMapping[data.attributeNewValue]) {
+            return;
+          }
+
+          if (!conversionApi.consumable.consume(data.item, evt.name)) {
+            return;
+          }
+
+          viewWriter.addClass(
+            alignMapping[data.attributeNewValue],
+            viewElement,
+          );
+        },
+      );
+    });
+
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
       conversion.attributeToAttribute({
