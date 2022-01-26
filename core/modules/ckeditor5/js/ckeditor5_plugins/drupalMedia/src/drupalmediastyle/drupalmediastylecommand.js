@@ -2,7 +2,15 @@ import { Command } from 'ckeditor5/src/core';
 
 import { getClosestSelectedDrupalMediaElement } from '../utils';
 
+/**
+ * The Drupal Media style command.
+ *
+ * This is used to apply Drupal Media style option to a selected Drupal Media.
+ */
 export default class DrupalMediaStyleCommand extends Command {
+  /**
+   * Constructs a new object.
+   */
   constructor(editor, styles) {
     super(editor);
     this.styles = new Map(
@@ -32,6 +40,17 @@ export default class DrupalMediaStyleCommand extends Command {
     }
   }
 
+  /**
+   * Executes the command and applies the style to the selected Drupal Media.
+   *
+   * @example
+   *    editor.execute('drupalMediaStyle', { value: 'alignLeft' });
+   *
+   * @param {Object} options
+   * @param {string} options.value
+   *   The name of the style as configured in the Drupal Media style
+   *   configuration.
+   */
   execute(options = {}) {
     const editor = this.editor;
     const model = editor.model;
@@ -39,14 +58,18 @@ export default class DrupalMediaStyleCommand extends Command {
     model.change((writer) => {
       const requestedStyle = options.value;
 
-      const imageElement = getClosestSelectedDrupalMediaElement(
+      const drupalMediaElement = getClosestSelectedDrupalMediaElement(
         model.document.selection,
       );
 
       if (!requestedStyle || this.styles.get(requestedStyle).isDefault) {
-        writer.removeAttribute('drupalMediaStyle', imageElement);
+        writer.removeAttribute('drupalMediaStyle', drupalMediaElement);
       } else {
-        writer.setAttribute('drupalMediaStyle', requestedStyle, imageElement);
+        writer.setAttribute(
+          'drupalMediaStyle',
+          requestedStyle,
+          drupalMediaElement,
+        );
       }
     });
   }
