@@ -47,6 +47,7 @@ abstract class ProcessPluginWithConditionBase extends ProcessPluginBase implemen
     if (isset($configuration['configuration']) && !is_array($configuration['configuration'])) {
       throw new \InvalidArgumentException('If "configuration" is set it must be an array.');
     }
+    $this->configuration['negate'] = $this->configuration['negate'] ?? FALSE;
     $this->condition = $condition_manager->createInstance($configuration['condition'], $configuration['configuration'] ?? []);
   }
 
