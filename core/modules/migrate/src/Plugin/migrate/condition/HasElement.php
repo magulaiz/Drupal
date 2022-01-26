@@ -85,7 +85,8 @@ class HasElement extends ConditionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function evaluate($source, Row $row) {
-    foreach ((array) $source as $source_value) {
+    $source = (array) $source;
+    foreach ($source as $source_value) {
       if ($this->condition->evaluate($source_value, $row) xor $this->configuration['negate']) {
         return TRUE;
       }

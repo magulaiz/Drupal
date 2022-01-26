@@ -141,6 +141,23 @@ class AllElementsTest extends UnitTestCase {
         ],
         'expected' => TRUE,
       ],
+      [
+        'source' => [],
+        'configuration' => [
+          'condition' => 'foo',
+        ],
+        'sub_evaluate_map' => [],
+        'expected' => FALSE,
+      ],
+      [
+        'source' => [],
+        'configuration' => [
+          'condition' => 'foo',
+          'negate' => TRUE,
+        ],
+        'sub_evaluate_map' => [],
+        'expected' => FALSE,
+      ],
     ];
   }
 

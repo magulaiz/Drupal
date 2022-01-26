@@ -85,7 +85,11 @@ class AllElements extends ConditionBase implements ContainerFactoryPluginInterfa
    * {@inheritdoc}
    */
   public function evaluate($source, Row $row) {
-    foreach ((array) $source as $source_value) {
+    $source = (array) $source;
+    if (empty($source)) {
+      return FALSE;
+    }
+    foreach ($source as $source_value) {
       if (!($this->condition->evaluate($source_value, $row) xor $this->configuration['negate'])) {
         return FALSE;
       }
