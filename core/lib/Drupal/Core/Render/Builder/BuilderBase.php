@@ -19,21 +19,21 @@ abstract class BuilderBase implements BuilderBaseInterface, RenderableInterface 
   /**
    * {@inheritdoc}
    */
-  public static function create() {
+  public static function create(): static {
     return new static();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function toRenderable() {
+  public function toRenderable(): array {
     return $this->renderable;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function set($key, $value) {
+  public function set($key, $value): static {
     $this->renderable['#' . $key] = $value;
     return $this;
   }
@@ -41,33 +41,33 @@ abstract class BuilderBase implements BuilderBaseInterface, RenderableInterface 
   /**
    * {@inheritdoc}
    */
-  public function prefix($value) {
+  public function prefix($value): static {
     return $this->set('prefix', $value);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function suffix($value) {
+  public function suffix($value): static {
     return $this->set('suffix', $value);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function access($value) {
+  public function access($value): static {
     return $this->set('access', $value);
   }
 
   /**
    * Set the attributes property on the image.
    *
-   * @param mixed $value
+   * @param array $value
    *   The value to set.
    *
    * @return $this
    */
-  public function attributes($value) {
+  public function attributes(array $value): static {
     return $this->set('attributes', $value);
   }
 

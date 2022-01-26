@@ -12,7 +12,7 @@ interface BuilderBaseInterface {
    *
    * @return $this
    */
-  public static function create();
+  public static function create(): static;
 
   /**
    * Set any key on the renderable array being constructed.
@@ -21,8 +21,10 @@ interface BuilderBaseInterface {
    *   The key to set on the renderable array.
    * @param string|array $value
    *   The value to assign the key.
+   *
+   * @return $this
    */
-  public function set(string $key, mixed $value);
+  public function set(string $key, mixed $value): static;
 
   /**
    * Set the 'prefix' property.
@@ -32,7 +34,7 @@ interface BuilderBaseInterface {
    *
    * @return $this
    */
-  public function prefix(array $value);
+  public function prefix(array $value): static;
 
   /**
    * Set the 'suffix' property.
@@ -42,6 +44,6 @@ interface BuilderBaseInterface {
    *
    * @return $this
    */
-  public function suffix(array $value);
+  public function suffix(array $value): static;
 
 }
