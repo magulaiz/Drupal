@@ -74,7 +74,7 @@ class MediaTest extends WebDriverTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <a href> <drupal-media data-entity-type data-entity-uuid alt>',
+            'allowed_html' => '<p> <br> <a href> <drupal-media data-entity-type data-entity-uuid data-align alt>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -646,7 +646,39 @@ class MediaTest extends WebDriverTestBase {
    */
   public function testAlignment() {
     // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3246385
-    $this->markTestSkipped('Blocked on https://www.drupal.org/project/ckeditor5/issues/3246385.');
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    // Return the source editing content of the drupal-media with the data-alignment class.
+    $addAlignmentJS = <<<JS
+    (function(){
+      const str = document.querySelector('.ck-source-editing-area > textarea').value;
+      const n = str.indexOf('>');
+      return str.substring(0,n) + 'data-align="center"' + '>';
+    }())
+JS;
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    // Edit the source of the image through the UI.
+    $page->pressButton('Source');
+    $newHTML = $this->getSession()->evaluateScript($addAlignmentJS);
+    $textArea = $page->find('css', '.ck-source-editing-area > textarea');
+    // Set the value of the source code to the updated HTML that has the data-alignment.
+    $textArea->setValue($newHTML);
+    $page->pressButton('Source');
+
+    // Assert the alignment class exists after editing downcast.
+    $assert_session->elementExists('css', '.ck-widget.drupal-media.image-style-align-center');
+    $page->pressButton('Save');
+    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    $assert_session->waitForElementVisible('css', 'messages messages--status');
+    // Check that the class is correct in the front end.
+    $assert_session->elementExists('css', 'article.align-center');
+    // Go back to the editor to check that the alignment class still exists.
+    $editURL = $this->getSession()->getCurrentURL() . '/edit';
+    $this->drupalGet($editURL);
+    $assert_session->elementExists('css', '.ck-widget.drupal-media.image-style-align-center');
   }
 
   /**
