@@ -14,6 +14,25 @@ use Masterminds\HTML5\Elements;
 /**
  * Represents a set of HTML restrictions.
  *
+ * This is a value object to represent HTML restrictions as defined by
+ * \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions(). It:
+ * - accepts the array structure documented on that interface as its constructor
+ *   argument
+ * - can transform this into multiple representations: a single string
+ *   representation historically used by Drupal, a list of
+ *   representation used by CKEditor 5 and a complex array structure used by
+ *   CKEditor 5's General HTML Support plugin
+ * - can parse the first two of those representations (both string-based, and
+ *   similar) back into a value object
+ * - offers difference, intersection and union operations.
+ *
+ * This makes it significantly simpler to reason about different sets of HTML
+ * restrictions and perform complex comparisons by performing the simple
+ * operations.
+ *
+ * @see FilterInterface::getHTMLRestrictions()
+ *
+ * NOTE: Currently only supports the 'allowed' portion.
  * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231334
  *
  * @internal
@@ -178,7 +197,7 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
-   * Creates the empty set of HTML restrictions.
+   * Creates the empty set of HTML restrictions: nothing is allowed.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
@@ -258,10 +277,15 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
+   * Parses a string of HTML restrictions into a HTMLRestrictions value object.
+   *
    * @param $elements_string
    *   A string representing a list of allowed HTML elements.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
+   *
+   * @see ::toFilterHtmlAllowedTagsString()
+   * @see ::toCKEditor5ElementsArray()
    */
   public static function parse($elements_string): HTMLRestrictions {
     if (is_array($elements_string)) {
@@ -650,7 +674,7 @@ final class HTMLRestrictions implements \Countable {
    *
    * @return array
    *
-   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions
+   * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public function getAllowedElements(bool $retain_wildcard = FALSE): array {
     $elements = $this->elements;
@@ -680,6 +704,15 @@ final class HTMLRestrictions implements \Countable {
     return $elements;
   }
 
+  /**
+   * Transforms into the CKEditor 5 package metadata "elements" representation.
+   *
+   * @return string[]
+   *   A list of strings, with each string expressing an allowed element,
+   *   structured in the way expected by the CKEditor 5 package metadata.
+   *
+   * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/contributing/package-metadata.html
+   */
   public function toCKEditor5ElementsArray(): array {
     $readable = [];
     foreach ($this->elements as $tag => $attributes) {
@@ -702,12 +735,22 @@ final class HTMLRestrictions implements \Countable {
     return $readable;
   }
 
+  /**
+   * Transforms into the Drupal HTML filter's "allowed_html" representation.
+   *
+   * @return string
+   *   A string representing the list of allowed elements, structured in the
+   *   manner expected by the "Limit allowed HTML tags and correct faulty HTML"
+   *   filter plugin.
+   *
+   * @see \Drupal\filter\Plugin\Filter\FilterHtml
+   */
   public function toFilterHtmlAllowedTagsString(): string {
     return implode(' ', $this->toCKEditor5ElementsArray());
   }
 
   /**
-   * Gets the HTML restrictions.
+   * Transforms into the CKEditor 5 GHS configuration representation.
    *
    * @return string[]
    *   An array of allowed elements, structured in the manner expected by the
@@ -751,7 +794,7 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
-   * Returns the tags that match the provided wildcard.
+   * Computes the tags that match the provided wildcard.
    *
    * A wildcard tag in element config is a way of representing multiple tags
    * with a single item, such as `<$block>` to represent all block tags. Each
@@ -762,7 +805,7 @@ final class HTMLRestrictions implements \Countable {
    * @param string $wildcard
    *   The wildcard that represents multiple tags.
    *
-   * @return array
+   * @return string[]
    *   An array of HTML tags.
    */
   protected static function getWildcardTags(string $wildcard): array {
@@ -782,7 +825,7 @@ final class HTMLRestrictions implements \Countable {
    * @param array|bool $value
    *   The attribute config value.
    */
-  protected static function providedElementsAttributes(array &$elements, string $tag, string $attribute, $value) : void {
+  protected static function providedElementsAttributes(array &$elements, string $tag, string $attribute, $value): void {
     $attribute_already_allows_all = isset($elements[$tag][$attribute]) && $elements[$tag][$attribute] === TRUE;
 
     if ($value === TRUE) {
