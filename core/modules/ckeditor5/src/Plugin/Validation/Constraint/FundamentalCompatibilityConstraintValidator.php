@@ -101,10 +101,11 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *   The constraint to validate.
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
-    $minimum_tags = array_keys($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
+    $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
+    $minimum_tags = array_keys($fundamental->getAllowedElements());
 
+    // @todo Remove in favor of HTMLRestrictions::diff() in https://www.drupal.org/project/drupal/issues/3231334
     $html_restrictions = $text_format->getHtmlRestrictions();
-
     $forbidden_minimum_tags = isset($html_restrictions['forbidden_tags'])
       ? array_diff($minimum_tags, $html_restrictions['forbidden_tags'])
       : [];
@@ -116,10 +117,11 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
         ->addViolation();
     }
 
-    $not_allowed_minimum_tags = isset($html_restrictions['allowed'])
-      ? array_diff($minimum_tags, array_keys($html_restrictions['allowed']))
-      : [];
-    if (!empty($not_allowed_minimum_tags)) {
+    // @todo Remove early return in https://www.drupal.org/project/drupal/issues/3231334
+    if (!isset($html_restrictions['allowed'])) {
+      return;
+    }
+    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->isEmpty()) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $minimum_tags);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
