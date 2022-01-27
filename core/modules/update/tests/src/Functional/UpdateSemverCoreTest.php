@@ -346,6 +346,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testModulePageRegularUpdate() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'administer software updates',
       'administer modules',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
@@ -382,6 +383,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testModulePageSecurityUpdate() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
+      'administer software updates',
       'administer modules',
       'administer themes',
     ]));
