@@ -453,7 +453,7 @@ final class SmartDefaultSettings {
           // with what we need to achieve, then subtract what is already
           // supported. This yields the net new elements.
           $net_new = $potential_future->intersect($still_needed)->diff($provided);
-          if ($net_new->count() > 0) {
+          if (!$net_new->isEmpty()) {
             foreach ($net_new->getAllowedElements() as $tag_name => $attributes_config) {
               foreach ($attributes_config as $attribute_name => $attribute_config) {
                 $plugins_to_enable_to_support_attribute_config[$plugin_id][$attribute_name][$tag_name] = $attribute_config;

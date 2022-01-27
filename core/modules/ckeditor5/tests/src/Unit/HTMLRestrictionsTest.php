@@ -94,31 +94,44 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::count()
-   * @dataProvider providerCount
+   * @covers ::isEmpty()
+   * @covers ::getAllowedElements()
+   * @dataProvider providerCounting
    */
-  public function testCount(array $elements, int $expected): void {
-    $this->assertCount($expected, new HTMLRestrictions($elements));
+  public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
+    $r = new HTMLRestrictions($elements);
+    $this->assertSame($expected_is_empty, $r->isEmpty());
+    $this->assertCount($expected_concrete_only_count, $r->getAllowedElements());
+    $this->assertCount($expected_concrete_only_count, $r->getAllowedElements(FALSE));
+    $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(TRUE));
   }
 
-  public function providerCount(): \Generator {
+  public function providerCounting(): \Generator {
     yield 'empty' => [
       [],
+      TRUE,
+      0,
       0,
     ];
 
     yield 'one' => [
       ['a' => TRUE],
+      FALSE,
+      1,
       1,
     ];
 
     yield 'two' => [
       ['a' => TRUE, 'b' => FALSE],
+      FALSE,
+      2,
       2,
     ];
 
     yield 'two of which one is a wildcard' => [
       ['a' => TRUE, '$block' => FALSE],
+      FALSE,
+      1,
       2,
     ];
   }

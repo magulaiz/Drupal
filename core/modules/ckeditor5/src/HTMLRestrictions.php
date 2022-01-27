@@ -37,7 +37,7 @@ use Masterminds\HTML5\Elements;
  *
  * @internal
  */
-final class HTMLRestrictions implements \Countable {
+final class HTMLRestrictions {
 
   /**
    * An array of allowed elements.
@@ -206,10 +206,14 @@ final class HTMLRestrictions implements \Countable {
   }
 
   /**
-   * {@inheritdoc}
+   * Whether this is the empty set of HTML restrictions.
+   *
+   * @return bool
+   *
+   * @see ::emptySet()
    */
-  public function count(): int {
-    return count($this->elements);
+  public function isEmpty(): bool {
+    return count($this->elements) === 0;
   }
 
   /**

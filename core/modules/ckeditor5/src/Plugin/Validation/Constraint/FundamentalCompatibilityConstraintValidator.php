@@ -151,14 +151,14 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
 
-      if ($diff_allowed->count() > 0) {
+      if (!$diff_allowed->isEmpty()) {
         $this->context->buildViolation($constraint->notSupportedElementsMessage)
           ->setParameter('@list', $provided->toFilterHtmlAllowedTagsString())
           ->setParameter('@diff', $diff_allowed->toFilterHtmlAllowedTagsString())
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
       }
-      elseif ($diff_elements->count() > 0) {
+      elseif (!$diff_elements->isEmpty()) {
         $this->context->buildViolation($constraint->missingElementsMessage)
           ->setParameter('@list', $provided->toFilterHtmlAllowedTagsString())
           ->setParameter('@diff', $diff_elements->toFilterHtmlAllowedTagsString())

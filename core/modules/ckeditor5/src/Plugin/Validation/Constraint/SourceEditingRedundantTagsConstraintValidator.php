@@ -46,7 +46,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     // The single tag for which source editing is enabled, which we are checking
     // now.
     $source_enabled_tags = HTMLRestrictions::parse($value);
-    assert($source_enabled_tags->count() <= 1);
+    assert($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) === 1);
     // This validation constraint currently only validates tags, not attributes.
     // @todo Expand this validation constraint to also cover elements other than tags.
     $source_enabled_elements = $source_enabled_tags->getAllowedElements();
@@ -58,7 +58,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $disabled_plugin_overlap = $disabled_plugin_tags->intersect($source_enabled_tags);
     foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as &$overlap) {
       $checking_enabled = $overlap === $enabled_plugin_overlap;
-      if ($overlap->count() > 0) {
+      if (!$overlap->isEmpty()) {
         $plugins_to_check_against = $checking_enabled ? $enabled_plugins : $disabled_plugins;
         $tags_plugin_report = $this->pluginsSupplyingTagsMessage($overlap, $plugins_to_check_against);
         $message = $checking_enabled ? $constraint->enabledPluginsMessage : $constraint->availablePluginsMessage;
