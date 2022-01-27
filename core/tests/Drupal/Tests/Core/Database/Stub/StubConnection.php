@@ -44,6 +44,14 @@ class StubConnection extends Connection {
   /**
    * {@inheritdoc}
    */
+  public static function open(array &$connection_options = []) {
+    $pdo = new \ReflectionClass(\PDO::class);
+    return $pdo;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
     return NULL;
   }

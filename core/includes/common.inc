@@ -152,29 +152,30 @@ function format_size($size, $langcode = NULL) {
   $options = ['langcode' => $langcode];
   switch ($unit) {
     case 'KB':
-      return new TranslatableMarkup('@size KB', $args, $options);
+      $markup = new TranslatableMarkup('@size KB', $args, $options);
 
     case 'MB':
-      return new TranslatableMarkup('@size MB', $args, $options);
+      $markup = new TranslatableMarkup('@size MB', $args, $options);
 
     case 'GB':
-      return new TranslatableMarkup('@size GB', $args, $options);
+      $markup = new TranslatableMarkup('@size GB', $args, $options);
 
     case 'TB':
-      return new TranslatableMarkup('@size TB', $args, $options);
+      $markup = new TranslatableMarkup('@size TB', $args, $options);
 
     case 'PB':
-      return new TranslatableMarkup('@size PB', $args, $options);
+      $markup = new TranslatableMarkup('@size PB', $args, $options);
 
     case 'EB':
-      return new TranslatableMarkup('@size EB', $args, $options);
+      $markup = new TranslatableMarkup('@size EB', $args, $options);
 
     case 'ZB':
-      return new TranslatableMarkup('@size ZB', $args, $options);
+      $markup = new TranslatableMarkup('@size ZB', $args, $options);
 
     case 'YB':
-      return new TranslatableMarkup('@size YB', $args, $options);
+      $markup = new TranslatableMarkup('@size YB', $args, $options);
   }
+  return $markup;
 }
 
 /**
