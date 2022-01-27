@@ -39,7 +39,7 @@
       }
     };
 
-    const toggleCollapsed = (matches) => {
+    const toggleCollapsed = ({ matches }) => {
       if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           let width = 0;
@@ -60,10 +60,6 @@
       }
     };
 
-    const handleToggleMQ = (event) => {
-      toggleCollapsed(event.matches);
-    };
-
     $tab.addClass('position-container is-horizontal-enabled');
 
     $target.find('.js-tab').each((index, element) => {
@@ -74,8 +70,8 @@
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
 
     const mql = window.matchMedia('(min-width: 48em)');
-    mql.addListener(handleToggleMQ);
-    toggleCollapsed(mql.matches);
+    mql.addListener(toggleCollapsed);
+    toggleCollapsed(mql);
   }
   /**
    * Initialize the tabs JS.
