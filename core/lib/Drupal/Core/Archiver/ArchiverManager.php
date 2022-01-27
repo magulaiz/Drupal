@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Archiver;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;

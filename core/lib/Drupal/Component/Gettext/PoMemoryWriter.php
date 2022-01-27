@@ -58,7 +58,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Not implemented. Not relevant for the MemoryWriter.
    */
   public function setLangcode($langcode) {
-    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter.');
+    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter');
   }
 
   /**
@@ -67,7 +67,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Not implemented. Not relevant for the MemoryWriter.
    */
   public function getLangcode() {
-    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter.');
+    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter');
   }
 
   /**
@@ -76,7 +76,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Not implemented. Not relevant for the MemoryWriter.
    */
   public function getHeader() {
-    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter.');
+    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter');
   }
 
   /**
@@ -85,7 +85,7 @@ class PoMemoryWriter implements PoWriterInterface {
    * Not implemented. Not relevant for the MemoryWriter.
    */
   public function setHeader(PoHeader $header) {
-    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter.');
+    throw new \LogicException(__METHOD__ . '() not implemented. Not relevant for the MemoryWriter');
   }
 
 }

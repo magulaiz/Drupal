@@ -22,6 +22,7 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function doLoadMultiple(array $ids = NULL) {
+    return [];
   }
 
   /**
@@ -125,12 +126,14 @@ class ContentEntityNullStorage extends ContentEntityStorageBase {
    * {@inheritdoc}
    */
   protected function doSave($id, EntityInterface $entity) {
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   protected function has($id, EntityInterface $entity) {
+    return FALSE;
   }
 
   /**

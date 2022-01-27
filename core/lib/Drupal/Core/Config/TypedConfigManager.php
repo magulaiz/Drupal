@@ -323,7 +323,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     while ($name = array_shift($parts)) {
       if (!is_array($data) || !isset($data[$name])) {
         // Key not found, return original value
-        return $value;
+        break;
       }
       elseif (!$parts) {
         $value = $data[$name];
@@ -331,7 +331,8 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
           $value = (int) $value;
         }
         // If no more parts left, this is the final property.
-        return (string) $value;
+        $value = (string) $value;
+        break;
       }
       else {
         // Get nested value and continue processing.
@@ -352,6 +353,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
         }
       }
     }
+    return $value;
   }
 
   /**
