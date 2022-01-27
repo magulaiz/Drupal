@@ -91,7 +91,7 @@ class MediaTest extends WebDriverTestBase {
           'items' => [
             'sourceEditing',
             'link',
-            'drupalMedia'
+            'drupalMedia',
           ],
         ],
         'plugins' => [
