@@ -75,7 +75,7 @@ class ArchiverManager extends DefaultPluginManager {
         }
       }
     }
-    throw new \PluginException("Could not find a plugin to manage $filepath");
+    throw new PluginException("Could not find a plugin to manage $filepath");
   }
 
   /**
