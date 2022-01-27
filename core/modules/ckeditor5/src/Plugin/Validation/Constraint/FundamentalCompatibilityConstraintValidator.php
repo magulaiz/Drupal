@@ -102,10 +102,10 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    */
   private function checkHtmlRestrictionsAreCompatible(FilterFormatInterface $text_format, FundamentalCompatibilityConstraint $constraint): void {
     $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements(self::FUNDAMENTAL_CKEDITOR5_PLUGINS));
-    $minimum_tags = array_keys($fundamental->getAllowedElements());
 
     // @todo Remove in favor of HTMLRestrictions::diff() in https://www.drupal.org/project/drupal/issues/3231334
     $html_restrictions = $text_format->getHtmlRestrictions();
+    $minimum_tags = array_keys($fundamental->getAllowedElements());
     $forbidden_minimum_tags = isset($html_restrictions['forbidden_tags'])
       ? array_diff($minimum_tags, $html_restrictions['forbidden_tags'])
       : [];
@@ -122,7 +122,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       return;
     }
     if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->isEmpty()) {
-      $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $minimum_tags);
+      $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
@@ -245,15 +245,15 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *
    * @param \Drupal\filter\FilterFormatInterface $text_format
    *   A text format whose filters to check for compatibility.
-   * @param string[] $required_tags
-   *   A list of HTML tags that are required.
+   * @param \Drupal\ckeditor5\HTMLRestrictions $required
+   *   A set of HTML restrictions, listing required HTML tags.
    *
    * @return \Drupal\filter\Plugin\FilterInterface
    *   The filter plugin instance not allowing the required tags.
    *
    * @throws \InvalidArgumentException
    */
-  private static function findHtmlRestrictorFilterNotAllowingTags(FilterFormatInterface $text_format, array $required_tags): FilterInterface {
+  private static function findHtmlRestrictorFilterNotAllowingTags(FilterFormatInterface $text_format, HTMLRestrictions $required): FilterInterface {
     // Get HTML restrictor filters that actually restrict HTML.
     $filters = static::getFiltersInFormatOfType(
       $text_format,
@@ -263,8 +263,6 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       }
     );
 
-    // Construct the minimal HTMLRestrictions that would allow $required_tags.
-    $required = new HTMLRestrictions(array_fill_keys($required_tags, FALSE));
     foreach ($filters as $filter) {
       // Return any filter not allowing >=1 of the required tags.
       if (!$required->diff(HTMLRestrictions::fromFilterPluginInstance($filter))->isEmpty()) {
