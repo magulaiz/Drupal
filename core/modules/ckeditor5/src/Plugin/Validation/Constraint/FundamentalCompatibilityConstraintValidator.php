@@ -265,7 +265,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     $required = new HTMLRestrictions(array_fill_keys($required_tags, FALSE));
     foreach ($filters as $filter) {
       // Return any filter not allowing >=1 of the required tags.
-      if (!empty($required->diff(HTMLRestrictions::fromFilterPluginInstance($filter)))) {
+      if (!$required->diff(HTMLRestrictions::fromFilterPluginInstance($filter))->isEmpty()) {
         return $filter;
       }
     }
