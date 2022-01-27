@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * Skip a row if any date in the array source_dates is too old.
  *
+ * @code
  * skip:
  *   plugin: skip_on_condition
  *   condition: has_element
@@ -34,6 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *     value: -1 week'
  *   method: row
  *   source: source_dates
+ * @endcode
  *
  * @see \Drupal\migrate\Plugin\MigrateConditionInterface
  *

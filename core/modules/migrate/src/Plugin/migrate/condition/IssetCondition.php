@@ -9,12 +9,16 @@ use Drupal\migrate\Row;
  *
  * Examples:
  *
+ * Skip a row if the source_value is not set.
+ *
  * @code
  * process:
  *   destination_field:
  *     plugin: skip_on_condition
  *     condition: isset
+ *     negate: true
  *     source: source_field
+ *     method: row
  * @endcode
  *
  * @see \Drupal\migrate\Plugin\MigrateConditionInterface

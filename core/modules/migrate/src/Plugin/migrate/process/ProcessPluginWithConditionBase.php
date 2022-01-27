@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base class to be used by MigrateProcess plugins that rely on a condition.
  *
  * Available configuration keys:
- * - condition: (required) The id of a MigrateCondition plugin.
+ * - condition: The id of a MigrateCondition plugin.
  * - configuration: (optional) Additional configuration to be passed to the
  *   condition plugin. Some condition plugins have required configuration.
  * - negate: (optional) A boolean flag that indicates whether condition result
