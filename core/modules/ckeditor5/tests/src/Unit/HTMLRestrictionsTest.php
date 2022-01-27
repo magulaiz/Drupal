@@ -223,8 +223,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       [],
     ];
 
-    // @todo test `data-*` attribute, related: #2105841
-    // @todo port test coverage similar to #2596083
+    // @todo Test `data-*` attribute: https://www.drupal.org/project/drupal/issues/3260853
   }
 
   /**

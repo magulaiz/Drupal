@@ -48,7 +48,8 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $source_enabled_tags = HTMLRestrictions::parse($value);
     assert($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) === 1);
     // This validation constraint currently only validates tags, not attributes.
-    // @todo Expand this validation constraint to also cover elements other than tags.
+    // @todo Support attributes and attribute values in
+    //   https://www.drupal.org/project/drupal/issues/3260857
     $source_enabled_elements = $source_enabled_tags->getAllowedElements();
     if (reset($source_enabled_elements) !== FALSE) {
       return;
