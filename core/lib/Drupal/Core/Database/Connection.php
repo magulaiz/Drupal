@@ -364,6 +364,15 @@ abstract class Connection {
   }
 
   /**
+   * Returns the prefix of the tables.
+   *
+   * @return string $prefix
+   */
+  public function getPrefix() {
+    return $this->prefixes['default'];
+  }
+
+  /**
    * Set the prefix used by this database connection.
    *
    * @param string $prefix
@@ -428,8 +437,17 @@ abstract class Connection {
    *
    * @param string $table
    *   (optional) The table to find the prefix for.
+   *
+   * @deprecated in drupal:10.0.0 and is removed from drupal:11.0.0.
+   * Instead, you should just use Connection::getPrefix().
+   *
+   * @see https://www.drupal.org/node/3260849
+   *
    */
   public function tablePrefix($table = 'default') {
+    @trigger_error('Connection::tablePrefix() is deprecated in drupal:10.0.0 and is
+    removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix().
+    See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
     return $this->prefix;
   }
 
