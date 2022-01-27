@@ -54,6 +54,7 @@ class MediaTest extends WebDriverTestBase {
     'node',
     'text',
     'media_test_embed',
+    'media_library',
   ];
 
   /**
@@ -90,6 +91,7 @@ class MediaTest extends WebDriverTestBase {
           'items' => [
             'sourceEditing',
             'link',
+            'drupalMedia'
           ],
         ],
         'plugins' => [

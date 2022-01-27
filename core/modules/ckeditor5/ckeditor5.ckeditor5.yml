@@ -486,9 +486,8 @@ ckeditor5_drupalMediaAlign:
     elements:
       - <drupal-media data-align>
     conditions:
+      toolbarItem: drupalMedia
       filter: filter_align
-
-
 
 ckeditor5_indent:
   ckeditor5:
