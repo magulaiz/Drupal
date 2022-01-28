@@ -97,7 +97,9 @@ abstract class ContentEntityConfirmFormBase extends ContentEntityForm implements
    *
    * Confirmation forms should override submitForm() instead for their logic.
    */
-  public function save(array $form, FormStateInterface $form_state) {}
+  public function save(array $form, FormStateInterface $form_state) {
+    throw new \LogicException(get_class($this) . '::' . __FUNCTION__ . '() not implemented');
+  }
 
   /**
    * {@inheritdoc}

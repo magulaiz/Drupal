@@ -72,10 +72,10 @@ class CsrfRequestHeaderAccessCheck implements AccessCheckInterface {
           return FALSE;
         }
       }
-      // No method requirement given, so we run this access check to be on the
-      // safe side.
-      return TRUE;
     }
+    // No method requirement given, so we run this access check to be on the
+    // safe side.
+    return TRUE;
   }
 
   /**

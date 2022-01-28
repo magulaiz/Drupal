@@ -38,9 +38,6 @@ interface DrupalKernelInterface extends HttpKernelInterface, ContainerAwareInter
 
   /**
    * Discovers available serviceProviders.
-   *
-   * @return array
-   *   The available serviceProviders.
    */
   public function discoverServiceProviders();
 

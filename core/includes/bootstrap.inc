@@ -177,7 +177,6 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       // Manually add the info file path of an extension.
       $extension_list->setPathname($name, $filename);
     }
-    return $extension_list->getPathname($name);
   }
   catch (ServiceNotFoundException $e) {
     // Catch the exception. This will result in triggering an error.
@@ -195,6 +194,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
       E_USER_WARNING
     );
   }
+  return $extension_list->getPathname($name);
 }
 
 /**

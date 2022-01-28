@@ -248,7 +248,7 @@ abstract class Connection {
    * @return \PDO
    *   A \PDO object.
    */
-  public static function open(array &$connection_options = []) {}
+  abstract public static function open(array &$connection_options = []);
 
   /**
    * Ensures that the PDO connection can be garbage collected.

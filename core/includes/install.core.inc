@@ -1398,7 +1398,7 @@ function install_select_language(&$install_state) {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return string|null
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  */
@@ -1416,6 +1416,7 @@ function install_download_translation(&$install_state) {
   if ($install_state['interactive']) {
     install_goto(install_redirect_url($install_state));
   }
+  return NULL;
 }
 
 /**
@@ -2383,7 +2384,7 @@ function install_config_import_batch() {
  * @param array $install_state
  *   An array of information about the current installation state.
  *
- * @return string
+ * @return string|null
  *   A themed status report, or an exception if there are requirement errors.
  *   Upon successful download the page is reloaded and no output is returned.
  *
@@ -2394,6 +2395,7 @@ function install_config_download_translations(&$install_state) {
   if ($needs_download) {
     return install_download_translation($install_state);
   }
+  return NULL;
 }
 
 /**

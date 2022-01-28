@@ -18,6 +18,7 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
   public function createTranslation(ContentEntityInterface $entity, $langcode, array $values = []) {
     // @todo Complete the content entity storage implementation in
     //   https://www.drupal.org/node/2618436.
+    throw new \LogicException(get_class($this) . '::' . __FUNCTION__ . '() not implemented');
   }
 
   /**
@@ -37,7 +38,9 @@ class KeyValueContentEntityStorage extends KeyValueEntityStorage implements Cont
   /**
    * {@inheritdoc}
    */
-  public function createWithSampleValues($bundle = FALSE, array $values = []) {}
+  public function createWithSampleValues($bundle = FALSE, array $values = []) {
+    throw new \LogicException(get_class($this) . '::' . __FUNCTION__ . '() not implemented');
+  }
 
   /**
    * {@inheritdoc}
