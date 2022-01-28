@@ -45,7 +45,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
 
     // The single tag for which source editing is enabled, which we are checking
     // now.
-    $source_enabled_tags = HTMLRestrictions::parse($value);
+    $source_enabled_tags = HTMLRestrictions::fromString($value);
     assert($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) === 1);
     // This validation constraint currently only validates tags, not attributes.
     // @todo Support attributes and attribute values in
@@ -86,7 +86,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $message_string = '';
     foreach ($plugin_definitions as $definition) {
       if ($definition->hasElements()) {
-        $plugin_capabilities = HTMLRestrictions::parse($definition->getElements());
+        $plugin_capabilities = HTMLRestrictions::fromString($definition->getElements());
         foreach ($plugin_capabilities->intersect($overlap)->toCKEditor5ElementsArray() as $element) {
           $message_array[(string) $definition->label()][] = $element;
         }

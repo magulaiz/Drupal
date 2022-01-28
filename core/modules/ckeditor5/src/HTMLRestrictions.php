@@ -291,7 +291,7 @@ final class HTMLRestrictions {
    * @see ::toFilterHtmlAllowedTagsString()
    * @see ::toCKEditor5ElementsArray()
    */
-  public static function parse($elements_string): HTMLRestrictions {
+  public static function fromString($elements_string): HTMLRestrictions {
     if (is_array($elements_string)) {
       $elements_string = implode(' ', $elements_string);
     }

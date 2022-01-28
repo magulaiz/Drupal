@@ -140,7 +140,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
         if ($definition['id'] === 'ckeditor5_sourceEditing') {
           continue;
         }
-        $parsed = HTMLRestrictions::parse($element);
+        $parsed = HTMLRestrictions::fromString($element);
         if ($parsed->isEmpty()) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a value at "drupal.elements.%d" that is not an HTML tag with optional attributes: "%s". Expected structure: "<tag allowedAttribute="allowedValue1 allowedValue2">".', $id, $index, $element));
         }

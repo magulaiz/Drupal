@@ -43,7 +43,7 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_heading.
     $form_value = $form_state->getValue('allowed_tags');
     if (!is_array($form_value)) {
-      $config_value = HTMLRestrictions::parse($form_value)->toCKEditor5ElementsArray();
+      $config_value = HTMLRestrictions::fromString($form_value)->toCKEditor5ElementsArray();
       $form_state->setValue('allowed_tags', $config_value);
     }
   }
@@ -77,7 +77,7 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     return [
       'htmlSupport' => [
-        'allow' => HTMLRestrictions::parse($this->configuration['allowed_tags'])->toGeneralHtmlSupportConfig(),
+        'allow' => HTMLRestrictions::fromString($this->configuration['allowed_tags'])->toGeneralHtmlSupportConfig(),
       ],
     ];
   }

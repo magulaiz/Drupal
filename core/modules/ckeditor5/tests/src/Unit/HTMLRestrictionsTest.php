@@ -137,14 +137,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::parse()
-   * @dataProvider providerParse
+   * @covers ::fromString()
+   * @dataProvider providerFromString
    */
-  public function testParse($input, array $expected): void {
-    $this->assertSame($expected, HTMLRestrictions::parse($input)->getAllowedElements());
+  public function testFromString($input, array $expected): void {
+    $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
   }
 
-  public function providerParse(): \Generator {
+  public function providerFromString(): \Generator {
     // All empty cases.
     yield 'empty string' => [
       '',
