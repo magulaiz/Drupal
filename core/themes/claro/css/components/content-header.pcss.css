@@ -7,6 +7,6 @@
 .content-header {
   overflow: hidden;
   margin-bottom: var(--space-s);
-  padding: var(--space-l) 0 0;
+  padding: 12px 0 36px;
   background-color: var(--color-gray-050);
 }

@@ -24,6 +24,7 @@
   text-decoration: none;
   color: var(--color-text);
   font-weight: bold;
+  line-height: 48px;
 }
 
 .breadcrumb__item + .breadcrumb__item::before {
