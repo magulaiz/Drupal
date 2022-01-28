@@ -1154,9 +1154,9 @@ class MediaImageTextAlternative extends delegated_corefrom_dll_reference_CKEdito
   }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-html-support/src/conversionutils.js
+;// CONCATENATED MODULE: ../../ckeditor5/packages/ckeditor5-html-support/src/conversionutils.js
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2441,6 +2441,15 @@ class DrupalMediaStyleCommand extends delegated_corefrom_dll_reference_CKEditor5
 
 const { objectLeft: drupalmediastyleediting_objectLeft, objectRight: drupalmediastyleediting_objectRight, objectCenter: drupalmediastyleediting_objectCenter } = delegated_corefrom_dll_reference_CKEditor5.icons;
 
+/**
+ * Gets style definition by name.
+ *
+ * @param {string} name
+ *   The name of the style definition.
+ * @param styles
+ *   The styles to search from.
+ * @return {Drupal.CKEditor5~drupalMediaStyle}
+ */
 function getStyleDefinitionByName(name, styles) {
   // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
@@ -2573,6 +2582,44 @@ function viewToModelStyleAttribute(styles) {
   };
 }
 
+const DEFAULT_STYLES = [
+  {
+    name: 'alignRight',
+    title: 'Right aligned media',
+    icon: drupalmediastyleediting_objectRight,
+    drupalMediaAlign: 'right',
+  },
+  {
+    name: 'alignLeft',
+    title: 'Left aligned media',
+    icon: drupalmediastyleediting_objectLeft,
+    drupalMediaAlign: 'left',
+  },
+  {
+    name: 'alignCenter',
+    title: 'Centered media',
+    icon: drupalmediastyleediting_objectCenter,
+    drupalMediaAlign: 'center',
+  },
+];
+
+/**
+ * The Drupal Media Style editing plugin.
+ *
+ * Additional Drupal Media styles can be defined with `drupalMedia.styles`
+ * configuration key.
+ *
+ * @example
+ *    config:
+ *      drupalMedia:
+ *        styles:
+ *          - name: 'side'
+ *            icon: 'objectBlockRight'
+ *            title: 'Side image'
+ *            className: 'image-side'
+ *
+ * @see Drupal.CKEditor5~drupalMediaStyle
+ */
 class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
   /**
    * @inheritDoc
@@ -2581,32 +2628,58 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
     const editor = this.editor;
     const schema = editor.model.schema;
 
-    editor.config.define('drupalMedia.styles', {
-      options: [
-        {
-          name: 'alignRight',
-          title: 'Right aligned media',
-          icon: drupalmediastyleediting_objectRight,
-          drupalMediaAlign: 'right',
-        },
-        {
-          name: 'alignLeft',
-          title: 'Left aligned media',
-          icon: drupalmediastyleediting_objectLeft,
-          drupalMediaAlign: 'left',
-        },
-        {
-          name: 'alignCenter',
-          title: 'Centered media',
-          icon: drupalmediastyleediting_objectCenter,
-          drupalMediaAlign: 'center',
-        },
-      ],
-    });
+    editor.config.define('drupalMedia.styles', { options: [] });
+    // Ensure that the alignemnt styles exist always.
+    const stylesConfig = [...editor.config.get('drupalMedia.styles').options, ...DEFAULT_STYLES];
 
-    // @todo validate and normalize styles.
-    this.normalizedStyles = editor.config.get('drupalMedia.styles').options;
+    /**
+     * The Drupal Media Styles.
+     *
+     * @typedef {Object} Drupal.CKEditor5~drupalMediaStyle
+     *
+     * @prop {string} name
+     *   The name of the style.
+     * @prop {string} [drupalMediaAlign]
+     *   The value that should be set on data-align attribute. This property
+     *   cannot be set with `className`.
+     * @prop {string} [className]
+     *   The CSS class that should be applied on the element. This property
+     *   cannot be set with `drupalMediaAlign`.
+     * @prop {string} [icon]
+     *   An icon for the style button. This needs to either refer to an icon in
+     *   the CKEditor 5 core icons, or this can be the XML content of the icon.
+     *
+     * @type {Drupal.CKEditor5~drupalMediaStyle[]}
+     */
+    this.normalizedStyles = stylesConfig
+      .map((style) => {
+        // Allow defining style icon as a string that is referring to the
+        // CKEditor 5 default icons.
+        if (typeof style.icon === 'string') {
+          if (delegated_corefrom_dll_reference_CKEditor5.icons[style.icon]) {
+            style.icon = delegated_corefrom_dll_reference_CKEditor5.icons[style.icon];
+          }
+        }
+        return style;
+      })
+      .filter((style) => {
+        if (style.drupalMediaAlign && style.className) {
+          console.warn('drupalMedia.styles items can only include either drupalMediaAlign or className property.');
+          return false;
+        }
+        if (!style.drupalMediaAlign && !style.className) {
+          console.warn('drupalMedia.styles items must include either drupalMediaAlign or className property.');
+          return false;
+        }
+        if (!style.name && !style.name) {
+          console.warn('drupalMedia.styles items must include a name.');
+          return false;
+        }
 
+        return true;
+      });
+
+    debugger;
     this._setupConversion();
 
     editor.commands.add(
