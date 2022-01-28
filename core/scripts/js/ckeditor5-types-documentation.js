@@ -71,7 +71,7 @@ const existingDefinitions = definitions.filter(e => e);
 const total = definitions.length;
 const totalExisting = existingDefinitions.length;
 
-fs.writeFile(`./modules/ckeditor5/js/build/ckeditor5.types.jsdoc`, existingDefinitions.join('\n\n'), () => {
+fs.writeFile(`./modules/ckeditor5/js/build/ckeditor5.types.jsdoc`, existingDefinitions.join('\n'), () => {
   log(`CKEditor5 types have been generated: ${totalExisting} declarations found, ${total - totalExisting} files ignored`);
 });
 
