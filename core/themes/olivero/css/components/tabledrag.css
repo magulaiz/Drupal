@@ -28,11 +28,15 @@
 }
 
 .draggable.drag {
-  background-color: var(--color--gray-100);
+  background-color: var(--color--gray-95);
 }
 
 .draggable.drag-previous {
-  background-color: var(--color--gray-95);
+  background-color: var(--color--gray-90);
+}
+
+.draggable.drag-previous:hover {
+  background-color: var(--color--gray-85);
 }
 
 .drag-previous a {
