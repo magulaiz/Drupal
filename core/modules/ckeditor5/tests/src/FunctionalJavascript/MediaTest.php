@@ -91,7 +91,6 @@ class MediaTest extends WebDriverTestBase {
           'items' => [
             'sourceEditing',
             'link',
-            'drupalMedia',
           ],
         ],
         'plugins' => [
@@ -647,7 +646,6 @@ class MediaTest extends WebDriverTestBase {
    * are reflected on the widget and downcast drupal-media tag.
    */
   public function testAlignment() {
-    // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3246385
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Return the source editing content of the drupal-media with the data-alignment class.
