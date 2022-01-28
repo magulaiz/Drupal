@@ -251,7 +251,6 @@ export default class DrupalMediaStyleEditing extends Plugin {
         return true;
       });
 
-    debugger;
     this._setupConversion();
 
     editor.commands.add(
