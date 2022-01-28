@@ -273,6 +273,14 @@
       .sidebar-grid .layout--pass--content-narrow > *.text-content blockquote,
       .sidebar-grid .layout--pass--content-narrow > *.text-content pre,
       .sidebar-grid .layout--pass--content-narrow > * .text-content blockquote,
-      .sidebar-grid .layout--pass--content-narrow > * .text-content pre {
+      .sidebar-grid .layout--pass--content-narrow > * .text-content pre,
+      .toolbar-vertical.toolbar-tray-open .layout--content-narrow.text-content blockquote,
+      .toolbar-vertical.toolbar-tray-open .layout--content-narrow.text-content pre,
+      .toolbar-vertical.toolbar-tray-open .layout--content-narrow .text-content blockquote,
+      .toolbar-vertical.toolbar-tray-open .layout--content-narrow .text-content pre,
+      .toolbar-vertical.toolbar-tray-open .layout--pass--content-narrow > *.text-content blockquote,
+      .toolbar-vertical.toolbar-tray-open .layout--pass--content-narrow > *.text-content pre,
+      .toolbar-vertical.toolbar-tray-open .layout--pass--content-narrow > * .text-content blockquote,
+      .toolbar-vertical.toolbar-tray-open .layout--pass--content-narrow > * .text-content pre {
         width: auto;
       }

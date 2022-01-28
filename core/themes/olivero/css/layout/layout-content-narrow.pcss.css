@@ -136,7 +136,8 @@
  * <pre> and <blockquote> elements should not break containers and overflow
  * into sidebar region when present.
  */
-.sidebar-grid {
+.sidebar-grid,
+.toolbar-vertical.toolbar-tray-open {
   & .layout--content-narrow,
   & .layout--pass--content-narrow > * {
     &.text-content,
