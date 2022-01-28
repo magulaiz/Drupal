@@ -26,10 +26,6 @@
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-basic-styles/src/attributecommand.js
  *
@@ -78,8 +74,6 @@ false
  * @typedef {module:basic-styles/code/codeui} module:basic-styles/code/codeui~CodeUI
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-basic-styles/src/italic.js
@@ -214,8 +208,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/clipboard.js
  *
@@ -251,20 +243,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-clipboard/src/pasteplaintext.js
  *
  * @typedef {module:clipboard/pasteplaintext} module:clipboard/pasteplaintext~PastePlainText
  */
 
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-core/src/command.js
@@ -315,16 +299,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-core/src/multicommand.js
  *
@@ -374,8 +348,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-editor-decoupled/src/decouplededitor.js
  *
@@ -396,8 +368,6 @@ false
  * @typedef {module:editor-decoupled/decouplededitoruiview} module:editor-decoupled/decouplededitoruiview~DecoupledEditorUIView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/controller/datacontroller.js
@@ -490,8 +460,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/dataprocessor/xmldataprocessor.js
  *
@@ -499,20 +467,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/dev-utils/operationreplayer.js
  *
  * @typedef {module:engine/dev-utils/operationreplayer} module:engine/dev-utils/operationreplayer~OperationReplayer
  */
 
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/batch.js
@@ -689,10 +649,6 @@ false
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/position.js
  *
@@ -748,18 +704,6 @@ false
  * @typedef {module:engine/model/treewalker} module:engine/model/treewalker~TreeWalker
  */
 
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/writer.js
@@ -838,8 +782,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/matcher.js
  *
@@ -860,8 +802,6 @@ false
  * @typedef {module:engine/view/observer/arrowkeysobserver} module:engine/view/observer/arrowkeysobserver~ArrowKeysObserver
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/observer/bubblingeventinfo.js
@@ -954,8 +894,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/position.js
  *
@@ -997,16 +935,6 @@ false
  * @typedef {module:engine/view/selection} module:engine/view/selection~Selection
  */
 
-
-false
-
-false
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/view/stylesmap.js
@@ -1078,8 +1006,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-enter/src/shiftenter.js
  *
@@ -1094,16 +1020,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-essentials/src/essentials.js
  *
  * @typedef {module:essentials/essentials} module:essentials/essentials~Essentials
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-heading/src/heading.js
@@ -1140,16 +1062,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-heading/src/title.js
  *
  * @typedef {module:heading/title} module:heading/title~Title
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-horizontal-line/src/horizontalline.js
@@ -1179,12 +1097,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-html-support/src/datafilter.js
  *
@@ -1212,8 +1124,6 @@ false
  * @typedef {module:html-support/htmlcomment} module:html-support/htmlcomment~HtmlComment
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-html-support/src/integrations/codeblock.js
@@ -1257,8 +1167,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/autoimage.js
  *
@@ -1272,8 +1180,6 @@ false
  * @typedef {module:image/image} module:image/image~Image
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/image/imageblockediting.js
@@ -1317,10 +1223,6 @@ false
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imageblock.js
  *
@@ -1356,8 +1258,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imageinline.js
  *
@@ -1392,8 +1292,6 @@ false
  * @typedef {module:image/imageinsert/ui/imageinsertpanelview} module:image/imageinsert/ui/imageinsertpanelview~ImageInsertPanelView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imageresize.js
@@ -1437,8 +1335,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imagestyle/imagestylecommand.js
  *
@@ -1459,8 +1355,6 @@ false
  * @typedef {module:image/imagestyle/imagestyleui} module:image/imagestyle/imagestyleui~ImageStyleUI
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imagetextalternative.js
@@ -1539,16 +1433,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/imageutils.js
  *
  * @typedef {module:image/imageutils} module:image/imageutils~ImageUtils
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-image/src/pictureediting.js
@@ -1606,10 +1496,6 @@ false
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-language/src/textpartlanguage.js
  *
@@ -1638,16 +1524,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-link/src/autolink.js
  *
  * @typedef {module:link/autolink} module:link/autolink~AutoLink
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-link/src/link.js
@@ -1719,8 +1601,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-link/src/utils/automaticdecorators.js
  *
@@ -1742,16 +1622,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-list/src/indentcommand.js
  *
  * @typedef {module:list/indentcommand} module:list/indentcommand~IndentCommand
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-list/src/list.js
@@ -1816,8 +1692,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-list/src/todolistediting.js
  *
@@ -1831,10 +1705,6 @@ false
  * @typedef {module:list/todolistui} module:list/todolistui~TodoListUI
  */
 
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-paragraph/src/insertparagraphcommand.js
@@ -1864,18 +1734,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-paste-from-office/src/normalizers/googledocsnormalizer.js
  *
@@ -1896,8 +1754,6 @@ false
  * @typedef {module:paste-from-office/pastefromoffice} module:paste-from-office/pastefromoffice~PasteFromOffice
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-remove-format/src/removeformat.js
@@ -1927,8 +1783,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-select-all/src/selectall.js
  *
@@ -1957,18 +1811,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-source-editing/src/sourceediting.js
  *
  * @typedef {module:source-editing/sourceediting} module:source-editing/sourceediting~SourceEditing
  */
 
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-special-characters/src/specialcharacters.js
@@ -2124,24 +1972,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-table/src/table.js
  *
@@ -2176,8 +2006,6 @@ false
  * @typedef {module:table/tablecaption/toggletablecaptioncommand} module:table/tablecaption/toggletablecaptioncommand~ToggleTableCaptionCommand
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-table/src/tablecellproperties.js
@@ -2452,20 +2280,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-typing/src/delete.js
  *
@@ -2486,8 +2300,6 @@ false
  * @typedef {module:typing/deleteobserver} module:typing/deleteobserver~DeleteObserver
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-typing/src/input.js
@@ -2538,26 +2350,6 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/button/buttonview.js
  *
@@ -2585,8 +2377,6 @@ false
  * @typedef {module:ui/colorgrid/colortile} module:ui/colorgrid/colortile~ColorTileView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/componentfactory.js
@@ -2622,8 +2412,6 @@ false
  * @typedef {module:ui/dropdown/dropdownview} module:ui/dropdown/dropdownview~DropdownView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/editableui/editableuiview.js
@@ -2688,8 +2476,6 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/inputtext/inputtextview.js
  *
@@ -2710,8 +2496,6 @@ false
  * @typedef {module:ui/labeledfield/labeledfieldview} module:ui/labeledfield/labeledfieldview~LabeledFieldView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/labeledinput/labeledinputview.js
@@ -2804,10 +2588,6 @@ false
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-ui/src/toolbar/toolbarlinebreakview.js
  *
@@ -2856,8 +2636,6 @@ false
  * @typedef {module:undo/basecommand} module:undo/basecommand~BaseCommand
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-undo/src/redocommand.js
@@ -2922,16 +2700,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-upload/src/ui/filedialogbuttonview.js
  *
  * @typedef {module:upload/ui/filedialogbuttonview} module:upload/ui/filedialogbuttonview~FileDialogButtonView
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/ckeditorerror.js
@@ -2947,50 +2721,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/config.js
  *
  * @typedef {module:utils/config} module:utils/config~Config
  */
 
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/rect.js
@@ -2999,20 +2735,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/dom/resizeobserver.js
  *
  * @typedef {module:utils/dom/resizeobserver} module:utils/dom/resizeobserver~ResizeObserver
  */
 
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/elementreplacer.js
@@ -3021,20 +2749,12 @@ false
  */
 
 
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/eventinfo.js
  *
  * @typedef {module:utils/eventinfo} module:utils/eventinfo~EventInfo
  */
 
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/focustracker.js
@@ -3043,20 +2763,12 @@ false
  */
 
 
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/keystrokehandler.js
  *
  * @typedef {module:utils/keystrokehandler} module:utils/keystrokehandler~KeystrokeHandler
  */
 
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-utils/src/locale.js
@@ -3065,44 +2777,12 @@ false
  */
 
 
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-widget/src/highlightstack.js
  *
  * @typedef {module:widget/highlightstack} module:widget/highlightstack~HighlightStack
  */
 
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-widget/src/widget.js
@@ -3146,20 +2826,12 @@ false
  */
 
 
-false
-
 /**
  * Declared in file @ckeditor/ckeditor5-widget/src/widgettypearound/widgettypearound.js
  *
  * @typedef {module:widget/widgettypearound} module:widget/widgettypearound~WidgetTypeAround
  */
 
-
-false
-
-false
-
-false
 
 /**
  * Declared in file @ckeditor/ckeditor5-engine/src/model/item.jsdoc
@@ -3180,12 +2852,3 @@ false
  *
  * @typedef {module:engine/view/item} module:engine/view/item~Item
  */
-
-
-false
-
-false
-
-false
-
-false
