@@ -401,6 +401,14 @@ display:
           absolute: true
           entity_type: entity_test
           plugin_id: entity_link
+        edit_bypass_access_check_entity_test:
+          id: edit_bypass_access_check_entity_test
+          table: entity_test
+          field: edit_entity_test
+          text: 'Edit entity test'
+          bypass_access_check: true
+          entity_type: entity_test
+          plugin_id: entity_link_edit
       filters: {  }
       sorts:
         id:

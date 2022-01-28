@@ -69,11 +69,25 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
    */
   public function testEntityLink() {
     // Anonymous users cannot see edit/delete links.
-    $expected_results = ['canonical' => TRUE, 'edit-form' => FALSE, 'delete-form' => FALSE, 'canonical_raw' => TRUE, 'canonical_raw_absolute' => TRUE];
+    $expected_results = [
+      'canonical' => TRUE,
+      'edit-form' => FALSE,
+      'delete-form' => FALSE,
+      'canonical_raw' => TRUE,
+      'canonical_raw_absolute' => TRUE,
+      'edit_bypass_access_check_entity_test' => TRUE,
+    ];
     $this->doTestEntityLink(\Drupal::currentUser(), $expected_results);
 
     // Admin users cannot see all links.
-    $expected_results = ['canonical' => TRUE, 'edit-form' => TRUE, 'delete-form' => TRUE, 'canonical_raw' => TRUE, 'canonical_raw_absolute' => TRUE];
+    $expected_results = [
+      'canonical' => TRUE,
+      'edit-form' => TRUE,
+      'delete-form' => TRUE,
+      'canonical_raw' => TRUE,
+      'canonical_raw_absolute' => TRUE,
+      'edit_bypass_access_check_entity_test' => TRUE,
+    ];
     $this->doTestEntityLink($this->adminUser, $expected_results);
   }
 
@@ -129,6 +143,14 @@ class FieldEntityLinkTest extends ViewsKernelTestBase {
         'link' => FALSE,
         'options' => ['absolute' => TRUE],
         'relationship' => 'canonical',
+      ],
+      'edit_bypass_access_check_entity_test' => [
+        'label' => 'Edit entity test',
+        'field_id' => 'edit_bypass_access_check_entity_test',
+        'destination' => TRUE,
+        'link' => TRUE,
+        'options' => [],
+        'relationship' => 'edit-form',
       ],
     ];
 
