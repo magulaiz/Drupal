@@ -184,7 +184,7 @@ final class SmartDefaultSettings {
       $messages[] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
       $settings['toolbar']['items'][] = 'sourceEditing';
     }
-    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [])->union($tags)->toCKEditor5ElementsArray();
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [])->merge($tags)->toCKEditor5ElementsArray();
     $editor->setSettings($settings);
     return $messages;
   }
@@ -446,7 +446,7 @@ final class SmartDefaultSettings {
           // Do not inspect just $plugin_support, but the union of that with the
           // already supported elements: wildcard restrictions will only expand
           // if the concrete tags they support are also present.
-          $potential_future = $provided->union($plugin_support);
+          $potential_future = $provided->merge($plugin_support);
           // This is the heart of the operation: intersect the potential future
           // with what we need to achieve, then subtract what is already
           // supported. This yields the net new elements.

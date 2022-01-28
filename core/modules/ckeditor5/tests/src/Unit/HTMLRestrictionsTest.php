@@ -298,7 +298,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
   /**
    * @covers ::diff()
    * @covers ::intersect()
-   * @covers ::union()
+   * @covers ::merge()
    * @dataProvider providerOperands
    */
   public function testOperations(HTMLRestrictions $a, HTMLRestrictions $b, $expected_diff, $expected_intersection, $expected_union): void {
@@ -322,7 +322,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     }
     $this->assertEquals($expected_diff, $a->diff($b));
     $this->assertEquals($expected_intersection, $a->intersect($b));
-    $this->assertEquals($expected_union, $a->union($b));
+    $this->assertEquals($expected_union, $a->merge($b));
   }
 
   public function providerOperands(): \Generator {

@@ -308,7 +308,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       assert(Inspector::assertAllStrings($defined_elements));
       foreach ($defined_elements as $element) {
         $additional_elements = HTMLRestrictions::fromString($element);
-        $elements = $elements->union($additional_elements);
+        $elements = $elements->merge($additional_elements);
       }
     }
 

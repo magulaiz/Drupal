@@ -504,7 +504,7 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Computes union of two HTML restrictions, with wildcard support.
+   * Computes set union of two HTML restrictions, with wildcard support.
    *
    * @param \Drupal\ckeditor5\HTMLRestrictions $other
    *   The HTML restrictions to compare to.
@@ -513,7 +513,7 @@ final class HTMLRestrictions {
    *   Returns a new HTML restrictions value object with all the elements that
    *   are either allowed in $this or in $other.
    */
-  public function union(HTMLRestrictions $other): HTMLRestrictions {
+  public function merge(HTMLRestrictions $other): HTMLRestrictions {
     $union = array_merge_recursive($this->elements, $other->elements);
     // When recursively merging elements arrays, unkeyed boolean values can
     // appear in attribute config arrays. This removes them.
