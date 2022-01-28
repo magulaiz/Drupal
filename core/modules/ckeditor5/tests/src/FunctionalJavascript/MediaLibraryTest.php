@@ -177,7 +177,6 @@ class MediaLibraryTest extends WebDriverTestBase {
     $expected_attributes = [
       'data-entity-type' => 'media',
       'data-entity-uuid' => $this->media->uuid(),
-      'data-align' => 'center',
     ];
     foreach ($expected_attributes as $name => $expected) {
       $this->assertSame($expected, $drupal_media->getAttribute($name));
@@ -190,6 +189,31 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertEditorButtonDisabled('Undo');
     $this->pressEditorButton('Redo');
     $this->assertEditorButtonEnabled('Undo');
+
+    // Ensure that data-align attribute is set by default when media is inserted
+    // while filter_align is enabled.
+    FilterFormat::load('test_format')
+      ->setFilterConfig('filter_align', ['status' => TRUE])
+      ->save();
+    $this->drupalGet('/node/add/blog');
+    $this->waitForEditor();
+    $this->pressEditorButton('Insert Drupal Media');
+    $assert_session->waitForElement('css', '.js-media-library-item')->click();
+    $assert_session->elementExists('css', '.ui-dialog-buttonpane')->pressButton('Insert selected');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-content .ck-widget.drupal-media .media', 1000));
+    $this->pressEditorButton('Source');
+    $value = $assert_session->elementExists('css', '.ck-source-editing-area textarea')->getValue();
+    $dom = Html::load($value);
+    $xpath = new \DOMXPath($dom);
+    $drupal_media = $xpath->query('//drupal-media')[0];
+    $expected_attributes = [
+      'data-entity-type' => 'media',
+      'data-entity-uuid' => $this->media->uuid(),
+      'data-align' => 'center',
+    ];
+    foreach ($expected_attributes as $name => $expected) {
+      $this->assertSame($expected, $drupal_media->getAttribute($name));
+    }
   }
 
   /**

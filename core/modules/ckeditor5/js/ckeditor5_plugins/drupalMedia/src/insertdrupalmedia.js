@@ -55,6 +55,21 @@ export default class InsertDrupalMediaCommand extends Command {
       {},
     );
 
+    // Check if there's Drupal Media Style matching the value of data-align.
+    if (
+      attributes['data-align'] &&
+      this.editor.plugins.has('DrupalMediaStyleEditing')
+    ) {
+      const mediaStyleEditing = this.editor.plugins.get(
+        'DrupalMediaStyleEditing',
+      );
+      mediaStyleEditing.normalizedStyles.forEach((style) => {
+        if (style.drupalMediaAlign === attributes['data-align']) {
+          modelAttributes.drupalMediaStyle = style.name;
+        }
+      });
+    }
+
     this.editor.model.change((writer) => {
       this.editor.model.insertContent(
         createDrupalMedia(writer, modelAttributes),
