@@ -68,7 +68,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $web_assert = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->enableTheme($theme);
-    $block = $this->placeBlock($block_plugin);
+    $settings = [];
+    if ($theme === 'olivero') {
+      // Olivero doesn't have the 'sidebar_first' region that this method
+      // defaults to.
+      $settings['region'] = 'sidebar';
+    }
+    $block = $this->placeBlock($block_plugin, $settings);
     $block_selector = $this->getBlockSelector($block);
     $block_id = $block->id();
     $this->drupalGet('user');
@@ -179,7 +185,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
         "$theme: block-branding" => [
           'theme' => $theme,
           'block_plugin' => 'system_branding_block',
-          'new_page_text' => 'The site that will live a very short life',
+          'new_page_text' => 'NewSite',
           'element_selector' => "a[rel='home']:last-child",
           'label_selector' => "a[rel='home']:last-child",
           'button_text' => 'Save Site branding',
@@ -190,7 +196,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
           'theme' => $theme,
           'block_plugin' => 'search_form_block',
           'new_page_text' => NULL,
-          'element_selector' => '#edit-submit',
+          'element_selector' => '[data-drupal-selector="edit-submit"]',
           'label_selector' => 'h2',
           'button_text' => 'Save Search form',
           'toolbar_item' => NULL,
@@ -232,7 +238,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
   public function testEditModeEnableDisable() {
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
-      $block = $this->placeBlock('system_powered_by_block');
+      $settings = [];
+      if ($theme === 'olivero') {
+        // Olivero doesn't have the 'sidebar_first' region that this method
+        // defaults to.
+        $settings['region'] = 'sidebar';
+      }
+      $block = $this->placeBlock('system_powered_by_block', $settings);
       foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
         $this->drupalGet('user');
         $this->assertEditModeDisabled();
@@ -269,7 +281,13 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $web_assert = $this->assertSession();
     foreach ($this->getTestThemes() as $theme) {
       $this->enableTheme($theme);
-      $block = $this->placeBlock('settings_tray_test_validation');
+      $settings = [];
+      if ($theme === 'olivero') {
+        // Olivero doesn't have the 'sidebar_first' region that this method
+        // defaults to.
+        $settings['region'] = 'sidebar';
+      }
+      $block = $this->placeBlock('settings_tray_test_validation', $settings);
       $this->drupalGet('user');
       $this->enableEditMode();
       $this->openBlockForm($this->getBlockSelector($block));

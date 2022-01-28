@@ -119,17 +119,17 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertSession()->fieldValueEquals('comment_body[0][value]', $edit['comment_body[0][value]']);
 
     // Store the content of this page.
-    $this->submitForm([], 'Save');
+    $this->submitForm([], 'Post comment');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $elements = $this->xpath('//section[contains(@class, "comment-wrapper")]/article');
+    $elements = $this->xpath('//section[contains(@class, "comments")]/article');
     $this->assertCount(1, $elements);
 
     // Go back and re-submit the form.
     $this->getSession()->getDriver()->back();
-    $submit_button = $this->assertSession()->buttonExists('Save');
+    $submit_button = $this->assertSession()->buttonExists('Post comment');
     $submit_button->click();
     $this->assertSession()->pageTextContains('Your comment has been posted.');
-    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comment-wrapper")]/article', 2);
+    $this->assertSession()->elementsCount('xpath', '//section[contains(@class, "comments")]/article', 2);
   }
 
   /**
@@ -156,10 +156,10 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['date[date]'] = $date->format('Y-m-d');
     $edit['date[time]'] = $date->format('H:i:s');
     $raw_date = $date->getTimestamp();
-    $expected_text_date = $this->container->get('date.formatter')->format($raw_date);
+    $expected_text_date = $this->container->get('date.formatter')->formatInterval(\Drupal::time()->getRequestTime() - $raw_date);
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
-    $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE);
+    $comment = $this->postComment($this->node, $edit['subject[0][value]'], $edit['comment_body[0][value]'], TRUE, 'comment', 'Post comment');
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->submitForm($edit, 'Preview');
 
@@ -179,7 +179,7 @@ class CommentPreviewTest extends CommentTestBase {
 
     // Check that saving a comment produces a success message.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->submitForm($edit, 'Post comment');
     $this->assertSession()->pageTextContains('Your comment has been posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
@@ -198,7 +198,7 @@ class CommentPreviewTest extends CommentTestBase {
     $displayed['date[date]'] = $this->assertSession()->fieldExists('edit-date-date')->getValue();
     $displayed['date[time]'] = $this->assertSession()->fieldExists('edit-date-time')->getValue();
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->submitForm($displayed, 'Save');
+    $this->submitForm($displayed, 'Post comment');
 
     // Check that the saved comment is still correct.
     $comment_storage = \Drupal::entityTypeManager()->getStorage('comment');
@@ -219,7 +219,7 @@ class CommentPreviewTest extends CommentTestBase {
     // Web user cannot change the comment author.
     unset($edit['uid']);
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $this->submitForm($user_edit, 'Save');
+    $this->submitForm($user_edit, 'Post comment');
     $comment_storage->resetCache([$comment->id()]);
     $comment_loaded = Comment::load($comment->id());
     $this->assertEquals($expected_created_time, $comment_loaded->getCreatedTime(), 'Expected date and time for comment edited.');
