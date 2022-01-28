@@ -30,6 +30,7 @@
   text-decoration: none;
   color: var(--color-text);
   font-weight: bold;
+  line-height: 3rem;
 }
 
 .breadcrumb__item + .breadcrumb__item::before {
