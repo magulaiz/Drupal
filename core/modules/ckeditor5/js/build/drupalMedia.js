@@ -2630,7 +2630,10 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
 
     editor.config.define('drupalMedia.styles', { options: [] });
     // Ensure that the alignemnt styles exist always.
-    const stylesConfig = [...editor.config.get('drupalMedia.styles').options, ...DEFAULT_STYLES];
+    const stylesConfig = [
+      ...editor.config.get('drupalMedia.styles').options,
+      ...DEFAULT_STYLES,
+    ];
 
     /**
      * The Drupal Media Styles.
@@ -2664,11 +2667,15 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
       })
       .filter((style) => {
         if (style.drupalMediaAlign && style.className) {
-          console.warn('drupalMedia.styles items can only include either drupalMediaAlign or className property.');
+          console.warn(
+            'drupalMedia.styles items can only include either drupalMediaAlign or className property.',
+          );
           return false;
         }
         if (!style.drupalMediaAlign && !style.className) {
-          console.warn('drupalMedia.styles items must include either drupalMediaAlign or className property.');
+          console.warn(
+            'drupalMedia.styles items must include either drupalMediaAlign or className property.',
+          );
           return false;
         }
         if (!style.name && !style.name) {
