@@ -402,7 +402,8 @@ final class HTMLRestrictions {
             return FALSE;
           }
           else {
-            assert(is_array($other->elements));
+            // @see ::validateAllowedRestrictionsPhase3()
+            assert(is_array($other->elements[$tag]));
             return TRUE;
           }
         }
@@ -462,6 +463,10 @@ final class HTMLRestrictions {
       // In all other cases, we need to return the most restrictive
       // intersection of per-attribute restrictions.
       else {
+        // @see ::validateAllowedRestrictionsPhase3()
+        assert(is_array($this->elements[$tag]));
+        assert(is_array($other->elements[$tag]));
+
         $intersection[$tag] = [];
 
         $attributes_intersection = array_intersect_key($this->elements[$tag], $other->elements[$tag]);
