@@ -5,9 +5,13 @@ namespace Drupal\Tests\views\Kernel;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 
+/**
+ * Tests the many to one filter.
+ *
+ * @group views
+ */
 class ManyToOneFilterTest extends ViewsKernelTestBase {
 
   use TaxonomyTestTrait;
@@ -19,11 +23,15 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
   public static $testViews = [];
 
   /**
+   * Stores the terms used in the tests.
+   *
    * @var \Drupal\taxonomy\TermInterface[]
    */
   protected $terms = [];
 
   /**
+   * Stores the nodes used in the tests.
+   *
    * @var \Drupal\node\NodeInterface[]
    */
   protected $nodes = [];
@@ -43,6 +51,9 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
     'views_test_many_to_one',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
     $this->installEntitySchema('field_storage_config');
@@ -56,7 +67,7 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
       'views_test_many_to_one',
     ]);
     $vocabulary = Vocabulary::load('tags');
-    for ($i=0;$i<3;$i++) {
+    for ($i = 0; $i < 3; $i++) {
       $term = $this->createTerm($vocabulary);
       $this->terms[] = $term;
       $this->nodes = $this->createNode([
@@ -95,6 +106,9 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
     ]);
   }
 
+  /**
+   * Tests filters.
+   */
   public function testFilters(): void {
     $view = Views::getView('test_many_to_one_exposed');
     $view->initHandlers();
@@ -113,6 +127,9 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
     $this->assertCount(1, $view->result);
   }
 
+  /**
+   * Tests contexts.
+   */
   public function testContexts(): void {
     $view = Views::getView('test_many_to_one_contextual');
     $view->initHandlers();
@@ -123,4 +140,5 @@ class ManyToOneFilterTest extends ViewsKernelTestBase {
     $this->executeView($view, $args);
     $this->assertCount(2, $view->result);
   }
+
 }
