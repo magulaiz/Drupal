@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+// cspell:ignore esque
+
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading
  * @group ckeditor5

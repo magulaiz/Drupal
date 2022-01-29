@@ -11,7 +11,7 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore esque upcasted
+// cspell:ignore upcasted
 
 /**
  * Tests for CKEditor5.
