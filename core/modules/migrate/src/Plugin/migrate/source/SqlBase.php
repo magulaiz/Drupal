@@ -206,7 +206,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
       // If we fell back to the magic 'migrate' connection and it doesn't exist,
       // treat the lack of the connection as a RequirementsException.
       if ($key == 'migrate') {
-        throw new RequirementsException("No database connection configured for source plugin " . $this->pluginId, [], 0, $e);
+        throw new RequirementsException("No database connection configured for source plugin " . $this->pluginId, ['database_connection' => FALSE], 0, $e);
       }
       else {
         throw $e;
