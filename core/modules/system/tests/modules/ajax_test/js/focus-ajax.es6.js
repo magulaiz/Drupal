@@ -8,7 +8,7 @@
     attach() {
       // Add data-has-focus attribute to focused elements so tests have a
       // selector to wait for before moving to the next test step.
-      once('focusin', document.body).forEach((element) => {
+      Drupal.once('focusin', document.body).forEach((element) => {
         element.addEventListener('focusin', (e) => {
           document
             .querySelectorAll('[data-has-focus]')

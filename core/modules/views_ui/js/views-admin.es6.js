@@ -361,7 +361,7 @@
   Drupal.behaviors.viewsUiRenderAddViewButton = {
     attach(context) {
       // Build the add display menu and pull the display input buttons into it.
-      const menu = once(
+      const menu = Drupal.once(
         'views-ui-render-add-view-button',
         '#views-display-menu-tabs',
         context,
@@ -621,11 +621,14 @@
 
       // Executes an initial preview.
       if (
-        $(once('edit-displays-live-preview', '#edit-displays-live-preview')).is(
-          ':checked',
-        )
+        $(
+          Drupal.once(
+            'edit-displays-live-preview',
+            '#edit-displays-live-preview',
+          ),
+        ).is(':checked')
       ) {
-        $(once('edit-displays-live-preview', '#preview-submit')).trigger(
+        $(Drupal.once('edit-displays-live-preview', '#preview-submit')).trigger(
           'click',
         );
       }
@@ -705,7 +708,7 @@
     // based on the values of the operator dropdown within that group.
     this.redrawOperatorLabels();
     $(
-      once(
+      Drupal.once(
         'views-rearrange-filter-handler',
         $table.find('.views-group-title select'),
       ),
@@ -721,7 +724,7 @@
     //   filter that is currently displayed last in each group is not supposed
     //   to have a label display next to it).
     $(
-      once(
+      Drupal.once(
         'views-rearrange-filter-handler',
         $table.find('a.views-groups-remove-link'),
       ),
@@ -748,7 +751,7 @@
         // Since Drupal does not provide a theme function for this markup this is
         // the best we can do.
         $(
-          once(
+          Drupal.once(
             'views-rearrange-filter-handler',
             // When the link is clicked, dynamically click the hidden form
             // button for adding a new filter group.
@@ -771,7 +774,7 @@
           const $removeGroupButton = $(this.removeGroupButtons[i]);
           const buttonId = $removeGroupButton.attr('id');
           $(
-            once(
+            Drupal.once(
               'views-rearrange-filter-handler',
               // When the link is clicked, dynamically click the corresponding form
               // button.
@@ -823,7 +826,7 @@
         let newRow;
         let titleRow;
 
-        const titleRows = once(
+        const titleRows = Drupal.once(
           'duplicateGroupsOperator',
           'tr.views-group-title',
         );
@@ -1091,7 +1094,7 @@
    */
   Drupal.behaviors.viewsFilterConfigSelectAll = {
     attach(context) {
-      const selectAll = once(
+      const selectAll = Drupal.once(
         'filterConfigSelectAll',
         '.js-form-item-options-value-all',
         context,
@@ -1132,7 +1135,7 @@
    */
   Drupal.behaviors.viewsRemoveIconClass = {
     attach(context) {
-      $(once('dropbutton-icon', '.dropbutton', context))
+      $(Drupal.once('dropbutton-icon', '.dropbutton', context))
         .find('.icon')
         .removeClass('icon');
     },
@@ -1148,7 +1151,7 @@
    */
   Drupal.behaviors.viewsUiCheckboxify = {
     attach(context, settings) {
-      const buttons = once(
+      const buttons = Drupal.once(
         'views-ui-checkboxify',
         '[data-drupal-selector="edit-options-expose-button-button"], [data-drupal-selector="edit-options-group-button-button"]',
       ).forEach((button) => new Drupal.viewsUi.Checkboxifier(button));
@@ -1229,7 +1232,7 @@
    */
   Drupal.behaviors.viewsUiOverrideSelect = {
     attach(context) {
-      once(
+      Drupal.once(
         'views-ui-override-button-text',
         '[data-drupal-selector="edit-override-dropdown"]',
         context,
@@ -1239,7 +1242,7 @@
         const $submit = $context.find('[id^=edit-submit]');
         const oldValue = $submit.val();
 
-        $(once('views-ui-override-button-text', $submit)).on(
+        $(Drupal.once('views-ui-override-button-text', $submit)).on(
           'mouseup',
           function () {
             $(this).val(oldValue);
@@ -1278,7 +1281,7 @@
       const $context = $(context);
       // Handle handler deletion by looking for the hidden checkbox and hiding
       // the row.
-      $(once('views', 'a.views-remove-link', context)).on(
+      $(Drupal.once('views', 'a.views-remove-link', context)).on(
         'click',
         function (event) {
           const id = $(this).attr('id').replace('views-remove-link-', '');
@@ -1290,7 +1293,7 @@
 
       // Handle display deletion by looking for the hidden checkbox and hiding
       // the row.
-      $(once('display', 'a.display-remove-link', context)).on(
+      $(Drupal.once('display', 'a.display-remove-link', context)).on(
         'click',
         function (event) {
           const id = $(this).attr('id').replace('display-remove-link-', '');
@@ -1321,12 +1324,12 @@
       ) {
         return;
       }
-      const table = once(
+      const table = Drupal.once(
         'views-rearrange-filters',
         '#views-rearrange-filters',
         context,
       );
-      const operator = once(
+      const operator = Drupal.once(
         'views-rearrange-filters',
         '.js-form-item-filter-groups-operator',
         context,

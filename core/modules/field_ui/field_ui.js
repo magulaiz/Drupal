@@ -8,7 +8,7 @@
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.fieldUIFieldStorageAddForm = {
     attach: function attach(context) {
-      var form = once('field_ui_add', '[data-drupal-selector="field-ui-field-storage-add-form"]', context);
+      var form = Drupal.once('field_ui_add', '[data-drupal-selector="field-ui-field-storage-add-form"]', context);
 
       if (form.length) {
         var $form = $(form);
@@ -37,7 +37,7 @@
   };
   Drupal.behaviors.fieldUIDisplayOverview = {
     attach: function attach(context, settings) {
-      once('field-display-overview', 'table#field-display-overview', context).forEach(function (overview) {
+      Drupal.once('field-display-overview', 'table#field-display-overview', context).forEach(function (overview) {
         Drupal.fieldUIOverview.attach(overview, settings.fieldUIRowsData, Drupal.fieldUIDisplayOverview);
       });
     }

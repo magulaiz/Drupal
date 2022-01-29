@@ -12,7 +12,7 @@
    */
   behaviors.js_interaction_test_trigger_link = {
     attach() {
-      const removeBlockerTrigger = once(
+      const removeBlockerTrigger = Drupal.once(
         'remove-blocker-trigger',
         '.remove-blocker-trigger',
       ).shift();
@@ -23,7 +23,7 @@
         }, 100);
       });
 
-      const enableFieldTrigger = once(
+      const enableFieldTrigger = Drupal.once(
         'enable-field-trigger',
         '.enable-field-trigger',
       ).shift();

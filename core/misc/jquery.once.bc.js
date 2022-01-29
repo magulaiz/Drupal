@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function ($, once) {
+(function ($, once, Drupal) {
   var deprecatedMessageSuffix = "is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256";
   var originalJQOnce = $.fn.once;
   var originalJQRemoveOnce = $.fn.removeOnce;
@@ -36,7 +36,7 @@
     return drupalOnce.remove(id, selector, context);
   }
 
-  window.once = Object.assign(augmentedOnce, drupalOnce, {
+  Drupal.once = Object.assign(augmentedOnce, drupalOnce, {
     remove: remove
   });
-})(jQuery, once);
+})(jQuery, once, Drupal);

@@ -69,7 +69,7 @@
       // corresponding node IDs) newer than 30 days ago that have not already
       // been read after their last comment timestamp.
       const nodeIDs = [];
-      const placeholders = once(
+      const placeholders = Drupal.once(
         'history',
         '[data-comment-timestamp]',
         context,

@@ -25,7 +25,7 @@
           .show();
       }
 
-      $(once('filter-guidelines', '.js-filter-guidelines', context))
+      $(Drupal.once('filter-guidelines', '.js-filter-guidelines', context))
         .find(':header')
         .hide()
         .closest('.js-filter-wrapper')

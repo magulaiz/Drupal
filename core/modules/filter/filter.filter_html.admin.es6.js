@@ -67,7 +67,7 @@
 
     attach(context, settings) {
       const that = this;
-      once(
+      Drupal.once(
         'filter-filter_html-updating',
         '[name="filters[filter_html][settings][allowed_html]"]',
         context,

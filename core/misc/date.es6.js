@@ -18,50 +18,49 @@
       // If the browser does not support a native datepicker, add date
       // formatting instructions on date/time fields.
       if (Modernizr.inputtypes.date === false) {
-        once('datepicker', '[data-drupal-field-elements="date-time"]').forEach(
-          (dateTime) => {
-            const dateInput = dateTime.querySelector('input[type="date"]');
-            const timeInput = dateTime.querySelector('input[type="time"]');
-            const help = Drupal.theme.dateTimeHelp({
-              dateId: `${dateInput.id}--description`,
-              dateDesc: dateInput.dataset.help,
-              timeId: `${timeInput.id}--description`,
-              timeDesc: timeInput.dataset.help,
-            });
+        Drupal.once(
+          'datepicker',
+          '[data-drupal-field-elements="date-time"]',
+        ).forEach((dateTime) => {
+          const dateInput = dateTime.querySelector('input[type="date"]');
+          const timeInput = dateTime.querySelector('input[type="time"]');
+          const help = Drupal.theme.dateTimeHelp({
+            dateId: `${dateInput.id}--description`,
+            dateDesc: dateInput.dataset.help,
+            timeId: `${timeInput.id}--description`,
+            timeDesc: timeInput.dataset.help,
+          });
 
-            [dateInput, timeInput].forEach((input) => {
-              input.setAttribute(
-                'aria-describedby',
-                `${input.id}--description`,
-              );
-              // If the browser does not support date or time inputs, the input
-              // is treated as the type "text". The type attribute should be
-              // changed to reflect this.
-              input.setAttribute('type', 'text');
-            });
-
-            Drupal.DatepickerPolyfill.attachDescription(dateTime, help);
-          },
-        );
-
-        once('datepicker', '[data-drupal-field-elements="date"]').forEach(
-          (date) => {
-            const dateInput = date.querySelector('input[type="date"]');
-            const help = Drupal.theme.dateHelp({
-              dateDesc: dateInput.dataset.help,
-            });
-
-            // Date-only input will be described by description directly.
-            const id = `${date.id}--description`;
-            dateInput.setAttribute('aria-describedby', id);
-
-            // If the browser does not support date inputs, the input is treated
-            // as the type "text". The type attribute should be changed to
+          [dateInput, timeInput].forEach((input) => {
+            input.setAttribute('aria-describedby', `${input.id}--description`);
+            // If the browser does not support date or time inputs, the input
+            // is treated as the type "text". The type attribute should be
             // changed to reflect this.
-            dateInput.setAttribute('type', 'text');
-            Drupal.DatepickerPolyfill.attachDescription(date, help, id);
-          },
-        );
+            input.setAttribute('type', 'text');
+          });
+
+          Drupal.DatepickerPolyfill.attachDescription(dateTime, help);
+        });
+
+        Drupal.once(
+          'datepicker',
+          '[data-drupal-field-elements="date"]',
+        ).forEach((date) => {
+          const dateInput = date.querySelector('input[type="date"]');
+          const help = Drupal.theme.dateHelp({
+            dateDesc: dateInput.dataset.help,
+          });
+
+          // Date-only input will be described by description directly.
+          const id = `${date.id}--description`;
+          dateInput.setAttribute('aria-describedby', id);
+
+          // If the browser does not support date inputs, the input is treated
+          // as the type "text". The type attribute should be changed to
+          // changed to reflect this.
+          dateInput.setAttribute('type', 'text');
+          Drupal.DatepickerPolyfill.attachDescription(date, help, id);
+        });
       }
     },
   };

@@ -10,7 +10,7 @@
    */
   Drupal.behaviors.menuUiChangeParentItems = {
     attach(context, settings) {
-      const menu = once('menu-parent', '#edit-menu');
+      const menu = Drupal.once('menu-parent', '#edit-menu');
       if (menu.length) {
         const $menu = $(menu);
         // Update the list of available parent menu items to match the initial

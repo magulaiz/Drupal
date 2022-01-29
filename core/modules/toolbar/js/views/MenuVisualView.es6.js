@@ -25,7 +25,10 @@
         // Add subtrees.
         Object.keys(subtrees || {}).forEach((id) => {
           $(
-            once('toolbar-subtrees', this.$el.find(`#toolbar-link-${id}`)),
+            Drupal.once(
+              'toolbar-subtrees',
+              this.$el.find(`#toolbar-link-${id}`),
+            ),
           ).after(subtrees[id]);
         });
         // Render the main menu as a nested, collapsible accordion.

@@ -42,7 +42,7 @@
         }
       };
 
-      $(once('block-filter-text', 'input.js-layout-builder-filter', context)).on('keyup', debounce(filterBlockList, 200));
+      $(Drupal.once('block-filter-text', 'input.js-layout-builder-filter', context)).on('keyup', debounce(filterBlockList, 200));
     }
   };
 

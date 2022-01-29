@@ -99,7 +99,7 @@
       // Find each row in a draggable table and process it with
       // createItemWrapBoundaries().
       Object.keys(settings.tableDrag || {}).forEach((base) => {
-        once(
+        Drupal.once(
           'claroTabledrag',
           $(context)
             .find(`#${base}`)

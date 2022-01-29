@@ -8,7 +8,7 @@
 (function ($, Drupal) {
   Drupal.behaviors.localeTranslateDirty = {
     attach: function attach() {
-      var form = once('localetranslatedirty', '#locale-translate-edit-form');
+      var form = Drupal.once('localetranslatedirty', '#locale-translate-edit-form');
 
       if (form.length) {
         var $form = $(form);
@@ -19,7 +19,7 @@
         });
         $form.on('formUpdated.localeTranslateDirty', 'tr', function () {
           var $row = $(this);
-          var rowToMark = once('localemark', $row);
+          var rowToMark = Drupal.once('localemark', $row);
           var marker = Drupal.theme('localeTranslateChangedMarker');
           $row.addClass('changed');
 
@@ -41,7 +41,7 @@
   };
   Drupal.behaviors.hideUpdateInformation = {
     attach: function attach(context, settings) {
-      var table = once('expand-updates', '#locale-translation-status-form');
+      var table = Drupal.once('expand-updates', '#locale-translation-status-form');
 
       if (table.length) {
         var $table = $(table);

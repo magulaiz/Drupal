@@ -20,9 +20,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 (function ($, Drupal, debounce) {
   Drupal.behaviors.tableFilterByText = {
     attach: function attach(context, settings) {
-      var _once = once('table-filter-text', 'input.table-filter-text'),
-          _once2 = _slicedToArray(_once, 1),
-          input = _once2[0];
+      var _Drupal$once = Drupal.once('table-filter-text', 'input.table-filter-text'),
+          _Drupal$once2 = _slicedToArray(_Drupal$once, 1),
+          input = _Drupal$once2[0];
 
       if (!input) {
         return;

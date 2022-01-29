@@ -21,8 +21,8 @@
         return;
       }
 
-      $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
-      once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (verticalTab) {
+      $(Drupal.once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
+      Drupal.once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (verticalTab) {
         var $this = $(verticalTab).addClass('vertical-tabs__panes');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
         var tabFocus;

@@ -74,7 +74,7 @@
     attach(context) {
       DetailsSummarizedContent.instances =
         DetailsSummarizedContent.instances.concat(
-          once('details', 'details', context).map(
+          Drupal.once('details', 'details', context).map(
             (details) => new DetailsSummarizedContent(details),
           ),
         );

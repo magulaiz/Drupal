@@ -7,7 +7,7 @@
 (function ($, window, Drupal) {
   Drupal.behaviors.insertTest = {
     attach(context) {
-      $(once('ajax-insert', '.ajax-insert')).on('click', (event) => {
+      $(Drupal.once('ajax-insert', '.ajax-insert')).on('click', (event) => {
         event.preventDefault();
         const ajaxSettings = {
           url: event.currentTarget.getAttribute('href'),
@@ -21,19 +21,22 @@
         myAjaxObject.execute();
       });
 
-      $(once('ajax-insert', '.ajax-insert-inline')).on('click', (event) => {
-        event.preventDefault();
-        const ajaxSettings = {
-          url: event.currentTarget.getAttribute('href'),
-          wrapper: 'ajax-target-inline',
-          base: false,
-          element: false,
-          method: event.currentTarget.getAttribute('data-method'),
-          effect: event.currentTarget.getAttribute('data-effect'),
-        };
-        const myAjaxObject = Drupal.ajax(ajaxSettings);
-        myAjaxObject.execute();
-      });
+      $(Drupal.once('ajax-insert', '.ajax-insert-inline')).on(
+        'click',
+        (event) => {
+          event.preventDefault();
+          const ajaxSettings = {
+            url: event.currentTarget.getAttribute('href'),
+            wrapper: 'ajax-target-inline',
+            base: false,
+            element: false,
+            method: event.currentTarget.getAttribute('data-method'),
+            effect: event.currentTarget.getAttribute('data-effect'),
+          };
+          const myAjaxObject = Drupal.ajax(ajaxSettings);
+          myAjaxObject.execute();
+        },
+      );
 
       $(context).addClass('processed');
     },

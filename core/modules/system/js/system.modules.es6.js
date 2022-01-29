@@ -18,7 +18,10 @@
    */
   Drupal.behaviors.tableFilterByText = {
     attach(context, settings) {
-      const [input] = once('table-filter-text', 'input.table-filter-text');
+      const [input] = Drupal.once(
+        'table-filter-text',
+        'input.table-filter-text',
+      );
       if (!input) {
         return;
       }

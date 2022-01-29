@@ -105,12 +105,12 @@
         '-',
       )}-${settings.view_display_id.replace(/_/g, '-')}`,
     );
-    once('exposed-form', this.$exposed_form).forEach(
+    Drupal.once('exposed-form', this.$exposed_form).forEach(
       $.proxy(this.attachExposedFormAjax, this),
     );
 
     // Add the ajax to pagers.
-    once(
+    Drupal.once(
       'ajax-pager',
       this.$view
         // Don't attach to nested views. Doing so would attach multiple behaviors

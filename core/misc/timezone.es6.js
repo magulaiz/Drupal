@@ -11,7 +11,7 @@
    */
   Drupal.behaviors.setTimezone = {
     attach(context, settings) {
-      const timezone = once('timezone', '.timezone-detect', context);
+      const timezone = Drupal.once('timezone', '.timezone-detect', context);
       if (timezone.length) {
         const $timezone = $(timezone);
         const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;

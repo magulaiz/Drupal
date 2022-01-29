@@ -44,7 +44,9 @@
     attach(context, settings) {
       const notSmartPhone = window.matchMedia('(min-width: 300px)');
       if (notSmartPhone.matches) {
-        once('nav-tabs', '[data-drupal-nav-tabs]', context).forEach(init);
+        Drupal.once('nav-tabs', '[data-drupal-nav-tabs]', context).forEach(
+          init,
+        );
       }
     },
   };

@@ -13,11 +13,11 @@
 
   Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
     var $form = $('.js-views-ui-dialog form');
-    var $submitButtons = $(once('views-ajax-submit', $form.find('input[type=submit].js-form-submit, button.js-form-submit')));
+    var $submitButtons = $(Drupal.once('views-ajax-submit', $form.find('input[type=submit].js-form-submit, button.js-form-submit')));
     $submitButtons.on('click mousedown', function () {
       this.form.clk = this;
     });
-    once('views-ajax-submit', $form).forEach(function (form) {
+    Drupal.once('views-ajax-submit', $form).forEach(function (form) {
       var $form = $(form);
       var elementSettings = {
         url: response.url,
@@ -59,7 +59,7 @@
 
   Drupal.behaviors.livePreview = {
     attach: function attach(context) {
-      $(once('views-ajax', 'input#edit-displays-live-preview', context)).on('click', function () {
+      $(Drupal.once('views-ajax', 'input#edit-displays-live-preview', context)).on('click', function () {
         if ($(this).is(':checked')) {
           $('#preview-submit').trigger('click');
         }
@@ -68,7 +68,7 @@
   };
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function attach(context) {
-      $(once('views-ajax', '#views-tabset a')).on('click', function () {
+      $(Drupal.once('views-ajax', '#views-tabset a')).on('click', function () {
         var href = $(this).attr('href');
         var displayId = href.substr(11);
         $('#views-live-preview #preview-display-id').val(displayId);
@@ -84,7 +84,7 @@
           type: 'fullscreen'
         }
       };
-      once('views-ajax', 'a.views-ajax-link', context).forEach(function (link) {
+      Drupal.once('views-ajax', 'a.views-ajax-link', context).forEach(function (link) {
         var $link = $(link);
         var elementSettings = baseElementSettings;
         elementSettings.base = $link.attr('id');
@@ -96,7 +96,7 @@
 
         Drupal.ajax(elementSettings);
       });
-      once('views-ajax', 'div#views-live-preview a').forEach(function (link) {
+      Drupal.once('views-ajax', 'div#views-live-preview a').forEach(function (link) {
         var $link = $(link);
 
         if (!$link.attr('href')) {
@@ -116,7 +116,7 @@
         elementSettings.element = link;
         Drupal.ajax(elementSettings);
       });
-      once('views-ajax', 'div#views-live-preview input[type=submit]').forEach(function (submit) {
+      Drupal.once('views-ajax', 'div#views-live-preview input[type=submit]').forEach(function (submit) {
         var $submit = $(submit);
         $submit.on('click', function () {
           this.form.clk = this;

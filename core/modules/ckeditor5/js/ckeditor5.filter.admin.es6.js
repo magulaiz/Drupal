@@ -6,7 +6,7 @@
 ((Drupal, once) => {
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
-      once(
+      Drupal.once(
         'allowed-tags-listener',
         context.querySelector(
           '[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]',

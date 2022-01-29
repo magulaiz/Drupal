@@ -15,7 +15,7 @@
   Drupal.behaviors.tableSelect = {
     attach(context, settings) {
       // Select the inner-most table in case of nested tables.
-      once(
+      Drupal.once(
         'table-select',
         $(context).find('th.select-all').closest('table'),
       ).forEach((table) => Drupal.tableSelect.call(table));

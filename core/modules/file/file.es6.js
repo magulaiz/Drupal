@@ -24,7 +24,7 @@
       let elements;
 
       function initFileValidation(selector) {
-        $(once('fileValidate', $context.find(selector))).on(
+        $(Drupal.once('fileValidate', $context.find(selector))).on(
           'change.fileValidate',
           { extensions: elements[selector] },
           Drupal.file.validateExtension,
@@ -66,7 +66,7 @@
    */
   Drupal.behaviors.fileAutoUpload = {
     attach(context) {
-      $(once('auto-file-upload', 'input[type="file"]', context)).on(
+      $(Drupal.once('auto-file-upload', 'input[type="file"]', context)).on(
         'change.autoFileUpload',
         Drupal.file.triggerUploadButton,
       );

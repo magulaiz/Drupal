@@ -18,7 +18,10 @@
    */
   Drupal.behaviors.viewTableFilterByText = {
     attach(context, settings) {
-      const [input] = once('views-filter-text', 'input.views-filter-text');
+      const [input] = Drupal.once(
+        'views-filter-text',
+        'input.views-filter-text',
+      );
       if (!input) {
         return;
       }

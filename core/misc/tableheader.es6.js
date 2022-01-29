@@ -76,11 +76,12 @@
 
   // Select and initialize sticky table headers.
   function tableHeaderInitHandler(e) {
-    once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(
-      (table) => {
-        TableHeader.tables.push(new TableHeader(table));
-      },
-    );
+    Drupal.once(
+      'tableheader',
+      $(e.data.context).find('table.sticky-enabled'),
+    ).forEach((table) => {
+      TableHeader.tables.push(new TableHeader(table));
+    });
     forTables('onScroll');
   }
 

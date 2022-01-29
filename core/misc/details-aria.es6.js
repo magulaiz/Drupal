@@ -11,7 +11,7 @@
    */
   Drupal.behaviors.detailsAria = {
     attach() {
-      $(once('detailsAria', 'body')).on(
+      $(Drupal.once('detailsAria', 'body')).on(
         'click.detailsAria',
         'summary',
         (event) => {

@@ -218,45 +218,46 @@
       };
 
       // Add the behavior to each region select list.
-      $(once('block-region-select', 'select.block-region-select', context)).on(
-        'change',
-        function (event) {
-          // Make our new row and select field.
-          const row = $(this).closest('tr');
-          const select = $(this);
-          // Find the correct region and insert the row as the last in the
-          // region.
-          tableDrag.rowObject = new tableDrag.row(row[0]);
-          const regionMessage = table.find(
-            `.region-${select[0].value}-message`,
-          );
-          const regionItems = regionMessage.nextUntil(
-            '.region-message, .region-title',
-          );
-          if (regionItems.length) {
-            regionItems.last().after(row);
-          }
-          // We found that regionMessage is the last row.
-          else {
-            regionMessage.after(row);
-          }
-          updateBlockWeights(table, select[0].value);
-          // Modify empty regions with added or removed fields.
-          checkEmptyRegions(table, tableDrag.rowObject);
-          // Update last placed block indication.
-          updateLastPlaced(table, row);
-          // Show unsaved changes warning.
-          if (!tableDrag.changed) {
-            $(Drupal.theme('tableDragChangedWarning'))
-              .insertBefore(tableDrag.table)
-              .hide()
-              .fadeIn('slow');
-            tableDrag.changed = true;
-          }
-          // Remove focus from selectbox.
-          select.trigger('blur');
-        },
-      );
+      $(
+        Drupal.once(
+          'block-region-select',
+          'select.block-region-select',
+          context,
+        ),
+      ).on('change', function (event) {
+        // Make our new row and select field.
+        const row = $(this).closest('tr');
+        const select = $(this);
+        // Find the correct region and insert the row as the last in the
+        // region.
+        tableDrag.rowObject = new tableDrag.row(row[0]);
+        const regionMessage = table.find(`.region-${select[0].value}-message`);
+        const regionItems = regionMessage.nextUntil(
+          '.region-message, .region-title',
+        );
+        if (regionItems.length) {
+          regionItems.last().after(row);
+        }
+        // We found that regionMessage is the last row.
+        else {
+          regionMessage.after(row);
+        }
+        updateBlockWeights(table, select[0].value);
+        // Modify empty regions with added or removed fields.
+        checkEmptyRegions(table, tableDrag.rowObject);
+        // Update last placed block indication.
+        updateLastPlaced(table, row);
+        // Show unsaved changes warning.
+        if (!tableDrag.changed) {
+          $(Drupal.theme('tableDragChangedWarning'))
+            .insertBefore(tableDrag.table)
+            .hide()
+            .fadeIn('slow');
+          tableDrag.changed = true;
+        }
+        // Remove focus from selectbox.
+        select.trigger('blur');
+      });
     },
   };
 })(jQuery, window, Drupal, once);

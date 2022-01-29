@@ -9,8 +9,8 @@
   var dateFormats = drupalSettings.dateFormats;
   Drupal.behaviors.dateFormat = {
     attach: function attach(context) {
-      var source = once('dateFormat', '[data-drupal-date-formatter="source"]', context);
-      var target = once('dateFormat', '[data-drupal-date-formatter="preview"]', context);
+      var source = Drupal.once('dateFormat', '[data-drupal-date-formatter="source"]', context);
+      var target = Drupal.once('dateFormat', '[data-drupal-date-formatter="preview"]', context);
 
       if (!source.length || !target.length) {
         return;

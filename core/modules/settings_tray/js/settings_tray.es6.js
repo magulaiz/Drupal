@@ -82,7 +82,7 @@
       closeToolbarTrays();
 
       $editables = $(
-        once('settingstray', '[data-drupal-settingstray="editable"]'),
+        Drupal.once('settingstray', '[data-drupal-settingstray="editable"]'),
       );
       if ($editables.length) {
         // Use event capture to prevent clicks on links.
@@ -221,7 +221,7 @@
     prepareAjaxLinks();
 
     // When the first contextual link is added to the page set Edit Mode.
-    once('settings_tray.edit_mode_init', 'body').forEach(() => {
+    Drupal.once('settings_tray.edit_mode_init', 'body').forEach(() => {
       const editMode =
         localStorage.getItem('Drupal.contextualToolbar.isViewing') === 'false';
       if (editMode) {
@@ -264,7 +264,7 @@
    */
   Drupal.behaviors.toggleEditMode = {
     attach() {
-      $(once('settingstray', toggleEditSelector)).on(
+      $(Drupal.once('settingstray', toggleEditSelector)).on(
         'click.settingstray',
         toggleEditMode,
       );

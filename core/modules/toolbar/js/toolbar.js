@@ -24,7 +24,7 @@
         return;
       }
 
-      once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
+      Drupal.once('toolbar', '#toolbar-administration', context).forEach(function (toolbar) {
         var model = new Drupal.toolbar.ToolbarModel({
           locked: JSON.parse(localStorage.getItem('Drupal.toolbar.trayVerticalLocked')),
           activeTab: document.getElementById(JSON.parse(localStorage.getItem('Drupal.toolbar.activeTabID'))),

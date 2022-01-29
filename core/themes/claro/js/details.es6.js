@@ -15,16 +15,15 @@
    */
   Drupal.behaviors.claroDetails = {
     attach(context) {
-      // The second argument of once() needs to be an instance of Element, but
+      // The second argument of Drupal.once() needs to be an instance of Element, but
       // document is an instance of Document, replace it with the html Element.
-      $(once('claroDetails', context === document ? 'html' : context)).on(
-        'click',
-        (event) => {
-          if (event.target.nodeName === 'SUMMARY') {
-            $(event.target).trigger('focus');
-          }
-        },
-      );
+      $(
+        Drupal.once('claroDetails', context === document ? 'html' : context),
+      ).on('click', (event) => {
+        if (event.target.nodeName === 'SUMMARY') {
+          $(event.target).trigger('focus');
+        }
+      });
     },
   };
 
@@ -44,16 +43,19 @@
         return;
       }
 
-      $(once('claroDetailsToggleShim', 'details .details-title', context)).on(
-        'keypress',
-        (event) => {
-          const keyCode = event.keyCode || event.charCode;
-          if (keyCode === 32) {
-            $(event.target).closest('summary').trigger('click');
-            event.preventDefault();
-          }
-        },
-      );
+      $(
+        Drupal.once(
+          'claroDetailsToggleShim',
+          'details .details-title',
+          context,
+        ),
+      ).on('keypress', (event) => {
+        const keyCode = event.keyCode || event.charCode;
+        if (keyCode === 32) {
+          $(event.target).closest('summary').trigger('click');
+          event.preventDefault();
+        }
+      });
     },
   };
 

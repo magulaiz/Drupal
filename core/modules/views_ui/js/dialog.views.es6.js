@@ -41,13 +41,13 @@
    */
   Drupal.behaviors.viewsModalContent = {
     attach(context) {
-      $(once('viewsDialog', 'body')).on(
+      $(Drupal.once('viewsDialog', 'body')).on(
         'dialogContentResize.viewsDialog',
         '.ui-dialog-content',
         handleDialogResize,
       );
       // When expanding details, make sure the modal is resized.
-      $(once('detailsUpdate', '.scroll', context)).on(
+      $(Drupal.once('detailsUpdate', '.scroll', context)).on(
         'click',
         'summary',
         (e) => {

@@ -213,7 +213,7 @@
     attach(context) {
       // Act on textfields with the "form-autocomplete" class.
       const $autocomplete = $(
-        once('autocomplete', 'input.form-autocomplete', context),
+        Drupal.once('autocomplete', 'input.form-autocomplete', context),
       );
       if ($autocomplete.length) {
         // Allow options to be overridden per instance.

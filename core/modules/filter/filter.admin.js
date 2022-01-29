@@ -9,7 +9,7 @@
   Drupal.behaviors.filterStatus = {
     attach: function attach(context, settings) {
       var $context = $(context);
-      once('filter-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
+      Drupal.once('filter-status', '#filters-status-wrapper input.form-checkbox', context).forEach(function (checkbox) {
         var $checkbox = $(checkbox);
         var $row = $context.find("#".concat($checkbox.attr('id').replace(/-status$/, '-weight'))).closest('tr');
         var $filterSettings = $context.find("[data-drupal-selector='".concat($checkbox.attr('id').replace(/-status$/, '-settings'), "']"));

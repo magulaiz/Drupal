@@ -16,7 +16,7 @@
       };
 
       Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        once('claroTabledrag', $(context).find("#".concat(base)).find('> tr.draggable, > tbody > tr.draggable')).forEach(createItemWrapBoundaries);
+        Drupal.once('claroTabledrag', $(context).find("#".concat(base)).find('> tr.draggable, > tbody > tr.draggable')).forEach(createItemWrapBoundaries);
       });
     }
   };

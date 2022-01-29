@@ -1002,7 +1002,7 @@
    */
   Drupal.behaviors.initializeFilterConfiguration = {
     attach(context, settings) {
-      once(
+      Drupal.once(
         'filter-editor-status',
         '#filters-status-wrapper input.form-checkbox',
         context,

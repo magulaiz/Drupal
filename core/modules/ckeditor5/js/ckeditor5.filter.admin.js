@@ -8,7 +8,7 @@
 (function (Drupal, once) {
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
-      once('allowed-tags-listener', context.querySelector('[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]')).forEach(function (textarea) {
+      Drupal.once('allowed-tags-listener', context.querySelector('[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]')).forEach(function (textarea) {
         var editorSelect = document.querySelector('[data-drupal-selector="edit-editor-editor"]');
         var filterCheckbox = document.querySelector('[data-drupal-selector="edit-filters-filter-html-status"]');
         var formSubmit = document.querySelector('[data-drupal-selector="edit-actions-submit"]');

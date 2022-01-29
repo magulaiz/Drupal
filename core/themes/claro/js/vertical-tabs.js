@@ -14,8 +14,8 @@
 
   Drupal.behaviors.claroVerticalTabs = {
     attach: function attach(context) {
-      $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
-      once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (panes) {
+      $(Drupal.once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
+      Drupal.once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (panes) {
         var $this = $(panes).addClass('vertical-tabs__items--processed');
         var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
         var tabFocus;

@@ -19,7 +19,7 @@
       let colors;
       // This behavior attaches by ID, so is only valid once on a page.
       const form = $(
-        once('color', '#system-theme-settings .color-form', context),
+        Drupal.once('color', '#system-theme-settings .color-form', context),
       );
       if (form.length === 0) {
         return;
@@ -30,9 +30,9 @@
       let focused = null;
 
       // Add Farbtastic.
-      $(once('color', $('<div class="color-placeholder"></div>'))).prependTo(
-        form,
-      );
+      $(
+        Drupal.once('color', $('<div class="color-placeholder"></div>')),
+      ).prependTo(form);
       const farb = $.farbtastic('.color-placeholder');
 
       // Decode reference colors to HSL.
@@ -182,7 +182,7 @@
       // Loop through all defined gradients.
       Object.keys(settings.gradients || {}).forEach((i) => {
         // Add element to display the gradient.
-        $(once('color', '.color-preview')).append(
+        $(Drupal.once('color', '.color-preview')).append(
           `<div id="gradient-${i}"></div>`,
         );
         const gradient = $(`.color-preview #gradient-${i}`);

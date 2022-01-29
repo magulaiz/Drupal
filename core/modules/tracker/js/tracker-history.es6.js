@@ -80,7 +80,7 @@
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
       const nodeIDs = [];
-      const nodeNewPlaceholders = once(
+      const nodeNewPlaceholders = Drupal.once(
         'history',
         '[data-history-node-timestamp]',
         context,
@@ -100,7 +100,7 @@
 
       // Find all "new" comment indicator placeholders newer than 30 days ago that
       // have not already been read after their last comment timestamp.
-      const newRepliesPlaceholders = once(
+      const newRepliesPlaceholders = Drupal.once(
         'history',
         '[data-history-node-last-comment-timestamp]',
         context,

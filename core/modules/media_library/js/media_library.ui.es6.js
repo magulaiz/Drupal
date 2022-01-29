@@ -55,7 +55,7 @@
   Drupal.behaviors.MediaLibraryTabs = {
     attach(context) {
       const $menu = $('.js-media-library-menu');
-      $(once('media-library-menu-item', $menu.find('a')))
+      $(Drupal.once('media-library-menu-item', $menu.find('a')))
         .on('keypress', (e) => {
           // The AJAX link has the button role, so we need to make sure the link
           // is also triggered when pressing the spacebar.
@@ -177,7 +177,7 @@
       //    media library display links when we can alter display links.
       //    https://www.drupal.org/project/drupal/issues/3036694
       $(
-        once(
+        Drupal.once(
           'media-library-views-display-link',
           '.views-display-link-widget, .views-display-link-widget_table',
           context,
@@ -327,7 +327,7 @@
 
       // Update the selection array and the hidden form field when a media item
       // is selected.
-      $(once('media-item-change', $mediaItems)).on('change', (e) => {
+      $(Drupal.once('media-item-change', $mediaItems)).on('change', (e) => {
         const id = e.currentTarget.value;
 
         // Update the selection.
@@ -358,7 +358,7 @@
 
       // The hidden selection form field changes when the selection is updated.
       $(
-        once(
+        Drupal.once(
           'media-library-selection-change',
           $form.find('#media-library-modal-selection'),
         ),

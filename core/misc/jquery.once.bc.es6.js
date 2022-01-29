@@ -5,13 +5,13 @@
  *
  * It allows contributed code still using jQuery.once to behave as expected:
  * @example
- * once('core-once-call', 'body');
+ * Drupal.once('core-once-call', 'body');
  *
  * // The following will work in a contrib module still using jQuery.once:
  * $('body').once('core-once-call'); // => returns empty object
  */
 
-(($, once) => {
+(($, once, Drupal) => {
   const deprecatedMessageSuffix = `is deprecated in Drupal 9.3.0 and will be removed in Drupal 10.0.0. Use the core/once library instead. See https://www.drupal.org/node/3158256`;
 
   // Trigger a deprecation error when using jQuery.once methods.
@@ -35,7 +35,7 @@
   // We'll replace the whole library so keep a version in cache for later.
   const drupalOnce = once;
 
-  // When calling once(), also populate jQuery.once registry.
+  // When calling Drupal.once(), also populate jQuery.once registry.
   function augmentedOnce(id, selector, context) {
     // Do not trigger deprecation warnings for the BC layer calls.
     originalJQOnce.apply($(selector, context), [id]);
@@ -51,5 +51,5 @@
 
   // Expose the rest of @drupal/once API and replace @drupal/once library with
   // the version augmented with jQuery.once calls.
-  window.once = Object.assign(augmentedOnce, drupalOnce, { remove });
-})(jQuery, once);
+  Drupal.once = Object.assign(augmentedOnce, drupalOnce, { remove });
+})(jQuery, once, Drupal);

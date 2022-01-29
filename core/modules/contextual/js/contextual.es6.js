@@ -155,7 +155,7 @@
 
       // Find all contextual links placeholders, if any.
       let $placeholders = $(
-        once('contextual-render', '[data-contextual-id]', context),
+        Drupal.once('contextual-render', '[data-contextual-id]', context),
       );
       if ($placeholders.length === 0) {
         return;

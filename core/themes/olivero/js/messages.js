@@ -63,7 +63,7 @@
 
   Drupal.behaviors.messages = {
     attach: function attach(context) {
-      once('messages', '[data-drupal-selector="messages"]', context).forEach(closeMessage);
+      Drupal.once('messages', '[data-drupal-selector="messages"]', context).forEach(closeMessage);
     }
   };
 })(Drupal, once);

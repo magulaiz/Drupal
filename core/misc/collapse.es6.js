@@ -117,7 +117,7 @@
       if (Modernizr.details) {
         return;
       }
-      once('collapse', 'details', context).forEach((detail) => {
+      Drupal.once('collapse', 'details', context).forEach((detail) => {
         // This class is used for styling purpose only.
         detail.classList.add('collapse-processed');
         CollapsibleDetails.instances.push(new CollapsibleDetails(detail));

@@ -76,7 +76,7 @@
    */
   Drupal.behaviors.searchWide = {
     attach(context) {
-      const searchWideButton = once(
+      const searchWideButton = Drupal.once(
         'search-wide',
         '[data-drupal-selector="block-search-wide-button"]',
         context,

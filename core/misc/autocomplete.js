@@ -116,7 +116,7 @@
 
   Drupal.behaviors.autocomplete = {
     attach: function attach(context) {
-      var $autocomplete = $(once('autocomplete', 'input.form-autocomplete', context));
+      var $autocomplete = $(Drupal.once('autocomplete', 'input.form-autocomplete', context));
 
       if ($autocomplete.length) {
         var blacklist = $autocomplete.attr('data-autocomplete-first-character-blacklist');
