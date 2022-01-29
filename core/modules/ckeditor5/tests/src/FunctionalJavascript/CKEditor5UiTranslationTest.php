@@ -14,7 +14,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * @group ckeditor5
  * @internal
  */
-class LanguageTest extends CKEditor5TestBase {
+class CKEditor5UiTranslationTest extends CKEditor5TestBase {
 
   /**
    * {@inheritdoc}
