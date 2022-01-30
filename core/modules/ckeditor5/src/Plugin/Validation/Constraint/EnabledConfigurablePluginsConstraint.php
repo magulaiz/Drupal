@@ -7,7 +7,7 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * The CKEditor 5 plugin settings.
+ * Checks if settings exist for enabled configurable CKEditor 5 plugins.
  *
  * @Constraint(
  *   id = "CKEditor5EnabledConfigurablePlugins",

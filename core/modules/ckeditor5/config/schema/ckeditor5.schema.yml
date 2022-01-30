@@ -26,6 +26,11 @@ editor.settings.ckeditor5:
     # Each enabled CKEditor 5 plugin that implements \Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface
     # must exist in here.
     CKEditor5EnabledConfigurablePlugins: []
+    # Settings may only exist if the corresponding CKEditor 5 plugin is enabled.
+    CKEditor5ConfigurablePluginSettings: []
+#    # Configuring this does not make sense without the corresponding button.
+#    CKEditor5ToolbarItemDependencyConstraint:
+#      toolbarItem: textPartLanguage
 
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
 ckeditor5.plugin.ckeditor5_language:
@@ -36,9 +41,6 @@ ckeditor5.plugin.ckeditor5_language:
       type: string
       label: 'Language list ID'
       constraints:
-        # Configuring this does not make sense without the corresponding button.
-        CKEditor5ToolbarItemDependencyConstraint:
-          toolbarItem: textPartLanguage
         # Only two possible values are accepted.
         Choice:
           - un
