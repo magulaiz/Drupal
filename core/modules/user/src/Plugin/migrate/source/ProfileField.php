@@ -109,9 +109,7 @@ class ProfileField extends DrupalSqlBase {
     $this->setTableNames();
     if (!$this->getDatabase()->schema()->tableExists($this->fieldTable)) {
       // If we make it to here, the profile module isn't installed.
-      throw new RequirementsException('Profile module not enabled on source site', [
-        'missing_source_module' => 'profile',
-      ]);
+      throw new RequirementsException('Profile module not enabled on source site');
     }
     parent::checkRequirements();
   }

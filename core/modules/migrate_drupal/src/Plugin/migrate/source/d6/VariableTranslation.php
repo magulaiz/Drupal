@@ -123,9 +123,7 @@ class VariableTranslation extends DrupalSqlBase {
    */
   public function checkRequirements() {
     if (!$this->getDatabase()->schema()->tableExists('i18n_variable')) {
-      throw new RequirementsException("Source database table 'i18n_variable' does not exist", [
-        'missing_source_table' => 'i18n_variable',
-      ]);
+      throw new RequirementsException("Source database table 'i18n_variable' does not exist");
     }
     parent::checkRequirements();
   }
