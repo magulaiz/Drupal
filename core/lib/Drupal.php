@@ -115,7 +115,7 @@ class Drupal {
    * Remember to update both whenever this constant is updated.
    */
   const MINIMUM_PHP = '8.0.2';
-s
+
   /**
    * Minimum recommended value of PHP memory_limit.
    *
