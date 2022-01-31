@@ -440,7 +440,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "ac2e42b6e2a05971e9324054cd4ec367fd15153f"
+                "reference": "09b1d114e9439e7495f155f23c19721cee5ed28f"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -593,7 +593,6 @@
                 "drupal/text": "self.version",
                 "drupal/toolbar": "self.version",
                 "drupal/tour": "self.version",
-                "drupal/tracker": "self.version",
                 "drupal/update": "self.version",
                 "drupal/user": "self.version",
                 "drupal/views": "self.version",

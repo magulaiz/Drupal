@@ -154,7 +154,6 @@
         "drupal/text": "self.version",
         "drupal/toolbar": "self.version",
         "drupal/tour": "self.version",
-        "drupal/tracker": "self.version",
         "drupal/update": "self.version",
         "drupal/user": "self.version",
         "drupal/views": "self.version",
