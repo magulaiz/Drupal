@@ -5,6 +5,10 @@
 
 @import "../base/variables.pcss.css";
 
+:root {
+  --sticky-sidebar-offset: var(--sp2);
+}
+
 .sidebar-grid {
   & > .site-main {
     grid-column: 1 / 7;
@@ -46,6 +50,29 @@
     @media (--lg) {
       -ms-grid-row: 1;
       grid-column: 12 / 15;
+    }
+  }
+  &.is-sticky {
+    @supports (position: sticky) {
+      position: sticky;
+      inset-block-start: var(--sticky-sidebar-offset);
+      align-self: start;
+    }
+  }
+}
+
+@supports (position: sticky) {
+  /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
+  .toolbar-vertical.toolbar-fixed,
+  .toolbar-horizontal.toolbar-fixed {
+    & .region--sidebar.is-sticky {
+      inset-block-start: calc(var(--toolbar-height) + var(--sticky-sidebar-offset));
+    }
+  }
+  /* Toolbar is fixed, and tray is open and horizontal. */
+  .toolbar-horizontal.toolbar-fixed.toolbar-tray-open {
+    & .region--sidebar.is-sticky {
+      inset-block-start: calc(var(--toolbar-tray-height) + var(--toolbar-height) + var(--sticky-sidebar-offset));
     }
   }
 }
