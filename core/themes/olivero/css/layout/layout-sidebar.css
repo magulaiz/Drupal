@@ -92,7 +92,7 @@
       }
         }
     }
-  
+
   @supports (position: sticky) {
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */
       .toolbar-vertical.toolbar-fixed .region--sidebar.is-sticky, .toolbar-horizontal.toolbar-fixed .region--sidebar.is-sticky {
