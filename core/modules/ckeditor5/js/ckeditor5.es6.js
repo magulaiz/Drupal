@@ -322,6 +322,16 @@
             element.removeAttribute('required');
           }
 
+          // Integrate CKEditor 5 viewport offset with Drupal displace.
+          // @see \Drupal\Tests\ckeditor5\FunctionalJavascript\CKEditor5ToolbarTest
+          // @see https://ckeditor.com/docs/ckeditor5/latest/api/module_core_editor_editorui-EditorUI.html#member-viewportOffset
+          $(document).on(
+            `drupalViewportOffsetChange.ckeditor5.${id}`,
+            (event, offsets) => {
+              editor.ui.viewportOffset = offsets;
+            },
+          );
+
           editor.model.document.on('change:data', () => {
             const callback = callbacks.get(id);
             if (callback) {
@@ -372,6 +382,9 @@
       if (!editor) {
         return;
       }
+
+      $(document).off(`drupalViewportOffsetChange.ckeditor5.${id}`);
+
       if (trigger === 'serialize') {
         editor.updateSourceElement();
       } else {
@@ -505,29 +518,17 @@
         window.matchMedia('(min-width: 600px)').matches;
       dialogSettings.width = 'auto';
 
-      const $content = $(
-        `<div class="ckeditor5-dialog-loading"><span style="top: -40px;" class="ckeditor5-dialog-loading-link">${Drupal.t(
-          'Loading...',
-        )}</span></div>`,
-      );
-      $content.appendTo($('body'));
-
       const ckeditorAjaxDialog = Drupal.ajax({
         dialog: dialogSettings,
         dialogType: 'modal',
         selector: '.ckeditor5-dialog-loading-link',
         url,
-        progress: { type: 'throbber' },
+        progress: { type: 'fullscreen' },
         submit: {
           editor_object: {},
         },
       });
       ckeditorAjaxDialog.execute();
-
-      // After a short delay, show "Loading…" message.
-      window.setTimeout(() => {
-        $content.find('span').animate({ top: '0px' });
-      }, 1000);
 
       // Store the save callback to be executed when this dialog is closed.
       Drupal.ckeditor5.saveCallback = saveCallback;
