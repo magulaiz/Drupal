@@ -130,9 +130,14 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
 
         case 'vocabulary':
           /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+          $language_manager = \Drupal::languageManager();
+          $language = $language_manager->getLanguage($langcode);
+          $original_language = $language_manager->getConfigOverrideLanguage();
+          $language_manager->setConfigOverrideLanguage($language);
           $vocabulary = Vocabulary::load($term->bundle());
           $bubbleable_metadata->addCacheableDependency($vocabulary);
           $replacements[$original] = $vocabulary->label();
+          $language_manager->setConfigOverrideLanguage($original_language);
           break;
 
         case 'parent':
@@ -147,8 +152,14 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
     }
 
     if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
+      /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+      $language_manager = \Drupal::languageManager();
+      $language = $language_manager->getLanguage($langcode);
+      $original_language = $language_manager->getConfigOverrideLanguage();
+      $language_manager->setConfigOverrideLanguage($language);
       $vocabulary = Vocabulary::load($term->bundle());
       $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, ['vocabulary' => $vocabulary], $options, $bubbleable_metadata);
+      $language_manager->setConfigOverrideLanguage($original_language);
     }
 
     if (($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'parent'))) {
@@ -162,10 +173,6 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
 
   elseif ($type == 'vocabulary' && !empty($data['vocabulary'])) {
     /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
-    $language_manager = \Drupal::languageManager();
-    $language = $language_manager->getLanguage($langcode);
-    $original_language = $language_manager->getConfigOverrideLanguage();
-    $language_manager->setConfigOverrideLanguage($language);
     $vocabulary = $data['vocabulary'];
 
     foreach ($tokens as $name => $original) {
@@ -199,7 +206,6 @@ function taxonomy_tokens($type, $tokens, array $data, array $options, Bubbleable
           break;
       }
     }
-    $language_manager->setConfigOverrideLanguage($original_language);
   }
 
   return $replacements;
