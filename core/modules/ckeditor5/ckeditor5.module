@@ -226,12 +226,6 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
   // updates.
   $form['filter_settings']['#wrapper_attributes']['id'] = 'filter-settings-wrapper';
 
-  // Add an ID to the editor settings vertical tabs wrapper so it can be easily
-  // targeted by JavaScript.
-  // @todo consider moving this to editor.module when this module is moved to
-  //   Drupal core https://www.drupal.org/project/ckeditor5/issues/3231322.
-  $form['editor']['settings']['subform']['plugin_settings']['#wrapper_attributes']['id'] = 'plugin-settings-wrapper';
-
   $form['#after_build'][] = [CKEditor5::class, 'assessActiveTextEditorAfterBuild'];
   $form['#validate'][] = [CKEditor5::class, 'validateSwitchingToCKEditor5'];
 }
