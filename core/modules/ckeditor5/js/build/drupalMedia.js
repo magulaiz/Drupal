@@ -2629,7 +2629,7 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
     const schema = editor.model.schema;
 
     editor.config.define('drupalMedia.styles', { options: [] });
-    // Ensure that the alignemnt styles exist always.
+    // Ensure that the alignment styles exist always.
     const stylesConfig = [
       ...editor.config.get('drupalMedia.styles').options,
       ...DEFAULT_STYLES,
@@ -2686,7 +2686,6 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
         return true;
       });
 
-    debugger;
     this._setupConversion();
 
     editor.commands.add(

@@ -194,7 +194,7 @@ export default class DrupalMediaStyleEditing extends Plugin {
     const schema = editor.model.schema;
 
     editor.config.define('drupalMedia.styles', { options: [] });
-    // Ensure that the alignemnt styles exist always.
+    // Ensure that the alignment styles exist always.
     const stylesConfig = [
       ...editor.config.get('drupalMedia.styles').options,
       ...DEFAULT_STYLES,
