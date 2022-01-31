@@ -765,6 +765,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // avoid a mismatch between old and new deltas. The rebuilt elements will
     // have #default_value set appropriately for the current state of the field,
     // so nothing is lost in doing this.
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::extractFormValues
     $button = $form_state->getTriggeringElement();
     $parents = array_slice($button['#parents'], 0, -2);
     NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
@@ -874,6 +875,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // avoid a mismatch between old and new deltas. The rebuilt elements will
     // have #default_value set appropriately for the current state of the field,
     // so nothing is lost in doing this.
+    // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::extractFormValues
     $button = $form_state->getTriggeringElement();
     $parents = array_slice($button['#parents'], 0, -1);
     $parents[] = 'selection';

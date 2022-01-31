@@ -492,7 +492,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * Tests that changed order is maintained after removing a selection.
    */
-  public function testRemoveAfterReordering() {
+  public function testRemoveAfterReordering(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
@@ -523,7 +523,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
   /**
    * Tests that order is correct after re-order and adding another item.
    */
-  public function testAddAfterReordering() {
+  public function testAddAfterReordering(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
