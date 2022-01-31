@@ -615,6 +615,20 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
       'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
     ];
+    yield 'wildcard + matching tag: on both sides' => [
+      'a' => new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE], 'p' => FALSE]),
+      'b' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => FALSE]),
+      'diff' => new HTMLRestrictions(['$block' => ['foo' => TRUE], 'p' => ['foo' => TRUE]]),
+      'intersection' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
+      'union' => 'a',
+    ];
+    yield 'wildcard + matching tag: on both sides — vice versa' => [
+      'a' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => FALSE]),
+      'b' => new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE], 'p' => FALSE]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => ['class' => TRUE]]),
+      'union' => 'b',
+    ];
 
     // Wildcard + non-matching cases.
     yield 'wildcard + non-matching tag: attribute diff — without possible expansion' => [
