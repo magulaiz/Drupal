@@ -28,7 +28,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    'tracker',
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -133,7 +132,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Text',
       'Title',
       'Toolbar',
-      'Tracker',
       'Trigger',
       'Update manager',
       'User',
