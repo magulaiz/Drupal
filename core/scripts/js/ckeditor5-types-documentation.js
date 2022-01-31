@@ -1,8 +1,10 @@
 /**
  * @file
  *
- * Provides the build:ckeditor5-types command to generate ckeditor 5 types
- *   documentation.
+ * Provides the `build:ckeditor5-types` command.
+ *
+ * This command is used for generating documentation for mapping CKEditor 5
+ * types so that they can be parsed by IDEs.
  *
  * @internal This file is part of the core javascript build process and is only
  * meant to be used in that context.
@@ -15,7 +17,7 @@ const log = require('./log');
 const fs = require('fs');
 
 /**
- * The different regex used to alias CKEditor 5 types.
+ * A list of regex used to alias CKEditor 5 types.
  *
  * @type {RegExp[]}
  */
@@ -24,7 +26,7 @@ const regexList = [
   // class name and not the module name only.
   / * @module \b(.*)\b[\s\S]*?export default(?: class| function)? \b(\w+)\b/g,
 
-  // Pick up ckeditor own aliases to alias them too.
+  // Pick up CKEditor 5 own aliases to alias them too.
   / * @module \b(.*)\b[\s\S]*?@(?:typedef|interface) (?:.*~)?(\w+)/g,
 ];
 
@@ -78,7 +80,7 @@ function getFile(filePath) {
  * Returns a callback function.
  *
  * @param {string} filePath
- *  The CKEditor source file to inspect for exports or type definitions.
+ *  The CKEditor 5 source file to inspect for exports or type definitions.
  *
  * @return {function}
  *  The aliased typedef string.
@@ -104,12 +106,12 @@ const definitions = glob.sync('./ckeditor5*/src/**/*.+(js|jsdoc)', globOptions).
 // Filter definitions that do not match any regex.
 const existingDefinitions = definitions.filter((e) => !!e);
 
-// Write the file in the ckeditor module, use the jsdoc extension to make sure
-// the jsdoc extension is associated with the javascript file type and it
-// prevents core JS lint rules to be run. Add it to the build folder to prevent
-// cspell checks on this file.
+// Write the file in the ckeditor module, use the JSDoc extension to make sure
+// the JSDoc extension is associated with the JavaScript file type and it
+// prevents core JavaScript lint rules to be run. Add it to the build folder to
+// prevent cspell checks on this file.
 fs.writeFile(`./modules/ckeditor5/js/build/ckeditor5.types.jsdoc`, existingDefinitions.join('\n'), () => {
-  log(`CKEditor5 types have been generated: ${existingDefinitions.length} declarations aliased, ${definitions.length - existingDefinitions.length} files ignored`);
+  log(`CKEditor 5 types have been generated: ${existingDefinitions.length} declarations aliased, ${definitions.length - existingDefinitions.length} files ignored`);
 });
 
 process.exitCode = 0;
