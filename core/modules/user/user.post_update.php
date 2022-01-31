@@ -5,10 +5,6 @@
  * Post update functions for User module.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\user\Entity\Role;
-
 /**
  * Implements hook_removed_post_updates().
  */

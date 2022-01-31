@@ -5,10 +5,6 @@
  * Post update functions for Views.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\views\ViewEntityInterface;
-use Drupal\views\ViewsConfigUpdater;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -34,7 +30,7 @@ function views_removed_post_updates() {
     'views_post_update_field_names_for_multivalue_fields' => '10.0.0',
     'views_post_update_configuration_entity_relationships' => '10.0.0',
     'views_post_update_rename_default_display_setting' => '10.0.0',
-    'views_post_update_remove_sorting_global_text_field'=> '10.0.0',
+    'views_post_update_remove_sorting_global_text_field' => '10.0.0',
     'views_post_update_title_translations' => '10.0.0',
     'views_post_update_sort_identifier' => '10.0.0',
     'views_post_update_provide_revision_table_relationship' => '10.0.0',

@@ -5,10 +5,6 @@
  * Contains post update hooks for the text module.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\text\Plugin\Field\FieldWidget\TextareaWithSummaryWidget;
-
 /**
  * Implements hook_removed_post_updates().
  */

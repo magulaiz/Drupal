@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
-use Drupal\views\Entity\View;
 
 /**
  * Implements hook_removed_post_updates().

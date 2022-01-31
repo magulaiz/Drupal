@@ -5,16 +5,6 @@
  * Post update functions for System.
  */
 
-use Drupal\Core\Site\Settings;
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Database\Database;
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\ContentEntityType;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Extension\Exception\UnknownExtensionException;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -53,4 +43,3 @@ function system_removed_post_updates() {
     'system_post_update_enable_provider_database_driver' => '10.0.0',
   ];
 }
-

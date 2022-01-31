@@ -5,10 +5,6 @@
  * Post update functions for Layout Builder.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\layout_builder\Entity\LayoutEntityDisplayInterface;
-
 /**
  * Implements hook_removed_post_updates().
  */
