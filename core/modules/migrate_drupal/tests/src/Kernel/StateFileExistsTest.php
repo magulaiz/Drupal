@@ -76,7 +76,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'taxonomy',
     'telephone',
     'text',
-    'tracker',
     'update',
     'user',
   ];
