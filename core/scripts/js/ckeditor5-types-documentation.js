@@ -78,7 +78,7 @@ function getFile(filePath) {
  * Returns a callback function.
  *
  * @param {string} filePath
- *  The regex used to find exports to alias.
+ *  The CKEditor source file to inspect for exports or type definitions.
  *
  * @return {function}
  *  The aliased typedef string.
