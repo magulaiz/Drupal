@@ -201,8 +201,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
    * A definite singular/plural name of the type.
    *
    * Needed keys: "singular" and "plural".
+   * @code
+   * [
+   *    'singular' => '@count entity',
+   *    'plural' => '@count entities',
+   * ]
    *
-   * @var array[]|\Drupal\Core\StringTranslation\TranslatableMarkup
+   * @var string[]|\Drupal\Core\StringTranslation\TranslatableMarkup
    *
    * @see \Drupal\Core\Entity\EntityTypeInterface::getCountLabel()
    */
