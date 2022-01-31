@@ -6,11 +6,10 @@
  */
 
 /**
- * Remove obsolete hal.settings configuration key.
+ * Implements hook_post_update_last_removed().
  */
-function hal_post_update_delete_settings() {
-  \Drupal::configFactory()
-    ->getEditable('hal.settings')
-    ->clear('bc_file_uri_as_url_normalizer')
-    ->save();
+function hal_post_update_last_removed() {
+  return [
+    'hal_post_update_delete_settings' => '10.0.0',
+  ];
 }
