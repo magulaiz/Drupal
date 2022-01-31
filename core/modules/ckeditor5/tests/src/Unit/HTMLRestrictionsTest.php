@@ -302,8 +302,11 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @dataProvider providerOperands
    */
   public function testOperations(HTMLRestrictions $a, HTMLRestrictions $b, $expected_diff, $expected_intersection, $expected_union): void {
+    // This looks more complicated than it is: it applies the same processing to
+    // all three of the expected operation results.
     foreach (['diff', 'intersection', 'union'] as $op) {
       $parameter = "expected_$op";
+      // Ensure that the operation expectation is 'a' or 'b' whenever possible.
       if ($a == $$parameter) {
         throw new \LogicException("List 'a' as the expected $op rather than specifying it in full, to keep the tests legible.");
       }
@@ -312,6 +315,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
           throw new \LogicException("List 'b' as the expected $op rather than specifying it in full, to keep the tests legible.");
         }
       }
+      // Map any expected 'a' or 'b' string value to the corresponding operand.
       if ($$parameter === 'a') {
         $$parameter = $a;
       }
