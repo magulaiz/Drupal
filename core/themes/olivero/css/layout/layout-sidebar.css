@@ -82,17 +82,16 @@
       -ms-grid-column-span: 3;
       grid-column: 12 / 15
   }
-    }
+        @supports (position: sticky) {
 
-@supports (position: sticky) {
-
-  .sidebar-grid.is-sticky {
-        position: sticky;
-        top: 2.25rem;
-        -ms-grid-row-align: start;
-        align-self: start
-    }
+      .sidebar-grid .region--sidebar.is-sticky {
+          position: sticky;
+          top: 2.25rem;
+          -ms-grid-row-align: start;
+          align-self: start
       }
+        }
+    }
   
   @supports (position: sticky) {
     /* Toolbar is fixed, and tray is either vertical or closed and horizontal. */

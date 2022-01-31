@@ -50,13 +50,14 @@
     @media (--lg) {
       -ms-grid-row: 1;
       grid-column: 12 / 15;
-    }
-  }
-  &.is-sticky {
-    @supports (position: sticky) {
-      position: sticky;
-      inset-block-start: var(--sticky-sidebar-offset);
-      align-self: start;
+
+      &.is-sticky {
+        @supports (position: sticky) {
+          position: sticky;
+          inset-block-start: var(--sticky-sidebar-offset);
+          align-self: start;
+        }
+      }
     }
   }
 }
