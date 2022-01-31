@@ -210,7 +210,7 @@ printf "\n"
 
 # Run PHPStan on all files on DrupalCI. APCu is disabled to
 # ensure that the composer classmap is not corrupted.
-if [[ $DRUPALCI" == "1" ]]; then
+if [[ "$DRUPALCI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 else
