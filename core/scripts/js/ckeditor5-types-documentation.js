@@ -1,7 +1,8 @@
 /**
  * @file
  *
- * Provides the build:ckeditor5-types command to generate ckeditor 5 types documentation.
+ * Provides the build:ckeditor5-types command to generate ckeditor 5 types
+ *   documentation.
  *
  * @internal This file is part of the core javascript build process and is only
  * meant to be used in that context.
@@ -13,18 +14,25 @@ const glob = require('glob');
 const log = require('./log');
 const fs = require('fs');
 
+/**
+ * The different regex used to alias CKEditor 5 types.
+ *
+ * @type {RegExp[]}
+ */
+const regexList = [
+  // Makes sure that `export default class` code can be referenced with the
+  // class name and not the module name only.
+  / * @module \b(.*)\b[\s\S]*?export default(?: class| function)? \b(\w+)\b/g,
+
+  // Pick up ckeditor own aliases to alias them too.
+  / * @module \b(.*)\b[\s\S]*?@(?:typedef|interface) (?:.*~)?(\w+)/g,
+];
+
 const globOptions = {
   // Search within the ckeditor npm namespace.
   cwd: process.cwd() + '/node_modules/@ckeditor/',
   absolute: true,
 };
-
-/**
- * The list of files where type data can't be extracted.
- *
- * @type {array}
- */
-const ignored = [];
 
 /**
  * Template for the generated typedef comment.
@@ -69,49 +77,30 @@ function getFile(filePath) {
 /**
  * Returns a callback function.
  *
- * @param {RegExp} regex
+ * @param {string} filePath
  *  The regex used to find exports to alias.
  *
  * @return {function}
- *  The callback function applied to each file found. It applies the regex
- *  to the file contents and returns a typedef string.
+ *  The aliased typedef string.
  *
  * @see generateTypeDef
  */
-function processFile(regex) {
-  return (filePath) => {
+function processFile(filePath) {
+  const fileData = getFile(filePath);
+  // Use a for loop to be able to return early.
+  for (const regex of regexList) {
+    // Reset the match index of the Regex to make sure we search from the
+    // beginning of the file every time.
     regex.lastIndex = 0;
-    const m = regex.exec(getFile(filePath));
+    const m = regex.exec(fileData);
     if (m) {
       return generateTypeDef(filePath, m[1], m[2]);
     }
-    return false;
   }
+  return false;
 }
 
-const match = {
-  js: {
-    search: './ckeditor5*/src/**/*.js',
-    /**
-     * Makes sure that `export default class` code can be referenced with the
-     * class name and not the module name only.
-     */
-    regex: / * @module \b(.*)\b[\s\S]*?export default class \b(\w+)\b/g,
-  },
-  jsdoc: {
-    search: './ckeditor5*/src/**/*.jsdoc',
-    /**
-     * Pick up ckeditor own aliases to alias them too.
-     */
-    regex: / * @module \b(.*)\b[\s\S]*?@typedef .* .*~(\w+)/g,
-  }
-}
-
-
-const definitions = [
-  ...glob.sync(match.js.search, globOptions).map(processFile(match.js.regex)),
-  ...glob.sync(match.jsdoc.search, globOptions).map(processFile(match.jsdoc.regex)),
-];
+const definitions = glob.sync('./ckeditor5*/src/**/*.+(js|jsdoc)', globOptions).map(processFile);
 // Filter definitions that do not match any regex.
 const existingDefinitions = definitions.filter((e) => !!e);
 
@@ -120,7 +109,7 @@ const existingDefinitions = definitions.filter((e) => !!e);
 // prevents core JS lint rules to be run. Add it to the build folder to prevent
 // cspell checks on this file.
 fs.writeFile(`./modules/ckeditor5/js/build/ckeditor5.types.jsdoc`, existingDefinitions.join('\n'), () => {
-  log(`CKEditor5 types have been generated: ${existingDefinitions.length} declarations found, ${definitions.length - existingDefinitions.length} files ignored`);
+  log(`CKEditor5 types have been generated: ${existingDefinitions.length} declarations aliased, ${definitions.length - existingDefinitions.length} files ignored`);
 });
 
 process.exitCode = 0;
