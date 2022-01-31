@@ -616,6 +616,13 @@ final class HTMLRestrictions {
     $b_concrete = static::expandedWildcardSuperset($b);
     $concrete_op_result = $a_concrete->$operation_method_name($b_concrete);
 
+    // Using the PHP array union operator is safe because the two operation
+    // result arrays ensure there is no overlap between the array keys.
+    // @codingStandardsIgnoreStart
+    assert(Inspector::assertAll(function ($t) { return static::isWildcardTag($t); }, array_keys($wildcard_op_result->elements)));
+    assert(Inspector::assertAll(function ($t) { return !static::isWildcardTag($t); }, array_keys($concrete_op_result->elements)));
+    // @codingStandardsIgnoreEnd
+
     return new HTMLRestrictions($concrete_op_result->elements + $wildcard_op_result->elements);
   }
 
