@@ -937,6 +937,7 @@ PHP,
     $expected_plugins = array_merge($default_plugins, [
       'ckeditor5_test_layercake',
       'media_media',
+      'media_mediaAlign',
     ]);
     sort($expected_plugins);
     $this->assertSame($expected_plugins, $plugin_ids);
