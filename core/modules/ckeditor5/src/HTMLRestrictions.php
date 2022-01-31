@@ -598,25 +598,25 @@ final class HTMLRestrictions {
    *   The result of the operation.
    */
   private static function applyOperation(HTMLRestrictions $a, HTMLRestrictions $b, string $operation_method_name): HTMLRestrictions {
-    // 1. Intersection of wildcard tags that exist in both operands.
+    // 1. Operation applied to wildcard tags that exist in both operands.
     // For example: <$block id> in both operands.
     $a_wildcard = static::getWildcardSubset($a);
     $b_wildcard = static::getWildcardSubset($b);
-    $wildcard_intersection = $a_wildcard->$operation_method_name($b_wildcard);
+    $wildcard_op_result = $a_wildcard->$operation_method_name($b_wildcard);
 
     // Early return if both operands contain only wildcard tags.
-    if (count($a_wildcard->elements) === count($a->elements) && count($a_wildcard->elements) === count($b->elements)) {
-      return $wildcard_intersection;
+    if (count($a_wildcard->elements) === count($a->elements) && count($b_wildcard->elements) === count($b->elements)) {
+      return $wildcard_op_result;
     }
 
-    // 2. Intersection with wildcard tags expanded.
+    // 2. Operation applied with wildcard tags expanded into concrete tags.
     // For example: <p class="text-align-center"> in the first operand and
     // <$block class="text-align-center"> in the second operand.
     $a_concrete = static::expandedWildcardSuperset($a);
     $b_concrete = static::expandedWildcardSuperset($b);
-    $concrete_intersection = $a_concrete->$operation_method_name($b_concrete);
+    $concrete_op_result = $a_concrete->$operation_method_name($b_concrete);
 
-    return new HTMLRestrictions($concrete_intersection->elements + $wildcard_intersection->elements);
+    return new HTMLRestrictions($concrete_op_result->elements + $wildcard_op_result->elements);
   }
 
   /**
