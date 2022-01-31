@@ -11,6 +11,8 @@ import { getClosestSelectedDrupalMediaElement } from '../utils';
  * The Drupal Media style command.
  *
  * This is used to apply Drupal Media style option to a selected Drupal Media.
+ *
+ * @extends module:core/command~Command
  */
 export default class DrupalMediaStyleCommand extends Command {
   /**

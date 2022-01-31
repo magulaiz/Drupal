@@ -13,6 +13,10 @@ import DrupalMediaStyleEditing from './drupalmediastyleediting';
 import { isObject } from '../utils';
 
 /**
+ * @module drupalMedia/druaplmediastyle/drupalmediastyleui
+ */
+
+/**
  * Returns the first argument it receives.
  *
  * @param {*} value
@@ -48,6 +52,11 @@ function getUIComponentName(name) {
   return `drupalMediaStyle:${name}`;
 }
 
+/**
+ * The Drupal Media Style UI plugin.
+ *
+ * @extends module:core/plugin~Plugin
+ */
 export default class DrupalMediaStyleUi extends Plugin {
   /**
    * @inheritDoc

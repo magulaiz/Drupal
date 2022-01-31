@@ -7,6 +7,10 @@ import DrupalMediaStyleCommand from './drupalmediastylecommand';
 const { objectLeft, objectRight, objectCenter } = icons;
 
 /**
+ * @module drupalMedia/druaplmediastyle/drupalmediastyleediting
+ */
+
+/**
  * Gets style definition by name.
  *
  * @param {string} name
@@ -184,6 +188,8 @@ const DEFAULT_STYLES = [
  *            className: 'image-side'
  *
  * @see Drupal.CKEditor5~drupalMediaStyle
+ *
+ * @extends module:core/plugin~Plugin
  */
 export default class DrupalMediaStyleEditing extends Plugin {
   /**
