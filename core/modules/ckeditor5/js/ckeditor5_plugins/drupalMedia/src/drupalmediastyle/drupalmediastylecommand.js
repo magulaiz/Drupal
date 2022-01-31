@@ -4,6 +4,10 @@ import { Command } from 'ckeditor5/src/core';
 import { getClosestSelectedDrupalMediaElement } from '../utils';
 
 /**
+ * @module drupalMedia/druaplmediastyle/drupalmediastylecommand
+ */
+
+/**
  * The Drupal Media style command.
  *
  * This is used to apply Drupal Media style option to a selected Drupal Media.

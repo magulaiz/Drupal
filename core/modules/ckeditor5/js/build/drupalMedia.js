@@ -2360,6 +2360,10 @@ function warnInvalidStyle( info ) {
 
 
 /**
+ * @module drupalMedia/druaplmediastyle/drupalmediastylecommand
+ */
+
+/**
  * The Drupal Media style command.
  *
  * This is used to apply Drupal Media style option to a selected Drupal Media.
@@ -2641,7 +2645,9 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
      * @typedef {Object} Drupal.CKEditor5~drupalMediaStyle
      *
      * @prop {string} name
-     *   The name of the style.
+     *   The name of the style used for identifying the button.
+     * @prop {string} title
+     *   The title of the style displayed in the UI.
      * @prop {string} [drupalMediaAlign]
      *   The value that should be set on data-align attribute. This property
      *   cannot be set with `className`.
@@ -2750,12 +2756,38 @@ class DrupalMediaStyleEditing extends delegated_corefrom_dll_reference_CKEditor5
 
 
 
+/**
+ * Returns the first argument it receives.
+ *
+ * @param {*} value
+ * @return {*}
+ */
 const identity = (value) => {
   return value;
 };
+
+/**
+ * Gets the dropdown title.
+ *
+ * @param {string} dropdownTitle
+ *   The dropdown title.
+ * @param {string} buttonTitle
+ *   The button title.
+ * @return {string}
+ *   The generated dropdown title.
+ */
 const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
   return (dropdownTitle ? `${dropdownTitle}: ` : '') + buttonTitle;
 };
+
+/**
+ * Gets the UI Component name.
+ *
+ * @param {string} name
+ *   The name of the component.
+ * @return {string}
+ *   The UI component name.
+ */
 function getUIComponentName(name) {
   return `drupalMediaStyle:${name}`;
 }
@@ -2783,6 +2815,32 @@ class DrupalMediaStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plug
       this._createButton(styleConfig);
     });
 
+    /**
+     * The Drupal Media dropdown definition.
+     *
+     * @example
+     *    config:
+     *       drupalMedia:
+     *         toolbar:
+     *           - name: 'drupalMediaStyle:alignment'
+     *             title: 'Custom title for the dropdown'
+     *             items:
+     *               - 'drupalMediaStyle:alignLeft'
+     *               - 'drupalMediaStyle:alignCenter'
+     *               - 'drupalMediaStyle:alignRight'
+     *             defaultItem: 'drupalMediaStyle:alignCenter'
+     *
+     * @typedef {Object} Drupal.CKEditor5~drupalMediaDropdownDefinition
+     *
+     * @prop {string} name
+     *   The name of the dropdown used for identifying the dropdown.
+     * @prop {string[]} items
+     *   The items displayed in the dropdown.
+     * @prop {string} defaultItem
+     *   The default item of the dropdown.
+     * @prop {string} [title]
+     *   The title of the dropdown.
+     */
     const definedDropdowns = [...toolbarConfig.filter(isObject)];
 
     definedDropdowns.forEach((dropdownConfig) => {
@@ -2790,6 +2848,18 @@ class DrupalMediaStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plug
     });
   }
 
+  /**
+   * Creates a dropdown and stores it in the component factory.
+   *
+   * @param {Drupal.CKEditor5~drupalMediaDropdownDefinition} dropdownConfig
+   *   The dropdown configuration.
+   * @param {Drupal.CKEditor5~drupalMediaStyle[]} definedStyles
+   *   A list of defined styles.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
   _createDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
 
@@ -2871,6 +2941,16 @@ class DrupalMediaStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plug
     });
   }
 
+  /**
+   * Creates a button and stores it in the editor component factory.
+   *
+   * @param {Drupal.CKEditor5~drupalMediaStyle} buttonConfig
+   *   The button configuration.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
   _createButton(buttonConfig) {
     const buttonName = buttonConfig.name;
 
@@ -2896,6 +2976,16 @@ class DrupalMediaStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plug
     );
   }
 
+  /**
+   * Executes the Drupal Media Style command.
+   *
+   * @param {string} name
+   *   The name of the style that should be applied.
+   *
+   * @see module:drupalMedia/druaplmediastyle/drupalmediastylecommand~DrupalMediaStyleCommand
+   *
+   * @private
+   */
   _executeCommand(name) {
     this.editor.execute('drupalMediaStyle', { value: name });
     this.editor.editing.view.focus();

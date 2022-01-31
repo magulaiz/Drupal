@@ -12,12 +12,38 @@ import DrupalMediaStyleEditing from './drupalmediastyleediting';
 
 import { isObject } from '../utils';
 
+/**
+ * Returns the first argument it receives.
+ *
+ * @param {*} value
+ * @return {*}
+ */
 const identity = (value) => {
   return value;
 };
+
+/**
+ * Gets the dropdown title.
+ *
+ * @param {string} dropdownTitle
+ *   The dropdown title.
+ * @param {string} buttonTitle
+ *   The button title.
+ * @return {string}
+ *   The generated dropdown title.
+ */
 const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
   return (dropdownTitle ? `${dropdownTitle}: ` : '') + buttonTitle;
 };
+
+/**
+ * Gets the UI Component name.
+ *
+ * @param {string} name
+ *   The name of the component.
+ * @return {string}
+ *   The UI component name.
+ */
 function getUIComponentName(name) {
   return `drupalMediaStyle:${name}`;
 }
@@ -45,6 +71,32 @@ export default class DrupalMediaStyleUi extends Plugin {
       this._createButton(styleConfig);
     });
 
+    /**
+     * The Drupal Media dropdown definition.
+     *
+     * @example
+     *    config:
+     *       drupalMedia:
+     *         toolbar:
+     *           - name: 'drupalMediaStyle:alignment'
+     *             title: 'Custom title for the dropdown'
+     *             items:
+     *               - 'drupalMediaStyle:alignLeft'
+     *               - 'drupalMediaStyle:alignCenter'
+     *               - 'drupalMediaStyle:alignRight'
+     *             defaultItem: 'drupalMediaStyle:alignCenter'
+     *
+     * @typedef {Object} Drupal.CKEditor5~drupalMediaDropdownDefinition
+     *
+     * @prop {string} name
+     *   The name of the dropdown used for identifying the dropdown.
+     * @prop {string[]} items
+     *   The items displayed in the dropdown.
+     * @prop {string} defaultItem
+     *   The default item of the dropdown.
+     * @prop {string} [title]
+     *   The title of the dropdown.
+     */
     const definedDropdowns = [...toolbarConfig.filter(isObject)];
 
     definedDropdowns.forEach((dropdownConfig) => {
@@ -52,6 +104,18 @@ export default class DrupalMediaStyleUi extends Plugin {
     });
   }
 
+  /**
+   * Creates a dropdown and stores it in the component factory.
+   *
+   * @param {Drupal.CKEditor5~drupalMediaDropdownDefinition} dropdownConfig
+   *   The dropdown configuration.
+   * @param {Drupal.CKEditor5~drupalMediaStyle[]} definedStyles
+   *   A list of defined styles.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
   _createDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
 
@@ -133,6 +197,16 @@ export default class DrupalMediaStyleUi extends Plugin {
     });
   }
 
+  /**
+   * Creates a button and stores it in the editor component factory.
+   *
+   * @param {Drupal.CKEditor5~drupalMediaStyle} buttonConfig
+   *   The button configuration.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
   _createButton(buttonConfig) {
     const buttonName = buttonConfig.name;
 
@@ -158,6 +232,16 @@ export default class DrupalMediaStyleUi extends Plugin {
     );
   }
 
+  /**
+   * Executes the Drupal Media Style command.
+   *
+   * @param {string} name
+   *   The name of the style that should be applied.
+   *
+   * @see module:drupalMedia/druaplmediastyle/drupalmediastylecommand~DrupalMediaStyleCommand
+   *
+   * @private
+   */
   _executeCommand(name) {
     this.editor.execute('drupalMediaStyle', { value: name });
     this.editor.editing.view.focus();

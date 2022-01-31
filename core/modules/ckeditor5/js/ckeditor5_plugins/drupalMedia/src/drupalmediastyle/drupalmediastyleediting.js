@@ -206,7 +206,9 @@ export default class DrupalMediaStyleEditing extends Plugin {
      * @typedef {Object} Drupal.CKEditor5~drupalMediaStyle
      *
      * @prop {string} name
-     *   The name of the style.
+     *   The name of the style used for identifying the button.
+     * @prop {string} title
+     *   The title of the style displayed in the UI.
      * @prop {string} [drupalMediaAlign]
      *   The value that should be set on data-align attribute. This property
      *   cannot be set with `className`.
