@@ -523,7 +523,8 @@ final class HTMLRestrictions {
         // then the result of array_merge_recursive() is an array containing two
         // booleans (because it is designed for arrays, not for also merging
         // booleans) under the first two numeric keys: 0 and 1. This does not
-        // match the structure expected of HTML restrictions. Combine the two booleans.
+        // match the structure expected of HTML restrictions. Combine the two
+        // booleans.
         if (array_key_exists(0, $tag_config) && array_key_exists(1, $tag_config) && is_bool($tag_config[0]) && is_bool($tag_config[1])) {
           // Twice FALSE.
           if ($tag_config === [FALSE, FALSE]) {
@@ -570,8 +571,12 @@ final class HTMLRestrictions {
             $union[$tag][$html_tag_attribute_name] = TRUE;
           }
           else {
-            // Finally, when both operands list the same allowed attribute values,
-            // there can be an array of
+            // Finally, when both operands list the same allowed attribute
+            // values, then the result provided by array_merge_recursive() for
+            // those allowed attribute values is an array containing two times
+            // `TRUE` (because it is designed for arrays, not for also merging
+            // booleans) under the first two numeric keys: 0 and 1.
+            // e.g.: <foo bar="baz qux"> merged with <foo bar="baz quux">.
             foreach ($html_tag_attribute_restrictions as $allowed_attribute_value => $merged_result) {
               if ($merged_result === [0 => TRUE, 1 => TRUE]) {
                 $union[$tag][$html_tag_attribute_name][$allowed_attribute_value] = TRUE;
