@@ -56,6 +56,8 @@ function getUIComponentName(name) {
  * The Drupal Media Style UI plugin.
  *
  * @extends module:core/plugin~Plugin
+ *
+ * @internal
  */
 export default class DrupalMediaStyleUi extends Plugin {
   /**

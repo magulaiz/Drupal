@@ -190,6 +190,8 @@ const DEFAULT_STYLES = [
  * @see Drupal.CKEditor5~drupalMediaStyle
  *
  * @extends module:core/plugin~Plugin
+ *
+ * @internal
  */
 export default class DrupalMediaStyleEditing extends Plugin {
   /**
@@ -197,7 +199,10 @@ export default class DrupalMediaStyleEditing extends Plugin {
    */
   init() {
     const editor = this.editor;
-    const schema = editor.model.schema;
+
+    if (!editor.plugins.has('DrupalMedia')) {
+      return;
+    }
 
     editor.config.define('drupalMedia.styles', { options: [] });
     // Ensure that the alignment styles exist always.

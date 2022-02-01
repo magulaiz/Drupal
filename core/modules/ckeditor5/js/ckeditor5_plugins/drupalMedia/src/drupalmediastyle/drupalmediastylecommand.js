@@ -13,6 +13,8 @@ import { getClosestSelectedDrupalMediaElement } from '../utils';
  * This is used to apply Drupal Media style option to a selected Drupal Media.
  *
  * @extends module:core/command~Command
+ *
+ * @internal
  */
 export default class DrupalMediaStyleCommand extends Command {
   /**
@@ -20,7 +22,7 @@ export default class DrupalMediaStyleCommand extends Command {
    */
   constructor(editor, styles) {
     super(editor);
-    this.styles = new Map(
+    this._styles = new Map(
       styles.map((style) => {
         return [style.name, style];
       }),
@@ -33,7 +35,7 @@ export default class DrupalMediaStyleCommand extends Command {
   refresh() {
     const editor = this.editor;
     const element = getClosestSelectedDrupalMediaElement(
-      this.editor.model.document.selection,
+      editor.model.document.selection,
     );
 
     this.isEnabled = !!element;
@@ -69,7 +71,7 @@ export default class DrupalMediaStyleCommand extends Command {
         model.document.selection,
       );
 
-      if (!requestedStyle || this.styles.get(requestedStyle).isDefault) {
+      if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
         writer.removeAttribute('drupalMediaStyle', drupalMediaElement);
       } else {
         writer.setAttribute(

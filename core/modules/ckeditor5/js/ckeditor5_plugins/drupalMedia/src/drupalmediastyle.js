@@ -5,14 +5,17 @@ import DrupalMediaStyleUi from './drupalmediastyle/drupalmediastyleui';
 import DrupalMediaStyleEditing from './drupalmediastyle/drupalmediastyleediting';
 import DrupalMedia from './drupalmedia';
 
+/**
+ * The Drupal Media Style plugin.
+ *
+ * @internal
+ */
 export default class DrupalMediaStyle extends Plugin {
   /**
    * @inheritDoc
-   *
-   * @todo not sure why we need DrupalMedia here.
    */
   static get requires() {
-    return [DrupalMedia, DrupalMediaStyleEditing, DrupalMediaStyleUi];
+    return [DrupalMediaStyleEditing, DrupalMediaStyleUi];
   }
 
   /**
