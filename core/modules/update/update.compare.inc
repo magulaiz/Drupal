@@ -309,7 +309,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $project_data['recommended'] = $recommended_release['version'];
     $project_data['releases'][$recommended_release['version']] = $recommended_release;
   }
-  if ($latest_release = $status_calculator->getLatestReleaseForMajor()) {
+  $target_major = $status_calculator->getTargetMajor();
+  $releases = $status_calculator->getInstallableReleases($target_major);
+  if ($releases) {
+    $latest_release = array_shift($releases);
     $project_data['latest_version'] = $latest_release['version'];
     $project_data['releases'][$latest_release['version']] = $latest_release;
   }
@@ -320,10 +323,12 @@ function update_calculate_project_update_status(&$project_data, $available) {
   if ($security_releases = $status_calculator->getSecurityReleases()) {
     $project_data['security updates'] = array_values($security_releases);
   }
-  $target_major = $status_calculator->getTargetMajor();
+
   foreach ($status_calculator->getSupportedMajors() as $supported_major) {
     if ($supported_major > $target_major) {
-      if ($supported_major_release = $status_calculator->getLatestReleaseForMajor($supported_major)) {
+      $major_releases = $status_calculator->getInstallableReleases($supported_major);
+      if ($major_releases) {
+        $supported_major_release = array_shift($major_releases);
         $project_data['also'][$supported_major] = $supported_major_release['version'];
         $project_data['releases'][$supported_major_release['version']] = $supported_major_release;
       }

@@ -80,35 +80,9 @@ final class ProjectStatusCalculator {
       return NULL;
     }
     $major = $major ?? $this->getTargetMajor();
-    foreach ($this->getInstallableReleases() as $version => $release_info) {
+    foreach ($this->getInstallableReleases($major) as $version => $release_info) {
       $release_module_version = ExtensionVersion::createFromVersionString($version);
-      if ($major === $release_module_version->getMajorVersion()
-        && $release_module_version->getVersionExtra() === 'dev') {
-        return $release_info;
-      }
-    }
-    return NULL;
-  }
-
-  /**
-   * Gets the latest installable release, if any, for a major version.
-   *
-   * @param string|null $major
-   *   (optional) The major version to use. Defaults to NULL. If no major
-   *   version is specified the target major will be used.
-   *
-   * @return array|null
-   *   The latest installable release if available, otherwise NULL.
-   *
-   * @see self::getTargetMajor()
-   */
-  public function getLatestReleaseForMajor(string $major = NULL): ?array {
-    if (!$this->isProjectRecommendable()) {
-      return NULL;
-    }
-    $major = $major ?? $this->getTargetMajor();
-    foreach ($this->getInstallableReleases() as $version => $release_info) {
-      if ($major === ExtensionVersion::createFromVersionString($version)->getMajorVersion()) {
+      if ($release_module_version->getVersionExtra() === 'dev') {
         return $release_info;
       }
     }
@@ -130,7 +104,8 @@ final class ProjectStatusCalculator {
     $target_major = $this->getTargetMajor();
     $recommended_version_without_extra = '';
     $first_installable_release_in_major = NULL;
-    foreach ($this->getInstallableReleases() as $version => $release_info) {
+    $releases = $this->getInstallableReleases($target_major);
+    foreach ($releases as $version => $release_info) {
       $release_module_version = ExtensionVersion::createFromVersionString($version);
       if ($release_module_version->getVersionExtra()) {
         $release_version_without_extra = str_replace('-' . $release_module_version->getVersionExtra(), '', $version);
@@ -139,26 +114,20 @@ final class ProjectStatusCalculator {
         $release_version_without_extra = $version;
       }
 
-      if ($release_module_version->getMajorVersion() === $target_major) {
-        if ($recommended_version_without_extra !== $release_version_without_extra) {
-          $recommended_version_without_extra = $release_version_without_extra;
-          $first_installable_release_in_major = $release_info;
-        }
-        if ($release_module_version->getVersionExtra() === NULL) {
-          // Once we have found the first version in this major that does not
-          // have an extra version string return
-          // $first_installable_release_in_major as the recommended release.
-          // @see \Drupal\Core\Extension\ExtensionVersion::getVersionExtra()
-          return $first_installable_release_in_major;
-        }
+      if ($recommended_version_without_extra !== $release_version_without_extra) {
+        $recommended_version_without_extra = $release_version_without_extra;
+        $first_installable_release_in_major = $release_info;
+      }
+      if ($release_module_version->getVersionExtra() === NULL) {
+        // Once we have found the first version in this major that does not
+        // have an extra version string return
+        // $first_installable_release_in_major as the recommended release.
+        // @see \Drupal\Core\Extension\ExtensionVersion::getVersionExtra()
+        return $first_installable_release_in_major;
       }
     }
     // We didn't find a release.
-    $latest_release = $this->getLatestReleaseForMajor($target_major);
-    if ($latest_release) {
-      return $latest_release;
-    }
-    return NULL;
+    return array_shift($releases);
   }
 
   /**
@@ -324,19 +293,23 @@ final class ProjectStatusCalculator {
   /**
    * Gets all the installable releases up to and including the existing version.
    *
+   * @param string|null $major
+   *   (optional) The major version to return releases for.
+   *
+   * @return array[]
+   *   The releases.
+   *
    * @todo Right now this returns the current version regardless of whether this
    *   passes ::releaseIsInstallable(). This is because currently
    *   update_calculate_project_update_status() will consider the current
    *   version regardless of whether it passes this condition.
-   *
-   * @return array[]
-   *   The releases.
    */
-  private function getInstallableReleases(): array {
-    if (isset($this->installableReleases)) {
-      return $this->installableReleases;
+  public function getInstallableReleases(string $major = NULL): array {
+    $major_key = $major ?? 'all';
+    if (isset($this->installableReleases[$major_key])) {
+      return $this->installableReleases[$major_key];
     }
-    $this->installableReleases = [];
+    $installable_releases = [];
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       try {
         $release = ProjectRelease::createFromArray($release_info);
@@ -355,19 +328,21 @@ final class ProjectStatusCalculator {
       }
       try {
         // Ensure the version number string validates.
-        ExtensionVersion::createFromVersionString($release->getVersion());
+        $extension_version = ExtensionVersion::createFromVersionString($release->getVersion());
       }
       catch (\UnexpectedValueException $exception) {
         continue;
       }
-      if ($this->releaseIsInstallable($release) || $version === $this->projectData['existing_version']) {
-        $this->installableReleases[$version] = $release_info;
+
+      if ((!$major || $extension_version->getMajorVersion() === $major) && ($this->releaseIsInstallable($release) || $version === $this->projectData['existing_version'])) {
+        $installable_releases[$version] = $release_info;
       }
       if ($version === $this->projectData['existing_version']) {
         break;
       }
     }
-    return $this->installableReleases;
+    $this->installableReleases[$major_key] = $installable_releases;
+    return $this->installableReleases[$major_key];
   }
 
   /**
@@ -442,7 +417,8 @@ final class ProjectStatusCalculator {
 
     switch ($this->getInstallType()) {
       case 'official':
-        $latest_release_info = $this->getLatestReleaseForMajor();
+        $releases = $this->getInstallableReleases($this->getTargetMajor());
+        $latest_release_info = array_shift($releases);
         if ($existing_release_info && ($existing_release_info['version'] === $recommended_release_info['version'] || $existing_release_info['version'] === $latest_release_info['version'])) {
           $status = UpdateManagerInterface::CURRENT;
         }
@@ -496,7 +472,8 @@ final class ProjectStatusCalculator {
    */
   public function getLatestDevForMajor(string $major = NULL): ?array {
     $dev_release_info = $this->getLatestDevReleaseForMajor($major);
-    $latest_release_info = $this->getLatestReleaseForMajor($major);
+    $releases = $this->getInstallableReleases($major);
+    $latest_release_info = array_shift($releases);
     if ($dev_release_info && $latest_release_info) {
       $dev_release = ProjectRelease::createFromArray($dev_release_info);
       $latest_release = ProjectRelease::createFromArray($latest_release_info);
