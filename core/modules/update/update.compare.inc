@@ -353,37 +353,44 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
 
-  foreach ($project->getInstallableReleases() as $version => $release_info) {
-    $release = ProjectRelease::createFromArray($release_info);
-
+  if ($existing_release_info = $project->getExistingRelease()) {
     // First, if this is the existing release, check a few conditions.
-    if ($project_data['existing_version'] === $version) {
-      if ($release->isInsecure()) {
-        $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
-      }
-      elseif (!$release->isPublished()) {
-        $project_data['status'] = UpdateManagerInterface::REVOKED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'class' => ['release-revoked'],
-          'label' => t('Release revoked'),
-          'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-        ];
-      }
-      elseif ($release->isUnsupported()) {
-        $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
-        if (empty($project_data['extra'])) {
-          $project_data['extra'] = [];
-        }
-        $project_data['extra'][] = [
-          'class' => ['release-not-supported'],
-          'label' => t('Release not supported'),
-          'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
-        ];
-      }
+    $release = ProjectRelease::createFromArray($existing_release_info);
+    if ($release->isInsecure()) {
+      $project_data['status'] = UpdateManagerInterface::NOT_SECURE;
     }
+    elseif (!$release->isPublished()) {
+      $project_data['status'] = UpdateManagerInterface::REVOKED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'class' => ['release-revoked'],
+        'label' => t('Release revoked'),
+        'data' => t('Your currently installed release has been revoked, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+      ];
+    }
+    elseif ($release->isUnsupported()) {
+      $project_data['status'] = UpdateManagerInterface::NOT_SUPPORTED;
+      if (empty($project_data['extra'])) {
+        $project_data['extra'] = [];
+      }
+      $project_data['extra'][] = [
+        'class' => ['release-not-supported'],
+        'label' => t('Release not supported'),
+        'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
+      ];
+    }
+  }
+  $releases = $project->getInstallableReleases();
+  if ($existing_release_info) {
+    // If there is an existing release add this to the array of releases to be
+    // considered.
+    $releases[$existing_release_info['version']] = $existing_release_info;
+  }
+
+  foreach ($releases as $version => $release_info) {
+    $release = ProjectRelease::createFromArray($release_info);
 
     $release_module_version = ExtensionVersion::createFromVersionString($version);
     $release_major_version = $release_module_version->getMajorVersion();
@@ -442,11 +449,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
         $project_data['recommended'] = $recommended_release['version'];
         $project_data['releases'][$recommended_release['version']] = $recommended_release;
       }
-    }
-
-    // Stop searching once we hit the currently installed version.
-    if ($project_data['existing_version'] === $version) {
-      break;
     }
 
     // If we're running a dev snapshot and have a timestamp, stop
