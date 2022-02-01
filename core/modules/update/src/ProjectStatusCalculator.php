@@ -129,7 +129,7 @@ final class ProjectStatusCalculator {
     }
     $target_major = $this->getTargetMajor();
     $recommended_version_without_extra = '';
-    $recommended_release = NULL;
+    $first_installable_release_in_major = NULL;
     foreach ($this->getInstallableReleases() as $version => $release_info) {
       $release_module_version = ExtensionVersion::createFromVersionString($version);
       if ($release_module_version->getVersionExtra()) {
@@ -142,13 +142,14 @@ final class ProjectStatusCalculator {
       if ($release_module_version->getMajorVersion() === $target_major) {
         if ($recommended_version_without_extra !== $release_version_without_extra) {
           $recommended_version_without_extra = $release_version_without_extra;
-          $recommended_release = $release_info;
+          $first_installable_release_in_major = $release_info;
         }
         if ($release_module_version->getVersionExtra() === NULL) {
-          // @todo we explicitly NOT returning $release_info but instead
-          //   $recommended_version_without_extra research again why this is
-          //   and comment or change.
-          return $recommended_release;
+          // Once we have found the first version in this major that does not
+          // have an extra version string return
+          // $first_installable_release_in_major as the recommended release.
+          // @see \Drupal\Core\Extension\ExtensionVersion::getVersionExtra()
+          return $first_installable_release_in_major;
         }
       }
     }
