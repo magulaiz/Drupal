@@ -1530,12 +1530,6 @@ function system_update_last_removed() {
 }
 
 /**
- * Empty update, just so there is one.
- */
-function system_update_9300() {
-}
-
-/**
  * Display requirements from security advisories.
  *
  * @param array[] $requirements
