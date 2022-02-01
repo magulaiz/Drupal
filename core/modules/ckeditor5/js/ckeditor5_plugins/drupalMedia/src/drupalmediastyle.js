@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalmediastyle drupalmediastyleui */
+/* cspell:words drupalmediastyle drupalmediastyleui imagestyle */
 import { Plugin } from 'ckeditor5/src/core';
 import DrupalMediaStyleUi from './drupalmediastyle/drupalmediastyleui';
 import DrupalMediaStyleEditing from './drupalmediastyle/drupalmediastyleediting';
