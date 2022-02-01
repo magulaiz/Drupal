@@ -49,6 +49,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo-bar' => '', '1-foo-bar' => ''],
       '"1-foo-bar" is not a valid HTML tag name.',
     ];
+    yield 'INVALID: unknown wildcard element name' => [
+      ['$foo' => TRUE],
+      '"$foo" is not a valid HTML tag name.',
+    ];
 
     // Invalid HTML tag attribute name restrictions.
     yield 'INVALID: keys valid, but not yet the values' => [

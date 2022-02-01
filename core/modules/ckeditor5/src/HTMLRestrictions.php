@@ -6,8 +6,8 @@ namespace Drupal\ckeditor5;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\DiffArray;
-use Drupal\Component\Utility\Html;
 use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\Filter\FilterHtml;
 use Drupal\filter\Plugin\FilterInterface;
 use Masterminds\HTML5\Elements;
 
@@ -296,86 +296,30 @@ final class HTMLRestrictions {
       $elements_string = implode(' ', $elements_string);
     }
 
-    // Preprocess tag wildcards, such as <$block>.
-    preg_match('/<(\$[A-Z,a-z]*)/', $elements_string, $wildcard_matches);
-    $tag_wildcard = NULL;
-    if (!empty($wildcard_matches)) {
-      $tag_wildcard = $wildcard_matches[1];
-      assert(substr($tag_wildcard, 0, 1) === '$', 'Wildcard tags must begin with "$"');
-      $elements_string = str_replace($tag_wildcard, 'WILDCARD', $elements_string);
-    }
+    // Preprocess wildcard tags: convert `<$block>` to `<__wildcard-block__>`.
+    // Note: unknown wildcard tags will trigger a validation error in
+    // ::validateAllowedRestrictionsPhase1().
+    $replaced_wildcard_tags = [];
+    $elements_string = preg_replace_callback('/<(\$[a-z]*)/', function ($matches) use (&$replaced_wildcard_tags) {
+      $wildcard_tag_name = $matches[1];
+      $replacement = sprintf("__preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
+      $replaced_wildcard_tags[$replacement] = $wildcard_tag_name;
+      return "<$replacement";
+    }, $elements_string);
 
-    $allowed_elements = [];
+    // Reuse the parsing logic from FilterHtml::getHTMLRestrictions().
+    $configuration = ['settings' => ['allowed_html' => $elements_string]];
+    $filter = new FilterHtml($configuration, 'filter_html', ['provider' => 'filter']);
+    $allowed_elements = $filter->getHTMLRestrictions()['allowed'];
+    // Omit the broad wildcard addition that FilterHtml::getHTMLRestrictions()
+    // always sets; it is specific to how FilterHTML works and irrelevant here.
+    unset($allowed_elements['*']);
 
-    // Everything below this is copied from FilterHtml::getHTMLRestrictions(),
-    // with the sole exception of the handling for "<foo *>".
-
-    // Make all the tags self-closing, so they will be parsed into direct
-    // children of the body tag in the DomDocument.
-    $html = str_replace('>', ' />', $elements_string);
-    // Protect any trailing * characters in attribute names, since DomDocument
-    // strips them as invalid.
-    $star_protector = '__zqh6vxfbk3cg__';
-    $html = str_replace('*', $star_protector, $html);
-    $body_child_nodes = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
-
-    foreach ($body_child_nodes as $node) {
-      if ($node->nodeType !== XML_ELEMENT_NODE) {
-        // Skip the empty text nodes inside tags.
-        continue;
-      }
-
-      $tag = $tag_wildcard ?? $node->tagName;
-      if ($node->hasAttributes()) {
-        // This tag has a notation like "<foo *>", to indicate all attributes
-        // are allowed.
-        // NOTE: this is the only difference compared to
-        // \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions().
-        if ($node->hasAttribute($star_protector)) {
-          $allowed_elements[$tag] = TRUE;
-          continue;
-        }
-
-        // Mark the tag as allowed, assigning TRUE for each attribute name if
-        // all values are allowed, or an array of specific allowed values.
-        $allowed_elements[$tag] = [];
-        // Iterate over any attributes, and mark them as allowed.
-        foreach ($node->attributes as $name => $attribute) {
-          // Put back any trailing * on wildcard attribute name.
-          $name = str_replace($star_protector, '*', $name);
-
-          // Put back any trailing * on wildcard attribute value and parse out
-          // the allowed attribute values.
-          $allowed_attribute_values = preg_split('/\s+/', str_replace($star_protector, '*', $attribute->value), -1, PREG_SPLIT_NO_EMPTY);
-
-          // Sanitize the attribute value: it lists the allowed attribute values
-          // but one allowed attribute value that some may be tempted to use
-          // is specifically nonsensical: the asterisk. A prefix is required for
-          // allowed attribute values with a wildcard. A wildcard by itself
-          // would mean allowing all possible attribute values. But in that
-          // case, one would not specify an attribute value at all.
-          $allowed_attribute_values = array_filter($allowed_attribute_values, function ($value) {
-            return $value !== '*';
-          });
-
-          if (empty($allowed_attribute_values)) {
-            // If the value is the empty string all values are allowed.
-            $allowed_elements[$tag][$name] = TRUE;
-          }
-          else {
-            // A non-empty attribute value is assigned, mark each of the
-            // specified attribute values as allowed.
-            foreach ($allowed_attribute_values as $value) {
-              $allowed_elements[$tag][$name][$value] = TRUE;
-            }
-          }
-        }
-      }
-      else {
-        // Mark the tag as allowed, but with no attributes allowed.
-        if (!isset($allowed_elements[$tag])) {
-          $allowed_elements[$tag] = FALSE;
-        }
+    // Postprocess tag wildcards: convert `<__wildcard-block__>` to `<$block>`.
+    foreach ($replaced_wildcard_tags as $processed => $original) {
+      if (isset($allowed_elements[$processed])) {
+        $allowed_elements[$original] = $allowed_elements[$processed];
+        unset($allowed_elements[$processed]);
       }
     }
 
