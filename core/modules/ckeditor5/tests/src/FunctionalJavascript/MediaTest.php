@@ -669,7 +669,7 @@ JS;
     $page->pressButton('Source');
 
     // Assert the alignment class exists after editing downcast.
-    $assert_session->elementExists('css', '.ck-widget.drupal-media.image-style-align-center');
+    $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
     $page->pressButton('Save');
     // Check that the 'content has been updated' message status appears to confirm we left the editor.
     $assert_session->waitForElementVisible('css', 'messages messages--status');
@@ -678,7 +678,7 @@ JS;
     // Go back to the editor to check that the alignment class still exists.
     $edit_url = $this->getSession()->getCurrentURL() . '/edit';
     $this->drupalGet($edit_url);
-    $assert_session->elementExists('css', '.ck-widget.drupal-media.image-style-align-center');
+    $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
   }
 
   /**
