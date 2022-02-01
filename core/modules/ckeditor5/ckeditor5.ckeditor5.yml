@@ -534,6 +534,7 @@ media_mediaAlign:
             defaultItem: 'drupalMediaStyle:alignCenter'
   drupal:
     label: Media align
+    library: ckeditor5/drupal.ckeditor5.mediaAlign
     elements:
       - <drupal-media data-align>
     conditions:
