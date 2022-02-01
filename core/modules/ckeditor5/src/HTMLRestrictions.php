@@ -370,9 +370,15 @@ final class HTMLRestrictions {
   private function doDiff(HTMLRestrictions $other): HTMLRestrictions {
     $diff_elements = array_filter(
       DiffArray::diffAssocRecursive($this->elements, $other->elements),
-      // DiffArray::diffAssocRecursive() does not know the semantics of the HTML
-      // restrictions array: unaware that `TAG => FALSE` is a subset of
-      // `TAG => foo` and that in turn is a subset of `TAG => TRUE`.
+      // DiffArray::diffAssocRecursive() provides a good start, but
+      // additional filtering is necessary due to the specific semantics of 
+      // an HTML restrictions array, where:
+      // - A value of FALSE for a given tag/attribute disallows all attributes/attribute
+      //    values for that tag/attribute.
+      // - An array value for a given tag/attribute provides an array keyed by specific attributes/
+      //   attribute values with boolean values determining if they are allowed or not. 
+      // - A value of TRUE for a given tag/attribute permits all attributes/attribute
+      //    values for that tag/attribute.
       // @see \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions()
       function ($value, string $tag) use ($other) {
         // If this HTML restrictions object contains a tag that the other did
@@ -384,13 +390,15 @@ final class HTMLRestrictions {
         // All subsequent checks can assume that $other contains an entry for
         // this tag.
 
-        // If this HTML restrictions object did not allow any attributes, then
-        // the other is at least equally restrictive: drop the DiffArray result.
+        // If this HTML restrictions object does not allow any attributes for
+        // this tag, then the other is at least equally restrictive: drop the 
+        // DiffArray result.
         if ($value === FALSE) {
           return FALSE;
         }
-        // If this HTML restrictions object allows any attributes, then the
-        // other is at most equally restrictive: keep the DiffArray result.
+        // If this HTML restrictions object allows any attributes for this
+        // tag, then the other is at most equally permissive: keep the 
+        // DiffArray result.
         elseif ($value === TRUE) {
           return TRUE;
         }
@@ -443,6 +451,9 @@ final class HTMLRestrictions {
   public function doIntersect(HTMLRestrictions $other): HTMLRestrictions {
     $intersection_based_on_tags = array_intersect_key($this->elements, $other->elements);
     $intersection = [];
+    // Additional filtering is necessary beyond the array_intersect_key that
+    // computed $intersection_based_on_tags because tag configuration can have
+    // boolean values that have different logic than array values.
     foreach (array_keys($intersection_based_on_tags) as $tag) {
       // If either does not allow attributes, neither does the intersection.
       if ($this->elements[$tag] === FALSE || $other->elements[$tag] === FALSE) {
