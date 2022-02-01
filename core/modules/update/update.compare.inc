@@ -451,6 +451,11 @@ function update_calculate_project_update_status(&$project_data, $available) {
       }
     }
 
+    // Stop searching once we hit the currently installed version.
+    if ($project_data['existing_version'] === $version) {
+      break;
+    }
+
     // If we're running a dev snapshot and have a timestamp, stop
     // searching for security updates once we hit an official release
     // older than what we've got. Allow 100 seconds of leeway to handle
