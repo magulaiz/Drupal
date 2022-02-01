@@ -49,7 +49,7 @@ final class ProjectStatusCalculator {
    * Creates a ProjectStatusCalculator object.
    *
    * @param array $project_data
-   *   Data for project as returned by
+   *   Data for a project as returned by
    *   Drupal\update\UpdateManagerInterface::getProjects().
    * @param \Drupal\update\UpdateServerProjectInfo $project_info
    *   The update server project information.
