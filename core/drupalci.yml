@@ -7,8 +7,17 @@
 build:
   assessment:
     testing:
-      run_tests.kernel:
-        types: 'PHPUnit-Kernel'
-        testgroups: '--class "\Drupal\Tests\update\Kernel\CompareOldNew"'
+      # Run code quality checks.
+      container_command.commit-checks:
+        commands:
+          - "core/scripts/dev/commit-code-check.sh --drupalci"
+        halt-on-fail: true
+      # run_tests task is executed several times in order of performance speeds.
+      # halt-on-fail can be set on the run_tests tasks in order to fail fast.
+      # suppress-deprecations is false in order to be alerted to usages of
+      # deprecated code.
+      run_tests.functional:
+        types: 'PHPUnit-Functional'
+        testgroups: '--module update'
         suppress-deprecations: false
         halt-on-fail: false
