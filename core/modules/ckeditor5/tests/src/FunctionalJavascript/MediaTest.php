@@ -649,7 +649,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Return the source editing content of the drupal-media with the data-alignment class.
-    $addAlignmentJS = <<<JS
+    $add_alignment_js = <<<JS
     (function(){
       const str = document.querySelector('.ck-source-editing-area > textarea').value;
       const n = str.indexOf('>');
@@ -662,10 +662,10 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
     // Edit the source of the image through the UI.
     $page->pressButton('Source');
-    $newHTML = $this->getSession()->evaluateScript($addAlignmentJS);
-    $textArea = $page->find('css', '.ck-source-editing-area > textarea');
+    $new_html = $this->getSession()->evaluateScript($add_alignment_js);
+    $textarea = $page->find('css', '.ck-source-editing-area > textarea');
     // Set the value of the source code to the updated HTML that has the data-alignment.
-    $textArea->setValue($newHTML);
+    $textarea->setValue($new_html);
     $page->pressButton('Source');
 
     // Assert the alignment class exists after editing downcast.
@@ -676,8 +676,8 @@ JS;
     // Check that the class is correct in the front end.
     $assert_session->elementExists('css', 'article.align-center');
     // Go back to the editor to check that the alignment class still exists.
-    $editURL = $this->getSession()->getCurrentURL() . '/edit';
-    $this->drupalGet($editURL);
+    $edit_url = $this->getSession()->getCurrentURL() . '/edit';
+    $this->drupalGet($edit_url);
     $assert_session->elementExists('css', '.ck-widget.drupal-media.image-style-align-center');
   }
 
