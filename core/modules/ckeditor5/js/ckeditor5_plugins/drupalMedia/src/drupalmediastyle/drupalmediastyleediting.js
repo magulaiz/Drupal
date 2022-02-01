@@ -201,6 +201,9 @@ export default class DrupalMediaStyleEditing extends Plugin {
     const editor = this.editor;
 
     if (!editor.plugins.has('DrupalMedia')) {
+      console.warn(
+        'DrupalMediaStyle plugin requires DrupalMedia to be enabled.',
+      );
       return;
     }
 
