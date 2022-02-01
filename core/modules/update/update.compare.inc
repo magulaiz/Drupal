@@ -6,7 +6,7 @@
 
 use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\update\ProjectRelease;
-use Drupal\update\ProjectStatusCalculator;
+use Drupal\update\Project;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;
@@ -359,7 +359,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_release = NULL;
 
   $server_project_info = UpdateServerProjectInfo::createFromArray($available);
-  $status_calculator = ProjectStatusCalculator::createFromProjectData($project_data, $server_project_info);
+  $status_calculator = Project::createFromProjectData($project_data, $server_project_info);
 
   foreach ($status_calculator->getInstallableReleases() as $version => $release_info) {
     $release = ProjectRelease::createFromArray($release_info);

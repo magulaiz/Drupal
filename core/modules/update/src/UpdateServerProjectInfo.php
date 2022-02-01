@@ -38,16 +38,6 @@ class UpdateServerProjectInfo {
   }
 
   /**
-   * Gets the project status.
-   *
-   * @return string|null
-   *   The project status if available, otherwise NULL.
-   */
-  public function getStatus(): ?string {
-    return $this->data['project_status'] ?? NULL;
-  }
-
-  /**
    * Gets the supported branches.
    *
    * @link https://www.drupal.org/drupalorg/docs/apis/update-status-xml#s-top-level-project-element
