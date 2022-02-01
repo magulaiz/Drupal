@@ -353,7 +353,11 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
 
+  $releases = $project->getInstallableReleases();
   if ($existing_release_info = $project->getExistingRelease()) {
+    // If there is an existing release add this to the array of releases to be
+    // considered.
+    $releases[$existing_release_info['version']] = $existing_release_info;
     // First, if this is the existing release, check a few conditions.
     $release = ProjectRelease::createFromArray($existing_release_info);
     if ($release->isInsecure()) {
@@ -381,12 +385,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
         'data' => t('Your currently installed release is now unsupported, and is no longer available for download. Disabling everything included in this release or upgrading is strongly recommended!'),
       ];
     }
-  }
-  $releases = $project->getInstallableReleases();
-  if ($existing_release_info) {
-    // If there is an existing release add this to the array of releases to be
-    // considered.
-    $releases[$existing_release_info['version']] = $existing_release_info;
   }
 
   foreach ($releases as $version => $release_info) {
