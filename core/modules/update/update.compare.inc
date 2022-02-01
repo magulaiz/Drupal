@@ -291,15 +291,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
     $supported_branches = explode(',', $available['supported_branches']);
   }
 
-  $is_in_supported_branch = function ($version) use ($supported_branches) {
-    foreach ($supported_branches as $supported_branch) {
-      if (strpos($version, $supported_branch) === 0) {
-        return TRUE;
-      }
-    }
-    return FALSE;
-  };
-  if ($is_in_supported_branch($project_data['existing_version'])) {
+  $server_project_info = UpdateServerProjectInfo::createFromArray($available);
+  $project = Project::createFromProjectData($project_data, $server_project_info);
+
+  if ($project->isInSupportedBranch($project_data['existing_version'])) {
     // Still supported, stay at the current major version.
     $target_major = $existing_major;
   }
@@ -358,10 +353,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
 
-  $server_project_info = UpdateServerProjectInfo::createFromArray($available);
-  $status_calculator = Project::createFromProjectData($project_data, $server_project_info);
-
-  foreach ($status_calculator->getInstallableReleases() as $version => $release_info) {
+  foreach ($project->getInstallableReleases() as $version => $release_info) {
     $release = ProjectRelease::createFromArray($release_info);
 
     // First, if this is the existing release, check a few conditions.

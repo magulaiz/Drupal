@@ -70,7 +70,7 @@ final class Project {
    * @return bool
    *   TRUE if the version is supported branch of the project. otherwise false.
    */
-  private function isInSupportedBranch(string $version): bool {
+  public function isInSupportedBranch(string $version): bool {
     foreach ($this->updateServerProjectInfo->getSupportBranches() as $supported_branch) {
       if (strpos($version, $supported_branch) === 0) {
         return TRUE;
