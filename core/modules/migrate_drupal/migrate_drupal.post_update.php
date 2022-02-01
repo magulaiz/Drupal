@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_post_update_last_removed().
+ * Implements hook_removed_post_updates().
  */
-function migrate_drupal_post_update_last_removed() {
+function migrate_drupal_removed_post_updates() {
   return [
     'migrate_drupal_post_update_uninstall_multilingual' => '10.0.0',
   ];

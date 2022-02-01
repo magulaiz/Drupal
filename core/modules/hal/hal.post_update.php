@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_post_update_last_removed().
+ * Implements hook_removed_post_updates().
  */
-function hal_post_update_last_removed() {
+function hal_removed_post_updates() {
   return [
     'hal_post_update_delete_settings' => '10.0.0',
   ];

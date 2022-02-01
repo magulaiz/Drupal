@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_post_update_last_removed().
+ * Implements hook_removed_post_updates().
  */
-function serialization_post_update_last_removed() {
+function serialization_removed_post_updates() {
   return [
     'serialization_post_update_delete_settings' => '10.0.0',
   ];
