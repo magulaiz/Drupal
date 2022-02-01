@@ -370,15 +370,16 @@ final class HTMLRestrictions {
   private function doDiff(HTMLRestrictions $other): HTMLRestrictions {
     $diff_elements = array_filter(
       DiffArray::diffAssocRecursive($this->elements, $other->elements),
-      // DiffArray::diffAssocRecursive() provides a good start, but
-      // additional filtering is necessary due to the specific semantics of 
-      // an HTML restrictions array, where:
-      // - A value of FALSE for a given tag/attribute disallows all attributes/attribute
-      //    values for that tag/attribute.
-      // - An array value for a given tag/attribute provides an array keyed by specific attributes/
-      //   attribute values with boolean values determining if they are allowed or not. 
+      // DiffArray::diffAssocRecursive() provides a good start, but additional
+      // filtering is necessary due to the specific semantics of an HTML
+      // restrictions array, where:
+      // - A value of FALSE for a given tag/attribute disallows all
+      //   attributes/ /attribute values for that tag/attribute.
+      // - An array value for a given tag/attribute provides an array keyed by
+      //   specific attributes/attribute values with boolean values determining
+      //   if they are allowed or not.
       // - A value of TRUE for a given tag/attribute permits all attributes/attribute
-      //    values for that tag/attribute.
+      //   values for that tag/attribute.
       // @see \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions()
       function ($value, string $tag) use ($other) {
         // If this HTML restrictions object contains a tag that the other did
@@ -391,13 +392,13 @@ final class HTMLRestrictions {
         // this tag.
 
         // If this HTML restrictions object does not allow any attributes for
-        // this tag, then the other is at least equally restrictive: drop the 
+        // this tag, then the other is at least equally restrictive: drop the
         // DiffArray result.
         if ($value === FALSE) {
           return FALSE;
         }
         // If this HTML restrictions object allows any attributes for this
-        // tag, then the other is at most equally permissive: keep the 
+        // tag, then the other is at most equally permissive: keep the
         // DiffArray result.
         elseif ($value === TRUE) {
           return TRUE;
