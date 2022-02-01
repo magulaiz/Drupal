@@ -766,11 +766,9 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     // have #default_value set appropriately for the current state of the field,
     // so nothing is lost in doing this.
     // @see Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::extractFormValues
-    $button = $form_state->getTriggeringElement();
-    $parents = array_slice($button['#parents'], 0, -2);
-    NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
-
     $triggering_element = $form_state->getTriggeringElement();
+    $parents = array_slice($triggering_element['#parents'], 0, -2);
+    NestedArray::setValue($form_state->getUserInput(), $parents, NULL);
 
     // Get the parents required to find the top-level widget element.
     if (count($triggering_element['#array_parents']) < 4) {
