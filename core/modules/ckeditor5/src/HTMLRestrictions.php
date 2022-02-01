@@ -305,13 +305,19 @@ final class HTMLRestrictions {
       $elements_string = str_replace($tag_wildcard, 'WILDCARD', $elements_string);
     }
 
-    // Preprocess attribute wildcards, such as <foo *>. This makes them
-    // detectable in a next phase. (HTML5 does not allow a literal asterisk as
-    // an attribute name, so without this transformation, it'd be lost.)
-    $elements_string = preg_replace('/(\*\s*)>/', '__attribute_wildcard__>', $elements_string);
+    $allowed_elements = [];
 
-    $elements = [];
-    $body_child_nodes = Html::load(str_replace('>', ' />', $elements_string))->getElementsByTagName('body')->item(0)->childNodes;
+    // Everything below this is copied from FilterHtml::getHTMLRestrictions(),
+    // with the sole exception of the handling for "<foo *>".
+
+    // Make all the tags self-closing, so they will be parsed into direct
+    // children of the body tag in the DomDocument.
+    $html = str_replace('>', ' />', $elements_string);
+    // Protect any trailing * characters in attribute names, since DomDocument
+    // strips them as invalid.
+    $star_protector = '__zqh6vxfbk3cg__';
+    $html = str_replace('*', $star_protector, $html);
+    $body_child_nodes = Html::load($html)->getElementsByTagName('body')->item(0)->childNodes;
 
     foreach ($body_child_nodes as $node) {
       if ($node->nodeType !== XML_ELEMENT_NODE) {
@@ -323,24 +329,57 @@ final class HTMLRestrictions {
       if ($node->hasAttributes()) {
         // This tag has a notation like "<foo *>", to indicate all attributes
         // are allowed.
-        if ($node->hasAttribute('__attribute_wildcard__')) {
-          $elements[$tag] = TRUE;
+        // NOTE: this is the only difference compared to
+        // \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions().
+        if ($node->hasAttribute($star_protector)) {
+          $allowed_elements[$tag] = TRUE;
           continue;
         }
 
-        foreach ($node->attributes as $attribute_name => $attribute) {
-          $value = empty($attribute->value) ? TRUE : explode(' ', $attribute->value);
-          self::providedElementsAttributes($elements, $tag, $attribute_name, $value);
+        // Mark the tag as allowed, assigning TRUE for each attribute name if
+        // all values are allowed, or an array of specific allowed values.
+        $allowed_elements[$tag] = [];
+        // Iterate over any attributes, and mark them as allowed.
+        foreach ($node->attributes as $name => $attribute) {
+          // Put back any trailing * on wildcard attribute name.
+          $name = str_replace($star_protector, '*', $name);
+
+          // Put back any trailing * on wildcard attribute value and parse out
+          // the allowed attribute values.
+          $allowed_attribute_values = preg_split('/\s+/', str_replace($star_protector, '*', $attribute->value), -1, PREG_SPLIT_NO_EMPTY);
+
+          // Sanitize the attribute value: it lists the allowed attribute values
+          // but one allowed attribute value that some may be tempted to use
+          // is specifically nonsensical: the asterisk. A prefix is required for
+          // allowed attribute values with a wildcard. A wildcard by itself
+          // would mean allowing all possible attribute values. But in that
+          // case, one would not specify an attribute value at all.
+          $allowed_attribute_values = array_filter($allowed_attribute_values, function ($value) {
+            return $value !== '*';
+          });
+
+          if (empty($allowed_attribute_values)) {
+            // If the value is the empty string all values are allowed.
+            $allowed_elements[$tag][$name] = TRUE;
+          }
+          else {
+            // A non-empty attribute value is assigned, mark each of the
+            // specified attribute values as allowed.
+            foreach ($allowed_attribute_values as $value) {
+              $allowed_elements[$tag][$name][$value] = TRUE;
+            }
+          }
         }
       }
       else {
-        if (!isset($elements[$tag])) {
-          $elements[$tag] = FALSE;
+        // Mark the tag as allowed, but with no attributes allowed.
+        if (!isset($allowed_elements[$tag])) {
+          $allowed_elements[$tag] = FALSE;
         }
       }
     }
 
-    return new static($elements);
+    return new static($allowed_elements);
   }
 
   /**
