@@ -70,4 +70,3 @@ function system_post_update_enable_provider_database_driver() {
     \Drupal::service('module_installer')->install(array_keys($modules_to_install));
   }
 }
-
