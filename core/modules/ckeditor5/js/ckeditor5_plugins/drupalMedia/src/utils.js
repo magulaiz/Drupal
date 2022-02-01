@@ -58,7 +58,17 @@ export function getClosestSelectedDrupalMediaElement(selection) {
     : selection.getFirstPosition().findAncestor('drupalMedia');
 }
 
-// @todo better way to do this?
+/**
+ * Checks if value is a JavaScript object.
+ *
+ * This will return true for any type of JavaScript object. (e.g. arrays,
+ * functions, objects, regexes, new Number(0), and new String(''))
+ *
+ * @param value
+ *   Value to check.
+ * @return {boolean}
+ *   True if value is an object, else false.
+ */
 export function isObject(value) {
   const type = typeof value;
   return value != null && (type === 'object' || type === 'function');

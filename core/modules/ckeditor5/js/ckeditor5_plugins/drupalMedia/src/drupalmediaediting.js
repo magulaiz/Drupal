@@ -127,6 +127,8 @@ export default class DrupalMediaEditing extends Plugin {
       dispatcher.on(
         'attribute:drupalMediaStyle:drupalMedia',
         (evt, data, conversionApi) => {
+          // Re-use image style plugin CSS classes for rendering the alignment
+          // in the editing view to have equivalent functionality in the editor.
           const alignMapping = {
             alignLeft: 'image-style-align-left',
             alignRight: 'image-style-align-right',

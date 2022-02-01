@@ -8,6 +8,10 @@ import DrupalMedia from './drupalmedia';
 /**
  * The Drupal Media Style plugin.
  *
+ * This plugin is inspired by the CKEditor 5 Image Style plugin.
+ *
+ * @see module:image/imagestyle~ImageStyle
+ *
  * @internal
  */
 export default class DrupalMediaStyle extends Plugin {
