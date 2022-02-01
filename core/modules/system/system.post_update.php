@@ -5,6 +5,8 @@
  * Post update functions for System.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_removed_post_updates().
  */
