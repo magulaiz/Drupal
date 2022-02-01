@@ -149,7 +149,7 @@ export default class DrupalMediaEditing extends Plugin {
             return;
           }
 
-          // The the model property is already consumed, do not proceed.
+          // The model property is already consumed, do not proceed.
           if (!conversionApi.consumable.consume(data.item, evt.name)) {
             return;
           }
