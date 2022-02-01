@@ -283,8 +283,8 @@ final class HTMLRestrictions {
   /**
    * Parses a string of HTML restrictions into a HTMLRestrictions value object.
    *
-   * @param $elements_string
-   *   A string representing a list of allowed HTML elements.
+   * @param string|string[] $elements_string
+   *   A string or string array representing a list of allowed HTML elements.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *
@@ -298,11 +298,11 @@ final class HTMLRestrictions {
 
     // Preprocess tag wildcards, such as <$block>.
     preg_match('/<(\$[A-Z,a-z]*)/', $elements_string, $wildcard_matches);
-    $wildcard = NULL;
+    $tag_wildcard = NULL;
     if (!empty($wildcard_matches)) {
-      $wildcard = $wildcard_matches[1];
-      assert(substr($wildcard, 0, 1) === '$', 'Wildcard tags must begin with "$"');
-      $elements_string = str_replace($wildcard, 'WILDCARD', $elements_string);
+      $tag_wildcard = $wildcard_matches[1];
+      assert(substr($tag_wildcard, 0, 1) === '$', 'Wildcard tags must begin with "$"');
+      $elements_string = str_replace($tag_wildcard, 'WILDCARD', $elements_string);
     }
 
     // Preprocess attribute wildcards, such as <foo *>. This makes them
@@ -319,7 +319,7 @@ final class HTMLRestrictions {
         continue;
       }
 
-      $tag = $wildcard ?? $node->tagName;
+      $tag = $tag_wildcard ?? $node->tagName;
       if ($node->hasAttributes()) {
         // This tag has a notation like "<foo *>", to indicate all attributes
         // are allowed.
@@ -403,13 +403,22 @@ final class HTMLRestrictions {
         elseif ($value === TRUE) {
           return TRUE;
         }
+        // Otherwise, this HTML restrictions object allows specific attributes
+        // only. DiffArray only knows to compare arrays. When the other object
+        // has a non-array value for this tag, interpret those values correctly.
         elseif (is_array($value)) {
+          // The other object is more restrictive regarding allowed attributes
+          // for this tag: keep the DiffArray result.
           if ($other->elements[$tag] === FALSE) {
             return TRUE;
           }
+          // The other object is more permissive regarding allowed attributes
+          // for this tag: drop the DiffArray result.
           elseif ($other->elements[$tag] === TRUE) {
             return FALSE;
           }
+          // Both objects have lists of allowed attributes: keep the DiffArray
+          // result.
           else {
             // @see ::validateAllowedRestrictionsPhase3()
             assert(is_array($other->elements[$tag]));
