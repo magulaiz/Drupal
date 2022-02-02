@@ -648,24 +648,20 @@ class MediaTest extends WebDriverTestBase {
   public function testAlignment() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    // Return the source editing content of the drupal-media with the data-alignment class.
-    $add_alignment_js = <<<JS
-    (function(){
-      const str = document.querySelector('.ck-source-editing-area > textarea').value;
-      const n = str.indexOf('>');
-      return str.substring(0,n) + 'data-align="center"' + '>';
-    }())
-JS;
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     // Wait for the media preview to load.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
     // Edit the source of the image through the UI.
     $page->pressButton('Source');
-    $new_html = $this->getSession()->evaluateScript($add_alignment_js);
+
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')->item(0);
+    $drupal_media_element->setAttribute('data-align', 'center');
     $textarea = $page->find('css', '.ck-source-editing-area > textarea');
-    // Set the value of the source code to the updated HTML that has the data-alignment.
-    $textarea->setValue($new_html);
+    // Set the value of the source code to the updated HTML that has the
+    // `data-align` attribute.
+    $textarea->setValue($editor_dom->C14N());
     $page->pressButton('Source');
 
     // Assert the alignment class exists after editing downcast.
@@ -678,6 +674,7 @@ JS;
     // Go back to the editor to check that the alignment class still exists.
     $edit_url = $this->getSession()->getCurrentURL() . '/edit';
     $this->drupalGet($edit_url);
+    $this->waitForEditor();
     $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
   }
 
