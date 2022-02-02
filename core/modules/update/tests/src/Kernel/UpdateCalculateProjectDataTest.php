@@ -66,12 +66,13 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
   }
 
   /**
-   * Provides fixture data for test scenarios testing project status field.
+   * Data provider for testProjectStatus().
    *
    * The test cases rely on the following fixtures:
    * - drupal.project_status.revoked.0.2.xml: Project_status is 'revoked'.
    * - drupal.project_status.insecure.0.2.xml:  Project_status is 'insecure'.
-   * - drupal.project_status.unsupported.0.2.xml: Project_status is 'unsupported'.
+   * - drupal.project_status.unsupported.0.2.xml: Project_status is
+   * 'unsupported'.
    *
    * @return array[]
    *   Test data.
@@ -82,19 +83,19 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
         'fixture' => '/../../fixtures/release-history/drupal.project_status.revoked.0.2.xml',
         'status' => UpdateManagerInterface::REVOKED,
         'label' => 'Project revoked',
-        'exp_error_message' => 'This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
+        'expected_error_message' => 'This project has been revoked, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
       ],
       'insecure' => [
         'fixture' => '/../../fixtures/release-history/drupal.project_status.insecure.0.2.xml',
         'status' => UpdateManagerInterface::NOT_SECURE,
         'label' => 'Project not secure',
-        'exp_error_message' => 'This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!',
+        'expected_error_message' => 'This project has been labeled insecure by the Drupal security team, and is no longer available for download. Immediately disabling everything included by this project is strongly recommended!',
       ],
       'unsupported' => [
         'fixture' => '/../../fixtures/release-history/drupal.project_status.unsupported.0.2.xml',
         'status' => UpdateManagerInterface::NOT_SUPPORTED,
         'label' => 'Project not supported',
-        'exp_error_message' => 'This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
+        'expected_error_message' => 'This project is no longer supported, and is no longer available for download. Disabling everything included by this project is strongly recommended!',
       ],
     ];
   }
@@ -106,16 +107,16 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    *
    * @covers update_calculate_project_update_status
    */
-  public function testProjectStatus($fixture, $status, $label, $exp_error_message): void {
+  public function testProjectStatus(string $fixture, UpdateManagerInterface $status, string $label, string $expected_error_message): void {
     update_storage_clear();
     $this->setReleaseMetadata(__DIR__ . $fixture);
     $available = update_get_available(TRUE);
-    $new = update_calculate_project_data($available);
-    $this->assertArrayHasKey('status', $new['drupal']);
-    $this->assertEquals($status, $new['drupal']['status']);
-    $this->assertArrayHasKey('extra', $new['drupal']);
-    $this->assertEquals($label, $new['drupal']['extra']['0']['label']);
-    $this->assertEquals($exp_error_message, $new['drupal']['extra']['0']['data']);
+    $project_data = update_calculate_project_data($available);
+    $this->assertArrayHasKey('status', $project_data['drupal']);
+    $this->assertEquals($status, $project_data['drupal']['status']);
+    $this->assertArrayHasKey('extra', $project_data['drupal']);
+    $this->assertEquals($label, $project_data['drupal']['extra']['0']['label']);
+    $this->assertEquals($expected_error_message, $project_data['drupal']['extra']['0']['data']);
   }
 
 }
