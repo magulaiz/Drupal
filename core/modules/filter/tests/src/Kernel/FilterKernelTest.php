@@ -912,6 +912,7 @@ www.example.com with a newline in comments -->
    *   comments.
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and email addresses in one content.
+   * - Input that exceeds PCRE's backtracking limit.
    */
   public function testUrlFilterContent() {
     // Get FilterUrl object.
@@ -927,27 +928,22 @@ www.example.com with a newline in comments -->
     $expected = file_get_contents($path . '/filter.url-output.txt');
     $result = _filter_url($input, $filter);
     $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
-  }
 
-  /**
-   * Tests _filter_url with very long html tag.
-   */
-  public function testUrlFilterLongTag() {
-    // Get FilterUrl object.
-    $filter = $this->filters['filter_url'];
-    $filter->setConfiguration([
-      'settings' => [
-        'filter_url_length' => 496,
-      ],
-    ]);
-
-    // Test the filter when there's a p tag with tons of classes.
-    // Each class is ten bytes (including the trailing space).
-    // So $classes is about 1MB.
-    $classes = str_repeat('dum-class ', 100000);
-    $input = '<div><p class="' . $classes . '">Not a url.</p></div>';
+    $pcre_backtrack_limit = ini_get('pcre.backtrack_limit');
+    // If a PCRE error occurs, we expect to get the same text.
+    $input = $expected = '<p>No url</p>';
+    // Setting the limit to the smallest possible value so that it will break.
+    ini_set('pcre.backtrack_limit', 1);
+    // Make sure it broke.
+    preg_split('/(<.+?>)/is', $input, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $preg_last_error = preg_last_error();
+    $this->assertSame($preg_last_error, PREG_BACKTRACK_LIMIT_ERROR, 'PREG backtrack error occurred as expected.');
+    // Make sure we got the same text back without any errors.
     $result = _filter_url($input, $filter);
-    $this->assertSame($input, $result);
+    $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
+
+    // Setting limit back to default.
+    ini_set('pcre.backtrack_limit', $pcre_backtrack_limit);
   }
 
   /**
