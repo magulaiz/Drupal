@@ -934,10 +934,6 @@ www.example.com with a newline in comments -->
     $input = $expected = '<p>No url</p>';
     // Setting the limit to the smallest possible value so that it will break.
     ini_set('pcre.backtrack_limit', 1);
-    // Make sure it broke.
-    preg_split('/(<.+?>)/is', $input, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $preg_last_error = preg_last_error();
-    $this->assertSame($preg_last_error, PREG_BACKTRACK_LIMIT_ERROR, 'PREG backtrack error occurred as expected.');
     // Make sure we got the same text back without any errors.
     $result = _filter_url($input, $filter);
     $this->assertSame($expected, $result, 'Complex HTML document was correctly processed.');
