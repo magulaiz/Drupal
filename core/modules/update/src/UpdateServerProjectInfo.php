@@ -59,7 +59,8 @@ class UpdateServerProjectInfo {
    * @return array[]
    *   The project releases.
    *   @link https://www.drupal.org/drupalorg/docs/apis/update-status-xml#s-releases-element
-   *   Drupal.org Update XML documentation @endlink for element information.
+   *   Drupal.org Update XML documentation @endlink for element information. The
+   *   releases are ordered by version number descending.
    */
   public function getReleases(): array {
     return $this->data['releases'] ?? [];

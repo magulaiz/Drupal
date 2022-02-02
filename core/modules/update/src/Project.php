@@ -92,7 +92,7 @@ final class Project {
    * @return bool
    *   TRUE if the release is installable, otherwise FALSE.
    */
-  private function releaseIsInstallable(array $release_info): bool {
+  private function isInstallableRelease(array $release_info): bool {
     if (!$this->isReleaseValid($release_info)) {
       return FALSE;
     }
@@ -104,10 +104,12 @@ final class Project {
   }
 
   /**
-   * Gets all the installable releases up to and including the existing version.
+   * Gets all the installable releases.
    *
    * @return array[]
    *   The releases.
+   *
+   * @see self::isInstallableRelease()
    */
   public function getInstallableReleases(): array {
     if (isset($this->installableReleases)) {
@@ -116,12 +118,15 @@ final class Project {
     $this->installableReleases = [];
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
       if ($version === $this->projectData['existing_version']) {
+        // Because \Drupal\update\UpdateServerProjectInfo::getReleases() returns
+        // releases ordered by descending version number we can exit after we
+        // find the existing version as everything after this would be a
+        // downgrade.
         break;
       }
-      if ($this->releaseIsInstallable($release_info)) {
+      if ($this->isInstallableRelease($release_info)) {
         $this->installableReleases[$version] = $release_info;
       }
-
     }
     return $this->installableReleases;
   }
@@ -139,24 +144,27 @@ final class Project {
   private function isReleaseValid(array $release_info): bool {
     try {
       $release = ProjectRelease::createFromArray($release_info);
+      // Ensure the version number string validates.
+      ExtensionVersion::createFromVersionString($release->getVersion());
     }
     catch (\UnexpectedValueException $exception) {
       // Ignore releases that are in an invalid format. Although this is
       // highly unlikely we should still process releases in the correct
       // format.
+      if (isset($release)) {
+        $message = 'Invalid version string : @version';
+        $placeholders = ['@version' => $release->getVersion()];
+      }
+      else {
+        $message = 'Invalid project format: @release';
+        $placeholders = ['@release' => print_r($release_info, TRUE)];
+      }
       watchdog_exception(
         'update',
         $exception,
-        'Invalid project format: @release',
-        ['@release' => print_r($release_info, TRUE)]
+        $message,
+        $placeholders
       );
-      return FALSE;
-    }
-    try {
-      // Ensure the version number string validates.
-      ExtensionVersion::createFromVersionString($release->getVersion());
-    }
-    catch (\UnexpectedValueException $exception) {
       return FALSE;
     }
     return TRUE;
