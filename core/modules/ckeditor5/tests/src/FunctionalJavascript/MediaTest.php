@@ -55,6 +55,7 @@ class MediaTest extends WebDriverTestBase {
     'text',
     'media_test_embed',
     'media_library',
+    'ckeditor5_test',
   ];
 
   /**
@@ -656,7 +657,8 @@ class MediaTest extends WebDriverTestBase {
     $page->pressButton('Source');
 
     $editor_dom = $this->getEditorDataAsDom();
-    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')->item(0);
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
     $drupal_media_element->setAttribute('data-align', 'center');
     $textarea = $page->find('css', '.ck-source-editing-area > textarea');
     // Set the value of the source code to the updated HTML that has the
@@ -676,6 +678,75 @@ class MediaTest extends WebDriverTestBase {
     $this->drupalGet($edit_url);
     $this->waitForEditor();
     $assert_session->elementExists('css', '.ck-widget.drupal-media.drupal-media-style-align-center');
+  }
+
+  /**
+   * Tests Drupal Media Style with a CSS class.
+   */
+  public function testDrupalMediaStyleWithClass() {
+    $editor = Editor::load('test_format');
+    $editor->setSettings([
+      'toolbar' => [
+        'items' => [
+          'sourceEditing',
+          'simpleBox',
+        ],
+      ],
+      'plugins' => [
+        'ckeditor5_sourceEditing' => [
+          'allowed_tags' => [],
+        ],
+      ],
+    ]);
+    $filter_format = $editor->getFilterFormat();
+    $filter_format->setFilterConfig('filter_html', [
+      'status' => TRUE,
+      'settings' => [
+        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align alt class="layercake-side">',
+      ],
+    ]);
+    $filter_format->save();
+    $editor->save();
+
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    $page->pressButton('Source');
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')->item(0);
+
+    // Add `layercake-side` class which is used in `ckeditor5_test_layercake`,
+    // as well as an arbitrary class to compare behavior between these.
+    $drupal_media_element->setAttribute('class', 'layercake-side arbitrary-class');
+    $textarea = $page->find('css', '.ck-source-editing-area > textarea');
+    $textarea->setValue($editor_dom->C14N());
+    $page->pressButton('Source');
+
+    // Ensure that the `layercake-side` class is retained.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.layercake-side'));
+
+    // Ensure that the `arbitrary-class` class is removed.
+    $assert_session->elementNotExists('css', '.ck-widget.drupal-media.arbitrary-class');
+    $page->pressButton('Save');
+
+    // Check that the 'content has been updated' message status appears to confirm we left the editor.
+    $assert_session->waitForElementVisible('css', 'messages messages--status');
+
+    // Ensure that the class is correct in the front end.
+    $assert_session->elementExists('css', 'article.layercake-side');
+    $assert_session->elementNotExists('css', 'article.arbitrary-class');
   }
 
   /**
