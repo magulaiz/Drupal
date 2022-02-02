@@ -10,7 +10,7 @@ use Drupal\Core\Extension\ExtensionVersion;
 final class Project {
 
   /**
-   * The releases for the project that can be installed safely.
+   * The releases of this project that can be installed safely.
    *
    * @var array
    */
@@ -127,7 +127,7 @@ final class Project {
   }
 
   /**
-   * Determines if a project release data is valid.
+   * Determines if a project release is valid.
    *
    * @param array $release_info
    *   The release information as returned by
