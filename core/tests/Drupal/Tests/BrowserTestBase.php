@@ -348,6 +348,10 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    // The `checkRequirements` method in TestCase is private.
+    // Invoke our own check requirements.
+    $this->checkRequirements();
+
     parent::setUp();
 
     $this->setUpAppRoot();

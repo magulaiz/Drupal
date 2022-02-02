@@ -149,7 +149,9 @@ class FileUploadTest extends ResourceTestBase {
    *
    * @requires module irrelevant_for_this_test
    */
-  public function testGetIndividual() {}
+  public function testGetIndividual() {
+    $this->fail('This should not be called.');
+  }
 
   /**
    * {@inheritdoc}
