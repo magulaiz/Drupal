@@ -72,7 +72,7 @@ final class Project {
    */
   public function isInSupportedBranch(string $version): bool {
     foreach ($this->updateServerProjectInfo->getSupportBranches() as $supported_branch) {
-      if (strpos($version, $supported_branch) === 0) {
+      if (str_starts_with($version, $supported_branch)) {
         return TRUE;
       }
     }
