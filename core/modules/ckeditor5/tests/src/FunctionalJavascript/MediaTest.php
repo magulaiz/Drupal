@@ -642,7 +642,7 @@ class MediaTest extends WebDriverTestBase {
    * Tests alignment integration.
    *
    * Tests that alignment is reflected onto the CKEditor Widget wrapper, that
-   * the EditorMediaDialog allows altering the alignment and that the changes
+   * the media style toolbar allows altering the alignment and that the changes
    * are reflected on the widget and downcast drupal-media tag.
    */
   public function testAlignment() {
