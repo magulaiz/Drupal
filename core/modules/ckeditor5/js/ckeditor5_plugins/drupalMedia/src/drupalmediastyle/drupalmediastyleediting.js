@@ -4,8 +4,6 @@ import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalMediaStyleCommand from './drupalmediastylecommand';
 
-const { objectLeft, objectRight, objectCenter } = icons;
-
 /**
  * @module drupalMedia/druaplmediastyle/drupalmediastyleediting
  */
@@ -151,27 +149,6 @@ function viewToModelStyleAttribute(styles) {
   };
 }
 
-const DEFAULT_STYLES = [
-  {
-    name: 'alignRight',
-    title: 'Right aligned media',
-    icon: objectRight,
-    drupalMediaAlign: 'right',
-  },
-  {
-    name: 'alignLeft',
-    title: 'Left aligned media',
-    icon: objectLeft,
-    drupalMediaAlign: 'left',
-  },
-  {
-    name: 'alignCenter',
-    title: 'Centered media',
-    icon: objectCenter,
-    drupalMediaAlign: 'center',
-  },
-];
-
 /**
  * The Drupal Media Style editing plugin.
  *
@@ -207,12 +184,9 @@ export default class DrupalMediaStyleEditing extends Plugin {
       return;
     }
 
+    // Ensure that the styles.options exists always.
     editor.config.define('drupalMedia.styles', { options: [] });
-    // Ensure that the alignment styles exist always.
-    const stylesConfig = [
-      ...editor.config.get('drupalMedia.styles').options,
-      ...DEFAULT_STYLES,
-    ];
+    const stylesConfig = editor.config.get('drupalMedia.styles').options;
 
     /**
      * The Drupal Media Styles.
@@ -305,10 +279,12 @@ export default class DrupalMediaStyleEditing extends Plugin {
 
     schema.extend('drupalMedia', { allowAttributes: 'drupalMediaStyle' });
 
-    // Converter for the img element from view to model.
+    // Converter for the <drupal-media> element from view to model.
     editor.data.upcastDispatcher.on(
       'element:drupal-media',
       viewToModelConverter,
+      // This needs to be set as low priority to ensure this runs always after
+      // <drupal-media> has been converted to a model element.
       { priority: 'low' },
     );
   }

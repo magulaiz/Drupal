@@ -525,6 +525,20 @@ media_mediaAlign:
       - drupalMedia.DrupalMediaStyle
     config:
       drupalMedia:
+        styles:
+          options:
+            - name: 'alignRight'
+              title: 'Right aligned media'
+              icon: 'objectRight'
+              drupalMediaAlign: 'right'
+            - name: 'alignLeft'
+              title: 'Left aligned media'
+              icon: 'objectLeft'
+              drupalMediaAlign: 'left'
+            - name: 'alignCenter'
+              title: 'Centered media'
+              icon: 'objectCenter'
+              drupalMediaAlign: 'center'
         toolbar:
           - name: 'drupalMediaStyle:icons'
             items:
