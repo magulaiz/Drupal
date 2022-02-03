@@ -444,7 +444,7 @@ final class SmartDefaultSettings {
         if (!in_array($plugin_id, $enabled_plugins) && !$definition->hasConditions() && $definition->hasElements()) {
           $plugin_support = HTMLRestrictions::fromString($definition->getElements());
           // Do not inspect just $plugin_support, but the union of that with the
-          // already supported elements: wildcard restrictions will only expand
+          // already supported elements: wildcard restrictions will only resolve
           // if the concrete tags they support are also present.
           $potential_future = $provided->merge($plugin_support);
           // This is the heart of the operation: intersect the potential future

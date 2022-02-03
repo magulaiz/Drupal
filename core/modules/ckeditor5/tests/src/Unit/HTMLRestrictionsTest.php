@@ -567,56 +567,56 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     // Wildcard + matching tag cases.
-    yield 'wildcard + matching tag: attribute intersection — without possible expansion' => [
+    yield 'wildcard + matching tag: attribute intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + matching tag: attribute intersection — without possible expansion — vice versa' => [
+    yield 'wildcard + matching tag: attribute intersection — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + matching tag: attribute intersection — WITH possible expansion' => [
+    yield 'wildcard + matching tag: attribute intersection — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => FALSE]),
       'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + matching tag: attribute intersection — WITH possible expansion — vice versa' => [
+    yield 'wildcard + matching tag: attribute intersection — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'diff' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'intersection' => 'b',
       'union' => new HTMLRestrictions(['p' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + matching tag: attribute value intersection — without possible expansion' => [
+    yield 'wildcard + matching tag: attribute value intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
     ];
-    yield 'wildcard + matching tag: attribute value intersection — without possible expansion — vice versa' => [
+    yield 'wildcard + matching tag: attribute value intersection — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
     ];
-    yield 'wildcard + matching tag: attribute value intersection — WITH possible expansion' => [
+    yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
       'diff' => new HTMLRestrictions(['p' => ['class' => ['text-align-justify' => TRUE]]]),
       'intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
       'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$block' => ['class' => ['text-align-center' => TRUE]]]),
     ];
-    yield 'wildcard + matching tag: attribute value intersection — WITH possible expansion — vice versa' => [
+    yield 'wildcard + matching tag: attribute value intersection — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]], 'p' => FALSE]),
       'b' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'diff' => new HTMLRestrictions(['$block' => ['class' => ['text-align-center' => TRUE]]]),
@@ -639,56 +639,56 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     // Wildcard + non-matching cases.
-    yield 'wildcard + non-matching tag: attribute diff — without possible expansion' => [
+    yield 'wildcard + non-matching tag: attribute diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + non-matching tag: attribute diff — without possible expansion — vice versa' => [
+    yield 'wildcard + non-matching tag: attribute diff — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + non-matching tag: attribute diff — WITH possible expansion' => [
+    yield 'wildcard + non-matching tag: attribute diff — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'span' => FALSE]),
       'diff' => 'a',
       'intersection' => new HTMLRestrictions(['span' => FALSE]),
       'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + non-matching tag: attribute diff — WITH possible expansion — vice versa' => [
+    yield 'wildcard + non-matching tag: attribute diff — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE], 'span' => FALSE]),
       'b' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'diff' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
       'intersection' => new HTMLRestrictions(['span' => FALSE]),
       'union' => new HTMLRestrictions(['span' => ['class' => TRUE], '$block' => ['class' => TRUE]]),
     ];
-    yield 'wildcard + non-matching tag: attribute value diff — without possible expansion' => [
+    yield 'wildcard + non-matching tag: attribute value diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => ['vertical-align-top' => TRUE]]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$block' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
-    yield 'wildcard + non-matching tag: attribute value diff — without possible expansion — vice versa' => [
+    yield 'wildcard + non-matching tag: attribute value diff — without possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => ['vertical-align-top' => TRUE]]]),
       'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$block' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
-    yield 'wildcard + non-matching tag: attribute value diff — WITH possible expansion' => [
+    yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
       'diff' => 'a',
       'intersection' => new HTMLRestrictions(['span' => FALSE]),
       'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$block' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
-    yield 'wildcard + non-matching tag: attribute value diff — WITH possible expansion — vice versa' => [
+    yield 'wildcard + non-matching tag: attribute value diff — WITH possible resolving — vice versa' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => ['vertical-align-top' => TRUE]], 'span' => FALSE]),
       'b' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]]]),
       'diff' => new HTMLRestrictions(['$block' => ['class' => ['vertical-align-top' => TRUE]]]),

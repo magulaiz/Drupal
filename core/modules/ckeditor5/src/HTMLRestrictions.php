@@ -626,11 +626,11 @@ final class HTMLRestrictions {
       return $wildcard_op_result;
     }
 
-    // 2. Operation applied with wildcard tags expanded into concrete tags.
+    // 2. Operation applied with wildcard tags resolved into concrete tags.
     // For example: <p class="text-align-center"> in the first operand and
     // <$block class="text-align-center"> in the second operand.
-    $a_concrete = static::expandedWildcardSuperset($a);
-    $b_concrete = static::expandedWildcardSuperset($b);
+    $a_concrete = static::resolveWildcards($a);
+    $b_concrete = static::resolveWildcards($b);
     $concrete_op_result = $a_concrete->$operation_method_name($b_concrete);
 
     // Using the PHP array union operator is safe because the two operation
@@ -670,22 +670,24 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Gets the superset of allowed elements, with all wildcard tags expanded.
+   * Resolves the wildcard tags (this consumes the wildcard tags).
    *
    * @param \Drupal\ckeditor5\HTMLRestrictions $r
    *   A set of HTML restrictions.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
-   *   The superset of the given set of HTML restrictions. When expanded, the
-   *   original wildcard tag is consumed.
+   *   The concrete interpretation of the given set of HTML restrictions. All
+   *   wildcard tag restrictions are resolved into restrictions on concrete
+   *   elements, if concrete elements are allowed that correspond to the
+   *   wildcard tags.
    */
-  private static function expandedWildcardSuperset(HTMLRestrictions $r): HTMLRestrictions {
+  private static function resolveWildcards(HTMLRestrictions $r): HTMLRestrictions {
     $result = clone $r;
     foreach ($r->elements as $tag_name => $tag_config) {
       if (static::isWildcardTag($tag_name)) {
         unset($result->elements[$tag_name]);
         $wildcard_tags = self::getWildcardTags($tag_name);
-        // Do not expand to all tags supported by the wildcard tag, but only
+        // Do not resolve to all tags supported by the wildcard tag, but only
         // those which are explicitly supported. Because wildcard tags only
         // allow declaring support for additional attributes and attribute
         // values on already supported tags.
@@ -700,10 +702,11 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Gets allowed elements, optionally with wildcards processed.
+   * Gets allowed elements, optionally with wildcards resolved.
    *
    * @param bool $retain_wildcard
-   *   Whether to retain the wildcard or not.
+   *   Whether to retain the wildcard or not. If they are not retained, they
+   *   will be resolved.
    *
    * @return array
    *
