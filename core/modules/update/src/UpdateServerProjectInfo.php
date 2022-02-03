@@ -38,6 +38,16 @@ class UpdateServerProjectInfo {
   }
 
   /**
+   * Gets the project status.
+   *
+   * @return string|null
+   *   The project status if available, otherwise NULL.
+   */
+  public function getStatus(): ?string {
+    return $this->data['project_status'] ?? NULL;
+  }
+
+  /**
    * Gets the supported branches.
    *
    * @link https://www.drupal.org/drupalorg/docs/apis/update-status-xml#s-top-level-project-element
@@ -64,6 +74,23 @@ class UpdateServerProjectInfo {
    */
   public function getReleases(): array {
     return $this->data['releases'] ?? [];
+  }
+
+  /**
+   * Determines if we can recommend any release in the project.
+   *
+   * @return bool
+   *   TRUE if the project can have any release recommended, otherwise false.
+   */
+  private function isProjectRecommendable(): bool {
+    $unusable_project_statuses = [
+      'insecure',
+      'unpublished',
+      'revoked',
+      'unsupported',
+      'not-fetched',
+    ];
+    return in_array($this->getStatus(), $unusable_project_statuses, TRUE);
   }
 
 }
