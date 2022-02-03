@@ -296,7 +296,8 @@ final class HTMLRestrictions {
       $elements_string = implode(' ', $elements_string);
     }
 
-    // Preprocess wildcard tags: convert `<$block>` to `<__wildcard-block__>`.
+    // Preprocess wildcard tags: convert `<$block>` to
+    // `<__preprocessed-wildcard-block__>`.
     // Note: unknown wildcard tags will trigger a validation error in
     // ::validateAllowedRestrictionsPhase1().
     $replaced_wildcard_tags = [];
@@ -315,7 +316,8 @@ final class HTMLRestrictions {
     // always sets; it is specific to how FilterHTML works and irrelevant here.
     unset($allowed_elements['*']);
 
-    // Postprocess tag wildcards: convert `<__wildcard-block__>` to `<$block>`.
+    // Postprocess tag wildcards: convert `<__preprocessed-wildcard-block__>` to
+    // `<$block>`.
     foreach ($replaced_wildcard_tags as $processed => $original) {
       if (isset($allowed_elements[$processed])) {
         $allowed_elements[$original] = $allowed_elements[$processed];
@@ -563,14 +565,20 @@ final class HTMLRestrictions {
 
         // If the HTML tag restrictions are arrays for both operands, similar
         // logic needs to be applied to the attribute-level restrictions.
-        foreach ($union[$tag] as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+        foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
           if ($html_tag_attribute_restrictions === TRUE) {
             continue;
           }
 
           if (array_key_exists(0, $html_tag_attribute_restrictions)) {
-            // The "twice FALSE" case cannot occur for attributes.
-            // Once or twice TRUE.
+            // The "twice FALSE" case cannot occur for attributes, because
+            // attribute restrictions either have "TRUE" (to indicate any value
+            // is allowed for the attribute) or a list of allowed attribute
+            // values. If there is a numeric key, then one of the two operands
+            // must allow all attribute values (the "TRUE" case). Otherwise, an
+            // array merge would have happened, and no numeric key would exist.
+            // Therefore, this is always once or twice TRUE.
+            // e.g.: <foo bar> and <foo bar>, or <foo bar> and <foo bar="baz">
             assert($html_tag_attribute_restrictions[0] === TRUE || $html_tag_attribute_restrictions[1] === TRUE);
             $union[$tag][$html_tag_attribute_name] = TRUE;
           }
@@ -632,7 +640,7 @@ final class HTMLRestrictions {
     assert(Inspector::assertAll(function ($t) { return !static::isWildcardTag($t); }, array_keys($concrete_op_result->elements)));
     // @codingStandardsIgnoreEnd
 
-    return new HTMLRestrictions($concrete_op_result->elements + $wildcard_op_result->elements);
+    return new static($concrete_op_result->elements + $wildcard_op_result->elements);
   }
 
   /**
@@ -645,7 +653,7 @@ final class HTMLRestrictions {
    *   The subset of the given set of HTML restrictions.
    */
   private static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
-    return new HTMLRestrictions(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+    return new static(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
   }
 
   /**
