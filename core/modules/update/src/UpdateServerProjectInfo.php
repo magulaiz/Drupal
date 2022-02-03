@@ -8,20 +8,40 @@ namespace Drupal\update;
 class UpdateServerProjectInfo {
 
   /**
-   * The project data from the update server.
+   * The project status.
    *
-   * @var array[]
+   * @var string|null
    */
-  protected $data;
+  private $status;
+
+  /**
+   * The supported branches.
+   *
+   * @var array
+   */
+  private $supportedBranches;
+
+  /**
+   * The project releases.
+   *
+   * @var array
+   */
+  private $releases;
 
   /**
    * Constructs a UpdateServerProjectInfo object.
    *
-   * @param array $data
-   *   The project data from the Update XML.
+   * @param string|null $status
+   *   The project status.
+   * @param array $supported_branches
+   *   The supported branches.
+   * @param array $releases
+   *   The project releases.
    */
-  private function __construct(array $data) {
-    $this->data = $data;
+  private function __construct(string $status = NULL, array $supported_branches = [], array $releases = []) {
+    $this->status = $status;
+    $this->supportedBranches = $supported_branches;
+    $this->releases = $releases;
   }
 
   /**
@@ -34,7 +54,11 @@ class UpdateServerProjectInfo {
    *   The UpdateServerProjectInfo instances.
    */
   public static function createFromArray(array $data): UpdateServerProjectInfo {
-    return new UpdateServerProjectInfo($data);
+    return new UpdateServerProjectInfo(
+      $data['project_status'] ?? NULL,
+      $data['supported_branches'] ? explode(',', $data['supported_branches']) : [],
+      $data['releases'] ?? []
+    );
   }
 
   /**
@@ -44,7 +68,7 @@ class UpdateServerProjectInfo {
    *   The project status if available, otherwise NULL.
    */
   public function getStatus(): ?string {
-    return $this->data['project_status'] ?? NULL;
+    return $this->status;
   }
 
   /**
@@ -57,10 +81,7 @@ class UpdateServerProjectInfo {
    *   The supported branches.
    */
   public function getSupportBranches(): array {
-    if (isset($this->data['supported_branches'])) {
-      return explode(',', $this->data['supported_branches']);
-    }
-    return [];
+    return $this->supportedBranches;
   }
 
   /**
@@ -73,7 +94,7 @@ class UpdateServerProjectInfo {
    *   releases are ordered by version number descending.
    */
   public function getReleases(): array {
-    return $this->data['releases'] ?? [];
+    return $this->releases;
   }
 
   /**
@@ -82,7 +103,7 @@ class UpdateServerProjectInfo {
    * @return bool
    *   TRUE if the project can have any release recommended, otherwise false.
    */
-  private function isProjectRecommendable(): bool {
+  public function isProjectRecommendable(): bool {
     $unusable_project_statuses = [
       'insecure',
       'unpublished',

@@ -10,20 +10,18 @@ use Drupal\Core\Extension\ExtensionVersion;
 final class Project {
 
   /**
+   * The existing version of project on the site.
+   *
+   * @var string
+   */
+  protected $existingVersion;
+
+  /**
    * The releases of this project that can be installed safely.
    *
    * @var array
    */
   private $installableReleases;
-
-  /**
-   * Project data from Drupal\update\UpdateManagerInterface::getProjects().
-   *
-   * @var array
-   *
-   * @see \Drupal\update\UpdateManagerInterface::getProjects()
-   */
-  private $projectData;
 
   /**
    * The update server project information.
@@ -35,13 +33,13 @@ final class Project {
   /**
    * Constructs a ProjectStatusCalculator object.
    *
-   * @param array $project_data
-   *   Project data from Drupal\update\UpdateManagerInterface::getProjects().
    * @param \Drupal\update\UpdateServerProjectInfo $project_info
    *   The update server project information.
+   * @param string|null $existing_version
+   *   The existing version of project on the site, if any.
    */
-  private function __construct(array $project_data, UpdateServerProjectInfo $project_info) {
-    $this->projectData = $project_data;
+  private function __construct(UpdateServerProjectInfo $project_info, string $existing_version = NULL) {
+    $this->existingVersion = $existing_version;
     $this->updateServerProjectInfo = $project_info;
   }
 
@@ -58,7 +56,7 @@ final class Project {
    *   The ProjectStatusCalculator instance.
    */
   public static function createFromProjectData(array $project_data, UpdateServerProjectInfo $project_info): Project {
-    return new Project($project_data, $project_info);
+    return new Project($project_info, $project_data['existing_version'] ?? NULL);
   }
 
   /**
@@ -116,8 +114,13 @@ final class Project {
       return $this->installableReleases;
     }
     $this->installableReleases = [];
+    if (!$this->updateServerProjectInfo->isProjectRecommendable()) {
+      // If the project is not recommendable do not consider any releases.
+      // return $this->installableReleases;
+    }
+
     foreach ($this->updateServerProjectInfo->getReleases() as $version => $release_info) {
-      if ($version === $this->projectData['existing_version']) {
+      if ($version === $this->existingVersion) {
         // Because \Drupal\update\UpdateServerProjectInfo::getReleases() returns
         // releases ordered by descending version number we can exit after we
         // find the existing version as everything after this would be a
@@ -177,13 +180,12 @@ final class Project {
    *   The existing release if any, otherwise NULL.
    */
   public function getExistingRelease(): ?array {
-    if (!isset($this->projectData['existing_version'])) {
+    if ($this->existingVersion) {
       return NULL;
     }
-    $existing_version = $this->projectData['existing_version'];
     $releases = $this->updateServerProjectInfo->getReleases();
-    if (isset($releases[$existing_version])) {
-      $existing_release = $releases[$existing_version];
+    if (isset($releases[$this->existingVersion])) {
+      $existing_release = $releases[$this->existingVersion];
       if ($this->isReleaseValid($existing_release)) {
         return $existing_release;
       }
