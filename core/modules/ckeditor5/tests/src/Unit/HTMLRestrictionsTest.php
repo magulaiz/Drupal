@@ -238,6 +238,129 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ],
       ],
     ];
+    yield '$block + one concrete tag to resolve into' => [
+      '<p> <$block class="text-align-left text-align-center text-align-right text-align-justify">',
+      [
+        'p' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+      [
+        'p' => FALSE,
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '$block + two concrete tag to resolve into' => [
+      '<p> <$block class="text-align-left text-align-center text-align-right text-align-justify"> <blockquote>',
+      [
+        'p' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+        'blockquote' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+      [
+        'p' => FALSE,
+        'blockquote' => FALSE,
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '$block + one concrete tag to resolve into that already allows a subset of attributes: concrete less permissive than wildcard' => [
+      '<p class="text-align-left"> <$block class="text-align-left text-align-center text-align-right text-align-justify">',
+      [
+        'p' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+      [
+        'p' => [
+          'class' => [
+            'text-align-left' => TRUE,
+          ],
+        ],
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '$block + one concrete tag to resolve into that already allows all attribute values: concrete more permissive than wildcard' => [
+      '<p class> <$block class="text-align-left text-align-center text-align-right text-align-justify">',
+      [
+        'p' => [
+          'class' => TRUE,
+        ],
+      ],
+      [
+        'p' => [
+          'class' => TRUE,
+        ],
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '$block + one concrete tag to resolve into that already allows all attributes: concrete more permissive than wildcard' => [
+      '<p *> <$block class="text-align-left text-align-center text-align-right text-align-justify">',
+      [
+        'p' => TRUE,
+      ],
+      [
+        'p' => TRUE,
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
+    ];
 
     // @todo Test `data-*` attribute: https://www.drupal.org/project/drupal/issues/3260853
   }
