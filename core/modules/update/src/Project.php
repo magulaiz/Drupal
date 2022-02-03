@@ -180,7 +180,7 @@ final class Project {
    *   The existing release if any, otherwise NULL.
    */
   public function getExistingRelease(): ?array {
-    if ($this->existingVersion) {
+    if (!$this->existingVersion) {
       return NULL;
     }
     $releases = $this->updateServerProjectInfo->getReleases();
