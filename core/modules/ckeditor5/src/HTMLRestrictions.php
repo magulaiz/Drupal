@@ -682,23 +682,40 @@ final class HTMLRestrictions {
    *   wildcard tags.
    */
   private static function resolveWildcards(HTMLRestrictions $r): HTMLRestrictions {
-    $result = clone $r;
+    // Start by resolving the wildcards in a naive, simple way: generate
+    // tags, attributes and attribute values they support.
+    $naively_resolved_wildcard_elements = [];
     foreach ($r->elements as $tag_name => $tag_config) {
       if (static::isWildcardTag($tag_name)) {
-        unset($result->elements[$tag_name]);
         $wildcard_tags = self::getWildcardTags($tag_name);
         // Do not resolve to all tags supported by the wildcard tag, but only
         // those which are explicitly supported. Because wildcard tags only
         // allow declaring support for additional attributes and attribute
         // values on already supported tags.
         foreach ($wildcard_tags as $wildcard_tag) {
-          if (isset($result->elements[$wildcard_tag])) {
-            $result->elements[$wildcard_tag] = $tag_config;
+          if (isset($r->elements[$wildcard_tag])) {
+            $naively_resolved_wildcard_elements[$wildcard_tag] = $tag_config;
           }
         }
       }
     }
-    return $result;
+    $naive_resolution = new static($naively_resolved_wildcard_elements);
+
+    // Now merge the naive resolution's elements with the original elements, to
+    // let ::merge() pick the most permissive one.
+    // This is necessary because resolving wildcards may result in concrete tags
+    // becoming either more permissive:
+    // - if $r is `<p> <$block class="foo">`
+    // - then $naive will be `<p class="foo">`
+    // - merging them yields `<p class="foo"> <$block class="foo">`
+    // - diffing the wildcard subsets yields just `<p class="foo">`
+    // Or it could result in concrete tags being unaffected by the resolved
+    // wildcards:
+    // - if $r is `<p class> <$block class="foo">`
+    // - then $naive will be `<p class="foo">`
+    // - merging them yields `<p class> <$block class="foo">` again
+    // - diffing the wildcard subsets yields just `<p class>`
+    return $r->merge($naive_resolution)->doDiff(static::getWildcardSubset($r));
   }
 
   /**
