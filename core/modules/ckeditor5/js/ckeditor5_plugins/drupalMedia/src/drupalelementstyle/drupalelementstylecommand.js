@@ -3,11 +3,11 @@
 import { Command } from 'ckeditor5/src/core';
 
 /**
- * @module drupalMedia/drupalblockstyle/drupalblockstylecommand
+ * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
  */
 
 /**
- * Gets closest element that has drupalBlockStyle attribute in schema.
+ * Gets closest element that has drupalElementStyle attribute in schema.
  *
  * @param {module:engine/model/documentselection~DocumentSelection} selection
  *   The current document selection.
@@ -16,29 +16,29 @@ import { Command } from 'ckeditor5/src/core';
  *
  * @return {null|module:engine/model/element~Element}
  */
-function getClosestElementWithBlockStyleAttribute(selection, schema) {
+function getClosestElementWithElementStyleAttribute(selection, schema) {
   const selectedElement = selection.getSelectedElement();
 
   return selectedElement &&
-    schema.checkAttribute(selectedElement, 'drupalBlockStyle')
+    schema.checkAttribute(selectedElement, 'drupalElementStyle')
     ? selectedElement
     : selection
         .getFirstPosition()
         .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalBlockStyle'),
+          schema.checkAttribute(element, 'drupalElementStyle'),
         );
 }
 
 /**
- * The Drupal Block style command.
+ * The Drupal Element style command.
  *
- * This is used to apply Drupal Block style option to supported model elements.
+ * This is used to apply Drupal Element style option to supported model elements.
  *
  * @extends module:core/command~Command
  *
  * @internal
  */
-export default class DrupalBlockStyleCommand extends Command {
+export default class DrupalElementStyleCommand extends Command {
   /**
    * Constructs a new object.
    */
@@ -56,7 +56,7 @@ export default class DrupalBlockStyleCommand extends Command {
    */
   refresh() {
     const editor = this.editor;
-    const element = getClosestElementWithBlockStyleAttribute(
+    const element = getClosestElementWithElementStyleAttribute(
       editor.model.document.selection,
       editor.model.schema,
     );
@@ -65,8 +65,8 @@ export default class DrupalBlockStyleCommand extends Command {
 
     if (!this.isEnabled) {
       this.value = false;
-    } else if (element.hasAttribute('drupalBlockStyle')) {
-      this.value = element.getAttribute('drupalBlockStyle');
+    } else if (element.hasAttribute('drupalElementStyle')) {
+      this.value = element.getAttribute('drupalElementStyle');
     } else {
       this.value = false;
     }
@@ -76,11 +76,11 @@ export default class DrupalBlockStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalBlockStyle', { value: 'alignLeft' });
+   *    editor.execute('drupalElementStyle', { value: 'alignLeft' });
    *
    * @param {Object} options
    * @param {string} options.value
-   *   The name of the style as configured in the Drupal Block style
+   *   The name of the style as configured in the Drupal Element style
    *   configuration.
    */
   execute(options = {}) {
@@ -89,15 +89,15 @@ export default class DrupalBlockStyleCommand extends Command {
 
     model.change((writer) => {
       const requestedStyle = options.value;
-      const element = getClosestElementWithBlockStyleAttribute(
+      const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
       );
 
       if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
-        writer.removeAttribute('drupalBlockStyle', element);
+        writer.removeAttribute('drupalElementStyle', element);
       } else {
-        writer.setAttribute('drupalBlockStyle', requestedStyle, element);
+        writer.setAttribute('drupalElementStyle', requestedStyle, element);
       }
     });
   }

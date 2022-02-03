@@ -522,9 +522,9 @@ media_mediaAlign:
   provider: media
   ckeditor5:
     plugins:
-      - drupalMedia.DrupalBlockStyle
+      - drupalMedia.DrupalElementStyle
     config:
-      drupalBlockStyles:
+      drupalElementStyles:
         options:
           - name: 'alignRight'
             title: 'Right aligned media'
@@ -546,12 +546,12 @@ media_mediaAlign:
             modelElements: ['drupalMedia']
       drupalMedia:
         toolbar:
-          - name: 'drupalMediaStyle:icons'
+          - name: 'drupalMedia:align'
             items:
-              - 'drupalBlockStyle:alignLeft'
-              - 'drupalBlockStyle:alignCenter'
-              - 'drupalBlockStyle:alignRight'
-            defaultItem: 'drupalBlockStyle:alignCenter'
+              - 'drupalElementStyle:alignLeft'
+              - 'drupalElementStyle:alignCenter'
+              - 'drupalElementStyle:alignRight'
+            defaultItem: 'drupalElementStyle:alignCenter'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign

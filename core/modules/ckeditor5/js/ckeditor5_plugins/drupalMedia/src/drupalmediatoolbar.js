@@ -1,8 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalmediatoolbar */
 import { Plugin } from 'ckeditor5/src/core';
 import { WidgetToolbarRepository } from 'ckeditor5/src/widget';
 
 import { getSelectedDrupalMediaWidget, isObject } from './utils';
+
+/**
+ * @module drupalMedia/drupalmediatoolbar
+ */
 
 /**
  * Convert dropdown definitions to keys registered in the ComponentFactory.

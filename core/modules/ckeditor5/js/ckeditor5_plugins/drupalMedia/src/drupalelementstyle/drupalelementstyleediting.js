@@ -1,11 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalblockstylecommand */
+/* cspell:words drupalelementstylecommand */
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
-import DrupalBlockStyleCommand from './drupalblockstylecommand';
+import DrupalElementStyleCommand from './drupalelementstylecommand';
 
 /**
- * @module drupalMedia/drupalblockstyle/drupalblockstyleediting
+ * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
  */
 
 /**
@@ -15,7 +15,7 @@ import DrupalBlockStyleCommand from './drupalblockstylecommand';
  *   The name of the style definition.
  * @param styles
  *   The styles to search from.
- * @return {Drupal.CKEditor5~drupalBlockStyle}
+ * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
   // eslint-disable-next-line no-restricted-syntax
@@ -27,12 +27,12 @@ function getStyleDefinitionByName(name, styles) {
 }
 
 /**
- * Returns a model-to-view converted for Drupal Media styles.
+ * Returns a model-to-view converted for Drupal Element styles.
  *
  * This model to view converter supports downcasting model to either a CSS class
- * or a data-align attribute.
+ * or attribute.
  *
- * Note that only one style can be applied to a single Drupal Media element.
+ * Note that only one style can be applied to a single model element.
  */
 function modelToViewStyleAttribute(styles) {
   return (evt, data, conversionApi) => {
@@ -70,7 +70,7 @@ function modelToViewStyleAttribute(styles) {
 }
 
 /**
- * Returns a view-to-model converter for Drupal Block styles.
+ * Returns a view-to-model converter for Drupal Element styles.
  *
  * This view to model converted supports styles that are configured to use
  * either CSS classes or data-align.
@@ -94,10 +94,10 @@ function viewToModelStyleAttribute(styles) {
       return;
     }
 
-    // Stop conversion early if the drupalBlockStyle attribute isn't allowed for
-    // the element.
+    // Stop conversion early if the drupalElementStyle attribute isn't allowed
+    // for the element.
     if (
-      !conversionApi.schema.checkAttribute(modelElement, 'drupalBlockStyle')
+      !conversionApi.schema.checkAttribute(modelElement, 'drupalElementStyle')
     ) {
       return;
     }
@@ -114,7 +114,7 @@ function viewToModelStyleAttribute(styles) {
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            'drupalBlockStyle',
+            'drupalElementStyle',
             style.name,
             modelElement,
           );
@@ -131,7 +131,7 @@ function viewToModelStyleAttribute(styles) {
             viewElement.getAttribute(style.attributeName)
           ) {
             conversionApi.writer.setAttribute(
-              'drupalBlockStyle',
+              'drupalElementStyle',
               style.name,
               modelElement,
             );
@@ -143,14 +143,14 @@ function viewToModelStyleAttribute(styles) {
 }
 
 /**
- * The Drupal Block Style editing plugin.
+ * The Drupal Element Style editing plugin.
  *
- * Additional Drupal Media styles can be defined with `drupalBlockStyles`
+ * Additional Drupal Element styles can be defined with `drupalElementStyles`
  * configuration key.
  *
  * @example
  *    config:
- *      drupalBlockStyles:
+ *      drupalElementStyles:
  *         options:
  *           - name: 'side'
  *             icon: 'objectBlockRight'
@@ -158,50 +158,43 @@ function viewToModelStyleAttribute(styles) {
  *             attributeName: 'class'
  *             attributeValue: 'image-side'
  *
- * @see Drupal.CKEditor5~drupalBlockStyle
+ * @see Drupal.CKEditor5~DrupalElementStyle
  *
  * @extends module:core/plugin~Plugin
  *
  * @internal
  */
-export default class DrupalBlockStyleEditing extends Plugin {
+export default class DrupalElementStyleEditing extends Plugin {
   /**
    * @inheritDoc
    */
   init() {
     const editor = this.editor;
 
-    if (!editor.plugins.has('DrupalMedia')) {
-      console.warn(
-        'DrupalMediaStyle plugin requires DrupalMedia to be enabled.',
-      );
-      return;
-    }
-
-    // Ensure that the styles.options exists always.
-    editor.config.define('drupalBlockStyles', { options: [] });
-    const stylesConfig = editor.config.get('drupalBlockStyles').options;
+    // Ensure that the drupalElementStyles.options exists always.
+    editor.config.define('drupalElementStyles', { options: [] });
+    const stylesConfig = editor.config.get('drupalElementStyles').options;
 
     /**
-     * The Drupal Block Styles.
+     * The Drupal Element Styles.
      *
-     * @typedef {Object} Drupal.CKEditor5~drupalBlockStyle
+     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyle
      *
      * @prop {string} name
      *   The name of the style used for identifying the button.
      * @prop {string} title
      *   The title of the style displayed in the UI.
-     * @prop {string} [attributeName]
-     *   @todo
-     * @prop {string} [attributeValue]
-     *   @todo
-     * @prop {string[]} [modelElements]
-     *   @todo
+     * @prop {string} attributeName
+     *   The name of the attribute in view.
+     * @prop {string} attributeValue
+     *   The value of the attribute in view.
+     * @prop {string[]} modelElements
+     *   A list of model elements that the style can be attached to.
      * @prop {string} [icon]
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
      *
-     * @type {Drupal.CKEditor5~drupalBlockStyle[]}
+     * @type {Drupal.CKEditor5~DrupalElementStyle[]}
      */
     this.normalizedStyles = stylesConfig
       .map((style) => {
@@ -217,19 +210,19 @@ export default class DrupalBlockStyleEditing extends Plugin {
       .filter((style) => {
         if (!style.attributeName || !style.attributeValue) {
           console.warn(
-            'drupalBlockStyles options must include attributeName and attributeValue.',
+            'drupalElementStyles options must include attributeName and attributeValue.',
           );
           return false;
         }
         if (!style.modelElements || !Array.isArray(style.modelElements)) {
           console.warn(
-            'drupalBlockStyles options must include an array of supported modelElements.',
+            'drupalElementStyles options must include an array of supported modelElements.',
           );
           return false;
         }
 
-        if (!style.name && !style.name) {
-          console.warn('drupalBlockStyles items must include a name.');
+        if (!style.name) {
+          console.warn('drupalElementStyles options must include a name.');
           return false;
         }
 
@@ -239,13 +232,13 @@ export default class DrupalBlockStyleEditing extends Plugin {
     this._setupConversion();
 
     editor.commands.add(
-      'drupalBlockStyle',
-      new DrupalBlockStyleCommand(editor, this.normalizedStyles),
+      'drupalElementStyle',
+      new DrupalElementStyleCommand(editor, this.normalizedStyles),
     );
   }
 
   /**
-   * Sets up conversion for Drupal Media Styles.
+   * Sets up conversion for Drupal Element Styles.
    *
    * @see modelToViewStyleAttribute()
    * @see viewToModelStyleAttribute()
@@ -264,15 +257,16 @@ export default class DrupalBlockStyleEditing extends Plugin {
     );
 
     editor.editing.downcastDispatcher.on(
-      'attribute:drupalBlockStyle',
+      'attribute:drupalElementStyle',
       modelToViewConverter,
     );
     editor.data.downcastDispatcher.on(
-      'attribute:drupalBlockStyle',
+      'attribute:drupalElementStyle',
       modelToViewConverter,
     );
 
-    // Allow drupalBlockStyle on all model elements that have associated styles.
+    // Allow drupalElementStyle on all model elements that have associated
+    // styles.
     const modelElements = [
       ...new Set(
         this.normalizedStyles
@@ -283,7 +277,7 @@ export default class DrupalBlockStyleEditing extends Plugin {
       ),
     ];
     modelElements.forEach((modelElement) => {
-      schema.extend(modelElement, { allowAttributes: 'drupalBlockStyle' });
+      schema.extend(modelElement, { allowAttributes: 'drupalElementStyle' });
     });
 
     // View to model converter that runs on all elements.
@@ -300,6 +294,6 @@ export default class DrupalBlockStyleEditing extends Plugin {
    * @inheritDoc
    */
   static get pluginName() {
-    return 'DrupalBlockStyleEditing';
+    return 'DrupalElementStyleEditing';
   }
 }

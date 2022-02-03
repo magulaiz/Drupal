@@ -3,7 +3,7 @@ ckeditor5_test_layercake:
   ckeditor5:
     plugins: []
     config:
-      drupalBlockStyles:
+      drupalElementStyles:
         options:
           - name: 'layerCakeSide'
             title: 'Media aligned to side'
@@ -13,7 +13,7 @@ ckeditor5_test_layercake:
             modelElements: ['drupalMedia']
       drupalMediaStyles:
         toolbar:
-          - drupalMediaStyle:layerCakeSide
+          - drupalElementStyle:layerCakeSide
   drupal:
     label: TEST — Layercake
     library: ckeditor5_test/layercake
