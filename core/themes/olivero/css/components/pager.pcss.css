@@ -6,9 +6,11 @@
 @import "../base/media-queries.pcss.css";
 
 .pager__items {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  --pager-item-size: var(--sp2-5);
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--pager-item-size));
+  grid-auto-rows: var(--pager-item-size);
   margin-block: 0;
   margin-inline-start: 0;
   padding-block: 0;
@@ -16,22 +18,19 @@
   padding-inline-end: 0;
   list-style: none;
   font-weight: bold;
+
+  @media (--sm) {
+    --pager-item-size: var(--sp3);
+  }
 }
 
 .pager__item {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--sp2-5);
-  height: var(--sp2-5);
   cursor: default;
   color: var(--color--gray-45);
   background-color: var(--color--white);
-
-  @media (--sm) {
-    width: var(--sp3);
-    height: var(--sp3);
-  }
 }
 
 [dir="rtl"] .pager__item--control {

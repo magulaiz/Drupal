@@ -24,14 +24,14 @@
 /* Width of the entire grid maxes out. */
 
 :root {
-  --vertical-tabs-menu-width: 15rem;
   --vertical-tabs-menu-border-width: 1px;
 }
 
 @media (min-width: 62.5rem) {
 
 .vertical-tabs {
-    display: flex
+    display: grid;
+    grid-template-columns: 15rem auto
 }
   }
 
@@ -64,7 +64,6 @@
 @media (min-width: 62.5rem) {
 
 .vertical-tabs__menu {
-    width: var(--vertical-tabs-menu-width);
     border-width: var(--vertical-tabs-menu-border-width) 0 var(--vertical-tabs-menu-border-width) var(--vertical-tabs-menu-border-width)
 }
   }
@@ -76,7 +75,6 @@
 @media (min-width: 62.5rem) {
 
 .vertical-tabs__panes {
-    width: calc(100% - var(--vertical-tabs-menu-width));
     margin-top: 0
 }
   }

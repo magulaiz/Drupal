@@ -6,7 +6,8 @@
 @import "../base/media-queries.pcss.css";
 
 :root {
-  --messages-icon-size: 32px;
+  --messages-status-icon-size: 32px;
+  --messages-close-icon-size: 25px;
 }
 
 .messages-list {
@@ -18,7 +19,7 @@
 }
 
 .messages {
-  min-height: calc(var(--messages-icon-size) + 2 * var(--sp1));
+  min-height: calc(var(--messages-status-icon-size) + 2 * var(--sp1));
   padding-block: var(--sp1);
   padding-inline-start: var(--sp1-5);
   padding-inline-end: var(--sp1-5);
@@ -55,16 +56,13 @@
 }
 
 .messages__container {
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--messages-status-icon-size) auto var(--messages-close-icon-size);
+  gap: var(--sp1);
 }
 
-.messages__header {
-  flex-shrink: 0;
-  margin-inline-end: var(--sp1);
-
-  &.no-icon {
-    margin-inline-end: 0;
-  }
+.messages__container--no-icon {
+  grid-template-columns: auto var(--messages-close-icon-size);
 }
 
 .messages__content {
@@ -74,15 +72,13 @@
 }
 
 .messages__button {
-  flex-shrink: 0;
-  margin-inline-start: var(--sp1);
   padding-block-start: 3px;
 }
 
 .messages__close {
   position: relative;
-  width: 25px;
-  height: 25px;
+  width: var(--messages-close-icon-size);
+  height: var(--messages-close-icon-size);
   padding-block: 0;
   padding-inline-start: 0;
   padding-inline-end: 0;
@@ -126,6 +122,8 @@
 }
 
 .messages__icon svg {
+  width: var(--messages-status-icon-size);
+  height: var(--messages-status-icon-size);
   vertical-align: top;
 }
 
