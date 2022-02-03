@@ -8,7 +8,10 @@
 use Drupal\Core\DrupalKernel;
 use Symfony\Component\HttpFoundation\Request;
 
-chdir('../../..');
+// Use SCRIPT_FILENAME rather than the current filename so that symlinks are not
+// resolved.
+$app_root = dirname($_SERVER['SCRIPT_FILENAME'], 4);
+chdir($app_root);
 
 $autoloader = require_once 'autoload.php';
 
