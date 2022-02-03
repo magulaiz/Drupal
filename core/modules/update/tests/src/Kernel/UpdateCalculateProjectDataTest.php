@@ -107,7 +107,7 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    *
    * @covers update_calculate_project_update_status
    */
-  public function testProjectStatus(string $fixture, UpdateManagerInterface $status, string $label, string $expected_error_message): void {
+  public function testProjectStatus(string $fixture, int $status, string $label, string $expected_error_message): void {
     update_storage_clear();
     $this->setReleaseMetadata(__DIR__ . $fixture);
     $available = update_get_available(TRUE);
