@@ -91,7 +91,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo' => TRUE, 'bar' => FALSE],
       NULL,
     ];
-    yield 'INVALID: keys valid, array attribute restriction values: also valid' => [
+    yield 'VALID: keys valid, array attribute restriction values: also valid' => [
       ['foo' => ['baz' => TRUE], 'bar' => ['qux' => ['a' => TRUE, 'b' => TRUE]]],
       NULL,
     ];
