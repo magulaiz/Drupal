@@ -27,6 +27,7 @@ a.block-demo-backlink:visited {
   left: 35px; /* LTR */
   padding: 5px 10px;
   color: #000;
+  border-bottom: none;
   border-radius: 10px;
   background-color: #b4d7f0;
   font-family: "Lucida Grande", Verdana, sans-serif;
