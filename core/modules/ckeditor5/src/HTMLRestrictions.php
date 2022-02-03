@@ -714,31 +714,11 @@ final class HTMLRestrictions {
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
   public function getAllowedElements(bool $resolve_wildcards = TRUE): array {
-    $elements = $this->elements;
-    // @todo move this to another helper method which returns a new value object with everything processed
-    foreach ($elements as $tag_name => $tag_config) {
-      if (static::isWildcardTag($tag_name)) {
-        $wildcard_tags = self::getWildcardTags($tag_name);
-        foreach ($wildcard_tags as $wildcard_tag) {
-
-          if (isset($elements[$wildcard_tag])) {
-            foreach ($tag_config as $attribute_name => $attribute_value) {
-              if (is_array($attribute_value)) {
-                $attribute_value = array_keys($attribute_value);
-              }
-              $element_already_allows_all_values = isset($elements[$wildcard_tag][$attribute_name]) && $elements[$wildcard_tag][$attribute_name] === TRUE;
-              if (!$element_already_allows_all_values) {
-                self::providedElementsAttributes($elements, $wildcard_tag, $attribute_name, $attribute_value);
-              }
-            }
-          }
-        }
-        if ($resolve_wildcards) {
-          unset($elements[$tag_name]);
-        }
-      }
+    if ($resolve_wildcards) {
+      return static::resolveWildcards($this)->elements;
     }
-    return $elements;
+
+    return $this->elements;
   }
 
   /**
@@ -848,31 +828,6 @@ final class HTMLRestrictions {
   protected static function getWildcardTags(string $wildcard): array {
     $wildcard_element_method = self::WILDCARD_ELEMENT_METHODS[$wildcard];
     return call_user_func([self::class, $wildcard_element_method]);
-  }
-
-  /**
-   * Adds allowed attributes to the elements array.
-   *
-   * @param array $elements
-   *   The elements array.
-   * @param string $tag
-   *   The tag having its attributes configured.
-   * @param string $attribute
-   *   The attribute being configured.
-   * @param array|bool $value
-   *   The attribute config value.
-   */
-  protected static function providedElementsAttributes(array &$elements, string $tag, string $attribute, $value): void {
-    $attribute_already_allows_all = isset($elements[$tag][$attribute]) && $elements[$tag][$attribute] === TRUE;
-
-    if ($value === TRUE) {
-      $elements[$tag][$attribute] = TRUE;
-    }
-    elseif (!$attribute_already_allows_all) {
-      foreach ($value as $attribute_value) {
-        $elements[$tag][$attribute][$attribute_value] = TRUE;
-      }
-    }
   }
 
 }
