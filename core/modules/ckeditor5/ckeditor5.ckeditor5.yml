@@ -522,30 +522,36 @@ media_mediaAlign:
   provider: media
   ckeditor5:
     plugins:
-      - drupalMedia.DrupalMediaStyle
+      - drupalMedia.DrupalBlockStyle
     config:
+      drupalBlockStyles:
+        options:
+          - name: 'alignRight'
+            title: 'Right aligned media'
+            icon: 'objectRight'
+            attributeName: 'data-align'
+            attributeValue: 'right'
+            modelElements: [ 'drupalMedia' ]
+          - name: 'alignLeft'
+            title: 'Left aligned media'
+            icon: 'objectLeft'
+            attributeName: 'data-align'
+            attributeValue: 'left'
+            modelElements: [ 'drupalMedia' ]
+          - name: 'alignCenter'
+            title: 'Centered media'
+            icon: 'objectCenter'
+            attributeName: 'data-align'
+            attributeValue: 'center'
+            modelElements: ['drupalMedia']
       drupalMedia:
-        styles:
-          options:
-            - name: 'alignRight'
-              title: 'Right aligned media'
-              icon: 'objectRight'
-              drupalMediaAlign: 'right'
-            - name: 'alignLeft'
-              title: 'Left aligned media'
-              icon: 'objectLeft'
-              drupalMediaAlign: 'left'
-            - name: 'alignCenter'
-              title: 'Centered media'
-              icon: 'objectCenter'
-              drupalMediaAlign: 'center'
         toolbar:
           - name: 'drupalMediaStyle:icons'
             items:
-              - 'drupalMediaStyle:alignLeft'
-              - 'drupalMediaStyle:alignCenter'
-              - 'drupalMediaStyle:alignRight'
-            defaultItem: 'drupalMediaStyle:alignCenter'
+              - 'drupalBlockStyle:alignLeft'
+              - 'drupalBlockStyle:alignCenter'
+              - 'drupalBlockStyle:alignRight'
+            defaultItem: 'drupalBlockStyle:alignCenter'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign

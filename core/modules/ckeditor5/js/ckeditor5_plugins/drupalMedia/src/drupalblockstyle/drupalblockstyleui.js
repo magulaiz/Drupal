@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalmediastyleediting splitbutton imagestyle componentfactory */
+/* cspell:words drupalblockstyleediting splitbutton imagestyle componentfactory */
 import { Plugin } from 'ckeditor5/src/core';
 import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
 import {
@@ -8,12 +8,12 @@ import {
   createDropdown,
   SplitButtonView,
 } from 'ckeditor5/src/ui';
-import DrupalMediaStyleEditing from './drupalmediastyleediting';
+import DrupalBlockStyleEditing from './drupalblockstyleediting';
 
 import { isObject } from '../utils';
 
 /**
- * @module drupalMedia/druaplmediastyle/drupalmediastyleui
+ * @module drupalMedia/drupalblockstyle/drupalblockstyleui
  */
 
 /**
@@ -49,22 +49,22 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  *   The UI component name.
  */
 function getUIComponentName(name) {
-  return `drupalMediaStyle:${name}`;
+  return `drupalBlockStyle:${name}`;
 }
 
 /**
- * The Drupal Media Style UI plugin.
+ * The Drupal Block Style UI plugin.
  *
  * @extends module:core/plugin~Plugin
  *
  * @internal
  */
-export default class DrupalMediaStyleUi extends Plugin {
+export default class DrupalBlockStyleUi extends Plugin {
   /**
    * @inheritDoc
    */
   static get requires() {
-    return [DrupalMediaStyleEditing];
+    return [DrupalBlockStyleEditing];
   }
 
   /**
@@ -75,7 +75,7 @@ export default class DrupalMediaStyleUi extends Plugin {
     const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
 
     const definedStyles = Object.values(
-      plugins.get('DrupalMediaStyleEditing').normalizedStyles,
+      plugins.get('DrupalBlockStyleEditing').normalizedStyles,
     );
 
     definedStyles.forEach((styleConfig) => {
@@ -120,7 +120,7 @@ export default class DrupalMediaStyleUi extends Plugin {
    *
    * @param {Drupal.CKEditor5~drupalMediaDropdownDefinition} dropdownConfig
    *   The dropdown configuration.
-   * @param {Drupal.CKEditor5~drupalMediaStyle[]} definedStyles
+   * @param {Drupal.CKEditor5~drupalBlockStyle[]} definedStyles
    *   A list of defined styles.
    *
    * @see module:ui/componentfactory~ComponentFactory
@@ -211,7 +211,7 @@ export default class DrupalMediaStyleUi extends Plugin {
   /**
    * Creates a button and stores it in the editor component factory.
    *
-   * @param {Drupal.CKEditor5~drupalMediaStyle} buttonConfig
+   * @param {Drupal.CKEditor5~drupalBlockStyle} buttonConfig
    *   The button configuration.
    *
    * @see module:ui/componentfactory~ComponentFactory
@@ -224,7 +224,7 @@ export default class DrupalMediaStyleUi extends Plugin {
     this.editor.ui.componentFactory.add(
       getUIComponentName(buttonName),
       (locale) => {
-        const command = this.editor.commands.get('drupalMediaStyle');
+        const command = this.editor.commands.get('drupalBlockStyle');
         const view = new ButtonView(locale);
 
         view.set({
@@ -244,17 +244,17 @@ export default class DrupalMediaStyleUi extends Plugin {
   }
 
   /**
-   * Executes the Drupal Media Style command.
+   * Executes the Drupal Block Style command.
    *
    * @param {string} name
    *   The name of the style that should be applied.
    *
-   * @see module:drupalMedia/druaplmediastyle/drupalmediastylecommand~DrupalMediaStyleCommand
+   * @see module:drupalMedia/drupalblockstyle/drupalblockstylecommand~DrupalBlockStyleCommand
    *
    * @private
    */
   _executeCommand(name) {
-    this.editor.execute('drupalMediaStyle', { value: name });
+    this.editor.execute('drupalBlockStyle', { value: name });
     this.editor.editing.view.focus();
   }
 
@@ -262,6 +262,6 @@ export default class DrupalMediaStyleUi extends Plugin {
    * @inheritDoc
    */
   static get pluginName() {
-    return 'DrupalMediaStyleUi';
+    return 'DrupalBlockStyleUi';
   }
 }

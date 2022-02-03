@@ -6,8 +6,8 @@ import DrupalMedia from './drupalmedia';
 // cspell:ignore drupallinkmedia
 import DrupalLinkMedia from './drupallinkmedia/drupallinkmedia';
 
-// cspell:ignore drupalmediastyle
-import DrupalMediaStyle from './drupalmediastyle';
+// cspell:ignore drupalblockstyle
+import DrupalBlockStyle from './drupalblockstyle';
 
 // cspell:ignore mediaimagetextalternative
 import MediaImageTextAlternative from './mediaimagetextalternative';
@@ -23,5 +23,5 @@ export default {
   MediaImageTextAlternativeEditing,
   MediaImageTextAlternativeUi,
   DrupalLinkMedia,
-  DrupalMediaStyle,
+  DrupalBlockStyle,
 };

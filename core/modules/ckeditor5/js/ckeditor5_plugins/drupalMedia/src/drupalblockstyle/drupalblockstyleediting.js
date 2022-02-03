@@ -1,11 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalmediastylecommand */
+/* cspell:words drupalblockstylecommand */
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
-import DrupalMediaStyleCommand from './drupalmediastylecommand';
+import DrupalBlockStyleCommand from './drupalblockstylecommand';
 
 /**
- * @module drupalMedia/druaplmediastyle/drupalmediastyleediting
+ * @module drupalMedia/drupalblockstyle/drupalblockstyleediting
  */
 
 /**
@@ -15,7 +15,7 @@ import DrupalMediaStyleCommand from './drupalmediastylecommand';
  *   The name of the style definition.
  * @param styles
  *   The styles to search from.
- * @return {Drupal.CKEditor5~drupalMediaStyle}
+ * @return {Drupal.CKEditor5~drupalBlockStyle}
  */
 function getStyleDefinitionByName(name, styles) {
   // eslint-disable-next-line no-restricted-syntax
@@ -48,34 +48,34 @@ function modelToViewStyleAttribute(styles) {
     const viewWriter = conversionApi.writer;
 
     if (oldStyle) {
-      if (oldStyle.drupalMediaAlign) {
-        viewWriter.removeAttribute('data-align', viewElement);
+      if (oldStyle.attributeName === 'class') {
+        viewWriter.removeClass(oldStyle.attributeValue, viewElement);
       } else {
-        viewWriter.removeClass(oldStyle.className, viewElement);
+        viewWriter.removeAttribute(oldStyle.attributeName, viewElement);
       }
     }
 
     if (newStyle) {
-      if (newStyle.drupalMediaAlign) {
+      if (newStyle.attributeName === 'class') {
+        viewWriter.addClass(newStyle.attributeValue, viewElement);
+      } else {
         viewWriter.setAttribute(
-          'data-align',
-          newStyle.drupalMediaAlign,
+          newStyle.attributeName,
+          newStyle.attributeValue,
           viewElement,
         );
-      } else {
-        viewWriter.addClass(newStyle.className, viewElement);
       }
     }
   };
 }
 
 /**
- * Returns a view-to-model converter for Drupal Media styles.
+ * Returns a view-to-model converter for Drupal Block styles.
  *
  * This view to model converted supports styles that are configured to use
  * either CSS classes or data-align.
  *
- * Note that only one style can be applied to each Drupal Media element.
+ * Note that only one style can be applied to each model element.
  */
 function viewToModelStyleAttribute(styles) {
   // Convert only non–default styles.
@@ -87,21 +87,17 @@ function viewToModelStyleAttribute(styles) {
     }
 
     const viewElement = data.viewItem;
-    const modelDrupalMediaElement = first(data.modelRange.getItems());
+    const modelElement = first(data.modelRange.getItems());
 
-    // Run this converter only if a Drupal Media element has been found in the
-    // model.
-    if (!modelDrupalMediaElement) {
+    // Run this converter only if a model element has been found from the model.
+    if (!modelElement) {
       return;
     }
 
-    // Stop conversion early if the drupalMediaStyle attribute isn't allowed for
+    // Stop conversion early if the drupalBlockStyle attribute isn't allowed for
     // the element.
     if (
-      !conversionApi.schema.checkAttribute(
-        modelDrupalMediaElement,
-        'drupalMediaStyle',
-      )
+      !conversionApi.schema.checkAttribute(modelElement, 'drupalBlockStyle')
     ) {
       return;
     }
@@ -110,39 +106,36 @@ function viewToModelStyleAttribute(styles) {
     // eslint-disable-next-line no-restricted-syntax
     for (const style of nonDefaultStyles) {
       // Try to consume class corresponding with the style.
-      if (style.className) {
+      if (style.attributeName === 'class') {
         if (
           conversionApi.consumable.consume(viewElement, {
-            classes: style.className,
+            classes: style.attributeValue,
           })
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            'drupalMediaStyle',
+            'drupalBlockStyle',
             style.name,
-            modelDrupalMediaElement,
+            modelElement,
           );
         }
-      }
-    }
-
-    // Convert data-align attribute to a style.
-    if (
-      conversionApi.consumable.consume(viewElement, {
-        attributes: ['data-align'],
-      })
-    ) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const style of nonDefaultStyles) {
-        if (
-          style.drupalMediaAlign &&
-          style.drupalMediaAlign === viewElement.getAttribute('data-align')
-        ) {
-          conversionApi.writer.setAttribute(
-            'drupalMediaStyle',
-            style.name,
-            modelDrupalMediaElement,
-          );
+      } else if (
+        conversionApi.consumable.consume(viewElement, {
+          attributes: [style.attributeName],
+        })
+      ) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const style of nonDefaultStyles) {
+          if (
+            style.attributeValue ===
+            viewElement.getAttribute(style.attributeName)
+          ) {
+            conversionApi.writer.setAttribute(
+              'drupalBlockStyle',
+              style.name,
+              modelElement,
+            );
+          }
         }
       }
     }
@@ -150,27 +143,28 @@ function viewToModelStyleAttribute(styles) {
 }
 
 /**
- * The Drupal Media Style editing plugin.
+ * The Drupal Block Style editing plugin.
  *
- * Additional Drupal Media styles can be defined with `drupalMedia.styles`
+ * Additional Drupal Media styles can be defined with `drupalBlockStyles`
  * configuration key.
  *
  * @example
  *    config:
- *      drupalMedia:
- *        styles:
- *          - name: 'side'
- *            icon: 'objectBlockRight'
- *            title: 'Side image'
- *            className: 'image-side'
+ *      drupalBlockStyles:
+ *         options:
+ *           - name: 'side'
+ *             icon: 'objectBlockRight'
+ *             title: 'Side image'
+ *             attributeName: 'class'
+ *             attributeValue: 'image-side'
  *
- * @see Drupal.CKEditor5~drupalMediaStyle
+ * @see Drupal.CKEditor5~drupalBlockStyle
  *
  * @extends module:core/plugin~Plugin
  *
  * @internal
  */
-export default class DrupalMediaStyleEditing extends Plugin {
+export default class DrupalBlockStyleEditing extends Plugin {
   /**
    * @inheritDoc
    */
@@ -185,29 +179,29 @@ export default class DrupalMediaStyleEditing extends Plugin {
     }
 
     // Ensure that the styles.options exists always.
-    editor.config.define('drupalMedia.styles', { options: [] });
-    const stylesConfig = editor.config.get('drupalMedia.styles').options;
+    editor.config.define('drupalBlockStyles', { options: [] });
+    const stylesConfig = editor.config.get('drupalBlockStyles').options;
 
     /**
-     * The Drupal Media Styles.
+     * The Drupal Block Styles.
      *
-     * @typedef {Object} Drupal.CKEditor5~drupalMediaStyle
+     * @typedef {Object} Drupal.CKEditor5~drupalBlockStyle
      *
      * @prop {string} name
      *   The name of the style used for identifying the button.
      * @prop {string} title
      *   The title of the style displayed in the UI.
-     * @prop {string} [drupalMediaAlign]
-     *   The value that should be set on data-align attribute. This property
-     *   cannot be set with `className`.
-     * @prop {string} [className]
-     *   The CSS class that should be applied on the element. This property
-     *   cannot be set with `drupalMediaAlign`.
+     * @prop {string} [attributeName]
+     *   @todo
+     * @prop {string} [attributeValue]
+     *   @todo
+     * @prop {string[]} [modelElements]
+     *   @todo
      * @prop {string} [icon]
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
      *
-     * @type {Drupal.CKEditor5~drupalMediaStyle[]}
+     * @type {Drupal.CKEditor5~drupalBlockStyle[]}
      */
     this.normalizedStyles = stylesConfig
       .map((style) => {
@@ -221,20 +215,21 @@ export default class DrupalMediaStyleEditing extends Plugin {
         return style;
       })
       .filter((style) => {
-        if (style.drupalMediaAlign && style.className) {
+        if (!style.attributeName || !style.attributeValue) {
           console.warn(
-            'drupalMedia.styles items can only include either drupalMediaAlign or className property.',
+            'drupalBlockStyles options must include attributeName and attributeValue.',
           );
           return false;
         }
-        if (!style.drupalMediaAlign && !style.className) {
+        if (!style.modelElements || !Array.isArray(style.modelElements)) {
           console.warn(
-            'drupalMedia.styles items must include either drupalMediaAlign or className property.',
+            'drupalBlockStyles options must include an array of supported modelElements.',
           );
           return false;
         }
+
         if (!style.name && !style.name) {
-          console.warn('drupalMedia.styles items must include a name.');
+          console.warn('drupalBlockStyles items must include a name.');
           return false;
         }
 
@@ -244,8 +239,8 @@ export default class DrupalMediaStyleEditing extends Plugin {
     this._setupConversion();
 
     editor.commands.add(
-      'drupalMediaStyle',
-      new DrupalMediaStyleCommand(editor, this.normalizedStyles),
+      'drupalBlockStyle',
+      new DrupalBlockStyleCommand(editor, this.normalizedStyles),
     );
   }
 
@@ -269,22 +264,34 @@ export default class DrupalMediaStyleEditing extends Plugin {
     );
 
     editor.editing.downcastDispatcher.on(
-      'attribute:drupalMediaStyle',
+      'attribute:drupalBlockStyle',
       modelToViewConverter,
     );
     editor.data.downcastDispatcher.on(
-      'attribute:drupalMediaStyle',
+      'attribute:drupalBlockStyle',
       modelToViewConverter,
     );
 
-    schema.extend('drupalMedia', { allowAttributes: 'drupalMediaStyle' });
+    // Allow drupalBlockStyle on all model elements that have associated styles.
+    const modelElements = [
+      ...new Set(
+        this.normalizedStyles
+          .map((style) => {
+            return style.modelElements;
+          })
+          .flat(),
+      ),
+    ];
+    modelElements.forEach((modelElement) => {
+      schema.extend(modelElement, { allowAttributes: 'drupalBlockStyle' });
+    });
 
-    // Converter for the <drupal-media> element from view to model.
+    // View to model converter that runs on all elements.
     editor.data.upcastDispatcher.on(
-      'element:drupal-media',
+      'element',
       viewToModelConverter,
       // This needs to be set as low priority to ensure this runs always after
-      // <drupal-media> has been converted to a model element.
+      // the element has been converted to a model element.
       { priority: 'low' },
     );
   }
@@ -293,6 +300,6 @@ export default class DrupalMediaStyleEditing extends Plugin {
    * @inheritDoc
    */
   static get pluginName() {
-    return 'DrupalMediaStyleEditing';
+    return 'DrupalBlockStyleEditing';
   }
 }
