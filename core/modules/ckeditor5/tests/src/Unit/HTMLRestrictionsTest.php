@@ -144,8 +144,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @covers ::fromString()
    * @dataProvider providerFromString
    */
-  public function testFromString($input, array $expected): void {
+  public function testFromString($input, array $expected, ?array $expected_without_resolving = NULL): void {
     $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
+    $expected_without_resolving = $expected_without_resolving ?? $expected;
+    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromString($input)->getAllowedElements(FALSE));
   }
 
   public function providerFromString(): \Generator {
@@ -225,6 +227,16 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield '$block' => [
       '<$block class="text-align-left text-align-center text-align-right text-align-justify">',
       [],
+      [
+        '$block' => [
+          'class' => [
+            'text-align-left' => TRUE,
+            'text-align-center' => TRUE,
+            'text-align-right' => TRUE,
+            'text-align-justify' => TRUE,
+          ],
+        ],
+      ],
     ];
 
     // @todo Test `data-*` attribute: https://www.drupal.org/project/drupal/issues/3260853
