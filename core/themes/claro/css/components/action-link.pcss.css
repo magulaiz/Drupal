@@ -166,19 +166,6 @@
   margin-left: 0.4em;
 }
 
-/**
- * Hide action link icons for IE11.
- *
- * IE 11 does not display inline svg backgrounds
- */
-@media screen and (-ms-high-contrast: active) {
-  /* stylelint-disable-next-line selector-type-no-unknown */
-  _:-ms-fullscreen,
-  .action-link::before {
-    display: none;
-  }
-}
-
 /* Plus */
 .action-link--icon-plus::before {
   content: "";

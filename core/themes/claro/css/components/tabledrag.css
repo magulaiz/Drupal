@@ -287,7 +287,7 @@ body.drag {
 }
 
 .tabledrag-cell-content .tree {
-  min-height: 100%; /* Using simply 'height: 100%' would make IE11 rendering ugly. */
+  min-height: 100%;
 }
 
 /**

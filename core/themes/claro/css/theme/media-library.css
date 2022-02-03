@@ -255,17 +255,6 @@
   margin: 0.5rem 0 0;
 }
 
-/* Align remove buttons with Save button and compensate for IE scrollbar and focus padding. */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .ui-dialog > .ui-dialog-content {
-    padding-right: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
-  }
-  [dir="rtl"] .ui-dialog > .ui-dialog-content {
-    padding-left: calc(var(--space-s) - calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px));
-  }
-}
-
 /* Style the media add oEmbed form. */
 
 .media-library-add-form--oembed .media-library-add-form__input-wrapper {

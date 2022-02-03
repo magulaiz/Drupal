@@ -142,10 +142,6 @@
   html.js .system-status-report__status-title::-webkit-details-marker {
     display: none;
   }
-  .collapse-processed > .system-status-report__status-title:before {
-    position: relative;
-    top: 3px;
-  }
   .system-status-report__entry__value {
     display: block;
     width: calc(100% - 23em);
