@@ -214,8 +214,7 @@ class MigrateRdfMappingTest extends MigrateDrupal7TestBase {
     );
     $this->assertRdfMapping(
       'node',
-      'forum',
-      [
+        [
         'types' => [
           'sioc:Post',
           'sioct:BoardPost',

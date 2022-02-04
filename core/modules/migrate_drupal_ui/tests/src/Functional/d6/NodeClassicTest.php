@@ -29,7 +29,6 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
     'telephone',
     'aggregator',
     'book',
-    'forum',
     'statistics',
   ];
 
