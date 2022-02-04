@@ -56,9 +56,6 @@ global-styling:
     js/navigation-utils.js: {}
 
   dependencies:
-    - core/drupal.element.closest
-    - core/drupal.element.matches
-    - core/drupal.nodelist.foreach
     - core/drupal
     - core/once
     - core/tabbable

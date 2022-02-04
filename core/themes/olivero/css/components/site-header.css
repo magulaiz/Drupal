@@ -66,7 +66,7 @@
     body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed {
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
-      top: calc(var(--sp4)*-1);
+      top: calc(-1 * var(--sp4));
       max-width: var(--max-bg-color);
     }
   body:not(.is-always-mobile-nav) {
