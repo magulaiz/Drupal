@@ -49,8 +49,8 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
 
     $entity_type_id = $entity_type->id();
 
-    if ($bundle_permissions_route = $this->getEntityPermissionsRoute($entity_type)) {
-      $collection->add("entity.$entity_type_id.entity_permissions_form", $bundle_permissions_route);
+    if ($entity_permissions_route = $this->getEntityPermissionsRoute($entity_type)) {
+      $collection->add("entity.$entity_type_id.entity_permissions_form", $entity_permissions_route);
     }
 
     return $collection;
