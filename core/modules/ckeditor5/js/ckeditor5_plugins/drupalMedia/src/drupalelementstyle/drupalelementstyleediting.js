@@ -157,6 +157,7 @@ function viewToModelStyleAttribute(styles) {
  *             title: 'Side image'
  *             attributeName: 'class'
  *             attributeValue: 'image-side'
+ *             modelElement: ['drupalMedia']
  *
  * @see Drupal.CKEditor5~DrupalElementStyle
  *
