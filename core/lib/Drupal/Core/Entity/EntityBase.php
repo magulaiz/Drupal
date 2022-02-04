@@ -166,7 +166,13 @@ abstract class EntityBase implements EntityInterface {
 
     // Links pointing to the current revision point to the actual entity. So
     // instead of using the 'revision' link, use the 'canonical' link.
-    if ($rel === 'revision' && $this instanceof RevisionableInterface && $this->isDefaultRevision()) {
+    if ($rel === 'revision' && (
+        (\Drupal::moduleHandler()->moduleExists('workspaces') && \Drupal::service('workspaces.manager')->hasActiveWorkspace())
+        || ($this instanceof RevisionableInterface && $this->isDefaultRevision() && (
+          (\Drupal::moduleHandler()->moduleExists('workspaces') && !\Drupal::service('workspaces.manager')->hasActiveWorkspace())
+          || (!\Drupal::moduleHandler()->moduleExists('workspaces'))
+        )
+      ))) {
       $rel = 'canonical';
     }
 
