@@ -82,13 +82,13 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
       $entity_type->getLinkTemplate('bundle-permissions-form'),
       [
         '_title' => 'Manage permissions',
-        '_form' => 'Drupal\user\Form\UserPermissionsBundleForm',
+        '_form' => 'Drupal\user\Form\UserPermissionsEntityForm',
         'entity_type_id' => $bundle_of_id,
         'bundle_entity_type' => $entity_type_id,
       ],
       [
         '_permission' => 'administer permissions',
-        '_custom_access' => '\Drupal\user\Form\UserPermissionsBundleForm::access',
+        '_custom_access' => '\Drupal\user\Form\UserPermissionsEntityForm::access',
       ],
       [
         // Indicate that Drupal\Core\Entity\EntityBundleRouteEnhancer should

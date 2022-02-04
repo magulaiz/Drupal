@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Route;
  *
  * @internal
  */
-class UserPermissionsBundleForm extends UserPermissionsForm {
+class UserPermissionsEntityForm extends UserPermissionsForm {
 
   /**
    * The configuration entity manager.
@@ -46,7 +46,7 @@ class UserPermissionsBundleForm extends UserPermissionsForm {
   protected $bundle;
 
   /**
-   * Constructs a new UserPermissionsBundleForm.
+   * Constructs a new UserPermissionsEntityForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
