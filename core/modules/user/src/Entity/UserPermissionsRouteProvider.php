@@ -91,7 +91,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
         '_custom_access' => '\Drupal\user\Form\UserPermissionsEntityForm::access',
       ],
       [
-        // Indicate that Drupal\Core\Entity\EntityBundleRouteEnhancer should
+        // Indicate that Drupal\Core\Entity\Enhancer\EntityBundleRouteEnhancer should
         // set the bundle parameter.
         '_field_ui' => TRUE,
         'parameters' => [
