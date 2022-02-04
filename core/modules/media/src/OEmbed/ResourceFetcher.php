@@ -71,7 +71,16 @@ class ResourceFetcher implements ResourceFetcherInterface {
       ]);
     }
     catch (TransferException $e) {
-      throw new ResourceException('Could not retrieve the oEmbed resource.', $url, [], $e);
+      $exception_message = 'Could not retrieve the oEmbed resource.';
+      $response = $e->getResponse();
+      if ($response) {
+        $body = $response->getBody();
+        $contents = json_decode($body->getContents(), TRUE);
+       if ($contents && is_array($contents['error']) && isset($contents['error']['message'])) {
+          $exception_message = $contents['error']['message'];
+        }
+      }
+      throw new ResourceException($exception_message, $url, [], $e);
     }
 
     [$format] = $response->getHeader('Content-Type');
