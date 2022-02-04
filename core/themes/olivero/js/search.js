@@ -8,6 +8,7 @@
 (function (Drupal) {
   var searchWideButton = document.querySelector('[data-drupal-selector="block-search-wide-button"]');
   var searchWideWrapper = document.querySelector('[data-drupal-selector="block-search-wide-wrapper"]');
+  var searchBlockForm2 = document.querySelector('[data-drupal-selector="search-block-form-2"]');
 
   function searchIsVisible() {
     return searchWideWrapper.classList.contains('is-active');
@@ -55,9 +56,12 @@
       }
     }
   };
-  document.querySelector('[data-drupal-selector="search-block-form-2"]').addEventListener('focusout', function (e) {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      toggleSearchVisibility(false);
-    }
-  });
+
+  if (searchBlockForm2 !== null) {
+    searchBlockForm2.addEventListener('focusout', function (e) {
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        toggleSearchVisibility(false);
+      }
+    });
+  }
 })(Drupal);
