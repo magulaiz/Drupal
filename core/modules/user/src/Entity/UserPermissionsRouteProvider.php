@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Provides routes for the user entity.
+ * Provides routes for the entity permissions form.
  */
 class UserPermissionsRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
