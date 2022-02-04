@@ -170,12 +170,7 @@ class UserPermissionsEntityForm extends UserPermissionsForm {
       return AccessResult::forbidden();
     }
 
-    $granularity = $this->entityTypeManager
-      ->getDefinition($this->bundle->getEntityType()->getBundleOf())
-      ->getPermissionGranularity();
-    $bundle_has_permissions = $granularity === 'bundle' || (bool) $this->permissionsByProvider();
-
-    return AccessResult::allowedIf($bundle_has_permissions);
+    return AccessResult::allowedIf((bool) $this->permissionsByProvider());
   }
 
 }
