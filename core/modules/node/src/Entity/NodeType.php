@@ -41,7 +41,7 @@ use Drupal\node\NodeTypeInterface;
  *   links = {
  *     "edit-form" = "/admin/structure/types/manage/{node_type}",
  *     "delete-form" = "/admin/structure/types/manage/{node_type}/delete",
- *     "bundle-permissions-form" = "/admin/structure/types/manage/{node_type}/permissions",
+ *     "entity-permissions-form" = "/admin/structure/types/manage/{node_type}/permissions",
  *     "collection" = "/admin/structure/types",
  *   },
  *   config_export = {

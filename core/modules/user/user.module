@@ -1333,7 +1333,7 @@ function user_filter_format_disable(FilterFormatInterface $filter_format) {
 function user_entity_operation(EntityInterface $entity) {
   // Add Manage permissions link if this entity type defines the permissions
   // link template.
-  if (!$entity->hasLinkTemplate('bundle-permissions-form')) {
+  if (!$entity->hasLinkTemplate('entity-permissions-form')) {
     return [];
   }
 

@@ -53,7 +53,7 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
 
     $entity_definitions = $this->entityTypeManager->getDefinitions();
     foreach ($entity_definitions as $bundle_type_id => $bundle_entity_type) {
-      if (!$bundle_entity_type->hasLinkTemplate('bundle-permissions-form')) {
+      if (!$bundle_entity_type->hasLinkTemplate('entity-permissions-form')) {
         continue;
       }
 

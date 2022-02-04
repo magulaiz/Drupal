@@ -48,7 +48,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "reset-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset",
  *     "overview-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview",
  *     "edit-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}",
- *     "bundle-permissions-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview/permissions",
+ *     "entity-permissions-form" = "/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/overview/permissions",
  *     "collection" = "/admin/structure/taxonomy",
  *   },
  *   config_export = {

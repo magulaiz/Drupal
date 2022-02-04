@@ -41,7 +41,7 @@ use Drupal\Core\Url;
  *   links = {
  *     "delete-form" = "/admin/structure/contact/manage/{contact_form}/delete",
  *     "edit-form" = "/admin/structure/contact/manage/{contact_form}",
- *     "bundle-permissions-form" = "/admin/structure/contact/manage/{contact_form}/permissions",
+ *     "entity-permissions-form" = "/admin/structure/contact/manage/{contact_form}/permissions",
  *     "collection" = "/admin/structure/contact",
  *     "canonical" = "/contact/{contact_form}",
  *   },
