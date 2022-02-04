@@ -25,7 +25,7 @@ use Drupal\comment\CommentTypeInterface;
  *       "delete" = "Drupal\comment\Form\CommentTypeDeleteForm"
  *     },
  *     "route_provider" = {
- *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProviderWithCheck",
  *     },
  *     "list_builder" = "Drupal\comment\CommentTypeListBuilder"
  *   },
