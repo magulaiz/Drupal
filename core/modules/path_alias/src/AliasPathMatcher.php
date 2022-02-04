@@ -42,7 +42,7 @@ class AliasPathMatcher extends PathMatcher {
       return true;
     }
     $url = Url::fromRouteMatch($this->routeMatch);
-    $path = $url->getInternalPath();
+    $path = '/' . $url->getInternalPath();
     return $this->aliasManager->getAliasByPath($path) === $this->getFrontPagePath();
   }
 
