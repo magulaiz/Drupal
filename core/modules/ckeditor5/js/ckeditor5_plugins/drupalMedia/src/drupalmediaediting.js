@@ -1,10 +1,14 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words insertdrupalmedia */
+/* cspell:words insertdrupalmedia drupalmediaediting */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
+
+/**
+ * @module drupalMedia/drupalmediaediting
+ */
 
 /**
  * @internal
@@ -155,7 +159,7 @@ export default class DrupalMediaEditing extends Plugin {
           }
 
           // Add the alignment class in the view that corresponds to the value
-          // of the model's drupalMediaStyle property.
+          // of the model's drupalElementStyle property.
           viewWriter.addClass(
             alignMapping[data.attributeNewValue],
             viewElement,

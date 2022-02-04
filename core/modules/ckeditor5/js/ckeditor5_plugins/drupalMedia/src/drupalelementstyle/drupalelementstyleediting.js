@@ -73,7 +73,7 @@ function modelToViewStyleAttribute(styles) {
  * Returns a view-to-model converter for Drupal Element styles.
  *
  * This view to model converted supports styles that are configured to use
- * either CSS classes or data-align.
+ * either CSS class or an attribute.
  *
  * Note that only one style can be applied to each model element.
  */

@@ -50,14 +50,6 @@ export function getSelectedDrupalMediaWidget(selection) {
   return null;
 }
 
-export function getClosestSelectedDrupalMediaElement(selection) {
-  const selectedElement = selection.getSelectedElement();
-
-  return isDrupalMedia(selectedElement)
-    ? selectedElement
-    : selection.getFirstPosition().findAncestor('drupalMedia');
-}
-
 /**
  * Checks if value is a JavaScript object.
  *
