@@ -61,8 +61,8 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
    *   exists. This approach only works correctly for the node entity type and
    *   with the 'string' formatter. In other cases it likely produces illegal
    *   markup and possibly incorrect display. This option has been retained for
-   *   back-compatibility to support sites that expect attributes set on the
-   *   field to propagate to the page title.
+   *   backward-compatibility to support sites that expect attributes set on
+   *   the field to propagate to the page title.
    * - TRUE: use the output from the entity_page_title template. This approach
    *   works correctly in all cases, without relying on a particular field
    *   formatter or special templates and is the preferred option for the
@@ -94,20 +94,20 @@ class EntityViewController implements ContainerInjectionInterface, TrustedCallba
 
         // Prevent output of the label field in the main content.
         $page[$label_field]['#access'] = FALSE;
+        return $page;
       }
-      else {
-        // Set page title to the rendered title field formatter instead of
-        // the default plain text title.
-        //
-        // @todo https://www.drupal.org/project/drupal/issues/3015623
-        //   Eventually delete this code and always use the first approach.
-        if (isset($page[$label_field])) {
-          // Allow templates and theme functions to generate different markup
-          // for the page title, which must be inline markup as it will be placed
-          // inside <h1>.  See field--node--title.html.twig.
-          $page[$label_field]['#is_page_title'] = TRUE;
-          $page['#title'] = $this->renderer->render($page[$label_field]);
-        }
+
+      // Set page title to the rendered title field formatter instead of
+      // the default plain text title.
+      //
+      // @todo https://www.drupal.org/project/drupal/issues/3015623
+      //   Eventually delete this code and always use the first approach.
+      if (isset($page[$label_field])) {
+        // Allow templates and theme functions to generate different markup
+        // for the page title, which must be inline markup as it will be placed
+        // inside <h1>.  See field--node--title.html.twig.
+        $page[$label_field]['#is_page_title'] = TRUE;
+        $page['#title'] = $this->renderer->render($page[$label_field]);
       }
     }
     return $page;
