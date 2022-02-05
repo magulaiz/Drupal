@@ -198,4 +198,87 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-language"]');
   }
 
+  /**
+   * Confirms active tab status is intact after AJAX refresh.
+   */
+  public function testActiveTabsMaintained() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Ensure the HTML filter tab is visible.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'a[href^="#edit-filters-filter-html-settings"]'));
+
+    // Enable media embed to make a second filter config tab visible.
+    $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
+    $page->checkField('filters[media_embed][status]');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->responseContains('Media types selectable in the Media Library');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Enable upload image to add one plugin config form.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
+    // cSpell:disable-next-line
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-imageupload"]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-uploadImage'));
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->clickLink('Image Upload');
+    $assert_session->waitForText('Enable image uploads');
+    $this->assertTrue($page->hasUncheckedField('editor[settings][plugins][ckeditor5_imageUpload][status]'));
+    $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Enable language to add a second plugin config form.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-textPartLanguage'));
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('Added text format ckeditor5');
+
+    // Leave and return to the config form, both sets of tabs should then have
+    // the first tab active by default.
+    $this->drupalGet('admin/config/content/formats/');
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+
+    $assert_session->waitForElement('css', '.vertical-tabs__menu-item.is-selected');
+
+    $plugin_settings_vertical_tabs = $page->findAll('css', '#plugin-settings-wrapper .vertical-tabs__menu-item');
+    $filter_settings = $page->find('xpath', '//*[contains(@class, "js-form-type-vertical-tabs")]/label[contains(text(), "Filter settings")]/..');
+    $filter_settings_vertical_tabs = $filter_settings->findAll('css', '.vertical-tabs__menu-item');
+
+    $this->assertTrue($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected plugin tab 1 selected on initial build');
+    $this->assertFalse($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), 'Expected plugin tab 2 not selected on initial build');
+
+    $this->assertFalse($filter_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected filter tab 1 not selected on initial build');
+    $this->assertTrue($filter_settings_vertical_tabs[2]->hasClass('is-selected'), 'Expected (visible) filter tab 2 selected on initial build');
+
+    $plugin_settings_vertical_tabs[1]->click();
+    $filter_settings_vertical_tabs[0]->click();
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected plugin tab 1 deselected after click');
+    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), 'Expected plugin tab 2 selected after click');
+
+    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected filter tab 1 selected after click');
+    $this->assertFalse($filter_settings_vertical_tabs[2]->hasClass('is-selected'), 'Expected (visible) filter tab 2 deselected after click');
+
+    // Add a plugin just to trigger AJAX refresh.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-blockQuote'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-blockQuote', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected plugin tab 1 deselected after AJAX refresh');
+    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), 'Expected plugin tab 2 selected after AJAX refresh');
+
+    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), 'Expected filter tab 1 selected after AJAX refresh');
+    $this->assertFalse($filter_settings_vertical_tabs[1]->hasClass('is-selected'), 'Expected filter tab 2 deselected after AJAX refresh');
+  }
+
 }

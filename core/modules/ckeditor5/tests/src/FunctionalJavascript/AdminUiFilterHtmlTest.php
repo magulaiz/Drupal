@@ -14,7 +14,7 @@ use Symfony\Component\Yaml\Yaml;
  * @group ckeditor5
  * @internal
  */
-class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
+class AdminUiFilterHtmlTest extends CKEditor5TestBase {
 
   /**
    * {@inheritdoc}
