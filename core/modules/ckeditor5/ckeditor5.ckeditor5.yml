@@ -82,6 +82,19 @@ ckeditor5_htmlSupport:
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
     conditions: []
 
+ckeditor5_htmlEmbed:
+  ckeditor5:
+    plugins:
+      - htmlEmbed.HtmlEmbed
+  drupal:
+    label: Html Embed
+    library: core/ckeditor5.htmlEmbed
+    admin_library: ckeditor5/admin.htmlEmbed
+    toolbar_items:
+      htmlEmbed:
+        label: Html Embed
+    elements: false
+
 ckeditor5_specialCharacters:
   ckeditor5:
     plugins:

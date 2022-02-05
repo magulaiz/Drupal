@@ -102,6 +102,11 @@ admin:
     - core/jquery
     - core/once
 
+admin.htmlEmbed:
+  css:
+    theme:
+      css/html-embed.css: { }
+
 admin.specialCharacters:
   css:
     theme:

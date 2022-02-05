@@ -1027,6 +1027,13 @@
   dependencies:
     ckeditor5 "^31.0.0"
 
+"@ckeditor/ckeditor5-html-embed@~31.0.0":
+  version "31.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-embed/-/ckeditor5-html-embed-31.0.0.tgz#c4b9a5bcdbbf3c1d6bbf541d1ab62b2018bb477b"
+  integrity sha512-+BY016YJNAF0XTAlXhPW35aFyf6XV4Tk17oaTRxlfMCjANl9RNPhsgRb5gEHrmmcyUXmtIXLqRAxG6Jt8OvzlA==
+  dependencies:
+    ckeditor5 "^31.0.0"
+
 "@ckeditor/ckeditor5-html-support@~31.0.0":
   version "31.0.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-support/-/ckeditor5-html-support-31.0.0.tgz#02abcfc62102828e752768c7c8e139faec48e7d4"
