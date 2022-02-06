@@ -181,9 +181,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
           'url' => $entity->toUrl('edit-form'),
         ];
       }
-      $field_definition = $commented_entity->getFieldDefinition($entity->getFieldName());
-      if ($entity->access('create')
-        && $field_definition->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED) {
+      if ($entity->access('create')) {
         $links['comment-reply'] = [
           'title' => t('Reply'),
           'url' => Url::fromRoute('comment.reply', [
