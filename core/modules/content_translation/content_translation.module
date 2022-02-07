@@ -460,27 +460,6 @@ function content_translation_language_fallback_candidates_entity_view_alter(&$ca
 }
 
 /**
- * Implements hook_entity_extra_field_info().
- */
-function content_translation_entity_extra_field_info() {
-  $extra = [];
-  $bundle_info_service = \Drupal::service('entity_type.bundle.info');
-  foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_type => $info) {
-    foreach ($bundle_info_service->getBundleInfo($entity_type) as $bundle => $bundle_info) {
-      if (\Drupal::service('content_translation.manager')->isEnabled($entity_type, $bundle)) {
-        $extra[$entity_type][$bundle]['form']['translation'] = [
-          'label' => t('Translation'),
-          'description' => t('Translation settings'),
-          'weight' => 10,
-        ];
-      }
-    }
-  }
-
-  return $extra;
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for 'field_config_edit_form'.
  */
 function content_translation_form_field_config_edit_form_alter(array &$form, FormStateInterface $form_state) {
