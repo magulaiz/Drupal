@@ -19,13 +19,6 @@ module.exports = (__webpack_require__(79))("./src/core.js");
 
 /***/ }),
 
-/***/ 492:
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
-module.exports = (__webpack_require__(79))("./src/engine.js");
-
-/***/ }),
-
 /***/ 273:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -269,13 +262,12 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
   _defineConverters() {
     const conversion = this.editor.conversion;
 
-    conversion.for('upcast')
-      .elementToElement({
-        view: {
-          name: 'drupal-media',
-        },
-        model: 'drupalMedia',
-      });
+    conversion.for('upcast').elementToElement({
+      view: {
+        name: 'drupal-media',
+      },
+      model: 'drupalMedia',
+    });
 
     conversion.for('dataDowncast').elementToElement({
       model: 'drupalMedia',
@@ -508,8 +500,6 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 }
 
-// EXTERNAL MODULE: delegated ./engine.js from dll-reference CKEditor5.dll
-var delegated_enginefrom_dll_reference_CKEditor5 = __webpack_require__(492);
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativecommand.js
 /* eslint-disable import/no-extraneous-dependencies */
 
@@ -531,7 +521,8 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
    */
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
-    this.isEnabled = isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
+    this.isEnabled =
+      isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');
@@ -560,14 +551,19 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
       }
     });
   }
-
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediametadatarepository.js
 
 
-class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+/**
+ * @module drupalMedia/drupalmediametadatarepository
+ */
 
+/**
+ * @internal
+ */
+class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
   /**
    * @inheritdoc
    */
@@ -608,17 +604,17 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
       });
     }
 
+    const reject = new Promise((resolve, reject) => {
+      reject();
+    });
+
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
-      return new Promise((resolve, reject) => {
-        reject();
-      });
+      return reject;
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return new Promise((resolve, reject) => {
-        reject();
-      });
+      return reject;
     }
 
     const { mediaEntityMetadataUrl } = options;
@@ -654,12 +650,14 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
 
 
 
-
 /**
  * The media image text alternative editing plugin.
  */
 class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
 
+  /**
+   * @inheritDoc
+   */
   static get requires() {
     return [DrupalMediaMetadataRepository];
   }
@@ -675,12 +673,16 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
    * @inheritDoc
    */
   init() {
-    const { editor, editor:  { model, plugins, conversion } } = this;
+    const {
+      editor,
+      editor: { model, plugins, conversion },
+    } = this;
     const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
 
-    conversion.for('upcast')
-      .add((dispatcher) => {
-        return dispatcher.on('element:drupal-media', (event, data) => {
+    conversion.for('upcast').add((dispatcher) => {
+      return dispatcher.on(
+        'element:drupal-media',
+        (event, data) => {
           const [modelElement] = data.modelRange.getItems();
           if (!isDrupalMedia(modelElement)) {
             return;
@@ -691,13 +693,23 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
           // @todo what should we do in case an error happens?
           metadataRepository.getMetadata(modelElement).then((metadata) => {
             model.enqueueChange('transparent', (writer) => {
-              writer.setAttribute('drupalMediaIsImage', !!metadata.imageMetadata, modelElement);
+              writer.setAttribute(
+                'drupalMediaIsImage',
+                !!metadata.imageMetadata,
+                modelElement,
+              );
             });
           });
-        }, { priority: 'lowest' });
-      });
+        },
+        // This converter needs to have the lowest priority to ensure that the
+        // model element and its attributes have been converted.
+        { priority: 'lowest' },
+      );
+    });
 
-    model.schema.extend('drupalMedia', { allowAttributes: ['drupalMediaIsImage'] });
+    model.schema.extend('drupalMedia', {
+      allowAttributes: ['drupalMediaIsImage'],
+    });
 
     editor.commands.add(
       'mediaImageTextAlternative',

@@ -1,5 +1,12 @@
 import { Plugin } from 'ckeditor5/src/core';
 
+/**
+ * @module drupalMedia/drupalmediametadatarepository
+ */
+
+/**
+ * @internal
+ */
 export default class DrupalMediaMetadataRepository extends Plugin {
   /**
    * @inheritdoc
@@ -41,17 +48,17 @@ export default class DrupalMediaMetadataRepository extends Plugin {
       });
     }
 
+    const reject = new Promise((resolve, reject) => {
+      reject();
+    });
+
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
-      return new Promise((resolve, reject) => {
-        reject();
-      });
+      return reject;
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return new Promise((resolve, reject) => {
-        reject();
-      });
+      return reject;
     }
 
     const { mediaEntityMetadataUrl } = options;

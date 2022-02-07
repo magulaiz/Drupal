@@ -2,7 +2,6 @@
 /* cspell:words mediaimagetextalternativecommand textalternativeformview */
 
 import { Plugin } from 'ckeditor5/src/core';
-import { Batch } from 'ckeditor5/src/engine';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { isDrupalMedia } from '../utils';
@@ -11,6 +10,10 @@ import { isDrupalMedia } from '../utils';
  * The media image text alternative editing plugin.
  */
 export default class MediaImageTextAlternativeEditing extends Plugin {
+
+  /**
+   * @inheritDoc
+   */
   static get requires() {
     return [DrupalMediaMetadataRepository];
   }
@@ -54,6 +57,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
             });
           });
         },
+        // This converter needs to have the lowest priority to ensure that the
+        // model element and its attributes have been converted.
         { priority: 'lowest' },
       );
     });
