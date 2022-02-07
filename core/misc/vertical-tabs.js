@@ -24,7 +24,7 @@
       $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (verticalTab) {
         var $this = $(verticalTab).addClass('vertical-tabs__panes');
-        var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+        var focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         var tabFocus;
         var $details = $this.find('> details');
 
@@ -36,8 +36,9 @@
         $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
         $details.each(function () {
           var $that = $(this);
+          var $summary = $that.find('> summary');
           var verticalTab = new Drupal.verticalTab({
-            title: $that.find('> summary').text(),
+            title: $summary.length ? $summary[0].textContent : '',
             details: $that
           });
           tabList.append(verticalTab.item);
@@ -93,7 +94,7 @@
         var tab = $(this).data('verticalTab');
         tab.details.hide();
         tab.item.removeClass('is-selected');
-      }).end().show().siblings(':hidden.vertical-tabs__active-tab').val(this.details.attr('id'));
+      }).end().show().siblings(':hidden.vertical-tabs__active-tab')[0].value = this.details.attr('id');
       this.item.addClass('is-selected');
       $('#active-vertical-tab').remove();
       this.link.append("<span id=\"active-vertical-tab\" class=\"visually-hidden\">".concat(Drupal.t('(active tab)'), "</span>"));
@@ -127,7 +128,9 @@
 
   Drupal.theme.verticalTab = function (settings) {
     var tab = {};
-    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#"></a>').append(tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>').text(settings.title)).append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')));
+    tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');
+    tab.title[0].textContent = settings.title;
+    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#"></a>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')));
     return tab;
   };
 })(jQuery, Drupal, drupalSettings);

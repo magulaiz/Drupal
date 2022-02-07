@@ -12,6 +12,7 @@ use Laminas\Feed\Reader\StandaloneExtensionManager;
 /**
  * @coversDefaultClass \Drupal\Component\Bridge\ZfExtensionManagerSfContainer
  * @group Bridge
+ * @group legacy
  */
 class ZfExtensionManagerSfContainerTest extends TestCase {
 
