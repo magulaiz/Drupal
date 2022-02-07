@@ -1,23 +1,39 @@
 import { Plugin } from 'ckeditor5/src/core';
 
 export default class DrupalMediaMetadataRepository extends Plugin {
-
+  /**
+   * @inheritdoc
+   */
   init() {
     this._data = new WeakMap();
   }
 
-  async _fetchMetadata(url, query) {
-    // The `isMediaUrl` received from the server is guaranteed to already have
-    // a query string (for the CSRF token).
-    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const response = await fetch(`${url}&${query}`);
+  /**
+   * Fetch metadata from the backend.
+   *
+   * @param {string} url
+   *   The URL used for retrieving the metadata.
+   * @return {Promise<Object>}
+   *   Promise containining response content.
+   *
+   * @private
+   */
+  async _fetchMetadata(url) {
+    const response = await fetch(url);
     if (response.ok) {
       return JSON.parse(await response.text());
     }
 
-    return { label: this.labelError, preview: this.themeError };
+    return {};
   }
 
+  /**
+   * Gets metadata for `drupalMedia` model element.
+   *
+   * @param {module:engine/model/element~Element} modelElement
+   *   The model element which metadata should be retrieved.
+   * @return {Promise<Object>}
+   */
   getMetadata(modelElement) {
     if (this._data.get(modelElement)) {
       return new Promise((resolve) => {
@@ -25,29 +41,37 @@ export default class DrupalMediaMetadataRepository extends Plugin {
       });
     }
 
-    debugger;
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
-      return;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     const { mediaEntityMetadataUrl } = options;
     const query = new URLSearchParams({
       uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
     });
+    // The `mediaEntityMetadataUrl` received from the server already includes a
+    // a query string (for the CSRF token).
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
+    const url = `${mediaEntityMetadataUrl}&${query}`;
 
-    return this._fetchMetadata(mediaEntityMetadataUrl, query).then((metadata) => {
+    // @todo how to handle errors?
+    return this._fetchMetadata(url, query).then((metadata) => {
       this._data.set(modelElement, metadata);
       return metadata;
     });
   }
 
   /**
-   * {inheritDoc}
+   * @inheritdoc
    */
   static get pluginName() {
     return 'DrupalMediaMetadataRepository';

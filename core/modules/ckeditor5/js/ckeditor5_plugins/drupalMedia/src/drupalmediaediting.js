@@ -5,15 +5,13 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
-import DrupalMediaMetadataRepository from "./drupalmediametadatarepository";
-import {isDrupalMedia} from "./utils";
 
 /**
  * @internal
  */
 export default class DrupalMediaEditing extends Plugin {
   static get requires() {
-    return [Widget, DrupalMediaMetadataRepository];
+    return [Widget];
   }
 
   init() {
@@ -77,28 +75,13 @@ export default class DrupalMediaEditing extends Plugin {
 
   _defineConverters() {
     const conversion = this.editor.conversion;
-    const metadataRepository = this.editor.plugins.get('DrupalMediaMetadataRepository');
 
-    conversion.for('upcast')
-      .elementToElement({
-        view: {
-          name: 'drupal-media',
-        },
-        model: 'drupalMedia',
-      })
-      .add((dispatcher) => {
-        // @todo decied if we want to pre-fetch metadata for all drupalMedia elements?
-        return dispatcher.on('element:drupal-media', (event, data, conversionApi) => {
-          const [modelElement] = data.modelRange.getItems();
-          if (!isDrupalMedia(modelElement)) {
-            return;
-          }
-
-          // Pre-fetch metadata for all drupalMedia elements.
-          // @todo what should we do in case an error happens?
-          metadataRepository.getMetadata(modelElement);
-        }, { priority: 'lowest' });
-      });
+    conversion.for('upcast').elementToElement({
+      view: {
+        name: 'drupal-media',
+      },
+      model: 'drupalMedia',
+    });
 
     conversion.for('dataDowncast').elementToElement({
       model: 'drupalMedia',

@@ -18,14 +18,8 @@ export default class MediaImageTextAlternativeCommand extends Command {
    */
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
-    const metadataRepository = this.editor.plugins.get('DrupalMediaMetadataRepository');
-
-    this.isEnabled = isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt');
-    if (isDrupalMedia(element)) {
-      metadataRepository.getMetadata(element).then(({ imageMetadata }) => {
-        this.isEnabled = !!imageMetadata;
-      });
-    }
+    this.isEnabled =
+      isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');
@@ -54,5 +48,4 @@ export default class MediaImageTextAlternativeCommand extends Command {
       }
     });
   }
-
 }

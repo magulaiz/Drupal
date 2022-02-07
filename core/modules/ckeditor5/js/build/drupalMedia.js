@@ -19,6 +19,13 @@ module.exports = (__webpack_require__(79))("./src/core.js");
 
 /***/ }),
 
+/***/ 492:
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+module.exports = (__webpack_require__(79))("./src/engine.js");
+
+/***/ }),
+
 /***/ 273:
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -183,121 +190,9 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
   }
 }
 
-;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediametadatarepository.js
-
-
-class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
-
-  init() {
-    this._data = new WeakMap();
-  }
-
-  async _fetchMetadata(url, query) {
-    // The `isMediaUrl` received from the server is guaranteed to already have
-    // a query string (for the CSRF token).
-    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const response = await fetch(`${url}&${query}`);
-    if (response.ok) {
-      return JSON.parse(await response.text());
-    }
-
-    return { label: this.labelError, preview: this.themeError };
-  }
-
-  getMetadata(modelElement) {
-    if (this._data.get(modelElement)) {
-      return new Promise((resolve) => {
-        resolve(this._data.get(modelElement));
-      });
-    }
-
-    debugger;
-    const options = this.editor.config.get('drupalMedia');
-    if (!options) {
-      return;
-    }
-
-    if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return;
-    }
-
-    const { mediaEntityMetadataUrl } = options;
-    const query = new URLSearchParams({
-      uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
-    });
-
-    return this._fetchMetadata(mediaEntityMetadataUrl, query).then((metadata) => {
-      this._data.set(modelElement, metadata);
-      return metadata;
-    });
-  }
-
-  /**
-   * {inheritDoc}
-   */
-  static get pluginName() {
-    return 'DrupalMediaMetadataRepository';
-  }
-}
-
-;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/utils.js
-/* eslint-disable import/no-extraneous-dependencies */
-
-
-/**
- * Checks if the provided model element is `drupalMedia`.
- *
- * @param {module:engine/model/element~Element} modelElement
- *   The model element to be checked.
- * @return {boolean}
- *   A boolean indicating whether element is drupalMedia element.
- *
- * @internal
- */
-function isDrupalMedia(modelElement) {
-  return !!modelElement && modelElement.is('element', 'drupalMedia');
-}
-
-/**
- * Checks if view element is <drupal-media> element.
- *
- * @param {module:engine/view/element~Element} viewElement
- *   The view element.
- * @return {boolean}
- *   A boolean indicating whether element is <drupal-media> element.
- *
- * @internal
- */
-function isDrupalMediaWidget(viewElement) {
-  return (
-    (0,delegated_widgetfrom_dll_reference_CKEditor5.isWidget)(viewElement) && !!viewElement.getCustomProperty('drupalMedia')
-  );
-}
-
-/**
- * Gets selected Drupal Media widget if only Drupal Media is currently selected.
- *
- * @param {module:engine/model/selection~Selection} selection
- *   The current selection.
- * @return {module:engine/view/element~Element|null}
- *   The currently selected Drupal Media widget or null.
- *
- * @internal
- */
-function getSelectedDrupalMediaWidget(selection) {
-  const viewElement = selection.getSelectedElement();
-  if (viewElement && isDrupalMediaWidget(viewElement)) {
-    return viewElement;
-  }
-
-  return null;
-}
-
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediaediting.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words insertdrupalmedia */
-
-
 
 
 
@@ -309,7 +204,7 @@ function getSelectedDrupalMediaWidget(selection) {
  */
 class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
   static get requires() {
-    return [delegated_widgetfrom_dll_reference_CKEditor5.Widget, DrupalMediaMetadataRepository];
+    return [delegated_widgetfrom_dll_reference_CKEditor5.Widget];
   }
 
   init() {
@@ -373,7 +268,6 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
   _defineConverters() {
     const conversion = this.editor.conversion;
-    const metadataRepository = this.editor.plugins.get('DrupalMediaMetadataRepository');
 
     conversion.for('upcast')
       .elementToElement({
@@ -381,19 +275,6 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
           name: 'drupal-media',
         },
         model: 'drupalMedia',
-      })
-      .add((dispatcher) => {
-        // @todo decied if we want to pre-fetch metadata for all drupalMedia elements?
-        return dispatcher.on('element:drupal-media', (event, data, conversionApi) => {
-          const [modelElement] = data.modelRange.getItems();
-          if (!isDrupalMedia(modelElement)) {
-            return;
-          }
-
-          // Pre-fetch metadata for all drupalMedia elements.
-          // @todo what should we do in case an error happens?
-          metadataRepository.getMetadata(modelElement);
-        }, { priority: 'lowest' });
       });
 
     conversion.for('dataDowncast').elementToElement({
@@ -542,6 +423,59 @@ class DrupalMediaUI extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
   }
 }
 
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/utils.js
+/* eslint-disable import/no-extraneous-dependencies */
+
+
+/**
+ * Checks if the provided model element is `drupalMedia`.
+ *
+ * @param {module:engine/model/element~Element} modelElement
+ *   The model element to be checked.
+ * @return {boolean}
+ *   A boolean indicating whether element is drupalMedia element.
+ *
+ * @internal
+ */
+function isDrupalMedia(modelElement) {
+  return !!modelElement && modelElement.is('element', 'drupalMedia');
+}
+
+/**
+ * Checks if view element is <drupal-media> element.
+ *
+ * @param {module:engine/view/element~Element} viewElement
+ *   The view element.
+ * @return {boolean}
+ *   A boolean indicating whether element is <drupal-media> element.
+ *
+ * @internal
+ */
+function isDrupalMediaWidget(viewElement) {
+  return (
+    (0,delegated_widgetfrom_dll_reference_CKEditor5.isWidget)(viewElement) && !!viewElement.getCustomProperty('drupalMedia')
+  );
+}
+
+/**
+ * Gets selected Drupal Media widget if only Drupal Media is currently selected.
+ *
+ * @param {module:engine/model/selection~Selection} selection
+ *   The current selection.
+ * @return {module:engine/view/element~Element|null}
+ *   The currently selected Drupal Media widget or null.
+ *
+ * @internal
+ */
+function getSelectedDrupalMediaWidget(selection) {
+  const viewElement = selection.getSelectedElement();
+  if (viewElement && isDrupalMediaWidget(viewElement)) {
+    return viewElement;
+  }
+
+  return null;
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediatoolbar.js
 /* eslint-disable import/no-extraneous-dependencies */
 
@@ -574,6 +508,8 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 }
 
+// EXTERNAL MODULE: delegated ./engine.js from dll-reference CKEditor5.dll
+var delegated_enginefrom_dll_reference_CKEditor5 = __webpack_require__(492);
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativecommand.js
 /* eslint-disable import/no-extraneous-dependencies */
 
@@ -595,14 +531,7 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
    */
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
-    const metadataRepository = this.editor.plugins.get('DrupalMediaMetadataRepository');
-
-    this.isEnabled = isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt');
-    if (isDrupalMedia(element)) {
-      metadataRepository.getMetadata(element).then(({ imageMetadata }) => {
-        this.isEnabled = !!imageMetadata;
-      });
-    }
+    this.isEnabled = isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');
@@ -634,9 +563,93 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
 
 }
 
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediametadatarepository.js
+
+
+class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+
+  /**
+   * @inheritdoc
+   */
+  init() {
+    this._data = new WeakMap();
+  }
+
+  /**
+   * Fetch metadata from the backend.
+   *
+   * @param {string} url
+   *   The URL used for retrieving the metadata.
+   * @return {Promise<Object>}
+   *   Promise containining response content.
+   *
+   * @private
+   */
+  async _fetchMetadata(url) {
+    const response = await fetch(url);
+    if (response.ok) {
+      return JSON.parse(await response.text());
+    }
+
+    return {};
+  }
+
+  /**
+   * Gets metadata for `drupalMedia` model element.
+   *
+   * @param {module:engine/model/element~Element} modelElement
+   *   The model element which metadata should be retrieved.
+   * @return {Promise<Object>}
+   */
+  getMetadata(modelElement) {
+    if (this._data.get(modelElement)) {
+      return new Promise((resolve) => {
+        resolve(this._data.get(modelElement));
+      });
+    }
+
+    const options = this.editor.config.get('drupalMedia');
+    if (!options) {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    }
+
+    if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
+      return new Promise((resolve, reject) => {
+        reject();
+      });
+    }
+
+    const { mediaEntityMetadataUrl } = options;
+    const query = new URLSearchParams({
+      uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
+    });
+    // The `mediaEntityMetadataUrl` received from the server already includes a
+    // a query string (for the CSRF token).
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
+    const url = `${mediaEntityMetadataUrl}&${query}`;
+
+    // @todo how to handle errors?
+    return this._fetchMetadata(url, query).then((metadata) => {
+      this._data.set(modelElement, metadata);
+      return metadata;
+    });
+  }
+
+  /**
+   * @inheritdoc
+   */
+  static get pluginName() {
+    return 'DrupalMediaMetadataRepository';
+  }
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativeediting.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words mediaimagetextalternativecommand textalternativeformview */
+
+
 
 
 
@@ -662,7 +675,31 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
    * @inheritDoc
    */
   init() {
-    this.editor.commands.add(
+    const { editor, editor:  { model, plugins, conversion } } = this;
+    const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
+
+    conversion.for('upcast')
+      .add((dispatcher) => {
+        return dispatcher.on('element:drupal-media', (event, data) => {
+          const [modelElement] = data.modelRange.getItems();
+          if (!isDrupalMedia(modelElement)) {
+            return;
+          }
+
+          // Get all metadata for drupalMedia elements to set value for
+          // drupalMediaIsImage attribute.
+          // @todo what should we do in case an error happens?
+          metadataRepository.getMetadata(modelElement).then((metadata) => {
+            model.enqueueChange('transparent', (writer) => {
+              writer.setAttribute('drupalMediaIsImage', !!metadata.imageMetadata, modelElement);
+            });
+          });
+        }, { priority: 'lowest' });
+      });
+
+    model.schema.extend('drupalMedia', { allowAttributes: ['drupalMediaIsImage'] });
+
+    editor.commands.add(
       'mediaImageTextAlternative',
       new MediaImageTextAlternativeCommand(this.editor),
     );
