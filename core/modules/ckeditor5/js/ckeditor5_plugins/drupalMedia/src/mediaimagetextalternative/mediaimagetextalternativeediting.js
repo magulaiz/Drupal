@@ -3,11 +3,17 @@
 
 import { Plugin } from 'ckeditor5/src/core';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
+import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 
 /**
- * The image text alternative editing plugin.
+ * The media image text alternative editing plugin.
  */
 export default class MediaImageTextAlternativeEditing extends Plugin {
+
+  static get requires() {
+    return [DrupalMediaMetadataRepository];
+  }
+
   /**
    * @inheritDoc
    */

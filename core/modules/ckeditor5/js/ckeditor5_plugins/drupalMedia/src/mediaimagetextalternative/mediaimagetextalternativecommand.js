@@ -18,11 +18,12 @@ export default class MediaImageTextAlternativeCommand extends Command {
    */
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
+    const metadataRepository = this.editor.plugins.get('DrupalMediaMetadataRepository');
 
-    this.isEnabled = false;
+    this.isEnabled = isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt');
     if (isDrupalMedia(element)) {
-      this._isMediaImage(element).then((hasImageField) => {
-        this.isEnabled = hasImageField;
+      metadataRepository.getMetadata(element).then(({ imageMetadata }) => {
+        this.isEnabled = !!imageMetadata;
       });
     }
 
@@ -54,24 +55,4 @@ export default class MediaImageTextAlternativeCommand extends Command {
     });
   }
 
-  async _isMediaImage(modelElement) {
-    const options = this.editor.config.get('drupalMedia');
-    if (!options) {
-      return null;
-    }
-
-    const { isMediaUrl } = options;
-    const query = new URLSearchParams({
-      uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
-    });
-    // The `isMediaUrl` received from the server is guaranteed to already have
-    // a query string (for the CSRF token).
-    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const response = await fetch(`${isMediaUrl}&${query}`);
-    if (response.ok) {
-      return JSON.parse(await response.text());
-    }
-
-    return null;
-  }
 }
