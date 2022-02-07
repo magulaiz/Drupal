@@ -11,17 +11,14 @@ import DrupalElementStyleEditing from './drupalelementstyle/drupalelementstyleed
 /**
  * The Drupal Element Style plugin.
  *
- * This plugin is internal because it was originally written for adding
- * `data-align` support to `<drupal-media>`, without tightly coupling it to
- * `<drupal-media>`. The intent is to make this plugin a starting point for
- * adding `data-align` support to other elements, because the `FilterAlign`
- * filter plugin PHP code also does not limit itself to a specific HTML element.
- * Nor is this plugin limited to just `data-align`, because other filters
- * plugins on the server side will also need to provide a great authoring
- * experience. Even supporting `data-align` just requires configuration to be
- * specified. The intent for this CKEditor 5 plugin is hence to make it simple
- * for more (PHP) filters to provide a good authoring experience without the
- * need for additional JavaScript code.
+ * This plugin is internal and it is currently only used for providing
+ * `data-align` support to `<drupal-media>`. However, this plugin isn't tightly
+ * coupled to `<drupal-media>` or `data-align`. The intent is to make this
+ * plugin a starting point for adding `data-align` support to other elements,
+ * because the `FilterAlign` filter plugin PHP code also does not limit itself
+ * to a specific HTML element. This could be also used for other filters to
+ * provide same authoring experience as `FilterAlign` without the need for
+ * additional JavaScript code.
  *
  * To be able to change element styles in the UI, the model element needs to
  * have a toolbar where the element style buttons can be displayed.

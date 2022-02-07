@@ -20,7 +20,9 @@ import { isObject } from '../utils';
  * Returns the first argument it receives.
  *
  * @param {*} value
+ *   Any value to be returned by this function.
  * @return {*}
+ *   Any value passed as the first argument.
  */
 const identity = (value) => {
   return value;
@@ -102,11 +104,15 @@ export default class DrupalElementStyleUi extends Plugin {
      * @prop {string} name
      *   The name of the dropdown used for identifying the dropdown.
      * @prop {string[]} items
-     *   The items displayed in the dropdown.
+     *   The items displayed in the dropdown. These must be styles defined in
+     *   `drupalElementStyles.options`.
      * @prop {string} defaultItem
-     *   The default item of the dropdown.
+     *   The default item of the dropdown. This must be a style defined in
+     *   `drupalElementStyles.options`.
      * @prop {string} [title]
      *   The title of the dropdown.
+     *
+     * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
     const definedDropdowns = [...toolbarConfig.filter(isObject)];
 

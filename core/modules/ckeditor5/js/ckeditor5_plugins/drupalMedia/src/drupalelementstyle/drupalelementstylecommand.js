@@ -15,6 +15,7 @@ import { Command } from 'ckeditor5/src/core';
  *   The model schema.
  *
  * @return {null|module:engine/model/element~Element}
+ *   The closest element that supports element styles.
  */
 function getClosestElementWithElementStyleAttribute(selection, schema) {
   const selectedElement = selection.getSelectedElement();
@@ -41,6 +42,11 @@ function getClosestElementWithElementStyleAttribute(selection, schema) {
 export default class DrupalElementStyleCommand extends Command {
   /**
    * Constructs a new object.
+   *
+   * @param {module:core/editor/editor~Editor} editor
+   *   The editor instance.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+   *   All available Drupal Element Styles.
    */
   constructor(editor, styles) {
     super(editor);
@@ -79,6 +85,7 @@ export default class DrupalElementStyleCommand extends Command {
    *    editor.execute('drupalElementStyle', { value: 'alignLeft' });
    *
    * @param {Object} options
+   *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
