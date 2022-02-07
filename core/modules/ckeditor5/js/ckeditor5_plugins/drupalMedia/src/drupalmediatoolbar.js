@@ -12,7 +12,7 @@ import { getSelectedDrupalMediaWidget, isObject } from './utils';
 /**
  * Convert dropdown definitions to keys registered in the ComponentFactory.
  *
- * The registration precess should be handled by the plugin which handles the UI
+ * The registration process should be handled by the plugin which handles the UI
  * of a particular feature.
  *
  * @param {Array.<string|Object>} config

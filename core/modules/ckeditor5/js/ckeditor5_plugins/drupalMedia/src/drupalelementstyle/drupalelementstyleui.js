@@ -45,10 +45,15 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
 /**
  * Gets the UI Component name.
  *
+ * This is used for getting unique component names for registering the UI
+ * components in the component factory.
+ *
  * @param {string} name
  *   The name of the component.
  * @return {string}
  *   The UI component name.
+ *
+ * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name) {
   return `drupalElementStyle:${name}`;
@@ -114,7 +119,7 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
-    const definedDropdowns = [...toolbarConfig.filter(isObject)];
+    const definedDropdowns = toolbarConfig.filter(isObject);
 
     definedDropdowns.forEach((dropdownConfig) => {
       this._createDropdown(dropdownConfig, definedStyles);
@@ -171,12 +176,16 @@ export default class DrupalElementStyleUi extends Plugin {
         tooltip: true,
       });
 
+      // If style is selected, show the currently selected style as the default
+      // button of the split button.
       splitButtonView.bind('icon').toMany(buttonViews, 'isOn', (...areOn) => {
         const index = areOn.findIndex(identity);
 
         return index < 0 ? defaultButton.icon : buttonViews[index].icon;
       });
 
+      // If style is selected, use the label of the selected style as the
+      // default label of the split button.
       splitButtonView.bind('label').toMany(buttonViews, 'isOn', (...areOn) => {
         const index = areOn.findIndex(identity);
 
@@ -186,10 +195,14 @@ export default class DrupalElementStyleUi extends Plugin {
         );
       });
 
+      // If one of the style is selected, render the split button as selected.
       splitButtonView
         .bind('isOn')
         .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
 
+      // If one of the styles is selected, add a CSS class to the split button
+      // which modifies the styles to indicate that the splitbutton default
+      // option is currently selected.
       splitButtonView
         .bind('class')
         .toMany(buttonViews, 'isOn', (...areOn) =>
