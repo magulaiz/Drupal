@@ -72,7 +72,7 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    * - drupal.project_status.revoked.0.2.xml: Project_status is 'revoked'.
    * - drupal.project_status.insecure.0.2.xml:  Project_status is 'insecure'.
    * - drupal.project_status.unsupported.0.2.xml: Project_status is
-   * 'unsupported'.
+   *   'unsupported'.
    *
    * @return array[]
    *   Test data.
