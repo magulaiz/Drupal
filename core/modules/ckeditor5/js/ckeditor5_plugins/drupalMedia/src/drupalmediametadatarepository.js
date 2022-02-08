@@ -50,17 +50,17 @@ export default class DrupalMediaMetadataRepository extends Plugin {
       });
     }
 
-    const reject = new Promise((resolve, reject) => {
-      reject();
-    });
-
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
-      return reject;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return reject;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     const { mediaEntityMetadataUrl } = options;

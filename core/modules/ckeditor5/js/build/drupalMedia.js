@@ -606,17 +606,17 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
       });
     }
 
-    const reject = new Promise((resolve, reject) => {
-      reject();
-    });
-
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
-      return reject;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
-      return reject;
+      return new Promise((resolve, reject) => {
+        reject();
+      });
     }
 
     const { mediaEntityMetadataUrl } = options;
@@ -690,7 +690,8 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
           }
 
           // Get all metadata for drupalMedia elements to set value for
-          // drupalMediaIsImage attribute.
+          // drupalMediaIsImage attribute. This could potentially be moved
+          // outside of this plugin once other plugins start using the metadata.
           // @todo what should we do in case an error happens?
           metadataRepository.getMetadata(modelElement).then((metadata) => {
             model.enqueueChange('transparent', (writer) => {
@@ -700,6 +701,8 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
                 modelElement,
               );
             });
+          }).catch((e) => {
+            console.warn(e);
           });
         },
         // This converter needs to have the lowest priority to ensure that the

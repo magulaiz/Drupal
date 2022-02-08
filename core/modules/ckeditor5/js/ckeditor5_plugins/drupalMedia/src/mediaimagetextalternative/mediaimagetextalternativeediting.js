@@ -55,6 +55,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
                 modelElement,
               );
             });
+          }).catch((e) => {
+            console.warn(e);
           });
         },
         // This converter needs to have the lowest priority to ensure that the
