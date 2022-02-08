@@ -163,6 +163,7 @@ class FieldBlockTest extends EntityKernelTestBase {
     $field_definition = $this->prophesize(FieldDefinitionInterface::class);
     $field->getFieldDefinition()->willReturn($field_definition->reveal());
     $field_definition->getDefaultValue($entity->reveal())->willReturn($default_value);
+    $field_definition->getType()->willReturn('not_an_image');
     $entity->get('the_field_name')->willReturn($field->reveal());
 
     $field->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
