@@ -44,7 +44,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           }
 
           // Get all metadata for drupalMedia elements to set value for
-          // drupalMediaIsImage attribute.
+          // drupalMediaIsImage attribute. This could potentially be moved
+          // outside of this plugin once other plugins start using the metadata.
           // @todo what should we do in case an error happens?
           metadataRepository.getMetadata(modelElement).then((metadata) => {
             model.enqueueChange('transparent', (writer) => {
