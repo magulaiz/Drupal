@@ -6,13 +6,10 @@
  */
 
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Drupal\views\ViewEntityInterface;
@@ -834,19 +831,4 @@ function views_view_presave(ViewEntityInterface $view) {
   /** @var \Drupal\views\ViewsConfigUpdater $config_updater */
   $config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
   $config_updater->updateAll($view);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_access().
- */
-function views_action_access(EntityInterface $entity, string $operation, AccountInterface $account): AccessResultInterface {
-  if ($operation === 'execute') {
-    if ($account->isAuthenticated()) {
-      return AccessResult::allowed()->cachePerUser();
-    }
-
-    return AccessResult::forbidden()->cachePerUser();
-  }
-
-  return AccessResult::neutral()->cachePerUser();
 }
