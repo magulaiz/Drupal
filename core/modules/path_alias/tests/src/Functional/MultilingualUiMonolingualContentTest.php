@@ -6,7 +6,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
- * Tests altering the inbound path and the outbound path.
+ * Tests sites with multiple UI languages but content in a single language.
  *
  * @group path_alias
  */
@@ -78,9 +78,6 @@ class MultilingualUiMonolingualContentTest extends BrowserTestBase {
 
   /**
    * Tests tokens with content language.
-   */
-  /**
-   * Tests URL aliases work.
    */
   public function testTokens() {
     // @todo create an admin user with permissions
