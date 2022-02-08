@@ -64,12 +64,37 @@ class MultilingualUiMonolingualContentTest extends BrowserTestBase {
     $this->submitForm(['title[0][value]' => 'Test content', 'path[0][alias]' => '/test-content'], 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Should be on /test-content but we'll be on node/1.
-    $this->assertSession()->addressEquals('node/1');
     // The message will use the aliased URL.
     $this->assertSession()->linkByHrefExists('/test-content');
     // But getting it will 404.
     $this->drupalGet('test-content');
     $this->assertSession()->statusCodeEquals(200);
+
+    // Prove the current state of the entities.
+    $node = $this->drupalGetNodeByTitle('Test content');
+    $this->assertSame('de', $node->language()->getId());
+    $this->assertSame('en', $this->rootUser->getPreferredLangcode());
+  }
+
+  /**
+   * Tests tokens with content language.
+   */
+  /**
+   * Tests URL aliases work.
+   */
+  public function testTokens() {
+    // @todo create an admin user with permissions
+    $this->drupalLogin($this->rootUser);
+
+    // Set the language url prefix config (even though it is disabled).
+    $this->drupalGet('admin/config/regional/language/detection');
+    $this->clickLink('Configure');
+    $this->assertSession()->pageTextContains('Part of the URL that determines language');
+    $this->submitForm(['prefix[de]' => ''], 'Save configuration');
+    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+
+    // This other test will now pass.
+    $this->testPathAlias();
   }
 
 }
