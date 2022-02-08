@@ -368,7 +368,7 @@ abstract class Connection {
    *
    * @return string $prefix
    */
-  public function getPrefix() {
+  public function getPrefix(): string {
     return $this->prefixes['default'];
   }
 
@@ -478,7 +478,7 @@ abstract class Connection {
    */
   public function getFullQualifiedTableName($table) {
     $options = $this->getConnectionOptions();
-    $prefix = $this->tablePrefix($table);
+    $prefix = $this->getPrefix();
     return $options['database'] . '.' . $prefix . $table;
   }
 
