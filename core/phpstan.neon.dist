@@ -29,8 +29,7 @@ parameters:
     # new static() is a best practice in Drupal, so we cannot fix that.
     - "#^Unsafe usage of new static#"
 
-    # Ignore deprecation errors for now.
-    - "#^Call to deprecated constant .*#"
+    # Ignore alias and service deprecation errors for now.
     - "#^The .* service is deprecated.*#"
     - "#^The .* alias is deprecated.*#"
 
