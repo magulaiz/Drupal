@@ -50,6 +50,11 @@ class MultilingualUiMonolingualContentTest extends BrowserTestBase {
       'language_interface[enabled][language-user]' => 1,
     ], 'Save settings');
     $this->assertSession()->pageTextContains('Language detection configuration saved.');
+
+    // Enable the language selector on article nodes.
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->submitForm(["entity_types[node]" => TRUE, "settings[node][article][settings][language][language_alterable]" => TRUE], 'Save configuration');
+
     $this->drupalLogout();
   }
 
@@ -61,25 +66,50 @@ class MultilingualUiMonolingualContentTest extends BrowserTestBase {
     $this->drupalLogin($this->rootUser);
 
     $this->drupalGet('node/add/article');
-    $this->submitForm(['title[0][value]' => 'Test content', 'path[0][alias]' => '/test-content'], 'Save');
+    $this->submitForm(['title[0][value]' => 'Test content DE', 'path[0][alias]' => '/test-content-de'], 'Save');
     $this->assertSession()->statusCodeEquals(200);
     // Should be on /test-content but we'll be on node/1.
-    // The message will use the aliased URL.
-    $this->assertSession()->linkByHrefExists('/test-content');
-    // But getting it will 404.
-    $this->drupalGet('test-content');
+    $this->assertSession()->linkByHrefExists('/test-content-de');
+    $this->drupalGet('test-content-de');
     $this->assertSession()->statusCodeEquals(200);
 
     // Prove the current state of the entities.
-    $node = $this->drupalGetNodeByTitle('Test content');
+    $node = $this->drupalGetNodeByTitle('Test content DE');
     $this->assertSame('de', $node->language()->getId());
     $this->assertSame('en', $this->rootUser->getPreferredLangcode());
+
+    // Change the user preferred language to de.
+    $this->drupalGet('user/1/edit');
+    $this->submitForm(['preferred_langcode' => 'de'], 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+
+    $this->drupalGet('test-content-de');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Add an english article.
+    $this->drupalGet('node/add/article');
+    $this->submitForm(['title[0][value]' => 'Test content EN', 'path[0][alias]' => '/test-content-en', 'langcode[0][value]' => 'en'], 'Save');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists('/test-content-en');
+    $this->drupalGet('test-content-en');
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Prove the current state of the node.
+    $node = $this->drupalGetNodeByTitle('Test content EN');
+    $this->assertSame('en', $node->language()->getId());
+
+    // Change the user preferred language to en.
+    $this->drupalGet('user/1/edit');
+    $this->submitForm(['preferred_langcode' => 'en'], 'Save');
+    $this->assertSession()->pageTextContains('The changes have been saved.');
+    $this->drupalGet('test-content-en');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
-   * Tests tokens with content language.
+   * Tests URL aliases work after setting the prefix to an empty string.
    */
-  public function testTokens() {
+  public function testPathAliasAfterFixingPathPrefixes() {
     // @todo create an admin user with permissions
     $this->drupalLogin($this->rootUser);
 
@@ -90,7 +120,7 @@ class MultilingualUiMonolingualContentTest extends BrowserTestBase {
     $this->submitForm(['prefix[de]' => ''], 'Save configuration');
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
 
-    // This other test will now pass.
+    // The DE node test will now pass. The EN node will not.
     $this->testPathAlias();
   }
 
