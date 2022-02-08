@@ -75,7 +75,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->uuidService = \Drupal::service('uuid');
+    $this->uuidService = $this->container->get('uuid');
 
     $filtered_html_format = FilterFormat::create([
       'format' => 'filtered_html',

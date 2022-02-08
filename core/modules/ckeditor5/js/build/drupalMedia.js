@@ -578,7 +578,9 @@ const _fetchMetadata = async (url) => {
     return JSON.parse(await response.text());
   }
 
-  return {};
+  throw new Error(
+    'Fetching media embed metadata from the server failed.',
+  );
 };
 
 /**
@@ -609,13 +611,17 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
       return new Promise((resolve, reject) => {
-        reject();
+        reject(
+          'drupalMedia configuration is required for parsing metadata.',
+        );
       });
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
       return new Promise((resolve, reject) => {
-        reject();
+        reject(
+          'drupalMedia element must have drupalMediaEntityUuid attribute to retrieve metadata.',
+        );
       });
     }
 
@@ -626,9 +632,8 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     // The `mediaEntityMetadataUrl` received from the server already includes a
     // a query string (for the CSRF token).
     // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const url = `${mediaEntityMetadataUrl}&${query}`;
+    const url = `${mediaEntityMetadataUrl}&${query}123`;
 
-    // @todo how to handle errors?
     return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
       return metadata;
@@ -692,18 +697,21 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
           // Get all metadata for drupalMedia elements to set value for
           // drupalMediaIsImage attribute. This could potentially be moved
           // outside of this plugin once other plugins start using the metadata.
-          // @todo what should we do in case an error happens?
-          metadataRepository.getMetadata(modelElement).then((metadata) => {
-            model.enqueueChange('transparent', (writer) => {
-              writer.setAttribute(
-                'drupalMediaIsImage',
-                !!metadata.imageMetadata,
-                modelElement,
-              );
+          metadataRepository
+            .getMetadata(modelElement)
+            .then((metadata) => {
+              model.enqueueChange('transparent', (writer) => {
+                writer.setAttribute(
+                  'drupalMediaIsImage',
+                  !!metadata.imageMetadata,
+                  modelElement,
+                );
+              });
+            })
+            .catch((e) => {
+              const messages = new Drupal.Message();
+              messages.add(`Editing alternative texts for embedded media on CKEditor 5 is limited due to error on retrieving metadata from server: ${e.message}`, { type: 'error' });
             });
-          }).catch((e) => {
-            console.warn(e);
-          });
         },
         // This converter needs to have the lowest priority to ensure that the
         // model element and its attributes have been converted.

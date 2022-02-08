@@ -22,7 +22,7 @@ const _fetchMetadata = async (url) => {
     return JSON.parse(await response.text());
   }
 
-  return {};
+  throw new Error('Fetching media embed metadata from the server failed.');
 };
 
 /**
@@ -53,13 +53,21 @@ export default class DrupalMediaMetadataRepository extends Plugin {
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
       return new Promise((resolve, reject) => {
-        reject();
+        reject(
+          new Error(
+            'drupalMedia configuration is required for parsing metadata.',
+          ),
+        );
       });
     }
 
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
       return new Promise((resolve, reject) => {
-        reject();
+        reject(
+          new Error(
+            'drupalMedia element must have drupalMediaEntityUuid attribute to retrieve metadata.',
+          ),
+        );
       });
     }
 
@@ -70,9 +78,8 @@ export default class DrupalMediaMetadataRepository extends Plugin {
     // The `mediaEntityMetadataUrl` received from the server already includes a
     // a query string (for the CSRF token).
     // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const url = `${mediaEntityMetadataUrl}&${query}`;
+    const url = `${mediaEntityMetadataUrl}&${query}123`;
 
-    // @todo how to handle errors?
     return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
       return metadata;

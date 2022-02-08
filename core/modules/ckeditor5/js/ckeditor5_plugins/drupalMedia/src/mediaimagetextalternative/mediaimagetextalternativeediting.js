@@ -46,18 +46,24 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           // Get all metadata for drupalMedia elements to set value for
           // drupalMediaIsImage attribute. This could potentially be moved
           // outside of this plugin once other plugins start using the metadata.
-          // @todo what should we do in case an error happens?
-          metadataRepository.getMetadata(modelElement).then((metadata) => {
-            model.enqueueChange('transparent', (writer) => {
-              writer.setAttribute(
-                'drupalMediaIsImage',
-                !!metadata.imageMetadata,
-                modelElement,
+          metadataRepository
+            .getMetadata(modelElement)
+            .then((metadata) => {
+              model.enqueueChange('transparent', (writer) => {
+                writer.setAttribute(
+                  'drupalMediaIsImage',
+                  !!metadata.imageMetadata,
+                  modelElement,
+                );
+              });
+            })
+            .catch((e) => {
+              const messages = new Drupal.Message();
+              messages.add(
+                `Editing alternative texts for embedded media on CKEditor 5 is limited due to error on retrieving metadata from server: ${e.message}`,
+                { type: 'error' },
               );
             });
-          }).catch((e) => {
-            console.warn(e);
-          });
         },
         // This converter needs to have the lowest priority to ensure that the
         // model element and its attributes have been converted.
