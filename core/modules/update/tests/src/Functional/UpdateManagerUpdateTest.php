@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Tests\update\Traits\ProjectTestTrait;
+
 /**
  * Tests the Update Manager module's 'Update' form and functionality.
  *
@@ -11,6 +13,7 @@ namespace Drupal\Tests\update\Functional;
  */
 class UpdateManagerUpdateTest extends UpdateTestBase {
 
+  use ProjectTestTrait;
   /**
    * Modules to enable.
    *
@@ -57,7 +60,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
   }
 
   /**
