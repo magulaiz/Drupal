@@ -100,9 +100,9 @@ class CKEditor5MediaController extends ControllerBase {
       throw new NotFoundHttpException();
     }
     $image_field = $this->getMediaImageSourceFieldName($media);
-    $reponse = [];
+    $response = [];
     if ($image_field) {
-      $reponse['imageMetadata'] = [
+      $response['imageMetadata'] = [
         'alt' => $media->{$image_field}->alt,
       ];
     }
@@ -112,7 +112,7 @@ class CKEditor5MediaController extends ControllerBase {
     //   side is wasteful, hence there is no need for cacheability metadata.
     // - \Drupal\Core\Render\HtmlResponse because there is no need for
     //   attachments nor cacheability metadata.
-    return (new JsonResponse($reponse, 200))
+    return (new JsonResponse($response, 200))
       // Do not allow any intermediary to cache the response, only the end user.
       ->setPrivate()
       // Allow the end user to cache it for up to 5 minutes.
