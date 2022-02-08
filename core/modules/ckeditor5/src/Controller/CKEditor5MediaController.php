@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Controller;
 
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Controller\ControllerBase;
@@ -91,7 +92,7 @@ class CKEditor5MediaController extends ControllerBase {
    */
   public function mediaEntityMetadata(Request $request) {
     $uuid = $request->query->get('uuid');
-    if ($uuid == '') {
+    if (!Uuid::isValid($uuid)) {
       throw new BadRequestHttpException();
     }
     // Access is enforced on route level.
@@ -147,7 +148,7 @@ class CKEditor5MediaController extends ControllerBase {
     // https://www.drupal.org/project/drupal/issues/2786941 has been resolved.
     $request = $this->requestStack->getCurrentRequest();
     $uuid = $request->query->get('uuid');
-    if (!$uuid) {
+    if (!Uuid::isValid($uuid)) {
       throw new BadRequestHttpException();
     }
     $media = $this->entityRepository->loadEntityByUuid('media', $uuid);
