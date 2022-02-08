@@ -1,8 +1,29 @@
+/* eslint-disable import/no-extraneous-dependencies */
+
 import { Plugin } from 'ckeditor5/src/core';
 
 /**
  * @module drupalMedia/drupalmediametadatarepository
  */
+
+/**
+ * Fetch metadata from the backend.
+ *
+ * @param {string} url
+ *   The URL used for retrieving the metadata.
+ * @return {Promise<Object>}
+ *   Promise containing response content.
+ *
+ * @private
+ */
+const _fetchMetadata = async (url) => {
+  const response = await fetch(url);
+  if (response.ok) {
+    return JSON.parse(await response.text());
+  }
+
+  return {};
+};
 
 /**
  * @internal
@@ -13,25 +34,6 @@ export default class DrupalMediaMetadataRepository extends Plugin {
    */
   init() {
     this._data = new WeakMap();
-  }
-
-  /**
-   * Fetch metadata from the backend.
-   *
-   * @param {string} url
-   *   The URL used for retrieving the metadata.
-   * @return {Promise<Object>}
-   *   Promise containining response content.
-   *
-   * @private
-   */
-  async _fetchMetadata(url) {
-    const response = await fetch(url);
-    if (response.ok) {
-      return JSON.parse(await response.text());
-    }
-
-    return {};
   }
 
   /**
@@ -71,7 +73,7 @@ export default class DrupalMediaMetadataRepository extends Plugin {
     const url = `${mediaEntityMetadataUrl}&${query}`;
 
     // @todo how to handle errors?
-    return this._fetchMetadata(url, query).then((metadata) => {
+    return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
       return metadata;
     });

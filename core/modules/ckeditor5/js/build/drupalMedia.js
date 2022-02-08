@@ -554,11 +554,32 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediametadatarepository.js
+/* eslint-disable import/no-extraneous-dependencies */
+
 
 
 /**
  * @module drupalMedia/drupalmediametadatarepository
  */
+
+/**
+ * Fetch metadata from the backend.
+ *
+ * @param {string} url
+ *   The URL used for retrieving the metadata.
+ * @return {Promise<Object>}
+ *   Promise containing response content.
+ *
+ * @private
+ */
+const _fetchMetadata = async (url) => {
+  const response = await fetch(url);
+  if (response.ok) {
+    return JSON.parse(await response.text());
+  }
+
+  return {};
+};
 
 /**
  * @internal
@@ -569,25 +590,6 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
    */
   init() {
     this._data = new WeakMap();
-  }
-
-  /**
-   * Fetch metadata from the backend.
-   *
-   * @param {string} url
-   *   The URL used for retrieving the metadata.
-   * @return {Promise<Object>}
-   *   Promise containining response content.
-   *
-   * @private
-   */
-  async _fetchMetadata(url) {
-    const response = await fetch(url);
-    if (response.ok) {
-      return JSON.parse(await response.text());
-    }
-
-    return {};
   }
 
   /**
@@ -627,7 +629,7 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     const url = `${mediaEntityMetadataUrl}&${query}`;
 
     // @todo how to handle errors?
-    return this._fetchMetadata(url, query).then((metadata) => {
+    return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
       return metadata;
     });
@@ -643,7 +645,7 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativeediting.js
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words mediaimagetextalternativecommand textalternativeformview */
+/* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository */
 
 
 
@@ -654,7 +656,6 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
  * The media image text alternative editing plugin.
  */
 class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
-
   /**
    * @inheritDoc
    */

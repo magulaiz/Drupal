@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words mediaimagetextalternativecommand textalternativeformview */
+/* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository */
 
 import { Plugin } from 'ckeditor5/src/core';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
@@ -10,7 +10,6 @@ import { isDrupalMedia } from '../utils';
  * The media image text alternative editing plugin.
  */
 export default class MediaImageTextAlternativeEditing extends Plugin {
-
   /**
    * @inheritDoc
    */
