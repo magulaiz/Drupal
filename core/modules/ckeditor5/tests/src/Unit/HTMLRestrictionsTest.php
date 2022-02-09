@@ -106,8 +106,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $r = new HTMLRestrictions($elements);
     $this->assertSame($expected_is_empty, $r->isEmpty());
     $this->assertCount($expected_concrete_only_count, $r->getAllowedElements());
-    $this->assertCount($expected_concrete_only_count, $r->getAllowedElements(FALSE));
-    $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(TRUE));
+    $this->assertCount($expected_concrete_only_count, $r->getAllowedElements(TRUE));
+    $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(FALSE));
   }
 
   public function providerCounting(): \Generator {

@@ -702,17 +702,18 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Gets allowed elements, optionally with wildcards resolved.
+   * Gets allowed elements.
    *
-   * @param bool $retain_wildcard
-   *   Whether to retain the wildcard or not. If they are not retained, they
-   *   will be resolved.
+   * @param bool $resolve_wildcards
+   *   (optional) Whether to resolve wildcards. Defaults to TRUE. When set to
+   *   FALSE, the raw allowed elements will be returned (with no processing
+   *   applied hence no resolved wildcards).
    *
    * @return array
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getAllowedElements(bool $retain_wildcard = FALSE): array {
+  public function getAllowedElements(bool $resolve_wildcards = TRUE): array {
     $elements = $this->elements;
     // @todo move this to another helper method which returns a new value object with everything processed
     foreach ($elements as $tag_name => $tag_config) {
@@ -732,7 +733,7 @@ final class HTMLRestrictions {
             }
           }
         }
-        if (!$retain_wildcard) {
+        if ($resolve_wildcards) {
           unset($elements[$tag_name]);
         }
       }
