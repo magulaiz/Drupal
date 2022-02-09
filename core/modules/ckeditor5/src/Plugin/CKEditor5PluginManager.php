@@ -263,7 +263,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   /**
    * {@inheritdoc}
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $retain_wildcard = FALSE): array {
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL): array {
     $plugins = $this->getDefinitions();
     if (!empty($plugin_ids)) {
       $plugins = array_intersect_key($plugins, array_flip($plugin_ids));
@@ -312,7 +312,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       }
     }
 
-    return $elements->getAllowedElements($retain_wildcard);
+    return $elements->getAllowedElements();
   }
 
   /**
