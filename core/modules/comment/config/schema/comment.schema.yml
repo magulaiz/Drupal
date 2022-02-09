@@ -49,6 +49,16 @@ comment.type.*:
     description:
       type: text
       label: 'Description'
+    button_labels:
+      type: mapping
+      label: 'Button Labels'
+      mapping:
+        submit_comment:
+          type: string
+          label: 'Comment Submit Button Label'
+        submit_reply:
+          type: string
+          label: 'Reply Submit Button Label'
 
 field.storage_settings.comment:
   type: mapping
