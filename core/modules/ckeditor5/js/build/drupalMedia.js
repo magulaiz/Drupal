@@ -344,10 +344,36 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
           const modelElement = data.item;
           const container = conversionApi.mapper.toViewElement(data.item);
 
-          // Check for an existing media preview.
-          let media = Array.from(container.getChildren()).find((child) =>
-            child.getAttribute('data-drupal-media-preview'),
-          );
+          /**
+           * Finds element from preview container children recursively.
+           *
+           * @param {Iterable.<module:engine/view/element~Element>} children
+           *   The child elements.
+           * @return {null|module:engine/view/element~Element}
+           *   The preview child element if available.
+           */
+          const findPreviewContainer = (children) => {
+            for (const child of children) {
+              if (child.hasAttribute('data-drupal-media-preview')) {
+                return child;
+              }
+
+              if (child.childCount) {
+                const recursive = findPreviewContainer(child.getChildren());
+                // Return only if preview container was found from children of
+                // this element.
+                if (recursive) {
+                  return recursive;
+                }
+              }
+            }
+
+            return null;
+          };
+
+          // Search for preview container recursively from the children. The
+          // preview container could be wrapped with an element such as `<a>`.
+          let media = findPreviewContainer(container.getChildren());
 
           // Use pre-existing media preview container if one exists. If the
           // preview element doesn't exist, create a new element.
@@ -374,6 +400,9 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
           }
 
           this._fetchPreview(modelElement).then(({ label, preview }) => {
+            // CKEditor 5 doesn't support async view conversion. Therefore, once
+            // the promise is fulfilled, the editing view needs to be modified
+            // manually.
             this.editor.editing.view.change((writer) => {
               const mediaPreview = writer.createRawElement(
                 'div',
@@ -382,11 +411,14 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
                   domElement.innerHTML = preview;
                 },
               );
-              writer.remove(media);
+              // Insert the new preview before the previous preview element to
+              // ensure that the location remains same even if it is wrapped
+              // with another element.
               writer.insert(
-                writer.createPositionAt(container, 0),
+                writer.createPositionBefore(media, 0),
                 mediaPreview,
               );
+              writer.remove(media);
             });
           });
         };
@@ -675,6 +707,7 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
 
 
+
 /**
  * The media image text alternative command.
  *
@@ -692,7 +725,9 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
     this.isEnabled =
-      isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
+      isDrupalMedia(element) &&
+      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR &&
+      element.getAttribute('drupalMediaIsImage');
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');
@@ -830,6 +865,8 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
 
 
 
+const METADATA_ERROR = 'error';
+
 /**
  * The media image text alternative editing plugin.
  */
@@ -886,7 +923,7 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
                   'drupalMediaIsImage',
-                  'error',
+                  METADATA_ERROR,
                   modelElement,
                 );
               });
@@ -905,7 +942,7 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
           const { writer, mapper } = conversionApi;
           const container = mapper.toViewElement(data.item);
 
-          if (data.attributeNewValue !== 'error') {
+          if (data.attributeNewValue !== METADATA_ERROR) {
             const existingError = Array.from(container.getChildren()).find(
               (child) => child.getCustomProperty('drupalMediaMetadataError'),
             );

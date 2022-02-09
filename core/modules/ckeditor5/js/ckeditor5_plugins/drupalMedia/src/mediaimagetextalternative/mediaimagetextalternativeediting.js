@@ -7,6 +7,8 @@ import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { isDrupalMedia } from '../utils';
 
+export const METADATA_ERROR = 'error';
+
 /**
  * The media image text alternative editing plugin.
  */
@@ -63,7 +65,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
                   'drupalMediaIsImage',
-                  'error',
+                  METADATA_ERROR,
                   modelElement,
                 );
               });
@@ -82,7 +84,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           const { writer, mapper } = conversionApi;
           const container = mapper.toViewElement(data.item);
 
-          if (data.attributeNewValue !== 'error') {
+          if (data.attributeNewValue !== METADATA_ERROR) {
             const existingError = Array.from(container.getChildren()).find(
               (child) => child.getCustomProperty('drupalMediaMetadataError'),
             );

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Command } from 'ckeditor5/src/core';
 import { isDrupalMedia } from '../utils';
+import { METADATA_ERROR } from './mediaimagetextalternativeediting';
 
 /**
  * The media image text alternative command.
@@ -19,7 +20,9 @@ export default class MediaImageTextAlternativeCommand extends Command {
   refresh() {
     const element = this.editor.model.document.selection.getSelectedElement();
     this.isEnabled =
-      isDrupalMedia(element) && element.getAttribute('drupalMediaIsImage');
+      isDrupalMedia(element) &&
+      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR &&
+      element.getAttribute('drupalMediaIsImage');
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');
