@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\views\ViewEntityInterface;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -239,7 +240,14 @@ class MediaLibraryUiBuilder {
 
     $selected_type_id = $state->getSelectedTypeId();
     foreach ($allowed_types as $allowed_type_id => $allowed_type) {
-      $link_state = MediaLibraryState::create($state->getOpenerId(), $state->getAllowedTypeIds(), $allowed_type_id, $state->getAvailableSlots(), $state->getOpenerParameters());
+      $link_state = MediaLibraryState::create(
+        $state->getOpenerId(),
+        $state->getAllowedTypeIds(),
+        $allowed_type_id,
+        $state->getAvailableSlots(),
+        $state->getOpenerParameters(),
+        $state->getViewDisplay()
+      );
       // Add the 'media_library_content' parameter so the response will contain
       // only the updated content for the tab.
       // @see self::buildUi()
@@ -323,9 +331,11 @@ class MediaLibraryUiBuilder {
    *   The render array for the media library view.
    */
   protected function buildMediaLibraryView(MediaLibraryState $state) {
-    $view = $this->entityTypeManager->getStorage('view')->load($this->getViewId($state));
+    $view_storage = $this->entityTypeManager->getStorage('view');
+    $view = $view_storage->load($state->getViewId());
+    assert($view instanceof ViewEntityInterface);
     $view_executable = $this->viewsExecutableFactory->get($view);
-    $display_id = $state->get('views_display_id', 'widget');
+    $display_id = $state->getViewDisplayId();
 
     // Make sure the state parameters are set in the request so the view can
     // pass the parameters along in the pager, filters etc.
@@ -346,19 +356,6 @@ class MediaLibraryUiBuilder {
     $view_executable->execute($display_id);
 
     return $view_executable->buildRenderable($display_id, $args, FALSE);
-  }
-
-  /**
-   * Returns the ID of the media library view.
-   *
-   * @param \Drupal\media_library\MediaLibraryState $state
-   *   The current state of the media library, derived from the current request.
-   *
-   * @return string
-   *   The ID of the media library view.
-   */
-  protected function getViewId(MediaLibraryState $state): string {
-    return $state->get('view_id', 'media_library');
   }
 
 }
