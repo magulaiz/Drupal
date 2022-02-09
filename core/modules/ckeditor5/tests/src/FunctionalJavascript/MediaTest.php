@@ -351,7 +351,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session->elementExists('css', '.ck-widget.drupal-media [aria-label="Screaming hairy armadillo"]');
 
     // Test that the downcast drupal-media element now has the alt attribute
-    // entered in the dialog.
+    // entered in the balloon.
     $this->assertSourceAttributeSame('alt', $who_is_zartan);
 
     // The alt field should now display the override instead of the default.
@@ -367,10 +367,8 @@ class MediaTest extends WebDriverTestBase {
     $alt_override_input->setValue($cobra_commander_bio);
     $this->getBalloonButton('Save')->click();
     // Assert that the img within the media embed preview
-    // within the CKEditor contains the overridden alt text set in the dialog.
-    // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3206522.
-    // @codingStandardsIgnoreLine
-//    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt*="' . $cobra_commander_bio . '"]'));
+    // within the CKEditor contains the overridden alt text set in the balloon.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $cobra_commander_bio . '"]'));
 
     // Test that the downcast drupal-media element now has the alt attribute
     // entered in the dialog.
@@ -400,7 +398,7 @@ class MediaTest extends WebDriverTestBase {
     // empty string indicator.
     $this->assertSourceAttributeSame('alt', '""');
 
-    // Test that setting alt to back to an empty string within the dialog will
+    // Test that setting alt to back to an empty string within the balloon will
     // restore the default alt value saved in to the media image field of the
     // media item.
     $this->getBalloonButton('Override media image text alternative')->click();
