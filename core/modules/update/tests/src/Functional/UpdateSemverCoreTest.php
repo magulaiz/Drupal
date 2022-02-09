@@ -41,7 +41,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
         'version' => $version,
       ],
     ];
-    $this->config('update_test.settings')->set('system_info', $setting)->save();
+    $this->setProjectsInfo($setting);
   }
 
   /**

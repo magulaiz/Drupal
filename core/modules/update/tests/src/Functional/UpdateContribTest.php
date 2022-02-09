@@ -518,13 +518,12 @@ class UpdateContribTest extends UpdateTestBase {
    * update, then assert if we see the appropriate warnings on the right pages.
    */
   public function testHookUpdateStatusAlter() {
-    $update_test_config = $this->config('update_test.settings');
     $update_admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer software updates',
     ]);
     $this->drupalLogin($update_admin_user);
-
+    $update_test_config = $this->config('update_test.settings');
     $system_info = [
       '#all' => [
         'version' => '8.0.0',
@@ -535,7 +534,7 @@ class UpdateContribTest extends UpdateTestBase {
         'hidden' => FALSE,
       ],
     ];
-    $update_test_config->set('system_info', $system_info)->save();
+    $this->setProjectsInfo($system_info);
     $update_status = [
       'aaa_update_test' => [
         'status' => UpdateManagerInterface::NOT_SECURE,
