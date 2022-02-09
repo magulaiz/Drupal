@@ -165,6 +165,25 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
       {},
     );
 
+    // Check if there's Drupal Element Style matching the default attributes on
+    // the media.
+    // @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting~DrupalElementStyleEditing
+    if (this.editor.plugins.has('DrupalElementStyleEditing')) {
+      const elementStyleEditing = this.editor.plugins.get(
+        'DrupalElementStyleEditing',
+      );
+      // eslint-disable-next-line no-restricted-syntax
+      for (const style of elementStyleEditing.normalizedStyles) {
+        if (
+          attributes[style.attributeName] &&
+          style.attributeValue === attributes[style.attributeName]
+        ) {
+          modelAttributes.drupalElementStyle = style.name;
+          break;
+        }
+      }
+    }
+
     this.editor.model.change((writer) => {
       this.editor.model.insertContent(
         createDrupalMedia(writer, modelAttributes),
@@ -185,12 +204,16 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediaediting.js
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words insertdrupalmedia */
+/* cspell:words insertdrupalmedia drupalmediaediting */
 
 
 
 
 
+
+/**
+ * @module drupalMedia/drupalmediaediting
+ */
 
 /**
  * @internal
@@ -203,7 +226,6 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaAlign: 'data-align',
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
@@ -379,6 +401,47 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         return dispatcher;
       });
 
+    conversion.for('editingDowncast').add((dispatcher) => {
+      dispatcher.on(
+        'attribute:drupalElementStyle:drupalMedia',
+        (evt, data, conversionApi) => {
+          const alignMapping = {
+            alignLeft: 'drupal-media-style-align-left',
+            alignRight: 'drupal-media-style-align-right',
+            alignCenter: 'drupal-media-style-align-center',
+          };
+          const viewElement = conversionApi.mapper.toViewElement(data.item);
+          const viewWriter = conversionApi.writer;
+
+          // If the prior value is alignment related, it should be removed
+          // whether or not the module property is consumed.
+          if (alignMapping[data.attributeOldValue]) {
+            viewWriter.removeClass(
+              alignMapping[data.attributeOldValue],
+              viewElement,
+            );
+          }
+
+          // If the new value is not alignment related, do not proceed.
+          if (!alignMapping[data.attributeNewValue]) {
+            return;
+          }
+
+          // The model property is already consumed, do not proceed.
+          if (!conversionApi.consumable.consume(data.item, evt.name)) {
+            return;
+          }
+
+          // Add the alignment class in the view that corresponds to the value
+          // of the model's drupalElementStyle property.
+          viewWriter.addClass(
+            alignMapping[data.attributeNewValue],
+            viewElement,
+          );
+        },
+      );
+    });
+
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
       conversion.attributeToAttribute({
@@ -536,12 +599,49 @@ function getSelectedDrupalMediaWidget(selection) {
   return null;
 }
 
+/**
+ * Checks if value is a JavaScript object.
+ *
+ * This will return true for any type of JavaScript object. (e.g. arrays,
+ * functions, objects, regexes, new Number(0), and new String(''))
+ *
+ * @param value
+ *   Value to check.
+ * @return {boolean}
+ *   True if value is an object, else false.
+ */
+function isObject(value) {
+  const type = typeof value;
+  return value != null && (type === 'object' || type === 'function');
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediatoolbar.js
 /* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalmediatoolbar */
 
 
 
 
+
+/**
+ * @module drupalMedia/drupalmediatoolbar
+ */
+
+/**
+ * Convert dropdown definitions to keys registered in the ComponentFactory.
+ *
+ * The registration process should be handled by the plugin which handles the UI
+ * of a particular feature.
+ *
+ * @param {Array.<string|Object>} config
+ *   The drupalMedia.toolbar configuration.
+ *
+ * @return {string[]}
+ *   A normalized toolbar item list.
+ */
+function normalizeDeclarativeConfig(config) {
+  return config.map((item) => (isObject(item) ? item.name : item));
+}
 
 /**
  * @internal
@@ -556,12 +656,14 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 
   afterInit() {
-    const editor = this.editor;
+    const { editor } = this;
     const widgetToolbarRepository = editor.plugins.get(delegated_widgetfrom_dll_reference_CKEditor5.WidgetToolbarRepository);
 
     widgetToolbarRepository.register('drupalMedia', {
       ariaLabel: Drupal.t('Drupal Media toolbar'),
-      items: editor.config.get('drupalMedia.toolbar') || [],
+      items:
+        normalizeDeclarativeConfig(editor.config.get('drupalMedia.toolbar')) ||
+        [],
       // Get the selected image or an image containing the figcaption with the selection inside.
       getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
     });
@@ -1616,6 +1718,13 @@ class DrupalMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
       MediaImageTextAlternative,
     ];
   }
+
+  /**
+   * @inheritdoc
+   */
+  static get pluginName() {
+    return 'DrupalMedia';
+  }
 }
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupallinkmedia/drupallinkmediaediting.js
@@ -2178,6 +2287,1123 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
   }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-image/src/imagestyle/utils.js
+/**
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
+
+/**
+ * @module image/imagestyle/utils
+ */
+
+
+
+
+const {
+	objectFullWidth,
+	objectInline,
+	objectLeft,	objectRight, objectCenter,
+	objectBlockLeft, objectBlockRight
+} = delegated_corefrom_dll_reference_CKEditor5.icons;
+
+/**
+ * Default image style options provided by the plugin that can be referred in the {@link module:image/image~ImageConfig#styles}
+ * configuration.
+ *
+ * There are available 5 styles focused on formatting:
+ *
+ * * **`'alignLeft'`** aligns the inline or block image to the left and wraps it with the text using the `image-style-align-left` class,
+ * * **`'alignRight'`** aligns the inline or block image to the right and wraps it with the text using the `image-style-align-right` class,
+ * * **`'alignCenter'`** centers the block image using the `image-style-align-center` class,
+ * * **`'alignBlockLeft'`** aligns the block image to the left using the `image-style-block-align-left` class,
+ * * **`'alignBlockRight'`** aligns the block image to the right using the `image-style-block-align-right` class,
+ *
+ * and 3 semantic styles:
+ *
+ * * **`'inline'`** is an inline image without any CSS class,
+ * * **`'block'`** is a block image without any CSS class,
+ * * **`'side'`** is a block image styled with the `image-style-side` CSS class.
+ *
+ * @readonly
+ * @type {Object.<String,module:image/imagestyle~ImageStyleOptionDefinition>}
+ */
+const DEFAULT_OPTIONS = {
+	// This style represents an image placed in the line of text.
+	inline: {
+		name: 'inline',
+		title: 'In line',
+		icon: objectInline,
+		modelElements: [ 'imageInline' ],
+		isDefault: true
+	},
+
+	// This style represents an image aligned to the left and wrapped with text.
+	alignLeft: {
+		name: 'alignLeft',
+		title: 'Left aligned image',
+		icon: objectLeft,
+		modelElements: [ 'imageBlock', 'imageInline' ],
+		className: 'image-style-align-left'
+	},
+
+	// This style represents an image aligned to the left.
+	alignBlockLeft: {
+		name: 'alignBlockLeft',
+		title: 'Left aligned image',
+		icon: objectBlockLeft,
+		modelElements: [ 'imageBlock' ],
+		className: 'image-style-block-align-left'
+	},
+
+	// This style represents a centered image.
+	alignCenter: {
+		name: 'alignCenter',
+		title: 'Centered image',
+		icon: objectCenter,
+		modelElements: [ 'imageBlock' ],
+		className: 'image-style-align-center'
+	},
+
+	// This style represents an image aligned to the right and wrapped with text.
+	alignRight: {
+		name: 'alignRight',
+		title: 'Right aligned image',
+		icon: objectRight,
+		modelElements: [ 'imageBlock', 'imageInline' ],
+		className: 'image-style-align-right'
+	},
+
+	// This style represents an image aligned to the right.
+	alignBlockRight: {
+		name: 'alignBlockRight',
+		title: 'Right aligned image',
+		icon: objectBlockRight,
+		modelElements: [ 'imageBlock' ],
+		className: 'image-style-block-align-right'
+	},
+
+	// This option is equal to the situation when no style is applied.
+	block: {
+		name: 'block',
+		title: 'Centered image',
+		icon: objectCenter,
+		modelElements: [ 'imageBlock' ],
+		isDefault: true
+	},
+
+	// This represents a side image.
+	side: {
+		name: 'side',
+		title: 'Side image',
+		icon: objectRight,
+		modelElements: [ 'imageBlock' ],
+		className: 'image-style-side'
+	}
+};
+
+/**
+ * Default image style icons provided by the plugin that can be referred in the {@link module:image/image~ImageConfig#styles}
+ * configuration.
+ *
+ * See {@link module:image/imagestyle~ImageStyleOptionDefinition#icon} to learn more.
+ *
+ * There are 7 default icons available: `'full'`, `'left'`, `'inlineLeft'`, `'center'`, `'right'`, `'inlineRight'`, and `'inline'`.
+ *
+ * @readonly
+ * @type {Object.<String,String>}
+ */
+const DEFAULT_ICONS = {
+	full: objectFullWidth,
+	left: objectBlockLeft,
+	right: objectBlockRight,
+	center: objectCenter,
+	inlineLeft: objectLeft,
+	inlineRight: objectRight,
+	inline: objectInline
+};
+
+/**
+ * Default drop-downs provided by the plugin that can be referred in the {@link module:image/image~ImageConfig#toolbar}
+ * configuration. The drop-downs are containers for the {@link module:image/imagestyle~ImageStyleConfig#options image style options}.
+ *
+ * If both of the `ImageEditing` plugins are loaded, there are 2 predefined drop-downs available:
+ *
+ * * **`'imageStyle:wrapText'`**, which contains the `alignLeft` and `alignRight` options, that is,
+ * those that wraps the text around the image,
+ * * **`'imageStyle:breakText'`**, which contains the `alignBlockLeft`, `alignCenter` and `alignBlockRight` options, that is,
+ * those that breaks the text around the image.
+ *
+ * @readonly
+ * @type {Array.<module:image/imagestyle/imagestyleui~ImageStyleDropdownDefinition>}
+ */
+const DEFAULT_DROPDOWN_DEFINITIONS = [ {
+	name: 'imageStyle:wrapText',
+	title: 'Wrap text',
+	defaultItem: 'imageStyle:alignLeft',
+	items: [ 'imageStyle:alignLeft', 'imageStyle:alignRight' ]
+}, {
+	name: 'imageStyle:breakText',
+	title: 'Break text',
+	defaultItem: 'imageStyle:block',
+	items: [ 'imageStyle:alignBlockLeft', 'imageStyle:block', 'imageStyle:alignBlockRight' ]
+} ];
+
+/**
+ * Returns a list of the normalized and validated image style options.
+ *
+ * @protected
+ * @param {Object} config
+ * @param {Boolean} config.isInlinePluginLoaded
+ * Determines whether the {@link module:image/image/imageblockediting~ImageBlockEditing `ImageBlockEditing`} plugin has been loaded.
+ * @param {Boolean} config.isBlockPluginLoaded
+ * Determines whether the {@link module:image/image/imageinlineediting~ImageInlineEditing `ImageInlineEditing`} plugin has been loaded.
+ * @param {module:image/imagestyle~ImageStyleConfig} config.configuredStyles
+ * The image styles configuration provided in the image styles {@link module:image/image~ImageConfig#styles configuration}
+ * as a default or custom value.
+ * @returns {module:image/imagestyle~ImageStyleConfig}
+ * * Each of options contains a complete icon markup.
+ * * The image style options not supported by any of the loaded plugins are filtered out.
+ */
+function normalizeStyles( config ) {
+	const configuredStyles = config.configuredStyles.options || [];
+
+	const styles = configuredStyles
+		.map( arrangement => normalizeDefinition( arrangement ) )
+		.filter( arrangement => isValidOption( arrangement, config ) );
+
+	return styles;
+}
+
+/**
+ * Returns the default image styles configuration depending on the loaded image editing plugins.
+ * @protected
+ *
+ * @param {Boolean} isInlinePluginLoaded
+ * Determines whether the {@link module:image/image/imageblockediting~ImageBlockEditing `ImageBlockEditing`} plugin has been loaded.
+ *
+ * @param {Boolean} isBlockPluginLoaded
+ * Determines whether the {@link module:image/image/imageinlineediting~ImageInlineEditing `ImageInlineEditing`} plugin has been loaded.
+ *
+ * @returns {Object<String,Array>}
+ * It returns an object with the lists of the image style options and groups defined as strings related to the
+ * {@link module:image/imagestyle/utils~DEFAULT_OPTIONS default options}
+ */
+function getDefaultStylesConfiguration( isBlockPluginLoaded, isInlinePluginLoaded ) {
+	if ( isBlockPluginLoaded && isInlinePluginLoaded ) {
+		return {
+			options: [
+				'inline', 'alignLeft', 'alignRight',
+				'alignCenter', 'alignBlockLeft', 'alignBlockRight',
+				'block', 'side'
+			]
+		};
+	} else if ( isBlockPluginLoaded ) {
+		return {
+			options: [ 'block', 'side' ]
+		};
+	} else if ( isInlinePluginLoaded ) {
+		return {
+			options: [ 'inline', 'alignLeft', 'alignRight' ]
+		};
+	}
+
+	return {};
+}
+
+/**
+ * Returns a list of the available predefined drop-downs' definitions depending on the loaded image editing plugins.
+ * @protected
+ *
+ * @param {module:core/plugincollection~PluginCollection} pluginCollection
+ * @returns {Array.<module:image/imagestyle/imagestyleui~ImageStyleDropdownDefinition>}
+ */
+function getDefaultDropdownDefinitions( pluginCollection ) {
+	if ( pluginCollection.has( 'ImageBlockEditing' ) && pluginCollection.has( 'ImageInlineEditing' ) ) {
+		return [ ...DEFAULT_DROPDOWN_DEFINITIONS ];
+	} else {
+		return [];
+	}
+}
+
+// Normalizes an image style option or group provided in the {@link module:image/image~ImageConfig#styles}
+// and returns it in a {@link module:image/imagestyle~ImageStyleOptionDefinition}/
+//
+// @param {Object|String} definition
+//
+// @returns {module:image/imagestyle~ImageStyleOptionDefinition}}
+function normalizeDefinition( definition ) {
+	if ( typeof definition === 'string' ) {
+		// Just the name of the style has been passed, but none of the defaults.
+		if ( !DEFAULT_OPTIONS[ definition ] ) {
+			// Normalize the style anyway to prevent errors.
+			definition = { name: definition };
+		}
+		// Just the name of the style has been passed and it's one of the defaults, just use it.
+		// Clone the style to avoid overriding defaults.
+		else {
+			definition = { ...DEFAULT_OPTIONS[ definition ] };
+		}
+	} else {
+		// If an object style has been passed and if the name matches one of the defaults,
+		// extend it with defaults – the user wants to customize a default style.
+		// Note: Don't override the user–defined style object, clone it instead.
+		definition = extendStyle( DEFAULT_OPTIONS[ definition.name ], definition );
+	}
+
+	// If an icon is defined as a string and correspond with a name
+	// in default icons, use the default icon provided by the plugin.
+	if ( typeof definition.icon === 'string' ) {
+		definition.icon = DEFAULT_ICONS[ definition.icon ] || definition.icon;
+	}
+
+	return definition;
+}
+
+// Checks if the image style option is valid:
+// * if it has the modelElements fields defined and filled,
+// * if the defined modelElements are supported by any of the loaded image editing plugins.
+// It also displays a console warning these conditions are not met.
+//
+// @param {module:image/imagestyle~ImageStyleOptionDefinition} image style option
+// @param {Object.<String,Boolean>} { isBlockPluginLoaded, isInlinePluginLoaded }
+//
+// @returns Boolean
+function isValidOption( option, { isBlockPluginLoaded, isInlinePluginLoaded } ) {
+	const { modelElements, name } = option;
+
+	if ( !modelElements || !modelElements.length || !name ) {
+		warnInvalidStyle( { style: option } );
+
+		return false;
+	} else {
+		const supportedElements = [ isBlockPluginLoaded ? 'imageBlock' : null, isInlinePluginLoaded ? 'imageInline' : null ];
+
+		// Check if the option is supported by any of the loaded plugins.
+		if ( !modelElements.some( elementName => supportedElements.includes( elementName ) ) ) {
+			/**
+			 * In order to work correctly, each image style {@link module:image/imagestyle~ImageStyleOptionDefinition option}
+			 * requires specific model elements (also: types of images) to be supported by the editor.
+			 *
+			 * Model element names to which the image style option can be applied are defined in the
+			 * {@link module:image/imagestyle~ImageStyleOptionDefinition#modelElements} property of the style option
+			 * definition.
+			 *
+			 * Explore the warning in the console to find out precisely which option is not supported and which editor plugins
+			 * are missing. Make sure these plugins are loaded in your editor to get this image style option working.
+			 *
+			 * @error image-style-missing-dependency
+			 * @param {String} [option] The name of the unsupported option.
+			 * @param {String} [missingPlugins] The names of the plugins one of which has to be loaded for the particular option.
+			 */
+			(0,delegated_utilsfrom_dll_reference_CKEditor5.logWarning)( 'image-style-missing-dependency', {
+				style: option,
+				missingPlugins: modelElements.map( name => name === 'imageBlock' ? 'ImageBlockEditing' : 'ImageInlineEditing' )
+			} );
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+// Extends the default style with a style provided by the developer.
+// Note: Don't override the custom–defined style object, clone it instead.
+//
+// @param {module:image/imagestyle~ImageStyleOptionDefinition} source
+// @param {Object} style
+//
+// @returns {module:image/imagestyle~ImageStyleOptionDefinition}
+function extendStyle( source, style ) {
+	const extendedStyle = { ...style };
+
+	for ( const prop in source ) {
+		if ( !Object.prototype.hasOwnProperty.call( style, prop ) ) {
+			extendedStyle[ prop ] = source[ prop ];
+		}
+	}
+
+	return extendedStyle;
+}
+
+// Displays a console warning with the 'image-style-configuration-definition-invalid' error.
+// @param {Object} info
+function warnInvalidStyle( info ) {
+	/**
+	 * The image style definition provided in the configuration is invalid.
+	 *
+	 * Please make sure the definition implements properly one of the following:
+	 *
+	 * * {@link module:image/imagestyle~ImageStyleOptionDefinition image style option definition},
+	 * * {@link module:image/imagestyle/imagestyleui~ImageStyleDropdownDefinition image style dropdown definition}
+	 *
+	 * @error image-style-configuration-definition-invalid
+	 * @param {String} [dropdown] The name of the invalid drop-down
+	 * @param {String} [style] The name of the invalid image style option
+	 */
+	(0,delegated_utilsfrom_dll_reference_CKEditor5.logWarning)( 'image-style-configuration-definition-invalid', info );
+}
+
+/* harmony default export */ var utils = ({
+	normalizeStyles,
+	getDefaultStylesConfiguration,
+	getDefaultDropdownDefinitions,
+	warnInvalidStyle,
+	DEFAULT_OPTIONS,
+	DEFAULT_ICONS,
+	DEFAULT_DROPDOWN_DEFINITIONS
+});
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstylecommand.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words documentselection */
+
+
+/**
+ * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
+ */
+
+/**
+ * Gets closest element that has drupalElementStyle attribute in schema.
+ *
+ * @param {module:engine/model/documentselection~DocumentSelection} selection
+ *   The current document selection.
+ * @param {module:engine/model/schema~Schema} schema
+ *   The model schema.
+ *
+ * @return {null|module:engine/model/element~Element}
+ *   The closest element that supports element styles.
+ */
+function getClosestElementWithElementStyleAttribute(selection, schema) {
+  const selectedElement = selection.getSelectedElement();
+
+  return selectedElement &&
+    schema.checkAttribute(selectedElement, 'drupalElementStyle')
+    ? selectedElement
+    : selection
+        .getFirstPosition()
+        .findAncestor((element) =>
+          schema.checkAttribute(element, 'drupalElementStyle'),
+        );
+}
+
+/**
+ * The Drupal Element style command.
+ *
+ * This is used to apply Drupal Element style option to supported model elements.
+ *
+ * @extends module:core/command~Command
+ *
+ * @internal
+ */
+class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEditor5.Command {
+  /**
+   * Constructs a new object.
+   *
+   * @param {module:core/editor/editor~Editor} editor
+   *   The editor instance.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+   *   All available Drupal Element Styles.
+   */
+  constructor(editor, styles) {
+    super(editor);
+    this._styles = new Map(
+      styles.map((style) => {
+        return [style.name, style];
+      }),
+    );
+  }
+
+  /**
+   * @inheritDoc
+   */
+  refresh() {
+    const editor = this.editor;
+    const element = getClosestElementWithElementStyleAttribute(
+      editor.model.document.selection,
+      editor.model.schema,
+    );
+
+    this.isEnabled = !!element;
+
+    if (!this.isEnabled) {
+      this.value = false;
+    } else if (element.hasAttribute('drupalElementStyle')) {
+      this.value = element.getAttribute('drupalElementStyle');
+    } else {
+      this.value = false;
+    }
+  }
+
+  /**
+   * Executes the command and applies the style to the selected model element.
+   *
+   * @example
+   *    editor.execute('drupalElementStyle', { value: 'alignLeft' });
+   *
+   * @param {Object} options
+   *   The command options.
+   * @param {string} options.value
+   *   The name of the style as configured in the Drupal Element style
+   *   configuration.
+   */
+  execute(options = {}) {
+    const editor = this.editor;
+    const model = editor.model;
+
+    model.change((writer) => {
+      const requestedStyle = options.value;
+      const element = getClosestElementWithElementStyleAttribute(
+        model.document.selection,
+        model.schema,
+      );
+
+      if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
+        writer.removeAttribute('drupalElementStyle', element);
+      } else {
+        writer.setAttribute('drupalElementStyle', requestedStyle, element);
+      }
+    });
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleediting.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalelementstylecommand */
+
+
+
+
+/**
+ * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
+ */
+
+/**
+ * Gets style definition by name.
+ *
+ * @param {string} name
+ *   The name of the style definition.
+ * @param styles
+ *   The styles to search from.
+ * @return {Drupal.CKEditor5~DrupalElementStyle}
+ */
+function getStyleDefinitionByName(name, styles) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const style of styles) {
+    if (style.name === name) {
+      return style;
+    }
+  }
+}
+
+/**
+ * Returns a model-to-view converted for Drupal Element styles.
+ *
+ * This model to view converter supports downcasting model to either a CSS class
+ * or attribute.
+ *
+ * Note that only one style can be applied to a single model element.
+ */
+function modelToViewStyleAttribute(styles) {
+  return (evt, data, conversionApi) => {
+    if (!conversionApi.consumable.consume(data.item, evt.name)) {
+      return;
+    }
+
+    // Check if there is a style associated with given value.
+    const newStyle = getStyleDefinitionByName(data.attributeNewValue, styles);
+    const oldStyle = getStyleDefinitionByName(data.attributeOldValue, styles);
+
+    const viewElement = conversionApi.mapper.toViewElement(data.item);
+    const viewWriter = conversionApi.writer;
+
+    if (oldStyle) {
+      if (oldStyle.attributeName === 'class') {
+        viewWriter.removeClass(oldStyle.attributeValue, viewElement);
+      } else {
+        viewWriter.removeAttribute(oldStyle.attributeName, viewElement);
+      }
+    }
+
+    if (newStyle) {
+      if (newStyle.attributeName === 'class') {
+        viewWriter.addClass(newStyle.attributeValue, viewElement);
+      } else {
+        viewWriter.setAttribute(
+          newStyle.attributeName,
+          newStyle.attributeValue,
+          viewElement,
+        );
+      }
+    }
+  };
+}
+
+/**
+ * Returns a view-to-model converter for Drupal Element styles.
+ *
+ * This view to model converted supports styles that are configured to use
+ * either CSS class or an attribute.
+ *
+ * Note that only one style can be applied to each model element.
+ */
+function viewToModelStyleAttribute(styles) {
+  // Convert only non–default styles.
+  const nonDefaultStyles = styles.filter((style) => !style.isDefault);
+
+  return (evt, data, conversionApi) => {
+    if (!data.modelRange) {
+      return;
+    }
+
+    const viewElement = data.viewItem;
+    const modelElement = (0,delegated_utilsfrom_dll_reference_CKEditor5.first)(data.modelRange.getItems());
+
+    // Run this converter only if a model element has been found from the model.
+    if (!modelElement) {
+      return;
+    }
+
+    // Stop conversion early if the drupalElementStyle attribute isn't allowed
+    // for the element.
+    if (
+      !conversionApi.schema.checkAttribute(modelElement, 'drupalElementStyle')
+    ) {
+      return;
+    }
+
+    // Convert styles with CSS classes one by one.
+    // eslint-disable-next-line no-restricted-syntax
+    for (const style of nonDefaultStyles) {
+      // Try to consume class corresponding with the style.
+      if (style.attributeName === 'class') {
+        if (
+          conversionApi.consumable.consume(viewElement, {
+            classes: style.attributeValue,
+          })
+        ) {
+          // And convert this style to model attribute.
+          conversionApi.writer.setAttribute(
+            'drupalElementStyle',
+            style.name,
+            modelElement,
+          );
+        }
+      } else if (
+        conversionApi.consumable.consume(viewElement, {
+          attributes: [style.attributeName],
+        })
+      ) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const style of nonDefaultStyles) {
+          if (
+            style.attributeValue ===
+            viewElement.getAttribute(style.attributeName)
+          ) {
+            conversionApi.writer.setAttribute(
+              'drupalElementStyle',
+              style.name,
+              modelElement,
+            );
+          }
+        }
+      }
+    }
+  };
+}
+
+/**
+ * The Drupal Element Style editing plugin.
+ *
+ * Additional Drupal Element styles can be defined with `drupalElementStyles`
+ * configuration key.
+ *
+ * @example
+ *    config:
+ *      drupalElementStyles:
+ *         options:
+ *           - name: 'side'
+ *             icon: 'objectBlockRight'
+ *             title: 'Side image'
+ *             attributeName: 'class'
+ *             attributeValue: 'image-side'
+ *             modelElement: ['drupalMedia']
+ *
+ * @see Drupal.CKEditor5~DrupalElementStyle
+ *
+ * @extends module:core/plugin~Plugin
+ *
+ * @internal
+ */
+class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const editor = this.editor;
+
+    // Ensure that the drupalElementStyles.options exists always.
+    editor.config.define('drupalElementStyles', { options: [] });
+    const stylesConfig = editor.config.get('drupalElementStyles').options;
+
+    /**
+     * The Drupal Element Styles.
+     *
+     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyle
+     *
+     * @prop {string} name
+     *   The name of the style used for identifying the button.
+     * @prop {string} title
+     *   The title of the style displayed in the UI.
+     * @prop {string} attributeName
+     *   The name of the attribute in view.
+     * @prop {string} attributeValue
+     *   The value of the attribute in view.
+     * @prop {string[]} modelElements
+     *   A list of model elements that the style can be attached to.
+     * @prop {string} [icon]
+     *   An icon for the style button. This needs to either refer to an icon in
+     *   the CKEditor 5 core icons, or this can be the XML content of the icon.
+     *
+     * @type {Drupal.CKEditor5~DrupalElementStyle[]}
+     */
+    this.normalizedStyles = stylesConfig
+      .map((style) => {
+        // Allow defining style icon as a string that is referring to the
+        // CKEditor 5 default icons.
+        if (typeof style.icon === 'string') {
+          if (delegated_corefrom_dll_reference_CKEditor5.icons[style.icon]) {
+            style.icon = delegated_corefrom_dll_reference_CKEditor5.icons[style.icon];
+          }
+        }
+        return style;
+      })
+      .filter((style) => {
+        if (!style.attributeName || !style.attributeValue) {
+          console.warn(
+            'drupalElementStyles options must include attributeName and attributeValue.',
+          );
+          return false;
+        }
+        if (!style.modelElements || !Array.isArray(style.modelElements)) {
+          console.warn(
+            'drupalElementStyles options must include an array of supported modelElements.',
+          );
+          return false;
+        }
+
+        if (!style.name) {
+          console.warn('drupalElementStyles options must include a name.');
+          return false;
+        }
+
+        return true;
+      });
+
+    this._setupConversion();
+
+    editor.commands.add(
+      'drupalElementStyle',
+      new DrupalElementStyleCommand(editor, this.normalizedStyles),
+    );
+  }
+
+  /**
+   * Sets up conversion for Drupal Element Styles.
+   *
+   * @see modelToViewStyleAttribute()
+   * @see viewToModelStyleAttribute()
+   *
+   * @private
+   */
+  _setupConversion() {
+    const editor = this.editor;
+    const schema = editor.model.schema;
+
+    const modelToViewConverter = modelToViewStyleAttribute(
+      this.normalizedStyles,
+    );
+    const viewToModelConverter = viewToModelStyleAttribute(
+      this.normalizedStyles,
+    );
+
+    editor.editing.downcastDispatcher.on(
+      'attribute:drupalElementStyle',
+      modelToViewConverter,
+    );
+    editor.data.downcastDispatcher.on(
+      'attribute:drupalElementStyle',
+      modelToViewConverter,
+    );
+
+    // Allow drupalElementStyle on all model elements that have associated
+    // styles.
+    const modelElements = [
+      ...new Set(
+        this.normalizedStyles
+          .map((style) => {
+            return style.modelElements;
+          })
+          .flat(),
+      ),
+    ];
+    modelElements.forEach((modelElement) => {
+      schema.extend(modelElement, { allowAttributes: 'drupalElementStyle' });
+    });
+
+    // View to model converter that runs on all elements.
+    editor.data.upcastDispatcher.on(
+      'element',
+      viewToModelConverter,
+      // This needs to be set as low priority to ensure this runs always after
+      // the element has been converted to a model element.
+      { priority: 'low' },
+    );
+  }
+
+  /**
+   * @inheritDoc
+   */
+  static get pluginName() {
+    return 'DrupalElementStyleEditing';
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleui.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
+
+
+
+
+
+
+
+/**
+ * @module drupalMedia/drupalelementstyle/drupalelementstyleui
+ */
+
+/**
+ * Returns the first argument it receives.
+ *
+ * @param {*} value
+ *   Any value to be returned by this function.
+ * @return {*}
+ *   Any value passed as the first argument.
+ */
+const identity = (value) => {
+  return value;
+};
+
+/**
+ * Gets the dropdown title.
+ *
+ * @param {string} dropdownTitle
+ *   The dropdown title.
+ * @param {string} buttonTitle
+ *   The button title.
+ * @return {string}
+ *   The generated dropdown title.
+ */
+const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
+  return (dropdownTitle ? `${dropdownTitle}: ` : '') + buttonTitle;
+};
+
+/**
+ * Gets the UI Component name.
+ *
+ * This is used for getting unique component names for registering the UI
+ * components in the component factory.
+ *
+ * @param {string} name
+ *   The name of the component.
+ * @return {string}
+ *   The UI component name.
+ *
+ * @see module:ui/componentfactory~ComponentFactory
+ */
+function getUIComponentName(name) {
+  return `drupalElementStyle:${name}`;
+}
+
+/**
+ * The Drupal Element Style UI plugin.
+ *
+ * @extends module:core/plugin~Plugin
+ *
+ * @internal
+ */
+class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  /**
+   * @inheritDoc
+   */
+  static get requires() {
+    return [DrupalElementStyleEditing];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const plugins = this.editor.plugins;
+    const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
+
+    const definedStyles = Object.values(
+      plugins.get('DrupalElementStyleEditing').normalizedStyles,
+    );
+
+    definedStyles.forEach((styleConfig) => {
+      this._createButton(styleConfig);
+    });
+
+    /**
+     * A Drupal Element Style dropdown definition.
+     *
+     * @example
+     *    config:
+     *       drupalMedia:
+     *         toolbar:
+     *           - name: 'drupalMedia:alignment'
+     *             title: 'Custom title for the dropdown'
+     *             items:
+     *               - 'drupalElementStyle:alignLeft'
+     *               - 'drupalElementStyle:alignCenter'
+     *               - 'drupalElementStyle:alignRight'
+     *             defaultItem: 'drupalElementStyle:alignCenter'
+     *
+     * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
+     *
+     * @prop {string} name
+     *   The name of the dropdown used for identifying the dropdown.
+     * @prop {string[]} items
+     *   The items displayed in the dropdown. These must be styles defined in
+     *   `drupalElementStyles.options`.
+     * @prop {string} defaultItem
+     *   The default item of the dropdown. This must be a style defined in
+     *   `drupalElementStyles.options`.
+     * @prop {string} [title]
+     *   The title of the dropdown.
+     *
+     * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
+     */
+    const definedDropdowns = toolbarConfig.filter(isObject);
+
+    definedDropdowns.forEach((dropdownConfig) => {
+      this._createDropdown(dropdownConfig, definedStyles);
+    });
+  }
+
+  /**
+   * Creates a dropdown and stores it in the component factory.
+   *
+   * @param {Drupal.CKEditor5~drupalElementStyleDropdownDefinition} dropdownConfig
+   *   The dropdown configuration.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
+  _createDropdown(dropdownConfig, definedStyles) {
+    const factory = this.editor.ui.componentFactory;
+
+    factory.add(dropdownConfig.name, (locale) => {
+      let defaultButton;
+
+      const { defaultItem, items, title } = dropdownConfig;
+      const buttonViews = items
+        .filter((itemName) =>
+          definedStyles.find(
+            ({ name }) => getUIComponentName(name) === itemName,
+          ),
+        )
+        .map((buttonName) => {
+          const button = factory.create(buttonName);
+
+          if (buttonName === defaultItem) {
+            defaultButton = button;
+          }
+
+          return button;
+        });
+
+      if (items.length !== buttonViews.length) {
+        utils.warnInvalidStyle({ dropdown: dropdownConfig });
+      }
+
+      const dropdownView = (0,delegated_uifrom_dll_reference_CKEditor5.createDropdown)(locale, delegated_uifrom_dll_reference_CKEditor5.SplitButtonView);
+      const splitButtonView = dropdownView.buttonView;
+
+      (0,delegated_uifrom_dll_reference_CKEditor5.addToolbarToDropdown)(dropdownView, buttonViews);
+
+      splitButtonView.set({
+        label: getDropdownButtonTitle(title, defaultButton.label),
+        class: null,
+        tooltip: true,
+      });
+
+      // If style is selected, show the currently selected style as the default
+      // button of the split button.
+      splitButtonView.bind('icon').toMany(buttonViews, 'isOn', (...areOn) => {
+        const index = areOn.findIndex(identity);
+
+        return index < 0 ? defaultButton.icon : buttonViews[index].icon;
+      });
+
+      // If style is selected, use the label of the selected style as the
+      // default label of the split button.
+      splitButtonView.bind('label').toMany(buttonViews, 'isOn', (...areOn) => {
+        const index = areOn.findIndex(identity);
+
+        return getDropdownButtonTitle(
+          title,
+          index < 0 ? defaultButton.label : buttonViews[index].label,
+        );
+      });
+
+      // If one of the style is selected, render the split button as selected.
+      splitButtonView
+        .bind('isOn')
+        .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
+
+      // If one of the styles is selected, add a CSS class to the split button
+      // which modifies the styles to indicate that the splitbutton default
+      // option is currently selected.
+      splitButtonView
+        .bind('class')
+        .toMany(buttonViews, 'isOn', (...areOn) =>
+          areOn.some(identity) ? 'ck-splitbutton_flatten' : null,
+        );
+
+      splitButtonView.on('execute', () => {
+        if (!buttonViews.some(({ isOn }) => isOn)) {
+          defaultButton.fire('execute');
+        } else {
+          dropdownView.isOpen = !dropdownView.isOpen;
+        }
+      });
+
+      dropdownView
+        .bind('isEnabled')
+        .toMany(buttonViews, 'isEnabled', (...areEnabled) =>
+          areEnabled.some(identity),
+        );
+
+      return dropdownView;
+    });
+  }
+
+  /**
+   * Creates a button and stores it in the editor component factory.
+   *
+   * @param {Drupal.CKEditor5~DrupalElementStyle} buttonConfig
+   *   The button configuration.
+   *
+   * @see module:ui/componentfactory~ComponentFactory
+   *
+   * @private
+   */
+  _createButton(buttonConfig) {
+    const buttonName = buttonConfig.name;
+
+    this.editor.ui.componentFactory.add(
+      getUIComponentName(buttonName),
+      (locale) => {
+        const command = this.editor.commands.get('drupalElementStyle');
+        const view = new delegated_uifrom_dll_reference_CKEditor5.ButtonView(locale);
+
+        view.set({
+          label: buttonConfig.title,
+          icon: buttonConfig.icon,
+          tooltip: true,
+          isToggleable: true,
+        });
+
+        view.bind('isEnabled').to(command, 'isEnabled');
+        view.bind('isOn').to(command, 'value', (value) => value === buttonName);
+        view.on('execute', this._executeCommand.bind(this, buttonName));
+
+        return view;
+      },
+    );
+  }
+
+  /**
+   * Executes the Drupal Element Style command.
+   *
+   * @param {string} name
+   *   The name of the style that should be applied.
+   *
+   * @see module:drupalMedia/drupalelementstyle/drupalelementstylecommand~DrupalElementStyleCommand
+   *
+   * @private
+   */
+  _executeCommand(name) {
+    this.editor.execute('drupalElementStyle', { value: name });
+    this.editor.editing.view.focus();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  static get pluginName() {
+    return 'DrupalElementStyleUi';
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalelementstyle drupalelementstyleui drupalelementstyleediting imagestyle drupalmediatoolbar drupalmediaediting */
+
+
+
+
+/**
+ * @module drupalMedia/drupalelementstyle
+ */
+
+/**
+ * The Drupal Element Style plugin.
+ *
+ * This plugin is internal and it is currently only used for providing
+ * `data-align` support to `<drupal-media>`. However, this plugin isn't tightly
+ * coupled to `<drupal-media>` or `data-align`. The intent is to make this
+ * plugin a starting point for adding `data-align` support to other elements,
+ * because the `FilterAlign` filter plugin PHP code also does not limit itself
+ * to a specific HTML element. This could be also used for other filters to
+ * provide same authoring experience as `FilterAlign` without the need for
+ * additional JavaScript code.
+ *
+ * To be able to change element styles in the UI, the model element needs to
+ * have a toolbar where the element style buttons can be displayed.
+ *
+ * This plugin is inspired by the CKEditor 5 Image Style plugin.
+ *
+ * @see module:image/imagestyle~ImageStyle
+ * @see core/modules/ckeditor5/css/media-alignment.css
+ * @see module:drupalMedia/drupalmediaediting~DrupalMediaEditing
+ * @see module:drupalMedia/drupalmediatoolbar~DrupalMediaToolbar
+ *
+ * @internal
+ */
+class DrupalElementStyle extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  /**
+   * @inheritDoc
+   */
+  static get requires() {
+    return [DrupalElementStyleEditing, DrupalElementStyleUi];
+  }
+
+  /**
+   * @inheritdoc
+   */
+  static get pluginName() {
+    return 'DrupalElementStyle';
+  }
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js
 /* eslint-disable import/no-extraneous-dependencies */
 // cspell:ignore mediaimagetextalternative
@@ -2185,6 +3411,9 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 
 
 // cspell:ignore drupallinkmedia
+
+
+// cspell:ignore drupalelementstyle
 
 
 // cspell:ignore mediaimagetextalternative
@@ -2201,6 +3430,7 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
   MediaImageTextAlternativeEditing: MediaImageTextAlternativeEditing,
   MediaImageTextAlternativeUi: MediaImageTextAlternativeUi,
   DrupalLinkMedia: DrupalLinkMedia,
+  DrupalElementStyle: DrupalElementStyle,
 });
 
 }();
