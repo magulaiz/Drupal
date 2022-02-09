@@ -214,7 +214,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
       return;
     }
     const { previewURL, themeError } = options;
-    this.previewURL = previewURL;
+    this.previewUrl = previewURL;
     this.labelError = Drupal.t('Preview failed');
     this.themeError =
       themeError ||
@@ -233,13 +233,31 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
     );
   }
 
-  async _fetchPreview(url, query) {
-    const response = await fetch(`${url}?${new URLSearchParams(query)}`, {
-      headers: {
-        'X-Drupal-MediaPreview-CSRF-Token':
-          this.editor.config.get('drupalMedia').previewCsrfToken,
+  /**
+   * Fetch preview from the server.
+   *
+   * @param {module:engine/model/element~Element} modelElement
+   *   The model element which preview should be loaded.
+   * @return {Promise<{preview: string, label: string}>}
+   *   A promise that returns an object.
+   *
+   * @private
+   */
+  async _fetchPreview(modelElement) {
+    const query = {
+      text: this._renderElement(modelElement),
+      uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
+    };
+
+    const response = await fetch(
+      `${this.previewUrl}?${new URLSearchParams(query)}`,
+      {
+        headers: {
+          'X-Drupal-MediaPreview-CSRF-Token':
+            this.editor.config.get('drupalMedia').previewCsrfToken,
+        },
       },
-    });
+    );
     if (response.ok) {
       const label = response.headers.get('drupal-media-label');
       const preview = await response.text();
@@ -275,41 +293,91 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         name: 'drupal-media',
       },
     });
+    conversion
+      .for('editingDowncast')
+      .elementToElement({
+        model: 'drupalMedia',
+        view: (modelElement, { writer }) => {
+          const container = writer.createContainerElement('div', {
+            class: 'drupal-media',
+          });
+          if (!this.previewUrl) {
+            // If preview URL isn't available, insert empty preview element
+            // which indicates that preview couldn't be loaded.
+            const mediaPreview = writer.createRawElement('div', {
+              'data-drupal-media-preview': 'unavailable',
+            });
+            writer.insert(writer.createPositionAt(container, 0), mediaPreview);
+          }
+          writer.setCustomProperty('drupalMedia', true, container);
 
-    conversion.for('editingDowncast').elementToElement({
-      model: 'drupalMedia',
-      view: (modelElement, { writer: viewWriter }) => {
-        const container = viewWriter.createContainerElement('div', {
-          class: 'drupal-media',
-        });
-        const media = viewWriter.createRawElement(
-          'div',
-          { 'data-drupal-media-preview': 'loading' },
-          (domElement) => {
-            if (this.previewURL) {
-              this._fetchPreview(this.previewURL, {
-                text: this._renderElement(modelElement),
-                uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
-              }).then(({ label, preview }) => {
-                domElement.innerHTML = preview;
-                domElement.setAttribute('aria-label', label);
-                domElement.setAttribute('data-drupal-media-preview', 'ready');
-              });
-            } else {
-              domElement.innerHTML = this.themeError;
-              domElement.setAttribute('aria-label', 'drupal-media');
-              domElement.setAttribute(
-                'data-drupal-media-preview',
-                'unavailable',
-              );
+          return (0,delegated_widgetfrom_dll_reference_CKEditor5.toWidget)(container, writer, {
+            label: Drupal.t('Media widget'),
+          });
+        },
+      })
+      .add((dispatcher) => {
+        const converter = (event, data, conversionApi) => {
+          const viewWriter = conversionApi.writer;
+          const modelElement = data.item;
+          const container = conversionApi.mapper.toViewElement(data.item);
+
+          // Check for an existing media preview.
+          let media = Array.from(container.getChildren()).find((child) =>
+            child.getAttribute('data-drupal-media-preview'),
+          );
+
+          // Use pre-existing media preview container if one exists. If the
+          // preview element doesn't exist, create a new element.
+          if (media) {
+            // Stop processing if media preview is unavailable or a preview is
+            // already loading.
+            if (media.getAttribute('data-drupal-media-preview') !== 'ready') {
+              return;
             }
-          },
-        );
-        viewWriter.insert(viewWriter.createPositionAt(container, 0), media);
-        viewWriter.setCustomProperty('drupalMedia', true, container);
-        return (0,delegated_widgetfrom_dll_reference_CKEditor5.toWidget)(container, viewWriter, { label: 'media widget' });
-      },
-    });
+
+            // Preview was ready meaning so a new preview can be loaded. Change
+            // the attribute to loading but don't remove the preview to keep the
+            // element interactable in the UI.
+            viewWriter.setAttribute(
+              'data-drupal-media-preview',
+              'loading',
+              media,
+            );
+          } else {
+            media = viewWriter.createRawElement('div', {
+              'data-drupal-media-preview': 'loading',
+            });
+            viewWriter.insert(viewWriter.createPositionAt(container, 0), media);
+          }
+
+          this._fetchPreview(modelElement).then(({ label, preview }) => {
+            this.editor.editing.view.change((writer) => {
+              const mediaPreview = writer.createRawElement(
+                'div',
+                { 'data-drupal-media-preview': 'ready', 'aria-label': label },
+                (domElement) => {
+                  domElement.innerHTML = preview;
+                },
+              );
+              writer.remove(media);
+              writer.insert(
+                writer.createPositionAt(container, 0),
+                mediaPreview,
+              );
+            });
+          });
+        };
+
+        // List all attributes that should trigger re-rendering of the
+        // preview.
+        dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaViewMode:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
+        dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
+
+        return dispatcher;
+      });
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
@@ -578,9 +646,7 @@ const _fetchMetadata = async (url) => {
     return JSON.parse(await response.text());
   }
 
-  throw new Error(
-    'Fetching media embed metadata from the server failed.',
-  );
+  throw new Error('Fetching media embed metadata from the server failed.');
 };
 
 /**
@@ -612,7 +678,9 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     if (!options) {
       return new Promise((resolve, reject) => {
         reject(
-          'drupalMedia configuration is required for parsing metadata.',
+          new Error(
+            'drupalMedia configuration is required for parsing metadata.',
+          ),
         );
       });
     }
@@ -620,7 +688,9 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     if (!modelElement.hasAttribute('drupalMediaEntityUuid')) {
       return new Promise((resolve, reject) => {
         reject(
-          'drupalMedia element must have drupalMediaEntityUuid attribute to retrieve metadata.',
+          new Error(
+            'drupalMedia element must have drupalMediaEntityUuid attribute to retrieve metadata.',
+          ),
         );
       });
     }
@@ -632,7 +702,7 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
     // The `mediaEntityMetadataUrl` received from the server already includes a
     // a query string (for the CSRF token).
     // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const url = `${mediaEntityMetadataUrl}&${query}123`;
+    const url = `${mediaEntityMetadataUrl}&${query}`;
 
     return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
@@ -651,6 +721,7 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/mediaimagetextalternative/mediaimagetextalternativeediting.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository */
+
 
 
 
@@ -709,13 +780,99 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
               });
             })
             .catch((e) => {
-              const messages = new Drupal.Message();
-              messages.add(`Editing alternative texts for embedded media on CKEditor 5 is limited due to error on retrieving metadata from server: ${e.message}`, { type: 'error' });
+              console.warn(e);
+              model.enqueueChange('transparent', (writer) => {
+                writer.setAttribute(
+                  'drupalMediaIsImage',
+                  'error',
+                  modelElement,
+                );
+              });
             });
         },
         // This converter needs to have the lowest priority to ensure that the
         // model element and its attributes have been converted.
         { priority: 'lowest' },
+      );
+    });
+
+    conversion.for('downcast').add((dispatcher) => {
+      dispatcher.on(
+        'attribute:drupalMediaIsImage',
+        (event, data, conversionApi) => {
+          const { writer, mapper } = conversionApi;
+          const container = mapper.toViewElement(data.item);
+
+          if (data.attributeNewValue !== 'error') {
+            const existingError = Array.from(container.getChildren()).find(
+              (child) => child.getCustomProperty('drupalMediaMetadataError'),
+            );
+            // If the view contains an existing error, it should be removed since
+            // retrieving metadata was successful.
+            if (existingError) {
+              writer.setCustomProperty(
+                'widgetLabel',
+                existingError.getCustomProperty(
+                  'drupalMediaOriginalWidgetLabel',
+                ),
+                existingError,
+              );
+              writer.removeElement(existingError);
+            }
+
+            return;
+          }
+
+          const message = Drupal.t(
+            'Functionality could be limited due to error on loading media metadata from the server',
+          );
+
+          const tooltip = new delegated_uifrom_dll_reference_CKEditor5.TooltipView();
+          tooltip.text = message;
+          tooltip.position = 'sw';
+
+          const html = new delegated_uifrom_dll_reference_CKEditor5.Template({
+            tag: 'span',
+            children: [
+              {
+                tag: 'span',
+                attributes: {
+                  class: 'drupal-media__metadata-error-icon',
+                },
+              },
+              tooltip,
+            ],
+          }).render();
+
+          const error = writer.createRawElement(
+            'div',
+            {
+              class: 'drupal-media__metadata-error',
+            },
+            (domElement, domConverter) => {
+              domConverter.setContentOf(domElement, html.outerHTML);
+            },
+          );
+          writer.setCustomProperty('drupalMediaMetadataError', true, error);
+
+          // Edit widget label to ensure the current status of media embed is
+          // available for screen reader users.
+          const originalWidgetLabel =
+            container.getCustomProperty('widgetLabel');
+          writer.setCustomProperty(
+            'drupalMediaOriginalWidgetLabel',
+            originalWidgetLabel,
+            error,
+          );
+          writer.setCustomProperty(
+            'widgetLabel',
+            `${originalWidgetLabel} (${message})`,
+            container,
+          );
+
+          writer.insert(writer.createPositionAt(container, 0), error);
+        },
+        { priority: 'low' },
       );
     });
 
