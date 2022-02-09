@@ -140,7 +140,7 @@ export default class DrupalMediaEditing extends Plugin {
           const container = conversionApi.mapper.toViewElement(data.item);
 
           /**
-           * Finds element from preview container children recursively.
+           * Finds preview container element from the media element.
            *
            * @param {Iterable.<module:engine/view/element~Element>} children
            *   The child elements.

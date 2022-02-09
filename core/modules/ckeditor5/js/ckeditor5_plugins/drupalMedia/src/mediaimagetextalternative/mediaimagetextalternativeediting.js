@@ -51,6 +51,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           metadataRepository
             .getMetadata(modelElement)
             .then((metadata) => {
+              // Enqueue a model change in `transparent` batch to make it
+              // invisible to the undo/redo functionality.
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
                   'drupalMediaIsImage',
@@ -87,8 +89,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
             const existingError = Array.from(container.getChildren()).find(
               (child) => child.getCustomProperty('drupalMediaMetadataError'),
             );
-            // If the view contains an existing error, it should be removed since
-            // retrieving metadata was successful.
+            // If the view contains an existing error, it should be removed
+            // since retrieving metadata was successful.
             if (existingError) {
               writer.setCustomProperty(
                 'widgetLabel',
@@ -104,7 +106,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           }
 
           const message = Drupal.t(
-            'Functionality could be limited due to error on loading media metadata from the server',
+            'Not all functionality may be available because some information could not be retrieved.',
           );
 
           const tooltip = new TooltipView();
