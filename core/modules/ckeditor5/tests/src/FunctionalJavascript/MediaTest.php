@@ -348,7 +348,7 @@ class MediaTest extends WebDriverTestBase {
     // the overridden alt text set in the dialog.
     // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3206522.
     // @codingStandardsIgnoreLine
-//    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $who_is_zartan . '"]'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $who_is_zartan . '"]'));
     // Test `aria-label` attribute appears on the widget wrapper.
     $assert_session->elementExists('css', '.ck-widget.drupal-media [aria-label="Screaming hairy armadillo"]');
 
