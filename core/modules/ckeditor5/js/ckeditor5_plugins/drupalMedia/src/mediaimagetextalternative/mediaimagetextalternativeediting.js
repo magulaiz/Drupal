@@ -6,8 +6,7 @@ import { TooltipView, Template } from 'ckeditor5/src/ui';
 import MediaImageTextAlternativeCommand from './mediaimagetextalternativecommand';
 import DrupalMediaMetadataRepository from '../drupalmediametadatarepository';
 import { isDrupalMedia } from '../utils';
-
-export const METADATA_ERROR = 'error';
+import { METADATA_ERROR } from './utils';
 
 /**
  * The media image text alternative editing plugin.

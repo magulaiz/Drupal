@@ -148,6 +148,7 @@ export default class DrupalMediaEditing extends Plugin {
            *   The preview child element if available.
            */
           const findPreviewContainer = (children) => {
+            // eslint-disable-next-line no-restricted-syntax
             for (const child of children) {
               if (child.hasAttribute('data-drupal-media-preview')) {
                 return child;
