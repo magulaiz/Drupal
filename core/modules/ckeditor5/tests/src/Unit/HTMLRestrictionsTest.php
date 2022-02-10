@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\filter\FilterFormatInterface;
+use Drupal\filter\Plugin\FilterInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -142,15 +144,43 @@ class HTMLRestrictionsTest extends UnitTestCase {
 
   /**
    * @covers ::fromString()
-   * @dataProvider providerFromString
+   * @covers ::fromTextFormat()
+   * @covers ::fromFilterPluginInstance()
+   * @dataProvider providerConvenienceConstructors
    */
-  public function testFromString($input, array $expected, ?array $expected_without_resolving = NULL): void {
-    $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
+  public function testConvienceConstructors($input, array $expected, ?array $expected_without_resolving = NULL): void {
     $expected_without_resolving = $expected_without_resolving ?? $expected;
+
+    // ::fromString()
+    $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
     $this->assertSame($expected_without_resolving, HTMLRestrictions::fromString($input)->getAllowedElements(FALSE));
+
+    // ::fromTextFormat()
+    $text_format = $this->prophesize(FilterFormatInterface::class);
+    $text_format->getHTMLRestrictions()->willReturn([
+      'allowed' => $expected_without_resolving,
+    ]);
+    $this->assertSame($expected, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements());
+    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements(FALSE));
+
+    // ::fromFilterPluginInstance()
+    $filter_plugin_instance = $this->prophesize(FilterInterface::class);
+    $filter_plugin_instance->getHTMLRestrictions()->willReturn([
+      'allowed' => $expected_without_resolving + [
+        // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+        '*' => [
+          'style' => FALSE,
+          'on*' => FALSE,
+          'lang' => TRUE,
+          'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
+        ],
+      ],
+    ]);
+    $this->assertSame($expected, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());
+    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
   }
 
-  public function providerFromString(): \Generator {
+  public function providerConvenienceConstructors(): \Generator {
     // All empty cases.
     yield 'empty string' => [
       '',

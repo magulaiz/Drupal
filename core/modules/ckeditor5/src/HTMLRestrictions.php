@@ -18,12 +18,11 @@ use Masterminds\HTML5\Elements;
  * \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions(). It:
  * - accepts the array structure documented on that interface as its constructor
  *   argument
+ * - provides convenience constructors for common sources of HTML restrictions
  * - can transform this into multiple representations: a single string
  *   representation historically used by Drupal, a list
  *   representation used by CKEditor 5 and a complex array structure used by
  *   CKEditor 5's General HTML Support plugin
- * - can parse the first two of those representations (both string-based, and
- *   similar) back into a value object
  * - offers difference, intersection and union operations.
  *
  * This makes it significantly simpler to reason about different sets of HTML
