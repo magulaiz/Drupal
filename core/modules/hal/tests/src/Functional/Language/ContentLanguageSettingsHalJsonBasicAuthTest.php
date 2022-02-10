@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\language\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Language;
 
 use Drupal\Tests\language\Functional\Rest\ContentLanguageSettingsResourceTestBase;
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class ContentLanguageSettingsHalJsonAnonTest extends ContentLanguageSettingsResourceTestBase {
+class ContentLanguageSettingsHalJsonBasicAuthTest extends ContentLanguageSettingsResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class ContentLanguageSettingsHalJsonAnonTest extends ContentLanguageSettingsReso
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'basic_auth';
 
 }

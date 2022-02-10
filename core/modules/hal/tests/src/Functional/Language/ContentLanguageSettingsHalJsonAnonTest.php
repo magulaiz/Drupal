@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\Tests\language\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Language;
 
-use Drupal\Tests\language\Functional\Rest\ConfigurableLanguageResourceTestBase;
+use Drupal\Tests\language\Functional\Rest\ContentLanguageSettingsResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class ConfigurableLanguageHalJsonAnonTest extends ConfigurableLanguageResourceTestBase {
+class ContentLanguageSettingsHalJsonAnonTest extends ContentLanguageSettingsResourceTestBase {
 
   use AnonResourceTestTrait;
 

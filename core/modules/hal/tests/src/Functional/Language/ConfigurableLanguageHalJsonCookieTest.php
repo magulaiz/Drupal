@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\language\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Language;
 
 use Drupal\Tests\language\Functional\Rest\ConfigurableLanguageResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
