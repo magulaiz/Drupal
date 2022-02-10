@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\block\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Block;
 
 use Drupal\Tests\block\Functional\Rest\BlockResourceTestBase;
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class BlockHalJsonAnonTest extends BlockResourceTestBase {
+class BlockHalJsonBasicAuthTest extends BlockResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class BlockHalJsonAnonTest extends BlockResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'basic_auth';
 
 }

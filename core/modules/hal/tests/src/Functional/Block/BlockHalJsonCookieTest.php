@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\block\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Block;
 
 use Drupal\Tests\block\Functional\Rest\BlockResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
