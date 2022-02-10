@@ -8,6 +8,7 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
+use Drupal\migrate\PluginManagerTrait;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -97,6 +98,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[\AllowDynamicProperties]
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
+
+use PluginManagerTrait;
 
   /**
    * The migration ID (machine name).
@@ -702,6 +705,26 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
       throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
     }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
+    return $this->migration_dependencies;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExpandedDependencies() {
+    // @todo Remove these checks when self::set() is deprecated.
+    // @see https://www.drupal.org/project/drupal/issues/2796755
+    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
+      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
+    }
+    $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
+    $this->migration_dependencies = array_map(
+      function (array $migration_ids) {
+        return $this->expandPluginIds($migration_ids, $this->migrationPluginManager);
+      },
+      $this->migration_dependencies
+    );
     return $this->migration_dependencies;
   }
 

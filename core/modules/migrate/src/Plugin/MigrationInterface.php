@@ -295,6 +295,14 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function getMigrationDependencies();
 
   /**
+   * Get the expanded dependencies for this migration.
+   *
+   * @return array
+   *   The dependencies for this migration, including derived migrations.
+   */
+  public function getExpandedDependencies();
+
+  /**
    * Get the destination configuration, with at least a 'plugin' key.
    *
    * @return array
