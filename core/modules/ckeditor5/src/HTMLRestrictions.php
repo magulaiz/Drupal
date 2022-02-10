@@ -303,7 +303,7 @@ final class HTMLRestrictions {
     // Note: unknown wildcard tags will trigger a validation error in
     // ::validateAllowedRestrictionsPhase1().
     $replaced_wildcard_tags = [];
-    $elements_string = preg_replace_callback('/<(\$[a-z]*)/', function ($matches) use (&$replaced_wildcard_tags) {
+    $elements_string = preg_replace_callback('/<(\$[a-z][0-9a-z\-]*)/', function ($matches) use (&$replaced_wildcard_tags) {
       $wildcard_tag_name = $matches[1];
       $replacement = sprintf("__preprocessed-wildcard-%s__", substr($wildcard_tag_name, 1));
       $replaced_wildcard_tags[$replacement] = $wildcard_tag_name;
