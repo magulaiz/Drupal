@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\Tests\BrowserTestBase;
 
 /**
