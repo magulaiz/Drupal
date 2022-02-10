@@ -19,7 +19,7 @@ use Masterminds\HTML5\Elements;
  * - accepts the array structure documented on that interface as its constructor
  *   argument
  * - can transform this into multiple representations: a single string
- *   representation historically used by Drupal, a list of
+ *   representation historically used by Drupal, a list
  *   representation used by CKEditor 5 and a complex array structure used by
  *   CKEditor 5's General HTML Support plugin
  * - can parse the first two of those representations (both string-based, and
@@ -27,10 +27,17 @@ use Masterminds\HTML5\Elements;
  * - offers difference, intersection and union operations.
  *
  * This makes it significantly simpler to reason about different sets of HTML
- * restrictions and perform complex comparisons by performing the simple
+ * restrictions and perform complex comparisons by performing these simple
  * operations.
  *
  * @see FilterInterface::getHTMLRestrictions()
+ *
+ * NOTE: Wildcard tags are not a concept of the Drupal filter system or HTML
+ * filter; they are a CKEditor 5 concept. This allows CKEditor 5 plugins to
+ * convey a whole range of elements which they support setting certain
+ * attributes or attribute values on. For example: alignment.
+ *
+ * @see ::WILDCARD_ELEMENT_METHODS
  *
  * NOTE: Currently only supports the 'allowed' portion.
  * @todo Add support for "forbidden" tags in https://www.drupal.org/project/drupal/issues/3231334
@@ -680,6 +687,8 @@ final class HTMLRestrictions {
    *   wildcard tag restrictions are resolved into restrictions on concrete
    *   elements, if concrete elements are allowed that correspond to the
    *   wildcard tags.
+   *
+   * @see ::getWildcardTags()
    */
   private static function resolveWildcards(HTMLRestrictions $r): HTMLRestrictions {
     // Start by resolving the wildcards in a naive, simple way: generate
