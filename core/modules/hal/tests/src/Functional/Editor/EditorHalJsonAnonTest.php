@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\editor\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Editor;
 
 use Drupal\Tests\editor\Functional\Rest\EditorResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
