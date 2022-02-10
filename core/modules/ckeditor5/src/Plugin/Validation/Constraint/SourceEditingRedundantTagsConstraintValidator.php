@@ -96,7 +96,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $message_string = '';
     foreach ($plugin_definitions as $definition) {
       if ($definition->hasElements()) {
-        $plugin_capabilities = HTMLRestrictions::fromString($definition->getElements());
+        $plugin_capabilities = HTMLRestrictions::fromString(implode(' ', $definition->getElements()));
         foreach ($plugin_capabilities->intersect($overlap)->toCKEditor5ElementsArray() as $element) {
           $message_array[(string) $definition->label()][] = $element;
         }

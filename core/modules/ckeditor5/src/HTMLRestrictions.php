@@ -289,19 +289,15 @@ final class HTMLRestrictions {
   /**
    * Parses a string of HTML restrictions into a HTMLRestrictions value object.
    *
-   * @param string|string[] $elements_string
-   *   A string or string array representing a list of allowed HTML elements.
+   * @param string $elements_string
+   *   A string representing a list of allowed HTML elements.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *
    * @see ::toFilterHtmlAllowedTagsString()
    * @see ::toCKEditor5ElementsArray()
    */
-  public static function fromString($elements_string): HTMLRestrictions {
-    if (is_array($elements_string)) {
-      $elements_string = implode(' ', $elements_string);
-    }
-
+  public static function fromString(string $elements_string): HTMLRestrictions {
     // Preprocess wildcard tags: convert `<$block>` to
     // `<__preprocessed-wildcard-block__>`.
     // Note: unknown wildcard tags will trigger a validation error in

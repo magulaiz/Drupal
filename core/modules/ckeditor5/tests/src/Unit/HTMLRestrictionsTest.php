@@ -187,7 +187,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       [],
     ];
     yield 'empty array' => [
-      [],
+      implode(' ', []),
       [],
     ];
     yield 'whitespace string' => [
@@ -201,11 +201,11 @@ class HTMLRestrictionsTest extends UnitTestCase {
       [],
     ];
     yield 'nonsense array #1' => [
-      ['foo', 'bar'],
+      implode(' ', ['foo', 'bar']),
       [],
     ];
     yield 'nonsense array #2' => [
-      ['foo' => TRUE, 'bar' => FALSE],
+      implode(' ', ['foo' => TRUE, 'bar' => FALSE]),
       [],
     ];
 

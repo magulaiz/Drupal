@@ -75,9 +75,10 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
     return [
       'htmlSupport' => [
-        'allow' => HTMLRestrictions::fromString($this->configuration['allowed_tags'])->toGeneralHtmlSupportConfig(),
+        'allow' => $restrictions->toGeneralHtmlSupportConfig(),
       ],
     ];
   }

@@ -184,7 +184,9 @@ final class SmartDefaultSettings {
       $messages[] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
       $settings['toolbar']['items'][] = 'sourceEditing';
     }
-    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [])->merge($tags)->toCKEditor5ElementsArray();
+    $allowed_tags_array = $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [];
+    $allowed_tags_string = implode(' ', $allowed_tags_array);
+    $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($allowed_tags_string)->merge($tags)->toCKEditor5ElementsArray();
     $editor->setSettings($settings);
     return $messages;
   }
@@ -442,7 +444,7 @@ final class SmartDefaultSettings {
         // automatically enabling filters, but for now we assume that the filter
         // configuration cannot be modified.
         if (!in_array($plugin_id, $enabled_plugins, TRUE) && !$definition->hasConditions() && $definition->hasElements()) {
-          $plugin_support = HTMLRestrictions::fromString($definition->getElements());
+          $plugin_support = HTMLRestrictions::fromString(implode(' ', $definition->getElements()));
           // Do not inspect just $plugin_support, but the union of that with the
           // already supported elements: wildcard restrictions will only resolve
           // if the concrete tags they support are also present.
