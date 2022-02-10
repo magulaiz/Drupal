@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\config_test\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\ConfigTest;
 
 use Drupal\Tests\config_test\Functional\Rest\ConfigTestResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
