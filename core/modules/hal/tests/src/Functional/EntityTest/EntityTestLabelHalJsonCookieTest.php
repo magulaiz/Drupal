@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\entity_test\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\EntityTest;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityTestHalJsonCookieTest extends EntityTestHalJsonAnonTest {
+class EntityTestLabelHalJsonCookieTest extends EntityTestLabelHalJsonAnonTest {
 
   use CookieResourceTestTrait;
 

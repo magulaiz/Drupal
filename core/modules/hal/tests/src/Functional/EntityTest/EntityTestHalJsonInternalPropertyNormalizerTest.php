@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\entity_test\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\EntityTest;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\field\Entity\FieldConfig;

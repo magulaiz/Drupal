@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\entity_test\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\EntityTest;
 
-use Drupal\Tests\entity_test\Functional\Rest\EntityTestLabelResourceTestBase;
+use Drupal\Tests\entity_test\Functional\Rest\EntityTestMapFieldResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\user\Entity\User;
@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
 /**
  * @group hal
  */
-class EntityTestLabelHalJsonAnonTest extends EntityTestLabelResourceTestBase {
+class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBase {
 
   use HalEntityNormalizationTrait;
   use AnonResourceTestTrait;
@@ -47,12 +47,12 @@ class EntityTestLabelHalJsonAnonTest extends EntityTestLabelResourceTestBase {
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/entity/entity_test_label/1?_format=hal_json',
+          'href' => $this->baseUrl . '/entity/entity_test_map_field/1?_format=hal_json',
         ],
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/entity_test_label/entity_test_label',
+          'href' => $this->baseUrl . '/rest/type/entity_test_map_field/entity_test_map_field',
         ],
-        $this->baseUrl . '/rest/relation/entity_test_label/entity_test_label/user_id' => [
+        $this->baseUrl . '/rest/relation/entity_test_map_field/entity_test_map_field/user_id' => [
           [
             'href' => $this->baseUrl . '/user/0?_format=hal_json',
             'lang' => 'en',
@@ -60,7 +60,7 @@ class EntityTestLabelHalJsonAnonTest extends EntityTestLabelResourceTestBase {
         ],
       ],
       '_embedded' => [
-        $this->baseUrl . '/rest/relation/entity_test_label/entity_test_label/user_id' => [
+        $this->baseUrl . '/rest/relation/entity_test_map_field/entity_test_map_field/user_id' => [
           [
             '_links' => [
               'self' => [
@@ -89,7 +89,7 @@ class EntityTestLabelHalJsonAnonTest extends EntityTestLabelResourceTestBase {
     return parent::getNormalizedPostEntity() + [
       '_links' => [
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/entity_test_label/entity_test_label',
+          'href' => $this->baseUrl . '/rest/type/entity_test_map_field/entity_test_map_field',
         ],
       ],
     ];
