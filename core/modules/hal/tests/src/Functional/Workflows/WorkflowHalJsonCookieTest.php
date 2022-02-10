@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\workflows\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Workflows;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
