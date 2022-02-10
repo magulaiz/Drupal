@@ -99,7 +99,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[\AllowDynamicProperties]
 class Migration extends PluginBase implements MigrationInterface, RequirementsInterface, ContainerFactoryPluginInterface {
 
-use PluginManagerTrait;
+  use PluginManagerTrait;
 
   /**
    * The migration ID (machine name).

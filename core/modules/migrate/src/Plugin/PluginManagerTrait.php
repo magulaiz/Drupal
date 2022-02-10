@@ -15,7 +15,7 @@ trait PluginManagerTrait {
    *
    * @param array $migration_ids
    *   A list of plugin IDs.
-   * @param PluginManagerInterface $manager
+   * @param \Drupal\Component\Plugin\PluginManagerInterface|null $manager
    *   (optional) A plugin manager. Defaults to $this, so it should be supplied
    *   explicitly except in a class that implements PluginManagerInterface.
    *

@@ -3,7 +3,6 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Graph\Graph;
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
@@ -20,7 +19,7 @@ use Drupal\migrate\PluginManagerTrait;
  */
 class MigrationPluginManager extends DefaultPluginManager implements MigrationPluginManagerInterface, MigrateBuildDependencyInterface {
 
-use PluginManagerTrait;
+  use PluginManagerTrait;
 
   /**
    * Provides default values for migrations.
