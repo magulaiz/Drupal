@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\rest\Kernel\EntityResource;
+namespace Drupal\Tests\hal\Kernel\EntityResource;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
