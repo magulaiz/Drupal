@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\comment\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Comment;
 
 use Drupal\Tests\comment\Functional\Rest\CommentTypeResourceTestBase;
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class CommentTypeHalJsonBasicAuthTest extends CommentTypeResourceTestBase {
+class CommentTypeHalJsonCookieTest extends CommentTypeResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}
@@ -35,6 +35,6 @@ class CommentTypeHalJsonBasicAuthTest extends CommentTypeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $auth = 'basic_auth';
+  protected static $auth = 'cookie';
 
 }

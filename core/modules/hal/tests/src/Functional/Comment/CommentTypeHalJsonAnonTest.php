@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\comment\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Comment;
 
 use Drupal\Tests\comment\Functional\Rest\CommentTypeResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
