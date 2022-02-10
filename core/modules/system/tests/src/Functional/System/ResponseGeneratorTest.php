@@ -17,7 +17,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['hal', 'rest', 'node', 'basic_auth'];
+  protected static $modules = ['node', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -55,20 +55,6 @@ class ResponseGeneratorTest extends BrowserTestBase {
     $this->drupalGet('llama');
     $this->assertSession()->statusCodeEquals(404);
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
-    $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
-
-    // Enable cookie-based authentication for the entity:node REST resource.
-    /** @var \Drupal\rest\RestResourceConfigInterface $resource_config */
-    $resource_config = RestResourceConfig::load('entity.node');
-    $configuration = $resource_config->get('configuration');
-    $configuration['authentication'][] = 'cookie';
-    $resource_config->set('configuration', $configuration)->save();
-    $this->rebuildAll();
-
-    // Tests to see if this also works for a non-html request
-    $this->drupalGet($node->toUrl()->setOption('query', ['_format' => 'hal_json']));
-    $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
 
   }
