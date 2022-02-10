@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\responsive_image\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\ResponsiveImage;
 
 use Drupal\Tests\responsive_image\Functional\Rest\ResponsiveImageStyleResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
