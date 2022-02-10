@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\contact\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Contact;
 
 use Drupal\Tests\contact\Functional\Rest\MessageResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
