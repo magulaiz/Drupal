@@ -5,6 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
+import { getPreviewContainer } from './utils';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -51,7 +52,7 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
-   * Fetch preview from the server.
+   * Fetches preview from the server.
    *
    * @param {module:engine/model/element~Element} modelElement
    *   The model element which preview should be loaded.
@@ -139,37 +140,9 @@ export default class DrupalMediaEditing extends Plugin {
           const modelElement = data.item;
           const container = conversionApi.mapper.toViewElement(data.item);
 
-          /**
-           * Finds preview container element from the media element.
-           *
-           * @param {Iterable.<module:engine/view/element~Element>} children
-           *   The child elements.
-           * @return {null|module:engine/view/element~Element}
-           *   The preview child element if available.
-           */
-          const findPreviewContainer = (children) => {
-            // eslint-disable-next-line no-restricted-syntax
-            for (const child of children) {
-              if (child.hasAttribute('data-drupal-media-preview')) {
-                return child;
-              }
-
-              if (child.childCount) {
-                const recursive = findPreviewContainer(child.getChildren());
-                // Return only if preview container was found from children of
-                // this element.
-                if (recursive) {
-                  return recursive;
-                }
-              }
-            }
-
-            return null;
-          };
-
           // Search for preview container recursively from the children. The
           // preview container could be wrapped with an element such as `<a>`.
-          let media = findPreviewContainer(container.getChildren());
+          let media = getPreviewContainer(container.getChildren());
 
           // Use pre-existing media preview container if one exists. If the
           // preview element doesn't exist, create a new element.

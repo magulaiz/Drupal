@@ -29,7 +29,7 @@ class Media extends CKEditor5PluginDefault {
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-    $dynamic_plugin_config['drupalMedia']['mediaEntityMetadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
+    $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())
     );

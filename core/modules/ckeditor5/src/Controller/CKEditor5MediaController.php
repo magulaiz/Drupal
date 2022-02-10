@@ -175,6 +175,7 @@ class CKEditor5MediaController extends ControllerBase {
   protected function getMediaImageSourceFieldName(MediaInterface $media) {
     $field_definition = $media->getSource()
       ->getSourceFieldDefinition($media->bundle->entity);
+    $source = $media->getSource();
     $item_class = $field_definition->getItemDefinition()->getClass();
     if (is_a($item_class, ImageItem::class, TRUE)) {
       return $field_definition->getName();

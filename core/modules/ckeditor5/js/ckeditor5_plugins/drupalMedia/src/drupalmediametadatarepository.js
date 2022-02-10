@@ -71,14 +71,14 @@ export default class DrupalMediaMetadataRepository extends Plugin {
       });
     }
 
-    const { mediaEntityMetadataUrl } = options;
+    const { metadataUrl } = options;
     const query = new URLSearchParams({
       uuid: modelElement.getAttribute('drupalMediaEntityUuid'),
     });
-    // The `mediaEntityMetadataUrl` received from the server already includes a
-    // a query string (for the CSRF token).
+    // The `metadataUrl` received from the server already includes a query
+    // string (for the CSRF token).
     // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::getDynamicPluginConfig()
-    const url = `${mediaEntityMetadataUrl}&${query}`;
+    const url = `${metadataUrl}&${query}`;
 
     return _fetchMetadata(url).then((metadata) => {
       this._data.set(modelElement, metadata);
