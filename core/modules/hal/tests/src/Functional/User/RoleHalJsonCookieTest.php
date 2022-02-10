@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\User;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\user\Functional\Rest\RoleResourceTestBase;
