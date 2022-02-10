@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\file\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\File;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class FileUploadHalJsonCookieTest extends FileUploadHalJsonTestBase {
+class FileHalJsonCookieTest extends FileHalJsonAnonTest {
 
   use CookieResourceTestTrait;
 
