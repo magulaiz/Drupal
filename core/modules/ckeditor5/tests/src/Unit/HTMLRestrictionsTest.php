@@ -148,25 +148,25 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @covers ::fromFilterPluginInstance()
    * @dataProvider providerConvenienceConstructors
    */
-  public function testConvienceConstructors($input, array $expected, ?array $expected_without_resolving = NULL): void {
-    $expected_without_resolving = $expected_without_resolving ?? $expected;
+  public function testConvienceConstructors($input, array $expected, ?array $expected_raw = NULL): void {
+    $expected_raw = $expected_raw ?? $expected;
 
     // ::fromString()
     $this->assertSame($expected, HTMLRestrictions::fromString($input)->getAllowedElements());
-    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromString($input)->getAllowedElements(FALSE));
+    $this->assertSame($expected_raw, HTMLRestrictions::fromString($input)->getAllowedElements(FALSE));
 
     // ::fromTextFormat()
     $text_format = $this->prophesize(FilterFormatInterface::class);
     $text_format->getHTMLRestrictions()->willReturn([
-      'allowed' => $expected_without_resolving,
+      'allowed' => $expected_raw,
     ]);
     $this->assertSame($expected, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements());
-    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements(FALSE));
+    $this->assertSame($expected_raw, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements(FALSE));
 
     // ::fromFilterPluginInstance()
     $filter_plugin_instance = $this->prophesize(FilterInterface::class);
     $filter_plugin_instance->getHTMLRestrictions()->willReturn([
-      'allowed' => $expected_without_resolving + [
+      'allowed' => $expected_raw + [
         // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
         '*' => [
           'style' => FALSE,
@@ -177,7 +177,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ],
     ]);
     $this->assertSame($expected, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());
-    $this->assertSame($expected_without_resolving, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
+    $this->assertSame($expected_raw, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
   }
 
   public function providerConvenienceConstructors(): \Generator {
