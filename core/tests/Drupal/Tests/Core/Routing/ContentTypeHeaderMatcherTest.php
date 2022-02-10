@@ -105,7 +105,6 @@ class ContentTypeHeaderMatcherTest extends UnitTestCase {
    * Confirms that the matcher throws an exception for no-route.
    *
    * @covers ::filter
-   * @group testtest
    */
   public function testNoRouteFound() {
     $matcher = new ContentTypeHeaderMatcher();
