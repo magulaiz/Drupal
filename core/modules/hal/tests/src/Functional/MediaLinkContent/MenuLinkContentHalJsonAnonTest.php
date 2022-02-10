@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\menu_link_content\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\MenuLinkContent;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
