@@ -148,7 +148,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @covers ::fromFilterPluginInstance()
    * @dataProvider providerConvenienceConstructors
    */
-  public function testConvienceConstructors($input, array $expected, ?array $expected_raw = NULL): void {
+  public function testConvenienceConstructors($input, array $expected, ?array $expected_raw = NULL): void {
     $expected_raw = $expected_raw ?? $expected;
 
     // ::fromString()
