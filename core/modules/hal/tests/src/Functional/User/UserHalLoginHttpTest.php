@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Functional;
+namespace Drupal\Tests\hal\Functional\User;
 
 use Drupal\Core\Flood\DatabaseBackend;
 use Drupal\Core\Test\AssertMailTrait;
@@ -11,6 +11,7 @@ use GuzzleHttp\Cookie\CookieJar;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Drupal\hal\Encoder\JsonEncoder as HALJsonEncoder;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Serializer\Serializer;
  *
  * @group user
  */
-class UserLoginHttpTest extends BrowserTestBase {
+class UserHalLoginHttpTest extends BrowserTestBase {
 
   use AssertMailTrait {
     getMails as drupalGetMails;
@@ -29,7 +30,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['dblog'];
+  protected static $modules = ['hal', 'dblog', 'serialization'];
 
   /**
    * {@inheritdoc}
@@ -56,7 +57,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->cookies = new CookieJar();
-    $encoders = [new JsonEncoder(), new XmlEncoder()];
+    $encoders = [new JsonEncoder(), new XmlEncoder(), new HALJsonEncoder()];
     $this->serializer = new Serializer([], $encoders);
   }
 
@@ -101,13 +102,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * Tests user session life cycle.
    */
   public function testLogin() {
-    // Without the serialization module only JSON is supported.
-    $this->doTestLogin('json');
-
-    // Enable serialization so we have access to additional formats.
-    $this->container->get('module_installer')->install(['serialization']);
-    $this->doTestLogin('json');
-    $this->doTestLogin('xml');
+    $this->doTestLogin('hal_json');
   }
 
   /**
@@ -237,15 +232,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   public function testPasswordReset() {
     // Create a user account.
     $account = $this->drupalCreateUser();
-
-    // Without the serialization module only JSON is supported.
-    $this->doTestPasswordReset('json', $account);
-
-    // Enable serialization so we have access to additional formats.
-    $this->container->get('module_installer')->install(['serialization']);
-
-    $this->doTestPasswordReset('json', $account);
-    $this->doTestPasswordReset('xml', $account);
+    $this->doTestPasswordReset('hal_json', $account);
   }
 
   /**
@@ -276,43 +263,6 @@ class UserLoginHttpTest extends BrowserTestBase {
    */
   protected function resetFlood() {
     $this->container->get('database')->delete(DatabaseBackend::TABLE_NAME)->execute();
-  }
-
-  /**
-   * Tests the global login flood control.
-   *
-   * @see \Drupal\basic_auth\Tests\Authentication\BasicAuthTest::testGlobalLoginFloodControl
-   * @see \Drupal\user\Tests\UserLoginTest::testGlobalLoginFloodControl
-   */
-  public function testGlobalLoginFloodControl() {
-    $database = \Drupal::database();
-    $this->config('user.flood')
-      ->set('ip_limit', 2)
-      // Set a high per-user limit out so that it is not relevant in the test.
-      ->set('user_limit', 4000)
-      ->save();
-
-    $user = $this->drupalCreateUser([]);
-    $incorrect_user = clone $user;
-    $incorrect_user->passRaw .= 'incorrect';
-
-    // Try 2 failed logins.
-    for ($i = 0; $i < 2; $i++) {
-      $response = $this->loginRequest($incorrect_user->getAccountName(), $incorrect_user->passRaw);
-      $this->assertEquals('400', $response->getStatusCode());
-    }
-
-    // IP limit has reached to its limit. Even valid user credentials will fail.
-    $response = $this->loginRequest($user->getAccountName(), $user->passRaw);
-    $this->assertHttpResponseWithMessage($response, '403', 'Access is blocked because of IP based flood prevention.');
-    $last_log = $database->select('watchdog', 'w')
-      ->fields('w', ['message'])
-      ->condition('type', 'user')
-      ->orderBy('wid', 'DESC')
-      ->range(0, 1)
-      ->execute()
-      ->fetchField();
-    $this->assertEquals('Flood control blocked login attempt from %ip', $last_log, 'A watchdog message was logged for the login attempt blocked by flood control per IP.');
   }
 
   /**
@@ -450,49 +400,6 @@ class UserLoginHttpTest extends BrowserTestBase {
 
     $response = $client->post($user_logout_url->toString(), $post_options);
     return $response;
-  }
-
-  /**
-   * Tests csrf protection of User Logout route.
-   */
-  public function testLogoutCsrfProtection() {
-    $client = \Drupal::httpClient();
-    $login_status_url = $this->getLoginStatusUrlString();
-    $account = $this->drupalCreateUser();
-    $name = $account->getAccountName();
-    $pass = $account->passRaw;
-
-    $response = $this->loginRequest($name, $pass);
-    $this->assertEquals(200, $response->getStatusCode());
-    $result_data = $this->serializer->decode($response->getBody(), 'json');
-
-    $logout_token = $result_data['logout_token'];
-
-    // Test third party site posting to current site with logout request.
-    // This should not logout the current user because it lacks the CSRF
-    // token.
-    $response = $this->logoutRequest('json');
-    $this->assertEquals(403, $response->getStatusCode());
-
-    // Ensure still logged in.
-    $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
-
-    // Try with an incorrect token.
-    $response = $this->logoutRequest('json', 'not-the-correct-token');
-    $this->assertEquals(403, $response->getStatusCode());
-
-    // Ensure still logged in.
-    $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_IN);
-
-    // Try a logout request with correct token.
-    $response = $this->logoutRequest('json', $logout_token);
-    $this->assertEquals(204, $response->getStatusCode());
-
-    // Ensure actually logged out.
-    $response = $client->get($login_status_url, ['cookies' => $this->cookies]);
-    $this->assertHttpResponse($response, 200, UserAuthenticationController::LOGGED_OUT);
   }
 
   /**
