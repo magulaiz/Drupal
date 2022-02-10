@@ -8,6 +8,28 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 /**
  * Drupal 7 file source from database.
  *
+ * Examples:
+ *
+ * @code
+ * source:
+ *   plugin: d7_file
+ *   file_types: 'video'
+ * @endcode
+ *
+ * In this example all files that have a mime type starting with 'video'
+ * will be selected.
+ *
+ * @code
+ * source:
+ *   plugin: d7_file
+ *   file_types:
+ *     - 'video/mp4'
+ *     - 'image/jpg'
+ * @endcode
+ *
+ * In this example all files that have a mime type 'video/mp4' and
+ * 'image/jpg' will be selected.
+ *
  * @MigrateSource(
  *   id = "d7_file",
  *   source_module = "file"
@@ -55,6 +77,20 @@ class File extends DrupalSqlBase {
         $conditions->condition('f.uri', $scheme . '%', 'LIKE');
       }
       $query->condition($conditions);
+    }
+
+    // Filter by filemime(s), if configured.
+    if (isset($this->configuration['file_types'])) {
+      if (is_array($this->configuration['file_types']) ){
+        $filemime_conditions = $this->getDatabase()->condition('OR');
+        foreach ($this->configuration['file_types'] as $filemime) {
+          $filemime_conditions->condition('f.filemime', $filemime);
+        }
+        $query->condition($filemime_conditions);
+      }
+      else {
+        $query->condition('f.filemime', $this->configuration['file_types'] . '%', 'LIKE');
+      }
     }
 
     return $query;
