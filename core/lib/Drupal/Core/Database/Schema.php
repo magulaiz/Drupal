@@ -191,7 +191,7 @@ abstract class Schema implements PlaceholderInterface {
     $condition = $this->buildTableNameCondition('%', 'LIKE');
     $condition->compile($this->connection, $this);
 
-    $prefix = $this->connection->tablePrefix();
+    $prefix = $this->connection->getPrefix();
     $prefix_length = strlen($prefix);
     $tables = [];
     // Normally, we would heartily discourage the use of string

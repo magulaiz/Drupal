@@ -369,7 +369,7 @@ abstract class Connection {
    * @return string $prefix
    */
   public function getPrefix(): string {
-    return $this->prefixes['default'];
+    return $this->prefix;
   }
 
   /**
@@ -442,10 +442,9 @@ abstract class Connection {
    * Instead, you should just use Connection::getPrefix().
    *
    * @see https://www.drupal.org/node/3260849
-   *
    */
   public function tablePrefix($table = 'default') {
-    @trigger_error('Connection::tablePrefix() is deprecated in drupal:10.0.0 and is
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.0.0 and is
     removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix().
     See https://www.drupal.org/node/3260849', E_USER_DEPRECATED);
     return $this->prefix;
