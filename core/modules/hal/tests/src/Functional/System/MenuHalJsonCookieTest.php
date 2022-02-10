@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\System;
 
-use Drupal\Tests\system\Functional\Rest\ActionResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase;
 
 /**
  * @group hal
  */
-class ActionHalJsonCookieTest extends ActionResourceTestBase {
+class MenuHalJsonCookieTest extends MenuResourceTestBase {
 
   use CookieResourceTestTrait;
 

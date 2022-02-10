@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\System;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
-use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase;
+use Drupal\Tests\system\Functional\Rest\ActionResourceTestBase;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class MenuHalJsonCookieTest extends MenuResourceTestBase {
+class ActionHalJsonAnonTest extends ActionResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class MenuHalJsonCookieTest extends MenuResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
 }

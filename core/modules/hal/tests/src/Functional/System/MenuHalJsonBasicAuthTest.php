@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\System;
 
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\system\Functional\Rest\MenuResourceTestBase;
 
 /**
  * @group hal
  */
-class MenuHalJsonAnonTest extends MenuResourceTestBase {
+class MenuHalJsonBasicAuthTest extends MenuResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class MenuHalJsonAnonTest extends MenuResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'basic_auth';
 
 }
