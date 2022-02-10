@@ -372,6 +372,10 @@ use PluginManagerTrait;
       @trigger_error("The key 'trackLastImported' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3282894", E_USER_DEPRECATED);
     }
 
+    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
+    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
+      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
+    }
   }
 
   /**
@@ -635,6 +639,12 @@ use PluginManagerTrait;
       // Invalidate the destination plugin.
       unset($this->destinationPlugin);
     }
+    elseif ($property_name === 'migration_dependencies') {
+      $value = ($value ?: []) + ['required' => [], 'optional' => []];
+      if (count($value) !== 2 || !is_array($value['required']) || !is_array($value['optional'])) {
+        throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
+      }
+    }
     $this->{$property_name} = $value;
     return $this;
   }
@@ -701,10 +711,6 @@ use PluginManagerTrait;
    */
   public function getMigrationDependencies() {
     @trigger_error('Migration::getMigrationDependencies() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3183069', E_USER_DEPRECATED);
-    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
-    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
-      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
-    }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
     return $this->migration_dependencies;
   }
@@ -713,12 +719,6 @@ use PluginManagerTrait;
    * {@inheritdoc}
    */
   public function getExpandedDependencies() {
-    // @todo Remove these checks when self::set() is deprecated.
-    // @see https://www.drupal.org/project/drupal/issues/2796755
-    $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
-    if (count($this->migration_dependencies) !== 2 || !is_array($this->migration_dependencies['required']) || !is_array($this->migration_dependencies['optional'])) {
-      throw new InvalidPluginDefinitionException($this->id(), "Invalid migration dependencies configuration for migration {$this->id()}");
-    }
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
     $this->migration_dependencies = array_map(
       function (array $migration_ids) {
