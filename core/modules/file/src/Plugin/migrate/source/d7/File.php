@@ -81,7 +81,7 @@ class File extends DrupalSqlBase {
 
     // Filter by filemime(s), if configured.
     if (isset($this->configuration['file_types'])) {
-      if (is_array($this->configuration['file_types']) ){
+      if (is_array($this->configuration['file_types'])) {
         $filemime_conditions = $this->getDatabase()->condition('OR');
         foreach ($this->configuration['file_types'] as $filemime) {
           $filemime_conditions->condition('f.filemime', $filemime);
