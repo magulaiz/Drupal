@@ -48,8 +48,10 @@ interface CommentTypeInterface extends ConfigEntityInterface {
    *
    * @param string $button_label
    *   The label for the comment submit button.
+   *
+   * @return $this
    */
-  public function setCommentSubmitButtonLabel($label);
+  public function setCommentSubmitButtonLabel($button_label);
 
   /**
    * Gets the reply submit button label for the comment type.
@@ -64,6 +66,8 @@ interface CommentTypeInterface extends ConfigEntityInterface {
    *
    * @param string $button_label
    *   The label for the reply submit button.
+   *
+   * @return $this
    */
   public function setReplySubmitButtonLabel($button_label);
 

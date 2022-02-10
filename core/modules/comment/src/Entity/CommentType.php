@@ -127,6 +127,7 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
    */
   public function setCommentSubmitButtonLabel($button_label) {
     $this->button_labels['submit_comment'] = $button_label;
+    return $this;
   }
 
   /**
@@ -141,6 +142,7 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
    */
   public function setReplySubmitButtonLabel($button_label) {
     $this->button_labels['submit_reply'] = $button_label;
+    return $this;
   }
 
 }
