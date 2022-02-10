@@ -392,33 +392,28 @@ final class HTMLRestrictions {
         // If this HTML restrictions object allows any attributes for this
         // tag, then the other is at most equally permissive: keep the
         // DiffArray result.
-        elseif ($value === TRUE) {
+        if ($value === TRUE) {
           return TRUE;
         }
         // Otherwise, this HTML restrictions object allows specific attributes
         // only. DiffArray only knows to compare arrays. When the other object
         // has a non-array value for this tag, interpret those values correctly.
-        elseif (is_array($value)) {
-          // The other object is more restrictive regarding allowed attributes
-          // for this tag: keep the DiffArray result.
-          if ($other->elements[$tag] === FALSE) {
-            return TRUE;
-          }
-          // The other object is more permissive regarding allowed attributes
-          // for this tag: drop the DiffArray result.
-          elseif ($other->elements[$tag] === TRUE) {
-            return FALSE;
-          }
-          // Both objects have lists of allowed attributes: keep the DiffArray
-          // result.
-          else {
-            // @see ::validateAllowedRestrictionsPhase3()
-            assert(is_array($other->elements[$tag]));
-            return TRUE;
-          }
+        assert(is_array($value));
+        // The other object is more restrictive regarding allowed attributes
+        // for this tag: keep the DiffArray result.
+        if ($other->elements[$tag] === FALSE) {
+          return TRUE;
         }
-
-        throw new \LogicException('This should never be reached.');
+        // The other object is more permissive regarding allowed attributes
+        // for this tag: drop the DiffArray result.
+        if ($other->elements[$tag] === TRUE) {
+          return FALSE;
+        }
+        // Both objects have lists of allowed attributes: keep the DiffArray
+        // result.
+        // @see ::validateAllowedRestrictionsPhase3()
+        assert(is_array($other->elements[$tag]));
+        return TRUE;
       },
       ARRAY_FILTER_USE_BOTH
     );
@@ -460,56 +455,59 @@ final class HTMLRestrictions {
       // If either does not allow attributes, neither does the intersection.
       if ($this->elements[$tag] === FALSE || $other->elements[$tag] === FALSE) {
         $intersection[$tag] = FALSE;
+        continue;
       }
       // If both allow all attributes, so does the intersection.
-      elseif ($this->elements[$tag] === TRUE && $other->elements[$tag] === TRUE) {
+      if ($this->elements[$tag] === TRUE && $other->elements[$tag] === TRUE) {
         $intersection[$tag] = TRUE;
+        continue;
       }
       // If the first allows all attributes, return the second.
-      elseif ($this->elements[$tag] === TRUE) {
+      if ($this->elements[$tag] === TRUE) {
         $intersection[$tag] = $other->elements[$tag];
+        continue;
       }
       // And vice versa.
-      elseif ($other->elements[$tag] === TRUE) {
+      if ($other->elements[$tag] === TRUE) {
         $intersection[$tag] = $this->elements[$tag];
+        continue;
       }
       // In all other cases, we need to return the most restrictive
       // intersection of per-attribute restrictions.
-      else {
-        // @see ::validateAllowedRestrictionsPhase3()
-        assert(is_array($this->elements[$tag]));
-        assert(is_array($other->elements[$tag]));
-
-        $intersection[$tag] = [];
-
-        $attributes_intersection = array_intersect_key($this->elements[$tag], $other->elements[$tag]);
-        foreach (array_keys($attributes_intersection) as $attr) {
-          // If both allow all attribute values, so does the intersection.
-          if ($this->elements[$tag][$attr] === TRUE && $other->elements[$tag][$attr] === TRUE) {
-            $intersection[$tag][$attr] = TRUE;
-          }
-          // If the first allows all attribute values, return the second.
-          elseif ($this->elements[$tag][$attr] === TRUE) {
-            $intersection[$tag][$attr] = $other->elements[$tag][$attr];
-          }
-          // And vice versa.
-          elseif ($other->elements[$tag][$attr] === TRUE) {
-            $intersection[$tag][$attr] = $this->elements[$tag][$attr];
-          }
-          else {
-            $intersection[$tag][$attr] = array_intersect_key($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
-            // It is not permitted to specify an empty attribute value
-            // restrictions array.
-            if (empty($intersection[$tag][$attr])) {
-              unset($intersection[$tag][$attr]);
-            }
-          }
+      // @see ::validateAllowedRestrictionsPhase3()
+      assert(is_array($this->elements[$tag]));
+      assert(is_array($other->elements[$tag]));
+      $intersection[$tag] = [];
+      $attributes_intersection = array_intersect_key($this->elements[$tag], $other->elements[$tag]);
+      foreach (array_keys($attributes_intersection) as $attr) {
+        // If both allow all attribute values, so does the intersection.
+        if ($this->elements[$tag][$attr] === TRUE && $other->elements[$tag][$attr] === TRUE) {
+          $intersection[$tag][$attr] = TRUE;
+          continue;
         }
-
-        // HTML tags must not have an empty array of allowed attributes.
-        if ($intersection[$tag] === []) {
-          $intersection[$tag] = FALSE;
+        // If the first allows all attribute values, return the second.
+        if ($this->elements[$tag][$attr] === TRUE) {
+          $intersection[$tag][$attr] = $other->elements[$tag][$attr];
+          continue;
         }
+        // And vice versa.
+        if ($other->elements[$tag][$attr] === TRUE) {
+          $intersection[$tag][$attr] = $this->elements[$tag][$attr];
+          continue;
+        }
+        assert(is_array($this->elements[$tag][$attr]));
+        assert(is_array($other->elements[$tag][$attr]));
+        $intersection[$tag][$attr] = array_intersect_key($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
+        // It is not permitted to specify an empty attribute value
+        // restrictions array.
+        if (empty($intersection[$tag][$attr])) {
+          unset($intersection[$tag][$attr]);
+        }
+      }
+
+      // HTML tags must not have an empty array of allowed attributes.
+      if ($intersection[$tag] === []) {
+        $intersection[$tag] = FALSE;
       }
     }
 

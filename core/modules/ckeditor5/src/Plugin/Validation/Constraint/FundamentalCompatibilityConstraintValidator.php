@@ -160,7 +160,8 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
       }
-      elseif (!$diff_elements->isEmpty()) {
+
+      if (!$diff_elements->isEmpty()) {
         $this->context->buildViolation($constraint->missingElementsMessage)
           ->setParameter('@list', $provided->toFilterHtmlAllowedTagsString())
           ->setParameter('@diff', $diff_elements->toFilterHtmlAllowedTagsString())
