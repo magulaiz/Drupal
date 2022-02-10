@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\block_content\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\BlockContent;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\block_content\Functional\Rest\BlockContentResourceTestBase;

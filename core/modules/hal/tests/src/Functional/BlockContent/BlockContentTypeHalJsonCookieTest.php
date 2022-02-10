@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\block_content\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\BlockContent;
 
 use Drupal\Tests\block_content\Functional\Rest\BlockContentTypeResourceTestBase;
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class BlockContentTypeHalJsonAnonTest extends BlockContentTypeResourceTestBase {
+class BlockContentTypeHalJsonCookieTest extends BlockContentTypeResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class BlockContentTypeHalJsonAnonTest extends BlockContentTypeResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'cookie';
 
 }
