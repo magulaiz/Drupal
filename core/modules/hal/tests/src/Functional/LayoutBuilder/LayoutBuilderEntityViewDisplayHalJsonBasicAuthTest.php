@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\layout_builder\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\LayoutBuilder;
 
 use Drupal\FunctionalTests\Hal\EntityViewDisplayHalJsonAnonTest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
