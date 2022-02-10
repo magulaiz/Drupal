@@ -9,17 +9,17 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
 
 /**
- * Checks that all core content/config entity types have REST test coverage.
+ * Checks that all core content/config entity types have HAL test coverage.
  *
  * Every entity type must have test coverage for:
- * - every format in core (json + xml)
+ * - hal_json
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
  * Additionally, every entity type must have the correct parent test class.
  *
- * @group rest
+ * @group hal
  */
-class EntityResourceRestTestCoverageTest extends KernelTestBase {
+class EntityResourceHalTestCoverageTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -62,20 +62,17 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
   }
 
   /**
-   * Tests that all core content/config entity types have REST test coverage.
+   * Tests that all core content/config entity types have HAL test coverage.
    */
-  public function testEntityTypeRestTestCoverage() {
+  public function testEntityTypeHalTestCoverage() {
     $tests = [
-      // Test coverage for formats provided by the 'serialization' module.
-      'serialization' => [
-        'path' => '\Drupal\Tests\PROVIDER\Functional\Rest\CLASS',
+      // Test coverage for formats provided by the 'hal' module.
+      'hal' => [
+        'path' => '\Drupal\Tests\hal\Functional\PROVIDER\CLASS',
         'class suffix' => [
-          'JsonAnonTest',
-          'JsonBasicAuthTest',
-          'JsonCookieTest',
-          'XmlAnonTest',
-          'XmlBasicAuthTest',
-          'XmlCookieTest',
+          'HalJsonAnonTest',
+          'HalJsonBasicAuthTest',
+          'HalJsonCookieTest',
         ],
       ],
     ];
@@ -92,8 +89,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
         $missing_tests = [];
         foreach ($info['class suffix'] as $postfix) {
           $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
-          $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
-          if (class_exists($class) || class_exists($class_alternative)) {
+          if (class_exists($class)) {
             continue;
           }
           $missing_tests[] = $postfix;
@@ -108,7 +104,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       }
 
       $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
-      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class) || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class);
+      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class);
       if ($config_entity && !$config_test) {
         $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
       }
