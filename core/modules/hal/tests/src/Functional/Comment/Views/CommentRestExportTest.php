@@ -3,7 +3,8 @@
 namespace Drupal\Tests\hal\Functional\Comment\Views;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\comment\Entity\Comment;use Drupal\Tests\comment\Functional\Views\CommentTestBase;
+use Drupal\comment\Entity\Comment;
+use Drupal\Tests\comment\Functional\Views\CommentTestBase;
 
 /**
  * Tests a comment rest export view.
