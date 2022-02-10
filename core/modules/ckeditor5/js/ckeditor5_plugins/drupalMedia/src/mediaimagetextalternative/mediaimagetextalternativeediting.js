@@ -62,7 +62,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
               });
             })
             .catch((e) => {
-              console.warn(e);
+              console.warn(e.toString());
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
                   'drupalMediaIsImage',

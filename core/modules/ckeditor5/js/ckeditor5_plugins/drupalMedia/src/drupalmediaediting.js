@@ -210,10 +210,7 @@ export default class DrupalMediaEditing extends Plugin {
               // Insert the new preview before the previous preview element to
               // ensure that the location remains same even if it is wrapped
               // with another element.
-              writer.insert(
-                writer.createPositionBefore(media, 0),
-                mediaPreview,
-              );
+              writer.insert(writer.createPositionBefore(media), mediaPreview);
               writer.remove(media);
             });
           });
