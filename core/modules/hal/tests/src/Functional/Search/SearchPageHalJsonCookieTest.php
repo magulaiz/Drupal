@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\search\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Search;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\search\Functional\Rest\SearchPageResourceTestBase;
