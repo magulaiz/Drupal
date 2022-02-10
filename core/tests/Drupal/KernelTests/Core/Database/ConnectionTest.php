@@ -214,7 +214,7 @@ class ConnectionTest extends DatabaseTestBase {
    */
   public function testDeprecatedTablePrefix() {
     $this->expectDeprecation('Drupal\Core\Database\Connection::tablePrefix() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. Instead, you should just use Connection::getPrefix(). See https://www.drupal.org/node/3260849');
-    $this->assertIsString($this->connection->getPrefix());
+    $this->assertIsString($this->connection->tablePrefix());
   }
 
 }
