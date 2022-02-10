@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\path_alias\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\PathAlias;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  * @group path_alias
  */
-class PathAliasHalJsonCookieTest extends PathAliasHalJsonTestBase {
+class PathAliasHalJsonAnonTest extends PathAliasHalJsonTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class PathAliasHalJsonCookieTest extends PathAliasHalJsonTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
 }

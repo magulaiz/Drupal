@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\path_alias\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\PathAlias;
 
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\path_alias\Functional\Rest\PathAliasResourceTestBase;
