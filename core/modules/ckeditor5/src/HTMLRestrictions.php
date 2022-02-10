@@ -104,7 +104,7 @@ final class HTMLRestrictions {
       if ($html_tag_name[0] === '<' || $html_tag_name[-1] === '>') {
         throw new \InvalidArgumentException(sprintf('"%s" is not a HTML tag name, it is an actual HTML tag. Omit the angular brackets.', $html_tag_name));
       }
-      if (static::isWildcardTag($html_tag_name)) {
+      if (self::isWildcardTag($html_tag_name)) {
         continue;
       }
       // HTML elements must have a valid tag name.
@@ -209,7 +209,7 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   public static function emptySet(): HTMLRestrictions {
-    return new static([]);
+    return new self([]);
   }
 
   /**
@@ -232,7 +232,7 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   public static function fromFilterPluginInstance(FilterInterface $filter): HTMLRestrictions {
-    return static::fromObjectWithHtmlRestrictions($filter);
+    return self::fromObjectWithHtmlRestrictions($filter);
   }
 
   /**
@@ -244,7 +244,7 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    */
   public static function fromTextFormat(FilterFormatInterface $text_format): HTMLRestrictions {
-    return static::fromObjectWithHtmlRestrictions($text_format);
+    return self::fromObjectWithHtmlRestrictions($text_format);
   }
 
   /**
@@ -284,7 +284,7 @@ final class HTMLRestrictions {
       unset($allowed['*']);
     }
 
-    return new static($allowed);
+    return new self($allowed);
   }
 
   /**
@@ -332,7 +332,7 @@ final class HTMLRestrictions {
       }
     }
 
-    return new static($allowed_elements);
+    return new self($allowed_elements);
   }
 
   /**
@@ -346,7 +346,7 @@ final class HTMLRestrictions {
    *   are not allowed in $other.
    */
   public function diff(HTMLRestrictions $other): HTMLRestrictions {
-    return static::applyOperation($this, $other, 'doDiff');
+    return self::applyOperation($this, $other, 'doDiff');
   }
 
   /**
@@ -423,7 +423,7 @@ final class HTMLRestrictions {
       ARRAY_FILTER_USE_BOTH
     );
 
-    return new static($diff_elements);
+    return new self($diff_elements);
   }
 
   /**
@@ -437,7 +437,7 @@ final class HTMLRestrictions {
    *   are also allowed in $other.
    */
   public function intersect(HTMLRestrictions $other): HTMLRestrictions {
-    return static::applyOperation($this, $other, 'doIntersect');
+    return self::applyOperation($this, $other, 'doIntersect');
   }
 
   /**
@@ -513,7 +513,7 @@ final class HTMLRestrictions {
       }
     }
 
-    return new static($intersection);
+    return new self($intersection);
   }
 
   /**
@@ -605,7 +605,7 @@ final class HTMLRestrictions {
         }
       }
     }
-    return new static($union);
+    return new self($union);
   }
 
   /**
@@ -624,8 +624,8 @@ final class HTMLRestrictions {
   private static function applyOperation(HTMLRestrictions $a, HTMLRestrictions $b, string $operation_method_name): HTMLRestrictions {
     // 1. Operation applied to wildcard tags that exist in both operands.
     // For example: <$block id> in both operands.
-    $a_wildcard = static::getWildcardSubset($a);
-    $b_wildcard = static::getWildcardSubset($b);
+    $a_wildcard = self::getWildcardSubset($a);
+    $b_wildcard = self::getWildcardSubset($b);
     $wildcard_op_result = $a_wildcard->$operation_method_name($b_wildcard);
 
     // Early return if both operands contain only wildcard tags.
@@ -636,18 +636,18 @@ final class HTMLRestrictions {
     // 2. Operation applied with wildcard tags resolved into concrete tags.
     // For example: <p class="text-align-center"> in the first operand and
     // <$block class="text-align-center"> in the second operand.
-    $a_concrete = static::resolveWildcards($a);
-    $b_concrete = static::resolveWildcards($b);
+    $a_concrete = self::resolveWildcards($a);
+    $b_concrete = self::resolveWildcards($b);
     $concrete_op_result = $a_concrete->$operation_method_name($b_concrete);
 
     // Using the PHP array union operator is safe because the two operation
     // result arrays ensure there is no overlap between the array keys.
     // @codingStandardsIgnoreStart
-    assert(Inspector::assertAll(function ($t) { return static::isWildcardTag($t); }, array_keys($wildcard_op_result->elements)));
-    assert(Inspector::assertAll(function ($t) { return !static::isWildcardTag($t); }, array_keys($concrete_op_result->elements)));
+    assert(Inspector::assertAll(function ($t) { return self::isWildcardTag($t); }, array_keys($wildcard_op_result->elements)));
+    assert(Inspector::assertAll(function ($t) { return !self::isWildcardTag($t); }, array_keys($concrete_op_result->elements)));
     // @codingStandardsIgnoreEnd
 
-    return new static($concrete_op_result->elements + $wildcard_op_result->elements);
+    return new self($concrete_op_result->elements + $wildcard_op_result->elements);
   }
 
   /**
@@ -660,7 +660,7 @@ final class HTMLRestrictions {
    *   The subset of the given set of HTML restrictions.
    */
   private static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
-    return new static(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+    return new self(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
   }
 
   /**
@@ -673,7 +673,7 @@ final class HTMLRestrictions {
    *   TRUE if it is a wildcard, otherwise FALSE.
    */
   private static function isWildcardTag(string $tag_name): bool {
-    return substr($tag_name, 0, 1) === '$' && array_key_exists($tag_name, static::WILDCARD_ELEMENT_METHODS);
+    return substr($tag_name, 0, 1) === '$' && array_key_exists($tag_name, self::WILDCARD_ELEMENT_METHODS);
   }
 
   /**
@@ -695,7 +695,7 @@ final class HTMLRestrictions {
     // tags, attributes and attribute values they support.
     $naively_resolved_wildcard_elements = [];
     foreach ($r->elements as $tag_name => $tag_config) {
-      if (static::isWildcardTag($tag_name)) {
+      if (self::isWildcardTag($tag_name)) {
         $wildcard_tags = self::getWildcardTags($tag_name);
         // Do not resolve to all tags supported by the wildcard tag, but only
         // those which are explicitly supported. Because wildcard tags only
@@ -708,7 +708,7 @@ final class HTMLRestrictions {
         }
       }
     }
-    $naive_resolution = new static($naively_resolved_wildcard_elements);
+    $naive_resolution = new self($naively_resolved_wildcard_elements);
 
     // Now merge the naive resolution's elements with the original elements, to
     // let ::merge() pick the most permissive one.
@@ -724,7 +724,7 @@ final class HTMLRestrictions {
     // - then $naive will be `<p class="foo">`
     // - merging them yields `<p class> <$block class="foo">` again
     // - diffing the wildcard subsets yields just `<p class>`
-    return $r->merge($naive_resolution)->doDiff(static::getWildcardSubset($r));
+    return $r->merge($naive_resolution)->doDiff(self::getWildcardSubset($r));
   }
 
   /**
@@ -741,7 +741,7 @@ final class HTMLRestrictions {
    */
   public function getAllowedElements(bool $resolve_wildcards = TRUE): array {
     if ($resolve_wildcards) {
-      return static::resolveWildcards($this)->elements;
+      return self::resolveWildcards($this)->elements;
     }
 
     return $this->elements;
