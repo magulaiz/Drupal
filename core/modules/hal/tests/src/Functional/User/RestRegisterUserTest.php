@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\user\Functional;
+namespace Drupal\Tests\hal\Functional\User;
 
 use Drupal\Core\Url;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
