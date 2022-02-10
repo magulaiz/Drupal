@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\rdf\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Rdf;
 
 use Drupal\Tests\rdf\Functional\Rest\RdfMappingResourceTestBase;
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class RdfMappingHalJsonAnonTest extends RdfMappingResourceTestBase {
+class RdfMappingHalJsonCookieTest extends RdfMappingResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class RdfMappingHalJsonAnonTest extends RdfMappingResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'cookie';
 
 }

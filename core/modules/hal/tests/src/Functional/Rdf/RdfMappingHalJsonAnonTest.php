@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\rdf\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Rdf;
 
 use Drupal\Tests\rdf\Functional\Rest\RdfMappingResourceTestBase;
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class RdfMappingHalJsonBasicAuthTest extends RdfMappingResourceTestBase {
+class RdfMappingHalJsonAnonTest extends RdfMappingResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class RdfMappingHalJsonBasicAuthTest extends RdfMappingResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'basic_auth';
 
 }

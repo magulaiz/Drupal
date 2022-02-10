@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\rdf\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Rdf;
 
 use Drupal\Tests\rdf\Functional\Rest\RdfMappingResourceTestBase;
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class RdfMappingHalJsonCookieTest extends RdfMappingResourceTestBase {
+class RdfMappingHalJsonBasicAuthTest extends RdfMappingResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -35,6 +35,6 @@ class RdfMappingHalJsonCookieTest extends RdfMappingResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $auth = 'cookie';
+  protected static $auth = 'basic_auth';
 
 }
