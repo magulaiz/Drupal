@@ -100,6 +100,7 @@ export default class DrupalElementStyleCommand extends Command {
         model.document.selection,
         model.schema,
       );
+      console.log('writer ', writer);
 
       if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
         writer.removeAttribute('drupalElementStyle', element);

@@ -142,6 +142,7 @@ export default class DrupalMediaEditing extends Plugin {
           // If the prior value is alignment related, it should be removed
           // whether or not the module property is consumed.
           if (alignMapping[data.attributeOldValue]) {
+            console.log('hit');
             viewWriter.removeClass(
               alignMapping[data.attributeOldValue],
               viewElement,

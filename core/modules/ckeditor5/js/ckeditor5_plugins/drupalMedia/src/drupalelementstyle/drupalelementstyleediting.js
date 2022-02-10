@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstylecommand */
-import {Plugin, icons} from 'ckeditor5/src/core';
-import {first} from 'ckeditor5/src/utils';
+import { Plugin, icons } from 'ckeditor5/src/core';
+import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
 
 /**
@@ -36,6 +36,7 @@ function getStyleDefinitionByName(name, styles) {
  */
 function modelToViewStyleAttribute(styles) {
   return (evt, data, conversionApi) => {
+    console.log(data);
     if (!conversionApi.consumable.consume(data.item, evt.name)) {
       return;
     }
@@ -56,6 +57,7 @@ function modelToViewStyleAttribute(styles) {
     }
 
     if (newStyle) {
+      console.log('new style attr name ', newStyle.attributeName);
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
       } else {
@@ -78,7 +80,6 @@ function modelToViewStyleAttribute(styles) {
  * Note that only one style can be applied to each model element.
  */
 function viewToModelStyleAttribute(styles) {
-  console.log('blah ', styles);
   // Convert only non–default styles.
   const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
@@ -190,7 +191,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     const editor = this.editor;
 
     // Ensure that the drupalElementStyles.options exists always.
-    editor.config.define('drupalElementStyles', {options: []});
+    editor.config.define('drupalElementStyles', { options: [] });
     const stylesConfig = editor.config.get('drupalElementStyles').options;
 
     /**
@@ -214,79 +215,46 @@ export default class DrupalElementStyleEditing extends Plugin {
      *
      * @type {Drupal.CKEditor5~DrupalElementStyle[]}
      */
-    this.normalizedStyles  = Object.keys(stylesConfig)
+    const stylesArray = [];
+    Object.keys(stylesConfig)
       .map((group) => {
-      stylesConfig[group]
-        .filter(Boolean)
-        .map((style) => {
-          // style = 'full'
-          // Allow defining style icon as a string that is referring to the
-          // CKEditor 5 default icons.
-          if (typeof style.icon === 'string') {
-            if (icons[style.icon]) {
-              style.icon = icons[style.icon];
+        stylesConfig[group] // array of styles
+          .map((style) => {
+            // Allow defining style icon as a string that is referring to the
+            // CKEditor 5 default icons.
+            if (typeof style.icon === 'string') {
+              if (icons[style.icon]) {
+                style.icon = icons[style.icon];
+              }
             }
-          }
-          console.log(style);
-          return style;
-        })
-        .filter((style) => {
-          if (!style.attributeName || !style.attributeValue) {
-            console.warn(
-              'drupalElementStyles options must include attributeName and attributeValue.',
-            );
-            return false;
-          }
-          if (!style.modelElements || !Array.isArray(style.modelElements)) {
-            console.warn(
-              'drupalElementStyles options must include an array of supported modelElements.',
-            );
-            return false;
-          }
+            return style;
+          })
+          .filter((style) => {
+            if (!style.attributeName || !style.attributeValue) {
+              console.warn(
+                'drupalElementStyles options must include attributeName and attributeValue.',
+              );
+              return false;
+            }
+            if (!style.modelElements || !Array.isArray(style.modelElements)) {
+              console.warn(
+                'drupalElementStyles options must include an array of supported modelElements.',
+              );
+              return false;
+            }
 
-          if (!style.name) {
-            console.warn('drupalElementStyles options must include a name.');
-            return false;
-          }
+            if (!style.name) {
+              console.warn('drupalElementStyles options must include a name.');
+              return false;
+            }
 
-          return true;
-        });
-    }).filter(Boolean);
-    console.log(this.normalizedStyles);
-
-    // this.normalizedStyles = stylesConfig
-    //   .map((style) => {
-    //     // Allow defining style icon as a string that is referring to the
-    //     // CKEditor 5 default icons.
-    //     if (typeof style.icon === 'string') {
-    //       if (icons[style.icon]) {
-    //         style.icon = icons[style.icon];
-    //       }
-    //     }
-    //     return style;
-    //   })
-    //   .filter((style) => {
-    //     if (!style.attributeName || !style.attributeValue) {
-    //       console.warn(
-    //         'drupalElementStyles options must include attributeName and attributeValue.',
-    //       );
-    //       return false;
-    //     }
-    //     if (!style.modelElements || !Array.isArray(style.modelElements)) {
-    //       console.warn(
-    //         'drupalElementStyles options must include an array of supported modelElements.',
-    //       );
-    //       return false;
-    //     }
-    //
-    //     if (!style.name) {
-    //       console.warn('drupalElementStyles options must include a name.');
-    //       return false;
-    //     }
-    //
-    //     return true;
-    //   });
-    // console.log(this.normalizedStyles);
+            return true;
+          });
+        stylesArray.push(stylesConfig[group]);
+      })
+      .filter(Boolean);
+    // Flatten into one array.
+    this.normalizedStyles = Array.prototype.concat.apply([], stylesArray);
 
     this._setupConversion();
 
@@ -336,7 +304,7 @@ export default class DrupalElementStyleEditing extends Plugin {
       ),
     ];
     modelElements.forEach((modelElement) => {
-      schema.extend(modelElement, {allowAttributes: 'drupalElementStyle'});
+      schema.extend(modelElement, { allowAttributes: 'drupalElementStyle' });
     });
 
     // View to model converter that runs on all elements.
@@ -345,7 +313,7 @@ export default class DrupalElementStyleEditing extends Plugin {
       viewToModelConverter,
       // This needs to be set as low priority to ensure this runs always after
       // the element has been converted to a model element.
-      {priority: 'low'},
+      { priority: 'low' },
     );
   }
 
