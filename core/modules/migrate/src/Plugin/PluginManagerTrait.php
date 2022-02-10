@@ -28,7 +28,7 @@ trait PluginManagerTrait {
       $manager = $this;
     }
     $plugin_ids = [];
-    $all_ids = array_keys($manager->getDefinitions()));
+    $all_ids = array_keys($manager->getDefinitions());
     foreach ($migration_ids as $id) {
       $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', $all_ids);
       if ($manager->hasDefinition($id)) {
