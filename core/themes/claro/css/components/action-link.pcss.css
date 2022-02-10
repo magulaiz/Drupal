@@ -96,6 +96,11 @@
   margin-left: var(--space-s);
 }
 
+/* Action links inside modal */
+.ui-dialog-buttonpane .form-actions .action-link {
+  padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2) - 1px) var(--space-m);
+}
+
 /* Action link states */
 .action-link:hover {
   text-decoration: none;

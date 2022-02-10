@@ -112,6 +112,12 @@
   margin-left: 0.75rem;
 }
 
+/* Action links inside modal */
+
+.ui-dialog-buttonpane .form-actions .action-link {
+  padding: calc(0.75rem - 1px) 1rem;
+}
+
 /* Action link states */
 
 .action-link:hover {

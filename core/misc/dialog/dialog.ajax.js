@@ -37,7 +37,7 @@
     },
     prepareDialogButtons: function prepareDialogButtons($dialog) {
       var buttons = [];
-      var $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a.button');
+      var $buttons = $dialog.find('.form-actions input[type=submit], .form-actions a');
       $buttons.each(function () {
         var $originalButton = $(this).css({
           display: 'none'

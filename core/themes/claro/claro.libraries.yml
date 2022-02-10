@@ -20,12 +20,12 @@ global-styling:
       css/classy/components/textarea.css: {}
       css/classy/components/ui-dialog.css: {}
       css/components/accordion.css: {}
-      css/components/action-link.css: {}
       css/components/content-header.css: {}
       css/components/container-inline.css: {}
       css/components/container-inline.module.css: {}
       css/components/breadcrumb.css: {}
       css/components/button.css: {}
+      css/components/action-link.css: {}
       css/components/details.css: {}
       css/components/divider.css: {}
       css/components/messages.css: {}
