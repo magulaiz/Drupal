@@ -107,6 +107,13 @@ use PluginManagerTrait;
 
     $factory = $this->getFactory();
     $migration_ids = (array) $migration_id;
+
+    // We need to expand any derivative migrations. Derivative migrations are
+    // calculated by migration derivers such as D6NodeDeriver. This allows
+    // migrations to depend on the base id and then have a dependency on all
+    // derivative migrations. For example, d6_comment depends on d6_node but
+    // after we've expanded the dependencies it will depend on d6_node:page,
+    // d6_node:story and so on, for other derivative migrations.
     $plugin_ids = $this->expandPluginIds($migration_ids);
 
     $instances = [];
