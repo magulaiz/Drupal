@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Aggregator;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 

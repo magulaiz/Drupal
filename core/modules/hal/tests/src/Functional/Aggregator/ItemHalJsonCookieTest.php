@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Aggregator;
 
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class ItemHalJsonAnonTest extends ItemHalJsonTestBase {
+class ItemHalJsonCookieTest extends ItemHalJsonTestBase {
 
-  use AnonResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -30,5 +30,10 @@ class ItemHalJsonAnonTest extends ItemHalJsonTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'cookie';
 
 }

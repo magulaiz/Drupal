@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Aggregator;
 
 use Drupal\aggregator\Entity\Feed;
 use Drupal\Tests\aggregator\Functional\Rest\ItemResourceTestBase;
