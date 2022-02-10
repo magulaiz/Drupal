@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\shortcut\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Shortcut;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\shortcut\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Shortcut;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class ShortcutHalJsonBasicAuthTest extends ShortcutHalJsonAnonTest {
+class ShortcutSetHalJsonBasicAuthTest extends ShortcutSetHalJsonAnonTest {
 
   use BasicAuthResourceTestTrait;
 
