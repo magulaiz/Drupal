@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\EntityFormModeResourceTestBase;
+use Drupal\FunctionalTests\Rest\DateFormatResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityFormModeHalJsonCookieTest extends EntityFormModeResourceTestBase {
+class DateFormatHalJsonCookieTest extends DateFormatResourceTestBase {
 
   use CookieResourceTestTrait;
 

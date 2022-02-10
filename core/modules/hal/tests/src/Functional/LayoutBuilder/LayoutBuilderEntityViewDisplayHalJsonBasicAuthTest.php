@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\hal\Functional\LayoutBuilder;
 
-use Drupal\FunctionalTests\Hal\EntityViewDisplayHalJsonAnonTest;
+use Drupal\Tests\hal\Functional\Drupal\EntityViewDisplayHalJsonAnonTest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**

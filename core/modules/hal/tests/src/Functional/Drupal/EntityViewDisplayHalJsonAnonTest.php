@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\BaseFieldOverrideResourceTestBase;
+use Drupal\FunctionalTests\Rest\EntityViewDisplayResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class BaseFieldOverrideHalJsonAnonTest extends BaseFieldOverrideResourceTestBase {
+class EntityViewDisplayHalJsonAnonTest extends EntityViewDisplayResourceTestBase {
 
   use AnonResourceTestTrait;
 

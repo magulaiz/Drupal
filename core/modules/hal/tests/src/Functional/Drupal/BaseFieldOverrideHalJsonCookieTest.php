@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\DateFormatResourceTestBase;
+use Drupal\FunctionalTests\Rest\BaseFieldOverrideResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class DateFormatHalJsonCookieTest extends DateFormatResourceTestBase {
+class BaseFieldOverrideHalJsonCookieTest extends BaseFieldOverrideResourceTestBase {
 
   use CookieResourceTestTrait;
 

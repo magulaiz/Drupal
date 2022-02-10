@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
 use Drupal\FunctionalTests\Rest\BaseFieldOverrideResourceTestBase;
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class BaseFieldOverrideHalJsonCookieTest extends BaseFieldOverrideResourceTestBase {
+class BaseFieldOverrideHalJsonBasicAuthTest extends BaseFieldOverrideResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -35,6 +35,6 @@ class BaseFieldOverrideHalJsonCookieTest extends BaseFieldOverrideResourceTestBa
   /**
    * {@inheritdoc}
    */
-  protected static $auth = 'cookie';
+  protected static $auth = 'basic_auth';
 
 }

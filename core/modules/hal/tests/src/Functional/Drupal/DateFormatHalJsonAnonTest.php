@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\EntityFormDisplayResourceTestBase;
+use Drupal\FunctionalTests\Rest\DateFormatResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityFormDisplayHalJsonAnonTest extends EntityFormDisplayResourceTestBase {
+class DateFormatHalJsonAnonTest extends DateFormatResourceTestBase {
 
   use AnonResourceTestTrait;
 

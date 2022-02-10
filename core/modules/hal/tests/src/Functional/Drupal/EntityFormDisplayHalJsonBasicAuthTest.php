@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\EntityViewModeResourceTestBase;
+use Drupal\FunctionalTests\Rest\EntityFormDisplayResourceTestBase;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityViewModeHalJsonBasicAuthTest extends EntityViewModeResourceTestBase {
+class EntityFormDisplayHalJsonBasicAuthTest extends EntityFormDisplayResourceTestBase {
 
   use BasicAuthResourceTestTrait;
 

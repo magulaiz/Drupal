@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\FunctionalTests\Hal;
+namespace Drupal\Tests\hal\Functional\Drupal;
 
-use Drupal\FunctionalTests\Rest\BaseFieldOverrideResourceTestBase;
+use Drupal\FunctionalTests\Rest\EntityFormModeResourceTestBase;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class BaseFieldOverrideHalJsonBasicAuthTest extends BaseFieldOverrideResourceTestBase {
+class EntityFormModeHalJsonBasicAuthTest extends EntityFormModeResourceTestBase {
 
   use BasicAuthResourceTestTrait;
 
