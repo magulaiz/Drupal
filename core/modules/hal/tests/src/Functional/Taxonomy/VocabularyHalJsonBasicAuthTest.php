@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Taxonomy;
 
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase;
 
 /**
  * @group hal
  */
-class VocabularyHalJsonAnonTest extends VocabularyResourceTestBase {
+class VocabularyHalJsonBasicAuthTest extends VocabularyResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -33,10 +33,8 @@ class VocabularyHalJsonAnonTest extends VocabularyResourceTestBase {
   protected static $mimeType = 'application/hal+json';
 
   /**
-   * @todo Remove this override in https://www.drupal.org/node/2805281.
+   * {@inheritdoc}
    */
-  public function testGet() {
-    $this->markTestSkipped();
-  }
+  protected static $auth = 'basic_auth';
 
 }

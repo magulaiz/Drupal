@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Taxonomy;
 
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;

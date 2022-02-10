@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Taxonomy;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase;
 
 /**
  * @group hal
  */
-class VocabularyHalJsonCookieTest extends VocabularyResourceTestBase {
+class VocabularyHalJsonAnonTest extends VocabularyResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -33,8 +33,10 @@ class VocabularyHalJsonCookieTest extends VocabularyResourceTestBase {
   protected static $mimeType = 'application/hal+json';
 
   /**
-   * {@inheritdoc}
+   * @todo Remove this override in https://www.drupal.org/node/2805281.
    */
-  protected static $auth = 'cookie';
+  public function testGet() {
+    $this->markTestSkipped();
+  }
 
 }

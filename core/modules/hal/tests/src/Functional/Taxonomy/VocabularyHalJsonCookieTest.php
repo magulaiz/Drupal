@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Taxonomy;
 
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\taxonomy\Functional\Rest\VocabularyResourceTestBase;
 
 /**
  * @group hal
  */
-class VocabularyHalJsonBasicAuthTest extends VocabularyResourceTestBase {
+class VocabularyHalJsonCookieTest extends VocabularyResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}
@@ -35,6 +35,6 @@ class VocabularyHalJsonBasicAuthTest extends VocabularyResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $auth = 'basic_auth';
+  protected static $auth = 'cookie';
 
 }

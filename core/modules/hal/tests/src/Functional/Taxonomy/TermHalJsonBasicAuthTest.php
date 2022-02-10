@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\taxonomy\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Taxonomy;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
