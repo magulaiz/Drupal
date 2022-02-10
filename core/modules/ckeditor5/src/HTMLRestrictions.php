@@ -51,7 +51,7 @@ final class HTMLRestrictions {
    * @var array
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  protected $elements;
+  private $elements;
 
   /**
    * Wildcard types, and the methods that return tags the wildcard represents.
@@ -848,7 +848,7 @@ final class HTMLRestrictions {
    * @return string[]
    *   An array of HTML tags.
    */
-  protected static function getWildcardTags(string $wildcard): array {
+  private static function getWildcardTags(string $wildcard): array {
     $wildcard_element_method = self::WILDCARD_ELEMENT_METHODS[$wildcard];
     return call_user_func([self::class, $wildcard_element_method]);
   }
