@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\tour\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Tour;
 
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\tour\Functional\Rest\TourResourceTestBase;
