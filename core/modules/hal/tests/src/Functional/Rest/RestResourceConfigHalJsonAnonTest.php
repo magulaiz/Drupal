@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\rest\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Rest;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\Rest\RestResourceConfigResourceTestBase;
 
 /**
  * @group hal
  */
-class RestResourceConfigHalJsonCookieTest extends RestResourceConfigResourceTestBase {
+class RestResourceConfigHalJsonAnonTest extends RestResourceConfigResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class RestResourceConfigHalJsonCookieTest extends RestResourceConfigResourceTest
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
 }
