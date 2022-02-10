@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\serialization\Kernel;
+namespace Drupal\Tests\hal\Kernel;
 
 use Drupal\Core\Url;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldStorageConfig;use Drupal\Tests\serialization\Kernel\NormalizerTestBase;
 
 /**
  * Tests that entities references can be resolved.
