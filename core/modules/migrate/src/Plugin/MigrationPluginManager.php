@@ -12,7 +12,6 @@ use Drupal\migrate\Plugin\Discovery\ProviderFilterDecorator;
 use Drupal\Core\Plugin\Discovery\YamlDirectoryDiscovery;
 use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\migrate\MigrateBuildDependencyInterface;
-use Drupal\migrate\Plugin\PluginManagerTrait;
 
 /**
  * Plugin manager for migration plugins.
