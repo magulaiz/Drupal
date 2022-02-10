@@ -67,7 +67,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
 
     $enabled_plugin_overlap = $enabled_plugin_tags->intersect($source_enabled_tags);
     $disabled_plugin_overlap = $disabled_plugin_tags->intersect($source_enabled_tags);
-    foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as &$overlap) {
+    foreach ([$enabled_plugin_overlap, $disabled_plugin_overlap] as $overlap) {
       $checking_enabled = $overlap === $enabled_plugin_overlap;
       if (!$overlap->isEmpty()) {
         $plugins_to_check_against = $checking_enabled ? $enabled_plugins : $disabled_plugins;
