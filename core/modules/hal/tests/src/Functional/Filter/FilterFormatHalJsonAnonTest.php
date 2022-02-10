@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\filter\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Filter;
 
 use Drupal\Tests\filter\Functional\Rest\FilterFormatResourceTestBase;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;

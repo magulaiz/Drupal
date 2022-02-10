@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\image\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Image;
 
 use Drupal\Tests\image\Functional\Rest\ImageStyleResourceTestBase;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
