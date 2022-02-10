@@ -12,7 +12,7 @@ use GuzzleHttp\RequestOptions;
 /**
  * Tests user registration via REST resource.
  *
- * @group user
+ * @group hal
  */
 class RestRegisterUserTest extends ResourceTestBase {
 

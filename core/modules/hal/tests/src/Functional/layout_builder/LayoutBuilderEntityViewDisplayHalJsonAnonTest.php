@@ -6,8 +6,7 @@ use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayRe
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
- * @group layout_builder
- * @group rest
+ * @group hal
  */
 class LayoutBuilderEntityViewDisplayHalJsonAnonTest extends LayoutBuilderEntityViewDisplayResourceTestBase {
 

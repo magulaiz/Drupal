@@ -6,8 +6,7 @@ use Drupal\Tests\hal\Functional\Core\EntityViewDisplayHalJsonAnonTest;
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
- * @group layout_builder
- * @group rest
+ * @group hal
  */
 class LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest extends EntityViewDisplayHalJsonAnonTest {
 

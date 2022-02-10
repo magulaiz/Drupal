@@ -6,7 +6,6 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
- * @group path_alias
  */
 class PathAliasHalJsonCookieTest extends PathAliasHalJsonTestBase {
 

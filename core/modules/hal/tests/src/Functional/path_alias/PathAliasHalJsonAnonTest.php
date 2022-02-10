@@ -6,7 +6,6 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
- * @group path_alias
  */
 class PathAliasHalJsonAnonTest extends PathAliasHalJsonTestBase {
 

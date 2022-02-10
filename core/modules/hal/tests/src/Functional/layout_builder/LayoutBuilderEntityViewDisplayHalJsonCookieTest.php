@@ -5,8 +5,7 @@ namespace Drupal\Tests\hal\Functional\layout_builder;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
- * @group layout_builder
- * @group rest
+ * @group hal
  */
 class LayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {
 

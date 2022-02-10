@@ -6,7 +6,6 @@ use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
- * @group path_alias
  */
 class PathAliasHalJsonBasicAuthTest extends PathAliasHalJsonTestBase {
 

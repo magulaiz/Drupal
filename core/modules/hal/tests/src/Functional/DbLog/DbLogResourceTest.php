@@ -11,7 +11,7 @@ use Drupal\Tests\rest\Functional\ResourceTestBase;
 /**
  * Tests the watchdog database log resource.
  *
- * @group dblog
+ * @group hal
  */
 class DbLogResourceTest extends ResourceTestBase {
 

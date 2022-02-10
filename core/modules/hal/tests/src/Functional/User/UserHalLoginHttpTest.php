@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\Serializer;
 /**
  * Tests login and password reset via direct HTTP.
  *
- * @group user
+ * @group hal
  */
 class UserHalLoginHttpTest extends BrowserTestBase {
 
