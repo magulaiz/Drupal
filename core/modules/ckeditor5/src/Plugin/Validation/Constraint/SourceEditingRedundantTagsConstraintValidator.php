@@ -46,12 +46,22 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     // The single tag for which source editing is enabled, which we are checking
     // now.
     $source_enabled_tags = HTMLRestrictions::fromString($value);
-    assert($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) === 1);
-    // This validation constraint currently only validates tags, not attributes.
+    // @todo Remove this early return in
+    //   https://www.drupal.org/project/drupal/issues/2820364. It is only
+    //   necessary because CKEditor5ElementConstraintValidator does not run
+    //   before this, which means that this validator cannot assume it receives
+    //   valid values.
+    if ($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) > 1) {
+      return;
+    }
+    // This validation constraint currently only validates tags, not attributes;
+    // so if all attributes are allowed (TRUE) or some attributes are allowed
+    // (an array), return early. Only proceed when no attributes are allowed
+    // (FALSE).
     // @todo Support attributes and attribute values in
     //   https://www.drupal.org/project/drupal/issues/3260857
-    $source_enabled_elements = $source_enabled_tags->getAllowedElements();
-    if (reset($source_enabled_elements) !== FALSE) {
+    $tags = array_keys($source_enabled_tags->getAllowedElements());
+    if ($source_enabled_tags->getAllowedElements()[reset($tags)] !== FALSE) {
       return;
     }
 
