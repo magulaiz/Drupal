@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\views\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Views;
 
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\views\Functional\Rest\ViewResourceTestBase;
 
 /**
  * @group hal
  */
-class ViewHalJsonCookieTest extends ViewResourceTestBase {
+class ViewHalJsonAnonTest extends ViewResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class ViewHalJsonCookieTest extends ViewResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
 }
