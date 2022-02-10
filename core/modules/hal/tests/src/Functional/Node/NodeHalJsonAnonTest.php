@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\node\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Node;
 
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\node\Functional\Rest\NodeResourceTestBase;
