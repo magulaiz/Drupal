@@ -64,6 +64,8 @@ class Registry implements DestructableInterface {
    *   In case of a theme base hook, one of the following:
    *   - variables: An associative array whose keys are variable names and whose
    *     values are default values of the variables to use for this theme hook.
+   *   - attribute variables: An array of strings whose values are variable
+   *     names that should be converted into Attribute objects.
    *   - render element: A string denoting the name of the variable name, in
    *     which the render element for this theme hook is provided.
    *   In case of a theme template file:
@@ -455,6 +457,11 @@ class Registry implements DestructableInterface {
 
     $hook_defaults = [
       'variables' => TRUE,
+      'attribute variables' => [
+        'attributes',
+        'title_attributes',
+        'content_attributes',
+      ],
       'render element' => TRUE,
       'pattern' => TRUE,
       'base hook' => TRUE,
