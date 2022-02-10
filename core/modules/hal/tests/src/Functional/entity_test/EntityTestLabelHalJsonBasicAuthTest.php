@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\EntityTest;
+namespace Drupal\Tests\hal\Functional\entity_test;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityTestHalJsonBasicAuthTest extends EntityTestHalJsonAnonTest {
+class EntityTestLabelHalJsonBasicAuthTest extends EntityTestLabelHalJsonAnonTest {
 
   use BasicAuthResourceTestTrait;
 

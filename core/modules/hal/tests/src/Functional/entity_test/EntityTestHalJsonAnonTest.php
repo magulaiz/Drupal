@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\EntityTest;
+namespace Drupal\Tests\hal\Functional\entity_test;
 
-use Drupal\Tests\entity_test\Functional\Rest\EntityTestMapFieldResourceTestBase;
+use Drupal\Tests\entity_test\Functional\Rest\EntityTestResourceTestBase;
 use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\user\Entity\User;
@@ -10,7 +10,7 @@ use Drupal\user\Entity\User;
 /**
  * @group hal
  */
-class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBase {
+class EntityTestHalJsonAnonTest extends EntityTestResourceTestBase {
 
   use HalEntityNormalizationTrait;
   use AnonResourceTestTrait;
@@ -47,12 +47,12 @@ class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBa
     return $normalization + [
       '_links' => [
         'self' => [
-          'href' => $this->baseUrl . '/entity/entity_test_map_field/1?_format=hal_json',
+          'href' => $this->baseUrl . '/entity_test/1?_format=hal_json',
         ],
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/entity_test_map_field/entity_test_map_field',
+          'href' => $this->baseUrl . '/rest/type/entity_test/entity_test',
         ],
-        $this->baseUrl . '/rest/relation/entity_test_map_field/entity_test_map_field/user_id' => [
+        $this->baseUrl . '/rest/relation/entity_test/entity_test/user_id' => [
           [
             'href' => $this->baseUrl . '/user/0?_format=hal_json',
             'lang' => 'en',
@@ -60,7 +60,7 @@ class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBa
         ],
       ],
       '_embedded' => [
-        $this->baseUrl . '/rest/relation/entity_test_map_field/entity_test_map_field/user_id' => [
+        $this->baseUrl . '/rest/relation/entity_test/entity_test/user_id' => [
           [
             '_links' => [
               'self' => [
@@ -71,9 +71,7 @@ class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBa
               ],
             ],
             'uuid' => [
-              [
-                'value' => $author->uuid(),
-              ],
+              ['value' => $author->uuid()],
             ],
             'lang' => 'en',
           ],
@@ -89,19 +87,9 @@ class EntityTestMapFieldHalJsonAnonTest extends EntityTestMapFieldResourceTestBa
     return parent::getNormalizedPostEntity() + [
       '_links' => [
         'type' => [
-          'href' => $this->baseUrl . '/rest/type/entity_test_map_field/entity_test_map_field',
+          'href' => $this->baseUrl . '/rest/type/entity_test/entity_test',
         ],
       ],
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getExpectedCacheContexts() {
-    return [
-      'url.site',
-      'user.permissions',
     ];
   }
 

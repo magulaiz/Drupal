@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\DbLog;
+namespace Drupal\Tests\hal\Functional\dblog;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Database\Database;

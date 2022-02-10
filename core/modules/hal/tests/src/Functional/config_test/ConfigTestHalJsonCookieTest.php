@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\ConfigTest;
+namespace Drupal\Tests\hal\Functional\config_test;
 
 use Drupal\Tests\config_test\Functional\Rest\ConfigTestResourceTestBase;
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class ConfigTestHalJsonBasicAuthTest extends ConfigTestResourceTestBase {
+class ConfigTestHalJsonCookieTest extends ConfigTestResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use CookieResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}
@@ -35,6 +35,6 @@ class ConfigTestHalJsonBasicAuthTest extends ConfigTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $auth = 'basic_auth';
+  protected static $auth = 'cookie';
 
 }

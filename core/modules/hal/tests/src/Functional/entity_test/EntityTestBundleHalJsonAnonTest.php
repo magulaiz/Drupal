@@ -1,16 +1,18 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\EntityTest;
+namespace Drupal\Tests\hal\Functional\entity_test;
 
 use Drupal\Tests\entity_test\Functional\Rest\EntityTestBundleResourceTestBase;
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\hal\Functional\EntityResource\HalEntityNormalizationTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class EntityTestBundleHalJsonCookieTest extends EntityTestBundleResourceTestBase {
+class EntityTestBundleHalJsonAnonTest extends EntityTestBundleResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use HalEntityNormalizationTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -21,11 +23,6 @@ class EntityTestBundleHalJsonCookieTest extends EntityTestBundleResourceTestBase
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
   /**
    * {@inheritdoc}

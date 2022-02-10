@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\ConfigTest;
+namespace Drupal\Tests\hal\Functional\config_test;
 
 use Drupal\Tests\config_test\Functional\Rest\ConfigTestResourceTestBase;
-use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class ConfigTestHalJsonCookieTest extends ConfigTestResourceTestBase {
+class ConfigTestHalJsonAnonTest extends ConfigTestResourceTestBase {
 
-  use CookieResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class ConfigTestHalJsonCookieTest extends ConfigTestResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'cookie';
 
 }
