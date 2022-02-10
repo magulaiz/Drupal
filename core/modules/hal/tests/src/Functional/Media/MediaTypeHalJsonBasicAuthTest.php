@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\media\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Media;
 
 use Drupal\Tests\media\Functional\Rest\MediaTypeResourceTestBase;
-use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
+use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
 /**
  * @group hal
  */
-class MediaTypeHalJsonAnonTest extends MediaTypeResourceTestBase {
+class MediaTypeHalJsonBasicAuthTest extends MediaTypeResourceTestBase {
 
-  use AnonResourceTestTrait;
+  use BasicAuthResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal'];
+  protected static $modules = ['hal', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -31,5 +31,10 @@ class MediaTypeHalJsonAnonTest extends MediaTypeResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $auth = 'basic_auth';
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\media\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Media;
 
 use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
 
