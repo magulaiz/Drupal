@@ -1,14 +1,14 @@
 <?php
 
-namespace Drupal\Tests\field\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\Field;
 
-use Drupal\Tests\field\Functional\Rest\FieldStorageConfigResourceTestBase;
+use Drupal\Tests\field\Functional\Rest\FieldConfigResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
  * @group hal
  */
-class FieldStorageConfigHalJsonCookieTest extends FieldStorageConfigResourceTestBase {
+class FieldConfigHalJsonCookieTest extends FieldConfigResourceTestBase {
 
   use CookieResourceTestTrait;
 
