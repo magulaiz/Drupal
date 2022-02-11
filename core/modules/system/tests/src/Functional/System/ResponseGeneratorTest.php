@@ -17,7 +17,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['jsonapi', 'rest', 'user', 'basic_auth'];
+  protected static $modules = ['serialization', 'rest', 'user', 'basic_auth'];
 
   /**
    * {@inheritdoc}
