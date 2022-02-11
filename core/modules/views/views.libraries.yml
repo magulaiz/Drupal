@@ -17,3 +17,9 @@ views.ajax:
     - core/jquery.once.bc
     - core/internal.jquery.form
     - core/drupal.ajax
+
+views.bulk_form:
+  version: VERSION
+  css:
+    component:
+      css/views.bulk_form.css: {}
