@@ -3,18 +3,15 @@ status: true
 dependencies:
   module:
     - basic_auth
-    - hal
-    - node
-id: entity.node
-plugin_id: 'entity:node'
+    - jsonapi
+    - user
+id: entity.user
+plugin_id: 'entity:user'
 granularity: resource
 configuration:
   methods:
     - GET
-    - POST
-    - PATCH
-    - DELETE
   formats:
-    - hal_json
+    - json
   authentication:
     - basic_auth
