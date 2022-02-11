@@ -166,7 +166,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
 
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['imageMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
 
     $this->mediaImage->set('field_media_image', [
       'target_id' => 1,
@@ -175,7 +175,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     ])->save();
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['imageMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
 
     $this->drupalGet($path, ['query' => ['uuid' => $this->mediaFile->uuid(), 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
