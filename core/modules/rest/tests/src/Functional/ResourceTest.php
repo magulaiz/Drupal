@@ -88,6 +88,7 @@ class ResourceTest extends BrowserTestBase {
 
   /**
    * Tests that a resource without authentication cannot be enabled.
+   * @group testtest
    */
   public function testAuthentication() {
     RestResourceConfig::create([
@@ -96,14 +97,14 @@ class ResourceTest extends BrowserTestBase {
       'configuration' => [
         'GET' => [
           'supported_formats' => [
-            'hal_json',
+            'json',
           ],
         ],
       ],
     ])->save();
 
     // Verify that accessing the resource returns 401.
-    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST
