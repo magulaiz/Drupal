@@ -28,9 +28,6 @@ class EntityContextDefinition extends ContextDefinition {
     // make sense for entity context definitions to have a default value;
     // hard-code the parameter value when calling the parent constructor.
     parent::__construct($data_type, $label, $required, $multiple, $description, NULL);
-
-    // In development environments, this assertion should cause an exception to
-    // inform developers that default values will be discarded in production.
     assert($default_value === NULL, 'EntityContextDefinition cannot have a default value');
   }
 
