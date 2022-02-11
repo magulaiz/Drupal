@@ -56,6 +56,7 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name) {
+  console.log('name,' + name);
   return `drupalElementStyle:${name}`;
 }
 
@@ -122,7 +123,8 @@ export default class DrupalElementStyleUi extends Plugin {
     const definedDropdowns = toolbarConfig.filter(isObject);
 
     definedDropdowns.forEach((dropdownConfig) => {
-      this._createDropdown(dropdownConfig, definedStyles);
+      console.log(definedDropdowns);
+      // this._createDropdown(dropdownConfig, definedStyles);
     });
   }
 
@@ -152,7 +154,10 @@ export default class DrupalElementStyleUi extends Plugin {
           ),
         )
         .map((buttonName) => {
+          console.log('button name', buttonName);
           const button = factory.create(buttonName);
+          console.log('button ', button);
+
 
           if (buttonName === defaultItem) {
             defaultButton = button;
@@ -171,7 +176,10 @@ export default class DrupalElementStyleUi extends Plugin {
       addToolbarToDropdown(dropdownView, buttonViews);
 
       splitButtonView.set({
-        label: getDropdownButtonTitle(title, defaultButton.label),
+        label: getDropdownButtonTitle(
+          title,
+          defaultButton ? defaultButton.label : '',
+        ),
         class: null,
         tooltip: true,
       });

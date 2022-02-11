@@ -62,23 +62,27 @@ export default class InsertDrupalMediaCommand extends Command {
       const elementStyleEditing = this.editor.plugins.get(
         'DrupalElementStyleEditing',
       );
-      // eslint-disable-next-line no-restricted-syntax
-      for (const style of elementStyleEditing.normalizedStyles) {
-        if (
-          attributes[style.attributeName] &&
-          style.attributeValue === attributes[style.attributeName]
-        ) {
-          modelAttributes.drupalElementStyle = style.name;
-          break;
+
+      const normStyles = elementStyleEditing.normalizedStyles;
+      for (const group of Object.keys(normStyles)) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const style of elementStyleEditing.normalizedStyles[group]) {
+          if (
+            attributes[style.attributeName] &&
+            style.attributeValue === attributes[style.attributeName]
+          ) {
+            modelAttributes.drupalElementStyle = style.name;
+            break;
+          }
         }
       }
-    }
 
-    this.editor.model.change((writer) => {
-      this.editor.model.insertContent(
-        createDrupalMedia(writer, modelAttributes),
-      );
-    });
+      this.editor.model.change((writer) => {
+        this.editor.model.insertContent(
+          createDrupalMedia(writer, modelAttributes),
+        );
+      });
+    }
   }
 
   refresh() {

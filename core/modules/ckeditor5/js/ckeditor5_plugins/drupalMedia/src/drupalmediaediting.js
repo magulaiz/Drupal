@@ -24,7 +24,7 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
-      drupalMediaViewMode: 'data-view-mode',
+      drupalViewMode: 'data-view-mode',
     };
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
@@ -132,6 +132,7 @@ export default class DrupalMediaEditing extends Plugin {
         'attribute:drupalElementStyle:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
+            // these are css classes
             alignLeft: 'drupal-media-style-align-left',
             alignRight: 'drupal-media-style-align-right',
             alignCenter: 'drupal-media-style-align-center',
