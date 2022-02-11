@@ -16,7 +16,6 @@ class RegisterSerializationClassesCompilerPassTest extends UnitTestCase {
 
   /**
    * @covers ::process
-   * @group testtest
    */
   public function testEncoders() {
     $container = new ContainerBuilder();
