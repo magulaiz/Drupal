@@ -20,9 +20,9 @@ use Masterminds\HTML5\Elements;
  *   argument
  * - provides convenience constructors for common sources of HTML restrictions
  * - can transform this into multiple representations: a single string
- *   representation historically used by Drupal, a list
- *   representation used by CKEditor 5 and a complex array structure used by
- *   CKEditor 5's General HTML Support plugin
+ *   representation historically used by Drupal, a list representation used by
+ *   CKEditor 5 and a complex array structure used by CKEditor 5's General HTML
+ *   Support plugin
  * - offers difference, intersection and union operations.
  *
  * This makes it significantly simpler to reason about different sets of HTML
@@ -183,8 +183,8 @@ final class HTMLRestrictions {
       }
 
       foreach ($html_tag_restrictions as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-        // The value must be either TRUE (meaning all values for this
-        // are allowed), or an array of allowed attribute values.
+        // The value must be either TRUE (meaning all values for this are
+        // allowed), or an array of allowed attribute values.
         if ($html_tag_attribute_restrictions === TRUE) {
           continue;
         }
@@ -384,9 +384,9 @@ final class HTMLRestrictions {
         if ($value === FALSE) {
           return FALSE;
         }
-        // If this HTML restrictions object allows any attributes for this
-        // tag, then the other is at most equally permissive: keep the
-        // DiffArray result.
+        // If this HTML restrictions object allows any attributes for this tag,
+        // then the other is at most equally permissive: keep the DiffArray
+        // result.
         if ($value === TRUE) {
           return TRUE;
         }
@@ -467,8 +467,8 @@ final class HTMLRestrictions {
         $intersection[$tag] = $this->elements[$tag];
         continue;
       }
-      // In all other cases, we need to return the most restrictive
-      // intersection of per-attribute restrictions.
+      // In all other cases, we need to return the most restrictive intersection
+      // of per-attribute restrictions.
       // @see ::validateAllowedRestrictionsPhase3()
       assert(is_array($this->elements[$tag]));
       assert(is_array($other->elements[$tag]));
@@ -493,8 +493,8 @@ final class HTMLRestrictions {
         assert(is_array($this->elements[$tag][$attr]));
         assert(is_array($other->elements[$tag][$attr]));
         $intersection[$tag][$attr] = array_intersect_key($this->elements[$tag][$attr], $other->elements[$tag][$attr]);
-        // It is not permitted to specify an empty attribute value
-        // restrictions array.
+        // It is not permitted to specify an empty attribute value restrictions
+        // array.
         if (empty($intersection[$tag][$attr])) {
           unset($intersection[$tag][$attr]);
         }
@@ -684,8 +684,8 @@ final class HTMLRestrictions {
    * @see ::getWildcardTags()
    */
   private static function resolveWildcards(HTMLRestrictions $r): HTMLRestrictions {
-    // Start by resolving the wildcards in a naive, simple way: generate
-    // tags, attributes and attribute values they support.
+    // Start by resolving the wildcards in a naive, simple way: generate tags,
+    // attributes, and attribute values they support.
     $naively_resolved_wildcard_elements = [];
     foreach ($r->elements as $tag_name => $tag_config) {
       if (self::isWildcardTag($tag_name)) {
@@ -704,9 +704,9 @@ final class HTMLRestrictions {
     $naive_resolution = new self($naively_resolved_wildcard_elements);
 
     // Now merge the naive resolution's elements with the original elements, to
-    // let ::merge() pick the most permissive one.
-    // This is necessary because resolving wildcards may result in concrete tags
-    // becoming either more permissive:
+    // let ::merge() pick the most permissive one. This is necessary because
+    // resolving wildcards may result in concrete tags becoming either more
+    // permissive:
     // - if $r is `<p> <$block class="foo">`
     // - then $naive will be `<p class="foo">`
     // - merging them yields `<p class="foo"> <$block class="foo">`
