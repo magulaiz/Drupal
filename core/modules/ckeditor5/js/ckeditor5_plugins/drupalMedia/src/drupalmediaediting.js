@@ -169,6 +169,10 @@ export default class DrupalMediaEditing extends Plugin {
           }
 
           this._fetchPreview(modelElement).then(({ label, preview }) => {
+            if (!media) {
+              // Nothing to do if associated preview wrapped no longer exist.
+              return;
+            }
             // CKEditor 5 doesn't support async view conversion. Therefore, once
             // the promise is fulfilled, the editing view needs to be modified
             // manually.

@@ -103,7 +103,7 @@ class CKEditor5MediaController extends ControllerBase {
     $image_field = $this->getMediaImageSourceFieldName($media);
     $response = [];
     if ($image_field) {
-      $response['imageMetadata'] = [
+      $response['imageSourceMetadata'] = [
         'alt' => $media->{$image_field}->alt,
       ];
     }
@@ -175,7 +175,6 @@ class CKEditor5MediaController extends ControllerBase {
   protected function getMediaImageSourceFieldName(MediaInterface $media) {
     $field_definition = $media->getSource()
       ->getSourceFieldDefinition($media->bundle->entity);
-    $source = $media->getSource();
     $item_class = $field_definition->getItemDefinition()->getClass();
     if (is_a($item_class, ImageItem::class, TRUE)) {
       return $field_definition->getName();

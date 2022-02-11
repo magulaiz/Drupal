@@ -51,17 +51,27 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
           metadataRepository
             .getMetadata(modelElement)
             .then((metadata) => {
+              if (!modelElement) {
+                // Nothing to do if model element has been removed before
+                // promise was resolved.
+                return;
+              }
               // Enqueue a model change in `transparent` batch to make it
               // invisible to the undo/redo functionality.
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
                   'drupalMediaIsImage',
-                  !!metadata.imageMetadata,
+                  !!metadata.imageSourceMetadata,
                   modelElement,
                 );
               });
             })
             .catch((e) => {
+              if (!modelElement) {
+                // Nothing to do if model element has been removed before
+                // promise was resolved.
+                return;
+              }
               console.warn(e.toString());
               model.enqueueChange('transparent', (writer) => {
                 writer.setAttribute(
