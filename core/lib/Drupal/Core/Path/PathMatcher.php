@@ -102,14 +102,14 @@ class PathMatcher implements PathMatcherInterface {
    * @return bool
    *   TRUE if the current page is the front page.
    */
-  public function checkFrontPage() {
+  protected function checkFrontPage() {
     // Ensure that the code can also be executed when there is no active
     // route match, like on exception responses.
     if ($this->routeMatch->getRouteName()) {
       $url = Url::fromRouteMatch($this->routeMatch);
       return ($url->getRouteName() && '/' . $url->getInternalPath() === $this->getFrontPagePath());
     }
-    return false;
+    return FALSE;
   }
 
   /**

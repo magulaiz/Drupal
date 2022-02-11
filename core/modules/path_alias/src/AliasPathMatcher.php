@@ -37,13 +37,17 @@ class AliasPathMatcher extends PathMatcher {
   /**
    * {@inheritdoc}
    */
-  public function checkFrontPage() {
+  protected function checkFrontPage() {
     if (parent::checkFrontPage()) {
-      return true;
+      return TRUE;
     }
-    $url = Url::fromRouteMatch($this->routeMatch);
-    $path = '/' . $url->getInternalPath();
-    return $this->aliasManager->getAliasByPath($path) === $this->getFrontPagePath();
+    if ($this->routeMatch->getRouteName()) {
+      $url = Url::fromRouteMatch($this->routeMatch);
+      $path = '/' . $url->getInternalPath();
+      return $this->aliasManager->getAliasByPath($path) === $this->getFrontPagePath();
+    }
+
+    return FALSE;
   }
 
 }
