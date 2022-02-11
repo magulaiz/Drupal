@@ -10,7 +10,6 @@ use Drupal\rest\RestResourceConfigInterface;
  * @coversDefaultClass \Drupal\rest\RestPermissions
  *
  * @group rest
- * @group testtest
  */
 class RestPermissionsTest extends KernelTestBase {
 

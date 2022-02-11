@@ -15,6 +15,7 @@ use GuzzleHttp\RequestOptions;
  * Tests the structure of a REST resource.
  *
  * @group rest
+ * @group testtest
  */
 class ResourceTest extends BrowserTestBase {
 
@@ -23,7 +24,7 @@ class ResourceTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['hal', 'rest', 'entity_test', 'rest_test'];
+  protected static $modules = ['rest', 'entity_test', 'rest_test'];
 
   /**
    * {@inheritdoc}
@@ -77,7 +78,7 @@ class ResourceTest extends BrowserTestBase {
     ])->save();
 
     // Verify that accessing the resource returns 406.
-    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'hal_json'));
+    $this->drupalGet($this->entity->toUrl()->setRouteParameter('_format', 'json'));
     // \Drupal\Core\Routing\RequestFormatRouteFilter considers the canonical,
     // non-REST route a match, but a lower quality one: no format restrictions
     // means there's always a match and hence when there is no matching REST
