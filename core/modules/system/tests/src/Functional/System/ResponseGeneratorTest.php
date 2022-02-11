@@ -36,7 +36,6 @@ class ResponseGeneratorTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $account = $this->drupalCreateUser(['access content']);
     $this->currentUser = $account;
