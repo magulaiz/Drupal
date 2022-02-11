@@ -41,8 +41,9 @@ class PageCacheTest extends BrowserTestBase {
   }
 
   /**
-   * Tests support for different cache items with different request formats
-   * specified via a query parameter.
+   * Tests support for different cache items with different request formats.
+   *
+   * Request formats are specified via a query parameter.
    */
   public function testQueryParameterFormatRequests() {
     $config = $this->config('system.performance');
@@ -50,12 +51,17 @@ class PageCacheTest extends BrowserTestBase {
     $config->save();
 
     // Enable REST support for nodes and hal+json.
-    \Drupal::service('module_installer')->install(['node', 'rest', 'hal', 'basic_auth']);
+    \Drupal::service('module_installer')->install([
+      'node',
+      'hal',
+      'rest',
+      'basic_auth',
+    ]);
     $this->drupalCreateContentType(['type' => 'article']);
     $node = $this->drupalCreateNode(['type' => 'article']);
     $node_uri = $node->toUrl();
+
     $node_url_with_hal_json_format = $node->toUrl('canonical')->setRouteParameter('_format', 'hal_json');
-
     $this->drupalGet($node_uri);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
@@ -63,8 +69,8 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
 
-    // Now request a HAL page, we expect that the first request is a cache miss
-    // and it serves HTML.
+    // Now request a HAL page twice, we expect that the first request is a cache
+    // miss and both requests serve 'application/hal+json'.
     $this->drupalGet($node_url_with_hal_json_format);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
@@ -72,8 +78,8 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/hal+json');
 
-    // Clear the page cache. After that request a HAL request, followed by an
-    // ordinary HTML one.
+    // Clear the page cache. After that request a double HAL request, followed
+    // by two ordinary HTML ones.
     \Drupal::cache('page')->deleteAll();
     $this->drupalGet($node_url_with_hal_json_format);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
