@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\TimestampFormatter;
+use Drupal\views\Plugin\views\field\BulkForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -410,6 +411,47 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view) {
       return $this->processRevisionFieldHyphenFix($view);
     });
+  }
+
+  /**
+   * Updates the bulk form fields by adding the actions order configuration.
+   *
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The View to update.
+   *
+   * @return bool
+   *   Whether the view was updated.
+   */
+  public function needsBulkFormActionsOrderUpdate(ViewEntityInterface $view): bool {
+    return $this->processDisplayHandlers($view, FALSE, function (array &$handler, string $handler_type): bool {
+      return $this->processBulkFormActionsOrderUpdate($handler, $handler_type);
+    });
+  }
+
+  /**
+   * Processes the bulk form fields by adding the actions order configuration.
+   *
+   * @param array $handler
+   *   A display handler.
+   * @param string $handler_type
+   *   The handler type.
+   *
+   * @return bool
+   *   Whether the handler was updated.
+   */
+  protected function processBulkFormActionsOrderUpdate(array &$handler, string $handler_type): bool {
+    if ($handler_type === 'field' && !isset($handler['actions_order']) && isset($handler['plugin_id'])) {
+      /** @var \Drupal\views\Plugin\ViewsPluginManager $plugin_manager */
+      $plugin_manager = \Drupal::service('plugin.manager.views.field');
+      if ($plugin_manager->hasDefinition($handler['plugin_id'])) {
+        $definition = $plugin_manager->getDefinition($handler['plugin_id']);
+        if (is_subclass_of($definition['class'], BulkForm::class)) {
+          $handler['actions_order'] = [];
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
 }
