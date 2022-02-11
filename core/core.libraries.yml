@@ -333,6 +333,7 @@ css.escape:
     gpl-compatible: true
   js:
     assets/vendor/css-escape/css.escape.js: { weight: -20 }
+  deprecated: &polyfill_deprecated The "%library_id%" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501
 
 drupal:
   version: VERSION
@@ -456,6 +457,7 @@ drupal.array.find:
   version: VERSION
   js:
     misc/polyfills/array.find.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.array.includes:
   version: VERSION
@@ -613,6 +615,7 @@ drupal.element.closest:
     misc/polyfills/element.closest.js: { weight: -20 }
   dependencies:
     - core/drupal.element.matches
+  deprecated: *polyfill_deprecated
 
 drupal.element.matches:
   version: VERSION
@@ -661,6 +664,7 @@ drupal.nodelist.foreach:
   version: VERSION
   js:
     misc/polyfills/nodelist.foreach.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.object.assign:
   version: VERSION
@@ -691,6 +695,7 @@ drupal.string.includes:
   version: VERSION
   js:
     misc/polyfills/string.includes.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.tabbingmanager:
   version: VERSION
@@ -780,6 +785,7 @@ es6-promise:
     gpl-compatible: true
   js:
     assets/vendor/es6-promise/es6-promise.auto.min.js: { weight: -20, minified: true }
+  deprecated: *polyfill_deprecated
 
 jquery:
   remote: https://github.com/jquery/jquery
@@ -1104,6 +1110,7 @@ once:
     assets/vendor/once/once.min.js: { weight: -19, minified: true }
   dependencies:
     - core/drupal.element.matches
+  deprecated: *polyfill_deprecated
 
 picturefill:
   remote: https://github.com/scottjehl/picturefill
@@ -1114,6 +1121,7 @@ picturefill:
     gpl-compatible: true
   js:
     assets/vendor/picturefill/picturefill.min.js: { weight: -10, minified: true }
+  deprecated: *polyfill_deprecated
 
 popperjs:
   version: "2.11.2"
