@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\serialization\Kernel;
+namespace Drupal\Tests\hal\Kernel\serialization;
 
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Symfony\Component\Serializer\Exception\UnexpectedValueException;
+use Drupal\Tests\serialization\Kernel\NormalizerTestBase;
 
 /**
  * Test field level normalization process.
  *
- * @group serialization
+ * @group hal
  */
 class FieldItemSerializationTest extends NormalizerTestBase {
 
@@ -120,45 +120,6 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Tests normalizing and denormalizing an entity with field item normalizer.
-   */
-  public function testFieldNormalizeDenormalize() {
-    $normalized = $this->serializer->normalize($this->entity, 'json');
-
-    $expected_field_value = $this->entity->field_test_text[0]->getValue()['value'] . '::silly_suffix';
-    $this->assertEquals($expected_field_value, $normalized['field_test_text'][0]['value'], 'Text field item normalized');
-    $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, 'json');
-
-    $this->assertEquals($denormalized->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item denormalized.');
-    $this->assertEquals($denormalized->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default denormalized.');
-
-    // Unset the values for text field that has a default value.
-    unset($normalized['field_test_text_default']);
-    $denormalized_without_all_fields = $this->serializer->denormalize($normalized, $this->entityClass, 'json');
-    // Check that denormalized entity is still the same even if not all fields
-    // are not provided.
-    $this->assertEquals($denormalized_without_all_fields->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item denormalized.');
-    // Even though field_test_text_default value was unset before
-    // denormalization it should still have the default values for the field.
-    $this->assertEquals($denormalized_without_all_fields->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default denormalized.');
-  }
-
-  /**
-   * Tests denormalizing using a scalar field value.
-   */
-  public function testFieldDenormalizeWithScalarValue() {
-    $this->expectException(UnexpectedValueException::class);
-    $this->expectExceptionMessage('Field values for "uuid" must use an array structure');
-
-    $normalized = $this->serializer->normalize($this->entity, 'json');
-
-    // Change the UUID value to use the UUID directly. No array structure.
-    $normalized['uuid'] = $normalized['uuid'][0]['value'];
-
-    $this->serializer->denormalize($normalized, $this->entityClass, 'json');
-  }
-
-  /**
    * Tests a format-agnostic normalizer.
    *
    * @param string[] $test_modules
@@ -215,24 +176,16 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    */
   public function providerTestCustomBooleanNormalization() {
     return [
-      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the format-agnostic normalization' => [
+      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
         ['test_fieldtype_boolean_emoji_normalizer'],
-        NULL,
+        'hal_json',
       ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the format-agnostic normalization' => [
-        ['test_datatype_boolean_emoji_normalizer'],
-        NULL,
+      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
+        ['test_datatype_boolean_emoji_normalizer', 'hal'],
+        'hal_json',
       ],
-      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the JSON normalization' => [
-        ['test_fieldtype_boolean_emoji_normalizer'],
-        'json',
-      ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the JSON normalization' => [
-        ['test_datatype_boolean_emoji_normalizer'],
-        'json',
-      ],
-      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the XML normalization' => [
-        ['test_fieldtype_boolean_emoji_normalizer'],
+      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the XML normalization' => [
+        ['test_datatype_boolean_emoji_normalizer', 'hal'],
         'xml',
       ],
     ];
