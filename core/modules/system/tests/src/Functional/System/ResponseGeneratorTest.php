@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\rest\Entity\RestResourceConfig;
+use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -17,7 +18,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['serialization', 'rest', 'user', 'basic_auth'];
+  protected static $modules = ['serialization', 'rest', 'node', 'basic_auth'];
 
   /**
    * {@inheritdoc}
@@ -25,20 +26,13 @@ class ResponseGeneratorTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * The currently logged-in user.
-   *
-   * @var \Drupal\user\Entity\User
-   */
-  protected $currentUser;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $account = $this->drupalCreateUser(['access content']);
-    $this->currentUser = $account;
     $this->drupalLogin($account);
   }
 
@@ -46,11 +40,14 @@ class ResponseGeneratorTest extends BrowserTestBase {
    * Tests to see if generator header is added.
    */
   public function testGeneratorHeaderAdded() {
+
+    $node = $this->drupalCreateNode();
+
     [$version] = explode('.', \Drupal::VERSION, 2);
     $expectedGeneratorHeader = 'Drupal ' . $version . ' (https://www.drupal.org)';
 
     // Check to see if the header is added when viewing an HTML page.
-    $this->drupalGet($this->currentUser->toUrl());
+    $this->drupalGet($node->toUrl());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
@@ -61,18 +58,32 @@ class ResponseGeneratorTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
 
-    // Enable cookie-based authentication for the entity:user REST resource.
-    $resource_config = RestResourceConfig::load('entity.user');
-    $configuration = $resource_config->get('configuration');
-    $configuration['authentication'][] = 'cookie';
-    $resource_config->set('configuration', $configuration)->save();
+    // Create a cookie-based authentication for the entity:node REST resource.
+    $resource_config_values = [
+      'id' => 'entity.node',
+      'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+      'configuration' => [
+        'methods' => [
+          'GET',
+        ],
+        'formats' => [
+          'json',
+        ],
+        'authentication' => [
+          'cookie',
+        ],
+      ],
+    ];
+
+    RestResourceConfig::create($resource_config_values)->save();
     $this->rebuildAll();
 
     // Check to see if the header is also added for a non-HTML request.
-    $this->drupalGet($this->currentUser->toUrl()->setOption('query', ['_format' => 'json']));
+    $this->drupalGet($node->toUrl()->setOption('query', ['_format' => 'json']));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
     $this->assertSession()->responseHeaderEquals('X-Generator', $expectedGeneratorHeader);
+
   }
 
 }
