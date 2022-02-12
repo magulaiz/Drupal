@@ -11,6 +11,9 @@ granularity: resource
 configuration:
   methods:
     - GET
+    - POST
+    - PATCH
+    - DELETE
   formats:
     - hal_json
   authentication:
