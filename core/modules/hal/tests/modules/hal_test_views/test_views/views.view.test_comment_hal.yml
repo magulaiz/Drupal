@@ -9,7 +9,7 @@ dependencies:
     - rest
     - text
     - user
-id: test_comment_rest
+id: test_comment_hal
 label: 'Comments by node'
 module: views
 description: ''
@@ -386,7 +386,7 @@ display:
         options:
           uses_fields: false
           formats:
-            json: json
+            hal_json: hal_json
       row:
         type: data_field
         options:

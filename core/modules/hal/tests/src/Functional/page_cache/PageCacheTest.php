@@ -60,8 +60,8 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalCreateContentType(['type' => 'article']);
     $node = $this->drupalCreateNode(['type' => 'article']);
     $node_uri = $node->toUrl();
-
     $node_url_with_hal_json_format = $node->toUrl('canonical')->setRouteParameter('_format', 'hal_json');
+
     $this->drupalGet($node_uri);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
     $this->assertSession()->responseHeaderEquals('Content-Type', 'text/html; charset=UTF-8');

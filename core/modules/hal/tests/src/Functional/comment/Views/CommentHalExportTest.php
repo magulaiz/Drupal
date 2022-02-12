@@ -11,7 +11,7 @@ use Drupal\Tests\comment\Functional\Views\CommentTestBase;
  *
  * @group hal
  */
-class CommentRestExportTest extends CommentTestBase {
+class CommentHalExportTest extends CommentTestBase {
 
   /**
    * {@inheritdoc}
@@ -23,7 +23,7 @@ class CommentRestExportTest extends CommentTestBase {
    *
    * @var array
    */
-  public static $testViews = ['test_comment_rest'];
+  public static $testViews = ['test_comment_hal'];
 
   /**
    * {@inheritdoc}
@@ -31,13 +31,13 @@ class CommentRestExportTest extends CommentTestBase {
   protected static $modules = [
     'node',
     'comment',
-    'comment_test_views',
+    'hal_test_views',
     'rest',
     'hal',
   ];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['comment_test_views']): void {
+    parent::setUp($import_test_views, ['hal_test_views']);
     // Add another anonymous comment.
     $comment = [
       'uid' => 0,
