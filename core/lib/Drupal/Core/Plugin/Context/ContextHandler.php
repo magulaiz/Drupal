@@ -61,11 +61,31 @@ class ContextHandler implements ContextHandlerInterface {
    */
   public function checkRequirements(array $contexts, array $requirements) {
     foreach ($requirements as $requirement) {
-      if ($requirement->isRequired() && ($requirement->getDefaultValue() === NULL || !$requirement->isSatisfiedBy(new Context($requirement))) && !$this->getMatchingContexts($contexts, $requirement)) {
+      // Required definitions can be satisfied by one of the following:
+      // - a matching default value, or
+      // - a matching context.
+      if ($requirement->isRequired() && !$this->hasMatchingDefaultValue($requirement) && !$this->getMatchingContexts($contexts, $requirement)) {
         return FALSE;
       }
     }
     return TRUE;
+  }
+
+  /**
+   * Check if a definition is satisfied by its own default value.
+   *
+   * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface $definition
+   *   The definition to satisfy.
+   *
+   * @return bool
+   *   TRUE if the definition is satisfied, or FALSE.
+   */
+  private function hasMatchingDefaultValue(ContextDefinitionInterface $definition): bool {
+    if ($definition->getDefaultValue() !== NULL) {
+      // Check the definition's default value by creating an empty context.
+      return $definition->isSatisfiedBy(new Context($definition));
+    }
+    return FALSE;
   }
 
   /**
