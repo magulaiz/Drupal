@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Url;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -46,6 +47,7 @@ class CommentInterfaceTest extends CommentTestBase {
    * Tests the comment interface.
    */
   public function testCommentInterface() {
+    $comment_type = CommentType::load('comment');
 
     // Post comment #1 without subject or preview.
     $this->drupalLogin($this->webUser);
@@ -61,18 +63,22 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet($this->node->toUrl());
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
 
-    // Set comments to have subject and preview to required.
+    // Set comments to have subject and preview to required. Also change the
+    // comment button label.
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_REQUIRED);
     $this->drupalLogout();
+    $comment_type
+      ->setCommentSubmitButtonLabel('Post')
+      ->save();
 
     // Create comment #2 that allows subject and requires preview.
     $this->drupalLogin($this->webUser);
     $subject_text = $this->randomMachineName();
     $comment_text = $this->randomMachineName();
-    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Comment as anonymous with preview required.
@@ -151,11 +157,16 @@ class CommentInterfaceTest extends CommentTestBase {
     // Check the thread of second reply grows correctly.
     $this->assertEquals(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
 
+    // Change the reply button label.
+    $comment_type
+      ->setReplySubmitButtonLabel('Reply')
+      ->save();
+
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
     $this->assertSession()->pageTextContains($reply_loaded->getSubject());
     $this->assertSession()->pageTextContains($reply_loaded->comment_body->value);
-    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Reply');
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of reply to second reply grows correctly.
