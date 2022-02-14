@@ -72,7 +72,7 @@ class ContextHandler implements ContextHandlerInterface {
   }
 
   /**
-   * Check if a definition is satisfied by its own default value.
+   * Checks if a context definition is satisfied by its own default value.
    *
    * @param \Drupal\Core\Plugin\Context\ContextDefinitionInterface $definition
    *   The definition to satisfy.
