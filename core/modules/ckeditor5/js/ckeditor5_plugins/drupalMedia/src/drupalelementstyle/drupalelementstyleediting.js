@@ -79,7 +79,6 @@ function modelToViewStyleAttribute(styles) {
  * Note that only one style can be applied to each model element.
  */
 function viewToModelStyleAttribute(styles, groupName) {
-  console.log('e: ', styles);
   // Convert only non–default styles.
   const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
@@ -315,7 +314,6 @@ export default class DrupalElementStyleEditing extends Plugin {
       modelElements.forEach((modelElement) => {
         schema.extend(modelElement, { allowAttributes: `drupal${groupName}` });
       });
-      console.log('schema ', schema);
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(
         'element',

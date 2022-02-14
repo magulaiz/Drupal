@@ -2390,6 +2390,14 @@ function warnInvalidStyle( info ) {
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
  */
 
+function schemaContainsAttribute(selectedElement, schema) {
+  const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
+  for (const group of Object.keys(drupalStyles)) {
+    return schema.checkAttribute(selectedElement, group);
+  }
+  return false;
+}
+
 /**
  * Gets closest element that has any DrupalElementStyle attribute in schema.
  *
@@ -2406,16 +2414,19 @@ function warnInvalidStyle( info ) {
 function getClosestElementWithElementStyleAttribute(selection, schema) {
   // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
+  console.log(selectedElement);
+  // console.log(schemaContainsAttribute(selectedElement, schema, styles));
 
   return selectedElement &&
     // here checks schema for if any of the drupal element styles with this attribute name exists
-    schema.checkAttribute(selectedElement, 'drupalAlign')
+    schemaContainsAttribute(selectedElement, schema)
     ? selectedElement
     : selection
         // if false find the closest element that has drupal style element allowed
+      // todo: need to change to consider more than one style
         .getFirstPosition()
         .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalAlign'),
+          schema.checkAttribute(element, 'drupalElementStyle'),
         );
 }
 
@@ -2439,16 +2450,17 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   constructor(editor, styles) {
     super(editor);
+    this.styles = styles;
     this._styles = {};
     for (const group of Object.keys(styles)) {
       // eslint-disable-next-line no-restricted-syntax
-        this._styles[group] = new Map(
-          styles[group].map((style) => {
-            return [style.name, style];
-          }),
-        );
-      }
+      this._styles[group] = new Map(
+        styles[group].map((style) => {
+          return [style.name, style];
+        }),
+      );
     }
+  }
 
   /**
    * @inheritDoc
@@ -2456,27 +2468,49 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   // this is called every time the model changes
   // to make sure command has the correct state
   refresh() {
-    console.log('refresh ');
-    const editor = this.editor;
+    const { editor } = this;
     const element = getClosestElementWithElementStyleAttribute(
       editor.model.document.selection,
       editor.model.schema,
+      this.styles,
     );
+    console.log('element ', element);
 
     this.isEnabled = !!element;
 
     if (!this.isEnabled) {
+      console.log('not enabled');
       this.value = false;
       // here element needs to be checked against list of possible attributes
       // and then update the value to include all drupal element styles selected for the element
-    } else if (element.hasAttribute('drupalAlign')) {
-      console.log('hit');
-      this.value = { drupalAlign: element.getAttribute('drupalAlign') };
-      // this.value = element.getAttribute('drupalElementStyle');
-      // this.value = element.getAttribute('drupalElementStyle');
+    } else if (this.containsAttribute(element)) {
+      console.log('true');
+      this.value = this.getGroupAndAttribute(element);
     } else {
       this.value = false;
     }
+  }
+
+  containsAttribute(element) {
+    const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
+
+    for (const group of Object.keys(drupalStyles)) {
+      console.log('diff group ', group);
+      return element.hasAttribute(group);
+    }
+    return false;
+  }
+
+  getGroupAndAttribute(element) {
+    const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
+    const groupAttr = {};
+    for (const group of Object.keys(drupalStyles)) {
+      if (element.hasAttribute(group)) {
+        groupAttr[group] = element.getAttribute(group);
+      }
+    }
+    console.log('groupAttr ', groupAttr);
+    return groupAttr;
   }
 
   /**
@@ -2494,8 +2528,9 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   // makes the actual change in the MODEL
   // execute needs to change to take value and the group
   execute(options = {}) {
-    const editor = this.editor;
-    const model = editor.model;
+    console.log('execute');
+    const { editor } = this;
+    const { model } = editor;
 
     model.change((writer) => {
       const requestedStyle = options.value;
@@ -2503,7 +2538,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
         model.document.selection,
         model.schema,
       );
-      console.log('writer ', writer);
 
       // handle group, retrieve style from correct group
       if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
@@ -2597,7 +2631,6 @@ function modelToViewStyleAttribute(styles) {
  * Note that only one style can be applied to each model element.
  */
 function viewToModelStyleAttribute(styles, groupName) {
-  console.log('e: ', styles);
   // Convert only non–default styles.
   const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
@@ -2833,7 +2866,6 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
       modelElements.forEach((modelElement) => {
         schema.extend(modelElement, { allowAttributes: `drupal${groupName}` });
       });
-      console.log('schema ', schema);
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(
         'element',
