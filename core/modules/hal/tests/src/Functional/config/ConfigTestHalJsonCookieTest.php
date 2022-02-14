@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\config_test;
+namespace Drupal\Tests\hal\Functional\config;
 
 use Drupal\Tests\config_test\Functional\Rest\ConfigTestResourceTestBase;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;

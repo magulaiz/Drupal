@@ -1,21 +1,21 @@
 <?php
 
-namespace Drupal\Tests\hal\Functional\config_test;
+namespace Drupal\Tests\hal\Functional\config;
 
 use Drupal\Tests\config_test\Functional\Rest\ConfigTestResourceTestBase;
-use Drupal\Tests\rest\Functional\BasicAuthResourceTestTrait;
+use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
  * @group hal
  */
-class ConfigTestHalJsonBasicAuthTest extends ConfigTestResourceTestBase {
+class ConfigTestHalJsonAnonTest extends ConfigTestResourceTestBase {
 
-  use BasicAuthResourceTestTrait;
+  use AnonResourceTestTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['hal', 'basic_auth'];
+  protected static $modules = ['hal'];
 
   /**
    * {@inheritdoc}
@@ -31,10 +31,5 @@ class ConfigTestHalJsonBasicAuthTest extends ConfigTestResourceTestBase {
    * {@inheritdoc}
    */
   protected static $mimeType = 'application/hal+json';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $auth = 'basic_auth';
 
 }
