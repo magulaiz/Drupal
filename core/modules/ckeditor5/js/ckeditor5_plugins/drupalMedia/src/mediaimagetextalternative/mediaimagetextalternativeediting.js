@@ -27,14 +27,77 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
   }
 
   /**
+   * Upcasts `drupalMediaIsImage` from Drupal Media metadata.
+   *
+   * @param {module:engine/model/node~Node} modelElement
+   *   The `drupalMedia` model element.
+   *
+   * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+   *
+   * @private
+   */
+  _upcastDrupalMediaIsImage(modelElement) {
+    const { model, plugins } = this.editor;
+    const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
+
+    // Get all metadata for drupalMedia elements to set value for
+    // drupalMediaIsImage attribute. This could potentially be moved
+    // outside of this plugin once other plugins start using the metadata.
+    metadataRepository
+      .getMetadata(modelElement)
+      .then((metadata) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        // Enqueue a model change in `transparent` batch to make it
+        // invisible to the undo/redo functionality.
+        model.enqueueChange('transparent', (writer) => {
+          writer.setAttribute(
+            'drupalMediaIsImage',
+            !!metadata.imageSourceMetadata,
+            modelElement,
+          );
+        });
+      })
+      .catch((e) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        console.warn(e.toString());
+        model.enqueueChange('transparent', (writer) => {
+          writer.setAttribute(
+            'drupalMediaIsImage',
+            METADATA_ERROR,
+            modelElement,
+          );
+        });
+      });
+  }
+
+  /**
    * @inheritDoc
    */
   init() {
     const {
       editor,
-      editor: { model, plugins, conversion },
+      editor: { model, conversion },
     } = this;
-    const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
+
+    // Listen to `insertContent` event on the model to set `drupalMediaIsImage`
+    // attribute when `drupalMedia` model element is inserted directly to the
+    // model.
+    // @see module:drupalMedia/insertdrupalmediacommand~InsertDrupalMediaCommand
+    this.listenTo(model, 'insertContent', (evt, [modelElement]) => {
+      if (!isDrupalMedia(modelElement)) {
+        return;
+      }
+
+      this._upcastDrupalMediaIsImage(modelElement);
+    });
 
     conversion.for('upcast').add((dispatcher) => {
       return dispatcher.on(
@@ -45,42 +108,7 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
             return;
           }
 
-          // Get all metadata for drupalMedia elements to set value for
-          // drupalMediaIsImage attribute. This could potentially be moved
-          // outside of this plugin once other plugins start using the metadata.
-          metadataRepository
-            .getMetadata(modelElement)
-            .then((metadata) => {
-              if (!modelElement) {
-                // Nothing to do if model element has been removed before
-                // promise was resolved.
-                return;
-              }
-              // Enqueue a model change in `transparent` batch to make it
-              // invisible to the undo/redo functionality.
-              model.enqueueChange('transparent', (writer) => {
-                writer.setAttribute(
-                  'drupalMediaIsImage',
-                  !!metadata.imageSourceMetadata,
-                  modelElement,
-                );
-              });
-            })
-            .catch((e) => {
-              if (!modelElement) {
-                // Nothing to do if model element has been removed before
-                // promise was resolved.
-                return;
-              }
-              console.warn(e.toString());
-              model.enqueueChange('transparent', (writer) => {
-                writer.setAttribute(
-                  'drupalMediaIsImage',
-                  METADATA_ERROR,
-                  modelElement,
-                );
-              });
-            });
+          this._upcastDrupalMediaIsImage(modelElement);
         },
         // This converter needs to have the lowest priority to ensure that the
         // model element and its attributes have been converted.
