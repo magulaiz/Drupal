@@ -7,7 +7,7 @@ import { Command } from 'ckeditor5/src/core';
  */
 
 /**
- * Gets closest element that has drupalElementStyle attribute in schema.
+ * Gets closest element that has any DrupalElementStyle attribute in schema.
  *
  * @param {module:engine/model/documentselection~DocumentSelection} selection
  *   The current document selection.
@@ -17,16 +17,21 @@ import { Command } from 'ckeditor5/src/core';
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
+// find the closest element with the drupal element style
+// also checks the ancestor
 function getClosestElementWithElementStyleAttribute(selection, schema) {
+  // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
 
   return selectedElement &&
-    schema.checkAttribute(selectedElement, 'drupalElementStyle')
+    // here checks schema for if any of the drupal element styles with this attribute name exists
+    schema.checkAttribute(selectedElement, 'drupalAlign')
     ? selectedElement
     : selection
+        // if false find the closest element that has drupal style element allowed
         .getFirstPosition()
         .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalElementStyle'),
+          schema.checkAttribute(element, 'drupalAlign'),
         );
 }
 
@@ -50,17 +55,24 @@ export default class DrupalElementStyleCommand extends Command {
    */
   constructor(editor, styles) {
     super(editor);
-    this._styles = new Map(
-      styles.map((style) => {
-        return [style.name, style];
-      }),
-    );
-  }
+    this._styles = {};
+    for (const group of Object.keys(styles)) {
+      // eslint-disable-next-line no-restricted-syntax
+        this._styles[group] = new Map(
+          styles[group].map((style) => {
+            return [style.name, style];
+          }),
+        );
+      }
+    }
 
   /**
    * @inheritDoc
    */
+  // this is called every time the model changes
+  // to make sure command has the correct state
   refresh() {
+    console.log('refresh ');
     const editor = this.editor;
     const element = getClosestElementWithElementStyleAttribute(
       editor.model.document.selection,
@@ -71,8 +83,13 @@ export default class DrupalElementStyleCommand extends Command {
 
     if (!this.isEnabled) {
       this.value = false;
-    } else if (element.hasAttribute('drupalElementStyle')) {
-      this.value = element.getAttribute('drupalElementStyle');
+      // here element needs to be checked against list of possible attributes
+      // and then update the value to include all drupal element styles selected for the element
+    } else if (element.hasAttribute('drupalAlign')) {
+      console.log('hit');
+      this.value = { drupalAlign: element.getAttribute('drupalAlign') };
+      // this.value = element.getAttribute('drupalElementStyle');
+      // this.value = element.getAttribute('drupalElementStyle');
     } else {
       this.value = false;
     }
@@ -90,6 +107,8 @@ export default class DrupalElementStyleCommand extends Command {
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
    */
+  // makes the actual change in the MODEL
+  // execute needs to change to take value and the group
   execute(options = {}) {
     const editor = this.editor;
     const model = editor.model;
@@ -102,6 +121,7 @@ export default class DrupalElementStyleCommand extends Command {
       );
       console.log('writer ', writer);
 
+      // handle group, retrieve style from correct group
       if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
         writer.removeAttribute('drupalElementStyle', element);
       } else {

@@ -256,10 +256,10 @@ export default class DrupalElementStyleEditing extends Plugin {
 
     this._setupConversion();
 
-    // editor.commands.add(
-    //   'drupalElementStyle',
-    //   new DrupalElementStyleCommand(editor, this.normalizedStyles),
-    // );
+    editor.commands.add(
+      'drupalElementStyle',
+      new DrupalElementStyleCommand(editor, this.normalizedStyles),
+    );
   }
 
   /**

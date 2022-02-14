@@ -123,7 +123,7 @@ export default class DrupalElementStyleUi extends Plugin {
     const definedDropdowns = toolbarConfig.filter(isObject);
 
     definedDropdowns.forEach((dropdownConfig) => {
-      console.log(definedDropdowns);
+      console.log('definedDropdowns ', definedDropdowns);
       // this._createDropdown(dropdownConfig, definedStyles);
     });
   }
@@ -145,6 +145,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
+      debugger;
 
       const { defaultItem, items, title } = dropdownConfig;
       const buttonViews = items

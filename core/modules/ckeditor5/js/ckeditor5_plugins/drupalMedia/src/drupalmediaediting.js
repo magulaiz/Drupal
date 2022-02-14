@@ -129,7 +129,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     conversion.for('editingDowncast').add((dispatcher) => {
       dispatcher.on(
-        'attribute:drupalElementStyle:drupalMedia',
+        'attribute:drupalAlign:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
             // these are css classes

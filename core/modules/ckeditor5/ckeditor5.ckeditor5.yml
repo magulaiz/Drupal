@@ -564,12 +564,14 @@ media_mediaAlign:
       drupalMedia:
         toolbar:
           - name: 'drupalMedia:align'
+            display: 'toolbar'
             items:
               - 'drupalAlign:alignLeft'
               - 'drupalAlign:alignCenter'
               - 'drupalAlign:alignRight'
             defaultItem: 'drupalAlign:alignCenter'
           - name: 'drupalMedia:viewMode'
+            display: 'list'
             items:
               - 'drupalViewMode:full'
               - 'drupalViewMode:media_library'
