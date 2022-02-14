@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository */
+/* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository insertdrupalmediacommand */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { TooltipView, Template } from 'ckeditor5/src/ui';
