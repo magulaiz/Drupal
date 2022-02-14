@@ -8,6 +8,7 @@
 declare(strict_types = 1);
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Ajax\MessageCommand;
@@ -343,6 +344,80 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     $libraries['base']['dependencies'][] = 'ckeditor5/ie11.user.warnings';
   }
 
+  if ($extension === 'ckeditor5') {
+    // Add paths to stylesheets specified by a theme's ckeditor5-stylesheets
+    // config property.
+    $css = _ckeditor5_theme_css();
+    $libraries['drupal.ckeditor5.stylesheets'] = [
+      'css' => [
+        'theme' => array_map(function () {
+          return [];
+        }, array_flip($css)),
+      ],
+    ];
+
+    $themes = [];
+    $default_theme = \Drupal::configFactory()->get('system.theme')->get('default');
+    if (!empty($default_theme)) {
+      $themes[$default_theme] = \Drupal::service('theme_handler')->listInfo()[$default_theme]->info;
+    }
+
+    $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
+    if (!empty($admin_theme) && $admin_theme !== $default_theme) {
+      $themes[$admin_theme] = \Drupal::service('theme_handler')->listInfo()[$admin_theme]->info;
+    }
+
+    $ckeditor_stylesheets_use = [];
+
+    // Collect information on which themes/base themes have ckeditor_stylesheets
+    // configuration, but do not have corresponding ckeditor5-stylesheets
+    // configuration.
+    foreach ($themes as $theme_info) {
+      $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
+      if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
+        $ckeditor_stylesheets_use[] = $theme_info['name'];
+      }
+
+      // If the primary theme has ckeditor5-stylesheets configured, do not
+      // check base themes.
+      if ($theme_has_ckeditor5_stylesheets) {
+        continue;
+      }
+      $base_theme = $theme_info['base theme'] ?? FALSE;
+      while ($base_theme) {
+        $base_theme_info = \Drupal::service('theme_handler')->listInfo()[$base_theme]->info;
+        $base_theme_has_ckeditor5_stylesheets = isset($base_theme_info['ckeditor5-stylesheets']);
+
+        if (!empty($base_theme_info['ckeditor_stylesheets']) && !$base_theme_has_ckeditor5_stylesheets) {
+          $ckeditor_stylesheets_use[] = $base_theme_info['name'];
+        }
+        $base_theme = $base_theme_info['base theme'] ?? FALSE;
+      }
+    }
+
+    if (!empty($ckeditor_stylesheets_use)) {
+      $last_item = array_pop($ckeditor_stylesheets_use);
+      $stylesheets_warning = \Drupal::translation()->formatPlural(count($ckeditor_stylesheets_use) + 1,
+        'The %last_item theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration.',
+        'The %first_items and %last_item themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations.',
+          [
+            '%last_item' => $last_item,
+            '%first_items' => implode(', ', $ckeditor_stylesheets_use),
+          ]);
+    }
+
+    if (!empty($stylesheets_warning)) {
+      $stylesheets_warning .= ' ' . t('See :change_record for details.', [':change_record' => 'https://www.drupal.org/node/3259165']);
+      $libraries['drupal.ckeditor5.filter.admin']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.stylesheets.warning';
+      $libraries['drupal.ckeditor5.stylesheets.warning']['drupalSettings']['ckeditor5']['ckeditor_stylesheets_warning'] = $stylesheets_warning;
+    }
+
+    $module_handler = \Drupal::service('module_handler');
+    if ($module_handler->moduleExists('quickedit')) {
+      $libraries['drupal.ckeditor5']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.quickedit-temporary-work-around';
+    }
+  }
+
   if ($extension === 'core') {
     // Generate libraries for each of the CKEditor 5 translation files so that
     // the correct translation file can be attached depending on the current
@@ -395,4 +470,45 @@ function ckeditor5_config_schema_info_alter(&$definitions) {
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['filters'] = $definitions['filter.format.*']['mapping']['filters'];
   // @see @see editor.editor.*.image_upload
   $definitions['ckeditor5_valid_pair__format_and_editor']['mapping']['image_upload'] = $definitions['editor.editor.*']['mapping']['image_upload'];
+}
+
+/**
+ * Retrieves the default theme's CKEditor 5 stylesheets.
+ *
+ * Themes may specify CSS files for use within CKEditor 5 by including a
+ * "ckeditor5-stylesheets" key in their .info.yml file.
+ *
+ * @code
+ * ckeditor5-stylesheets:
+ *   - css/ckeditor.css
+ * @endcode
+ *
+ * @return string[]
+ *   A list of paths to CSS files.
+ */
+function _ckeditor5_theme_css($theme = NULL): array {
+  $css = [];
+  if (!isset($theme)) {
+    $theme = \Drupal::config('system.theme')->get('default');
+  }
+  if (isset($theme) && $theme_path = \Drupal::service('extension.list.theme')->getPath($theme)) {
+    $info = \Drupal::service('extension.list.theme')->getExtensionInfo($theme);
+    if (isset($info['ckeditor5-stylesheets'])) {
+      $css = $info['ckeditor5-stylesheets'];
+      foreach ($css as $key => $url) {
+        // CSS url is external or relative to Drupal root.
+        if (UrlHelper::isExternal($url) || $url[0] === '/') {
+          $css[$key] = $url;
+        }
+        // CSS url is relative to theme.
+        else {
+          $css[$key] = '/' . $theme_path . '/' . $url;
+        }
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_ckeditor5_theme_css($info['base theme']), $css);
+    }
+  }
+  return $css;
 }

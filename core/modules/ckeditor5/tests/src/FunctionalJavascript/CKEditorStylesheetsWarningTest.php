@@ -1,0 +1,67 @@
+<?php
+
+namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
+
+// cspell:ignore subtheming
+
+/**
+ * Tests warnings when ckeditor_stylesheets do not have CKEditor 5 equivalents.
+ *
+ * @group ckeditor5
+ * @internal
+ */
+class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+  }
+
+  public function installThemeThatTriggersWarning($theme) {
+    $theme_installer = \Drupal::service('theme_installer');
+    $theme_installer->install([$theme]);
+    $this->config('system.theme')->set('default', $theme)->save();
+    $theme_installer->install(['stark']);
+    $this->config('system.theme')->set('admin', 'stark')->save();
+    \Drupal::service('theme_handler')->refreshInfo();
+  }
+
+  /**
+   * Test the ckeditor_stylesheets warning in the filter UI.
+   *
+   * @dataProvider providerTestWarningFilterUI
+   */
+  public function testWarningFilterUI($theme, $expected_warning) {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->addNewTextFormat($page, $assert_session);
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+
+    $this->assertFalse($assert_session->waitForText($expected_warning, 5000));
+    $this->installThemeThatTriggersWarning($theme);
+    $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
+    $this->assertTrue($assert_session->waitForText($expected_warning));
+  }
+
+  /**
+   * Data provider for testWarningFilterUI().
+   *
+   * @return \string[][]
+   *   An array with the theme to enable and the warning message to check.
+   */
+  public function providerTestWarningFilterUI() {
+    return [
+      'single theme' => [
+        'theme' => 'test_ckeditor_stylesheets_without_5',
+        'expected_warning' => 'The No setting for CKEditor5 stylesheets theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration. See https://www.drupal.org/node/3259165 for details.',
+      ],
+      'with base theme' => [
+        'theme' => 'test_subtheming_ckeditor_stylesheets_without_5',
+        'expected_warning' => 'The No setting for CKEditor5 stylesheets here or subtheme and No setting for CKEditor5 stylesheets themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations. See https://www.drupal.org/node/3259165 for details.',
+      ],
+    ];
+  }
+
+}
