@@ -6,10 +6,10 @@ import { Command } from 'ckeditor5/src/core';
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
  */
 
-function schemaContainsAttribute(selectedElement, schema) {
-  const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
-  for (const group of Object.keys(drupalStyles)) {
-    return schema.checkAttribute(selectedElement, group);
+function schemaContainsAttribute(selectedElement, schema, styles) {
+  for (const group of Object.keys(styles)) {
+    const groupName = group[0].toUpperCase() + group.substring(1);
+    return schema.checkAttribute(selectedElement, `drupal${groupName}`);
   }
   return false;
 }
@@ -27,19 +27,18 @@ function schemaContainsAttribute(selectedElement, schema) {
  */
 // find the closest element with the drupal element style
 // also checks the ancestor
-function getClosestElementWithElementStyleAttribute(selection, schema) {
+function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
   // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
   console.log(selectedElement);
-  // console.log(schemaContainsAttribute(selectedElement, schema, styles));
 
   return selectedElement &&
     // here checks schema for if any of the drupal element styles with this attribute name exists
-    schemaContainsAttribute(selectedElement, schema)
+    schemaContainsAttribute(selectedElement, schema, styles)
     ? selectedElement
     : selection
         // if false find the closest element that has drupal style element allowed
-      // todo: need to change to consider more than one style
+      // todo: need to change this
         .getFirstPosition()
         .findAncestor((element) =>
           schema.checkAttribute(element, 'drupalElementStyle'),
@@ -108,21 +107,22 @@ export default class DrupalElementStyleCommand extends Command {
   }
 
   containsAttribute(element) {
-    const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
-
-    for (const group of Object.keys(drupalStyles)) {
-      console.log('diff group ', group);
-      return element.hasAttribute(group);
+    for (const group of Object.keys(this.styles)) {
+      const groupName = group[0].toUpperCase() + group.substring(1);
+      return element.hasAttribute(`drupal${groupName}`);
     }
     return false;
   }
 
   getGroupAndAttribute(element) {
-    const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
+    // const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
     const groupAttr = {};
-    for (const group of Object.keys(drupalStyles)) {
-      if (element.hasAttribute(group)) {
-        groupAttr[group] = element.getAttribute(group);
+    for (const group of Object.keys(this.styles)) {
+      const groupName = group[0].toUpperCase() + group.substring(1);
+      if (element.hasAttribute(`drupal${groupName}`)) {
+        groupAttr[`drupal${groupName}`] = element.getAttribute(
+          `drupal${groupName}`,
+        );
       }
     }
     console.log('groupAttr ', groupAttr);

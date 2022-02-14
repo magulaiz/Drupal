@@ -586,47 +586,6 @@ media_mediaAlign:
       filter: filter_align
       plugins: [media_media]
 
-#media_viewMode:
-#  provider: media
-#  ckeditor5:
-#    plugins:
-#      - drupalMedia.DrupalElementStyle
-#    config:
-#      drupalElementStyles:
-#        options:
-#          - name: 'full'
-#            title: 'full view mode'
-#            label: 'Full'
-#            attributeName: 'data-view-mode'
-#            attributeValue: 'full'
-#            modelElements: [ 'drupalMedia' ]
-#          - name: 'media_library'
-#            title: 'media_library view mode'
-#            label: 'Media Library'
-#            attributeName: 'data-view-mode'
-#            attributeValue: 'media_library'
-#            modelElements: [ 'drupalMedia' ]
-#          - name: 'tiny'
-#            title: 'tiny view mode'
-#            label: 'Tiny'
-#            attributeName: 'data-view-mode'
-#            attributeValue: 'tiny'
-#            modelElements: ['drupalMedia']
-#      drupalMedia:
-#        toolbar:
-#          - name: 'drupalMedia:viewMode'
-#            items:
-#              - 'drupalElementStyle:full'
-#              - 'drupalElementStyle:media_library'
-#              - 'drupalElementStyle:tiny'
-#            defaultItem: 'drupalElementStyle:full'
-#  drupal:
-#    label: Media view mode
-#    elements:
-#      - <drupal-media data-view-mode>
-#    conditions:
-#      plugins: [media_media]
-
 media_library_mediaLibrary:
   provider: media_library
   ckeditor5:

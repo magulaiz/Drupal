@@ -145,7 +145,6 @@ export default class DrupalElementStyleUi extends Plugin {
 
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
-      debugger;
 
       const { defaultItem, items, title } = dropdownConfig;
       const buttonViews = items
