@@ -44,6 +44,8 @@ export default class DrupalMediaMetadataRepository extends Plugin {
    * @return {Promise<Object>}
    */
   getMetadata(modelElement) {
+    // If metadata was retrieved earlier for the model element, return the
+    // cached value.
     if (this._data.get(modelElement)) {
       return new Promise((resolve) => {
         resolve(this._data.get(modelElement));

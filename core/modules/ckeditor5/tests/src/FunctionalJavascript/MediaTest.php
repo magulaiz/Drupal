@@ -366,8 +366,8 @@ class MediaTest extends WebDriverTestBase {
     // Set the alt field to the new alt text.
     $alt_override_input->setValue($cobra_commander_bio);
     $this->getBalloonButton('Save')->click();
-    // Assert that the img within the media embed preview
-    // within the CKEditor contains the overridden alt text set in the balloon.
+    // Assert that the img within the media embed preview inside CKEditor 5
+    // contains the overridden alt text set in the balloon.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img[alt*="' . $cobra_commander_bio . '"]'));
 
     // Test that the downcast drupal-media element now has the alt attribute

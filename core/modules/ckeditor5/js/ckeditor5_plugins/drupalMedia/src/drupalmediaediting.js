@@ -140,8 +140,9 @@ export default class DrupalMediaEditing extends Plugin {
           const modelElement = data.item;
           const container = conversionApi.mapper.toViewElement(data.item);
 
-          // Search for preview container recursively from the children. The
-          // preview container could be wrapped with an element such as `<a>`.
+          // Search for preview container recursively from its children because
+          // the preview container could be wrapped with an element such as
+          // `<a>`.
           let media = getPreviewContainer(container.getChildren());
 
           // Use pre-existing media preview container if one exists. If the
@@ -153,9 +154,10 @@ export default class DrupalMediaEditing extends Plugin {
               return;
             }
 
-            // Preview was ready meaning so a new preview can be loaded. Change
-            // the attribute to loading but don't remove the preview to keep the
-            // element interactable in the UI.
+            // Preview was ready meaning that a new preview can be loaded.
+            // "Change the attribute to loading to prepare for the loading of
+            // the updated preview. Preview is kept intact so that it remains
+            // interactable in the UI until the new preview has been rendered.
             viewWriter.setAttribute(
               'data-drupal-media-preview',
               'loading',

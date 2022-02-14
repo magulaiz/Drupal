@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words mediaimagetextalternativecommand textalternativeformview drupalmediametadatarepository insertdrupalmediacommand */
+/* cspell:words mediaimagetextalternativecommand drupalmediametadatarepository insertdrupalmediacommand */
 
 import { Plugin } from 'ckeditor5/src/core';
 import { TooltipView, Template } from 'ckeditor5/src/ui';
@@ -87,6 +87,10 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
       editor: { model, conversion },
     } = this;
 
+    model.schema.extend('drupalMedia', {
+      allowAttributes: ['drupalMediaIsImage'],
+    });
+
     // Listen to `insertContent` event on the model to set `drupalMediaIsImage`
     // attribute when `drupalMedia` model element is inserted directly to the
     // model.
@@ -99,8 +103,10 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
       this._upcastDrupalMediaIsImage(modelElement);
     });
 
+    // On upcast, get `drupalMediaIsImage` attribute value from media metadata
+    // repository.
     conversion.for('upcast').add((dispatcher) => {
-      return dispatcher.on(
+      dispatcher.on(
         'element:drupal-media',
         (event, data) => {
           const [modelElement] = data.modelRange.getItems();
@@ -116,7 +122,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
       );
     });
 
-    conversion.for('downcast').add((dispatcher) => {
+    // Display error in the editor if fetching Drupal Media metadata failed.
+    conversion.for('editingDowncast').add((dispatcher) => {
       dispatcher.on(
         'attribute:drupalMediaIsImage',
         (event, data, conversionApi) => {
@@ -194,10 +201,6 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
         },
         { priority: 'low' },
       );
-    });
-
-    model.schema.extend('drupalMedia', {
-      allowAttributes: ['drupalMediaIsImage'],
     });
 
     editor.commands.add(

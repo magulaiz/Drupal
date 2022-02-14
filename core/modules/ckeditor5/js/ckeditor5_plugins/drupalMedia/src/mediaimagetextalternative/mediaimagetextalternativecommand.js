@@ -21,8 +21,8 @@ export default class MediaImageTextAlternativeCommand extends Command {
     const element = this.editor.model.document.selection.getSelectedElement();
     this.isEnabled =
       isDrupalMedia(element) &&
-      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR &&
-      element.getAttribute('drupalMediaIsImage');
+      element.getAttribute('drupalMediaIsImage') &&
+      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
 
     if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
       this.value = element.getAttribute('drupalMediaAlt');

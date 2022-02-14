@@ -83,8 +83,8 @@ export function getPreviewContainer(children) {
 
     if (child.childCount) {
       const recursive = getPreviewContainer(child.getChildren());
-      // Return only if preview container was found from children of
-      // this element.
+      // Return only if preview container was found within this element's
+      // children.
       if (recursive) {
         return recursive;
       }
