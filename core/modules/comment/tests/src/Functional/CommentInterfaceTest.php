@@ -84,7 +84,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Comment as anonymous with preview required.
     $this->drupalLogout();
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
-    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();
 
@@ -110,20 +110,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->titleEquals('Edit comment ' . $comment->getSubject() . ' | Drupal');
 
     // Test changing the comment author to "Anonymous".
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => ''], 'comment', 'Post');
     $this->assertSame('Anonymous', $comment->getAuthorName());
     $this->assertEquals(0, $comment->getOwnerId());
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomMachineName();
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name]);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name], 'comment', 'Post');
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->pageTextContains($random_name . ' (not verified)');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')']);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')'], 'comment', 'Post');
     $this->assertSame($this->webUser->getAccountName(), $comment->getAuthorName());
     $this->assertSame($this->webUser->id(), $comment->getOwnerId());
 
@@ -174,12 +174,12 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id() . '/edit');
-    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Reply');
     $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
-    $comment_new_page = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comment_new_page = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
     $this->drupalGet('node/' . $this->node->id(), ['query' => ['page' => 2]]);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
@@ -231,7 +231,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Submit comment through node form.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
-    $form_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $form_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($form_comment), 'Form comment found.');
 
     // Disable comment form on node page.

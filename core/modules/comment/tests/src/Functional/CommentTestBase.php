@@ -158,13 +158,13 @@ abstract class CommentTestBase extends BrowserTestBase {
       case DRUPAL_OPTIONAL:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists($button_label);
-        $this->submitForm($edit, 'Save');
+        $this->submitForm($edit, $button_label);
         break;
 
       case DRUPAL_DISABLED:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists($button_label);
-        $this->submitForm($edit, 'Save');
+        $this->submitForm($edit, $button_label);
         break;
     }
     $match = [];
