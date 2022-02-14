@@ -120,7 +120,7 @@ class CurrentThemeCondition extends ConditionPluginBase implements ContainerFact
     }
     else {
       $summary = $this->isNegated() ?
-        $this->t('The current theme is not of any enabled theme.') : $this->t('The current theme is one of enabled theme.');
+        $this->t('The current theme is not one of the enabled themes.') : $this->t('The current theme is one of the enabled themes.');
     }
 
     return $summary;
