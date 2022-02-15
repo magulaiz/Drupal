@@ -285,6 +285,7 @@ class NodeForm extends ContentEntityForm {
           $this->messenger()
             ->addStatus($this->t('@type %title has been created.', $t_args));
           break;
+
         case SAVED_UPDATED:
           $this->logger('content')->notice('@type: updated %title.', $context);
           $this->messenger()
