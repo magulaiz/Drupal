@@ -131,8 +131,29 @@ class TaxonomyIndexTid extends ManyToOne {
    */
   public function buildExtraOptionsForm(&$form, FormStateInterface $form_state) {
     if ($this->options['limit']) {
+      // Determine which vocabularies the field references. We need to work over
+      // the instances of this field on all bundles of the referencing entity
+      // type, as entities of any bundle could be in the view result.
+      $field_map = \Drupal::service('entity_field.manager')->getFieldMap();
+      $bundles = $field_map[$this->configuration['entity_type']][$this->configuration['field_name']]['bundles'];
+      $referenced_vocabulary_ids = [];
+      foreach ($bundles as $bundle) {
+        $field_definition = \Drupal::service('entity_field.manager')->getFieldDefinitions($this->configuration['entity_type'], $bundle)[$this->configuration['field_name']];
+        // If the field uses the standard taxonomy term entity reference
+        // handler, we can find the vocabularies it references.
+        if ($field_definition->getSetting('handler') == 'default:taxonomy_term') {
+          $referenced_vocabulary_ids += $field_definition->getSetting('handler_settings')['target_bundles'];
+        }
+        else {
+          // If the field uses a different entity reference handler, we can't
+          // tell which vocabularies are referenced: give up and use them all.
+          $referenced_vocabulary_ids = $field_map['taxonomy_term']['tid']['bundles'];
+          break;
+        }
+      }
+
       // We only do this when the form is displayed.
-      $vocabularies = $this->vocabularyStorage->loadMultiple();
+      $vocabularies = $this->vocabularyStorage->loadMultiple($referenced_vocabulary_ids);
       if (empty($this->definition['vocabulary'])) {
         $form['vids'] = [
           '#type' => 'checkboxes',
