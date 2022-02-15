@@ -107,10 +107,18 @@ drupal.ckeditor5.filter.admin:
     - core/drupalSettings
     - core/drupal.message
 
+# This library is marked as @internal. It is used for messaging that may change or be removed entirely.
 drupal.ckeditor5.stylesheets.warning:
+  js:
+    js/ckeditor5.stylesheets.warning.js: { }
   drupalSettings:
     ckeditor5:
       ckeditor4_stylesheets: []
+  dependencies:
+    - core/drupal
+    - core/once
+    - core/drupalSettings
+    - core/drupal.message
 
 admin:
   js:

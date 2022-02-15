@@ -19,6 +19,12 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
     parent::setUp();
   }
 
+  /**
+   * Installs and enables themes for testing.
+   *
+   * @param string $theme
+   *   The theme to enable.
+   */
   public function installThemeThatTriggersWarning($theme) {
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install([$theme]);
@@ -33,7 +39,7 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
    *
    * @dataProvider providerTestWarningFilterUI
    */
-  public function testWarningFilterUI($theme, $expected_warning) {
+  public function testWarningFilterUi($theme, $expected_warning) {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->addNewTextFormat($page, $assert_session);
@@ -55,11 +61,11 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
     return [
       'single theme' => [
         'theme' => 'test_ckeditor_stylesheets_without_5',
-        'expected_warning' => 'The No setting for CKEditor5 stylesheets theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration. See https://www.drupal.org/node/3259165 for details.',
+        'expected_warning' => 'The No setting for CKEditor 5 stylesheets theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration. See the change record for details.',
       ],
       'with base theme' => [
         'theme' => 'test_subtheming_ckeditor_stylesheets_without_5',
-        'expected_warning' => 'The No setting for CKEditor5 stylesheets here or subtheme and No setting for CKEditor5 stylesheets themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations. See https://www.drupal.org/node/3259165 for details.',
+        'expected_warning' => 'The No setting for CKEditor 5 stylesheets here or subtheme and No setting for CKEditor 5 stylesheets themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations. See the change record for details.',
       ],
     ];
   }

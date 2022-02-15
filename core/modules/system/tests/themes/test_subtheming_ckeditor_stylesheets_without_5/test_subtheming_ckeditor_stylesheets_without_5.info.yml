@@ -1,4 +1,4 @@
-name: No setting for CKEditor5 stylesheets here or subtheme
+name: No setting for CKEditor 5 stylesheets here or subtheme
 type: theme
 description: 'A theme that uses ckeditor_stylesheets without ckeditor5-stylesheets, nor does its base theme.'
 package: Testing

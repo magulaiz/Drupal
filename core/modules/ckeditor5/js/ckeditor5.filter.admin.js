@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-(function (Drupal, once, drupalSettings) {
+(function (Drupal, once) {
   Drupal.behaviors.allowedTagsListener = {
     attach: function attach(context) {
       once('allowed-tags-listener', context.querySelector('[data-drupal-selector="edit-filters-filter-html-settings-allowed-html"]')).forEach(function (textarea) {
@@ -69,56 +69,6 @@
       });
     }
   };
-  Drupal.behaviors.ckEditor5StylesheetsWarn = {
-    attach: function attach() {
-      var editorSelect = once('editor-select-stylesheet-warning', document.querySelector('#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor'));
-
-      if (typeof editorSelect[0] !== 'undefined' && drupalSettings.ckeditor5 && drupalSettings.ckeditor5.ckeditor_stylesheets_warning) {
-        var select = editorSelect[0];
-        var selectMessageContainer = document.createElement('div');
-        select.parentNode.insertBefore(selectMessageContainer, select);
-        var selectMessages = new Drupal.Message(selectMessageContainer);
-        var editorSettings = document.querySelector('#editor-settings-wrapper');
-
-        var ck5Warning = function ck5Warning() {
-          selectMessages.add(drupalSettings.ckeditor5.ckeditor_stylesheets_warning, {
-            type: 'warning'
-          });
-        };
-
-        var updateWarningStatus = function updateWarningStatus() {
-          if (select.value === 'ckeditor5' && !select.classList.contains('error')) {
-            ck5Warning();
-          } else {
-            editorSettings.hidden = false;
-            selectMessages.clear();
-          }
-        };
-
-        var selectChangeHandler = function selectChangeHandler() {
-          var editorSelectObserver = null;
-
-          function whenSelectAttributeChanges(mutations) {
-            for (var i = 0; i < mutations.length; i++) {
-              if (mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled) {
-                updateWarningStatus();
-                editorSelectObserver.disconnect();
-              }
-            }
-          }
-
-          editorSelectObserver = new MutationObserver(whenSelectAttributeChanges);
-          editorSelectObserver.observe(select, {
-            attributes: true,
-            attributeOldValue: true
-          });
-        };
-
-        updateWarningStatus();
-        select.addEventListener('change', selectChangeHandler);
-      }
-    }
-  };
   var originalAjaxEventResponse = Drupal.Ajax.prototype.eventResponse;
 
   Drupal.Ajax.prototype.eventResponse = function ckeditor5AjaxEventResponse() {
@@ -134,4 +84,4 @@
 
     originalAjaxEventResponse.apply(this, args);
   };
-})(Drupal, once, drupalSettings);
+})(Drupal, once);

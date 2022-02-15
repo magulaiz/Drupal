@@ -1,4 +1,4 @@
-name: No setting for CKEditor5 stylesheets
+name: No setting for CKEditor 5 stylesheets
 type: theme
 description: 'A theme that uses ckeditor_stylesheets without ckeditor5-stylesheets.'
 package: Testing
