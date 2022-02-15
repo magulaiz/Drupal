@@ -21,6 +21,12 @@ exports.command = function drupalCreateRole(
 
   let machineName;
   this.drupalLoginAsAdmin(() => {
+    // Start with a cache clear to make sure all newly enabled modules
+    // permissions show up.
+    this.drupalRelativeURL('/admin/config/development/performance')
+      .submitForm('input[value="Clear all caches"]')
+      .waitForElementVisible('input[value="Clear all caches"]', 10000);
+
     this.drupalRelativeURL('/admin/people/roles/add')
       .setValue('input[name="label"]', roleName)
       // Wait for the machine name to appear so that it can be used later to
