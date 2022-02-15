@@ -56,8 +56,8 @@
         };
 
         /**
-         * Adds a warning if the selected editor is ckeditor5, otherwise clears
-         * the message container.
+         * Adds a warning if the selected editor is CKEditor 5, otherwise clears
+         * any existing ckeditor_stylesheets warnings.
          */
         const updateWarningStatus = () => {
           // If the selected editor is CKEditor 5 and there are no validation

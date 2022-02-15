@@ -9,7 +9,7 @@
   Drupal.behaviors.ckEditor5warn = {
     attach: function attach() {
       var isIE11 = Modernizr.mq('(-ms-high-contrast: active), (-ms-high-contrast: none)');
-      var editorSelect = once('editor-select', document.querySelector('#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor'));
+      var editorSelect = once('editor-ie11-warning', '[data-drupal-selector="filter-format-edit-form"] [data-drupal-selector="edit-editor-editor"], [data-drupal-selector="filter-format-add-form"] [data-drupal-selector="edit-editor-editor"]');
 
       if (typeof editorSelect[0] !== 'undefined') {
         var select = editorSelect[0];

@@ -15,10 +15,8 @@
         '(-ms-high-contrast: active), (-ms-high-contrast: none)',
       );
       const editorSelect = once(
-        'editor-select',
-        document.querySelector(
-          '#filter-format-edit-form #edit-editor-editor, #filter-format-add-form #edit-editor-editor',
-        ),
+        'editor-ie11-warning',
+        '[data-drupal-selector="filter-format-edit-form"] [data-drupal-selector="edit-editor-editor"], [data-drupal-selector="filter-format-add-form"] [data-drupal-selector="edit-editor-editor"]',
       );
 
       if (typeof editorSelect[0] !== 'undefined') {
@@ -33,7 +31,7 @@
         );
 
         /**
-         * Adds an IE11 compatibility warning to the message container.
+         * Adds IE11 compatibility warnings to the message container.
          */
         const addIE11Warning = () => {
           selectMessages.add(
@@ -65,8 +63,8 @@
         };
 
         /**
-         * Adds a warning if the selected editor is ckeditor5, otherwise clears
-         * the message container.
+         * Adds a warning if the selected editor is CKEditor 5, otherwise clears
+         * any existing IE11 warnings.
          */
         const updateWarningStatus = () => {
           if (
