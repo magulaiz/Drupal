@@ -57,7 +57,7 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
    * @return \string[][]
    *   An array with the theme to enable and the warning message to check.
    */
-  public function providerTestWarningFilterUI() {
+  public function providerTestWarningFilterUi() {
     return [
       'single theme' => [
         'theme' => 'test_ckeditor_stylesheets_without_5',

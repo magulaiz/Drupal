@@ -15,40 +15,35 @@
         var selectMessageContainer = document.createElement('div');
         select.parentNode.insertBefore(selectMessageContainer, select);
         var selectMessages = new Drupal.Message(selectMessageContainer);
-        var editorSettings = document.querySelector('[data-drupal-selector="editor-settings-wrapper"]');
 
         var addCkeditorStylesheetsWarning = function addCkeditorStylesheetsWarning() {
           selectMessages.add(drupalSettings.ckeditor5.ckeditor_stylesheets_warning, {
-            type: 'warning'
+            type: 'warning',
+            id: 'ckeditor_stylesheets_warning'
           });
         };
 
         var updateWarningStatus = function updateWarningStatus() {
-          if (select.value === 'ckeditor5' && !select.classList.contains('error')) {
+          if (select.value === 'ckeditor5' && !select.hasAttribute('data-error-switching-to-ckeditor5')) {
             addCkeditorStylesheetsWarning();
-          } else {
-            editorSettings.hidden = false;
-            selectMessages.clear();
+          } else if (selectMessages.select('ckeditor_stylesheets_warning')) {
+            selectMessages.remove('ckeditor_stylesheets_warning');
           }
         };
 
         updateWarningStatus();
-        var editorSelectObserver = null;
-        select.addEventListener('change', function () {
-          if (editorSelectObserver) {
-            editorSelectObserver = new MutationObserver(function (mutations) {
-              for (var i = 0; i < mutations.length; i++) {
-                if (mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled) {
-                  updateWarningStatus();
-                  editorSelectObserver.disconnect();
-                }
-              }
-            });
-          }
+        var editorSelectObserver = new MutationObserver(function (mutations) {
+          for (var i = 0; i < mutations.length; i++) {
+            var switchToCKEditor5Complete = mutations[i].type === 'attributes' && mutations[i].attributeName === 'disabled' && !select.disabled;
+            var fixedErrorsPreventingSwitchToCKEditor5 = mutations[i].type === 'attributes' && mutations[i].attributeName === 'data-error-switching-to-ckeditor5' && !select.hasAttribute('data-error-switching-to-ckeditor5');
 
-          editorSelectObserver.observe(select, {
-            attributes: true
-          });
+            if (switchToCKEditor5Complete || fixedErrorsPreventingSwitchToCKEditor5) {
+              updateWarningStatus();
+            }
+          }
+        });
+        editorSelectObserver.observe(select, {
+          attributes: true
         });
       }
     }

@@ -41,9 +41,6 @@
         const selectMessageContainer = document.createElement('div');
         select.parentNode.insertBefore(selectMessageContainer, select);
         const selectMessages = new Drupal.Message(selectMessageContainer);
-        const editorSettings = document.querySelector(
-          '[data-drupal-selector="editor-settings-wrapper"]',
-        );
 
         /**
          * Adds a ckeditor_stylesheets warning to the message container.
@@ -53,6 +50,7 @@
             drupalSettings.ckeditor5.ckeditor_stylesheets_warning,
             {
               type: 'warning',
+              id: 'ckeditor_stylesheets_warning',
             },
           );
         };
@@ -62,59 +60,53 @@
          * the message container.
          */
         const updateWarningStatus = () => {
+          // If the selected editor is CKEditor 5 and there are no validation
+          // errors, provide the ckeditor_stylesheets warning.
           if (
             select.value === 'ckeditor5' &&
-            !select.classList.contains('error')
+            !select.hasAttribute('data-error-switching-to-ckeditor5')
           ) {
             addCkeditorStylesheetsWarning();
-          } else {
-            editorSettings.hidden = false;
-            selectMessages.clear();
+          } else if (selectMessages.select('ckeditor_stylesheets_warning')) {
+            selectMessages.remove('ckeditor_stylesheets_warning');
           }
         };
 
         updateWarningStatus();
 
-        // Declare the observer first so the observer callback can access it.
-        let editorSelectObserver = null;
-
-        // Listen to text format selection changes.
-        select.addEventListener('change', () => {
-          // Create the observer if it does not yet exist.
-          if (editorSelectObserver) {
-            // An observer is used because during the select change event, it is
-            // not yet known if validation prevented the switch to CKEditor 5.
-            // The observer listens for the removal of the 'disabled' attribute on
-            // the editor <select>, as this means the AJAX callback has completed
-            // and the form is in a state suitable for determining if the
-            // stylesheet warning is needed.
-            editorSelectObserver = new MutationObserver((mutations) => {
-              for (let i = 0; i < mutations.length; i++) {
-                // When the select input is no longer disabled, the AJAX request
-                // is complete and the UI is in a state where it can be determined
-                // if the ckeditor_stylesheets warning is needed.
-                if (
-                  mutations[i].type === 'attributes' &&
-                  mutations[i].attributeName === 'disabled' &&
-                  !select.disabled
-                ) {
-                  updateWarningStatus();
-
-                  // Once a ckeditor_stylesheets warning is generated, the
-                  // observer can stop monitoring. Monitoring will resume if
-                  // the select element changes.
-                  editorSelectObserver.disconnect();
-                }
-              }
-            });
+        // This observer listens for two different attribute changes that, when
+        // they occur, may require adding or removing the ckeditor_stylesheets
+        // warning.
+        // - If the disabled attribute was removed, which is potentially due to
+        //   an AJAX update having completed.
+        // - If the data-error-switching-to-ckeditor5 attribute was removed,
+        //   which means a switch to CKEditor 5 that was previously blocked due
+        //   to validation errors has resumed and completed.
+        const editorSelectObserver = new MutationObserver((mutations) => {
+          for (let i = 0; i < mutations.length; i++) {
+            // TRUE when the element has switched from disabled to not disabled.
+            const switchToCKEditor5Complete =
+              mutations[i].type === 'attributes' &&
+              mutations[i].attributeName === 'disabled' &&
+              !select.disabled;
+            // TRUE when a switch to CKEditor 5 blocked by validation is no
+            // longer blocked.
+            const fixedErrorsPreventingSwitchToCKEditor5 =
+              mutations[i].type === 'attributes' &&
+              mutations[i].attributeName ===
+                'data-error-switching-to-ckeditor5' &&
+              !select.hasAttribute('data-error-switching-to-ckeditor5');
+            if (
+              switchToCKEditor5Complete ||
+              fixedErrorsPreventingSwitchToCKEditor5
+            ) {
+              updateWarningStatus();
+            }
           }
+        });
 
-          // Enable the observer as soon as the select element changes, so it
-          // can monitor when the AJAX request has completed by checking when
-          // the element is no longer disabled.
-          editorSelectObserver.observe(select, {
-            attributes: true,
-          });
+        editorSelectObserver.observe(select, {
+          attributes: true,
         });
       }
     },
