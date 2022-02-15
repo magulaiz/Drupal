@@ -188,7 +188,7 @@ class TaxonomyIndexTid extends ManyToOne {
     ];
 
     if ($this->options['type'] == 'textfield') {
-      $terms = $this->value ? $this->termStorage->loadMultiple($this->value) : [];
+      $terms = $this->value ? Term::loadMultiple(($this->value)) : [];
       $form['value'] += [
         '#type' => 'textfield',
         '#default_value' => EntityAutocomplete::getEntityLabels($terms),
@@ -216,7 +216,7 @@ class TaxonomyIndexTid extends ManyToOne {
       }
       else {
         $options = [];
-        $query = $this->termStorage->getQuery()
+        $query = \Drupal::entityQuery('taxonomy_term')
           ->accessCheck(TRUE)
           // @todo Sorting on vocabulary properties -
           //   https://www.drupal.org/node/1821274.
@@ -229,7 +229,7 @@ class TaxonomyIndexTid extends ManyToOne {
         if ($this->options['limit']) {
           $query->condition('vid', $this->options['vids'], 'IN');
         }
-        $terms = $this->termStorage->loadMultiple($query->execute());
+        $terms = Term::loadMultiple($query->execute());
       }
 
       /** @var \Drupal\taxonomy\TermInterface[] $terms */
@@ -395,7 +395,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     if ($this->value) {
       $this->value = array_filter($this->value);
-      $terms = $this->termStorage->loadMultiple($this->value);
+      $terms = Term::loadMultiple($this->value);
       foreach ($terms as $term) {
         $this->valueOptions[$term->id()] = \Drupal::service('entity.repository')
           ->getTranslationFromContext($term)
