@@ -151,6 +151,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
       'Views',
       'Views translation',
       'migrate_status_active_test',

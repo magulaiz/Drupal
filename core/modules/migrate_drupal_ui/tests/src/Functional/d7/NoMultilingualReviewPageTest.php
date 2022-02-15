@@ -159,6 +159,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Entity Translation Menu',
       'Entity Translation Upgrade',
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual select',
       'Path translation',

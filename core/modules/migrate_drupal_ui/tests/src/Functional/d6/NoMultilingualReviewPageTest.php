@@ -147,6 +147,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Devel',
       'Devel generate',
       'Devel node access',
+      'Forum',
       'Internationalization',
       'Menu translation',
       'migrate_status_active_test',

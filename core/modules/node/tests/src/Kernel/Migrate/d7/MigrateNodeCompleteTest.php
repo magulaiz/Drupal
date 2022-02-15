@@ -166,7 +166,7 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       'article',
       'blog',
       'book',
-        'page',
+      'page',
       'test_content_type',
     ];
     foreach ($node_types as $node_type) {

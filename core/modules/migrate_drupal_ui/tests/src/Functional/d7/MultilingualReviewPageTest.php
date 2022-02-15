@@ -161,6 +161,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Flexslider_picture is a sub module of Picture module. Only the
       // styles from picture are migrated.
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual select',
       'Path translation',

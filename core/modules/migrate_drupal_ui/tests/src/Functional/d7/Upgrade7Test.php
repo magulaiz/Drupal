@@ -84,8 +84,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'contact_form' => 3,
       'contact_message' => 0,
       'editor' => 2,
-      'field_config' => 91,
-      'field_storage_config' => 70,
+      'field_config' => 90,
+      'field_storage_config' => 69,
       'file' => 3,
       'filter_format' => 7,
       'image_style' => 7,
@@ -107,11 +107,11 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 12,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 24,
+      'entity_form_display' => 23,
       'entity_form_mode' => 1,
-      'entity_view_display' => 37,
+      'entity_view_display' => 36,
       'entity_view_mode' => 14,
-      'base_field_override' => 4,
+      'base_field_override' => 3,
     ];
   }
 
@@ -154,7 +154,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Field',
       'File',
       'Filter',
-        'Image',
+      'Image',
       'Internationalization',
       'Locale',
       'Link',
@@ -204,6 +204,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Forum',
       'References',
       'Translation sets',
       'Variable realm',
