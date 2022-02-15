@@ -153,6 +153,23 @@ class ConfigDependenciesTest extends KernelTestBase {
    */
   public function providerOnDependencyRemovalForResourceGranularity() {
     return [
+      'resource with multiple formats' => [
+        [
+          'plugin_id' => 'entity:entity_test',
+          'granularity' => RestResourceConfigInterface::RESOURCE_GRANULARITY,
+          'configuration' => [
+            'methods' => ['GET', 'POST'],
+            'formats' => ['xml', 'json'],
+            'authentication' => ['cookie', 'basic_auth'],
+          ],
+        ],
+        'serialization',
+        [
+          'methods' => ['GET', 'POST'],
+          'formats' => ['xml'],
+          'authentication' => ['cookie', 'basic_auth'],
+        ],
+      ],
       'resource with multiple authentication providers' => [
         [
           'plugin_id' => 'entity:entity_test',
