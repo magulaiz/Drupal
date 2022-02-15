@@ -7,6 +7,7 @@ import { Command } from 'ckeditor5/src/core';
  */
 
 function schemaContainsAttribute(selectedElement, schema, styles) {
+  console.log(styles);
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(selectedElement, `drupal${groupName}`);
@@ -28,9 +29,9 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
 // find the closest element with the drupal element style
 // also checks the ancestor
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
+  console.log('line 32: ', styles);
   // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
-  console.log(selectedElement);
 
   return selectedElement &&
     // here checks schema for if any of the drupal element styles with this attribute name exists
@@ -89,12 +90,10 @@ export default class DrupalElementStyleCommand extends Command {
       editor.model.schema,
       this.styles,
     );
-    console.log('element ', element);
 
     this.isEnabled = !!element;
 
     if (!this.isEnabled) {
-      console.log('not enabled');
       this.value = false;
       // here element needs to be checked against list of possible attributes
       // and then update the value to include all drupal element styles selected for the element
@@ -125,7 +124,6 @@ export default class DrupalElementStyleCommand extends Command {
         );
       }
     }
-    console.log('groupAttr ', groupAttr);
     return groupAttr;
   }
 
@@ -150,16 +148,22 @@ export default class DrupalElementStyleCommand extends Command {
 
     model.change((writer) => {
       const requestedStyle = options.value;
+      console.log('requestedStyle', requestedStyle);
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
+        this.styles,
       );
 
       // handle group, retrieve style from correct group
-      if (!requestedStyle || this._styles.get(requestedStyle).isDefault) {
-        writer.removeAttribute('drupalElementStyle', element);
+      console.log('this._styles', this._styles.align.get(requestedStyle.drupalAlign));
+      // todo: ask what this isDefault is and remove hardcode
+      if (!requestedStyle || this._styles.align.get(requestedStyle.drupalAlign).isDefault) {
+        // instead of removing drupalemlementstyle remove value from the object
+        writer.removeAttribute('drupalAlign', element);
       } else {
-        writer.setAttribute('drupalElementStyle', requestedStyle, element);
+        // instead of overriding extend the object with new value
+        writer.setAttribute('drupalAlign', requestedStyle.drupalAlign, element);
       }
     });
   }

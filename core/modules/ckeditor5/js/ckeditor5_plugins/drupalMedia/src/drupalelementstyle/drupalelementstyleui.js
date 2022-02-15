@@ -56,8 +56,9 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name) {
-  console.log('name,' + name);
-  return `drupalElementStyle:${name}`;
+  console.log(`name, ${name}`);
+  // todo: change this to take group too
+  return `drupalElementStyle:align:${name}`;
 }
 
 /**
@@ -79,17 +80,29 @@ export default class DrupalElementStyleUi extends Plugin {
    * @inheritDoc
    */
   init() {
-    const plugins = this.editor.plugins;
+    const { plugins } = this.editor;
     const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
 
+    // update on group basis
     const definedStyles = Object.values(
       plugins.get('DrupalElementStyleEditing').normalizedStyles,
     );
+    console.log('definedStyles: ', definedStyles);
 
-    definedStyles.forEach((styleConfig) => {
-      this._createButton(styleConfig);
+    definedStyles.forEach((group) => {
+      // todo:.normalizedStyles returns array of arrays without 'align' or 'viewMode' key so need to fix hardcode
+      if (group[0].name.includes('align')) {
+        group.forEach((styleConfig) => {
+          this._createButton(styleConfig);
+        });
+      } else {
+        console.log('create buttons for list dropdown');
+      }
     });
+    // loop thru the dropdowns and if its a list, create a collection of buttons out of all the options
+    // separate process for list dropdown
 
+    // update this documentation to have the new display
     /**
      * A Drupal Element Style dropdown definition.
      *
@@ -121,10 +134,22 @@ export default class DrupalElementStyleUi extends Plugin {
      * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
     const definedDropdowns = toolbarConfig.filter(isObject);
+    const definedStylesByGroup = [];
 
     definedDropdowns.forEach((dropdownConfig) => {
-      console.log('definedDropdowns ', definedDropdowns);
-      // this._createDropdown(dropdownConfig, definedStyles);
+      if (dropdownConfig.display === 'toolbar') {
+        definedStyles.forEach((group) => {
+          // todo: this needs to change to not just check align
+          if (group[0].name.includes('align')) {
+            // definedStylesByGroup.push(group);
+            // console.log('definedStylesByGroup ', definedStylesByGroup);
+            // todo: fix hardcord 0 position
+            this._createDropdown(dropdownConfig, group);
+          }
+        });
+      } else {
+        console.log('create list dropdown');
+      }
     });
   }
 
@@ -141,23 +166,27 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _createDropdown(dropdownConfig, definedStyles) {
+    console.log('dropdownConfig, ', dropdownConfig);
+    console.log('definedStyles, ', definedStyles);
+    // make sure definedstyles to reading from the correct group
     const factory = this.editor.ui.componentFactory;
 
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
+      console.log('peeeeeee');
 
       const { defaultItem, items, title } = dropdownConfig;
-      const buttonViews = items
-        .filter((itemName) =>
-          definedStyles.find(
+      console.log('dropdownConfig.items ', dropdownConfig.items);
+      const buttonViews = items.filter((itemName) => {
+          // const splitItemName = itemName.split(':');
+          // console.log('split, ', splitItemName[2]);
+          return definedStyles.find(
             ({ name }) => getUIComponentName(name) === itemName,
-          ),
-        )
+          );
+        })
         .map((buttonName) => {
-          console.log('button name', buttonName);
+          console.log('buttonName: ', buttonName);
           const button = factory.create(buttonName);
-          console.log('button ', button);
-
 
           if (buttonName === defaultItem) {
             defaultButton = button;
@@ -176,10 +205,7 @@ export default class DrupalElementStyleUi extends Plugin {
       addToolbarToDropdown(dropdownView, buttonViews);
 
       splitButtonView.set({
-        label: getDropdownButtonTitle(
-          title,
-          defaultButton ? defaultButton.label : '',
-        ),
+        label: getDropdownButtonTitle(title, defaultButton.label),
         class: null,
         tooltip: true,
       });
@@ -251,7 +277,9 @@ export default class DrupalElementStyleUi extends Plugin {
     this.editor.ui.componentFactory.add(
       getUIComponentName(buttonName),
       (locale) => {
+        // change to take account of groups
         const command = this.editor.commands.get('drupalElementStyle');
+        console.log('command ', command);
         const view = new ButtonView(locale);
 
         view.set({
@@ -263,7 +291,9 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.bind('isEnabled').to(command, 'isEnabled');
         view.bind('isOn').to(command, 'value', (value) => value === buttonName);
-        view.on('execute', this._executeCommand.bind(this, buttonName));
+        const group = '';
+        console.log('buttonName', buttonName);
+        view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
         return view;
       },
@@ -280,8 +310,12 @@ export default class DrupalElementStyleUi extends Plugin {
    *
    * @private
    */
-  _executeCommand(name) {
-    this.editor.execute('drupalElementStyle', { value: name });
+  _executeCommand(name, group) {
+    const key = 'drupalAlign';
+    const obj = {};
+    obj[key] = name;
+    console.log(obj);
+    this.editor.execute('drupalElementStyle', { value: obj });
     this.editor.editing.view.focus();
   }
 

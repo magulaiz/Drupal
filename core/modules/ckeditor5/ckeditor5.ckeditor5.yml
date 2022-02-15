@@ -566,17 +566,17 @@ media_mediaAlign:
           - name: 'drupalMedia:align'
             display: 'toolbar'
             items:
-              - 'drupalAlign:alignLeft'
-              - 'drupalAlign:alignCenter'
-              - 'drupalAlign:alignRight'
-            defaultItem: 'drupalAlign:alignCenter'
+              - 'drupalElementStyle:align:alignLeft'
+              - 'drupalElementStyle:align:alignCenter'
+              - 'drupalElementStyle:align:alignRight'
+            defaultItem: 'drupalElementStyle:align:alignCenter'
           - name: 'drupalMedia:viewMode'
             display: 'list'
             items:
-              - 'drupalViewMode:full'
-              - 'drupalViewMode:media_library'
-              - 'drupalViewMode:tiny'
-            defaultItem: 'drupalViewMode:full'
+              - 'drupalElementStyle:viewMode:full'
+              - 'drupalElementStyle:viewMode:media_library'
+              - 'drupalElementStyle:viewMode:tiny'
+            defaultItem: 'drupalElementStyle:viewMode:full'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign
