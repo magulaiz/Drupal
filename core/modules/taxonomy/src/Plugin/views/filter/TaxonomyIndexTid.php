@@ -3,7 +3,6 @@
 namespace Drupal\taxonomy\Plugin\views\filter;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
-use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\taxonomy\TermInterface;
@@ -53,13 +52,6 @@ class TaxonomyIndexTid extends ManyToOne {
   protected $currentUser;
 
   /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * Constructs a TaxonomyIndexTid object.
    *
    * @param array $configuration
@@ -74,10 +66,8 @@ class TaxonomyIndexTid extends ManyToOne {
    *   The term storage.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
-   *   The entity repository service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user = NULL, EntityRepositoryInterface $entity_repository = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
@@ -86,11 +76,6 @@ class TaxonomyIndexTid extends ManyToOne {
       $current_user = \Drupal::service('current_user');
     }
     $this->currentUser = $current_user;
-    if (!$entity_repository) {
-      @trigger_error('Calling TaxonomyIndexTid::__construct() without the $entity_repository argument is deprecated in drupal:9.1.0 and the $entity_repository argument will be required in drupal:10.0.0. See https://www.drupal.org/node/3162414', E_USER_DEPRECATED);
-      $entity_repository = \Drupal::service('entity.repository');
-    }
-    $this->entityRepository = $entity_repository;
   }
 
   /**
@@ -103,8 +88,7 @@ class TaxonomyIndexTid extends ManyToOne {
       $plugin_definition,
       $container->get('entity_type.manager')->getStorage('taxonomy_vocabulary'),
       $container->get('entity_type.manager')->getStorage('taxonomy_term'),
-      $container->get('current_user'),
-      $container->get('entity.repository')
+      $container->get('current_user')
     );
   }
 
@@ -413,7 +397,7 @@ class TaxonomyIndexTid extends ManyToOne {
       $this->value = array_filter($this->value);
       $terms = $this->termStorage->loadMultiple($this->value);
       foreach ($terms as $term) {
-        $this->valueOptions[$term->id()] = $this->entityRepository
+        $this->valueOptions[$term->id()] = \Drupal::service('entity.repository')
           ->getTranslationFromContext($term)
           ->label();
       }
@@ -478,7 +462,7 @@ class TaxonomyIndexTid extends ManyToOne {
    *   The list of vocabularies.
    */
   protected function addOption(array &$options, TermInterface $term, array $vocabularies): void {
-    $option = $this->entityRepository->getTranslationFromContext($term)->label();
+    $option = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();
     if (!empty($this->options['hierarchy']) && $this->options['limit']) {
       $option = str_repeat('-', $term->depth) . $option;
     }
