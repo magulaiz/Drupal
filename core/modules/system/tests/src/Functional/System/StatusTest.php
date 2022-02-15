@@ -15,7 +15,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['update_test_postupdate'];
+  protected static $modules = ['update_test_postupdate', 'update'];
 
   /**
    * {@inheritdoc}
@@ -37,14 +37,21 @@ class StatusTest extends BrowserTestBase {
 
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
+      'access site reports',
     ]);
     $this->drupalLogin($admin_user);
   }
 
   /**
    * Tests that the status page returns.
+   *
+   * @group legacy
    */
   public function testStatusPage() {
+    // Verify if the 'Status report' is the first item link.
+    $this->drupalGet('admin/reports');
+    $this->assertEquals('Status report', $this->cssSelect('.list-group :first-child')[0]->getText());
+
     // Go to Administration.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
