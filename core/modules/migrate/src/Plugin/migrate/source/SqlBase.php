@@ -489,7 +489,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
    * Gets the source count using countQuery().
    */
   protected function doCount() {
-    return (int) $this->query()->countQuery()->execute()->fetchField();
+    return (int) $this->prepareQuery()->countQuery()->execute()->fetchField();
   }
 
   /**
