@@ -282,7 +282,7 @@ function editor_load($format_id) {
   // formats for administrators). Loading a small number of editors all at once
   // is more efficient than loading multiple editors individually.
   $editors = Editor::loadMultiple();
-  return isset($editors[$format_id]) ? $editors[$format_id] : NULL;
+  return $editors[$format_id] ?? NULL;
 }
 
 /**
@@ -369,7 +369,7 @@ function editor_entity_insert(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_record_file_usage($uuids, $entity);
   }
 }
@@ -387,7 +387,7 @@ function editor_entity_update(EntityInterface $entity) {
   // deletion of previous file usages are necessary.
   if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
     $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-    foreach ($referenced_files_by_field as $field => $uuids) {
+    foreach ($referenced_files_by_field as $uuids) {
       _editor_record_file_usage($uuids, $entity);
     }
   }
@@ -403,8 +403,7 @@ function editor_entity_update(EntityInterface $entity) {
 
     // Detect file usages that should be incremented.
     foreach ($uuids_by_field as $field => $uuids) {
-      $original_uuids = isset($original_uuids_by_field[$field]) ?
-        $original_uuids_by_field[$field] : [];
+      $original_uuids = $original_uuids_by_field[$field] ?? [];
 
       if ($added_files = array_diff($uuids_by_field[$field], $original_uuids)) {
         _editor_record_file_usage($added_files, $entity);
@@ -428,7 +427,7 @@ function editor_entity_delete(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_delete_file_usage($uuids, $entity, 0);
   }
 }
@@ -442,7 +441,7 @@ function editor_entity_revision_delete(EntityInterface $entity) {
     return;
   }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
-  foreach ($referenced_files_by_field as $field => $uuids) {
+  foreach ($referenced_files_by_field as $uuids) {
     _editor_delete_file_usage($uuids, $entity, 1);
   }
 }

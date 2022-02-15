@@ -257,7 +257,7 @@ class LibraryDiscoveryParser {
 
           // Set the 'minified' flag on JS file assets, default to FALSE.
           if ($type == 'js' && $options['type'] == 'file') {
-            $options['minified'] = isset($options['minified']) ? $options['minified'] : FALSE;
+            $options['minified'] = $options['minified'] ?? FALSE;
           }
 
           $library[$type][] = $options;
@@ -544,7 +544,7 @@ class LibraryDiscoveryParser {
         return 2;
       }
       $categories[] = $category;
-      foreach ($files as $source => $options) {
+      foreach ($files as $options) {
         if (!is_array($options)) {
           return 1;
         }
