@@ -214,8 +214,9 @@ function update_calculate_project_data($available) {
  *   - 'latest_dev': (string) This value is only set if the installed version is
  *      a dev version. This will be set to the value of latest_version or
  *      dev_version depending on which release is the most recent one.
- *   - 'also': (array) This is a list of the latest official releases from any
- *      higher major versions.
+ *   - 'also': (array) This is a list of the latest supported releases from any
+ *      higher major versions. The keys of this array are the major version
+ *      numbers of the relaeses.
  *   - 'extra': (array) Extra details about the existing version.
  *      It has following sub-keys:
  *      - class: (array) The CSS classes associated with the release, e.g.
@@ -224,7 +225,7 @@ function update_calculate_project_data($available) {
  *        'Project revoked'.
  *      - data: (string) An explanation with respect to the label.
  *   - 'status': The overall status of the project (one of the
- *      UpdateManagerInterface constants).
+ *      UpdateManagerInterface/UpdateFetcherInterface constants).
  *   - 'reason': (string) The reason behind the specific 'status'.
  *   - 'fetch_status': Set to UpdateFetcherInterface::FETCH_PENDING when the
  *     'status' is set to UpdateFetcherInterface::FETCH_PENDING.
