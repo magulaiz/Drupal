@@ -2411,10 +2411,7 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
-// find the closest element with the drupal element style
-// also checks the ancestor
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
-  console.log('line 32: ', styles);
   // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
 
@@ -2423,13 +2420,32 @@ function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
     schemaContainsAttribute(selectedElement, schema, styles)
     ? selectedElement
     : selection
-        // if false find the closest element that has drupal style element allowed
       // todo: need to change this
         .getFirstPosition()
         .findAncestor((element) =>
           schema.checkAttribute(element, 'drupalElementStyle'),
         );
 }
+// function getClosestElementWithElementStyleAttribute(selection, schema) {
+//   const selectedElement = selection.getSelectedElement();
+//
+//   if (
+//     selectedElement &&
+//     schema.checkAttribute(selectedElement, 'drupalElementStyle')
+//   ) {
+//     console.log('hit');
+//     return selectedElement;
+//   }
+//   let parent = selection.getFirstPosition().parent;
+//   console.log('parent', parent);
+//   while (parent) {
+//     if (parent.is('element') && schema.checkAttribute(parent, 'drupalElementStyle')) {
+//       return parent;
+//     }
+//     parent = parent.parent;
+//   }
+//   return null;
+// }
 
 /**
  * The Drupal Element style command.
@@ -2528,7 +2544,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   // makes the actual change in the MODEL
   // execute needs to change to take value and the group
   execute(options = {}, group) {
-    console.log('recevied group in command execute' , group);
+    console.log('recevied group in command execute', group);
     const { editor } = this;
     const { model } = editor;
 
@@ -2540,7 +2556,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
         model.schema,
         this.styles,
       );
-      // todo: ask what this isDefault is and remove hardcode
       if (
         !requestedStyle ||
         this._styles[group].get(requestedStyle[modelGroupName]).isDefault
@@ -2905,6 +2920,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
 
 
 
+
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
  */
@@ -2949,8 +2965,6 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
-  console.log(`name: ${name}, group: ${group}`);
-  // todo: change this to take group too
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -2986,7 +3000,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
           this._createButton(style, group);
         } else {
           // create a collection of buttons for all the otions like in resize
-          console.log('here create buttons for list dropdown');
+          this._createButton(style, group);
         }
       }
     });
@@ -3027,13 +3041,13 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     const definedDropdowns = toolbarConfig.filter(isObject);
 
     definedDropdowns.forEach((dropdownConfig) => {
+      const groupName = dropdownConfig.name.split(':')[1];
       if (dropdownConfig.display === 'toolbar') {
-        const groupName = dropdownConfig.name.split(':')[1];
         if (groupName === 'align') {
           this._createDropdown(dropdownConfig, definedStyles[groupName]);
         }
       } else {
-        console.log('create list dropdown');
+        this._createListDropdown(dropdownConfig, definedStyles[groupName]);
       }
     });
   }
@@ -3184,6 +3198,142 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
   }
 
   /**
+   * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
+   *
+   * @private
+   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options The resize options.
+   * @param {module:image/imageresize/resizeimagecommand~ResizeImageCommand} command The resize image command.
+   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+   */
+  _getDropdownListItemDefinitions(options, command) {
+    console.log('options', options);
+    const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
+
+    options.map((option) => {
+      console.log('option: ', option);
+      // const optionValueWithUnit = option.value ? option.value + this._resizeUnit : null;
+      const definition = {
+        type: 'button',
+        model: new delegated_uifrom_dll_reference_CKEditor5.Model({
+          commandName: 'drupalViewMode',
+          commandValue: option.name,
+          label: option.title,
+          withText: true,
+          // icon: null
+        }),
+      };
+
+      console.log('option.name??', option.name);
+      // todo: fix this
+      // definition.model.bind('isOn').to(command, 'value', option);
+      // .to(command, 'value', getIsOnButtonCallback('something'));
+      itemDefinitions.add(definition);
+    });
+
+    return itemDefinitions;
+  }
+
+  /**
+   * A helper function that creates a dropdown component for the plugin containing all the resize options defined in
+   * the editor configuration.
+   *
+   * @private
+   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options An array of configured options.
+   */
+  _createListDropdown(dropdownConfig, definedStyles) {
+    const factory = this.editor.ui.componentFactory;
+
+    factory.add(dropdownConfig.name, (locale) => {
+      let defaultButton;
+
+      const { defaultItem, items, title } = dropdownConfig;
+      const buttonViews = items
+        .filter((itemName) => {
+          console.log('itemName: ', itemName);
+          const groupName = itemName.split(':')[1];
+          console.log('definedStyles: ', definedStyles);
+          return definedStyles.find(
+            ({ name }) => getUIComponentName(name, groupName) === itemName,
+          );
+        })
+        .map((buttonName) => {
+          console.log('buttonName: ', buttonName);
+          const button = factory.create(buttonName);
+
+          if (buttonName === defaultItem) {
+            defaultButton = button;
+          }
+
+          return button;
+        });
+
+      if (items.length !== buttonViews.length) {
+        utils.warnInvalidStyle({ dropdown: dropdownConfig });
+      }
+
+      const dropdownView = (0,delegated_uifrom_dll_reference_CKEditor5.createDropdown)(locale, delegated_uifrom_dll_reference_CKEditor5.DropdownButtonView);
+      const dropdownButtonView = dropdownView.buttonView;
+
+      (0,delegated_uifrom_dll_reference_CKEditor5.addToolbarToDropdown)(dropdownView, buttonViews);
+
+      dropdownButtonView.set({
+        label: getDropdownButtonTitle(title, defaultButton.label),
+        class: null,
+        tooltip: Drupal.t('Change view mode'),
+        withText: true,
+      });
+
+      // If style is selected, use the label of the selected style as the
+      // default label of the split button.
+      dropdownButtonView
+        .bind('label')
+        .toMany(buttonViews, 'isOn', (...areOn) => {
+          const index = areOn.findIndex(identity);
+
+          return getDropdownButtonTitle(
+            title,
+            index < 0 ? defaultButton.label : buttonViews[index].label,
+          );
+        });
+
+      // // If one of the style is selected, render the split button as selected.
+      // splitButtonView
+      //   .bind('isOn')
+      //   .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
+      //
+      // // If one of the styles is selected, add a CSS class to the split button
+      // // which modifies the styles to indicate that the splitbutton default
+      // // option is currently selected.
+      // splitButtonView
+      //   .bind('class')
+      //   .toMany(buttonViews, 'isOn', (...areOn) =>
+      //     areOn.some(identity) ? 'ck-splitbutton_flatten' : null,
+      //   );
+
+      (0,delegated_uifrom_dll_reference_CKEditor5.addListToDropdown)(
+        dropdownView,
+        this._getDropdownListItemDefinitions(definedStyles, 'drupalViewMode'),
+      );
+
+      dropdownButtonView.on('execute', () => {
+        if (!buttonViews.some(({ isOn }) => isOn)) {
+          defaultButton.fire('execute');
+        } else {
+          dropdownView.isOpen = !dropdownView.isOpen;
+        }
+      });
+
+      dropdownView
+        .bind('isEnabled')
+        .toMany(buttonViews, 'isEnabled', (...areEnabled) =>
+          areEnabled.some(identity),
+        );
+
+      return dropdownView;
+    });
+  }
+
+  /**
    * Executes the Drupal Element Style command.
    *
    * @param {string} name
@@ -3194,7 +3344,9 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    * @private
    */
   _executeCommand(name, group) {
-    const key = 'drupalAlign';
+    const groupName = group[0].toUpperCase() + group.substring(1);
+    // const key = 'drupalAlign';
+    const key = `drupal${groupName}`;
     const obj = {};
     obj[key] = name;
     console.log(obj);

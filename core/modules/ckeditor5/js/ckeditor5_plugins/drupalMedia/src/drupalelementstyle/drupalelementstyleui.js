@@ -1,11 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
 import { Plugin } from 'ckeditor5/src/core';
+import { CKEditorError, Collection } from 'ckeditor5/src/utils';
 import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
 import {
   addToolbarToDropdown,
+  addListToDropdown,
   ButtonView,
   createDropdown,
+  DropdownButtonView,
+  Model,
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
@@ -56,8 +60,6 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
-  console.log(`name: ${name}, group: ${group}`);
-  // todo: change this to take group too
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -93,7 +95,7 @@ export default class DrupalElementStyleUi extends Plugin {
           this._createButton(style, group);
         } else {
           // create a collection of buttons for all the otions like in resize
-          console.log('here create buttons for list dropdown');
+          this._createButton(style, group);
         }
       }
     });
@@ -134,13 +136,13 @@ export default class DrupalElementStyleUi extends Plugin {
     const definedDropdowns = toolbarConfig.filter(isObject);
 
     definedDropdowns.forEach((dropdownConfig) => {
+      const groupName = dropdownConfig.name.split(':')[1];
       if (dropdownConfig.display === 'toolbar') {
-        const groupName = dropdownConfig.name.split(':')[1];
         if (groupName === 'align') {
           this._createDropdown(dropdownConfig, definedStyles[groupName]);
         }
       } else {
-        console.log('create list dropdown');
+        this._createListDropdown(dropdownConfig, definedStyles[groupName]);
       }
     });
   }
@@ -291,6 +293,142 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
+   * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
+   *
+   * @private
+   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options The resize options.
+   * @param {module:image/imageresize/resizeimagecommand~ResizeImageCommand} command The resize image command.
+   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+   */
+  _getDropdownListItemDefinitions(options, command) {
+    console.log('options', options);
+    const itemDefinitions = new Collection();
+
+    options.map((option) => {
+      console.log('option: ', option);
+      // const optionValueWithUnit = option.value ? option.value + this._resizeUnit : null;
+      const definition = {
+        type: 'button',
+        model: new Model({
+          commandName: 'drupalViewMode',
+          commandValue: option.name,
+          label: option.title,
+          withText: true,
+          // icon: null
+        }),
+      };
+
+      console.log('option.name??', option.name);
+      // todo: fix this
+      // definition.model.bind('isOn').to(command, 'value', option);
+      // .to(command, 'value', getIsOnButtonCallback('something'));
+      itemDefinitions.add(definition);
+    });
+
+    return itemDefinitions;
+  }
+
+  /**
+   * A helper function that creates a dropdown component for the plugin containing all the resize options defined in
+   * the editor configuration.
+   *
+   * @private
+   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options An array of configured options.
+   */
+  _createListDropdown(dropdownConfig, definedStyles) {
+    const factory = this.editor.ui.componentFactory;
+
+    factory.add(dropdownConfig.name, (locale) => {
+      let defaultButton;
+
+      const { defaultItem, items, title } = dropdownConfig;
+      const buttonViews = items
+        .filter((itemName) => {
+          console.log('itemName: ', itemName);
+          const groupName = itemName.split(':')[1];
+          console.log('definedStyles: ', definedStyles);
+          return definedStyles.find(
+            ({ name }) => getUIComponentName(name, groupName) === itemName,
+          );
+        })
+        .map((buttonName) => {
+          console.log('buttonName: ', buttonName);
+          const button = factory.create(buttonName);
+
+          if (buttonName === defaultItem) {
+            defaultButton = button;
+          }
+
+          return button;
+        });
+
+      if (items.length !== buttonViews.length) {
+        utils.warnInvalidStyle({ dropdown: dropdownConfig });
+      }
+
+      const dropdownView = createDropdown(locale, DropdownButtonView);
+      const dropdownButtonView = dropdownView.buttonView;
+
+      addToolbarToDropdown(dropdownView, buttonViews);
+
+      dropdownButtonView.set({
+        label: getDropdownButtonTitle(title, defaultButton.label),
+        class: null,
+        tooltip: Drupal.t('Change view mode'),
+        withText: true,
+      });
+
+      // If style is selected, use the label of the selected style as the
+      // default label of the split button.
+      dropdownButtonView
+        .bind('label')
+        .toMany(buttonViews, 'isOn', (...areOn) => {
+          const index = areOn.findIndex(identity);
+
+          return getDropdownButtonTitle(
+            title,
+            index < 0 ? defaultButton.label : buttonViews[index].label,
+          );
+        });
+
+      // // If one of the style is selected, render the split button as selected.
+      // splitButtonView
+      //   .bind('isOn')
+      //   .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
+      //
+      // // If one of the styles is selected, add a CSS class to the split button
+      // // which modifies the styles to indicate that the splitbutton default
+      // // option is currently selected.
+      // splitButtonView
+      //   .bind('class')
+      //   .toMany(buttonViews, 'isOn', (...areOn) =>
+      //     areOn.some(identity) ? 'ck-splitbutton_flatten' : null,
+      //   );
+
+      addListToDropdown(
+        dropdownView,
+        this._getDropdownListItemDefinitions(definedStyles, 'drupalViewMode'),
+      );
+
+      dropdownButtonView.on('execute', () => {
+        if (!buttonViews.some(({ isOn }) => isOn)) {
+          defaultButton.fire('execute');
+        } else {
+          dropdownView.isOpen = !dropdownView.isOpen;
+        }
+      });
+
+      dropdownView
+        .bind('isEnabled')
+        .toMany(buttonViews, 'isEnabled', (...areEnabled) =>
+          areEnabled.some(identity),
+        );
+
+      return dropdownView;
+    });
+  }
+
+  /**
    * Executes the Drupal Element Style command.
    *
    * @param {string} name
@@ -301,7 +439,9 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _executeCommand(name, group) {
-    const key = 'drupalAlign';
+    const groupName = group[0].toUpperCase() + group.substring(1);
+    // const key = 'drupalAlign';
+    const key = `drupal${groupName}`;
     const obj = {};
     obj[key] = name;
     console.log(obj);

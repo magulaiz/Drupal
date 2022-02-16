@@ -26,10 +26,7 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
-// find the closest element with the drupal element style
-// also checks the ancestor
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
-  console.log('line 32: ', styles);
   // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
 
@@ -38,13 +35,32 @@ function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
     schemaContainsAttribute(selectedElement, schema, styles)
     ? selectedElement
     : selection
-        // if false find the closest element that has drupal style element allowed
       // todo: need to change this
         .getFirstPosition()
         .findAncestor((element) =>
           schema.checkAttribute(element, 'drupalElementStyle'),
         );
 }
+// function getClosestElementWithElementStyleAttribute(selection, schema) {
+//   const selectedElement = selection.getSelectedElement();
+//
+//   if (
+//     selectedElement &&
+//     schema.checkAttribute(selectedElement, 'drupalElementStyle')
+//   ) {
+//     console.log('hit');
+//     return selectedElement;
+//   }
+//   let parent = selection.getFirstPosition().parent;
+//   console.log('parent', parent);
+//   while (parent) {
+//     if (parent.is('element') && schema.checkAttribute(parent, 'drupalElementStyle')) {
+//       return parent;
+//     }
+//     parent = parent.parent;
+//   }
+//   return null;
+// }
 
 /**
  * The Drupal Element style command.
@@ -143,7 +159,7 @@ export default class DrupalElementStyleCommand extends Command {
   // makes the actual change in the MODEL
   // execute needs to change to take value and the group
   execute(options = {}, group) {
-    console.log('recevied group in command execute' , group);
+    console.log('recevied group in command execute', group);
     const { editor } = this;
     const { model } = editor;
 
@@ -155,7 +171,6 @@ export default class DrupalElementStyleCommand extends Command {
         model.schema,
         this.styles,
       );
-      // todo: ask what this isDefault is and remove hardcode
       if (
         !requestedStyle ||
         this._styles[group].get(requestedStyle[modelGroupName]).isDefault
