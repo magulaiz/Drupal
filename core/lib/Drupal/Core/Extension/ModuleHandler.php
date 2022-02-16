@@ -514,7 +514,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules = array_merge($extra_modules, array_keys($this->getImplementationInfo($extra_type . '_alter')));
+          $extra_modules[] = array_keys($this->getImplementationInfo($extra_type . '_alter'));
         }
         $extra_modules = array_merge([], ...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
