@@ -20,7 +20,10 @@ module.exports = {
         .waitForElementVisible('input[name="modules[toolbar][enable]"]', 1000)
         .click('input[name="modules[breakpoint][enable]"]')
         .click('input[name="modules[toolbar][enable]"]')
-        .click('input[type="submit"]');
+        .click('input[type="submit"]')
+        // Make sure the module has finished installing before progressing.
+        .waitForElementVisible('.system-modules', 10000);
+
     });
     browser
       .drupalCreateUser({
