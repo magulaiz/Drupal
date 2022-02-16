@@ -41,8 +41,8 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
     const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
 
     // Get all metadata for drupalMedia elements to set value for
-    // drupalMediaIsImage attribute. This could potentially be moved
-    // outside of this plugin once other plugins start using the metadata.
+    // drupalMediaIsImage attribute. When other plugins start using the
+    // metadata, this functionality will be handled more generically.
     metadataRepository
       .getMetadata(modelElement)
       .then((metadata) => {
