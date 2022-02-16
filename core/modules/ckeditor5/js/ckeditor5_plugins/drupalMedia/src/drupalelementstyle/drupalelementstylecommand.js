@@ -76,6 +76,7 @@ export default class DrupalElementStyleCommand extends Command {
         }),
       );
     }
+    console.log('this._styles: ', this._styles);
   }
 
   /**
@@ -141,29 +142,33 @@ export default class DrupalElementStyleCommand extends Command {
    */
   // makes the actual change in the MODEL
   // execute needs to change to take value and the group
-  execute(options = {}) {
-    console.log('execute');
+  execute(options = {}, group) {
+    console.log('recevied group in command execute' , group);
     const { editor } = this;
     const { model } = editor;
 
     model.change((writer) => {
       const requestedStyle = options.value;
-      console.log('requestedStyle', requestedStyle);
+      const modelGroupName = Object.keys(options.value)[0];
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
         this.styles,
       );
-
-      // handle group, retrieve style from correct group
-      console.log('this._styles', this._styles.align.get(requestedStyle.drupalAlign));
       // todo: ask what this isDefault is and remove hardcode
-      if (!requestedStyle || this._styles.align.get(requestedStyle.drupalAlign).isDefault) {
-        // instead of removing drupalemlementstyle remove value from the object
-        writer.removeAttribute('drupalAlign', element);
+      if (
+        !requestedStyle ||
+        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
+      ) {
+        // Remove value from the object.
+        writer.removeAttribute(modelGroupName, element);
       } else {
-        // instead of overriding extend the object with new value
-        writer.setAttribute('drupalAlign', requestedStyle.drupalAlign, element);
+        // Extend the object with new value.
+        writer.setAttribute(
+          modelGroupName,
+          requestedStyle[modelGroupName],
+          element,
+        );
       }
     });
   }

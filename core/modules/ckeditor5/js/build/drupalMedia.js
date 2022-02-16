@@ -2461,6 +2461,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
         }),
       );
     }
+    console.log('this._styles: ', this._styles);
   }
 
   /**
@@ -2526,29 +2527,33 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   // makes the actual change in the MODEL
   // execute needs to change to take value and the group
-  execute(options = {}) {
-    console.log('execute');
+  execute(options = {}, group) {
+    console.log('recevied group in command execute' , group);
     const { editor } = this;
     const { model } = editor;
 
     model.change((writer) => {
       const requestedStyle = options.value;
-      console.log('requestedStyle', requestedStyle);
+      const modelGroupName = Object.keys(options.value)[0];
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
         this.styles,
       );
-
-      // handle group, retrieve style from correct group
-      console.log('this._styles', this._styles.align.get(requestedStyle.drupalAlign));
       // todo: ask what this isDefault is and remove hardcode
-      if (!requestedStyle || this._styles.align.get(requestedStyle.drupalAlign).isDefault) {
-        // instead of removing drupalemlementstyle remove value from the object
-        writer.removeAttribute('drupalAlign', element);
+      if (
+        !requestedStyle ||
+        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
+      ) {
+        // Remove value from the object.
+        writer.removeAttribute(modelGroupName, element);
       } else {
-        // instead of overriding extend the object with new value
-        writer.setAttribute('drupalAlign', requestedStyle.drupalAlign, element);
+        // Extend the object with new value.
+        writer.setAttribute(
+          modelGroupName,
+          requestedStyle[modelGroupName],
+          element,
+        );
       }
     });
   }
@@ -2943,10 +2948,10 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  *
  * @see module:ui/componentfactory~ComponentFactory
  */
-function getUIComponentName(name) {
-  console.log(`name, ${name}`);
+function getUIComponentName(name, group) {
+  console.log(`name: ${name}, group: ${group}`);
   // todo: change this to take group too
-  return `drupalElementStyle:align:${name}`;
+  return `drupalElementStyle:${group}:${name}`;
 }
 
 /**
@@ -2971,26 +2976,21 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     const { plugins } = this.editor;
     const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
 
-    // update on group basis
-    const definedStyles = Object.values(
-      plugins.get('DrupalElementStyleEditing').normalizedStyles,
-    );
-    console.log('definedStyles: ', definedStyles);
+    const definedStyles = plugins.get(
+      'DrupalElementStyleEditing',
+    ).normalizedStyles;
 
-    definedStyles.forEach((group) => {
-      // todo:.normalizedStyles returns array of arrays without 'align' or 'viewMode' key so need to fix hardcode
-      if (group[0].name.includes('align')) {
-        group.forEach((styleConfig) => {
-          this._createButton(styleConfig);
-        });
-      } else {
-        console.log('create buttons for list dropdown');
+    Object.keys(definedStyles).map((group) => {
+      for (const style of definedStyles[group]) {
+        if (group === 'align') {
+          this._createButton(style, group);
+        } else {
+          // create a collection of buttons for all the otions like in resize
+          console.log('here create buttons for list dropdown');
+        }
       }
     });
-    // loop thru the dropdowns and if its a list, create a collection of buttons out of all the options
-    // separate process for list dropdown
 
-    // update this documentation to have the new display
     /**
      * A Drupal Element Style dropdown definition.
      *
@@ -2999,17 +2999,20 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
      *       drupalMedia:
      *         toolbar:
      *           - name: 'drupalMedia:alignment'
+     *             display: 'toolbar'
      *             title: 'Custom title for the dropdown'
      *             items:
-     *               - 'drupalElementStyle:alignLeft'
-     *               - 'drupalElementStyle:alignCenter'
-     *               - 'drupalElementStyle:alignRight'
-     *             defaultItem: 'drupalElementStyle:alignCenter'
+     *               - 'drupalElementStyle:align:alignLeft'
+     *               - 'drupalElementStyle:align:alignCenter'
+     *               - 'drupalElementStyle:align:alignRight'
+     *             defaultItem: 'drupalElementStyle:align:alignCenter'
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
      * @prop {string} name
      *   The name of the dropdown used for identifying the dropdown.
+     * @prop {string} display
+     *   The type of the dropdown used.
      * @prop {string[]} items
      *   The items displayed in the dropdown. These must be styles defined in
      *   `drupalElementStyles.options`.
@@ -3022,19 +3025,13 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
      * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
     const definedDropdowns = toolbarConfig.filter(isObject);
-    const definedStylesByGroup = [];
 
     definedDropdowns.forEach((dropdownConfig) => {
       if (dropdownConfig.display === 'toolbar') {
-        definedStyles.forEach((group) => {
-          // todo: this needs to change to not just check align
-          if (group[0].name.includes('align')) {
-            // definedStylesByGroup.push(group);
-            // console.log('definedStylesByGroup ', definedStylesByGroup);
-            // todo: fix hardcord 0 position
-            this._createDropdown(dropdownConfig, group);
-          }
-        });
+        const groupName = dropdownConfig.name.split(':')[1];
+        if (groupName === 'align') {
+          this._createDropdown(dropdownConfig, definedStyles[groupName]);
+        }
       } else {
         console.log('create list dropdown');
       }
@@ -3054,22 +3051,19 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    * @private
    */
   _createDropdown(dropdownConfig, definedStyles) {
-    console.log('dropdownConfig, ', dropdownConfig);
-    console.log('definedStyles, ', definedStyles);
-    // make sure definedstyles to reading from the correct group
     const factory = this.editor.ui.componentFactory;
 
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
-      console.log('peeeeeee');
 
       const { defaultItem, items, title } = dropdownConfig;
-      console.log('dropdownConfig.items ', dropdownConfig.items);
-      const buttonViews = items.filter((itemName) => {
-          // const splitItemName = itemName.split(':');
-          // console.log('split, ', splitItemName[2]);
+      const buttonViews = items
+        .filter((itemName) => {
+          console.log('itemName: ', itemName);
+          const groupName = itemName.split(':')[1];
+          console.log('definedStyles: ', definedStyles);
           return definedStyles.find(
-            ({ name }) => getUIComponentName(name) === itemName,
+            ({ name }) => getUIComponentName(name, groupName) === itemName,
           );
         })
         .map((buttonName) => {
@@ -3159,11 +3153,13 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    *
    * @private
    */
-  _createButton(buttonConfig) {
+  _createButton(buttonConfig, group) {
     const buttonName = buttonConfig.name;
+    console.log('buttonConfig.name', buttonConfig.name);
+    console.log('group arg', group);
 
     this.editor.ui.componentFactory.add(
-      getUIComponentName(buttonName),
+      getUIComponentName(buttonName, group),
       (locale) => {
         // change to take account of groups
         const command = this.editor.commands.get('drupalElementStyle');
@@ -3179,7 +3175,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
         view.bind('isEnabled').to(command, 'isEnabled');
         view.bind('isOn').to(command, 'value', (value) => value === buttonName);
-        const group = '';
         console.log('buttonName', buttonName);
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
@@ -3203,7 +3198,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     const obj = {};
     obj[key] = name;
     console.log(obj);
-    this.editor.execute('drupalElementStyle', { value: obj });
+    this.editor.execute('drupalElementStyle', { value: obj }, group);
     this.editor.editing.view.focus();
   }
 
