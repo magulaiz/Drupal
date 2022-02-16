@@ -1360,12 +1360,12 @@ function system_requirements($phase) {
     $module_list = [];
     $module_handler->invokeAllWith(
       'update_last_removed',
-      function (callable $hook, string $module) use (&$module_list, $update_registry) {
+      function (callable $hook, string $module) use (&$module_list, $update_registry, $module_extension_list) {
         $last_removed = $hook();
         if ($last_removed && $last_removed > $update_registry->getInstalledVersion($module)) {
 
           /** @var \Drupal\Core\Extension\Extension $module_info */
-          $module_info = \Drupal::service('extension.list.module')->get($module);
+          $module_info = $module_extension_list->get($module);
           $module_list[$module] = [
             'name' => $module_info->info['name'],
             'last_removed' => $last_removed,
