@@ -22,10 +22,10 @@ use Drupal\migrate\Row;
  *   - include_source: (optional) If TRUE, all source row values and field
  *     values will be copied into the sub-processed row in a new property named
  *     for the source_key configuration value (see below). Defaults to FALSE.
- *   - source_key: (optional) If include_source is TRUE, this
- *     is the name of the property of the sub-processed row which will contain
- *     the row values and field values. Ignored if include_source is
- *     FALSE. Defaults to 'source' if no value is provided.
+ *   - source_key: (optional) If include_source is TRUE, this is the name of
+ *     the property of the sub-processed row which will contain the row values
+ *     and field values. Ignored if include_source is FALSE. Defaults to 
+ *     'source' if no value is provided.
  *
  * Example 1:
  *
