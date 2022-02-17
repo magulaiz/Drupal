@@ -58,7 +58,7 @@ module.exports = {
     browser.click(itemUser);
     browser.assert.cssClassPresent(itemUser, 'is-active');
     browser.assert.cssClassPresent(itemUserTray, 'is-active');
-  },/*
+  },
   'Change orientation': (browser) => {
     browser.waitForElementPresent(adminOrientationButton);
     browser.assert.cssClassPresent(
@@ -375,5 +375,5 @@ module.exports = {
         );
       },
     );
-  },*/
+  },
 };

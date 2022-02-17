@@ -129,7 +129,6 @@ module.exports = {
       },
     );
   },
-  /*
   'Change tab': (browser) => {
     browser.execute(
       function () {
@@ -262,5 +261,4 @@ module.exports = {
       },
     );
   },
-   */
 };
