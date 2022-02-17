@@ -5,3 +5,6 @@ id: comment
 label: 'Default comments'
 target_entity_type_id: node
 description: 'Allows commenting on content'
+button_labels:
+  submit_comment: Save
+  submit_reply: Save

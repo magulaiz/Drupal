@@ -252,6 +252,8 @@ class CommentForm extends ContentEntityForm {
     $element = parent::actions($form, $form_state);
     /** @var \Drupal\comment\CommentInterface $comment */
     $comment = $this->entity;
+    /** @var \Drupal\comment\CommentTypeInterface $comment_type */
+    $comment_type = $comment->get('comment_type')->entity;
     $entity = $comment->getCommentedEntity();
     $field_definition = $this->entityFieldManager->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle())[$comment->getFieldName()];
     $preview_mode = $field_definition->getSetting('preview');
@@ -259,6 +261,9 @@ class CommentForm extends ContentEntityForm {
     // No delete action on the comment form.
     unset($element['delete']);
 
+    $element['submit']['#value'] = $comment->hasParentComment() ?
+      $comment_type->getReplySubmitButtonLabel() :
+      $comment_type->getCommentSubmitButtonLabel();
     // Mark the submit action as the primary action, when it appears.
     $element['submit']['#button_type'] = 'primary';
 

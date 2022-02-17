@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\comment\Functional;
 
+use Drupal\comment\Entity\CommentType;
 use Drupal\Core\Url;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -46,6 +47,7 @@ class CommentInterfaceTest extends CommentTestBase {
    * Tests the comment interface.
    */
   public function testCommentInterface() {
+    $comment_type = CommentType::load('comment');
 
     // Post comment #1 without subject or preview.
     $this->drupalLogin($this->webUser);
@@ -61,24 +63,28 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalGet($this->node->toUrl());
     $this->assertSession()->responseMatches('@<h2[^>]*>Comments</h2>@');
 
-    // Set comments to have subject and preview to required.
+    // Set comments to have subject and preview to required. Also change the
+    // comment button label.
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
     $this->setCommentPreview(DRUPAL_REQUIRED);
     $this->drupalLogout();
+    $comment_type
+      ->setCommentSubmitButtonLabel('Post')
+      ->save();
 
     // Create comment #2 that allows subject and requires preview.
     $this->drupalLogin($this->webUser);
     $subject_text = $this->randomMachineName();
     $comment_text = $this->randomMachineName();
-    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE);
+    $comment = $this->postComment($this->node, $comment_text, $subject_text, TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($comment), 'Comment found.');
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
     user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
-    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();
 
@@ -104,20 +110,20 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->titleEquals('Edit comment ' . $comment->getSubject() . ' | Drupal');
 
     // Test changing the comment author to "Anonymous".
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => '']);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => ''], 'comment', 'Post');
     $this->assertSame('Anonymous', $comment->getAuthorName());
     $this->assertEquals(0, $comment->getOwnerId());
 
     // Test changing the comment author to an unverified user.
     $random_name = $this->randomMachineName();
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name]);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['name' => $random_name], 'comment', 'Post');
     $this->drupalGet('node/' . $this->node->id());
     $this->assertSession()->pageTextContains($random_name . ' (not verified)');
 
     // Test changing the comment author to a verified user.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
-    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')']);
+    $comment = $this->postComment(NULL, $comment->comment_body->value, $comment->getSubject(), ['uid' => $this->webUser->getAccountName() . ' (' . $this->webUser->id() . ')'], 'comment', 'Post');
     $this->assertSame($this->webUser->getAccountName(), $comment->getAuthorName());
     $this->assertSame($this->webUser->id(), $comment->getOwnerId());
 
@@ -151,11 +157,16 @@ class CommentInterfaceTest extends CommentTestBase {
     // Check the thread of second reply grows correctly.
     $this->assertEquals(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
 
+    // Change the reply button label.
+    $comment_type
+      ->setReplySubmitButtonLabel('Reply')
+      ->save();
+
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
     $this->assertSession()->pageTextContains($reply_loaded->getSubject());
     $this->assertSession()->pageTextContains($reply_loaded->comment_body->value);
-    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Reply');
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of reply to second reply grows correctly.
@@ -163,12 +174,12 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id() . '/edit');
-    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $reply = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Reply');
     $this->assertTrue($this->commentExists($reply, TRUE), 'Modified reply found.');
 
     // Confirm a new comment is posted to the correct page.
     $this->setCommentsPerPage(2);
-    $comment_new_page = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $comment_new_page = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($comment_new_page), 'Page one exists. %s');
     $this->drupalGet('node/' . $this->node->id(), ['query' => ['page' => 2]]);
     $this->assertTrue($this->commentExists($reply, TRUE), 'Page two exists. %s');
@@ -220,7 +231,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Submit comment through node form.
     $this->drupalLogin($this->webUser);
     $this->drupalGet('node/' . $this->node->id());
-    $form_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE);
+    $form_comment = $this->postComment(NULL, $this->randomMachineName(), $this->randomMachineName(), TRUE, 'comment', 'Post');
     $this->assertTrue($this->commentExists($form_comment), 'Form comment found.');
 
     // Disable comment form on node page.

@@ -35,4 +35,40 @@ interface CommentTypeInterface extends ConfigEntityInterface {
    */
   public function getTargetEntityTypeId();
 
+  /**
+   * Gets the comment submit button label for the comment type.
+   *
+   * @return string
+   *   The label for the comment submit button.
+   */
+  public function getCommentSubmitButtonLabel();
+
+  /**
+   * Sets the comment submit button label for the comment type.
+   *
+   * @param string $button_label
+   *   The label for the comment submit button.
+   *
+   * @return $this
+   */
+  public function setCommentSubmitButtonLabel($button_label);
+
+  /**
+   * Gets the reply submit button label for the comment type.
+   *
+   * @return string
+   *   The label for the reply submit button.
+   */
+  public function getReplySubmitButtonLabel();
+
+  /**
+   * Sets the reply submit button label for the comment type.
+   *
+   * @param string $button_label
+   *   The label for the reply submit button.
+   *
+   * @return $this
+   */
+  public function setReplySubmitButtonLabel($button_label);
+
 }

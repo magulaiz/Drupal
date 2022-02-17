@@ -8,3 +8,6 @@ id: comment_forum
 label: Comment_forum
 target_entity_type_id: node
 description: 'Default comment field'
+button_labels:
+  submit_comment: Save
+  submit_reply: Save

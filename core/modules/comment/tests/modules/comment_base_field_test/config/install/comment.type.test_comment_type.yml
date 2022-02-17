@@ -4,3 +4,6 @@ id: test_comment_type
 label: Test comment type
 target_entity_type_id: comment_test_base_field
 description: 'Test comment type.'
+button_labels:
+  submit_comment: Save
+  submit_reply: Save

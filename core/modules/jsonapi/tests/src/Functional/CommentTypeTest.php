@@ -56,6 +56,10 @@ class CommentTypeTest extends ConfigEntityResourceTestBase {
       'label' => 'Camelids',
       'description' => 'Camelids are large, strictly herbivorous animals with slender necks and long legs.',
       'target_entity_type_id' => 'node',
+      'button_labels' => [
+        'submit_comment' => 'Save camelid comment',
+        'submit_reply' => 'Save camelid reply',
+      ],
     ]);
 
     $camelids->save();
@@ -93,6 +97,10 @@ class CommentTypeTest extends ConfigEntityResourceTestBase {
           'langcode' => 'en',
           'status' => TRUE,
           'target_entity_type_id' => 'node',
+          'button_labels' => [
+            'submit_comment' => 'Save camelid comment',
+            'submit_reply' => 'Save camelid reply',
+          ],
           'drupal_internal__id' => 'camelids',
         ],
       ],

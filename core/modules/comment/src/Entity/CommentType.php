@@ -4,6 +4,7 @@ namespace Drupal\comment\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\comment\CommentTypeInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * Defines the comment type entity.
@@ -44,6 +45,7 @@ use Drupal\comment\CommentTypeInterface;
  *     "label",
  *     "target_entity_type_id",
  *     "description",
+ *     "button_labels",
  *   }
  * )
  */
@@ -78,6 +80,20 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
   protected $target_entity_type_id;
 
   /**
+   * An array of submit button labels.
+   *
+   * The keys are 'submit_comment' and 'submit_reply' and the values are the
+   * labels of the submit button for a top-level comment and a comment reply,
+   * respectively.
+   *
+   * @var string[]
+   */
+  protected $button_labels = [
+    'submit_comment' => '',
+    'submit_reply' => '',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   public function getDescription() {
@@ -97,6 +113,36 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
    */
   public function getTargetEntityTypeId() {
     return $this->target_entity_type_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCommentSubmitButtonLabel() {
+    return $this->button_labels['submit_comment'] ?: new TranslatableMarkup('Save');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCommentSubmitButtonLabel($button_label) {
+    $this->button_labels['submit_comment'] = $button_label;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReplySubmitButtonLabel() {
+    return $this->button_labels['submit_reply'] ?: new TranslatableMarkup('Save');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setReplySubmitButtonLabel($button_label) {
+    $this->button_labels['submit_reply'] = $button_label;
+    return $this;
   }
 
 }

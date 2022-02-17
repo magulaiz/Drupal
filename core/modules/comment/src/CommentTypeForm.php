@@ -126,6 +126,21 @@ class CommentTypeForm extends EntityForm {
       ];
     }
 
+    $form['button_labels'] = [
+      '#type' => 'container',
+      '#tree' => TRUE,
+    ];
+    $form['button_labels']['submit_comment'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Submit button label for top-level comments'),
+      '#default_value' => $comment_type->getCommentSubmitButtonLabel(),
+    ];
+    $form['button_labels']['submit_reply'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Submit button label for comment replies'),
+      '#default_value' => $comment_type->getReplySubmitButtonLabel(),
+    ];
+
     if ($this->moduleHandler->moduleExists('content_translation')) {
       $form['language'] = [
         '#type' => 'details',
