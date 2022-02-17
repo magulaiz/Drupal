@@ -85,3 +85,4 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
         label: 'Allowed Tag'
         constraints:
           SourceEditingRedundantTags: []
+          SourceEditingPreventSelfXssConstraint: []
