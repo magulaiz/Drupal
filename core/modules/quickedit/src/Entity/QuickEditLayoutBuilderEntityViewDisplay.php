@@ -7,6 +7,9 @@ use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\quickedit\LayoutBuilderIntegration;
 
+/**
+ * Provides an entity view display entity that has a layout with quickedit.
+ */
 class QuickEditLayoutBuilderEntityViewDisplay extends LayoutBuilderEntityViewDisplay {
 
   /**
