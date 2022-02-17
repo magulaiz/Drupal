@@ -134,6 +134,7 @@ abstract class DraggableListBuilder extends ConfigEntityListBuilder implements F
     }
 
     $form['actions']['#type'] = 'actions';
+    $form['actions']['#access'] = count($this->entities) > 1;
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => t('Save'),
