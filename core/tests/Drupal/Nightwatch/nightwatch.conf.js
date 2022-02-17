@@ -10,7 +10,7 @@ const collectedFolders = {
   Pages: [],
 };
 const searchDirectory = process.env.DRUPAL_NIGHTWATCH_SEARCH_DIRECTORY || '';
-const defaultIgnore = ['vendor/**'];
+const defaultIgnore = ['vendor/**', 'core/tests/Drupal/Nightwatch/Tests/**', 'core/modules/ckeditor5/**'];
 
 glob
   .sync('**/tests/**/Nightwatch/**/*.js', {
