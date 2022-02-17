@@ -35,32 +35,11 @@ function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
     schemaContainsAttribute(selectedElement, schema, styles)
     ? selectedElement
     : selection
-      // todo: need to change this
         .getFirstPosition()
         .findAncestor((element) =>
           schema.checkAttribute(element, 'drupalElementStyle'),
         );
 }
-// function getClosestElementWithElementStyleAttribute(selection, schema) {
-//   const selectedElement = selection.getSelectedElement();
-//
-//   if (
-//     selectedElement &&
-//     schema.checkAttribute(selectedElement, 'drupalElementStyle')
-//   ) {
-//     console.log('hit');
-//     return selectedElement;
-//   }
-//   let parent = selection.getFirstPosition().parent;
-//   console.log('parent', parent);
-//   while (parent) {
-//     if (parent.is('element') && schema.checkAttribute(parent, 'drupalElementStyle')) {
-//       return parent;
-//     }
-//     parent = parent.parent;
-//   }
-//   return null;
-// }
 
 /**
  * The Drupal Element style command.
@@ -92,14 +71,13 @@ export default class DrupalElementStyleCommand extends Command {
         }),
       );
     }
-    console.log('this._styles: ', this._styles);
   }
 
   /**
    * @inheritDoc
    */
-  // this is called every time the model changes
-  // to make sure command has the correct state
+  // This is called every time the model changes
+  // to make sure command has the correct state.
   refresh() {
     const { editor } = this;
     const element = getClosestElementWithElementStyleAttribute(
@@ -112,10 +90,9 @@ export default class DrupalElementStyleCommand extends Command {
 
     if (!this.isEnabled) {
       this.value = false;
-      // here element needs to be checked against list of possible attributes
-      // and then update the value to include all drupal element styles selected for the element
+      // Here element needs to be checked against list of possible attributes
+      // and then update the value to include all drupal element styles selected for the element.
     } else if (this.containsAttribute(element)) {
-      console.log('true');
       this.value = this.getGroupAndAttribute(element);
     } else {
       this.value = false;
@@ -152,6 +129,8 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @param {Object} options
    *   The command options.
+   * @param {string} group
+   *   The name of the group.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
@@ -162,10 +141,12 @@ export default class DrupalElementStyleCommand extends Command {
     console.log('recevied group in command execute', group);
     const { editor } = this;
     const { model } = editor;
+    console.log('options.value', options.value);
 
     model.change((writer) => {
-      const requestedStyle = options.value;
       const modelGroupName = Object.keys(options.value)[0];
+      const requestedStyle = options.value;
+      console.log(modelGroupName, requestedStyle);
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
@@ -175,9 +156,11 @@ export default class DrupalElementStyleCommand extends Command {
         !requestedStyle ||
         this._styles[group].get(requestedStyle[modelGroupName]).isDefault
       ) {
+        console.log('hit');
         // Remove value from the object.
         writer.removeAttribute(modelGroupName, element);
       } else {
+        console.log('else');
         // Extend the object with new value.
         writer.setAttribute(
           modelGroupName,
