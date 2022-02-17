@@ -48,7 +48,6 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
     $this->addNewTextFormat($page, $assert_session);
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
-    $this->waitForEditor();
     $assert_session->pageTextNotContains($expected_warning);
     $this->installThemeThatTriggersWarning($theme);
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
