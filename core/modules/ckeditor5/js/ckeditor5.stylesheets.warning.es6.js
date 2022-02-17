@@ -13,11 +13,11 @@
    * when.
    * - The text format is using CKEditor 5.
    * - There are themes or base themes using the ckeditor_stylesheets setting
-   *     without a corresponding ckeditor5-stylesheets setting. Note that if a
-   *     primary (non-base theme) theme has ckeditor5-stylesheets configured,
-   *     any associated base themes will not trigger a warning, as the primary
-   *     theme could potentially be providing the needed ckeditor5-stylesheets
-   *     for itself and its base themes.
+   *   without a corresponding ckeditor5-stylesheets setting. Note that if a
+   *   primary (non-base theme) theme has ckeditor5-stylesheets configured,
+   *   any associated base themes will not trigger a warning, as the primary
+   *   theme could potentially be providing the needed ckeditor5-stylesheets
+   *   for itself and its base themes.
    *
    * @type {Drupal~behavior}
    *
