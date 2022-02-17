@@ -3,6 +3,7 @@
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 // cspell:ignore subtheming
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
 /**
  * Tests warnings when ckeditor_stylesheets do not have CKEditor 5 equivalents.
@@ -11,6 +12,8 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
  * @internal
  */
 class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
+
+  use CKEditor5TestTrait;
 
   /**
    * {@inheritdoc}
@@ -45,7 +48,8 @@ class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
     $this->addNewTextFormat($page, $assert_session);
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
 
-    $this->assertFalse($assert_session->waitForText($expected_warning, 5000));
+    $this->waitForEditor();
+    $assert_session->pageTextNotContains($expected_warning);
     $this->installThemeThatTriggersWarning($theme);
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertTrue($assert_session->waitForText($expected_warning));
