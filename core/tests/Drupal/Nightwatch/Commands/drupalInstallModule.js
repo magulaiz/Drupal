@@ -8,14 +8,10 @@
  * @return {object}
  *   The drupalInstallModule command.
  */
-exports.command = function drupalInstallModule(
-  module,
-  callback,
-) {
+exports.command = function drupalInstallModule(module, callback) {
   const self = this;
   this.drupalLoginAsAdmin(() => {
-    this
-      .drupalRelativeURL('/admin/modules')
+    this.drupalRelativeURL('/admin/modules')
       .click(`input[data-drupal-selector="edit-modules-${module}-enable"]`)
       .click('input[data-drupal-selector="edit-submit"]')
       // Wait for the install message to show up.
