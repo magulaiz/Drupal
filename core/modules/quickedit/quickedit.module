@@ -211,14 +211,8 @@ function quickedit_entity_view_alter(&$build, EntityInterface $entity, EntityVie
 
 /**
  * Implements hook_quickedit_render_field().
- *
- * @todo can this go somewhere else?
  */
-function quickedit_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
-  if (!\Drupal::moduleHandler()->moduleExists('layout_builder')) {
-    return;
-  }
-
+function layout_builder_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
   /** @var \Drupal\quickedit\LayoutBuilderIntegration $layout_builder_integration */
   $layout_builder_integration = \Drupal::classResolver(LayoutBuilderIntegration::class);
   return $layout_builder_integration->quickEditRenderField($entity, $field_name, $view_mode_id, $langcode);
