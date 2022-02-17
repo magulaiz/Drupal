@@ -212,8 +212,6 @@ class NodeViewsData extends EntityViewsData {
       ],
     ] + $data['node_field_revision']['vid'];
 
-    $data['node_field_revision']['langcode']['help'] = $this->t('The language the original content is in.');
-
     $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
 
     $data['node_field_revision']['status']['filter']['label'] = $this->t('Published');
