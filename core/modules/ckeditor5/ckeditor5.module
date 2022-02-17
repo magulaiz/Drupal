@@ -235,6 +235,10 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
 
   $form['#after_build'][] = [CKEditor5::class, 'assessActiveTextEditorAfterBuild'];
   $form['#validate'][] = [CKEditor5::class, 'validateSwitchingToCKEditor5'];
+
+  if($css_warning = _ckeditor5_stylesheets_warning()) {
+    \Drupal::messenger()->addMessage($css_warning, 'warning');
+  }
 }
 
 /**
@@ -261,11 +265,12 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
 
   if ($form_state->get('ckeditor5_is_active')) {
     // Delete all existing validation messages, replace them with the current set.
-    $response->addCommand(new RemoveCommand('#ckeditor5-realtime-validation-messages-container > *'));
+    $response->addCommand(new RemoveCommand('[data-drupal-selector="editor-settings-wrapper"] [data-drupal-messages] > *'));
+
     $messages = \Drupal::messenger()->deleteAll();
     foreach ($messages as $type => $messages_by_type) {
       foreach ($messages_by_type as $message) {
-        $response->addCommand(new MessageCommand($message, '#ckeditor5-realtime-validation-messages-container', ['type' => $type], FALSE));
+        $response->addCommand(new MessageCommand($message, '[data-drupal-selector="editor-settings-wrapper"] [data-drupal-messages]', ['type' => $type], FALSE));
       }
     }
   }
@@ -356,61 +361,6 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
         'theme' => array_fill_keys(array_values($css), []),
       ],
     ];
-
-    $themes = [];
-    $default_theme = \Drupal::configFactory()->get('system.theme')->get('default');
-    if (!empty($default_theme)) {
-      $themes[$default_theme] = \Drupal::service('theme_handler')->listInfo()[$default_theme]->info;
-    }
-
-    $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
-    if (!empty($admin_theme) && $admin_theme !== $default_theme) {
-      $themes[$admin_theme] = \Drupal::service('theme_handler')->listInfo()[$admin_theme]->info;
-    }
-
-    $ckeditor_stylesheets_use = [];
-
-    // Collect information on which themes/base themes have ckeditor_stylesheets
-    // configuration, but do not have corresponding ckeditor5-stylesheets
-    // configuration.
-    foreach ($themes as $theme_info) {
-      $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
-      if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
-        $ckeditor_stylesheets_use[] = $theme_info['name'];
-      }
-
-      // If the primary theme has ckeditor5-stylesheets configured, do not check
-      // base themes. The primary theme can potentially provide the
-      // ckeditor5-stylesheets config for itself and its base themes, so we err
-      // on the side of not showing a warning if this is possibly the case.
-      if ($theme_has_ckeditor5_stylesheets) {
-        continue;
-      }
-      $base_theme = $theme_info['base theme'] ?? FALSE;
-      while ($base_theme) {
-        $base_theme_info = \Drupal::service('theme_handler')->listInfo()[$base_theme]->info;
-        $base_theme_has_ckeditor5_stylesheets = isset($base_theme_info['ckeditor5-stylesheets']);
-
-        if (!empty($base_theme_info['ckeditor_stylesheets']) && !$base_theme_has_ckeditor5_stylesheets) {
-          $ckeditor_stylesheets_use[] = $base_theme_info['name'];
-        }
-        $base_theme = $base_theme_info['base theme'] ?? FALSE;
-      }
-    }
-
-    if (!empty($ckeditor_stylesheets_use)) {
-      $last_item = array_pop($ckeditor_stylesheets_use);
-      $stylesheets_warning = \Drupal::translation()->formatPlural(count($ckeditor_stylesheets_use) + 1,
-        'The %last_item theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration.',
-        'The %first_items and %last_item themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations.',
-          [
-            '%last_item' => $last_item,
-            '%first_items' => implode(', ', $ckeditor_stylesheets_use),
-          ]);
-      $stylesheets_warning .= ' ' . t('See the <a href=":change_record">change record</a> for details.', [':change_record' => 'https://www.drupal.org/node/3259165']);
-      $libraries['drupal.ckeditor5.filter.admin']['dependencies'][] = 'ckeditor5/drupal.ckeditor5.stylesheets.warning';
-      $libraries['drupal.ckeditor5.stylesheets.warning']['drupalSettings']['ckeditor5']['ckeditor_stylesheets_warning'] = $stylesheets_warning;
-    }
 
     $module_handler = \Drupal::service('module_handler');
     if ($module_handler->moduleExists('quickedit')) {
@@ -511,4 +461,63 @@ function _ckeditor5_theme_css($theme = NULL): array {
     }
   }
   return $css;
+}
+
+function _ckeditor5_stylesheets_warning() {
+  $themes = [];
+  $default_theme = \Drupal::configFactory()->get('system.theme')->get('default');
+  if (!empty($default_theme)) {
+    $themes[$default_theme] = \Drupal::service('theme_handler')->listInfo()[$default_theme]->info;
+  }
+
+  $admin_theme = \Drupal::configFactory()->get('system.theme')->get('admin');
+  if (!empty($admin_theme) && $admin_theme !== $default_theme) {
+    $themes[$admin_theme] = \Drupal::service('theme_handler')->listInfo()[$admin_theme]->info;
+  }
+
+  $ckeditor_stylesheets_use = [];
+
+  // Collect information on which themes/base themes have ckeditor_stylesheets
+  // configuration, but do not have corresponding ckeditor5-stylesheets
+  // configuration.
+  foreach ($themes as $theme_info) {
+    $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
+    if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
+      $ckeditor_stylesheets_use[] = $theme_info['name'];
+    }
+
+    // If the primary theme has ckeditor5-stylesheets configured, do not check
+    // base themes. The primary theme can potentially provide the
+    // ckeditor5-stylesheets config for itself and its base themes, so we err
+    // on the side of not showing a warning if this is possibly the case.
+    if ($theme_has_ckeditor5_stylesheets) {
+      continue;
+    }
+    $base_theme = $theme_info['base theme'] ?? FALSE;
+    while ($base_theme) {
+      $base_theme_info = \Drupal::service('theme_handler')->listInfo()[$base_theme]->info;
+      $base_theme_has_ckeditor5_stylesheets = isset($base_theme_info['ckeditor5-stylesheets']);
+
+      if (!empty($base_theme_info['ckeditor_stylesheets']) && !$base_theme_has_ckeditor5_stylesheets) {
+        $ckeditor_stylesheets_use[] = $base_theme_info['name'];
+      }
+      $base_theme = $base_theme_info['base theme'] ?? FALSE;
+    }
+  }
+
+  if (!empty($ckeditor_stylesheets_use)) {
+    $last_item = array_pop($ckeditor_stylesheets_use);
+    $stylesheets_warning = \Drupal::translation()->formatPlural(count($ckeditor_stylesheets_use) + 1,
+      'The %last_item theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration. See the <a href=":change_record">change record</a> for details.',
+      'The %first_items and %last_item themes have ckeditor_stylesheets configured, but without corresponding ckeditor5-stylesheets configurations. See the <a href=":change_record">change record</a> for details.',
+      [
+        '%last_item' => $last_item,
+        '%first_items' => implode(', ', $ckeditor_stylesheets_use),
+        ':change_record' => 'https://www.drupal.org/node/3259165',
+      ]);
+
+    return $stylesheets_warning;
+  }
+
+  return NULL;
 }
