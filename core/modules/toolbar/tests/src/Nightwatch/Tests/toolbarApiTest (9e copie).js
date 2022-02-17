@@ -9,27 +9,26 @@ module.exports = {
     browser
       .drupalInstall()
       .drupalInstallModule('breakpoint')
-      .drupalInstallModule('toolbar', () => {
-        browser.drupalCreateUser({
-          name: 'user',
-          password: '123',
-          permissions: [
-            'access site reports',
-            'access toolbar',
-            'administer menu',
-            'administer modules',
-            'administer site configuration',
-            'administer account settings',
-            'administer software updates',
-            'access content',
-            'administer permissions',
-            'administer users',
-          ],
-        })
-        .drupalLogin({ name: 'user', password: '123' })
-        .drupalRelativeURL('/')
-        .waitForElementPresent('#toolbar-administration', 10000);
-      });
+      .drupalInstallModule('toolbar')
+      .drupalCreateUser({
+        name: 'user',
+        password: '123',
+        permissions: [
+          'access site reports',
+          'access toolbar',
+          'administer menu',
+          'administer modules',
+          'administer site configuration',
+          'administer account settings',
+          'administer software updates',
+          'access content',
+          'administer permissions',
+          'administer users',
+        ],
+      })
+      .drupalLogin({ name: 'user', password: '123' })
+      .drupalRelativeURL('/')
+      .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
     // Set the resolution to the default desktop resolution. Ensure the default

@@ -16,28 +16,27 @@ module.exports = {
     browser
       .drupalInstall()
       .drupalInstallModule('breakpoint')
-      .drupalInstallModule('toolbar', () => {
-        browser.drupalCreateUser({
-            name: 'user',
-            password: '123',
-            permissions: [
-              'access site reports',
-              'access toolbar',
-              'access administration pages',
-              'administer menu',
-              'administer modules',
-              'administer site configuration',
-              'administer account settings',
-              'administer software updates',
-              'access content',
-              'administer permissions',
-              'administer users',
-            ],
-          })
-          .drupalLogin({ name: 'user', password: '123' })
-          .drupalRelativeURL('/')
-          .waitForElementPresent('#toolbar-administration', 10000);
-      });
+      .drupalInstallModule('toolbar')
+      .drupalCreateUser({
+        name: 'user',
+        password: '123',
+        permissions: [
+          'access site reports',
+          'access toolbar',
+          'access administration pages',
+          'administer menu',
+          'administer modules',
+          'administer site configuration',
+          'administer account settings',
+          'administer software updates',
+          'access content',
+          'administer permissions',
+          'administer users',
+        ],
+      })
+      .drupalLogin({ name: 'user', password: '123' })
+      .drupalRelativeURL('/')
+      .waitForElementPresent('#toolbar-administration', 10000);
   },
   beforeEach(browser) {
     browser.resizeWindow(1920, 1080);
