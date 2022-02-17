@@ -43,6 +43,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   and join type (optional, defaults to INNER). Defaults to an empty array.
  *   For more documentation refer to
  *   \Drupal\Core\Database\Query\SelectInterface::addJoin().
+ * - fields: (optional) Add extra fields to the query. This is useful when using
+ *   'joins' - we can retrieve an extra migration source from the joined table.
+ *   This should be in array format with each array item providing values for
+ *   table_alias, field, alias (optional, defaults to NULL). Defaults to an
+ *   empty array. For more documentation refer to
+ *   \Drupal\Core\Database\Query\SelectInterface::addField().
  * - distinct: (optional) Sets the source plugin query to be DISTINCT if set to
  *   TRUE. If set to FALSE, the distinct flag will be disabled.
  *
@@ -101,6 +107,27 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * In this example users of certain roles are retrieved from the source
  * database. The distinct is required to remove duplicate records, because each
  * user can have multiple roles.
+ *
+ * @code
+ * source:
+ *   plugin: d7_user
+ *   joins:
+ *     -
+ *       table: foo
+ *       alias: f
+ *       type: LEFT
+ *       condition: u.uid = f.uid
+ *   fields:
+ *     -
+ *       table_alias: f
+ *       field: bar
+ *       alias: my_bar
+ * @endcode
+ *
+ * In this example adds an extra user field 'bar'. The 'bar' field values are
+ * located in another custom database table 'foo', which should be joined
+ * against base table (users). This will provide a new source of migration
+ * 'my_bar'.
  *
  * For other optional configuration keys inherited from the parent class, refer
  * to \Drupal\migrate\Plugin\migrate\source\SourcePluginBase.
@@ -182,7 +209,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     $this->state = $state;
 
     // Validate 'conditions' and 'joins' configuration keys.
-    foreach (['conditions', 'joins'] as $config_key) {
+    foreach (['conditions', 'joins', 'fields'] as $config_key) {
       $this->configuration[$config_key] = $this->configuration[$config_key] ?? [];
 
       if (!is_array($this->configuration[$config_key])) {
@@ -197,6 +224,11 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     foreach ($this->configuration['joins'] as $join) {
       if (!is_array($join) || !isset($join['table']) || !isset($join['alias']) || !isset($join['condition'])) {
         throw new \InvalidArgumentException("Each 'joins' array item must be an array including table, alias, condition, and type (optional) keys.");
+      }
+    }
+    foreach ($this->configuration['fields'] as $field) {
+      if (!is_array($field) || !isset($field['table_alias']) || !isset($field['field'])) {
+        throw new \InvalidArgumentException("Each 'fields' array item must be an array including table_alias, field, alias (optional) keys.");
       }
     }
   }
@@ -341,6 +373,11 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
     // Add any configured joins.
     foreach ($this->configuration['joins'] as $join) {
       $this->query->addJoin($join['type'] ?? 'INNER', $join['table'], $join['alias'], $join['condition']);
+    }
+
+    // Add any configured joins.
+    foreach ($this->configuration['fields'] as $field) {
+      $this->query->addField($field['table_alias'], $field['field'], $field['alias'] ?? NULL);
     }
 
     // Add distinct, if configured.
