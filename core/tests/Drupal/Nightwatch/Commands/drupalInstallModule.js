@@ -1,12 +1,12 @@
 /**
- * Creates role with given permissions.
+ * Install the given module.
  *
  * @param {string} module
- *   The list of modules to enable.
+ *   The module machine name to enable.
  * @param {function} callback
- *   A callback which will be called, when creating the role is finished.
+ *   A callback which will be called, when the module has been enabled.
  * @return {object}
- *   The drupalInstallModules command.
+ *   The drupalInstallModule command.
  */
 exports.command = function drupalInstallModule(
   module,
