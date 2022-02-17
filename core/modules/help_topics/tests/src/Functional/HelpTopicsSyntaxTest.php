@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\help_topics\Functional;
 
+use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help_topics\HelpTopicDiscovery;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -133,6 +134,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     $body = preg_replace('|---.*---|sU', '', $body);
     $body = preg_replace('|\{\{.*\}\}|sU', '', $body);
     $body = preg_replace('|\{\% set.*\%\}|sU', '', $body);
+    $body = preg_replace('|\{\% endset \%\}|sU', '', $body);
     $body = trim($body);
     $this->assertNotEmpty($body, 'Topic ' . $id . ' Twig file contains some text outside of front matter');
 
@@ -278,7 +280,11 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     // Find the extensions of this type, even if they are not installed, but
     // excluding test ones.
     $lister = \Drupal::service('extension.list.' . $type);
-    foreach (array_keys($lister->getAllAvailableInfo()) as $name) {
+    foreach ($lister->getAllAvailableInfo() as $name => $info) {
+      // Skip obsolete modules.
+      if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER]) && $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
+        continue;
+      }
       $path = $lister->getPath($name);
       // You can tell test modules because they are in package 'Testing', but
       // test themes are only known by being found in test directories. So...

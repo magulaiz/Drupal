@@ -17,7 +17,11 @@
     const fieldId = $formatSelector.attr('data-editor-for');
     // This selector will only find text areas in the top-level document. We do
     // not support attaching editors on text areas within iframes.
-    return $(`#${fieldId}`).get(0);
+    var fieldIds = fieldId.split(/\s*,\s*/);
+    fieldIds.forEach(function (part, index) {
+      this[index] = '#' + this[index];
+    }, fieldIds);
+    return $(fieldIds.join());
   }
 
   /**
@@ -71,6 +75,10 @@
    *   format will be attached.
    */
   function changeTextEditor(field, newFormatID) {
+    if (typeof field.length !== 'undefined' && field.length) {
+      // multiple fields were accidentally passed in
+      changeTextEditorMultiple($ield, newFormatID);
+    }
     const previousFormatID = field.getAttribute(
       'data-editor-active-text-format',
     );
@@ -103,6 +111,22 @@
   }
 
   /**
+   * Changes the text editor on multiple text areas. @see changeTextEditor()
+   *
+   * @param {{HTMLElement}} fields
+   *   The text area DOM elements in an object.
+   * @param {string} newFormatID
+   *   The text format we're changing to; the text editor for the currently
+   *   active text format will be detached, and the text editor for the new text
+   *   format will be attached.
+   */
+  function changeTextEditorMultiple(fields, newFormatID) {
+    fields.each(function () {
+      changeTextEditor(this, newFormatID);
+    });
+  }
+
+  /**
    * Handles changes in text format.
    *
    * @param {jQuery.Event} event
@@ -111,24 +135,24 @@
   function onTextFormatChange(event) {
     const $select = $(event.target);
     const field = event.data.field;
-    const activeFormatID = field.getAttribute('data-editor-active-text-format');
+    let activeFormatID;
     const newFormatID = $select.val();
+    let checkContent = false;
+    let supportContentFiltering;
+    let hasContent;
 
-    // Prevent double-attaching if the change event is triggered manually.
-    if (newFormatID === activeFormatID) {
-      return;
-    }
-
-    // When changing to a text format that has a text editor associated
-    // with it that supports content filtering, then first ask for
-    // confirmation, because switching text formats might cause certain
-    // markup to be stripped away.
-    const supportContentFiltering =
-      drupalSettings.editor.formats[newFormatID] &&
-      drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
-    // If there is no content yet, it's always safe to change the text format.
-    const hasContent = field.value !== '';
-    if (hasContent && supportContentFiltering) {
+    field.each(function () {
+      activeFormatID = this.getAttribute('data-editor-active-text-format');
+      if (newFormatID === activeFormatID) {
+        return;
+      }
+      supportContentFiltering = drupalSettings.editor.formats[newFormatID] && drupalSettings.editor.formats[newFormatID].editorSupportsContentFiltering;
+      hasContent = this.value !== '';
+      if (hasContent && supportContentFiltering) {
+        checkContent = true;
+      }
+    });
+    if (checkContent) {
       const message = Drupal.t(
         'Changing the text format to %text_format will permanently remove content that is not allowed in that text format.<br><br>Save your changes before switching the text format to avoid losing data.',
         {
@@ -144,7 +168,7 @@
             text: Drupal.t('Continue'),
             class: 'button button--primary',
             click() {
-              changeTextEditor(field, newFormatID);
+              changeTextEditorMultiple(field, newFormatID);
               confirmationDialog.close();
             },
           },
@@ -153,7 +177,7 @@
             class: 'button',
             click() {
               // Restore the active format ID: cancel changing text format. We
-              // cannot simply call event.preventDefault() because jQuery's
+              // cannot simply call event.preventDefault(field.setAttribute) because jQuery's
               // change event is only triggered after the change has already
               // been accepted.
               $select.val(activeFormatID);
@@ -176,7 +200,7 @@
 
       confirmationDialog.showModal();
     } else {
-      changeTextEditor(field, newFormatID);
+      changeTextEditorMultiple(field, newFormatID);
     }
   }
 
@@ -204,57 +228,54 @@
         return;
       }
 
-      $(context)
-        .find('[data-editor-for]')
-        .once('editor')
-        .each(function () {
-          const $this = $(this);
-          const field = findFieldForFormatSelector($this);
+      once('editor', '[data-editor-for]', context).forEach((editor) => {
+        const $this = $(editor);
+        const field = findFieldForFormatSelector($this);
 
-          // Opt-out if no supported text area was found.
-          if (!field) {
+        // Opt-out if no supported text area was found.
+        if (!field) {
+          return;
+        }
+
+        // Store the current active format.
+        const activeFormatID = $this.val();
+        field.each(function () {
+          this.setAttribute('data-editor-active-text-format', activeFormatID);
+        });
+
+        // Directly attach this text editor, if the text format is enabled.
+        if (settings.editor.formats[activeFormatID]) {
+          // XSS protection for the current text format/editor is performed on
+          // the server side, so we don't need to do anything special here.
+          Drupal.editorAttachMultiple(field, settings.editor.formats[activeFormatID]);
+        }
+        // When there is no text editor for this text format, still track
+        // changes, because the user has the ability to switch to some text
+        // editor, otherwise this code would not be executed.
+        $(field).on('change.editor keypress.editor', () => {
+          field.setAttribute('data-editor-value-is-changed', 'true');
+          // Just knowing that the value was changed is enough, stop tracking.
+          $(field).off('.editor');
+        });
+
+        // Attach onChange handler to text format selector element.
+        if ($this.is('select')) {
+          $this.on('change.editorAttachMultiple', { field: field }, onTextFormatChange);
+        }
+        // Detach any editor when the containing form is submitted.
+        $this.parents('form').on('submit', (event) => {
+          // Do not detach if the event was canceled.
+          if (event.isDefaultPrevented()) {
             return;
           }
-
-          // Store the current active format.
-          const activeFormatID = $this.val();
-          field.setAttribute('data-editor-active-text-format', activeFormatID);
-
-          // Directly attach this text editor, if the text format is enabled.
+          // Detach the current editor (if any).
           if (settings.editor.formats[activeFormatID]) {
-            // XSS protection for the current text format/editor is performed on
-            // the server side, so we don't need to do anything special here.
-            Drupal.editorAttach(field, settings.editor.formats[activeFormatID]);
+            field.each(function () {
+              Drupal.editorDetach(this, settings.editor.formats[activeFormatID], 'serialize');
+            });
           }
-          // When there is no text editor for this text format, still track
-          // changes, because the user has the ability to switch to some text
-          // editor, otherwise this code would not be executed.
-          $(field).on('change.editor keypress.editor', () => {
-            field.setAttribute('data-editor-value-is-changed', 'true');
-            // Just knowing that the value was changed is enough, stop tracking.
-            $(field).off('.editor');
-          });
-
-          // Attach onChange handler to text format selector element.
-          if ($this.is('select')) {
-            $this.on('change.editorAttach', { field }, onTextFormatChange);
-          }
-          // Detach any editor when the containing form is submitted.
-          $this.parents('form').on('submit', (event) => {
-            // Do not detach if the event was canceled.
-            if (event.isDefaultPrevented()) {
-              return;
-            }
-            // Detach the current editor (if any).
-            if (settings.editor.formats[activeFormatID]) {
-              Drupal.editorDetach(
-                field,
-                settings.editor.formats[activeFormatID],
-                'serialize',
-              );
-            }
-          });
         });
+      });
     },
 
     detach(context, settings, trigger) {
@@ -264,21 +285,19 @@
       if (trigger === 'serialize') {
         // Removing the editor-processed class guarantees that the editor will
         // be reattached. Only do this if we're planning to destroy the editor.
-        editors = $(context).find('[data-editor-for]').findOnce('editor');
+        editors = once.filter('editor', '[data-editor-for]', context);
       } else {
-        editors = $(context).find('[data-editor-for]').removeOnce('editor');
+        editors = once.remove('editor', '[data-editor-for]', context);
       }
 
-      editors.each(function () {
-        const $this = $(this);
+      editors.forEach((editor) => {
+        const $this = $(editor);
         const activeFormatID = $this.val();
         const field = findFieldForFormatSelector($this);
         if (field && activeFormatID in settings.editor.formats) {
-          Drupal.editorDetach(
-            field,
-            settings.editor.formats[activeFormatID],
-            trigger,
-          );
+          field.each(function () {
+            Drupal.editorDetach(this, settings.editor.formats[activeFormatID], trigger);
+          });
         }
       });
     },
@@ -298,8 +317,12 @@
    * @fires event:formUpdated
    */
   Drupal.editorAttach = function (field, format) {
+    if (typeof field.length !== 'undefined' && field.length) {
+      // we are dealing with multiple
+      Drupal.editorAttachMultiple(field, format);
+    }
     if (format.editor) {
-      // Attach the text editor.
+      // We need this to make a closure variable to use within onChange event handler below.
       Drupal.editors[format.editor].attach(field, format);
 
       // Ensures form.js' 'formUpdated' event is triggered even for changes that
@@ -310,6 +333,23 @@
         // Keep track of changes, so we know what to do when switching text
         // formats and guaranteeing XSS protection.
         field.setAttribute('data-editor-value-is-changed', 'true');
+      });
+    }
+  };
+
+  /**
+   * Attaches editor behaviors to multiple fields. @see Drupal.editorAttach()
+   *
+   * @param {HTMLElement} field
+   *   The textarea DOM element.
+   * @param {object} format
+   *   The text format that's being activated, from
+   *   drupalSettings.editor.formats.
+   */
+  Drupal.editorAttachMultiple = function (field, format) {
+    if (format.editor) {
+      field.each(function() {
+        Drupal.editorAttach(this, format);
       });
     }
   };

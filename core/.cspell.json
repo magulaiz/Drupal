@@ -10,7 +10,10 @@
       "lib/Drupal/Component/Diff/**",
       "lib/Drupal/Component/Transliteration/data/**",
       "lib/Drupal/Core/File/MimeType/ExtensionMimeTypeGuesser.php",
+      "**/LICENSE.txt",
+      "../**/LICENSE.txt",
       "modules/**/Migrate*Test.php",
+      "modules/ckeditor5/js/build/*",
       "modules/color/preview.html",
       "modules/color/tests/modules/color_test/themes/color_test_theme/color/preview.html",
       "modules/media/tests/fixtures/oembed/*",
@@ -33,7 +36,9 @@
     "ignoreRegExpList": [
       "^msgstr .*",
       "!!binary .*",
-      "%[0-9][0-9A-F]"
+      "%[0-9][0-9A-F]",
+      "\\Wi18n",
+      "\\x{[0-9A-F]{4,5}}"
     ],
     "dictionaries": ["drupal","companies", "fonts", "html", "php", "softwareTerms"],
     "dictionaryDefinitions": [

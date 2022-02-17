@@ -3,7 +3,6 @@
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Driver\GoutteDriver;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
@@ -11,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\RefreshVariablesTrait;
 use Drupal\Core\Url;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Provides UI helper methods.
@@ -134,7 +134,8 @@ trait UiHelperTrait {
    *   @code
    *   // First step in form.
    *   $edit = array(...);
-   *   $this->drupalPostForm('some_url', $edit, 'Save');
+   *   $this->drupalGet('some_url');
+   *   $this->submitForm($edit, 'Save');
    *
    *   // Second step in form.
    *   $edit = array(...);
@@ -253,7 +254,7 @@ trait UiHelperTrait {
     $this->submitForm([
       'name' => $account->getAccountName(),
       'pass' => $account->passRaw,
-    ], t('Log in'));
+    ], 'Log in');
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
@@ -558,6 +559,25 @@ trait UiHelperTrait {
   }
 
   /**
+   * Translates a CSS expression to its XPath equivalent.
+   *
+   * The search is relative to the root element (HTML tag normally) of the page.
+   *
+   * @param string $selector
+   *   CSS selector to use in the search.
+   * @param bool $html
+   *   (optional) Enables HTML support. Disable it for XML documents.
+   * @param string $prefix
+   *   (optional) The prefix for the XPath expression.
+   *
+   * @return string
+   *   The equivalent XPath of a CSS expression.
+   */
+  protected function cssSelectToXpath($selector, $html = TRUE, $prefix = 'descendant-or-self::') {
+    return (new CssSelectorConverter($html))->toXPath($selector, $prefix);
+  }
+
+  /**
    * Determines if test is using DrupalTestBrowser.
    *
    * @return bool
@@ -565,10 +585,6 @@ trait UiHelperTrait {
    */
   protected function isTestUsingGuzzleClient() {
     $driver = $this->getSession()->getDriver();
-    if ($driver instanceof GoutteDriver) {
-      // Legacy support of GoutteDriver.
-      return TRUE;
-    }
     if ($driver instanceof BrowserKitDriver) {
       return $driver->getClient() instanceof DrupalTestBrowser;
     }

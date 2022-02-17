@@ -5,6 +5,7 @@ namespace Drupal\comment;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -287,7 +288,7 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       ->addMetaData('field_name', $field_name);
 
     if ($comments_per_page) {
-      $query = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')
+      $query = $query->extend(PagerSelectExtender::class)
         ->limit($comments_per_page);
       if ($pager_id) {
         $query->element($pager_id);
@@ -318,9 +319,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $query->orderBy('c.cid', 'ASC');
     }
     else {
-      // See comment above. Analysis reveals that this doesn't cost too
-      // much. It scales much much better than having the whole comment
-      // structure.
+      // See comment above. Analysis reveals that this doesn't cost too much. It
+      // scales much better than having the whole comment structure.
       $query->addExpression('SUBSTRING([c].[thread], 1, (LENGTH([c].[thread]) - 1))', 'torder');
       $query->orderBy('torder', 'ASC');
     }
