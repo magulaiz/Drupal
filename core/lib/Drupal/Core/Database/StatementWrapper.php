@@ -7,7 +7,7 @@ namespace Drupal\Core\Database;
 /**
  * Implementation of StatementInterface encapsulating PDOStatement.
  */
-class StatementWrapper implements \IteratorAggregate, StatementInterface {
+class StatementWrapper implements StatementInterface {
 
   /**
    * The Drupal database connection object.
@@ -253,14 +253,6 @@ class StatementWrapper implements \IteratorAggregate, StatementInterface {
       default:
         return $this->clientStatement->fetchAll($mode, $column_index, $constructor_arguments);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
-    return new \ArrayIterator($this->fetchAll());
   }
 
 }
