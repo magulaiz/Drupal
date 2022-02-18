@@ -30,7 +30,6 @@ class Media extends CKEditor5PluginDefault {
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-
     $media_embed_filter = $editor->getFilterFormat()->filters('media_embed');
     $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
 
@@ -39,8 +38,8 @@ class Media extends CKEditor5PluginDefault {
       $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
       $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $view_mode_options;
     }
-    $dynamic_plugin_config['drupalMedia']['isMediaUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
-      Url::fromRoute('ckeditor5.media_image')
+    $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
+      Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())
     );
     $dynamic_plugin_config['drupalMedia']['previewCsrfToken'] = \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token');

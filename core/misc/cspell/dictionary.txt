@@ -635,6 +635,7 @@ inspectable
 instaclick
 installable
 instantiator
+interactable
 introspectable
 invalidators
 invalididentifier
@@ -727,7 +728,6 @@ lisu
 litererally
 llamaids
 llamasarelame
-llame
 llamma
 lnumber
 loadjs
@@ -899,6 +899,7 @@ nocdata
 nocookie
 nocssjs
 nodereference
+nodir
 nodo
 noemptytag
 noevent

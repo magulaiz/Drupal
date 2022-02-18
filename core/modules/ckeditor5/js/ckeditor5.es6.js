@@ -97,6 +97,10 @@
 
     return Object.entries(config).reduce((processed, [key, value]) => {
       if (typeof value === 'object') {
+        // Check for null values.
+        if (!value) {
+          return processed;
+        }
         if (value.hasOwnProperty('func')) {
           processed[key] = buildFunc(value);
         } else if (value.hasOwnProperty('regexp')) {
@@ -367,25 +371,22 @@
      */
     attach(element, format) {
       const { editorClassic } = CKEditor5;
-      const {
-        toolbar,
-        plugins,
-        config: pluginConfig,
-        language,
-      } = format.editorSettings;
+      const { toolbar, plugins, config, language } = format.editorSettings;
       const extraPlugins = selectPlugins(plugins);
-
-      const config = {
+      const pluginConfig = processConfig(config);
+      const editorConfig = {
         extraPlugins,
         toolbar,
-        language,
-        ...processConfig(pluginConfig),
+        ...pluginConfig,
+        // Language settings have a conflict between the editor localization
+        // settings and the "language" plugin.
+        language: { ...pluginConfig.language, ...language },
       };
       // Set the id immediately so that it is available when onChange is called.
       const id = setElementId(element);
       const { ClassicEditor } = editorClassic;
 
-      ClassicEditor.create(element, config)
+      ClassicEditor.create(element, editorConfig)
         .then((editor) => {
           // Save a reference to the initialized instance.
           Drupal.CKEditor5Instances.set(id, editor);
