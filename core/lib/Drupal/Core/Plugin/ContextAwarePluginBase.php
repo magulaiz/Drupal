@@ -14,8 +14,8 @@ use Drupal\Core\TypedData\TypedDataTrait;
 /**
  * Base class for plugins that are context aware.
  *
- * @deprecated in drupal:9.1.0 and will be removed before drupal:10.0.0. Use
- *   \Drupal\Core\Plugin\ContextAwarePluginTrait.
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Plugin\ContextAwarePluginTrait instead.
  *
  * @see https://www.drupal.org/node/3120980
  */
