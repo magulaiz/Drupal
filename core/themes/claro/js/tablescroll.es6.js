@@ -3,6 +3,22 @@
  * Horizontally scrollable table functionality.
  */
 ((Drupal, $, debounce) => {
+  /**
+   * @typedef {class} Drupal.TableScroll~tableScrollDefinition
+   */
+
+  /**
+   * Constructs a new instance of the Drupal.TableScroll class.
+   *
+   * This provides a uniform interface for adding and removing messages to a
+   * specific location on the page.
+   *
+   * @param {HTMLElement} table
+   *   The table to which overflow-scrolling functionality will be added.
+   *
+   * @return {Drupal.TableScroll~tableScrollDefinition}
+   *   Class to add scrollable functionality to tables within Claro.
+   */
   Drupal.TableScroll = class {
     constructor(table) {
       this.table = table;
