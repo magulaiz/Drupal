@@ -359,7 +359,7 @@ function olivero_preprocess_field(&$variables) {
     $variables['attributes']['class'][] = 'text-content';
   }
 
-  if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"]) {
+  if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"] && $variables['field_name'] !== 'user_picture') {
     $variables['attributes']['class'][] = 'wide-image';
   }
 }
@@ -484,20 +484,6 @@ function olivero_theme_suggestions_user_alter(&$suggestions, $variables) {
 function olivero_preprocess_field__node__created(&$variables) {
   foreach (Element::children($variables['items']) as $item) {
     unset($variables['items'][$item]['content']['#prefix']);
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- */
-function olivero_preprocess_field__node__field_image__article(&$variables) {
-  if ($variables['element']['#view_mode'] == 'full') {
-    $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide');
-    if ($image_style) {
-      foreach (Element::children($variables['items']) as $key) {
-        $variables['items'][$key]['content']['#image_style'] = 'wide';
-      }
-    }
   }
 }
 

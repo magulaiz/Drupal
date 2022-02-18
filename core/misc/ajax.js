@@ -83,7 +83,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     try {
       statusText = "\n".concat(Drupal.t('StatusText: !statusText', {
-        '!statusText': $.trim(xmlhttp.statusText)
+        '!statusText': xmlhttp.statusText.trim()
       }));
     } catch (e) {}
 
@@ -91,7 +91,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     try {
       responseText = "\n".concat(Drupal.t('ResponseText: !responseText', {
-        '!responseText': $.trim(xmlhttp.responseText)
+        '!responseText': xmlhttp.responseText.trim()
       }));
     } catch (e) {}
 
@@ -656,7 +656,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       $(response.selector).find('> tbody > tr:visible, > tr:visible').removeClass('odd even').filter(':even').addClass('odd').end().filter(':odd').addClass('even');
     },
     update_build_id: function update_build_id(ajax, response, status) {
-      $("input[name=\"form_build_id\"][value=\"".concat(response.old, "\"]")).val(response.new);
+      document.querySelectorAll("input[name=\"form_build_id\"][value=\"".concat(response.old, "\"]")).forEach(function (item) {
+        item.value = response.new;
+      });
     },
     add_css: function add_css(ajax, response, status) {
       $('head').prepend(response.data);

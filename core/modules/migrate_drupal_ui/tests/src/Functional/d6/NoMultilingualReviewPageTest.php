@@ -4,11 +4,12 @@ namespace Drupal\Tests\migrate_drupal_ui\Functional\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
 
+// cspell:ignore multigroup nodeaccess
+
 /**
  * Tests migrate upgrade review page for Drupal 6 without translations.
  *
- * Tests with the translation modules and migrate_drupal_multilingual module
- * disabled.
+ * Tests with the translation modules disabled.
  *
  * @group migrate_drupal_6
  * @group migrate_drupal_ui
@@ -19,6 +20,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'datetime_range',
     'language',
     'telephone',
     'aggregator',

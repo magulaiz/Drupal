@@ -26,7 +26,11 @@ class ModuleHandlerTest extends KernelTestBase {
    */
   public function testModuleList() {
     $module_list = ['system'];
-
+    $database_module = \Drupal::database()->getProvider();
+    if ($database_module !== 'core') {
+      $module_list[] = $database_module;
+    }
+    sort($module_list);
     $this->assertModuleList($module_list, 'Initial');
 
     // Try to install a new module.
@@ -58,9 +62,12 @@ class ModuleHandlerTest extends KernelTestBase {
    *
    * @param array $expected_values
    *   The expected values, sorted by weight and module name.
-   * @param $condition
+   * @param string $condition
+   *   The condition being tested, such as 'After adding a module'.
+   *
+   * @internal
    */
-  protected function assertModuleList(array $expected_values, $condition) {
+  protected function assertModuleList(array $expected_values, string $condition): void {
     $expected_values = array_values(array_unique($expected_values));
     $enabled_modules = array_keys($this->container->get('module_handler')->getModuleList());
     $this->assertEquals($expected_values, $enabled_modules, new FormattableMarkup('@condition: extension handler returns correct results', ['@condition' => $condition]));
@@ -294,7 +301,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Generate the list of available modules.
     $modules = $this->container->get('extension.list.module')->getList();
     // Check that the mtime field exists for the system module.
-    $this->assertTrue(!empty($modules['system']->info['mtime']), 'The system.info.yml file modification time field is present.');
+    $this->assertNotEmpty($modules['system']->info['mtime'], 'The system.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
     $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
@@ -326,7 +333,7 @@ class ModuleHandlerTest extends KernelTestBase {
     // Generate the list of available themes.
     $themes = \Drupal::service('theme_handler')->rebuildThemeData();
     // Check that the mtime field exists for the bartik theme.
-    $this->assertTrue(!empty($themes['bartik']->info['mtime']), 'The bartik.info.yml file modification time field is present.');
+    $this->assertNotEmpty($themes['bartik']->info['mtime'], 'The bartik.info.yml file modification time field is present.');
     // Use 0 if mtime isn't present, to avoid an array index notice.
     $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.

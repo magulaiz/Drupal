@@ -19,6 +19,13 @@
           $fullLabel = $('<label></label>').prependTo($full);
         }
 
+        if ($fullLabel.hasClass('visually-hidden')) {
+          $fullLabel.html(function (index, oldHtml) {
+            return "<span class=\"visually-hidden\">".concat(oldHtml, "</span>");
+          });
+          $fullLabel.removeClass('visually-hidden');
+        }
+
         var $link = $("<span class=\"field-edit-link\"> (<button type=\"button\" class=\"link link-edit-summary\">".concat(Drupal.t('Hide summary'), "</button>)</span>"));
         var $button = $link.find('button');
         var toggleClick = true;
@@ -37,7 +44,7 @@
           toggleClick = !toggleClick;
         }).appendTo($summaryLabel);
 
-        if ($widget.find('.js-text-summary').val() === '') {
+        if (summary.value === '') {
           $link.trigger('click');
         }
       });

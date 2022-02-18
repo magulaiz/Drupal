@@ -480,7 +480,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    if (in_array('phar', stream_get_wrappers(), TRUE)) {
+    // @todo clean-up for PHP 8.0+ https://www.drupal.org/node/3210486
+    if (PHP_VERSION_ID < 80000 && in_array('phar', stream_get_wrappers(), TRUE)) {
       // Set up a stream wrapper to handle insecurities due to PHP's builtin
       // phar stream wrapper. This is not registered as a regular stream wrapper
       // to prevent \Drupal\Core\File\FileSystem::validScheme() treating "phar"
@@ -635,7 +636,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         $this->containerNeedsDumping = FALSE;
         $GLOBALS['conf']['container_service_providers']['InstallerServiceProvider'] = 'Drupal\Core\Installer\InstallerServiceProvider';
       }
-      $this->moduleList = isset($extensions['module']) ? $extensions['module'] : [];
+      $this->moduleList = $extensions['module'] ?? [];
     }
     $module_filenames = $this->getModuleFileNames();
     $this->classLoaderAddMultiplePsr4($this->getModuleNamespacesPsr4($module_filenames));
@@ -778,7 +779,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // Now find modules.
       $this->moduleData = $profiles + $listing->scan('module');
     }
-    return isset($this->moduleData[$module]) ? $this->moduleData[$module] : FALSE;
+    return $this->moduleData[$module] ?? FALSE;
   }
 
   /**
@@ -1279,7 +1280,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Identify all services whose instances should be persisted when rebuilding
     // the container during the lifetime of the kernel (e.g., during a kernel
     // reboot). Include synthetic services, because by definition, they cannot
-    // be automatically reinstantiated. Also include services tagged to persist.
+    // be automatically re-instantiated. Also include services tagged to
+    // persist.
     $persist_ids = [];
     foreach ($container->getDefinitions() as $id => $definition) {
       // It does not make sense to persist the container itself, exclude it.
