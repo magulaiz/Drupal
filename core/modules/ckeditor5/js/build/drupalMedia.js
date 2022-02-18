@@ -509,7 +509,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         // List all attributes that should trigger re-rendering of the
         // preview.
         dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
-        dispatcher.on('attribute:drupalMediaViewMode:drupalMedia', converter);
+        dispatcher.on('attribute:drupalViewMode:drupalMedia', converter);
         dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
         dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
 

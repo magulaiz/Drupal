@@ -598,6 +598,7 @@ media_mediaAlign:
               - 'drupalElementStyle:viewMode:media_library'
               - 'drupalElementStyle:viewMode:tiny'
             defaultItem: 'drupalElementStyle:viewMode:full'
+            defaultText: 'Select view mode'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign
