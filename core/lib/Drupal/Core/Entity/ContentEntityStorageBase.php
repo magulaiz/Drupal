@@ -697,7 +697,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       $return = SAVED_NEW;
     }
     else {
-      $return = SAVED_UPDATED ;
+      $return = SAVED_UPDATED;
     }
 
     $this->populateAffectedRevisionTranslations($entity);
