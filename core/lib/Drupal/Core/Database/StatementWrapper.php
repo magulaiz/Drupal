@@ -130,7 +130,7 @@ class StatementWrapper implements StatementInterface {
       }
     }
 
-    foreach ($this as $record) {
+    foreach ($this->fetchAll() as $record) {
       $record_key = is_object($record) ? $record->$key : $record[$key];
       $return[$record_key] = $record;
     }
@@ -144,7 +144,7 @@ class StatementWrapper implements StatementInterface {
   public function fetchAllKeyed($key_index = 0, $value_index = 1) {
     $return = [];
     $this->setFetchMode(\PDO::FETCH_NUM);
-    foreach ($this as $record) {
+    foreach ($this->fetchAll() as $record) {
       $return[$record[$key_index]] = $record[$value_index];
     }
     return $return;
