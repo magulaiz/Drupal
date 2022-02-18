@@ -20,7 +20,7 @@ namespace Drupal\Core\Database;
  *
  * @ingroup database
  */
-interface StatementInterface extends \Traversable {
+interface StatementInterface {
 
   /**
    * Executes a prepared statement.
