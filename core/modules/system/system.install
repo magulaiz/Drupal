@@ -294,7 +294,7 @@ function system_requirements($phase) {
         ':php_requirements' => 'https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement',
       ]
     );
-    $requirements['php']['severity'] = REQUIREMENT_ERROR;
+    $requirements['php']['severity'] = REQUIREMENT_WARNING;
 
     // If the PHP version is also below the absolute minimum allowed, it's not
     // safe to continue with the requirements check.
