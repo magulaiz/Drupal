@@ -5,17 +5,7 @@
  * This file replaces core/misc/vertical-tabs.js to fix some bugs in the
  * original implementation, as well as makes minor changes to enable Claro
  * designs:
- * 1. Replaces hard-coded markup and adds 'js-' prefixed CSS classes for the
- *    JavaScript functionality (https://www.drupal.org/node/3081489).
- *    - The original Drupal.behavior and Drupal.verticalTab object hard-code
- *      markup of the tab list and (the outermost) wrapper of the vertical tabs
- *      component.
- *    - The original Drupal.verticalTab object is built on the same (unprefixed)
- *      CSS classes that should be used only for theming the component:
- *      - .vertical-tabs__pane - replaced by .js-vertical-tabs-pane;
- *      - .vertical-tabs__menu-item - replaced by .js-vertical-tabs-menu-item;
- *      - .vertical-tab--hidden - replaced by .js-vertical-tab-hidden.
- * 2. Fixes accessibility bugs (https://www.drupal.org/node/3081500):
+ * 1. Fixes accessibility bugs (https://www.drupal.org/node/3081500):
  *    - The original Drupal.verticalTab object doesn't take care of the right
  *      aria attributes. Every details summary element is described with
  *      aria-expanded="false" and aria-pressed="false".
@@ -33,12 +23,12 @@
  *      the enter key on the last vertical tabs element's menu link ('Filter
  *      settings'), the focused element will be the first vertical tabs
  *      ('CKEditor plugin settings') active input, and not the expected one.
- * 3. Consistency between browsers (https://www.drupal.org/node/3081508):
+ * 2. Consistency between browsers (https://www.drupal.org/node/3081508):
  *    We have to display the setting summary on the 'accordion look' as well.
  *    Using the original file, these are displayed only on browsers without
  *    HTML5 details support, where core's built-in core/misc/collapse.js HTML5
  *    details polyfill is in action.
- * 4. Help fulfill our custom needs (https://www.drupal.org/node/3081519):
+ * 3. Help fulfill our custom needs (https://www.drupal.org/node/3081519):
  *    The original behavior applies its features only when the actual screen
  *    width is bigger than 640 pixels (or the value of the
  *    drupalSettings.widthBreakpoint). But we want to switch between the
@@ -72,7 +62,7 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target.parents('.js-vertical-tabs-pane').each((index, pane) => {
+    $target.parents('[data-claro-vertical-tabs-pane]').each((index, pane) => {
       $(pane).data('verticalTab').focus();
     });
   };
@@ -119,8 +109,9 @@
           const tabList = $(Drupal.theme.verticalTabListWrapper());
           $this
             .wrap(
-              $(Drupal.theme.verticalTabsWrapper()).addClass(
-                'js-vertical-tabs',
+              $(Drupal.theme.verticalTabsWrapper()).attr(
+                'data-claro-vertical-tabs',
+                '',
               ),
             )
             .before(tabList);
@@ -139,7 +130,7 @@
               // prop() can't be used on browsers not supporting details
               // element, the style won't apply to them if prop() is used.
               .removeAttr('open')
-              .addClass('js-vertical-tabs-pane')
+              .attr('data-claro-vertical-tabs-pane', '')
               .data('verticalTab', verticalTab);
             if (this.id === focusID) {
               tabFocus = $that;
@@ -151,11 +142,11 @@
             // element that matches the URL fragment, activate that tab.
             const $locationHash = $this.find(window.location.hash);
             if (window.location.hash && $locationHash.length) {
-              tabFocus = $locationHash.is('.js-vertical-tabs-pane')
+              tabFocus = $locationHash.is('[data-claro-vertical-tabs-pane]')
                 ? $locationHash
-                : $locationHash.closest('.js-vertical-tabs-pane');
+                : $locationHash.closest('[data-claro-vertical-tabs-pane]');
             } else {
-              tabFocus = $this.find('> .js-vertical-tabs-pane').eq(0);
+              tabFocus = $this.find('> [data-claro-vertical-tabs-pane]').eq(0);
             }
           }
           if (tabFocus.length) {
@@ -185,8 +176,6 @@
   Drupal.verticalTab = function verticalTab(settings) {
     const self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
-
-    this.item.addClass('js-vertical-tabs-menu-item');
 
     this.link.attr('href', `#${settings.details.attr('id')}`);
 
@@ -252,7 +241,7 @@
      */
     focus(triggerFocus = true) {
       this.details
-        .siblings('.js-vertical-tabs-pane')
+        .siblings('[data-claro-vertical-tabs-pane]')
         .each(function closeOtherTabs() {
           const tab = $(this).data('verticalTab');
           if (tab.details.attr('open')) {
@@ -260,7 +249,7 @@
               'aria-expanded': 'false',
               'aria-pressed': 'false',
             });
-            tab.item.removeClass('is-selected');
+            tab.item.removeAttr('data-claro-vertical-tabs-menu-item-selected');
           }
         })
         .end()
@@ -274,8 +263,8 @@
           'aria-expanded': 'true',
           'aria-pressed': 'true',
         })
-        .closest('.js-vertical-tabs')
-        .find('.js-vertical-tab-active')
+        .closest('[data-claro-vertical-tabs]')
+        .find('[data-claro-vertical-tab-active]')
         .remove();
 
       if (triggerFocus) {
@@ -284,11 +273,12 @@
           $summary.trigger('focus');
         }
       }
-      this.item.addClass('is-selected');
+      this.item.attr('data-claro-vertical-tabs-menu-item-selected', '');
       // Mark the active tab for screen readers.
       this.title.after(
-        $(Drupal.theme.verticalTabActiveTabIndicator()).addClass(
-          'js-vertical-tab-active',
+        $(Drupal.theme.verticalTabActiveTabIndicator()).attr(
+          'data-claro-vertical-tab-active',
+          '',
         ),
       );
     },
@@ -314,19 +304,20 @@
       this.item.closest('.js-form-type-vertical-tabs').show();
       // Display the details element.
       this.details
-        .removeClass('vertical-tab--hidden js-vertical-tab-hidden')
+        .removeClass('vertical-tab-hidden')
+        .removeAttr('data-claro-vertical-tab-hidden')
         .show();
       // Update first and last CSS classes for details.
       this.details
         .parent()
-        .children('.js-vertical-tabs-pane')
+        .children('[data-claro-vertical-tabs-pane]')
         .removeClass('vertical-tabs__item--first vertical-tabs__item--last')
         .filter(':visible')
         .eq(0)
         .addClass('vertical-tabs__item--first');
       this.details
         .parent()
-        .children('.js-vertical-tabs-pane')
+        .children('[data-claro-vertical-tabs-pane]')
         .filter(':visible')
         .eq(-1)
         .addClass('vertical-tabs__item--last');
@@ -346,25 +337,28 @@
       this.item.addClass('vertical-tabs__menu-item--hidden').hide();
       // Hide the details element.
       this.details
-        .addClass('vertical-tab--hidden js-vertical-tab-hidden')
+        .addClass('vertical-tab-hidden')
+        .attr('data-claro-vertical-tab-hidden', '')
         .hide();
       // Update first and last CSS classes for details.
       this.details
         .parent()
-        .children('.js-vertical-tabs-pane')
+        .children('[data-claro-vertical-tabs-pane]')
         .removeClass('vertical-tabs__item--first vertical-tabs__item--last')
         .filter(':visible')
         .eq(0)
         .addClass('vertical-tabs__item--first');
       this.details
         .parent()
-        .children('.js-vertical-tabs-pane')
+        .children('[data-claro-vertical-tabs-pane]')
         .filter(':visible')
         .eq(-1)
         .addClass('vertical-tabs__item--last');
       // Focus the first visible tab (if there is one).
       const $firstTab = this.details
-        .siblings('.js-vertical-tabs-pane:not(.js-vertical-tab-hidden)')
+        .siblings(
+          '[data-claro-vertical-tabs-pane]:not([data-claro-vertical-tab-hidden])',
+        )
         .eq(0);
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus(false);
@@ -397,7 +391,7 @@
     tab.title = $('<strong class="vertical-tabs__menu-link-title"></strong>');
     tab.title[0].textContent = settings.title;
     tab.item = $(
-      '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
+      '<li class="vertical-tabs__menu-item" data-claro-vertical-tabs-menu-item tabindex="-1"></li>',
     ).append(
       (tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append(
         $('<span class="vertical-tabs__menu-link-content"></span>')

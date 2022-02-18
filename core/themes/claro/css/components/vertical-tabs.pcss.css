@@ -104,13 +104,13 @@
   box-shadow: none;
 }
 
-.vertical-tabs__menu-item.is-selected::before,
-.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item.is-selected::before {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::before,
+.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::before {
   content: normal;
 }
 
 /* Make the white masking line displayed for the selected menu item. */
-.vertical-tabs__menu-item.is-selected::after {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::after {
   content: "";
 }
 
@@ -189,7 +189,7 @@
   border-radius: var(--vertical-tabs-border-radius);
 }
 
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
   color: var(--color-absolutezero);
   border-color: var(--vertical-tabs-border-color) transparent;
@@ -197,28 +197,28 @@
   box-shadow: var(--vertical-tabs-shadow);
 }
 
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover {
   color: var(--color-absolutezero-hover);
   background-color: var(--color-bgblue-hover);
 }
 
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
   border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
   border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
-[dir=rtl] .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+[dir=rtl] .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
   border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-left: 0;
   border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
 }
 
-.vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link:hover::before {
+.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover::before {
   background: none;
 }
 
 @media screen and (-ms-high-contrast: active) {
-  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link {
+  .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
     border-color: windowText transparent;
   }
 
@@ -226,7 +226,7 @@
     border-color: transparent;
   }
 
-  .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-link::before {
+  .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
     border-color: windowText;
   }
 }

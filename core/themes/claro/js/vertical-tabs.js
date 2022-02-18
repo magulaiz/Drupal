@@ -7,7 +7,7 @@
 
 (function ($, Drupal) {
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
-    $target.parents('.js-vertical-tabs-pane').each(function (index, pane) {
+    $target.parents('[data-claro-vertical-tabs-pane]').each(function (index, pane) {
       $(pane).data('verticalTab').focus();
     });
   };
@@ -26,7 +26,7 @@
         }
 
         var tabList = $(Drupal.theme.verticalTabListWrapper());
-        $this.wrap($(Drupal.theme.verticalTabsWrapper()).addClass('js-vertical-tabs')).before(tabList);
+        $this.wrap($(Drupal.theme.verticalTabsWrapper()).attr('data-claro-vertical-tabs', '')).before(tabList);
         $details.each(function initializeVerticalTabItems() {
           var $that = $(this);
           var verticalTab = new Drupal.verticalTab({
@@ -34,7 +34,7 @@
             details: $that
           });
           tabList.append(verticalTab.item);
-          $that.removeAttr('open').addClass('js-vertical-tabs-pane').data('verticalTab', verticalTab);
+          $that.removeAttr('open').attr('data-claro-vertical-tabs-pane', '').data('verticalTab', verticalTab);
 
           if (this.id === focusID) {
             tabFocus = $that;
@@ -45,9 +45,9 @@
           var $locationHash = $this.find(window.location.hash);
 
           if (window.location.hash && $locationHash.length) {
-            tabFocus = $locationHash.is('.js-vertical-tabs-pane') ? $locationHash : $locationHash.closest('.js-vertical-tabs-pane');
+            tabFocus = $locationHash.is('[data-claro-vertical-tabs-pane]') ? $locationHash : $locationHash.closest('[data-claro-vertical-tabs-pane]');
           } else {
-            tabFocus = $this.find('> .js-vertical-tabs-pane').eq(0);
+            tabFocus = $this.find('> [data-claro-vertical-tabs-pane]').eq(0);
           }
         }
 
@@ -61,7 +61,6 @@
   Drupal.verticalTab = function verticalTab(settings) {
     var self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
-    this.item.addClass('js-vertical-tabs-menu-item');
     this.link.attr('href', "#".concat(settings.details.attr('id')));
     this.link.on('click', function (event) {
       event.preventDefault();
@@ -103,7 +102,7 @@
   Drupal.verticalTab.prototype = {
     focus: function focus() {
       var triggerFocus = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-      this.details.siblings('.js-vertical-tabs-pane').each(function closeOtherTabs() {
+      this.details.siblings('[data-claro-vertical-tabs-pane]').each(function closeOtherTabs() {
         var tab = $(this).data('verticalTab');
 
         if (tab.details.attr('open')) {
@@ -111,13 +110,13 @@
             'aria-expanded': 'false',
             'aria-pressed': 'false'
           });
-          tab.item.removeClass('is-selected');
+          tab.item.removeAttr('data-claro-vertical-tabs-menu-item-selected');
         }
       }).end().siblings(':hidden.vertical-tabs__active-tab').val(this.details.attr('id'));
       this.details.attr('open', true).find('> summary').attr({
         'aria-expanded': 'true',
         'aria-pressed': 'true'
-      }).closest('.js-vertical-tabs').find('.js-vertical-tab-active').remove();
+      }).closest('[data-claro-vertical-tabs]').find('[data-claro-vertical-tab-active]').remove();
 
       if (triggerFocus) {
         var $summary = this.details.find('> summary');
@@ -127,8 +126,8 @@
         }
       }
 
-      this.item.addClass('is-selected');
-      this.title.after($(Drupal.theme.verticalTabActiveTabIndicator()).addClass('js-vertical-tab-active'));
+      this.item.attr('data-claro-vertical-tabs-menu-item-selected', '');
+      this.title.after($(Drupal.theme.verticalTabActiveTabIndicator()).attr('data-claro-vertical-tab-active', ''));
     },
     updateSummary: function updateSummary() {
       var summary = this.details.drupalGetSummary();
@@ -137,18 +136,18 @@
     tabShow: function tabShow() {
       this.item.removeClass('vertical-tabs__menu-item--hidden').show();
       this.item.closest('.js-form-type-vertical-tabs').show();
-      this.details.removeClass('vertical-tab--hidden js-vertical-tab-hidden').show();
-      this.details.parent().children('.js-vertical-tabs-pane').removeClass('vertical-tabs__item--first vertical-tabs__item--last').filter(':visible').eq(0).addClass('vertical-tabs__item--first');
-      this.details.parent().children('.js-vertical-tabs-pane').filter(':visible').eq(-1).addClass('vertical-tabs__item--last');
+      this.details.removeClass('vertical-tab-hidden').removeAttr('data-claro-vertical-tab-hidden').show();
+      this.details.parent().children('[data-claro-vertical-tabs-pane]').removeClass('vertical-tabs__item--first vertical-tabs__item--last').filter(':visible').eq(0).addClass('vertical-tabs__item--first');
+      this.details.parent().children('[data-claro-vertical-tabs-pane]').filter(':visible').eq(-1).addClass('vertical-tabs__item--last');
       this.focus(false);
       return this;
     },
     tabHide: function tabHide() {
       this.item.addClass('vertical-tabs__menu-item--hidden').hide();
-      this.details.addClass('vertical-tab--hidden js-vertical-tab-hidden').hide();
-      this.details.parent().children('.js-vertical-tabs-pane').removeClass('vertical-tabs__item--first vertical-tabs__item--last').filter(':visible').eq(0).addClass('vertical-tabs__item--first');
-      this.details.parent().children('.js-vertical-tabs-pane').filter(':visible').eq(-1).addClass('vertical-tabs__item--last');
-      var $firstTab = this.details.siblings('.js-vertical-tabs-pane:not(.js-vertical-tab-hidden)').eq(0);
+      this.details.addClass('vertical-tab-hidden').attr('data-claro-vertical-tab-hidden', '').hide();
+      this.details.parent().children('[data-claro-vertical-tabs-pane]').removeClass('vertical-tabs__item--first vertical-tabs__item--last').filter(':visible').eq(0).addClass('vertical-tabs__item--first');
+      this.details.parent().children('[data-claro-vertical-tabs-pane]').filter(':visible').eq(-1).addClass('vertical-tabs__item--last');
+      var $firstTab = this.details.siblings('[data-claro-vertical-tabs-pane]:not([data-claro-vertical-tab-hidden])').eq(0);
 
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus(false);
@@ -164,7 +163,7 @@
     var tab = {};
     tab.title = $('<strong class="vertical-tabs__menu-link-title"></strong>');
     tab.title[0].textContent = settings.title;
-    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append($('<span class="vertical-tabs__menu-link-content"></span>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-link-summary"></span>'))));
+    tab.item = $('<li class="vertical-tabs__menu-item" data-claro-vertical-tabs-menu-item tabindex="-1"></li>').append(tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append($('<span class="vertical-tabs__menu-link-content"></span>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-link-summary"></span>'))));
     return tab;
   };
 

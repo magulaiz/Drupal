@@ -78,7 +78,7 @@
   }
 }
 
-.vertical-tabs__menu-item.is-selected {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] {
   background-color: var(--color--white);
 
   @media (--lg) {
@@ -87,7 +87,7 @@
   }
 }
 
-.vertical-tabs__menu-item.is-selected a {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] a {
   background-color: transparent;
 }
 
