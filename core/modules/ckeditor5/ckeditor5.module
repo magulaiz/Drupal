@@ -463,6 +463,15 @@ function _ckeditor5_theme_css($theme = NULL): array {
   return $css;
 }
 
+/**
+ * Generates a warning related to ckeditor_stylesheets.
+ *
+ * Identifies themes using ckeditor_stylesheets without an equivalent
+ * ckeditor5-stylesheets setting. If such themes are found, a warning message is
+ * returned.
+ *
+ * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup|null
+ */
 function _ckeditor5_stylesheets_warning() {
   $themes = [];
   $default_theme = \Drupal::configFactory()->get('system.theme')->get('default');
@@ -475,37 +484,17 @@ function _ckeditor5_stylesheets_warning() {
     $themes[$admin_theme] = \Drupal::service('theme_handler')->listInfo()[$admin_theme]->info;
   }
 
-  $ckeditor_stylesheets_use = [];
-
   // Collect information on which themes/base themes have ckeditor_stylesheets
   // configuration, but do not have corresponding ckeditor5-stylesheets
   // configuration.
+  $ckeditor_stylesheets_use = [];
   foreach ($themes as $theme_info) {
-    $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
-    if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
-      $ckeditor_stylesheets_use[] = $theme_info['name'];
-    }
-
-    // If the primary theme has ckeditor5-stylesheets configured, do not check
-    // base themes. The primary theme can potentially provide the
-    // ckeditor5-stylesheets config for itself and its base themes, so we err
-    // on the side of not showing a warning if this is possibly the case.
-    if ($theme_has_ckeditor5_stylesheets) {
-      continue;
-    }
-    $base_theme = $theme_info['base theme'] ?? FALSE;
-    while ($base_theme) {
-      $base_theme_info = \Drupal::service('theme_handler')->listInfo()[$base_theme]->info;
-      $base_theme_has_ckeditor5_stylesheets = isset($base_theme_info['ckeditor5-stylesheets']);
-
-      if (!empty($base_theme_info['ckeditor_stylesheets']) && !$base_theme_has_ckeditor5_stylesheets) {
-        $ckeditor_stylesheets_use[] = $base_theme_info['name'];
-      }
-      $base_theme = $base_theme_info['base theme'] ?? FALSE;
-    }
+    _ckeditor5_check_stylesheets_equivalent($theme_info, $ckeditor_stylesheets_use);
   }
 
   if (!empty($ckeditor_stylesheets_use)) {
+    // A subtheme may unnecessarily appear multiple times.
+    $ckeditor_stylesheets_use = array_unique($ckeditor_stylesheets_use);
     $last_item = array_pop($ckeditor_stylesheets_use);
     $stylesheets_warning = \Drupal::translation()->formatPlural(count($ckeditor_stylesheets_use) + 1,
       'The %last_item theme has ckeditor_stylesheets configured without a corresponding ckeditor5-stylesheets configuration. See the <a href=":change_record">change record</a> for details.',
@@ -520,4 +509,39 @@ function _ckeditor5_stylesheets_warning() {
   }
 
   return NULL;
+}
+
+/**
+ * Identifies themes using ckeditor_stylesheets without a CKEditor 5 equivalent.
+ *
+ * @param array $theme_info
+ *   The config of the theme to check.
+ * @param string[] $ckeditor_stylesheets_use
+ *   Themes using ckeditor_stylesheets without a CKEditor 5 equivalent.
+ *
+ * @return void
+ */
+function _ckeditor5_check_stylesheets_equivalent($theme_info, &$ckeditor_stylesheets_use) {
+  $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
+  if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
+    $ckeditor_stylesheets_use[] = $theme_info['name'];
+  }
+
+  // If the primary theme has ckeditor5-stylesheets configured, do not check
+  // base themes. The primary theme can potentially provide the
+  // ckeditor5-stylesheets config for itself and its base themes, so we err
+  // on the side of not showing a warning if this is possibly the case.
+  if ($theme_has_ckeditor5_stylesheets) {
+    return;
+  }
+  $base_theme = $theme_info['base theme'] ?? FALSE;
+  while ($base_theme) {
+    $base_theme_info = \Drupal::service('theme_handler')->listInfo()[$base_theme]->info;
+    $base_theme_has_ckeditor5_stylesheets = isset($base_theme_info['ckeditor5-stylesheets']);
+
+    if (!empty($base_theme_info['ckeditor_stylesheets']) && !$base_theme_has_ckeditor5_stylesheets) {
+      $ckeditor_stylesheets_use[] = $base_theme_info['name'];
+    }
+    $base_theme = $base_theme_info['base theme'] ?? FALSE;
+  }
 }

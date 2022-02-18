@@ -11,7 +11,7 @@ namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
  * @internal
  */
 class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
-  
+
   /**
    * {@inheritdoc}
    */
