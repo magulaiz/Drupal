@@ -21,7 +21,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
@@ -70,8 +69,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 11,
-      'aggregator_feed' => 1,
       'block' => 25,
       'block_content' => 1,
       'block_content_type' => 1,
@@ -106,12 +103,12 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'user' => 4,
       'user_role' => 4,
       'menu_link_content' => 12,
-      'view' => 16,
+      'view' => 14,
       'date_format' => 11,
       'entity_form_display' => 24,
       'entity_form_mode' => 1,
-      'entity_view_display' => 37,
-      'entity_view_mode' => 14,
+      'entity_view_display' => 34,
+      'entity_view_mode' => 12,
       'base_field_override' => 4,
     ];
   }
@@ -136,7 +133,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block languages',
       'Block',
       'Book',
@@ -206,6 +202,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Aggregator',
       'References',
       'Translation sets',
       'Variable realm',
