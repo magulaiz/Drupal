@@ -368,20 +368,22 @@ export default class DrupalElementStyleUi extends Plugin {
         withText: true,
       });
 
+      const command = this.editor.commands.get('drupalElementStyle');
+
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
       dropdownButtonView
-        .bind('label')
-        .toMany(buttonViews, 'isOn', (...areOn) => {
-          const index = areOn.findIndex(identity);
+        .bind('label').to(command, 'value', (commandValue) => {
+          // @todo Remove hardcoded group from here.
+          if (commandValue && commandValue.drupalViewMode) {
+            // @todo Use the style title instead of the machine name.
+            return commandValue.drupalViewMode;
+          }
 
-          return getDropdownButtonTitle(
-            title,
-            index < 0 ? defaultButton.label : buttonViews[index].label,
-          );
+          // @todo What is the default text and where to get it?
+          return 'Select view mode';
         });
 
-      const command = this.editor.commands.get('drupalElementStyle');
 
       dropdownView.bind('isOn').to(command);
       dropdownView.bind('isEnabled').to(this);

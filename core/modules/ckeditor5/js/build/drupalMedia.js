@@ -1177,7 +1177,7 @@ class MediaImageTextAlternative extends delegated_corefrom_dll_reference_CKEdito
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-html-support/src/conversionutils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -1687,7 +1687,7 @@ class DrupalLinkMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-link/src/utils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2015,7 +2015,7 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-image/src/imagestyle/utils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2192,7 +2192,6 @@ const DEFAULT_DROPDOWN_DEFINITIONS = [ {
  * * The image style options not supported by any of the loaded plugins are filtered out.
  */
 function normalizeStyles( config ) {
-  console.log('this functino is called');
 	const configuredStyles = config.configuredStyles.options || [];
 
 	const styles = configuredStyles
@@ -2487,7 +2486,9 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
-      return element.hasAttribute(`drupal${groupName}`);
+      if (element.hasAttribute(`drupal${groupName}`)) {
+        return true;
+      }
     }
     return false;
   }
@@ -2531,7 +2532,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
-      console.log(modelGroupName, requestedStyle);
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
@@ -3256,20 +3256,22 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
         withText: true,
       });
 
+      const command = this.editor.commands.get('drupalElementStyle');
+
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
       dropdownButtonView
-        .bind('label')
-        .toMany(buttonViews, 'isOn', (...areOn) => {
-          const index = areOn.findIndex(identity);
+        .bind('label').to(command, 'value', (commandValue) => {
+          // @todo Remove hardcoded group from here.
+          if (commandValue && commandValue.drupalViewMode) {
+            // @todo Use the style title instead of the machine name.
+            return commandValue.drupalViewMode;
+          }
 
-          return getDropdownButtonTitle(
-            title,
-            index < 0 ? defaultButton.label : buttonViews[index].label,
-          );
+          // @todo What is the default text and where to get it?
+          return 'Select view mode';
         });
 
-      const command = this.editor.commands.get('drupalElementStyle');
 
       dropdownView.bind('isOn').to(command);
       dropdownView.bind('isEnabled').to(this);

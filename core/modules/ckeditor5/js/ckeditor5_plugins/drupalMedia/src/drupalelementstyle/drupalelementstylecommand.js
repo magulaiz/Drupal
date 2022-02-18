@@ -102,7 +102,9 @@ export default class DrupalElementStyleCommand extends Command {
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
-      return element.hasAttribute(`drupal${groupName}`);
+      if (element.hasAttribute(`drupal${groupName}`)) {
+        return true;
+      }
     }
     return false;
   }
@@ -146,7 +148,6 @@ export default class DrupalElementStyleCommand extends Command {
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
-      console.log(modelGroupName, requestedStyle);
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
