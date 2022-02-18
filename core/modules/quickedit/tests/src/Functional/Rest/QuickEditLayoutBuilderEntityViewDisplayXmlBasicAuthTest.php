@@ -1,0 +1,11 @@
+<?php
+
+namespace Drupal\Tests\quickedit\Functional\Rest;
+
+use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayXmlBasicAuthTest;
+
+/**
+ * @group quickedit
+ * @group rest
+ */
+class QuickEditLayoutBuilderEntityViewDisplayXmlBasicAuthTest extends LayoutBuilderEntityViewDisplayXmlBasicAuthTest {}
