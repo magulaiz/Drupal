@@ -3,7 +3,6 @@
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 // cspell:ignore subtheming
-use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
 /**
  * Tests warnings when ckeditor_stylesheets do not have CKEditor 5 equivalents.
@@ -12,9 +11,7 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
  * @internal
  */
 class CKEditorStylesheetsWarningTest extends CKEditor5TestBase {
-
-  use CKEditor5TestTrait;
-
+  
   /**
    * {@inheritdoc}
    */
