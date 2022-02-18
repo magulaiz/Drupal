@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstylecommand */
-import {Plugin, icons} from 'ckeditor5/src/core';
-import {first} from 'ckeditor5/src/utils';
+import { Plugin, icons } from 'ckeditor5/src/core';
+import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
 
 /**
@@ -56,7 +56,6 @@ function modelToViewStyleAttribute(styles) {
     }
 
     if (newStyle) {
-      console.log('new style attr name ', newStyle.attributeName);
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
       } else {
@@ -170,10 +169,10 @@ function viewToModelStyleAttribute(styles, groupName) {
  *                attributeName: 'data-align'
  *                modelElements: [ 'drupalMedia' ]
  *            viewMode:
- *              - name: 'View mode A'
- *                title: 'A'
+ *              - name: 'full view mode'
+ *                title: 'Full view mode'
  *                attributeName: 'data-view-mode'
- *                attributeValue: 'A'
+ *                attributeValue: 'full'
  *                modelElements: [ 'drupalMedia' ]
  *
  * @see Drupal.CKEditor5~DrupalElementStyle
@@ -187,7 +186,7 @@ export default class DrupalElementStyleEditing extends Plugin {
    * @inheritDoc
    */
   init() {
-    const {editor} = this;
+    const { editor } = this;
 
     // Ensure that the drupalElementStyles.options exists always.
     editor.config.define('drupalElementStyles', { options: [] });
@@ -251,7 +250,6 @@ export default class DrupalElementStyleEditing extends Plugin {
       })
       .filter(Boolean);
     this.normalizedStyles = stylesConfig;
-    console.log('norm: ', this.normalizedStyles);
 
     this._setupConversion();
 
@@ -270,15 +268,14 @@ export default class DrupalElementStyleEditing extends Plugin {
    * @private
    */
   _setupConversion() {
-    const {editor} = this;
-    const {schema} = editor.model;
+    const { editor } = this;
+    const { schema } = editor.model;
 
     const groupNamesArr = Object.keys(this.normalizedStyles);
 
     for (let i = 0; i < groupNamesArr.length; i++) {
-      // Capitalize first letter for attribute naming purposes.
       const group = groupNamesArr[i];
-      console.log('group', group);
+      // Capitalize first letter to append in camelCase properly.
       const groupName = group[0].toUpperCase() + group.substring(1);
 
       const modelToViewConverter = modelToViewStyleAttribute(
@@ -289,8 +286,6 @@ export default class DrupalElementStyleEditing extends Plugin {
         groupName,
       );
 
-      // loop thru group here and do separately
-      // use group name to generate attribute
       editor.editing.downcastDispatcher.on(
         `attribute:drupal${groupName}`,
         modelToViewConverter,
@@ -320,7 +315,7 @@ export default class DrupalElementStyleEditing extends Plugin {
         viewToModelConverter,
         // This needs to be set as low priority to ensure this runs always after
         // the element has been converted to a model element.
-        {priority: 'low'},
+        { priority: 'low' },
       );
     }
   }

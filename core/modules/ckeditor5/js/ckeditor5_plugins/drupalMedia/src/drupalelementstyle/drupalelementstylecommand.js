@@ -6,8 +6,20 @@ import { Command } from 'ckeditor5/src/core';
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
  */
 
+/**
+ * Checks the schema if any of the drupalElementStyles with the given attribute name exists.
+ *
+ * @param {module:engine/model/element~Element|null} selectedElement
+ *   The selected element.
+ * @param {module:engine/model/schema~Schema} schema
+ *   The model schema.
+ * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+ *   All available Drupal Element Styles.
+ *
+ * @return {boolean}
+ *   Does the schema contain the attribute?
+ */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  console.log(styles);
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(selectedElement, `drupal${groupName}`);
@@ -16,22 +28,22 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
 }
 
 /**
- * Gets closest element that has any DrupalElementStyle attribute in schema.
+ * Gets closest element that has any drupalElementStyle attribute in schema.
  *
  * @param {module:engine/model/documentselection~DocumentSelection} selection
  *   The current document selection.
  * @param {module:engine/model/schema~Schema} schema
  *   The model schema.
+ * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+ *   All available Drupal Element Styles.
  *
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
-  // dynamically check for attributes
   const selectedElement = selection.getSelectedElement();
 
   return selectedElement &&
-    // here checks schema for if any of the drupal element styles with this attribute name exists
     schemaContainsAttribute(selectedElement, schema, styles)
     ? selectedElement
     : selection
@@ -76,8 +88,6 @@ export default class DrupalElementStyleCommand extends Command {
   /**
    * @inheritDoc
    */
-  // This is called every time the model changes
-  // to make sure command has the correct state.
   refresh() {
     const { editor } = this;
     const element = getClosestElementWithElementStyleAttribute(
@@ -90,8 +100,8 @@ export default class DrupalElementStyleCommand extends Command {
 
     if (!this.isEnabled) {
       this.value = false;
-      // Here element needs to be checked against list of possible attributes
-      // and then update the value to include all drupal element styles selected for the element.
+      // The element needs to be checked against list of possible attributes then
+      // update the value to include all drupalElementStyles selected for the element.
     } else if (this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
     } else {
@@ -99,6 +109,15 @@ export default class DrupalElementStyleCommand extends Command {
     }
   }
 
+  /**
+   * Checks if an element has a drupalElementStyle attribute.
+   *
+   * @param {module:engine/model/element~Element|null} element
+   *   The element.
+   *
+   * @return {boolean}
+   *   Does the element have a drupalElementStyle attribute?
+   */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
@@ -109,8 +128,18 @@ export default class DrupalElementStyleCommand extends Command {
     return false;
   }
 
+  /**
+   * Gets the group(s) and attribute(s) of the element.
+   *
+   * @example {drupalAlign: 'alignLeft', drupalViewMode: 'full'}
+   *
+   * @param {module:engine/model/element~Element|null} element
+   *   The element.
+   *
+   * @return {Object}
+   * The group(s) and attribute(s) in the form of an object.
+   */
   getGroupAndAttribute(element) {
-    // const drupalStyles = { drupalAlign: '', drupalViewMode: '' };
     const groupAttr = {};
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
@@ -127,23 +156,19 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: 'alignLeft' });
+   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' } });
    *
    * @param {Object} options
    *   The command options.
-   * @param {string} group
-   *   The name of the group.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
+   * @param {string} groupName
+   *   The name of the group.
    */
-  // makes the actual change in the MODEL
-  // execute needs to change to take value and the group
-  execute(options = {}, group) {
-    console.log('recevied group in command execute', group);
+  execute(options = {}, groupName) {
     const { editor } = this;
     const { model } = editor;
-    console.log('options.value', options.value);
 
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
@@ -155,13 +180,11 @@ export default class DrupalElementStyleCommand extends Command {
       );
       if (
         !requestedStyle ||
-        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
+        this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
       ) {
-        console.log('hit');
         // Remove value from the object.
         writer.removeAttribute(modelGroupName, element);
       } else {
-        console.log('else');
         // Extend the object with new value.
         writer.setAttribute(
           modelGroupName,

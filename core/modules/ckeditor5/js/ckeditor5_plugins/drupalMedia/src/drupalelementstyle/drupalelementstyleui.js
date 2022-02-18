@@ -91,11 +91,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
     Object.keys(definedStyles).map((group) => {
       for (const style of definedStyles[group]) {
-        if (group === 'align') {
-          this._createButton(style, group);
-        } else {
-          this._createButton(style, group);
-        }
+        this._createButton(style, group);
       }
     });
 
@@ -137,9 +133,7 @@ export default class DrupalElementStyleUi extends Plugin {
     definedDropdowns.forEach((dropdownConfig) => {
       const groupName = dropdownConfig.name.split(':')[1];
       if (dropdownConfig.display === 'toolbar') {
-        if (groupName === 'align') {
-          this._createDropdown(dropdownConfig, definedStyles[groupName]);
-        }
+        this._createDropdown(dropdownConfig, definedStyles[groupName]);
       } else {
         this._createListDropdown(dropdownConfig, definedStyles[groupName]);
       }
@@ -167,15 +161,12 @@ export default class DrupalElementStyleUi extends Plugin {
       const { defaultItem, items, title } = dropdownConfig;
       const buttonViews = items
         .filter((itemName) => {
-          console.log('itemName: ', itemName);
           const groupName = itemName.split(':')[1];
-          console.log('definedStyles: ', definedStyles);
           return definedStyles.find(
             ({ name }) => getUIComponentName(name, groupName) === itemName,
           );
         })
         .map((buttonName) => {
-          console.log('buttonName: ', buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
@@ -256,6 +247,8 @@ export default class DrupalElementStyleUi extends Plugin {
    *
    * @param {Drupal.CKEditor5~DrupalElementStyle} buttonConfig
    *   The button configuration.
+   * @param {string} group
+   *   The name of the group (ex. 'align', 'viewMode').
    *
    * @see module:ui/componentfactory~ComponentFactory
    *
@@ -267,9 +260,7 @@ export default class DrupalElementStyleUi extends Plugin {
     this.editor.ui.componentFactory.add(
       getUIComponentName(buttonName, group),
       (locale) => {
-        // change to take account of groups
         const command = this.editor.commands.get('drupalElementStyle');
-        console.log('command ', command);
         const view = new ButtonView(locale);
 
         view.set({
@@ -281,7 +272,6 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.bind('isEnabled').to(command, 'isEnabled');
         view.bind('isOn').to(command, 'value', (value) => value === buttonName);
-        console.log('BUTTON NAMEEEEEEE', buttonName);
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
         return view;
@@ -290,42 +280,14 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
-   * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
-   *
-   * @private
-   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options The resize options.
-   * @param {module:image/imageresize/resizeimagecommand~ResizeImageCommand} command The resize image command.
-   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
-   */
-  _getDropdownListItemDefinitions(options, command) {
-    console.log('options', options);
-    const itemDefinitions = new Collection();
-
-    options.map((option) => {
-      console.log('option: ', option);
-      const definition = {
-        type: 'button',
-        model: new Model({
-          commandName: 'drupalElementStyle',
-          // todo: change this hardcode
-          commandGroup: 'drupalViewMode',
-          groupName: 'viewMode',
-          commandValue: option.name,
-          label: option.title,
-          withText: true,
-        }),
-      };
-      itemDefinitions.add(definition);
-    });
-    return itemDefinitions;
-  }
-
-  /**
-   * A helper function that creates a dropdown component for the plugin containing all the resize options defined in
+   * A helper function that creates a list dropdown component for the plugin containing all the style options defined in
    * the editor configuration.
    *
    * @private
-   * @param {Array.<module:image/imageresize/imageresizebuttons~ImageResizeOption>} options An array of configured options.
+   * @param {Drupal.CKEditor5~drupalElementStyleDropdownDefinition} dropdownConfig
+   *   The dropdown configuration.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
    */
   _createListDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
@@ -334,17 +296,14 @@ export default class DrupalElementStyleUi extends Plugin {
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
+      const groupName = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {
-          console.log('itemName: ', itemName);
-          const groupName = itemName.split(':')[1];
-          console.log('definedStyles: ', definedStyles);
           return definedStyles.find(
             ({ name }) => getUIComponentName(name, groupName) === itemName,
           );
         })
         .map((buttonName) => {
-          console.log('buttonName: ', buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
@@ -369,33 +328,28 @@ export default class DrupalElementStyleUi extends Plugin {
       });
 
       const command = this.editor.commands.get('drupalElementStyle');
+      const commandGroupName = this.getCommandGroupNameFromGroup(groupName);
 
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
-      dropdownButtonView
-        .bind('label').to(command, 'value', (commandValue) => {
-          // @todo Remove hardcoded group from here.
-          if (commandValue && commandValue.drupalViewMode) {
-            // @todo Use the style title instead of the machine name.
-            return commandValue.drupalViewMode;
-          }
-
-          // @todo What is the default text and where to get it?
-          return 'Select view mode';
-        });
-
+      dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
+        if (commandValue && commandValue[commandGroupName]) {
+          // @todo Use the style title instead of the machine name.
+          return commandValue.drupalViewMode;
+        }
+        return dropdownConfig.defaultText;
+      });
 
       dropdownView.bind('isOn').to(command);
       dropdownView.bind('isEnabled').to(this);
 
       addListToDropdown(
         dropdownView,
-        this._getDropdownListItemDefinitions(definedStyles, command),
+        this._getDropdownListItemDefinitions(definedStyles, command, groupName),
       );
 
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
-        console.log('evt: ', evt);
         const obj = {};
         const key = evt.source.commandGroup;
         obj[key] = evt.source.commandValue;
@@ -412,23 +366,66 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
+   * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
+   *
+   * @private
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
+   * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
+   * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
+   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+   */
+  _getDropdownListItemDefinitions(definedStyles, command, groupName) {
+    const itemDefinitions = new Collection();
+    const commandGroup = this.getCommandGroupNameFromGroup(groupName);
+
+    definedStyles.map((style) => {
+      const definition = {
+        type: 'button',
+        model: new Model({
+          commandName: 'drupalElementStyle',
+          commandGroup: commandGroup,
+          groupName: groupName,
+          commandValue: style.name,
+          label: style.title,
+          withText: true,
+        }),
+      };
+      itemDefinitions.add(definition);
+    });
+    return itemDefinitions;
+  }
+
+  /**
+   * A simple helper function that returns the command group name.
+   *
+   * @example
+   *    groupName = 'viewMode' -> commandGroupName = 'drupalViewMode'
+   *
+   * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
+   * @return {string} Command group name.
+   */
+  getCommandGroupNameFromGroup(groupName) {
+    return 'drupal'.concat(groupName[0].toUpperCase() + groupName.substring(1));
+  }
+
+  /**
    * Executes the Drupal Element Style command.
    *
    * @param {string} name
    *   The name of the style that should be applied.
+   * @param {string} groupName
+   *   The name of the group (ex. 'align', 'viewMode').
    *
    * @see module:drupalMedia/drupalelementstyle/drupalelementstylecommand~DrupalElementStyleCommand
    *
    * @private
    */
-  _executeCommand(name, group) {
-    const groupName = group[0].toUpperCase() + group.substring(1);
-    // const key = 'drupalAlign';
-    const key = `drupal${groupName}`;
+  _executeCommand(name, groupName) {
+    const key = this.getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
-    console.log('blaahhhhhh is this important');
-    this.editor.execute('drupalElementStyle', { value: obj }, group);
+    this.editor.execute('drupalElementStyle', { value: obj }, groupName);
     this.editor.editing.view.focus();
   }
 
