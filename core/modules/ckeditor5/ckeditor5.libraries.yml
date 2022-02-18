@@ -37,6 +37,7 @@ drupal.ckeditor5:
 # @see ckeditor5_library_info_alter()
 drupal.ckeditor5.stylesheets:
   version: VERSION
+  css: []
 
 drupal.ckeditor5.quickedit-temporary-work-around:
   deprecated: "Temporary work-around until https://www.drupal.org/project/drupal/issues/3196689 lands."

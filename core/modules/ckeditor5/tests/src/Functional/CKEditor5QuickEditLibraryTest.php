@@ -74,6 +74,9 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
     $this->drupalLogin($this->adminUser);
   }
 
+  /**
+   * Tests that the Quick Edit workaround css loads when needed.
+   */
   public function testQuickeditTemporaryWorkaround() {
     $assert_session = $this->assertSession();
 
