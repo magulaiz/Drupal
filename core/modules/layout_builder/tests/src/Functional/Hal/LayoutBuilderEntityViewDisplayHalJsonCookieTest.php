@@ -8,7 +8,7 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
  * @group layout_builder
  * @group rest
  */
-class LayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {
+class LayoutBuilderEntityViewDisplayHalJsonCookieTest extends QuickEditLayoutBuilderEntityViewDisplayHalJsonAnonTest {
 
   use CookieResourceTestTrait;
 
