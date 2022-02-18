@@ -685,8 +685,6 @@ function _ckeditor5_stylesheets_warning() {
  *   The config of the theme to check.
  * @param string[] $ckeditor_stylesheets_use
  *   Themes using ckeditor_stylesheets without a CKEditor 5 equivalent.
- *
- * @return void
  */
 function _ckeditor5_check_stylesheets_equivalent(array $theme_info, array &$ckeditor_stylesheets_use): void {
   $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
