@@ -274,7 +274,7 @@ tfoot tr:first-child td {
 }
 
 .scrollable-table-wrapper label.visually-hidden {
-  /* Fixes the hidden label causing in incorrect width calculations. */
+  /* Fixes the hidden label causing incorrect width calculations. */
   left: 0;
 }
 
