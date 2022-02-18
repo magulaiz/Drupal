@@ -471,6 +471,7 @@ function _ckeditor5_theme_css($theme = NULL): array {
  * returned.
  *
  * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup|null
+ *   A warning message where appropriate, otherwise null.
  */
 function _ckeditor5_stylesheets_warning() {
   $themes = [];
@@ -521,7 +522,7 @@ function _ckeditor5_stylesheets_warning() {
  *
  * @return void
  */
-function _ckeditor5_check_stylesheets_equivalent($theme_info, &$ckeditor_stylesheets_use) {
+function _ckeditor5_check_stylesheets_equivalent(array $theme_info, array &$ckeditor_stylesheets_use): void {
   $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
   if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
     $ckeditor_stylesheets_use[] = $theme_info['name'];
