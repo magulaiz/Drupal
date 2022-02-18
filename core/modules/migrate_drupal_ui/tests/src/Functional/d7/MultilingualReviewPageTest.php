@@ -107,7 +107,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Node Reference',
       'Number',
       'OpenID',
-      'Options',
       'Overlay',
       'PHP filter',
       'Page manager',
@@ -151,7 +150,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   protected function getMissingPaths() {
     return [
       // Action is set not_finished in migrate_state_not_finished_test.
-      // Aggregator is set not_finished in migrate_state_not_finished_test.
       'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
@@ -166,6 +164,8 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',
+      // Options is set not_finished in migrate_state_not_finished_test.
+      'Options',
       'Path translation',
       'Picture',
       'References',
