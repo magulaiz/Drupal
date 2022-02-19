@@ -1197,10 +1197,8 @@ function _node_access_rebuild_batch_finished($success, $results, $operations) {
 function node_modules_installed(array $modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
-  if (!node_access_needs_rebuild()) {
-    if (\Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
-      node_access_needs_rebuild(TRUE);
-    }
+  if (!node_access_needs_rebuild() && \Drupal::moduleHandler()->hasImplementations('node_grants', $modules)) {
+    node_access_needs_rebuild(TRUE);
   }
 }
 
