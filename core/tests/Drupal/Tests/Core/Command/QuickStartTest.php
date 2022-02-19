@@ -50,7 +50,6 @@ class QuickStartTest extends TestCase {
    * {@inheritdoc}
    */
   public function setUp(): void {
-    $this->markTestSkipped();
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
@@ -135,34 +134,6 @@ class QuickStartTest extends TestCase {
     $response = $guzzle->get('http://127.0.0.1:' . $port, ['cookies' => $cookieJar]);
     $content = (string) $response->getBody();
     $this->assertStringContainsString('Test site ' . $this->testDb->getDatabasePrefix(), $content);
-
-    // Stop the web server.
-    $process->stop();
-  }
-
-  /**
-   * Tests that the installer throws a requirement error on older PHP versions.
-   */
-  public function testPhpRequirement() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) >= 0) {
-      $this->markTestSkipped();
-    }
-
-    $install_command = [
-      $this->php,
-      'core/scripts/drupal',
-      'quick-start',
-      'standard',
-      "--site-name='Test site {$this->testDb->getDatabasePrefix()}'",
-      '--suppress-login',
-    ];
-    $process = new Process($install_command, NULL, ['DRUPAL_DEV_SITE_PATH' => $this->testDb->getTestSitePath()]);
-    $process->setTimeout(500);
-    $process->run();
-    $error_output = $process->getErrorOutput();
-    $this->assertStringContainsString('Your PHP installation is too old.', $error_output);
-    $this->assertStringContainsString('Drupal requires at least PHP', $error_output);
-    $this->assertStringContainsString(\Drupal::MINIMUM_SUPPORTED_PHP, $error_output);
 
     // Stop the web server.
     $process->stop();
