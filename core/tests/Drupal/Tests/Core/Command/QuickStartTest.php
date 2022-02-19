@@ -85,9 +85,6 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start command.
    */
   public function testQuickStartCommand() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
-      $this->markTestSkipped();
-    }
     if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
     }
@@ -143,9 +140,6 @@ class QuickStartTest extends TestCase {
    * Tests the quick-start commands.
    */
   public function testQuickStartInstallAndServerCommands() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
-      $this->markTestSkipped();
-    }
     if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
       $this->markTestSkipped();
     }
