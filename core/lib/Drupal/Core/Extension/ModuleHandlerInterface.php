@@ -183,7 +183,7 @@ interface ModuleHandlerInterface {
    *
    * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the
    *   self::invoke*() methods instead. To pass arguments by reference or
-   *   process return values, use self::invoke*With*().
+   *   process return values, use self::invokeAllWith().
    *
    * @see https://www.drupal.org/node/3000490
    */
@@ -205,14 +205,14 @@ interface ModuleHandlerInterface {
    * @param string $hook
    *   The name of the hook (e.g. "help" or "menu").
    * @param string|string[]|null $modules
-   *   A single module or multiple modules to check if they have any
+   *   (optional) A single module or multiple modules to check if they have any
    *   implementations of a hook. Use NULL to check if any enabled module has
    *   implementations.
    *
    * @return bool
    *   If $modules is provided, then TRUE if there are any implementations by
-   *   the module(s) provided. Or if $modules if NULL, TRUE if there are any
-   *   implementations. Otherwise FALSE.
+   *   the module(s) provided. Or if $modules if NULL, then TRUE if there are
+   *   any implementations. Otherwise FALSE.
    */
   public function hasImplementations(string $hook, $modules = NULL): bool;
 
