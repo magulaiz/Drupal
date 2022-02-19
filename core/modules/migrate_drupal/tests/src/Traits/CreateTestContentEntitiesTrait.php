@@ -14,7 +14,7 @@ trait CreateTestContentEntitiesTrait {
    */
   protected function getRequiredModules() {
     return [
-      // @todo Remove aggregator when aggregator is removed from core.
+      // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
       'aggregator',
       'block_content',
       'comment',
@@ -54,7 +54,7 @@ trait CreateTestContentEntitiesTrait {
   protected function createContent() {
     $entity_type_manager = \Drupal::entityTypeManager();
 
-    // @todo Remove aggregator when aggregator is removed from core.
+    // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
     // Create an aggregator feed.
     if ($entity_type_manager->hasDefinition('aggregator_feed')) {
       $feed = $entity_type_manager->getStorage('aggregator_feed')->create([
