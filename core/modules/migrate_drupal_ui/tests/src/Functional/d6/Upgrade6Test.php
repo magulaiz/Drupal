@@ -23,7 +23,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     'config_translation',
     'content_translation',
     'datetime_range',
-    'forum',
     'language',
     'migrate_drupal_ui',
     'statistics',
@@ -70,7 +69,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     return [
       'aggregator_item' => 1,
       'aggregator_feed' => 2,
-      'block' => 34,
+      'block' => 32,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
@@ -81,8 +80,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'contact_message' => 0,
       'configurable_language' => 5,
       'editor' => 2,
-      'field_config' => 103,
-      'field_storage_config' => 71,
+      'field_config' => 102,
+      'field_storage_config' => 70,
       'file' => 7,
       'filter_format' => 7,
       'image_style' => 6,
@@ -91,7 +90,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'rdf_mapping' => 7,
+      'rdf_mapping' => 5,
       'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,
@@ -106,11 +105,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'menu_link_content' => 10,
       'view' => 16,
       'date_format' => 11,
-      'entity_form_display' => 31,
+      'entity_form_display' => 30,
       'entity_form_mode' => 1,
-      'entity_view_display' => 61,
+      'entity_view_display' => 60,
       'entity_view_mode' => 14,
-      'base_field_override' => 41,
+      'base_field_override' => 40,
     ];
   }
 
@@ -121,14 +120,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 9;
-    $counts['entity_view_display'] = 61;
-    $counts['entity_view_mode'] = 14;
     $counts['file'] = 8;
     $counts['menu_link_content'] = 11;
     $counts['node'] = 19;
     $counts['taxonomy_term'] = 16;
     $counts['user'] = 8;
-    $counts['view'] = 16;
     return $counts;
   }
 
@@ -151,7 +147,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'Email',
       'FileField',
       'Filter',
-      'Forum',
       'ImageCache',
       'ImageField',
       'Internationalization',
@@ -192,7 +187,9 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function getMissingPaths() {
-    return [];
+    return [
+      'Forum',
+    ];
   }
 
   /**

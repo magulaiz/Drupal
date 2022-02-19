@@ -401,8 +401,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'update',
       'user',
       'views_ui',
-      'forum',
-      'menu_link_content',
+        'menu_link_content',
       'views',
       'standard',
     ];

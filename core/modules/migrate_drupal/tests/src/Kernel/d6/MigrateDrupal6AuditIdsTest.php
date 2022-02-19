@@ -35,7 +35,6 @@ class MigrateDrupal6AuditIdsTest extends MigrateDrupal6TestBase {
     // Install required schemas.
     $this->installSchema('book', ['book']);
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('forum', ['forum_index']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);
     $this->installSchema('system', ['sequences']);

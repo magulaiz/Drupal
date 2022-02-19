@@ -34,9 +34,6 @@ process:
           0: book_navigation
         comment:
           0: views_block:comments_recent-block_1
-        forum:
-          0: forum_active_block
-          1: forum_new_block
         locale:
           0: language_block
         node:

@@ -30,7 +30,6 @@ class DbLogTest extends BrowserTestBase {
     'dblog',
     'error_test',
     'node',
-    'forum',
     'help',
     'block',
   ];

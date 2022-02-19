@@ -25,7 +25,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     'node',
     'aggregator',
     'book',
-    'forum',
     'path_alias',
     'statistics',
   ];
@@ -98,7 +97,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
    */
   public function testBlockMigration() {
     $blocks = Block::loadMultiple();
-    $this->assertCount(14, $blocks);
+    $this->assertCount(12, $blocks);
 
     // Check user blocks.
     $visibility = [
@@ -215,31 +214,6 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'block_mode' => 'book pages',
     ];
     $this->assertEntity('book', [], 'sidebar_second', 'bartik', -4, $settings);
-
-    // Check forum block settings.
-    $settings = [
-      'id' => 'forum_active_block',
-      'label' => '',
-      'provider' => 'forum',
-      'label_display' => '0',
-      'block_count' => 3,
-      'properties' => [
-        'administrative' => '1',
-      ],
-    ];
-    $this->assertEntity('forum', [], 'sidebar_first', 'bartik', -8, $settings);
-
-    $settings = [
-      'id' => 'forum_new_block',
-      'label' => '',
-      'provider' => 'forum',
-      'label_display' => '0',
-      'block_count' => 4,
-      'properties' => [
-        'administrative' => '1',
-      ],
-    ];
-    $this->assertEntity('forum_1', [], 'sidebar_first', 'bartik', -9, $settings);
 
     // Check statistic block settings.
     $settings = [

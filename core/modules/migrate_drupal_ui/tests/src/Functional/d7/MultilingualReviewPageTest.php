@@ -26,7 +26,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'telephone',
     'aggregator',
     'book',
-    'forum',
     'statistics',
     'syslog',
     'tracker',
@@ -92,7 +91,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Field UI',
       'File',
       'Filter',
-      'Forum',
       'Help',
       'Image',
       'Internationalization',
@@ -163,6 +161,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Flexslider_picture is a sub module of Picture module. Only the
       // styles from picture are migrated.
       'FlexSlider Picture',
+      'Forum',
       'Multilingual content',
       'Multilingual forum',
       'Multilingual select',

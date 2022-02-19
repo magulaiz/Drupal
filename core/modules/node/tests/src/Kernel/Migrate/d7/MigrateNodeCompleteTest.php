@@ -166,7 +166,6 @@ class MigrateNodeCompleteTest extends MigrateDrupal7TestBase {
       'article',
       'blog',
       'book',
-      'forum',
       'page',
       'test_content_type',
     ];
