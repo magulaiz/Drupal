@@ -26,6 +26,7 @@ class MigrationPluginListTest extends KernelTestBase {
     'migrate',
     // Test with all modules containing Drupal migrations.
     'action',
+    // @todo Remove aggregator when aggregator is removed from core.
     'aggregator',
     'ban',
     'block',

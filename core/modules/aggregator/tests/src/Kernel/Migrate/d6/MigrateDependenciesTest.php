@@ -1,10 +1,9 @@
 <?php
 
-namespace Drupal\Tests\aggregator\Kernel;
+namespace Drupal\Tests\aggregator\Kernel\Migrate\d6;
 
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\migrate\MigrateExecutable;
-use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
  * Ensure the consistency among the dependencies for migrate.

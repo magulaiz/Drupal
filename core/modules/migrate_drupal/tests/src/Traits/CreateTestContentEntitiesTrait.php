@@ -14,6 +14,7 @@ trait CreateTestContentEntitiesTrait {
    */
   protected function getRequiredModules() {
     return [
+      // @todo Remove aggregator when aggregator is removed from core.
       'aggregator',
       'block_content',
       'comment',
@@ -53,6 +54,7 @@ trait CreateTestContentEntitiesTrait {
   protected function createContent() {
     $entity_type_manager = \Drupal::entityTypeManager();
 
+    // @todo Remove aggregator when aggregator is removed from core.
     // Create an aggregator feed.
     if ($entity_type_manager->hasDefinition('aggregator_feed')) {
       $feed = $entity_type_manager->getStorage('aggregator_feed')->create([
