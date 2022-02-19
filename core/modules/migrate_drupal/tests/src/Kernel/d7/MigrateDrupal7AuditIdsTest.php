@@ -127,6 +127,9 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     );
 
     $expected = [
+      // @todo Remove aggregator when aggregator is removed from core.
+      'd7_aggregator_feed',
+      'd7_aggregator_item',
       'd7_comment',
       'd7_custom_block',
       'd7_file',
