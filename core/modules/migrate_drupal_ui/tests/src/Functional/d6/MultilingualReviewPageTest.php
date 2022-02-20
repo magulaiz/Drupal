@@ -25,7 +25,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
     'content_translation',
     'config_translation',
     'telephone',
-    'aggregator',
     'book',
     'forum',
     'statistics',

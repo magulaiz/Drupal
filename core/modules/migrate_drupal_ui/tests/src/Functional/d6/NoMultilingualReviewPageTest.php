@@ -23,7 +23,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'datetime_range',
     'language',
     'telephone',
-    'aggregator',
     'book',
     'forum',
     'statistics',
