@@ -181,9 +181,10 @@ interface ModuleHandlerInterface {
    * @return array
    *   An array with the names of the modules which are implementing this hook.
    *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use the
-   *   self::invoke*() methods instead. To pass arguments by reference or
-   *   process return values, use self::invokeAllWith().
+   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead you
+   *   should use ModuleHandlerInterface::invokeAllWith() for hook invocations
+   *   or you should use ModuleHandlerInterface::hasImplementations() to
+   *   determine if hooks implementations exist.
    *
    * @see https://www.drupal.org/node/3000490
    */
