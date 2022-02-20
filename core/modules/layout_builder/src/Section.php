@@ -16,7 +16,7 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
  * @see \Drupal\Core\Layout\LayoutDefinition
  * @see \Drupal\layout_builder\SectionComponent
  */
-class Section implements ThirdPartySettingsInterface {
+class Section implements ThirdPartySettingsInterface, \JsonSerializable {
 
   /**
    * The layout plugin ID.
@@ -437,6 +437,16 @@ class Section implements ThirdPartySettingsInterface {
    */
   protected function contextHandler() {
     return \Drupal::service('context.handler');
+  }
+
+  /**
+   * Returns a representation of the section for use in JSON serialization.
+   *
+   * @return array
+   *   Representation of the section.
+   */
+  public function jsonSerialize() {
+    return $this->toArray();
   }
 
 }

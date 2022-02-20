@@ -24,7 +24,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   /**
    * @covers ::getContext
    */
-  public function testGetContextMissingEntityTypeId() {
+  public function testGetContextMissingEntityTypeId(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $cache_context = new LayoutBuilderIsActiveCacheContext($route_match->reveal());
     $this->expectException(\LogicException::class);
@@ -36,7 +36,7 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
    * @covers ::getContext
    * @covers ::getDisplay
    */
-  public function testGetContextNonFieldableEntity() {
+  public function testGetContextNonFieldableEntity(): void {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $route_match->getParameter('not_a_fieldable_entity')->willReturn('something that is not a fieldable entity');
 
