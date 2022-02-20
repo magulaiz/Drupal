@@ -8,4 +8,11 @@ use Drupal\Tests\layout_builder\Functional\Hal\LayoutBuilderEntityViewDisplayHal
  * @group layout_builder
  * @group rest
  */
-class QuickEditLayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {}
+class QuickEditLayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['quickedit'];
+
+}

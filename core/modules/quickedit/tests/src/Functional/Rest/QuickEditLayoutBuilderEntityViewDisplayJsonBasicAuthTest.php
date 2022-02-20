@@ -8,4 +8,11 @@ use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayJs
  * @group quickedit
  * @group rest
  */
-class QuickEditLayoutBuilderEntityViewDisplayJsonBasicAuthTest extends LayoutBuilderEntityViewDisplayJsonBasicAuthTest {}
+class QuickEditLayoutBuilderEntityViewDisplayJsonBasicAuthTest extends LayoutBuilderEntityViewDisplayJsonBasicAuthTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['quickedit'];
+
+}

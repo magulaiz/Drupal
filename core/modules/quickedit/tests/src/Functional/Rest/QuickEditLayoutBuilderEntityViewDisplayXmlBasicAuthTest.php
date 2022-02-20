@@ -8,4 +8,11 @@ use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayXm
  * @group quickedit
  * @group rest
  */
-class QuickEditLayoutBuilderEntityViewDisplayXmlBasicAuthTest extends LayoutBuilderEntityViewDisplayXmlBasicAuthTest {}
+class QuickEditLayoutBuilderEntityViewDisplayXmlBasicAuthTest extends LayoutBuilderEntityViewDisplayXmlBasicAuthTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['quickedit'];
+
+}
