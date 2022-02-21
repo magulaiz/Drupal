@@ -307,14 +307,6 @@ function system_requirements($phase) {
     elseif ($phase === 'update') {
       $requirements['php']['severity'] = REQUIREMENT_WARNING;
     }
-    // Since we allow sites with unsupported PHP versions to still run Drupal
-    // updates, we also need to be able to run tests with those PHP versions,
-    // which requires the ability to install test sites. Not all tests are
-    // required to pass on these PHP versions, but we want to monitor which
-    // ones do and don't.
-    elseif ($phase === 'install' && drupal_valid_test_ua()) {
-      $requirements['php']['severity'] = REQUIREMENT_INFO;
-    }
   }
   // For PHP versions that are still supported but no longer recommended,
   // inform users of what's recommended, allowing them to take action before it
