@@ -253,7 +253,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['a' => FALSE, 'p' => FALSE],
     ];
 
-    // Wildcard tag.
+    // Wildcard tag., attribute and attribute value.
     yield '$block' => [
       '<$block class="text-align-left text-align-center text-align-right text-align-justify">',
       [],
@@ -391,8 +391,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ],
       ],
     ];
-
-    // @todo Test `data-*` attribute: https://www.drupal.org/project/drupal/issues/3260853
+    yield '<drupal-media data-*>' => [
+      '<drupal-media data-*>',
+      ['drupal-media' => ['data-*' => TRUE]],
+    ];
+    yield '<h2 id="jump-*">' => [
+      '<h2 id="jump-*">',
+      ['h2' => ['id' => ['jump-*' => TRUE]]],
+    ];
   }
 
   /**
@@ -460,6 +466,47 @@ class HTMLRestrictionsTest extends UnitTestCase {
           ],
         ],
         ['name' => 'br'],
+      ],
+    ];
+
+    // Wildcard tag, attribute and attribute value.
+    yield '$block' => [
+      new HTMLRestrictions(['$block' => ['data-*' => TRUE]]),
+      ['<$block data-*>'],
+      '<$block data-*>',
+      [
+        [
+          'name' => '$block',
+          'attributes' => [
+            'data-*' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media data-*>' => [
+      new HTMLRestrictions(['drupal-media' => ['data-*' => TRUE]]),
+      ['<drupal-media data-*>'],
+      '<drupal-media data-*>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            'data-*' => TRUE,
+          ],
+        ],
+      ],
+    ];
+    yield '<h2 id="jump-*">' => [
+      new HTMLRestrictions(['h2' => ['id' => ['jump-*' => TRUE]]]),
+      ['<h2 id="jump-*">'],
+      '<h2 id="jump-*">',
+      [
+        [
+          'name' => 'h2',
+          'attributes' => [
+            'id' => ['jump-*'],
+          ],
+        ],
       ],
     ];
   }
@@ -731,7 +778,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => 'b',
     ];
 
-    // Wildcard + matching tag cases.
+    // Wildcard tag + matching tag cases.
     yield 'wildcard + matching tag: attribute intersection — without possible resolving' => [
       'a' => new HTMLRestrictions(['p' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -803,7 +850,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => 'b',
     ];
 
-    // Wildcard + non-matching cases.
+    // Wildcard tag + non-matching tag cases.
     yield 'wildcard + non-matching tag: attribute diff — without possible resolving' => [
       'a' => new HTMLRestrictions(['span' => ['class' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -861,7 +908,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => new HTMLRestrictions(['span' => ['class' => ['vertical-align-top' => TRUE, 'vertical-align-bottom' => TRUE]], '$block' => ['class' => ['vertical-align-top' => TRUE]]]),
     ];
 
-    // Wildcard + wildcard cases.
+    // Wildcard tag + wildcard tag cases.
     yield 'wildcard + wildcard tag: attributes' => [
       'a' => new HTMLRestrictions(['$block' => ['class' => TRUE, 'foo' => TRUE]]),
       'b' => new HTMLRestrictions(['$block' => ['class' => TRUE]]),
@@ -889,6 +936,22 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
+    ];
+
+    // Concrete attributes + wildcard attribute cases.
+    yield 'concrete attrs + wildcard attr' => [
+      'a' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
+    yield 'concrete attrs + wildcard attr — vice versa' => [
+      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
+      'diff' => 'a',
+      'intersection' => 'b',
+      'union' => 'a',
     ];
   }
 
