@@ -68,8 +68,6 @@ class LocaleTranslatedSchemaDefinitionTest extends BrowserTestBase {
    * Tests that translations do not affect the update system.
    */
   public function testTranslatedUpdate() {
-    $this->markTestSkipped();
-
     // Visit the update page to collect any strings that may be translatable.
     $user = $this->drupalCreateUser(['administer software updates']);
     $this->drupalLogin($user);
