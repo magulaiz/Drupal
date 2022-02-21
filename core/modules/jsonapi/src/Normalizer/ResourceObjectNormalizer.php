@@ -10,6 +10,7 @@ use Drupal\jsonapi\JsonApiResource\Relationship;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
  * Converts the JSON:API module ResourceObject into a JSON:API array structure.
@@ -192,7 +193,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       // @todo Replace this workaround after https://www.drupal.org/node/3043245
       //   or remove the need for this in https://www.drupal.org/node/2942975.
       //   See \Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer.
-      if (is_a($context['resource_object']->getResourceType()->getDeserializationTargetClass(), 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay', TRUE) && $context['resource_object']->getField('third_party_settings') === $field) {
+      if (is_a($context['resource_object']->getResourceType()->getDeserializationTargetClass(), LayoutBuilderEntityViewDisplay::class, TRUE) && $context['resource_object']->getField('third_party_settings') === $field) {
         unset($field['layout_builder']['sections']);
       }
 
