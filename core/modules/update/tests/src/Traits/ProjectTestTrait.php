@@ -3,7 +3,7 @@
 namespace Drupal\Tests\update\Traits;
 
 /**
- * Provides a trait for or setting project versions.
+ * Provides a trait for altering project information during tests.
  */
 trait ProjectTestTrait {
 
@@ -11,7 +11,7 @@ trait ProjectTestTrait {
    * Sets the project versions.
    *
    * @param array $system_info
-   *   The system information.
+   *   The system information as used by 'update_test_system_info_alter()'.
    *
    * @see update_test_system_info_alter()
    */
