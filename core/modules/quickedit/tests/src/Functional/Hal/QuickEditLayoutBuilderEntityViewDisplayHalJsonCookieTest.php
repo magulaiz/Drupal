@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\quickedit\Functional\Hal;
 
-use Drupal\Tests\layout_builder\Functional\Hal\LayoutBuilderEntityViewDisplayHalJsonAnonTest;
+use Drupal\Tests\layout_builder\Functional\Hal\LayoutBuilderEntityViewDisplayHalJsonCookieTest;
 
 /**
  * @group quickedit
  * @group rest
  */
-class QuickEditLayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {
+class QuickEditLayoutBuilderEntityViewDisplayHalJsonCookieTest extends LayoutBuilderEntityViewDisplayHalJsonCookieTest {
 
   /**
    * {@inheritdoc}
