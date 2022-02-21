@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\quickedit\Functional\Hal;
+namespace Drupal\Tests\hal\Functional\quickedit;
 
-use Drupal\Tests\layout_builder\Functional\Hal\LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest;
+use Drupal\Tests\hal\Functional\layout_builder\LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest;
 
 /**
  * @group quickedit
