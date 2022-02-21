@@ -24,10 +24,6 @@ trait RequirementsPageTrait {
   /**
    * Continues installation when the expected warnings are found.
    *
-   * This function is no longer called by any core test, but it is retained for
-   * use by contrib/custom tests. It is not deprecated, because it remains the
-   * recommended function to call for its purpose.
-   *
    * @param string[] $expected_warnings
    *   A list of warning summaries to expect on the requirements screen (e.g.
    *   'PHP', 'PHP OPcode caching', etc.). If only the expected warnings
