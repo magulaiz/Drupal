@@ -476,10 +476,21 @@ ckeditor5_imageAlign:
         toolbar:
           - name: 'imageStyle:icons'
             items:
+              - 'imageStyle:block'
               - 'imageStyle:alignLeft'
               - 'imageStyle:alignCenter'
               - 'imageStyle:alignRight'
-            defaultItem: 'imageStyle:alignCenter'
+              - 'imageStyle:inline'
+            defaultItem: 'imageStyle:block'
+        styles:
+          options:
+            - alignLeft
+            - alignCenter
+            - alignRight
+            - inline
+            - name: 'block'
+              icon: 'left'
+              title: 'Break text'
   drupal:
     label: Image align
     elements:
@@ -565,14 +576,20 @@ media_mediaAlign:
             attributeName: 'data-align'
             attributeValue: 'center'
             modelElements: ['drupalMedia']
+          - name: 'breakText'
+            title: 'Break text'
+            icon: 'objectBlockLeft'
+            isDefault: true
+            modelElements: [ 'drupalMedia' ]
       drupalMedia:
         toolbar:
           - name: 'drupalMedia:align'
             items:
+              - 'drupalElementStyle:breakText'
               - 'drupalElementStyle:alignLeft'
               - 'drupalElementStyle:alignCenter'
               - 'drupalElementStyle:alignRight'
-            defaultItem: 'drupalElementStyle:alignCenter'
+            defaultItem: 'drupalElementStyle:breakText'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign
