@@ -29,6 +29,14 @@ class InstallerProfileRequirementsTest extends InstallerTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function setUpRequirementsProblem() {
+    // Override, since we expect an error here, and the parent asserts there is
+    // no error.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpSite() {
     // This form will never be reached.
   }

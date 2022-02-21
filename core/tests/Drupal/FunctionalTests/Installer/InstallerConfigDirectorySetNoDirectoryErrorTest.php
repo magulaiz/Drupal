@@ -50,6 +50,14 @@ class InstallerConfigDirectorySetNoDirectoryErrorTest extends InstallerTestBase 
   /**
    * {@inheritdoc}
    */
+  protected function setUpRequirementsProblem() {
+    // Override, since we expect an error here, and the parent asserts there is
+    // no error.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUpSite() {
     // This step should not appear as we had a failure prior to the settings
     // screen.

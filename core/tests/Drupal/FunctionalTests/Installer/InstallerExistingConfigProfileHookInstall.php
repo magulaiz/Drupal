@@ -35,6 +35,14 @@ EOF;
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUpRequirementsProblem() {
+    // Override, since we expect an error here, and the parent asserts there is
+    // no error.
+  }
+
+  /**
    * Final installer step: Configure site.
    */
   protected function setUpSite() {
