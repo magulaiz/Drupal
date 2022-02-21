@@ -8,9 +8,7 @@
 (($, Drupal) => {
   function init(tab) {
     const $tab = $(tab);
-    const $target = $tab
-      .find('[data-drupal-nav-tabs-target]')
-      .not('.js-tabs-secondary');
+    const $target = $tab.find('[data-drupal-nav-tabs-target]');
     const $active = $target.find('.js-active-tab');
 
     const openMenu = () => {
