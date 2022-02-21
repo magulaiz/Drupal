@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormSubmitterInterface;
 use Drupal\Core\Queue\Batch;
 use Drupal\Core\Queue\BatchMemory;
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -96,11 +97,18 @@ class BatchProcessor implements BatchProcessorInterface {
   protected $routeMatch;
 
   /**
-   * In memory batch  cache.
+   * In memory batch cache.
    *
    * @var array
    */
-  protected $batch;
+  protected $batch = [];
+
+  /**
+   * Queue list storage.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface[]
+   */
+  protected $queues = [];
 
   /**
    * Creates a new BatchProcessor.
@@ -128,7 +136,6 @@ class BatchProcessor implements BatchProcessorInterface {
     $this->moduleHandler = $module_handler;
     $this->themeManager = $theme_manager;
     $this->routeMatch = $route_match;
-    $this->batch = [];
   }
 
   /**
@@ -256,20 +263,14 @@ class BatchProcessor implements BatchProcessorInterface {
    * {@inheritdoc}
    */
   public function getQueue(array $batch_set) {
-    static $queues;
-
-    if (!isset($queues)) {
-      $queues = [];
-    }
-
     if (isset($batch_set['queue'])) {
       $name = $batch_set['queue']['name'];
       $class = $batch_set['queue']['class'];
 
-      if (!isset($queues[$class][$name])) {
-        $queues[$class][$name] = new $class($name, $this->getConnection());
+      if (!isset($this->queues[$class][$name])) {
+        $this->queues[$class][$name] = new $class($name, $this->getConnection());
       }
-      return $queues[$class][$name];
+      return $this->queues[$class][$name];
     }
   }
 
