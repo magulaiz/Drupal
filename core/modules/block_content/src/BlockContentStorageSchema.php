@@ -18,8 +18,7 @@ class BlockContentStorageSchema extends SqlContentEntityStorageSchema {
     $field_name = $storage_definition->getName();
 
     if ($table_name === $this->storage->getDataTable()) {
-      // Add index to moderation state to improve performance for the
-      // views plugins that join using this column.
+      // Add index to 'reusable' to improve performance when filtering on this field
       if ($field_name === 'reusable') {
         $this->addSharedTableFieldIndex($storage_definition, $schema);
       }
