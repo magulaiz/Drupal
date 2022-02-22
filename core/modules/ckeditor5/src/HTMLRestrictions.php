@@ -413,6 +413,28 @@ final class HTMLRestrictions {
       ARRAY_FILTER_USE_BOTH
     );
 
+    // Special case: `data-` attributes, and the ability to define restrictions
+    // for all of them using `data-*`.
+    foreach ($diff_elements as $tag => $tag_config) {
+      // If `data-*` is allowed in $other, then all `data-`-attributes are
+      // allowed. Then we need to explicitly omit them from the difference.
+      if (isset($other->elements[$tag]['data-*'])) {
+        $other_data_attribute_restrictions = $other->elements[$tag]['data-*'];
+        foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $other_data_attribute_restrictions) {
+            unset($tag_config[$html_tag_attribute_name]);
+          }
+        }
+
+        if ($tag_config !== []) {
+          $diff_elements[$tag] = $tag_config;
+        }
+        else {
+          unset($diff_elements[$tag]);
+        }
+      }
+    }
+
     return new self($diff_elements);
   }
 
@@ -504,6 +526,31 @@ final class HTMLRestrictions {
       if ($intersection[$tag] === []) {
         $intersection[$tag] = FALSE;
       }
+    }
+
+    // Special case: `data-` attributes, and the ability to define restrictions
+    // for all of them using `data-*`.
+    foreach ($intersection as $tag => $tag_config) {
+      $other_has_wildcard = isset($other->elements[$tag]['data-*']);
+      $this_has_wildcard = isset($this->elements[$tag]['data-*']);
+      // If `data-*` is allowed in both or neither, no adjustment necessary: the
+      // intersection is already correct.
+      if ($other_has_wildcard === $this_has_wildcard) {
+        continue;
+      }
+      // Otherwise, `data-*` is allowed in one of the two, and the intersection
+      // must contain the most restrictive of the two.
+      $wildcard_operand = $other_has_wildcard ? $other : $this;
+      $concrete_operand = $other_has_wildcard ? $this : $other;
+      $concrete_tag_config = $concrete_operand->elements[$tag];
+      $wildcard_attribute_restriction = $wildcard_operand->elements[$tag]['data-*'];
+      foreach ($concrete_tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+        if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $wildcard_attribute_restriction) {
+          $tag_config = $tag_config === FALSE ? [] : $tag_config;
+          $tag_config[$html_tag_attribute_name] = $html_tag_attribute_restrictions;
+        }
+      }
+      $intersection[$tag] = $tag_config;
     }
 
     return new self($intersection);
@@ -598,6 +645,27 @@ final class HTMLRestrictions {
         }
       }
     }
+
+    // Special case: `data-` attributes, and the ability to define restrictions
+    // for all of them using `data-*`.
+    foreach ($union as $tag => $tag_config) {
+      // If `data-*` is allowed in either one, then all `data-`-attributes are
+      // allowed. Then we must explicitly the concrete ones in favor of the
+      // wildcard one.
+      if (isset($tag_config['data-*'])) {
+        $wildcard_attribute_restrictions = $tag_config['data-*'];
+        foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          if ($html_tag_attribute_name === 'data-*') {
+            continue;
+          }
+          if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $wildcard_attribute_restrictions) {
+            unset($tag_config[$html_tag_attribute_name]);
+          }
+        }
+        $union[$tag] = $tag_config;
+      }
+    }
+
     return new self($union);
   }
 
@@ -641,6 +709,19 @@ final class HTMLRestrictions {
     // @codingStandardsIgnoreEnd
 
     return new self($concrete_op_result->elements + $wildcard_op_result->elements);
+  }
+
+  /**
+   * Checks whether the given attribute name is a data- attribute.
+   *
+   * @param string $attribute_name
+   *   The attribute name to check.
+   *
+   * @return bool
+   *   Whether the given attribute name starts with `data-`.
+   */
+  private static function isDataAttribute(string $attribute_name): bool {
+    return substr($attribute_name, 0, 5) === 'data-';
   }
 
   /**
