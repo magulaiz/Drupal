@@ -939,19 +939,47 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     // Concrete attributes + wildcard attribute cases.
-    yield 'concrete attrs + wildcard attr' => [
+    yield 'concrete attrs + wildcard attr that covers a superset' => [
       'a' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
       'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
       'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
     ];
-    yield 'concrete attrs + wildcard attr — vice versa' => [
+    yield 'concrete attrs + wildcard attr that covers a superset — vice versa' => [
       'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
       'b' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
       'diff' => 'a',
       'intersection' => 'b',
       'union' => 'a',
+    ];
+    yield 'concrete attrs + wildcard attr that covers a subset' => [
+      'a' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+      'intersection' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
+      'union' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
+    ];
+    yield 'concrete attrs + wildcard attr that covers a subset — vice versa' => [
+      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+      'diff' => 'a',
+      'intersection' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
+      'union' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
+    ];
+    yield 'wildcard attr + wildcard attr' => [
+      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'wildcard attr + wildcard attr — vice versa' => [
+      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
+      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
     ];
   }
 
