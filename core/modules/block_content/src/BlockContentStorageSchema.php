@@ -17,7 +17,7 @@ class BlockContentStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
     $field_name = $storage_definition->getName();
 
-    if ($table_name == $this->storage->getDataTable()) {
+    if ($table_name === $this->storage->getDataTable()) {
       // Add index to moderation state to improve performance for the
       // views plugins that join using this column.
       if ($field_name === 'reusable') {
