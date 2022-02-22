@@ -474,14 +474,21 @@ ckeditor5_imageAlign:
     config:
       image:
         toolbar:
-          - name: 'imageStyle:icons'
+          - '|'
+          - 'imageStyle:inline'
+          - name: 'imageStyle:drupalWrapText'
+            title: 'Wrap text'
+            items:
+              - 'imageStyle:alignLeft'
+              - 'imageStyle:alignRight'
+            defaultItem: 'imageStyle:alignLeft'
+          - name: 'imageStyle:drupalBreakText'
+            title: 'Break text'
             items:
               - 'imageStyle:block'
-              - 'imageStyle:alignLeft'
               - 'imageStyle:alignCenter'
-              - 'imageStyle:alignRight'
-              - 'imageStyle:inline'
             defaultItem: 'imageStyle:block'
+          - '|'
         styles:
           options:
             - alignLeft
@@ -490,7 +497,7 @@ ckeditor5_imageAlign:
             - inline
             - name: 'block'
               icon: 'left'
-              title: 'Break text'
+              title: 'No alignment'
   drupal:
     label: Image align
     elements:
@@ -577,19 +584,26 @@ media_mediaAlign:
             attributeValue: 'center'
             modelElements: ['drupalMedia']
           - name: 'breakText'
-            title: 'Break text'
+            title: 'No alignment'
             icon: 'objectBlockLeft'
             isDefault: true
             modelElements: [ 'drupalMedia' ]
       drupalMedia:
         toolbar:
+          - '|'
+          - name: 'drupalMedia:wrapText'
+            title: 'Wrap text'
+            items:
+              - 'drupalElementStyle:alignLeft'
+              - 'drupalElementStyle:alignRight'
+            defaultItem: 'drupalElementStyle:alignLeft'
           - name: 'drupalMedia:align'
+            title: 'Break text'
             items:
               - 'drupalElementStyle:breakText'
-              - 'drupalElementStyle:alignLeft'
               - 'drupalElementStyle:alignCenter'
-              - 'drupalElementStyle:alignRight'
             defaultItem: 'drupalElementStyle:breakText'
+          - '|'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign

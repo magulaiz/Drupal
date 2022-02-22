@@ -330,7 +330,7 @@ class ImageTest extends CKEditor5TestBase {
     $this->host->save();
 
     $image_selector = $image_type === 'block' ? '.ck-widget.image' : '.ck-widget.image-inline';
-    $default_alignment = $image_type === 'block' ? 'Break text' : 'In line';
+    $default_alignment = $image_type === 'block' ? 'Break text: No alignment' : 'In line';
 
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
@@ -339,11 +339,18 @@ class ImageTest extends CKEditor5TestBase {
     // Ensure that the default alignment option matches expectation.
     $this->click($image_selector);
     $this->assertVisibleBalloon('[aria-label="Image toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton($default_alignment))->hasClass('ck-on'));
+    $this->assertTrue($this->getBalloonButton($default_alignment)->hasClass('ck-on'));
+    $this->assertNotEmpty($align_button = $this->getBalloonButton('Break text: No alignment'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('img')
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+    // Align button needs to be clicked twice for an inline image since the
+    // first click will convert it to "No alignment" style and second click will
+    // open the panel.
+    if ($image_type === 'inline') {
+      $align_button->click();
+    }
     $align_button->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-dropdown__panel-visible'));
     $this->getBalloonButton('Centered image')->click();
@@ -369,10 +376,10 @@ class ImageTest extends CKEditor5TestBase {
     // Ensure that "Centered image" alignment option is selected.
     $this->click('.ck-widget.image');
     $this->assertVisibleBalloon('[aria-label="Image toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton('Centered image'))->hasClass('ck-on'));
+    $this->assertTrue(($align_button = $this->getBalloonButton('Break text: Centered image'))->hasClass('ck-on'));
     $align_button->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-dropdown__panel-visible'));
-    $this->getBalloonButton('Break text')->click();
+    $this->getBalloonButton('No alignment')->click();
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-widget.image.image-style-align-center'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('img')

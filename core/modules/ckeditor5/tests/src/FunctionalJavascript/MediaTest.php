@@ -655,7 +655,7 @@ class MediaTest extends WebDriverTestBase {
     // Ensure that by default the "Break text" alignment option is selected.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+    $this->assertTrue(($align_button = $this->getBalloonButton('Break text: No alignment'))->hasClass('ck-on'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
@@ -685,10 +685,10 @@ class MediaTest extends WebDriverTestBase {
     // Ensure that "Centered media" alignment option is selected.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->assertTrue(($align_button = $this->getBalloonButton('Centered media'))->hasClass('ck-on'));
+    $this->assertTrue(($align_button = $this->getBalloonButton('Break text: Centered media'))->hasClass('ck-on'));
     $align_button->click();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-dropdown__panel-visible'));
-    $this->getBalloonButton('Break text')->click();
+    $this->getBalloonButton('No alignment')->click();
     $this->assertTrue($assert_session->waitForElementRemoved('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
