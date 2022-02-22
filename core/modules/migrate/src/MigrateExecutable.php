@@ -17,6 +17,8 @@ use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+// cSpell:ignore destid idlist
+
 /**
  * Defines a migrate executable class.
  */
