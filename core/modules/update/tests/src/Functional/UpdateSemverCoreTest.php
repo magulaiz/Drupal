@@ -347,6 +347,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
+      'see update notifications'
     ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
@@ -383,6 +384,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       'administer site configuration',
       'administer modules',
       'administer themes',
+      'see update notifications'
     ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
