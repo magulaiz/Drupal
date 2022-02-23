@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\layout_builder\Functional\Update;
+namespace Drupal\Tests\block_content\Functional\Update;
 
 use Drupal\Core\Database\Database;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests the upgrade path for Layout Builder reusable column index.
+ * Tests the upgrade path for Block Content reusable column index.
  *
- * @group layout_builder
+ * @group block_content
  */
-class LayoutBuilderReusableIndexUpdatePathTest extends UpdatePathTestBase {
+class BlockContentReusableIndexUpdatePathTest extends UpdatePathTestBase {
 
   /**
    * {@inheritdoc}
@@ -22,7 +22,7 @@ class LayoutBuilderReusableIndexUpdatePathTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests the upgrade path for Layout Builder layout context mappings.
+   * Tests the upgrade path for Block Content reusable index.
    */
   public function testRunUpdates() {
     $connection = Database::getConnection();
@@ -33,5 +33,5 @@ class LayoutBuilderReusableIndexUpdatePathTest extends UpdatePathTestBase {
 
     $this->assertTrue($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index has been added.');
   }
-  
+
 }
