@@ -47,26 +47,28 @@ ENDPO;
    * {@inheritdoc}
    */
   protected function setUpProfile() {
+    // The test will never go past this step.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpSettings() {
+    // This step will never be reached.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpRequirementsProblem() {
-    // Override, since we expect an error here, and the parent asserts there is
-    // no error.
+    // The test will never go past this step.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpSite() {
+    // This step will never be reached.
   }
 
   /**
