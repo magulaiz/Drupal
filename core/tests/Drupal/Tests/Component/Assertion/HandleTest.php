@@ -24,7 +24,7 @@ class HandleTest extends TestCase {
    * @group legacy
    */
   public function testFormatDisplayName() {
-    $this->expectDeprecation('Drupal\Component\Assertion\Handle is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Instead, use assert_options(ASSERT_EXCEPTION, TRUE). See https://drupal.org/node/3105918');
+    $this->expectDeprecation('Drupal\Component\Assertion\Handle is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, use assert_options(ASSERT_EXCEPTION, TRUE). See https://drupal.org/node/3105918');
     $this->getMockBuilder(Handle::class)
       ->disableOriginalConstructor()
       ->getMock();
