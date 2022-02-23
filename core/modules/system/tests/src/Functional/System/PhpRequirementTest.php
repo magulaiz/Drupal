@@ -30,6 +30,14 @@ class PhpRequirementTest extends BrowserTestBase {
       'access site reports',
     ]);
     $this->drupalLogin($admin_user);
+
+    // Add trusted host settings so there are not out-of-scope errors.
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => ['^' . preg_quote(\Drupal::request()->getHost()) . '$'],
+      'required' => TRUE,
+    ];
+
+    $this->writeSettings($settings);
   }
 
   /**
