@@ -42,7 +42,6 @@ EOF;
     // this test expects a requirements error. Therefore, we override it to
     // suppress the parent's assertions.
     // @see static::testConfigSync()
-
   }
 
   /**
