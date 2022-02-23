@@ -442,14 +442,15 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield '$block wildcard' => [
-      new HTMLRestrictions(['$block' => ['class' => TRUE], 'div' => FALSE, 'span' => FALSE, 'blockquote' => ['cite' => TRUE]]),
-      ['<$block class>', '<div>', '<span>', '<blockquote cite>'],
-      '<$block class> <div> <span> <blockquote cite>',
+      new HTMLRestrictions(['$block' => ['class' => TRUE, 'data-*' => TRUE], 'div' => FALSE, 'span' => FALSE, 'blockquote' => ['cite' => TRUE]]),
+      ['<$block class data-*>', '<div>', '<span>', '<blockquote cite>'],
+      '<$block class data-*> <div> <span> <blockquote cite>',
       [
         [
           'name' => 'div',
+          'classes' => TRUE,
           'attributes' => [
-            'class' => TRUE,
+            'data-*' => TRUE,
           ],
         ],
         ['name' => 'span'],
@@ -457,8 +458,9 @@ class HTMLRestrictionsTest extends UnitTestCase {
           'name' => 'blockquote',
           'attributes' => [
             'cite' => TRUE,
-            'class' => TRUE,
+            'data-*' => TRUE,
           ],
+          'classes' => TRUE,
         ],
       ],
     ];
