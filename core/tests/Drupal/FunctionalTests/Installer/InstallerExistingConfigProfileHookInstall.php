@@ -38,8 +38,11 @@ EOF;
    * {@inheritdoc}
    */
   protected function setUpRequirementsProblem() {
-    // Override, since we expect an error here, and the parent asserts there is
-    // no error.
+    // The parent method asserts that there are no requirements errors, but
+    // this test expects a requirements error. Therefore, we override it to
+    // suppress the parent's assertions.
+    // @see static::testConfigSync()
+
   }
 
   /**
