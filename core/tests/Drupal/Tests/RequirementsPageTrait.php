@@ -64,7 +64,7 @@ trait RequirementsPageTrait {
    */
   protected function assertErrorSummaries(array $summaries) {
     $this->assertRequirementSummaries($summaries, 'error');
- }
+  }
 
   /**
    * Assert the given requirements section summaries are present on the page.
@@ -104,4 +104,5 @@ trait RequirementsPageTrait {
     }
     $this->assertEquals($summaries, $requirements);
   }
+
 }
