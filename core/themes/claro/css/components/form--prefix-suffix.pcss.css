@@ -13,9 +13,9 @@
   box-sizing: border-box;
   padding: calc(var(--space-xs) / 2) var(--space-xs);
   white-space: nowrap;
-  color: var(--color-davysgray);
-  border: 1px solid var(--color-lightgray);
-  background: var(--color-whitesmoke);
+  color: var(--color-gray-800);
+  border: 1px solid var(--color-gray-200);
+  background: var(--color-gray-050);
 }
 
 .form-item__affix.is-disabled {
