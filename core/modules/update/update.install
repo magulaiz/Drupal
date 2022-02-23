@@ -189,7 +189,7 @@ function update_update_last_removed() {
  * This update grants 'see update notifications' permission to anyone who has had
  * this permission through 'administer site configuration' in the past.
  */
-function update_update_9300(&$sandbox) {
+function update_update_9400(&$sandbox) {
   $roles = user_roles(FALSE, 'administer site configuration');
   foreach (array_keys($roles) as $rid) {
     user_role_grant_permissions($rid, ['see update notifications']);
