@@ -10,6 +10,10 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
  *
  * Instantiating @EntityStorageInterface is expensive performance-wise.
  * Inject @EntityTypeManager and call @EntityStorageInterface when required.
+ *
+ * Storage implementations are no longer serializable because they carry a 
+ * required private property which won't be present when restored from 
+ * serialization.
  */
 abstract class EntityStorageBase extends EntityHandlerBase implements EntityStorageInterface, EntityHandlerInterface {
 
