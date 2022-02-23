@@ -7,7 +7,6 @@
  * @see phpunit.xml.dist
  */
 
-use Drupal\Component\Assertion\Handle;
 use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
 /**
