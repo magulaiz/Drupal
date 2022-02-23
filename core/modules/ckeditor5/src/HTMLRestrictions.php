@@ -796,7 +796,8 @@ final class HTMLRestrictions {
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
-    foreach ($this->elements as $tag => $attributes) {
+    $elements = self::resolveWildcards($this)->getAllowedElements();
+    foreach ($elements as $tag => $attributes) {
       $to_allow = ['name' => $tag];
       assert($attributes === FALSE || is_array($attributes));
       if (is_array($attributes)) {
