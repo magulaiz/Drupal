@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
@@ -62,11 +61,11 @@ class PhpRequirementTest extends BrowserTestBase {
     // There should be an informational message if the PHP version is below the
     // recommended version.
     if (version_compare($phpversion, \Drupal::RECOMMENDED_PHP) < 0) {
-      $this->assertSession()->pageTextContains('It is recommended to upgrade to PHP version ' .\DRUPAL::RECOMMENDED_PHP . ' or higher');
+      $this->assertSession()->pageTextContains('It is recommended to upgrade to PHP version ' . \DRUPAL::RECOMMENDED_PHP . ' or higher');
     }
     // Otherwise, the message should not be there.
     else {
-      $this->assertSession()->pageTextNotContains('It is recommended to upgrade to PHP version ' .\DRUPAL::RECOMMENDED_PHP . ' or higher');
+      $this->assertSession()->pageTextNotContains('It is recommended to upgrade to PHP version ' . \DRUPAL::RECOMMENDED_PHP . ' or higher');
     }
   }
 
