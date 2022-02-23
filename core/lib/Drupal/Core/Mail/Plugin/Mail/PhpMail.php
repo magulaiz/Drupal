@@ -161,7 +161,7 @@ class PhpMail implements MailInterface {
    *
    * @see mail()
    */
-  protected function doMail(string $to, string $subject, string $message, $additional_headers = [], string $additional_params = ''): bool {
+  protected function doMail(string $to, string $subject, string $message, array|string $additional_headers = [], string $additional_params = ''): bool {
     return @mail(
       $to,
       $subject,
