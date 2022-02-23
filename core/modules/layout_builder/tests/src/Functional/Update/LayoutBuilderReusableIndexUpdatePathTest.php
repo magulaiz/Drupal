@@ -33,4 +33,5 @@ class LayoutBuilderReusableIndexUpdatePathTest extends UpdatePathTestBase {
 
     $this->assertTrue($connection->schema()->indexExists('block_content_field_data', 'block_content__reusable'), 'Block Content reusable index has been added.');
   }
+  
 }
