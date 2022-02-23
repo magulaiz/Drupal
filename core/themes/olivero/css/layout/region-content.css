@@ -27,3 +27,8 @@
     margin-bottom: 3.375rem
 }
   }
+
+.region--content pre {
+    overflow-x: scroll;
+    overflow-y: visible;
+  }

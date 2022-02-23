@@ -8,6 +8,10 @@
 .region--content {
   margin-block-end: var(--sp);
 
+  & pre {
+    overflow: scroll;
+  }
+
   @media (--md) {
     margin-block-end: var(--sp2);
   }
