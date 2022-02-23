@@ -294,19 +294,17 @@ function system_requirements($phase) {
         ':php_requirements' => 'https://www.drupal.org/docs/9/how-drupal-9-is-made-and-what-is-included/environment-requirements-of-drupal-9#s-php-version-requirement',
       ]
     );
-    $requirements['php']['severity'] = REQUIREMENT_WARNING;
 
     // If the PHP version is also below the absolute minimum allowed, it's not
-    // safe to continue with the requirements check.
+    // safe to continue with the requirements check, and should always be an
+    // error.
     if (version_compare($phpversion, \Drupal::MINIMUM_PHP) < 0) {
+      $requirements['php']['severity'] = REQUIREMENT_ERROR;
       return $requirements;
     }
-    // Otherwise downgrade the error to a warning during updates. Even if there
-    // are some problems with the site's PHP version, it's still better for the
-    // site to keep its Drupal codebase up to date.
-    elseif ($phase === 'update') {
-      $requirements['php']['severity'] = REQUIREMENT_WARNING;
-    }
+    // Otherwise, the message should be an error at runtime, and a warning
+    // during installation or update.
+    $requirements['php']['severity'] = ($phase === 'runtime') ? REQUIREMENT_ERROR : REQUIREMENT_WARNING;
   }
   // For PHP versions that are still supported but no longer recommended,
   // inform users of what's recommended, allowing them to take action before it
