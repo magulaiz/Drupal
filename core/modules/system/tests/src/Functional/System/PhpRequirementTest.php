@@ -42,8 +42,6 @@ class PhpRequirementTest extends BrowserTestBase {
 
   /**
    * Tests that the status page returns.
-   *
-   * @group legacy
    */
   public function testStatusPage() {
     // Go to Administration.
