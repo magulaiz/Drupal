@@ -3,6 +3,7 @@
 namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d6;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
 
 /**
  * Tests Drupal 6 upgrade using the migrate UI.
@@ -11,7 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  *
  * @group aggregator
  */
-class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
+class UpgradeTest extends MigrateUpgradeExecuteTestBase {
 
   /**
    * {@inheritdoc}
@@ -41,17 +42,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
-    // Delete the existing content made to test the ID Conflict form. Migrations
-    // are to be done on a site without content. The test of the ID Conflict
-    // form is being moved to its own issue which will remove the deletion
-    // of the created nodes.
-    // See https://www.drupal.org/project/drupal/issues/3087061.
-    $this->nodeStorage = $this->container->get('entity_type.manager')
-      ->getStorage('node');
-    $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
-
+    MigrateUpgradeTestBase::setUp();
     $this->loadFixture($this->getModulePath('aggregator') . '/tests/fixtures/drupal6.php');
   }
 
@@ -68,7 +59,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   protected function getEntityCounts() {
     return [
       'aggregator_item' => 1,
-      'aggregator_feed' => 2,
+      'aggregator_feed' => 1,
       'block' => 34,
       'block_content' => 2,
       'block_content_type' => 1,
@@ -82,7 +73,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'editor' => 2,
       'field_config' => 103,
       'field_storage_config' => 71,
-      'file' => 7,
+      'file' => 6,
       'filter_format' => 7,
       'image_style' => 6,
       'language_content_settings' => 15,
@@ -102,7 +93,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 6,
       'user' => 7,
       'user_role' => 7,
-      'menu_link_content' => 10,
+      'menu_link_content' => 9,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 31,

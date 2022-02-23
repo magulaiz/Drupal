@@ -3,6 +3,7 @@
 namespace Drupal\Tests\aggregator\Functional\migrate_drupal_ui\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
+use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
 
 // cspell:ignore Filefield Multiupload Imagefield
 
@@ -13,7 +14,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  *
  * @group aggregator
  */
-class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
+class UpgradeTest extends MigrateUpgradeExecuteTestBase {
 
   /**
    * {@inheritdoc}
@@ -42,17 +43,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
-    // Delete the existing content made to test the ID Conflict form. Migrations
-    // are to be done on a site without content. The test of the ID Conflict
-    // form is being moved to its own issue which will remove the deletion
-    // of the created nodes.
-    // See https://www.drupal.org/project/drupal/issues/3087061.
-    $this->nodeStorage = $this->container->get('entity_type.manager')
-      ->getStorage('node');
-    $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
-
+    MigrateUpgradeTestBase::setUp();
     $this->loadFixture($this->getModulePath('aggregator') . '/tests/fixtures/drupal7.php');
   }
 
@@ -68,7 +59,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 11,
+      'aggregator_item' => 10,
       'aggregator_feed' => 1,
       'block' => 25,
       'block_content' => 1,
@@ -103,7 +94,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'tour' => 6,
       'user' => 4,
       'user_role' => 4,
-      'menu_link_content' => 12,
+      'menu_link_content' => 11,
       'view' => 16,
       'date_format' => 11,
       'entity_form_display' => 24,
