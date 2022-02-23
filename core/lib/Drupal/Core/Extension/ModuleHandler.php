@@ -366,15 +366,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function hasImplementations(string $hook, $modules = NULL): bool {
-    $implementations = $this->getImplementationInfo($hook);
-    $hasImplementations = (NULL === $modules)
-      ? count($implementations) > 0
-      : count(array_intersect((array) $modules, array_keys($implementations))) > 0;
-
-    if ($hasImplementations) {
-      return TRUE;
-    }
-
     if ($modules !== NULL) {
       foreach ((array) $modules as $module) {
         // Some hooks need to be run in a pre-installed phase, where
@@ -383,6 +374,14 @@ class ModuleHandler implements ModuleHandlerInterface {
           return TRUE;
         }
       }
+    }
+
+    $implementations = $this->getImplementationInfo($hook);
+    if ($modules === NULL && !empty($implementations)) {
+      return TRUE;
+    }
+    elseif (!empty(array_intersect((array) $modules, array_keys($implementations)))) {
+      return TRUE;
     }
 
     return FALSE;
