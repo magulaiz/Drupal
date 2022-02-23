@@ -46,12 +46,16 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     // The single tag for which source editing is enabled, which we are checking
     // now.
     $source_enabled_tags = HTMLRestrictions::fromString($value);
+    // Test for empty allowed elements with resolved wildcards since for
+    // purposes of this validator, HTML restrictions with only wildcards should
+    // be considered as empty.
+    // @see \Drupal\ckeditor5\HTMLRestrictions::isEmpty
     // @todo Remove this early return in
     //   https://www.drupal.org/project/drupal/issues/2820364. It is only
     //   necessary because CKEditor5ElementConstraintValidator does not run
     //   before this, which means that this validator cannot assume it receives
     //   valid values.
-    if ($source_enabled_tags->isEmpty() || count($source_enabled_tags->getAllowedElements()) > 1) {
+    if (empty($source_enabled_tags->getAllowedElements(TRUE)) || count($source_enabled_tags->getAllowedElements()) > 1) {
       return;
     }
     // This validation constraint currently only validates tags, not attributes;

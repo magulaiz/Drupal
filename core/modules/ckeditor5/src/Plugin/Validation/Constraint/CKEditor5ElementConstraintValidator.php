@@ -25,7 +25,12 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
     if (!$constraint instanceof CKEditor5ElementConstraint) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\CKEditor5Element');
     }
-    $body_child_nodes = Html::load(str_replace('>', ' />', trim($element)))->getElementsByTagName('body')->item(0)->childNodes;
+
+    // Wilcard <$block> element needs to be converted into a regular element for
+    // the validation.
+    // @todo could we use \Drupal\ckeditor5\HTMLRestrictions::isWildcardTag here?
+    $normalized_element = preg_replace('/^<\$block/', '<block', $element);
+    $body_child_nodes = Html::load(str_replace('>', ' />', trim($normalized_element)))->getElementsByTagName('body')->item(0)->childNodes;
 
     if ($body_child_nodes->count() !== 1 || $body_child_nodes->item(0)->nodeType !== XML_ELEMENT_NODE) {
       $this->context->buildViolation($constraint->message)

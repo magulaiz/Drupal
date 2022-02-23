@@ -105,7 +105,7 @@ class SourceEditingTest extends CKEditor5TestBase {
       'type' => 'page',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<p>The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p>',
+        'value' => '<p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p>',
         'format' => 'test_format',
       ],
     ]);
@@ -130,10 +130,10 @@ class SourceEditingTest extends CKEditor5TestBase {
       // Keep the allowed HTML tags in sync.
       $text_format = FilterFormat::load('test_format');
       $allowed_elements = HTMLRestrictions::fromTextFormat($text_format);
-      $updated_allowed_tags = $allowed_elements->merge(HTMLRestrictions::fromString($allowed_elements_string));
+      $updated_allowed_tags = $allowed_elements->merge(HTMLRestrictions::fromString($allowed_elements_string))->getAllowedElements();
       $filter_html_config = $text_format->filters('filter_html')
         ->getConfiguration();
-      $filter_html_config['settings']['allowed_html'] = $updated_allowed_tags->toFilterHtmlAllowedTagsString();
+      $filter_html_config['settings']['allowed_html'] = (new HTMLRestrictions($updated_allowed_tags))->toFilterHtmlAllowedTagsString();
       $text_format->setFilterConfig('filter_html', $filter_html_config);
 
       // Verify the text format and editor are still a valid pair.
@@ -195,6 +195,12 @@ class SourceEditingTest extends CKEditor5TestBase {
       '<a class>' => [
         '<p>The <a class="button" href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
         '<a class>',
+      ],
+
+      // $block wildcard.
+      '<$block data-llama>' => [
+        '<p data-llama="🦙">The <a href="https://example.com/pirate">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<$block data-llama>',
       ],
 
       // Edge case: `style`.

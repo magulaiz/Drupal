@@ -75,7 +75,22 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
+    // Get HTML restrictions that has a list of elements with all attributes
+    // disallowed for all elements so that elements impacted by the union with
+    // source restrictions can be identified.
+    $filter_restrictions = new HTMLRestrictions(array_map(function () {
+      return FALSE;
+    }, HTMLRestrictions::fromTextFormat($editor->getFilterFormat())->getAllowedElements(FALSE)));
+    $source_restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
+    // Resolve wildcards from source restrictions to the elements from the
+    // filter restrictions. Remove elements that don't have any additional
+    // attributes added as a result of the union.
+    $additional_ghs_restrictions = new HTMLRestrictions(array_filter($filter_restrictions->merge($source_restrictions)->getAllowedElements(), function ($element) {
+      return !is_bool($element);
+    }));
+    // Finally, merge the additional GHS restrictions to the original set of
+    // restrictions.
+    $restrictions = $source_restrictions->merge($additional_ghs_restrictions);
     return [
       'htmlSupport' => [
         'allow' => $restrictions->toGeneralHtmlSupportConfig(),

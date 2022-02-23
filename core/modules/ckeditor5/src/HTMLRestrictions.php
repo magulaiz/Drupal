@@ -270,6 +270,10 @@ final class HTMLRestrictions {
     }
 
     $restrictions = $object->getHTMLRestrictions();
+    if (!isset($restrictions['allowed']) && !isset($restrictions['forbidden'])) {
+      return new self([]);
+    }
+
     if (!isset($restrictions['allowed'])) {
       // @todo Handle HTML restrictor filters that only set forbidden_tags
       //   https://www.drupal.org/project/ckeditor5/issues/3231336.
@@ -796,10 +800,10 @@ final class HTMLRestrictions {
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
-    // Resolve wildcards based on Drupal's assumptions on wilcards to retain
-    // backwards compatibility. This is possible since the CKEditor 5 GHS is
-    // always acting as a fallback for other plugins, meaning that if a tag or
-    // an attribute is supported by a plugin, they would always have an
+    // Resolve any remaining wildcards based on Drupal's assumptions on wilcards
+    // to retain backwards compatibility. This is possible since the CKEditor 5
+    // GHS is always acting as a fallback for other plugins, meaning that if a
+    // tag or an attribute is supported by a plugin, they would always have an
     // opportunity to consume the tag or the attribute before GHS.
     $elements = self::resolveWildcards($this)->getAllowedElements();
     foreach ($elements as $tag => $attributes) {
