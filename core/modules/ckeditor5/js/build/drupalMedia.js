@@ -2763,9 +2763,24 @@ function warnInvalidStyle( info ) {
 	DEFAULT_DROPDOWN_DEFINITIONS
 });
 
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/utils.js
+/**
+ * A simple helper function that returns the command group name.
+ *
+ * @example
+ *    groupName = 'viewMode' -> commandGroupName = 'drupalViewMode'
+ *
+ * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
+ * @return {string} Command group name.
+ */
+function getCommandGroupNameFromGroup(groupName) {
+  return 'drupal'.concat(groupName[0].toUpperCase() + groupName.substring(1));
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstylecommand.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words documentselection */
+
 
 
 /**
@@ -2787,8 +2802,8 @@ function warnInvalidStyle( info ) {
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
   for (const group of Object.keys(styles)) {
-    const groupName = group[0].toUpperCase() + group.substring(1);
-    return schema.checkAttribute(selectedElement, `drupal${groupName}`);
+    const groupName = getCommandGroupNameFromGroup(group);
+    return schema.checkAttribute(selectedElement, `${groupName}`);
   }
   return false;
 }
@@ -2886,8 +2901,8 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = group[0].toUpperCase() + group.substring(1);
-      if (element.hasAttribute(`drupal${groupName}`)) {
+      const groupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`${groupName}`)) {
         return true;
       }
     }
@@ -2908,11 +2923,9 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   getGroupAndAttribute(element) {
     const groupAttr = {};
     for (const group of Object.keys(this.styles)) {
-      const groupName = group[0].toUpperCase() + group.substring(1);
-      if (element.hasAttribute(`drupal${groupName}`)) {
-        groupAttr[`drupal${groupName}`] = element.getAttribute(
-          `drupal${groupName}`,
-        );
+      const groupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`${groupName}`)) {
+        groupAttr[`${groupName}`] = element.getAttribute(`${groupName}`);
       }
     }
     return groupAttr;
@@ -2965,6 +2978,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleediting.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstylecommand */
+
 
 
 
@@ -3241,7 +3255,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
       // Capitalize first letter to append in camelCase properly.
-      const groupName = group[0].toUpperCase() + group.substring(1);
+      const groupName = getCommandGroupNameFromGroup(group);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
@@ -3251,12 +3265,13 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
         groupName,
       );
 
+      // model
       editor.editing.downcastDispatcher.on(
-        `attribute:drupal${groupName}`,
+        `attribute:${groupName}`,
         modelToViewConverter,
       );
       editor.data.downcastDispatcher.on(
-        `attribute:drupal${groupName}`,
+        `attribute:${groupName}`,
         modelToViewConverter,
       );
 
@@ -3272,7 +3287,8 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
         ),
       ];
       modelElements.forEach((modelElement) => {
-        schema.extend(modelElement, { allowAttributes: `drupal${groupName}` });
+        // specific
+        schema.extend(modelElement, { allowAttributes: `${groupName}` });
       });
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(
@@ -3296,6 +3312,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleui.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
+
 
 
 
@@ -3616,7 +3633,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       });
 
       const command = this.editor.commands.get('drupalElementStyle');
-      const commandGroupName = this.getCommandGroupNameFromGroup(groupName);
+      const commandGroupName = getCommandGroupNameFromGroup(groupName);
 
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
@@ -3665,7 +3682,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    */
   _getDropdownListItemDefinitions(definedStyles, command, groupName) {
     const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
-    const commandGroup = this.getCommandGroupNameFromGroup(groupName);
+    const commandGroup = getCommandGroupNameFromGroup(groupName);
 
     definedStyles.map((style) => {
       const definition = {
@@ -3685,19 +3702,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
   }
 
   /**
-   * A simple helper function that returns the command group name.
-   *
-   * @example
-   *    groupName = 'viewMode' -> commandGroupName = 'drupalViewMode'
-   *
-   * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
-   * @return {string} Command group name.
-   */
-  getCommandGroupNameFromGroup(groupName) {
-    return 'drupal'.concat(groupName[0].toUpperCase() + groupName.substring(1));
-  }
-
-  /**
    * Executes the Drupal Element Style command.
    *
    * @param {string} name
@@ -3710,7 +3714,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    * @private
    */
   _executeCommand(name, groupName) {
-    const key = this.getCommandGroupNameFromGroup(groupName);
+    const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
     this.editor.execute('drupalElementStyle', { value: obj }, groupName);

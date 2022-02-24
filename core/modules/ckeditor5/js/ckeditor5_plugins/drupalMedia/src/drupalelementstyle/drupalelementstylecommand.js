@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
+import getCommandGroupNameFromGroup from './utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
@@ -21,8 +22,8 @@ import { Command } from 'ckeditor5/src/core';
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
   for (const group of Object.keys(styles)) {
-    const groupName = group[0].toUpperCase() + group.substring(1);
-    return schema.checkAttribute(selectedElement, `drupal${groupName}`);
+    const groupName = getCommandGroupNameFromGroup(group);
+    return schema.checkAttribute(selectedElement, `${groupName}`);
   }
   return false;
 }
@@ -120,8 +121,8 @@ export default class DrupalElementStyleCommand extends Command {
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = group[0].toUpperCase() + group.substring(1);
-      if (element.hasAttribute(`drupal${groupName}`)) {
+      const groupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`${groupName}`)) {
         return true;
       }
     }
@@ -142,11 +143,9 @@ export default class DrupalElementStyleCommand extends Command {
   getGroupAndAttribute(element) {
     const groupAttr = {};
     for (const group of Object.keys(this.styles)) {
-      const groupName = group[0].toUpperCase() + group.substring(1);
-      if (element.hasAttribute(`drupal${groupName}`)) {
-        groupAttr[`drupal${groupName}`] = element.getAttribute(
-          `drupal${groupName}`,
-        );
+      const groupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`${groupName}`)) {
+        groupAttr[`${groupName}`] = element.getAttribute(`${groupName}`);
       }
     }
     return groupAttr;

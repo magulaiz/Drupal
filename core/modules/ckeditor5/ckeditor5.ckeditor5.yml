@@ -572,6 +572,8 @@ media_mediaAlign:
               attributeName: 'data-view-mode'
               attributeValue: 'tiny'
               modelElements: [ 'drupalMedia' ]
+              modelAttributes:
+                DrupalMediaBundle: ['img', 'file']
             - name: 'full'
               title: 'full view mode'
               attributeName: 'data-view-mode'

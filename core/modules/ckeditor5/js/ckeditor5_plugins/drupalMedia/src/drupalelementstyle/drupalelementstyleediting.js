@@ -3,6 +3,7 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
+import getCommandGroupNameFromGroup from './utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -276,7 +277,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
       // Capitalize first letter to append in camelCase properly.
-      const groupName = group[0].toUpperCase() + group.substring(1);
+      const groupName = getCommandGroupNameFromGroup(group);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
@@ -286,12 +287,13 @@ export default class DrupalElementStyleEditing extends Plugin {
         groupName,
       );
 
+      // model
       editor.editing.downcastDispatcher.on(
-        `attribute:drupal${groupName}`,
+        `attribute:${groupName}`,
         modelToViewConverter,
       );
       editor.data.downcastDispatcher.on(
-        `attribute:drupal${groupName}`,
+        `attribute:${groupName}`,
         modelToViewConverter,
       );
 
@@ -307,7 +309,8 @@ export default class DrupalElementStyleEditing extends Plugin {
         ),
       ];
       modelElements.forEach((modelElement) => {
-        schema.extend(modelElement, { allowAttributes: `drupal${groupName}` });
+        // specific
+        schema.extend(modelElement, { allowAttributes: `${groupName}` });
       });
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(

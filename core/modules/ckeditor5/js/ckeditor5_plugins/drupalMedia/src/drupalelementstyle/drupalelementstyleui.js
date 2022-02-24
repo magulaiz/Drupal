@@ -13,6 +13,7 @@ import {
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
+import getCommandGroupNameFromGroup from './utils';
 
 import { isObject } from '../utils';
 
@@ -328,7 +329,7 @@ export default class DrupalElementStyleUi extends Plugin {
       });
 
       const command = this.editor.commands.get('drupalElementStyle');
-      const commandGroupName = this.getCommandGroupNameFromGroup(groupName);
+      const commandGroupName = getCommandGroupNameFromGroup(groupName);
 
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
@@ -377,7 +378,7 @@ export default class DrupalElementStyleUi extends Plugin {
    */
   _getDropdownListItemDefinitions(definedStyles, command, groupName) {
     const itemDefinitions = new Collection();
-    const commandGroup = this.getCommandGroupNameFromGroup(groupName);
+    const commandGroup = getCommandGroupNameFromGroup(groupName);
 
     definedStyles.map((style) => {
       const definition = {
@@ -397,19 +398,6 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
-   * A simple helper function that returns the command group name.
-   *
-   * @example
-   *    groupName = 'viewMode' -> commandGroupName = 'drupalViewMode'
-   *
-   * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
-   * @return {string} Command group name.
-   */
-  getCommandGroupNameFromGroup(groupName) {
-    return 'drupal'.concat(groupName[0].toUpperCase() + groupName.substring(1));
-  }
-
-  /**
    * Executes the Drupal Element Style command.
    *
    * @param {string} name
@@ -422,7 +410,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _executeCommand(name, groupName) {
-    const key = this.getCommandGroupNameFromGroup(groupName);
+    const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
     this.editor.execute('drupalElementStyle', { value: obj }, groupName);
