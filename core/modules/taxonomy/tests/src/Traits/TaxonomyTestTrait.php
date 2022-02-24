@@ -44,7 +44,7 @@ trait TaxonomyTestTrait {
    * @return \Drupal\taxonomy\TermInterface
    *   The new taxonomy term object.
    */
-  public function createTerm(VocabularyInterface $vocabulary, array $values = []) {
+  public function createTerm(VocabularyInterface $vocabulary, $values = []) {
     $term = Term::create($values + [
       'name' => $this->randomMachineName(),
       'description' => [
