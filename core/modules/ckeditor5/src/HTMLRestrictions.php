@@ -894,20 +894,28 @@ final class HTMLRestrictions {
             continue;
           }
           assert($value === TRUE || Inspector::assertAllStrings($value));
-          if ($name === 'class') {
-            $to_allow['classes'] = $value;
-            continue;
-          }
           // If a single attribute value is allowed, it must be TRUE (see the
           // assertion above). Otherwise, it must be an array of strings (see
           // the assertion above), which lists all allowed attribute values. To
           // be able to configure GHS to a range of values, we need to use a
           // regular expression.
-          // @todo Expand to support partial wildcards in
-          //   https://www.drupal.org/project/drupal/issues/3260853.
-          $to_allow['attributes'][$name] = is_array($value)
-            ? ['regexp' => ['pattern' => '/^(' . implode('|', $value) . ')$/']]
+          $allowed_attribute_value = is_array($value)
+            ? ['regexp' => ['pattern' => '/^(' . implode('|', str_replace('*', '.*', $value)) . ')$/']]
             : $value;
+          if ($name === 'class') {
+            $to_allow['classes'] = $allowed_attribute_value;
+            continue;
+          }
+          // Most attribute restrictions specify a concrete attribute name. When
+          // the attribute name contains a partial wildcard, more complex syntax
+          // is needed.
+          // NOTE: for now, only `data-*` is supported, in the future support
+          // for more wildcard attribute restrictions may be added.
+          // @see https://ckeditor5.github.io/docs/nightly/ckeditor5/latest/api/module_engine_view_matcher-MatcherPattern.html
+          $to_allow['attributes'][] = [
+            'key' => $name !== 'data-*' ? $name : ['regexp' => ['pattern' => '/^data-.*/']],
+            'value' => $allowed_attribute_value,
+          ];
         }
       }
       $allowed[] = $to_allow;
