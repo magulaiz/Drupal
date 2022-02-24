@@ -178,8 +178,8 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
         'DrupalElementStyleEditing',
       );
 
-      const normStyles = elementStyleEditing.normalizedStyles;
-      for (const group of Object.keys(normStyles)) {
+      const normalizedStyles = elementStyleEditing.normalizedStyles;
+      for (const group of Object.keys(normalizedStyles)) {
         // eslint-disable-next-line no-restricted-syntax
         for (const style of elementStyleEditing.normalizedStyles[group]) {
           if (
@@ -524,7 +524,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         'attribute:drupalElementStyleAlign:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
-            // these are css classes
+            // This is a map of CSS classes representing Drupal element styles for alignments.
             alignLeft: 'drupal-media-style-align-left',
             alignRight: 'drupal-media-style-align-right',
             alignCenter: 'drupal-media-style-align-center',
@@ -2907,7 +2907,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = group.charAt(0).toUpperCase() + group.slice(1);
+      const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
@@ -2944,22 +2944,22 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' } });
+   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' }, groupName: 'align' });
    *
    * @param {Object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
-   * @param {string} groupName
-   *   The name of the group.
+   * @param {string} options.groupName
+   *   The group name of the drupalElementStyle.
    */
-  execute(options = {}, groupName) {
+  execute(options = {}) {
     const { editor } = this;
     const { model } = editor;
-    const groupNameCap = groupName.charAt(0).toUpperCase() + groupName.slice(1);
+    const groupName = Object.values(options)[1];
+    const groupNameCap = groupName[0].toUpperCase() + groupName.substring(1);
     model.change((writer) => {
-      // drupalAlign
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
@@ -2972,16 +2972,9 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
         this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        // writer.removeAttribute(modelGroupName, element);
         writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
-
       } else {
         // Extend the object with new value.
-        // writer.setAttribute(
-        //   modelGroupName,
-        //   requestedStyle[modelGroupName],
-        //   element,
-        // );
         writer.setAttribute(
           `drupalElementStyle${groupNameCap}`,
           requestedStyle[modelGroupName],
@@ -3294,7 +3287,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
         modelToViewConverter,
       );
 
-      // Allow drupalElementStyle on all model elements that have associated
+      // Allow drupalElementStyle${groupName} on all model elements that have associated
       // styles.
       const modelElements = [
         ...new Set(
@@ -3457,10 +3450,15 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
     definedDropdowns.forEach((dropdownConfig) => {
       const groupName = dropdownConfig.name.split(':')[1];
-      if (dropdownConfig.display === 'toolbar') {
-        this._createDropdown(dropdownConfig, definedStyles[groupName]);
-      } else {
-        this._createListDropdown(dropdownConfig, definedStyles[groupName]);
+      switch (dropdownConfig.display) {
+        case 'toolbar':
+          this._createDropdown(dropdownConfig, definedStyles[groupName]);
+          break;
+        case 'list':
+          this._createListDropdown(dropdownConfig, definedStyles[groupName]);
+          break;
+        default:
+          throw new Error('Toolbar display type must be specified.');
       }
     });
   }
@@ -3660,7 +3658,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
         if (commandValue && commandValue[commandGroupName]) {
           // @todo Use the style title instead of the machine name.
-          return commandValue.drupalViewMode;
+          return commandValue[commandGroupName];
         }
         return dropdownConfig.defaultText;
       });
@@ -3678,11 +3676,10 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
         const obj = {};
         const key = evt.source.commandGroup;
         obj[key] = evt.source.commandValue;
-        this.editor.execute(
-          evt.source.commandName,
-          { value: obj },
-          evt.source.groupName,
-        );
+        this.editor.execute(evt.source.commandName, {
+          value: obj,
+          groupName: evt.source.groupName,
+        });
         this.editor.editing.view.focus();
       });
 
@@ -3737,7 +3734,10 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
-    this.editor.execute('drupalElementStyle', { value: obj }, groupName);
+    this.editor.execute('drupalElementStyle', {
+      value: obj,
+      groupName: groupName,
+    });
     this.editor.editing.view.focus();
   }
 

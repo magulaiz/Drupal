@@ -133,10 +133,15 @@ export default class DrupalElementStyleUi extends Plugin {
 
     definedDropdowns.forEach((dropdownConfig) => {
       const groupName = dropdownConfig.name.split(':')[1];
-      if (dropdownConfig.display === 'toolbar') {
-        this._createDropdown(dropdownConfig, definedStyles[groupName]);
-      } else {
-        this._createListDropdown(dropdownConfig, definedStyles[groupName]);
+      switch (dropdownConfig.display) {
+        case 'toolbar':
+          this._createDropdown(dropdownConfig, definedStyles[groupName]);
+          break;
+        case 'list':
+          this._createListDropdown(dropdownConfig, definedStyles[groupName]);
+          break;
+        default:
+          throw new Error('Toolbar display type must be specified.');
       }
     });
   }
@@ -336,7 +341,7 @@ export default class DrupalElementStyleUi extends Plugin {
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
         if (commandValue && commandValue[commandGroupName]) {
           // @todo Use the style title instead of the machine name.
-          return commandValue.drupalViewMode;
+          return commandValue[commandGroupName];
         }
         return dropdownConfig.defaultText;
       });
@@ -354,11 +359,10 @@ export default class DrupalElementStyleUi extends Plugin {
         const obj = {};
         const key = evt.source.commandGroup;
         obj[key] = evt.source.commandValue;
-        this.editor.execute(
-          evt.source.commandName,
-          { value: obj },
-          evt.source.groupName,
-        );
+        this.editor.execute(evt.source.commandName, {
+          value: obj,
+          groupName: evt.source.groupName,
+        });
         this.editor.editing.view.focus();
       });
 
@@ -413,7 +417,10 @@ export default class DrupalElementStyleUi extends Plugin {
     const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
-    this.editor.execute('drupalElementStyle', { value: obj }, groupName);
+    this.editor.execute('drupalElementStyle', {
+      value: obj,
+      groupName: groupName,
+    });
     this.editor.editing.view.focus();
   }
 

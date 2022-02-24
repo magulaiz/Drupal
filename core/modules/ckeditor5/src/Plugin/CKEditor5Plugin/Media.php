@@ -37,10 +37,10 @@ class Media extends CKEditor5PluginDefault {
     foreach (array_keys($media_bundles) as $bundle) {
       $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
       $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $view_mode_options;
+      // todo: configure this
 //      $dynamic_plugin_config['drupalElementStyles']['options']['viewModes'][$bundle] = $view_mode_options;
 //      $dynamic_plugin_config['drupalElementStyles']['drupalMedia']['toolbar'] = $view_mode_options;
 //      fdsfdd['modelAttributes']['DrupalMediaBundle'][] = $bundle;
-
 
     }
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(

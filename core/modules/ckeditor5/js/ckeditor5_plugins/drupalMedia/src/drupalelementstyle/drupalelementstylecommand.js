@@ -124,7 +124,7 @@ export default class DrupalElementStyleCommand extends Command {
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = group.charAt(0).toUpperCase() + group.slice(1);
+      const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
@@ -161,22 +161,22 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' } });
+   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' }, groupName: 'align' });
    *
    * @param {Object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
-   * @param {string} groupName
-   *   The name of the group.
+   * @param {string} options.groupName
+   *   The group name of the drupalElementStyle.
    */
-  execute(options = {}, groupName) {
+  execute(options = {}) {
     const { editor } = this;
     const { model } = editor;
-    const groupNameCap = groupName.charAt(0).toUpperCase() + groupName.slice(1);
+    const groupName = Object.values(options)[1];
+    const groupNameCap = groupName[0].toUpperCase() + groupName.substring(1);
     model.change((writer) => {
-      // drupalAlign
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
@@ -189,16 +189,9 @@ export default class DrupalElementStyleCommand extends Command {
         this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        // writer.removeAttribute(modelGroupName, element);
         writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
-
       } else {
         // Extend the object with new value.
-        // writer.setAttribute(
-        //   modelGroupName,
-        //   requestedStyle[modelGroupName],
-        //   element,
-        // );
         writer.setAttribute(
           `drupalElementStyle${groupNameCap}`,
           requestedStyle[modelGroupName],

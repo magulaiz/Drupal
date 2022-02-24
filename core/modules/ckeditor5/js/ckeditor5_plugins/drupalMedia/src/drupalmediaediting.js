@@ -213,7 +213,7 @@ export default class DrupalMediaEditing extends Plugin {
         'attribute:drupalElementStyleAlign:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
-            // these are css classes
+            // This is a map of CSS classes representing Drupal element styles for alignments.
             alignLeft: 'drupal-media-style-align-left',
             alignRight: 'drupal-media-style-align-right',
             alignCenter: 'drupal-media-style-align-center',

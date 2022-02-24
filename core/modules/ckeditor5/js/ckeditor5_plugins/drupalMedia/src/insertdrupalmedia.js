@@ -68,8 +68,8 @@ export default class InsertDrupalMediaCommand extends Command {
         'DrupalElementStyleEditing',
       );
 
-      const normStyles = elementStyleEditing.normalizedStyles;
-      for (const group of Object.keys(normStyles)) {
+      const normalizedStyles = elementStyleEditing.normalizedStyles;
+      for (const group of Object.keys(normalizedStyles)) {
         // eslint-disable-next-line no-restricted-syntax
         for (const style of elementStyleEditing.normalizedStyles[group]) {
           if (

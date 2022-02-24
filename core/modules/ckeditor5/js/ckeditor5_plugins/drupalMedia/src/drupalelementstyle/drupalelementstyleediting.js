@@ -299,7 +299,7 @@ export default class DrupalElementStyleEditing extends Plugin {
         modelToViewConverter,
       );
 
-      // Allow drupalElementStyle on all model elements that have associated
+      // Allow drupalElementStyle${groupName} on all model elements that have associated
       // styles.
       const modelElements = [
         ...new Set(
