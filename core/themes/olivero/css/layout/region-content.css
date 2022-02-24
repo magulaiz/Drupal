@@ -14,6 +14,11 @@
   margin-bottom: 1.125rem
 }
 
+.region--content pre {
+    overflow-x: scroll;
+    overflow-y: visible;
+  }
+
 @media (min-width: 43.75rem) {
 
 .region--content {
@@ -26,9 +31,4 @@
 .region--content {
     margin-bottom: 3.375rem
 }
-  }
-
-.region--content pre {
-    overflow-x: scroll;
-    overflow-y: visible;
   }
