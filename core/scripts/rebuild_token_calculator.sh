@@ -18,7 +18,7 @@ if (PHP_SAPI !== 'cli') {
 $autoloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
 
 $request = Request::createFromGlobals();
-Settings::initialize(DRUPAL_ROOT, DrupalKernel::findSitePath($request), $autoloader);
+$kernel = DrupalKernel::createFromRequest($request, $autoloader, 'prod', FALSE);
 
 $timestamp = time();
 $token = Crypt::hmacBase64($timestamp, Settings::get('hash_salt'));
