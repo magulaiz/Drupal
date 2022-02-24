@@ -874,6 +874,7 @@ final class HTMLRestrictions {
    *   CKEditor 5 htmlSupport plugin constructor.
    *
    * @see https://ckeditor5.github.io/docs/nightly/ckeditor5/latest/features/general-html-support.html#configuration
+   * @see https://ckeditor5.github.io/docs/nightly/ckeditor5/latest/api/module_engine_view_matcher-MatcherPattern.html
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];

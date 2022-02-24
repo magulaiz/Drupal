@@ -253,7 +253,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['a' => FALSE, 'p' => FALSE],
     ];
 
-    // Wildcard tag., attribute and attribute value.
+    // Wildcard tag, attribute and attribute value.
     yield '$block' => [
       '<$block class="text-align-left text-align-center text-align-right text-align-justify">',
       [],

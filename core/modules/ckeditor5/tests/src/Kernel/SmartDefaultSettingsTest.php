@@ -573,7 +573,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ]),
     ];
 
-    yield "basic_html_with_any_data_attr can be switched to CKEditor 5 without problems …………………………" => [
+    yield "basic_html_with_any_data_attr can be switched to CKEditor 5 without problems (3 upgrade messages)" => [
       'format_id' => 'basic_html_with_any_data_attr',
       'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
       'expected_ckeditor5_settings' => [
