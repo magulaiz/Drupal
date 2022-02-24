@@ -16,7 +16,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$classloader = require_once __DIR__ . '/../../autoload.php';
+$classloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
 
 $application = new Application('drupal', \Drupal::VERSION);
 
