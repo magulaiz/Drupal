@@ -9,8 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * Tests Source Editing plugin.
- *
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
  * @group ckeditor5
  * @internal
  */
@@ -28,7 +27,7 @@ class SourceEditingTest extends KernelTestBase {
   /**
    * The manager for "CKEditor 5 plugin" plugins.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface
    */
   protected $manager;
 
@@ -41,8 +40,7 @@ class SourceEditingTest extends KernelTestBase {
   }
 
   /**
-   * Tests GHS configuration for source editing.
-   *
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getDynamicPluginConfig()
    * @dataProvider providerGhsConfiguration
    */
   public function testGhsConfiguration(string $filter_html_allowed, array $source_editing_tags, array $expected_ghs_configuration, ?array $additional_toolbar_items = []): void {
@@ -56,8 +54,6 @@ class SourceEditingTest extends KernelTestBase {
             'allowed_html' => $filter_html_allowed,
           ],
         ],
-        'filter_align' => ['status' => TRUE],
-        'filter_caption' => ['status' => TRUE],
       ],
     ])->save();
     $editor = Editor::create([
