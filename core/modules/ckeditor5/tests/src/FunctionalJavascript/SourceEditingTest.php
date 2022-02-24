@@ -130,10 +130,10 @@ class SourceEditingTest extends CKEditor5TestBase {
       // Keep the allowed HTML tags in sync.
       $text_format = FilterFormat::load('test_format');
       $allowed_elements = HTMLRestrictions::fromTextFormat($text_format);
-      $updated_allowed_tags = $allowed_elements->merge(HTMLRestrictions::fromString($allowed_elements_string))->getAllowedElements();
+      $updated_allowed_tags = $allowed_elements->merge(HTMLRestrictions::fromString($allowed_elements_string));
       $filter_html_config = $text_format->filters('filter_html')
         ->getConfiguration();
-      $filter_html_config['settings']['allowed_html'] = (new HTMLRestrictions($updated_allowed_tags))->toFilterHtmlAllowedTagsString();
+      $filter_html_config['settings']['allowed_html'] = $updated_allowed_tags->toFilterHtmlAllowedTagsString();
       $text_format->setFilterConfig('filter_html', $filter_html_config);
 
       // Verify the text format and editor are still a valid pair.

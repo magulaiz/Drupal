@@ -786,7 +786,10 @@ final class HTMLRestrictions {
    * @see \Drupal\filter\Plugin\Filter\FilterHtml
    */
   public function toFilterHtmlAllowedTagsString(): string {
-    return implode(' ', $this->toCKEditor5ElementsArray());
+    // Resolve wildcard tags, because Drupal's filter_html filter plugin does
+    // not support those.
+    $concrete = self::resolveWildcards($this);
+    return implode(' ', $concrete->toCKEditor5ElementsArray());
   }
 
   /**
