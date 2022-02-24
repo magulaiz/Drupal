@@ -380,11 +380,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     if ($modules === NULL && !empty($implementations)) {
       return TRUE;
     }
-    elseif (!empty(array_intersect((array) $modules, array_keys($implementations)))) {
-      return TRUE;
-    }
 
-    return FALSE;
+    return !empty(array_intersect((array) $modules, array_keys($implementations)));
   }
 
   /**
