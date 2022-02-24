@@ -25,7 +25,7 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
-      drupalViewMode: 'data-view-mode',
+      drupalElementStyleViewMode: 'data-view-mode',
     };
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
@@ -198,7 +198,10 @@ export default class DrupalMediaEditing extends Plugin {
         // List all attributes that should trigger re-rendering of the
         // preview.
         dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
-        dispatcher.on('attribute:drupalViewMode:drupalMedia', converter);
+        dispatcher.on(
+          'attribute:drupalElementStyleViewMode:drupalMedia',
+          converter,
+        );
         dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
         dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
 
@@ -207,7 +210,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     conversion.for('editingDowncast').add((dispatcher) => {
       dispatcher.on(
-        'attribute:drupalAlign:drupalMedia',
+        'attribute:drupalElementStyleAlign:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
             // these are css classes

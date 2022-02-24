@@ -22,8 +22,11 @@ import getCommandGroupNameFromGroup from './utils';
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
   for (const group of Object.keys(styles)) {
-    const groupName = getCommandGroupNameFromGroup(group);
-    return schema.checkAttribute(selectedElement, `${groupName}`);
+    const groupName = group[0].toUpperCase() + group.substring(1);
+    return schema.checkAttribute(
+      selectedElement,
+      `drupalElementStyle${groupName}`,
+    );
   }
   return false;
 }
@@ -121,8 +124,8 @@ export default class DrupalElementStyleCommand extends Command {
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = getCommandGroupNameFromGroup(group);
-      if (element.hasAttribute(`${groupName}`)) {
+      const groupName = group.charAt(0).toUpperCase() + group.slice(1);
+      if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
     }
@@ -143,9 +146,12 @@ export default class DrupalElementStyleCommand extends Command {
   getGroupAndAttribute(element) {
     const groupAttr = {};
     for (const group of Object.keys(this.styles)) {
-      const groupName = getCommandGroupNameFromGroup(group);
-      if (element.hasAttribute(`${groupName}`)) {
-        groupAttr[`${groupName}`] = element.getAttribute(`${groupName}`);
+      const groupName = group[0].toUpperCase() + group.substring(1);
+      const commandGroupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
+        groupAttr[`${commandGroupName}`] = element.getAttribute(
+          `drupalElementStyle${groupName}`,
+        );
       }
     }
     return groupAttr;
@@ -168,8 +174,9 @@ export default class DrupalElementStyleCommand extends Command {
   execute(options = {}, groupName) {
     const { editor } = this;
     const { model } = editor;
-
+    const groupNameCap = groupName.charAt(0).toUpperCase() + groupName.slice(1);
     model.change((writer) => {
+      // drupalAlign
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
@@ -182,11 +189,18 @@ export default class DrupalElementStyleCommand extends Command {
         this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        writer.removeAttribute(modelGroupName, element);
+        // writer.removeAttribute(modelGroupName, element);
+        writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
+
       } else {
         // Extend the object with new value.
+        // writer.setAttribute(
+        //   modelGroupName,
+        //   requestedStyle[modelGroupName],
+        //   element,
+        // );
         writer.setAttribute(
-          modelGroupName,
+          `drupalElementStyle${groupNameCap}`,
           requestedStyle[modelGroupName],
           element,
         );

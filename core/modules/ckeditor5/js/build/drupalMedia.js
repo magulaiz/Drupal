@@ -336,7 +336,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
       drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
-      drupalViewMode: 'data-view-mode',
+      drupalElementStyleViewMode: 'data-view-mode',
     };
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
@@ -509,7 +509,10 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         // List all attributes that should trigger re-rendering of the
         // preview.
         dispatcher.on('attribute:drupalMediaEntityUuid:drupalMedia', converter);
-        dispatcher.on('attribute:drupalViewMode:drupalMedia', converter);
+        dispatcher.on(
+          'attribute:drupalElementStyleViewMode:drupalMedia',
+          converter,
+        );
         dispatcher.on('attribute:drupalMediaEntityType:drupalMedia', converter);
         dispatcher.on('attribute:drupalMediaAlt:drupalMedia', converter);
 
@@ -518,7 +521,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
     conversion.for('editingDowncast').add((dispatcher) => {
       dispatcher.on(
-        'attribute:drupalAlign:drupalMedia',
+        'attribute:drupalElementStyleAlign:drupalMedia',
         (evt, data, conversionApi) => {
           const alignMapping = {
             // these are css classes
@@ -2802,8 +2805,11 @@ function getCommandGroupNameFromGroup(groupName) {
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
   for (const group of Object.keys(styles)) {
-    const groupName = getCommandGroupNameFromGroup(group);
-    return schema.checkAttribute(selectedElement, `${groupName}`);
+    const groupName = group[0].toUpperCase() + group.substring(1);
+    return schema.checkAttribute(
+      selectedElement,
+      `drupalElementStyle${groupName}`,
+    );
   }
   return false;
 }
@@ -2901,8 +2907,8 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   containsAttribute(element) {
     for (const group of Object.keys(this.styles)) {
-      const groupName = getCommandGroupNameFromGroup(group);
-      if (element.hasAttribute(`${groupName}`)) {
+      const groupName = group.charAt(0).toUpperCase() + group.slice(1);
+      if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
     }
@@ -2923,9 +2929,12 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   getGroupAndAttribute(element) {
     const groupAttr = {};
     for (const group of Object.keys(this.styles)) {
-      const groupName = getCommandGroupNameFromGroup(group);
-      if (element.hasAttribute(`${groupName}`)) {
-        groupAttr[`${groupName}`] = element.getAttribute(`${groupName}`);
+      const groupName = group[0].toUpperCase() + group.substring(1);
+      const commandGroupName = getCommandGroupNameFromGroup(group);
+      if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
+        groupAttr[`${commandGroupName}`] = element.getAttribute(
+          `drupalElementStyle${groupName}`,
+        );
       }
     }
     return groupAttr;
@@ -2948,8 +2957,9 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   execute(options = {}, groupName) {
     const { editor } = this;
     const { model } = editor;
-
+    const groupNameCap = groupName.charAt(0).toUpperCase() + groupName.slice(1);
     model.change((writer) => {
+      // drupalAlign
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
@@ -2962,11 +2972,18 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
         this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        writer.removeAttribute(modelGroupName, element);
+        // writer.removeAttribute(modelGroupName, element);
+        writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
+
       } else {
         // Extend the object with new value.
+        // writer.setAttribute(
+        //   modelGroupName,
+        //   requestedStyle[modelGroupName],
+        //   element,
+        // );
         writer.setAttribute(
-          modelGroupName,
+          `drupalElementStyle${groupNameCap}`,
           requestedStyle[modelGroupName],
           element,
         );
@@ -2978,7 +2995,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleediting.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstylecommand */
-
 
 
 
@@ -3076,7 +3092,10 @@ function viewToModelStyleAttribute(styles, groupName) {
     // Stop conversion early if the drupalElementStyle attribute isn't allowed
     // for the element.
     if (
-      !conversionApi.schema.checkAttribute(modelElement, `drupal${groupName}`)
+      !conversionApi.schema.checkAttribute(
+        modelElement,
+        `drupalElementStyle${groupName}`,
+      )
     ) {
       return;
     }
@@ -3093,7 +3112,7 @@ function viewToModelStyleAttribute(styles, groupName) {
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            `drupal${groupName}`,
+            `drupalElementStyle${groupName}`,
             style.name,
             modelElement,
           );
@@ -3110,7 +3129,7 @@ function viewToModelStyleAttribute(styles, groupName) {
             viewElement.getAttribute(style.attributeName)
           ) {
             conversionApi.writer.setAttribute(
-              `drupal${groupName}`,
+              `drupalElementStyle${groupName}`,
               style.name,
               modelElement,
             );
@@ -3255,7 +3274,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
       // Capitalize first letter to append in camelCase properly.
-      const groupName = getCommandGroupNameFromGroup(group);
+      const groupName = group[0].toUpperCase() + group.substring(1);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
@@ -3267,11 +3286,11 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
 
       // model
       editor.editing.downcastDispatcher.on(
-        `attribute:${groupName}`,
+        `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,
       );
       editor.data.downcastDispatcher.on(
-        `attribute:${groupName}`,
+        `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,
       );
 
@@ -3287,8 +3306,9 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
         ),
       ];
       modelElements.forEach((modelElement) => {
-        // specific
-        schema.extend(modelElement, { allowAttributes: `${groupName}` });
+        schema.extend(modelElement, {
+          allowAttributes: `drupalElementStyle${groupName}`,
+        });
       });
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(

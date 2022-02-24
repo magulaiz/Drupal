@@ -3,7 +3,6 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
-import getCommandGroupNameFromGroup from './utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -98,7 +97,10 @@ function viewToModelStyleAttribute(styles, groupName) {
     // Stop conversion early if the drupalElementStyle attribute isn't allowed
     // for the element.
     if (
-      !conversionApi.schema.checkAttribute(modelElement, `drupal${groupName}`)
+      !conversionApi.schema.checkAttribute(
+        modelElement,
+        `drupalElementStyle${groupName}`,
+      )
     ) {
       return;
     }
@@ -115,7 +117,7 @@ function viewToModelStyleAttribute(styles, groupName) {
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            `drupal${groupName}`,
+            `drupalElementStyle${groupName}`,
             style.name,
             modelElement,
           );
@@ -132,7 +134,7 @@ function viewToModelStyleAttribute(styles, groupName) {
             viewElement.getAttribute(style.attributeName)
           ) {
             conversionApi.writer.setAttribute(
-              `drupal${groupName}`,
+              `drupalElementStyle${groupName}`,
               style.name,
               modelElement,
             );
@@ -277,7 +279,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
       // Capitalize first letter to append in camelCase properly.
-      const groupName = getCommandGroupNameFromGroup(group);
+      const groupName = group[0].toUpperCase() + group.substring(1);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
@@ -289,11 +291,11 @@ export default class DrupalElementStyleEditing extends Plugin {
 
       // model
       editor.editing.downcastDispatcher.on(
-        `attribute:${groupName}`,
+        `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,
       );
       editor.data.downcastDispatcher.on(
-        `attribute:${groupName}`,
+        `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,
       );
 
@@ -309,8 +311,9 @@ export default class DrupalElementStyleEditing extends Plugin {
         ),
       ];
       modelElements.forEach((modelElement) => {
-        // specific
-        schema.extend(modelElement, { allowAttributes: `${groupName}` });
+        schema.extend(modelElement, {
+          allowAttributes: `drupalElementStyle${groupName}`,
+        });
       });
       // View to model converter that runs on all elements.
       editor.data.upcastDispatcher.on(
