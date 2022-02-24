@@ -5,6 +5,7 @@ namespace Drupal\Core\Command;
 use Composer\Autoload\ClassLoader;
 use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
@@ -33,12 +34,18 @@ class GenerateTheme extends Command {
   private $root;
 
   /**
-   * {@inheritdoc}
+   * Constructs a new GenerateTheme command.
+   *
+   * @param object $classloader
+   *   The class loader.
+   * @param string $name
+   *   The command name.
    */
-  public function __construct(string $name = NULL) {
+  public function __construct($classloader, string $name = NULL) {
     parent::__construct($name);
 
-    $this->root = dirname(__DIR__, 5);
+    $kernel = new DrupalKernel('prod', $classloader, FALSE);
+    $this->root = $kernel->getAppRoot();
   }
 
   /**
