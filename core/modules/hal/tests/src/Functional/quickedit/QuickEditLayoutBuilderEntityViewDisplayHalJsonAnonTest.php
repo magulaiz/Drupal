@@ -7,5 +7,6 @@ use Drupal\Tests\hal\Functional\layout_builder\LayoutBuilderEntityViewDisplayHal
 /**
  * @group quickedit
  * @group rest
+ * @group legacy
  */
 class QuickEditLayoutBuilderEntityViewDisplayHalJsonAnonTest extends LayoutBuilderEntityViewDisplayHalJsonAnonTest {}
