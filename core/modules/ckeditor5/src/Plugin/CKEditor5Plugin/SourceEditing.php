@@ -80,7 +80,7 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
     // source restrictions can be identified.
     $filter_restrictions = new HTMLRestrictions(array_map(function () {
       return FALSE;
-    }, HTMLRestrictions::fromTextFormat($editor->getFilterFormat())->getAllowedElements(FALSE)));
+    }, HTMLRestrictions::fromTextFormat($editor->getFilterFormat())->getAllowedElements()));
     $source_restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
     // Resolve wildcards from source restrictions to the elements from the
     // filter restrictions. Remove elements that don't have any additional

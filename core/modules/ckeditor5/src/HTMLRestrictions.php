@@ -800,11 +800,14 @@ final class HTMLRestrictions {
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
-    // Resolve any remaining wildcards based on Drupal's assumptions on wildcards
-    // to retain backwards compatibility. This is possible since the CKEditor 5
-    // GHS is always acting as a fallback for other plugins, meaning that if a
-    // tag or an attribute is supported by a plugin, they would always have an
-    // opportunity to consume the tag or the attribute before GHS.
+    // Resolve any remaining wildcards based on Drupal's assumptions on
+    // wildcards to ensure all HTML tags that Drupal thinks are supported are
+    // truly supported by CKEditor 5. For example: the <$block> wildcard does
+    // NOT correspond to block-level HTML tags, but to CKEditor 5 elements that
+    // behave like blocks. Knowing the list of concrete HTML tags this maps to
+    // is impossible without executing JavaScript, which PHP cannot do. By
+    // generating this GHS configuration, we can guarantee that Drupal's only
+    // possible interpretation also actually works.
     $elements = self::resolveWildcards($this)->getAllowedElements();
     foreach ($elements as $tag => $attributes) {
       $to_allow = ['name' => $tag];
