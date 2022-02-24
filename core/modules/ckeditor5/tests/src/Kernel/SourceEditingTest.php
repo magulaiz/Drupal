@@ -1,0 +1,163 @@
+<?php
+
+namespace Drupal\Tests\ckeditor5\Kernel;
+
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\editor\Entity\Editor;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Validator\ConstraintViolation;
+
+/**
+ * Tests Source Editing plugin.
+ *
+ * @group ckeditor5
+ * @internal
+ */
+class SourceEditingTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'ckeditor5',
+    'filter',
+    'editor',
+  ];
+
+  /**
+   * The manager for "CKEditor 5 plugin" plugins.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $manager;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
+  }
+
+  /**
+   * Tests GHS configuration for source editing.
+   *
+   * @dataProvider providerGhsConfiguration
+   */
+  public function testGhsConfiguration(string $filter_html_allowed, array $source_editing_tags, array $expected_ghs_configuration, ?array $additional_toolbar_items = []): void {
+    FilterFormat::create([
+      'format' => 'test_format',
+      'name' => 'Test format',
+      'filters' => [
+        'filter_html' => [
+          'status' => TRUE,
+          'settings' => [
+            'allowed_html' => $filter_html_allowed,
+          ],
+        ],
+        'filter_align' => ['status' => TRUE],
+        'filter_caption' => ['status' => TRUE],
+      ],
+    ])->save();
+    $editor = Editor::create([
+      'editor' => 'ckeditor5',
+      'format' => 'test_format',
+      'settings' => [
+        'toolbar' => [
+          'items' => array_merge(['sourceEditing'], $additional_toolbar_items),
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => $source_editing_tags,
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+    ]);
+    $editor->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+    $dynamic_configuration = $this->manager->getPlugin('ckeditor5_sourceEditing', $editor)->getDynamicPluginConfig([], $editor);
+    $this->assertEquals($expected_ghs_configuration, $dynamic_configuration['htmlSupport']['allow']);
+  }
+
+  public function providerGhsConfiguration(): array {
+    return [
+      'empty source editing' => [
+        '<p> <br>',
+        [],
+        [],
+      ],
+      'without wildcard' => [
+        '<p> <br> <a href> <blockquote> <div data-llama>',
+        ['<div data-llama>'],
+        [
+          [
+            'name' => 'div',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+        ],
+        ['link', 'blockQuote'],
+      ],
+      '<$block> minimal configuration' => [
+        '<p data-llama> <br>',
+        ['<$block data-llama>'],
+        [
+          [
+            'name' => 'p',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+        ],
+      ],
+      '<$block> realistic configuration' => [
+        '<p data-llama> <br> <a href> <blockquote data-llama> <div data-llama> <mark> <abbr title>',
+        ['<$block data-llama>', '<div>', '<mark>', '<abbr title>'],
+        [
+          [
+            'name' => 'div',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+          [
+            'name' => 'mark',
+          ],
+          [
+            'name' => 'abbr',
+            'attributes' => [
+              'title' => TRUE,
+            ],
+          ],
+          [
+            'name' => 'p',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+          [
+            'name' => 'blockquote',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+        ],
+        ['link', 'blockQuote'],
+      ],
+    ];
+  }
+
+}
