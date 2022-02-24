@@ -15,7 +15,7 @@ if (PHP_SAPI !== 'cli') {
   return;
 }
 
-$autoloader = require __DIR__ . '/../../autoload.php';
+$autoloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
 
 $request = Request::createFromGlobals();
 Settings::initialize(DRUPAL_ROOT, DrupalKernel::findSitePath($request), $autoloader);

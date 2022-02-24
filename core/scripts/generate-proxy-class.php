@@ -24,7 +24,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 // Bootstrap.
-$autoloader = require __DIR__ . '/../../autoload.php';
+$autoloader = require_once dirname(exec("pwd") . '/' . trim($_SERVER['argv'][0], './'), 3) . '/autoload.php';
 $request = Request::createFromGlobals();
 Settings::initialize(dirname(__DIR__, 2), DrupalKernel::findSitePath($request), $autoloader);
 DrupalKernel::createFromRequest($request, $autoloader, 'prod')->boot();
