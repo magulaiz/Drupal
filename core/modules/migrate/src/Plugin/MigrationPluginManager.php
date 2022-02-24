@@ -120,7 +120,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
     }
 
     foreach ($instances as $migration) {
-      $migration->set('migration_dependencies', array_map([$this, 'expandPluginIds'], $migration->getMigrationDependencies()));
+      $migration->set('migration_dependencies', array_map([$this, 'expandPluginIds'], $migration->getExpandedDependencies()));
     }
 
     // Sort the migrations based on their dependencies.
@@ -153,7 +153,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       $id = $migration->id();
       $requirements[$id] = [];
       $dependency_graph[$id]['edges'] = [];
-      $migration_dependencies = $migration->getMigrationDependencies();
+      $migration_dependencies = $migration->getExpandedDependencies();
 
       if (isset($migration_dependencies['required'])) {
         foreach ($migration_dependencies['required'] as $dependency) {
