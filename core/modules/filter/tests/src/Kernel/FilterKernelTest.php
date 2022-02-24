@@ -912,7 +912,7 @@ www.example.com with a newline in comments -->
    *   comments.
    * - Empty HTML tags (BR, IMG).
    * - Mix of absolute and partial URLs, and email addresses in one content.
-   * - Input that exceeds PCRE's backtracking limit.
+   * - Input that exceeds PCRE backtracking limit.
    */
   public function testUrlFilterContent() {
     // Get FilterUrl object.
