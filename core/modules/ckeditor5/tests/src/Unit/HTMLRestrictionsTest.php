@@ -440,8 +440,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'script',
           'attributes' => [
-            'src' => TRUE,
-            'defer' => TRUE,
+            ['key' => 'src', 'value' => TRUE],
+            ['key' => 'defer', 'value' => TRUE],
           ],
         ],
       ],
@@ -455,10 +455,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'a',
           'attributes' => [
-            'href' => TRUE,
-            'hreflang' => [
-              'regexp' => [
-                'pattern' => '/^(en|fr)$/',
+            ['key' => 'href', 'value' => TRUE],
+            [
+              'key' => 'hreflang',
+              'value' => [
+                'regexp' => [
+                  'pattern' => '/^(en|fr)$/',
+                ],
               ],
             ],
           ],
@@ -466,10 +469,19 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'p',
           'attributes' => [
-            'data-*' => TRUE,
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
           ],
           'classes' => [
-            'block',
+            'regexp' => [
+              'pattern' => '/^(block)$/',
+            ],
           ],
         ],
         ['name' => 'br'],
@@ -485,7 +497,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => '$block',
           'attributes' => [
-            'data-*' => TRUE,
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
           ],
         ],
       ],
@@ -498,7 +517,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'drupal-media',
           'attributes' => [
-            'data-*' => TRUE,
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^data-.*/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
           ],
         ],
       ],
@@ -511,9 +537,12 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'h2',
           'attributes' => [
-            'id' => [
-              'regexp' => [
-                'pattern' => '/^(jump-*)$/',
+            [
+              'key' => 'id',
+              'value' => [
+                'regexp' => [
+                  'pattern' => '/^(jump-.*)$/',
+                ],
               ],
             ],
           ],
