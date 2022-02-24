@@ -813,7 +813,7 @@ class ValidatorsTest extends KernelTestBase {
         'settings.toolbar.items.0' => 'The <em class="placeholder">Drupal media</em> toolbar item requires the <em class="placeholder">Embed media</em> filter to be enabled.',
       ],
     ];
-    $data['VALID: HTML format: very minimal toolbar + wilcard in source editing HTML'] = [
+    $data['VALID: HTML format: very minimal toolbar + wildcard in source editing HTML'] = [
       'settings' => [
         'toolbar' => [
           'items' => [

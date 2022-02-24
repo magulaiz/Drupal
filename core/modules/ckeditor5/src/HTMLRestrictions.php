@@ -800,7 +800,7 @@ final class HTMLRestrictions {
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
-    // Resolve any remaining wildcards based on Drupal's assumptions on wilcards
+    // Resolve any remaining wildcards based on Drupal's assumptions on wildcards
     // to retain backwards compatibility. This is possible since the CKEditor 5
     // GHS is always acting as a fallback for other plugins, meaning that if a
     // tag or an attribute is supported by a plugin, they would always have an

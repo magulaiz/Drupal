@@ -26,7 +26,7 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\CKEditor5Element');
     }
 
-    // Wilcard <$block> element needs to be converted into a regular element for
+    // Wildcard <$block> element needs to be converted into a regular element for
     // the validation.
     // @todo could we use \Drupal\ckeditor5\HTMLRestrictions::isWildcardTag here?
     $normalized_element = preg_replace('/^<\$block/', '<block', $element);
