@@ -364,16 +364,20 @@ class ModuleHandlerTest extends UnitTestCase {
         ['mymodule' => FALSE],
       );
 
+    // ModuleHandler::buildImplementationInfo mock returns no implementations.
     $this->assertFalse($module_handler->hasImplementations('hook'));
 
+    // Reset static caches.
     $module_handler->resetImplementations();
+
+    // ModuleHandler::buildImplementationInfo mock returns an implementation.
     $this->assertTrue($module_handler->hasImplementations('hook'));
   }
 
   /**
    * Tests getImplementations.
    *
-   * @covers ::getImplementationInfo
+   * @covers ::invokeAllWith
    */
   public function testCachedGetImplementations() {
     $this->cacheBackend->expects($this->exactly(1))
@@ -412,7 +416,7 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * Tests getImplementations.
    *
-   * @covers ::getImplementationInfo
+   * @covers ::invokeAllWith
    */
   public function testCachedGetImplementationsMissingMethod() {
     $this->cacheBackend->expects($this->exactly(1))
