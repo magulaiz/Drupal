@@ -203,6 +203,24 @@ class SourceEditingTest extends CKEditor5TestBase {
         '<a data-*>',
       ],
 
+      // Edge case: concrete attribute with wildcard class value.
+      '<a class="use-*">' => [
+        '<p>The <a href="https://example.com/pirate">pirate</a> is <a class="use-ajax" href="https://example.com/irate">irate</a>.</p>',
+        '<a class="use-*">',
+      ],
+
+      // Edge case: concrete attribute with wildcard attribute value.
+      '<a data-grammar="sub*">' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<a data-grammar="sub*">',
+      ],
+
+      // Edge case: `data-*` with wildcard attribute value.
+      '<a data-*="sub*">' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate">irate</a>.</p>',
+        '<a data-*="sub*">',
+      ],
+
       // Edge case: `style`.
       // @todo https://www.drupal.org/project/drupal/issues/3260857
     ];
