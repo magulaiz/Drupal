@@ -511,7 +511,11 @@ class HTMLRestrictionsTest extends UnitTestCase {
         [
           'name' => 'h2',
           'attributes' => [
-            'id' => ['jump-*'],
+            'id' => [
+              'regexp' => [
+                'pattern' => '/^(jump-*)$/',
+              ],
+            ],
           ],
         ],
       ],
