@@ -197,6 +197,12 @@ class SourceEditingTest extends CKEditor5TestBase {
         '<a class>',
       ],
 
+      // Edge case: `data-*`.
+      '<a data-*>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a data-*>',
+      ],
+
       // Edge case: `style`.
       // @todo https://www.drupal.org/project/drupal/issues/3260857
     ];
