@@ -216,7 +216,7 @@ function update_calculate_project_data($available) {
  *      dev_version depending on which release is the most recent one.
  *   - 'also': (array) This is a list of the latest supported releases from any
  *      higher major versions. The keys of this array are the major version
- *      numbers of the relaeses.
+ *      numbers of the releases.
  *   - 'extra': (array) Extra details about the existing version.
  *      It has following sub-keys:
  *      - class: (array) The CSS classes associated with the release, e.g.
