@@ -238,10 +238,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
       '<a target class>',
       ['a' => ['target' => TRUE, 'class' => TRUE]],
     ];
-    yield 'tag with two attributes, one with a partial wildcard' => [
-      '<a target class>',
-      ['a' => ['target' => TRUE, 'class' => TRUE]],
-    ];
 
     // Multiple tag cases.
     yield 'two tags' => [
