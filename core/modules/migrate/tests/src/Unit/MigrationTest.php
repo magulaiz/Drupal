@@ -137,23 +137,34 @@ class MigrationTest extends UnitTestCase {
    * @param array $expected_value
    *   The migration dependencies configuration array expected.
    *
-   * @covers ::getMigrationDependencies
+   * @covers ::getExpandedDependencies
    * @dataProvider getValidMigrationDependenciesProvider
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function testMigrationDependenciesWithValidConfig($source, array $expected_value) {
     $migration = new TestMigration();
+
+    // Set the plugin manager to support getExpandedDependencies().
+    $plugin_manager = $this->createMock('Drupal\migrate\Plugin\MigrationPluginManagerInterface');
+    $migration->setMigrationPluginManager($plugin_manager);
+    $plugin_manager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([]);
+    $plugin_manager->expects($this->any())
+      ->method('hasDefinition')
+      ->willReturn(TRUE);
+
     if (!is_null($source)) {
       $migration->set('migration_dependencies', $source);
     }
-    $this->assertSame($migration->getMigrationDependencies(), $expected_value);
+    $this->assertSame($migration->getExpandedDependencies(), $expected_value);
   }
 
   /**
    * Tests that getting migration dependencies fails with invalid configuration.
    *
-   * @covers ::getMigrationDependencies
+   * @covers ::getExpandedDependencies
    */
   public function testMigrationDependenciesWithInvalidConfig() {
     $migration = new TestMigration();
