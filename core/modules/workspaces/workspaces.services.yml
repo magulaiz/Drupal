@@ -67,3 +67,15 @@ services:
     arguments: ['@database', '@workspaces.manager']
     public: false
     decoration_priority: 50
+
+  workspaces.pathauto_skip_generation:
+    class: Drupal\workspaces\EventSubscriber\PathautoSkipGenerationSubscriber
+    arguments: ['@workspaces.manager']
+    tags:
+      - { name: event_subscriber }
+
+  workspaces.entity_link_rel_alter:
+    class: Drupal\workspaces\EventSubscriber\WorkspacesEntityLinkRelAlterSubscriber
+    arguments: ['@workspaces.manager']
+    tags:
+      - { name: event_subscriber }

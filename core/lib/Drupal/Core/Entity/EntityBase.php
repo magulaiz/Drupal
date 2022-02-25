@@ -6,6 +6,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\RefinableCacheableDependencyTrait;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Config\Entity\Exception\ConfigEntityIdLengthException;
+use Drupal\Core\Entity\Event\EntityEvents;
+use Drupal\Core\Entity\Event\EntityLinkRelAlterEvent;
 use Drupal\Core\Entity\Exception\UndefinedLinkTemplateException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
@@ -164,16 +166,16 @@ abstract class EntityBase implements EntityInterface {
     // The links array might contain URI templates set in annotations.
     $link_templates = $this->linkTemplates();
 
-    // Links pointing to the current revision point to the actual entity. So
-    // instead of using the 'revision' link, use the 'canonical' link.
-    if ($rel === 'revision' && (
-        (\Drupal::moduleHandler()->moduleExists('workspaces') && \Drupal::service('workspaces.manager')->hasActiveWorkspace())
-        || ($this instanceof RevisionableInterface && $this->isDefaultRevision() && (
-          (\Drupal::moduleHandler()->moduleExists('workspaces') && !\Drupal::service('workspaces.manager')->hasActiveWorkspace())
-          || (!\Drupal::moduleHandler()->moduleExists('workspaces'))
-        )
-      ))) {
-      $rel = 'canonical';
+    if ($rel === 'revision' && $this instanceof RevisionableInterface) {
+      // Links pointing to the current revision point to the actual entity. So
+      // instead of using the 'revision' link, use the 'canonical' link. See
+      // EntityLinkRelAlterSubscriber.
+      /** @var \Drupal\Core\Entity\Event\EntityLinkRelAlterEvent $event */
+      $event = \Drupal::service('event_dispatcher')->dispatch(
+        EntityEvents::ENTITY_LINK_REL_ALTER,
+        new EntityLinkRelAlterEvent($this, $rel)
+      );
+      $rel = $event->getRel();
     }
 
     if (isset($link_templates[$rel])) {
