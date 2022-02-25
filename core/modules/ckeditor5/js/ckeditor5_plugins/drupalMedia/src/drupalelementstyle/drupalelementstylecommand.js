@@ -21,6 +21,7 @@ import getCommandGroupNameFromGroup from './utils';
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
@@ -79,8 +80,8 @@ export default class DrupalElementStyleCommand extends Command {
     super(editor);
     this.styles = styles;
     this._styles = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(styles)) {
-      // eslint-disable-next-line no-restricted-syntax
       this._styles[group] = new Map(
         styles[group].map((style) => {
           return [style.name, style];
@@ -123,6 +124,7 @@ export default class DrupalElementStyleCommand extends Command {
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -145,6 +147,7 @@ export default class DrupalElementStyleCommand extends Command {
    */
   getGroupAndAttribute(element) {
     const groupAttr = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);

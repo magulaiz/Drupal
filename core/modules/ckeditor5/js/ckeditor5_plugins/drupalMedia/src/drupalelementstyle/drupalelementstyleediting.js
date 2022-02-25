@@ -216,45 +216,44 @@ export default class DrupalElementStyleEditing extends Plugin {
      *
      * @type {Drupal.CKEditor5~DrupalElementStyle[]}
      */
-    Object.keys(stylesConfig)
-      .map((group) => {
-        stylesConfig[group] // array of styles
-          .map((style) => {
-            // Allow defining style icon as a string that is referring to the
-            // CKEditor 5 default icons.
-            if (typeof style.icon === 'string') {
-              if (icons[style.icon]) {
-                style.icon = icons[style.icon];
-              }
+    Object.keys(stylesConfig).forEach((group) => {
+      stylesConfig[group] // array of styles
+        .map((style) => {
+          // Allow defining style icon as a string that is referring to the
+          // CKEditor 5 default icons.
+          if (typeof style.icon === 'string') {
+            if (icons[style.icon]) {
+              style.icon = icons[style.icon];
             }
-            return style;
-          })
-          .filter((style) => {
-            if (
-              (!style.isDefault && !style.attributeName) ||
-              !style.attributeValue
-            ) {
-              console.warn(
-                'drupalElementStyles options must include attributeName and attributeValue.',
-              );
-              return false;
-            }
-            if (!style.modelElements || !Array.isArray(style.modelElements)) {
-              console.warn(
-                'drupalElementStyles options must include an array of supported modelElements.',
-              );
-              return false;
-            }
+          }
+          return style;
+        })
+        .filter((style) => {
+          if (
+            (!style.isDefault && !style.attributeName) ||
+            !style.attributeValue
+          ) {
+            console.warn(
+              'drupalElementStyles options must include attributeName and attributeValue.',
+            );
+            return false;
+          }
+          if (!style.modelElements || !Array.isArray(style.modelElements)) {
+            console.warn(
+              'drupalElementStyles options must include an array of supported modelElements.',
+            );
+            return false;
+          }
 
-            if (!style.name) {
-              console.warn('drupalElementStyles options must include a name.');
-              return false;
-            }
+          if (!style.name) {
+            console.warn('drupalElementStyles options must include a name.');
+            return false;
+          }
 
-            return true;
-          });
-      })
-      .filter(Boolean);
+          return true;
+        });
+    });
+    // .filter(Boolean);
     this.normalizedStyles = stylesConfig;
 
     this._setupConversion();

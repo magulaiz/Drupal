@@ -178,7 +178,8 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
         'DrupalElementStyleEditing',
       );
 
-      const normalizedStyles = elementStyleEditing.normalizedStyles;
+      const { normalizedStyles } = elementStyleEditing;
+      // eslint-disable-next-line no-restricted-syntax
       for (const group of Object.keys(normalizedStyles)) {
         // eslint-disable-next-line no-restricted-syntax
         for (const style of elementStyleEditing.normalizedStyles[group]) {
@@ -2804,6 +2805,7 @@ function getCommandGroupNameFromGroup(groupName) {
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
@@ -2862,8 +2864,8 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     super(editor);
     this.styles = styles;
     this._styles = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(styles)) {
-      // eslint-disable-next-line no-restricted-syntax
       this._styles[group] = new Map(
         styles[group].map((style) => {
           return [style.name, style];
@@ -2906,6 +2908,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -2928,6 +2931,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   getGroupAndAttribute(element) {
     const groupAttr = {};
+    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
@@ -3204,45 +3208,44 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
      *
      * @type {Drupal.CKEditor5~DrupalElementStyle[]}
      */
-    Object.keys(stylesConfig)
-      .map((group) => {
-        stylesConfig[group] // array of styles
-          .map((style) => {
-            // Allow defining style icon as a string that is referring to the
-            // CKEditor 5 default icons.
-            if (typeof style.icon === 'string') {
-              if (delegated_corefrom_dll_reference_CKEditor5.icons[style.icon]) {
-                style.icon = delegated_corefrom_dll_reference_CKEditor5.icons[style.icon];
-              }
+    Object.keys(stylesConfig).forEach((group) => {
+      stylesConfig[group] // array of styles
+        .map((style) => {
+          // Allow defining style icon as a string that is referring to the
+          // CKEditor 5 default icons.
+          if (typeof style.icon === 'string') {
+            if (delegated_corefrom_dll_reference_CKEditor5.icons[style.icon]) {
+              style.icon = delegated_corefrom_dll_reference_CKEditor5.icons[style.icon];
             }
-            return style;
-          })
-          .filter((style) => {
-            if (
-              (!style.isDefault && !style.attributeName) ||
-              !style.attributeValue
-            ) {
-              console.warn(
-                'drupalElementStyles options must include attributeName and attributeValue.',
-              );
-              return false;
-            }
-            if (!style.modelElements || !Array.isArray(style.modelElements)) {
-              console.warn(
-                'drupalElementStyles options must include an array of supported modelElements.',
-              );
-              return false;
-            }
+          }
+          return style;
+        })
+        .filter((style) => {
+          if (
+            (!style.isDefault && !style.attributeName) ||
+            !style.attributeValue
+          ) {
+            console.warn(
+              'drupalElementStyles options must include attributeName and attributeValue.',
+            );
+            return false;
+          }
+          if (!style.modelElements || !Array.isArray(style.modelElements)) {
+            console.warn(
+              'drupalElementStyles options must include an array of supported modelElements.',
+            );
+            return false;
+          }
 
-            if (!style.name) {
-              console.warn('drupalElementStyles options must include a name.');
-              return false;
-            }
+          if (!style.name) {
+            console.warn('drupalElementStyles options must include a name.');
+            return false;
+          }
 
-            return true;
-          });
-      })
-      .filter(Boolean);
+          return true;
+        });
+    });
+    // .filter(Boolean);
     this.normalizedStyles = stylesConfig;
 
     this._setupConversion();
@@ -3381,7 +3384,6 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
-  // console.log()
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -3411,7 +3413,8 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       'DrupalElementStyleEditing',
     ).normalizedStyles;
 
-    Object.keys(definedStyles).map((group) => {
+    Object.keys(definedStyles).forEach((group) => {
+      // eslint-disable-next-line no-restricted-syntax
       for (const style of definedStyles[group]) {
         this._createButton(style, group);
       }
@@ -3631,7 +3634,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
           );
         })
         .map((buttonName) => {
-          console.log(buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
@@ -3706,13 +3708,13 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
     const commandGroup = getCommandGroupNameFromGroup(groupName);
 
-    definedStyles.map((style) => {
+    definedStyles.forEach((style) => {
       const definition = {
         type: 'button',
         model: new delegated_uifrom_dll_reference_CKEditor5.Model({
           commandName: 'drupalElementStyle',
-          commandGroup: commandGroup,
-          groupName: groupName,
+          commandGroup,
+          groupName,
           commandValue: style.name,
           label: style.title,
           withText: true,
@@ -3741,7 +3743,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     obj[key] = name;
     this.editor.execute('drupalElementStyle', {
       value: obj,
-      groupName: groupName,
+      groupName,
     });
     this.editor.editing.view.focus();
   }

@@ -61,7 +61,6 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
-  // console.log()
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -91,7 +90,8 @@ export default class DrupalElementStyleUi extends Plugin {
       'DrupalElementStyleEditing',
     ).normalizedStyles;
 
-    Object.keys(definedStyles).map((group) => {
+    Object.keys(definedStyles).forEach((group) => {
+      // eslint-disable-next-line no-restricted-syntax
       for (const style of definedStyles[group]) {
         this._createButton(style, group);
       }
@@ -311,7 +311,6 @@ export default class DrupalElementStyleUi extends Plugin {
           );
         })
         .map((buttonName) => {
-          console.log(buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
@@ -386,13 +385,13 @@ export default class DrupalElementStyleUi extends Plugin {
     const itemDefinitions = new Collection();
     const commandGroup = getCommandGroupNameFromGroup(groupName);
 
-    definedStyles.map((style) => {
+    definedStyles.forEach((style) => {
       const definition = {
         type: 'button',
         model: new Model({
           commandName: 'drupalElementStyle',
-          commandGroup: commandGroup,
-          groupName: groupName,
+          commandGroup,
+          groupName,
           commandValue: style.name,
           label: style.title,
           withText: true,
@@ -421,7 +420,7 @@ export default class DrupalElementStyleUi extends Plugin {
     obj[key] = name;
     this.editor.execute('drupalElementStyle', {
       value: obj,
-      groupName: groupName,
+      groupName,
     });
     this.editor.editing.view.focus();
   }
