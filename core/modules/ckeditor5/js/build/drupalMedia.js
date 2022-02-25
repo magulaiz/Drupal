@@ -3557,6 +3557,37 @@ function getUIComponentName(name, group) {
 }
 
 /**
+ * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
+ *
+ * @private
+ * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+ *   A list of defined styles.
+ * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
+ * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
+ * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+ */
+function getDropdownListItemDefinitions(definedStyles, command, groupName) {
+  const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
+  const commandGroup = getCommandGroupNameFromGroup(groupName);
+
+  definedStyles.forEach((style) => {
+    const definition = {
+      type: 'button',
+      model: new delegated_uifrom_dll_reference_CKEditor5.Model({
+        commandName: 'drupalElementStyle',
+        commandGroup,
+        groupName,
+        commandValue: style.name,
+        label: style.title,
+        withText: true,
+      }),
+    };
+    itemDefinitions.add(definition);
+  });
+  return itemDefinitions;
+}
+
+/**
  * The Drupal Element Style UI plugin.
  *
  * @extends module:core/plugin~Plugin
@@ -3844,7 +3875,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
       (0,delegated_uifrom_dll_reference_CKEditor5.addListToDropdown)(
         dropdownView,
-        this._getDropdownListItemDefinitions(definedStyles, command, groupName),
+        getDropdownListItemDefinitions(definedStyles, command, groupName),
       );
 
       // Execute command when an item from the dropdown is selected.
@@ -3861,37 +3892,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
       return dropdownView;
     });
-  }
-
-  /**
-   * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
-   *
-   * @private
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
-   * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
-   * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
-   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
-   */
-  _getDropdownListItemDefinitions(definedStyles, command, groupName) {
-    const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
-    const commandGroup = getCommandGroupNameFromGroup(groupName);
-
-    definedStyles.forEach((style) => {
-      const definition = {
-        type: 'button',
-        model: new delegated_uifrom_dll_reference_CKEditor5.Model({
-          commandName: 'drupalElementStyle',
-          commandGroup,
-          groupName,
-          commandValue: style.name,
-          label: style.title,
-          withText: true,
-        }),
-      };
-      itemDefinitions.add(definition);
-    });
-    return itemDefinitions;
   }
 
   /**
