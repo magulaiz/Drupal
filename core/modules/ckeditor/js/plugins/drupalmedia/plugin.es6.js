@@ -254,7 +254,10 @@
 
         _setUpDynamicEditables() {
           // Now that the caption is available in the DOM, make it editable.
-          if (this.initEditable('caption', this.definition.editables.caption)) {
+          if (
+            editor.config.DrupalMediaLibrary_enableCaptioning &&
+            this.initEditable('caption', this.definition.editables.caption)
+          ) {
             const captionEditable = this.editables.caption;
             // @see core/modules/filter/css/filter.caption.css
             // @see ckeditor_ckeditor_css_alter()

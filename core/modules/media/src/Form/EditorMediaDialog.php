@@ -167,13 +167,15 @@ class EditorMediaDialog extends FormBase {
 
     // When Drupal core's filter_caption is being used, the text editor offers
     // the ability to in-place edit the media's caption: show a toggle.
-    $form['caption'] = [
-      '#title' => $this->t('Caption'),
-      '#type' => 'checkbox',
-      '#default_value' => $has_caption === 'true',
-      '#parents' => ['hasCaption'],
-      '#access' => $filter_caption->status && ($filter_html->status === FALSE || !empty($allowed_attributes['data-caption'])),
-    ];
+    if ($media_embed_filter->settings['enable_captioning']) {
+      $form['caption'] = [
+        '#title' => $this->t('Caption'),
+        '#type' => 'checkbox',
+        '#default_value' => $has_caption === 'true',
+        '#parents' => ['hasCaption'],
+        '#access' => $filter_caption->status && ($filter_html->status === FALSE || !empty($allowed_attributes['data-caption'])),
+      ];
+    }
 
     $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $media->bundle()), $media_embed_filter->settings['allowed_view_modes']);
     $default_view_mode = static::getViewModeDefaultValue($view_mode_options, $media_embed_filter, $media_embed_element['data-view-mode'] ?? NULL);
