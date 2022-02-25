@@ -198,7 +198,7 @@
         _setUpDynamicEditables: function _setUpDynamicEditables() {
           var _this2 = this;
 
-          if (this.initEditable('caption', this.definition.editables.caption)) {
+          if (editor.config.DrupalMediaLibrary_enableCaptioning && this.initEditable('caption', this.definition.editables.caption)) {
             var captionEditable = this.editables.caption;
             captionEditable.setAttribute('data-placeholder', Drupal.t('Enter caption here'));
             this.captionObserver = new MutationObserver(function () {
