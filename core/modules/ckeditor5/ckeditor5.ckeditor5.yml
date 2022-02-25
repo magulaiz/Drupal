@@ -566,28 +566,28 @@ media_mediaAlign:
               attributeName: 'data-align'
               attributeValue: 'center'
               modelElements: ['drupalMedia']
-          viewMode:
-            - name: 'tiny'
-              title: 'tiny view mode'
-              attributeName: 'data-view-mode'
-              attributeValue: 'tiny'
-              modelElements: [ 'drupalMedia' ]
-              modelAttributes:
-                drupalMediaBundle: ['img', 'file']
-            - name: 'full'
-              title: 'full view mode'
-              attributeName: 'data-view-mode'
-              attributeValue: 'full'
-              modelElements: [ 'drupalMedia' ]
-            - name: 'media_library'
-              title: 'media library view mode'
-              attributeName: 'data-view-mode'
-              attributeValue: 'media_library'
-              modelElements: [ 'drupalMedia' ]
-            - name: 'none'
-              title: 'no view mode'
-              modelElements: [ 'drupalMedia' ]
-              isDefault: true
+#          viewMode:
+#            - name: 'tiny'
+#              title: 'tiny view mode'
+#              attributeName: 'data-view-mode'
+#              attributeValue: 'tiny'
+#              modelElements: [ 'drupalMedia' ]
+#              modelAttributes:
+#                drupalMediaBundle: ['img', 'file']
+#            - name: 'full'
+#              title: 'full view mode'
+#              attributeName: 'data-view-mode'
+#              attributeValue: 'full'
+#              modelElements: [ 'drupalMedia' ]
+#            - name: 'media_library'
+#              title: 'media library view mode'
+#              attributeName: 'data-view-mode'
+#              attributeValue: 'media_library'
+#              modelElements: [ 'drupalMedia' ]
+#            - name: 'none'
+#              title: 'no view mode'
+#              modelElements: [ 'drupalMedia' ]
+#              isDefault: true
       drupalMedia:
         toolbar:
           - name: 'drupalMedia:align'
@@ -597,15 +597,15 @@ media_mediaAlign:
               - 'drupalElementStyle:align:alignCenter'
               - 'drupalElementStyle:align:alignRight'
             defaultItem: 'drupalElementStyle:align:alignCenter'
-          - name: 'drupalMedia:viewMode'
-            display: 'list'
-            items:
-              - 'drupalElementStyle:viewMode:none'
-              - 'drupalElementStyle:viewMode:full'
-              - 'drupalElementStyle:viewMode:media_library'
-              - 'drupalElementStyle:viewMode:tiny'
-            defaultItem: 'drupalElementStyle:viewMode:none'
-            defaultText: 'Select view mode'
+#          - name: 'drupalMedia:viewMode'
+#            display: 'list'
+#            items:
+#              - 'drupalElementStyle:viewMode:none'
+#              - 'drupalElementStyle:viewMode:full'
+#              - 'drupalElementStyle:viewMode:media_library'
+#              - 'drupalElementStyle:viewMode:tiny'
+#            defaultItem: 'drupalElementStyle:viewMode:none'
+#            defaultText: 'Select view mode'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign

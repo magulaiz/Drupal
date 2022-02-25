@@ -3381,6 +3381,7 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
+  // console.log()
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -3630,6 +3631,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
           );
         })
         .map((buttonName) => {
+          console.log(buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {

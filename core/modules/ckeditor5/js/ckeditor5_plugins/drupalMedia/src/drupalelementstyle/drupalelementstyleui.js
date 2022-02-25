@@ -61,6 +61,7 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * @see module:ui/componentfactory~ComponentFactory
  */
 function getUIComponentName(name, group) {
+  // console.log()
   return `drupalElementStyle:${group}:${name}`;
 }
 
@@ -310,6 +311,7 @@ export default class DrupalElementStyleUi extends Plugin {
           );
         })
         .map((buttonName) => {
+          console.log(buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {

@@ -35,30 +35,57 @@ class Media extends CKEditor5PluginDefault {
 
     $media_bundles = MediaType::loadMultiple();
     $bundles_per_view_mode = [];
+    $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
+
     foreach (array_keys($media_bundles) as $bundle) {
-      $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
-      $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $view_mode_options;
-      foreach (array_keys($view_mode_options) as $view_mode) {
+      $allowed_view_modes = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
+
+      $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $allowed_view_modes;
+
+      foreach (array_keys($allowed_view_modes) as $view_mode) {
+        // Get the bundles that have this view mode enabled.
         $bundles_per_view_mode[$view_mode][] = $bundle;
       }
-      $view_mode_options = $this->entityDisplayRepository->getViewModeOptions('media');
-
-
-      // todo: configure this
-//      $dynamic_plugin_config['drupalElementStyles']['options']['viewModes'][$bundle] = $view_mode_options;
-//      $dynamic_plugin_config['drupalElementStyles']['drupalMedia']['toolbar'] = $view_mode_options;
-//      fdsfdd['modelAttributes']['DrupalMediaBundle'][] = $bundle;
-
     }
-    $dynamic_plugin_config['drupalMedia']['debug2'] = $bundles_per_view_mode;
 
-    // probably drop this
-    $current_view_mode = 'media_library';
-    $test = array_keys(array_filter($dynamic_plugin_config['drupalMedia']['viewModes'], function ($options, $media_type_id) use ($current_view_mode) {
-      return isset($options[$current_view_mode]);
-      return TRUE;
-    }, ARRAY_FILTER_USE_BOTH));
-    $dynamic_plugin_config['drupalMedia']['debug'] = $test;
+    $dynamic_plugin_config['drupalMedia']['debug'] = $bundles_per_view_mode;
+
+    // Create view mode options.
+    foreach (array_keys($all_view_modes) as $view_mode) {
+      $specific_bundles = $bundles_per_view_mode[$view_mode];
+      $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+        'name' => $view_mode,
+        'title' => $view_mode . ' view mode',
+        'attributeName' => 'data-view-mode',
+        'attributeValue' => $view_mode,
+        'modelElements' => ['drupalMedia'],
+        'modelAttributes' => ['drupalMediaBundle' => $specific_bundles],
+      ];
+    }
+    // Add a "no view mode" option to be used by the UI.
+    $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+      'name' => 'none',
+      'title' => 'no view mode',
+      'modelElements' => ['drupalMedia'],
+      'isDefault' => TRUE,
+    ];
+    $items = [];
+
+    // @todo: Define view modes that are available to the bundle used.
+    foreach (array_keys($all_view_modes) as $view_mode) {
+      $items[] = "drupalElementStyle:viewMode:$view_mode";
+    }
+    // Add the "no view mode" option to the toolbar items.
+    $items[] = "drupalElementStyle:viewMode:none";
+
+    // Configure dropdown menu.
+    $dynamic_plugin_config['drupalMedia']['toolbar'][] = [
+      'name' => 'drupalMedia:viewMode',
+      'display' => 'list',
+      'defaultItem' => 'drupalElementStyle:viewMode:none',
+      'defaultText' => 'Select view mode',
+      'items' => $items,
+    ];
 
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
