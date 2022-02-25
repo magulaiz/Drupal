@@ -206,7 +206,8 @@ class TestMigrationMock extends Migration {
   /**
    * {@inheritdoc}
    */
-  public function getMigrationDependencies() {
+  public function getExpandedDependencies() {
+    // For the purpose of testing, do not expand dependencies.
     return $this->dependencies;
   }
 
