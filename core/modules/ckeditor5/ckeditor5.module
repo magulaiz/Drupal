@@ -266,12 +266,11 @@ function _update_ckeditor5_html_filter(array $form, FormStateInterface $form_sta
 
   if ($form_state->get('ckeditor5_is_active')) {
     // Delete all existing validation messages, replace them with the current set.
-    $response->addCommand(new RemoveCommand('[data-drupal-selector="editor-settings-wrapper"] [data-drupal-messages] > *'));
-
+    $response->addCommand(new RemoveCommand('#ckeditor5-realtime-validation-messages-container > *'));
     $messages = \Drupal::messenger()->deleteAll();
     foreach ($messages as $type => $messages_by_type) {
       foreach ($messages_by_type as $message) {
-        $response->addCommand(new MessageCommand($message, '[data-drupal-selector="editor-settings-wrapper"] [data-drupal-messages]', ['type' => $type], FALSE));
+        $response->addCommand(new MessageCommand($message, '#ckeditor5-realtime-validation-messages-container', ['type' => $type], FALSE));
       }
     }
   }

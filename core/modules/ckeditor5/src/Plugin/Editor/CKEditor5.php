@@ -270,11 +270,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // AJAX validation errors should appear visually close to the text editor
     // since this is a very long form: otherwise they would not be noticed.
     $form['real_time_validation_errors_location'] = [
-      '#type' => 'status_messages',
+      '#type' => 'container',
       '#id' => 'ckeditor5-realtime-validation-messages-container',
-      '#attributes' => [
-        'data-drupal-messages' => TRUE,
-      ],
     ];
 
     $form['toolbar'] = [
