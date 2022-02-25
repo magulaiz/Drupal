@@ -19,6 +19,13 @@ module.exports = (__webpack_require__("dll-reference CKEditor5.dll"))("./src/cor
 
 /***/ }),
 
+/***/ "ckeditor5/src/engine.js":
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+module.exports = (__webpack_require__("dll-reference CKEditor5.dll"))("./src/engine.js");
+
+/***/ }),
+
 /***/ "ckeditor5/src/ui.js":
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
@@ -334,7 +341,6 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
@@ -428,7 +434,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
       .elementToElement({
         model: 'drupalMedia',
         view: (modelElement, { writer }) => {
-          const container = writer.createContainerElement('div', {
+          const container = writer.createContainerElement('figure', {
             class: 'drupal-media',
           });
           if (!this.previewUrl) {
@@ -564,7 +570,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      conversion.attributeToAttribute({
+      const attributeMapping = {
         model: {
           key: modelKey,
           name: 'drupalMedia',
@@ -573,7 +579,11 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
           name: 'drupal-media',
           key: this.attrs[modelKey],
         },
-      });
+      };
+      // Attributes should be rendered only in dataDowncast to avoid having
+      // unfiltered data-attributes on the Drupal Media widget.
+      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+      conversion.for('upcast').attributeToAttribute(attributeMapping);
     });
   }
 
@@ -790,6 +800,7 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediametadatarepository.js
 /* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalmediametadatarepository */
 
 
 
@@ -897,6 +908,10 @@ class DrupalMediaMetadataRepository extends delegated_corefrom_dll_reference_CKE
 
 
 
+
+/**
+ * @module drupalMedia/mediaimagetextalternative/mediaimagetextalternativeediting
+ */
 
 /**
  * The media image text alternative editing plugin.
@@ -1191,6 +1206,22 @@ class TextAlternativeFormView extends delegated_uifrom_dll_reference_CKEditor5.V
     this.labeledInput = this._createLabeledInputView();
 
     /**
+     * The default alt text.
+     *
+     * @observable
+     *
+     * @member {string} #defaultAltText
+     */
+    this.set('defaultAltText', undefined);
+
+    /**
+     * The default alt text view.
+     *
+     * @type {module:ui/template~Template}
+     */
+    this.defaultAltTextView = this._createDefaultAltTextView();
+
+    /**
      * A button used to submit the form.
      */
     this.saveButtonView = this._createButton(
@@ -1235,11 +1266,16 @@ class TextAlternativeFormView extends delegated_uifrom_dll_reference_CKEditor5.V
       tag: 'form',
 
       attributes: {
-        class: ['ck', 'ck-text-alternative-form', 'ck-responsive-form'],
+        class: ['ck', 'ck-media-alternative-text-form', 'ck-vertical-form'],
         tabindex: '-1',
       },
 
-      children: [this.labeledInput, this.saveButtonView, this.cancelButtonView],
+      children: [
+        this.defaultAltTextView,
+        this.labeledInput,
+        this.saveButtonView,
+        this.cancelButtonView,
+      ],
     });
 
     (0,delegated_uifrom_dll_reference_CKEditor5.injectCssTransitionDisabler)(this);
@@ -1314,9 +1350,50 @@ class TextAlternativeFormView extends delegated_uifrom_dll_reference_CKEditor5.V
       delegated_uifrom_dll_reference_CKEditor5.createLabeledInputText,
     );
 
-    labeledInput.label = Drupal.t('Override text alternative');
+    labeledInput.label = Drupal.t('Alternative text override');
 
     return labeledInput;
+  }
+
+  /**
+   * Creates a default alt text view.
+   *
+   * @return {module:ui/template~Template}
+   *   A template for default alt text view.
+   * @private
+   */
+  _createDefaultAltTextView() {
+    const bind = delegated_uifrom_dll_reference_CKEditor5.Template.bind(this, this);
+    return new delegated_uifrom_dll_reference_CKEditor5.Template({
+      tag: 'div',
+      attributes: {
+        class: [
+          'ck-media-alternative-text-form__default-alt-text',
+          bind.if('defaultAltText', 'ck-hidden', (value) => !value),
+        ],
+      },
+      children: [
+        {
+          tag: 'strong',
+          attributes: {
+            class: 'ck-media-alternative-text-form__default-alt-text-label',
+          },
+          children: [Drupal.t('Default alternative text:')],
+        },
+        ' ',
+        {
+          tag: 'span',
+          attributes: {
+            class: 'ck-media-alternative-text-form__default-alt-text-value',
+          },
+          children: [
+            {
+              text: [bind.to('defaultAltText')],
+            },
+          ],
+        },
+      ],
+    });
   }
 }
 
@@ -1380,7 +1457,7 @@ class MediaImageTextAlternativeUi extends delegated_corefrom_dll_reference_CKEdi
       const view = new delegated_uifrom_dll_reference_CKEditor5.ButtonView(locale);
 
       view.set({
-        label: Drupal.t('Override media image text alternative'),
+        label: Drupal.t('Override media image alternative text'),
         icon: delegated_corefrom_dll_reference_CKEditor5.icons.lowVision,
         tooltip: true,
       });
@@ -1462,9 +1539,11 @@ class MediaImageTextAlternativeUi extends delegated_corefrom_dll_reference_CKEdi
     if (this._isVisible) {
       return;
     }
-
     const editor = this.editor;
     const command = editor.commands.get('mediaImageTextAlternative');
+    const metadataRepository = editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
     const labeledInput = this._form.labeledInput;
 
     this._form.disableCssTransitions();
@@ -1483,6 +1562,28 @@ class MediaImageTextAlternativeUi extends delegated_corefrom_dll_reference_CKEdi
     // https://github.com/ckeditor/ckeditor5-image/issues/114
     labeledInput.fieldView.element.value = command.value || '';
     labeledInput.fieldView.value = labeledInput.fieldView.element.value;
+
+    this._form.defaultAltText = '';
+    const modelElement = editor.model.document.selection.getSelectedElement();
+
+    // Make sure that each time the panel shows up, the default alt text remains
+    // in sync with the value from the metadata repository.
+    if (isDrupalMedia(modelElement)) {
+      metadataRepository
+        .getMetadata(modelElement)
+        .then((metadata) => {
+          this._form.defaultAltText = metadata.imageSourceMetadata
+            ? metadata.imageSourceMetadata.alt
+            : '';
+        })
+        .catch((e) => {
+          // There isn't any UI indication for errors because this should be
+          // always called after the Drupal Media has been upcast, which would
+          // already display an error in the UI.
+          // @see module:drupalMedia/mediaimagetextalternative/mediaimagetextalternativeediting~MediaImageTextAlternativeEditing
+          console.warn(e.toString());
+        });
+    }
 
     this._form.labeledInput.fieldView.select();
 
@@ -1622,7 +1723,7 @@ function mergeViewElementAttributes( target, source ) {
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediageneralhtmlsupport.js
 /* eslint-disable import/no-extraneous-dependencies */
-// cSpell:words conversionutils datafilter
+// cSpell:words conversionutils datafilter eventinfo downcastdispatcher generalhtmlsupport
 
 
 
@@ -1661,6 +1762,8 @@ function viewToModelDrupalMediaAttributeConverter(dataFilter) {
         const viewMediaElement = data.viewItem;
         const viewContainerElement = viewMediaElement.parent;
 
+        preserveElementAttributes(viewMediaElement, 'htmlAttributes');
+
         if (viewContainerElement.is('element', 'a')) {
           preserveLinkAttributes(viewContainerElement);
         }
@@ -1694,13 +1797,33 @@ function getDescendantElement(writer, containerElement, elementName) {
 }
 
 /**
+ * Model to view converter for the Drupal Media wrapper attributes.
+ *
+ * @param {module:utils/eventinfo~EventInfo} evt
+ *   An object containing information about the fired event.
+ * @param {Object} data
+ *   Additional information about the change.
+ * @param {module:engine/conversion/downcastdispatcher~DowncastDispatcher} conversionApi
+ *   Conversion interface to be used by the callback.
+ */
+function modelToDataAttributeConverter(evt, data, conversionApi) {
+  if (!conversionApi.consumable.consume(data.item, evt.name)) {
+    return;
+  }
+
+  const viewElement = conversionApi.mapper.toViewElement(data.item);
+
+  setViewAttributes(conversionApi.writer, data.attributeNewValue, viewElement);
+}
+
+/**
  * Model to editing view attribute converter.
  *
  * @return {function}
  *   A function that adds an event listener to downcastDispatcher.
  */
 function modelToEditingViewAttributeConverter() {
-  return (dispatcher) =>
+  return (dispatcher) => {
     dispatcher.on(
       'attribute:linkHref:drupalMedia',
       (evt, data, conversionApi) => {
@@ -1728,6 +1851,16 @@ function modelToEditingViewAttributeConverter() {
       },
       { priority: 'low' },
     );
+
+    // Render arbitrary attributes on the CKEditor 5 widget wrapper until
+    // arbitrary attributes are included as part of the server rendered preview.
+    // @see https://www.drupal.org/project/drupal/issues/3231337
+    dispatcher.on(
+      'attribute:htmlAttributes:drupalMedia',
+      modelToDataAttributeConverter,
+      { priority: 'low' },
+    );
+  };
 }
 
 /**
@@ -1737,7 +1870,7 @@ function modelToEditingViewAttributeConverter() {
  *   function that adds an event listener to downcastDispatcher.
  */
 function modelToDataViewAttributeConverter() {
-  return (dispatcher) =>
+  return (dispatcher) => {
     dispatcher.on(
       'attribute:linkHref:drupalMedia',
       (evt, data, conversionApi) => {
@@ -1760,6 +1893,13 @@ function modelToDataViewAttributeConverter() {
       },
       { priority: 'low' },
     );
+
+    dispatcher.on(
+      'attribute:htmlAttributes:drupalMedia',
+      modelToDataAttributeConverter,
+      { priority: 'low' },
+    );
+  };
 }
 
 /**
@@ -1771,29 +1911,58 @@ class DrupalMediaGeneralHtmlSupport extends delegated_corefrom_dll_reference_CKE
   /**
    * @inheritdoc
    */
-  init() {
-    const { editor } = this;
+  constructor(editor) {
+    super(editor);
 
     // This plugin is only needed if General HTML Support plugin is loaded.
     if (!editor.plugins.has('GeneralHtmlSupport')) {
       return;
     }
+    // This plugin works only if `DataFilter` and `DataSchema` plugins are
+    // loaded. These plugins are dependencies of `GeneralHtmlSupport` meaning
+    // that these should be available always when `GeneralHtmlSupport` is
+    // enabled.
+    if (
+      !editor.plugins.has('DataFilter') ||
+      !editor.plugins.has('DataSchema')
+    ) {
+      console.error(
+        'DataFilter and DataSchema plugins are required for Drupal Media to integrate with General HTML Support plugin.',
+      );
+    }
 
     const { schema } = editor.model;
     const { conversion } = editor;
-    const dataFilter = editor.plugins.get('DataFilter');
+    const dataFilter = this.editor.plugins.get('DataFilter');
+    const dataSchema = this.editor.plugins.get('DataSchema');
 
-    schema.extend('drupalMedia', {
-      allowAttributes: ['htmlLinkAttributes'],
+    // This needs to be initialized in ::constructor() to ensure this runs
+    // before the General HTML Support has been initialized.
+    // @see module:html-support/generalhtmlsupport~GeneralHtmlSupport
+    dataSchema.registerBlockElement({
+      model: 'drupalMedia',
+      view: 'drupal-media',
     });
 
-    conversion
-      .for('upcast')
-      .add(viewToModelDrupalMediaAttributeConverter(dataFilter));
-    conversion
-      .for('editingDowncast')
-      .add(modelToEditingViewAttributeConverter());
-    conversion.for('dataDowncast').add(modelToDataViewAttributeConverter());
+    dataFilter.on('register:drupal-media', (evt, definition) => {
+      if (definition.model !== 'drupalMedia') {
+        return;
+      }
+
+      schema.extend('drupalMedia', {
+        allowAttributes: ['htmlLinkAttributes', 'htmlAttributes'],
+      });
+
+      conversion
+        .for('upcast')
+        .add(viewToModelDrupalMediaAttributeConverter(dataFilter));
+      conversion
+        .for('editingDowncast')
+        .add(modelToEditingViewAttributeConverter());
+      conversion.for('dataDowncast').add(modelToDataViewAttributeConverter());
+
+      evt.stop();
+    });
   }
 
   /**
@@ -3807,9 +3976,566 @@ class DrupalElementStyle extends delegated_corefrom_dll_reference_CKEditor5.Plug
   }
 }
 
+// EXTERNAL MODULE: delegated ./engine.js from dll-reference CKEditor5.dll
+var delegated_enginefrom_dll_reference_CKEditor5 = __webpack_require__("ckeditor5/src/engine.js");
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption/drupalmediacaptioncommand.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words imagecaption */
+
+
+
+/**
+ * Gets the caption model element from the media model selection.
+ *
+ * @param {module:engine/model/element~Element} drupalMediaModelElement
+ *   The model element from which caption should be retrieved.
+ * @returns {module:engine/model/element~Element|null}
+ *   The caption element or `null` if the selection has no child caption
+ *   element.
+ */
+function getCaptionFromDrupalMediaModelElement(drupalMediaModelElement) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const node of drupalMediaModelElement.getChildren()) {
+    if (!!node && node.is('element', 'caption')) {
+      return node;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * The toggle Drupal Media caption command.
+ *
+ * This command either adds or removes the caption of a selected drupalMedia
+ * element.
+ *
+ * This is inspired by the CKEditor 5 image caption plugin.
+ *
+ * @see module:image/imagecaption~ImageCaption
+ *
+ * @extends module:core/command~Command
+ *
+ * @internal
+ */
+class ToggleDrupalMediaCaptionCommand extends delegated_corefrom_dll_reference_CKEditor5.Command {
+  /**
+   * @inheritDoc
+   */
+  refresh() {
+    const element = this.editor.model.document.selection.getSelectedElement();
+
+    this.isEnabled = isDrupalMedia(element);
+
+    if (!this.isEnabled) {
+      this.value = false;
+    } else {
+      this.value = !!getCaptionFromDrupalMediaModelElement(element);
+    }
+  }
+
+  /**
+   * Executes the command.
+   *
+   * @example
+   *   editor.execute('toggleMediaCaption');
+   *
+   * @param {Object} [options]
+   *   Options for the executed command.
+   * @param {String} [options.focusCaptionOnShow]
+   *   When true and the caption shows up, the selection will be moved into it
+   *    When true: If a caption is present, the selection will be moved to that
+   *    caption immediately.
+   *
+   * @fires execute
+   */
+  execute(options = {}) {
+    const { focusCaptionOnShow } = options;
+    this.editor.model.change((writer) => {
+      if (this.value) {
+        this._hideDrupalMediaCaption(writer);
+      } else {
+        this._showDrupalMediaCaption(writer, focusCaptionOnShow);
+      }
+    });
+  }
+
+  /**
+   * Shows the caption of a selected drupalMedia element.
+   *
+   * This also attempts to restore the caption content from the
+   * `DrupalMediaEditing` caption registry. If the `focusCaptionOnShow` option
+   * is true, the selection is immediately moved to the caption.
+   *
+   * @param {module:engine/model/writer~Writer} writer
+   *   The model writer.
+   * @param {bool} focusCaptionOnShow
+   *   Flag indicating whether the caption should be focused.
+   */
+  _showDrupalMediaCaption(writer, focusCaptionOnShow) {
+    const model = this.editor.model;
+    const selection = model.document.selection;
+    const mediaCaptionEditing = this.editor.plugins.get(
+      'DrupalMediaCaptionEditing',
+    );
+    const selectedMedia = selection.getSelectedElement();
+    const savedCaption = mediaCaptionEditing._getSavedCaption(selectedMedia);
+
+    // Try restoring the caption from the DrupalMediaCaptionEditing plugin storage.
+    const newCaptionElement = savedCaption || writer.createElement('caption');
+
+    writer.append(newCaptionElement, selectedMedia);
+
+    if (focusCaptionOnShow) {
+      writer.setSelection(newCaptionElement, 'in');
+    }
+  }
+
+  /**
+   * Hides the caption of a selected drupalMedia element.
+   *
+   * The content of the caption is stored in the `DrupalMediaCaptionEditing`
+   * caption registry to make this a reversible action.
+   *
+   * @param {module:engine/model/writer~Writer} writer
+   *   The model writer.
+   */
+  _hideDrupalMediaCaption(writer) {
+    const editor = this.editor;
+    const selection = editor.model.document.selection;
+    const mediaCaptionEditing = editor.plugins.get('DrupalMediaCaptionEditing');
+    const selectedMedia = selection.getSelectedElement();
+
+    if (selectedMedia) {
+      const captionElement =
+        getCaptionFromDrupalMediaModelElement(selectedMedia);
+
+      // Store the caption content so it can be restored quickly if the user
+      // changes their mind.
+      mediaCaptionEditing._saveCaption(selectedMedia, captionElement);
+      writer.setSelection(selectedMedia, 'on');
+      writer.remove(captionElement);
+    }
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption/drupalmediacaptionediting.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words insertdrupalmedia JSONified drupalmediacaptioncommand downcasted */
+
+
+
+
+
+
+/**
+ * A view to model converter for Drupal Media caption.
+ *
+ * This upcasts the `data-caption` attribute from `<drupal-media>` elements into
+ * a `<caption>` model element. This is converted into a model element instead of
+ * a model attribute in order to leverage CKEditor 5 built-in editing.
+ *
+ * @param {module:core/editor/editor~Editor} editor
+ *   Editor on which this converter will be used.
+ * @return {function}
+ *   A function that attaches converter to the dispatcher.
+ */
+function viewToModelCaption(editor) {
+  const converter = (evt, data, conversionApi) => {
+    const { viewItem } = data;
+    const { writer, consumable } = conversionApi;
+    if (
+      !data.modelRange ||
+      !consumable.consume(viewItem, { attributes: ['data-caption'] })
+    ) {
+      return;
+    }
+
+    const caption = writer.createElement('caption');
+    const drupalMedia = data.modelRange.start.nodeAfter;
+
+    // Parse HTML from data-caption attribute and upcast it to model fragment.
+    const viewFragment = editor.data.processor.toView(
+      viewItem.getAttribute('data-caption'),
+    );
+    const modelFragment = writer.createDocumentFragment();
+
+    // Consumable must know about those newly parsed view elements.
+    conversionApi.consumable.constructor.createFrom(
+      viewFragment,
+      conversionApi.consumable,
+    );
+    conversionApi.convertChildren(viewFragment, modelFragment);
+
+    // Insert caption model nodes into the caption.
+    // eslint-disable-next-line no-restricted-syntax
+    for (const child of Array.from(modelFragment.getChildren())) {
+      writer.append(child, caption);
+    }
+
+    // Insert the caption element into drupalMedia, as a last child.
+    writer.append(caption, drupalMedia);
+  };
+
+  return (dispatcher) => {
+    dispatcher.on('element:drupal-media', converter, { priority: 'low' });
+  };
+}
+
+/**
+ * Gets mapper function for repositioning the `<figcaption>` element.
+ *
+ * @param {module:engine/view/view~View} editingView
+ *   The editing view.
+ * @return {function}
+ *   A mapper callback that moves `<figcaption>` element after the Drupal Media
+ *   preview.
+ */
+function mapModelPositionToView(editingView) {
+  return (evt, data) => {
+    const modelPosition = data.modelPosition;
+    const parent = modelPosition.parent;
+
+    if (!isDrupalMedia(parent)) {
+      return;
+    }
+
+    const viewElement = data.mapper.toViewElement(parent);
+    data.viewPosition = editingView.createPositionAt(
+      viewElement,
+      modelPosition.offset + 1,
+    );
+  };
+}
+
+/**
+ * A model to view converter for Drupal Media caption.
+ *
+ * This downcasts the `<caption>` model element into `data-caption` attribute in
+ * the view.
+ *
+ * @param {module:core/editor/editor~Editor} editor
+ *   Editor on which this converter will be used.
+ * @return {function}
+ *   A function that attaches converter to the dispatcher.
+ */
+function modelCaptionToCaptionAttribute(editor) {
+  return (dispatcher) => {
+    dispatcher.on('insert:caption', (evt, data, conversionApi) => {
+      const { consumable, writer, mapper } = conversionApi;
+
+      if (
+        !isDrupalMedia(data.item.parent) ||
+        !consumable.consume(data.item, 'insert')
+      ) {
+        return;
+      }
+
+      const range = editor.model.createRangeIn(data.item);
+      const viewDocumentFragment = writer.createDocumentFragment();
+
+      // Bind caption model element to the detached view document fragment so
+      // all content of the caption will be downcasted into that document
+      // fragment.
+      mapper.bindElements(data.item, viewDocumentFragment);
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const { item } of Array.from(range)) {
+        const itemData = {
+          item,
+          range: editor.model.createRangeOn(item),
+        };
+
+        // The following lines are extracted from
+        // DowncastDispatcher._convertInsertWithAttributes().
+        const eventName = `insert:${item.name || '$text'}`;
+
+        editor.data.downcastDispatcher.fire(eventName, itemData, conversionApi);
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const key of item.getAttributeKeys()) {
+          Object.assign(itemData, {
+            attributeKey: key,
+            attributeOldValue: null,
+            attributeNewValue: itemData.item.getAttribute(key),
+          });
+
+          editor.data.downcastDispatcher.fire(
+            `attribute:${key}`,
+            itemData,
+            conversionApi,
+          );
+        }
+      }
+
+      // Unbind all the view elements that were downcasted to the document
+      // fragment.
+      // eslint-disable-next-line no-restricted-syntax
+      for (const child of writer
+        .createRangeIn(viewDocumentFragment)
+        .getItems()) {
+        mapper.unbindViewElement(child);
+      }
+
+      mapper.unbindViewElement(viewDocumentFragment);
+
+      // Stringify view document fragment to HTML string.
+      const captionText = editor.data.processor.toData(viewDocumentFragment);
+
+      if (captionText) {
+        const imageViewElement = mapper.toViewElement(data.item.parent);
+
+        writer.setAttribute('data-caption', captionText, imageViewElement);
+      }
+    });
+  };
+}
+
+/**
+ * The Drupal Media caption editing plugin.
+ *
+ * @extends module:core/plugin~Plugin
+ *
+ * @internal
+ */
+class DrupalMediaCaptionEditing extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  /**
+   * @inheritDoc
+   */
+  static get requires() {
+    return [];
+  }
+
+  /**
+   * @inheritDoc
+   */
+  static get pluginName() {
+    return 'DrupalMediaCaptionEditing';
+  }
+
+  /**
+   * @inheritDoc
+   */
+  constructor(editor) {
+    super(editor);
+
+    /**
+     * A map of saved Drupal Media captions and related model elements.
+     *
+     * @member {WeakMap.<module:engine/model/element~Element,Object>}
+     *
+     * @see _saveCaption
+     */
+    this._savedCaptionsMap = new WeakMap();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  init() {
+    const editor = this.editor;
+    const schema = editor.model.schema;
+
+    // Schema configuration.
+    if (!schema.isRegistered('caption')) {
+      schema.register('caption', {
+        allowIn: 'drupalMedia',
+        allowContentOf: '$block',
+        isLimit: true,
+      });
+    } else {
+      schema.extend('caption', {
+        allowIn: 'drupalMedia',
+      });
+    }
+
+    editor.commands.add(
+      'toggleMediaCaption',
+      new ToggleDrupalMediaCaptionCommand(editor),
+    );
+
+    this._setupConversion();
+  }
+
+  /**
+   * Initializes upcasting and downcasting Drupal Media captions.
+   */
+  _setupConversion() {
+    const editor = this.editor;
+    const view = editor.editing.view;
+
+    // View -> model converter for the data pipeline.
+    editor.conversion.for('upcast').add(viewToModelCaption(editor));
+
+    // Model -> Editing View converter for the data pipeline.
+    editor.conversion.for('editingDowncast').elementToElement({
+      model: 'caption',
+      view: (modelElement, { writer }) => {
+        if (!isDrupalMedia(modelElement.parent)) {
+          return null;
+        }
+
+        const figcaptionElement = writer.createEditableElement('figcaption');
+
+        (0,delegated_enginefrom_dll_reference_CKEditor5.enablePlaceholder)({
+          view,
+          element: figcaptionElement,
+          text: Drupal.t('Enter media caption'),
+          keepOnFocus: true,
+        });
+
+        return (0,delegated_widgetfrom_dll_reference_CKEditor5.toWidgetEditable)(figcaptionElement, writer);
+      },
+    });
+    // The `<caption>` element inside the Drupal Media wrapper is by default
+    // placed before the preview. This rearranges the elements so that
+    // `<caption>` is rendered after the preview.
+    editor.editing.mapper.on(
+      'modelToViewPosition',
+      mapModelPositionToView(view),
+    );
+
+    // Model -> Data converter for the data pipeline.
+    editor.conversion
+      .for('dataDowncast')
+      .add(modelCaptionToCaptionAttribute(editor));
+  }
+
+  /**
+   * Returns the saved caption of a Drupal Media model element.
+   *
+   * @param {module:engine/model/element~Element} drupalMediaModelElement
+   *   The model element the caption should be returned for.
+   * @return {module:engine/model/element~Element|null}
+   *   The model caption element or `null` if there is none.
+   */
+  _getSavedCaption(drupalMediaModelElement) {
+    const jsonObject = this._savedCaptionsMap.get(drupalMediaModelElement);
+
+    return jsonObject ? delegated_enginefrom_dll_reference_CKEditor5.Element.fromJSON(jsonObject) : null;
+  }
+
+  /**
+   * Saves Drupal Media element caption to allow restoring it in the future.
+   *
+   * A caption is saved every time it gets hidden and/or the type of an Drupal
+   * Media changes. The user should be able to restore it on demand.
+   *
+   * @param {module:engine/model/element~Element} drupalMediaModelElement
+   *   The model element the caption is saved for.
+   * @param {module:engine/model/element~Element} caption
+   *   The caption model element to be saved.
+   *
+   * @see _getSavedCaption
+   * @see module:engine/model/element~Element#toJSON
+   */
+  _saveCaption(drupalMediaModelElement, caption) {
+    this._savedCaptionsMap.set(drupalMediaModelElement, caption.toJSON());
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption/drupalmediacaptionui.js
+/* eslint-disable import/no-extraneous-dependencies */
+
+
+
+/**
+ * The caption media UI plugin.
+ *
+ * @internal
+ */
+class DrupalMediaCaptionUI extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  /**
+   * @inheritdoc
+   */
+  static get requires() {
+    return [];
+  }
+
+  /**
+   * @inheritdoc
+   */
+  static get pluginName() {
+    return 'DrupalMediaCaptionUI';
+  }
+
+  /**
+   * @inheritdoc
+   */
+  init() {
+    const { editor } = this;
+    const editingView = editor.editing.view;
+    editor.ui.componentFactory.add('toggleDrupalMediaCaption', (locale) => {
+      const button = new delegated_uifrom_dll_reference_CKEditor5.ButtonView(locale);
+      const captionCommand = editor.commands.get('toggleMediaCaption');
+      button.set({
+        label: Drupal.t('Caption media'),
+        icon: delegated_corefrom_dll_reference_CKEditor5.icons.caption,
+        tooltip: true,
+        isToggleable: true,
+      });
+
+      // Bind button isOn and isEnabled properties to the command.
+      button.bind('isOn', 'isEnabled').to(captionCommand, 'value', 'isEnabled');
+
+      button
+        .bind('label')
+        .to(captionCommand, 'value', (value) =>
+          value
+            ? Drupal.t('Toggle caption off')
+            : Drupal.t('Toggle caption on'),
+        );
+
+      this.listenTo(button, 'execute', () => {
+        editor.execute('toggleMediaCaption', { focusCaptionOnShow: true });
+
+        // If a caption is present, highlight it and scroll to the selection.
+        const modelCaptionElement = editor.model.document.selection
+          .getFirstPosition()
+          .findAncestor('caption');
+        if (modelCaptionElement) {
+          const figcaptionElement =
+            editor.editing.mapper.toViewElement(modelCaptionElement);
+
+          editingView.scrollToTheSelection();
+
+          editingView.change((writer) => {
+            writer.addClass(
+              'drupal-media__caption_highlighted',
+              figcaptionElement,
+            );
+          });
+        }
+      });
+
+      return button;
+    });
+  }
+}
+
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption.js
+/* eslint-disable import/no-extraneous-dependencies */
+/* cspell:words drupalmediacaption drupalmediacaptionediting drupalmediacaptionui */
+
+
+
+
+/**
+ * @internal
+ */
+class DrupalMediaCaption extends delegated_corefrom_dll_reference_CKEditor5.Plugin {
+  static get requires() {
+    return [DrupalMediaCaptionEditing, DrupalMediaCaptionUI];
+  }
+
+  static get pluginName() {
+    return 'DrupalMediaCaption';
+  }
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/index.js
 /* eslint-disable import/no-extraneous-dependencies */
-// cspell:ignore mediaimagetextalternative
+// cspell:ignore mediaimagetextalternative drupalmediacaption
 
 
 
@@ -3817,6 +4543,8 @@ class DrupalElementStyle extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
 
 // cspell:ignore drupalelementstyle
+
+
 
 
 // cspell:ignore mediaimagetextalternative
@@ -3833,6 +4561,7 @@ class DrupalElementStyle extends delegated_corefrom_dll_reference_CKEditor5.Plug
   MediaImageTextAlternativeEditing: MediaImageTextAlternativeEditing,
   MediaImageTextAlternativeUi: MediaImageTextAlternativeUi,
   DrupalLinkMedia: DrupalLinkMedia,
+  DrupalMediaCaption: DrupalMediaCaption,
   DrupalElementStyle: DrupalElementStyle,
 });
 

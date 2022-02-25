@@ -22,7 +22,6 @@ export default class DrupalMediaEditing extends Plugin {
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
-      drupalMediaCaption: 'data-caption',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
@@ -116,7 +115,7 @@ export default class DrupalMediaEditing extends Plugin {
       .elementToElement({
         model: 'drupalMedia',
         view: (modelElement, { writer }) => {
-          const container = writer.createContainerElement('div', {
+          const container = writer.createContainerElement('figure', {
             class: 'drupal-media',
           });
           if (!this.previewUrl) {
@@ -252,7 +251,7 @@ export default class DrupalMediaEditing extends Plugin {
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      conversion.attributeToAttribute({
+      const attributeMapping = {
         model: {
           key: modelKey,
           name: 'drupalMedia',
@@ -261,7 +260,11 @@ export default class DrupalMediaEditing extends Plugin {
           name: 'drupal-media',
           key: this.attrs[modelKey],
         },
-      });
+      };
+      // Attributes should be rendered only in dataDowncast to avoid having
+      // unfiltered data-attributes on the Drupal Media widget.
+      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+      conversion.for('upcast').attributeToAttribute(attributeMapping);
     });
   }
 
