@@ -268,26 +268,20 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     }
 
     if ($css_warning = _ckeditor5_stylesheets_warning()) {
-      // Get all accumulated messages, and delete them from the global state.
-      $pre_existing_messages = \Drupal::messenger()->deleteAll();
-      // Add the warning message that should appear visually close to the text
-      // editor since this is a very long form: otherwise it either would be
+      // Explicitly render this single warning message visually close to the
+      // text editor since this is a very long form: otherwise it either would be
       // interpreted as a text format problem, or it would not be noticed.
-      \Drupal::messenger()->addMessage($css_warning, 'warning');
-      // Pre-render it, to avoid this from getting converted to a placeholder.
-      // @see \Drupal\Core\Render\Element\StatusMessages::generatePlaceholder()
+      // All other messages will be rendered in the default location.
+      // @see \Drupal\Core\Render\Element\StatusMessages
       $form['css_warning'] = [
-        '#type' => 'status_messages',
+        '#theme' => 'status_messages',
+        '#message_list' => [
+          'warning' => [$css_warning],
+        ],
+        '#status_headings' => [
+          'warning' => t('Warning message'),
+        ],
       ];
-      \Drupal::service('renderer')->renderPlain($form['css_warning']);
-      unset($form['css_warning']['#printed']);
-      // Restore the accumulated messages: add them back to the global state.
-      // This allows those messages to be rendered in the default location.
-      foreach ($pre_existing_messages as $type => $messages) {
-        foreach ($messages as $message) {
-          \Drupal::messenger()->addMessage($message, $type);
-        }
-      }
     }
 
     // AJAX validation errors should appear visually close to the text editor
