@@ -236,10 +236,6 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
 
   $form['#after_build'][] = [CKEditor5::class, 'assessActiveTextEditorAfterBuild'];
   $form['#validate'][] = [CKEditor5::class, 'validateSwitchingToCKEditor5'];
-
-  if ($css_warning = _ckeditor5_stylesheets_warning()) {
-    \Drupal::messenger()->addMessage($css_warning, 'warning');
-  }
 }
 
 /**
