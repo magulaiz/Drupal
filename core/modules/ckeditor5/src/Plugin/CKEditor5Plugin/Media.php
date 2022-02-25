@@ -34,15 +34,32 @@ class Media extends CKEditor5PluginDefault {
     $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
 
     $media_bundles = MediaType::loadMultiple();
+    $bundles_per_view_mode = [];
     foreach (array_keys($media_bundles) as $bundle) {
       $view_mode_options = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
       $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $view_mode_options;
+      foreach (array_keys($view_mode_options) as $view_mode) {
+        $bundles_per_view_mode[$view_mode][] = $bundle;
+      }
+      $view_mode_options = $this->entityDisplayRepository->getViewModeOptions('media');
+
+
       // todo: configure this
 //      $dynamic_plugin_config['drupalElementStyles']['options']['viewModes'][$bundle] = $view_mode_options;
 //      $dynamic_plugin_config['drupalElementStyles']['drupalMedia']['toolbar'] = $view_mode_options;
 //      fdsfdd['modelAttributes']['DrupalMediaBundle'][] = $bundle;
 
     }
+    $dynamic_plugin_config['drupalMedia']['debug2'] = $bundles_per_view_mode;
+
+    // probably drop this
+    $current_view_mode = 'media_library';
+    $test = array_keys(array_filter($dynamic_plugin_config['drupalMedia']['viewModes'], function ($options, $media_type_id) use ($current_view_mode) {
+      return isset($options[$current_view_mode]);
+      return TRUE;
+    }, ARRAY_FILTER_USE_BOTH));
+    $dynamic_plugin_config['drupalMedia']['debug'] = $test;
+
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())

@@ -584,6 +584,10 @@ media_mediaAlign:
               attributeName: 'data-view-mode'
               attributeValue: 'media_library'
               modelElements: [ 'drupalMedia' ]
+            - name: 'none'
+              title: 'no view mode'
+              modelElements: [ 'drupalMedia' ]
+              isDefault: true
       drupalMedia:
         toolbar:
           - name: 'drupalMedia:align'
@@ -596,10 +600,11 @@ media_mediaAlign:
           - name: 'drupalMedia:viewMode'
             display: 'list'
             items:
+              - 'drupalElementStyle:viewMode:none'
               - 'drupalElementStyle:viewMode:full'
               - 'drupalElementStyle:viewMode:media_library'
               - 'drupalElementStyle:viewMode:tiny'
-            defaultItem: 'drupalElementStyle:viewMode:full'
+            defaultItem: 'drupalElementStyle:viewMode:none'
             defaultText: 'Select view mode'
   drupal:
     label: Media align

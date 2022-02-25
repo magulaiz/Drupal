@@ -3218,7 +3218,10 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
             return style;
           })
           .filter((style) => {
-            if (!style.attributeName || !style.attributeValue) {
+            if (
+              (!style.isDefault && !style.attributeName) ||
+              !style.attributeValue
+            ) {
               console.warn(
                 'drupalElementStyles options must include attributeName and attributeValue.',
               );
