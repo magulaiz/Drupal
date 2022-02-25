@@ -416,8 +416,10 @@ final class HTMLRestrictions {
     // Special case: `data-` attributes, and the ability to define restrictions
     // for all of them using `data-*`.
     foreach ($diff_elements as $tag => $tag_config) {
-      // If `data-*` is allowed in $other, then all `data-`-attributes are
-      // allowed. Then we need to explicitly omit them from the difference.
+      // If `data-*` is allowed in $other with the same attribute value
+      // restrictions (e.g. TRUE to allow all attribute values or an array of
+      // specific allowed attribute values), then all `data-`-attributes are
+      // allowed and should be explicitly omitted from the difference.
       if (isset($other->elements[$tag]['data-*'])) {
         $other_data_attribute_restrictions = $other->elements[$tag]['data-*'];
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
@@ -538,8 +540,10 @@ final class HTMLRestrictions {
       if ($other_has_wildcard === $this_has_wildcard) {
         continue;
       }
-      // Otherwise, `data-*` is allowed in one of the two, and the intersection
-      // must contain the most restrictive of the two.
+      // Otherwise, `data-*` is allowed in one of the two with the same
+      // attribute value restrictions (e.g. TRUE to allow all attribute values
+      // or an array of specific allowed attribute values), and the intersection
+      // must contain the most restrictive configuration.
       $wildcard_operand = $other_has_wildcard ? $other : $this;
       $concrete_operand = $other_has_wildcard ? $this : $other;
       $concrete_tag_config = $concrete_operand->elements[$tag];
@@ -649,9 +653,9 @@ final class HTMLRestrictions {
     // Special case: `data-` attributes, and the ability to define restrictions
     // for all of them using `data-*`.
     foreach ($union as $tag => $tag_config) {
-      // If `data-*` is allowed in either one, then all `data-`-attributes are
-      // allowed. Then we must explicitly the concrete ones in favor of the
-      // wildcard one.
+      // If `data-*` is allowed in either one with the same attribute value
+      // restrictions, then all `data-`-attributes are allowed. Then we must
+      // explicitly omit the concrete ones in favor of the wildcard one.
       if (isset($tag_config['data-*'])) {
         $wildcard_attribute_restrictions = $tag_config['data-*'];
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
