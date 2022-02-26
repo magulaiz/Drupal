@@ -179,7 +179,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
     $this->iFrameUrlHelper = $iframe_url_helper;
     $this->fileSystem = $file_system;
     if (empty($token)) {
-      @trigger_error('The token service should be passed to ' . __METHOD__ . '() and is required in drupal:10.0.0. See https://www.drupal.org/node/3240036', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the token service is deprecated in drupal:9.3.0 and it is required in drupal:10.0.0. See https://www.drupal.org/node/3240036', E_USER_DEPRECATED);
       $token = \Drupal::token();
     }
     $this->token = $token;

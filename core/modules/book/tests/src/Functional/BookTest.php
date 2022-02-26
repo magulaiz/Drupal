@@ -103,7 +103,7 @@ class BookTest extends BrowserTestBase {
    * @group legacy
    */
   public function testBookNavigationCacheContextDeprecatedParameter() {
-    $this->expectDeprecation('Passing the request_stack service to Drupal\book\Cache\BookNavigationCacheContext::__construct() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead.');
+    $this->expectDeprecation('Passing the request_stack service to Drupal\book\Cache\BookNavigationCacheContext::__construct() is deprecated in drupal:9.2.0 and will be removed before drupal:10.0.0. The parameter should be an instance of \Drupal\Core\Routing\RouteMatchInterface instead. See https://www.drupal.org/node/2575827');
     $request_stack = $this->container->get('request_stack');
     $book_navigation_cache_context = new BookNavigationCacheContext($request_stack);
     $this->assertNotNull($book_navigation_cache_context);

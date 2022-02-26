@@ -64,7 +64,7 @@ class RelationshipFieldAccess implements AccessInterface {
    *   The access result.
    */
   public function access(Request $request, Route $route, AccountInterface $account) {
-    @trigger_error(sprintf("The %s access check is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. JSON:API's route access checks are internal. See https://www.drupal.org/node/3194641.", static::ROUTE_REQUIREMENT_KEY), E_USER_DEPRECATED);
+    @trigger_error(sprintf("The %s access check is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. There is no replacement. JSON:API's route access checks are internal. See https://www.drupal.org/node/3194641", static::ROUTE_REQUIREMENT_KEY), E_USER_DEPRECATED);
     $relationship_route_access_checker = \Drupal::service('access_check.jsonapi.relationship_route_access');
     assert($relationship_route_access_checker instanceof RelationshipRouteAccessCheck);
     $access_result = $relationship_route_access_checker->access($route, RouteMatch::createFromRequest($request), $account);

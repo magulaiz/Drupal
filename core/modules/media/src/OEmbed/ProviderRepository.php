@@ -90,7 +90,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
     $this->providersUrl = $config_factory->get('media.settings')->get('oembed_providers_url');
     $this->time = $time;
     if (!($key_value_factory instanceof KeyValueFactoryInterface)) {
-      @trigger_error('The keyvalue service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the keyvalue service is deprecated in drupal:9.3.0 and it is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $key_value_factory = \Drupal::service('keyvalue');
     }
     if (!($logger_factory instanceof LoggerChannelFactoryInterface)) {
@@ -99,7 +99,7 @@ class ProviderRepository implements ProviderRepositoryInterface {
       if (is_numeric($logger_factory)) {
         $max_age = $logger_factory;
       }
-      @trigger_error('The logger.factory service should be passed to ' . __METHOD__ . '() since drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the logger.factory service is deprecated in drupal:9.3.0 and it is required in drupal:10.0.0. See https://www.drupal.org/node/3186186', E_USER_DEPRECATED);
       $logger_factory = \Drupal::service('logger.factory');
     }
     $this->maxAge = $max_age;

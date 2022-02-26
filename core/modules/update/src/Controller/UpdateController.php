@@ -39,7 +39,7 @@ class UpdateController extends ControllerBase {
   public function __construct(UpdateManagerInterface $update_manager, RendererInterface $renderer = NULL) {
     $this->updateManager = $update_manager;
     if (is_null($renderer)) {
-      @trigger_error('The renderer service should be passed to UpdateController::__construct() since 9.1.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3179315', E_USER_DEPRECATED);
+      @trigger_error('Calling UpdateController::__construct() without the renderer service argument is deprecated in drupal:9.1.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3179315', E_USER_DEPRECATED);
       $renderer = \Drupal::service('renderer');
     }
     $this->renderer = $renderer;

@@ -156,11 +156,11 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    */
   public function __get($name) {
     if ($name === 'dbh') {
-      @trigger_error(__CLASS__ . '::$dbh should not be accessed in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->connection instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
+      @trigger_error('Accessing ' . __CLASS__ . '::$dbh is deprecated in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->connection instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
       return $this->connection;
     }
     if ($name === 'allowRowCount') {
-      @trigger_error(__CLASS__ . '::$allowRowCount should not be accessed in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->rowCountEnabled instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
+      @trigger_error('Accessing ' . __CLASS__ . '::$allowRowCount is deprecated in drupal:9.3.0 and will error in drupal:10.0.0. Use $this->rowCountEnabled instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
       return $this->rowCountEnabled;
     }
   }
@@ -173,7 +173,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    */
   public function __set($name, $value) {
     if ($name === 'allowRowCount') {
-      @trigger_error(__CLASS__ . '::$allowRowCount should not be written in drupal:9.3.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
+      @trigger_error(__CLASS__ . '::$allowRowCount is deprecated in drupal:9.3.0 and will error in drupal:10.0.0. Enable row counting by passing the appropriate argument to the constructor instead. See https://www.drupal.org/node/3186368', E_USER_DEPRECATED);
       $this->rowCountEnabled = $value;
     }
   }

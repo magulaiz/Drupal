@@ -178,7 +178,7 @@ class FileUploadResource extends ResourceBase {
     $this->lock = $lock;
     $this->systemFileConfig = $system_file_config;
     if (!$event_dispatcher) {
-      @trigger_error('The event dispatcher service should be passed to FileUploadResource::__construct() since 9.2.0. This will be required in Drupal 10.0.0. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
+      @trigger_error('Calling FileUploadResource::__construct() without the event dispatcher service is deprecated in drupal:9.2.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3032541', E_USER_DEPRECATED);
       $event_dispatcher = \Drupal::service('event_dispatcher');
     }
     $this->eventDispatcher = $event_dispatcher;

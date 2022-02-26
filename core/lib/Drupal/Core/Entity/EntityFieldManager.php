@@ -171,7 +171,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
     if (!$entity_last_installed_schema_repository) {
-      @trigger_error('The entity.last_installed_schema.repository service must be passed to EntityFieldManager::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling EntityFieldManager::__construct() without the entity.last_installed_schema.repository service is deprecated in drupal:9.2.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/3131585', E_USER_DEPRECATED);
       $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
     }
     $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;

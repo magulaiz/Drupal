@@ -36,7 +36,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
   public function __construct(StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
     $this->state = $state;
     if (!$file_url_generator) {
-      @trigger_error('Calling JsCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0. The $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      @trigger_error('Calling JsCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and the argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
       $file_url_generator = \Drupal::service('file_url_generator');
     }
     $this->fileUrlGenerator = $file_url_generator;

@@ -133,7 +133,7 @@ class FieldResolver {
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, ResourceTypeRepositoryInterface $resource_type_repository, ModuleHandlerInterface $module_handler, AccountInterface $current_user = NULL) {
     if (is_null($current_user)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3147244', E_USER_DEPRECATED);
       $current_user = \Drupal::currentUser();
     }
 
