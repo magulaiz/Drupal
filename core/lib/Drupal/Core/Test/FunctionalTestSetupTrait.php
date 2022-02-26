@@ -634,9 +634,12 @@ trait FunctionalTestSetupTrait {
    */
   protected function prepareEnvironment() {
     // Bootstrap Drupal so we can use Drupal's built in functions.
-    $this->classLoader = require __DIR__ . '/../../../../../autoload.php';
+    $app_root = $_ENV['DRUPAL_APP_ROOT'] ?? dirname(__DIR__, 5);
+    $this->classLoader = require $app_root . '/autoload.php';
     $request = Request::createFromGlobals();
     $kernel = TestRunnerKernel::createFromRequest($request, $this->classLoader);
+    // TestRunnerKernel expects the working directory to be the app root.
+    chdir($app_root);
     $kernel->boot();
     $kernel->preHandle($request);
     $this->prepareDatabasePrefix();
