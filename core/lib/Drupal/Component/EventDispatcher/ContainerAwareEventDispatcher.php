@@ -99,7 +99,6 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       // Trigger a deprecation error if the deprecated Event class is used
       // directly.
       if ($class_name === 'Symfony\Component\EventDispatcher\Event') {
-        // phpcs:ignore Drupal.Semantics.FunctionTriggerError
         @trigger_error($deprecation_message, E_USER_DEPRECATED);
       }
       // Also try to trigger deprecation errors when classes are in the Drupal
@@ -109,7 +108,6 @@ class ContainerAwareEventDispatcher implements EventDispatcherInterface {
       // bridge class as a special case, otherwise it's pointless.
       elseif ($class_name !== 'Drupal\Component\EventDispatcher\Event' && strpos($class_name, 'Drupal') !== FALSE) {
         if (get_parent_class($event) === 'Symfony\Component\EventDispatcher\Event') {
-          // phpcs:ignore Drupal.Semantics.FunctionTriggerError
           @trigger_error($deprecation_message, E_USER_DEPRECATED);
         }
       }
