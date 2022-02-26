@@ -7,6 +7,7 @@ use Drupal\Component\EventDispatcher\Event;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\Serialization\PhpSerialize;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Composer\Plugin\Locations\DrupalLocation;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
@@ -327,17 +328,32 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   }
 
   /**
-   * Determine the application root directory based on this file's location.
+   * Returns the application root directory.
+   *
+   * This uses the constant written in
+   * \Drupal\Composer\Plugin\Locations\DrupalLocation by the
+   * drupal-composer/drupal-scaffold Composer plugin.
+   *
+   * For backwards compatibility with installations that do not use Composer,
+   * the fallback is to determine the app root from this file's location, which
+   * is not always reliable in a nonstandard installation structure.
    *
    * @return string
    *   The application root.
+   *
+   * @see \Drupal\Composer\Plugin\Scaffold\GenerateAutoloadReferenceFile
    */
   protected static function guessApplicationRoot() {
-    // Determine the application root by:
-    // - Removing the namespace directories from the path.
-    // - Getting the path to the directory two levels up from the path
-    //   determined in the previous step.
-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    if (class_exists(DrupalLocation::class)) {
+      return DrupalLocation::APP_ROOT;
+    }
+    else {
+      // Determine the application root by:
+      // - Removing the namespace directories from the path.
+      // - Getting the path to the directory two levels up from the path
+      //   determined in the previous step.
+      return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    }
   }
 
   /**
