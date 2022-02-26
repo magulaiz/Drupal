@@ -1,0 +1,3 @@
+# Ignore the generated location file which this plugin writes into its own
+# directory.
+DrupalLocation.php
