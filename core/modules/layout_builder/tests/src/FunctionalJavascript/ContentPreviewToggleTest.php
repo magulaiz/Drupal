@@ -94,7 +94,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $this->assertContextualLinks();
 
     // Confirm repositioning blocks works with content preview disabled.
-    $this->assertOrderInPage([$links_field_placeholder_label, $body_field_placeholder_label]);
+    $this->assertSession()->responseContentHasOrder([$links_field_placeholder_label, $body_field_placeholder_label]);
 
     $region_content = '.layout__region--content';
     $links_block = "[data-layout-content-preview-placeholder-label='$links_field_placeholder_label']";
@@ -110,7 +110,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains($content_preview_body_text);
 
     // Check that drag successfully repositioned blocks.
-    $this->assertOrderInPage([$body_field_placeholder_label, $links_field_placeholder_label]);
+    $this->assertSession()->responseContentHasOrder([$body_field_placeholder_label, $links_field_placeholder_label]);
 
     // Check if block position maintained after enabling content preview.
     $this->assertTrue($page->hasUncheckedField('layout-builder-content-preview'));
@@ -118,7 +118,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForText($content_preview_body_text));
     $assert_session->pageTextContains($content_preview_body_text);
     $this->assertNotEmpty($assert_session->waitForText('Placeholder for the "Links" field'));
-    $this->assertOrderInPage([$content_preview_body_text, 'Placeholder for the "Links" field']);
+    $this->assertSession()->responseContentHasOrder([$content_preview_body_text, 'Placeholder for the "Links" field']);
   }
 
   /**
