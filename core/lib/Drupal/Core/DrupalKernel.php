@@ -334,9 +334,23 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
     $this->root = $app_root;
+  }
+
+  /**
+   * Returns the application root directory.
+   *
+   * @deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Use
+   *   getApplicationRoot() instead.
+   *
+   * @see https://www.drupal.org/node/3267862
+   */
+  protected static function guessApplicationRoot() {
+    @trigger_error('The guessApplicationRoot() method is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use getApplicationRoot() instead.', E_USER_DEPRECATED);
+
+    return static::getApplicationRoot();
   }
 
   /**
@@ -355,7 +369,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *
    * @see \Drupal\Composer\Plugin\Scaffold\GenerateAutoloadReferenceFile
    */
-  protected static function guessApplicationRoot() {
+  protected static function getApplicationRoot() {
     if (class_exists(DrupalLocation::class)) {
       return DrupalLocation::APP_ROOT;
     }
@@ -430,7 +444,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
 
     // Check for a test override.
@@ -1076,7 +1090,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Determine the application root if it's not supplied.
     if ($app_root === NULL) {
-      $app_root = static::guessApplicationRoot();
+      $app_root = static::getApplicationRoot();
     }
 
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
