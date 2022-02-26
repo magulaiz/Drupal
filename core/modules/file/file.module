@@ -134,7 +134,7 @@ function file_field_widget_info_alter(array &$info) {
  * @see hook_file_copy()
  */
 function file_copy(FileInterface $source, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::copy() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::copy() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
   if (empty($destination)) {
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }
@@ -199,7 +199,7 @@ function file_copy(FileInterface $source, $destination = NULL, $replace = FileSy
  * @see hook_file_move()
  */
 function file_move(FileInterface $source, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::move() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::move() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
   if (empty($destination)) {
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }
@@ -517,7 +517,7 @@ function file_validate_image_resolution(FileInterface $file, $maximum_dimensions
  * @see \Drupal\Core\File\FileSystemInterface::saveData()
  */
 function file_save_data($data, $destination = NULL, $replace = FileSystemInterface::EXISTS_RENAME) {
-  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and will be removed in drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::writeData() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\file\FileRepositoryInterface::writeData() instead. See https://www.drupal.org/node/3223520', E_USER_DEPRECATED);
   if (empty($destination)) {
     $destination = \Drupal::config('system.file')->get('default_scheme') . '://';
   }

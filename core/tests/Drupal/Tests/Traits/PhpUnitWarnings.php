@@ -71,6 +71,7 @@ trait PhpUnitWarnings {
 
     // assertInternalType() has many similar deprecation warnings.
     if (preg_match('/^assertInternalType\(\) is deprecated and will be removed in PHPUnit 9. Refactor your test to use assert.*\(\) instead.$/', $warning)) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error($warning, E_USER_DEPRECATED);
       return;
     }

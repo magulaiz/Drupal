@@ -130,6 +130,7 @@ class Container implements ContainerInterface, ResetInterface {
   public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
     if ($this->hasParameter('_deprecated_service_list')) {
       if ($deprecation = $this->getParameter('_deprecated_service_list')[$id] ?? '') {
+        // phpcs:ignore Drupal.Semantics.FunctionTriggerError        
         @trigger_error($deprecation, E_USER_DEPRECATED);
       }
     }
