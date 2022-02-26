@@ -263,7 +263,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ],
     ];
 
-    // Define bundle fields to be stored on the Bundle Cass
+    // Define bundle fields to be stored on the Bundle Class
     $bundle_class_fields = [
       'the_entity_id' => [
         'test_entity_bundle_class' => [
