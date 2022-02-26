@@ -222,6 +222,17 @@ class MigrationTest extends UnitTestCase {
     new Migration([], 'test', ['trackLastImported' => TRUE], $migration_plugin_manager, $source_plugin_manager, $process_Plugin_manager, $destination_plugin_manager, $id_map_plugin_manager);
   }
 
+  /**
+   * Tests deprecation of getMigrationDependencies().
+   *
+   * @group legacy
+   */
+  public function testGetMigrationDependencies() {
+    $migration = new TestMigration();
+    $this->expectDeprecation('Migration::getMigrationDependencies() is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. In most cases, use getExpandedDependencies(). See https://www.drupal.org/node/3183069');
+    $migration->getMigrationDependencies();
+  }
+
 }
 
 /**
