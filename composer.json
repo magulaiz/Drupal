@@ -11,6 +11,7 @@
     "require": {
         "composer/installers": "^2.0",
         "drupal/core": "self.version",
+        "drupal/core-drupal-locations": "self.version",
         "drupal/core-project-message": "self.version",
         "drupal/core-vendor-hardening": "self.version"
     },
@@ -59,6 +60,7 @@
         },
         "allow-plugins": {
             "composer/installers": true,
+            "drupal/core-drupal-locations": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
             "phpstan/extension-installer": true,
@@ -122,6 +124,10 @@
         {
             "type": "path",
             "url": "core"
+        },
+        {
+            "type": "path",
+            "url": "composer/Plugin/Locations"
         },
         {
             "type": "path",
