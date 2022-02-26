@@ -721,7 +721,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
     $this->migration_dependencies['optional'] = array_unique(array_merge($this->migration_dependencies['optional'], $this->findMigrationDependencies($this->process)));
     $this->migration_dependencies = array_map(
       function (array $migration_ids) {
-        return $this->expandPluginIds($migration_ids, $this->migrationPluginManager);
+        return $this->addDerivatives($migration_ids, $this->migrationPluginManager);
       },
       $this->migration_dependencies
     );

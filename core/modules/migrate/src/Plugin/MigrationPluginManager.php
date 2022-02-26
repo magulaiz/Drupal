@@ -138,6 +138,19 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
   }
 
   /**
+   * Expand derivative migration dependencies.
+   *
+   * @param string[] $migration_ids
+   *   A list of plugin IDs.
+   *
+   * @return array
+   *   An array of expanded plugin ids.
+   */
+  protected function expandPluginIds(array $migration_ids) {
+    return $this->addDerivatives($migration_ids, $this);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildDependencyMigration(array $migrations, array $dynamic_ids) {

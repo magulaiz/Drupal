@@ -13,23 +13,19 @@ trait PluginManagerTrait {
   /**
    * Add derivatives to a list of plugin IDs.
    *
-   * @param array $migration_ids
+   * @param string[] $source_ids
    *   A list of plugin IDs.
-   * @param \Drupal\Component\Plugin\PluginManagerInterface|null $manager
-   *   (optional) A plugin manager. Defaults to $this, so it should be supplied
-   *   explicitly except in a class that implements PluginManagerInterface.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
+   *   A plugin manager.
    *
-   * @return array
-   *   An expanded array of plugin ids. Include the original list and add all
+   * @return string[]
+   *   An expanded array of plugin IDs. Include the original list and add all
    *   derivatives of plugins in the original list.
    */
-  protected function expandPluginIds(array $migration_ids, ?PluginManagerInterface $manager = NULL) {
-    if ($manager === NULL) {
-      $manager = $this;
-    }
+  protected function addDerivatives(array $source_ids, PluginManagerInterface $manager): array {
     $plugin_ids = [];
     $all_ids = array_keys($manager->getDefinitions());
-    foreach ($migration_ids as $id) {
+    foreach ($source_ids as $id) {
       $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', $all_ids);
       if ($manager->hasDefinition($id)) {
         $plugin_ids[] = $id;
