@@ -278,8 +278,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    * @param string $app_root
-   *   (optional) The path to the application root as a string. If not supplied,
-   *   the application root will be computed.
+   *   (deprecated) (optional) The path to the application root as a string.
+   *   Specifying the Drupal app root $app_root to createFromRequest() is
+   *   deprecated in drupal:9.4.0
+   *   and is removed from drupal:10.0.0. Omit the parameter.
    *
    * @return static
    *
@@ -287,6 +289,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   In case the host name in the request is not trusted.
    */
   public static function createFromRequest(Request $request, $class_loader, $environment, $allow_dumping = TRUE, $app_root = NULL) {
+    if ($app_root) {
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Omit the parameter.', E_USER_DEPRECATED);
+    }
+
     $kernel = new static($environment, $class_loader, $allow_dumping, $app_root);
     static::bootEnvironment($app_root);
     $kernel->initializeSettings($request);
@@ -305,13 +311,19 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    * @param string $app_root
-   *   (optional) The path to the application root as a string. If not supplied,
-   *   the application root will be computed.
+   *   (deprecated) (optional) The path to the application root as a string.
+   *   Specifying the Drupal app root $app_root to __construct is deprecated in
+   *   drupal:9.4.0 and is removed from drupal:10.0.0. Omit the parameter.
    */
   public function __construct($environment, $class_loader, $allow_dumping = TRUE, $app_root = NULL) {
     $this->environment = $environment;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
+
+    if ($app_root) {
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Omit the parameter.', E_USER_DEPRECATED);
+    }
+
     if ($app_root === NULL) {
       $app_root = static::guessApplicationRoot();
     }
@@ -986,10 +998,16 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * correctly for security or just saneness.
    *
    * @param string $app_root
-   *   (optional) The path to the application root as a string. If not supplied,
-   *   the application root will be computed.
+   *   (deprecated) (optional) The path to the application root as a string. If
+   *   not supplied, the application root will be computed. Specifying the
+   *   Drupal app root $app_root to bootEnvironment() is deprecated in
+   *   drupal:9.4.0 and is removed from drupal:10.0.0. Omit the parameter.
    */
   public static function bootEnvironment($app_root = NULL) {
+    if ($app_root) {
+      @trigger_error('Specifying the Drupal app root $app_root is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Omit the parameter.', E_USER_DEPRECATED);
+    }
+
     if (static::$isEnvironmentInitialized) {
       return;
     }
