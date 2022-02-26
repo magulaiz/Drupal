@@ -380,8 +380,8 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     // Use a Bundle Class if the current bundle provides one, otherwise use
     // the base entity class
-    $bundle_info = $this->entityTypeBundleInfo->getBundleInfo($entity_type_id);
-    $class = $bundle_info[$bundle]['class'] ?? $entity_type->getClass();
+    $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
+    $class = $entity_storage->getEntityClass($bundle);
 
     // Allow the entity class to provide bundle fields and bundle-specific
     // overrides of base fields.
