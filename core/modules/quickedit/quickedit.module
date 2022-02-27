@@ -181,9 +181,11 @@ function quickedit_preprocess_field(&$variables) {
  * Implements hook_entity_type_alter().
  */
 function quickedit_entity_type_alter(array &$entity_types) {
-  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-  if ($entity_types['entity_view_display']->getClass() === LayoutBuilderEntityViewDisplay::class) {
-    $entity_types['entity_view_display']->setClass(QuickEditLayoutBuilderEntityViewDisplay::class);
+  if (\Drupal::moduleHandler()->moduleExists('layout_builder')) {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+    if ($entity_types['entity_view_display']->getClass() === LayoutBuilderEntityViewDisplay::class) {
+      $entity_types['entity_view_display']->setClass(QuickEditLayoutBuilderEntityViewDisplay::class);
+    }
   }
 }
 

@@ -5,8 +5,7 @@ namespace Drupal\Tests\hal\Functional\quickedit;
 use Drupal\Tests\hal\Functional\layout_builder\LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest;
 
 /**
- * @group quickedit
- * @group rest
+ * @group hal
  * @group legacy
  */
 class QuickEditLayoutBuilderEntityViewDisplayHalJsonBasicAuthTest extends LayoutBuilderEntityViewDisplayHalJsonBasicAuthTest {}

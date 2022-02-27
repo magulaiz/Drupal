@@ -8,6 +8,7 @@ use Drupal\Tests\layout_builder\Functional\Jsonapi\LayoutBuilderEntityViewDispla
  * JSON:API integration test for the "EntityViewDisplay" config entity type.
  *
  * @group jsonapi
+ * @group layout_builder
  * @group quickedit
  */
 class QuickEditLayoutBuilderEntityViewDisplayTest extends LayoutBuilderEntityViewDisplayTest {
