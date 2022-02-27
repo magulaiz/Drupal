@@ -259,7 +259,7 @@ class EntityFieldManagerTest extends UnitTestCase {
         ],
         'test_entity_bundle_class' => [
           'some_extra_field' => $bundle_field_definition->reveal(),
-        ]
+        ],
       ],
     ];
 
@@ -268,8 +268,8 @@ class EntityFieldManagerTest extends UnitTestCase {
       'the_entity_id' => [
         'test_entity_bundle_class' => [
           'id_bundle_class' => $bundle_field_definition->reveal(),
-        ]
-      ]
+        ],
+      ],
     ];
 
     EntityTypeManagerTestEntity::$bundleFieldDefinitions = $bundle_fields;
@@ -292,7 +292,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $expected = [
       'id' => $field_definition,
       'some_extra_field' => $bundle_fields['the_entity_id']['test_entity_bundle_class']['some_extra_field'],
-      'id_bundle_class' => $bundle_class_fields['the_entity_id']['test_entity_bundle_class']['id_bundle_class']
+      'id_bundle_class' => $bundle_class_fields['the_entity_id']['test_entity_bundle_class']['id_bundle_class'],
     ];
     $this->assertSame($expected, $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'test_entity_bundle_class'));
   }
@@ -942,5 +942,7 @@ abstract class EntityTypeManagerTestEntityBundle extends EntityTypeManagerTestEn
     }
 
     return $definitions;
+
   }
+
 }
