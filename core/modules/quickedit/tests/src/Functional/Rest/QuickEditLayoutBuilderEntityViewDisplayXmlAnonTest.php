@@ -6,6 +6,7 @@ use Drupal\Tests\layout_builder\Functional\Rest\LayoutBuilderEntityViewDisplayXm
 
 /**
  * @group quickedit
+ * @group layout_builder
  * @group rest
  */
 class QuickEditLayoutBuilderEntityViewDisplayXmlAnonTest extends LayoutBuilderEntityViewDisplayXmlAnonTest {
