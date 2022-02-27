@@ -93,15 +93,17 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     // @see https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_ansi_quotes
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI', 'DB2', 'MAXDB', 'MSSQL', 'ORACLE', 'POSTGRESQL'];
     $is_ansi_quotes_mode = FALSE;
-    if (isset($connection_options['init_commands']['sql_mode'])) {
-      foreach ($ansi_quotes_modes as $mode) {
-        // None of the modes in $ansi_quotes_modes are substrings of other modes
-        // that are not in $ansi_quotes_modes, so a simple stripos() does not
-        // return false positives.
-        if (stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
-          $is_ansi_quotes_mode = TRUE;
-          break;
-        }
+    foreach ($ansi_quotes_modes as $mode) {
+      // None of the modes in $ansi_quotes_modes are substrings of other modes
+      // that are not in $ansi_quotes_modes, so a simple stripos() does not
+      // return false positives.
+      if (isset($connection_options['init_commands']['sql_mode']) && stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
+        $is_ansi_quotes_mode = TRUE;
+        break;
+      }
+      if (isset($connection_options['init_commands']['sql_mode_options']) && !empty($connection_options['init_commands']['sql_mode'][$mode])) {
+        $is_ansi_quotes_mode = TRUE;
+        break;
       }
     }
 
@@ -212,9 +214,30 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'init_commands' => [],
     ];
 
-    $connection_options['init_commands'] += [
-      'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
-    ];
+    // Set MySQL sql_mode options to defaults, unless the legacy property
+    // 'sql_mode' is already defined.
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      @trigger_error("The 'sql_mode' database command is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. Use an array of options in 'sql_mode_options' instead.", E_USER_DEPRECATED);
+    }
+    else {
+      $sql_mode_defaults = [
+        // An option may be removed by setting it to FALSE in the
+        // sql_mode_options array.
+        'ANSI' => TRUE,
+        'TRADITIONAL' => TRUE,
+      ];
+
+      $connection_options['init_commands'] += [
+        'sql_mode_options' => [],
+      ];
+      $connection_options['init_commands']['sql_mode_options'] += $sql_mode_defaults;
+
+      $sql_mode_options = implode(',', array_keys(array_filter($connection_options['init_commands']['sql_mode_options'])));
+      $connection_options['init_commands']['sql_mode'] = "SET sql_mode = '{$sql_mode_options}'";
+
+      // Unset the array of options so it's not executed.
+      unset($connection_options['init_commands']['sql_mode_options']);
+    }
     if (!empty($connection_options['isolation_level'])) {
       $connection_options['init_commands'] += [
         'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
