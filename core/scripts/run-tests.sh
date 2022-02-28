@@ -1139,7 +1139,7 @@ function simpletest_script_get_test_list() {
       foreach ($args['test_names'] as $group_name) {
         $test_list = array_merge($test_list, array_flip(array_keys($groups[$group_name])));
       }
-      $test_list = array_flip($test_list);
+      $test_list = array_unique(array_keys($test_list));
     }
   }
 
