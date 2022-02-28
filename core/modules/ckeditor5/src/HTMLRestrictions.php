@@ -413,17 +413,25 @@ final class HTMLRestrictions {
       ARRAY_FILTER_USE_BOTH
     );
 
-    // Special case: `data-` attributes, and the ability to define restrictions
-    // for all of them using `data-*`.
+    // Special case: wildcard attributes, and the ability to define restrictions
+    // for all concrete attributes matching them using:
+    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
+    // - infix wildcard, f.e. `*-entity-*`
+    // - suffix wildcard, f.e. `foo-*`
     foreach ($diff_elements as $tag => $tag_config) {
-      // If `data-*` is allowed in $other with the same attribute value
-      // restrictions (e.g. TRUE to allow all attribute values or an array of
-      // specific allowed attribute values), then all `data-`-attributes are
-      // allowed and should be explicitly omitted from the difference.
-      if (isset($other->elements[$tag]['data-*'])) {
-        $other_data_attribute_restrictions = $other->elements[$tag]['data-*'];
+      // If a wildcard attribute name (f.e. `data-*`) is allowed in $other with
+      // the same attribute value restrictions (e.g. TRUE to allow all attribute
+      // values or an array of specific allowed attribute values), then all
+      // concrete matches (f.e. `data-foo`, `data-bar`, etc.) are allowed and
+      // should be explicitly omitted from the difference.
+      if (!isset($other->elements[$tag]) || !is_array($other->elements[$tag])) {
+        continue;
+      }
+      $wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
+      foreach ($wildcard_attributes as $wildcard_attribute_name) {
+        $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-          if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $other_data_attribute_restrictions) {
+          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $other->elements[$tag][$wildcard_attribute_name]) {
             unset($tag_config[$html_tag_attribute_name]);
           }
         }
@@ -530,31 +538,46 @@ final class HTMLRestrictions {
       }
     }
 
-    // Special case: `data-` attributes, and the ability to define restrictions
-    // for all of them using `data-*`.
+    // Special case: wildcard attributes, and the ability to define restrictions
+    // for all concrete attributes matching them using:
+    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
+    // - infix wildcard, f.e. `*-entity-*`
+    // - suffix wildcard, f.e. `foo-*`
     foreach ($intersection as $tag => $tag_config) {
-      $other_has_wildcard = isset($other->elements[$tag]['data-*']);
-      $this_has_wildcard = isset($this->elements[$tag]['data-*']);
-      // If `data-*` is allowed in both or neither, no adjustment necessary: the
-      // intersection is already correct.
-      if ($other_has_wildcard === $this_has_wildcard) {
+      // Gather the wildcard attributes present in both operands.
+      if (!is_array($this->elements[$tag]) || !is_array($other->elements[$tag])) {
         continue;
       }
-      // Otherwise, `data-*` is allowed in one of the two with the same
-      // attribute value restrictions (e.g. TRUE to allow all attribute values
-      // or an array of specific allowed attribute values), and the intersection
-      // must contain the most restrictive configuration.
-      $wildcard_operand = $other_has_wildcard ? $other : $this;
-      $concrete_operand = $other_has_wildcard ? $this : $other;
-      $concrete_tag_config = $concrete_operand->elements[$tag];
-      $wildcard_attribute_restriction = $wildcard_operand->elements[$tag]['data-*'];
-      foreach ($concrete_tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-        if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $wildcard_attribute_restriction) {
-          $tag_config = $tag_config === FALSE ? [] : $tag_config;
-          $tag_config[$html_tag_attribute_name] = $html_tag_attribute_restrictions;
+      $other_wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
+      $this_wildcard_attributes = array_filter(array_keys($this->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
+
+      // If the same wildcard attribute restrictions are present in both or
+      // neither, no adjustment necessary: the intersection is already correct.
+      $in_both = array_intersect($other_wildcard_attributes, $this_wildcard_attributes);
+      $other_wildcard_attributes = array_diff($other_wildcard_attributes, $in_both);
+      $this_wildcard_attributes = array_diff($this_wildcard_attributes, $in_both);
+      $wildcard_attributes_to_analyze = array_merge($other_wildcard_attributes, $this_wildcard_attributes);
+
+      // Otherwise, the wildcard attribute name (f.e. `data-*`) is allowed in
+      // one of the two with the same attribute value restrictions (e.g. TRUE to
+      // allow all attribute values  or an array of specific allowed attribute
+      // values), and the intersection must contain the most restrictive
+      // configuration.
+      foreach ($wildcard_attributes_to_analyze as $wildcard_attribute_name) {
+        $other_has_wildcard = isset($other->elements[$tag][$wildcard_attribute_name]);
+        $wildcard_operand = $other_has_wildcard ? $other : $this;
+        $concrete_operand = $other_has_wildcard ? $this : $other;
+        $concrete_tag_config = $concrete_operand->elements[$tag];
+        $wildcard_attribute_restriction = $wildcard_operand->elements[$tag][$wildcard_attribute_name];
+        $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
+        foreach ($concrete_tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $wildcard_attribute_restriction) {
+            $tag_config = $tag_config === FALSE ? [] : $tag_config;
+            $tag_config[$html_tag_attribute_name] = $html_tag_attribute_restrictions;
+          }
         }
+        $intersection[$tag] = $tag_config;
       }
-      $intersection[$tag] = $tag_config;
     }
 
     return new self($intersection);
@@ -650,19 +673,27 @@ final class HTMLRestrictions {
       }
     }
 
-    // Special case: `data-` attributes, and the ability to define restrictions
-    // for all of them using `data-*`.
+    // Special case: wildcard attributes, and the ability to define restrictions
+    // for all concrete attributes matching them using:
+    // - prefix wildcard, f.e. `data-*`, to match `data-foo`, `data-bar`, etc.
+    // - infix wildcard, f.e. `*-entity-*`
+    // - suffix wildcard, f.e. `foo-*`
     foreach ($union as $tag => $tag_config) {
-      // If `data-*` is allowed in either one with the same attribute value
-      // restrictions, then all `data-`-attributes are allowed. Then we must
+      // If a wildcard attribute name (f.e. `data-*`) is allowed in either one
+      // with the same attribute value restrictions, then all concrete matches
+      // (f.e. `data-foo`, `data-bar`, etc.) are allowed. Then we must
       // explicitly omit the concrete ones in favor of the wildcard one.
-      if (isset($tag_config['data-*'])) {
-        $wildcard_attribute_restrictions = $tag_config['data-*'];
+      if (!is_array($tag_config)) {
+        continue;
+      }
+      $wildcard_attributes = array_filter(array_keys($tag_config), [__CLASS__, 'isWildcardAttributeName']);
+      foreach ($wildcard_attributes as $wildcard_attribute_name) {
+        $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-          if ($html_tag_attribute_name === 'data-*') {
+          if ($html_tag_attribute_name === $wildcard_attribute_name) {
             continue;
           }
-          if (self::isDataAttribute($html_tag_attribute_name) && $html_tag_attribute_restrictions === $wildcard_attribute_restrictions) {
+          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $tag_config[$wildcard_attribute_name]) {
             unset($tag_config[$html_tag_attribute_name]);
           }
         }
@@ -716,16 +747,30 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Checks whether the given attribute name is a data- attribute.
+   * Checks whether the given attribute name contains a wildcard, e.g. `data-*`.
    *
    * @param string $attribute_name
    *   The attribute name to check.
    *
    * @return bool
-   *   Whether the given attribute name starts with `data-`.
+   *   Whether the given attribute name contains a wildcard.
    */
-  private static function isDataAttribute(string $attribute_name): bool {
-    return substr($attribute_name, 0, 5) === 'data-';
+  private static function isWildcardAttributeName(string $attribute_name): bool {
+    return strpos($attribute_name, '*') !== FALSE;
+  }
+
+  /**
+   * Computes a regular expression for matching a wildcard attribute name.
+   *
+   * @param string $wildcard_attribute_name
+   *   The wildcard attribute name for which to compute a regular expression.
+   *
+   * @return string
+   *   The computed regular expression.
+   */
+  private static function getRegExForWildCardAttributeName(string $wildcard_attribute_name): string {
+    assert(self::isWildcardAttributeName($wildcard_attribute_name));
+    return '/^' . str_replace('*', '.*', $wildcard_attribute_name) . '$/';
   }
 
   /**
@@ -914,11 +959,8 @@ final class HTMLRestrictions {
           // Most attribute restrictions specify a concrete attribute name. When
           // the attribute name contains a partial wildcard, more complex syntax
           // is needed.
-          // NOTE: for now, only `data-*` is supported, in the future support
-          // for more wildcard attribute restrictions may be added.
-          // @see https://ckeditor5.github.io/docs/nightly/ckeditor5/latest/api/module_engine_view_matcher-MatcherPattern.html
           $to_allow['attributes'][] = [
-            'key' => $name !== 'data-*' ? $name : ['regexp' => ['pattern' => '/^data-.*/']],
+            'key' => strpos($name, '*') === FALSE ? $name : ['regexp' => ['pattern' => '/^' . str_replace('*', '.*', $name) . '$/']],
             'value' => $allowed_attribute_value,
           ];
         }

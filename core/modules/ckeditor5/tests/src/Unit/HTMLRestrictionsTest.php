@@ -476,7 +476,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
             [
               'key' => [
                 'regexp' => [
-                  'pattern' => '/^data-.*/',
+                  'pattern' => '/^data-.*$/',
                 ],
               ],
               'value' => TRUE,
@@ -504,7 +504,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
             [
               'key' => [
                 'regexp' => [
-                  'pattern' => '/^data-.*/',
+                  'pattern' => '/^data-.*$/',
                 ],
               ],
               'value' => TRUE,
@@ -524,7 +524,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
             [
               'key' => [
                 'regexp' => [
-                  'pattern' => '/^data-.*/',
+                  'pattern' => '/^data-.*$/',
                 ],
               ],
               'value' => TRUE,
