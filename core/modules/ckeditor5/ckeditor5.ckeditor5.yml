@@ -475,19 +475,11 @@ ckeditor5_imageAlign:
       image:
         toolbar:
           - '|'
+          - 'imageStyle:block'
+          - 'imageStyle:alignLeft'
+          - 'imageStyle:alignCenter'
+          - 'imageStyle:alignRight'
           - 'imageStyle:inline'
-          - name: 'imageStyle:drupalWrapText'
-            title: 'Wrap text'
-            items:
-              - 'imageStyle:alignLeft'
-              - 'imageStyle:alignRight'
-            defaultItem: 'imageStyle:alignLeft'
-          - name: 'imageStyle:drupalBreakText'
-            title: 'Break text'
-            items:
-              - 'imageStyle:block'
-              - 'imageStyle:alignCenter'
-            defaultItem: 'imageStyle:block'
           - '|'
         styles:
           options:
@@ -607,18 +599,10 @@ media_mediaAlign:
       drupalMedia:
         toolbar:
           - '|'
-          - name: 'drupalMedia:wrapText'
-            title: 'Wrap text'
-            items:
-              - 'drupalElementStyle:alignLeft'
-              - 'drupalElementStyle:alignRight'
-            defaultItem: 'drupalElementStyle:alignLeft'
-          - name: 'drupalMedia:align'
-            title: 'Break text'
-            items:
-              - 'drupalElementStyle:breakText'
-              - 'drupalElementStyle:alignCenter'
-            defaultItem: 'drupalElementStyle:breakText'
+          - 'drupalElementStyle:breakText'
+          - 'drupalElementStyle:alignLeft'
+          - 'drupalElementStyle:alignCenter'
+          - 'drupalElementStyle:alignRight'
           - '|'
   drupal:
     label: Media align
