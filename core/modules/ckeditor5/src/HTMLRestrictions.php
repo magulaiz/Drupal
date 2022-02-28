@@ -434,7 +434,7 @@ final class HTMLRestrictions {
       foreach ($wildcard_attributes as $wildcard_attribute_name) {
         $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $other->elements[$tag][$wildcard_attribute_name]) {
+          if ($html_tag_attribute_restrictions === $other->elements[$tag][$wildcard_attribute_name] && preg_match($regex, $html_tag_attribute_name) === 1) {
             unset($tag_config[$html_tag_attribute_name]);
           }
         }
@@ -574,7 +574,7 @@ final class HTMLRestrictions {
         $wildcard_attribute_restriction = $wildcard_operand->elements[$tag][$wildcard_attribute_name];
         $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($concrete_tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $wildcard_attribute_restriction) {
+          if ($html_tag_attribute_restrictions === $wildcard_attribute_restriction && preg_match($regex, $html_tag_attribute_name) === 1) {
             $tag_config = $tag_config === FALSE ? [] : $tag_config;
             $tag_config[$html_tag_attribute_name] = $html_tag_attribute_restrictions;
           }
@@ -696,7 +696,7 @@ final class HTMLRestrictions {
           if ($html_tag_attribute_name === $wildcard_attribute_name) {
             continue;
           }
-          if (preg_match($regex, $html_tag_attribute_name) === 1 && $html_tag_attribute_restrictions === $tag_config[$wildcard_attribute_name]) {
+          if ($html_tag_attribute_restrictions === $tag_config[$wildcard_attribute_name] && preg_match($regex, $html_tag_attribute_name) === 1) {
             unset($tag_config[$html_tag_attribute_name]);
           }
         }
