@@ -391,6 +391,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
       '<drupal-media data-*>',
       ['drupal-media' => ['data-*' => TRUE]],
     ];
+    yield '<drupal-media foo-*-bar>' => [
+      '<drupal-media foo-*-bar>',
+      ['drupal-media' => ['foo-*-bar' => TRUE]],
+    ];
+    yield '<drupal-media *-foo>' => [
+      '<drupal-media *-foo>',
+      ['drupal-media' => ['*-foo' => TRUE]],
+    ];
     yield '<h2 id="jump-*">' => [
       '<h2 id="jump-*">',
       ['h2' => ['id' => ['jump-*' => TRUE]]],
@@ -517,6 +525,46 @@ class HTMLRestrictionsTest extends UnitTestCase {
               'key' => [
                 'regexp' => [
                   'pattern' => '/^data-.*/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media foo-*-bar>' => [
+      new HTMLRestrictions(['drupal-media' => ['foo-*-bar' => TRUE]]),
+      ['<drupal-media foo-*-bar>'],
+      '<drupal-media foo-*-bar>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^foo-.*-bar$/',
+                ],
+              ],
+              'value' => TRUE,
+            ],
+          ],
+        ],
+      ],
+    ];
+    yield '<drupal-media *-bar>' => [
+      new HTMLRestrictions(['drupal-media' => ['*-bar' => TRUE]]),
+      ['<drupal-media *-bar>'],
+      '<drupal-media *-bar>',
+      [
+        [
+          'name' => 'drupal-media',
+          'attributes' => [
+            [
+              'key' => [
+                'regexp' => [
+                  'pattern' => '/^.*-bar$/',
                 ],
               ],
               'value' => TRUE,
@@ -974,49 +1022,58 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => 'b',
     ];
 
-    // Concrete attributes + wildcard attribute cases.
-    yield 'concrete attrs + wildcard attr that covers a superset' => [
-      'a' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
+    // Concrete attributes + wildcard attribute cases for all 3 possible
+    // wildcard locations. Parametrized to prevent excessive repetition and
+    // subtle differences.
+    $wildcard_locations = [
+      'prefix' => 'data-*',
+      'infix' => '*-entity-*',
+      'suffix' => '*-type',
     ];
-    yield 'concrete attrs + wildcard attr that covers a superset — vice versa' => [
-      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => 'b',
-      'union' => 'a',
-    ];
-    yield 'concrete attrs + wildcard attr that covers a subset' => [
-      'a' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
-      'intersection' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
-      'union' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
-    ];
-    yield 'concrete attrs + wildcard attr that covers a subset — vice versa' => [
-      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
-      'diff' => 'a',
-      'intersection' => new HTMLRestrictions(['img' => ['data-entity-uuid' => TRUE, 'data-entity-type' => TRUE]]),
-      'union' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
-    ];
-    yield 'wildcard attr + wildcard attr' => [
-      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
-      'intersection' => 'b',
-      'union' => 'a',
-    ];
-    yield 'wildcard attr + wildcard attr — vice versa' => [
-      'a' => new HTMLRestrictions(['img' => ['data-*' => TRUE]]),
-      'b' => new HTMLRestrictions(['img' => ['data-*' => TRUE, 'class' => TRUE]]),
-      'diff' => HTMLRestrictions::emptySet(),
-      'intersection' => 'a',
-      'union' => 'b',
-    ];
+    foreach ($wildcard_locations as $wildcard_location => $wildcard_attr_name) {
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a superset" => [
+        'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => HTMLRestrictions::emptySet(),
+        'intersection' => 'a',
+        'union' => 'b',
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a superset — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'diff' => 'a',
+        'intersection' => 'b',
+        'union' => 'a',
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a subset" => [
+        'a' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+      ];
+      yield "concrete attrs + wildcard $wildcard_location attr that covers a subset — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE, 'class' => TRUE]]),
+        'diff' => 'a',
+        'intersection' => new HTMLRestrictions(['img' => ['data-entity-bundle-type' => TRUE, 'data-entity-type' => TRUE]]),
+        'union' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+      ];
+      yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'diff' => new HTMLRestrictions(['img' => ['class' => TRUE]]),
+        'intersection' => 'b',
+        'union' => 'a',
+      ];
+      yield "wildcard $wildcard_location attr + wildcard $wildcard_location attr — vice versa" => [
+        'a' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE]]),
+        'b' => new HTMLRestrictions(['img' => [$wildcard_attr_name => TRUE, 'class' => TRUE]]),
+        'diff' => HTMLRestrictions::emptySet(),
+        'intersection' => 'a',
+        'union' => 'b',
+      ];
+    }
   }
 
 }

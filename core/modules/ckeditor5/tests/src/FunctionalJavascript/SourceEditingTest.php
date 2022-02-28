@@ -197,10 +197,21 @@ class SourceEditingTest extends CKEditor5TestBase {
         '<a class>',
       ],
 
-      // Edge case: `data-*`.
+      // Edge case: wildcard attribute names:
+      // - prefix, f.e. `data-*`
+      // - infix, f.e. `*gramma*`
+      // - suffix, f.e. `*-grammar`
       '<a data-*>' => [
         '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
         '<a data-*>',
+      ],
+      '<a *gramma*>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a *gramma*>',
+      ],
+      '<a *-grammar>' => [
+        '<p>The <a href="https://example.com/pirate" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" data-grammar="adjective">irate</a>.</p>',
+        '<a *-grammar>',
       ],
 
       // Edge case: concrete attribute with wildcard class value.
