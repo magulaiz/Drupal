@@ -442,3 +442,18 @@
     background-image: url("../../images/icons/windowText/questionmark.svg") !important;
   }
 }
+
+/* Chevron left */
+.action-link--icon-chevron-left::before {
+  content: "";
+  background-image: url(../../images/icons/545560/chevron-left.svg);
+}
+[dir="rtl"] .action-link--icon-chevron-left::before {
+  transform: rotate(180deg);
+}
+.action-link--icon-chevron-left:hover::before {
+  background-image: url(../../images/icons/0036b1/chevron-left.svg);
+}
+.action-link--icon-chevron-left:active::before {
+  background-image: url(../../images/icons/00309e/chevron-left.svg);
+}
