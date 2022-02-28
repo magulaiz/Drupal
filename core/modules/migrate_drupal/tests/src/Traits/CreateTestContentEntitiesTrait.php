@@ -36,6 +36,7 @@ trait CreateTestContentEntitiesTrait {
    * Install required entity schemas.
    */
   protected function installEntitySchemas() {
+    // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
     $this->installEntitySchema('aggregator_feed');
     $this->installEntitySchema('aggregator_item');
     $this->installEntitySchema('block_content');
