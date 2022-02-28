@@ -73,6 +73,10 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo' => ['baz' => ''], 'bar' => [' qux' => '']],
       'The "bar" HTML tag has an attribute restriction " qux" which contains whitespace. Omit the whitespace.',
     ];
+    yield 'INVALID: keys valid, values invalid attribute restrictions due to broad wildcard instead of prefix/infix/suffix wildcard attribute name' => [
+      ['foo' => ['*' => TRUE]],
+      'The "foo" HTML tag has an attribute restriction "*". This implies all attributes are allowed. Remove the attribute restriction instead, or use a prefix (`*-foo`), infix (`*-foo-*`) or suffix (`foo-*`) wildcard restriction instead.',
+    ];
 
     // Invalid HTML tag attribute value restrictions.
     yield 'INVALID: keys valid, values invalid attribute restrictions due to empty strings' => [

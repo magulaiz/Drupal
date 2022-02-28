@@ -164,6 +164,9 @@ final class HTMLRestrictions {
         if (trim($html_tag_attribute_name) !== $html_tag_attribute_name) {
           throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "%s" which contains whitespace. Omit the whitespace.', $html_tag_name, $html_tag_attribute_name));
         }
+        if ($html_tag_attribute_name === '*') {
+          throw new \InvalidArgumentException(sprintf('The "%s" HTML tag has an attribute restriction "*". This implies all attributes are allowed. Remove the attribute restriction instead, or use a prefix (`*-foo`), infix (`*-foo-*`) or suffix (`foo-*`) wildcard restriction instead.', $html_tag_name));
+        }
       }
     }
   }
@@ -756,6 +759,8 @@ final class HTMLRestrictions {
    *   Whether the given attribute name contains a wildcard.
    */
   private static function isWildcardAttributeName(string $attribute_name): bool {
+    // @see ::validateAllowedRestrictionsPhase3()
+    assert($attribute_name !== '*');
     return strpos($attribute_name, '*') !== FALSE;
   }
 
