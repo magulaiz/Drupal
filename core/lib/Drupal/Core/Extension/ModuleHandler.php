@@ -366,6 +366,20 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function hasImplementations(string $hook, $modules = NULL): bool {
+    if ($modules !== NULL) {
+      foreach ((array) $modules as $module) {
+        // Hook implementations usually found in a module's .install file are
+        // not stored in the implementation info cache. In order to invoke hooks
+        // like hook_schema() and hook_requirements() the module's .install file
+        // must be included by the calling code. Additionally, this check avoids
+        // unnecessary work when a hook implementation is present in a module's
+        // .module file.
+        if (function_exists($module . '_' . $hook)) {
+          return TRUE;
+        }
+      }
+    }
+
     $implementations = $this->getImplementationInfo($hook);
     if ($modules === NULL && !empty($implementations)) {
       return TRUE;
