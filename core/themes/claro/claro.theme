@@ -1635,7 +1635,7 @@ function claro_preprocess_toolbar(&$variables, $hook, $info) {
   // @todo revisit in https://drupal.org/node/3167438. This can potentially be
   // removed as part of that issue.
   $push_right_class = TRUE;
-  foreach (['workspace', 'contextual', 'tour'] as $item_name) {
+  foreach (['user', 'workspace', 'contextual', 'tour'] as $item_name) {
     if (isset($variables['tabs'][$item_name])) {
       $item = $variables['tabs'][$item_name];
       unset($variables['tabs'][$item_name]);
