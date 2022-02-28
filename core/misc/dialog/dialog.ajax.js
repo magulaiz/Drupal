@@ -43,7 +43,7 @@
             return true;
           }
 
-          return allowInteraction.apply(this);
+          return allowInteraction.apply(this, arguments);
         };
       });
     },
