@@ -560,6 +560,9 @@ final class HTMLRestrictions {
       $other_wildcard_attributes = array_diff($other_wildcard_attributes, $in_both);
       $this_wildcard_attributes = array_diff($this_wildcard_attributes, $in_both);
       $wildcard_attributes_to_analyze = array_merge($other_wildcard_attributes, $this_wildcard_attributes);
+      if (empty($wildcard_attributes_to_analyze)) {
+        continue;
+      }
 
       // Otherwise, the wildcard attribute name (f.e. `data-*`) is allowed in
       // one of the two with the same attribute value restrictions (e.g. TRUE to
