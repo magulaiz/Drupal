@@ -422,18 +422,20 @@ final class HTMLRestrictions {
     // - infix wildcard, f.e. `*-entity-*`
     // - suffix wildcard, f.e. `foo-*`
     foreach ($diff_elements as $tag => $tag_config) {
-      // If a wildcard attribute name (f.e. `data-*`) is allowed in $other with
-      // the same attribute value restrictions (e.g. TRUE to allow all attribute
-      // values or an array of specific allowed attribute values), then all
-      // concrete matches (f.e. `data-foo`, `data-bar`, etc.) are allowed and
-      // should be explicitly omitted from the difference.
-      if (!isset($other->elements[$tag]) || !is_array($other->elements[$tag])) {
+      // If there are no per-attribute restrictions for this tag in either
+      // operand, then no wildcard attribute postprocessing is needed.
+      if (!(isset($other->elements[$tag]) && is_array($other->elements[$tag]))) {
         continue;
       }
       $wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
       foreach ($wildcard_attributes as $wildcard_attribute_name) {
         $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          // If a wildcard attribute name (f.e. `data-*`) is allowed in $other
+          // with the same attribute value restrictions (e.g. TRUE to allow all
+          // attribute values or an array of specific allowed attribute values),
+          // then all concrete matches (f.e. `data-foo`, `data-bar`, etc.) are
+          // allowed and should be explicitly omitted from the difference.
           if ($html_tag_attribute_restrictions === $other->elements[$tag][$wildcard_attribute_name] && preg_match($regex, $html_tag_attribute_name) === 1) {
             unset($tag_config[$html_tag_attribute_name]);
           }
@@ -547,8 +549,9 @@ final class HTMLRestrictions {
     // - infix wildcard, f.e. `*-entity-*`
     // - suffix wildcard, f.e. `foo-*`
     foreach ($intersection as $tag => $tag_config) {
-      // Gather the wildcard attributes present in both operands.
-      if (!is_array($this->elements[$tag]) || !is_array($other->elements[$tag])) {
+      // If there are no per-attribute restrictions for this tag in either
+      // operand, then no wildcard attribute postprocessing is needed.
+      if (!(is_array($this->elements[$tag]) && is_array($other->elements[$tag]))) {
         continue;
       }
       $other_wildcard_attributes = array_filter(array_keys($other->elements[$tag]), [__CLASS__, 'isWildcardAttributeName']);
@@ -685,10 +688,8 @@ final class HTMLRestrictions {
     // - infix wildcard, f.e. `*-entity-*`
     // - suffix wildcard, f.e. `foo-*`
     foreach ($union as $tag => $tag_config) {
-      // If a wildcard attribute name (f.e. `data-*`) is allowed in either one
-      // with the same attribute value restrictions, then all concrete matches
-      // (f.e. `data-foo`, `data-bar`, etc.) are allowed. Then we must
-      // explicitly omit the concrete ones in favor of the wildcard one.
+      // If there are no per-attribute restrictions for this tag, then no
+      // wildcard attribute postprocessing is needed.
       if (!is_array($tag_config)) {
         continue;
       }
@@ -696,9 +697,15 @@ final class HTMLRestrictions {
       foreach ($wildcard_attributes as $wildcard_attribute_name) {
         $regex = self::getRegExForWildCardAttributeName($wildcard_attribute_name);
         foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
+          // The wildcard attribute restriction itself must be kept.
           if ($html_tag_attribute_name === $wildcard_attribute_name) {
             continue;
           }
+          // If a concrete attribute restriction (f.e. `data-foo`, `data-bar`,
+          // etc.) exists whose attribute value restrictions are the same as the
+          // wildcard attribute value restrictions (f.e. `data-*`), we must
+          // explicitly drop the concrete attribute restriction in favor of the
+          // wildcard one.
           if ($html_tag_attribute_restrictions === $tag_config[$wildcard_attribute_name] && preg_match($regex, $html_tag_attribute_name) === 1) {
             unset($tag_config[$html_tag_attribute_name]);
           }
