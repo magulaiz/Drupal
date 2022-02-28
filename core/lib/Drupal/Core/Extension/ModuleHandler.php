@@ -366,16 +366,6 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function hasImplementations(string $hook, $modules = NULL): bool {
-    if ($modules !== NULL) {
-      foreach ((array) $modules as $module) {
-        // Some hooks need to be run in a pre-installed phase, where
-        // getImplementationInfo is not yet aware of the new modules.
-        if (function_exists($module . '_' . $hook)) {
-          return TRUE;
-        }
-      }
-    }
-
     $implementations = $this->getImplementationInfo($hook);
     if ($modules === NULL && !empty($implementations)) {
       return TRUE;
