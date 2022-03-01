@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Editor;
 
+use Drupal\ckeditor5\CKEditor5StylesheetsMessage;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
@@ -99,6 +100,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
   protected $cache;
 
   /**
+   * The ckeditor_stylesheets message utility.
+   *
+   * @var \Drupal\ckeditor5\CKEditor5StylesheetsMessage
+   */
+  private $stylesheetsMessage;
+
+  /**
    * Constructs a CKEditor5 editor plugin.
    *
    * @param array $configuration
@@ -118,13 +126,14 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   The cache.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditor5PluginManagerInterface $ckeditor5_plugin_manager, LanguageManagerInterface $language_manager, ModuleHandlerInterface $module_handler, SmartDefaultSettings $smart_default_settings, CacheBackendInterface $cache, CKEditor5StylesheetsMessage $stylesheets_message) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditor5PluginManager = $ckeditor5_plugin_manager;
     $this->languageManager = $language_manager;
     $this->moduleHandler = $module_handler;
     $this->smartDefaultSettings = $smart_default_settings;
     $this->cache = $cache;
+    $this->stylesheetsMessage = $stylesheets_message;
   }
 
   /**
@@ -139,7 +148,8 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('language_manager'),
       $container->get('module_handler'),
       $container->get('ckeditor5.smart_default_settings'),
-      $container->get('cache.default')
+      $container->get('cache.default'),
+      $container->get('ckeditor5.stylesheets.message')
     );
   }
 
@@ -267,10 +277,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $form_state->set('editor', $editor);
     }
 
-    if ($css_warning = _ckeditor5_stylesheets_warning()) {
+    if ($css_warning = $this->stylesheetsMessage->getWarning()) {
       // Explicitly render this single warning message visually close to the
-      // text editor since this is a very long form: otherwise it either would be
-      // interpreted as a text format problem, or it would not be noticed.
+      // text editor since this is a very long form. Otherwise, it may be
+      // interpreted as a text format problem, or ignored entirely.
       // All other messages will be rendered in the default location.
       // @see \Drupal\Core\Render\Element\StatusMessages
       $form['css_warning'] = [
