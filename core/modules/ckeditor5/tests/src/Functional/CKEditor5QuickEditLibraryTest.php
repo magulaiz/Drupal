@@ -75,7 +75,7 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the Quick Edit workaround css loads when needed.
+   * Tests that the Quick Edit workaround CSS loads when needed.
    */
   public function testQuickeditTemporaryWorkaround() {
     $assert_session = $this->assertSession();
