@@ -41,6 +41,7 @@ class SourceEditingTest extends KernelTestBase {
 
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getDynamicPluginConfig()
+   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
    * @dataProvider providerGhsConfiguration
    */
   public function testGhsConfiguration(string $filter_html_allowed, array $source_editing_tags, array $expected_ghs_configuration, ?array $additional_toolbar_items = []): void {
@@ -83,8 +84,8 @@ class SourceEditingTest extends KernelTestBase {
         FilterFormat::load('test_format')
       ))
     ));
-    $dynamic_configuration = $this->manager->getPlugin('ckeditor5_sourceEditing', $editor)->getDynamicPluginConfig([], $editor);
-    $this->assertEquals($expected_ghs_configuration, $dynamic_configuration['htmlSupport']['allow']);
+    $config = $this->manager->getCKEditor5PluginConfig($editor);
+    $this->assertEquals($expected_ghs_configuration, $config['config']['htmlSupport']['allow']);
   }
 
   public function providerGhsConfiguration(): array {
