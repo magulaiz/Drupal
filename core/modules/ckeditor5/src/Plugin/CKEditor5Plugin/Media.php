@@ -59,30 +59,22 @@ class Media extends CKEditor5PluginDefault {
         'attributeName' => 'data-view-mode',
         'attributeValue' => $view_mode,
         'modelElements' => ['drupalMedia'],
-        'modelAttributes' => ['drupalMediaBundle' => $specific_bundles],
+        'modelAttributes' => [
+          'drupalMediaBundle' => $specific_bundles,
+        ],
       ];
     }
-    // Add a "no view mode" option to be used by the UI.
-    $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-      'name' => 'none',
-      'title' => 'no view mode',
-      'modelElements' => ['drupalMedia'],
-      'isDefault' => TRUE,
-    ];
     $items = [];
 
-    // @todo: Define view modes that are available to the bundle used.
     foreach (array_keys($all_view_modes) as $view_mode) {
       $items[] = "drupalElementStyle:viewMode:$view_mode";
     }
-    // Add the "no view mode" option to the toolbar items.
-    $items[] = "drupalElementStyle:viewMode:none";
 
     // Configure dropdown menu.
     $dynamic_plugin_config['drupalMedia']['toolbar'][] = [
       'name' => 'drupalMedia:viewMode',
       'display' => 'list',
-      'defaultItem' => 'drupalElementStyle:viewMode:none',
+      'defaultItem' => 'drupalElementStyle:viewMode:default',
       'defaultText' => 'Select view mode',
       'items' => $items,
     ];

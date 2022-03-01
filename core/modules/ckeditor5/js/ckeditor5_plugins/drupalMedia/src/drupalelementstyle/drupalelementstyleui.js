@@ -14,7 +14,6 @@ import {
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
 import getCommandGroupNameFromGroup from './utils';
-
 import { isObject } from '../utils';
 
 /**
@@ -116,13 +115,11 @@ export default class DrupalElementStyleUi extends Plugin {
   init() {
     const { plugins } = this.editor;
     const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
-
     const definedStyles = plugins.get(
       'DrupalElementStyleEditing',
     ).normalizedStyles;
 
     Object.keys(definedStyles).forEach((group) => {
-      // eslint-disable-next-line no-restricted-syntax
       for (const style of definedStyles[group]) {
         this._createButton(style, group);
       }
@@ -328,13 +325,38 @@ export default class DrupalElementStyleUi extends Plugin {
    *   A list of defined styles.
    */
   _createListDropdown(dropdownConfig, definedStyles) {
-    const factory = this.editor.ui.componentFactory;
+    const viewModeOptions = this.editor.config.get('drupalElementStyles')
+      .options.viewMode;
+    let filteredItems = [];
 
+    this.editor.model.document.on('change', (eventInfo, batch) => {
+      if (eventInfo.name === 'change') {
+        console.log('eventInfo', eventInfo);
+        console.log('batch', batch);
+        const { selection } = this.editor.model.document;
+        const modelElement = selection
+          ? selection.getSelectedElement()
+          : selection.getFirstPosition.findAncestor('drupalElementStyle');
+        const bundleType = modelElement.getAttribute('drupalMediaBundle');
+        const filteredDefinedStyles = viewModeOptions.filter(function (item) {
+          // todo: add polyfill library?
+          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+        });
+        filteredItems = filteredDefinedStyles.map(function (item) {
+          const temp = [];
+          temp.push(`drupalElementStyle:viewMode:${item.name}`);
+          return temp;
+        });
+      }
+    });
+    const factory = this.editor.ui.componentFactory;
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
       const groupName = dropdownConfig.name.split(':')[1];
+      console.log('hit2');
+
       const buttonViews = items
         .filter((itemName) => {
           return definedStyles.find(
@@ -350,6 +372,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
           return button;
         });
+      console.log('buttonViews', buttonViews);
 
       if (items.length !== buttonViews.length) {
         utils.warnInvalidStyle({ dropdown: dropdownConfig });
@@ -385,7 +408,6 @@ export default class DrupalElementStyleUi extends Plugin {
         dropdownView,
         getDropdownListItemDefinitions(definedStyles, command, groupName),
       );
-
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
         const obj = {};

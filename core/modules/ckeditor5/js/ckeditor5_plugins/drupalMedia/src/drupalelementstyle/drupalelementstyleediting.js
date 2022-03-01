@@ -18,7 +18,6 @@ import DrupalElementStyleCommand from './drupalelementstylecommand';
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
-  // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
     if (style.name === name) {
       return style;
@@ -58,7 +57,8 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-      } else {
+      } else if (newStyle.name !== 'default') {
+        console.log(newStyle.attributeValue);
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
@@ -291,7 +291,6 @@ export default class DrupalElementStyleEditing extends Plugin {
         groupName,
       );
 
-      // model
       editor.editing.downcastDispatcher.on(
         `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,

@@ -186,9 +186,7 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
       );
 
       const { normalizedStyles } = elementStyleEditing;
-      // eslint-disable-next-line no-restricted-syntax
       for (const group of Object.keys(normalizedStyles)) {
-        // eslint-disable-next-line no-restricted-syntax
         for (const style of elementStyleEditing.normalizedStyles[group]) {
           if (
             attributes[style.attributeName] &&
@@ -342,6 +340,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
     this.attrs = {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
+      drupalMediaBundle: null,
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
     };
@@ -415,13 +414,53 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
   _defineConverters() {
     const conversion = this.editor.conversion;
+    const metadataRepository = this.editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
 
-    conversion.for('upcast').elementToElement({
-      view: {
-        name: 'drupal-media',
-      },
-      model: 'drupalMedia',
-    });
+    conversion
+      .for('upcast')
+      .elementToElement({
+        view: {
+          name: 'drupal-media',
+        },
+        model: 'drupalMedia',
+      })
+      .add((dispatcher) => {
+        dispatcher.on(
+          'element:drupal-media',
+          (evt, data) => {
+            const [modelElement] = data.modelRange.getItems();
+            if (!isDrupalMedia(modelElement)) {
+              return;
+            }
+            metadataRepository
+              .getMetadata(modelElement)
+              .then((metadata) => {
+                if (!modelElement) {
+                  return;
+                }
+                // Enqueue a model change after getting modelElement.
+                this.editor.model.enqueueChange('transparent', (writer) => {
+                  writer.setAttribute(
+                    'drupalMediaBundle',
+                    metadata.bundleType,
+                    modelElement,
+                  );
+                });
+              })
+              .catch((e) => {
+                // There isn't any UI indication for errors because this should be
+                // always called after the Drupal Media has been upcast, which would
+                // already display an error in the UI.
+                console.warn(e.toString());
+              });
+          },
+          // This converter needs to have the lowest priority to ensure that the
+          // model element and its attributes have been converted.
+          { priority: 'lowest' },
+        );
+      });
 
     conversion.for('dataDowncast').elementToElement({
       model: 'drupalMedia',
@@ -456,6 +495,7 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
         const converter = (event, data, conversionApi) => {
           const viewWriter = conversionApi.writer;
           const modelElement = data.item;
+          // console.log('data.item: ', modelElement);
           const container = conversionApi.mapper.toViewElement(data.item);
 
           // Search for preview container recursively from its children because
@@ -942,6 +982,7 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
    * @private
    */
   _upcastDrupalMediaIsImage(modelElement) {
+    // console.log('modelElement', modelElement);
     const { model, plugins } = this.editor;
     const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
 
@@ -2974,7 +3015,6 @@ function getCommandGroupNameFromGroup(groupName) {
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
@@ -3033,7 +3073,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     super(editor);
     this.styles = styles;
     this._styles = {};
-    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(styles)) {
       this._styles[group] = new Map(
         styles[group].map((style) => {
@@ -3077,7 +3116,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
-    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -3100,7 +3138,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   getGroupAndAttribute(element) {
     const groupAttr = {};
-    // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
@@ -3179,7 +3216,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
-  // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
     if (style.name === name) {
       return style;
@@ -3219,7 +3255,8 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-      } else {
+      } else if (newStyle.name !== 'default') {
+        console.log(newStyle.attributeValue);
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
@@ -3452,7 +3489,6 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
         groupName,
       );
 
-      // model
       editor.editing.downcastDispatcher.on(
         `attribute:drupalElementStyle${groupName}`,
         modelToViewConverter,
@@ -3500,7 +3536,6 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstyleui.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
-
 
 
 
@@ -3608,13 +3643,11 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
   init() {
     const { plugins } = this.editor;
     const toolbarConfig = this.editor.config.get('drupalMedia.toolbar') || [];
-
     const definedStyles = plugins.get(
       'DrupalElementStyleEditing',
     ).normalizedStyles;
 
     Object.keys(definedStyles).forEach((group) => {
-      // eslint-disable-next-line no-restricted-syntax
       for (const style of definedStyles[group]) {
         this._createButton(style, group);
       }
@@ -3820,13 +3853,38 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    *   A list of defined styles.
    */
   _createListDropdown(dropdownConfig, definedStyles) {
-    const factory = this.editor.ui.componentFactory;
+    const viewModeOptions = this.editor.config.get('drupalElementStyles')
+      .options.viewMode;
+    let filteredItems = [];
 
+    this.editor.model.document.on('change', (eventInfo, batch) => {
+      if (eventInfo.name === 'change') {
+        console.log('eventInfo', eventInfo);
+        console.log('batch', batch);
+        const { selection } = this.editor.model.document;
+        const modelElement = selection
+          ? selection.getSelectedElement()
+          : selection.getFirstPosition.findAncestor('drupalElementStyle');
+        const bundleType = modelElement.getAttribute('drupalMediaBundle');
+        const filteredDefinedStyles = viewModeOptions.filter(function (item) {
+          // todo: add polyfill library?
+          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+        });
+        filteredItems = filteredDefinedStyles.map(function (item) {
+          const temp = [];
+          temp.push(`drupalElementStyle:viewMode:${item.name}`);
+          return temp;
+        });
+      }
+    });
+    const factory = this.editor.ui.componentFactory;
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
       const groupName = dropdownConfig.name.split(':')[1];
+      console.log('hit2');
+
       const buttonViews = items
         .filter((itemName) => {
           return definedStyles.find(
@@ -3842,6 +3900,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
           return button;
         });
+      console.log('buttonViews', buttonViews);
 
       if (items.length !== buttonViews.length) {
         utils.warnInvalidStyle({ dropdown: dropdownConfig });
@@ -3877,7 +3936,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
         dropdownView,
         getDropdownListItemDefinitions(definedStyles, command, groupName),
       );
-
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
         const obj = {};

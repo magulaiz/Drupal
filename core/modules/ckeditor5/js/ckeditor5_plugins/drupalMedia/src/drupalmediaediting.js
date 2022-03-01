@@ -5,7 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
-import { getPreviewContainer } from './utils';
+import { getPreviewContainer, isDrupalMedia } from './utils';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -23,6 +23,7 @@ export default class DrupalMediaEditing extends Plugin {
     this.attrs = {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
+      drupalMediaBundle: null,
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
     };
@@ -96,13 +97,53 @@ export default class DrupalMediaEditing extends Plugin {
 
   _defineConverters() {
     const conversion = this.editor.conversion;
+    const metadataRepository = this.editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
 
-    conversion.for('upcast').elementToElement({
-      view: {
-        name: 'drupal-media',
-      },
-      model: 'drupalMedia',
-    });
+    conversion
+      .for('upcast')
+      .elementToElement({
+        view: {
+          name: 'drupal-media',
+        },
+        model: 'drupalMedia',
+      })
+      .add((dispatcher) => {
+        dispatcher.on(
+          'element:drupal-media',
+          (evt, data) => {
+            const [modelElement] = data.modelRange.getItems();
+            if (!isDrupalMedia(modelElement)) {
+              return;
+            }
+            metadataRepository
+              .getMetadata(modelElement)
+              .then((metadata) => {
+                if (!modelElement) {
+                  return;
+                }
+                // Enqueue a model change after getting modelElement.
+                this.editor.model.enqueueChange('transparent', (writer) => {
+                  writer.setAttribute(
+                    'drupalMediaBundle',
+                    metadata.bundleType,
+                    modelElement,
+                  );
+                });
+              })
+              .catch((e) => {
+                // There isn't any UI indication for errors because this should be
+                // always called after the Drupal Media has been upcast, which would
+                // already display an error in the UI.
+                console.warn(e.toString());
+              });
+          },
+          // This converter needs to have the lowest priority to ensure that the
+          // model element and its attributes have been converted.
+          { priority: 'lowest' },
+        );
+      });
 
     conversion.for('dataDowncast').elementToElement({
       model: 'drupalMedia',
@@ -137,6 +178,7 @@ export default class DrupalMediaEditing extends Plugin {
         const converter = (event, data, conversionApi) => {
           const viewWriter = conversionApi.writer;
           const modelElement = data.item;
+          // console.log('data.item: ', modelElement);
           const container = conversionApi.mapper.toViewElement(data.item);
 
           // Search for preview container recursively from its children because
