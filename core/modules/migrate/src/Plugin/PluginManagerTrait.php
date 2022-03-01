@@ -24,9 +24,8 @@ trait PluginManagerTrait {
    */
   protected function addDerivatives(array $source_ids, PluginManagerInterface $manager): array {
     $plugin_ids = [];
-    $all_ids = array_keys($manager->getDefinitions());
     foreach ($source_ids as $id) {
-      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', $all_ids);
+      $plugin_ids += preg_grep('/^' . preg_quote($id, '/') . PluginBase::DERIVATIVE_SEPARATOR . '/', array_keys($manager->getDefinitions()));
       if ($manager->hasDefinition($id)) {
         $plugin_ids[] = $id;
       }
