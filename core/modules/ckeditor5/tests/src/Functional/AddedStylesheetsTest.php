@@ -66,7 +66,6 @@ class AddedStylesheetsTest extends BrowserTestBase {
 
     $this->adminUser = $this->drupalCreateUser([
       'create article content',
-      'edit own article content',
       'use text format llama',
     ]);
     $this->drupalLogin($this->adminUser);
@@ -80,7 +79,8 @@ class AddedStylesheetsTest extends BrowserTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = \Drupal::service('theme_installer');
-    // Install a theme which has an absolute external CSS URL.
+
+    // Install a theme with ckeditor5-stylesheets configured.
     $theme_installer->install(['test_ckeditor_stylesheets_relative']);
     $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_relative')->save();
     $this->config('system.theme')->set('admin', 'stark')->save();
