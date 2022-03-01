@@ -1452,6 +1452,10 @@ tparams
 trackback
 trailingslash
 transferthick
+transitioncancel
+transitionend
+transitionrun
+transitionstart
 translatables
 trayblock
 trex
