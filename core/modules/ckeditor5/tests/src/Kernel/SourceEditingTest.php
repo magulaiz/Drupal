@@ -125,6 +125,18 @@ class SourceEditingTest extends KernelTestBase {
         ['<$block data-llama>', '<div>', '<mark>', '<abbr title>'],
         [
           [
+            'name' => 'p',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+          [
+            'name' => 'blockquote',
+            'attributes' => [
+              'data-llama' => TRUE,
+            ],
+          ],
+          [
             'name' => 'div',
             'attributes' => [
               'data-llama' => TRUE,
@@ -137,18 +149,6 @@ class SourceEditingTest extends KernelTestBase {
             'name' => 'abbr',
             'attributes' => [
               'title' => TRUE,
-            ],
-          ],
-          [
-            'name' => 'p',
-            'attributes' => [
-              'data-llama' => TRUE,
-            ],
-          ],
-          [
-            'name' => 'blockquote',
-            'attributes' => [
-              'data-llama' => TRUE,
             ],
           ],
         ],
