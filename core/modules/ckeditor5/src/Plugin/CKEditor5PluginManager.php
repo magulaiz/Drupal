@@ -255,30 +255,13 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       // ckeditor5_sourceEditing is the edge case here: it is the only plugin
       // that is allowed to return a superset. It's a special case because it
       // is through configuring this particular plugin that additional HTML
-      // tags can be allowed.
-      // Even though its plugin definition says '<*>' is supported, this is a
-      // little lie to convey that this plugin is capable of supporting any
-      // HTML tag … but which ones are actually supported depends on the
-      // configuration.
-      // Furthermore, it supports not only Not only does it accept a ………………………
+      // tags can be allowed. Consequently the CKEditor 5 plugin configuration
+      // it generates also needs information about the computed superset of
+      // elements. That's why it is allowed to deviate from the interface.
       if ($plugin_id === 'ckeditor5_sourceEditing') {
-        $restrictions = HTMLRestrictions::fromString(implode(' ', $plugin->getElementsSubset()));
-        // If there are wildcard tags, we need to resolve those.
-        if ($restrictions->getAllowedElements(FALSE) !== $restrictions->getAllowedElements(TRUE)) {
-          // Determine which HTML elements are provided by all other enabled
-          // plugins (i.e. excluding this SourceEditing plugin).
-          $other_plugin_ids = array_diff(array_keys($definitions), ['ckeditor5_sourceEditing']);
-          $other_plugins_elements = new HTMLRestrictions($this->getProvidedElements($other_plugin_ids, $editor));
-          // Merge SourceEditing restrictions: these are the elements supported
-          // by all enabled CKEditor 5 plugins.
-          $all_plugins_elements = $other_plugins_elements->merge($restrictions);
-          // Finally, determine which are the net new elements.
-          // @see \Drupal\ckeditor5\SmartDefaultSettings::addToolbarItemsToMatchHtmlAttributesInFormat()
-          $net_new_elements = $all_plugins_elements->diff($other_plugins_elements);
-          // Deviate from the interface.
-          $config['ckeditor5_sourceEditing'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $net_new_elements);
-          continue;
-        }
+        $resolved_allowed_elements = new HTMLRestrictions($this->getProvidedElements(['ckeditor5_sourceEditing'], $editor));
+        $config['ckeditor5_sourceEditing'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $resolved_allowed_elements);
+        continue;
       }
 
       $config[$plugin_id] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor);
@@ -318,9 +301,23 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         // HTML tag … but which ones are actually supported depends on the
         // configuration.
         // This also means that without any configuration, it does not support
-        // any HTML tags.
+        // any HTML tags. If configured, information about the other enabled
+        // CKEditor 5 plugins is needed to be able to resolve wildcards.
+        // That's why it is allowed to deviate from the interface.
         if ($id === 'ckeditor5_sourceEditing') {
-          $defined_elements = !isset($editor) ? [] : $this->getPlugin($id, $editor)->getElementsSubset();
+          if (!isset($editor)) {
+            // The SourceEditing plugin only has a set of defined elements in
+            // the context of a specific text editor configuration.
+            continue;
+          }
+          $definitions = $this->getEnabledDefinitions($editor);
+          // Determine which HTML elements are provided by all other enabled
+          // plugins (i.e. excluding this SourceEditing plugin). This is
+          // necessary for computing the superset (in case of wildcards).
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getElementsSubset()
+          $other_plugin_ids = array_diff(array_keys($definitions), ['ckeditor5_sourceEditing']);
+          $other_plugins_elements = new HTMLRestrictions($this->getProvidedElements($other_plugin_ids, $editor));
+          $defined_elements = $this->getPlugin($id, $editor)->getElementsSubset($other_plugins_elements);
         }
         // The default case: all other plugins that implement this interface are
         // explicitly checked for compliance: only subsets are allowed. This is

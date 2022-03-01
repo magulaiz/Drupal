@@ -67,19 +67,49 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
   /**
    * {@inheritdoc}
    */
-  public function getElementsSubset(): array {
-    return $this->configuration['allowed_tags'];
+  public function getElementsSubset(HTMLRestrictions $other_plugins_elements = NULL): array {
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    if ($other_plugins_elements === NULL) {
+      throw new \LogicException();
+    }
+
+    $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
+    if ($restrictions->getAllowedElements(FALSE) === $restrictions->getAllowedElements(TRUE)) {
+      // If there are no wildcard tags, there is nothing to resolve: we can
+      // return the configuration directly.
+      return $this->configuration['allowed_tags'];
+    }
+
+    // Otherwise, compute the concrete elements that the wildcard tags resolve
+    // into. For this, we need to know the concrete elements allowed by all
+    // other enabled CKEditor 5 plugins, so that the wildcard tags in the
+    // "allowed_tags" SourceEditing configuration can resolve into them.
+
+    // Merge SourceEditing restrictions: these are the elements supported
+    // by all enabled CKEditor 5 plugins: SourceEditing + all others.
+    $all_plugins_elements = $other_plugins_elements->merge($restrictions);
+    // Finally, determine which are the net new elements.
+    // @see \Drupal\ckeditor5\SmartDefaultSettings::addToolbarItemsToMatchHtmlAttributesInFormat()
+    $net_new_elements = $all_plugins_elements->diff($other_plugins_elements);
+
+    // Note: this still contains wildcard tags. The wildcard tags' concrete
+    // effects when combined with the other CKEditor 5 plugins are explicit now.
+    return $net_new_elements->toCKEditor5ElementsArray();
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor, HTMLRestrictions $net_new_elements = NULL): array {
+  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor, HTMLRestrictions $resolved_allowed_elements = NULL): array {
     // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
-    $net_new_elements = $net_new_elements ?? HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
+    if ($resolved_allowed_elements === NULL) {
+      throw new \LogicException();
+    }
+
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
     return [
       'htmlSupport' => [
-        'allow' => $net_new_elements->toGeneralHtmlSupportConfig(),
+        'allow' => $resolved_allowed_elements->toGeneralHtmlSupportConfig(),
       ],
     ];
   }
