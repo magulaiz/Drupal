@@ -569,7 +569,7 @@ final class HTMLRestrictions {
 
       // Otherwise, the wildcard attribute name (f.e. `data-*`) is allowed in
       // one of the two with the same attribute value restrictions (e.g. TRUE to
-      // allow all attribute values  or an array of specific allowed attribute
+      // allow all attribute values, or an array of specific allowed attribute
       // values), and the intersection must contain the most restrictive
       // configuration.
       foreach ($wildcard_attributes_to_analyze as $wildcard_attribute_name) {
