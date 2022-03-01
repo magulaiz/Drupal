@@ -1,0 +1,17 @@
+<article class="card">
+  <div class="card__media">
+    {% block media %}
+    {% endblock %}
+  </div>
+  <div class="card__content">
+    <h3 class="card__title">{{ title }}</h3>
+    <div class="card__text">
+      {% block text %}
+      {% endblock %}
+    </div>
+    <div class="card__cta">
+      {% block cta %}
+      {% endblock %}
+    </div>
+  </div>
+</article>

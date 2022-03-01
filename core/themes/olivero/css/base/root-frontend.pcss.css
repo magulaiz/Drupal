@@ -1,0 +1,83 @@
+
+/**
+ * @file
+ * Overrides for Drupal core’s CSS custom properties API.
+ */
+.root-frontend {
+
+  /* Primary colors. */
+  --drupal-color-primary-light: var(--color--primary-50);
+  --drupal-color-primary-medium: var(--color--primary-40);
+  --drupal-color-primary-dark: var(--color--primary-30);
+
+  /* Neutral colors (grays, etc). */
+  --drupal-color-neutral-light: var(--color--gray-95);
+  --drupal-color-neutral-medium: var(--color--gray-45);
+  --drupal-color-neutral-dark: var(--color--gray-10);
+
+  /* Notification colors. */
+  --drupal-color-notification-background: var(--color--black);
+  --drupal-color-notification-text: var(--color--white);
+  --drupal-color-notification-error: var(--color--red);
+  --drupal-color-notification-success: var(--color--green);
+  --drupal-color-notification-warning: var(--color--gold);
+  --drupal-color-notification-status: var(--color--primary-60);
+
+  /* Canvas (background) colors. */
+  --drupal-color-canvas: var(--color--white);
+  --drupal-color-canvas-dark: var(--color--gray-5); /* Used on Olivero's footer. */
+  --drupal-color-canvas-neutral: var(--color--gray-100);
+
+  /* Hyperlink default color. */
+  --drupal-color-link: var(--color--primary-40);
+
+  /*  Helper variables to meet WCAG contrast ratios. */
+  --drupal-color-text-on-light: var(--color--gray-20); /* Meets 4.5:1 contrast ratio against --drupal-color-canvas. */
+  --drupal-color-text-on-neutral: var(--color--primary-40); /* Meets 4.5:1 contrast ratio against --drupal-color-canvas-neutral. */
+  --drupal-color-text-on-dark: var(--color--gray-10); /* Meets 4.5:1 contrast ratio against --drupal-color-canvas-dark. */
+  --drupal-color-text-on-primary: var(--color--white); /* Meets 4.5:1 contrast ratio against --drupal-color-primary-medium. */
+
+  /* Spacing units. */
+  --drupal-spacing: var(--sp);
+  --drupal-spacing-xs: calc(0.5 * var(--drupal-spacing));
+  --drupal-spacing-s: calc(0.75 * var(--drupal-spacing));
+  --drupal-spacing-m: var(--drupal-spacing);
+  --drupal-spacing-l: calc(2 * var(--drupal-spacing));
+  --drupal-spacing-xl: calc(3 * var(--drupal-spacing));
+  --drupal-spacing-2xl: calc(4 * var(--drupal-spacing));
+  --drupal-spacing-3xl: calc(5 * var(--drupal-spacing));
+
+  /* Typography. */
+  --drupal-font-family: var(--font-sans);
+  --drupal-font-size-xs: 13px;
+  --drupal-font-size-s: 14px;
+  --drupal-font-size-m: 16px;
+  --drupal-font-size-l: 18px;
+  --drupal-font-size-xl: 20px;
+  --drupal-font-size-2xl: 23px;
+  --drupal-font-size-3xl: 26px;
+  --drupal-font-size-4xl: 29px;
+  --drupal-font-size-5xl: 32px;
+  --drupal-line-height-xs: 13px;
+  --drupal-line-height-s: 14px;
+  --drupal-line-height-m: 16px;
+  --drupal-line-height-l: 18px;
+  --drupal-line-height-xl: 20px;
+  --drupal-line-height-2xl: 23px;
+  --drupal-line-height-3xl: 26px;
+  --drupal-line-height-4xl: 29px;
+  --drupal-line-height-5xl: 32px;
+}
+
+
+/*
+Thoughts:
+
+- My typography styles will include variables that are outside of .root-frontend. With
+  the current architecture, these will not be loaded by CK5. How do we handle this?
+  - Namespace front-end theme vars?
+- It seems weird when styling a component that some variables are "drupal" and some are
+  "olivero". The current architecture dictates that we should use the "drupal" variables
+  when possible. But that requires knowing that they exist and knowing which ones exist.
+  People (incl myself) will undoubtedly screw this up.
+*/
