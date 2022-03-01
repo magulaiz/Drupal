@@ -60,7 +60,6 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
       },
       iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
     ));
-    // Create node type.
     $this->drupalCreateContentType([
       'type' => 'article',
       'name' => 'Article',
