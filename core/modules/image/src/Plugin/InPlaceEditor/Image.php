@@ -11,6 +11,8 @@ use Drupal\quickedit\Plugin\InPlaceEditorBase;
  * @InPlaceEditor(
  *   id = "image"
  * )
+ *
+ * @todo this probably needs to move to quickedit too.
  */
 class Image extends InPlaceEditorBase {
 

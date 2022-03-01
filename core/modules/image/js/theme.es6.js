@@ -1,6 +1,8 @@
 /**
  * @file
  * Provides theme functions for image Quick Edit's client-side HTML.
+ *
+ * @todo move this to quickedit module.
  */
 
 (function (Drupal) {

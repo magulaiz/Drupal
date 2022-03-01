@@ -1,6 +1,8 @@
 /**
  * @file
  * Drag+drop based in-place editor for images.
+ *
+ * @todo move this to quickedit module.
  */
 
 (function ($, _, Drupal) {
