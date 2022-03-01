@@ -46,6 +46,16 @@ final class CKEditor5StylesheetsMessage {
     $this->configFactory = $config_factory;
   }
 
+  /**
+   * Generates a warning related to ckeditor_stylesheets.
+   *
+   * Identifies themes using ckeditor_stylesheets without an equivalent
+   * ckeditor5-stylesheets setting. If such themes are found, a warning message
+   * is returned.
+   *
+   * @return \Drupal\Core\StringTranslation\PluralTranslatableMarkup|null
+   *   A warning message where appropriate, otherwise null.
+   */
   public function getWarning() {
     $themes = [];
     $default_theme = $this->configFactory->get('system.theme')->get('default');
@@ -85,7 +95,15 @@ final class CKEditor5StylesheetsMessage {
     return NULL;
   }
 
-  private function checkForStylesheetsEquivalent($theme_info, array &$ckeditor_stylesheets_use) {
+  /**
+   * Checks themes using ckeditor_stylesheets for CKEditor 5 equivalents.
+   *
+   * @param array $theme_info
+   *   The config of the theme to check.
+   * @param string[] $ckeditor_stylesheets_use
+   *   Themes using ckeditor_stylesheets without a CKEditor 5 equivalent.
+   */
+  private function checkForStylesheetsEquivalent(array $theme_info, array &$ckeditor_stylesheets_use) {
     $theme_has_ckeditor5_stylesheets = isset($theme_info['ckeditor5-stylesheets']);
     if (!empty($theme_info['ckeditor_stylesheets']) && !$theme_has_ckeditor5_stylesheets) {
       $ckeditor_stylesheets_use[] = $theme_info['name'];
@@ -109,4 +127,5 @@ final class CKEditor5StylesheetsMessage {
       $base_theme = $base_theme_info['base theme'] ?? FALSE;
     }
   }
+
 }

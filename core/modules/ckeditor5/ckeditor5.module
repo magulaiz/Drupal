@@ -420,7 +420,6 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
     }
   }
 
-
   // Only add translation processing if the locale module is enabled.
   if (!$moduleHandler->moduleExists('locale')) {
     return;
