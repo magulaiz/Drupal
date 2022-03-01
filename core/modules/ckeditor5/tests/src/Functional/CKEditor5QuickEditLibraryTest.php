@@ -37,14 +37,14 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $filtered_html_format = FilterFormat::create([
+    $format = FilterFormat::create([
       'format' => 'llama',
       'name' => 'Llama',
       'filters' => [],
       'roles' => [RoleInterface::AUTHENTICATED_ID],
     ]);
-    $filtered_html_format->save();
-    $this->editor = Editor::create([
+    $format->save();
+    $editor = Editor::create([
       'format' => 'llama',
       'editor' => 'ckeditor5',
       'settings' => [
@@ -53,12 +53,12 @@ class CKEditor5QuickEditLibraryTest extends BrowserTestBase {
         ],
       ],
     ]);
-    $this->editor->save();
+    $editor->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
+      iterator_to_array(CKEditor5::validatePair($editor, $format))
     ));
     $this->drupalCreateContentType([
       'type' => 'article',
