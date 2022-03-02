@@ -88,11 +88,7 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
 
       $this->enableTheme($theme);
 
-      $block = $this->placeBlock($block_plugin, [
-        // @todo Remove this when
-        //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
-        'region' => 'sidebar_first',
-      ]);
+      $block = $this->placeBlock($block_plugin);
       $block_selector = $this->getBlockSelector($block);
       // Load the same page twice.
       foreach ([1, 2] as $page_load_times) {
