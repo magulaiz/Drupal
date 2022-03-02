@@ -67,6 +67,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'create article content',
       'use text format llama',
+      'administer themes',
     ]);
     $this->drupalLogin($this->adminUser);
   }
@@ -79,14 +80,27 @@ class AddedStylesheetsTest extends BrowserTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = \Drupal::service('theme_installer');
-
-    // Install a theme with ckeditor5-stylesheets configured.
     $theme_installer->install(['test_ckeditor_stylesheets_relative']);
-    $this->config('system.theme')->set('default', 'test_ckeditor_stylesheets_relative')->save();
     $this->config('system.theme')->set('admin', 'stark')->save();
 
     $this->drupalGet('node/add/article');
+    $assert_session->responseNotContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');
+
+    // Install a theme with ckeditor5-stylesheets configured. Do this manually
+    // to confirm `library_info` cache tags are invalidated.
+    $this->drupalGet('admin/appearance');
+    $this->clickLink('Set Test relative CKEditor stylesheets as default theme');
+
+    // Confirm the stylesheet added via `ckeditor5-stylesheets` is present.
+    $this->drupalGet('node/add/article');
     $assert_session->responseContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');
+
+    // Change the default theme to Stark, and confirm the styleheet added via
+    // `ckeditor5-stylesheets` is no longer present.
+    $this->drupalGet('admin/appearance');
+    $this->clickLink('Set Stark as default theme');
+    $this->drupalGet('node/add/article');
+    $assert_session->responseNotContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');
   }
 
 }
