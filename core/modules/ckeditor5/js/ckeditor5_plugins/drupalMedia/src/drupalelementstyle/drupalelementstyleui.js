@@ -73,10 +73,14 @@ function getUIComponentName(name, group) {
  * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
  * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
  */
-function getDropdownListItemDefinitions(definedStyles, command, groupName) {
+function getDropdownListItemDefinitions(
+  definedStyles,
+  command,
+  groupName,
+  editor,
+) {
   const itemDefinitions = new Collection();
   const commandGroup = getCommandGroupNameFromGroup(groupName);
-
   definedStyles.forEach((style) => {
     const definition = {
       type: 'button',
@@ -87,9 +91,32 @@ function getDropdownListItemDefinitions(definedStyles, command, groupName) {
         commandValue: style.name,
         label: style.title,
         withText: true,
+        class: '',
       }),
     };
     itemDefinitions.add(definition);
+
+    editor.model.document.on('change', (eventInfo, batch) => {
+      if (eventInfo.name === 'change') {
+        const { selection } = editor.model.document;
+        const modelElement = selection
+          ? selection.getSelectedElement()
+          : selection.getFirstPosition.findAncestor('drupalElementStyle');
+        const bundleType = modelElement.getAttribute('drupalMediaBundle');
+        const filteredDefinedStyles = definedStyles.filter(function (item) {
+          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+        });
+        console.log('filteredDefinedStyles', filteredDefinedStyles);
+        console.log('style', style);
+        if (!filteredDefinedStyles.includes(style)) {
+          // Hide button if view mode is not available for the bundle that the modelElement is.
+          definition.model.set({ class: 'ck-hidden' });
+        } else {
+          // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
+          definition.model.set({ class: '' });
+        }
+      }
+    });
   });
   return itemDefinitions;
 }
@@ -325,30 +352,6 @@ export default class DrupalElementStyleUi extends Plugin {
    *   A list of defined styles.
    */
   _createListDropdown(dropdownConfig, definedStyles) {
-    const viewModeOptions = this.editor.config.get('drupalElementStyles')
-      .options.viewMode;
-    let filteredItems = [];
-
-    this.editor.model.document.on('change', (eventInfo, batch) => {
-      if (eventInfo.name === 'change') {
-        console.log('eventInfo', eventInfo);
-        console.log('batch', batch);
-        const { selection } = this.editor.model.document;
-        const modelElement = selection
-          ? selection.getSelectedElement()
-          : selection.getFirstPosition.findAncestor('drupalElementStyle');
-        const bundleType = modelElement.getAttribute('drupalMediaBundle');
-        const filteredDefinedStyles = viewModeOptions.filter(function (item) {
-          // todo: add polyfill library?
-          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
-        });
-        filteredItems = filteredDefinedStyles.map(function (item) {
-          const temp = [];
-          temp.push(`drupalElementStyle:viewMode:${item.name}`);
-          return temp;
-        });
-      }
-    });
     const factory = this.editor.ui.componentFactory;
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
@@ -406,7 +409,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
       addListToDropdown(
         dropdownView,
-        getDropdownListItemDefinitions(definedStyles, command, groupName),
+        getDropdownListItemDefinitions(definedStyles, command, groupName, this.editor),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
@@ -423,6 +426,7 @@ export default class DrupalElementStyleUi extends Plugin {
       return dropdownView;
     });
   }
+  // )};
 
   /**
    * Executes the Drupal Element Style command.

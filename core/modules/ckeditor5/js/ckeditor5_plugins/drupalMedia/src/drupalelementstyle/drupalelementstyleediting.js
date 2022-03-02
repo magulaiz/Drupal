@@ -57,8 +57,8 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-      } else if (newStyle.name !== 'default') {
-        console.log(newStyle.attributeValue);
+      } else if (!newStyle.isDefault) {
+        // @todo: check this
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
