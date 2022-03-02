@@ -602,12 +602,15 @@ media_mediaAlign:
             modelElements: [ 'drupalMedia' ]
       drupalMedia:
         toolbar:
-          - '|'
-          - 'drupalElementStyle:breakText'
-          - 'drupalElementStyle:alignLeft'
-          - 'drupalElementStyle:alignCenter'
-          - 'drupalElementStyle:alignRight'
-          - '|'
+          - name: 'drupalMedia:align'
+            display: 'toolbar'
+            items:
+              - '|'
+              - 'drupalElementStyle:align:breakText'
+              - 'drupalElementStyle:align:alignLeft'
+              - 'drupalElementStyle:align:alignCenter'
+              - 'drupalElementStyle:align:alignRight'
+              - '|'
   drupal:
     label: Media align
     library: ckeditor5/drupal.ckeditor5.mediaAlign

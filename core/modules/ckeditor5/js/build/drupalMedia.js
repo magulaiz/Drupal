@@ -3061,7 +3061,7 @@ function getCommandGroupNameFromGroup(groupName) {
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  Object.keys(this.styles).forEach((group) => {
+  Object.keys(styles).forEach((group) => {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
       selectedElement,
@@ -3177,6 +3177,17 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     } else {
       this.value = false;
     }
+
+    // if (!this.isEnabled) {
+    //   this.value = false;
+    //   // The element needs to be checked against list of possible attributes then
+    //   // update the value to include all drupalElementStyles selected for the element.
+    // } else if (this.containsAttribute(element)) {
+    //   this.value = this.getGroupAndAttribute(element);
+    // } else {
+    //   this.value = false;
+    // }
+    //
   }
 
   /**
@@ -3190,7 +3201,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   containsAttribute(element) {
     Object.keys(this.styles).forEach((group) => {
-      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
@@ -3213,7 +3223,6 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
   getGroupAndAttribute(element) {
     const groupAttr = {};
     Object.keys(this.styles).forEach((group) => {
-      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -3654,6 +3663,8 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  *
  * @param {string} name
  *   The name of the component.
+ * @param {string} group
+ *   The group of the component.
  * @return {string}
  *   The UI component name.
  *
@@ -3706,8 +3717,6 @@ function getDropdownListItemDefinitions(
         const filteredDefinedStyles = definedStyles.filter(function (item) {
           return item.modelAttributes.drupalMediaBundle.includes(bundleType);
         });
-        console.log('filteredDefinedStyles', filteredDefinedStyles);
-        console.log('style', style);
         if (!filteredDefinedStyles.includes(style)) {
           // Hide button if view mode is not available for the bundle that the modelElement is.
           definition.model.set({ class: 'ck-hidden' });
@@ -3975,7 +3984,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
           return button;
         });
-      console.log('buttonViews', buttonViews);
 
       if (items.length !== buttonViews.length) {
         utils.warnInvalidStyle({ dropdown: dropdownConfig });

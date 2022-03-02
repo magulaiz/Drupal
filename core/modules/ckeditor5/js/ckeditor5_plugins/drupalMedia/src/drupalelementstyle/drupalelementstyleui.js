@@ -54,6 +54,8 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  *
  * @param {string} name
  *   The name of the component.
+ * @param {string} group
+ *   The group of the component.
  * @return {string}
  *   The UI component name.
  *
@@ -106,8 +108,6 @@ function getDropdownListItemDefinitions(
         const filteredDefinedStyles = definedStyles.filter(function (item) {
           return item.modelAttributes.drupalMediaBundle.includes(bundleType);
         });
-        console.log('filteredDefinedStyles', filteredDefinedStyles);
-        console.log('style', style);
         if (!filteredDefinedStyles.includes(style)) {
           // Hide button if view mode is not available for the bundle that the modelElement is.
           definition.model.set({ class: 'ck-hidden' });
@@ -375,7 +375,6 @@ export default class DrupalElementStyleUi extends Plugin {
 
           return button;
         });
-      console.log('buttonViews', buttonViews);
 
       if (items.length !== buttonViews.length) {
         utils.warnInvalidStyle({ dropdown: dropdownConfig });

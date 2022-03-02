@@ -21,7 +21,7 @@ import getCommandGroupNameFromGroup from './utils';
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  Object.keys(this.styles).forEach((group) => {
+  Object.keys(styles).forEach((group) => {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
       selectedElement,
@@ -137,6 +137,17 @@ export default class DrupalElementStyleCommand extends Command {
     } else {
       this.value = false;
     }
+
+    // if (!this.isEnabled) {
+    //   this.value = false;
+    //   // The element needs to be checked against list of possible attributes then
+    //   // update the value to include all drupalElementStyles selected for the element.
+    // } else if (this.containsAttribute(element)) {
+    //   this.value = this.getGroupAndAttribute(element);
+    // } else {
+    //   this.value = false;
+    // }
+    //
   }
 
   /**
@@ -150,7 +161,6 @@ export default class DrupalElementStyleCommand extends Command {
    */
   containsAttribute(element) {
     Object.keys(this.styles).forEach((group) => {
-      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
@@ -173,7 +183,6 @@ export default class DrupalElementStyleCommand extends Command {
   getGroupAndAttribute(element) {
     const groupAttr = {};
     Object.keys(this.styles).forEach((group) => {
-      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
