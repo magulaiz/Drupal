@@ -52,41 +52,44 @@ class Media extends CKEditor5PluginDefault {
     }
 
     $dynamic_plugin_config['drupalMedia']['debug'] = $allowed_view_modes;
+
+    // all_view_modes has 'fake'.
     $dynamic_plugin_config['drupalMedia']['debug1'] = $all_view_modes;
 
+    // default: [audio, doc].
+    // tiny: [img].
+    $dynamic_plugin_config['drupalMedia']['debug2'] = $bundles_per_view_mode;
 
     // Create view mode options.
     foreach (array_keys($all_view_modes) as $view_mode) {
-//      if (array_key_exists($view_mode, $allowed_view_modes)) {
-        var_dump('foooo');
-        $specific_bundles = $bundles_per_view_mode[$view_mode];
-        if ($view_mode !== 'default') {
-          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-            'name' => $view_mode,
-            'title' => $view_mode . ' view mode',
-            'attributeName' => 'data-view-mode',
-            'attributeValue' => $view_mode,
-            'modelElements' => ['drupalMedia'],
-            'modelAttributes' => [
-              'drupalMediaBundle' => $specific_bundles,
-            ],
-          ];
-        }
-        elseif ($view_mode === 'default') {
-          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-            'isDefault' => TRUE,
-            'name' => $view_mode,
-            'title' => $view_mode . ' view mode',
-            'attributeName' => 'data-view-mode',
-            'attributeValue' => $view_mode,
-            'modelElements' => ['drupalMedia'],
-            'modelAttributes' => [
-              'drupalMediaBundle' => $specific_bundles,
-            ],
-          ];
-        }
+      // If (array_key_exists($view_mode, $allowed_view_modes)).
+      $specific_bundles = $bundles_per_view_mode[$view_mode];
+      if ($view_mode !== 'default') {
+        $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+          'name' => $view_mode,
+          'title' => $view_mode . ' view mode',
+          'attributeName' => 'data-view-mode',
+          'attributeValue' => $view_mode,
+          'modelElements' => ['drupalMedia'],
+          'modelAttributes' => [
+            'drupalMediaBundle' => $specific_bundles,
+          ],
+        ];
       }
-//    }
+      elseif ($view_mode === 'default') {
+        $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+          'isDefault' => TRUE,
+          'name' => $view_mode,
+          'title' => $view_mode . ' view mode',
+          'attributeName' => 'data-view-mode',
+          'attributeValue' => $view_mode,
+          'modelElements' => ['drupalMedia'],
+          'modelAttributes' => [
+            'drupalMediaBundle' => $specific_bundles,
+          ],
+        ];
+      }
+    }
 
     $items = [];
 

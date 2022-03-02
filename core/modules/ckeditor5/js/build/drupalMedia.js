@@ -610,20 +610,23 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      const attributeMapping = {
-        model: {
-          key: modelKey,
-          name: 'drupalMedia',
-        },
-        view: {
-          name: 'drupal-media',
-          key: this.attrs[modelKey],
-        },
-      };
-      // Attributes should be rendered only in dataDowncast to avoid having
-      // unfiltered data-attributes on the Drupal Media widget.
-      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
-      conversion.for('upcast').attributeToAttribute(attributeMapping);
+      // Omit drupalMediaBundle from downcast because it is unnecessary for the view.
+      if (modelKey !== 'drupalMediaBundle') {
+        const attributeMapping = {
+          model: {
+            key: modelKey,
+            name: 'drupalMedia',
+          },
+          view: {
+            name: 'drupal-media',
+            key: this.attrs[modelKey],
+          },
+        };
+        // Attributes should be rendered only in dataDowncast to avoid having
+        // unfiltered data-attributes on the Drupal Media widget.
+        conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+        conversion.for('upcast').attributeToAttribute(attributeMapping);
+      }
     });
   }
 
@@ -3015,13 +3018,13 @@ function getCommandGroupNameFromGroup(groupName) {
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  for (const group of Object.keys(styles)) {
+  Object.keys(this.styles).forEach((group) => {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
       selectedElement,
       `drupalElementStyle${groupName}`,
     );
-  }
+  });
   return false;
 }
 
@@ -3073,13 +3076,13 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     super(editor);
     this.styles = styles;
     this._styles = {};
-    for (const group of Object.keys(styles)) {
+    Object.keys(styles).forEach((group) => {
       this._styles[group] = new Map(
         styles[group].map((style) => {
           return [style.name, style];
         }),
       );
-    }
+    });
   }
 
   /**
@@ -3116,12 +3119,13 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
-    for (const group of Object.keys(this.styles)) {
+    Object.keys(this.styles).forEach((group) => {
+      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
-    }
+    });
     return false;
   }
 
@@ -3138,7 +3142,8 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    */
   getGroupAndAttribute(element) {
     const groupAttr = {};
-    for (const group of Object.keys(this.styles)) {
+    Object.keys(this.styles).forEach((group) => {
+      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -3146,7 +3151,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
           `drupalElementStyle${groupName}`,
         );
       }
-    }
+    });
     return groupAttr;
   }
 
@@ -3216,11 +3221,11 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
-  for (const style of styles) {
+  styles.forEach((style) => {
     if (style.name === name) {
       return style;
     }
-  }
+  });
 }
 
 /**
@@ -3256,7 +3261,6 @@ function modelToViewStyleAttribute(styles) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
       } else if (!newStyle.isDefault) {
-        // @todo: check this
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
@@ -3675,9 +3679,9 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
     ).normalizedStyles;
 
     Object.keys(definedStyles).forEach((group) => {
-      for (const style of definedStyles[group]) {
+      definedStyles[group].forEach((style) => {
         this._createButton(style, group);
-      }
+      });
     });
 
     /**
@@ -3937,7 +3941,12 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
       (0,delegated_uifrom_dll_reference_CKEditor5.addListToDropdown)(
         dropdownView,
-        getDropdownListItemDefinitions(definedStyles, command, groupName, this.editor),
+        getDropdownListItemDefinitions(
+          definedStyles,
+          command,
+          groupName,
+          this.editor,
+        ),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {

@@ -18,11 +18,11 @@ import DrupalElementStyleCommand from './drupalelementstylecommand';
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
-  for (const style of styles) {
+  styles.forEach((style) => {
     if (style.name === name) {
       return style;
     }
-  }
+  });
 }
 
 /**
@@ -58,7 +58,6 @@ function modelToViewStyleAttribute(styles) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
       } else if (!newStyle.isDefault) {
-        // @todo: check this
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,

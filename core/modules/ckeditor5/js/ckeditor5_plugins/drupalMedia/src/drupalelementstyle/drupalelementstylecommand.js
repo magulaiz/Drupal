@@ -21,13 +21,13 @@ import getCommandGroupNameFromGroup from './utils';
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  for (const group of Object.keys(styles)) {
+  Object.keys(this.styles).forEach((group) => {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
       selectedElement,
       `drupalElementStyle${groupName}`,
     );
-  }
+  });
   return false;
 }
 
@@ -79,13 +79,13 @@ export default class DrupalElementStyleCommand extends Command {
     super(editor);
     this.styles = styles;
     this._styles = {};
-    for (const group of Object.keys(styles)) {
+    Object.keys(styles).forEach((group) => {
       this._styles[group] = new Map(
         styles[group].map((style) => {
           return [style.name, style];
         }),
       );
-    }
+    });
   }
 
   /**
@@ -122,12 +122,13 @@ export default class DrupalElementStyleCommand extends Command {
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
-    for (const group of Object.keys(this.styles)) {
+    Object.keys(this.styles).forEach((group) => {
+      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
-    }
+    });
     return false;
   }
 
@@ -144,7 +145,8 @@ export default class DrupalElementStyleCommand extends Command {
    */
   getGroupAndAttribute(element) {
     const groupAttr = {};
-    for (const group of Object.keys(this.styles)) {
+    Object.keys(this.styles).forEach((group) => {
+      // for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
@@ -152,7 +154,7 @@ export default class DrupalElementStyleCommand extends Command {
           `drupalElementStyle${groupName}`,
         );
       }
-    }
+    });
     return groupAttr;
   }
 

@@ -293,20 +293,23 @@ export default class DrupalMediaEditing extends Plugin {
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      const attributeMapping = {
-        model: {
-          key: modelKey,
-          name: 'drupalMedia',
-        },
-        view: {
-          name: 'drupal-media',
-          key: this.attrs[modelKey],
-        },
-      };
-      // Attributes should be rendered only in dataDowncast to avoid having
-      // unfiltered data-attributes on the Drupal Media widget.
-      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
-      conversion.for('upcast').attributeToAttribute(attributeMapping);
+      // Omit drupalMediaBundle from downcast because it is unnecessary for the view.
+      if (modelKey !== 'drupalMediaBundle') {
+        const attributeMapping = {
+          model: {
+            key: modelKey,
+            name: 'drupalMedia',
+          },
+          view: {
+            name: 'drupal-media',
+            key: this.attrs[modelKey],
+          },
+        };
+        // Attributes should be rendered only in dataDowncast to avoid having
+        // unfiltered data-attributes on the Drupal Media widget.
+        conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+        conversion.for('upcast').attributeToAttribute(attributeMapping);
+      }
     });
   }
 

@@ -147,9 +147,9 @@ export default class DrupalElementStyleUi extends Plugin {
     ).normalizedStyles;
 
     Object.keys(definedStyles).forEach((group) => {
-      for (const style of definedStyles[group]) {
+      definedStyles[group].forEach((style) => {
         this._createButton(style, group);
-      }
+      });
     });
 
     /**
@@ -409,7 +409,12 @@ export default class DrupalElementStyleUi extends Plugin {
 
       addListToDropdown(
         dropdownView,
-        getDropdownListItemDefinitions(definedStyles, command, groupName, this.editor),
+        getDropdownListItemDefinitions(
+          definedStyles,
+          command,
+          groupName,
+          this.editor,
+        ),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
