@@ -300,7 +300,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     // since this is a very long form: otherwise they would not be noticed.
     $form['real_time_validation_errors_location'] = [
       '#type' => 'container',
-      'id' => 'ckeditor5-realtime-validation-messages-container',
+      '#id' => 'ckeditor5-realtime-validation-messages-container',
     ];
 
     $form['toolbar'] = [
