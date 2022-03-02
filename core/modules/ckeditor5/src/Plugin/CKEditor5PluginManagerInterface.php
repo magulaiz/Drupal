@@ -98,19 +98,22 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
   public function getCKEditor5PluginConfig(EditorInterface $editor): array;
 
   /**
-   * Create a list of elements with attributes declared for the CKEditor5 build.
+   * Gets all supported elements for the given plugins and text editor.
    *
    * @param string[] $plugin_ids
-   *   An array of plugin IDs.
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A configured text editor object.
+   *   (optional) An array of CKEditor 5 plugin IDs. When not set, gets elements
+   *   for all plugins.
+   * @param \Drupal\editor\EditorInterface|null $editor
+   *   (optional) A configured text editor object using CKEditor 5. When not
+   *   set, plugins depending on the text editor cannot provide elements.
    *
    * @return array
    *   A nested array with a structure as described in
    *   \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions().
    *
    * @throws \LogicException
-   *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface implementation is encountered.
+   *   Thrown when an invalid CKEditor5PluginElementsSubsetInterface
+   *   implementation is encountered.
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */

@@ -1165,6 +1165,10 @@ PHP,
       'settings' => $text_editor_settings,
       'image_upload' => [],
     ]);
+    FilterFormat::create([
+      'format' => 'dummy',
+      'name' => 'dummy',
+    ])->save();
     $this->assertConfigSchema(
       $this->typedConfig,
       $text_editor->getConfigDependencyName(),
