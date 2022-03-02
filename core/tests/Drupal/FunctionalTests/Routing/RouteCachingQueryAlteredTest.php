@@ -9,21 +9,22 @@ use Symfony\Component\HttpFoundation\Response;
  * Tests the route cache when the request's query parameters are altered, either
  * in the normal course of operations or due to an exception.
  *
- * @group language
+ * @group routing
  */
 class RouteCachingQueryAlteredTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['router_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
@@ -39,6 +40,9 @@ class RouteCachingQueryAlteredTest extends BrowserTestBase {
     $this->writeSettings($settings);
   }
 
+  /**
+   * Test route collection cache after exception.
+   */
   public function testRouteCollectionCacheAfterException() {
     // Force an exception early in the Kernel middleware on a cold cache by
     // simulating bad Bearer authentication.
