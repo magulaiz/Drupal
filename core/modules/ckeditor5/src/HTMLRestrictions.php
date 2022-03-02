@@ -975,7 +975,7 @@ final class HTMLRestrictions {
           // the attribute name contains a partial wildcard, more complex syntax
           // is needed.
           $to_allow['attributes'][] = [
-            'key' => strpos($name, '*') === FALSE ? $name : ['regexp' => ['pattern' => '/^' . str_replace('*', '.*', $name) . '$/']],
+            'key' => strpos($name, '*') === FALSE ? $name : ['regexp' => ['pattern' => self::getRegExForWildCardAttributeName($name)]],
             'value' => $allowed_attribute_value,
           ];
         }
