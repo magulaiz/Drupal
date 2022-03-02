@@ -1270,7 +1270,7 @@ services:
       - { name: event_subscriber }
   exception.needs_installer:
     class: Drupal\Core\EventSubscriber\ExceptionDetectNeedsInstallSubscriber
-    arguments: ['@database']
+    arguments: ['@database', '@page_cache_kill_switch']
     tags:
       - { name: event_subscriber }
   exception.default_json:
