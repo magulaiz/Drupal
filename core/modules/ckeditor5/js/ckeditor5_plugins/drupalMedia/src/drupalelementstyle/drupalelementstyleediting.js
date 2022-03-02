@@ -243,7 +243,6 @@ export default class DrupalElementStyleEditing extends Plugin {
             );
             return false;
           }
-
           if (!style.name) {
             console.warn('drupalElementStyles options must include a name.');
             return false;
@@ -252,7 +251,6 @@ export default class DrupalElementStyleEditing extends Plugin {
           return true;
         });
     });
-    // .filter(Boolean);
     this.normalizedStyles = stylesConfig;
 
     this._setupConversion();

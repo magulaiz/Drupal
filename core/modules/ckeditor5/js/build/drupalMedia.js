@@ -219,6 +219,7 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
 
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/utils.js
 /* eslint-disable import/no-extraneous-dependencies */
+// cSpell:words documentselection
 
 
 /**
@@ -252,6 +253,26 @@ function isDrupalMediaWidget(viewElement) {
 }
 
 /**
+ * Gets `drupalMedia` element from selection.
+ *
+ * @param {module:engine/model/selection~Selection|module:engine/model/documentselection~DocumentSelection} selection
+ *   The current selection.
+ * @returns {module:engine/model/element~Element|null}
+ *   The `drupalMedia` element which could be either the current selected an
+ *   ancestor of the selection. Returns null if the selection has no Drupal
+ *   Media element.
+ *
+ * @internal
+ */
+function getClosestSelectedDrupalMediaElement(selection) {
+  const selectedElement = selection.getSelectedElement();
+
+  return isDrupalMedia(selectedElement)
+    ? selectedElement
+    : selection.getFirstPosition().findAncestor('drupalMedia');
+}
+
+/**
  * Gets selected Drupal Media widget if only Drupal Media is currently selected.
  *
  * @param {module:engine/model/selection~Selection} selection
@@ -261,10 +282,20 @@ function isDrupalMediaWidget(viewElement) {
  *
  * @internal
  */
-function getSelectedDrupalMediaWidget(selection) {
+function getClosestSelectedDrupalMediaWidget(selection) {
   const viewElement = selection.getSelectedElement();
   if (viewElement && isDrupalMediaWidget(viewElement)) {
     return viewElement;
+  }
+
+  let parent = selection.getFirstPosition().parent;
+
+  while (parent) {
+    if (parent.is('element') && isDrupalMediaWidget(parent)) {
+      return parent;
+    }
+
+    parent = parent.parent;
   }
 
   return null;
@@ -769,7 +800,8 @@ class DrupalMediaToolbar extends delegated_corefrom_dll_reference_CKEditor5.Plug
         normalizeDeclarativeConfig(editor.config.get('drupalMedia.toolbar')) ||
         [],
       // Get the selected image or an image containing the figcaption with the selection inside.
-      getRelatedElement: (selection) => getSelectedDrupalMediaWidget(selection),
+      getRelatedElement: (selection) =>
+        getClosestSelectedDrupalMediaWidget(selection),
     });
   }
 }
@@ -806,14 +838,16 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
    * @inheritDoc
    */
   refresh() {
-    const element = this.editor.model.document.selection.getSelectedElement();
+    const drupalMediaElement = getClosestSelectedDrupalMediaElement(
+      this.editor.model.document.selection,
+    );
     this.isEnabled =
-      isDrupalMedia(element) &&
-      element.getAttribute('drupalMediaIsImage') &&
-      element.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
+      !!drupalMediaElement &&
+      drupalMediaElement.getAttribute('drupalMediaIsImage') &&
+      drupalMediaElement.getAttribute('drupalMediaIsImage') !== METADATA_ERROR;
 
-    if (isDrupalMedia(element) && element.hasAttribute('drupalMediaAlt')) {
-      this.value = element.getAttribute('drupalMediaAlt');
+    if (this.isEnabled) {
+      this.value = drupalMediaElement.getAttribute('drupalMediaAlt');
     } else {
       this.value = false;
     }
@@ -828,14 +862,20 @@ class MediaImageTextAlternativeCommand extends delegated_corefrom_dll_reference_
    */
   execute(options) {
     const { model } = this.editor;
-    const imageElement = model.document.selection.getSelectedElement();
+    const drupalMediaElement = getClosestSelectedDrupalMediaElement(
+      model.document.selection,
+    );
 
     options.newValue = options.newValue.trim();
     model.change((writer) => {
       if (options.newValue.length > 0) {
-        writer.setAttribute('drupalMediaAlt', options.newValue, imageElement);
+        writer.setAttribute(
+          'drupalMediaAlt',
+          options.newValue,
+          drupalMediaElement,
+        );
       } else {
-        writer.removeAttribute('drupalMediaAlt', imageElement);
+        writer.removeAttribute('drupalMediaAlt', drupalMediaElement);
       }
     });
   }
@@ -1207,7 +1247,9 @@ function getBalloonPositionData(editor) {
 function repositionContextualBalloon(editor) {
   const balloon = editor.plugins.get('ContextualBalloon');
 
-  if (getSelectedDrupalMediaWidget(editor.editing.view.document.selection)) {
+  if (
+    getClosestSelectedDrupalMediaWidget(editor.editing.view.document.selection)
+  ) {
     const position = getBalloonPositionData(editor);
 
     balloon.updatePosition(position);
@@ -1558,9 +1600,10 @@ class MediaImageTextAlternativeUi extends delegated_corefrom_dll_reference_CKEdi
       cancel();
     });
 
-    // Reposition the balloon or hide the form if an image widget is no longer selected.
+    // Reposition the balloon or hide the form if a media widget is no longer
+    // selected.
     this.listenTo(editor.ui, 'update', () => {
-      if (!getSelectedDrupalMediaWidget(viewDocument.selection)) {
+      if (!getClosestSelectedDrupalMediaWidget(viewDocument.selection)) {
         this._hideForm(true);
       } else if (this._isVisible) {
         repositionContextualBalloon(editor);
@@ -3043,15 +3086,26 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  */
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
   const selectedElement = selection.getSelectedElement();
-
-  return selectedElement &&
+  if (
+    selectedElement &&
     schemaContainsAttribute(selectedElement, schema, styles)
-    ? selectedElement
-    : selection
-        .getFirstPosition()
-        .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalElementStyle'),
-        );
+  ) {
+    return selectedElement;
+  }
+
+  let parent = selection.getFirstPosition().parent;
+
+  while (parent) {
+    if (
+      parent.is('element') &&
+      schema.checkAttribute(parent, 'drupalElementStyle')
+    ) {
+      return parent;
+    }
+
+    parent = parent.parent;
+  }
+  return null;
 }
 
 /**
@@ -3098,12 +3152,28 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
 
     this.isEnabled = !!element;
 
-    if (!this.isEnabled) {
-      this.value = false;
-      // The element needs to be checked against list of possible attributes then
-      // update the value to include all drupalElementStyles selected for the element.
-    } else if (this.containsAttribute(element)) {
+    // The element needs to be checked against list of possible attributes then
+    // update the value to include all drupalElementStyles selected for the element.
+    if (this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
+    } else if (this.isEnabled) {
+      this.value = element.getAttribute('drupalElementStyle');
+      // If value is falsy, check if there is a default style to apply to the
+      // element.
+      if (!this.value) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [name, style] of this._styles.entries()) {
+          if (style.isDefault) {
+            const appliesToCurrentElement = style.modelElements.find(
+              (modelElement) => element.is('element', modelElement),
+            );
+            if (appliesToCurrentElement) {
+              this.value = name;
+              break;
+            }
+          }
+        }
+      }
     } else {
       this.value = false;
     }
@@ -3446,7 +3516,6 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
             );
             return false;
           }
-
           if (!style.name) {
             console.warn('drupalElementStyles options must include a name.');
             return false;
@@ -3455,7 +3524,6 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
           return true;
         });
     });
-    // .filter(Boolean);
     this.normalizedStyles = stylesConfig;
 
     this._setupConversion();
@@ -4049,9 +4117,37 @@ class DrupalElementStyle extends delegated_corefrom_dll_reference_CKEditor5.Plug
 
 // EXTERNAL MODULE: delegated ./engine.js from dll-reference CKEditor5.dll
 var delegated_enginefrom_dll_reference_CKEditor5 = __webpack_require__("ckeditor5/src/engine.js");
+;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption/utils.js
+/* eslint-disable import/prefer-default-export */
+
+
+/**
+ * Returns the Media caption model element for a model selection.
+ *
+ * @param {module:engine/model/selection~Selection} selection
+ *   The current selection.
+ * @returns {module:engine/model/element~Element|null}
+ *   The Drupal Media caption element for a model selection. Returns null if the
+ *   selection has no Drupal Media caption element ancestor.
+ */
+function getMediaCaptionFromModelSelection(selection) {
+  const captionElement = selection.getFirstPosition().findAncestor('caption');
+
+  if (!captionElement) {
+    return null;
+  }
+
+  if (isDrupalMedia(captionElement.parent)) {
+    return captionElement;
+  }
+
+  return null;
+}
+
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalmediacaption/drupalmediacaptioncommand.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words imagecaption */
+
 
 
 
@@ -4094,14 +4190,31 @@ class ToggleDrupalMediaCaptionCommand extends delegated_corefrom_dll_reference_C
    * @inheritDoc
    */
   refresh() {
-    const element = this.editor.model.document.selection.getSelectedElement();
+    const selection = this.editor.model.document.selection;
+    const selectedElement = selection.getSelectedElement();
 
-    this.isEnabled = isDrupalMedia(element);
+    // When selectedElement is falsy, it is potentially due to multiple elements
+    // being selected, such as elements that descend from `<drupalMedia>`.
+    if (!selectedElement) {
+      // Command should be enabled if `<drupalMedia>` element is part of the
+      // selection.
+      this.isEnabled = !!getClosestSelectedDrupalMediaElement(selection);
+      // Check if the selection descends from a `<drupalMedia>` element that
+      // also includes a `<caption>`.
+      this.value = !!getMediaCaptionFromModelSelection(selection);
+
+      return;
+    }
+
+    // If single element is selected, check if it's a `<drupalMedia>` element.
+    this.isEnabled = isDrupalMedia(selectedElement);
 
     if (!this.isEnabled) {
       this.value = false;
     } else {
-      this.value = !!getCaptionFromDrupalMediaModelElement(element);
+      // Command value is set based on whether the selected `<drupalMedia>`
+      // element has a `<caption>` as a child element.
+      this.value = !!getCaptionFromDrupalMediaModelElement(selectedElement);
     }
   }
 
@@ -4149,7 +4262,7 @@ class ToggleDrupalMediaCaptionCommand extends delegated_corefrom_dll_reference_C
     const mediaCaptionEditing = this.editor.plugins.get(
       'DrupalMediaCaptionEditing',
     );
-    const selectedMedia = selection.getSelectedElement();
+    const selectedMedia = getClosestSelectedDrupalMediaElement(selection);
     const savedCaption = mediaCaptionEditing._getSavedCaption(selectedMedia);
 
     // Try restoring the caption from the DrupalMediaCaptionEditing plugin storage.
@@ -4175,18 +4288,21 @@ class ToggleDrupalMediaCaptionCommand extends delegated_corefrom_dll_reference_C
     const editor = this.editor;
     const selection = editor.model.document.selection;
     const mediaCaptionEditing = editor.plugins.get('DrupalMediaCaptionEditing');
-    const selectedMedia = selection.getSelectedElement();
+    let selectedElement = selection.getSelectedElement();
+    let captionElement;
 
-    if (selectedMedia) {
-      const captionElement =
-        getCaptionFromDrupalMediaModelElement(selectedMedia);
-
-      // Store the caption content so it can be restored quickly if the user
-      // changes their mind.
-      mediaCaptionEditing._saveCaption(selectedMedia, captionElement);
-      writer.setSelection(selectedMedia, 'on');
-      writer.remove(captionElement);
+    if (selectedElement) {
+      captionElement = getCaptionFromDrupalMediaModelElement(selectedElement);
+    } else {
+      captionElement = getMediaCaptionFromModelSelection(selection);
+      selectedElement = getClosestSelectedDrupalMediaElement(selection);
     }
+
+    // Store the caption content so it can be restored quickly if the user
+    // changes their mind.
+    mediaCaptionEditing._saveCaption(selectedElement, captionElement);
+    writer.setSelection(selectedElement, 'on');
+    writer.remove(captionElement);
   }
 }
 
@@ -4510,6 +4626,7 @@ class DrupalMediaCaptionEditing extends delegated_corefrom_dll_reference_CKEdito
 
 
 
+
 /**
  * The caption media UI plugin.
  *
@@ -4561,9 +4678,9 @@ class DrupalMediaCaptionUI extends delegated_corefrom_dll_reference_CKEditor5.Pl
         editor.execute('toggleMediaCaption', { focusCaptionOnShow: true });
 
         // If a caption is present, highlight it and scroll to the selection.
-        const modelCaptionElement = editor.model.document.selection
-          .getFirstPosition()
-          .findAncestor('caption');
+        const modelCaptionElement = getMediaCaptionFromModelSelection(
+          editor.model.document.selection,
+        );
         if (modelCaptionElement) {
           const figcaptionElement =
             editor.editing.mapper.toViewElement(modelCaptionElement);

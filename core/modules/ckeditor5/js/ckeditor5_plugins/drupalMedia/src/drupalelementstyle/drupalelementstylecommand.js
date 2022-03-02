@@ -46,15 +46,26 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  */
 function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
   const selectedElement = selection.getSelectedElement();
-
-  return selectedElement &&
+  if (
+    selectedElement &&
     schemaContainsAttribute(selectedElement, schema, styles)
-    ? selectedElement
-    : selection
-        .getFirstPosition()
-        .findAncestor((element) =>
-          schema.checkAttribute(element, 'drupalElementStyle'),
-        );
+  ) {
+    return selectedElement;
+  }
+
+  let parent = selection.getFirstPosition().parent;
+
+  while (parent) {
+    if (
+      parent.is('element') &&
+      schema.checkAttribute(parent, 'drupalElementStyle')
+    ) {
+      return parent;
+    }
+
+    parent = parent.parent;
+  }
+  return null;
 }
 
 /**
@@ -101,12 +112,28 @@ export default class DrupalElementStyleCommand extends Command {
 
     this.isEnabled = !!element;
 
-    if (!this.isEnabled) {
-      this.value = false;
-      // The element needs to be checked against list of possible attributes then
-      // update the value to include all drupalElementStyles selected for the element.
-    } else if (this.containsAttribute(element)) {
+    // The element needs to be checked against list of possible attributes then
+    // update the value to include all drupalElementStyles selected for the element.
+    if (this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
+    } else if (this.isEnabled) {
+      this.value = element.getAttribute('drupalElementStyle');
+      // If value is falsy, check if there is a default style to apply to the
+      // element.
+      if (!this.value) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [name, style] of this._styles.entries()) {
+          if (style.isDefault) {
+            const appliesToCurrentElement = style.modelElements.find(
+              (modelElement) => element.is('element', modelElement),
+            );
+            if (appliesToCurrentElement) {
+              this.value = name;
+              break;
+            }
+          }
+        }
+      }
     } else {
       this.value = false;
     }
