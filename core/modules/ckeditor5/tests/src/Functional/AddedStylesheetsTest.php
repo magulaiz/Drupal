@@ -95,7 +95,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
     $this->drupalGet('node/add/article');
     $assert_session->responseContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');
 
-    // Change the default theme to Stark, and confirm the styleheet added via
+    // Change the default theme to Stark, and confirm the stylesheet added via
     // `ckeditor5-stylesheets` is no longer present.
     $this->drupalGet('admin/appearance');
     $this->clickLink('Set Stark as default theme');
