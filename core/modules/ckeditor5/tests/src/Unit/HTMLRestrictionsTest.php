@@ -924,7 +924,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * Ensure that filter plugiin without restrictions converts to an empty set.
+   * Ensure that filter plugin without restrictions converts to an empty set.
    *
    * @covers ::fromFilterPluginInstance
    */
