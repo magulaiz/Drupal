@@ -382,7 +382,9 @@ class MediaTest extends WebDriverTestBase {
       'Toggle caption off',
       'Link media',
       'Override media image alternative text',
-      'Centered media',
+      // Check only one of the element style buttons since that is sufficient
+      // for confirming that element style buttons are visible in the toolbar.
+      'Break text',
     ];
     foreach ($expected_buttons as $expected_button) {
       $this->assertNotEmpty($this->getBalloonButton($expected_button));
