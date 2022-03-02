@@ -251,7 +251,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willImplement(FieldDefinitionInterface::class)
       ->willImplement(FieldStorageDefinitionInterface::class);
 
-    // Define bundle fields to be stored on the default Entity class
+    // Define bundle fields to be stored on the default Entity class.
     $bundle_fields = [
       'the_entity_id' => [
         'test_entity_bundle' => [
@@ -263,7 +263,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ],
     ];
 
-    // Define bundle fields to be stored on the Bundle Class
+    // Define bundle fields to be stored on the bundle class.
     $bundle_class_fields = [
       'the_entity_id' => [
         'test_entity_bundle_class' => [
@@ -921,6 +921,10 @@ abstract class EntityTypeManagerTestEntity implements \Iterator, ContentEntityIn
 
 }
 
+/**
+ * Provides an extending bundle class for the above entity with dummy static
+ * method implementations.
+ */
 abstract class EntityTypeManagerTestEntityBundle extends EntityTypeManagerTestEntity {
   /**
    * The bundle class field definitions.
