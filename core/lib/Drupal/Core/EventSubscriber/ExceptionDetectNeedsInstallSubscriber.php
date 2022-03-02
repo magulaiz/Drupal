@@ -4,6 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Installer\InstallerRedirectTrait;
+use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -23,13 +24,23 @@ class ExceptionDetectNeedsInstallSubscriber implements EventSubscriberInterface 
   protected $connection;
 
   /**
+   * Page cache kill switch.
+   *
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   */
+  protected $killSwitch;
+
+  /**
    * Constructs a new ExceptionDetectNeedsInstallSubscriber.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The default database connection.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $killSwitch
+   *   Page cache kill switch.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(Connection $connection, KillSwitch $killSwitch) {
     $this->connection = $connection;
+    $this->killSwitch = $killSwitch;
   }
 
   /**
@@ -46,6 +57,7 @@ class ExceptionDetectNeedsInstallSubscriber implements EventSubscriberInterface 
       $request = $event->getRequest();
       $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
       if ($format == 'html') {
+        $this->killSwitch->trigger();
         $event->setResponse(new RedirectResponse($request->getBasePath() . '/core/install.php', 302, ['Cache-Control' => 'no-cache']));
       }
     }
