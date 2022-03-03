@@ -21,6 +21,6 @@ services:
   ckeditor5.ckeditor5_cache_tag:
     public: false
     class: Drupal\ckeditor5\EventSubscriber\CKEditor5CacheTag
-    arguments: [ '@theme_handler', '@cache_tags.invalidator' ]
+    arguments: ['@cache_tags.invalidator']
     tags:
       - { name: event_subscriber }

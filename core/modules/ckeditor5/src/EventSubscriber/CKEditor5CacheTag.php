@@ -5,7 +5,6 @@ namespace Drupal\ckeditor5\EventSubscriber;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -17,13 +16,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CKEditor5CacheTag implements EventSubscriberInterface {
 
   /**
-   * The theme handler.
-   *
-   * @var \Drupal\Core\Extension\ThemeHandlerInterface
-   */
-  protected $themeHandler;
-
-  /**
    * The cache tags invalidator.
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
@@ -33,13 +25,10 @@ class CKEditor5CacheTag implements EventSubscriberInterface {
   /**
    * Constructs a CKEditor5CacheTag object.
    *
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
    */
-  public function __construct(ThemeHandlerInterface $theme_handler, CacheTagsInvalidatorInterface $cache_tags_invalidator) {
-    $this->themeHandler = $theme_handler;
+  public function __construct(CacheTagsInvalidatorInterface $cache_tags_invalidator) {
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
   }
 
