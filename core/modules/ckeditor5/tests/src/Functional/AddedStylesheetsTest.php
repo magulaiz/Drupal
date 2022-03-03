@@ -68,6 +68,7 @@ class AddedStylesheetsTest extends BrowserTestBase {
       'create article content',
       'use text format llama',
       'administer themes',
+      'view the administration theme',
     ]);
     $this->drupalLogin($this->adminUser);
   }
@@ -80,8 +81,9 @@ class AddedStylesheetsTest extends BrowserTestBase {
 
     /** @var \Drupal\Core\Extension\ThemeInstallerInterface $theme_installer */
     $theme_installer = \Drupal::service('theme_installer');
-    $theme_installer->install(['test_ckeditor_stylesheets_relative']);
-    $this->config('system.theme')->set('admin', 'stark')->save();
+    $theme_installer->install(['test_ckeditor_stylesheets_relative', 'seven']);
+    $this->config('system.theme')->set('admin', 'seven')->save();
+    $this->config('node.settings')->set('use_admin_theme', TRUE)->save();
 
     $this->drupalGet('node/add/article');
     $assert_session->responseNotContains('test_ckeditor_stylesheets_relative/css/yokotsoko.css');
