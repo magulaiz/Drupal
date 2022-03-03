@@ -29,6 +29,7 @@ drupal.ckeditor5:
     - core/ckeditor5.editorDecoupled
     - core/ckeditor5
     - editor/drupal.editor
+    - ckeditor5/ie11.user.warnings
     - ckeditor5/drupal.ckeditor5.stylesheets
     - core/drupalSettings
     - core/drupal.message
