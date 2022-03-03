@@ -114,28 +114,27 @@ export default class DrupalElementStyleCommand extends Command {
 
     // The element needs to be checked against list of possible attributes then
     // update the value to include all drupalElementStyles selected for the element.
-    if (this.containsAttribute(element)) {
+    if (this.isEnabled && this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
-    } else if (this.isEnabled) {
-      this.value = element.getAttribute('drupalElementStyle');
+    } else {
+      this.value = false;
       // If value is falsy, check if there is a default style to apply to the
       // element.
       if (!this.value) {
+        // @todo need to add support for default styles.
         // eslint-disable-next-line no-restricted-syntax
-        for (const [name, style] of this._styles.entries()) {
-          if (style.isDefault) {
-            const appliesToCurrentElement = style.modelElements.find(
-              (modelElement) => element.is('element', modelElement),
-            );
-            if (appliesToCurrentElement) {
-              this.value = name;
-              break;
-            }
-          }
-        }
+        // for (const [name, style] of this._styles.entries()) {
+        //   if (style.isDefault) {
+        //     const appliesToCurrentElement = style.modelElements.find(
+        //       (modelElement) => element.is('element', modelElement),
+        //     );
+        //     if (appliesToCurrentElement) {
+        //       this.value = name;
+        //       break;
+        //     }
+        //   }
+        // }
       }
-    } else {
-      this.value = false;
     }
 
     // if (!this.isEnabled) {

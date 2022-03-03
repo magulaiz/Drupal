@@ -1750,7 +1750,7 @@ class MediaImageTextAlternative extends delegated_corefrom_dll_reference_CKEdito
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-html-support/src/conversionutils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2328,7 +2328,7 @@ class DrupalLinkMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-link/src/utils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2656,7 +2656,7 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-image/src/imagestyle/utils.js
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2833,7 +2833,6 @@ const DEFAULT_DROPDOWN_DEFINITIONS = [ {
  * * The image style options not supported by any of the loaded plugins are filtered out.
  */
 function normalizeStyles( config ) {
-  console.log('this functino is called');
 	const configuredStyles = config.configuredStyles.options || [];
 
 	const styles = configuredStyles
@@ -3154,28 +3153,27 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
 
     // The element needs to be checked against list of possible attributes then
     // update the value to include all drupalElementStyles selected for the element.
-    if (this.containsAttribute(element)) {
+    if (this.isEnabled && this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
-    } else if (this.isEnabled) {
-      this.value = element.getAttribute('drupalElementStyle');
+    } else {
+      this.value = false;
       // If value is falsy, check if there is a default style to apply to the
       // element.
       if (!this.value) {
+        // @todo need to add support for default styles.
         // eslint-disable-next-line no-restricted-syntax
-        for (const [name, style] of this._styles.entries()) {
-          if (style.isDefault) {
-            const appliesToCurrentElement = style.modelElements.find(
-              (modelElement) => element.is('element', modelElement),
-            );
-            if (appliesToCurrentElement) {
-              this.value = name;
-              break;
-            }
-          }
-        }
+        // for (const [name, style] of this._styles.entries()) {
+        //   if (style.isDefault) {
+        //     const appliesToCurrentElement = style.modelElements.find(
+        //       (modelElement) => element.is('element', modelElement),
+        //     );
+        //     if (appliesToCurrentElement) {
+        //       this.value = name;
+        //       break;
+        //     }
+        //   }
+        // }
       }
-    } else {
-      this.value = false;
     }
 
     // if (!this.isEnabled) {
