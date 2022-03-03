@@ -10,6 +10,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * A subscriber invalidating cache tags when the default theme changes.
+ *
+ * @internal
+ *   This class may change at any time. It is not for use outside this module.
  */
 class CKEditor5CacheTag implements EventSubscriberInterface {
 
@@ -28,7 +31,7 @@ class CKEditor5CacheTag implements EventSubscriberInterface {
   protected $cacheTagsInvalidator;
 
   /**
-   * Constructs a ConfigCacheTag object.
+   * Constructs a CKEditor5CacheTag object.
    *
    * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
    *   The theme handler.
@@ -41,7 +44,7 @@ class CKEditor5CacheTag implements EventSubscriberInterface {
   }
 
   /**
-   * Invalidate cache tags when particular system config objects are saved.
+   * Invalidates cache tags when particular system config objects are saved.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The Event to process.
@@ -51,6 +54,7 @@ class CKEditor5CacheTag implements EventSubscriberInterface {
 
     // Ckeditor5-stylesheets settings may change when the default theme changes.
     if ($config_name === 'system.theme' && $event->isChanged('default')) {
+      // @see ckeditor5_library_info_alter()
       $this->cacheTagsInvalidator->invalidateTags(['library_info']);
     }
   }

@@ -10,7 +10,7 @@ use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * Tests that a Quick Edit specific library loads when Quickedit is enabled.
+ * Tests that a Quick Edit specific library loads when Quick Edit is enabled.
  *
  * @group ckeditor5
  * @group legacy

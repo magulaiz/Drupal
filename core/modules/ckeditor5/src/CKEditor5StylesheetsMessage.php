@@ -14,6 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *
  * @internal
  *   This class may change at any time. It is not for use outside this module.
+ * @todo Remove in Drupal 11: https://www.drupal.org/project/ckeditor5/issues/3239012
  */
 final class CKEditor5StylesheetsMessage {
 
