@@ -107,9 +107,14 @@
       this.setAttribute('href', url + glue + destination);
     });
 
+    let title = '';
+    const $regionHeading = $region.find('h2');
+    if ($regionHeading.length) {
+      title = $regionHeading[0].textContent.trim();
+    }
     // Create a model and the appropriate views.
     const model = new contextual.StateModel({
-      title: $region.find('h2').eq(0).text().trim(),
+      title,
     });
     const viewOptions = $.extend({ el: $contextual, model }, options);
     contextual.views.push({
@@ -154,9 +159,9 @@
       const $context = $(context);
 
       // Find all contextual links placeholders, if any.
-      let $placeholders = $context
-        .find('[data-contextual-id]')
-        .once('contextual-render');
+      let $placeholders = $(
+        once('contextual-render', '[data-contextual-id]', context),
+      );
       if ($placeholders.length === 0) {
         return;
       }

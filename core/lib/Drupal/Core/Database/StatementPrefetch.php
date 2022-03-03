@@ -224,7 +224,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
     // as soon as possible.
     $this->data = $statement->fetchAll(\PDO::FETCH_ASSOC);
     // Destroy the statement as soon as possible. See the documentation of
-    // \Drupal\Core\Database\Driver\sqlite\Statement for an explanation.
+    // \Drupal\sqlite\Driver\Database\sqlite\Statement for an explanation.
     unset($statement);
 
     $this->resultRowCount = count($this->data);
@@ -320,6 +320,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * @return mixed
    *   The current row formatted as requested.
    */
+  #[\ReturnTypeWillChange]
   public function current() {
     if (isset($this->currentRow)) {
       switch ($this->fetchStyle) {
@@ -379,6 +380,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function key() {
     return $this->currentKey;
   }
@@ -386,6 +388,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function rewind() {
     // Nothing to do: our DatabaseStatement can't be rewound.
   }
@@ -393,6 +396,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function next() {
     if (!empty($this->data)) {
       $this->currentRow = reset($this->data);
@@ -407,6 +411,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function valid() {
     return isset($this->currentRow);
   }
@@ -430,7 +435,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
   public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
     if (isset($this->currentRow)) {
       // Set the fetch parameter.
-      $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
+      $this->fetchStyle = $fetch_style ?? $this->defaultFetchStyle;
       $this->fetchOptions = $this->defaultFetchOptions;
 
       // Grab the row in the format specified above.
@@ -516,7 +521,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    $this->fetchStyle = isset($mode) ? $mode : $this->defaultFetchStyle;
+    $this->fetchStyle = $mode ?? $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;
@@ -581,7 +586,7 @@ class StatementPrefetch implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAllAssoc($key, $fetch_style = NULL) {
-    $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
+    $this->fetchStyle = $fetch_style ?? $this->defaultFetchStyle;
     $this->fetchOptions = $this->defaultFetchOptions;
 
     $result = [];

@@ -14,10 +14,10 @@
 
   Drupal.behaviors.claroVerticalTabs = {
     attach: function attach(context) {
-      $('body').once('vertical-tabs-fragments').on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
-      $(context).find('[data-vertical-tabs-panes]').once('vertical-tabs').each(function initializeVerticalTabs() {
-        var $this = $(this).addClass('vertical-tabs__items--processed');
-        var focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+      $(once('vertical-tabs-fragments', 'body')).on('formFragmentLinkClickOrHashChange.verticalTabs', handleFragmentLinkClickOrHashChange);
+      once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(function (panes) {
+        var $this = $(panes).addClass('vertical-tabs__items--processed');
+        var focusID = $this.find(':hidden.vertical-tabs__active-tab')[0].value;
         var tabFocus;
         var $details = $this.find('> details');
 
@@ -30,7 +30,7 @@
         $details.each(function initializeVerticalTabItems() {
           var $that = $(this);
           var verticalTab = new Drupal.verticalTab({
-            title: $that.find('> summary').text(),
+            title: $that.find('> summary')[0].textContent,
             details: $that
           });
           tabList.append(verticalTab.item);
@@ -153,8 +153,8 @@
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus(false);
       } else {
-          this.item.closest('.js-form-type-vertical-tabs').hide();
-        }
+        this.item.closest('.js-form-type-vertical-tabs').hide();
+      }
 
       return this;
     }
@@ -162,7 +162,9 @@
 
   Drupal.theme.verticalTab = function (settings) {
     var tab = {};
-    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append($('<span class="vertical-tabs__menu-link-content"></span>').append(tab.title = $('<strong class="vertical-tabs__menu-link-title"></strong>').text(settings.title)).append(tab.summary = $('<span class="vertical-tabs__menu-link-summary"></span>'))));
+    tab.title = $('<strong class="vertical-tabs__menu-link-title"></strong>');
+    tab.title[0].textContent = settings.title;
+    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append($('<span class="vertical-tabs__menu-link-content"></span>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-link-summary"></span>'))));
     return tab;
   };
 
