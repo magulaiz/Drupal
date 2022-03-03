@@ -801,8 +801,23 @@ final class HTMLRestrictions {
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   The subset of the given set of HTML restrictions.
    */
-  private static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
+  public static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
     return new self(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+  }
+
+  /**
+   * Gets a concrete set of allowed elements without resolving wildcards.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $r
+   *   A set of HTML restrictions.
+   *
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   The subset of the given set of HTML restrictions.
+   */
+  public static function getConcreteSubset(HTMLRestrictions $r): HTMLRestrictions {
+    return new self(array_filter($r->elements, function (string $tag_name) {
+      return !self::isWildcardTag($tag_name);
+    }, ARRAY_FILTER_USE_KEY));
   }
 
   /**

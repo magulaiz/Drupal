@@ -1116,4 +1116,40 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertSame([], HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
   }
 
+  /**
+   * @covers ::getWildcardSubset
+   * @covers ::getConcreteSubset
+   * @dataProvider providerSubsets
+   */
+  public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset): void {
+    $this->assertEquals($expected_wildcard_subset, HTMLRestrictions::getWildcardSubset($input));
+    $this->assertEquals($expected_concrete_subset, HTMLRestrictions::getConcreteSubset($input));
+  }
+
+  public function providerSubsets(): \Generator {
+    yield 'empty set' => [
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions([]),
+    ];
+
+    yield 'without wildcards' => [
+      new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions([]),
+      new HTMLRestrictions(['div' => FALSE]),
+    ];
+
+    yield 'with wildcards' => [
+      new HTMLRestrictions(['div' => FALSE, '$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['div' => FALSE]),
+    ];
+
+    yield 'only wildcards' => [
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['$block' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions([]),
+    ];
+  }
+
 }

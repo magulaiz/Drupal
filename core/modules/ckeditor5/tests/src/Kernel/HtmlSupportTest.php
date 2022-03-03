@@ -9,11 +9,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\HtmlSupport
  * @group ckeditor5
  * @internal
  */
-class SourceEditingTest extends KernelTestBase {
+class HtmlSupportTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -102,7 +102,10 @@ class SourceEditingTest extends KernelTestBase {
           [
             'name' => 'div',
             'attributes' => [
-              'data-llama' => TRUE,
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
             ],
           ],
         ],
@@ -115,10 +118,59 @@ class SourceEditingTest extends KernelTestBase {
           [
             'name' => 'p',
             'attributes' => [
-              'data-llama' => TRUE,
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
             ],
           ],
         ],
+      ],
+      '<$block> from multiple plugins' => [
+        '<p data-llama class="text-align-left text-align-center text-align-right text-align-justify"> <br>',
+        ['<$block data-llama>'],
+        [
+          [
+            'name' => 'p',
+            'attributes' => [
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
+            ],
+            'classes' => [
+              'regexp' => [
+                'pattern' => '/^(text-align-left|text-align-center|text-align-right|text-align-justify)$/',
+              ],
+            ],
+          ],
+        ],
+        ['alignment'],
+      ],
+      '<$block> with attribute from multiple plugins' => [
+        '<p data-llama class"> <br>',
+        ['<$block data-llama>', '<p class>'],
+        [
+          [
+            'name' => 'p',
+            'attributes' => [
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
+            ],
+            'classes' => [
+              'regexp' => [
+                'pattern' => '/^(text-align-left|text-align-center|text-align-right|text-align-justify)$/',
+              ],
+            ],
+          ],
+          [
+            'name' => 'p',
+            'classes' => TRUE,
+          ],
+        ],
+        ['alignment'],
       ],
       '<$block> realistic configuration' => [
         '<p data-llama> <br> <a href> <blockquote data-llama> <div data-llama> <mark> <abbr title>',
@@ -127,20 +179,32 @@ class SourceEditingTest extends KernelTestBase {
           [
             'name' => 'p',
             'attributes' => [
-              'data-llama' => TRUE,
-            ],
-          ],
-          [
-            'name' => 'blockquote',
-            'attributes' => [
-              'data-llama' => TRUE,
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
             ],
           ],
           [
             'name' => 'div',
             'attributes' => [
-              'data-llama' => TRUE,
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
             ],
+          ],
+          [
+            'name' => 'blockquote',
+            'attributes' => [
+              [
+                'key' => 'data-llama',
+                'value' => TRUE,
+              ],
+            ],
+          ],
+          [
+            'name' => 'div',
           ],
           [
             'name' => 'mark',
@@ -148,7 +212,10 @@ class SourceEditingTest extends KernelTestBase {
           [
             'name' => 'abbr',
             'attributes' => [
-              'title' => TRUE,
+              [
+                'key' => 'title',
+                'value' => TRUE,
+              ],
             ],
           ],
         ],

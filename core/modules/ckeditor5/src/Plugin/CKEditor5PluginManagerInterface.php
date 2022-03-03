@@ -106,6 +106,10 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    * @param \Drupal\editor\EditorInterface|null $editor
    *   (optional) A configured text editor object using CKEditor 5. When not
    *   set, plugins depending on the text editor cannot provide elements.
+   * @param bool $resolve_wildcards
+   *   (optional) Whether to resolve wildcards. Defaults to TRUE. When set to
+   *   FALSE, the raw allowed elements will be returned (with no processing
+   *   applied hence no resolved wildcards).
    *
    * @return array
    *   A nested array with a structure as described in
@@ -117,6 +121,6 @@ interface CKEditor5PluginManagerInterface extends DiscoveryInterface {
    *
    * @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL): array;
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE): array;
 
 }

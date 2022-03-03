@@ -1021,6 +1021,7 @@ PHP,
       'ckeditor5_emphasis',
       'ckeditor5_essentials',
       'ckeditor5_heading',
+      'ckeditor5_htmlSupport',
       'ckeditor5_paragraph',
       'ckeditor5_pasteFromOffice',
     ];
@@ -1030,6 +1031,7 @@ PHP,
       'ckeditor5/drupal.ckeditor5.emphasis',
       'ckeditor5/drupal.ckeditor5.internal',
       'core/ckeditor5.basic',
+      'core/ckeditor5.htmlSupport',
       'core/ckeditor5.internal',
       'core/ckeditor5.pasteFromOffice',
     ];
@@ -1113,8 +1115,8 @@ PHP,
     sort($expected_libraries);
     $this->assertSame($expected_libraries, $this->manager->getEnabledLibraries($editor));
 
-    // Case 7: GHS is only enabled for Full HTML (or any other text format that
-    // has no TYPE_HTML_RESTRICTOR filters).
+    // Case 7: GHS is enabled for Full HTML (or any other text format that has
+    // no TYPE_HTML_RESTRICTOR filters).
     $editor = Editor::load('full_html');
     $definitions = array_keys($this->manager->getEnabledDefinitions($editor));
     $default_plugins = [

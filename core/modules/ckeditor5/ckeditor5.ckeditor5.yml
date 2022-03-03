@@ -65,18 +65,9 @@ ckeditor5_heading:
 ckeditor5_htmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]
-    config:
-      htmlSupport:
-        allow:
-          -
-            name:
-              regexp:
-                pattern: /.*/
-            attributes: true
-            classes: true
-            styles: true
   drupal:
     label: Arbitrary HTML support
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\HtmlSupport
     elements: false
     library: core/ckeditor5.htmlSupport
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
