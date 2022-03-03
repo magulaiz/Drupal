@@ -41,7 +41,6 @@ export default class MediaImageTextAlternativeEditing extends Plugin {
    * @private
    */
   _upcastDrupalMediaIsImage(modelElement) {
-    // console.log('modelElement', modelElement);
     const { model, plugins } = this.editor;
     const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
 

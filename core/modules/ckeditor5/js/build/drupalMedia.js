@@ -186,17 +186,16 @@ class InsertDrupalMediaCommand extends delegated_corefrom_dll_reference_CKEditor
       );
 
       const { normalizedStyles } = elementStyleEditing;
-      for (const group of Object.keys(normalizedStyles)) {
-        for (const style of elementStyleEditing.normalizedStyles[group]) {
+      Object.keys(normalizedStyles).forEach((group) => {
+        elementStyleEditing.normalizedStyles[group].forEach((style) => {
           if (
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
             modelAttributes.drupalElementStyle = style.name;
-            break;
           }
-        }
-      }
+        });
+      });
 
       this.editor.model.change((writer) => {
         this.editor.model.insertContent(
@@ -1025,7 +1024,6 @@ class MediaImageTextAlternativeEditing extends delegated_corefrom_dll_reference_
    * @private
    */
   _upcastDrupalMediaIsImage(modelElement) {
-    // console.log('modelElement', modelElement);
     const { model, plugins } = this.editor;
     const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
 
@@ -1750,7 +1748,7 @@ class MediaImageTextAlternative extends delegated_corefrom_dll_reference_CKEdito
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-html-support/src/conversionutils.js
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2328,7 +2326,7 @@ class DrupalLinkMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-link/src/utils.js
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2656,7 +2654,7 @@ class DrupalLinkMedia extends delegated_corefrom_dll_reference_CKEditor5.Plugin 
 
 ;// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-image/src/imagestyle/utils.js
 /**
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -2833,6 +2831,7 @@ const DEFAULT_DROPDOWN_DEFINITIONS = [ {
  * * The image style options not supported by any of the loaded plugins are filtered out.
  */
 function normalizeStyles( config ) {
+  console.log('this functino is called');
 	const configuredStyles = config.configuredStyles.options || [];
 
 	const styles = configuredStyles
@@ -3623,6 +3622,7 @@ class DrupalElementStyleEditing extends delegated_corefrom_dll_reference_CKEdito
 
 
 
+
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
  */
@@ -3672,6 +3672,86 @@ function getUIComponentName(name, group) {
   return `drupalElementStyle:${group}:${name}`;
 }
 
+// @todo: add docs
+function toggleButtonVisibility(editor, definedStyles, style, definition) {
+  const { selection } = editor.model.document;
+  const modelElement = selection
+    ? selection.getSelectedElement()
+    : selection.getFirstPosition.findAncestor('drupalElementStyle');
+  console.log(modelElement);
+  const bundleType = modelElement.getAttribute('drupalMediaBundle');
+  console.log(bundleType);
+  const filteredDefinedStyles = definedStyles.filter(function (item) {
+    return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+  });
+  if (!filteredDefinedStyles.includes(style)) {
+    // Hide button if view mode is not available for the bundle that the modelElement is.
+    definition.model.set({ class: 'ck-hidden' });
+  } else {
+    // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
+    definition.model.set({ class: '' });
+  }
+}
+
+/**
+ * Upcasts `drupalMediaIsImage` from Drupal Media metadata.
+ *
+ * @param {module:engine/model/node~Node} modelElement
+ *   The `drupalMedia` model element.
+ *
+ * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+ *
+ * @private
+ */
+function upcastDrupalMediaBundle(
+  modelElement,
+  editor,
+  definedStyles,
+  style,
+  definition,
+) {
+  const metadataRepository = editor.plugins.get(
+    'DrupalMediaMetadataRepository',
+  );
+  // Get all metadata for drupalMedia elements to set value for
+  // drupalMediaBundle attribute. When other plugins start using the
+  // metadata, this functionality will be handled more generically.
+  metadataRepository
+    .getMetadata(modelElement)
+    .then((metadata) => {
+      if (!modelElement) {
+        // Nothing to do if model element has been removed before
+        // promise was resolved.
+        return;
+      }
+      // Enqueue a model change in `transparent` batch to make it
+      // invisible to the undo/redo functionality.
+      editor.model.enqueueChange('transparent', (writer) => {
+        writer.setAttribute(
+          'drupalMediaBundle',
+          metadata.bundleType,
+          modelElement,
+        );
+      });
+    })
+    .catch((e) => {
+      if (!modelElement) {
+        // Nothing to do if model element has been removed before
+        // promise was resolved.
+        return;
+      }
+      console.warn(e.toString());
+      editor.model.enqueueChange('transparent', (writer) => {
+        writer.setAttribute('drupalMediaBundle', METADATA_ERROR, modelElement);
+      });
+    });
+  // @todo: remove this, added it for debugging purposes but doesn't even work.
+  setTimeout(
+    toggleButtonVisibility(editor, definedStyles, style, definition),
+    10000,
+  );
+}
+
 /**
  * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
  *
@@ -3705,24 +3785,29 @@ function getDropdownListItemDefinitions(
     };
     itemDefinitions.add(definition);
 
-    editor.model.document.on('change', (eventInfo, batch) => {
-      if (eventInfo.name === 'change') {
-        const { selection } = editor.model.document;
-        const modelElement = selection
-          ? selection.getSelectedElement()
-          : selection.getFirstPosition.findAncestor('drupalElementStyle');
-        const bundleType = modelElement.getAttribute('drupalMediaBundle');
-        const filteredDefinedStyles = definedStyles.filter(function (item) {
-          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
-        });
-        if (!filteredDefinedStyles.includes(style)) {
-          // Hide button if view mode is not available for the bundle that the modelElement is.
-          definition.model.set({ class: 'ck-hidden' });
-        } else {
-          // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
-          definition.model.set({ class: '' });
-        }
+    // Handles inserted content's list dropdown button's visibility.
+    editor.model.on('insertContent', (eventInfo, [modelElement]) => {
+      if (!isDrupalMedia(modelElement)) {
+        return;
       }
+      // Need to upcast DrupalMediaBundle to model so it can be used to show
+      // correct buttons based on bundle. Calls toggle function inside below method.
+      upcastDrupalMediaBundle(
+        modelElement,
+        editor,
+        definedStyles,
+        style,
+        definition,
+      );
+    });
+
+    // Handles selecting another element's list dropdown button's visiblilty.
+    editor.model.document.selection.on('change', () => {
+      const modelElement = editor.model.document.selection.getSelectedElement();
+      if (!isDrupalMedia(modelElement)) {
+        return;
+      }
+      toggleButtonVisibility(editor, definedStyles, style, definition);
     });
   });
   return itemDefinitions;
@@ -3965,8 +4050,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
 
       const { defaultItem, items, title } = dropdownConfig;
       const groupName = dropdownConfig.name.split(':')[1];
-      console.log('hit2');
-
       const buttonViews = items
         .filter((itemName) => {
           return definedStyles.find(

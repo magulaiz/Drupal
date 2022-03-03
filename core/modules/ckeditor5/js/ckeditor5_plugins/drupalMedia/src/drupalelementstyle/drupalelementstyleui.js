@@ -14,7 +14,8 @@ import {
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
 import getCommandGroupNameFromGroup from './utils';
-import { isObject } from '../utils';
+import { isDrupalMedia, isObject } from '../utils';
+import {METADATA_ERROR} from "../mediaimagetextalternative/utils";
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
@@ -65,6 +66,86 @@ function getUIComponentName(name, group) {
   return `drupalElementStyle:${group}:${name}`;
 }
 
+// @todo: add docs
+function toggleButtonVisibility(editor, definedStyles, style, definition) {
+  const { selection } = editor.model.document;
+  const modelElement = selection
+    ? selection.getSelectedElement()
+    : selection.getFirstPosition.findAncestor('drupalElementStyle');
+  console.log(modelElement);
+  const bundleType = modelElement.getAttribute('drupalMediaBundle');
+  console.log(bundleType);
+  const filteredDefinedStyles = definedStyles.filter(function (item) {
+    return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+  });
+  if (!filteredDefinedStyles.includes(style)) {
+    // Hide button if view mode is not available for the bundle that the modelElement is.
+    definition.model.set({ class: 'ck-hidden' });
+  } else {
+    // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
+    definition.model.set({ class: '' });
+  }
+}
+
+/**
+ * Upcasts `drupalMediaIsImage` from Drupal Media metadata.
+ *
+ * @param {module:engine/model/node~Node} modelElement
+ *   The `drupalMedia` model element.
+ *
+ * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+ *
+ * @private
+ */
+function upcastDrupalMediaBundle(
+  modelElement,
+  editor,
+  definedStyles,
+  style,
+  definition,
+) {
+  const metadataRepository = editor.plugins.get(
+    'DrupalMediaMetadataRepository',
+  );
+  // Get all metadata for drupalMedia elements to set value for
+  // drupalMediaBundle attribute. When other plugins start using the
+  // metadata, this functionality will be handled more generically.
+  metadataRepository
+    .getMetadata(modelElement)
+    .then((metadata) => {
+      if (!modelElement) {
+        // Nothing to do if model element has been removed before
+        // promise was resolved.
+        return;
+      }
+      // Enqueue a model change in `transparent` batch to make it
+      // invisible to the undo/redo functionality.
+      editor.model.enqueueChange('transparent', (writer) => {
+        writer.setAttribute(
+          'drupalMediaBundle',
+          metadata.bundleType,
+          modelElement,
+        );
+      });
+    })
+    .catch((e) => {
+      if (!modelElement) {
+        // Nothing to do if model element has been removed before
+        // promise was resolved.
+        return;
+      }
+      console.warn(e.toString());
+      editor.model.enqueueChange('transparent', (writer) => {
+        writer.setAttribute('drupalMediaBundle', METADATA_ERROR, modelElement);
+      });
+    });
+  // @todo: remove this, added it for debugging purposes but doesn't even work.
+  setTimeout(
+    toggleButtonVisibility(editor, definedStyles, style, definition),
+    10000,
+  );
+}
+
 /**
  * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
  *
@@ -98,24 +179,29 @@ function getDropdownListItemDefinitions(
     };
     itemDefinitions.add(definition);
 
-    editor.model.document.on('change', (eventInfo, batch) => {
-      if (eventInfo.name === 'change') {
-        const { selection } = editor.model.document;
-        const modelElement = selection
-          ? selection.getSelectedElement()
-          : selection.getFirstPosition.findAncestor('drupalElementStyle');
-        const bundleType = modelElement.getAttribute('drupalMediaBundle');
-        const filteredDefinedStyles = definedStyles.filter(function (item) {
-          return item.modelAttributes.drupalMediaBundle.includes(bundleType);
-        });
-        if (!filteredDefinedStyles.includes(style)) {
-          // Hide button if view mode is not available for the bundle that the modelElement is.
-          definition.model.set({ class: 'ck-hidden' });
-        } else {
-          // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
-          definition.model.set({ class: '' });
-        }
+    // Handles inserted content's list dropdown button's visibility.
+    editor.model.on('insertContent', (eventInfo, [modelElement]) => {
+      if (!isDrupalMedia(modelElement)) {
+        return;
       }
+      // Need to upcast DrupalMediaBundle to model so it can be used to show
+      // correct buttons based on bundle. Calls toggle function inside below method.
+      upcastDrupalMediaBundle(
+        modelElement,
+        editor,
+        definedStyles,
+        style,
+        definition,
+      );
+    });
+
+    // Handles selecting another element's list dropdown button's visiblilty.
+    editor.model.document.selection.on('change', () => {
+      const modelElement = editor.model.document.selection.getSelectedElement();
+      if (!isDrupalMedia(modelElement)) {
+        return;
+      }
+      toggleButtonVisibility(editor, definedStyles, style, definition);
     });
   });
   return itemDefinitions;
@@ -358,8 +444,6 @@ export default class DrupalElementStyleUi extends Plugin {
 
       const { defaultItem, items, title } = dropdownConfig;
       const groupName = dropdownConfig.name.split(':')[1];
-      console.log('hit2');
-
       const buttonViews = items
         .filter((itemName) => {
           return definedStyles.find(

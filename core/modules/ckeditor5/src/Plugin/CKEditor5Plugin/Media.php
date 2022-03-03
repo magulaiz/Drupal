@@ -63,32 +63,33 @@ class Media extends CKEditor5PluginDefault {
     // Create view mode options.
     foreach (array_keys($all_view_modes) as $view_mode) {
       // @todo: Handle view modes that are not enabled for any bundle.
-      // If (array_key_exists($view_mode, $allowed_view_modes)).
-      $specific_bundles = $bundles_per_view_mode[$view_mode];
-      if ($view_mode !== 'default') {
-        $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-          'name' => $view_mode,
-          'title' => $view_mode . ' view mode',
-          'attributeName' => 'data-view-mode',
-          'attributeValue' => $view_mode,
-          'modelElements' => ['drupalMedia'],
-          'modelAttributes' => [
-            'drupalMediaBundle' => $specific_bundles,
-          ],
-        ];
-      }
-      elseif ($view_mode === 'default') {
-        $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-          'isDefault' => TRUE,
-          'name' => $view_mode,
-          'title' => $view_mode . ' view mode',
-          'attributeName' => 'data-view-mode',
-          'attributeValue' => $view_mode,
-          'modelElements' => ['drupalMedia'],
-          'modelAttributes' => [
-            'drupalMediaBundle' => $specific_bundles,
-          ],
-        ];
+      if (array_key_exists($view_mode, $bundles_per_view_mode)) {
+        $specific_bundles = $bundles_per_view_mode[$view_mode];
+        if ($view_mode !== 'default') {
+          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+            'name' => $view_mode,
+            'title' => $view_mode . ' view mode',
+            'attributeName' => 'data-view-mode',
+            'attributeValue' => $view_mode,
+            'modelElements' => ['drupalMedia'],
+            'modelAttributes' => [
+              'drupalMediaBundle' => $specific_bundles,
+            ],
+          ];
+        }
+        elseif ($view_mode === 'default') {
+          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+            'isDefault' => TRUE,
+            'name' => $view_mode,
+            'title' => $view_mode . ' view mode',
+            'attributeName' => 'data-view-mode',
+            'attributeValue' => $view_mode,
+            'modelElements' => ['drupalMedia'],
+            'modelAttributes' => [
+              'drupalMediaBundle' => $specific_bundles,
+            ],
+          ];
+        }
       }
     }
 

@@ -69,17 +69,16 @@ export default class InsertDrupalMediaCommand extends Command {
       );
 
       const { normalizedStyles } = elementStyleEditing;
-      for (const group of Object.keys(normalizedStyles)) {
-        for (const style of elementStyleEditing.normalizedStyles[group]) {
+      Object.keys(normalizedStyles).forEach((group) => {
+        elementStyleEditing.normalizedStyles[group].forEach((style) => {
           if (
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
             modelAttributes.drupalElementStyle = style.name;
-            break;
           }
-        }
-      }
+        });
+      });
 
       this.editor.model.change((writer) => {
         this.editor.model.insertContent(
