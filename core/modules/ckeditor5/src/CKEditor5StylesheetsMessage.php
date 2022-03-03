@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\ckeditor5;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
