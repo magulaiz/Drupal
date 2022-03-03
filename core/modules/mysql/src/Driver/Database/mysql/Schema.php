@@ -7,6 +7,7 @@ use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
  * @addtogroup schemaapi
@@ -689,7 +690,13 @@ class Schema extends DatabaseSchema {
       return TRUE;
     }
     catch (\Exception $e) {
-      return FALSE;
+      // Check for ER_NO_SUCH_TABLE
+      // @link https://docs.oracle.com/cd/E19078-01/mysql/mysql-refman-5.0/error-handling.html
+      // @link https://mariadb.com/kb/en/mariadb-error-codes/
+      if ($e instanceof DatabaseExceptionWrapper && $e->getPrevious()->errorInfo[1] == 1146) {
+        return FALSE;
+      }
+      throw $e;
     }
   }
 
@@ -709,7 +716,13 @@ class Schema extends DatabaseSchema {
       return TRUE;
     }
     catch (\Exception $e) {
-      return FALSE;
+      // Check for ER_BAD_FIELD_ERROR
+      // @link https://docs.oracle.com/cd/E19078-01/mysql/mysql-refman-5.0/error-handling.html
+      // @link https://mariadb.com/kb/en/mariadb-error-codes/
+      if ($e instanceof DatabaseExceptionWrapper && $e->getPrevious()->errorInfo[1] == 1054) {
+        return FALSE;
+      }
+      throw $e;
     }
   }
 
