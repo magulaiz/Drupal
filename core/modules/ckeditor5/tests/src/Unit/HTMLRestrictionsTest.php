@@ -464,15 +464,24 @@ class HTMLRestrictionsTest extends UnitTestCase {
           'name' => 'div',
           'classes' => TRUE,
           'attributes' => [
-            'data-llama' => TRUE,
+            [
+              'key' => 'data-llama',
+              'value' => TRUE,
+            ],
           ],
         ],
         ['name' => 'span'],
         [
           'name' => 'blockquote',
           'attributes' => [
-            'cite' => TRUE,
-            'data-llama' => TRUE,
+            [
+              'key' => 'cite',
+              'value' => TRUE,
+            ],
+            [
+              'key' => 'data-llama',
+              'value' => TRUE,
+            ],
           ],
           'classes' => TRUE,
         ],
@@ -522,12 +531,12 @@ class HTMLRestrictionsTest extends UnitTestCase {
 
     // Wildcard tag, attribute and attribute value.
     yield '$block' => [
-      new HTMLRestrictions(['$block' => ['data-*' => TRUE]]),
-      ['<$block data-*>'],
-      '<$block data-*>',
+      new HTMLRestrictions(['p' => FALSE, '$block' => ['data-*' => TRUE]]),
+      ['<p>', '<$block data-*>'],
+      '<p data-*>',
       [
         [
-          'name' => '$block',
+          'name' => 'p',
           'attributes' => [
             [
               'key' => [
