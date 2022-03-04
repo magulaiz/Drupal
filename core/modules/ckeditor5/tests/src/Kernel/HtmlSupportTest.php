@@ -153,6 +153,10 @@ class HtmlSupportTest extends KernelTestBase {
         [
           [
             'name' => 'p',
+            'classes' => TRUE,
+          ],
+          [
+            'name' => 'p',
             'attributes' => [
               [
                 'key' => 'data-llama',
@@ -165,10 +169,6 @@ class HtmlSupportTest extends KernelTestBase {
               ],
             ],
           ],
-          [
-            'name' => 'p',
-            'classes' => TRUE,
-          ],
         ],
         ['alignment'],
       ],
@@ -176,6 +176,21 @@ class HtmlSupportTest extends KernelTestBase {
         '<p data-llama> <br> <a href> <blockquote data-llama> <div data-llama> <mark> <abbr title>',
         ['<$block data-llama>', '<div>', '<mark>', '<abbr title>'],
         [
+          [
+            'name' => 'div',
+          ],
+          [
+            'name' => 'mark',
+          ],
+          [
+            'name' => 'abbr',
+            'attributes' => [
+              [
+                'key' => 'title',
+                'value' => TRUE,
+              ],
+            ],
+          ],
           [
             'name' => 'p',
             'attributes' => [
@@ -199,21 +214,6 @@ class HtmlSupportTest extends KernelTestBase {
             'attributes' => [
               [
                 'key' => 'data-llama',
-                'value' => TRUE,
-              ],
-            ],
-          ],
-          [
-            'name' => 'div',
-          ],
-          [
-            'name' => 'mark',
-          ],
-          [
-            'name' => 'abbr',
-            'attributes' => [
-              [
-                'key' => 'title',
                 'value' => TRUE,
               ],
             ],
