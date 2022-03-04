@@ -14,7 +14,7 @@ use Drupal\editor\EditorInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class HtmlSupport extends CKEditor5PluginDefault {
+class WildcardHtmlSupport extends CKEditor5PluginDefault {
 
   /**
    * {@inheritdoc}

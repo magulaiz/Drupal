@@ -9,11 +9,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\HtmlSupport
+ * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
  * @group ckeditor5
  * @internal
  */
-class HtmlSupportTest extends KernelTestBase {
+class WildcardHtmlSupportTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
