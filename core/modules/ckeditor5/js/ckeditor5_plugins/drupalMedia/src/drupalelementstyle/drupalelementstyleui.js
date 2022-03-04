@@ -74,7 +74,11 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
     : selection.getFirstPosition.findAncestor('drupalElementStyle');
   console.log(modelElement);
   const bundleType = modelElement.getAttribute('drupalMediaBundle');
-  console.log(bundleType);
+
+  if (!bundleType) {
+    return;
+  }
+
   const filteredDefinedStyles = definedStyles.filter(function (item) {
     return item.modelAttributes.drupalMediaBundle.includes(bundleType);
   });
@@ -196,7 +200,10 @@ function getDropdownListItemDefinitions(
     });
 
     // Handles selecting another element's list dropdown button's visiblilty.
-    editor.model.document.selection.on('change', () => {
+    // We need to listen to editor UI changes instead of selection because
+    // visibility of the styles hould can be impacted by either selection or
+    // changes to the model.
+    editor.ui.on('update', () => {
       const modelElement = editor.model.document.selection.getSelectedElement();
       if (!isDrupalMedia(modelElement)) {
         return;
