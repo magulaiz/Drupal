@@ -199,7 +199,8 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
 
     // Use getLocatorFromPlaceholderLabel() to confirm the block exists.
-    $this->getLocatorFromPlaceholderLabel('"Search form" block');    $searchButton = $assert_session->buttonExists('Search');
+    $this->getLocatorFromPlaceholderLabel('"Search form" block');
+    $searchButton = $assert_session->buttonExists('Search');
     $this->assertElementUnclickable($searchButton);
     $assert_session->linkExists('Take me away');
     $this->assertElementUnclickable($page->findLink('Take me away'));
