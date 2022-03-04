@@ -32,6 +32,17 @@
    */
   const required = new Set();
 
+  /**
+   * Get the value of the (deep) property on name from scope.
+   *
+   * @param {object} scope
+   *  Object used to search for the function.
+   * @param {string} name
+   *  The path to access in the scope object.
+   *
+   * @return {null|function}
+   *  The corresponding function from the scope object.
+   */
   function findFunc(scope, name) {
     if (!scope) {
       return null;
@@ -44,6 +55,16 @@
     return typeof scope[parts[0]] === 'function' ? scope[parts[0]] : null;
   }
 
+  /**
+   * Transform a config key in a callback function or execute the function
+   * to dynamically build the configuration entry.
+   *
+   * @param {object} config
+   *  The plugin configuration object.
+   *
+   * @return {null|function|*}
+   *  Resulting configuration value.
+   */
   function buildFunc(config) {
     const { func } = config;
     // Assuming a global object.
@@ -365,7 +386,11 @@
   }
 
   /**
+   * Integration of CKEditor 5 with the Drupal editor API.
+   *
    * @namespace
+   *
+   * @see Drupal.editorAttach
    */
   Drupal.editors.ckeditor5 = {
     /**
