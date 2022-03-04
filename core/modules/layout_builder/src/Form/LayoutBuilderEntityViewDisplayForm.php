@@ -90,18 +90,14 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
       '#access' => $is_enabled,
     ];
 
-    $current_path = \Drupal::service('path.current')->getPath();
-    $current_url = Url::fromUserInput($current_path);
-    $current_route_params = $current_url->getRouteParameters();
-    if (!isset($current_route_params['view_mode_name'])) {
-      $current_route_params['view_mode_name'] = 'default';
-    }
     $form['translate_layout'] = [
       '#type' => 'link',
       '#title' => $this->t('Translate layout'),
       '#weight' => -9,
       '#attributes' => ['class' => ['button']],
-      '#url' => Url::fromRoute('entity.entity_view_display.config_translation_overview', $current_route_params),
+      '#url' => Url::fromUserInput(
+        Url::fromRoute('<current>')->toString() . '/translate'
+      ),
       '#access' => $is_enabled && $is_translatable,
     ];
 
