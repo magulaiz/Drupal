@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
+ * @coversClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
  * @group ckeditor5
  * @internal
  */
