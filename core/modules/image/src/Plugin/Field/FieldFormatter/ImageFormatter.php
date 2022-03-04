@@ -111,6 +111,9 @@ class ImageFormatter extends ImageFormatterBase {
     return [
       'image_style' => '',
       'image_link' => '',
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
     ] + parent::defaultSettings();
   }
 
@@ -118,6 +121,8 @@ class ImageFormatter extends ImageFormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $element = parent::settingsForm($form, $form_state);
+
     $image_styles = image_style_options(FALSE);
     $description_link = Link::fromTextAndUrl(
       $this->t('Configure Image Styles'),
@@ -143,6 +148,27 @@ class ImageFormatter extends ImageFormatterBase {
       '#default_value' => $this->getSetting('image_link'),
       '#empty_option' => t('Nothing'),
       '#options' => $link_types,
+    ];
+
+    $image_loading = $this->getSetting('image_loading');
+    $element['image_loading'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Image loading'),
+      '#weight' => 10,
+      '#description' => $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing modern browsers to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.'),
+    ];
+    $loading_attribute_options = [
+      'lazy' => $this->t('Lazy'),
+      'eager' => $this->t('Eager'),
+    ];
+    $element['image_loading']['attribute'] = [
+      '#title' => $this->t('Lazy loading attribute'),
+      '#type' => 'select',
+      '#default_value' => $image_loading['attribute'],
+      '#options' => $loading_attribute_options,
+      '#description' => $this->t('Select the lazy loading attribute for images. <a href=":link">Learn more.</a>', [
+        ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
+      ]),
     ];
 
     return $element;
@@ -177,7 +203,12 @@ class ImageFormatter extends ImageFormatterBase {
       $summary[] = $link_types[$image_link_setting];
     }
 
-    return $summary;
+    $image_loading = $this->getSetting('image_loading');
+    $summary[] = $this->t('Loading attribute: @attribute', [
+      '@attribute' => $image_loading['attribute'],
+    ]);
+
+    return array_merge($summary, parent::settingsSummary());
   }
 
   /**
@@ -226,6 +257,9 @@ class ImageFormatter extends ImageFormatterBase {
       $item = $file->_referringItem;
       $item_attributes = $item->_attributes;
       unset($item->_attributes);
+
+      $image_loading_settings = $this->getSetting('image_loading');
+      $item_attributes['loading'] = $image_loading_settings['attribute'];
 
       $elements[$delta] = [
         '#theme' => 'image_formatter',
