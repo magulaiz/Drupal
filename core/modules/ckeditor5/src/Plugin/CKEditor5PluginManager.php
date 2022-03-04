@@ -160,11 +160,37 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       }
     }
 
+    // Only enable the arbitrary HTML Support plugin on text formats with no
+    // HTML restrictions.
+    // @see https://ckeditor.com/docs/ckeditor5/latest/api/html-support.html
+    // @see https://github.com/ckeditor/ckeditor5/issues/9856
+    if ($editor->getFilterFormat()->getHtmlRestrictions() !== FALSE) {
+      unset($definitions['ckeditor5_arbitraryHtmlSupport']);
+    }
+
     // Evaluate `plugins` condition.
     foreach ($definitions_with_plugins_condition as $plugin_id => $definition) {
       if (!empty(array_diff($definition->getConditions()['plugins'], array_keys($definitions)))) {
         unset($definitions[$plugin_id]);
       }
+    }
+
+    // Only enable the Wildcard tags HTML support plugin when CKEditor 5 plugins
+    // are enabled with wildcard tags: CKEditor 5 interprets wildcards from a
+    // "CKE5 model element" perspective, Drupal interprets wildcards from a
+    // "HTML element" perspective. GHS is used to reconcile those two
+    // perspectives, to ensure all expected HTML elements truly are supported.
+    // @see https://ckeditor.com/docs/ckeditor5/latest/api/html-support.html
+    if (!isset($definitions['ckeditor5_arbitraryHtmlSupport'])) {
+      $restrictions = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
+      if ($restrictions->getAllowedElements(FALSE) === $restrictions->getAllowedElements(TRUE)) {
+        unset($definitions['ckeditor5_wildcardHtmlSupport']);
+      }
+    }
+    // When arbitrary HTML is already supported, there is no need for adding
+    // support for wildcard tags anymore.
+    else {
+      unset($definitions['ckeditor5_wildcardHtmlSupport']);
     }
 
     return $definitions;
@@ -244,14 +270,17 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
     foreach ($definitions as $plugin_id => $definition) {
       $plugin = $this->getPlugin($plugin_id, $editor);
 
-      // ckeditor5_htmlSupport is an edge case because it configures the
+      // ckeditor5_wildcardHtmlSupport is an edge case because it configures the
       // CKEditor 5 HTML support to add explicit support for all wildcard
       // elements provided by other plugins. Consequently the CKEditor 5 plugin
       // configuration it generates also needs information about the computed
       // superset of elements. That's why it is allowed to deviate from the
       // interface.
-      if ($plugin_id === 'ckeditor5_htmlSupport') {
+      // @see ::getEnabledDefinitions()
+      if ($plugin_id === 'ckeditor5_wildcardHtmlSupport') {
         $allowed_elements = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
+        // If there are wildcard tags, there is nothing to resolve: we can
+        // return the configuration directly.
         $config['ckeditor5_htmlSupport'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $allowed_elements);
         continue;
       }

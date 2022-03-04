@@ -62,11 +62,31 @@ ckeditor5_heading:
       - <h5>
       - <h6>
 
-ckeditor5_htmlSupport:
+ckeditor5_arbitraryHtmlSupport:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+    config:
+      htmlSupport:
+        allow:
+          -
+            name:
+              regexp:
+                pattern: /.*/
+            attributes: true
+            classes: true
+            styles: true
+  drupal:
+    label: Arbitrary HTML support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
+ckeditor5_wildcardHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]
   drupal:
-    label: Arbitrary HTML support
+    label: Wildcard HTML support
     class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\HtmlSupport
     elements: false
     library: core/ckeditor5.htmlSupport

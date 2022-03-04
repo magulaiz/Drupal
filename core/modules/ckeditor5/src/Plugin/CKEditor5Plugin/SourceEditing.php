@@ -76,8 +76,8 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
-    // Only handle concrete HTML elements to allow the HTML support plugin
-    // handle the wildcards.
+    // Only handle concrete HTML elements to allow the Wildcard HTML support
+    // plugin handle the wildcards.
     // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\HtmlSupport
     $concrete_restrictions = HTMLRestrictions::getConcreteSubset($restrictions);
     return [
