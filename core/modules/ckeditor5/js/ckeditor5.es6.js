@@ -2,7 +2,7 @@
  * @file
  * CKEditor 5 implementation of {@link Drupal.editors} API.
  */
-/* global CKEditor5 */
+
 ((Drupal, debounce, CKEditor5, $, once) => {
   // CKEditor 5 is incompatible with IE11. When IE11 is detected, the CKEditor5
   // variable is null. In those instances, exit early since CKEditor 5 is not
@@ -582,6 +582,11 @@
     },
   };
 
+  /**
+   * Public API for Drupal CKEditor 5 integration.
+   *
+   * @namespace
+   */
   Drupal.ckeditor5 = {
     /**
      * Variable storing the current dialog's save callback.
@@ -590,6 +595,19 @@
      */
     saveCallback: null,
 
+    /**
+     * Open a dialog for a Drupal-based plugin.
+     *
+     * This dynamically loads jQuery UI (if necessary) using the Drupal AJAX
+     * framework, then opens a dialog at the specified Drupal path.
+     *
+     * @param {string} url
+     *   The URL that contains the contents of the dialog.
+     * @param {function} saveCallback
+     *   A function to be called upon saving the dialog.
+     * @param {object} dialogSettings
+     *   An object containing settings to be passed to the jQuery UI.
+     */
     openDialog(url, saveCallback, dialogSettings) {
       // Add a consistent dialog class.
       const classes = dialogSettings.dialogClass
