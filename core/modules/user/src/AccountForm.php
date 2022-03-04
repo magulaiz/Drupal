@@ -174,7 +174,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
     }
 
     // When not building the user registration form, prevent web browsers from
-    // autofilling/prefilling the email, username, and password fields.
+    // auto-filling/prefilling the email, username, and password fields.
     if (!$register) {
       foreach (['mail', 'name', 'pass'] as $key) {
         if (isset($form['account'][$key])) {
@@ -418,7 +418,7 @@ abstract class AccountForm extends ContentEntityForm implements TrustedCallbackI
       'preferred_admin_langcode',
     ];
     foreach ($violations->getByFields($field_names) as $violation) {
-      list($field_name) = explode('.', $violation->getPropertyPath(), 2);
+      [$field_name] = explode('.', $violation->getPropertyPath(), 2);
       $form_state->setErrorByName($field_name, $violation->getMessage());
     }
     parent::flagViolations($violations, $form, $form_state);

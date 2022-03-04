@@ -309,7 +309,7 @@ class FileUploadTest extends ResourceTestBase {
 
     $this->setUpAuthorization('GET');
 
-    // Reuploading the same file will result in the file being uploaded twice
+    // Re-uploading the same file will result in the file being uploaded twice
     // and referenced twice.
     $response = $this->fileRequest($uri, $this->testFileData);
     $this->assertSame(200, $response->getStatusCode());
@@ -910,8 +910,10 @@ class FileUploadTest extends ResourceTestBase {
    *   The expected data.
    * @param \Psr\Http\Message\ResponseInterface $response
    *   The file upload response.
+   *
+   * @internal
    */
-  protected function assertResponseData(array $expected, ResponseInterface $response) {
+  protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
     $actual = Json::decode((string) $response->getBody());
     static::recursiveKSort($actual);

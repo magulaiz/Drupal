@@ -123,8 +123,10 @@ class ContextualLinksTest extends WebDriverTestBase {
 
   /**
    * Asserts the contextual links are correct in Layout Builder UI.
+   *
+   * @internal
    */
-  protected function assertCorrectContextualLinksInUi() {
+  protected function assertCorrectContextualLinksInUi(): void {
     $page = $this->getSession()->getPage();
 
     // Use getLocatorFromPlaceholderLabel() to confirm the block exists.
@@ -139,8 +141,10 @@ class ContextualLinksTest extends WebDriverTestBase {
 
   /**
    * Asserts the contextual links are correct on the canonical entity route.
+   *
+   * @internal
    */
-  protected function assertCorrectContextualLinksInNode() {
+  protected function assertCorrectContextualLinksInNode(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 

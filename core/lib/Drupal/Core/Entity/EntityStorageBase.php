@@ -83,7 +83,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected $memoryCache;
 
   /**
-   * The memory cache cache tag.
+   * The memory cache tag.
    *
    * @var string
    */
@@ -229,7 +229,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   protected function setStaticCache(array $entities) {
     if ($this->entityType->isStaticallyCacheable()) {
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         $this->memoryCache->set($this->buildCacheId($entity->id()), $entity, MemoryCacheInterface::CACHE_PERMANENT, [$this->memoryCacheTag]);
       }
     }
@@ -294,7 +294,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   public function load($id) {
     assert(!is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $entities = $this->loadMultiple([$id]);
-    return isset($entities[$id]) ? $entities[$id] : NULL;
+    return $entities[$id] ?? NULL;
   }
 
   /**

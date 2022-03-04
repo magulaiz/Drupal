@@ -21,7 +21,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
@@ -46,6 +45,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // @todo remove in https://www.drupal.org/project/drupal/issues/3267040
     // Delete the existing content made to test the ID Conflict form. Migrations
     // are to be done on a site without content. The test of the ID Conflict
     // form is being moved to its own issue which will remove the deletion
@@ -70,8 +70,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 11,
-      'aggregator_feed' => 1,
       'block' => 25,
       'block_content' => 1,
       'block_content_type' => 1,
@@ -106,12 +104,12 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'user' => 4,
       'user_role' => 4,
       'menu_link_content' => 12,
-      'view' => 16,
+      'view' => 14,
       'date_format' => 11,
       'entity_form_display' => 24,
       'entity_form_mode' => 1,
-      'entity_view_display' => 37,
-      'entity_view_mode' => 14,
+      'entity_view_display' => 34,
+      'entity_view_mode' => 12,
       'base_field_override' => 4,
     ];
   }
@@ -136,7 +134,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block languages',
       'Block',
       'Book',
@@ -206,6 +203,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Aggregator',
       'References',
       'Translation sets',
       'Variable realm',
@@ -230,12 +228,16 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'a password');
 
     $this->assertFollowUpMigrationResults();
+
+    $this->assertEmailsSent();
   }
 
   /**
    * Tests that follow-up migrations have been run successfully.
+   *
+   * @internal
    */
-  protected function assertFollowUpMigrationResults() {
+  protected function assertFollowUpMigrationResults(): void {
     $node = Node::load(2);
     $this->assertSame('4', $node->get('field_reference')->target_id);
     $this->assertSame('6', $node->get('field_reference_2')->target_id);

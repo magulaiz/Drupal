@@ -8,7 +8,8 @@
  */
 
 const path = require('path');
-const { copyFile, writeFile, readFile, chmod } = require('fs').promises;
+const { copyFile, writeFile, readFile, chmod, mkdir } = require('fs').promises;
+const glob = require('glob');
 
 const coreFolder = path.resolve(__dirname, '../../');
 const packageFolder = `${coreFolder}/node_modules`;
@@ -28,7 +29,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       const libraryDeclaration = libraries[libraryIndex];
       // Get the previous package version.
       const currentVersion = libraryDeclaration.match(/version: "(.*)"\n/)[1];
-      // Replace the version value and the version in the licence URL.
+      // Replace the version value and the version in the license URL.
       libraries[libraryIndex] = libraryDeclaration.replace(
         new RegExp(currentVersion, 'g'),
         version,
@@ -37,7 +38,9 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   }
 
   /**
-   * Declare the array that defines what needs to be copied over.
+   * Structure of the object defining a library to copy to the assets/ folder.
+   *
+   * @typedef DrupalLibraryAsset
    *
    * @prop {string} pack
    *   The name of the npm package (used to get the name of the folder where
@@ -55,6 +58,12 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
    *   the source and target folder.
    *     - An object with a `from` and `to` property if the source and target
    *   have a different name or if the folder nesting is different.
+   */
+
+  /**
+   * Declare the array that defines what needs to be copied over.
+   *
+   * @type {DrupalLibraryAsset[]}
    */
   const process = [
     {
@@ -171,7 +180,54 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       pack: 'loadjs',
       files: [{ from: 'dist/loadjs.min.js', to: 'loadjs.min.js' }],
     },
-  ].map(async ({ pack, files = [], folder = false, library = false }) => {
+  ];
+
+  // There are a lot of CKEditor 5 packages, generate the list dynamically.
+  // Drupal-specific mapping between CKEditor 5 name and Drupal library name.
+  const ckeditor5PluginMapping = {
+    'block-quote': 'blockquote',
+    'essentials': 'internal',
+    'basic-styles': 'basic',
+  };
+  // Get all the CKEditor 5 packages.
+  const ckeditor5Dirs = glob.sync(`{${packageFolder}/@ckeditor/ckeditor5*,${packageFolder}/ckeditor5}`);
+  for (const ckeditor5package of ckeditor5Dirs) {
+    // Add all the files in the build/ directory to the process array for copying.
+    const buildFiles = glob.sync(`${ckeditor5package}/build/**/*.js`, { nodir: true });
+    if (buildFiles.length) {
+      // Clean up the path to get the original package name.
+      const pack = ckeditor5package.replace(`${packageFolder}/`, '');
+      // Use the package name to generate the plugin name. There are some
+      // exceptions that needs to be handled. Ideally remove the special cases.
+      let pluginName = pack.replace('@ckeditor/ckeditor5-', '');
+      // Target folder in the vendor/assets folder.
+      let folder = `ckeditor5/${pluginName.replace('@ckeditor/ckeditor5-', '')}`;
+      // Transform kebab-case to CamelCase.
+      let library = pluginName.replace(/-./g, match => match[1].toUpperCase());
+      // Special case for Drupal implementation.
+      if (ckeditor5PluginMapping.hasOwnProperty(pluginName)) {
+        library = ckeditor5PluginMapping[pluginName];
+      }
+      if (library === 'ckeditor5') {
+        folder = 'ckeditor5/ckeditor5-dll';
+      } else {
+        library = `ckeditor5.${library}`;
+      }
+      process.push({
+        pack,
+        library,
+        folder,
+        files: buildFiles.map((absolutePath) => ({
+          from: absolutePath.replace(`${ckeditor5package}/`, ''),
+          to: absolutePath.replace(`${ckeditor5package}/build/`, ''),
+        })),
+      });
+    }
+  }
+
+  // Use sequential processing to avoid corrupting the contents of the
+  // concatenated CKEditor 5 translation files.
+  for (const { pack, files = [], folder = false, library = false } of process) {
     const sourceFolder = pack;
     const libraryName = library || folder || pack;
     const destFolder = folder || pack;
@@ -187,50 +243,45 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
       updateLibraryVersion(libraryName, packageInfo);
     }
 
-    files.forEach(async (file) => {
+    for (const file of files) {
       let source = file;
       let dest = file;
       if (typeof file === 'object') {
         source = file.from;
         dest = file.to;
       }
+      const sourceFile = `${packageFolder}/${sourceFolder}/${source}`;
+      const destFile = `${assetsFolder}/${destFolder}/${dest}`;
+
       // For map files, make sure the sources files don't leak outside the
       // library folder. In the `sources` member, remove all "../" values at
       // the start of the files names to avoid having the virtual files outside
       // of the library vendor folder in dev tools.
       if (path.extname(source) === '.map') {
         console.log('Process map file', source);
-        const map = await readFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-        );
-        const json = JSON.parse(map);
+        const json = JSON.parse(await readFile(sourceFile));
         json.sources = json.sources.map((source) =>
           source.replace(/^(\.\.\/)+/, ''),
         );
-        await writeFile(
-          `${assetsFolder}/${destFolder}/${dest}`,
-          JSON.stringify(json),
-        );
+        await writeFile(destFile, JSON.stringify(json));
       } else {
         console.log(
-          'Copy',
-          `${sourceFolder}/${source}`,
-          'to',
-          `${destFolder}/${dest}`,
+          `Copy ${sourceFolder}/${source} to ${destFolder}/${dest}`,
         );
-        await copyFile(
-          `${packageFolder}/${sourceFolder}/${source}`,
-          `${assetsFolder}/${destFolder}/${dest}`,
-        );
+        try {
+          await mkdir(path.dirname(destFile), { recursive: true });
+        } catch (e) {
+          // Nothing to do if the folder already exists.
+        }
+        await copyFile(sourceFile, destFile);
         // These 2 files come from a zip file that hasn't been updated in years
         // hardcode the permission fix to pass the commit checks.
         if (['jquery.joyride-2.1.js', 'marker.png'].includes(dest)) {
-          await chmod(`${assetsFolder}/${destFolder}/${dest}`, 0o644);
+          await chmod(destFile, 0o644);
         }
       }
-    });
-  });
+    }
+  }
 
-  await Promise.all(process);
   await writeFile(librariesPath, libraries.join('\n\n'));
 })();
