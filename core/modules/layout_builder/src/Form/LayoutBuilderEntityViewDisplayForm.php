@@ -12,6 +12,7 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\layout_builder\TranslatableSectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Edit form for the LayoutBuilderEntityViewDisplay entity type.
@@ -90,16 +91,13 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
       '#access' => $is_enabled,
     ];
 
-    $current_url = Url::fromRoute('<current>');
-    $translate_url = $current_url->toString() . '/translate';
-
+    $translate_url = Url::fromRoute('<current>')->toString() . '/translate';
     if (UrlHelper::isExternal($translate_url)) {
       $translate_url = Url::fromUri($translate_url);
     }
     else {
       $translate_url = Url::fromUserInput($translate_url);
     }
-
     $form['translate_layout'] = [
       '#type' => 'link',
       '#title' => $this->t('Translate layout'),
