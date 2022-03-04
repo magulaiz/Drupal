@@ -16,6 +16,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -35,7 +36,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -193,8 +194,8 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.block-search'));
-    $searchButton = $assert_session->buttonExists('Search');
+    // Use getLocatorFromPlaceholderLabel() to confirm the block exists.
+    $this->getLocatorFromPlaceholderLabel('"Search form" block');    $searchButton = $assert_session->buttonExists('Search');
     $this->assertElementUnclickable($searchButton);
     $assert_session->linkExists('Take me away');
     $this->assertElementUnclickable($page->findLink('Take me away'));
@@ -210,7 +211,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->getUrl());
 
-    $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
+    $this->clickContextualLink($this->getBodyLocator(), 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ui-dialog-titlebar [title="Close"]'));
     $page->pressButton('Close');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
@@ -218,7 +219,7 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     // Run the steps a second time after closing dialog, which reverses the
     // order that behaviors.layoutBuilderDisableInteractiveElements and
     // contextual link initialization occurs.
-    $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody [data-contextual-id^="layout_builder_block"]', 'Configure');
+    $this->clickContextualLink($this->getBodyLocator(), 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $page->pressButton('Close');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
@@ -239,8 +240,8 @@ class LayoutBuilderDisableInteractionsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $body_field_selector = '.block-field-blocknodebundle-with-section-fieldbody';
 
-    $body_block = $page->find('css', $body_field_selector);
-    $this->assertNotEmpty($body_block);
+    $body_field_selector = $this->getBodyLocator();
+    $this->assertNotEmpty($body_block = $page->find('css', $body_field_selector));
 
     // Get the current Y position of the body block.
     $body_block_top_position = $this->getElementVerticalPosition($body_field_selector, 'top');
