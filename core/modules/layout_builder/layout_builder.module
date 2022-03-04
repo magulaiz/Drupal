@@ -7,6 +7,7 @@
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,6 +16,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
+use Drupal\layout_builder\ConfigTranslation\LayoutEntityDisplayUpdater;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplayStorage;
 use Drupal\layout_builder\Form\DefaultsEntityForm;
@@ -420,4 +422,55 @@ function layout_builder_theme_suggestions_field_alter(&$suggestions, array $vari
     $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'] . '__' . $element['#third_party_settings']['layout_builder']['view_mode'];
   }
   return $suggestions;
+}
+
+/**
+ * Implements hook_config_translation_info().
+ */
+function layout_builder_config_translation_info(&$info) {
+  // If field UI is not enabled, the base routes of the type
+  // "entity.entity_view_display.$entity_type_id.view_mode" are not defined.
+  if (\Drupal::moduleHandler()->moduleExists('field_ui')) {
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $language_manager = \Drupal::languageManager();
+
+    // First loading of entity_view_display triggers field definitions loading
+    // which stores results in the cache in a wrong language if there is
+    // a mismatch between config override language and current language.
+    // In this way we always ensure there is no such mismatch.
+    $original_override_language = $language_manager->getConfigOverrideLanguage();
+    $language_manager->setConfigOverrideLanguage($language_manager->getCurrentLanguage());
+
+    foreach (EntityViewDisplay::loadMultiple() as $entity_view_display) {
+      if ($entity_view_display instanceof LayoutBuilderEntityViewDisplay && $entity_view_display->isLayoutBuilderEnabled()) {
+        $entity_type_id = $entity_view_display->getTargetEntityTypeId();
+        /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
+        $entity_type = $entity_type_manager->getDefinition($entity_type_id);
+        // Make sure entity type has field UI enabled and has a base route.
+        if ($entity_type->get('field_ui_base_route')) {
+          $info[$entity_type_id . '_' . $entity_view_display->getTargetBundle() . '_' . $entity_view_display->getMode() . '_entity_view_display'] = [
+            'base_route_name' => "entity.entity_view_display.$entity_type_id.view_mode",
+            'entity_type' => 'entity_view_display',
+            'title' => t('Layout'),
+            'class' => '\Drupal\layout_builder\ConfigTranslation\LayoutEntityDisplayMapper',
+            'weight' => 10,
+            'names' => [],
+            'target_entity_type' => $entity_type_id,
+          ];
+        }
+      }
+    }
+
+    // Rollback to the original config override language.
+    $language_manager->setConfigOverrideLanguage($original_override_language);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ */
+function layout_builder_entity_view_display_presave(EntityViewDisplayInterface $entity) {
+  /** @var \Drupal\layout_builder\ConfigTranslation\LayoutEntityDisplayUpdater $translation_updater */
+  $translation_updater = \Drupal::classResolver(LayoutEntityDisplayUpdater::class);
+  $translation_updater->presaveUpdateOverrides($entity);
 }
