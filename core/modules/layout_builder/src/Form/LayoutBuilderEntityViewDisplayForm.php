@@ -90,14 +90,22 @@ class LayoutBuilderEntityViewDisplayForm extends EntityViewDisplayEditForm {
       '#access' => $is_enabled,
     ];
 
+    $current_url = Url::fromRoute('<current>');
+    $translate_url = $current_url->toString() . '/translate';
+
+    if (UrlHelper::isExternal($translate_url)) {
+      $translate_url = Url::fromUri($translate_url);
+    }
+    else {
+      $translate_url = Url::fromUserInput($translate_url);
+    }
+
     $form['translate_layout'] = [
       '#type' => 'link',
       '#title' => $this->t('Translate layout'),
       '#weight' => -9,
       '#attributes' => ['class' => ['button']],
-      '#url' => Url::fromUserInput(
-        Url::fromRoute('<current>')->toString() . '/translate'
-      ),
+      '#url' => $translate_url,
       '#access' => $is_enabled && $is_translatable,
     ];
 
