@@ -167,6 +167,40 @@ ckeditor5_code:
     elements:
       - <code>
 
+ckeditor5_codeBlock:
+  ckeditor5:
+    plugins: [codeBlock.CodeBlock]
+    config:
+      codeBlock:
+        # These are the options passed to the CKEditor 5 CodeBlock plugin
+        # @see https://ckeditor.com/docs/ckeditor5/latest/api/module_heading_heading-HeadingConfig.html#member-options
+        #   for details on what each of these config properties do.
+        languages:
+          #- { language: 'plaintext', label: 'Plain text' }
+          #- { language: 'c', label: 'C' }
+          #- { language: 'cs', label: 'C#' }
+          #- { language: 'cpp', label: 'C++' }
+          #- { language: 'css', label: 'CSS' }
+          #- { language: 'diff', label: 'Diff' }
+          #- { language: 'html', label: 'HTML' }
+          #- { language: 'java', label: 'Java' }
+          #- { language: 'javascript', label: 'JavaScript' }
+          #- { language: 'php', label: 'PHP' }
+          #- { language: 'python', label: 'Python' }
+          #- { language: 'ruby', label: 'Ruby' }
+          #- { language: 'typescript', label: 'TypeScript' }
+          #- { language: 'xml', label: 'XML' }
+  drupal:
+    label: Code Block
+    library: core/ckeditor5.codeBlock
+    admin_library: ckeditor5/admin.codeBlock
+    toolbar_items:
+      codeBlock:
+        label: Code Block
+    elements:
+      - <pre>
+      - <code class="language-*">
+
 ckeditor5_strikethrough:
   ckeditor5:
     plugins: [basicStyles.Strikethrough]

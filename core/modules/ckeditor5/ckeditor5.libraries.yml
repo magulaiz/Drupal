@@ -208,3 +208,8 @@ admin.table:
   css:
     theme:
       css/table.admin.css: { }
+
+admin.codeBlock:
+  css:
+    theme:
+      css/code-block.admin.css: { }
