@@ -322,23 +322,12 @@
   }
   }
 
-/*
- * Olivero doesn't officially support nested tertiary submenus, but this
- * ensures that it doesn't break all the way.
- *
- * @see https://www.drupal.org/project/drupal/issues/3221399
- */
-
-.primary-nav__menu--level-2 .primary-nav__menu-item--has-children {
-  display: block;
-}
-
 @media (prefers-reduced-motion) {
 
-  .primary-nav__menu--level-2 {
-      transition: opacity 0.2s, visibility 0.2s
-  }
+.primary-nav__menu--level-2 {
+    transition: opacity 0.2s, visibility 0.2s
 }
+  }
 
 /*
  * Olivero doesn't officially support nested tertiary submenus, but this

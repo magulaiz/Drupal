@@ -135,7 +135,7 @@
       outline-offset: -4px
 
       /*
-        We normally indicate focus by animating background-image width. This isn"t
+        We normally indicate focus by animating background-image width. This isn't
         available in IE11 when in Windows high contrast mode.
       */
     }
@@ -282,7 +282,7 @@
 @media screen and (-ms-high-contrast: active) {
 
 .block-search-wide__wrapper .search-form__submit {
-      /* IE11"s high contrast show will not show the background image, so we show the text. */
+      /* IE11's high contrast show will not show the background image, so we show the text. */
   }
       .block-search-wide__wrapper .search-form__submit .visually-hidden {
         position: static;
@@ -295,7 +295,7 @@
 
 .block-search-wide__wrapper .search-form__submit {
 
-      /* Edge"s high contrast does show the background image, so we hide it. */
+      /* Edge's high contrast does show the background image, so we hide it. */
   }
       .block-search-wide__wrapper .search-form__submit .icon--search {
         display: none;
