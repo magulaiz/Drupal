@@ -737,8 +737,8 @@ final class HTMLRestrictions {
   private static function applyOperation(HTMLRestrictions $a, HTMLRestrictions $b, string $operation_method_name): HTMLRestrictions {
     // 1. Operation applied to wildcard tags that exist in both operands.
     // For example: <$block id> in both operands.
-    $a_wildcard = self::getWildcardSubset($a);
-    $b_wildcard = self::getWildcardSubset($b);
+    $a_wildcard = $a->getWildcardSubset();
+    $b_wildcard = $b->getWildcardSubset();
     $wildcard_op_result = $a_wildcard->$operation_method_name($b_wildcard);
 
     // Early return if both operands contain only wildcard tags.
@@ -795,27 +795,21 @@ final class HTMLRestrictions {
   /**
    * Gets the subset of allowed elements whose tags are wildcards.
    *
-   * @param \Drupal\ckeditor5\HTMLRestrictions $r
-   *   A set of HTML restrictions.
-   *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   The subset of the given set of HTML restrictions.
    */
-  public static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
-    return new self(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+  public function getWildcardSubset(): HTMLRestrictions {
+    return new self(array_filter($this->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
   }
 
   /**
-   * Gets a concrete set of allowed elements without resolving wildcards.
-   *
-   * @param \Drupal\ckeditor5\HTMLRestrictions $r
-   *   A set of HTML restrictions.
+   * Gets the subset of allowed elements whose tags are concrete.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   The subset of the given set of HTML restrictions.
    */
-  public static function getConcreteSubset(HTMLRestrictions $r): HTMLRestrictions {
-    return new self(array_filter($r->elements, function (string $tag_name) {
+  public function getConcreteSubset(): HTMLRestrictions {
+    return new self(array_filter($this->elements, function (string $tag_name) {
       return !self::isWildcardTag($tag_name);
     }, ARRAY_FILTER_USE_KEY));
   }
@@ -881,7 +875,7 @@ final class HTMLRestrictions {
     // - then $naive will be `<p class="foo">`
     // - merging them yields `<p class> <$block class="foo">` again
     // - diffing the wildcard subsets yields just `<p class>`
-    return $r->merge($naive_resolution)->doDiff(self::getWildcardSubset($r));
+    return $r->merge($naive_resolution)->doDiff($r->getWildcardSubset());
   }
 
   /**

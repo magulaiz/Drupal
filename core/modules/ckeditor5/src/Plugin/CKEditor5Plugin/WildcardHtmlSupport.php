@@ -26,7 +26,7 @@ class WildcardHtmlSupport extends CKEditor5PluginDefault {
     }
 
     // Compute the net new elements that the wildcard tags resolve into.
-    $concrete_allowed_elements = HTMLRestrictions::getConcreteSubset($allowed_elements);
+    $concrete_allowed_elements = $allowed_elements->getConcreteSubset();
     $net_new_elements = $allowed_elements->diff($concrete_allowed_elements);
 
     return [

@@ -1131,8 +1131,8 @@ class HTMLRestrictionsTest extends UnitTestCase {
    * @dataProvider providerSubsets
    */
   public function testSubsets(HTMLRestrictions $input, HTMLRestrictions $expected_wildcard_subset, HTMLRestrictions $expected_concrete_subset): void {
-    $this->assertEquals($expected_wildcard_subset, HTMLRestrictions::getWildcardSubset($input));
-    $this->assertEquals($expected_concrete_subset, HTMLRestrictions::getConcreteSubset($input));
+    $this->assertEquals($expected_wildcard_subset, $input->getWildcardSubset());
+    $this->assertEquals($expected_concrete_subset, $input->getConcreteSubset());
   }
 
   public function providerSubsets(): \Generator {
