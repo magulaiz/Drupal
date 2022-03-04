@@ -4,7 +4,7 @@
  */
 
 ((Drupal, debounce, CKEditor5, $, once) => {
-  // CKEditor 5 is incompatible with IE11. When IE11 is detected, the CKEditor5
+  // CKEditor 5 is incompatible with IE11. When IE11 is detected, the CKEditor 5
   // variable is null. In those instances, exit early since CKEditor 5 is not
   // loaded.
   if (!CKEditor5) {
@@ -12,7 +12,7 @@
   }
 
   /**
-   * The CKEDITOR instances.
+   * The CKEditor 5 instances.
    *
    * @type {Map}
    */
@@ -153,9 +153,9 @@
   const getElementId = (element) => element.getAttribute('data-ckeditor5-id');
 
   /**
-   * Select CKEditor5 plugin classes to include.
+   * Select CKEditor 5 plugin classes to include.
    *
-   * Found in the CKEditor5 global js object as {package.Class}.
+   * Found in the CKEditor 5 global JavaScript object as {package.Class}.
    *
    * @param {Array} plugins
    *  List of package and Class name of plugins
@@ -398,7 +398,7 @@
           // Save a reference to the initialized instance.
           Drupal.CKEditor5Instances.set(id, editor);
 
-          // CKEditor4 had a feature to remove the required attribute
+          // CKEditor 4 had a feature to remove the required attribute
           // see: https://www.drupal.org/project/drupal/issues/1954968
           if (element.hasAttribute('required')) {
             required.add(id);
@@ -520,7 +520,7 @@
     },
 
     /**
-     * Registers a callback which CKEditor5 will call on change:data event.
+     * Registers a callback which CKEditor 5 will call on change:data event.
      *
      * @param {HTMLElement} element
      *   The element where the change occurred.
