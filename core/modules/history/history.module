@@ -75,8 +75,8 @@ function history_read_multiple($nids) {
  *   current user.
  */
 function history_write($nid, $account = NULL) {
-    $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-    \Drupal::service('history.repository')->setTime($node, $account);
+  $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
+  \Drupal::service('history.repository')->setTime($node, $account);
   }
 }
 
@@ -84,7 +84,7 @@ function history_write($nid, $account = NULL) {
  * Implements hook_cron().
  */
 function history_cron() {
-   \Drupal::service('history.repository')->purge();
+  \Drupal::service('history.repository')->purge();
 }
 
 /**
@@ -112,7 +112,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * Implements hook_ENTITY_TYPE_delete() for node entities.
  */
 function history_node_delete(EntityInterface $node) {
-   \Drupal::service('history.repository')->deleteByEntity($node);
+  \Drupal::service('history.repository')->deleteByEntity($node);
 }
 
 /**
@@ -121,7 +121,7 @@ function history_node_delete(EntityInterface $node) {
 function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-       \Drupal::service('history.repository')->deleteByUser($account);
+      \Drupal::service('history.repository')->deleteByUser($account);
       break;
   }
 }

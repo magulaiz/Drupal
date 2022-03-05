@@ -129,7 +129,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     $node->save();
     $this->assertSame(NULL, \Drupal::service('history.repository')->getTime($node, $this->currentUser, NULL));
     $this->assertSame(FALSE, \Drupal::service('history.repository')->getTime($node, $this->currentUser, FALSE));
-     $this->assertSame(0, \Drupal::service('history.repository')->getTime($node, $this->currentUser, 0));
+    $this->assertSame(0, \Drupal::service('history.repository')->getTime($node, $this->currentUser, 0));
     $this->assertSame(1000, \Drupal::service('history.repository')->getTime($node, $this->currentUser, 1000));
     $this->assertSame('', \Drupal::service('history.repository')->getTime($node, $this->currentUser, ''));
     $this->assertSame('missing', \Drupal::service('history.repository')->getTime($node, $this->currentUser, 'missing'));
@@ -148,7 +148,7 @@ class HistoryRepositoryTest extends KernelTestBase {
       'title' => 'n2',
       'type' => 'default',
     ]);
-    $node->save();   
+    $node->save();
 
     // Exclude missing nodes if null is default.
     $this->assertSame([], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, NULL));
@@ -167,7 +167,6 @@ class HistoryRepositoryTest extends KernelTestBase {
     // Cached result should be same.
     $this->assertSame([$node1->id() => FALSE], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, FALSE));
   }
-
 
   /**
    * Tests the cache.

@@ -98,15 +98,15 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $found = $cached + $queried;
     $missing_ids = array_diff($entity_ids, array_keys($found));
     $missing = array_fill_keys($missing_ids, FALSE);
-    $this->setCachedTimes($entity_type, $queried, $account);
+    $this->setCachedTimes($entity_type, $missing, $account);
 
-    $result = $this->handleMissingTimes($entity_ids, $result, $default)
+    $result = $this->handleMissingTimes($entity_ids, $result, $default);
     return $result;
   }
 
   /**
    * Handles entities for whom no history is present.
-   * 
+   *
    * @param array $entity_ids
    *   The entity ids that should be keys in the returned array.
    * @param array $times
@@ -117,7 +117,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    * @return array
    *   An array of times or default values, keyed by entity id.
    */
-  protected function handleMissingTimes(array $entity_ids, array $times, ?$default) {
+  protected function handleMissingTimes(array $entity_ids, array $times, ? $default) {
     // Allow 0 as a valid time, but filter out FALSE.
     $result = array_filter($times, 'strlen');
     // If default is specified, use it for entities without times.
@@ -153,7 +153,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
 
     $time = $time ?? $this->time->getRequestTime();
 
-    foreach($entity_ids as $entity_id) {
+    foreach ($entity_ids as $entity_id) {
       $this->connection->merge('history')
         ->keys([
           'uid' => $account->id(),
@@ -185,7 +185,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $this->connection->delete('history')
       ->condition('uid', $account->id())
       ->execute();
-      $this->resetCache(NULL, NULL, $account);
+    $this->resetCache(NULL, NULL, $account);
   }
 
   /**
@@ -207,21 +207,21 @@ class HistoryRepository implements HistoryRepositoryInterface {
    */
   public function resetCache(?string $entity_type, ?array $entity_ids, ?AccountInterface $account): HistoryRepositoryInterface {
     $account_ids = $account ? [$account->id()] : array_keys(static::$cache);
-    foreach($account_ids as $account_id) {
+    foreach ($account_ids as $account_id) {
       if (empty($entity_type) && empty($entity_ids)) {
         unset(static::$cache[$account_id]);
         continue;
       }
       $entity_types = $entity_type ? [$entity_type] : array_keys(static::$cache[$account_id]);
-      foreach($entity_types as $entity_type) {
-          if (empty($entity_ids)) {
-            unset(static::$cache[$account_id][$entity_type]);
-            continue;
-          }
-          foreach($entity_ids as $entity_id) {
-            unset(static::$cache[$account_id][$entity_type][$entity_id]);
-          }
+      foreach ($entity_types as $entity_type) {
+        if (empty($entity_ids)) {
+          unset(static::$cache[$account_id][$entity_type]);
+          continue;
         }
+        foreach ($entity_ids as $entity_id) {
+          unset(static::$cache[$account_id][$entity_type][$entity_id]);
+        }
+      }
     }
     return $this;
   }

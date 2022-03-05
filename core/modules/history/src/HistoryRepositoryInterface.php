@@ -23,7 +23,7 @@ interface HistoryRepositoryInterface {
    * @return mixed
    *   A timestamp, or default value.
    */
-  public function getTime(\Drupal\Core\Entity\EntityInterface $entity, ?AccountInterface $account, ?$default);
+  public function getTime(EntityInterface $entity, ?AccountInterface $account, ?$default);
 
   /**
    * Retrieves the times of a user's latest activity with entities.
@@ -41,7 +41,7 @@ interface HistoryRepositoryInterface {
    * @return array
    *   Array of timestamps (or defaults) keyed by entity ID
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ?$default): array;
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ? $default): array;
 
   /**
    * Sets the time of a user's latest activity time with an entity.
