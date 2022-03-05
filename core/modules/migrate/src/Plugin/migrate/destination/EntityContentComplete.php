@@ -82,7 +82,7 @@ class EntityContentComplete extends EntityContentBase {
 
     // Creates a new entity if one was not found above or if an entity was
     // found that had a data mismatch.
-    if (isset($entity) || $entity === NULL) {
+    if (!isset($entity) || $entity === NULL) {
       // Attempt to set the bundle.
       if ($bundle = $this->getBundle($row)) {
         $row->setDestinationProperty($this->getKey('bundle'), $bundle);
