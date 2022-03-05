@@ -17,11 +17,13 @@ interface HistoryRepositoryInterface {
    *   The entity.
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *   (optional) The user account.
+   * @param mixed $default
+   *   (optional) A default value to use if no history exists for an entity.
    *
-   * @return int|null
-   *   A timestamp.
+   * @return mixed
+   *   A timestamp, or default value.
    */
-  public function getTime(\Drupal\Core\Entity\EntityInterface $entity, ?AccountInterface $account): ?int;
+  public function getTime(\Drupal\Core\Entity\EntityInterface $entity, ?AccountInterface $account, ?$default);
 
   /**
    * Retrieves the times of a user's latest activity with entities.
@@ -32,11 +34,14 @@ interface HistoryRepositoryInterface {
    *   The entity IDs.
    * @param \Drupal\Core\Session\AccountInterface|null $account
    *   (optional) The user account.
+   * @param mixed $default
+   *   (optional) A default value to use if no history exists for an entity.
+   *   If null, entities with missing times are excluded.
    *
    * @return array
-   *   Array of timestamps keyed by entity ID
+   *   Array of timestamps (or defaults) keyed by entity ID
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account): array;
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ?$default): array;
 
   /**
    * Sets the time of a user's latest activity time with an entity.
@@ -55,7 +60,7 @@ interface HistoryRepositoryInterface {
   /**
    * Sets the time of a user's latest activity time with an entity.
    *
-   * @param string $entity_type 
+   * @param string $entity_type
    *   The entity type.
    * @param array $entity_ids
    *   The entity IDs.

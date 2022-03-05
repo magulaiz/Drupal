@@ -21,7 +21,7 @@ class HistoryRepositoryTest extends KernelTestBase {
    * @var array
    */
   protected static $modules = ['history', 'node'];
-  
+
   /**
    * The current user entity.
    *
@@ -63,7 +63,7 @@ class HistoryRepositoryTest extends KernelTestBase {
   /**
    * Tests getting and setting times.
    */
-  public function testSetGetTime() {  
+  public function testSetGetTime() {
     $node = Node::create([
       'title' => 'n1',
       'type' => 'default',
@@ -93,7 +93,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->setTime($node, $notCurrentUser, $time);
     $this->assertNotSame($time, \Drupal::service('history.repository')->getTime($node));
     $this->assertSame($time, \Drupal::service('history.repository')->getTime($node, $notCurrentUser));
-    \Drupal::service('history.repository')->resetCache();    
+    \Drupal::service('history.repository')->resetCache();
     $this->assertSame($time, \Drupal::service('history.repository')->getTime($node, $notCurrentUser));
 
     // Set & get multiple.
@@ -106,7 +106,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
     $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
     $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
-    \Drupal::service('history.repository')->resetCache();  
+    \Drupal::service('history.repository')->resetCache();
     $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
 
     // Get some from cache and some from database.
@@ -114,12 +114,63 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
     $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
     \Drupal::service('history.repository')->resetCache();
-    $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()])); 
+    $this->assertSame($time, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
 
   }
 
   /**
-   * Tests getting and setting times.
+   * Tests default on getTime.
+   */
+  public function testDefaultGetTime() {
+    $node = Node::create([
+      'title' => 'n1',
+      'type' => 'default',
+    ]);
+    $node->save();
+    $this->assertSame(NULL, \Drupal::service('history.repository')->getTime($node, $this->currentUser, NULL));
+    $this->assertSame(FALSE, \Drupal::service('history.repository')->getTime($node, $this->currentUser, FALSE));
+     $this->assertSame(0, \Drupal::service('history.repository')->getTime($node, $this->currentUser, 0));
+    $this->assertSame(1000, \Drupal::service('history.repository')->getTime($node, $this->currentUser, 1000));
+    $this->assertSame('', \Drupal::service('history.repository')->getTime($node, $this->currentUser, ''));
+    $this->assertSame('missing', \Drupal::service('history.repository')->getTime($node, $this->currentUser, 'missing'));
+  }
+
+  /**
+   * Tests default on getTimes.
+   */
+  public function testDefaultGetTimes() {
+    $node1 = Node::create([
+      'title' => 'n1',
+      'type' => 'default',
+    ]);
+    $node->save();
+    $node2 = Node::create([
+      'title' => 'n2',
+      'type' => 'default',
+    ]);
+    $node->save();   
+
+    // Exclude missing nodes if null is default.
+    $this->assertSame([], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, NULL));
+    // Cached result should be same.
+    $this->assertSame([], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, NULL));
+
+    // Exclude missing nodes if 0 is default.
+    \Drupal::service('history.repository')->resetCache();
+    $this->assertSame([$node1->id() => 0], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, 0));
+    // Cached result should be same.
+    $this->assertSame([$node1->id() => 0], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, 0));
+
+    // Exclude missing nodes if FALSE is default.
+    \Drupal::service('history.repository')->resetCache();
+    $this->assertSame([$node1->id() => FALSE], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, FALSE));
+    // Cached result should be same.
+    $this->assertSame([$node1->id() => FALSE], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, FALSE));
+  }
+
+
+  /**
+   * Tests the cache.
    */
   public function testCache() {
     $node = Node::create([
@@ -128,7 +179,9 @@ class HistoryRepositoryTest extends KernelTestBase {
     ]);
     $node->save();
     $old = $this->randomTimestamp();
-    \Drupal::service('history.repository')->setTime($node, $this->currentUser, $old);
+
+    // Missing times are cached.
+    \Drupal::service('history.repository')->getTime($node, $this->currentUser, $old);
 
     // Manipulate database directly so cache is invalid.
     $new = $old + 10;

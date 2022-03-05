@@ -59,15 +59,15 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account): ?int {
-    $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account);
-    return $result ? reset($result) : NULL; 
+  public function getTime(EntityInterface $entity, ?AccountInterface $account, ?$default): ?int {
+    $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
+    return $result ? reset($result) : $default;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account): array {
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ?$default): array {
     if ($entity_type !== 'node') {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
@@ -77,21 +77,57 @@ class HistoryRepository implements HistoryRepositoryInterface {
       return [];
     }
 
+    // Get times from cache where possible.
     $cached = $this->getCachedTimes($entity_type, $entity_ids, $account);
-    $uncached = array_diff($entity_ids, array_keys($cached));
-    if (empty($uncached)) {
+    $uncached_ids = array_diff($entity_ids, array_keys($cached));
+    if (empty($uncached_ids)) {
+      $result = $this->handleMissingTimes($entity_ids, $cached, $default);
       return $cached;
     }
 
+    // Get uncached times from database.
     $queried = $this->connection->select('history', 'h')
       ->fields('h', ['nid', 'timestamp'])
       ->condition('uid', $account->id())
-      ->condition('nid', $uncached, 'IN')
+      ->condition('nid', $uncached_ids, 'IN')
       ->execute()
       ->fetchAllKeyed();
-    $this->setCache($entity_type, $queried, $account);
+    $this->setCachedTimes($entity_type, $queried, $account);
 
-    return $cached + $queried;
+    // Cache missing items with FALSE as time.
+    $found = $cached + $queried;
+    $missing_ids = array_diff($entity_ids, array_keys($found));
+    $missing = array_fill_keys($missing_ids, FALSE);
+    $this->setCachedTimes($entity_type, $queried, $account);
+
+    $result = $this->handleMissingTimes($entity_ids, $result, $default)
+    return $result;
+  }
+
+  /**
+   * Handles entities for whom no history is present.
+   * 
+   * @param array $entity_ids
+   *   The entity ids that should be keys in the returned array.
+   * @param array $times
+   *   An array of times (or FALSE), keyed by entity id.
+   * @param mixed $default
+   *   (optional) A default value to use as time if none is given.
+   *
+   * @return array
+   *   An array of times or default values, keyed by entity id.
+   */
+  protected function handleMissingTimes(array $entity_ids, array $times, ?$default) {
+    // Allow 0 as a valid time, but filter out FALSE.
+    $result = array_filter($times, 'strlen');
+    // If default is specified, use it for entities without times.
+    // Otherwise, exclude entities without times.
+    if (!is_null($default)) {
+      $missing = array_diff($entity_ids, array_keys($result));
+      $defaultResult = array_fill_keys($missing, $default);
+      $result = $result + $defaultResult;
+    }
+    return $result;
   }
 
   /**
@@ -125,7 +161,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
         ])
         ->fields(['timestamp' => $time])
         ->execute();
-      $this->setCachedTime($entity_type, $entity_id, $account, $time);
+      $this->setCachedTimes($entity_type, [$entity_id], $account, $time);
     }
 
     return $this;

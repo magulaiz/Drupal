@@ -62,7 +62,7 @@ function history_read($nid) {
  *   otherwise, zero.
  */
 function history_read_multiple($nids) {
-  return \Drupal::service('history.repository')->getLastViewed('node', $nids);
+  return \Drupal::service('history.repository')->getTimes('node', $nids, NULL, 0);
 }
 
 /**
@@ -75,14 +75,8 @@ function history_read_multiple($nids) {
  *   current user.
  */
 function history_write($nid, $account = NULL) {
-
-  if (!isset($account)) {
-    $account = \Drupal::currentUser();
-  }
-
-  if ($account->isAuthenticated()) {
     $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
-    \Drupal::service('history.repository')->updateLastViewed($node);
+    \Drupal::service('history.repository')->setTime($node, $account);
   }
 }
 
@@ -90,9 +84,7 @@ function history_write($nid, $account = NULL) {
  * Implements hook_cron().
  */
 function history_cron() {
-  \Drupal::database()->delete('history')
-    ->condition('timestamp', HISTORY_READ_LIMIT, '<')
-    ->execute();
+   \Drupal::service('history.repository')->purge();
 }
 
 /**
@@ -120,9 +112,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
  * Implements hook_ENTITY_TYPE_delete() for node entities.
  */
 function history_node_delete(EntityInterface $node) {
-  \Drupal::database()->delete('history')
-    ->condition('nid', $node->id())
-    ->execute();
+   \Drupal::service('history.repository')->deleteByEntity($node);
 }
 
 /**
@@ -131,9 +121,7 @@ function history_node_delete(EntityInterface $node) {
 function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
-      \Drupal::database()->delete('history')
-        ->condition('uid', $account->id())
-        ->execute();
+       \Drupal::service('history.repository')->deleteByUser($account);
       break;
   }
 }
@@ -142,7 +130,5 @@ function history_user_cancel($edit, UserInterface $account, $method) {
  * Implements hook_ENTITY_TYPE_delete() for user entities.
  */
 function history_user_delete($account) {
-  \Drupal::database()->delete('history')
-    ->condition('uid', $account->id())
-    ->execute();
+  \Drupal::service('history.repository')->deleteByUser($account);
 }

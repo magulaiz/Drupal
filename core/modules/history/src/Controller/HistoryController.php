@@ -49,7 +49,7 @@ class HistoryController extends ControllerBase {
     if (!isset($nids)) {
       throw new NotFoundHttpException();
     }
-    return new JsonResponse($this->historyRepository->getLastViewed('node', $nids));
+    return new JsonResponse($this->historyRepository->getTimes('node', $nids, $this->currentUser(), 0));
   }
 
   /**
@@ -66,10 +66,10 @@ class HistoryController extends ControllerBase {
     }
 
     // Update the history table, stating that this user viewed this node.
-    $timestamps = $this->historyRepository
-      ->updateLastViewed($node)
-      ->getLastViewed('node', [$node->id()]);
-    return new JsonResponse($timestamps[$node->id()]);
+    $timestamp = $this->historyRepository
+      ->setTime($node, $this->currentUser())
+      ->getTime($node, $this->currentUser(), 0);
+    return new JsonResponse($timestamp);
   }
 
 }

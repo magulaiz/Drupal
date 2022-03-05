@@ -20,8 +20,8 @@ class HistoryRenderCallback implements RenderCallbackInterface {
    */
   public static function lazyBuilder($node_id) {
     $element = [];
-    $timestamps = \Drupal::service('history.repository')->getLastViewed('node', [$node_id], \Drupal::currentUser());
-    $element['#attached']['drupalSettings']['history']['lastReadTimestamps'][$node_id] = (int) $timestamps[$node_id];
+    $timestamps = \Drupal::service('history.repository')->getTimes('node', [$node_id], NULL, 0);
+    $element['#attached']['drupalSettings']['history']['lastReadTimestamps'][$node_id] = $timestamps[$node_id];
     return $element;
   }
 
