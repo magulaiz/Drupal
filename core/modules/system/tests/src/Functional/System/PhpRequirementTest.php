@@ -31,7 +31,10 @@ class PhpRequirementTest extends BrowserTestBase {
     ]);
     $this->drupalLogin($admin_user);
 
-    // Add trusted host settings so there are not out-of-scope errors.
+    // By default, Drupal installation (and BrowserTestBase) do not configure
+    // trusted host patterns, which leads to an error on the status report.
+    // Configure them so that the site is properly configured and so that we
+    // can cleanly test the errors related to PHP versions.
     $settings['settings']['trusted_host_patterns'] = (object) [
       'value' => ['^' . preg_quote(\Drupal::request()->getHost()) . '$'],
       'required' => TRUE,
