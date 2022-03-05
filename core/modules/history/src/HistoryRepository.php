@@ -6,11 +6,9 @@ use Drupal\Core\Database\Connection;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 
 /**
- * Provides history repository service.
+ * Service class to store and retrieve the times of users latest activity with entities.
  */
 class HistoryRepository implements HistoryRepositoryInterface {
 
@@ -29,11 +27,11 @@ class HistoryRepository implements HistoryRepositoryInterface {
   protected $time;
 
   /**
-   * The memory cache.
+   * The cache.
    *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
+   * @var array
    */
-  protected $memoryCache;
+  protected static $cache = [];
 
   /**
    * The current user.
@@ -43,133 +41,105 @@ class HistoryRepository implements HistoryRepositoryInterface {
   protected $currentUser;
 
   /**
-   * Constructs the history repository service.
+   * Constructs the history repository.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
-   *   The memory cache.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(Connection $connection, TimeInterface $time, MemoryCacheInterface $memory_cache, AccountInterface $current_user) {
+  public function __construct(Connection $connection, TimeInterface $time, AccountInterface $current_user) {
     $this->connection = $connection;
     $this->time = $time;
-    $this->memoryCache = $memory_cache;
     $this->currentUser = $current_user;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLastViewed(string $entity_type, array $entity_ids): array {
-    $entities = []; 
-    $entities_to_read = [];
-    $user_id = $this->currentUser->id();
-    foreach ($entity_ids as $entity_id) {
-      // Load from the cache.
-      $cached = $this->memoryCache->get(
-        $this->buildCacheId($user_id, $entity_type, $entity_id
-      ));
-      if ($cached) {
-        $entities[$entity_id] = $cached->data;
-      }
-      else {
-        $entities_to_read[$entity_id] = 0;
-      }
-    }
-
-    if (empty($entities_to_read)) {
-      return $entities;
-    }
-
-    $result = $this->connection->select('history', 'h')
-      ->fields('h', ['entity_id', 'timestamp'])
-      ->condition('uid', $user_id)
-      ->condition('entity_type', $entity_type)
-      ->condition('entity_id', array_keys($entities_to_read), 'IN')
-      ->execute();
-
-    foreach ($result as $row) {
-      $timestamp = (int) $row->timestamp;
-      $this->memoryCache->set(
-        $this->buildCacheId($user_id, $entity_type, $row->entity_id),
-        $timestamp,
-        Cache::PERMANENT,
-        $this->getCacheTags($user_id, $row->entity_id)
-      );
-      $entities_to_read[$row->entity_id] = $timestamp;
-    }
-
-    return $entities + $entities_to_read;
+  public function getTime(EntityInterface $entity, ?AccountInterface $account): ?int {
+    $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account);
+    return $result ? reset($result) : NULL; 
   }
 
   /**
    * {@inheritdoc}
    */
-  public function updateLastViewed(EntityInterface $entity): HistoryRepositoryInterface {
-    if ($this->currentUser->isAuthenticated()) {
-      $user_id = $this->currentUser->id();
-      $time = $this->time->getRequestTime();
-      $entity_id = $entity->id();
-      $entity_type_id = $entity->getEntityTypeId();
-      $this->connection->merge('history')
-        ->keys([
-          'uid' => $user_id,
-          'entity_id' => $entity_id,
-          'entity_type' => $entity_type_id,
-        ])
-        ->fields(['timestamp' => $time])
-        ->execute();
-      // Update cached value.
-      $this->memoryCache->set(
-        $this->buildCacheId($user_id, $entity_type_id, $entity_id),
-        $time, Cache::PERMANENT,
-        $this->getCacheTags($user_id, $entity_id)
-      );
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account): array {
+    if ($entity_type !== 'node') {
+      throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
+
+    $account = $account ?? $this->currentUser;
+    if ($account->isAnonymous()) {
+      return [];
+    }
+
+    $cached = $this->getCachedTimes($entity_type, $entity_ids, $account);
+    $uncached = array_diff($entity_ids, array_keys($cached));
+    if (empty($uncached)) {
+      return $cached;
+    }
+
+    $queried = $this->connection->select('history', 'h')
+      ->fields('h', ['nid', 'timestamp'])
+      ->condition('uid', $account->id())
+      ->condition('nid', $uncached, 'IN')
+      ->execute()
+      ->fetchAllKeyed();
+    $this->setCache($entity_type, $queried, $account);
+
+    return $cached + $queried;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setTime(EntityInterface $entity, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface {
+    $this->setTimes($entity->getEntityTypeId(), [$entity->id()], $account, $time);
     return $this;
   }
 
   /**
-   * Builds the cache ID for the history timestamp.
-   *
-   * @param int $uid
-   *   The User ID.
-   * @param string $entity_type
-   *   The entity type.
-   * @param int $entity_id
-   *   The entity ID.
-   *
-   * @return string
-   *   Cache ID that can be passed to the cache backend.
+   * {@inheritdoc}
    */
-  protected function buildCacheId($uid, $entity_type, $entity_id): string {
-    return implode(':', ['history', $uid, $entity_type, $entity_id]);
+  public function setTimes($entity_type, $entity_ids, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface {
+    if ($entity_type !== 'node') {
+      throw new \InvalidArgumentException("History storage does not support entity types other than node.");
+    }
+
+    $account = $account ?? $this->currentUser;
+    if ($account->isAnonymous()) {
+      return $this;
+    }
+
+    $time = $time ?? $this->time->getRequestTime();
+
+    foreach($entity_ids as $entity_id) {
+      $this->connection->merge('history')
+        ->keys([
+          'uid' => $account->id(),
+          'nid' => $entity_id,
+        ])
+        ->fields(['timestamp' => $time])
+        ->execute();
+      $this->setCachedTime($entity_type, $entity_id, $account, $time);
+    }
+
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCacheTags($user_id, $entity_id): array {
-    return [
-      'history',
-      "history:user:{$user_id}",
-      "history:entity:{$entity_id}",
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function purge(): void {
+  public function purge(?int $time): void {
+    $time = $time ?? HISTORY_READ_LIMIT;
     $this->connection->delete('history')
-      ->condition('timestamp', HISTORY_READ_LIMIT, '<')
+      ->condition('timestamp', $time, '<')
       ->execute();
-    // Clean static cache.
-    Cache::invalidateTags(['history']);
+    $this->clearCache();
   }
 
   /**
@@ -179,20 +149,78 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $this->connection->delete('history')
       ->condition('uid', $account->id())
       ->execute();
-    // Clean static cache.
-    Cache::invalidateTags(["history:user:{$account->id()}"]);
+      $this->resetCache(NULL, NULL, $account);
   }
 
   /**
    * {@inheritdoc}
    */
   public function deleteByEntity(EntityInterface $entity): void {
+    $entity_type = $entity->getEntityTypeId();
+    if ($entity_type !== 'node') {
+      throw new \InvalidArgumentException("History storage does not support entity types other than node.");
+    }
     $this->connection->delete('history')
       ->condition('entity_id', $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
       ->execute();
-    // Clean static cache.
-    Cache::invalidateTags(["history:entity:{$entity->id()}"]);
+    $this->resetCache($entity_type, [$entity->id()]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache(?string $entity_type, ?array $entity_ids, ?AccountInterface $account): HistoryRepositoryInterface {
+    $account_ids = $account ? [$account->id()] : array_keys(static::$cache);
+    foreach($account_ids as $account_id) {
+      if (empty($entity_type) && empty($entity_ids)) {
+        unset(static::$cache[$account_id]);
+        continue;
+      }
+      $entity_types = $entity_type ? [$entity_type] : array_keys(static::$cache[$account_id]);
+      foreach($entity_types as $entity_type) {
+          if (empty($entity_ids)) {
+            unset(static::$cache[$account_id][$entity_type]);
+            continue;
+          }
+          foreach($entity_ids as $entity_id) {
+            unset(static::$cache[$account_id][$entity_type][$entity_id]);
+          }
+        }
+    }
+    return $this;
+  }
+
+  /**
+   * Retrieves the cached times of a user's latest activity with entities.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param array $entity_ids
+   *   The entity IDs.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   *
+   * @return array
+   *   Array of timestamps keyed by entity ID
+   */
+  protected function getCachedTimes(string $entity_type, array $entity_ids, AccountInterface $account): array {
+    return array_intersect_key(static::$cache[$account->id()][$entity_type] ?? [], array_flip($entity_ids));
+  }
+
+  /**
+   * Sets the cached times of a user's latest activity with entities.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param int $entity_id
+   *   The entity IDs.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user account.
+   * @param int $time
+   *   The activity timestamp.
+   */
+  protected function setCachedTime(string $entity_type, int $entity_id, AccountInterface $account, int $time): array {
+    static::$cache[$account->id()][$entity_type][$entity_id] = $time;
   }
 
 }

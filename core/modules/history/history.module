@@ -46,7 +46,7 @@ function history_help($route_name, RouteMatchInterface $route_match) {
  *   of when the last view occurred; otherwise, zero.
  */
 function history_read($nid) {
-  $history = history_read_multiple([$nid]);;
+  $history = history_read_multiple([$nid]);
   return $history[$nid];
 }
 
