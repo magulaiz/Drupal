@@ -60,7 +60,15 @@ class EntityContentComplete extends EntityContentBase {
     // If we are re-running a migration with set revision IDs and the
     // destination revision ID already exists then do not create a new revision.
     if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id))) {
-      $entity->setNewRevision(FALSE);
+      if ($entity_id = $row->getDestinationProperty($this->getKey('id')) && $entity_id === $entity->id()) {
+        $entity->setNewRevision(FALSE);
+      }
+      else {
+        // There is a data mismatch between the entity id and revision id.
+        // This will enforce creating a new destination entity to match the
+        // source entity id and a new revision id.
+        $entity = NULL;
+      }
     }
     elseif (($entity_id = $row->getDestinationProperty($this->getKey('id'))) && ($entity = $this->storage->load($entity_id))) {
       // We want to create a new entity. Set enforceIsNew() FALSE is  necessary
@@ -71,7 +79,10 @@ class EntityContentComplete extends EntityContentBase {
       // not be necessary, it is done for clarity.
       $entity->setNewRevision(TRUE);
     }
-    else {
+
+    // Creates a new entity if one was not found above or if an entity was
+    // found that had a data mismatch.
+    if (isset($entity) || $entity === NULL) {
       // Attempt to set the bundle.
       if ($bundle = $this->getBundle($row)) {
         $row->setDestinationProperty($this->getKey('bundle'), $bundle);
@@ -98,8 +109,12 @@ class EntityContentComplete extends EntityContentBase {
         // for all translations to match the current row that we are saving.
         // In this context, getChangedTime() should return the value we just
         // set in the updateEntity() call above.
-        if ($entity->getTranslation($langcode)->hasTranslationChanges()) {
+        $translation = $entity->getTranslation($langcode);
+        if (isset($translation) && $translation->hasTranslationChanges()) {
           $entity->getTranslation($langcode)->setChangedTime($entity->getChangedTime());
+        }
+        else {
+          // @todo test this case, throw skip row exception or not?
         }
       }
     }
