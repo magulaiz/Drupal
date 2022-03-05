@@ -47,28 +47,32 @@ ENDPO;
    * {@inheritdoc}
    */
   protected function setUpProfile() {
-    // The test will never go past this step.
+    // Do nothing, because this test only tests the language installation
+    // step's results.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpSettings() {
-    // This step will never be reached.
+    // Do nothing, because this test only tests the language installation
+    // step's results.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpRequirementsProblem() {
-    // The test will never go past this step.
+    // Do nothing, because this test only tests the language installation
+    // step's results.
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpSite() {
-    // This step will never be reached.
+    // Do nothing, because this test only tests the language installation
+    // step's results.
   }
 
   /**
