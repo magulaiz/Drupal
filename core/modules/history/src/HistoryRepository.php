@@ -65,7 +65,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    * {@inheritdoc}
    */
   public function getLastViewed(string $entity_type, array $entity_ids): array {
-    $entities = [];
+    $entities = []; 
     $entities_to_read = [];
     $user_id = $this->currentUser->id();
     foreach ($entity_ids as $entity_id) {
