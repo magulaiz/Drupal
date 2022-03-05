@@ -39,7 +39,7 @@ trait RequirementsPageTrait {
   }
 
   /**
-   * Assert the given warning summaries are present on the page.
+   * Asserts the given warning summaries are present on the page.
    *
    * If an expected warning is not found, or if a warning not in the list is
    * present, a fail is raised.
@@ -53,7 +53,7 @@ trait RequirementsPageTrait {
   }
 
   /**
-   * Assert the given error summaries are present on the page.
+   * Asserts the given error summaries are present on the page.
    *
    * If an expected error is not found, or if an error not in the list is
    * present, a fail is raised.
@@ -67,7 +67,7 @@ trait RequirementsPageTrait {
   }
 
   /**
-   * Assert the given requirements section summaries are present on the page.
+   * Asserts the given requirements section summaries are present on the page.
    *
    * If an expected requirements message  is not found, or if a message not in
    * the list is present, a fail is raised.
