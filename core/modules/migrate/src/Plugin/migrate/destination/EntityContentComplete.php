@@ -6,6 +6,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
+use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
@@ -52,6 +53,8 @@ class EntityContentComplete extends EntityContentBase {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity.
+   *
+   * @throws \Drupal\migrate\MigrateException
    */
   protected function getEntity(Row $row, array $old_destination_id_values) {
     $revision_id = $old_destination_id_values
@@ -123,7 +126,7 @@ class EntityContentComplete extends EntityContentBase {
           $entity->getTranslation($langcode)->setChangedTime($entity->getChangedTime());
         }
         else {
-          // @todo test this case, throw skip row exception or not?
+          throw new MigrateException('Update translation timestamps failed. Translation entity was not found.');
         }
       }
     }
