@@ -59,7 +59,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account, ? $default): ?int {
+  public function getTime(EntityInterface $entity, ?AccountInterface $account, $default = NULL): ?int {
     $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
     return $result ? reset($result) : $default;
   }
@@ -67,7 +67,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ? $default): array {
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, $default = NULL): array {
     if ($entity_type !== 'node') {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
@@ -117,7 +117,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    * @return array
    *   An array of times or default values, keyed by entity id.
    */
-  protected function handleMissingTimes(array $entity_ids, array $times, ? $default) {
+  protected function handleMissingTimes(array $entity_ids, array $times, $default = NULL) {
     // Allow 0 as a valid time, but filter out FALSE.
     $result = array_filter($times, 'strlen');
     // If default is specified, use it for entities without times.
