@@ -44,7 +44,7 @@ class PhpRequirementTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that the status page returns.
+   * Tests status report messages regarding the PHP version.
    */
   public function testStatusPage() {
     // Go to Administration.
