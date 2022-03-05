@@ -59,7 +59,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account, ?$default): ?int {
+  public function getTime(EntityInterface $entity, ?AccountInterface $account, ? $default): ?int {
     $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
     return $result ? reset($result) : $default;
   }
@@ -67,7 +67,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ?$default): array {
+  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ? $default): array {
     if ($entity_type !== 'node') {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }

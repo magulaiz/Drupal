@@ -77,7 +77,6 @@ function history_read_multiple($nids) {
 function history_write($nid, $account = NULL) {
   $node = \Drupal::entityTypeManager()->getStorage('node')->load($nid);
   \Drupal::service('history.repository')->setTime($node, $account);
-  }
 }
 
 /**

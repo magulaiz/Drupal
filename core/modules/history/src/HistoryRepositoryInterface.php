@@ -23,7 +23,7 @@ interface HistoryRepositoryInterface {
    * @return mixed
    *   A timestamp, or default value.
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account, ?$default);
+  public function getTime(EntityInterface $entity, ?AccountInterface $account, ? $default);
 
   /**
    * Retrieves the times of a user's latest activity with entities.
