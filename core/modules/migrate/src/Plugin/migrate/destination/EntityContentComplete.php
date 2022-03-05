@@ -66,6 +66,12 @@ class EntityContentComplete extends EntityContentBase {
       if (isset($entity_id) && $entity_id === $entity->id()) {
         $entity->setNewRevision(FALSE);
       }
+      elseif (isset($entity_id) && ($entity = $this->storage->load($entity_id))) {
+        // Forces a new revision if the entity exists, but the revision id does
+        // not match.
+        $entity->enforceIsNew(FALSE);
+        $entity->setNewRevision(TRUE);
+      }
       else {
         // There is a data mismatch between the entity id and revision id.
         // This will enforce creating a new destination entity to match the
