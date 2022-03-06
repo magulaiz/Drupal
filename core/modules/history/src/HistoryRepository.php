@@ -100,7 +100,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $missing = array_fill_keys($missing_ids, FALSE);
     $this->setCachedTimes($entity_type, $missing, $account);
 
-    $result = $this->handleMissingTimes($entity_ids, $result, $default);
+    $result = $this->handleMissingTimes($entity_ids, $found, $default);
     return $result;
   }
 

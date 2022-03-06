@@ -37,6 +37,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installSchema('history', ['history']);
+    $this->installSchema('node', ['node_access']);
 
     $user = User::create(['name' => 'current']);
     $user->save();
@@ -147,12 +148,12 @@ class HistoryRepositoryTest extends KernelTestBase {
       'title' => 'n1',
       'type' => 'default',
     ]);
-    $node->save();
+    $node1->save();
     $node2 = Node::create([
       'title' => 'n2',
       'type' => 'default',
     ]);
-    $node->save();
+    $node2->save();
 
     // Exclude missing nodes if null is default.
     $this->assertSame([], \Drupal::service('history.repository')->getTime('node', [$node1->id()], $this->currentUser, NULL));
