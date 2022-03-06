@@ -253,7 +253,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account.
    */
-  protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account): array {
+  protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account) {
     static::$cache[$account->id()][$entity_type] = $times + (static::$cache[$account->id()][$entity_type] ?? []);
   }
 
