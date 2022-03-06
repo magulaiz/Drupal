@@ -254,7 +254,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    *   The user account.
    */
   protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account): array {
-    static::$cache[$account->id()][$entity_type] = $entity_ids + (static::$cache[$account->id()][$entity_type] ?? []);
+    static::$cache[$account->id()][$entity_type] = $times + (static::$cache[$account->id()][$entity_type] ?? []);
   }
 
 }

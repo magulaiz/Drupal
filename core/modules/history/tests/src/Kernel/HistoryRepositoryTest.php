@@ -261,11 +261,11 @@ class HistoryRepositoryTest extends KernelTestBase {
 
     // View node 1 one year ago.
     $yearAgo = \Drupal::time()->getRequestTime() - (86400 * 365);
-    \Drupal::service('history.repository')->setTime($node, $this->currentUser, $yearAgo);
+    \Drupal::service('history.repository')->setTime($node1, $this->currentUser, $yearAgo);
 
     // View node 2 one week ago.
     $weekAgo = \Drupal::time()->getRequestTime() - (86400 * 7);
-    \Drupal::service('history.repository')->setTime($node, $this->currentUser, $weekAgo);
+    \Drupal::service('history.repository')->setTime($node2, $this->currentUser, $weekAgo);
 
     // Purge history, defaults to a month ago.
     \Drupal::service('history.repository')->purge();
