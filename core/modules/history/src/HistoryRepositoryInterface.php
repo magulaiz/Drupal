@@ -23,7 +23,7 @@ interface HistoryRepositoryInterface {
    * @return mixed
    *   A timestamp, or default value.
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account, $default = NULL);
+  public function getTime(EntityInterface $entity, AccountInterface $account = NULL, $default = NULL);
 
   /**
    * Retrieves the times of a user's latest activity with entities.
@@ -41,7 +41,7 @@ interface HistoryRepositoryInterface {
    * @return array
    *   Array of timestamps (or defaults) keyed by entity ID
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, $default = NULL): array;
+  public function getTimes(string $entity_type, array $entity_ids, AccountInterface $account = NULL, $default = NULL): array;
 
   /**
    * Sets the time of a user's latest activity time with an entity.
@@ -55,7 +55,7 @@ interface HistoryRepositoryInterface {
    *
    * @return self
    */
-  public function setTime(EntityInterface $entity, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface;
+  public function setTime(EntityInterface $entity, AccountInterface $account = NULL, int $time = NULL): HistoryRepositoryInterface;
 
   /**
    * Sets the time of a user's latest activity time with an entity.
@@ -71,7 +71,7 @@ interface HistoryRepositoryInterface {
    *
    * @return self
    */
-  public function setTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface;
+  public function setTimes(string $entity_type, array $entity_ids, AccountInterface $account = NULL, int $time = NULL): HistoryRepositoryInterface;
 
   /**
    * Purges outdated history.
@@ -79,7 +79,7 @@ interface HistoryRepositoryInterface {
    * @param int|null $time
    *   (optional) The timestamp before which history is outdated.
    */
-  public function purge(?int $time): void;
+  public function purge(int $time = NULL): void;
 
   /**
    * Deletes the history for the given user account.
@@ -109,6 +109,6 @@ interface HistoryRepositoryInterface {
    *
    * @return self
    */
-  public function resetCache(?string $entity_type, ?array $entity_ids, ?AccountInterface $account): HistoryRepositoryInterface;
+  public function resetCache(string $entity_type = NULL, array $entity_ids = NULL, AccountInterface $account = NULL): HistoryRepositoryInterface;
 
 }

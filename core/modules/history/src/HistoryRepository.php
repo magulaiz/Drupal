@@ -59,7 +59,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTime(EntityInterface $entity, ?AccountInterface $account, $default = NULL): ?int {
+  public function getTime(EntityInterface $entity, AccountInterface $account = NULL, $default = NULL): ?int {
     $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
     return $result ? reset($result) : $default;
   }
@@ -67,7 +67,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTimes(string $entity_type, array $entity_ids, ?AccountInterface $account, $default = NULL): array {
+  public function getTimes(string $entity_type, array $entity_ids, AccountInterface $account = NULL, $default = NULL): array {
     if ($entity_type !== 'node') {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
@@ -133,7 +133,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTime(EntityInterface $entity, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface {
+  public function setTime(EntityInterface $entity, AccountInterface $account = NULL, int $time = NULL): HistoryRepositoryInterface {
     $this->setTimes($entity->getEntityTypeId(), [$entity->id()], $account, $time);
     return $this;
   }
@@ -141,7 +141,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function setTimes($entity_type, $entity_ids, ?AccountInterface $account, ?int $time): HistoryRepositoryInterface {
+  public function setTimes($entity_type, $entity_ids, AccountInterface $account = NULL, int $time = NULL): HistoryRepositoryInterface {
     if ($entity_type !== 'node') {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
@@ -170,7 +170,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function purge(?int $time): void {
+  public function purge(int $time = NULL): void {
     $time = $time ?? HISTORY_READ_LIMIT;
     $this->connection->delete('history')
       ->condition('timestamp', $time, '<')
@@ -205,7 +205,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function resetCache(?string $entity_type, ?array $entity_ids, ?AccountInterface $account): HistoryRepositoryInterface {
+  public function resetCache(string $entity_type = NULL, array $entity_ids = NULL, AccountInterface $account = NULL): HistoryRepositoryInterface {
     $account_ids = $account ? [$account->id()] : array_keys(static::$cache);
     foreach ($account_ids as $account_id) {
       if (empty($entity_type) && empty($entity_ids)) {
@@ -252,10 +252,8 @@ class HistoryRepository implements HistoryRepositoryInterface {
    *   An array of timestamps keyed by entity ID.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account.
-   * @param int $time
-   *   The activity timestamp.
    */
-  protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account, int $time): array {
+  protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account): array {
     static::$cache[$account->id()][$entity_type] = $entity_ids + static::$cache[$account->id()][$entity_type];
   }
 
