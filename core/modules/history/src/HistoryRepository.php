@@ -175,7 +175,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $this->connection->delete('history')
       ->condition('timestamp', $time, '<')
       ->execute();
-    $this->clearCache();
+    $this->resetCache();
   }
 
   /**

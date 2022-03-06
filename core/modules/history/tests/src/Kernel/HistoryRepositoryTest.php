@@ -4,7 +4,7 @@ namespace Drupal\Tests\history\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\Kernel\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
