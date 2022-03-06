@@ -161,7 +161,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
         ])
         ->fields(['timestamp' => $time])
         ->execute();
-      $this->setCachedTimes($entity_type, [$entity_id], $account, $time);
+      $this->setCachedTimes($entity_type, [$entity_id => $time], $account);
     }
 
     return $this;
@@ -248,15 +248,15 @@ class HistoryRepository implements HistoryRepositoryInterface {
    *
    * @param string $entity_type
    *   The entity type.
-   * @param int $entity_id
-   *   The entity IDs.
+   * @param array $times
+   *   An array of timestamps keyed by entity ID.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account.
    * @param int $time
    *   The activity timestamp.
    */
-  protected function setCachedTime(string $entity_type, int $entity_id, AccountInterface $account, int $time): array {
-    static::$cache[$account->id()][$entity_type][$entity_id] = $time;
+  protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account, int $time): array {
+    static::$cache[$account->id()][$entity_type] = $entity_ids + static::$cache[$account->id()][$entity_type];
   }
 
 }
