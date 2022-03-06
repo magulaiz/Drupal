@@ -20,7 +20,7 @@ class HistoryRepositoryTest extends KernelTestBase {
    *
    * @var array
    */
-  protected static $modules = ['history', 'node'];
+  protected static $modules = ['history', 'node', 'user'];
 
   /**
    * The current user entity.
@@ -34,8 +34,8 @@ class HistoryRepositoryTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('node');
     $this->installEntitySchema('user');
+    $this->installEntitySchema('node');
     $this->installSchema('history', ['history']);
 
     $user = User::create(['name' => 'current']);
@@ -46,6 +46,8 @@ class HistoryRepositoryTest extends KernelTestBase {
 
   /**
    * Tests setting history for non-node entity type.
+   *
+   * @doesNotPerformAssertions
    */
   public function testSetNonNodeEntityType() {
     $this->expectException(\InvalidArgumentException::class);
@@ -54,6 +56,8 @@ class HistoryRepositoryTest extends KernelTestBase {
 
   /**
    * Tests getting history for non-node entity type.
+   *
+   * @doesNotPerformAssertions
    */
   public function testGetNonNodeEntityType() {
     $this->expectException(\InvalidArgumentException::class);

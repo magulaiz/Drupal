@@ -197,7 +197,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
       throw new \InvalidArgumentException("History storage does not support entity types other than node.");
     }
     $this->connection->delete('history')
-      ->condition('entity_id', $entity->id())
+      ->condition('nid', $entity->id())
       ->execute();
     $this->resetCache($entity_type, [$entity->id()]);
   }
@@ -254,7 +254,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    *   The user account.
    */
   protected function setCachedTimes(string $entity_type, array $times, AccountInterface $account): array {
-    static::$cache[$account->id()][$entity_type] = $entity_ids + static::$cache[$account->id()][$entity_type];
+    static::$cache[$account->id()][$entity_type] = $entity_ids + (static::$cache[$account->id()][$entity_type] ?? []);
   }
 
 }
