@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\filter\FilterFormatInterface;
@@ -69,7 +70,11 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button): ?string {
+  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button, HTMLRestrictions $text_format_html_restrictions = NULL): ?string {
+    if (!isset($text_format_html_restrictions)) {
+      throw new \LogicException('This @CKEditor4To5Upgrade plugin requires the optional $text_format_html_restrictions argument.');
+    }
+
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
@@ -115,7 +120,27 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return 'horizontalLine';
 
       case 'Format':
-        return 'heading';
+        if ($text_format_html_restrictions->isEmpty()) {
+          // When no restrictions exist, all tags possibly supported by "Format"
+          // in CKEditor 4 must be supported.
+          return 'heading';
+        }
+
+        $allowed_elements = $text_format_html_restrictions->getAllowedElements();
+
+        // Check if <h*> is supported.
+        $heading_supported = FALSE;
+        foreach (range(2, 6) as $index) {
+          // Merely checking the existence of the array key is sufficient; this
+          // plugin does not set or need any additional attributes.
+          // @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+          if (array_key_exists("h$index", $allowed_elements)) {
+            $heading_supported = TRUE;
+            break;
+          }
+        }
+
+        return $heading_supported ? 'heading' : NULL;
 
       case 'Table':
         return 'insertTable';
