@@ -21,13 +21,14 @@ import getCommandGroupNameFromGroup from './utils';
  *   Does the schema contain the attribute?
  */
 function schemaContainsAttribute(selectedElement, schema, styles) {
-  Object.keys(styles).forEach((group) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
     return schema.checkAttribute(
       selectedElement,
       `drupalElementStyle${groupName}`,
     );
-  });
+  }
   return false;
 }
 
@@ -116,6 +117,7 @@ export default class DrupalElementStyleCommand extends Command {
     // update the value to include all drupalElementStyles selected for the element.
     if (this.isEnabled && this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
+      console.log(this.getGroupAndAttribute(element));
     } else {
       this.value = false;
       // If value is falsy, check if there is a default style to apply to the
@@ -136,17 +138,6 @@ export default class DrupalElementStyleCommand extends Command {
         // }
       }
     }
-
-    // if (!this.isEnabled) {
-    //   this.value = false;
-    //   // The element needs to be checked against list of possible attributes then
-    //   // update the value to include all drupalElementStyles selected for the element.
-    // } else if (this.containsAttribute(element)) {
-    //   this.value = this.getGroupAndAttribute(element);
-    // } else {
-    //   this.value = false;
-    // }
-    //
   }
 
   /**
@@ -159,12 +150,13 @@ export default class DrupalElementStyleCommand extends Command {
    *   Does the element have a drupalElementStyle attribute?
    */
   containsAttribute(element) {
-    Object.keys(this.styles).forEach((group) => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const group of Object.keys(this.styles)) {
       const groupName = group[0].toUpperCase() + group.substring(1);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
-    });
+    }
     return false;
   }
 

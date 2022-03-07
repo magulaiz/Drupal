@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
 import { Plugin } from 'ckeditor5/src/core';
-import { CKEditorError, Collection } from 'ckeditor5/src/utils';
+import { Collection } from 'ckeditor5/src/utils';
 import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
 import {
   addToolbarToDropdown,
@@ -15,7 +15,7 @@ import {
 import DrupalElementStyleEditing from './drupalelementstyleediting';
 import getCommandGroupNameFromGroup from './utils';
 import { isDrupalMedia, isObject } from '../utils';
-import {METADATA_ERROR} from "../mediaimagetextalternative/utils";
+import { METADATA_ERROR } from '../mediaimagetextalternative/utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
@@ -72,7 +72,6 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
   const modelElement = selection
     ? selection.getSelectedElement()
     : selection.getFirstPosition.findAncestor('drupalElementStyle');
-  console.log(modelElement);
   const bundleType = modelElement.getAttribute('drupalMediaBundle');
 
   if (!bundleType) {
@@ -506,18 +505,22 @@ export default class DrupalElementStyleUi extends Plugin {
           this.editor,
         ),
       );
+      console.log(dropdownView);
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
+        console.log('execute dd');
         const obj = {};
         const key = evt.source.commandGroup;
         obj[key] = evt.source.commandValue;
+        console.log('obj', obj);
+        console.log('evt', evt);
+        console.log('evt source', evt.source);
         this.editor.execute(evt.source.commandName, {
           value: obj,
           groupName: evt.source.groupName,
         });
         this.editor.editing.view.focus();
       });
-
       return dropdownView;
     });
   }
@@ -536,6 +539,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _executeCommand(name, groupName) {
+    console.log('executeCommand');
     const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
