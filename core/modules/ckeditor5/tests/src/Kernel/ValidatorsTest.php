@@ -13,6 +13,8 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
+// cspell:ignore onhover
+
 /**
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
  * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
