@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\Entity\Editor;
 use Drupal\file\Entity\File;
 use Drupal\filter\Entity\FilterFormat;
@@ -1002,8 +1004,97 @@ class MediaTest extends WebDriverTestBase {
    * Tests the EditorMediaDialog can set the data-view-mode attribute.
    */
   public function testViewMode() {
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.22222',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2 has Numeric ID',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.view_mode_3',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 3',
+    ])->save();
+    // Only enable view mode 1 & 2 for Image.
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_1',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.22222',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => '22222',
+    ])->save();
+    // Only enable view mode 3 for Document.
+    EntityViewDisplay::create([
+      'id' => 'media.document.view_mode_3',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'document',
+      'mode' => 'view_mode_3',
+    ])->save();
+
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          '22222' => '22222',
+          'view_mode_3' => 'view_mode_3',
+        ],
+      ],
+    ])->save();
+
+    // Test that view mode dependencies are returned from the MediaEmbed
+    // filter's ::getDependencies() method.
+    $expected_config_dependencies = [
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_3',
+    ];
+
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
+
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
+
+    // Ensure that by default the "Break text" alignment option is selected.
+//    $this->click('.ck-widget.drupal-media');
+//    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+//    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
+//    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+//    $editor_dom = $this->getEditorDataAsDom();
+//    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+//      ->item(0);
+//    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+//    $this->getBalloonButton('Align center and break text')->click();
+
     // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3245720
-    $this->markTestSkipped('Blocked on https://www.drupal.org/project/ckeditor5/issues/3245720.');
   }
 
   /**
