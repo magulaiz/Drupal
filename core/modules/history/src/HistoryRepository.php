@@ -59,7 +59,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getTime(EntityInterface $entity, AccountInterface $account = NULL, $default = NULL): ?int {
+  public function getTime(EntityInterface $entity, AccountInterface $account = NULL, $default = NULL) {
     $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
     return $result ? reset($result) : $default;
   }
@@ -112,12 +112,12 @@ class HistoryRepository implements HistoryRepositoryInterface {
    * @param array $times
    *   An array of times (or FALSE), keyed by entity id.
    * @param mixed $default
-   *   (optional) A default value to use as time if none is given.
+   *   A default value to use as time if none is given.
    *
    * @return array
    *   An array of times or default values, keyed by entity id.
    */
-  protected function handleMissingTimes(array $entity_ids, array $times, $default = NULL) {
+  protected function handleMissingTimes(array $entity_ids, array $times, $default) {
     // Allow 0 as a valid time, but filter out FALSE.
     $result = array_filter($times, 'strlen');
     // If default is specified, use it for entities without times.
