@@ -281,7 +281,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         $allowed_elements = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
         // If there are wildcard tags, there is nothing to resolve: we can
         // return the configuration directly.
-        $config['ckeditor5_htmlSupport'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $allowed_elements);
+        $config['ckeditor5_wildcardHtmlSupport'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $allowed_elements);
         continue;
       }
 
