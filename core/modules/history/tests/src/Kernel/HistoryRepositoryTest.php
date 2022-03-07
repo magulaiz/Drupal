@@ -275,7 +275,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->purge($fortnightAgo);
     // Node 2 from a week ago is still there.
     $remainingHistory = \Drupal::service('history.repository')->getTimes('node', [$node1->id(), $node2->id()]);
-    $this->assertSame([$node2->id() => $weekAgo], $remainingHistoryy);
+    $this->assertSame([$node2->id() => $weekAgo], $remainingHistory);
     // Node 2 from a week ago will not survive a purge of history from before a day ago.
     $dayAgo = \Drupal::time()->getRequestTime() - (86400 * 1);
     \Drupal::service('history.repository')->purge($dayAgo);
