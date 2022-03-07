@@ -320,6 +320,44 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [],
     ];
 
+    $data['invalid SourceEditing plugin configuration: self-XSS'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              // Dangerous attribute with all values allowed.
+              '<p onhover>',
+              '<img on*>',
+              '<blockquote style>',
+
+              // No danger.
+              '<marquee>',
+
+              // Dangerous attribute with some values allowed.
+              '<a onclick="javascript:*">',
+              '<code style="*">',
+
+              // Also works on wildcard tags.
+              // @todo Detect this after https://www.drupal.org/project/drupal/issues/3260869 lands.
+              // '<$block style>',
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.0' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying JavaScript event handlers: <em class="placeholder">&lt;p onhover&gt;</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.1' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying JavaScript event handlers: <em class="placeholder">&lt;img on*&gt;</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying styles: <em class="placeholder">&lt;blockquote style&gt;</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.4' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying JavaScript event handlers: <em class="placeholder">&lt;a onclick=&quot;javascript:*&quot;&gt;</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying styles: <em class="placeholder">&lt;code style=&quot;*&quot;&gt;</em>.',
+      ],
+    ];
+
     return $data;
   }
 
