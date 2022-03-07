@@ -178,7 +178,6 @@ export default class DrupalMediaEditing extends Plugin {
         const converter = (event, data, conversionApi) => {
           const viewWriter = conversionApi.writer;
           const modelElement = data.item;
-          // console.log('data.item: ', modelElement);
           const container = conversionApi.mapper.toViewElement(data.item);
 
           // Search for preview container recursively from its children because

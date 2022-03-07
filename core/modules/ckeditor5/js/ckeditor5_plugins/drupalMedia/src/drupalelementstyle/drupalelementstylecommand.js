@@ -117,7 +117,6 @@ export default class DrupalElementStyleCommand extends Command {
     // update the value to include all drupalElementStyles selected for the element.
     if (this.isEnabled && this.containsAttribute(element)) {
       this.value = this.getGroupAndAttribute(element);
-      console.log(this.getGroupAndAttribute(element));
     } else {
       this.value = false;
       // If value is falsy, check if there is a default style to apply to the

@@ -38,8 +38,6 @@ class Media extends CKEditor5PluginDefault {
     $bundles_per_view_mode = [];
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
 
-    $allowed_view_modes = [];
-
     foreach (array_keys($media_bundles) as $bundle) {
       $allowed_view_modes = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
 
@@ -51,18 +49,8 @@ class Media extends CKEditor5PluginDefault {
       }
     }
 
-    $dynamic_plugin_config['drupalMedia']['debug'] = $allowed_view_modes;
-
-    // all_view_modes has 'fake'.
-    $dynamic_plugin_config['drupalMedia']['debug1'] = $all_view_modes;
-
-    // default: [audio, doc].
-    // tiny: [img].
-    $dynamic_plugin_config['drupalMedia']['debug2'] = $bundles_per_view_mode;
-
     // Create view mode options.
     foreach (array_keys($all_view_modes) as $view_mode) {
-      // @todo: Handle view modes that are not enabled for any bundle.
       if (array_key_exists($view_mode, $bundles_per_view_mode)) {
         $specific_bundles = $bundles_per_view_mode[$view_mode];
         if ($view_mode !== 'default') {

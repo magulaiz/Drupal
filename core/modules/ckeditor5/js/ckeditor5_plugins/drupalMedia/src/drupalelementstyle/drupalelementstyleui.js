@@ -66,7 +66,19 @@ function getUIComponentName(name, group) {
   return `drupalElementStyle:${group}:${name}`;
 }
 
-// @todo: add docs
+/**
+ * Toggles the visibility of the correct view mode buttons depending on the selection's bundle type.
+ *
+ * @param {module:core/editor/editor~Editor} editor
+ *   The editor instance.
+ * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+ *   A list of defined styles.
+ * @param {string} style
+ *   The style to check be checked against the bundle specific styles.
+ * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
+ *   Dropdown item definition.
+ *
+ */
 function toggleButtonVisibility(editor, definedStyles, style, definition) {
   const { selection } = editor.model.document;
   const modelElement = selection
@@ -91,10 +103,18 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
 }
 
 /**
- * Upcasts `drupalMediaIsImage` from Drupal Media metadata.
+ * Upcast `drupalMediaIsImage` from Drupal Media metadata.
  *
  * @param {module:engine/model/node~Node} modelElement
  *   The `drupalMedia` model element.
+ * @param {module:core/editor/editor~Editor} editor
+ *   The editor instance.
+ * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+ *   A list of defined styles.
+ * @param {string} style
+ *   The style to check be checked against the bundle specific styles.
+ * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
+ *   Dropdown item definition.
  *
  * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
  *
@@ -142,11 +162,7 @@ function upcastDrupalMediaBundle(
         writer.setAttribute('drupalMediaBundle', METADATA_ERROR, modelElement);
       });
     });
-  // @todo: remove this, added it for debugging purposes but doesn't even work.
-  setTimeout(
-    toggleButtonVisibility(editor, definedStyles, style, definition),
-    10000,
-  );
+  toggleButtonVisibility(editor, definedStyles, style, definition);
 }
 
 /**
@@ -198,9 +214,9 @@ function getDropdownListItemDefinitions(
       );
     });
 
-    // Handles selecting another element's list dropdown button's visiblilty.
+    // Handles selecting another element's list dropdown button's visibility.
     // We need to listen to editor UI changes instead of selection because
-    // visibility of the styles hould can be impacted by either selection or
+    // visibility of the styles can be impacted by either selection or
     // changes to the model.
     editor.ui.on('update', () => {
       const modelElement = editor.model.document.selection.getSelectedElement();
@@ -370,7 +386,7 @@ export default class DrupalElementStyleUi extends Plugin {
         .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
 
       // If one of the styles is selected, add a CSS class to the split button
-      // which modifies the styles to indicate that the splitbutton default
+      // which modifies the styles to indicate that the split button default
       // option is currently selected.
       splitButtonView
         .bind('class')
@@ -505,16 +521,11 @@ export default class DrupalElementStyleUi extends Plugin {
           this.editor,
         ),
       );
-      console.log(dropdownView);
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
-        console.log('execute dd');
         const obj = {};
         const key = evt.source.commandGroup;
         obj[key] = evt.source.commandValue;
-        console.log('obj', obj);
-        console.log('evt', evt);
-        console.log('evt source', evt.source);
         this.editor.execute(evt.source.commandName, {
           value: obj,
           groupName: evt.source.groupName,
@@ -524,7 +535,6 @@ export default class DrupalElementStyleUi extends Plugin {
       return dropdownView;
     });
   }
-  // )};
 
   /**
    * Executes the Drupal Element Style command.
@@ -539,7 +549,6 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _executeCommand(name, groupName) {
-    console.log('executeCommand');
     const key = getCommandGroupNameFromGroup(groupName);
     const obj = {};
     obj[key] = name;
