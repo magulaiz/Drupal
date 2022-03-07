@@ -16,8 +16,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator {
 
-  use TextEditorObjectDependentValidatorTrait;
-
   /**
    * {@inheritdoc}
    *
@@ -52,7 +50,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
       return;
     }
 
-    foreach ($attribute_restrictions as $attribute_name => $attribute_values) {
+    foreach (array_keys($attribute_restrictions) as $attribute_name) {
       // Self-XSS via `on*` attributes.
       if (preg_match('/^on.*$/', $attribute_name) === 1) {
         $this->context->buildViolation($constraint->onAttributeMessage)

@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraint;
  *
  * @Constraint(
  *   id = "SourceEditingPreventSelfXssConstraint",
- *   label = @Translation("Source editing should never allow self-XSS.", context = "Validation"),
+ *   label = @Translation("Source Editing should never allow self-XSS.", context = "Validation"),
  * )
  *
  * @internal
