@@ -47,26 +47,6 @@ class HistoryRepositoryTest extends KernelTestBase {
   }
 
   /**
-   * Tests setting history for non-node entity type.
-   *
-   * @doesNotPerformAssertions
-   */
-  public function testSetNonNodeEntityType() {
-    $this->expectException(\InvalidArgumentException::class);
-    \Drupal::service('history.repository')->setTimes('user', [1]);
-  }
-
-  /**
-   * Tests getting history for non-node entity type.
-   *
-   * @doesNotPerformAssertions
-   */
-  public function testGetNonNodeEntityType() {
-    $this->expectException(\InvalidArgumentException::class);
-    \Drupal::service('history.repository')->getTimes('user', [1]);
-  }
-
-  /**
    * Tests getting and setting times.
    */
   public function testSetGetTime() {
@@ -206,7 +186,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     $connection->insert('history')
       ->fields([
         'uid' => $this->currentUser->id(),
-        'nid' => $nodes->id(),
+        'nid' => $node->id(),
         'timestamp' => $new,
       ])->execute();
 
@@ -299,6 +279,26 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->purge($dayAgo);
     $remainingHistory = \Drupal::service('history.repository')->getTimes('node', [$node1->id(), $node2->id()]);
     $this->assertSame([$node2->id() => $weekAgo], $remainingHistory);
+  }
+
+  /**
+   * Tests setting history for non-node entity type.
+   *
+   * @doesNotPerformAssertions
+   */
+  public function testSetNonNodeEntityType() {
+    $this->expectException(\InvalidArgumentException::class);
+    \Drupal::service('history.repository')->setTimes('user', [1]);
+  }
+
+  /**
+   * Tests getting history for non-node entity type.
+   *
+   * @doesNotPerformAssertions
+   */
+  public function testGetNonNodeEntityType() {
+    $this->expectException(\InvalidArgumentException::class);
+    \Drupal::service('history.repository')->getTimes('user', [1]);
   }
 
   /**

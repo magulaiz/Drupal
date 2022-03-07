@@ -81,8 +81,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
     $cached = $this->getCachedTimes($entity_type, $entity_ids, $account);
     $uncached_ids = array_diff($entity_ids, array_keys($cached));
     if (empty($uncached_ids)) {
-      $result = $this->handleMissingTimes($entity_ids, $cached, $default);
-      return $cached;
+      return $this->handleMissingTimes($entity_ids, $cached, $default);
     }
 
     // Get uncached times from database.
@@ -92,6 +91,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
       ->condition('nid', $uncached_ids, 'IN')
       ->execute()
       ->fetchAllKeyed();
+    $queried = array_map('intval', $queried);
     $this->setCachedTimes($entity_type, $queried, $account);
 
     // Cache missing items with FALSE as time.
