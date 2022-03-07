@@ -5,16 +5,18 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
+ * Ensures Source Editing cannot be configured to allow self-XSS.
  *
  * @internal
  */
-class SourceEditingPreventSelfXssConstraintVAlidator extends ConstraintValidator implements ContainerInjectionInterface {
+class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator {
+
+  use TextEditorObjectDependentValidatorTrait;
 
   /**
    * {@inheritdoc}
@@ -30,7 +32,41 @@ class SourceEditingPreventSelfXssConstraintVAlidator extends ConstraintValidator
       return;
     }
 
-    // @todo
+    $restrictions = HTMLRestrictions::fromString($value);
+    // @todo Remove this early return in
+    //   https://www.drupal.org/project/drupal/issues/2820364. It is only
+    //   necessary because CKEditor5ElementConstraintValidator does not run
+    //   before this, which means that this validator cannot assume it receives
+    //   valid values.
+    if ($restrictions->isEmpty() || count($restrictions->getAllowedElements()) > 1) {
+      return;
+    }
+
+    // This validation constraint only validates attributes, not tags; so if all
+    // attributes are allowed (TRUE) or no attributes are allowed (FALSE),
+    // return early. Only proceed when some attributes are allowed (an array).
+    $tags = array_keys($restrictions->getAllowedElements(FALSE));
+    $tag = reset($tags);
+    $attribute_restrictions = $restrictions->getAllowedElements()[$tag];
+    if (!is_array($attribute_restrictions)) {
+      return;
+    }
+
+    foreach ($attribute_restrictions as $attribute_name => $attribute_values) {
+      // Self-XSS via `on*` attributes.
+      if (preg_match('/^on.*$/', $attribute_name) === 1) {
+        $this->context->buildViolation($constraint->onAttributeMessage)
+          ->setParameter('%dangerous_tag', $value)
+          ->addViolation();
+      }
+
+      // Self-XSS via `style` attribute.
+      if ($attribute_name === 'style') {
+        $this->context->buildViolation($constraint->styleAttributeMessage)
+          ->setParameter('%dangerous_tag', $value)
+          ->addViolation();
+      }
+    }
   }
 
 }
