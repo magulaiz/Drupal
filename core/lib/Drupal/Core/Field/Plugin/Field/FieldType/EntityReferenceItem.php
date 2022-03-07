@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldType;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityStorageInterface;
@@ -121,7 +122,17 @@ class EntityReferenceItem extends FieldItemBase implements OptionsProviderInterf
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
-    $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
+    try {
+      $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
+    }
+   catch (PluginNotFoundException $e) {
+     throw new FieldException(sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
+       $field_definition->getName(),
+       $field_definition->getTargetEntityTypeId(),
+       $target_type
+     ));
+   }
+
     $properties = static::propertyDefinitions($field_definition)['target_id'];
     if ($target_type_info->entityClassImplements(FieldableEntityInterface::class) && $properties->getDataType() === 'integer') {
       $columns = [
