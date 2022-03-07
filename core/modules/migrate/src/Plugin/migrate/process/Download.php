@@ -161,8 +161,6 @@ class Download extends FileProcessBase implements ContainerFactoryPluginInterfac
       // request, invalid file content from the failed request may be stored in
       // a newly created file. Clean up the file if it exists since the request
       // failed.
-      $migrate_executable->saveMessage("Deleting local file after download failure: $final_destination ($source)",
-        MigrationInterface::MESSAGE_NOTICE);
       $this->fileSystem->delete($final_destination);
 
       throw new MigrateException("{$e->getMessage()} ($source)");
