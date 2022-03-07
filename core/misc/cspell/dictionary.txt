@@ -393,6 +393,7 @@ drupallink
 drupalmedia
 drupalmediaediting
 drupalmedialibrary
+drupalmediametadatarepository
 drupalmediatoolbar
 drupaltest
 drupalunlink

@@ -24,10 +24,11 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
   // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
     const groupName = group[0].toUpperCase() + group.substring(1);
-    return schema.checkAttribute(
-      selectedElement,
-      `drupalElementStyle${groupName}`,
-    );
+    if (
+      schema.checkAttribute(selectedElement, `drupalElementStyle${groupName}`)
+    ) {
+      return true;
+    }
   }
   return false;
 }

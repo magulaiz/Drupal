@@ -8,7 +8,6 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 use Drupal\media\Entity\MediaType;
-use function PHPUnit\Framework\arrayHasKey;
 
 /**
  * CKEditor 5 Media plugin.
