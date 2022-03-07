@@ -273,10 +273,6 @@ final class HTMLRestrictions {
     }
 
     $restrictions = $object->getHTMLRestrictions();
-    if (!isset($restrictions['allowed']) && !isset($restrictions['forbidden'])) {
-      return new self([]);
-    }
-
     if (!isset($restrictions['allowed'])) {
       // @todo Handle HTML restrictor filters that only set forbidden_tags
       //   https://www.drupal.org/project/ckeditor5/issues/3231336.

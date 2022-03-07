@@ -1114,18 +1114,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * Ensure that filter plugin without restrictions converts to an empty set.
-   *
-   * @covers ::fromFilterPluginInstance
-   */
-  public function testTextFormatWithNoFilters() {
-    $filter_plugin_instance = $this->prophesize(FilterInterface::class);
-    $filter_plugin_instance->getHTMLRestrictions()->willReturn([]);
-    $this->assertSame([], HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());
-    $this->assertSame([], HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
-  }
-
-  /**
    * @covers ::getWildcardSubset
    * @covers ::getConcreteSubset
    * @dataProvider providerSubsets
