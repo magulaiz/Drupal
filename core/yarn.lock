@@ -946,6 +946,13 @@
     "@ckeditor/ckeditor5-widget" "^32.0.0"
     lodash-es "^4.17.11"
 
+"@ckeditor/ckeditor5-code-block@^32.0.0":
+  version "32.0.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-code-block/-/ckeditor5-code-block-32.0.0.tgz#40f708d7b252f88a21bfa296e3b7eeaccfcff926"
+  integrity sha512-5I/ELRd8J5NRQFWPrc8MFnc2jzQM4NVuqVl1D/V3gzifVQNjtlvLfbgLDZUrgmnt+ICAPe+Y1MGkaEYcLbUxZQ==
+  dependencies:
+    ckeditor5 "^32.0.0"
+
 "@ckeditor/ckeditor5-core@^32.0.0":
   version "32.0.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-core/-/ckeditor5-core-32.0.0.tgz#9f707d0544a8a6d924fdcb8150c297fafffa7ee9"
