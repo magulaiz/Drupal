@@ -91,18 +91,19 @@ class HistoryRepositoryTest extends KernelTestBase {
     $time = $this->randomTimestamp();
     \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
     $times = [$node->id() => $time, $node2->id() => $time];
-    $this->assertSame($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
-    $this->assertSame($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
     \Drupal::service('history.repository')->resetCache();
-    $this->assertSame($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
 
     // Get some from cache and some from database.
     $time = $this->randomTimestamp();
     \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
+    \Drupal::service('history.repository')->resetCache();
     $times = [$node->id() => $time, $node2->id() => $time];
-    $this->assertSame($times, \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
     \Drupal::service('history.repository')->resetCache('node', [$node2->id()]);
-    $this->assertSame($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
 
   }
 
@@ -280,7 +281,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     $dayAgo = \Drupal::time()->getRequestTime() - (86400 * 1);
     \Drupal::service('history.repository')->purge($dayAgo);
     $remainingHistory = \Drupal::service('history.repository')->getTimes('node', [$node1->id(), $node2->id()]);
-    $this->assertSame([$node2->id() => $weekAgo], $remainingHistory);
+    $this->assertSame([], $remainingHistory);
   }
 
   /**

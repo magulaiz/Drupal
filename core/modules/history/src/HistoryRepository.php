@@ -161,8 +161,8 @@ class HistoryRepository implements HistoryRepositoryInterface {
         ])
         ->fields(['timestamp' => $time])
         ->execute();
-      $this->setCachedTimes($entity_type, [$entity_id => $time], $account);
     }
+    $this->setCachedTimes($entity_type, array_fill_keys($entity_ids, $time), $account);
 
     return $this;
   }
