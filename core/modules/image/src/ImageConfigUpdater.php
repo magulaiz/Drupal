@@ -27,7 +27,10 @@ final class ImageConfigUpdater {
     $changed = FALSE;
 
     foreach ($view_display->getComponents() as $field => $component) {
-      if (isset($component['type']) && ($component['type'] === 'image')) {
+      if (isset($component['type'])
+        && ($component['type'] === 'image')
+        && !array_key_exists('image_loading', $component['settings'])
+      ) {
         $component['settings']['image_loading']['attribute'] = 'lazy';
         $view_display->setComponent($field, $component);
         $changed = TRUE;
