@@ -148,6 +148,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    * {@inheritdoc}
    */
   public function alterQuery($query, array $tables, $op, AccountInterface $account, $base_table) {
+    $operator = '';
     if (!$langcode = $query->getMetaData('langcode')) {
       $langcode = FALSE;
 
@@ -156,7 +157,11 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       if (isset($view->filter)) {
         /** @var \Drupal\views\Plugin\views\filter\LanguageFilter $filter */
         foreach ($view->filter as $filter) {
-          if ($filter instanceof LanguageFilter && $filter->table == $base_table) {
+          if ($filter instanceof LanguageFilter &&
+            $filter->table == $base_table &&
+            in_array($filter->operator, ['in', 'not in'])
+          ) {
+            $operator = $filter->operator;
             $langcode = !empty($filter->value) ? $filter->value : FALSE;
           }
         }
@@ -194,8 +199,8 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
           if ($langcode === FALSE) {
             $subquery->condition('na.fallback', 1, '=');
           }
-          else {
-            $subquery->condition('na.langcode', $langcode, 'IN');
+          elseif (in_array($operator, ['in', 'not in'])) {
+            $subquery->condition('na.langcode', $langcode, $operator);
           }
         }
 
