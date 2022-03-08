@@ -6,7 +6,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
-use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 
@@ -53,36 +52,18 @@ class EntityContentComplete extends EntityContentBase {
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   The entity.
-   *
-   * @throws \Drupal\migrate\MigrateException
    */
   protected function getEntity(Row $row, array $old_destination_id_values) {
     $revision_id = $old_destination_id_values
       ? $old_destination_id_values[1]
       : $row->getDestinationProperty($this->getKey('revision'));
+    $entity_id = $row->getDestinationProperty($this->getKey('id'));
     // If we are re-running a migration with set revision IDs and the
     // destination revision ID already exists then do not create a new revision.
-    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id))) {
-      $entity_id = $old_destination_id_values
-        ? $old_destination_id_values[0]
-        : $row->getDestinationProperty($this->getKey('id'));
-      if (isset($entity_id) && $entity_id === $entity->id()) {
-        $entity->setNewRevision(FALSE);
-      }
-      elseif (isset($entity_id) && ($entity = $this->storage->load($entity_id))) {
-        // Forces a new revision if the entity exists, but the revision id does
-        // not match.
-        $entity->enforceIsNew(FALSE);
-        $entity->setNewRevision(TRUE);
-      }
-      else {
-        // There is a data mismatch between the entity id and revision id.
-        // This will enforce creating a new destination entity to match the
-        // source entity id and a new revision id.
-        $entity = NULL;
-      }
+    if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id)) && ($entity_id === $entity->id())) {
+      $entity->setNewRevision(FALSE);
     }
-    elseif (($entity_id = $row->getDestinationProperty($this->getKey('id'))) && ($entity = $this->storage->load($entity_id))) {
+    elseif (isset($entity_id) && ($entity = $this->storage->load($entity_id))) {
       // We want to create a new entity. Set enforceIsNew() FALSE is  necessary
       // to properly save a new entity while setting the ID. Without it, the
       // system would see that the ID is already set and assume it is an update.
@@ -91,10 +72,7 @@ class EntityContentComplete extends EntityContentBase {
       // not be necessary, it is done for clarity.
       $entity->setNewRevision(TRUE);
     }
-
-    // Creates a new entity if one was not found above or if an entity was
-    // found that had a data mismatch.
-    if (!isset($entity) || $entity === NULL) {
+    else {
       // Attempt to set the bundle.
       if ($bundle = $this->getBundle($row)) {
         $row->setDestinationProperty($this->getKey('bundle'), $bundle);
@@ -120,13 +98,13 @@ class EntityContentComplete extends EntityContentBase {
         // If we updated an untranslated field, then set the changed time for
         // for all translations to match the current row that we are saving.
         // In this context, getChangedTime() should return the value we just
-        // set in the updateEntity() call above.
+        // set in the updateEntity() call above. If the translation does not
+        // exist, then there is most-likely a data conflict between the source
+        // and destination databases. An exception is not thrown here because
+        // any data conflict will be handled later.
         $translation = $entity->getTranslation($langcode);
         if (isset($translation) && $translation->hasTranslationChanges()) {
           $entity->getTranslation($langcode)->setChangedTime($entity->getChangedTime());
-        }
-        else {
-          throw new MigrateException('Update translation timestamps failed. Translation entity was not found.');
         }
       }
     }
