@@ -330,7 +330,7 @@ class ImageItem extends FileItem {
     $height = $this->height;
 
     // Determine the dimensions if necessary.
-    if ($this->entity && $this->entity instanceof EntityInterface) {
+    if ($this->entity instanceof EntityInterface) {
       if (empty($width) || empty($height)) {
         $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
         if ($image->isValid()) {
@@ -346,7 +346,8 @@ class ImageItem extends FileItem {
    */
   public function preSave() {
     parent::preSave();
-    if (!($this->entity && $this->entity instanceof EntityInterface)) {
+
+    if (!$this->entity instanceof EntityInterface) {
       $this->getLogger('image')->warning("Missing file with ID %id.", ['%id' => $this->target_id]);
     }
   }
