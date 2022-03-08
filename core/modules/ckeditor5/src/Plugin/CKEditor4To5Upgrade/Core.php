@@ -120,7 +120,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return 'horizontalLine';
 
       case 'Format':
-        if ($text_format_html_restrictions->isEmpty()) {
+        if ($text_format_html_restrictions->isUnrestricted()) {
           // When no restrictions exist, all tags possibly supported by "Format"
           // in CKEditor 4 must be supported.
           return 'heading';
