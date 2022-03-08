@@ -49,7 +49,7 @@ use Drupal\migrate\Row;
  *     plugin: callback
  *     callable: time
  *     unpack_source: true
- *     source: {  }
+ *     source: [  ]
  * @endcode
  *
  * An example where the callback accepts more than one argument:
