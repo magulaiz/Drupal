@@ -64,6 +64,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   protected $debugCacheabilityHeaders = FALSE;
 
   /**
+   * A character length restriction, required for some response headers.
+   *
+   * @var int
+   */
+  const RESPONSE_HEADER_LIMIT = 8000;
+
+  /**
    * Constructs a FinishResponseSubscriber object.
    *
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
@@ -161,10 +168,16 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response_cacheability = $response->getCacheableMetadata();
       $cache_tags = $response_cacheability->getCacheTags();
       sort($cache_tags);
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+      $cache_tags = implode(' ', $cache_tags);
+      foreach (explode("\n", wordwrap($cache_tags, static::RESPONSE_HEADER_LIMIT)) as $delta => $tags) {
+        $response->headers->set('X-Drupal-Cache-Tags' . ($delta > 0 ? '-' . $delta : ''), $tags);
+      }
       $cache_contexts = $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts());
       sort($cache_contexts);
-      $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $cache_contexts));
+      $cache_contexts = implode(' ', $cache_contexts);
+      foreach (explode("\n", wordwrap($cache_contexts, static::RESPONSE_HEADER_LIMIT)) as $delta => $contexts) {
+        $response->headers->set('X-Drupal-Cache-Contexts' . ($delta > 0 ? '-' . $delta : ''), $contexts);
+      }
       $max_age_message = $response_cacheability->getCacheMaxAge();
       if ($max_age_message === 0) {
         $max_age_message = '0 (Uncacheable)';
