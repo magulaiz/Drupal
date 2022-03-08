@@ -178,7 +178,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       };
 
       $add_header_with_long_value('X-Drupal-Cache-Tags', $response_cacheability->getCacheTags());
-      $add_header_with_long_value('X-Drupal-Cache-Context', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts()));
+      $add_header_with_long_value('X-Drupal-Cache-Contexts', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts()));
 
       $max_age_message = $response_cacheability->getCacheMaxAge();
       if ($max_age_message === 0) {
