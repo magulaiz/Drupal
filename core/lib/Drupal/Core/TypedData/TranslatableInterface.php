@@ -69,7 +69,7 @@ interface TranslatableInterface {
    *   LanguageInterface::LANGCODE_DEFAULT
    *   to get the data in default language.
    *
-   * @return $this
+   * @return \Drupal\Core\Entity\ContentEntityInterface
    *   A typed data object for the translated data.
    *
    * @throws \InvalidArgumentException
@@ -80,7 +80,12 @@ interface TranslatableInterface {
   /**
    * Returns the translatable object in the language it was created.
    *
+<<<<<<< HEAD
    * @return $this
+=======
+   * @return \Drupal\Core\Entity\ContentEntityInterface
+   *   The translation object referring to the original language.
+>>>>>>> changing other instances of the this variable at the return documentation
    */
   public function getUntranslated();
 
