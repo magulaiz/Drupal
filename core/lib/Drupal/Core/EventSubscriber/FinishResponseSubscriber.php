@@ -161,7 +161,20 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response_cacheability = $response->getCacheableMetadata();
       $cache_tags = $response_cacheability->getCacheTags();
       sort($cache_tags);
-      $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+      // Make sure that cache tags header's value length does not exceed usual
+      // FastCGI buffer limits and with that causes HTTP 502.
+      $cache_tags_chunk_size = 50;
+      if (count($cache_tags) > $cache_tags_chunk_size) {
+        $cache_tags_chunk_counter = 0;
+        $padding_length = strlen(floor(count($cache_tags) / $cache_tags_chunk_size));
+        foreach (array_chunk($cache_tags, $cache_tags_chunk_size, TRUE) as $cache_tags_chunk) {
+          ++$cache_tags_chunk_counter;
+          $response->headers->set('X-Drupal-Cache-Tags-'. str_pad($cache_tags_chunk_counter, $padding_length, 0, STR_PAD_LEFT), implode(' ', $cache_tags_chunk));
+        }
+      }
+      else {
+        $response->headers->set('X-Drupal-Cache-Tags', implode(' ', $cache_tags));
+      }
       $cache_contexts = $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts());
       sort($cache_contexts);
       $response->headers->set('X-Drupal-Cache-Contexts', implode(' ', $cache_contexts));
