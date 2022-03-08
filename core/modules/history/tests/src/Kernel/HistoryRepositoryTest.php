@@ -4,7 +4,7 @@ namespace Drupal\Tests\history\Kernel;
 
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
@@ -13,14 +13,14 @@ use Drupal\user\Entity\User;
  * @group history
  * @see \Drupal\history\HistoryRepository
  */
-class HistoryRepositoryTest extends KernelTestBase {
+class HistoryRepositoryTest extends EntityKernelTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  protected static $modules = ['history', 'node', 'user'];
+  protected static $modules = ['history', 'node'];
 
   /**
    * The current user entity.
@@ -34,14 +34,9 @@ class HistoryRepositoryTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installEntitySchema('user');
-    $this->installEntitySchema('node');
     $this->installSchema('history', ['history']);
-    $this->installSchema('node', ['node_access']);
-    $this->installSchema('user', ['users_data']);
 
-    $user = User::create(['name' => 'current']);
-    $user->save();
+    $user = $this->createUser();
     $this->currentUser = $user;
     \Drupal::currentUser()->setAccount($user);
   }
@@ -102,7 +97,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     \Drupal::service('history.repository')->setTimes('node', $nids, NULL, $time);
     \Drupal::service('history.repository')->resetCache();
     $times = [$node->id() => $time, $node2->id() => $time];
-    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids));
     \Drupal::service('history.repository')->resetCache('node', [$node2->id()]);
     $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids));
 
@@ -198,8 +193,7 @@ class HistoryRepositoryTest extends KernelTestBase {
     $this->assertNotSame($new, \Drupal::service('history.repository')->getTime($node, $this->currentUser));
 
     // Reset irrelevant parts of cache, cache still stale.
-    $notCurrentUser = User::create(['name' => 'notCurrent']);
-    $notCurrentUser->save();
+    $notCurrentUser = $this->createUser();
     \Drupal::service('history.repository')->resetCache('node', [], $notCurrentUser);
     \Drupal::service('history.repository')->resetCache('node', [$node->id() + 1]);
     \Drupal::service('history.repository')->resetCache('user');
