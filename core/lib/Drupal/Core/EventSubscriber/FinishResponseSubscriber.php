@@ -22,6 +22,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
+   * A character length limit for headers with possibly long values.
+   *
+   * Less than 8kb.
+   *
+   * @var int
+   */
+  protected const RESPONSE_HEADER_VALUE_LENGTH_LIMIT = 8000;
+
+  /**
    * The language manager object for retrieving the correct language code.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
@@ -62,13 +71,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @var bool
    */
   protected $debugCacheabilityHeaders = FALSE;
-
-  /**
-   * A character length restriction, required for some response headers.
-   *
-   * @var int
-   */
-  const RESPONSE_HEADER_LIMIT = 8000;
 
   /**
    * Constructs a FinishResponseSubscriber object.
@@ -166,18 +168,18 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // Expose the cache contexts and cache tags associated with this page in a
       // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
       $response_cacheability = $response->getCacheableMetadata();
-      $cache_tags = $response_cacheability->getCacheTags();
-      sort($cache_tags);
-      $cache_tags = implode(' ', $cache_tags);
-      foreach (explode("\n", wordwrap($cache_tags, static::RESPONSE_HEADER_LIMIT)) as $delta => $tags) {
-        $response->headers->set('X-Drupal-Cache-Tags' . ($delta > 0 ? '-' . $delta : ''), $tags);
-      }
-      $cache_contexts = $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts());
-      sort($cache_contexts);
-      $cache_contexts = implode(' ', $cache_contexts);
-      foreach (explode("\n", wordwrap($cache_contexts, static::RESPONSE_HEADER_LIMIT)) as $delta => $contexts) {
-        $response->headers->set('X-Drupal-Cache-Contexts' . ($delta > 0 ? '-' . $delta : ''), $contexts);
-      }
+
+      $add_header_with_long_value = static function (string $header_name, array $values) use ($response): void {
+        sort($values);
+        $values_as_string = implode(' ', $values);
+        foreach (explode("\n", wordwrap($values_as_string, static::RESPONSE_HEADER_VALUE_LENGTH_LIMIT)) as $delta => $row) {
+          $response->headers->set($header_name . ($delta > 0 ? "-{$delta}" : ''), $row);
+        }
+      };
+
+      $add_header_with_long_value('X-Drupal-Cache-Tags', $response_cacheability->getCacheTags());
+      $add_header_with_long_value('X-Drupal-Cache-Context', $this->cacheContextsManager->optimizeTokens($response_cacheability->getCacheContexts()));
+
       $max_age_message = $response_cacheability->getCacheMaxAge();
       if ($max_age_message === 0) {
         $max_age_message = '0 (Uncacheable)';
