@@ -1041,13 +1041,13 @@ class MediaTest extends WebDriverTestBase {
       'mode' => '22222',
     ])->save();
     // Only enable view mode 3 for Document.
-    EntityViewDisplay::create([
-      'id' => 'media.document.view_mode_3',
-      'targetEntityType' => 'media',
-      'status' => TRUE,
-      'bundle' => 'document',
-      'mode' => 'view_mode_3',
-    ])->save();
+//    EntityViewDisplay::create([
+//      'id' => 'media.document.view_mode_3',
+//      'targetEntityType' => 'media',
+//      'status' => TRUE,
+//      'bundle' => 'document',
+//      'mode' => 'view_mode_3',
+//    ])->save();
 
     $filter_format = FilterFormat::load('test_format');
     $filter_format->setFilterConfig('media_embed', [
@@ -1078,21 +1078,22 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
+
     $this->waitForEditor();
     // Wait for the media preview to load.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
-    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
 
     // Ensure that by default the "Break text" alignment option is selected.
-//    $this->click('.ck-widget.drupal-media');
-//    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-//    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
-//    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
-//    $editor_dom = $this->getEditorDataAsDom();
-//    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
-//      ->item(0);
-//    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
-//    $this->getBalloonButton('Align center and break text')->click();
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
+    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
+    $this->getBalloonButton('Align center and break text')->click();
 
     // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3245720
   }
