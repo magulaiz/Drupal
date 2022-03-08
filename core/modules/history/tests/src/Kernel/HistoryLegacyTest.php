@@ -24,8 +24,7 @@ class HistoryLegacyTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('history', 'history');
-    $user = $this->createUser();
-    \Drupal::currentUser()->setAccount($user);
+    \Drupal::currentUser()->setAccount($this->createUser());
   }
 
   /**
@@ -43,7 +42,7 @@ class HistoryLegacyTest extends EntityKernelTestBase {
     $this->assertSame([$node->id() => 0], history_read_multiple([$node->id()]));
 
     // Assert procedural functions return same results as repository methods.
-    history_write($node->id(), $user);
+    history_write($node->id());
     $this->assertSame(history_read($node->id()), \Drupal::service('history.repository')->getTime($node));
     $this->assertSame(history_read_multiple([$node->id()]), \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
   }

@@ -35,6 +35,7 @@ class HistoryRepositoryTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installSchema('history', ['history']);
+    $this->installSchema('node', ['node_access']);
 
     $user = $this->createUser();
     $this->currentUser = $user;
