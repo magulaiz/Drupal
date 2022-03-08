@@ -169,7 +169,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
         $padding_length = strlen(floor(count($cache_tags) / $cache_tags_chunk_size));
         foreach (array_chunk($cache_tags, $cache_tags_chunk_size, TRUE) as $cache_tags_chunk) {
           ++$cache_tags_chunk_counter;
-          $response->headers->set('X-Drupal-Cache-Tags-'. str_pad($cache_tags_chunk_counter, $padding_length, 0, STR_PAD_LEFT), implode(' ', $cache_tags_chunk));
+          $response->headers->set('X-Drupal-Cache-Tags-' . str_pad($cache_tags_chunk_counter, $padding_length, 0, STR_PAD_LEFT), implode(' ', $cache_tags_chunk));
         }
       }
       else {
