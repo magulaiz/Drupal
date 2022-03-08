@@ -88,22 +88,23 @@ class HistoryRepositoryTest extends KernelTestBase {
       'type' => 'default',
     ]);
     $node2->save();
+    $nids = [$node->id(), $node2->id()];
     $time = $this->randomTimestamp();
-    \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
+    \Drupal::service('history.repository')->setTimes('node', $nids, NULL, $time);
     $times = [$node->id() => $time, $node2->id() => $time];
-    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
-    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids, $this->currentUser));
     \Drupal::service('history.repository')->resetCache();
-    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()], $this->currentUser));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids, $this->currentUser));
 
     // Get some from cache and some from database.
     $time = $this->randomTimestamp();
-    \Drupal::service('history.repository')->setTimes('node', [$node->id(), $node2->id()], NULL, $time);
+    \Drupal::service('history.repository')->setTimes('node', $nids, NULL, $time);
     \Drupal::service('history.repository')->resetCache();
     $times = [$node->id() => $time, $node2->id() => $time];
     $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id()]));
     \Drupal::service('history.repository')->resetCache('node', [$node2->id()]);
-    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', [$node->id(), $node2->id()]));
+    $this->assertEqualsCanonicalizing($times, \Drupal::service('history.repository')->getTimes('node', $nids));
 
   }
 

@@ -61,7 +61,7 @@ class HistoryRepository implements HistoryRepositoryInterface {
    */
   public function getTime(EntityInterface $entity, AccountInterface $account = NULL, $default = NULL) {
     $result = $this->getTimes($entity->getEntityTypeId(), [$entity->id()], $account, $default);
-    return $result ? reset($result) : $default;
+    return $result[$entity->id()] ?? $default;
   }
 
   /**
