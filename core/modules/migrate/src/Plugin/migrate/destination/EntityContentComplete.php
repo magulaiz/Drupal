@@ -57,7 +57,9 @@ class EntityContentComplete extends EntityContentBase {
     $revision_id = $old_destination_id_values
       ? $old_destination_id_values[1]
       : $row->getDestinationProperty($this->getKey('revision'));
-    $entity_id = $old_destination_id_values[0] ?: $row->getDestinationProperty($this->getKey('id'));
+    $entity_id = $old_destination_id_values
+      ? $old_destination_id_values[0]
+      : $row->getDestinationProperty($this->getKey('id'));
     // If we are re-running a migration with set revision IDs and the
     // destination revision ID already exists then do not create a new revision.
     if (!empty($revision_id) && ($entity = $this->storage->loadRevision($revision_id)) && ($entity_id === $entity->id())) {
