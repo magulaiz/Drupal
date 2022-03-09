@@ -296,7 +296,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function createDuplicate(EntityInterface $entity) {
-    $entity_class = $this->entityClass;
+    $entity_class = $this->getEntityClass();
     $entity_class::preDuplicate($this, $entity);
 
     $duplicate = $this->doCreateDuplicate($entity);
