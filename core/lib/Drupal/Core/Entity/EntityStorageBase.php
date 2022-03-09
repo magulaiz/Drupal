@@ -323,7 +323,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $duplicate = clone $entity;
     $entity_type = $entity->getEntityType();
     // Reset the entity ID and indicate that this is a new entity.
-    $duplicate->{$entity_type->getKey('id')} = NULL;
+    $duplicate->{$entity_type->getKey('id')}->value = NULL;
     $duplicate->enforceIsNew();
 
     // Add a reference to the original source entity.
@@ -331,7 +331,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
-      $duplicate->{$entity_type->getKey('uuid')} = $this->uuidService->generate();
+      $duplicate->{$entity_type->getKey('uuid')}->value = $this->uuidService->generate();
     }
 
     return $duplicate;
