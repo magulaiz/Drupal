@@ -218,7 +218,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * {@inheritdoc}
    */
   public function postDuplicate(EntityStorageInterface $storage) {
-    parent::postDuplicate();
+    parent::postDuplicate($storage);
 
     // Prevent the new duplicate from being misinterpreted as a rename.
     $this->setOriginalId(NULL);
