@@ -987,7 +987,7 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object.
+ *   The duplicated entity object.
  *
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_duplicate_create()
@@ -1002,7 +1002,7 @@ function hook_entity_duplicate_create(\Drupal\Core\Entity\EntityInterface $entit
  * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object.
+ *   The duplicated entity object.
  *
  * @ingroup entity_crud
  * @see hook_entity_duplicate_create()
