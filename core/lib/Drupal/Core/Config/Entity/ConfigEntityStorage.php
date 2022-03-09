@@ -98,10 +98,9 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    *   The memory cache backend.
    */
   public function __construct(EntityTypeInterface $entity_type, ConfigFactoryInterface $config_factory, UuidInterface $uuid_service, LanguageManagerInterface $language_manager, MemoryCacheInterface $memory_cache) {
-    parent::__construct($entity_type, $memory_cache);
+    parent::__construct($entity_type, $memory_cache, $uuid_service);
 
     $this->configFactory = $config_factory;
-    $this->uuidService = $uuid_service;
     $this->languageManager = $language_manager;
   }
 
