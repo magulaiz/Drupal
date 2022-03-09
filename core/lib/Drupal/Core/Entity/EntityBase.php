@@ -48,13 +48,6 @@ abstract class EntityBase implements EntityInterface {
   protected $typedData;
 
   /**
-   * The source entity used to create a this duplicate.
-   *
-   * @var \Drupal\Core\Entity\EntityInterface
-   */
-  protected $duplicateSource;
-
-  /**
    * Constructs an Entity object.
    *
    * @param array $values

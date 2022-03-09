@@ -106,10 +106,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->langcodeKey = $this->entityType->getKey('langcode');
     $this->memoryCache = $memory_cache;
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
-
-    if ($this->uuidKey) {
-      $this->uuidService = \Drupal::service('uuid');
-    }
   }
 
   /**
@@ -321,17 +317,17 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    */
   public function doCreateDuplicate(EntityInterface $entity) {
     $duplicate = clone $entity;
-    $entity_type = $entity->getEntityType();
+
     // Reset the entity ID and indicate that this is a new entity.
-    $duplicate->set($entity_type->getKey('id'), NULL);
+    $duplicate->set($this->idKey, NULL);
     $duplicate->enforceIsNew();
 
     // Add a reference to the original source entity.
     $duplicate->setDuplicateSource($entity);
 
     // Assign a new UUID if there is none yet.
-    if ($this->uuidKey && $this->uuidService && !isset($values[$this->uuidKey])) {
-      $duplicate->set($entity_type->getKey('uuid'), $this->uuidService->generate());
+    if ($this->uuidKey) {
+      $duplicate->set($this->uuidKey, $this->uuidGenerator()->generate());
     }
 
     return $duplicate;
