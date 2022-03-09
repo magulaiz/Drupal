@@ -662,4 +662,44 @@ class InlineBlockTest extends InlineBlockTestBase {
     $assert($permissions, TRUE);
   }
 
+  /**
+   * Tests inline blocks valid.
+   */
+  public function testInlineBlocksValid() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+      'administer node fields',
+      'administer nodes',
+      'bypass node access',
+      'create and edit custom blocks',
+    ]));
+    // Enable layout builder and overrides.
+    $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
+    $this->drupalGet('node/1/layout');
+
+    // Add an inline block with no body.
+    $this->addInlineBlockToLayout('Block title', '');
+
+    $this->drupalGet('node/1');
+
+    // Set the body field to be required.
+    $field_config = FieldConfig::loadByName('node', 'bundle_with_section_field', 'body');
+    $field_config->setRequired(TRUE);
+
+    $this->drupalGet('node/1/layout');
+    $this->assertSaveLayout();
+
+    // This is temporary, because we should probably show an error message instead.
+    $block_id = $this->getLatestBlockEntityId();
+    $block = $this->blockStorage->load($block_id);
+
+    $this->assertCount(1, $block->validate());
+  }
+
 }
