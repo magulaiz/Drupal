@@ -327,7 +327,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey) {
-      $duplicate->set($this->uuidKey, $this->uuidGenerator()->generate());
+      $duplicate->set($this->uuidKey, $this->uuidService->generate());
     }
 
     return $duplicate;
