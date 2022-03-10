@@ -1164,7 +1164,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
 
     // Check whether the entity type supports revisions and initialize it if so.
     if ($entity_type->isRevisionable()) {
-      $this->{$entity_type->getKey('revision')}->value = NULL;
+      $this->set($entity_type->getKey('revision'), NULL);
       $this->loadedRevisionId = NULL;
     }
   }
