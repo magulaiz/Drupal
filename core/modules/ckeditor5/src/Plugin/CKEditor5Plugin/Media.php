@@ -77,7 +77,7 @@ class Media extends CKEditor5PluginDefault {
       'attributeValue' => 'default',
       'modelElements' => ['drupalMedia'],
       'modelAttributes' => [
-        'drupalMediaBundle' => $specific_bundles,
+        'drupalMediaBundle' => array_keys($media_bundles),
       ],
     ];
 

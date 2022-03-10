@@ -93,6 +93,7 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
   const filteredDefinedStyles = definedStyles.filter(function (item) {
     return item.modelAttributes.drupalMediaBundle.includes(bundleType);
   });
+
   if (!filteredDefinedStyles.includes(style)) {
     // Hide button if view mode is not available for the bundle that the modelElement is.
     definition.model.set({ class: 'ck-hidden' });
