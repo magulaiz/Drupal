@@ -41,15 +41,10 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
     parent::setUp();
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
-<<<<<<< HEAD
-      'updates notifications',
-    ]);
-=======
       'administer modules',
       'administer themes',
       'see update notifications',
       ]);
->>>>>>> 7a794f7061 (Update permission wording)
     $this->drupalLogin($admin_user);
     $this->drupalPlaceBlock('local_actions_block');
   }
