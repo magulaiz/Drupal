@@ -49,7 +49,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
    * @param \Drupal\Core\Routing\RequestContext $request_context
    *   The request context.
    */
-  public function __construct(RequestStack $request_stack, OutboundPathProcessorInterface $path_processor, array $filter_protocols = ['http', 'https'], ?RequestContext $request_context = NULL) {
+  public function __construct(RequestStack $request_stack, OutboundPathProcessorInterface $path_processor, array $filter_protocols = ['http', 'https'], RequestContext $request_context = NULL) {
     UrlHelper::setAllowedProtocols($filter_protocols);
     $this->requestStack = $request_stack;
     $this->pathProcessor = $path_processor;
