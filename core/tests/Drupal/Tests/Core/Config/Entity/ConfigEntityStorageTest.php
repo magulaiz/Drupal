@@ -267,9 +267,9 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->assertNotEquals($entity->uuid(), $duplicate->uuid());
     $this->assertSame($new_uuid, $duplicate->uuid());
 
-    $this->moduleHandler->invokeAll('test_entity_type_duplicate_create', [$duplicate])
+    $this->moduleHandler->invokeAll('test_entity_type_duplicate_create', [$entity, $duplicate])
       ->shouldHaveBeenCalled();
-    $this->moduleHandler->invokeAll('entity_duplicate_create', [$duplicate, 'test_entity_type'])
+    $this->moduleHandler->invokeAll('entity_duplicate_create', [$entity, $duplicate])
       ->shouldHaveBeenCalled();
 
     return $duplicate;

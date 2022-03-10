@@ -980,27 +980,6 @@ class ViewUI implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function isDuplicate() {
-    return $this->storage->isDuplicate();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDuplicateSource() {
-    return $this->storage->getDuplicateSource();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setDuplicateSource(EntityInterface $duplicate_source) {
-    $this->storage->setDuplicateSource($duplicate_source);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function load($id) {
     return View::load($id);
   }
