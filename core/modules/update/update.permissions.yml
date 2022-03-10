@@ -3,4 +3,3 @@ see update notifications:
   description: |
     Access update notification message. This notification is displayed on all admin pages when security updates are
     available for Drupal.
-  restrict access: true
