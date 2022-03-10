@@ -75,7 +75,8 @@ class CommentStorage extends SqlContentEntityStorage implements CommentStorageIn
       $container->get('language_manager'),
       $container->get('entity.memory_cache'),
       $container->get('entity_type.bundle.info'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('uuid')
     );
   }
 
