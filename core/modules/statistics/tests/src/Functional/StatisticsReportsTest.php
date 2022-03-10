@@ -35,7 +35,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $post = http_build_query(['nid' => $nid]);
     $headers = ['Content-Type' => 'application/x-www-form-urlencoded'];
     global $base_url;
-    $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics') . '/statistics.php';
+    $stats_path = $base_url . '/' . $this->getModulePath('statistics') . '/statistics.php';
     $client = \Drupal::httpClient();
     $client->post($stats_path, ['headers' => $headers, 'body' => $post]);
 
@@ -63,7 +63,7 @@ class StatisticsReportsTest extends StatisticsTestBase {
     $this->assertCacheContexts($contexts);
 
     // Check if the node link is displayed.
-    $this->assertRaw(Link::fromTextAndUrl($node->label(), $node->toUrl('canonical'))->toString());
+    $this->assertSession()->responseContains(Link::fromTextAndUrl($node->label(), $node->toUrl('canonical'))->toString());
   }
 
 }

@@ -8,7 +8,10 @@ use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Drupal\Tests\WebAssert;
+use WebDriver\Exception;
 use WebDriver\Exception\CurlExec;
+
+// cspell:ignore interactable
 
 /**
  * Defines a class with methods for asserting presence of elements during tests.
@@ -120,7 +123,7 @@ JS;
   }
 
   /**
-   * Waits for the specified text and returns its element when available.
+   * Waits for the specified text and returns TRUE when it is available.
    *
    * @param string $text
    *   The text to wait for.
@@ -128,7 +131,7 @@ JS;
    *   (Optional) Timeout in milliseconds, defaults to 10000.
    *
    * @return bool
-   *   TRUE if not found, FALSE if found.
+   *   TRUE if found, FALSE if not found.
    */
   public function waitForText($text, $timeout = 10000) {
     return (bool) $this->waitForHelper($timeout, function (Element $page) use ($text) {
@@ -243,7 +246,7 @@ JS;
    * use a viewport of 1024x768px.
    *
    * @param string $selector_type
-   *   The element selector type (CSS, XPath).
+   *   The element selector type (css, xpath).
    * @param string|array $selector
    *   The element selector. Note: the first found element is used.
    * @param bool|string $corner
@@ -286,7 +289,7 @@ JS;
    * Note: the node should exist in the page, otherwise this assertion fails.
    *
    * @param string $selector_type
-   *   The element selector type (CSS, XPath).
+   *   The element selector type (css, xpath).
    * @param string|array $selector
    *   The element selector. Note: the first found element is used.
    * @param bool|string $corner
@@ -504,6 +507,20 @@ JS;
     } while (microtime(TRUE) < $end);
 
     throw new ElementHtmlException($message, $this->session->getDriver(), $node);
+  }
+
+  /**
+   * Determines if an exception is due to an element not being clickable.
+   *
+   * @param \WebDriver\Exception $exception
+   *   The exception to check.
+   *
+   * @return bool
+   *   TRUE if the exception is due to an element not being clickable,
+   *   interactable or visible.
+   */
+  public static function isExceptionNotClickable(Exception $exception): bool {
+    return (bool) preg_match('/not (clickable|interactable|visible)/', $exception->getMessage());
   }
 
 }
