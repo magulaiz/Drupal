@@ -175,23 +175,3 @@ function _update_requirement_check($project, $type) {
 function update_update_last_removed() {
   return 8001;
 }
-
-/**
- * Implements hook_update_N().
- *
- * Grant 'see update notifications' permission to users with permission to
- * 'administer site configuration'.
- *
- * Up to now everyone with 'administer site configuration' permission
- * receives error messages on admin pages whenever there are security updates
- * to Drupal or contrib projects. As of update 8000, these notifications can be
- * enabled or disabled by granting/revoking 'see update notifications' permission.
- * This update grants 'see update notifications' permission to anyone who has had
- * this permission through 'administer site configuration' in the past.
- */
-function update_update_9400(&$sandbox) {
-  $roles = user_roles(FALSE, 'administer site configuration');
-  foreach (array_keys($roles) as $rid) {
-    user_role_grant_permissions($rid, ['see update notifications']);
-  }
-}
