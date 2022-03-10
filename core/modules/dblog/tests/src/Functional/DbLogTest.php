@@ -377,8 +377,8 @@ class DbLogTest extends BrowserTestBase {
   private function verifyEvents() {
     // Invoke events.
     $this->doUser();
-    $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->doNode('article');
     $this->doNode('page');
     $this->doNode('forum');
@@ -821,8 +821,10 @@ class DbLogTest extends BrowserTestBase {
    *   The database log message to check.
    * @param string $message
    *   The message to pass to simpletest.
+   *
+   * @internal
    */
-  protected function assertLogMessage($log_message, $message) {
+  protected function assertLogMessage(string $log_message, string $message): void {
     $message_text = Unicode::truncate($log_message, 56, TRUE, TRUE);
     $this->assertSession()->linkExists($message_text, 0, $message);
   }

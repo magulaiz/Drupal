@@ -104,7 +104,8 @@
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(
         (panes) => {
           const $this = $(panes).addClass('vertical-tabs__items--processed');
-          const focusID = $this.find(':hidden.vertical-tabs__active-tab').val();
+          const focusID = $this.find(':hidden.vertical-tabs__active-tab')[0]
+            .value;
           let tabFocus;
 
           // Check if there are some details that can be converted to
@@ -129,7 +130,7 @@
             const $that = $(this);
             /* eslint-disable new-cap */
             const verticalTab = new Drupal.verticalTab({
-              title: $that.find('> summary').text(),
+              title: $that.find('> summary')[0].textContent,
               details: $that,
             });
             /* eslint-enable new-cap */
@@ -393,16 +394,14 @@
    */
   Drupal.theme.verticalTab = (settings) => {
     const tab = {};
+    tab.title = $('<strong class="vertical-tabs__menu-link-title"></strong>');
+    tab.title[0].textContent = settings.title;
     tab.item = $(
       '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
     ).append(
       (tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append(
         $('<span class="vertical-tabs__menu-link-content"></span>')
-          .append(
-            (tab.title = $(
-              '<strong class="vertical-tabs__menu-link-title"></strong>',
-            ).text(settings.title)),
-          )
+          .append(tab.title)
           .append(
             (tab.summary = $(
               '<span class="vertical-tabs__menu-link-summary"></span>',

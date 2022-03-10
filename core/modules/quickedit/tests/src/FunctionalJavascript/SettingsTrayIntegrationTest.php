@@ -45,6 +45,16 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getTestThemes() {
+    // Make sure to test with Olivero first to avoid
+    // https://www.drupal.org/project/quickedit/issues/3262273
+    // @todo Remove when that is fixed.
+    return array_merge(['olivero'], array_diff(parent::getTestThemes(), ['olivero']));
+  }
+
+  /**
    * Tests QuickEdit links behavior.
    */
   public function testQuickEditLinks() {
