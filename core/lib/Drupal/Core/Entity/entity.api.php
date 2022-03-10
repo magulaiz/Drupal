@@ -953,12 +953,14 @@ function hook_ENTITY_TYPE_create(\Drupal\Core\Entity\EntityInterface $entity) {
  * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity object.
+ * @param \Drupal\Core\Entity\EntityInterface $duplicate
  *   The duplicated entity object.
  *
  * @ingroup entity_crud
  * @see hook_ENTITY_TYPE_duplicate_create()
  */
-function hook_entity_duplicate_create(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_entity_duplicate_create(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\EntityInterface $duplicate) {
   \Drupal::logger('example')->info('Entity duplicated: @label', ['@label' => $entity->label()]);
 }
 
@@ -968,12 +970,14 @@ function hook_entity_duplicate_create(\Drupal\Core\Entity\EntityInterface $entit
  * This hook runs after a new entity object has just been instantiated.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity object.
+ * @param \Drupal\Core\Entity\EntityInterface $duplicate
  *   The duplicated entity object.
  *
  * @ingroup entity_crud
  * @see hook_entity_duplicate_create()
  */
-function hook_ENTITY_TYPE_duplicate_create(\Drupal\Core\Entity\EntityInterface $entity) {
+function hook_ENTITY_TYPE_duplicate_create(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\EntityInterface $duplicate) {
   \Drupal::logger('example')->info('ENTITY_TYPE duplicated: @label', ['@label' => $entity->label()]);
 }
 
