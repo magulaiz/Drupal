@@ -362,39 +362,6 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   public function postDuplicate(EntityStorageInterface $storage);
 
   /**
-   * Determines whether the entity was duplicated from another entity.
-   *
-   * Usually an entity is a duplicate if there is a duplicate source entity.
-   *
-   * The duplicate source isn't saved with the entity as a result, this status only
-   * persists for the object creation. If the entity is loaded after that, the
-   * duplicate source won't be tracked, and the entity won't still be considered a
-   * duplicate.
-   *
-   * @return bool
-   *   TRUE if the entity is a duplicate, or FALSE if the entity has already been saved.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::getDuplicateSource()
-   */
-  public function isDuplicate();
-
-  /**
-   * Gets the original entity that was cloned from.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The entity this object was cloned from, if the object was cloned as a duplicate.
-   */
-  public function getDuplicateSource();
-
-  /**
-   * Sets the original entity that was cloned from.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $duplicate_source
-   *   The entity this object was cloned from, if the object was cloned as a duplicate.
-   */
-  public function setDuplicateSource(EntityInterface $duplicate_source);
-
-  /**
    * Gets the entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface

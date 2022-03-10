@@ -410,27 +410,6 @@ abstract class EntityBase implements EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function isDuplicate() {
-    return !is_null($this->getDuplicateSource());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getDuplicateSource() {
-    return $this->duplicateSource ?? NULL;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setDuplicateSource(EntityInterface $duplicate_source) {
-    $this->duplicateSource = $duplicate_source;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function preDelete(EntityStorageInterface $storage, array $entities) {
   }
 

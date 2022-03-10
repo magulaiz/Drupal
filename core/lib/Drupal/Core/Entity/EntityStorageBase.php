@@ -311,7 +311,15 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
     // Modules might need to add or change the data initially held by the new
     // entity object, for instance to fill-in default values.
-    $this->invokeHook('duplicate_create', $duplicate);
+
+    // Method ::invokeHook() cannot be used, as it does not allow passing
+    // more than one parameter.
+    $hook = 'duplicate_create';
+
+    // Invoke the hook.
+    $this->moduleHandler()->invokeAll($this->getEntityTypeId() . '_' . $hook, [$entity, $duplicate]);
+    // Invoke the respective entity-level hook.
+    $this->moduleHandler()->invokeAll('entity_' . $hook, [$entity, $duplicate]);
 
     return $duplicate;
   }
