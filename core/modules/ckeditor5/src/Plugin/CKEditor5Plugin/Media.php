@@ -36,13 +36,14 @@ class Media extends CKEditor5PluginDefault {
     $media_bundles = MediaType::loadMultiple();
     $bundles_per_view_mode = [];
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
+    $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
 
     foreach (array_keys($media_bundles) as $bundle) {
-      $allowed_view_modes = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
+      $allowed_view_modes_by_bundle = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
 
-      $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $allowed_view_modes;
+      $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $allowed_view_modes_by_bundle;
 
-      foreach (array_keys($allowed_view_modes) as $view_mode) {
+      foreach (array_keys($allowed_view_modes_by_bundle) as $view_mode) {
         // Get the bundles that have this view mode enabled.
         $bundles_per_view_mode[$view_mode][] = $bundle;
       }
@@ -55,20 +56,7 @@ class Media extends CKEditor5PluginDefault {
         if ($view_mode !== 'default') {
           $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
             'name' => $view_mode,
-            'title' => $view_mode . ' view mode',
-            'attributeName' => 'data-view-mode',
-            'attributeValue' => $view_mode,
-            'modelElements' => ['drupalMedia'],
-            'modelAttributes' => [
-              'drupalMediaBundle' => $specific_bundles,
-            ],
-          ];
-        }
-        elseif ($view_mode === 'default') {
-          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
-            'isDefault' => TRUE,
-            'name' => $view_mode,
-            'title' => $view_mode . ' view mode',
+            'title' => $view_mode,
             'attributeName' => 'data-view-mode',
             'attributeValue' => $view_mode,
             'modelElements' => ['drupalMedia'],
@@ -79,22 +67,35 @@ class Media extends CKEditor5PluginDefault {
         }
       }
     }
+    // Add default option no matter what so user always has the
+    // ability to return to default view.
+    $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+      'isDefault' => TRUE,
+      'name' => 'Default',
+      'title' => 'Default',
+      'attributeName' => 'data-view-mode',
+      'attributeValue' => 'default',
+      'modelElements' => ['drupalMedia'],
+      'modelAttributes' => [
+        'drupalMediaBundle' => $specific_bundles,
+      ],
+    ];
 
     $items = [];
 
     foreach (array_keys($all_view_modes) as $view_mode) {
       $items[] = "drupalElementStyle:viewMode:$view_mode";
     }
-
-    // Configure dropdown menu.
-    $dynamic_plugin_config['drupalMedia']['toolbar'][] = [
-      'name' => 'drupalMedia:viewMode',
-      'display' => 'list',
-      'defaultItem' => 'drupalElementStyle:viewMode:default',
-      'defaultText' => 'Select view mode',
-      'items' => $items,
-    ];
-
+    if (!empty($allowed_view_modes)) {
+      // Configure dropdown menu.
+      $dynamic_plugin_config['drupalMedia']['toolbar'][] = [
+        'name' => 'drupalMedia:viewMode',
+        'display' => 'list',
+        'defaultItem' => 'drupalElementStyle:viewMode:default',
+        'defaultText' => 'Select view mode',
+        'items' => $items,
+      ];
+    }
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())

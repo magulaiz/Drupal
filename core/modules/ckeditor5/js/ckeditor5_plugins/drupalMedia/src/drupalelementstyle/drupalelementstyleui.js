@@ -465,6 +465,9 @@ export default class DrupalElementStyleUi extends Plugin {
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
+      console.log('dropdownconfig: ', dropdownConfig);
+      console.log('definedstyles: ', definedStyles);
+
       const groupName = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {
@@ -473,9 +476,12 @@ export default class DrupalElementStyleUi extends Plugin {
           );
         })
         .map((buttonName) => {
+          console.log('buttonName', buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
+            console.log('buttonName in condition:', buttonName);
+            console.log('defaultItem in condition:', defaultItem);
             defaultButton = button;
           }
 
@@ -489,10 +495,15 @@ export default class DrupalElementStyleUi extends Plugin {
       const dropdownView = createDropdown(locale, DropdownButtonView);
       const dropdownButtonView = dropdownView.buttonView;
 
+      // If user does not have default enabled as a view mode button, make it the first option
+      // from the dropdown.
+      if (!defaultButton) {
+        defaultButton = buttonViews[0];
+      }
       dropdownButtonView.set({
         label: getDropdownButtonTitle(title, defaultButton.label),
         class: null,
-        tooltip: Drupal.t('Change view mode'),
+        tooltip: Drupal.t('Select view mode'),
         withText: true,
       });
 

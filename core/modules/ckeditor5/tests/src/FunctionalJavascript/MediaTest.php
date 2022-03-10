@@ -47,6 +47,13 @@ class MediaTest extends WebDriverTestBase {
   protected $media;
 
   /**
+   * The sample Media entity to embed.
+   *
+   * @var \Drupal\media\MediaInterface
+   */
+  protected $mediaFile;
+
+  /**
    * A host entity with a body field to embed media in.
    *
    * @var \Drupal\node\NodeInterface
@@ -84,7 +91,7 @@ class MediaTest extends WebDriverTestBase {
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt>',
+            'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-view-mode data-caption alt>',
           ],
         ],
         'filter_align' => ['status' => TRUE],
@@ -128,6 +135,7 @@ class MediaTest extends WebDriverTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'use text format test_format',
       'bypass node access',
+      'administer filters',
     ]);
 
     // Create a sample media entity to be embedded.
@@ -148,13 +156,29 @@ class MediaTest extends WebDriverTestBase {
     ]);
     $this->media->save();
 
+    $this->createMediaType('file', ['id' => 'file']);
+    File::create([
+      'uri' => $this->getTestFiles('text')[0]->uri,
+    ])->save();
+    $this->mediaFile = Media::create([
+      'bundle' => 'file',
+      'name' => 'Information about screaming hairy armadillo',
+      'field_media_file' => [
+        [
+          'target_id' => 2,
+        ],
+      ],
+    ]);
+    $this->mediaFile->save();
+
     // Create a sample host entity to embed media in.
     $this->drupalCreateContentType(['type' => 'blog']);
     $this->host = $this->createNode([
       'type' => 'blog',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>',
+        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>
+          <drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>',
         'format' => 'test_format',
       ],
     ]);
@@ -1001,9 +1025,137 @@ class MediaTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the EditorMediaDialog can set the data-view-mode attribute.
+   * Tests view mode integration.
+   *
+   * Tests that view mode is reflected onto the CKEditor Widget wrapper, that
+   * the media style toolbar allows changing the view mode and that the changes
+   * are reflected on the widget and downcast drupal-media tag.
    */
   public function testViewMode() {
+    EntityViewMode::create([
+      'id' => 'media.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 1',
+    ])->save();
+    EntityViewMode::create([
+      'id' => 'media.22222',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 2 has Numeric ID',
+    ])->save();
+    // Enable view mode 1 & 2 for Image.
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_1',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_1',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.22222',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => '22222',
+    ])->save();
+
+    $filter_format = FilterFormat::load('test_format');
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'default',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [
+          'view_mode_1' => 'view_mode_1',
+          '22222' => '22222',
+        ],
+      ],
+    ])->save();
+
+    // Test that view mode dependencies are returned from the MediaEmbed
+    // filter's ::getDependencies() method.
+    $expected_config_dependencies = [
+      'core.entity_view_mode.media.view_mode_1',
+      'core.entity_view_mode.media.22222',
+    ];
+
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
+    // Wait for the media preview to load.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Check that there is no data-view-mode set after embedding media.
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Select view mode')->click();
+    // Set view mode.
+    $this->getBalloonButton('22222')->click();
+    $editor_dom = $this->getEditorDataAsDom();
+    // Check that  “data-view-mode” exists inside source editing.
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertEquals('22222', $drupal_media_element->getAttribute('data-view-mode'));
+
+    // Check that toolbar matches current view mode.
+    $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
+    $this->assertEquals('22222', $dropdown_button->getText());
+    $page->pressButton('Save');
+
+    // Check that the 'content has been updated' message status
+    // appears to confirm we left the editor.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.messages.messages--status'));
+
+    // Check that the class is correct in the front end.
+    $attribute_value = $page->find('css', 'article.media')->getAttribute('data-media-embed-test-view-mode');
+    $this->assertEquals('22222', $attribute_value);
+
+    // Go back to edit page and check that it is still set to that view mode.
+    $edit_url = $this->getSession()->getCurrentURL() . '/edit';
+    $this->drupalGet($edit_url);
+    $this->waitForEditor();
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertEquals('22222', $drupal_media_element->getAttribute('data-view-mode'));
+    $this->click('.ck-widget.drupal-media');
+    $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
+    $this->assertEquals('22222', $dropdown_button->getText());
+
+    // Remove the current view mode by setting it to Default.
+    $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('22222')->click();
+    // Unset view mode.
+    $this->getBalloonButton('Default')->click();
+    $this->waitForEditor();
+    $editor_dom = $this->getEditorDataAsDom();
+    $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
+      ->item(0);
+    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    $assert_session->elementExists('css', 'article.media--view-mode-default');
+
+    // Check that the toolbar status matches "no view mode".
+    $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
+    $this->assertEquals('Select view mode', $dropdown_button->getText());
+  }
+
+  /**
+   * Tests that the correct dropdown items appear based on the bundle.
+   */
+  public function testViewModeDifferentBundles() {
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
       'targetEntityType' => 'media',
@@ -1040,20 +1192,19 @@ class MediaTest extends WebDriverTestBase {
       'bundle' => 'image',
       'mode' => '22222',
     ])->save();
-    // Only enable view mode 3 for Document.
-//    EntityViewDisplay::create([
-//      'id' => 'media.document.view_mode_3',
-//      'targetEntityType' => 'media',
-//      'status' => TRUE,
-//      'bundle' => 'document',
-//      'mode' => 'view_mode_3',
-//    ])->save();
-
+    // Only enable view mode 3 for File.
+    EntityViewDisplay::create([
+      'id' => 'media.file.view_mode_3',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'file',
+      'mode' => 'view_mode_3',
+    ])->save();
     $filter_format = FilterFormat::load('test_format');
     $filter_format->setFilterConfig('media_embed', [
       'status' => TRUE,
       'settings' => [
-        'default_view_mode' => 'view_mode_1',
+        'default_view_mode' => 'default',
         'allowed_media_types' => [],
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
@@ -1070,32 +1221,53 @@ class MediaTest extends WebDriverTestBase {
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
     ];
-
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
     $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
-
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->drupalGet($this->host->toUrl('edit-form'));
-    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
-
     $this->waitForEditor();
+
     // Wait for the media preview to load.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.ck-widget.drupal-media img'));
-
-    // Ensure that by default the "Break text" alignment option is selected.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
-    $this->assertTrue(($align_button = $this->getBalloonButton('Break text'))->hasClass('ck-on'));
+    // Check that there is no data-view-mode set after embedding media.
     $editor_dom = $this->getEditorDataAsDom();
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
-    $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
-    $this->getBalloonButton('Align center and break text')->click();
+    $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+    // Click the image.
+    $image = $page->find('css', 'article.media--type-image');
+    $this->click('article.media--type-image');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Select view mode')->click();
+//            $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
 
-    // @todo Port in https://www.drupal.org/project/ckeditor5/issues/3245720
+
+    // Check that the buttons exist.
+    $this->assertNotEmpty($this->getBalloonButton('view_mode_1'));
+    $this->assertNotEmpty($this->getBalloonButton('22222'));
+//    $this->assertNotEmpty($this->getBalloonButton('Default'));
+    // Check that the buttons are not hidden.
+    $this->assertFalse($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('22222')->hasClass('ck-hidden'));
+//    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
+    // Confirm that the hidden button is the view mode not enabled for image.
+    $this->assertTrue($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
+
+
+    // Click the file.
+    $this->click('article.media--type-file');
+    $this->assertNotEmpty($this->getBalloonButton('view_mode_3'));
+//    $this->assertNotEmpty($this->getBalloonButton('Default'));
+    $this->assertFalse($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
+//    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
+    // Confirm that the hidden button is the view mode not enabled for file.
+    $this->assertTrue($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
+    $this->assertTrue($this->getBalloonButton('22222')->hasClass('ck-hidden'));
+
   }
 
   /**
