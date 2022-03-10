@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\Core\Entity;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityFieldManager;
@@ -62,6 +63,13 @@ class EntityStorageDeprecationTest extends UnitTestCase {
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $entityFieldManager;
+
+  /**
+   * The mocked UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $uuidService;
 
   /**
    * The entity type ID.
@@ -133,14 +141,23 @@ class EntityStorageDeprecationTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
+    $this->uuidService = $this->createMock(UuidInterface::class);
+    $this->uuidService->expects($this->any())
+      ->method('generate')
+      ->willReturn($this->randomMachineName(16));
+
     $this->container->set('entity_type.manager', $this->entityTypeManager);
     $this->container->set('entity_field.manager', $this->entityFieldManager);
+    $this->container->set('uuid', $this->uuidService);
   }
 
   /**
    * Sets up the content entity storage.
+   *
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The mocked UUID service.
    */
-  protected function setUpEntityStorage() {
+  protected function setUpEntityStorage(UuidInterface $uuid_service = NULL) {
     $this->connection = $this->getMockBuilder('Drupal\Core\Database\Connection')
       ->disableOriginalConstructor()
       ->getMock();
@@ -161,7 +178,7 @@ class EntityStorageDeprecationTest extends UnitTestCase {
       ->method('getActiveFieldStorageDefinitions')
       ->willReturn($this->fieldDefinitions);
 
-    $this->entityStorage = new DeprecatedEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager);
+    $this->entityStorage = new DeprecatedEntityStorage($this->entityType, $this->connection, $this->entityFieldManager, $this->cache, $this->languageManager, new MemoryCache(), $this->entityTypeBundleInfo, $this->entityTypeManager, $uuid_service);
     $this->entityStorage->setModuleHandler($this->moduleHandler);
   }
 
@@ -171,7 +188,7 @@ class EntityStorageDeprecationTest extends UnitTestCase {
    * @group legacy
    */
   public function testGetEntityClass(): void {
-    $this->setUpEntityStorage();
+    $this->setUpEntityStorage($this->uuidService);
     $this->expectDeprecation('Accessing the entityClass property directly is deprecated in drupal:9.3.0. Use ::getEntityClass() instead. See https://www.drupal.org/node/3191609');
     $entity_class = $this->entityStorage->getCurrentEntityClass();
     $this->assertEquals('bogus_class', $entity_class);
@@ -183,10 +200,30 @@ class EntityStorageDeprecationTest extends UnitTestCase {
    * @group legacy
    */
   public function testSetEntityClass(): void {
-    $this->setUpEntityStorage();
+    $this->setUpEntityStorage($this->uuidService);
     $this->expectDeprecation('Setting the entityClass property directly is deprecated in drupal:9.3.0 and has no effect in drupal:10.0.0. See https://www.drupal.org/node/3191609');
     $this->entityStorage->setEntityClass('entity_class');
     $this->assertEquals('entity_class', $this->entityStorage->getEntityClass());
+  }
+
+  /**
+   * Tests the deprecation when missing $uuid_service argument.
+   *
+   * @group legacy
+   */
+  public function testOptionalParametersDeprecation(): void {
+    $this->setUpEntityStorage();
+    $this->expectDeprecation('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:9.4.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3268812');
+    new DeprecatedEntityStorage(
+      $this->entityType,
+      $this->connection,
+      $this->entityFieldManager,
+      $this->cache,
+      $this->languageManager,
+      new MemoryCache(),
+      $this->entityTypeBundleInfo,
+      $this->entityTypeManager
+    );
   }
 
 }
