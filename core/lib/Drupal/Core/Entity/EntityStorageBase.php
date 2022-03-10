@@ -339,9 +339,6 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $duplicate->set($this->idKey, NULL);
     $duplicate->enforceIsNew();
 
-    // Add a reference to the original source entity.
-    $duplicate->setDuplicateSource($entity);
-
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey) {
       $duplicate->set($this->uuidKey, $this->uuidService->generate());
