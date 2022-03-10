@@ -35,7 +35,7 @@ class LanguageConfigFactoryOverrideTest extends KernelTestBase {
 
     // Invalidate the container.
     $this->config('system.site')->set('default_langcode', 'de')->save();
-    Rebuilder::rebuildAll();
+    $this->container->get('kernel')->rebuildContainer();
 
     $config_factory_override = \Drupal::service('language.config_factory_override');
     $this->assertEquals('de', $config_factory_override->getLanguage()->getId());

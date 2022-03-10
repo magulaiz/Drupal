@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Asset;
 
-use Drupal\Core\Cache\QueryStringInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -23,27 +23,27 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
   protected $state;
 
   /**
-   * The cache query string interface.
+   * The file URL generator.
    *
-   * @var \Drupal\Core\Cache\QueryStringInterface|mixed|null
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  protected $queryString;
+  protected $fileUrlGenerator;
 
   /**
    * Constructs a CssCollectionRenderer.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
-   *   The cache query string interface.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct(StateInterface $state, QueryStringInterface $query_string = NULL) {
+  public function __construct(StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
     $this->state = $state;
-    if ($query_string === NULL) {
-      @trigger_error('$query_string parameter is added since drupal:9.3.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
-      $query_string = \Drupal::service('cache.query_string');
+    if (!$file_url_generator) {
+      @trigger_error('Calling CssCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2549139.', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
     }
-    $this->queryString = $query_string;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -75,7 +75,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
       switch ($css_asset['type']) {
         // For file items, output a LINK tag for file CSS assets.
         case 'file':
-          $element['#attributes']['href'] = file_url_transform_relative(file_create_url($css_asset['data']));
+          $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($css_asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
           if (!isset($css_asset['preprocessed'])) {

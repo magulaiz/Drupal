@@ -15,7 +15,6 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
@@ -24,8 +23,6 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
     'migrate_drupal_ui',
     'statistics',
     'telephone',
-    // Required for translation migrations.
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -33,7 +30,7 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->loadFixture(drupal_get_path('module', 'migrate_drupal') . '/tests/fixtures/drupal6.php');
+    $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
   }
 
   /**

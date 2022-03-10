@@ -26,7 +26,7 @@ class EntityKeysTest extends EntityKernelTestBase {
       'key_1' => 'test_field',
       'key_2' => 'test_field',
     ]);
-    Rebuilder::rebuildAll();
+
     $this->installEntitySchema('entity_test');
 
     $entity = EntityTest::create([]);

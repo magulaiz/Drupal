@@ -154,7 +154,7 @@ class DbUpdateController extends ControllerBase {
    *   The current request object.
    *
    * @return \Symfony\Component\HttpFoundation\Response
-   *   A response object object.
+   *   A response object.
    */
   public function handle($op, Request $request) {
     require_once $this->root . '/core/includes/install.inc';
@@ -163,13 +163,13 @@ class DbUpdateController extends ControllerBase {
     drupal_load_updates();
 
     if ($request->query->get('continue')) {
-      $_SESSION['update_ignore_warnings'] = TRUE;
+      $request->getSession()->set('update_ignore_warnings', TRUE);
     }
 
     $regions = [];
     $requirements = update_check_requirements();
     $severity = drupal_requirements_severity($requirements);
-    if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && empty($_SESSION['update_ignore_warnings']))) {
+    if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$request->getSession()->has('update_ignore_warnings'))) {
       $regions['sidebar_first'] = $this->updateTasksList('requirements');
       $output = $this->requirements($severity, $requirements, $request);
     }
@@ -207,7 +207,7 @@ class DbUpdateController extends ControllerBase {
     if ($output instanceof Response) {
       return $output;
     }
-    $title = isset($output['#title']) ? $output['#title'] : $this->t('Drupal database update');
+    $title = $output['#title'] ?? $this->t('Drupal database update');
 
     return $this->bareHtmlPageRenderer->renderBarePage($output, $title, 'maintenance_page', $regions);
   }
@@ -229,7 +229,7 @@ class DbUpdateController extends ControllerBase {
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
 
     $build['info_header'] = [
-      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a new release of Drupal or a module is installed.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/upgrade">upgrading handbook</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
+      '#markup' => '<p>' . $this->t('Use this utility to update your database whenever a new release of Drupal or a module is installed.') . '</p><p>' . $this->t('For more detailed information, see the <a href="https://www.drupal.org/docs/updating-drupal">Updating Drupal guide</a>. If you are unsure what these terms mean you should probably contact your hosting provider.') . '</p>',
     ];
 
     $info[] = $this->t("<strong>Back up your code</strong>. Hint: when backing up module code, do not leave that backup in the 'modules' or 'sites/*/modules' directories as this may confuse Drupal's auto-discovery mechanism.");
@@ -413,6 +413,12 @@ class DbUpdateController extends ControllerBase {
     // @todo Simplify with https://www.drupal.org/node/2548095
     $base_url = str_replace('/update.php', '', $request->getBaseUrl());
 
+    // Retrieve and remove session information.
+    $session = $request->getSession();
+    $update_results = $session->remove('update_results');
+    $update_success = $session->remove('update_success');
+    $session->remove('update_ignore_warnings');
+
     // Report end result.
     $dblog_exists = $this->moduleHandler->moduleExists('dblog');
     if ($dblog_exists && $this->account->hasPermission('access site reports')) {
@@ -424,12 +430,13 @@ class DbUpdateController extends ControllerBase {
       $log_message = $this->t('All errors have been logged.');
     }
 
-    if (!empty($_SESSION['update_success'])) {
+    if ($update_success) {
       $message = '<p>' . $this->t('Updates were attempted. If you see no failures below, you may proceed happily back to your <a href=":url">site</a>. Otherwise, you may need to update your database manually.', [':url' => Url::fromRoute('<front>')->setOption('base_url', $base_url)->toString(TRUE)->getGeneratedUrl()]) . ' ' . $log_message . '</p>';
     }
     else {
-      $last = reset($_SESSION['updates_remaining']);
-      list($module, $version) = array_pop($last);
+      $last = $session->get('updates_remaining');
+      $last = reset($last);
+      [$module, $version] = array_pop($last);
       $message = '<p class="error">' . $this->t('The update process was aborted prematurely while running <strong>update #@version in @module.module</strong>.', [
         '@version' => $version,
         '@module' => $module,
@@ -453,9 +460,9 @@ class DbUpdateController extends ControllerBase {
     ];
 
     // Output a list of info messages.
-    if (!empty($_SESSION['update_results'])) {
+    if (!empty($update_results)) {
       $all_messages = [];
-      foreach ($_SESSION['update_results'] as $module => $updates) {
+      foreach ($update_results as $module => $updates) {
         if ($module != '#abort') {
           $module_has_message = FALSE;
           $info_messages = [];
@@ -517,9 +524,6 @@ class DbUpdateController extends ControllerBase {
         ];
       }
     }
-    unset($_SESSION['update_results']);
-    unset($_SESSION['update_success']);
-    unset($_SESSION['update_ignore_warnings']);
 
     return $build;
   }
@@ -592,7 +596,7 @@ class DbUpdateController extends ControllerBase {
     $maintenance_mode = $this->state->get('system.maintenance_mode', FALSE);
     // Store the current maintenance mode status in the session so that it can
     // be restored at the end of the batch.
-    $_SESSION['maintenance_mode'] = $maintenance_mode;
+    $request->getSession()->set('maintenance_mode', $maintenance_mode);
     // During the update, always put the site into maintenance mode so that
     // in-progress schema changes do not affect visiting users.
     if (empty($maintenance_mode)) {
@@ -670,16 +674,16 @@ class DbUpdateController extends ControllerBase {
     // No updates to run, so caches won't get flushed later.  Clear them now.
     Rebuilder::rebuildAll();
 
-    $_SESSION['update_results'] = $results;
-    $_SESSION['update_success'] = $success;
-    $_SESSION['updates_remaining'] = $operations;
+    $session = \Drupal::request()->getSession();
+    $session->set('update_results', $results);
+    $session->set('update_success', $success);
+    $session->set('updates_remaining', $operations);
 
     // Now that the update is done, we can put the site back online if it was
     // previously not in maintenance mode.
-    if (empty($_SESSION['maintenance_mode'])) {
+    if (!$session->remove('maintenance_mode')) {
       \Drupal::state()->set('system.maintenance_mode', FALSE);
     }
-    unset($_SESSION['maintenance_mode']);
   }
 
   /**

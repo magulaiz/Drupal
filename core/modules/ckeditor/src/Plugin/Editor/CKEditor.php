@@ -2,9 +2,10 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
-use Drupal\Core\Cache\QueryStringInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
@@ -60,6 +61,13 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $renderer;
 
   /**
+   * The file URL generator.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
@@ -72,11 +80,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
   protected $state;
 
   /**
-   * The cache query string service.
+   * The module list service.
    *
-   * @var \Drupal\Core\Cache\QueryStringInterface
+   * @var \Drupal\Core\Extension\ModuleExtensionList
    */
-  protected $queryString;
+  protected $moduleList;
 
   /**
    * Constructs a \Drupal\ckeditor\Plugin\Editor\CKEditor object.
@@ -97,21 +105,28 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *   The renderer.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
-   *   The cache query string service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
+   * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
+   *   The module list service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, QueryStringInterface $query_string = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, RendererInterface $renderer, StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL, ModuleExtensionList $module_list = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->ckeditorPluginManager = $ckeditor_plugin_manager;
     $this->moduleHandler = $module_handler;
     $this->languageManager = $language_manager;
     $this->renderer = $renderer;
     $this->state = $state;
-    if ($query_string === NULL) {
-      @trigger_error('$query_string parameter is added in drupal:9.3.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
-      $query_string = \Drupal::service('cache.query_string');
+    if (!$file_url_generator) {
+      @trigger_error('Calling CKEditor::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0 and will be required before drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
     }
-    $this->queryString = $query_string;
+    $this->fileUrlGenerator = $file_url_generator;
+    if (!$module_list) {
+      @trigger_error('Calling CKEditor::__construct() without the $module_list argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      $module_list = \Drupal::service('extension.list.module');
+    }
+    $this->moduleList = $module_list;
   }
 
   /**
@@ -127,7 +142,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $container->get('language_manager'),
       $container->get('renderer'),
       $container->get('state'),
-      $container->get('cache.query_string')
+      $container->get('file_url_generator'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -328,11 +344,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     ];
 
     // Finally, set Drupal-specific CKEditor settings.
-    $root_relative_file_url = function ($uri) {
-      return file_url_transform_relative(file_create_url($uri));
-    };
     $settings += [
-      'drupalExternalPlugins' => array_map($root_relative_file_url, $external_plugin_files),
+      'drupalExternalPlugins' => array_map([$this->fileUrlGenerator, 'generateString'], $external_plugin_files),
     ];
 
     // Parse all CKEditor plugin JavaScript files for translations.
@@ -450,8 +463,8 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    */
   public function buildContentsCssJSSetting(Editor $editor) {
     $css = [
-      drupal_get_path('module', 'ckeditor') . '/css/ckeditor-iframe.css',
-      drupal_get_path('module', 'system') . '/css/components/align.module.css',
+      $this->moduleList->getPath('ckeditor') . '/css/ckeditor-iframe.css',
+      $this->moduleList->getPath('system') . '/css/components/align.module.css',
     ];
     $this->moduleHandler->alter('ckeditor_css', $css, $editor);
     // Get a list of all enabled plugins' iframe instance CSS files.
@@ -465,8 +478,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       $query_string_separator = (strpos($item, '?') !== FALSE) ? '&' : '?';
       return $item . $query_string_separator . $query_string;
     }, $css);
-    $css = array_map('file_create_url', $css);
-    $css = array_map('file_url_transform_relative', $css);
+    $css = array_map([$this->fileUrlGenerator, 'generateString'], $css);
 
     return array_values($css);
   }

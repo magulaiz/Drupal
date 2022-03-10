@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 
 /**
@@ -44,11 +45,11 @@ trait UpdatePathTestTrait {
 
     $this->drupalGet($update_url);
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
 
     $this->doSelectionTest();
     // Run the update hooks.
-    $this->clickLink(t('Apply pending updates'));
+    $this->clickLink('Apply pending updates');
     $this->checkForMetaRefresh();
 
     // Ensure there are no failed updates.
@@ -62,6 +63,7 @@ trait UpdatePathTestTrait {
       foreach (['update', 'post_update'] as $update_type) {
         switch ($update_type) {
           case 'update':
+            drupal_load_updates();
             $all_updates = update_get_update_list();
             break;
 
@@ -87,8 +89,10 @@ trait UpdatePathTestTrait {
       $modules_installed = FALSE;
       // Modules that are in configuration but not the module handler have been
       // installed.
+      /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+      $module_list = $this->container->get('extension.list.module');
       foreach (array_keys(array_diff_key($config_module_list, $module_handler_list)) as $module) {
-        $module_handler->addModule($module, drupal_get_path('module', $module));
+        $module_handler->addModule($module, $module_list->getPath($module));
         $modules_installed = TRUE;
       }
       $modules_uninstalled = FALSE;
@@ -103,6 +107,15 @@ trait UpdatePathTestTrait {
         // Note that resetAll() does not reset the kernel module list so we
         // have to do that manually.
         $this->kernel->updateModules($module_handler_list, $module_handler_list);
+      }
+
+      // Close any open database connections. This allows DB drivers that store
+      // static information to refresh it in the update runner.
+      // @todo https://drupal.org/i/3222121 consider doing this in
+      //   \Drupal\Core\DrupalKernel::initializeContainer() for container
+      //   rebuilds.
+      foreach (Database::getAllConnectionInfo() as $key => $info) {
+        Database::closeConnection(NULL, $key);
       }
 
       // If we have successfully clicked 'Apply pending updates' then we need to

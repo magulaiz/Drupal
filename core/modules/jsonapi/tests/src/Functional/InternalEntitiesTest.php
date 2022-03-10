@@ -84,7 +84,7 @@ class InternalEntitiesTest extends BrowserTestBase {
       'field_internal' => $this->internalEntity->id(),
     ]);
     $this->referencingEntity->save();
-    Rebuilder::rebuildAll();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**

@@ -192,7 +192,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       'administer taxonomy',
     ]);
 
-    Rebuilder::rebuildAll();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   /**
@@ -287,7 +287,7 @@ abstract class JsonApiFunctionalTestBase extends BrowserTestBase {
       }
       if ($article_has_image) {
         $file = File::create([
-          'uri' => 'vfs://' . $random->name() . '.png',
+          'uri' => 'public://' . $random->name() . '.png',
         ]);
         $file->setPermanent();
         $file->save();

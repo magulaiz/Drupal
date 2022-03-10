@@ -25,6 +25,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     'layout_test',
     'block',
     'block_test',
+    'contextual',
     'node',
     'layout_builder_test',
   ];
@@ -640,6 +641,37 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests that block plugins can define custom attributes and contextual links.
+   */
+  public function testPluginsProvidingCustomAttributesAndContextualLinks() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'access contextual links',
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('Layout Builder Test Plugin');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Test Attributes');
+    $page->pressButton('Add block');
+    $page->pressButton('Save layout');
+
+    $this->drupalGet('node/1');
+
+    $assert_session->elementExists('css', '.attribute-test-class');
+    $assert_session->elementExists('css', '[custom-attribute=test]');
+    $assert_session->elementExists('css', 'div[data-contextual-id*="layout_builder_test"]');
+  }
+
+  /**
    * Tests the interaction between full and default view modes.
    *
    * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::getDefaultSectionStorage()
@@ -876,6 +908,7 @@ class LayoutBuilderTest extends BrowserTestBase {
     // Verify that blocks explicitly removed are not present.
     $assert_session->linkNotExists('Help');
     $assert_session->linkNotExists('Sticky at top of lists');
+    $assert_session->linkNotExists('Main page content');
     $assert_session->linkNotExists('Page title');
 
     // Verify that Changed block is not present on first section.
@@ -1297,12 +1330,9 @@ class LayoutBuilderTest extends BrowserTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // Install Quick Edit as well.
-    $this->container->get('module_installer')->install(['quickedit']);
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
       'administer node display',
-      'access in-place editing',
     ]));
 
     $field_ui_prefix = 'admin/structure/types/manage/bundle_with_section_field';
@@ -1422,8 +1452,10 @@ class LayoutBuilderTest extends BrowserTestBase {
 
   /**
    * Asserts that the correct layouts are available.
+   *
+   * @internal
    */
-  protected function assertCorrectLayouts() {
+  protected function assertCorrectLayouts(): void {
     $assert_session = $this->assertSession();
     // Ensure the layouts provided by layout_builder are available.
     $expected_layouts_hrefs = [

@@ -3,7 +3,7 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\QueryStringInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
 
 /**
@@ -24,27 +24,27 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
   protected $state;
 
   /**
-   * The cache query string service.
+   * The file URL generator.
    *
-   * @var \Drupal\Core\Cache\QueryStringInterface
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  protected $queryString;
+  protected $fileUrlGenerator;
 
   /**
    * Constructs a JsCollectionRenderer.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key/value store.
-   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
-   *   The cache query string service.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
+   *   The file URL generator.
    */
-  public function __construct(StateInterface $state, QueryStringInterface $query_string = NULL) {
+  public function __construct(StateInterface $state, FileUrlGeneratorInterface $file_url_generator = NULL) {
     $this->state = $state;
-    if ($query_string === NULL) {
-      @trigger_error('$query_string parameter is added since drupal:9.3.0 and is required from drupal:10.0.0.', \E_USER_DEPRECATED);
-      $query_string = \Drupal::service('cache.query_string');
+    if (!$file_url_generator) {
+      @trigger_error('Calling JsCollectionRenderer::__construct() without the $file_url_generator argument is deprecated in drupal:9.3.0. The $file_url_generator argument will be required in drupal:10.0.0. See https://www.drupal.org/node/2940031', E_USER_DEPRECATED);
+      $file_url_generator = \Drupal::service('file_url_generator');
     }
-    $this->queryString = $query_string;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -94,7 +94,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
         case 'file':
           $query_string = $js_asset['version'] == -1 ? $default_query_string : 'v=' . $js_asset['version'];
           $query_string_separator = (strpos($js_asset['data'], '?') !== FALSE) ? '&' : '?';
-          $element['#attributes']['src'] = file_url_transform_relative(file_create_url($js_asset['data']));
+          $element['#attributes']['src'] = $this->fileUrlGenerator->generateString($js_asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
           if (!isset($js_asset['preprocessed'])) {

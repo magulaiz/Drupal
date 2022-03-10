@@ -200,9 +200,13 @@ function base_path() {
  * @param $data
  *   (optional) The default data parameter for the JavaScript asset array.
  *
- * @see hook_js_alter()
+ * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3197679
  */
 function drupal_js_defaults($data = NULL) {
+  @trigger_error('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679', E_USER_DEPRECATED);
   return [
     'type' => 'file',
     'group' => JS_DEFAULT,
@@ -354,8 +358,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
   $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
 
   // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
-  $source = isset($options['source']) ? $options['source'] : $target;
+  $target = $options['subgroup'] ?? $group;
+  $source = $options['source'] ?? $target;
   $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
     'target' => $target,
     'source' => $source,
@@ -381,11 +385,16 @@ function drupal_attach_tabledrag(&$element, array $options) {
  * @return
  *   The rendered element.
  *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal\Core\Render\RendererInterface::render() instead.
+ *
+ * @see https://www.drupal.org/node/2939099
  * @see \Drupal\Core\Render\RendererInterface
  * @see show()
  * @see hide()
  */
 function render(&$element) {
+  @trigger_error('The render() function is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Render\RendererInterface::render() instead. See https://www.drupal.org/node/2939099', E_USER_DEPRECATED);
   if (!$element && $element !== 0) {
     return NULL;
   }
@@ -407,13 +416,13 @@ function render(&$element) {
 /**
  * Hides an element from later rendering.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to hide an
- * element, be sure to call hide() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * hide an element, be sure to call hide() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
@@ -422,6 +431,7 @@ function render(&$element) {
  * @return
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see show()
  */
@@ -436,13 +446,13 @@ function hide(&$element) {
  * You can also use render($element), which shows the element while rendering
  * it.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to show an
- * element, be sure to call show() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * show an element, be sure to call show() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
@@ -451,6 +461,7 @@ function hide(&$element) {
  * @return
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see hide()
  */
@@ -531,8 +542,60 @@ function show(&$element) {
  * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function drupal_flush_all_caches($kernel = NULL) {
-  @trigger_error('drupal_flush_all_caches() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\Rebuilder::rebuildAll() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
-  Rebuilder::rebuildAll($kernel);
+  // This is executed based on old/previously known information if $kernel is
+  // not passed in, which is sufficient, since new extensions cannot have any
+  // primed caches yet.
+  $module_handler = \Drupal::moduleHandler();
+  // Flush all persistent caches.
+  $module_handler->invokeAll('cache_flush');
+  foreach (Cache::getBins() as $cache_backend) {
+    $cache_backend->deleteAll();
+  }
+
+  // Flush asset file caches.
+  \Drupal::service('asset.css.collection_optimizer')->deleteAll();
+  \Drupal::service('asset.js.collection_optimizer')->deleteAll();
+  _drupal_flush_css_js();
+
+  // Reset all static caches.
+  drupal_static_reset();
+
+  // Wipe the Twig PHP Storage cache.
+  \Drupal::service('twig')->invalidate();
+
+  // Rebuild theme data that is stored in state.
+  \Drupal::service('theme_handler')->refreshInfo();
+  // In case the active theme gets requested later in the same request we need
+  // to reset the theme manager.
+  \Drupal::theme()->resetActiveTheme();
+
+  if (!$kernel instanceof DrupalKernel) {
+    $kernel = \Drupal::service('kernel');
+    $kernel->invalidateContainer();
+    $kernel->rebuildContainer();
+  }
+
+  // Rebuild module data that is stored in state.
+  \Drupal::service('extension.list.module')->reset();
+
+  // Rebuild all information based on new module data.
+  \Drupal::moduleHandler()->invokeAll('rebuild');
+
+  // Clear all plugin caches.
+  \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
+
+  // Rebuild the menu router based on all rebuilt data.
+  // Important: This rebuild must happen last, so the menu router is guaranteed
+  // to be based on up to date information.
+  \Drupal::service('router.builder')->rebuild();
+
+  // Re-initialize the maintenance theme, if the current request attempted to
+  // use it. Unlike regular usages of this function, the installer and update
+  // scripts need to flush all caches during GET requests/page building.
+  if (function_exists('_drupal_maintenance_theme')) {
+    \Drupal::theme()->resetActiveTheme();
+    drupal_maintenance_theme();
+  }
 }
 
 /**

@@ -59,7 +59,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
       ->setLabel('Required string')
       ->setRequired(TRUE);
     $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
-    Rebuilder::rebuildAll();
+
     $this->installEntitySchema('entity_test');
     $child = EntityTest::create([
       'name' => 'test2',

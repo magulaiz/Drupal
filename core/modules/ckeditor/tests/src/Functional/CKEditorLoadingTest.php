@@ -94,7 +94,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // - doesn't have access to the filtered_html text format, so: no text editor.
     $this->drupalLogin($this->untrustedUser);
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertSession()->fieldExists('edit-body-0-value');
@@ -102,18 +102,18 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // Verify that a single text format hidden input does not exist on the page.
     $this->assertSession()->elementNotExists('xpath', '//input[@type="hidden" and contains(@class, "editor")]');
     // Verify that CKEditor glue JS is absent.
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertSession()->responseNotContains($this->getModulePath('ckeditor') . '/js/ckeditor.js');
 
     // On pages where there would never be a text editor, CKEditor JS is absent.
     $this->drupalGet('user');
-    $this->assertNoRaw(drupal_get_path('module', 'ckeditor') . '/js/ckeditor.js');
+    $this->assertSession()->responseNotContains($this->getModulePath('ckeditor') . '/js/ckeditor.js');
 
     // The normal user:
     // - has access to 2 text formats;
     // - does have access to the filtered_html text format, so: CKEditor.
     $this->drupalLogin($this->normalUser);
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $editor = Editor::load('filtered_html');
     $expected = [
@@ -150,7 +150,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $editor->setSettings($editor_settings);
     $editor->save();
     $this->drupalGet('node/add/article');
-    list($settings, $editor_settings_present, $editor_js_present) = $this->getThingsToCheck();
+    [$settings, $editor_settings_present, $editor_js_present] = $this->getThingsToCheck();
     $expected = [
       'formats' => [
         'filtered_html' => [
@@ -174,8 +174,8 @@ class CKEditorLoadingTest extends BrowserTestBase {
     $this->assertSame($expected, \Drupal::service('cache.query_string')->get(), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
-    Rebuilder::rebuildAll();
-    $this->assertSame($expected, \Drupal::service('cache.query_string')->get(), "CKEditor scripts cache-busting string is correct after flushing all caches.");
+    $this->resetAll();
+    $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct after flushing all caches.");
   }
 
   /**

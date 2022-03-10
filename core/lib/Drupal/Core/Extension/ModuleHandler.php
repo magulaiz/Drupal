@@ -233,8 +233,8 @@ class ModuleHandler implements ModuleHandlerInterface {
     $graph_object = new Graph($graph);
     $graph = $graph_object->searchAndSort();
     foreach ($graph as $module_name => $data) {
-      $modules[$module_name]->required_by = isset($data['reverse_paths']) ? $data['reverse_paths'] : [];
-      $modules[$module_name]->requires = isset($data['paths']) ? $data['paths'] : [];
+      $modules[$module_name]->required_by = $data['reverse_paths'] ?? [];
+      $modules[$module_name]->requires = $data['paths'] ?? [];
       $modules[$module_name]->sort = $data['weight'];
     }
     return $modules;
@@ -492,8 +492,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules = array_merge($extra_modules, $this->getImplementations($extra_type . '_alter'));
+          $extra_modules[] = $this->getImplementations($extra_type . '_alter');
         }
+        $extra_modules = array_merge([], ...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
         // appropriate order. $this->getImplementations() can only return
