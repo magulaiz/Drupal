@@ -2,9 +2,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
-use Drupal\Component\Uuid\UuidInterface;
 
 /**
  * A base entity storage class.
@@ -111,7 +111,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     $this->memoryCacheTag = 'entity.memory_cache:' . $this->entityTypeId;
 
     if (!$uuid_service) {
-      @trigger_error('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
+      @trigger_error('Calling EntityStorageBase::__construct() without the $uuid_service argument is deprecated in drupal:9.4.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3268812', E_USER_DEPRECATED);
       $uuid_service = \Drupal::service('uuid');
     }
     $this->uuidService = $uuid_service;
