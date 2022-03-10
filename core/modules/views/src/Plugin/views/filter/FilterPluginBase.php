@@ -332,8 +332,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
   protected function showValueForm(&$form, FormStateInterface $form_state) {
     $this->valueForm($form, $form_state);
     if (empty($this->no_operator)) {
-      $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . (isset($form['value']['#prefix']) ? $form['value']['#prefix'] : '');
-      $form['value']['#suffix'] = (isset($form['value']['#suffix']) ? $form['value']['#suffix'] : '') . '</div>';
+      $form['value']['#prefix'] = '<div class="views-group-box views-right-70">' . ($form['value']['#prefix'] ?? '');
+      $form['value']['#suffix'] = ($form['value']['#suffix'] ?? '') . '</div>';
     }
   }
 
@@ -748,8 +748,9 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    * @param string $identifier
    *   The identifier to check.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   (optional) The current state of the form.
    * @param array $form_group
-   *   The form element to set any errors on.
+   *   (optional) The form element to set any errors on.
    *
    * @return string
    */

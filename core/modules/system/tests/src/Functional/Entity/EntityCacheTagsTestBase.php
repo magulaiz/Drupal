@@ -50,7 +50,7 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Give anonymous users permission to view test entities, so that we can
@@ -91,10 +91,10 @@ abstract class EntityCacheTagsTestBase extends PageCacheTagsTestBase {
     }
 
     // Create a referencing and a non-referencing entity.
-    list(
+    [
       $this->referencingEntity,
       $this->nonReferencingEntity,
-    ) = $this->createReferenceTestEntities($this->entity);
+    ] = $this->createReferenceTestEntities($this->entity);
   }
 
   /**

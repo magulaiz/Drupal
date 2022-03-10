@@ -245,8 +245,8 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
    *   TRUE, when the view should override the given route.
    */
   protected function overrideApplies($view_path, Route $view_route, Route $route) {
-    return $this->overrideAppliesPathAndMethod($view_path, $view_route, $route)
-      && (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html');
+    return (!$route->hasRequirement('_format') || $route->getRequirement('_format') === 'html')
+      && $this->overrideAppliesPathAndMethod($view_path, $view_route, $route);
   }
 
   /**
@@ -338,13 +338,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     // Replace % with %views_arg for menu autoloading and add to the
     // page arguments so the argument actually comes through.
-    foreach ($bits as $pos => $bit) {
-      if ($bit == '%') {
-        // If a view requires any arguments we cannot create a static menu link.
-        return [];
-      }
+    if (in_array('%', $bits, TRUE)) {
+      // If a view requires any arguments we cannot create a static menu link.
+      return [];
     }
-
     $path = implode('/', $bits);
     $view_id = $this->view->storage->id();
     $display_id = $this->display['id'];
@@ -554,7 +551,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // Check for overridden route names.
     $view_route_names = $this->getAlteredRouteNames();
 
-    return (isset($view_route_names[$view_route_key]) ? $view_route_names[$view_route_key] : "view.$view_route_key");
+    return $view_route_names[$view_route_key] ?? "view.$view_route_key";
   }
 
   /**

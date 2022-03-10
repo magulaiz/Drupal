@@ -25,7 +25,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
    */
   protected function setDatabaseDumpFiles() {
     parent::setDatabaseDumpFiles();
-    $this->databaseDumpFiles[0] = __DIR__ . '/../../../../tests/fixtures/update/drupal-9.0.0.filled.standard.php.gz';
+    $this->databaseDumpFiles[0] = __DIR__ . '/../../../../tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz';
   }
 
   /**
@@ -368,7 +368,6 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBaseTest {
       'field_ui',
       'file',
       'filter',
-      'hal',
       'help',
       'history',
       'image',

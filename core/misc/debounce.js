@@ -6,16 +6,16 @@
 **/
 
 Drupal.debounce = function (func, wait, immediate) {
-  var timeout;
-  var result;
+  let timeout;
+  let result;
   return function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    var context = this;
+    const context = this;
 
-    var later = function later() {
+    const later = function () {
       timeout = null;
 
       if (!immediate) {
@@ -23,7 +23,7 @@ Drupal.debounce = function (func, wait, immediate) {
       }
     };
 
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
 

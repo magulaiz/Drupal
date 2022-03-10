@@ -229,7 +229,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       $this->entity->save();
       $this->messenger()->addStatus($this->t('Updated field %label field settings.', ['%label' => $field_label]));
       $request = $this->getRequest();
-      if (($destinations = $request->query->get('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
+      if (($destinations = $request->query->all('destinations')) && $next_destination = FieldUI::getNextDestination($destinations)) {
         $request->query->remove('destinations');
         $form_state->setRedirectUrl($next_destination);
       }
@@ -254,7 +254,7 @@ class FieldStorageConfigEditForm extends EntityForm {
     /** @var \Drupal\Core\Field\FieldTypePluginManager $field_type_manager */
     $field_type_manager = \Drupal::service('plugin.manager.field.field_type');
     $definition = $field_type_manager->getDefinition($this->entity->getType());
-    return isset($definition['cardinality']) ? $definition['cardinality'] : NULL;
+    return $definition['cardinality'] ?? NULL;
   }
 
 }

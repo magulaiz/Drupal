@@ -7,33 +7,34 @@
 
 (function ($, Drupal, drupalSettings) {
   Drupal.behaviors.ckeditorDrupalImageSettingsSummary = {
-    attach: function attach() {
-      $('[data-ckeditor-plugin-id="drupalimage"]').drupalSetSummary(function (context) {
-        var root = 'input[name="editor[settings][plugins][drupalimage][image_upload]';
-        var $status = $("".concat(root, "[status]\"]"));
-        var $maxFileSize = $("".concat(root, "[max_size]\"]"));
-        var $maxWidth = $("".concat(root, "[max_dimensions][width]\"]"));
-        var $maxHeight = $("".concat(root, "[max_dimensions][height]\"]"));
-        var $scheme = $("".concat(root, "[scheme]\"]:checked"));
-        var maxFileSize = $maxFileSize.val() ? $maxFileSize.val() : $maxFileSize.attr('placeholder');
-        var maxDimensions = $maxWidth.val() && $maxHeight.val() ? "(".concat($maxWidth.val(), "x").concat($maxHeight.val(), ")") : '';
+    attach() {
+      $('[data-ckeditor-plugin-id="drupalimage"]').drupalSetSummary(context => {
+        const root = 'input[name="editor[settings][plugins][drupalimage][image_upload]';
+        const $status = $(`${root}[status]"]`);
+        const maxFileSizeElement = document.querySelector(`${root}[max_size]"]`);
+        const maxWidth = document.querySelector(`${root}[max_dimensions][width]"]`);
+        const maxHeight = document.querySelector(`${root}[max_dimensions][height]"]`);
+        const $scheme = $(`${root}[scheme]"]:checked`);
+        const maxFileSize = maxFileSizeElement.value ? maxFileSizeElement.value : maxFileSizeElement.getAttribute('placeholder');
+        const maxDimensions = maxWidth.value && maxHeight.value ? `(${maxWidth.value}x${maxHeight.value})` : '';
 
         if (!$status.is(':checked')) {
           return Drupal.t('Uploads disabled');
         }
 
-        var output = '';
+        let output = '';
         output += Drupal.t('Uploads enabled, max size: @size @dimensions', {
           '@size': maxFileSize,
           '@dimensions': maxDimensions
         });
 
         if ($scheme.length) {
-          output += "<br />".concat($scheme.attr('data-label'));
+          output += `<br />${$scheme.attr('data-label')}`;
         }
 
         return output;
       });
     }
+
   };
 })(jQuery, Drupal, drupalSettings);

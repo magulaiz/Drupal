@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\query\Sql;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewEntityInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -154,7 +154,7 @@ class ViewUI implements ViewEntityInterface {
       return $this->storage->get($property_name, $langcode);
     }
 
-    return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
+    return $this->{$property_name} ?? NULL;
   }
 
   /**
@@ -215,7 +215,7 @@ class ViewUI implements ViewEntityInterface {
     // Determine whether the values the user entered are intended to apply to
     // the current display or the default display.
 
-    list($was_defaulted, $is_defaulted, $revert) = $this->getOverrideValues($form, $form_state);
+    [$was_defaulted, $is_defaulted, $revert] = $this->getOverrideValues($form, $form_state);
 
     // Based on the user's choice in the display dropdown, determine which display
     // these changes apply to.
@@ -429,7 +429,7 @@ class ViewUI implements ViewEntityInterface {
     $display_id = $form_state->get('display_id');
 
     // Handle the override select.
-    list($was_defaulted, $is_defaulted) = $this->getOverrideValues($form, $form_state);
+    [$was_defaulted, $is_defaulted] = $this->getOverrideValues($form, $form_state);
     if ($was_defaulted && !$is_defaulted) {
       // We were using the default display's values, but we're now overriding
       // the default display and saving values specific to this display.
@@ -450,7 +450,7 @@ class ViewUI implements ViewEntityInterface {
     if (!$form_state->isValueEmpty('name') && is_array($form_state->getValue('name'))) {
       // Loop through each of the items that were checked and add them to the view.
       foreach (array_keys(array_filter($form_state->getValue('name'))) as $field) {
-        list($table, $field) = explode('.', $field, 2);
+        [$table, $field] = explode('.', $field, 2);
 
         if ($cut = strpos($field, '$')) {
           $field = substr($field, 0, $cut);
@@ -574,7 +574,7 @@ class ViewUI implements ViewEntityInterface {
       $request->attributes->set(RouteObjectInterface::ROUTE_OBJECT, \Drupal::service('router.route_provider')->getRouteByName('entity.view.preview_form'));
       $request->attributes->set('view', $this->storage);
       $request->attributes->set('display_id', $display_id);
-      $raw_parameters = new ParameterBag();
+      $raw_parameters = new InputBag();
       $raw_parameters->set('view', $this->id());
       $raw_parameters->set('display_id', $display_id);
       $request->attributes->set('_raw_variables', $raw_parameters);

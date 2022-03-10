@@ -143,7 +143,7 @@ trait AssertContentTrait {
    *   The current URL.
    */
   protected function getUrl() {
-    return isset($this->url) ? $this->url : 'no-url';
+    return $this->url ?? 'no-url';
   }
 
   /**
@@ -264,9 +264,11 @@ trait AssertContentTrait {
 
     // Search option group children.
     if (isset($element->optgroup)) {
+      $nested_options = [];
       foreach ($element->optgroup as $group) {
-        $options = array_merge($options, $this->getAllOptions($group));
+        $nested_options[] = $this->getAllOptions($group);
       }
+      $options = array_merge($options, ...$nested_options);
     }
     return $options;
   }

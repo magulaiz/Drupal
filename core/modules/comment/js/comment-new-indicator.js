@@ -7,25 +7,26 @@
 
 (function ($, Drupal, window) {
   function processCommentNewIndicators(placeholders) {
-    var isFirstNewComment = true;
-    var newCommentString = Drupal.t('new');
-    var $placeholder;
-    placeholders.forEach(function (placeholder) {
+    let isFirstNewComment = true;
+    const newCommentString = Drupal.t('new');
+    let $placeholder;
+    placeholders.forEach(placeholder => {
       $placeholder = $(placeholder);
-      var timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
-      var $node = $placeholder.closest('[data-history-node-id]');
-      var nodeID = $node.attr('data-history-node-id');
-      var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
+      const timestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
+      const $node = $placeholder.closest('[data-history-node-id]');
+      const nodeID = $node.attr('data-history-node-id');
+      const lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
       if (timestamp > lastViewTimestamp) {
-        var $comment = $(placeholder).removeClass('hidden').text(newCommentString).closest('.js-comment').addClass('new');
+        placeholder.textContent = newCommentString;
+        $placeholder.removeClass('hidden').closest('.js-comment').addClass('new');
 
         if (isFirstNewComment) {
           isFirstNewComment = false;
-          $comment.prev().before('<a id="new"></a>');
+          $placeholder.prev().before('<a id="new"></a>');
 
           if (window.location.hash === '#new') {
-            window.scrollTo(0, $comment.offset().top - Drupal.displace.offsets.top);
+            window.scrollTo(0, $placeholder.offset().top - Drupal.displace.offsets.top);
           }
         }
       }
@@ -33,12 +34,12 @@
   }
 
   Drupal.behaviors.commentNewIndicator = {
-    attach: function attach(context) {
-      var nodeIDs = [];
-      var placeholders = once('history', '[data-comment-timestamp]', context).filter(function (placeholder) {
-        var $placeholder = $(placeholder);
-        var commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
-        var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
+    attach(context) {
+      const nodeIDs = [];
+      const placeholders = once('history', '[data-comment-timestamp]', context).filter(placeholder => {
+        const $placeholder = $(placeholder);
+        const commentTimestamp = parseInt($placeholder.attr('data-comment-timestamp'), 10);
+        const nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
 
         if (Drupal.history.needsServerCheck(nodeID, commentTimestamp)) {
           nodeIDs.push(nodeID);
@@ -52,9 +53,10 @@
         return;
       }
 
-      Drupal.history.fetchTimestamps(nodeIDs, function () {
+      Drupal.history.fetchTimestamps(nodeIDs, () => {
         processCommentNewIndicators(placeholders);
       });
     }
+
   };
 })(jQuery, Drupal, window);

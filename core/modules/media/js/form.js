@@ -7,12 +7,12 @@
 
 (function ($, Drupal) {
   Drupal.behaviors.mediaFormSummaries = {
-    attach: function attach(context) {
-      var $context = $(context);
-      $context.find('.media-form-author').drupalSetSummary(function (context) {
-        var $authorContext = $(context);
-        var name = $authorContext.find('.field--name-uid input').val();
-        var date = $authorContext.find('.field--name-created input').val();
+    attach(context) {
+      $(context).find('.media-form-author').drupalSetSummary(context => {
+        const nameInput = context.querySelector('.field--name-uid input');
+        const name = nameInput && nameInput.value;
+        const dateInput = context.querySelector('.field--name-created input');
+        const date = dateInput && dateInput.value;
 
         if (name && date) {
           return Drupal.t('By @name on @date', {
@@ -34,5 +34,6 @@
         }
       });
     }
+
   };
 })(jQuery, Drupal);

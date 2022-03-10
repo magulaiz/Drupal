@@ -13,7 +13,7 @@ use Drupal\Core\Menu\LocalTaskInterface;
 use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -428,7 +428,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->willReturn('menu_local_task_test_tasks_view');
     $this->routeMatch->expects($this->any())
       ->method('getRawParameters')
-      ->willReturn(new ParameterBag());
+      ->willReturn(new InputBag());
 
     $cacheability = new CacheableMetadata();
     $this->manager->getTasksBuild('menu_local_task_test_tasks_view', $cacheability);
@@ -452,10 +452,10 @@ class LocalTaskManagerTest extends UnitTestCase {
       $mock->getRouteParameters(Argument::cetera())->willReturn([]);
       $mock->getOptions(Argument::cetera())->willReturn([]);
       $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
-      $mock->getWeight()->willReturn(isset($info['weight']) ? $info['weight'] : 0);
-      $mock->getCacheContexts()->willReturn(isset($info['cache_contexts']) ? $info['cache_contexts'] : []);
-      $mock->getCacheTags()->willReturn(isset($info['cache_tags']) ? $info['cache_tags'] : []);
-      $mock->getCacheMaxAge()->willReturn(isset($info['cache_max_age']) ? $info['cache_max_age'] : Cache::PERMANENT);
+      $mock->getWeight()->willReturn($info['weight'] ?? 0);
+      $mock->getCacheContexts()->willReturn($info['cache_contexts'] ?? []);
+      $mock->getCacheTags()->willReturn($info['cache_tags'] ?? []);
+      $mock->getCacheMaxAge()->willReturn($info['cache_max_age'] ?? Cache::PERMANENT);
 
       $access_manager_map[] = [$info['route_name'], [], $this->account, TRUE, $info['access']];
 

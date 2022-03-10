@@ -3,11 +3,11 @@
  * Navigation in header.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 .header-nav {
   position: fixed;
-  z-index: 105; /* appear above overlay */
+  z-index: 501; /* Appear above overlay and contextual links in header. */
   inset-block-start: 0;
   inset-inline-start: 100%;
   visibility: hidden;
@@ -123,14 +123,14 @@ body.is-always-mobile-nav {
   & .header-nav {
     @media (--nav) {
       overflow: auto;
-      max-width: calc((7 * (var(--grid-col-width--nav) + var(--grid-gap--nav))));
+      max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       padding-inline-end: var(--sp);
       transition: transform 0.2s, visibility 0.2s;
       border-top-width: var(--sp11);
     }
 
     @media (--grid-max) {
-      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width--max) + var(--grid-gap--max)))));
+      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
       padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
     }
   }
@@ -138,4 +138,20 @@ body.is-always-mobile-nav {
 
 [dir="rtl"] .header-nav.is-active {
   transform: translateX(100%);
+}
+
+.header-nav-overlay {
+  position: fixed;
+  z-index: 101;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  display: none;
+  width: 100%;
+  height: 100vh;
+  opacity: 0.2;
+  background: var(--color--primary-40);
+
+  @nest .is-overlay-active & {
+    display: block;
+  }
 }

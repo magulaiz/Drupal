@@ -3,7 +3,7 @@
 namespace Drupal\Tests\Core\Database;
 
 use Composer\Autoload\ClassLoader;
-use Drupal\Core\Database\Driver\mysql\Install\Tasks as MysqlInstallTasks;
+use Drupal\mysql\Driver\Database\mysql\Install\Tasks as MysqlInstallTasks;
 use Drupal\Driver\Database\fake\Install\Tasks as FakeInstallTasks;
 use Drupal\Driver\Database\corefake\Install\Tasks as CustomCoreFakeInstallTasks;
 use Drupal\driver_test\Driver\Database\DrivertestMysql\Install\Tasks as DriverTestMysqlInstallTasks;
@@ -21,6 +21,7 @@ use Drupal\Tests\UnitTestCase;
  * @preserveGlobalState disabled
  *
  * @group Database
+ * @group legacy
  */
 class InstallerObjectTest extends UnitTestCase {
 
@@ -42,6 +43,7 @@ class InstallerObjectTest extends UnitTestCase {
    * @dataProvider providerDbInstallerObject
    */
   public function testDbInstallerObject($driver, $namespace, $expected_class_name) {
+    $this->expectDeprecation('db_installer_object() is deprecated in drupal:10.0.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3256641');
     $object = db_installer_object($driver, $namespace);
     $this->assertEquals(get_class($object), $expected_class_name);
   }
@@ -58,7 +60,7 @@ class InstallerObjectTest extends UnitTestCase {
   public function providerDbInstallerObject() {
     return [
       // A driver only in the core namespace.
-      ['mysql', NULL, MysqlInstallTasks::class],
+      ['mysql', "Drupal\\mysql\\Driver\\Database\\mysql", MysqlInstallTasks::class],
 
       // A driver only in the custom namespace.
       ['fake', "Drupal\\Driver\\Database\\fake", FakeInstallTasks::class],

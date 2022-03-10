@@ -16,13 +16,13 @@ use Drupal\Component\FileSecurity\FileSecurity;
 class Composer {
 
   protected static $packageToCleanup = [
-    'behat/mink' => ['tests', 'driver-testsuite'],
     'behat/mink-selenium2-driver' => ['tests'],
     'composer/composer' => ['bin'],
     'drupal/coder' => ['coder_sniffer/Drupal/Test', 'coder_sniffer/DrupalPractice/Test'],
     'doctrine/instantiator' => ['tests'],
     'easyrdf/easyrdf' => ['scripts'],
     'egulias/email-validator' => ['documentation', 'tests'],
+    'friends-of-behat/mink' => ['tests'],
     'friends-of-behat/mink-browserkit-driver' => ['tests'],
     'guzzlehttp/promises' => ['tests'],
     'guzzlehttp/psr7' => ['tests'],
@@ -44,7 +44,6 @@ class Composer {
     'phpspec/prophecy' => ['fixtures', 'spec', 'tests'],
     'phpunit/php-code-coverage' => ['tests'],
     'phpunit/php-timer' => ['tests'],
-    'phpunit/php-token-stream' => ['tests'],
     'phpunit/phpunit' => ['tests'],
     'sebastian/code-unit-reverse-lookup' => ['tests'],
     'sebastian/comparator' => ['tests'],
@@ -57,11 +56,9 @@ class Composer {
     'sebastian/recursion-context' => ['tests'],
     'seld/jsonlint' => ['tests'],
     'squizlabs/php_codesniffer' => ['tests'],
-    'stack/builder' => ['tests'],
     'symfony/browser-kit' => ['Tests'],
     'symfony/console' => ['Tests'],
     'symfony/css-selector' => ['Tests'],
-    'symfony/debug' => ['Tests'],
     'symfony/dependency-injection' => ['Tests'],
     'symfony/dom-crawler' => ['Tests'],
     'symfony/filesystem' => ['Tests'],
@@ -75,10 +72,8 @@ class Composer {
     'symfony/psr-http-message-bridge' => ['Tests'],
     'symfony/routing' => ['Tests'],
     'symfony/serializer' => ['Tests'],
-    'symfony/translation' => ['Tests'],
     'symfony/validator' => ['Tests', 'Resources'],
     'symfony/yaml' => ['Tests'],
-    'symfony-cmf/routing' => ['Test', 'Tests'],
     'theseer/tokenizer' => ['tests'],
     'twig/twig' => ['doc', 'ext', 'test', 'tests'],
   ];
@@ -87,6 +82,7 @@ class Composer {
    * Add vendor classes to Composer's static classmap.
    *
    * @param \Composer\Script\Event $event
+   *   The event.
    */
   public static function preAutoloadDump(Event $event) {
     // Get the configured vendor directory.
@@ -159,6 +155,7 @@ class Composer {
    * Ensures that .htaccess and web.config files are present in Composer root.
    *
    * @param \Composer\Script\Event $event
+   *   The event.
    */
   public static function ensureHtaccess(Event $event) {
 
@@ -295,6 +292,7 @@ class Composer {
    * Fires the drupal-phpunit-upgrade script event if necessary.
    *
    * @param \Composer\Script\Event $event
+   *   The event.
    */
   public static function upgradePHPUnit(Event $event) {
     $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();

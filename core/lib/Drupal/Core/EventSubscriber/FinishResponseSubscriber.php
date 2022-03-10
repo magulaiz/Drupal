@@ -117,10 +117,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $request = $event->getRequest();
     $response = $event->getResponse();
 
-    // Set the X-UA-Compatible HTTP header to force IE to use the most recent
-    // rendering engine.
-    $response->headers->set('X-UA-Compatible', 'IE=edge', FALSE);
-
     // Set the Content-language header.
     $response->headers->set('Content-language', $this->languageManager->getCurrentLanguage()->getId());
 
@@ -213,6 +209,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @see \Symfony\Component\HttpFoundation\ResponseHeaderBag::computeCacheControlValue()
    *
    * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response object.
    *
    * @return bool
    *   TRUE when Cache-Control header was set explicitly on the given response.
@@ -314,7 +311,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[KernelEvents::RESPONSE][] = ['onRespond'];
     // There is no specific reason for choosing 16 beside it should be executed
     // before ::onRespond().

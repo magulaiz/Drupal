@@ -3,8 +3,6 @@
  * Styles for Tour theme.
  */
 
-@import "../base/variables.pcss.css";
-
 /* Default styles for the container */
 .shepherd-element {
   color: #fff;
@@ -66,7 +64,7 @@
   line-height: 1.385em;
 }
 .shepherd-text a {
-  color: #fff;
+  color: var(--color-sunglow);
 }
 
 .shepherd-cancel-icon {
