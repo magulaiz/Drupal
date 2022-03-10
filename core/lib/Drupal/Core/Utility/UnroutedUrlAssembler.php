@@ -46,6 +46,8 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
    *   The output path processor.
    * @param string[] $filter_protocols
    *   (optional) An array of protocols allowed for URL generation.
+   * @param \Drupal\Core\Routing\RequestContext $request_context
+   *   The request context.
    */
   public function __construct(RequestStack $request_stack, OutboundPathProcessorInterface $path_processor, array $filter_protocols = ['http', 'https'], ?RequestContext $request_context = NULL) {
     UrlHelper::setAllowedProtocols($filter_protocols);
@@ -112,7 +114,7 @@ class UnroutedUrlAssembler implements UnroutedUrlAssemblerInterface {
     if (!empty($options['path_processing'])) {
       // Do not pass the request, since this is a special case and we do not
       // want to include e.g. the request language in the processing.
-      $uri = $this->pathProcessor->processOutbound(
+      $uri = $base_url . $this->pathProcessor->processOutbound(
         substr($uri, strlen($base_url)),
         $options
       );
