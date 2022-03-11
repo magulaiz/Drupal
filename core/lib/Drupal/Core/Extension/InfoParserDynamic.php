@@ -113,47 +113,4 @@ class InfoParserDynamic implements InfoParserInterface {
     return ['type', 'name'];
   }
 
-  /**
-   * Gets all the versions of Drupal 8 before a specific version.
-   *
-   * @param string $version
-   *   The version to get versions before.
-   *
-   * @return array
-   *   All of the applicable Drupal 8 releases.
-   */
-  protected static function getAllPreviousCoreVersions($version) {
-    static $versions_lists = [];
-    // Check if list of previous versions for the specified version has already
-    // been created.
-    if (empty($versions_lists[$version])) {
-      // Loop through all minor versions including 8.7.
-      foreach (range(0, 7) as $minor) {
-        // The largest patch number in a release was 17 in 8.6.17. Use 27 to
-        // leave room for future security releases.
-        foreach (range(0, 27) as $patch) {
-          $patch_version = "8.$minor.$patch";
-          if ($patch_version === $version) {
-            // Reverse the order of the versions so that they will be evaluated
-            // from the most recent versions first.
-            $versions_lists[$version] = array_reverse($versions_lists[$version]);
-            return $versions_lists[$version];
-          }
-          if ($patch === 0) {
-            // If this is a '0' patch release like '8.1.0' first create the
-            // pre-release versions such as '8.1.0-alpha1' and '8.1.0-rc1'.
-            foreach (['alpha', 'beta', 'rc'] as $prerelease) {
-              // The largest prerelease number was  in 8.0.0-beta16.
-              foreach (range(0, 16) as $prerelease_number) {
-                $versions_lists[$version][] = "$patch_version-$prerelease$prerelease_number";
-              }
-            }
-          }
-          $versions_lists[$version][] = $patch_version;
-        }
-      }
-    }
-    return $versions_lists[$version];
-  }
-
 }
