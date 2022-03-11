@@ -170,6 +170,10 @@ ckeditor5_code:
 ckeditor5_codeBlock:
   ckeditor5:
     plugins: [codeBlock.CodeBlock]
+    config:
+      htmlSupport:
+        allow:
+          - name: pre
   drupal:
     label: Code Block
     library: core/ckeditor5.codeBlock
