@@ -19,11 +19,6 @@ class InfoParserDynamic implements InfoParserInterface {
   protected $root;
 
   /**
-   * The earliest Drupal version that supports the 'core_version_requirement'.
-   */
-  const FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION = '8.7.7';
-
-  /**
    * InfoParserDynamic constructor.
    *
    * @param string|null $app_root
@@ -68,42 +63,20 @@ class InfoParserDynamic implements InfoParserInterface {
           // easier for contrib to use test modules.
           $parsed_info['core_version_requirement'] = \Drupal::VERSION;
         }
-        elseif (!isset($parsed_info['core'])) {
+        else {
           // Non-core extensions must specify core compatibility.
           throw new InfoParserException("The 'core_version_requirement' key must be present in " . $filename);
         }
       }
-      if (isset($parsed_info['core_version_requirement'])) {
-        try {
-          $supports_pre_core_version_requirement_version = static::isConstraintSatisfiedByPreviousVersion($parsed_info['core_version_requirement'], static::FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION);
-        }
-        catch (\UnexpectedValueException $e) {
-          throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
-        }
-        // If the 'core_version_requirement' constraint does not satisfy any
-        // Drupal 8 versions before 8.7.7 then 'core' cannot be set or it will
-        // effectively support all versions of Drupal 8 because
-        // 'core_version_requirement' will be ignored in previous versions.
-        if (!$supports_pre_core_version_requirement_version && isset($parsed_info['core'])) {
-          throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) requires the 'core' key not be set in " . $filename);
-        }
-        // 'core_version_requirement' can not be used to specify Drupal 8
-        // versions before 8.7.7 because these versions do not use the
-        // 'core_version_requirement' key. Do not throw the exception if the
-        // constraint also is satisfied by 8.0.0-alpha1 to allow constraints
-        // such as '^8' or '^8 || ^9'.
-        if ($supports_pre_core_version_requirement_version && !Semver::satisfies('8.0.0-alpha1', $parsed_info['core_version_requirement'])) {
-          throw new InfoParserException("The 'core_version_requirement' can not be used to specify compatibility for a specific version before " . static::FIRST_CORE_VERSION_REQUIREMENT_SUPPORTED_VERSION . " in $filename");
-        }
-      }
-      if (isset($parsed_info['core']) && $parsed_info['core'] !== '8.x') {
-        throw new InfoParserException("'core: {$parsed_info['core']}' is not supported. Use 'core_version_requirement' to specify core compatibility. Only 'core: 8.x' is supported to provide backwards compatibility for Drupal 8 when needed in $filename");
-      }
 
       // Determine if the extension is compatible with the current version of
       // Drupal core.
-      $core_version_constraint = $parsed_info['core_version_requirement'] ?? $parsed_info['core'];
-      $parsed_info['core_incompatible'] = !Semver::satisfies(\Drupal::VERSION, $core_version_constraint);
+      try {
+        $parsed_info['core_incompatible'] = !Semver::satisfies(\Drupal::VERSION, $parsed_info['core_version_requirement']);
+      }
+      catch (\UnexpectedValueException $exception) {
+        throw new InfoParserException("The 'core_version_requirement' constraint ({$parsed_info['core_version_requirement']}) is not a valid value in $filename");
+      }
       if (isset($parsed_info['version']) && $parsed_info['version'] === 'VERSION') {
         $parsed_info['version'] = \Drupal::VERSION;
       }
@@ -138,36 +111,6 @@ class InfoParserDynamic implements InfoParserInterface {
    */
   protected function getRequiredKeys() {
     return ['type', 'name'];
-  }
-
-  /**
-   * Determines if a constraint is satisfied by earlier versions of Drupal 8.
-   *
-   * @param string $constraint
-   *   A core semantic version constraint.
-   * @param string $version
-   *   A core version.
-   *
-   * @return bool
-   *   TRUE if the constraint is satisfied by a core version prior to the
-   *   provided version.
-   */
-  protected static function isConstraintSatisfiedByPreviousVersion($constraint, $version) {
-    static $evaluated_constraints = [];
-    // Any particular constraint and version combination only needs to be
-    // evaluated once.
-    if (!isset($evaluated_constraints[$constraint][$version])) {
-      $evaluated_constraints[$constraint][$version] = FALSE;
-      foreach (static::getAllPreviousCoreVersions($version) as $previous_version) {
-        if (Semver::satisfies($previous_version, $constraint)) {
-          $evaluated_constraints[$constraint][$version] = TRUE;
-          // The constraint only has to satisfy one previous version so break
-          // when the first one is found.
-          break;
-        }
-      }
-    }
-    return $evaluated_constraints[$constraint][$version];
   }
 
   /**
