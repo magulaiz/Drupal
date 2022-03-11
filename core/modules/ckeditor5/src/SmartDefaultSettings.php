@@ -238,12 +238,8 @@ final class SmartDefaultSettings {
             continue;
           }
           if ($equivalent) {
-            if (!strstr($equivalent, ',')) {
-              $settings['toolbar']['items'][] = $equivalent;
-            }
-            else {
-              $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], explode(',', $equivalent));
-            }
+            $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], explode(',', $equivalent));
+          
             $some_added = TRUE;
           }
         }
