@@ -97,7 +97,7 @@ class CommentLinkBuilder implements CommentLinkBuilderInterface {
       if ($commenting_status != CommentItemInterface::HIDDEN) {
         // Entity has commenting status open or closed.
         $field_definition = $entity->getFieldDefinition($field_name);
-        $entity_label_stripped = strip_tags($entity->label());
+        $entity_label_stripped = $entity->label();
         if ($view_mode == 'teaser') {
           // Teaser view: display the number of comments that have been posted,
           // or a link to add new comments if the user has permission, the

@@ -200,10 +200,10 @@ class CommentLinkBuilderTest extends UnitTestCase {
     ];
     $permutations = $this->generatePermutations($combinations);
     foreach ($permutations as $combination) {
-      $mockNode = $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']);
-      $node_label_stripped = strip_tags($mockNode->label());
+      $mock_node = $this->getMockNode(TRUE, $combination['comments'], $combination['form_location'], $combination['comment_count']);
+      $node_label_stripped = $mock_node->label();
       $case = [
-        $mockNode,
+        $mock_node,
         ['view_mode' => $combination['view_mode']],
         $combination['has_access_comments'],
         $combination['history_exists'],
