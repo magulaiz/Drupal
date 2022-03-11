@@ -466,9 +466,6 @@ export default class DrupalElementStyleUi extends Plugin {
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
-      console.log('dropdownconfig: ', dropdownConfig);
-      console.log('definedstyles: ', definedStyles);
-
       const groupName = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {

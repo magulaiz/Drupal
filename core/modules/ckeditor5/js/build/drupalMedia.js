@@ -4062,9 +4062,6 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
-      console.log('dropdownconfig: ', dropdownConfig);
-      console.log('definedstyles: ', definedStyles);
-
       const groupName = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {

@@ -1229,8 +1229,6 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
-    $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
-
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
