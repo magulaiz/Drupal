@@ -1100,9 +1100,10 @@ class MediaTest extends WebDriverTestBase {
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('Select view mode')->click();
+    $this->getBalloonButton('View mode')->click();
+
     // Set view mode.
-    $this->getBalloonButton('22222')->click();
+    $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
     $editor_dom = $this->getEditorDataAsDom();
     // Check that  “data-view-mode” exists inside source editing.
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
@@ -1111,7 +1112,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Check that toolbar matches current view mode.
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
-    $this->assertEquals('22222', $dropdown_button->getText());
+    $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
     $page->pressButton('Save');
 
     // Check that the 'content has been updated' message status
@@ -1132,12 +1133,12 @@ class MediaTest extends WebDriverTestBase {
     $this->assertEquals('22222', $drupal_media_element->getAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
-    $this->assertEquals('22222', $dropdown_button->getText());
+    $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
 
     // Remove the current view mode by setting it to Default.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('22222')->click();
+    $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
     // Unset view mode.
     $this->getBalloonButton('Default')->click();
     $this->waitForEditor();
@@ -1149,7 +1150,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Check that the toolbar status matches "no view mode".
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
-    $this->assertEquals('Select view mode', $dropdown_button->getText());
+    $this->assertEquals('View mode', $dropdown_button->getText());
   }
 
   /**
@@ -1242,28 +1243,28 @@ class MediaTest extends WebDriverTestBase {
     $image = $page->find('css', 'article.media--type-image');
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('Select view mode')->click();
+    $this->getBalloonButton('View mode')->click();
 
     // Check that the buttons exist.
-    $this->assertNotEmpty($this->getBalloonButton('view_mode_1'));
-    $this->assertNotEmpty($this->getBalloonButton('22222'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
     $this->assertNotEmpty($this->getBalloonButton('Default'));
     // Check that the buttons are not hidden.
-    $this->assertFalse($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
-    $this->assertFalse($this->getBalloonButton('22222')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('View Mode 1')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('View Mode 2 has Numeric ID')->hasClass('ck-hidden'));
     $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
     // Confirm that the hidden button is the view mode not enabled for image.
-    $this->assertTrue($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
+    $this->assertTrue($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
 
     // Click the file.
     $this->click('article.media--type-file');
-    $this->assertNotEmpty($this->getBalloonButton('view_mode_3'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 3'));
     $this->assertNotEmpty($this->getBalloonButton('Default'));
-    $this->assertFalse($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
     $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
     // Confirm that the hidden button is the view mode not enabled for file.
-    $this->assertTrue($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
-    $this->assertTrue($this->getBalloonButton('22222')->hasClass('ck-hidden'));
+    $this->assertTrue($this->getBalloonButton('View Mode 1')->hasClass('ck-hidden'));
+    $this->assertTrue($this->getBalloonButton('View Mode 2 has Numeric ID')->hasClass('ck-hidden'));
   }
 
   /**

@@ -471,13 +471,16 @@ class DrupalMediaEditing extends delegated_corefrom_dll_reference_CKEditor5.Plug
                   return;
                 }
                 // Enqueue a model change after getting modelElement.
-                this.editor.model.enqueueChange('transparent', (writer) => {
-                  writer.setAttribute(
-                    'drupalMediaBundle',
-                    metadata.bundleType,
-                    modelElement,
-                  );
-                });
+                this.editor.model.enqueueChange(
+                  { isUndoable: false },
+                  (writer) => {
+                    writer.setAttribute(
+                      'drupalMediaBundle',
+                      metadata.bundle,
+                      modelElement,
+                    );
+                  },
+                );
               })
               .catch((e) => {
                 // There isn't any UI indication for errors because this should be
@@ -3019,20 +3022,6 @@ function warnInvalidStyle( info ) {
 	DEFAULT_DROPDOWN_DEFINITIONS
 });
 
-;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/utils.js
-/**
- * A simple helper function that returns the command group name.
- *
- * @example
- *    groupName = 'viewMode' -> commandGroupName = 'drupalViewMode'
- *
- * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
- * @return {string} Command group name.
- */
-function getCommandGroupNameFromGroup(groupName) {
-  return 'drupal'.concat(groupName[0].toUpperCase() + groupName.substring(1));
-}
-
 ;// CONCATENATED MODULE: ./modules/ckeditor5/js/ckeditor5_plugins/drupalMedia/src/drupalelementstyle/drupalelementstylecommand.js
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words documentselection */
@@ -3082,7 +3071,11 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
-function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
+function getClosestElementWithElementStyleAttribute(
+  selection,
+  schema,
+  styles,
+) {
   const selectedElement = selection.getSelectedElement();
   if (
     selectedElement &&
@@ -3159,19 +3152,25 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
       // If value is falsy, check if there is a default style to apply to the
       // element.
       if (!this.value) {
-        // @todo need to add support for default styles.
+        const commandValue = {};
         // eslint-disable-next-line no-restricted-syntax
-        // for (const [name, style] of this._styles.entries()) {
-        //   if (style.isDefault) {
-        //     const appliesToCurrentElement = style.modelElements.find(
-        //       (modelElement) => element.is('element', modelElement),
-        //     );
-        //     if (appliesToCurrentElement) {
-        //       this.value = name;
-        //       break;
-        //     }
-        //   }
-        // }
+        for (const [key, value] of (0,delegated_utilsfrom_dll_reference_CKEditor5.toMap)(this._styles)) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const style of value) {
+            if (style[1].isDefault) {
+              if (element) {
+                const appliesToCurrentElement = style[1].modelElements.find(
+                  (modelElement) => element.is('element', modelElement),
+                );
+                if (appliesToCurrentElement) {
+                  commandValue[key] = style[0];
+                  this.value = commandValue;
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -3211,9 +3210,8 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
     const groupAttr = {};
     Object.keys(this.styles).forEach((group) => {
       const groupName = group[0].toUpperCase() + group.substring(1);
-      const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
-        groupAttr[`${commandGroupName}`] = element.getAttribute(
+        groupAttr[group] = element.getAttribute(
           `drupalElementStyle${groupName}`,
         );
       }
@@ -3225,21 +3223,24 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' }, groupName: 'align' });
+   *    editor.execute('drupalElementStyle', { value: { align: 'alignLeft' }, group: 'align',
+   *    modelAttribute: 'drupalElementStyleAlign' });
    *
    * @param {Object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
-   * @param {string} options.groupName
+   * @param {string} options.group
+   *   The group name of the drupalElementStyle.
+   * @param {string} options.modelAttribute
    *   The group name of the drupalElementStyle.
    */
   execute(options = {}) {
     const { editor } = this;
     const { model } = editor;
-    const groupName = Object.values(options)[1];
-    const groupNameCap = groupName[0].toUpperCase() + groupName.substring(1);
+    const group = options.group;
+    const modelAttribute = options.modelAttribute;
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
@@ -3250,14 +3251,14 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
       );
       if (
         !requestedStyle ||
-        this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
+        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
+        writer.removeAttribute(modelAttribute, element);
       } else {
         // Extend the object with new value.
         writer.setAttribute(
-          `drupalElementStyle${groupNameCap}`,
+          modelAttribute,
           requestedStyle[modelGroupName],
           element,
         );
@@ -3679,15 +3680,21 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
   const { selection } = editor.model.document;
   const modelElement = selection
     ? selection.getSelectedElement()
-    : selection.getFirstPosition.findAncestor('drupalElementStyle');
-  const bundleType = modelElement.getAttribute('drupalMediaBundle');
-
-  if (!bundleType) {
-    return;
-  }
+    : getClosestElementWithElementStyleAttribute(
+        selection,
+        editor.model.schema,
+        definedStyles,
+      );
 
   const filteredDefinedStyles = definedStyles.filter(function (item) {
-    return item.modelAttributes.drupalMediaBundle.includes(bundleType);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const [key, value] of (0,delegated_utilsfrom_dll_reference_CKEditor5.toMap)(item.modelAttributes)) {
+      if (modelElement.hasAttribute(key)) {
+        return value.includes(modelElement.getAttribute(key));
+      }
+      return false;
+    }
+    return true;
   });
 
   if (!filteredDefinedStyles.includes(style)) {
@@ -3740,12 +3747,8 @@ function upcastDrupalMediaBundle(
       }
       // Enqueue a model change in `transparent` batch to make it
       // invisible to the undo/redo functionality.
-      editor.model.enqueueChange('transparent', (writer) => {
-        writer.setAttribute(
-          'drupalMediaBundle',
-          metadata.bundleType,
-          modelElement,
-        );
+      editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+        writer.setAttribute('drupalMediaBundle', metadata.bundle, modelElement);
       });
     })
     .catch((e) => {
@@ -3755,7 +3758,7 @@ function upcastDrupalMediaBundle(
         return;
       }
       console.warn(e.toString());
-      editor.model.enqueueChange('transparent', (writer) => {
+      editor.model.enqueueChange({ isUndoable: false }, (writer) => {
         writer.setAttribute('drupalMediaBundle', METADATA_ERROR, modelElement);
       });
     });
@@ -3769,24 +3772,17 @@ function upcastDrupalMediaBundle(
  * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
  *   A list of defined styles.
  * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
- * @param {string} groupName The name of the group (ex. 'align', 'viewMode').
+ * @param {string} group The name of the group (ex. 'align', 'viewMode').
  * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
  */
-function getDropdownListItemDefinitions(
-  definedStyles,
-  command,
-  groupName,
-  editor,
-) {
+function getDropdownListItemDefinitions(definedStyles, command, group, editor) {
   const itemDefinitions = new delegated_utilsfrom_dll_reference_CKEditor5.Collection();
-  const commandGroup = getCommandGroupNameFromGroup(groupName);
   definedStyles.forEach((style) => {
     const definition = {
       type: 'button',
       model: new delegated_uifrom_dll_reference_CKEditor5.Model({
         commandName: 'drupalElementStyle',
-        commandGroup,
-        groupName,
+        group,
         commandValue: style.name,
         label: style.title,
         withText: true,
@@ -3816,7 +3812,14 @@ function getDropdownListItemDefinitions(
     // visibility of the styles can be impacted by either selection or
     // changes to the model.
     editor.ui.on('update', () => {
-      const modelElement = editor.model.document.selection.getSelectedElement();
+      const selection = editor.model.document.selection;
+      const modelElement = selection
+        ? selection.getSelectedElement()
+        : getClosestElementWithElementStyleAttribute(
+            selection,
+            editor.model.schema,
+            definedStyles,
+          );
       if (!isDrupalMedia(modelElement)) {
         return;
       }
@@ -3902,7 +3905,7 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
           this._createListDropdown(dropdownConfig, definedStyles[groupName]);
           break;
         default:
-          throw new Error('Toolbar display type must be specified.');
+          break;
       }
     });
   }
@@ -4062,20 +4065,17 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       let defaultButton;
 
       const { defaultItem, items, title } = dropdownConfig;
-      const groupName = dropdownConfig.name.split(':')[1];
+      const group = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {
           return definedStyles.find(
-            ({ name }) => getUIComponentName(name, groupName) === itemName,
+            ({ name }) => getUIComponentName(name, group) === itemName,
           );
         })
         .map((buttonName) => {
-          console.log('buttonName', buttonName);
           const button = factory.create(buttonName);
 
           if (buttonName === defaultItem) {
-            console.log('buttonName in condition:', buttonName);
-            console.log('defaultItem in condition:', defaultItem);
             defaultButton = button;
           }
 
@@ -4089,27 +4089,30 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
       const dropdownView = (0,delegated_uifrom_dll_reference_CKEditor5.createDropdown)(locale, delegated_uifrom_dll_reference_CKEditor5.DropdownButtonView);
       const dropdownButtonView = dropdownView.buttonView;
 
-      // If user does not have default enabled as a view mode button, make it the first option
-      // from the dropdown.
-      if (!defaultButton) {
-        defaultButton = buttonViews[0];
-      }
       dropdownButtonView.set({
-        label: getDropdownButtonTitle(title, defaultButton.label),
+        label: getDropdownButtonTitle(title, 'View mode'),
         class: null,
-        tooltip: Drupal.t('Select view mode'),
+        tooltip: Drupal.t('View mode'),
         withText: true,
       });
 
       const command = this.editor.commands.get('drupalElementStyle');
-      const commandGroupName = getCommandGroupNameFromGroup(groupName);
 
       // If style is selected, use the label of the selected style as the
       // default label of the split button.
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
-        if (commandValue && commandValue[commandGroupName]) {
-          // @todo Use the style title instead of the machine name.
-          return commandValue[commandGroupName];
+        if (
+          commandValue &&
+          commandValue[group] &&
+          commandValue[group] !== 'Default'
+        ) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const style of definedStyles) {
+            // Convert to strings in case of integer values.
+            if (style.name.toString() === commandValue[group].toString()) {
+              return style.title;
+            }
+          }
         }
         return dropdownConfig.defaultText;
       });
@@ -4122,18 +4125,20 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
         getDropdownListItemDefinitions(
           definedStyles,
           command,
-          groupName,
+          group,
           this.editor,
         ),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
         const obj = {};
-        const key = evt.source.commandGroup;
+        const key = evt.source.group;
         obj[key] = evt.source.commandValue;
+        const groupName = group[0].toUpperCase() + group.substring(1);
         this.editor.execute(evt.source.commandName, {
           value: obj,
-          groupName: evt.source.groupName,
+          group: evt.source.group,
+          modelAttribute: `drupalElementStyle${groupName}`,
         });
         this.editor.editing.view.focus();
       });
@@ -4146,20 +4151,21 @@ class DrupalElementStyleUi extends delegated_corefrom_dll_reference_CKEditor5.Pl
    *
    * @param {string} name
    *   The name of the style that should be applied.
-   * @param {string} groupName
+   * @param {string} group
    *   The name of the group (ex. 'align', 'viewMode').
    *
    * @see module:drupalMedia/drupalelementstyle/drupalelementstylecommand~DrupalElementStyleCommand
    *
    * @private
    */
-  _executeCommand(name, groupName) {
-    const key = getCommandGroupNameFromGroup(groupName);
+  _executeCommand(name, group) {
     const obj = {};
-    obj[key] = name;
+    obj[group] = name;
+    const groupName = group[0].toUpperCase() + group.substring(1);
     this.editor.execute('drupalElementStyle', {
       value: obj,
-      groupName,
+      group,
+      modelAttribute: `drupalElementStyle${groupName}`,
     });
     this.editor.editing.view.focus();
   }

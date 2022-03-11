@@ -124,13 +124,16 @@ export default class DrupalMediaEditing extends Plugin {
                   return;
                 }
                 // Enqueue a model change after getting modelElement.
-                this.editor.model.enqueueChange('transparent', (writer) => {
-                  writer.setAttribute(
-                    'drupalMediaBundle',
-                    metadata.bundleType,
-                    modelElement,
-                  );
-                });
+                this.editor.model.enqueueChange(
+                  { isUndoable: false },
+                  (writer) => {
+                    writer.setAttribute(
+                      'drupalMediaBundle',
+                      metadata.bundle,
+                      modelElement,
+                    );
+                  },
+                );
               })
               .catch((e) => {
                 // There isn't any UI indication for errors because this should be

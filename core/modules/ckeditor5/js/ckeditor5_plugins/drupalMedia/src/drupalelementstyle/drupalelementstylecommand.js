@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
-import getCommandGroupNameFromGroup from './utils';
+import { toMap } from 'ckeditor5/src/utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
@@ -46,7 +46,11 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
  */
-function getClosestElementWithElementStyleAttribute(selection, schema, styles) {
+export function getClosestElementWithElementStyleAttribute(
+  selection,
+  schema,
+  styles,
+) {
   const selectedElement = selection.getSelectedElement();
   if (
     selectedElement &&
@@ -123,19 +127,25 @@ export default class DrupalElementStyleCommand extends Command {
       // If value is falsy, check if there is a default style to apply to the
       // element.
       if (!this.value) {
-        // @todo need to add support for default styles.
+        const commandValue = {};
         // eslint-disable-next-line no-restricted-syntax
-        // for (const [name, style] of this._styles.entries()) {
-        //   if (style.isDefault) {
-        //     const appliesToCurrentElement = style.modelElements.find(
-        //       (modelElement) => element.is('element', modelElement),
-        //     );
-        //     if (appliesToCurrentElement) {
-        //       this.value = name;
-        //       break;
-        //     }
-        //   }
-        // }
+        for (const [key, value] of toMap(this._styles)) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const style of value) {
+            if (style[1].isDefault) {
+              if (element) {
+                const appliesToCurrentElement = style[1].modelElements.find(
+                  (modelElement) => element.is('element', modelElement),
+                );
+                if (appliesToCurrentElement) {
+                  commandValue[key] = style[0];
+                  this.value = commandValue;
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -175,9 +185,8 @@ export default class DrupalElementStyleCommand extends Command {
     const groupAttr = {};
     Object.keys(this.styles).forEach((group) => {
       const groupName = group[0].toUpperCase() + group.substring(1);
-      const commandGroupName = getCommandGroupNameFromGroup(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
-        groupAttr[`${commandGroupName}`] = element.getAttribute(
+        groupAttr[group] = element.getAttribute(
           `drupalElementStyle${groupName}`,
         );
       }
@@ -189,21 +198,24 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: {drupalAlign: 'alignLeft' }, groupName: 'align' });
+   *    editor.execute('drupalElementStyle', { value: { align: 'alignLeft' }, group: 'align',
+   *    modelAttribute: 'drupalElementStyleAlign' });
    *
    * @param {Object} options
    *   The command options.
    * @param {string} options.value
    *   The name of the style as configured in the Drupal Element style
    *   configuration.
-   * @param {string} options.groupName
+   * @param {string} options.group
+   *   The group name of the drupalElementStyle.
+   * @param {string} options.modelAttribute
    *   The group name of the drupalElementStyle.
    */
   execute(options = {}) {
     const { editor } = this;
     const { model } = editor;
-    const groupName = Object.values(options)[1];
-    const groupNameCap = groupName[0].toUpperCase() + groupName.substring(1);
+    const group = options.group;
+    const modelAttribute = options.modelAttribute;
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
@@ -214,14 +226,14 @@ export default class DrupalElementStyleCommand extends Command {
       );
       if (
         !requestedStyle ||
-        this._styles[groupName].get(requestedStyle[modelGroupName]).isDefault
+        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove value from the object.
-        writer.removeAttribute(`drupalElementStyle${groupNameCap}`, element);
+        writer.removeAttribute(modelAttribute, element);
       } else {
         // Extend the object with new value.
         writer.setAttribute(
-          `drupalElementStyle${groupNameCap}`,
+          modelAttribute,
           requestedStyle[modelGroupName],
           element,
         );

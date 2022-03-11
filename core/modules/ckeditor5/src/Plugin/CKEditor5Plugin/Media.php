@@ -49,6 +49,7 @@ class Media extends CKEditor5PluginDefault {
       }
     }
 
+    $dynamic_plugin_config['drupalElementStyles']['debug'] = $all_view_modes;
     // Create view mode options.
     foreach (array_keys($all_view_modes) as $view_mode) {
       if (array_key_exists($view_mode, $bundles_per_view_mode)) {
@@ -56,7 +57,7 @@ class Media extends CKEditor5PluginDefault {
         if ($view_mode !== 'default') {
           $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
             'name' => $view_mode,
-            'title' => $view_mode,
+            'title' => $all_view_modes[$view_mode],
             'attributeName' => 'data-view-mode',
             'attributeValue' => $view_mode,
             'modelElements' => ['drupalMedia'],
@@ -92,7 +93,7 @@ class Media extends CKEditor5PluginDefault {
         'name' => 'drupalMedia:viewMode',
         'display' => 'list',
         'defaultItem' => 'drupalElementStyle:viewMode:default',
-        'defaultText' => 'Select view mode',
+        'defaultText' => 'View mode',
         'items' => $items,
       ];
     }
