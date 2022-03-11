@@ -1243,31 +1243,27 @@ class MediaTest extends WebDriverTestBase {
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('Select view mode')->click();
-//            $this->assertSession()->waitForElement('css', 'idontexist', 10000000);
-
 
     // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('view_mode_1'));
     $this->assertNotEmpty($this->getBalloonButton('22222'));
-//    $this->assertNotEmpty($this->getBalloonButton('Default'));
+    $this->assertNotEmpty($this->getBalloonButton('Default'));
     // Check that the buttons are not hidden.
     $this->assertFalse($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
     $this->assertFalse($this->getBalloonButton('22222')->hasClass('ck-hidden'));
-//    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
     // Confirm that the hidden button is the view mode not enabled for image.
     $this->assertTrue($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
-
 
     // Click the file.
     $this->click('article.media--type-file');
     $this->assertNotEmpty($this->getBalloonButton('view_mode_3'));
-//    $this->assertNotEmpty($this->getBalloonButton('Default'));
+    $this->assertNotEmpty($this->getBalloonButton('Default'));
     $this->assertFalse($this->getBalloonButton('view_mode_3')->hasClass('ck-hidden'));
-//    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
+    $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
     // Confirm that the hidden button is the view mode not enabled for file.
     $this->assertTrue($this->getBalloonButton('view_mode_1')->hasClass('ck-hidden'));
     $this->assertTrue($this->getBalloonButton('22222')->hasClass('ck-hidden'));
-
   }
 
   /**
