@@ -3692,7 +3692,6 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
       if (modelElement.hasAttribute(key)) {
         return value.includes(modelElement.getAttribute(key));
       }
-      return false;
     }
     return true;
   });
