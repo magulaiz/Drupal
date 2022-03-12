@@ -98,9 +98,9 @@ final class Linkset extends ControllerBase {
    * array of link items encoded according the the application/linkset+json
    * media type.
    *
-   * To preserve hierarchical information, the `drupal-menu` target attribute,
-   * contains a `hierarchy` member. Its value is a lexicographically sortable
-   * string which can be used to reconstruct a hierarchical data structure.
+   * To preserve hierarchical information, the target attribute contains a 
+   * `hierarchy` member. Its value is a lexicographically sortable string 
+   * which can be used to reconstruct a hierarchical data structure.
    *
    * The reason that a `hierarchy` member is used instead of a `parent` or
    * `children` member is because it is more compact, more suited to the linkset
@@ -189,10 +189,10 @@ final class Linkset extends ControllerBase {
           // @todo should this use the "title*" key if it is internationalized?
           'title' => $element->link->getTitle(),
           // According to the Linkset specification, this member must be an
-          // array since the "drupal-menu-hierarchy" target attribute is
+          // array since the "hierarchy" target attribute is
           // non-standard.
           // See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00#section-4.2.4.3
-          'drupal-menu-hierarchy' => [$hierarchy],
+          'hierarchy' => [$hierarchy],
         ];
         $this->processCustomLinkAttributes($link, $link_attributes);
         $links[$link_rel][] = $link;
