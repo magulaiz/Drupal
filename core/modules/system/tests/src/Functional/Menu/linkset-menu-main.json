@@ -7,13 +7,13 @@
           "href": "/",
           "title": "Home",
           "hierarchy": [".000"],
-          "drupal-menu-machine-name": ["main"]
+          "machine-name": ["main"]
         },
         {
           "href": "/about",
           "title": "About us",
           "hierarchy": [".001"],
-          "drupal-menu-machine-name": ["main"]
+          "machine-name": ["main"]
         },
         {
           "href": "/about/custom-attributes",
@@ -33,13 +33,13 @@
             "42"
           ],
           "¯\\_(ツ)_/¯": ["ok"],
-          "drupal-menu-machine-name": ["main"]
+          "machine-name": ["main"]
         },
         {
           "href": "/about/name",
           "title": "Our name",
           "hierarchy": [".001.001"],
-          "drupal-menu-machine-name": ["main"]
+          "machine-name": ["main"]
         }
       ]
     }

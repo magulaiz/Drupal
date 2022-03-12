@@ -73,10 +73,10 @@ final class Linkset extends ControllerBase {
     foreach ($links as $rel => $target_objects) {
       $links[$rel] = array_map(function (array $target) use ($menu_id) {
         // According to the Linkset specification, this member must be an array
-        // since the "drupal-menu-machine-name" target attribute is
+        // since the "machine-name" target attribute is
         // non-standard.
         // See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00#section-4.2.4.3
-        return $target + ['drupal-menu-machine-name' => [$menu_id]];
+        return $target + ['machine-name' => [$menu_id]];
       }, $target_objects);
     }
     $linkset = !empty($tree)
