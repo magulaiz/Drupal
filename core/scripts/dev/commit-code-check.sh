@@ -161,7 +161,7 @@ for FILE in $FILES; do
     STYLELINT_CONFIG_FILE_CHANGED=1;
   fi;
 
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build || $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build ]]; then
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 done
