@@ -19,7 +19,7 @@ class UpdateAddSeeUpdateNotificationsPermissionTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
     ];
@@ -28,7 +28,7 @@ class UpdateAddSeeUpdateNotificationsPermissionTest extends UpdatePathTestBase {
   /**
    * Tests that the 'see update notifications' permission is correctly granted.
    */
-  public function testSeeUpdateNotificationsPermission() {
+  public function testSeeUpdateNotificationsPermission(): void {
     // Add a new 'Junior Admin' role with the legacy permission we care about.
     $junior_admin = $this->createRole(
       ['administer site configuration'],
