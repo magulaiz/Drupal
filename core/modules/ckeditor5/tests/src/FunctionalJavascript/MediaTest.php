@@ -976,7 +976,7 @@ class MediaTest extends WebDriverTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt class="layercake-side">',
+        'allowed_html' => '<p> <br> <h1 class> <div class> <section class> <drupal-media data-entity-type data-entity-uuid data-align data-caption data-view-mode alt class="layercake-side">',
       ],
     ]);
     $filter_format->save();

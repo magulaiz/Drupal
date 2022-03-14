@@ -3234,7 +3234,7 @@ class DrupalElementStyleCommand extends delegated_corefrom_dll_reference_CKEdito
    * @param {string} options.group
    *   The group name of the drupalElementStyle.
    * @param {string} options.modelAttribute
-   *   The group name of the drupalElementStyle.
+   *   The model attribute name of the drupalElementStyle.
    */
   execute(options = {}) {
     const { editor } = this;
