@@ -161,7 +161,7 @@ for FILE in $FILES; do
     STYLELINT_CONFIG_FILE_CHANGED=1;
   fi;
 
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build ]]; then
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]] && [[ $FILE =~ ^core/modules/ckeditor5/js/build || $FILE =~ ^core/modules/ckeditor5/js/ckeditor5_plugins ]]; then
     CKEDITOR5_PLUGINS_CHANGED=1;
   fi;
 done
@@ -294,8 +294,9 @@ if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
 fi
 
 # When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
-# properly.
-if [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
+# properly. Only check on DrupalCI, since locally it's normal that those files
+# change. We are only interested in making sure the result of the build is good.
+if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s check:ckeditor5
   if [ "$?" -ne "0" ]; then

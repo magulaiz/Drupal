@@ -3,8 +3,8 @@
  *
  * Provides the `check:ckeditor5` command.
  *
- * Check that the plugins are built with the appropriate dependencies.
- *
+ * Check that the plugins are built with the appropriate dependencies. This is
+ * only run on DrupalCI.
  *
  * @internal This file is part of the core javascript build process and is only
  * meant to be used in that context.
