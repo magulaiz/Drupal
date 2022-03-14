@@ -10,7 +10,7 @@
  */
 function update_post_update_add_see_update_notifications_permission(&$sandbox) {
   $roles = user_roles(FALSE, 'administer site configuration');
-  foreach (array_keys($roles) as $rid) {
-    user_role_grant_permissions($rid, ['see update notifications']);
+  foreach ($roles as $role) {
+    $role->grantPermission('see update notifications')->save();
   }
 }
