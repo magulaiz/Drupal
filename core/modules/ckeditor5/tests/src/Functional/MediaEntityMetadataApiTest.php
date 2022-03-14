@@ -22,7 +22,8 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class MediaEntityMetadataApiTest extends BrowserTestBase {
+class MediaEntityMetadataApiTest extends BrowserTestBase
+{
 
   use TestFileCreationTrait;
   use MediaTypeCreationTrait;
@@ -74,7 +75,8 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void {
+  protected function setUp(): void
+  {
     parent::setUp();
 
     $this->uuidService = $this->container->get('uuid');
@@ -111,7 +113,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->editor->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
+        return (string)$v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
     ));
@@ -168,7 +170,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
 
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(["bundle"=>"image", 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(["bundle" => "image", 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
 
     $this->mediaImage->set('field_media_image', [
       'target_id' => 1,
@@ -177,11 +179,11 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     ])->save();
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['bundle'=>'image', 'imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['bundle' => 'image', 'imageSourceMetadata' => ['alt' => '']]), $this->getSession()->getPage()->getContent());
 
     $this->drupalGet($path, ['query' => ['uuid' => $this->mediaFile->uuid(), 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['bundle'=>'file']), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['bundle' => 'file']), $this->getSession()->getPage()->getContent());
 
     // Ensure that unpublished media returns 403.
     $this->mediaImage->setUnpublished()->save();
@@ -245,13 +247,13 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token], 'language' => $media_fi->language()]);
     $this->assertSession()->statusCodeEquals(200);
     // cSpell:disable-next-line
-    $this->assertSame(json_encode(['bundle'=>'image','imageSourceMetadata' => ['alt' => 'oletus alt-teksti kuvalle']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['bundle' => 'image', 'imageSourceMetadata' => ['alt' => 'oletus alt-teksti kuvalle']]), $this->getSession()->getPage()->getContent());
 
     // Ensure that default translation is returned when no language is
     // specified.
     $this->drupalGet($path, ['query' => ['uuid' => $uuid, 'token' => $token]]);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSame(json_encode(['bundle'=>'image', 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
+    $this->assertSame(json_encode(['bundle' => 'image', 'imageSourceMetadata' => ['alt' => 'default alt']]), $this->getSession()->getPage()->getContent());
   }
 
 }
