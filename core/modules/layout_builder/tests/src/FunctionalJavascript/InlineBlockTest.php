@@ -692,6 +692,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Set the body field to be required.
     $field_config = FieldConfig::loadByName('node', 'bundle_with_section_field', 'body');
     $field_config->setRequired(TRUE);
+    $field_config->save();
 
     $this->drupalGet('node/1/layout');
     $this->assertSaveLayout();
