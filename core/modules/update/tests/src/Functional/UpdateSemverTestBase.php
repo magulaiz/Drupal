@@ -41,8 +41,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
     parent::setUp();
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
-      'administer modules',
-      'administer themes',
       'see update notifications',
       ]);
     $this->drupalLogin($admin_user);
