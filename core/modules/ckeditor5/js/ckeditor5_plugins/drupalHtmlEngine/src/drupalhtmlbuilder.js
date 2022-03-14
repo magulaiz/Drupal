@@ -3,6 +3,14 @@
 /**
  * HTML builder that converts document fragments into strings.
  *
+ * Escape ampersand characters (&) and the angle brackets (< and >) when
+ * transforming data to HTML. This is required because
+ * \Drupal\Component\Utility\Xss::filter fails to parse element attributes with
+ * unescaped entities in value.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3227831
+ * @see DrupalHtmlBuilder._escapeAttribute
+ *
  * @internal
  */
 export default class DrupalHtmlBuilder {

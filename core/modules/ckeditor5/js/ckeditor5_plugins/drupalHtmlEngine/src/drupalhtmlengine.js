@@ -6,10 +6,7 @@ import DrupalHtmlWriter from './drupalhtmlwriter';
 /**
  * A plugin that overrides the CKEditor HTML writer.
  *
- * Override the CKEditor 5 HTML writer to escape ampersand characters (&) and
- * the angle brackets (< and >). This is required because
- * \Drupal\Component\Utility\Xss::filter fails to parse element attributes with
- * unescaped entities in value.
+ * Override the CKEditor 5 HTML writer account for Drupal XSS filtering needs.
  *
  * @see https://www.drupal.org/project/drupal/issues/3227831
  * @see DrupalHtmlBuilder._escapeAttribute
