@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Functional\Theme;
 
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\Tests\BrowserTestBase;
 
 /**

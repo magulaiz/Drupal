@@ -11,7 +11,6 @@
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**

@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;

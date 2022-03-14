@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\Common;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**

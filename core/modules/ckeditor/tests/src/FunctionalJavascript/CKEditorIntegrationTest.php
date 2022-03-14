@@ -10,7 +10,6 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
-use Drupal\Core\Cache\Rebuilder;
 
 /**
  * Tests the integration of CKEditor.

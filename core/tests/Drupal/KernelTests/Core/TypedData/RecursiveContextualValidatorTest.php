@@ -2,7 +2,6 @@
 
 namespace Drupal\KernelTests\Core\TypedData;
 
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;

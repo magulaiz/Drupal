@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\language\Kernel;
 
-use Drupal\Core\Cache\Rebuilder;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\KernelTests\KernelTestBase;
 
