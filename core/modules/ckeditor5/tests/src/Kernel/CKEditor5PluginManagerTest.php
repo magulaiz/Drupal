@@ -164,6 +164,77 @@ YAML,
    *   Test scenarios.
    */
   public function providerTestInvalidPluginDefinitions(): \Generator {
+
+    yield 'invalid configuration: drupalElementStyles requires options key.' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+    config:
+      drupalElementStyles:
+        align: []
+        viewMode: []
+  drupal:
+    label: "Foo bar"
+    elements: false
+    conditions: []
+YAML,
+      'drupalElementStyles should have an options key before configuring the styles.',
+    ];
+    yield 'invalid configuration: drupalElementStyles with more than one option requires a key that is the type of style.' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+    config:
+      drupalElementStyles:
+        options:
+        - name: 'alignRight'
+          title: 'Align right and wrap text'
+          icon: 'objectRight'
+          attributeName: 'data-align'
+          attributeValue: 'right'
+          modelElements: [ 'drupalMedia' ]
+        - name: 'media_library'
+          title: 'media library view mode'
+          attributeName: 'data-view-mode'
+          attributeValue: 'media_library'
+          modelElements: [ 'drupalMedia' ]
+  drupal:
+    label: "Foo bar"
+    elements: false
+    conditions: []
+YAML,
+      'Different drupalElementStyles must be specified with a key of the type of style under the options key.',
+    ];
+    yield 'valid configuration of drupalElementStyles' => [
+      <<<YAML
+ckeditor5_invalid_plugin_foo_bar:
+  ckeditor5:
+    plugins: {}
+    config:
+      drupalElementStyles:
+        options:
+          align:
+            - name: 'alignRight'
+              title: 'Align right and wrap text'
+              icon: 'objectRight'
+              attributeName: 'data-align'
+              attributeValue: 'right'
+              modelElements: [ 'drupalMedia' ]
+          viewMode:
+            - name: 'media_library'
+              title: 'media library view mode'
+              attributeName: 'data-view-mode'
+              attributeValue: 'media_library'
+              modelElements: [ 'drupalMedia' ]
+  drupal:
+    label: "Foo bar"
+    elements: false
+    conditions: []
+YAML,
+      NULL,
+    ];
     yield 'invalid plugin ID with everything else okay' => [
       <<<YAML
 foo_bar:
