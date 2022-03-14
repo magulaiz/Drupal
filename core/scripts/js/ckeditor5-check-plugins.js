@@ -34,7 +34,7 @@ async function getContents(files) {
   const pluginsAfter = await getContents(files);
 
   if (JSON.stringify(pluginsBefore) !== JSON.stringify(pluginsAfter)) {
-    log("Mismatch in CKEditor 5 plugins build artefacts.");
+    log("Mismatch in CKEditor 5 plugins build artifact.");
     process.exitCode = 1;
   }
 })();
