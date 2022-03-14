@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
+use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\filter\FilterFormatInterface;
@@ -69,7 +70,11 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
   /**
    * {@inheritdoc}
    */
-  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button): ?string {
+  public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button, HTMLRestrictions $text_format_html_restrictions = NULL): ?string {
+    if (!isset($text_format_html_restrictions)) {
+      throw new \LogicException('This @CKEditor4To5Upgrade plugin requires the optional $text_format_html_restrictions argument.');
+    }
+
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
@@ -115,7 +120,21 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return 'horizontalLine';
 
       case 'Format':
-        return 'heading';
+        if ($text_format_html_restrictions->isUnrestricted()) {
+          // When no restrictions exist, all tags possibly supported by "Format"
+          // in CKEditor 4 must be supported.
+          return 'heading';
+        }
+
+        $allowed_elements = $text_format_html_restrictions->getAllowedElements();
+
+        // Check if <h*> is supported.
+        // Merely checking the existence of the array key is sufficient; this
+        // plugin does not set or need any additional attributes.
+        // @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
+        $intersect = array_intersect(['h2', 'h3', 'h4', 'h5', 'h6'], array_keys($allowed_elements));
+
+        return count($intersect) > 0 ? 'heading' : NULL;
 
       case 'Table':
         return 'insertTable';
