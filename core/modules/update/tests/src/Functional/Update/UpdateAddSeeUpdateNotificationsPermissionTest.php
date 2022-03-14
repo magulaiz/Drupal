@@ -37,6 +37,7 @@ class UpdateAddSeeUpdateNotificationsPermissionTest extends UpdatePathTestBase {
 
     $role = Role::load('junior_admin');
     $this->assertTrue($role->hasPermission('administer site configuration'), 'Junior Admin role has legacy permission.');
+    $this->assertFalse($role->hasPermission('see update notifications'), 'Junior Admin role does not have the new permission.');
 
     $this->runUpdates();
 
