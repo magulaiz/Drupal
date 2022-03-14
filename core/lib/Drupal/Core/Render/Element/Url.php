@@ -70,7 +70,7 @@ class Url extends FormElement {
       if ($element['#require_url'] && !UrlHelper::isValid($value, TRUE)) {
         $form_state->setError($element, t('The URL %url is not valid.', ['%url' => $value]));
       }
-      else if (!self::validateUri($value)) {
+      elseif (!self::validateUri($value)) {
         $form_state->setError($element, t('The URI %uri is not valid.', ['%uri' => $value]));
       }
     }
@@ -84,6 +84,7 @@ class Url extends FormElement {
    *
    * @param string $value
    *   URI to validate.
+   *
    * @return bool
    *   Whether the validation regex validates the URI.
    */
