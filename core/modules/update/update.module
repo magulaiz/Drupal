@@ -67,9 +67,8 @@ function update_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
-  $currentUser = \Drupal::currentUser();
-  if ($currentUser->hasPermission('see update notifications') && $admin_context->isAdminRoute($route_match->getRouteObject())) {
-    $route_name = $route_match->getRouteName();
+  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('see update notifications')) {
+    $route_name = \Drupal::routeMatch()->getRouteName();
     switch ($route_name) {
       // These pages don't need additional nagging.
       case 'update.theme_update':
