@@ -371,9 +371,9 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
-      'administer themes',
     ]));
     $this->drupalGet('admin/modules');
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextNotContains('There are updates available for your version of Drupal.');
   }
 
