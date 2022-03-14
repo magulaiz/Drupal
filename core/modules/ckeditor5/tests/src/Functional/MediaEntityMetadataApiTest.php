@@ -22,8 +22,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class MediaEntityMetadataApiTest extends BrowserTestBase
-{
+class MediaEntityMetadataApiTest extends BrowserTestBase {
 
   use TestFileCreationTrait;
   use MediaTypeCreationTrait;
@@ -75,8 +74,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void
-  {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->uuidService = $this->container->get('uuid');
@@ -113,7 +111,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase
     $this->editor->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
-        return (string)$v->getMessage();
+        return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair($this->editor, $filtered_html_format))
     ));
