@@ -177,8 +177,7 @@ class MediaTest extends WebDriverTestBase {
       'type' => 'blog',
       'title' => 'Animals with strange names',
       'body' => [
-        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>
-          <drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>',
+        'value' => '<drupal-media data-caption="baz" data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '"></drupal-media>',
         'format' => 'test_format',
       ],
     ]);
@@ -1227,6 +1226,9 @@ class MediaTest extends WebDriverTestBase {
     $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
+    // Add a second media of a different bundle here.
+    $this->host->body->value .= '<drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
+    $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
