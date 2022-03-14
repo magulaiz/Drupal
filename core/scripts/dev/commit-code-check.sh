@@ -129,7 +129,7 @@ ESLINT_CONFIG_PASSING_FILE_CHANGED=0
 STYLELINT_CONFIG_FILE_CHANGED=0
 
 # This variable will be set when a Drupal-specific CKEditor 5 plugin has changed
-# it it used to make sure the compiled JS is valid.
+# it is used to make sure the compiled JS is valid.
 CKEDITOR5_PLUGINS_CHANGED=0
 
 # Build up a list of absolute file names.
