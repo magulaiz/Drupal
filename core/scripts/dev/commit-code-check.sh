@@ -295,16 +295,17 @@ fi
 
 # When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
 # properly. Only check on DrupalCI, since locally it's normal that those files
-# change. We are only interested in making sure the result of the build is good.
+# change. We are only interested in making sure the result of the build is in
+# sync and conform to expectations.
 if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s check:ckeditor5
   if [ "$?" -ne "0" ]; then
     # If there are failures set the status to a number other than 0.
     FINAL_STATUS=1
-    printf "\nCKEditor 5 plugins: ${red}failed${reset}\n"
+    printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
   else
-    printf "\nCKEditor 5 plugins: ${green}passed${reset}\n"
+    printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
   fi
   cd $TOP_LEVEL
   # Add a separator line to make the output easier to read.
