@@ -102,7 +102,7 @@ class UpdateSettingsForm extends ConfigFormBase implements ContainerInjectionInt
         'security' => $this->t('Only security updates'),
       ],
       '#description' => $this->t(
-        'You can choose to send email only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will always print a message on the <a href=":status_report">status report</a> page. Users with permission to receive <a href=":see_update_notifications">update notifications</a> will see an error message on administration pages if there is a security update.',
+        'You can choose to send email only if a security update is available, or to be notified about all newer versions. If there are updates available of Drupal core or any of your installed modules and themes, your site will print a message on the <a href=":status_report">status report</a> page. If there is a security update, an error message will be printed on administration pages for users with <a href=":see_update_notifications">permission to see update notifications</a.',
         [
           ':status_report' => Url::fromRoute('system.status')->toString(),
           ':see_update_notifications' => Url::fromRoute('user.admin_permissions', [], ['fragment' => 'module-update'])->toString(),
