@@ -271,11 +271,11 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       $plugin = $this->getPlugin($plugin_id, $editor);
 
       // ckeditor5_wildcardHtmlSupport is an edge case because its configuration
-      // is based on the combined `elements` configuration of all other active
+      // is based on the combined `elements` configuration of all other enabled
       // plugins. This information is provided via a third argument sent to
       // getDynamicPluginConfig(). This third argument intentionally deviates
       // from the definition in CKEditor5PluginManagerInterface.
-      // @see ::getEnabledDefinitions()
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()
       if ($plugin_id === 'ckeditor5_wildcardHtmlSupport') {
         $allowed_elements = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
         $config['ckeditor5_wildcardHtmlSupport'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $allowed_elements);
