@@ -183,7 +183,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
     // @see https://ckeditor.com/docs/ckeditor5/latest/api/html-support.html
     if (!isset($definitions['ckeditor5_arbitraryHtmlSupport'])) {
       $restrictions = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
-      if ($restrictions->getAllowedElements(FALSE) === $restrictions->getAllowedElements(TRUE)) {
+      if ($restrictions->getWildcardSubset()->isEmpty()) {
         unset($definitions['ckeditor5_wildcardHtmlSupport']);
       }
     }
