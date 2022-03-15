@@ -286,10 +286,10 @@ ckeditor5.language:
 
 ckeditor5.codeBlock:
   remote: https://github.com/ckeditor/ckeditor5
-  version: "32.0.0"
+  version: "33.0.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://github.com/ckeditor/ckeditor5/blob/v32.0.0/LICENSE.md
+    url: https://github.com/ckeditor/ckeditor5/blob/v33.0.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/code-block/code-block.js: { minified: true }
