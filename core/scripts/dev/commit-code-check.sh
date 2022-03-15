@@ -294,9 +294,9 @@ if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
 fi
 
 # When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
-# properly. Only check on DrupalCI, since locally it's normal that those files
-# change. We are only interested in making sure the result of the build is in
-# sync and conform to expectations.
+# properly. Only check on DrupalCI, since we're concerned about the build being
+# run with the expected package versions and making sure the result of the build
+# is in sync and conform to expectations.
 if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
   cd "$TOP_LEVEL/core"
   yarn run -s check:ckeditor5
