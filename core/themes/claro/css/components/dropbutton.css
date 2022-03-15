@@ -61,16 +61,6 @@
   margin: 0;
 }
 
-/* Variants. */
-
-.js.no-touchevents .dropbutton--small {
-  height: 2rem;
-}
-
-.js.no-touchevents .dropbutton--extrasmall {
-  height: 1.5rem;
-}
-
 /**
  * First dropbutton list item.
  */
@@ -302,6 +292,11 @@
   border-radius: 2px 0 0 2px; /* LTR */
 }
 
+.dropbutton .dropbutton__item > a,
+.dropbutton .dropbutton__item > .button {
+  display: flex;
+}
+
 [dir="rtl"].js .dropbutton--multiple .dropbutton__item:first-of-type > *,
 [dir="rtl"].js .dropbutton--multiple .dropbutton__main-item > * {
   border-radius: 0 2px 2px 0;
@@ -322,7 +317,7 @@
 }
 
 .js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
-  display: none;
+  visibility: hidden;
 }
 
 /**
@@ -347,7 +342,7 @@
 }
 
 .js .dropbutton-wrapper:not(.open) .dropbutton__subitems-wrapper {
-  display: none;
+  visibility: hidden;
 }
 
 .dropbutton__sub-item {
