@@ -520,6 +520,10 @@ function template_preprocess_node(&$variables) {
     unset($variables['elements']['uid']);
   }
 
+  if (isset($variables['elements']['title']) && (!$skip_custom_preprocessing && !$node->getFieldDefinition('title')->isDisplayConfigurable('view'))) {
+    @trigger_error('Rendering a configured title field display without setting the 'eenable_base_field_custom_preprocess_skipping' flag is deprecated in %deprecation-version% and may display in an unexpected way from %removal-version%. See %cr-link%', E_USER_DEPRECATED)
+  }
+
   if (isset($variables['elements']['title']) && (!$skip_custom_preprocessing || !$node->getFieldDefinition('title')->isDisplayConfigurable('view'))) {
     $variables['label'] = $variables['elements']['title'];
     unset($variables['elements']['title']);
