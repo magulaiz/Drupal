@@ -308,7 +308,7 @@ function hook_menu_links_discovered_alter(&$links) {
  *   as described above.
  * @param string $route_name
  *   The route name of the page.
- * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
+ * @param \Drupal\Core\Cache\CacheableMetadata $cacheability
  *   The cacheability metadata for the current route's local tasks.
  *
  * @ingroup menu
