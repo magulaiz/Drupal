@@ -23,9 +23,7 @@ const _fetchMetadata = async (url) => {
     return JSON.parse(await response.text());
   }
 
-  throw new Error(
-    'Fetching media embed metadata from the server failed dramatically.',
-  );
+  throw new Error('Fetching media embed metadata from the server failed.');
 };
 
 /**
