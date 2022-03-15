@@ -269,6 +269,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setRevisionable(TRUE)
       ->setSetting('max_length', 255)
       ->setDisplayOptions('view', [
+        'region' => 'hidden',
         'label' => 'hidden',
         'type' => 'string',
         'weight' => -5,
