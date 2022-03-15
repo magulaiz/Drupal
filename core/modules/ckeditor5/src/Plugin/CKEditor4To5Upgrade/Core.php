@@ -119,18 +119,24 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         if ($text_format_html_restrictions->isUnrestricted()) {
           // When no restrictions exist, all tags possibly supported by "Format"
           // in CKEditor 4 must be supported.
-          return ['heading'];
+          return ['heading', 'codeBlock'];
         }
 
+        $supported = [];
         $allowed_elements = $text_format_html_restrictions->getAllowedElements();
-
         // Check if <h*> is supported.
         // Merely checking the existence of the array key is sufficient; this
         // plugin does not set or need any additional attributes.
         // @see \Drupal\filter\Plugin\FilterInterface::getHTMLRestrictions()
         $intersect = array_intersect(['h2', 'h3', 'h4', 'h5', 'h6'], array_keys($allowed_elements));
+        if (count($intersect) > 0) {
+          $supported[] = 'heading';
+        }
+        if (isset($allowed_elements['pre'])) {
+          $supported[] = 'codeBlock';
+        }
 
-        return count($intersect) > 0 ? ['heading'] : NULL;
+        return count($supported) > 0 ? $supported : NULL;
 
       case 'Table':
         return ['insertTable'];
