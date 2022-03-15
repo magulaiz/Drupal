@@ -72,6 +72,7 @@
 
   {{ title_prefix }}
   {% if label and not page %}
+  {% deprecated 'Core node templates will no longer render titles automatically, configure the display of the title like other fields.' %}
     <h2{{ title_attributes }}>
       <a href="{{ url }}" rel="bookmark">{{ label }}</a>
     </h2>
