@@ -20,6 +20,11 @@ class WildcardHtmlSupport extends CKEditor5PluginDefault {
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor, HTMLRestrictions $allowed_elements = NULL): array {
+    // This plugin is an edge case because its configuration is based on the
+    // combined `elements` configuration of all other active plugins. This
+    // information is provided via a third argument. This third argument
+    // intentionally deviates from the definition in
+    // CKEditor5PluginManagerInterface.
     // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
     if ($allowed_elements === NULL) {
       throw new \LogicException();
