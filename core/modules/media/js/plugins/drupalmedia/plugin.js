@@ -181,6 +181,7 @@
             });
           }
 
+          this.data.attributes['data-entity-name'] = this.data.label;
           this.element.setAttributes(this.data.attributes);
           this.oldData = CKEDITOR.tools.clone(this.data);
         },
