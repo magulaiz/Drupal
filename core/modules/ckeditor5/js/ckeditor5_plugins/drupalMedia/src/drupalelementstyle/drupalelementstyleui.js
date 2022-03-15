@@ -150,7 +150,7 @@ function upcastDrupalMediaBundle(
       // Enqueue a model change in `transparent` batch to make it
       // invisible to the undo/redo functionality.
       editor.model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute('drupalMediaBundle', metadata.bundle, modelElement);
+        writer.setAttribute('drupalMediaBundle', metadata.type, modelElement);
       });
     })
     .catch((e) => {

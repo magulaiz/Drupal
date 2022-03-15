@@ -129,7 +129,7 @@ export default class DrupalMediaEditing extends Plugin {
                   (writer) => {
                     writer.setAttribute(
                       'drupalMediaBundle',
-                      metadata.bundle,
+                      metadata.type,
                       modelElement,
                     );
                   },

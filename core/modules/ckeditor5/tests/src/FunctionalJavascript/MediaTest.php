@@ -47,7 +47,7 @@ class MediaTest extends WebDriverTestBase {
   protected $media;
 
   /**
-   * The sample Media entity to embed.
+   * The second sample Media entity to embed used in one of the tests.
    *
    * @var \Drupal\media\MediaInterface
    */

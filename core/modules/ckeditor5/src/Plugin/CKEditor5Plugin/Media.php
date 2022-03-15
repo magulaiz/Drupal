@@ -5,9 +5,11 @@ declare(strict_types = 1);
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 use Drupal\media\Entity\MediaType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * CKEditor 5 Media plugin.
@@ -17,9 +19,21 @@ use Drupal\media\Entity\MediaType;
  * @internal
  *   Plugin classes are internal.
  */
-class Media extends CKEditor5PluginDefault {
+class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInterface {
 
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
+
+  /**
+   * {@inheritDoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity_display.repository'),
+    );
+  }
 
   /**
    * {@inheritdoc}
