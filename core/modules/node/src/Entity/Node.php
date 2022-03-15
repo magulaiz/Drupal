@@ -277,6 +277,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
         'type' => 'string_textfield',
         'weight' => -5,
       ])
+      ->setDisplayConfigurable('view', TRUE);
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid']
