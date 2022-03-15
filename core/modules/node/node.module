@@ -440,17 +440,6 @@ function node_preprocess_field__node(&$variables) {
     // Page title is always inline because it will be displayed inside <h1>.
     $variables['is_inline'] = TRUE;
   }
-  elseif (in_array($variables['field_name'], ['created', 'uid', 'title'], TRUE)) {
-    // Display created, uid and title fields inline because they will be
-    // displayed inline by node.html.twig. Skip this if the field
-    // configured tp display or skipping has been enabled.
-    // @todo Delete as part of https://www.drupal.org/node/3015623
-
-    /** @var \Drupal\node\NodeInterface $node */
-    $node = $variables['element']['#object'];
-    $skip_custom_preprocessing = $node->getEntityType()->get('enable_base_field_custom_preprocess_skipping');
-    $variables['is_inline'] = !$skip_custom_preprocessing && !isset($variables['elements']['title'];
-  }
 }
 
 /**
@@ -521,9 +510,12 @@ function template_preprocess_node(&$variables) {
   }
 
   // If the title is configurable, then it will only be a child element if it is configured to not be hidden.
-  // Custom preprocess will be skipped if skipping is requested by flag, or title is configured to display normally not hide, 
+  // Custom preprocess will be skipped if skipping is requested by flag, or title is configured to display normally not hide,
   // or custom code has requested the field to be not configurable.
   if (!$skip_custom_preprocessing && !isset($variables['elements']['title'] )) {
+    @trigger_error("Custom preprocessing for node titles in template_node_preprocess is deprecated.
+    Configure the title to display like any other field, or set 'enable_base_field_custom_preprocess_skipping'
+    to silence this error if you do wish to hide the title and are using node templates other than those provided by core.")
     $variables['label'] = $variables['elements']['title'];
     unset($variables['elements']['title']);
   }
