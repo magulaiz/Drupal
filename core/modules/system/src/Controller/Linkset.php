@@ -98,8 +98,8 @@ final class Linkset extends ControllerBase {
    * array of link items encoded according the the application/linkset+json
    * media type.
    *
-   * To preserve hierarchical information, the target attribute contains a 
-   * `hierarchy` member. Its value is a lexicographically sortable string 
+   * To preserve hierarchical information, the target attribute contains a
+   * `hierarchy` member. Its value is a lexicographically sortable string
    * which can be used to reconstruct a hierarchical data structure.
    *
    * The reason that a `hierarchy` member is used instead of a `parent` or
