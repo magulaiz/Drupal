@@ -115,7 +115,7 @@ function _update_fix_missing_schema() {
     // don't, detect and fix the problem.
     if (!isset($versions[$module])) {
       // Ensure the .install file is loaded.
-      module_load_install($module);
+      $module_handler->loadInclude($module, 'install');
       $all_updates = $update_registry->getAvailableUpdates($module);
       // If the schema version of a module hasn't been recorded, we cannot
       // know the actual schema version a module is at, because
@@ -239,7 +239,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 
       $variables = Error::decodeException($e);
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
-      $ret['#abort'] = ['success' => FALSE, 'query' => t('%type: @message in %function (line %line of %file).', $variables)];
+      $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
     }
   }
 
@@ -287,7 +287,7 @@ function update_invoke_post_update($function, &$context) {
   }
 
   [$module, $name] = explode('_post_update_', $function, 2);
-  module_load_include('php', $module, $module . '.post_update');
+  \Drupal::moduleHandler()->loadInclude($module, 'php', $module . '.post_update');
   if (function_exists($function)) {
     try {
       $ret['results']['query'] = $function($context['sandbox']);
@@ -308,7 +308,7 @@ function update_invoke_post_update($function, &$context) {
       unset($variables['backtrace'], $variables['exception']);
       $ret['#abort'] = [
         'success' => FALSE,
-        'query' => t('%type: @message in %function (line %line of %file).', $variables),
+        'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
       ];
     }
   }
@@ -704,7 +704,7 @@ function update_retrieve_dependencies() {
     }
     $function = $module . '_update_dependencies';
     // Ensure install file is loaded.
-    module_load_install($module);
+    \Drupal::moduleHandler()->loadInclude($module, 'install');
     if (function_exists($function)) {
       $updated_dependencies = $function();
       // Each implementation of hook_update_dependencies() returns a

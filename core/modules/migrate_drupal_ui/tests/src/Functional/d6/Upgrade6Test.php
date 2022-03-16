@@ -18,7 +18,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
     'book',
     'config_translation',
     'content_translation',
@@ -43,7 +42,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    // @todo remove in https://www.drupal.org/project/drupal/issues/3267040
     // Delete the existing content made to test the ID Conflict form. Migrations
     // are to be done on a site without content. The test of the ID Conflict
     // form is being moved to its own issue which will remove the deletion
@@ -68,8 +67,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'aggregator_item' => 1,
-      'aggregator_feed' => 2,
       'block' => 34,
       'block_content' => 2,
       'block_content_type' => 1,
@@ -104,12 +101,12 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'user' => 7,
       'user_role' => 7,
       'menu_link_content' => 10,
-      'view' => 16,
+      'view' => 14,
       'date_format' => 11,
       'entity_form_display' => 31,
       'entity_form_mode' => 1,
-      'entity_view_display' => 61,
-      'entity_view_mode' => 14,
+      'entity_view_display' => 58,
+      'entity_view_mode' => 12,
       'base_field_override' => 41,
     ];
   }
@@ -121,14 +118,11 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $counts = $this->getEntityCounts();
     $counts['block_content'] = 3;
     $counts['comment'] = 9;
-    $counts['entity_view_display'] = 61;
-    $counts['entity_view_mode'] = 14;
     $counts['file'] = 8;
     $counts['menu_link_content'] = 11;
     $counts['node'] = 19;
     $counts['taxonomy_term'] = 16;
     $counts['user'] = 8;
-    $counts['view'] = 16;
     return $counts;
   }
 
@@ -137,7 +131,6 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getAvailablePaths() {
     return [
-      'Aggregator',
       'Block',
       'Block translation',
       'Book',
@@ -192,7 +185,9 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected function getMissingPaths() {
-    return [];
+    return [
+      'Aggregator',
+    ];
   }
 
   /**
@@ -206,6 +201,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'john.doe_pass');
 
     $this->assertFollowUpMigrationResults();
+
+    $this->assertEmailsSent();
   }
 
   /**
