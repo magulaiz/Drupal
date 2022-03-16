@@ -78,7 +78,7 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
     $restrictions = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
     // Only handle concrete HTML elements to allow the Wildcard HTML support
     // plugin to handle wildcards.
-    // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
     $concrete_restrictions = $restrictions->getConcreteSubset();
     return [
       'htmlSupport' => [

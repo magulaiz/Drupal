@@ -87,7 +87,6 @@ ckeditor5_wildcardHtmlSupport:
     plugins: [htmlSupport.GeneralHtmlSupport]
   drupal:
     label: Wildcard HTML support
-    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
     elements: false
     library: core/ckeditor5.htmlSupport
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()

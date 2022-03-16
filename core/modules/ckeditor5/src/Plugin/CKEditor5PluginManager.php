@@ -6,7 +6,6 @@ namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
-use Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\NestedArray;
@@ -182,7 +181,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         // This is only reached if arbitrary HTML is not enabled. If wildcard
         // tags (such as $block) are present, they need to be resolved via the
         // wildcardHtmlSupport plugin.
-        // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
         unset($definitions['ckeditor5_wildcardHtmlSupport']);
       }
     }
@@ -268,18 +267,26 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
     $config = [];
     foreach ($definitions as $plugin_id => $definition) {
       $plugin = $this->getPlugin($plugin_id, $editor);
+      $config[$plugin_id] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor);
+    }
 
-      $config[$plugin_id] = !$plugin instanceof WildcardHtmlSupport
-        ? $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor)
-        // ckeditor5_wildcardHtmlSupport is an edge case because its
-        // configuration is based on the combined `elements` configuration of
-        // all other enabled plugins. For this reason,
-        // getDynamicPluginConfigBasedOnAllowedElements() is called instead of
-        // getDynamicPluginConfig().
-        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()
-        : $plugin->getDynamicPluginConfigBasedOnAllowedElements(new HTMLRestrictions(
-          $this->getProvidedElements(array_keys($definitions), $editor, FALSE)
-        ));
+    // CKEditor 5 interprets wildcards from a "CKEditor 5 model element"
+    // perspective, Drupal interprets wildcards from a "HTML element"
+    // perspective. GHS is used to reconcile those two perspectives, to ensure
+    // all expected HTML elements truly are supported.
+    // The `ckeditor5_wildcardHtmlSupport` is automatically enabled when
+    // necessary, and only when necessary.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()
+    if (isset($definitions['ckeditor5_wildcardHtmlSupport'])) {
+      $allowed_elements = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
+      // Compute the net new elements that the wildcard tags resolve into.
+      $concrete_allowed_elements = $allowed_elements->getConcreteSubset();
+      $net_new_elements = $allowed_elements->diff($concrete_allowed_elements);
+      $config['ckeditor5_wildcardHtmlSupport'] = [
+        'htmlSupport' => [
+          'allow' => $net_new_elements->toGeneralHtmlSupportConfig(),
+        ],
+      ];
     }
 
     return [
