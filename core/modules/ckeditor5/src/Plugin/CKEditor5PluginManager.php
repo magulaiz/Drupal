@@ -185,8 +185,8 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         unset($definitions['ckeditor5_wildcardHtmlSupport']);
       }
     }
-    // When arbitrary HTML is already supported, there is no need for adding
-    // support for wildcard tags anymore.
+    // When arbitrary HTML is already supported, there is no need to support
+    // wildcard tags.
     else {
       unset($definitions['ckeditor5_wildcardHtmlSupport']);
     }
