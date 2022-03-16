@@ -25,10 +25,6 @@
   margin-right: 0.5em;
   margin-left: 1em;
 }
-.form-inline-separator {
-  /* Input line height + input vertical padding. */
-  line-height: calc(1.295em + (0.3em * 2));
-}
 .form--inline .form-actions {
   clear: left; /* LTR */
 }
