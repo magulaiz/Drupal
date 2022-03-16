@@ -55,7 +55,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     //   necessary because CKEditor5ElementConstraintValidator does not run
     //   before this, which means that this validator cannot assume it receives
     //   valid values.
-    if (empty($source_enabled_tags->getAllowedElements(TRUE)) || count($source_enabled_tags->getAllowedElements()) > 1) {
+    if (count($source_enabled_tags->getAllowedElements(TRUE)) !== 1) {
       return;
     }
     // This validation constraint currently only validates tags, not attributes;
