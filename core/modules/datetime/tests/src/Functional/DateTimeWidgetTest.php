@@ -14,6 +14,11 @@ use Drupal\Node\Entity\Node;
 class DateTimeWidgetTest extends DateTestBase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
    * The default display settings to use for the formatters.
    *
    * @var array

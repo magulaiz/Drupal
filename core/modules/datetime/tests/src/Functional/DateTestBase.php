@@ -24,11 +24,6 @@ abstract class DateTestBase extends BrowserTestBase {
   protected static $modules = ['node', 'entity_test', 'datetime', 'field_ui'];
 
   /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
    * An array of display options.
    *
    * An array of display options to pass to
