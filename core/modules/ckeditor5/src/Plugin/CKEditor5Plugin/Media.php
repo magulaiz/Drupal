@@ -10,6 +10,8 @@ use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
 use Drupal\media\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 
 /**
  * CKEditor 5 Media plugin.
@@ -24,6 +26,23 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
 
   /**
+   * Media constructor.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
+   *   The entity display repository.
+   */
+  public function __construct(array $configuration, string $plugin_id, CKEditor5PluginDefinition $plugin_definition, EntityDisplayRepositoryInterface $entity_display_repository) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityDisplayRepository = $entity_display_repository;
+  }
+
+  /**
    * {@inheritDoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -31,8 +50,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_display.repository'),
-    );
+      $container->get('entity_display.repository'));
   }
 
   /**
@@ -45,7 +63,6 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       ->toString(TRUE)
       ->getGeneratedUrl();
     $media_embed_filter = $editor->getFilterFormat()->filters('media_embed');
-    $this->entityDisplayRepository = \Drupal::service('entity_display.repository');
 
     $media_bundles = MediaType::loadMultiple();
     $bundles_per_view_mode = [];
