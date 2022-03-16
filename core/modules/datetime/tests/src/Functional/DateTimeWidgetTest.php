@@ -53,14 +53,17 @@ class DateTimeWidgetTest extends DateTestBase {
       'fields[field_dateonly][region]' => 'content',
       'fields[field_dateonly][type]' => 'datetime_default',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/dateonly_content/form-display', $edit, 'Save');
-    $this->drupalPostForm('admin/structure/types/manage/dateonly_content/display', $edit, 'Save');
+    $this->drupalGet('admin/structure/types/manage/dateonly_content/form-display');
+    $this->submitForm($edit, 'Save');
+    $this->drupalGet('admin/structure/types/manage/dateonly_content/display');
+    $this->submitForm($edit, 'Save');
 
     // Set now as default_value.
     $edit = [
       'default_value_input[default_date_type]' => 'now',
     ];
-    $this->drupalPostForm('admin/structure/types/manage/dateonly_content/fields/node.dateonly_content.field_dateonly', $edit, 'Save settings');
+    $this->drupalGet('admin/structure/types/manage/dateonly_content/fields/node.dateonly_content.field_dateonly');
+    $this->submitForm($edit, 'Save settings');
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/dateonly_content/fields/node.dateonly_content.field_dateonly');
@@ -83,7 +86,7 @@ class DateTimeWidgetTest extends DateTestBase {
       $edit = [
         'title[0][value]' => $timezone,
       ];
-      $this->drupalPostForm(NULL, $edit, 'Save');
+      $this->submitForm($edit, 'Save');
       $this->assertSession()->pageTextContains('dateonly_content ' . $timezone . ' has been created');
 
       preg_match('|node/(\d+)|', $this->getUrl(), $match);
