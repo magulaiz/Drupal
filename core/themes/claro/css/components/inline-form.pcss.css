@@ -23,7 +23,7 @@
   float: left; /* LTR */
   margin-top: calc(var(--space-l) + (18rem / 16) + var(--space-xs)); /* Form item margin-top + label line-height + label top/bottom margin. */
   white-space: nowrap;
-  line-height: 3rem; /* Same as input min height */
+  line-height: var(--input-min-height);
 }
 [dir="rtl"] .form--inline .form-item-separator {
   float: right;
