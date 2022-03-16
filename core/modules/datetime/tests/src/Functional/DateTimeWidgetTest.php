@@ -35,7 +35,7 @@ class DateTimeWidgetTest extends DateTestBase {
   /**
    * Test default value functionality.
    */
-  public function testDateonlyDefaultValue() {
+  public function testDateOnlyDefaultValue(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'dateonly_content']);
 
@@ -72,34 +72,39 @@ class DateTimeWidgetTest extends DateTestBase {
 
     // Check that default value is selected in default value form.
     $this->drupalGet('admin/structure/types/manage/dateonly_content/fields/node.dateonly_content.field_dateonly');
-    $option_field = $this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now');
+    $option_field = $this->assertSession()
+      ->optionExists('edit-default-value-input-default-date-type', 'now');
     $this->assertTrue($option_field->hasAttribute('selected'));
-    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
+    $this->assertSession()
+      ->fieldValueEquals('default_value_input[default_date]', '');
 
     // Loop through defined timezones to test that date-only defaults work at
     // the extremes.
     foreach (static::$timezones as $timezone) {
       $this->setSiteTimezone($timezone);
-      $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
+      $this->assertEquals($timezone, $this->config('system.date')
+        ->get('timezone.default'), 'Time zone set to ' . $timezone);
 
       $this->drupalGet('node/add/dateonly_content');
 
       $request_time = $this->container->get('datetime.time')->getRequestTime();
       $today = $this->dateFormatter->format($request_time, 'html_date', NULL, $timezone);
-      $this->assertSession()->fieldValueEquals('field_dateonly[0][value][date]', $today);
+      $this->assertSession()
+        ->fieldValueEquals('field_dateonly[0][value][date]', $today);
 
       $edit = [
         'title[0][value]' => $timezone,
       ];
       $this->submitForm($edit, 'Save');
-      $this->assertSession()->pageTextContains('dateonly_content ' . $timezone . ' has been created');
+      $this->assertSession()
+        ->pageTextContains('dateonly_content ' . $timezone . ' has been created');
 
       preg_match('|node/(\d+)|', $this->getUrl(), $match);
       $nid = $match[1];
       $node = Node::load($nid);
 
       $today_storage = $this->dateFormatter->format($request_time, 'html_date', NULL, $timezone);
-      $this->assertEquals($today_storage, $node->field_dateonly->value);
+      $this->assertEquals($today_storage, $node->get('field_dateonly')->value);
     }
   }
 
