@@ -11,6 +11,14 @@ use Drupal\editor\EditorInterface;
 /**
  * CKEditor 5 Wildcard HTML support plugin configuration.
  *
+ * This plugin ensures that all wilcards supported by Drupal, are at least
+ * retained. CKEditor 5 interprets wildcards from a "CKEditor 5 model element"
+ * perspective, Drupal interprets wildcards from a "HTML element" perspective.
+ * GHS is used to reconcile those two perspectives, to ensure all expected HTML
+ * elements truly are supported.
+ *
+ * @see https://ckeditor.com/docs/ckeditor5/latest/api/html-support.html
+ *
  * @internal
  *   Plugin classes are internal.
  */
