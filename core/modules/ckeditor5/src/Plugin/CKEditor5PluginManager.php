@@ -175,15 +175,13 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
       }
     }
 
-    // Only enable the Wildcard tags HTML support plugin when CKEditor 5 plugins
-    // are enabled with wildcard tags: CKEditor 5 interprets wildcards from a
-    // "CKE5 model element" perspective, Drupal interprets wildcards from a
-    // "HTML element" perspective. GHS is used to reconcile those two
-    // perspectives, to ensure all expected HTML elements truly are supported.
-    // @see https://ckeditor.com/docs/ckeditor5/latest/api/html-support.html
     if (!isset($definitions['ckeditor5_arbitraryHtmlSupport'])) {
       $restrictions = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
       if ($restrictions->getWildcardSubset()->isEmpty()) {
+      // This is only reached if arbitrary HTML is not enabled. If wildcard tags
+      // (such as $block) are present, they need to be resolved via the
+      // wildcardHtmlSupport plugin.
+      // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport
         unset($definitions['ckeditor5_wildcardHtmlSupport']);
       }
     }
