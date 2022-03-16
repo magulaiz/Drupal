@@ -134,11 +134,11 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       // alternate block rendering approaches in contributed modules. However,
       // the use of a child element is an implementation detail of this
       // particular block rendering approach. Semantically, the content returned
-      // by the block plugin, and in particular, attributes and contextual links
-      // are information that belong to the entire block. Therefore, we must
-      // move these properties from $content and merge them into the top-level
-      // element.
-      if (isset($content['#attributes'])) {
+      // by the plugin "is the" block, and in particular, #attributes and
+      // #contextual_links is information about the *entire* block. Therefore,
+      // we must move these properties from $content and merge them into the
+      // top-level element.
+      if (!isset($content['#type']) && !isset($content['#theme']) && isset($content['#attributes'])) {
         $build['#attributes'] = $content['#attributes'];
         unset($content['#attributes']);
       }
