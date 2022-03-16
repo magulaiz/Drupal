@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin;
 
 use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport;
 use Drupal\Component\Annotation\Plugin\Discovery\AnnotationBridgeDecorator;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Utility\NestedArray;
@@ -268,19 +269,17 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
     foreach ($definitions as $plugin_id => $definition) {
       $plugin = $this->getPlugin($plugin_id, $editor);
 
-      // ckeditor5_wildcardHtmlSupport is an edge case because its configuration
-      // is based on the combined `elements` configuration of all other enabled
-      // plugins. This information is provided via a third argument sent to
-      // getDynamicPluginConfig(). This third argument intentionally deviates
-      // from the definition in CKEditor5PluginManagerInterface.
-      // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()
-      if ($plugin_id === 'ckeditor5_wildcardHtmlSupport') {
-        $allowed_elements = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
-        $config['ckeditor5_wildcardHtmlSupport'] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor, $allowed_elements);
-        continue;
-      }
-
-      $config[$plugin_id] = $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor);
+      $config[$plugin_id] = !$plugin instanceof WildcardHtmlSupport
+        ? $plugin->getDynamicPluginConfig($definition->getCKEditor5Config(), $editor)
+        // ckeditor5_wildcardHtmlSupport is an edge case because its
+        // configuration is based on the combined `elements` configuration of
+        // all other enabled plugins. For this reason,
+        // getDynamicPluginConfigBasedOnAllowedElements() is called instead of
+        // getDynamicPluginConfig().
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getEnabledDefinitions()
+        : $plugin->getDynamicPluginConfigBasedOnAllowedElements(new HTMLRestrictions(
+          $this->getProvidedElements(array_keys($definitions), $editor, FALSE)
+        ));
     }
 
     return [

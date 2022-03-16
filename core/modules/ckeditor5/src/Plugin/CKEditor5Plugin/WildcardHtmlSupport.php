@@ -25,19 +25,19 @@ use Drupal\editor\EditorInterface;
 class WildcardHtmlSupport extends CKEditor5PluginDefault {
 
   /**
-   * {@inheritdoc}
+   * Allows a plugin to modify its static configuration.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $allowed_elements
+   *   Allowed elements by all enabled plugins.
+   *
+   * @return array
+   *   Returns the GHS configuration for resolved wildcards.
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport::getDynamicPluginConfig()
+   *
+   * @internal
    */
-  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor, HTMLRestrictions $allowed_elements = NULL): array {
-    // This plugin is an edge case because its configuration is based on the
-    // combined `elements` configuration of all other active plugins. This
-    // information is provided via a third argument. This third argument
-    // intentionally deviates from the definition in
-    // CKEditor5PluginManagerInterface.
-    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
-    if ($allowed_elements === NULL) {
-      throw new \LogicException();
-    }
-
+  public function getDynamicPluginConfigBasedOnAllowedElements(HTMLRestrictions $allowed_elements): array {
     // Compute the net new elements that the wildcard tags resolve into.
     $concrete_allowed_elements = $allowed_elements->getConcreteSubset();
     $net_new_elements = $allowed_elements->diff($concrete_allowed_elements);
@@ -47,6 +47,18 @@ class WildcardHtmlSupport extends CKEditor5PluginDefault {
         'allow' => $net_new_elements->toGeneralHtmlSupportConfig(),
       ],
     ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    // This plugin is an edge case because its configuration is based on the
+    // combined `elements` configuration of all other enabled plugins. Call
+    // \Drupal\ckeditor5\Plugin\CKEditor5Plugin\WildcardHtmlSupport::getDynamicPluginConfigBasedOnAllowedElements()
+    // instead.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    throw new \BadMethodCallException();
   }
 
 }
