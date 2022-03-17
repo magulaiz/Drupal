@@ -18,6 +18,7 @@ use Twig\Error\LoaderError;
  *
  * @see \Drupal\Core\Template\TwigEnvironment
  * @group Twig
+ * @group legacy
  */
 class TwigEnvironmentTest extends KernelTestBase {
 
@@ -286,6 +287,44 @@ TWIG;
     // This also applies to twig's file cache resulting in an unlimited growth
     // of the cache storage directory.
     $this->assertEquals(count(array_unique($cache_filenames)), 1);
+  }
+
+  /**
+   * Test twig deprecated tag.
+   */
+  public function testDeprecatedTag() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $element['test'] = [
+      '#type' => 'inline_template',
+      '#template' => "{% deprecated 'Some deprecation message' %}foo",
+    ];
+    // @todo Exact deprecation message contains long string id, not sure how to test for this.
+    $this->addExpectedDeprecationMessage('Some deprecation message');
+    $rendered = $renderer->renderRoot($element);
+    $this->assertEqual($rendered, 'foo');
+  }
+
+  /**
+   * Test deprecation errors are triggered when using deprecated variables.
+   */
+  public function testRenderArrayDeprecations() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+    $element['test'] = [
+      '#type' => 'inline_template',
+      '#template' => '{% if foo %}{% if bar != foo %}{{ foo }}{{ bar }}{% endif %}{% endif %}',
+      '#context' => [
+        'foo' => 'foo',
+        'bar' => 'bar',
+        'deprecations' => ['foo' => 'foo is deprecated']
+        ],
+    ];
+    $this->addExpectedDeprecationMessage('foo is deprecated');
+    $this->addExpectedDeprecationMessage('foo is deprecated');
+    $this->addExpectedDeprecationMessage('foo is deprecated');
+    $rendered = $renderer->renderRoot($element);
+    $this->assertEqual($rendered, 'foobar');
   }
 
 }

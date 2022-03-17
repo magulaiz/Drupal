@@ -112,6 +112,7 @@ class TwigExtension extends AbstractExtension {
       new TwigFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new TwigFunction('active_theme', [$this, 'getActiveTheme']),
       new TwigFunction('create_attribute', [$this, 'createAttribute']),
+      new TwigFunction('check_deprecation', [$this, 'checkDeprecation'], ['needs_context' => TRUE]),
     ];
   }
 
@@ -655,6 +656,26 @@ class TwigExtension extends AbstractExtension {
       unset($filtered_element[$key]);
     }
     return $filtered_element;
+  }
+
+  /**
+   * Triggers a deprecation error if a variable is deprecated.
+   *
+   * @param array $context
+   *   A Twig context array.
+   * @param string $name
+   *   The name of the variable, which should correspond to a key in $context.
+   * @param mixed $value
+   *   The value of the variable.
+   *
+   * @return string
+   *   The value.
+   */
+  public function checkDeprecation(array $context, $name, $value) {
+    if (array_key_exists($name, $context) && isset($context['deprecations'][$name])) {
+      @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
+    }
+    return $value;
   }
 
 }
