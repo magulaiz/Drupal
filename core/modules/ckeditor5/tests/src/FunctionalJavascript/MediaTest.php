@@ -1379,6 +1379,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Click the file.
     $this->click('article.media--type-file');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->assertNotEmpty($this->getBalloonButton('View Mode 3'));
     $this->assertNotEmpty($this->getBalloonButton('Default'));
     $this->assertFalse($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));

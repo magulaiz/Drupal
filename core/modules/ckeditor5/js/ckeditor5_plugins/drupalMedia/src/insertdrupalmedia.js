@@ -68,7 +68,7 @@ export default class InsertDrupalMediaCommand extends Command {
         'DrupalElementStyleEditing',
       );
 
-      const { normalizedStyles } = elementStyleEditing;
+      const {normalizedStyles} = elementStyleEditing;
       Object.keys(normalizedStyles).forEach((group) => {
         elementStyleEditing.normalizedStyles[group].forEach((style) => {
           if (
@@ -78,15 +78,11 @@ export default class InsertDrupalMediaCommand extends Command {
             // Manipulate string to have first letter capitalized to append in camel case.
             // Example: 'align' -> 'Align'
             const groupName = group[0].toUpperCase() + group.substring(1);
-            // @todo: Remove this condition and hard coded 'breakText' in https://www.drupal.org/project/drupal/issues/3099878.
-            if (style.name === 'alignCenter') {
-              modelAttributes[`drupalElementStyle${groupName}`] = 'breakText';
-            } else {
-              modelAttributes[`drupalElementStyle${groupName}`] = style.name;
-            }
+            modelAttributes[`drupalElementStyle${groupName}`] = style.name;
           }
         });
       });
+    }
 
       this.editor.model.change((writer) => {
         this.editor.model.insertContent(
@@ -94,7 +90,6 @@ export default class InsertDrupalMediaCommand extends Command {
         );
       });
     }
-  }
 
   refresh() {
     const model = this.editor.model;
