@@ -2,9 +2,16 @@
 /* cspell:words simpleuploadadapter filerepository */
 
 /**
- * Upload adapter. Copied from @ckeditor5/ckeditor5-upload/src/adapters/simpleuploadadapter
+ * Upload adapter.
  *
- * @internal
+ * Copied from @ckeditor5/ckeditor5-upload/src/adapters/simpleuploadadapter
+ * Adds a mapping from `response.uuid` to `dataEntityUuid` and
+ * `response.entity_type` to `dataEntityType` for the callback after the file
+ * upload in the `_initListeners` method.
+ *
+ * @todo why do we do the conversion instead of using response.entity_type in DrupalImageUploadEditing?
+ *
+ * @private
  * @implements {module:upload/filerepository~UploadAdapter}
  */
 export default class DrupalImageUploadAdapter {
@@ -99,7 +106,7 @@ export default class DrupalImageUploadAdapter {
             : genericErrorText,
         );
       }
-
+      console.log(response);
       resolve({
         urls: { default: response.url },
         dataEntityUuid: response.uuid ? response.uuid : '',

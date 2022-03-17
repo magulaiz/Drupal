@@ -5,7 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import DrupalImageEditing from './drupalimageediting';
 
 /**
- * @internal
+ * @private
  */
 class DrupalImage extends Plugin {
   /**
