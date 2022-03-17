@@ -68,7 +68,7 @@ export default class InsertDrupalMediaCommand extends Command {
         'DrupalElementStyleEditing',
       );
 
-      const {normalizedStyles} = elementStyleEditing;
+      const { normalizedStyles } = elementStyleEditing;
       Object.keys(normalizedStyles).forEach((group) => {
         elementStyleEditing.normalizedStyles[group].forEach((style) => {
           if (
@@ -84,12 +84,12 @@ export default class InsertDrupalMediaCommand extends Command {
       });
     }
 
-      this.editor.model.change((writer) => {
-        this.editor.model.insertContent(
-          createDrupalMedia(writer, modelAttributes),
-        );
-      });
-    }
+    this.editor.model.change((writer) => {
+      this.editor.model.insertContent(
+        createDrupalMedia(writer, modelAttributes),
+      );
+    });
+  }
 
   refresh() {
     const model = this.editor.model;
