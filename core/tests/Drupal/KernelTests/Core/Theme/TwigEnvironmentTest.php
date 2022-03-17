@@ -317,7 +317,7 @@ TWIG;
       '#context' => [
         'foo' => 'foo',
         'bar' => 'bar',
-        'deprecations' => ['foo' => 'foo is deprecated']
+        'deprecations' => ['foo' => 'foo is deprecated'],
         ],
     ];
     $this->addExpectedDeprecationMessage('foo is deprecated');
