@@ -18,6 +18,7 @@ import DrupalElementStyleCommand from './drupalelementstylecommand';
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
+  // eslint-disable-next-line no-restricted-syntax
   for (const style of styles) {
     if (style.name === name) {
       return style;
