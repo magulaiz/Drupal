@@ -7,7 +7,7 @@ import DrupalEmphasisEditing from './drupalemphasisediting';
 /**
  * Drupal specific plugin to alter CKEditor 5 italic command.
  *
- * @internal
+ * @private
  */
 class DrupalEmphasis extends Plugin {
   /**

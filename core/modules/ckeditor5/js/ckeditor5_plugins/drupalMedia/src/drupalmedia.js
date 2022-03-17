@@ -10,7 +10,7 @@ import MediaImageTextAlternative from './mediaimagetextalternative';
 import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMedia extends Plugin {
   static get requires() {

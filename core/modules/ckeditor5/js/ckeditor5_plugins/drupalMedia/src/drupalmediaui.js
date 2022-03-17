@@ -7,7 +7,7 @@ import { ButtonView } from 'ckeditor5/src/ui';
 import mediaIcon from '../theme/icons/medialibrary.svg';
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaUI extends Plugin {
   init() {

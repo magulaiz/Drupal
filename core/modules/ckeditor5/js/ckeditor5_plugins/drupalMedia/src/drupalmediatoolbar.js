@@ -26,7 +26,7 @@ function normalizeDeclarativeConfig(config) {
 }
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaToolbar extends Plugin {
   static get requires() {

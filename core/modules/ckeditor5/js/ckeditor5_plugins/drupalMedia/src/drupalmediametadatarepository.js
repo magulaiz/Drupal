@@ -27,7 +27,7 @@ const _fetchMetadata = async (url) => {
 };
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaMetadataRepository extends Plugin {
   /**

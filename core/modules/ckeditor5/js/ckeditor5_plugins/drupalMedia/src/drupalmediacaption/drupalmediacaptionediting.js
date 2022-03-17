@@ -174,7 +174,7 @@ function modelCaptionToCaptionAttribute(editor) {
  *
  * @extends module:core/plugin~Plugin
  *
- * @internal
+ * @private
  */
 export default class DrupalMediaCaptionEditing extends Plugin {
   /**

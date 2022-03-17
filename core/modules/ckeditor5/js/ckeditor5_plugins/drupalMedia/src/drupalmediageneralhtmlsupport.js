@@ -172,7 +172,7 @@ function modelToDataViewAttributeConverter() {
 /**
  * Integrates Drupal Media with General HTML Support.
  *
- * @internal
+ * @private
  */
 export default class DrupalMediaGeneralHtmlSupport extends Plugin {
   /**

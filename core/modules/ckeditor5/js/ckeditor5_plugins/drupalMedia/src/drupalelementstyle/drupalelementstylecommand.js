@@ -50,7 +50,7 @@ function getClosestElementWithElementStyleAttribute(selection, schema) {
  *
  * @extends module:core/command~Command
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleCommand extends Command {
   /**

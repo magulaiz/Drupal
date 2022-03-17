@@ -163,7 +163,7 @@ function viewToModelStyleAttribute(styles) {
  *
  * @extends module:core/plugin~Plugin
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleEditing extends Plugin {
   /**

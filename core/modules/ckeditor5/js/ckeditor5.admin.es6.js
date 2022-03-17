@@ -845,7 +845,7 @@
    * @return {string}
    *   The selected buttons markup.
    *
-   * @internal
+   * @private
    */
   Drupal.theme.ckeditor5SelectedButtons = ({ buttons }) => {
     return `
@@ -869,7 +869,7 @@
    * @return {string}
    *   The CKEditor 5 divider buttons markup.
    *
-   * @internal
+   * @private
    */
   Drupal.theme.ckeditor5DividerButtons = ({ buttons }) => {
     return `
@@ -893,7 +893,7 @@
    * @return {string}
    *   The CKEditor 5 available buttons markup.
    *
-   * @internal
+   * @private
    */
   Drupal.theme.ckeditor5AvailableButtons = ({ buttons }) => {
     return `
@@ -923,7 +923,7 @@
    * @return {string}
    *   The CKEditor 5 buttons markup.
    *
-   * @internal
+   * @private
    */
   Drupal.theme.ckeditor5Button = ({ button: { label, id }, listType }) => {
     const visuallyHiddenLabel = Drupal.t(`@listType button @label`, {
@@ -958,7 +958,7 @@
    * @return {string}
    *   The CKEditor 5 admin UI markup.
    *
-   * @internal
+   * @private
    */
   Drupal.theme.ckeditor5Admin = ({
     availableButtons,

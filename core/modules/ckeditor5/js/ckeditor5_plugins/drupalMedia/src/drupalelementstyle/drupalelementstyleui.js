@@ -64,7 +64,7 @@ function getUIComponentName(name) {
  *
  * @extends module:core/plugin~Plugin
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyleUi extends Plugin {
   /**

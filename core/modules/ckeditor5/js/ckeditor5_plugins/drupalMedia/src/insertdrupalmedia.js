@@ -12,7 +12,7 @@ function createDrupalMedia(writer, attributes) {
 }
 
 /**
- * @internal
+ * @private
  */
 /**
  * The insert media command.

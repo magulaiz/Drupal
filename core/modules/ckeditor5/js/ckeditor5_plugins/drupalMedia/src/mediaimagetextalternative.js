@@ -4,7 +4,7 @@ import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediai
 import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui';
 
 /**
- * @internal
+ * @private
  */
 /**
  * The media image text alternative plugin.

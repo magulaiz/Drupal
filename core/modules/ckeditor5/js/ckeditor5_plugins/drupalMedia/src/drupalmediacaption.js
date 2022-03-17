@@ -5,7 +5,7 @@ import DrupalMediaCaptionEditing from './drupalmediacaption/drupalmediacaptioned
 import DrupalMediaCaptionUI from './drupalmediacaption/drupalmediacaptionui';
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaCaption extends Plugin {
   static get requires() {

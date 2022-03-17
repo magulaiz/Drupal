@@ -12,7 +12,7 @@ import DrupalHtmlBuilder from './drupalhtmlbuilder';
  *
  * @see https://www.drupal.org/project/drupal/issues/3227831
  *
- * @internal
+ * @private
  */
 export default class DrupalHtmlWriter {
   /**

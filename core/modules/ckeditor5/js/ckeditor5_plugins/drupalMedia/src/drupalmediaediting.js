@@ -12,7 +12,7 @@ import { getPreviewContainer } from './utils';
  */
 
 /**
- * @internal
+ * @private
  */
 export default class DrupalMediaEditing extends Plugin {
   static get requires() {

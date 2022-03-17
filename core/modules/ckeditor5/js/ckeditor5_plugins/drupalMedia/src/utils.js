@@ -10,7 +10,7 @@ import { isWidget } from 'ckeditor5/src/widget';
  * @return {boolean}
  *   A boolean indicating whether element is drupalMedia element.
  *
- * @internal
+ * @private
  */
 export function isDrupalMedia(modelElement) {
   return !!modelElement && modelElement.is('element', 'drupalMedia');
@@ -24,7 +24,7 @@ export function isDrupalMedia(modelElement) {
  * @return {boolean}
  *   A boolean indicating whether element is <drupal-media> element.
  *
- * @internal
+ * @private
  */
 export function isDrupalMediaWidget(viewElement) {
   return (
@@ -42,7 +42,7 @@ export function isDrupalMediaWidget(viewElement) {
  *   ancestor of the selection. Returns null if the selection has no Drupal
  *   Media element.
  *
- * @internal
+ * @private
  */
 export function getClosestSelectedDrupalMediaElement(selection) {
   const selectedElement = selection.getSelectedElement();
@@ -60,7 +60,7 @@ export function getClosestSelectedDrupalMediaElement(selection) {
  * @return {module:engine/view/element~Element|null}
  *   The currently selected Drupal Media widget or null.
  *
- * @internal
+ * @private
  */
 export function getClosestSelectedDrupalMediaWidget(selection) {
   const viewElement = selection.getSelectedElement();

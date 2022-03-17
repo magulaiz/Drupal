@@ -11,7 +11,7 @@ import DrupalHtmlWriter from './drupalhtmlwriter';
  * @see https://www.drupal.org/project/drupal/issues/3227831
  * @see DrupalHtmlBuilder._escapeAttribute
  *
- * @internal
+ * @private
  */
 class DrupalHtmlEngine extends Plugin {
   /**

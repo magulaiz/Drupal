@@ -30,7 +30,7 @@ import DrupalElementStyleEditing from './drupalelementstyle/drupalelementstyleed
  * @see module:drupalMedia/drupalmediaediting~DrupalMediaEditing
  * @see module:drupalMedia/drupalmediatoolbar~DrupalMediaToolbar
  *
- * @internal
+ * @private
  */
 export default class DrupalElementStyle extends Plugin {
   /**
