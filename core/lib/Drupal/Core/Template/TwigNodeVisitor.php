@@ -3,6 +3,7 @@
 namespace Drupal\Core\Template;
 
 use Twig\Environment;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\NameExpression;
