@@ -59,7 +59,7 @@ export function getClosestElementWithElementStyleAttribute(
     return selectedElement;
   }
 
-  let parent = selection.getFirstPosition().parent;
+  let { parent } = selection.getFirstPosition();
 
   while (parent) {
     if (
@@ -120,10 +120,8 @@ export default class DrupalElementStyleCommand extends Command {
 
     // The element needs to be checked against list of possible attributes then
     // update the value to include all drupalElementStyles selected for the element.
-    if (this.isEnabled && this.containsAttribute(element)) {
+    if (this.isEnabled) {
       this.value = this.getGroupAndAttribute(element);
-    } else {
-      this.value = false;
       // If value is falsy, check if there is a default style to apply to the
       // element.
       if (!this.value) {
@@ -147,6 +145,8 @@ export default class DrupalElementStyleCommand extends Command {
           }
         }
       }
+    } else {
+      this.value = false;
     }
   }
 
@@ -189,6 +189,14 @@ export default class DrupalElementStyleCommand extends Command {
         groupAttr[group] = element.getAttribute(
           `drupalElementStyle${groupName}`,
         );
+      } else {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const style of this.styles[group]) {
+          // No drupalElementStyle attribute means it should be set to default.
+          if (style.isDefault) {
+            groupAttr[group] = style.name.toString();
+          }
+        }
       }
     });
     return groupAttr;
@@ -214,8 +222,8 @@ export default class DrupalElementStyleCommand extends Command {
   execute(options = {}) {
     const { editor } = this;
     const { model } = editor;
-    const group = options.group;
-    const modelAttribute = options.modelAttribute;
+    const { group } = options;
+    const { modelAttribute } = options;
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;

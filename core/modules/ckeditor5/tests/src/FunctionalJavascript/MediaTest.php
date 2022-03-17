@@ -1379,6 +1379,9 @@ class MediaTest extends WebDriverTestBase {
     // Confirm that the hidden button is the view mode not enabled for image.
     $this->assertTrue($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
 
+    // Resize window to prevent click interception by
+    // a different element in DrupalCI.
+    $this->getSession()->resizeWindow(1200, 1200);
     // Click the file.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-file'));
     $file = $page->find('css', 'article.media--type-file');

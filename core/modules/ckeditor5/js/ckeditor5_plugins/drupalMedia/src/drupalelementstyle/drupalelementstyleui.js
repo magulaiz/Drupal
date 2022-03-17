@@ -444,7 +444,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.bind('isEnabled').to(command, 'isEnabled');
         view.bind('isOn').to(command, 'value', (value) => {
-          return value && value[group] && value[group] === buttonName;
+          return value && value[group] === buttonName;
         });
 
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
@@ -567,6 +567,7 @@ export default class DrupalElementStyleUi extends Plugin {
     const obj = {};
     obj[group] = name;
     const groupName = group[0].toUpperCase() + group.substring(1);
+
     this.editor.execute('drupalElementStyle', {
       value: obj,
       group,
