@@ -342,21 +342,11 @@ class Row {
     $return = [];
     foreach ($properties as $orig_property) {
       $property = $orig_property;
-      $is_source = TRUE;
-      if ($property[0] == '@') {
-        $property = preg_replace_callback('/^(@?)((?:@@)*)([^@]|$)/', function ($matches) use (&$is_source) {
-          // If there are an odd number of @ in the beginning, it's a
-          // destination.
-          $is_source = empty($matches[1]);
-          // Remove the possible escaping and do not lose the terminating
-          // non-@ either.
-          return str_replace('@@', '@', $matches[2]) . $matches[3];
-        }, $property);
-      }
-      if ($is_source) {
+      if (self::isSourcePropertyKey($property)) {
         $return[$orig_property] = $this->getSourceProperty($property);
       }
       else {
+        $property = substr($property, 1);
         $return[$orig_property] = $this->getDestinationProperty($property);
       }
     }
@@ -430,6 +420,22 @@ class Row {
    */
   public function isStub() {
     return $this->isStub;
+  }
+
+  /**
+   * Reports whether the passed key is referring to a source property.
+   *
+   * @return bool
+   */
+  public static function isSourcePropertyKey(string $propertyKey) {
+    if ($propertyKey[0] === '@') {
+      return FALSE;
+    }
+
+    preg_match('/^(@?)((?:@@)*)([^@]|$)/', $propertyKey, $matches);
+    // If there are an odd number of @ in the beginning, it's a
+    // destination.
+    return empty($matches[1]);
   }
 
 }

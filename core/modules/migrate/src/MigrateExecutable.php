@@ -413,7 +413,40 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $multiple = FALSE;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
     foreach ($plugins as $plugin) {
+      $id = $plugin->getPluginId();
       $definition = $plugin->getPluginDefinition();
+      $configuration = $plugin->getConfiguration();
+
+      if ($id === 'get' && isset($configuration['source'])) {
+        $source = $configuration['source'];
+        $properties = is_string($source) ? [$source] : $source;
+
+        foreach ($properties as $property) {
+          if (!$property && (string) $property !== '0') {
+            continue;
+          }
+
+          $is_source = Row::isSourcePropertyKey($property);
+
+          if ($is_source) {
+            $missing = !$row->hasSourceProperty($property);
+          }
+          else {
+            $property = substr($property, 1);
+            $missing = !$row->hasDestinationProperty($property);
+          }
+
+          if ($missing) {
+            $behavior = $this->migration->getMissingPropertyBehavior();
+            if ($behavior === MigrationInterface::MISSING_PROPERTY_SKIP_ROW) {
+              throw new MigrateSkipRowException(sprintf("The '%s' property was missing from the %s.", $property, $is_source ? 'source' : 'destination'));
+            }
+            if ($behavior === MigrationInterface::MISSING_PROPERTY_SKIP_PROPERTY) {
+              return;
+            }
+          }
+        }
+      }
       // Many plugins expect a scalar value but the current value of the
       // pipeline might be multiple scalars (this is set by the previous plugin)
       // and in this case the current value needs to be iterated and each scalar

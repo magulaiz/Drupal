@@ -86,6 +86,21 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   const RESULT_DISABLED = 6;
 
   /**
+   * If a property is missing from the source, skip the row.
+   */
+  const MISSING_PROPERTY_SKIP_ROW = 'skip_row';
+
+  /**
+   * If a property is missing from the source, skip it without changing the destination.
+   */
+  const MISSING_PROPERTY_SKIP_PROPERTY = 'skip_property';
+
+  /**
+   * If a property is missing from the source, carry on as if it was NULL.
+   */
+  const MISSING_PROPERTY_SET_NULL = 'set_null';
+
+  /**
    * An alias for getPluginId() for backwards compatibility reasons.
    *
    * @return string
@@ -333,5 +348,15 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    * @return bool
    */
   public function isAuditable();
+
+  /**
+   * The behaviour in case a missing source or destination property is referenced.
+   *
+   * The value is a MigrationInterface::MISSING_PROPERTY_* constant, for example:
+   * MISSING_PROPERTY_SKIP_ROW.
+   *
+   * @return string
+   */
+  public function getMissingPropertyBehavior();
 
 }

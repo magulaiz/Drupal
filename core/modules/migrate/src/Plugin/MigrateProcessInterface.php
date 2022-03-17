@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate\Plugin;
 
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
@@ -20,7 +21,7 @@ use Drupal\migrate\Row;
  *
  * @ingroup migration
  */
-interface MigrateProcessInterface extends PluginInspectionInterface {
+interface MigrateProcessInterface extends ConfigurableInterface, PluginInspectionInterface {
 
   /**
    * Performs the associated process.
