@@ -1043,6 +1043,7 @@ class MediaTest extends WebDriverTestBase {
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
     $this->getBalloonButton('Align center and break text')->click();
+
     // Assert the alignment class exists after editing downcast.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
     $editor_dom = $this->getEditorDataAsDom();
@@ -1360,12 +1361,13 @@ class MediaTest extends WebDriverTestBase {
     $drupal_media_element = $editor_dom->getElementsByTagName('drupal-media')
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
+
     // Click the image.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-image'));
     $image = $page->find('css', 'article.media--type-image');
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View mode')->click();
-
     // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
     $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
@@ -1378,10 +1380,14 @@ class MediaTest extends WebDriverTestBase {
     $this->assertTrue($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
 
     // Click the file.
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-file'));
+    $file = $page->find('css', 'article.media--type-file');
     $this->click('article.media--type-file');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 3'));
     $this->assertNotEmpty($this->getBalloonButton('Default'));
+    // Check that the buttons are not hidden.
     $this->assertFalse($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
     $this->assertFalse($this->getBalloonButton('Default')->hasClass('ck-hidden'));
     // Confirm that the hidden button is the view mode not enabled for file.
