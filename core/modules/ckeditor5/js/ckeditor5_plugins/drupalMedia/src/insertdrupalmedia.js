@@ -80,7 +80,7 @@ export default class InsertDrupalMediaCommand extends Command {
             const groupName = group[0].toUpperCase() + group.substring(1);
             // @todo: Remove this condition and hard coded 'breakText' in https://www.drupal.org/project/drupal/issues/3099878.
             if (style.name === 'alignCenter') {
-              modelAttributes[`drupalElementStyle${groupName}`] = 'breakText'
+              modelAttributes[`drupalElementStyle${groupName}`] = 'breakText';
             } else {
               modelAttributes[`drupalElementStyle${groupName}`] = style.name;
             }
