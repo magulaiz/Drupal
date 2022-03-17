@@ -9,6 +9,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Template\TwigEnvironment;
 use Drupal\Core\Template\TwigPhpStorageCache;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\Traits\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Definition;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -21,6 +22,8 @@ use Twig\Error\LoaderError;
  * @group legacy
  */
 class TwigEnvironmentTest extends KernelTestBase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Modules to enable.
