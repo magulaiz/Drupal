@@ -18,11 +18,11 @@ import DrupalElementStyleCommand from './drupalelementstylecommand';
  * @return {Drupal.CKEditor5~DrupalElementStyle}
  */
 function getStyleDefinitionByName(name, styles) {
-  styles.forEach((style) => {
+  for (const style of styles) {
     if (style.name === name) {
       return style;
     }
-  });
+  }
 }
 
 /**
@@ -233,7 +233,7 @@ export default class DrupalElementStyleEditing extends Plugin {
             !style.attributeValue
           ) {
             console.warn(
-              'drupalElementStyles options must include attributeName and attributeValue.',
+              `${style.attributeValue} drupalElementStyles options must include attributeName and attributeValue.`,
             );
             return false;
           }

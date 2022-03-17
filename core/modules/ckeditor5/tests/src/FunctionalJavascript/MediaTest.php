@@ -135,7 +135,6 @@ class MediaTest extends WebDriverTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'use text format test_format',
       'bypass node access',
-      'administer filters',
     ]);
 
     // Create a sample media entity to be embedded.
@@ -249,7 +248,7 @@ class MediaTest extends WebDriverTestBase {
     $filter_format->setFilterConfig('filter_html', [
       'status' => TRUE,
       'settings' => [
-        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo>',
+        'allowed_html' => '<p> <br> <strong> <em> <a href> <drupal-media data-entity-type data-entity-uuid data-align data-caption alt data-foo data-view-mode>',
       ],
     ]);
     $filter_format->save();
@@ -365,6 +364,7 @@ class MediaTest extends WebDriverTestBase {
     // the preview is generated using the default theme, not the admin theme.
     // @see media_test_embed_entity_view_alter()
     $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
     $this->waitForEditor();
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
@@ -1043,7 +1043,6 @@ class MediaTest extends WebDriverTestBase {
       ->item(0);
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
     $this->getBalloonButton('Align center and break text')->click();
-
     // Assert the alignment class exists after editing downcast.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media.drupal-media-style-align-center'));
     $editor_dom = $this->getEditorDataAsDom();

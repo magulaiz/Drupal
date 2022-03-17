@@ -75,7 +75,15 @@ export default class InsertDrupalMediaCommand extends Command {
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
-            modelAttributes.drupalElementStyle = style.name;
+            // Manipulate string to have first letter capitalized to append in camel case.
+            // Example: 'align' -> 'Align'
+            const groupName = group[0].toUpperCase() + group.substring(1);
+            // @todo: Remove this condition and hard coded 'breakText' in https://www.drupal.org/project/drupal/issues/3099878.
+            if (style.name === 'alignCenter') {
+              modelAttributes[`drupalElementStyle${groupName}`] = 'breakText'
+            } else {
+              modelAttributes[`drupalElementStyle${groupName}`] = style.name;
+            }
           }
         });
       });

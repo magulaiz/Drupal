@@ -443,7 +443,10 @@ export default class DrupalElementStyleUi extends Plugin {
         });
 
         view.bind('isEnabled').to(command, 'isEnabled');
-        view.bind('isOn').to(command, 'value', (value) => value === buttonName);
+        view.bind('isOn').to(command, 'value', (value) => {
+            return value && value[group] && value[group] === buttonName;
+        });
+
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
         return view;
