@@ -248,4 +248,13 @@ class EntityListBuilder extends EntityHandlerBase implements EntityListBuilderIn
     return $url->mergeOptions(['query' => $this->getRedirectDestination()->getAsArray()]);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setLimit($limit) {
+    assert(is_int($limit) || $limit === FALSE, 'The limit must be an integer or FALSE.');
+    $this->limit = $limit;
+    return $this;
+  }
+
 }
