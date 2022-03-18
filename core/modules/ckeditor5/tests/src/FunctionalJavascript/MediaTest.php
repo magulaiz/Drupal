@@ -1347,7 +1347,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Add a second media of a different bundle here.
-    $this->host->body->value .= '<drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
+    $this->host->body->value .= '<p></p><p></p><p></p><drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
@@ -1379,12 +1379,10 @@ class MediaTest extends WebDriverTestBase {
     // Confirm that the hidden button is the view mode not enabled for image.
     $this->assertTrue($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
 
-    // Resize window to prevent click interception by
-    // a different element in DrupalCI.
-    $this->getSession()->resizeWindow(1200, 1200);
     // Click the file.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-file'));
     $file = $page->find('css', 'article.media--type-file');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
     $this->click('article.media--type-file');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     // Check that the buttons exist.
