@@ -1379,10 +1379,13 @@ class MediaTest extends WebDriverTestBase {
     // Confirm that the hidden button is the view mode not enabled for image.
     $this->assertTrue($this->getBalloonButton('View Mode 3')->hasClass('ck-hidden'));
 
-    // Click the file.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-file'));
     $file = $page->find('css', 'article.media--type-file');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+    // Click the caption of the media instead of the media for the second
+    // element to prevent element interception.
+    $this->getSession()->getPage()->find('xpath', '//figcaption[text()="armadillo"]')->click();
+
     $this->click('article.media--type-file');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     // Check that the buttons exist.
