@@ -115,9 +115,6 @@ export default class DrupalMediaEditing extends Plugin {
           'element:drupal-media',
           (evt, data) => {
             const [modelElement] = data.modelRange.getItems();
-            if (!isDrupalMedia(modelElement)) {
-              return;
-            }
             metadataRepository
               .getMetadata(modelElement)
               .then((metadata) => {
@@ -144,7 +141,7 @@ export default class DrupalMediaEditing extends Plugin {
               });
           },
           // This converter needs to have the lowest priority to ensure that the
-          // model element and its attributes have been converted.
+          // model element and its attributes have already been converted.
           { priority: 'lowest' },
         );
       });
@@ -297,22 +294,23 @@ export default class DrupalMediaEditing extends Plugin {
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
       // Omit drupalMediaType from downcast because it is unnecessary for the view.
-      if (modelKey !== 'drupalMediaType') {
-        const attributeMapping = {
-          model: {
-            key: modelKey,
-            name: 'drupalMedia',
-          },
-          view: {
-            name: 'drupal-media',
-            key: this.attrs[modelKey],
-          },
-        };
-        // Attributes should be rendered only in dataDowncast to avoid having
-        // unfiltered data-attributes on the Drupal Media widget.
-        conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
-        conversion.for('upcast').attributeToAttribute(attributeMapping);
+      if (modelKey === 'drupalMediaType') {
+        return;
       }
+      const attributeMapping = {
+        model: {
+          key: modelKey,
+          name: 'drupalMedia',
+        },
+        view: {
+          name: 'drupal-media',
+          key: this.attrs[modelKey],
+        },
+      };
+      // Attributes should be rendered only in dataDowncast to avoid having
+      // unfiltered data-attributes on the Drupal Media widget.
+      conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
+      conversion.for('upcast').attributeToAttribute(attributeMapping);
     });
   }
 

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cSpell:words insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
+import { capitalizeFirstLetter } from './utils';
 
 /**
  * @module drupalMedia/insertdrupalmediacommand
@@ -75,9 +76,7 @@ export default class InsertDrupalMediaCommand extends Command {
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
-            // Manipulate string to have first letter capitalized to append in camel case.
-            // Example: 'align' -> 'Align'
-            const groupName = group[0].toUpperCase() + group.substring(1);
+            const groupName = capitalizeFirstLetter(group);
             modelAttributes[`drupalElementStyle${groupName}`] = style.name;
           }
         });

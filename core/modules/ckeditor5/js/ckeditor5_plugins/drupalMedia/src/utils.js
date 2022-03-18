@@ -124,3 +124,15 @@ export function getPreviewContainer(children) {
 
   return null;
 }
+
+/**
+ * A simple helper function that manipulates string to have first letter capitalized to append in camel case.
+ *
+ * @example
+ *    Example: 'align' -> 'Align'
+ *
+ * @param {string} group The name of the group (ex. 'align', 'viewMode').
+ */
+export function capitalizeFirstLetter(group) {
+  return group[0].toUpperCase() + group.substring(1);
+}

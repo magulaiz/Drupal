@@ -26,6 +26,13 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
 
   /**
+   * The entity display repository.
+   *
+   * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
+   */
+  protected $entityDisplayRepository;
+
+  /**
    * Media constructor.
    *
    * @param array $configuration
@@ -114,7 +121,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
 
     $items = [];
 
-    foreach (array_keys($all_view_modes) as $view_mode) {
+    foreach (array_keys($allowed_view_modes) as $view_mode) {
       $items[] = "drupalElementStyle:viewMode:$view_mode";
     }
     if (!empty($allowed_view_modes)) {

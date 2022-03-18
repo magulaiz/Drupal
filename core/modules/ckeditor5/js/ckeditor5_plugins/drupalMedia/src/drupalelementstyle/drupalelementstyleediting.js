@@ -3,6 +3,7 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
+import { capitalizeFirstLetter } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -147,6 +148,7 @@ function viewToModelStyleAttribute(styles, groupName) {
   };
 }
 
+// @todo: remove options key in the comment
 /**
  * The Drupal Element Style editing plugin.
  *
@@ -173,11 +175,22 @@ function viewToModelStyleAttribute(styles, groupName) {
  *                icon: 'objectRight'
  *                attributeName: 'data-align'
  *                modelElements: [ 'drupalMedia' ]
+ *              - name: 'alignRight'
+ *                title: 'Right aligned media'
+ *                icon: 'objectRight'
+ *                attributeName: 'data-align'
+ *                attributeValue: 'left'
+ *                modelElements: [ 'drupalMedia' ]
  *            viewMode:
  *              - name: 'full view mode'
  *                title: 'Full view mode'
  *                attributeName: 'data-view-mode'
  *                attributeValue: 'full'
+ *                modelElements: [ 'drupalMedia' ]
+ *              - name: 'compact view mode'
+ *                title: 'Compact view mode'
+ *                attributeName: 'data-view-mode'
+ *                attributeValue: 'compact'
  *                modelElements: [ 'drupalMedia' ]
  *
  * @see Drupal.CKEditor5~DrupalElementStyle
@@ -281,7 +294,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
       // Capitalize first letter to append in camelCase properly.
-      const groupName = group[0].toUpperCase() + group.substring(1);
+      const groupName = capitalizeFirstLetter(group);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],

@@ -2,6 +2,7 @@
 /* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
 import { toMap } from 'ckeditor5/src/utils';
+import { capitalizeFirstLetter } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
@@ -23,7 +24,7 @@ import { toMap } from 'ckeditor5/src/utils';
 function schemaContainsAttribute(selectedElement, schema, styles) {
   // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
-    const groupName = group[0].toUpperCase() + group.substring(1);
+    const groupName = capitalizeFirstLetter(group);
     if (
       schema.checkAttribute(selectedElement, `drupalElementStyle${groupName}`)
     ) {
@@ -162,7 +163,7 @@ export default class DrupalElementStyleCommand extends Command {
   containsAttribute(element) {
     // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(this.styles)) {
-      const groupName = group[0].toUpperCase() + group.substring(1);
+      const groupName = capitalizeFirstLetter(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         return true;
       }
@@ -184,7 +185,7 @@ export default class DrupalElementStyleCommand extends Command {
   getGroupAndAttribute(element) {
     const groupAttr = {};
     Object.keys(this.styles).forEach((group) => {
-      const groupName = group[0].toUpperCase() + group.substring(1);
+      const groupName = capitalizeFirstLetter(group);
       if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
         groupAttr[group] = element.getAttribute(
           `drupalElementStyle${groupName}`,

@@ -365,7 +365,6 @@ class MediaTest extends WebDriverTestBase {
     // @see media_test_embed_entity_view_alter()
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
-    $this->waitForEditor();
     $assert_session = $this->assertSession();
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'img[src*="image-test.png"]'));
     $element = $assert_session->elementExists('css', '[data-media-embed-test-active-theme]');

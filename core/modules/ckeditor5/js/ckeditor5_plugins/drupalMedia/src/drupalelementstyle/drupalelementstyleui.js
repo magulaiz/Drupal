@@ -13,7 +13,7 @@ import {
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
-import { isDrupalMedia, isObject } from '../utils';
+import { isDrupalMedia, isObject, capitalizeFirstLetter } from '../utils';
 import { METADATA_ERROR } from '../mediaimagetextalternative/utils';
 import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
 
@@ -54,9 +54,9 @@ const getDropdownButtonTitle = (dropdownTitle, buttonTitle) => {
  * components in the component factory.
  *
  * @param {string} name
- *   The name of the component.
+ *   The name of the style
  * @param {string} group
- *   The group of the component.
+ *   The group of the style.
  * @return {string}
  *   The UI component name.
  *
@@ -67,19 +67,18 @@ function getUIComponentName(name, group) {
 }
 
 /**
- * Toggles the visibility of the correct view mode buttons depending on the selection's bundle type.
+ * Updates the visibility of the correct view mode options depending on the selection's media type.
  *
  * @param {module:core/editor/editor~Editor} editor
  *   The editor instance.
  * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
  *   A list of defined styles.
  * @param {string} style
- *   The style to check be checked against the bundle specific styles.
- * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
+ *   The style to check be checked against the media type's specific styles.
+ * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} dropdownItemDefinition
  *   Dropdown item definition.
- *
  */
-function toggleButtonVisibility(editor, definedStyles, style, definition) {
+function updateOptionVisibility(editor, definedStyles, style, dropdownItemDefinition) {
   const { selection } = editor.model.document;
   const modelElement = selection
     ? selection.getSelectedElement()
@@ -100,16 +99,16 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
   });
 
   if (!filteredDefinedStyles.includes(style)) {
-    // Hide button if view mode is not available for the bundle that the modelElement is.
-    definition.model.set({ class: 'ck-hidden' });
+    // Hide the style option if view mode is not available for the media type that the modelElement is.
+    dropdownItemDefinition.model.set({ class: 'ck-hidden' });
   } else {
-    // Un-hide button here after changing selection to a bundle that should have the view mode button visible.
-    definition.model.set({ class: '' });
+    // Un-hide the style option here after changing selection to a media type that should have the view mode button visible.
+    dropdownItemDefinition.model.set({ class: '' });
   }
 }
 
 /**
- * Upcast `drupalMediaType` from Drupal Media metadata.
+ * Upcast `type` from Drupal Media metadata.
  *
  * @param {module:engine/model/node~Node} modelElement
  *   The `drupalMedia` model element.
@@ -164,7 +163,7 @@ function upcastDrupalMediaType(
         writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
       });
     });
-  toggleButtonVisibility(editor, definedStyles, style, definition);
+  updateOptionVisibility(editor, definedStyles, style, definition);
 }
 
 /**
@@ -199,7 +198,7 @@ function getDropdownListItemDefinitions(definedStyles, command, group, editor) {
         return;
       }
       // Need to upcast DrupalMediaType to model so it can be used to show
-      // correct buttons based on bundle. Calls toggle function inside below method.
+      // correct buttons based on bundle. Calls updateOptionVisibility function inside below method.
       upcastDrupalMediaType(
         modelElement,
         editor,
@@ -225,7 +224,7 @@ function getDropdownListItemDefinitions(definedStyles, command, group, editor) {
       if (!isDrupalMedia(modelElement)) {
         return;
       }
-      toggleButtonVisibility(editor, definedStyles, style, definition);
+      updateOptionVisibility(editor, definedStyles, style, definition);
     });
   });
   return itemDefinitions;
@@ -265,18 +264,27 @@ export default class DrupalElementStyleUi extends Plugin {
     /**
      * A Drupal Element Style dropdown definition.
      *
+     * List dropdown display configuration.
      * @example
      *    config:
      *       drupalMedia:
-     *         toolbar:
-     *           - name: 'drupalMedia:alignment'
-     *             display: 'toolbar'
-     *             title: 'Custom title for the dropdown'
-     *             items:
-     *               - 'drupalElementStyle:align:alignLeft'
-     *               - 'drupalElementStyle:align:alignCenter'
-     *               - 'drupalElementStyle:align:alignRight'
-     *             defaultItem: 'drupalElementStyle:align:alignCenter'
+     *        toolbar:
+     *          - name: 'drupalMedia:viewMode'
+     *            display: 'list'
+     *            items:
+     *              - 'drupalElementStyle:full'
+     *              - 'drupalElementStyle:media_library'
+     *              - 'drupalElementStyle:tiny'
+     *
+     * Balloon button display configuration.
+     * @example
+     *    config:
+     *       drupalMedia:
+     *        toolbar:
+     *          - 'drupalElementStyle:align:breakText'
+     *          - 'drupalElementStyle:align:alignLeft'
+     *          - 'drupalElementStyle:align:alignCenter'
+     *          - 'drupalElementStyle:align:alignRight'
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
@@ -388,7 +396,7 @@ export default class DrupalElementStyleUi extends Plugin {
         .toMany(buttonViews, 'isOn', (...areOn) => areOn.some(identity));
 
       // If one of the styles is selected, add a CSS class to the split button
-      // which modifies the styles to indicate that the split button default
+      // which modifies the styles to indicate that the splitbutton default
       // option is currently selected.
       splitButtonView
         .bind('class')
@@ -504,7 +512,7 @@ export default class DrupalElementStyleUi extends Plugin {
       const command = this.editor.commands.get('drupalElementStyle');
 
       // If style is selected, use the label of the selected style as the
-      // default label of the split button.
+      // default label of the splitbutton.
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
         if (
           commandValue &&
@@ -539,7 +547,7 @@ export default class DrupalElementStyleUi extends Plugin {
         const obj = {};
         const key = evt.source.group;
         obj[key] = evt.source.commandValue;
-        const groupName = group[0].toUpperCase() + group.substring(1);
+        const groupName = capitalizeFirstLetter(group);
         this.editor.execute(evt.source.commandName, {
           value: obj,
           group: evt.source.group,
@@ -566,7 +574,7 @@ export default class DrupalElementStyleUi extends Plugin {
   _executeCommand(name, group) {
     const obj = {};
     obj[group] = name;
-    const groupName = group[0].toUpperCase() + group.substring(1);
+    const groupName = capitalizeFirstLetter(group);
 
     this.editor.execute('drupalElementStyle', {
       value: obj,
