@@ -35,7 +35,7 @@ class TwigNodeCheckDeprecations extends Node {
    */
   public function compile(Compiler $compiler) {
     $usedNamesNode = new ArrayExpression([], NULL);
-    foreach($this->usedNames as $name) {
+    foreach ($this->usedNames as $name) {
       $usedNamesNode->addElement(new ConstantExpression($name, $this->getTemplateLine()));
     }
 

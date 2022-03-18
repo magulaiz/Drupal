@@ -669,7 +669,7 @@ class TwigExtension extends AbstractExtension {
    * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
    */
   public function checkDeprecations(array $context, $used_variables) {
-    foreach($used_variables as $name) {
+    foreach ($used_variables as $name) {
       if (array_key_exists($name, $context) && isset($context['deprecations'][$name])) {
         @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
       }

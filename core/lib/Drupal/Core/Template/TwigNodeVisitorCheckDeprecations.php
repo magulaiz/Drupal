@@ -29,31 +29,31 @@ class TwigNodeVisitorCheckDeprecations extends AbstractNodeVisitor {
   /**
    * {@inheritdoc}
    */
-    protected function doEnterNode(Node $node, Environment $env) {
-      if ($node instanceof ModuleNode) {
-        $this->usedNames = [];
-      } elseif ($node instanceof NameExpression) {
-        $this->usedNames[$node->getAttribute('name')] = $node->getAttribute('name');
-      }
-      return $node;
+  protected function doEnterNode(Node $node, Environment $env) {
+    if ($node instanceof ModuleNode) {
+      $this->usedNames = [];
+    } elseif ($node instanceof NameExpression) {
+      $this->usedNames[$node->getAttribute('name')] = $node->getAttribute('name');
     }
+    return $node;
+  }
 
   /**
    * {@inheritdoc}
    */
-    protected function doLeaveNode(Node $node, Environment $env) {
-      if ($node instanceof ModuleNode) {
-        if (!empty($this->usedNames)) {
-          $checkNode = new Node([new TwigNodeCheckDeprecations($this->usedNames), $node->getNode('display_end')]);
-          $node->setNode('display_end', $checkNode);
-        }
+  protected function doLeaveNode(Node $node, Environment $env) {
+    if ($node instanceof ModuleNode) {
+      if (!empty($this->usedNames)) {
+        $checkNode = new Node([new TwigNodeCheckDeprecations($this->usedNames), $node->getNode('display_end')]);
+        $node->setNode('display_end', $checkNode);
       }
-      return $node;
     }
+    return $node;
+  }
 
-    public function getPriority() {
-      // Just above the Optimizer, which is the normal last one.
-      return 256;
-    }
+  public function getPriority() {
+    // Just above the Optimizer, which is the normal last one.
+    return 256;
+  }
 
 }
