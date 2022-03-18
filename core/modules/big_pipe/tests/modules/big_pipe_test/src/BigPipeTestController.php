@@ -76,7 +76,7 @@ class BigPipeTestController implements TrustedCallbackInterface {
         '#create_placeholder' => TRUE,
       ],
       'item3' => [
-        '#lazy_builder' => [[static::class. '::counter'], []],
+        '#lazy_builder' => [[static::class, '::counter'], []],
         '#create_placeholder' => TRUE,
       ],
     ];
