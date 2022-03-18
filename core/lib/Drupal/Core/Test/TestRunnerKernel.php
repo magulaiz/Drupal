@@ -9,7 +9,7 @@ use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Kernel used for running Functional tests and run-tests.sh.
+ * Defines a kernel used for running Functional tests and run-tests.sh.
  */
 class TestRunnerKernel extends DrupalKernel {
 
