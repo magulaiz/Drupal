@@ -78,7 +78,12 @@ function getUIComponentName(name, group) {
  * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} dropdownItemDefinition
  *   Dropdown item definition.
  */
-function updateOptionVisibility(editor, definedStyles, style, dropdownItemDefinition) {
+function updateOptionVisibility(
+  editor,
+  definedStyles,
+  style,
+  dropdownItemDefinition,
+) {
   const { selection } = editor.model.document;
   const modelElement = selection
     ? selection.getSelectedElement()
