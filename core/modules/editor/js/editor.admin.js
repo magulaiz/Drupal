@@ -146,12 +146,16 @@
         var allRequiredTags = Object.keys(universe);
         var filterRule;
 
+        var checkFilterRuleTags = function checkFilterRuleTags(tag) {
+          return filterRule.tags.include(tag).length > 0;
+        };
+
         for (var i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
 
           if (filterRule.allow === false) {
             if (allRequiredTags.filter(function (tag) {
-              return filterRule.tags.includes(tag).length > 0;
+              return checkFilterRuleTags(tag);
             })) {
               return true;
             }
