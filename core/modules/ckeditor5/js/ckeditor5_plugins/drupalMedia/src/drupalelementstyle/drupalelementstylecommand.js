@@ -71,6 +71,7 @@ export function getClosestElementWithElementStyleAttribute(
 
     parent = parent.parent;
   }
+
   return null;
 }
 
@@ -118,9 +119,8 @@ export default class DrupalElementStyleCommand extends Command {
 
     this.isEnabled = !!element;
 
-    // The element needs to be checked against list of possible attributes then
-    // update the value to include all drupalElementStyles selected for the element.
     if (this.isEnabled) {
+      // Assign value to be corresponding command value based on the element's modelAttribute.
       this.value = this.getGroupAndAttribute(element);
       // If value is falsy, check if there is a default style to apply to the
       // element.
@@ -171,7 +171,7 @@ export default class DrupalElementStyleCommand extends Command {
   }
 
   /**
-   * Gets the group(s) and attribute(s) of the element.
+   * Gets the group(s) and attribute(s) of the element in the form of a command.
    *
    * @example {drupalAlign: 'alignLeft', drupalViewMode: 'full'}
    *
@@ -192,7 +192,7 @@ export default class DrupalElementStyleCommand extends Command {
       } else {
         // eslint-disable-next-line no-restricted-syntax
         for (const style of this.styles[group]) {
-          // No drupalElementStyle attribute means it should be set to default.
+          // If there is no drupalElementStyle for a group, set to to the default.
           if (style.isDefault) {
             groupAttr[group] = style.name.toString();
           }
@@ -236,10 +236,10 @@ export default class DrupalElementStyleCommand extends Command {
         !requestedStyle ||
         this._styles[group].get(requestedStyle[modelGroupName]).isDefault
       ) {
-        // Remove value from the object.
+        // Remove attribute from the element.
         writer.removeAttribute(modelAttribute, element);
       } else {
-        // Extend the object with new value.
+        // Set or add the new attribute on the element.
         writer.setAttribute(
           modelAttribute,
           requestedStyle[modelGroupName],

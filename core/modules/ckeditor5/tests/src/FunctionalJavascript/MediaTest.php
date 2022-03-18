@@ -1367,7 +1367,6 @@ class MediaTest extends WebDriverTestBase {
     $image = $page->find('css', 'article.media--type-image');
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('Toggle caption off')->click();
     $this->getBalloonButton('View mode')->click();
     // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
@@ -1384,6 +1383,8 @@ class MediaTest extends WebDriverTestBase {
     $file = $page->find('css', 'article.media--type-file');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
+    // Click something out of the editor to close the toolbar of the first media
+    // to prevent element interception when trying to click the second media.
     $this->click('#edit-revision-log-0-value');
 
     // Click second media that has different view mode options.

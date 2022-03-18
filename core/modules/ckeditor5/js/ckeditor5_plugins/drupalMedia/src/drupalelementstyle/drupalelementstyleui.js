@@ -109,7 +109,7 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
 }
 
 /**
- * Upcast `drupalMediaIsImage` from Drupal Media metadata.
+ * Upcast `drupalMediaType` from Drupal Media metadata.
  *
  * @param {module:engine/model/node~Node} modelElement
  *   The `drupalMedia` model element.
@@ -126,7 +126,7 @@ function toggleButtonVisibility(editor, definedStyles, style, definition) {
  *
  * @private
  */
-function upcastDrupalMediaBundle(
+function upcastDrupalMediaType(
   modelElement,
   editor,
   definedStyles,
@@ -137,7 +137,7 @@ function upcastDrupalMediaBundle(
     'DrupalMediaMetadataRepository',
   );
   // Get all metadata for drupalMedia elements to set value for
-  // drupalMediaBundle attribute. When other plugins start using the
+  // drupalMediaType attribute. When other plugins start using the
   // metadata, this functionality will be handled more generically.
   metadataRepository
     .getMetadata(modelElement)
@@ -150,7 +150,7 @@ function upcastDrupalMediaBundle(
       // Enqueue a model change in `transparent` batch to make it
       // invisible to the undo/redo functionality.
       editor.model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute('drupalMediaBundle', metadata.type, modelElement);
+        writer.setAttribute('drupalMediaType', metadata.type, modelElement);
       });
     })
     .catch((e) => {
@@ -161,7 +161,7 @@ function upcastDrupalMediaBundle(
       }
       console.warn(e.toString());
       editor.model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute('drupalMediaBundle', METADATA_ERROR, modelElement);
+        writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
       });
     });
   toggleButtonVisibility(editor, definedStyles, style, definition);
@@ -198,9 +198,9 @@ function getDropdownListItemDefinitions(definedStyles, command, group, editor) {
       if (!isDrupalMedia(modelElement)) {
         return;
       }
-      // Need to upcast DrupalMediaBundle to model so it can be used to show
+      // Need to upcast DrupalMediaType to model so it can be used to show
       // correct buttons based on bundle. Calls toggle function inside below method.
-      upcastDrupalMediaBundle(
+      upcastDrupalMediaType(
         modelElement,
         editor,
         definedStyles,

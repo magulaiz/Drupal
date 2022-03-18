@@ -23,7 +23,7 @@ export default class DrupalMediaEditing extends Plugin {
     this.attrs = {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
-      drupalMediaBundle: null,
+      drupalMediaType: null,
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
     };
@@ -129,7 +129,7 @@ export default class DrupalMediaEditing extends Plugin {
                   { isUndoable: false },
                   (writer) => {
                     writer.setAttribute(
-                      'drupalMediaBundle',
+                      'drupalMediaType',
                       metadata.type,
                       modelElement,
                     );
@@ -296,8 +296,8 @@ export default class DrupalMediaEditing extends Plugin {
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      // Omit drupalMediaBundle from downcast because it is unnecessary for the view.
-      if (modelKey !== 'drupalMediaBundle') {
+      // Omit drupalMediaType from downcast because it is unnecessary for the view.
+      if (modelKey !== 'drupalMediaType') {
         const attributeMapping = {
           model: {
             key: modelKey,

@@ -92,7 +92,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
             'attributeValue' => $view_mode,
             'modelElements' => ['drupalMedia'],
             'modelAttributes' => [
-              'drupalMediaBundle' => $specific_bundles,
+              'drupalMediaType' => $specific_bundles,
             ],
           ];
         }
@@ -108,7 +108,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       'attributeValue' => 'default',
       'modelElements' => ['drupalMedia'],
       'modelAttributes' => [
-        'drupalMediaBundle' => array_keys($media_bundles),
+        'drupalMediaType' => array_keys($media_bundles),
       ],
     ];
 
