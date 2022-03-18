@@ -129,7 +129,7 @@ class Query extends QueryBase implements QueryInterface {
     $prefix_length = strlen($prefix);
 
     // Search the conditions for restrictions on configuration object names.
-    $filter_by_names = FALSE;
+    $filter_by_names = [];
     $id_condition = NULL;
     $id_key = $this->entityType->getKey('id');
     if ($this->condition->getConjunction() == 'AND') {
@@ -176,7 +176,7 @@ class Query extends QueryBase implements QueryInterface {
     }
 
     // If no restrictions on IDs were found, we need to parse all records.
-    if ($filter_by_names === FALSE) {
+    if ($filter_by_names === []) {
       $filter_by_names = $this->configFactory->listAll($prefix);
     }
     else {
