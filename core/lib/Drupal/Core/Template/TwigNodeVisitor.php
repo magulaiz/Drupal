@@ -3,10 +3,8 @@
 namespace Drupal\Core\Template;
 
 use Twig\Environment;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
-use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\AbstractNodeVisitor;
@@ -26,19 +24,6 @@ class TwigNodeVisitor extends AbstractNodeVisitor {
    * {@inheritdoc}
    */
   protected function doEnterNode(Node $node, Environment $env) {
-    // Wrap name expressions in check_deprecation() function calls, avoiding infinite recursion.
-    if ($node->hasAttribute('name') ? ($node->getAttribute('name') !== 'check_deprecation') : TRUE) {
-      foreach ($node->getIterator() as $name => $child) {
-        if ($child instanceof NameExpression) {
-          $line = $node->getTemplateLine();
-          $nameConstantNode = new ConstantExpression($child->getAttribute('name'), $line);
-          $argsNode = new Node([$nameConstantNode, $child], ['name' => 'check_deprecation'], $line);
-          $functionNode = new FunctionExpression('check_deprecation', $argsNode, $line);
-          $node->setNode($name, $functionNode);
-        }
-      }
-    }
-
     return $node;
   }
 

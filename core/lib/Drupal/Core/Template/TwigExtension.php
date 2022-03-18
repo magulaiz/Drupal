@@ -112,7 +112,6 @@ class TwigExtension extends AbstractExtension {
       new TwigFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new TwigFunction('active_theme', [$this, 'getActiveTheme']),
       new TwigFunction('create_attribute', [$this, 'createAttribute']),
-      new TwigFunction('check_deprecation', [$this, 'checkDeprecation'], ['needs_context' => TRUE]),
     ];
   }
 
@@ -159,6 +158,7 @@ class TwigExtension extends AbstractExtension {
     // render_var -> TwigExtension->renderVar() function.
     return [
       new TwigNodeVisitor(),
+      new TwigNodeVisitorCheckDeprecations(),
     ];
   }
 
@@ -663,19 +663,17 @@ class TwigExtension extends AbstractExtension {
    *
    * @param array $context
    *   A Twig context array.
-   * @param string $name
-   *   The name of the variable, which should correspond to a key in $context.
-   * @param mixed $value
-   *   The value of the variable.
+   * @param array $used_variables
+   *   The names of the variables used in a template, which should correspond to keys in $context.
    *
-   * @return string
-   *   The value.
+   * @see \Drupal\Core\Template\TwigNodeCheckDeprecations
    */
-  public function checkDeprecation(array $context, $name, $value) {
-    if (array_key_exists($name, $context) && isset($context['deprecations'][$name])) {
-      @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
+  public function checkDeprecations(array $context, $used_variables) {
+    foreach($used_variables as $name) {
+      if (array_key_exists($name, $context) && isset($context['deprecations'][$name])) {
+        @trigger_error($context['deprecations'][$name], E_USER_DEPRECATED);
+      }
     }
-    return $value;
   }
 
 }

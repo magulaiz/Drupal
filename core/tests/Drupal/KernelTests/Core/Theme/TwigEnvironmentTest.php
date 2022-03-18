@@ -324,8 +324,6 @@ TWIG;
         ],
     ];
     $this->addExpectedDeprecationMessage('foo is deprecated');
-    $this->addExpectedDeprecationMessage('foo is deprecated');
-    $this->addExpectedDeprecationMessage('foo is deprecated');
     $rendered = $renderer->renderRoot($element);
     $this->assertEqual($rendered, 'foobar');
   }
