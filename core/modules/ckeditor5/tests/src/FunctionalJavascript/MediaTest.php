@@ -1347,7 +1347,7 @@ class MediaTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     // Add a second media of a different bundle here.
-    $this->host->body->value .= '<p></p><p></p><p></p><drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
+    $this->host->body->value .= '<drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
     $this->host->save();
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
@@ -1367,6 +1367,7 @@ class MediaTest extends WebDriverTestBase {
     $image = $page->find('css', 'article.media--type-image');
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Toggle caption off')->click();
     $this->getBalloonButton('View mode')->click();
     // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
@@ -1382,10 +1383,8 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'article.media--type-file'));
     $file = $page->find('css', 'article.media--type-file');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
-    // Click the caption of the media instead of the media for the second
-    // element to prevent element interception.
-    $this->getSession()->getPage()->find('xpath', '//figcaption[text()="armadillo"]')->click();
 
+    // Click second media that has different view mode options.
     $this->click('article.media--type-file');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     // Check that the buttons exist.
