@@ -1384,6 +1384,8 @@ class MediaTest extends WebDriverTestBase {
     $file = $page->find('css', 'article.media--type-file');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
+    $this->click('#edit-revision-log-0-value');
+
     // Click second media that has different view mode options.
     $this->click('article.media--type-file');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
