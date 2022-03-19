@@ -60,7 +60,7 @@
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
-      if (!_.isEmpty(this.autoTags)) {
+      if (!Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
 
         var userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
@@ -84,7 +84,7 @@
           for (var t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
 
-            if (!_.has(editorRequiredTags, tag)) {
+            if (!editorRequiredTags.hasOwnProperty(tag)) {
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
@@ -100,7 +100,7 @@
       });
       var autoAllowedTags = {};
       Object.keys(editorRequiredTags).forEach(function (tag) {
-        if (!_.has(userAllowedTags, tag)) {
+        if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;

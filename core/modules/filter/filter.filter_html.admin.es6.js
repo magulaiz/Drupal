@@ -121,7 +121,7 @@
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
       // If any auto-created tags: insert message and update form item.
-      if (!_.isEmpty(this.autoTags)) {
+      if (!Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
@@ -171,7 +171,7 @@
           featureRule = feature[f];
           for (let t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
-            if (!_.has(editorRequiredTags, tag)) {
+            if (!editorRequiredTags.hasOwnProperty(tag)) {
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               // @todo Neither Drupal.FilterHtmlRule nor
@@ -214,7 +214,7 @@
       Object.keys(editorRequiredTags).forEach((tag) => {
         // If userAllowedTags does not contain a rule for this editor-required
         // tag, then add it to the list of automatically allowed tags.
-        if (!_.has(userAllowedTags, tag)) {
+        if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         }
         // Otherwise, if userAllowedTags already allows this tag, then check if
