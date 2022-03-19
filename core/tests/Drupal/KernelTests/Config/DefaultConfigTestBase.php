@@ -144,7 +144,7 @@ abstract class DefaultConfigTestBase extends KernelTestBase {
    * @return bool
    *   TRUE if the module is deprecated; FALSE otherwise.
    */
-   protected function isDeprecated(array $extension_info): bool {
+  protected function isDeprecated(array $extension_info): bool {
     if (isset($info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])) {
       return $info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED;
     }
