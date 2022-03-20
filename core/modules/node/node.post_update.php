@@ -22,5 +22,10 @@ function node_removed_post_updates() {
  * Enables the add default body field for existing installations.
  */
 function node_post_update_enable_add_default_body_field() {
-  \Drupal::configFactory()->getEditable('node.settings')->set('add_default_body_field', TRUE)->save();
+  $config = \Drupal::configFactory()->getEditable('node.settings');
+  if ($config->get('add_default_body_field') === FALSE) {
+    return;
+  }
+  $config->set('add_default_body_field', TRUE);
+  $config->save();
 }
