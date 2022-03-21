@@ -12,6 +12,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
@@ -281,6 +282,32 @@ final class SmartDefaultSettings {
   }
 
   /**
+   * Gets all enabled buttons in the given CKEditor 4 Text Editor instance.
+   *
+   * @param \Drupal\editor\EditorInterface $editor
+   *   A text editor config entity configured to use CKEditor 4.
+   *
+   * @return string[]
+   *   A list of CKEditor 4 toolbar buttons.
+   *
+   * @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledButtons()
+   */
+  protected static function getEnabledCKEditor4Buttons(EditorInterface $editor): array {
+    if ($editor->getEditor() !== 'ckeditor') {
+      throw new \BadMethodCallException();
+    }
+
+    $toolbar_rows = [];
+    $settings = $editor->getSettings();
+    foreach ($settings['toolbar']['rows'] as $row_number => $row) {
+      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function ($result, $button_group) {
+        return array_merge($result, $button_group['items']);
+      }, []);
+    }
+    return array_unique(NestedArray::mergeDeepArray($toolbar_rows));
+  }
+
+  /**
    * Gets all enabled CKEditor 4 plugins.
    *
    * @param \Drupal\editor\EditorInterface $editor
@@ -296,7 +323,7 @@ final class SmartDefaultSettings {
     // unfortunately does not provide the API this needs.
     // @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledPluginFiles()
     $plugins = array_keys($this->cke4PluginManager->getDefinitions());
-    $toolbar_buttons = $this->cke4PluginManager->getEnabledButtons($editor);
+    $toolbar_buttons = self::getEnabledCKEditor4Buttons($editor);
     $enabled_plugins = [];
     $additional_plugins = [];
     foreach ($plugins as $plugin_id) {
