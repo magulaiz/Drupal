@@ -109,16 +109,17 @@ function history_write($nid, $account = NULL) {
   }
 
   if ($account->isAuthenticated()) {
+    $request_time = \Drupal::time()->getRequestTime();
     \Drupal::database()->merge('history')
       ->keys([
         'uid' => $account->id(),
         'nid' => $nid,
       ])
-      ->fields(['timestamp' => \Drupal::time()->getRequestTime()])
+      ->fields(['timestamp' => $request_time])
       ->execute();
     // Update static cache.
     $history = &drupal_static('history_read_multiple', []);
-    $history[$nid] = \Drupal::time()->getRequestTime();
+    $history[$nid] = $request_time;
   }
 }
 

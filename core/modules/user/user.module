@@ -1113,9 +1113,10 @@ function user_modules_uninstalled($modules) {
  *   An array of key/value pairs to be saved into a cookie.
  */
 function user_cookie_save(array $values) {
+  $request_time = \Drupal::time()->getRequestTime();
   foreach ($values as $field => $value) {
     // Set cookie for 365 days.
-    setrawcookie('Drupal.visitor.' . $field, rawurlencode($value), \Drupal::time()->getRequestTime() + 31536000, '/');
+    setrawcookie('Drupal.visitor.' . $field, rawurlencode($value), $request_time + 31536000, '/');
   }
 }
 
