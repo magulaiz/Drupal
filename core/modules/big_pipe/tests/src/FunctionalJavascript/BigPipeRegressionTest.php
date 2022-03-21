@@ -56,7 +56,7 @@ class BigPipeRegressionTest extends WebDriverTestBase {
    * @see https://www.drupal.org/node/2698811
    */
   public function testCommentForm_2698811() {
-    $this->assertTrue($this->container->get('module_installer')->install(['comment', 'history', 'ckeditor'], TRUE), 'Installed modules.');
+    $this->assertTrue($this->container->get('module_installer')->install(['comment', 'history', 'ckeditor5'], TRUE), 'Installed modules.');
 
     // Ensure an `article` node type exists.
     $this->createContentType(['type' => 'article']);
@@ -70,22 +70,10 @@ class BigPipeRegressionTest extends WebDriverTestBase {
       'weight' => 1,
       'filters' => [],
     ])->save();
-    $settings['toolbar']['rows'] = [
-      [
-        [
-          'name' => 'Links',
-          'items' => [
-            'DrupalLink',
-            'DrupalUnlink',
-          ],
-        ],
-      ],
-    ];
     $editor = Editor::create([
       'format' => $format,
-      'editor' => 'ckeditor',
+      'editor' => 'ckeditor5',
     ]);
-    $editor->setSettings($settings);
     $editor->save();
 
     $admin_user = $this->drupalCreateUser([
@@ -110,13 +98,9 @@ class BigPipeRegressionTest extends WebDriverTestBase {
       $comment->save();
     }
     $this->drupalGet($node->toUrl()->toString());
-    // Confirm that CKEditor loaded.
-    $javascript = <<<JS
-    (function(){
-      return Object.keys(CKEDITOR.instances).length > 0;
-    }())
-JS;
-    $this->assertJsCondition($javascript);
+    // Confirm that CKEditor 5 loaded.
+    $assert_session = $this->assertSession();
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
   }
 
   /**
