@@ -184,13 +184,15 @@ ckeditor5_codeBlock:
       - codeBlock.CodeBlock
       - htmlSupport.GeneralHtmlSupport
     config:
+      # The CodeBlock plugin supports only `<pre><code>…</code></pre>`.
+      # Configure GHS to support `<pre>…</pre>` markup as well.
       htmlSupport:
         allow:
           -
             name: pre
   drupal:
     label: Code Block
-    library: core/ckeditor5.codeBlock
+    library: ckeditor5/drupal.ckeditor5.codeBlock
     admin_library: ckeditor5/admin.codeBlock
     toolbar_items:
       codeBlock:
