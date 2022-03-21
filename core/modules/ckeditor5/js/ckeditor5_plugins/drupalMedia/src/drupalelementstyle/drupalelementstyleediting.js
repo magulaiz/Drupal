@@ -204,9 +204,6 @@ export default class DrupalElementStyleEditing extends Plugin {
   init() {
     const { editor } = this;
 
-
-
-
     const stylesConfig = editor.config.get('drupalElementStyles');
 
     /**
