@@ -174,7 +174,7 @@ export default class DrupalElementStyleCommand extends Command {
   /**
    * Gets the group(s) and attribute(s) of the element in the form of a command.
    *
-   * @example {drupalAlign: 'alignLeft', drupalViewMode: 'full'}
+   * @example {drupalAlign: 'left', drupalViewMode: 'full'}
    *
    * @param {module:engine/model/element~Element|null} element
    *   The element.
@@ -207,7 +207,7 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: { align: 'alignLeft' }, group: 'align',
+   *    editor.execute('drupalElementStyle', { value: { align: 'left' }, group: 'align',
    *    modelAttribute: 'drupalElementStyleAlign' });
    *
    * @param {Object} options

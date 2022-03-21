@@ -288,9 +288,9 @@ export default class DrupalElementStyleUi extends Plugin {
      *       drupalMedia:
      *        toolbar:
      *          - 'drupalElementStyle:align:breakText'
-     *          - 'drupalElementStyle:align:alignLeft'
-     *          - 'drupalElementStyle:align:alignCenter'
-     *          - 'drupalElementStyle:align:alignRight'
+     *          - 'drupalElementStyle:align:left'
+     *          - 'drupalElementStyle:align:center'
+     *          - 'drupalElementStyle:align:right'
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *

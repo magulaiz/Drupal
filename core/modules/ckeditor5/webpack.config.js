@@ -17,7 +17,7 @@ getDirectories(path.resolve(__dirname, './js/ckeditor5_plugins')).forEach((dir) 
   const bc = {
     mode: 'production',
     optimization: {
-      minimize: false,
+      minimize: true,
       minimizer: [
         new TerserPlugin({
           terserOptions: {

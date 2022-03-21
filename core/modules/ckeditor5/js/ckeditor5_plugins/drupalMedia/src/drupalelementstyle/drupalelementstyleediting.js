@@ -168,14 +168,14 @@ function viewToModelStyleAttribute(styles, groupName) {
  *            attributeValue: 'image-side'
  *            modelElements: ['drupalMedia']
  *        align:
- *           - name: 'alignRight'
+ *           - name: 'right'
  *             title: 'Right aligned media'
  *             icon: 'objectRight'
  *             attributeName: 'data-align'
  *             modelElements: [ 'drupalMedia' ]
- *           - name: 'alignRight'
- *             title: 'Right aligned media'
- *             icon: 'objectRight'
+ *           - name: 'left'
+ *             title: 'Left aligned media'
+ *             icon: 'objectLeft'
  *             attributeName: 'data-align'
  *             attributeValue: 'left'
  *             modelElements: [ 'drupalMedia' ]
