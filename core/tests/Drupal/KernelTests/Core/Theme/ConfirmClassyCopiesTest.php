@@ -149,10 +149,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -280,10 +276,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -406,10 +398,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'tabs.css',
             'textarea.css',
             'ui-dialog.css',
-          ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
           ],
           'images' => [
             'application-octet-stream.png',
@@ -552,10 +540,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'media-embed-error.css',
             'container-inline.css',
             'more-link.css',
-          ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
           ],
           'images' => [
             'application-octet-stream.png',
@@ -711,10 +695,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'textarea.css' => '2bc390c137c5205bbcd7645d6c1c86de',
         'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
         'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
-      ],
-      'js' => [
-        'media_embed_ckeditor.theme.es6.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
-        'media_embed_ckeditor.theme.js' => 'b2e705b4503be407a35692b272c7ed6a',
       ],
       'images' => [
         'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
