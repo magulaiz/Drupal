@@ -14,7 +14,7 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['ckeditor', 'editor'];
+  protected static $modules = ['ckeditor5', 'editor'];
 
   /**
    * {@inheritdoc}
@@ -59,7 +59,7 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
     // Create a "Camelids" editor.
     $camelids = Editor::create([
       'format' => 'llama',
-      'editor' => 'ckeditor',
+      'editor' => 'ckeditor5',
     ]);
     $camelids
       ->setImageUploadSettings([
@@ -87,10 +87,10 @@ abstract class EditorResourceTestBase extends ConfigEntityResourceTestBase {
           'filter.format.llama',
         ],
         'module' => [
-          'ckeditor',
+          'ckeditor5',
         ],
       ],
-      'editor' => 'ckeditor',
+      'editor' => 'ckeditor5',
       'format' => 'llama',
       'image_upload' => [
         'status' => FALSE,
