@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
@@ -137,49 +138,10 @@ class EditorTest extends ConfigEntityResourceTestBase {
           'langcode' => 'en',
           'settings' => [
             'toolbar' => [
-              'rows' => [
-                [
-                  [
-                    'name' => 'Formatting',
-                    'items' => [
-                      'Bold',
-                      'Italic',
-                    ],
-                  ],
-                  [
-                    'name' => 'Links',
-                    'items' => [
-                      'DrupalLink',
-                      'DrupalUnlink',
-                    ],
-                  ],
-                  [
-                    'name' => 'Lists',
-                    'items' => [
-                      'BulletedList',
-                      'NumberedList',
-                    ],
-                  ],
-                  [
-                    'name' => 'Media',
-                    'items' => [
-                      'Blockquote',
-                      'DrupalImage',
-                    ],
-                  ],
-                  [
-                    'name' => 'Tools',
-                    'items' => [
-                      'Source',
-                    ],
-                  ],
-                ],
-              ],
+              'items' => ['heading', 'bold', 'italic'],
             ],
             'plugins' => [
-              'language' => [
-                'language_list' => 'un',
-              ],
+              'ckeditor5_heading' => Heading::DEFAULT_CONFIGURATION,
             ],
           ],
           'status' => TRUE,
