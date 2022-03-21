@@ -17,7 +17,7 @@ class MigrateException extends \Exception {
    *
    * @var int
    *
-   * @see \Drupal\migrate\Plugin\MigrationInterface
+   * @see \Drupal\migrate\Plugin\Migration
    */
   protected $level;
 
