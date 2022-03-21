@@ -26,8 +26,6 @@ use Drupal\media_library\Form\OEmbedForm;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Component\Serialization\Json;
 
 /**
  * Implements hook_help().
