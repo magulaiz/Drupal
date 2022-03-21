@@ -4,16 +4,12 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5;
 
-use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\ckeditor\CKEditorPluginContextualInterface;
-use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
@@ -44,26 +40,16 @@ final class SmartDefaultSettings {
   protected $upgradePluginManager;
 
   /**
-   * The "CKEditor 4 plugin" plugin manager.
-   *
-   * @var \Drupal\ckeditor\CKEditorPluginManager
-   */
-  protected $cke4PluginManager;
-
-  /**
    * Constructs a SmartDefaultSettings object.
    *
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
    *   The CKEditor 5 plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $upgrade_plugin_manager
    *   The CKEditor 4 to 5 upgrade plugin manager.
-   * @param \Drupal\ckeditor\CKEditorPluginManager $cke4_plugin_manager
-   *   The CKEditor 4 plugin manager.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, CKEditorPluginManager $cke4_plugin_manager = NULL) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
-    $this->cke4PluginManager = $cke4_plugin_manager;
   }
 
   /**
@@ -291,80 +277,6 @@ final class SmartDefaultSettings {
     }
 
     return [$settings, $messages];
-  }
-
-  /**
-   * Gets all enabled buttons in the given CKEditor 4 Text Editor instance.
-   *
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A text editor config entity configured to use CKEditor 4.
-   *
-   * @return string[]
-   *   A list of CKEditor 4 toolbar buttons.
-   *
-   * @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledButtons()
-   */
-  protected static function getEnabledCKEditor4Buttons(EditorInterface $editor): array {
-    if ($editor->getEditor() !== 'ckeditor') {
-      throw new \BadMethodCallException();
-    }
-
-    $toolbar_rows = [];
-    $settings = $editor->getSettings();
-    foreach ($settings['toolbar']['rows'] as $row_number => $row) {
-      $toolbar_rows[] = array_reduce($settings['toolbar']['rows'][$row_number], function ($result, $button_group) {
-        return array_merge($result, $button_group['items']);
-      }, []);
-    }
-    return array_unique(NestedArray::mergeDeepArray($toolbar_rows));
-  }
-
-  /**
-   * Gets all enabled CKEditor 4 plugins.
-   *
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A text editor config entity configured to use CKEditor 4.
-   *
-   * @return string[]
-   *   The enabled CKEditor 4 plugin IDs.
-   */
-  protected function getEnabledCkeditor4Plugins(EditorInterface $editor): array {
-    assert($editor->getEditor() === 'ckeditor');
-
-    // This is largely copied from the CKEditor 4 plugin manager, because it
-    // unfortunately does not provide the API this needs.
-    // @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledPluginFiles()
-    $plugins = array_keys($this->cke4PluginManager->getDefinitions());
-    $toolbar_buttons = self::getEnabledCKEditor4Buttons($editor);
-    $enabled_plugins = [];
-    $additional_plugins = [];
-    foreach ($plugins as $plugin_id) {
-      $plugin = $this->cke4PluginManager->createInstance($plugin_id);
-
-      $enabled = FALSE;
-      // Enable this plugin if it provides a button that has been enabled.
-      if ($plugin instanceof CKEditorPluginButtonsInterface) {
-        $plugin_buttons = array_keys($plugin->getButtons());
-        $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
-      }
-      // Otherwise enable this plugin if it declares itself as enabled.
-      if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {
-        $enabled = $plugin->isEnabled($editor);
-      }
-
-      if ($enabled) {
-        $enabled_plugins[] = $plugin_id;
-        // Check if this plugin has dependencies that also need to be enabled.
-        $additional_plugins = array_merge($additional_plugins, array_diff($plugin->getDependencies($editor), $additional_plugins));
-      }
-    }
-
-    // Add the list of dependent plugins.
-    foreach ($additional_plugins as $plugin_id) {
-      $enabled_plugins[$plugin_id] = $plugin_id;
-    }
-
-    return $enabled_plugins;
   }
 
   /**
