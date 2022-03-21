@@ -4,9 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5;
 
-use Drupal\ckeditor\CKEditorPluginButtonsInterface;
-use Drupal\ckeditor\CKEditorPluginContextualInterface;
-use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
@@ -120,16 +117,6 @@ final class SmartDefaultSettings {
       ]);
     $editor->setEditor('ckeditor5');
 
-    // Compute the appropriate settings based on the CKEditor 4 configuration
-    // if it exists.
-    $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
-    if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
-      $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
-      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
-      $editor->setSettings($upgraded_settings);
-      $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
-    }
-
     // Add toolbar items based on HTML tags and attributes.
     // NOTE: Helper updates $editor->settings by reference and returns info for the message.
     $result = $this->addToolbarItemsToMatchHtmlElementsInFormat($text_format, $editor);
@@ -189,143 +176,6 @@ final class SmartDefaultSettings {
     $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] = HTMLRestrictions::fromString($allowed_tags_string)->merge($tags)->toCKEditor5ElementsArray();
     $editor->setSettings($settings);
     return $messages;
-  }
-
-  /**
-   * Creates equivalent CKEditor 5 settings from CKEditor 4 settings.
-   *
-   * @param array $ckeditor4_settings
-   *   The value for "settings" in a Text Editor config entity configured to use
-   *   CKEditor 4.
-   * @param string[] $enabled_ckeditor4_plugins
-   *   The list of enabled CKEditor 4 plugins: their settings will be mapped to
-   *   the CKEditor 5 equivalents, if they have any.
-   * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
-   *   The restrictions of the text format, to allow an upgrade plugin to
-   *   inspect the text format's HTML restrictions to make a decision.
-   *
-   * @return array
-   *   An array with two values:
-   *   1. An equivalent value for CKEditor 5.
-   *   2. Messages explaining upgrade path issues.
-   *
-   * @throws \LogicException
-   *   Thrown when an upgrade plugin is attempting to generate plugin settings
-   *   for a CKEditor 4 plugin upgrade path that have already been generated.
-   */
-  private function createSettingsFromCKEditor4(array $ckeditor4_settings, array $enabled_ckeditor4_plugins, HTMLRestrictions $text_format_html_restrictions): array {
-    $settings = [
-      'toolbar' => [
-        'items' => [],
-      ],
-      'plugins' => [],
-    ];
-    $messages = [];
-
-    // First: toolbar items.
-    // @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
-    foreach ($ckeditor4_settings['toolbar']['rows'] as $row) {
-      foreach ($row as $group) {
-        $some_added = FALSE;
-        foreach ($group['items'] as $cke4_button) {
-          try {
-            $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
-          }
-          catch (\OutOfBoundsException $e) {
-            $messages[] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
-              '%button' => $cke4_button,
-            ]);
-            continue;
-          }
-          if ($equivalent) {
-            $settings['toolbar']['items'] = array_merge($settings['toolbar']['items'], $equivalent);
-            $some_added = TRUE;
-          }
-        }
-        // Add a CKEditor 5 toolbar group separator for every group.
-        if ($some_added) {
-          $settings['toolbar']['items'][] = '|';
-        }
-      }
-    }
-    // Remove the trailing CKEditor 5 toolbar group separator.
-    array_pop($settings['toolbar']['items']);
-    // Strip the CKEditor 4 buttons without a CKEditor 5 equivalent.
-    $settings['toolbar']['items'] = array_filter($settings['toolbar']['items']);
-
-    // Second: plugin settings.
-    // @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
-    $enabled_ckeditor4_plugins_with_settings = array_intersect_key($ckeditor4_settings['plugins'], array_flip($enabled_ckeditor4_plugins));
-    foreach ($enabled_ckeditor4_plugins_with_settings as $cke4_plugin_id => $cke4_plugin_settings) {
-      try {
-        $cke5_plugin_settings = $this->upgradePluginManager->mapCKEditor4SettingsToCKEditor5Configuration($cke4_plugin_id, $cke4_plugin_settings);
-        if ($cke5_plugin_settings === NULL) {
-          continue;
-        }
-        assert(count($cke5_plugin_settings) === 1);
-        $cke5_plugin_id = array_keys($cke5_plugin_settings)[0];
-        if (isset($settings['plugins'][$cke5_plugin_id])) {
-          throw new \LogicException(sprintf('The %s plugin settings have already been upgraded. Only a single @CKEditor4To5Upgrade is allowed to migrate the settings for a particular CKEditor 4 plugin.', $cke5_plugin_id));
-        }
-        $settings['plugins'] += $cke5_plugin_settings;
-      }
-      catch (\OutOfBoundsException $e) {
-        $messages[] = $this->t('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
-          '%cke4_plugin_id' => $cke4_plugin_id,
-        ]);
-        continue;
-      }
-    }
-
-    return [$settings, $messages];
-  }
-
-  /**
-   * Gets all enabled CKEditor 4 plugins.
-   *
-   * @param \Drupal\editor\EditorInterface $editor
-   *   A text editor config entity configured to use CKEditor 4.
-   *
-   * @return string[]
-   *   The enabled CKEditor 4 plugin IDs.
-   */
-  protected function getEnabledCkeditor4Plugins(EditorInterface $editor): array {
-    assert($editor->getEditor() === 'ckeditor');
-
-    // This is largely copied from the CKEditor 4 plugin manager, because it
-    // unfortunately does not provide the API this needs.
-    // @see \Drupal\ckeditor\CKEditorPluginManager::getEnabledPluginFiles()
-    $plugins = array_keys($this->cke4PluginManager->getDefinitions());
-    $toolbar_buttons = $this->cke4PluginManager->getEnabledButtons($editor);
-    $enabled_plugins = [];
-    $additional_plugins = [];
-    foreach ($plugins as $plugin_id) {
-      $plugin = $this->cke4PluginManager->createInstance($plugin_id);
-
-      $enabled = FALSE;
-      // Enable this plugin if it provides a button that has been enabled.
-      if ($plugin instanceof CKEditorPluginButtonsInterface) {
-        $plugin_buttons = array_keys($plugin->getButtons());
-        $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
-      }
-      // Otherwise enable this plugin if it declares itself as enabled.
-      if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {
-        $enabled = $plugin->isEnabled($editor);
-      }
-
-      if ($enabled) {
-        $enabled_plugins[] = $plugin_id;
-        // Check if this plugin has dependencies that also need to be enabled.
-        $additional_plugins = array_merge($additional_plugins, array_diff($plugin->getDependencies($editor), $additional_plugins));
-      }
-    }
-
-    // Add the list of dependent plugins.
-    foreach ($additional_plugins as $plugin_id) {
-      $enabled_plugins[$plugin_id] = $plugin_id;
-    }
-
-    return $enabled_plugins;
   }
 
   /**
