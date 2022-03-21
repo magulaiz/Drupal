@@ -1203,7 +1203,7 @@ class MediaTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
-          'default' => 'default'
+          'default' => 'default',
         ],
       ],
     ])->save();
@@ -1213,7 +1213,7 @@ class MediaTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
-      'core.entity_view_mode.media.default'
+      'core.entity_view_mode.media.default',
     ];
 
     $dependencies = $filter_format->getDependencies();
