@@ -552,16 +552,7 @@ export default class DrupalElementStyleUi extends Plugin {
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
-        const obj = {};
-        const key = evt.source.group;
-        obj[key] = evt.source.commandValue;
-        const groupName = capitalizeFirstLetter(group);
-        this.editor.execute(evt.source.commandName, {
-          value: obj,
-          group: evt.source.group,
-          modelAttribute: `drupalElementStyle${groupName}`,
-        });
-        this.editor.editing.view.focus();
+        this._executeCommand(evt.source.commandValue, evt.source.group);
       });
       return dropdownView;
     });

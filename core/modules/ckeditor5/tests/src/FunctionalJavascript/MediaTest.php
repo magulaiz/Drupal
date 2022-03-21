@@ -1164,7 +1164,14 @@ class MediaTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 2 has Numeric ID',
     ])->save();
-    // Enable view mode 1 & 2 for Image.
+    EntityViewMode::create([
+      'id' => 'media.default',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'Default',
+    ])->save();
+    // Enable view mode 1 & 2 and default for Image.
     EntityViewDisplay::create([
       'id' => 'media.image.view_mode_1',
       'targetEntityType' => 'media',
@@ -1179,6 +1186,13 @@ class MediaTest extends WebDriverTestBase {
       'bundle' => 'image',
       'mode' => '22222',
     ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.default',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'default',
+    ])->save();
 
     $filter_format = FilterFormat::load('test_format');
     $filter_format->setFilterConfig('media_embed', [
@@ -1189,6 +1203,7 @@ class MediaTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
+          'default' => 'default'
         ],
       ],
     ])->save();
@@ -1198,6 +1213,7 @@ class MediaTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.default'
     ];
 
     $dependencies = $filter_format->getDependencies();
@@ -1218,7 +1234,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('View mode')->click();
+    $this->getBalloonButton('Default')->click();
 
     // Set view mode.
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
@@ -1268,7 +1284,7 @@ class MediaTest extends WebDriverTestBase {
 
     // Check that the toolbar status matches "no view mode".
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
-    $this->assertEquals('View mode', $dropdown_button->getText());
+    $this->assertEquals('Default', $dropdown_button->getText());
   }
 
   /**
@@ -1296,6 +1312,13 @@ class MediaTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 3',
     ])->save();
+    EntityViewMode::create([
+      'id' => 'media.default',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'Default',
+    ])->save();
     // Only enable view mode 1 & 2 for Image.
     EntityViewDisplay::create([
       'id' => 'media.image.view_mode_1',
@@ -1319,6 +1342,20 @@ class MediaTest extends WebDriverTestBase {
       'bundle' => 'file',
       'mode' => 'view_mode_3',
     ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.default',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'default',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.file.default',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'file',
+      'mode' => 'default',
+    ])->save();
     $filter_format = FilterFormat::load('test_format');
     $filter_format->setFilterConfig('media_embed', [
       'status' => TRUE,
@@ -1329,6 +1366,7 @@ class MediaTest extends WebDriverTestBase {
           'view_mode_1' => 'view_mode_1',
           '22222' => '22222',
           'view_mode_3' => 'view_mode_3',
+          'default' => 'default',
         ],
       ],
     ])->save();
@@ -1339,6 +1377,7 @@ class MediaTest extends WebDriverTestBase {
       'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_3',
+      'core.entity_view_mode.media.default',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
@@ -1366,7 +1405,7 @@ class MediaTest extends WebDriverTestBase {
     $image = $page->find('css', 'article.media--type-image');
     $this->click('article.media--type-image');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('View mode')->click();
+    $this->getBalloonButton('Default')->click();
     // Check that the buttons exist.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
     $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
