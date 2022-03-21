@@ -100,7 +100,7 @@ class Insert extends QueryInsert {
         throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
       }
       else {
-        throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
+        throw new DatabaseExceptionWrapper($message, 0, $e);
       }
     }
     catch (\Exception $e) {
