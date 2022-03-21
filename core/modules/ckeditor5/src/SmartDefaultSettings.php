@@ -125,8 +125,7 @@ final class SmartDefaultSettings {
     // if it exists.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
-      $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
-      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
+      [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
     }
@@ -198,9 +197,6 @@ final class SmartDefaultSettings {
    * @param array $ckeditor4_settings
    *   The value for "settings" in a Text Editor config entity configured to use
    *   CKEditor 4.
-   * @param string[] $enabled_ckeditor4_plugins
-   *   The list of enabled CKEditor 4 plugins: their settings will be mapped to
-   *   the CKEditor 5 equivalents, if they have any.
    * @param \Drupal\ckeditor5\HTMLRestrictions $text_format_html_restrictions
    *   The restrictions of the text format, to allow an upgrade plugin to
    *   inspect the text format's HTML restrictions to make a decision.
@@ -214,7 +210,7 @@ final class SmartDefaultSettings {
    *   Thrown when an upgrade plugin is attempting to generate plugin settings
    *   for a CKEditor 4 plugin upgrade path that have already been generated.
    */
-  private function createSettingsFromCKEditor4(array $ckeditor4_settings, array $enabled_ckeditor4_plugins, HTMLRestrictions $text_format_html_restrictions): array {
+  private function createSettingsFromCKEditor4(array $ckeditor4_settings, HTMLRestrictions $text_format_html_restrictions): array {
     $settings = [
       'toolbar' => [
         'items' => [],
@@ -256,7 +252,7 @@ final class SmartDefaultSettings {
 
     // Second: plugin settings.
     // @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
-    $enabled_ckeditor4_plugins_with_settings = array_intersect_key($ckeditor4_settings['plugins'], array_flip($enabled_ckeditor4_plugins));
+    $enabled_ckeditor4_plugins_with_settings = $ckeditor4_settings['plugins'];
     foreach ($enabled_ckeditor4_plugins_with_settings as $cke4_plugin_id => $cke4_plugin_settings) {
       try {
         $cke5_plugin_settings = $this->upgradePluginManager->mapCKEditor4SettingsToCKEditor5Configuration($cke4_plugin_id, $cke4_plugin_settings);
