@@ -39,26 +39,16 @@ final class SmartDefaultSettings {
   protected $upgradePluginManager;
 
   /**
-   * The "CKEditor 4 plugin" plugin manager.
-   *
-   * @var \Drupal\ckeditor\CKEditorPluginManager
-   */
-  protected $cke4PluginManager;
-
-  /**
    * Constructs a SmartDefaultSettings object.
    *
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
    *   The CKEditor 5 plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $upgrade_plugin_manager
    *   The CKEditor 4 to 5 upgrade plugin manager.
-   * @param \Drupal\ckeditor\CKEditorPluginManager $cke4_plugin_manager
-   *   The CKEditor 4 plugin manager.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, CKEditorPluginManager $cke4_plugin_manager = NULL) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
-    $this->cke4PluginManager = $cke4_plugin_manager;
   }
 
   /**
