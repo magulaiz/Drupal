@@ -7,6 +7,7 @@ namespace Drupal\ckeditor5;
 use Drupal\ckeditor\CKEditorPluginButtonsInterface;
 use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\ckeditor\CKEditorPluginManager;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
@@ -173,6 +174,21 @@ final class SmartDefaultSettings {
     // original text format restrictions.
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
     $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
+
+    // In CKEditor 4, it's possible for settings to exist for plugins that are
+    // not actually enabled. During the upgrade path, these would then be mapped
+    // to equivalent CKEditor 5 configuration. But CKEditor 5 does not all
+    // configuration to be stored for
+    // @see \Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface::mapCKEditor4SettingsToCKEditor5Configuration()
+    if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
+      $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
+      $enabled_configurable_definitions = array_filter($enabled_definitions, function (CKEditor5PluginDefinition $definition): bool {
+        return is_a($definition->getClass(), CKEditor5PluginConfigurableInterface::class, TRUE);
+      });
+      $settings = $editor->getSettings();
+      $settings['plugins'] = array_intersect_key($settings['plugins'], $enabled_configurable_definitions);
+      $editor->setSettings($settings);
+    }
 
     return [$editor, $messages];
   }
