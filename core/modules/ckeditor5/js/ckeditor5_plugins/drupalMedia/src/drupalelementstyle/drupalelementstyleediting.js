@@ -59,8 +59,8 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-        // No need to set default style attributes on the element because
-        // the command already knows to set to default when necessary.
+        // No need to set default style attributes on the element because there is
+        // nothing to downcast to since the drupalElementStyle command sets to default when necessary.
       } else if (!newStyle.isDefault) {
         viewWriter.setAttribute(
           newStyle.attributeName,
@@ -148,7 +148,6 @@ function viewToModelStyleAttribute(styles, groupName) {
   };
 }
 
-// @todo: remove options key in the comment
 /**
  * The Drupal Element Style editing plugin.
  *
@@ -156,42 +155,41 @@ function viewToModelStyleAttribute(styles, groupName) {
  * configuration key.
  *
  * Additional Drupal Element styles can support multiple axes (ex. media alignment and media view modes)
- * by adding the new group under the 'options' key.
+ * by adding the new group under drupalElementStyles.
  *
  * @example
  *    config:
  *      drupalElementStyles:
- *         options:
- *            side:
- *              - name: 'side'
- *                icon: 'objectBlockRight'
- *                title: 'Side image'
- *                attributeName: 'class'
- *                attributeValue: 'image-side'
- *                modelElements: ['drupalMedia']
- *            align:
- *              - name: 'alignRight'
- *                title: 'Right aligned media'
- *                icon: 'objectRight'
- *                attributeName: 'data-align'
- *                modelElements: [ 'drupalMedia' ]
- *              - name: 'alignRight'
- *                title: 'Right aligned media'
- *                icon: 'objectRight'
- *                attributeName: 'data-align'
- *                attributeValue: 'left'
- *                modelElements: [ 'drupalMedia' ]
- *            viewMode:
- *              - name: 'full view mode'
- *                title: 'Full view mode'
- *                attributeName: 'data-view-mode'
- *                attributeValue: 'full'
- *                modelElements: [ 'drupalMedia' ]
- *              - name: 'compact view mode'
- *                title: 'Compact view mode'
- *                attributeName: 'data-view-mode'
- *                attributeValue: 'compact'
- *                modelElements: [ 'drupalMedia' ]
+ *        side:
+ *          - name: 'side'
+ *            icon: 'objectBlockRight'
+ *            title: 'Side image'
+ *            attributeName: 'class'
+ *            attributeValue: 'image-side'
+ *            modelElements: ['drupalMedia']
+ *        align:
+ *           - name: 'alignRight'
+ *             title: 'Right aligned media'
+ *             icon: 'objectRight'
+ *             attributeName: 'data-align'
+ *             modelElements: [ 'drupalMedia' ]
+ *           - name: 'alignRight'
+ *             title: 'Right aligned media'
+ *             icon: 'objectRight'
+ *             attributeName: 'data-align'
+ *             attributeValue: 'left'
+ *             modelElements: [ 'drupalMedia' ]
+ *        viewMode:
+ *           - name: 'full view mode'
+ *             title: 'Full view mode'
+ *             attributeName: 'data-view-mode'
+ *             attributeValue: 'full'
+ *             modelElements: [ 'drupalMedia' ]
+ *           - name: 'compact view mode'
+ *             title: 'Compact view mode'
+ *             attributeName: 'data-view-mode'
+ *             attributeValue: 'compact'
+ *             modelElements: [ 'drupalMedia' ]
  *
  * @see Drupal.CKEditor5~DrupalElementStyle
  *
@@ -206,9 +204,10 @@ export default class DrupalElementStyleEditing extends Plugin {
   init() {
     const { editor } = this;
 
-    // Ensure that the drupalElementStyles.options exists always.
-    editor.config.define('drupalElementStyles', { options: [] });
-    const stylesConfig = editor.config.get('drupalElementStyles').options;
+
+
+
+    const stylesConfig = editor.config.get('drupalElementStyles');
 
     /**
      * The Drupal Element Styles.

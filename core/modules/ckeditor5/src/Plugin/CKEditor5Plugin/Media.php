@@ -92,7 +92,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       if (array_key_exists($view_mode, $bundles_per_view_mode)) {
         $specific_bundles = $bundles_per_view_mode[$view_mode];
         if ($view_mode !== 'default') {
-          $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+          $dynamic_plugin_config['drupalElementStyles']['viewMode'][] = [
             'name' => $view_mode,
             'title' => $all_view_modes[$view_mode],
             'attributeName' => 'data-view-mode',
@@ -107,7 +107,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     }
     // Add default option no matter what so user always has the
     // ability to return to default view.
-    $dynamic_plugin_config['drupalElementStyles']['options']['viewMode'][] = [
+    $dynamic_plugin_config['drupalElementStyles']['viewMode'][] = [
       'isDefault' => TRUE,
       'name' => 'Default',
       'title' => 'Default',

@@ -172,7 +172,7 @@ function upcastDrupalMediaType(
 }
 
 /**
- * A helper function that parses the resize options and returns list item definitions ready for use in the dropdown.
+ * A helper function that parses the different dropdown options and returns list item definitions ready for use in the dropdown.
  *
  * @private
  * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
@@ -277,11 +277,12 @@ export default class DrupalElementStyleUi extends Plugin {
      *          - name: 'drupalMedia:viewMode'
      *            display: 'list'
      *            items:
-     *              - 'drupalElementStyle:full'
-     *              - 'drupalElementStyle:media_library'
-     *              - 'drupalElementStyle:tiny'
+     *              - 'drupalElementStyle:viewMode:full'
+     *              - 'drupalElementStyle:viewMode:media_library'
+     *              - 'drupalElementStyle:viewMode:compact'
+     *            defaultItem: 'drupalElementStyle:viewMode:default'
      *
-     * Balloon button display configuration.
+     * Non-dropdown button configuration.
      * @example
      *    config:
      *       drupalMedia:
@@ -293,16 +294,18 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
+     * These properties are needed for a list dropdown configuration. Buttons directly on the toolbar
+     * without a dropdown can be configured like in the align example above.
      * @prop {string} name
      *   The name of the dropdown used for identifying the dropdown.
      * @prop {string} display
      *   The type of the dropdown used.
      * @prop {string[]} items
      *   The items displayed in the dropdown. These must be styles defined in
-     *   `drupalElementStyles.options`.
+     *   `drupalElementStyles`.
      * @prop {string} defaultItem
      *   The default item of the dropdown. This must be a style defined in
-     *   `drupalElementStyles.options`.
+     *   `drupalElementStyles`.
      * @prop {string} [title]
      *   The title of the dropdown.
      *
