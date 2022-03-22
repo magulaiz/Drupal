@@ -5,9 +5,7 @@ namespace Drupal\KernelTests\Config;
 /**
  * Tests that deprecated extensions' installed and default config match.
  *
- * @group Config
- *
- * @legacy
+ * @group legacy
  *   This tests the functionality of deprecated extensions. It should not be
  *   removed from core during major version cleanups.
  */
