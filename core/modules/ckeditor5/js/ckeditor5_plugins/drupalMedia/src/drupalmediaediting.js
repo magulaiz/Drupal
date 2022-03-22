@@ -23,7 +23,6 @@ export default class DrupalMediaEditing extends Plugin {
     this.attrs = {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
-      drupalMediaType: null,
       drupalMediaEntityUuid: 'data-entity-uuid',
       drupalElementStyleViewMode: 'data-view-mode',
     };
@@ -141,7 +140,9 @@ export default class DrupalMediaEditing extends Plugin {
               });
           },
           // This converter needs to have the lowest priority to ensure that the
-          // model element and its attributes have already been converted.
+          // model element and its attributes have already been converted. It is only used
+          // to gather metadata to make the UI tailored to the specific media entity that
+          // is being dealt with.
           { priority: 'lowest' },
         );
       });
@@ -196,7 +197,7 @@ export default class DrupalMediaEditing extends Plugin {
             }
 
             // Preview was ready meaning that a new preview can be loaded.
-            // "Change the attribute to loading to prepare for the loading of
+            // "Change the attribute to loading to prepare for the loading of f
             // the updated preview. Preview is kept intact so that it remains
             // interactable in the UI until the new preview has been rendered.
             viewWriter.setAttribute(
@@ -293,10 +294,6 @@ export default class DrupalMediaEditing extends Plugin {
 
     // Set attributeToAttribute conversion for all supported attributes.
     Object.keys(this.attrs).forEach((modelKey) => {
-      // Omit drupalMediaType from downcast because it is unnecessary for the view.
-      if (modelKey === 'drupalMediaType') {
-        return;
-      }
       const attributeMapping = {
         model: {
           key: modelKey,

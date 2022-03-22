@@ -70,8 +70,10 @@ export default class InsertDrupalMediaCommand extends Command {
       );
 
       const { normalizedStyles } = elementStyleEditing;
-      Object.keys(normalizedStyles).forEach((group) => {
-        elementStyleEditing.normalizedStyles[group].forEach((style) => {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const group of normalizedStyles) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const style of elementStyleEditing.normalizedStyles[group]) {
           if (
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
@@ -79,8 +81,8 @@ export default class InsertDrupalMediaCommand extends Command {
             const groupName = capitalizeFirstLetter(group);
             modelAttributes[`drupalElementStyle${groupName}`] = style.name;
           }
-        });
-      });
+        }
+      }
     }
 
     this.editor.model.change((writer) => {
