@@ -192,14 +192,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $lookup_migration_ids = (array) $this->configuration['migration'];
-    $self = FALSE;
     $destination_ids = NULL;
     $source_id_values = [];
     foreach ($lookup_migration_ids as $lookup_migration_id) {
       $lookup_value = $value;
-      if ($lookup_migration_id == $this->migration->id()) {
-        $self = TRUE;
-      }
       if (isset($this->configuration['source_ids'][$lookup_migration_id])) {
         $lookup_value = array_values($row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]));
       }
@@ -232,13 +228,10 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       return NULL;
     }
 
-    if (!$destination_ids && ($self || isset($this->configuration['stub_id']) || count($lookup_migration_ids) == 1)) {
+    if (!$destination_ids && (isset($this->configuration['stub_id']) || count($lookup_migration_ids) == 1)) {
       // If the lookup didn't succeed, figure out which migration will do the
       // stubbing.
-      if ($self) {
-        $stub_migration = $this->migration->id();
-      }
-      elseif (isset($this->configuration['stub_id'])) {
+      if (isset($this->configuration['stub_id'])) {
         $stub_migration = $this->configuration['stub_id'];
       }
       else {
