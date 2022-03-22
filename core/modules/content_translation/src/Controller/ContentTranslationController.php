@@ -13,6 +13,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Base class for entity translation controllers.
@@ -372,6 +373,10 @@ class ContentTranslationController extends ControllerBase {
       if ($revision_id != $entity->getRevisionId()) {
         $entity = $storage->loadRevision($revision_id);
       }
+    }
+
+    if ($entity->hasTranslation($target->getId())) {
+      return new RedirectResponse($entity->toUrl('drupal:content-translation-overview')->toString());
     }
 
     // @todo Exploit the upcoming hook_entity_prepare() when available.
