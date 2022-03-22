@@ -6,19 +6,19 @@
         {
           "href": "/",
           "title": "Home",
-          "hierarchy": [".000"],
+          "hierarchy": ["0"],
           "machine-name": ["main"]
         },
         {
           "href": "/about",
           "title": "About us",
-          "hierarchy": [".001"],
+          "hierarchy": ["1"],
           "machine-name": ["main"]
         },
         {
           "href": "/about/custom-attributes",
           "title": "Custom attributes test page",
-          "hierarchy": [".001.000"],
+          "hierarchy": ["1", "0"],
           "class": [
             "foo",
             "bar",
@@ -38,7 +38,7 @@
         {
           "href": "/about/name",
           "title": "Our name",
-          "hierarchy": [".001.001"],
+          "hierarchy": ["1","1"],
           "machine-name": ["main"]
         }
       ]

@@ -73,9 +73,8 @@ final class Linkset extends ControllerBase {
     foreach ($links as $rel => $target_objects) {
       $links[$rel] = array_map(function (array $target) use ($menu_id) {
         // According to the Linkset specification, this member must be an array
-        // since the "machine-name" target attribute is
-        // non-standard.
-        // See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00#section-4.2.4.3
+        // since the "machine-name" target attribute is non-standard.
+        // See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
         return $target + ['machine-name' => [$menu_id]];
       }, $target_objects);
     }
@@ -95,12 +94,13 @@ final class Linkset extends ControllerBase {
    * Encode a menu tree as link items and capture any cacheability metadata.
    *
    * This method recursively traverses the given menu tree to produce a flat
-   * array of link items encoded according the the application/linkset+json
+   * array of link items encoded according the application/linkset+json
    * media type.
    *
    * To preserve hierarchical information, the target attribute contains a
-   * `hierarchy` member. Its value is a lexicographically sortable string
-   * which can be used to reconstruct a hierarchical data structure.
+   * `hierarchy` member. Its value is an array containing the position of a link
+   * within a particular sub-tree prepended by the positions of its ancestors,
+   * and can be used to reconstruct a hierarchical data structure.
    *
    * The reason that a `hierarchy` member is used instead of a `parent` or
    * `children` member is because it is more compact, more suited to the linkset
@@ -117,47 +117,41 @@ final class Linkset extends ControllerBase {
    * 2. The linkset media type is not itself hierarchical. This means that
    *    `children` is infeasible without inventing our own Drupal-specific media
    *    type.
-   * 3. By using simple string comparisons, the `hierarchy` member can be used
-   *    to efficiently perform tree operations that would otherwise be more
-   *    complicated to implement. For example, using a "starts with" comparison,
-   *    you can find any subtree without writing recursive logic or complicated
-   *    loops. Visit the URL below for more examples.
+   * 3. The `hierarchy` member can be used to efficiently perform tree
+   *    operations that would otherwise be more complicated to implement. For
+   *    example, by comparing the first X amount of hierarchy levels, you can
+   *    find any subtree without writing recursive logic or complicated loops.
+   *    Visit the URL below for more examples.
    *
    * The structure of a `hierarchy` value is defined below.
    *
    * A link which is a child of another link will always be prefixed by the
    * exact value of their parent's hierarchy member. For example, if a link /bar
    * is a child of a link /foo and /foo has a hierarchy member with the value
-   * ".001", then the the link /bar might have a hierarchy member with the value
-   * ".001.000". The link /foo can be said to have depth 1, while the link
-   * /bar can be said to have depth 2. Links of the same depth will always have
-   * a hierarchy value of the same character length.
+   * ["1"], then the link /bar might have a hierarchy member with the value
+   * ["1", "0"]. The link /foo can be said to have depth 1, while the link
+   * /bar can be said to have depth 2.
    *
    * Links which have the same parent (or no parent) have their relative order
-   * preserved in the final component of the hierarchy value. Applications can
-   * reconstruct this order by sorting that value in an ascending direction.
+   * preserved in the final component of the hierarchy value.
    *
-   * Applications must not assume that the numerical value between dots (".")
-   * will always be less than 1000. This number may be increased in the future.
-   *
-   * However, applications may rely on the length of the hierarchy value to be
-   * uniform across all items by increasing the number of left-padded
-   * characters.
+   * According to the Linkset specification, each value in the hierarchy array
+   * must be a string. See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-08#section-4.2.4.3
    *
    * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
    *   A tree of menu elements.
    * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
    *   An object to capture any cacheability metadata.
-   * @param string $hierarchy_prefix
-   *   (Internal use only) The hierarchy string value of the the parent element
+   * @param array $hierarchy_ancestors
+   *   (Internal use only) The hierarchy value of the parent element
    *   if $tree is a subtree. Do not pass this value.
    *
    * @return array
    *   An array which can be JSON-encoded to represent the given link tree.
    *
-   * @see https://www.drupal.org/project/decoupled_menus/issues/3196342#comment-14016222
+   * @see https://www.drupal.org/project/decoupled_menus/issues/3204132#comment-14439385
    */
-  protected function toLinkTargetObjects(array $tree, RefinableCacheableDependencyInterface $cacheability, $hierarchy_prefix = ''): array {
+  protected function toLinkTargetObjects(array $tree, RefinableCacheableDependencyInterface $cacheability, $hierarchy_ancestors = []): array {
     $links = [];
     // Calling array_values() discards any key names so that $index will be
     // numerical.
@@ -175,11 +169,11 @@ final class Linkset extends ControllerBase {
         $url = $element->link->getUrlObject();
         $generated_url = $url->toString(TRUE);
         $cacheability = $cacheability->addCacheableDependency($generated_url);
-        // Create the hierarchy value for the current element and prefix it
-        // with the link element parent's hierarchy value. See this method's
+        // Take the hierarchy value for the current element and append it
+        // to the link element parent's hierarchy value. See this method's
         // docblock for more context on why this value is the way it is.
-        $current_component = str_pad("{$index}", 3, "0", STR_PAD_LEFT);
-        $hierarchy = sprintf('%s.%s', $hierarchy_prefix, $current_component);
+        $hierarchy = $hierarchy_ancestors;
+        array_push($hierarchy, strval($index));
         $link_options = $element->link->getOptions();
         $link_attributes = ($link_options['attributes'] ?? []);
         $link_rel = $link_attributes['rel'] ?? 'item';
@@ -188,11 +182,7 @@ final class Linkset extends ControllerBase {
           'href' => $generated_url->getGeneratedUrl(),
           // @todo should this use the "title*" key if it is internationalized?
           'title' => $element->link->getTitle(),
-          // According to the Linkset specification, this member must be an
-          // array since the "hierarchy" target attribute is
-          // non-standard.
-          // See https://tools.ietf.org/html/draft-ietf-httpapi-linkset-00#section-4.2.4.3
-          'hierarchy' => [$hierarchy],
+          'hierarchy' => $hierarchy,
         ];
         $this->processCustomLinkAttributes($link, $link_attributes);
         $links[$link_rel][] = $link;
