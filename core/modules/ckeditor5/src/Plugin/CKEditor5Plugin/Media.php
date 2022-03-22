@@ -63,12 +63,18 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
   /**
    * Configures allowed view modes.
    *
-   * @param array $dynamic_plugin_config
-   *   The ckeditor5.config entry from the YAML or annotation.
    * @param \Drupal\editor\EditorInterface $editor
    *   A configured text editor object.
+   *
+   * @return array
+   *   An array containing view modes, style configuration,
+   *   and toolbar configuration.
    */
-  private function configureViewModes(array &$dynamic_plugin_config, EditorInterface $editor) {
+  private function configureViewModes(EditorInterface $editor) {
+    $view_mode_configuration = [];
+    $element_style_configuration = [];
+    $toolbar_configuration = [];
+
     $media_embed_filter = $editor->getFilterFormat()->filters('media_embed');
     $media_bundles = MediaType::loadMultiple();
     $bundles_per_view_mode = [];
@@ -76,10 +82,10 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
     $default_view_mode = $media_embed_filter->settings['default_view_mode'];
 
+    // Configure view modes.
     foreach (array_keys($media_bundles) as $bundle) {
       $allowed_view_modes_by_bundle = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
-
-      $dynamic_plugin_config['drupalMedia']['viewModes'][$bundle] = $allowed_view_modes_by_bundle;
+      $view_mode_configuration[$bundle] = $allowed_view_modes_by_bundle;
 
       foreach (array_keys($allowed_view_modes_by_bundle) as $view_mode) {
         // Get the bundles that have this view mode enabled.
@@ -87,12 +93,12 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       }
     }
 
-    // Create view mode options.
+    // Configure view mode element styles.
     foreach (array_keys($all_view_modes) as $view_mode) {
       if (array_key_exists($view_mode, $bundles_per_view_mode)) {
         $specific_bundles = $bundles_per_view_mode[$view_mode];
         if ($view_mode == $default_view_mode) {
-          $dynamic_plugin_config['drupalElementStyles']['viewMode'][] = [
+          $element_style_configuration[] = [
             'isDefault' => TRUE,
             'name' => $default_view_mode,
             'title' => $all_view_modes[$view_mode],
@@ -105,7 +111,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
           ];
         }
         else {
-          $dynamic_plugin_config['drupalElementStyles']['viewMode'][] = [
+          $element_style_configuration[] = [
             'name' => $view_mode,
             'title' => $all_view_modes[$view_mode],
             'attributeName' => 'data-view-mode',
@@ -127,15 +133,20 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
 
     $default_item = 'drupalElementStyle:viewMode:' . $default_view_mode;
     if (!empty($allowed_view_modes)) {
-      // Configure dropdown menu.
-      $dynamic_plugin_config['drupalMedia']['toolbar'][] = [
+      // Configure toolbar dropdown menu.
+      $toolbar_configuration[] = [
         'name' => 'drupalMedia:viewMode',
-        'display' => 'list',
+        'display' => 'listDropdown',
         'defaultItem' => $default_item,
         'defaultText' => 'View mode',
         'items' => $items,
       ];
     }
+    return [
+      $view_mode_configuration,
+      $element_style_configuration,
+      $toolbar_configuration,
+    ];
   }
 
   /**
@@ -147,8 +158,12 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-    self::configureViewModes($dynamic_plugin_config, $editor);
+    [$view_mode_configuration, $element_style_configuration, $toolbar_configuration,
+    ] = self::configureViewModes($editor);
 
+    $dynamic_plugin_config['drupalMedia']['viewModes'] = $view_mode_configuration;
+    $dynamic_plugin_config['drupalElementStyles']['viewMode'] = $element_style_configuration;
+    $dynamic_plugin_config['drupalMedia']['toolbar'] = $toolbar_configuration;
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())

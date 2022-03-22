@@ -275,14 +275,26 @@ export default class DrupalElementStyleUi extends Plugin {
      *       drupalMedia:
      *        toolbar:
      *          - name: 'drupalMedia:viewMode'
-     *            display: 'list'
+     *            display: 'listDropdown'
      *            items:
      *              - 'drupalElementStyle:viewMode:full'
      *              - 'drupalElementStyle:viewMode:media_library'
      *              - 'drupalElementStyle:viewMode:compact'
      *            defaultItem: 'drupalElementStyle:viewMode:default'
      *
-     * Non-dropdown button configuration.
+     * Icon dropdown display configuration.
+     * @example
+     *    config:
+     *       drupalMedia:
+     *        toolbar:
+     *          - name: 'drupalMedia:side'
+     *            display: 'iconDropdown'
+     *            items:
+     *              - 'drupalElementStyle:side:right'
+     *              - 'drupalElementStyle:side:left'
+     *            defaultItem: 'drupalElementStyle:side:right'
+     *
+     * Toolbar buttons configuration (non-dropdown).
      * @example
      *    config:
      *       drupalMedia:
@@ -294,10 +306,10 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
-     * These properties are needed for a list dropdown configuration. Buttons directly on the toolbar
+     * These properties are needed for a list or icon dropdown configuration. Buttons directly on the toolbar
      * without a dropdown can be configured like in the align example above.
      * @prop {string} name
-     *   The name of the dropdown used for identifying the dropdown.
+     *   The name of the dropdown used for identifying the dropdown, either as a list or icons.
      * @prop {string} display
      *   The type of the dropdown used.
      * @prop {string[]} items
@@ -311,15 +323,23 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
-    const definedDropdowns = toolbarConfig.filter(isObject);
+    const definedDropdowns = toolbarConfig.filter(isObject).filter((obj) => {
+      if (!obj.display) {
+        console.warn(
+          'dropdown configuration must include a display key specifying either listDropdown or iconDropdown.',
+        );
+        return false;
+      }
+      return true;
+    });
 
     definedDropdowns.forEach((dropdownConfig) => {
       const groupName = dropdownConfig.name.split(':')[1];
       switch (dropdownConfig.display) {
-        case 'toolbar':
+        case 'iconDropdown':
           this._createDropdown(dropdownConfig, definedStyles[groupName]);
           break;
-        case 'list':
+        case 'listDropdown':
           this._createListDropdown(dropdownConfig, definedStyles[groupName]);
           break;
         default:
