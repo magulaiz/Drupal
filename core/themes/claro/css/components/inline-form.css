@@ -32,7 +32,7 @@
   float: left; /* LTR */
   margin-top: 3.125rem; /* Form item margin-top + label line-height + label top/bottom margin. */
   white-space: nowrap;
-  line-height: 3rem; /* Same as input min height */
+  line-height: 1.5rem;
 }
 
 [dir="rtl"] .form--inline .form-item-separator {
