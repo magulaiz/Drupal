@@ -134,7 +134,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $default_item = 'drupalElementStyle:viewMode:' . $default_view_mode;
     if (!empty($allowed_view_modes)) {
       // Configure toolbar dropdown menu.
-      $toolbar_configuration[] = [
+      $toolbar_configuration = [
         'name' => 'drupalMedia:viewMode',
         'display' => 'listDropdown',
         'defaultItem' => $default_item,
