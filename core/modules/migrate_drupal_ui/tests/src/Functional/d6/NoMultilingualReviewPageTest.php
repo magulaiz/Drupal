@@ -27,7 +27,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'forum',
     'statistics',
     'syslog',
-    'tracker',
     'update',
     // Test migrations states.
     'migrate_state_finished_test',
@@ -112,7 +111,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Taxonomy',
       'Text',
       'Throttle',
-      'Tracker',
       'Trigger',
       'Update status',
       'Upload',
@@ -157,6 +155,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'String translation',
       'Synchronize translations',
       'Taxonomy translation',
+      'Tracker',
       'Views',
       'Views translation',
     ];

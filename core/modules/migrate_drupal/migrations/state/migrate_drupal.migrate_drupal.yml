@@ -37,7 +37,6 @@ finished:
     ping: core
     poll: core
     throttle: core
-    tracker: core
     translation: core
     trigger: core
     variable: core

@@ -167,6 +167,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Picture',
       'References',
       'References UUID',
+      'Tracker',
       'Translation redirect',
       'Translation sets',
       'User mail translation',
