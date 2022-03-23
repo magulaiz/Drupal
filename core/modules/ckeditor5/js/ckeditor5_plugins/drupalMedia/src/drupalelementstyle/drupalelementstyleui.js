@@ -334,16 +334,19 @@ export default class DrupalElementStyleUi extends Plugin {
     });
 
     definedDropdowns.forEach((dropdownConfig) => {
-      const groupName = dropdownConfig.name.split(':')[1];
-      switch (dropdownConfig.display) {
-        case 'iconDropdown':
-          this._createDropdown(dropdownConfig, definedStyles[groupName]);
-          break;
-        case 'listDropdown':
-          this._createListDropdown(dropdownConfig, definedStyles[groupName]);
-          break;
-        default:
-          break;
+      // Only create dropdowns if there are 2 or more items.
+      if (dropdownConfig.items.length >= 2) {
+        const groupName = dropdownConfig.name.split(':')[1];
+        switch (dropdownConfig.display) {
+          case 'iconDropdown':
+            this._createDropdown(dropdownConfig, definedStyles[groupName]);
+            break;
+          case 'listDropdown':
+            this._createListDropdown(dropdownConfig, definedStyles[groupName]);
+            break;
+          default:
+            break;
+        }
       }
     });
   }

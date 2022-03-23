@@ -71,7 +71,6 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
    *   and toolbar configuration.
    */
   private function configureViewModes(EditorInterface $editor) {
-    $view_mode_configuration = [];
     $element_style_configuration = [];
     $toolbar_configuration = [];
 
@@ -81,17 +80,23 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
     $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
     $default_view_mode = $media_embed_filter->settings['default_view_mode'];
+    // Return early since there is no need to configure if there
+    // are less than 2 view modes.
+    if ($allowed_view_modes < 2) {
+      return [];
+    }
 
     // Configure view modes.
     foreach (array_keys($media_bundles) as $bundle) {
-      $allowed_view_modes_by_bundle = array_intersect_key($this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle), $media_embed_filter->settings['allowed_view_modes']);
-      $view_mode_configuration[$bundle] = $allowed_view_modes_by_bundle;
+      $allowed_view_modes_by_bundle = $this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle);
 
       foreach (array_keys($allowed_view_modes_by_bundle) as $view_mode) {
         // Get the bundles that have this view mode enabled.
         $bundles_per_view_mode[$view_mode][] = $bundle;
       }
     }
+    // Limit to view modes allowed by filter.
+    $bundles_per_view_mode = array_intersect_key($bundles_per_view_mode, $media_embed_filter->settings['allowed_view_modes']);
 
     // Configure view mode element styles.
     foreach (array_keys($all_view_modes) as $view_mode) {
@@ -143,7 +148,6 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       ];
     }
     return [
-      $view_mode_configuration,
       $element_style_configuration,
       $toolbar_configuration,
     ];
@@ -158,10 +162,9 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-    [$view_mode_configuration, $element_style_configuration, $toolbar_configuration,
+    [$element_style_configuration, $toolbar_configuration,
     ] = self::configureViewModes($editor);
 
-    $dynamic_plugin_config['drupalMedia']['viewModes'] = $view_mode_configuration;
     $dynamic_plugin_config['drupalElementStyles']['viewMode'] = $element_style_configuration;
     $dynamic_plugin_config['drupalMedia']['toolbar'][] = $toolbar_configuration;
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
