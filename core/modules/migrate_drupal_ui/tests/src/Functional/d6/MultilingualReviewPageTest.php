@@ -151,6 +151,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Devel node access',
       // Option Widgets is set not_finished in migrate_state_not_finished_test.
       'Option Widgets',
+      'Tracker',
       'Views',
       'Views translation',
       'migrate_status_active_test',
