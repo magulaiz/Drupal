@@ -163,7 +163,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
 
     $dynamic_plugin_config['drupalMedia']['viewModes'] = $view_mode_configuration;
     $dynamic_plugin_config['drupalElementStyles']['viewMode'] = $element_style_configuration;
-    $dynamic_plugin_config['drupalMedia']['toolbar'] = $toolbar_configuration;
+    $dynamic_plugin_config['drupalMedia']['toolbar'][] = $toolbar_configuration;
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())
