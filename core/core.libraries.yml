@@ -14,10 +14,10 @@ backbone:
 
 ckeditor:
   remote: https://github.com/ckeditor/ckeditor4
-  version: "4.17.1"
+  version: "4.18.0"
   license:
     name: GNU-GPL-2.0-or-later
-    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.17.1/LICENSE.md
+    url: https://raw.githubusercontent.com/ckeditor/ckeditor4/4.18.0/LICENSE.md
     gpl-compatible: true
   js:
     assets/vendor/ckeditor/ckeditor.js: { preprocess: false, minified: true }
@@ -280,6 +280,19 @@ ckeditor5.language:
     gpl-compatible: true
   js:
     assets/vendor/ckeditor5/language/language.js: { minified: true }
+  dependencies:
+    - core/ckeditor5
+    - core/ckeditor5.translations
+
+ckeditor5.codeBlock:
+  remote: https://github.com/ckeditor/ckeditor5
+  version: "33.0.0"
+  license:
+    name: GNU-GPL-2.0-or-later
+    url: https://github.com/ckeditor/ckeditor5/blob/v33.0.0/LICENSE.md
+    gpl-compatible: true
+  js:
+    assets/vendor/ckeditor5/code-block/code-block.js: { minified: true }
   dependencies:
     - core/ckeditor5
     - core/ckeditor5.translations

@@ -62,7 +62,7 @@ ckeditor5_heading:
       - <h5>
       - <h6>
 
-ckeditor5_htmlSupport:
+ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]
     config:
@@ -77,6 +77,17 @@ ckeditor5_htmlSupport:
             styles: true
   drupal:
     label: Arbitrary HTML support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
+ckeditor5_wildcardHtmlSupport:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+  drupal:
+    label: Wildcard HTML support
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
     elements: false
     library: core/ckeditor5.htmlSupport
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
@@ -166,6 +177,29 @@ ckeditor5_code:
         label: Code
     elements:
       - <code>
+
+ckeditor5_codeBlock:
+  ckeditor5:
+    plugins:
+      - codeBlock.CodeBlock
+      - htmlSupport.GeneralHtmlSupport
+    config:
+      # The CodeBlock plugin supports only `<pre><code>…</code></pre>`.
+      # Configure GHS to support `<pre>…</pre>` markup as well.
+      htmlSupport:
+        allow:
+          -
+            name: pre
+  drupal:
+    label: Code Block
+    library: ckeditor5/drupal.ckeditor5.codeBlock
+    admin_library: ckeditor5/admin.codeBlock
+    toolbar_items:
+      codeBlock:
+        label: Code Block
+    elements:
+      - <pre>
+      - <code class="language-*">
 
 ckeditor5_strikethrough:
   ckeditor5:
