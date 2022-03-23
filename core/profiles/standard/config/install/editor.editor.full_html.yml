@@ -28,8 +28,6 @@ settings:
       - horizontalLine
       - '|'
       - heading
-      - '|'
-      - code
       - codeBlock
       - '|'
       - sourceEditing
