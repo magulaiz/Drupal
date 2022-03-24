@@ -39,8 +39,12 @@
       }
     };
 
-    const toggleCollapsed = () => {
-      if (window.matchMedia('(min-width: 48em)').matches) {
+    const toggleCollapsed = _ref => {
+      let {
+        matches
+      } = _ref;
+
+      if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           let width = 0;
 
