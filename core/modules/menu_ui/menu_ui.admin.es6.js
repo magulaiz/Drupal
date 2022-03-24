@@ -35,8 +35,8 @@
       // Get the names of all checked menus.
       values.push(Drupal.checkPlain($(this).val()));
     });
-    // Uncheck and hide link enabled checkbox if no menus selected.
     if (values.length === 0) {
+      // Uncheck and hide link enabled checkbox if no menus selected.
       $linkEnabled.prop('checked', false);
     }
     $linkEnabled.closest('div').attr('hidden', values.length === 0);

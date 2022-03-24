@@ -69,7 +69,7 @@ class MenuUiNodeTest extends BrowserTestBase {
    */
   public function testContentTypeLinkEnableConfiguration() {
     // Check that unconfigured content type defaults to enabled links.
-    $this->drupalGet('/node/add/page');
+    $this->drupalGet('node/add/page');
     $this->assertSession()->checkboxChecked('menu[link_enabled]');
 
     // Configure menu links to be disabled.
@@ -81,7 +81,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains('The content type Basic page has been updated.');
-    $this->drupalGet('/node/add/page');
+    $this->drupalGet('node/add/page');
     $this->assertSession()->checkboxNotChecked('menu[link_enabled]');
 
     // Configure menu links to be enabled.
@@ -89,7 +89,7 @@ class MenuUiNodeTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm($edit, 'Save content type');
     $this->assertSession()->pageTextContains('The content type Basic page has been updated.');
-    $this->drupalGet('/node/add/page');
+    $this->drupalGet('node/add/page');
     $this->assertSession()->checkboxChecked('menu[link_enabled]');
   }
 
