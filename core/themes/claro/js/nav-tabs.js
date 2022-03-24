@@ -37,8 +37,10 @@
       }
     };
 
-    var toggleCollapsed = function toggleCollapsed() {
-      if (window.matchMedia('(min-width: 48em)').matches) {
+    var toggleCollapsed = function toggleCollapsed(_ref) {
+      var matches = _ref.matches;
+
+      if (matches) {
         if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
           var width = 0;
           $target.find('.js-tabs-link').each(function (index, value) {
@@ -61,7 +63,9 @@
       $item.attr('data-original-order', $item.index());
     });
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);
-    $(window).on('resize.tabs', Drupal.debounce(toggleCollapsed, 150)).trigger('resize.tabs');
+    var mql = window.matchMedia('(min-width: 48em)');
+    mql.addEventListener('change', toggleCollapsed);
+    toggleCollapsed(mql);
   }
 
   Drupal.behaviors.navTabs = {
