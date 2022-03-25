@@ -168,13 +168,13 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
     }
   }
   catch (UpdaterException $e) {
-    _update_batch_create_message($context['results']['log'][$project], t('Error adding / updating'), FALSE);
+    _update_batch_create_message($context['results']['log'][$project], t('Error updating'), FALSE);
     _update_batch_create_message($context['results']['log'][$project], $e->getMessage(), FALSE);
     $context['results']['log'][$project]['#abort'] = TRUE;
     return;
   }
 
-  _update_batch_create_message($context['results']['log'][$project], t('Added / updated %project_name successfully', ['%project_name' => $project]));
+  _update_batch_create_message($context['results']['log'][$project], t('Updated %project_name successfully', ['%project_name' => $project]));
 
   if (!empty($tasks)) {
     $context['results']['tasks'] += $tasks;
