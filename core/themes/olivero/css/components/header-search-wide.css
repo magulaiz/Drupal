@@ -254,7 +254,7 @@
 @media (prefers-reduced-motion) {
 
 .block-search-wide__wrapper .search-form__submit .icon--search:after {
-          transition-duration: 0.01s /* Needed for transitionend event */
+          transition-duration: 0.01s /* Needed for transitionend event. */
       }
         }
 

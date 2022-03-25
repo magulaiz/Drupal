@@ -109,7 +109,7 @@ html.js .header-nav {
 
 @media (prefers-reduced-motion) {
   html.js .header-nav {
-    transition: visibility 0.2s;
+    transition: none;
   }
 }
 

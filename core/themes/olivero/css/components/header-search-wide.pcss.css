@@ -131,7 +131,7 @@
         border-block-start: solid var(--sp0-5) var(--color--blue-50);
 
         @media (prefers-reduced-motion) {
-          transition-duration: 0.01s; /* Needed for transitionend event */
+          transition-duration: 0.01s; /* Needed for transitionend event. */
         }
       }
     }
