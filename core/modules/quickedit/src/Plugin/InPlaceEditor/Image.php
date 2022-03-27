@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\image\Plugin\InPlaceEditor;
+namespace Drupal\quickedit\Plugin\InPlaceEditor;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\quickedit\Plugin\InPlaceEditorBase;
@@ -11,8 +11,6 @@ use Drupal\quickedit\Plugin\InPlaceEditorBase;
  * @InPlaceEditor(
  *   id = "image"
  * )
- *
- * @todo this probably needs to move to quickedit too.
  */
 class Image extends InPlaceEditorBase {
 
@@ -33,7 +31,7 @@ class Image extends InPlaceEditorBase {
   public function getAttachments() {
     return [
       'library' => [
-        'image/quickedit.inPlaceEditor.image',
+        'quickedit/quickedit.inPlaceEditor.image',
       ],
     ];
   }

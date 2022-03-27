@@ -17,7 +17,7 @@ class QuickEditImageControllerTest extends KernelTestBase {
    * Tests class \Drupal\image\Controller\QuickEditImageController deprecation.
    */
   public function testQuickEditImageControllerDeprecation(): void {
-    $this->expectDeprecation('Drupal\image\Controller\QuickEditImageController is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, use \Drupal\quickedit\QuickEditImageController. See https://www.drupal.org/node/3271848');
+    $this->expectDeprecation('Drupal\image\Controller\QuickEditImageController is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, use Drupal\quickedit\QuickEditImageController. See https://www.drupal.org/node/3271848');
     new QuickEditImageController(
       $this->container->get('renderer'),
       $this->container->get('image.factory'),
