@@ -71,6 +71,3 @@ image.effect_edit_form:
 
 route_callbacks:
   - '\Drupal\image\Routing\ImageStyleRoutes::routes'
-
-# @todo how do we deprecate the old route?
-# @see https://symfony.com/blog/new-in-symfony-5-4-route-aliasing#deprecating-routes

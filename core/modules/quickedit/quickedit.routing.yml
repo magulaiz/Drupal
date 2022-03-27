@@ -39,7 +39,7 @@ quickedit.entity_save:
 quickedit.image_upload:
   path: '/quickedit/image/upload/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
-    _controller: '\Drupal\image\Controller\QuickEditImageController::upload'
+    _controller: '\Drupal\quickedit\Controller\QuickEditImageController::upload'
   options:
     parameters:
       entity:
@@ -50,7 +50,7 @@ quickedit.image_upload:
     _method: 'POST'
 
 quickedit.image_info:
-  path: '/quickedit/image/info/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  path: '/quickedit/quickedit/info/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\image\Controller\QuickEditImageController::getInfo'
   options:
