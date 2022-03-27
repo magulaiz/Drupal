@@ -61,3 +61,4 @@ Disallow: /index.php/user/login
 Disallow: /index.php/user/logout
 # Oembed media
 Disallow: /media/oembed
+Disallow: /*/media/oembed
