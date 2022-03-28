@@ -152,26 +152,6 @@ export default class DrupalElementStyleCommand extends Command {
   }
 
   /**
-   * Checks if an element has a drupalElementStyle attribute.
-   *
-   * @param {module:engine/model/element~Element|null} element
-   *   The element.
-   *
-   * @return {boolean}
-   *   Does the element have a drupalElementStyle attribute?
-   */
-  containsAttribute(element) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const group of Object.keys(this.styles)) {
-      const groupName = capitalizeFirstLetter(group);
-      if (element.hasAttribute(`drupalElementStyle${groupName}`)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  /**
    * Gets the group(s) and attribute(s) of the element in the form of a command.
    *
    * @example {drupalAlign: 'left', drupalViewMode: 'full'}
