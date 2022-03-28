@@ -204,7 +204,7 @@ class ImageFormatter extends ImageFormatterBase {
     }
 
     $image_loading = $this->getSetting('image_loading');
-    $summary[] = $this->t('Loading attribute: @attribute', [
+    $summary[] = $this->t('Image loading: @attribute', [
       '@attribute' => $image_loading['attribute'],
     ]);
 
