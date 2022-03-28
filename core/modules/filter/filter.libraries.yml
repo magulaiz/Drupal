@@ -17,7 +17,6 @@ drupal.filter.filter_html.admin:
     - core/jquery
     - core/once
     - core/jquery.once.bc
-    - core/internal.underscore
 
 drupal.filter:
   version: VERSION

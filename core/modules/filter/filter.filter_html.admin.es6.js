@@ -3,7 +3,7 @@
  * Attaches behavior for updating filter_html's settings automatically.
  */
 
-(function ($, Drupal, _, document) {
+(function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     /**
      * Implement a live setting parser to prevent text editors from automatically
@@ -99,9 +99,11 @@
 
         // When the allowed tags list is manually changed, update userTags.
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(
-            that._parseSetting(this.value),
-            that.autoTags,
+          that.userTags = [
+            Object.values(that._parseSetting(this.value)),
+            Object.values(that.autoTags),
+          ].reduce((rules, auto_tags) =>
+            rules.filter((rule) => !auto_tags.includes(rule)),
           );
         });
       });
@@ -230,28 +232,39 @@
             userAllowedTags[tag].restrictedTags.allowed.attributes;
           const needsAdditionalAttributes =
             requiredAttributes.length &&
-            _.difference(requiredAttributes, allowedAttributes).length;
+            [requiredAttributes, allowedAttributes].reduce(
+              (requiredAttributes, allowedAttributes) =>
+                requiredAttributes.filter(
+                  (requiredAttribute) =>
+                    !allowedAttributes.includes(requiredAttribute),
+                ),
+            ).length;
           const requiredClasses =
             editorRequiredTags[tag].restrictedTags.allowed.classes;
           const allowedClasses =
             userAllowedTags[tag].restrictedTags.allowed.classes;
           const needsAdditionalClasses =
             requiredClasses.length &&
-            _.difference(requiredClasses, allowedClasses).length;
+            [requiredClasses, allowedClasses].reduce(
+              (requiredClasses, allowedClasses) =>
+                requiredClasses.filter(
+                  (requiredClass) => !allowedClasses.includes(requiredClass),
+                ),
+            ).length;
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(
-              allowedAttributes,
-              requiredAttributes,
-            );
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = [
+              ...allowedAttributes,
+              ...requiredAttributes,
+            ];
           }
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(
-              allowedClasses,
-              requiredClasses,
-            );
+            autoAllowedTags[tag].restrictedTags.allowed.classes = [
+              ...allowedClasses,
+              ...requiredClasses,
+            ];
           }
         }
       });

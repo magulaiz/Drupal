@@ -25,7 +25,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function ($, Drupal, _, document) {
+(function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
       getRules: function getRules() {
@@ -72,7 +72,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          that.userTags = [Object.values(that._parseSetting(this.value)), Object.values(that.autoTags)].reduce(function (rules, auto_tags) {
+            return rules.filter(function (rule) {
+              return !auto_tags.includes(rule);
+            });
+          });
         });
       });
     },
@@ -127,24 +131,29 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-
+          var needsAdditionalAttributes = requiredAttributes.length && [requiredAttributes, allowedAttributes].reduce(function (requiredAttributes, allowedAttributes) {
+            return requiredAttributes.filter(function (requiredAttribute) {
+              return !allowedAttributes.includes(requiredAttribute);
+            });
+          }).length;
           var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
           var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          var needsAdditionalClasses = requiredClasses.length && [requiredClasses, allowedClasses].reduce(function (requiredClasses, allowedClasses) {
+            return requiredClasses.filter(function (requiredClass) {
+              return !allowedClasses.includes(requiredClass);
+            });
+          }).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
 
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = [].concat(_toConsumableArray(allowedAttributes), _toConsumableArray(requiredAttributes));
           }
 
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+            autoAllowedTags[tag].restrictedTags.allowed.classes = [].concat(_toConsumableArray(allowedClasses), _toConsumableArray(requiredClasses));
           }
         }
       });
