@@ -125,7 +125,12 @@
         this.$allowedHTMLDescription.append(
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
-        const userTagsWithoutOverrides = Object.fromEntries(Object.entries(this.userTags).filter(key => !Object.keys(this).includes(key), this.autoTags));
+        const userTagsWithoutOverrides = Object.fromEntries(
+          Object.entries(this.userTags).filter(
+            (key) => !Object.keys(this).includes(key),
+            this.autoTags,
+          ),
+        );
 
         this.$allowedHTMLFormItem.val(
           `${this._generateSetting(
@@ -189,8 +194,14 @@
             // attributes.
             else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = [ ...filterRule.restrictedTags.allowed.attributes, ...featureRule.required.attributes ];
-              filterRule.restrictedTags.allowed.classes = [ ...filterRule.restrictedTags.allowed.classes, ...featureRule.required.classes ];
+              filterRule.restrictedTags.allowed.attributes = [
+                ...filterRule.restrictedTags.allowed.attributes,
+                ...featureRule.required.attributes,
+              ];
+              filterRule.restrictedTags.allowed.classes = [
+                ...filterRule.restrictedTags.allowed.classes,
+                ...featureRule.required.classes,
+              ];
             }
           }
         }
@@ -315,8 +326,8 @@
      */
     _generateSetting(tags) {
       let setting = '';
-      Object.entries(tags).forEach(data => {
-        const [tag, rule] = data
+      Object.entries(tags).forEach((data) => {
+        const [tag, rule] = data;
 
         if (setting.length) {
           setting += ' ';
@@ -333,7 +344,7 @@
         //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
         if (rule.restrictedTags.allowed.classes.length) {
           setting += ` class="${rule.restrictedTags.allowed.classes.join(
-              ' ',
+            ' ',
           )}"`;
         }
 
