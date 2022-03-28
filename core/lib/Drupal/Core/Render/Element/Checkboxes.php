@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   #options array cannot have a 0 key, as it would not be possible to discern
  *   checked and unchecked states.
  *
-* Usage example:
+ * Usage example:
  * @code
  * $form['favorites']['colors'] = array(
  *   '#type' => 'checkboxes',
