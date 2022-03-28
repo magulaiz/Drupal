@@ -121,14 +121,12 @@
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
       // If any auto-created tags: insert message and update form item.
-      if (!Object.keys(this.autoTags).length > 0) {
+      if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
-        const userTagsWithoutOverrides = _.omit(
-          this.userTags,
-          _.keys(this.autoTags),
-        );
+        const userTagsWithoutOverrides = Object.fromEntries(Object.entries(this.userTags).filter(key => !Object.keys(this).includes(key), this.autoTags));
+
         this.$allowedHTMLFormItem.val(
           `${this._generateSetting(
             userTagsWithoutOverrides,
@@ -191,14 +189,8 @@
             // attributes.
             else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = _.union(
-                filterRule.restrictedTags.allowed.attributes,
-                featureRule.required.attributes,
-              );
-              filterRule.restrictedTags.allowed.classes = _.union(
-                filterRule.restrictedTags.allowed.classes,
-                featureRule.required.classes,
-              );
+              filterRule.restrictedTags.allowed.attributes = [ ...filterRule.restrictedTags.allowed.attributes, ...featureRule.required.attributes ];
+              filterRule.restrictedTags.allowed.classes = [ ...filterRule.restrictedTags.allowed.classes, ...featureRule.required.classes ];
             }
           }
         }
@@ -322,33 +314,33 @@
      *   The string representation of the setting. e.g. "<p> <br> <a>"
      */
     _generateSetting(tags) {
-      return _.reduce(
-        tags,
-        (setting, rule, tag) => {
-          if (setting.length) {
-            setting += ' ';
-          }
+      let setting = '';
+      Object.entries(tags).forEach(data => {
+        const [tag, rule] = data
 
-          setting += `<${tag}`;
-          if (rule.restrictedTags.allowed.attributes.length) {
-            setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
-          }
-          // @todo Drupal.FilterHtmlRule does not allow for generic attribute
-          //   value restrictions, only for the "class" and "style" attribute's
-          //   values. The filter_html filter always disallows the "style"
-          //   attribute, so we only need to support "class" attribute value
-          //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
-          if (rule.restrictedTags.allowed.classes.length) {
-            setting += ` class="${rule.restrictedTags.allowed.classes.join(
+        if (setting.length) {
+          setting += ' ';
+        }
+
+        setting += `<${tag}`;
+        if (rule.restrictedTags.allowed.attributes.length) {
+          setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
+        }
+        // @todo Drupal.FilterHtmlRule does not allow for generic attribute
+        //   value restrictions, only for the "class" and "style" attribute's
+        //   values. The filter_html filter always disallows the "style"
+        //   attribute, so we only need to support "class" attribute value
+        //   restrictions. Fix once https://www.drupal.org/node/2567801 lands.
+        if (rule.restrictedTags.allowed.classes.length) {
+          setting += ` class="${rule.restrictedTags.allowed.classes.join(
               ' ',
-            )}"`;
-          }
+          )}"`;
+        }
 
-          setting += '>';
-          return setting;
-        },
-        '',
-      );
+        setting += '>';
+      });
+
+      return setting;
     },
   };
 
