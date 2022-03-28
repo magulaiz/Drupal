@@ -2,14 +2,12 @@
 
 namespace Drupal\Tests\ckeditor\FunctionalJavascript;
 
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\editor\Entity\Editor;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the integration of CKEditor.
@@ -19,6 +17,7 @@ use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
 class CKEditorIntegrationTest extends WebDriverTestBase {
 
   use CKEditorTestTrait;
+  use TestFileCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -61,30 +60,23 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor',
+      'image_upload' => [
+        'status' => TRUE,
+        'scheme' => 'public',
+        'directory' => 'inline-images',
+        'max_size' => '',
+        'max_dimensions' => [
+          'width' => NULL,
+          'height' => NULL,
+        ],
+      ],
     ])->save();
 
     // Create a node type for testing.
-    NodeType::create(['type' => 'page', 'name' => 'page'])->save();
-
-    $field_storage = FieldStorageConfig::loadByName('node', 'body');
-
-    // Create a body field instance for the 'page' node type.
-    FieldConfig::create([
-      'field_storage' => $field_storage,
-      'bundle' => 'page',
-      'label' => 'Body',
-      'settings' => ['display_summary' => TRUE],
-      'required' => TRUE,
-    ])->save();
-
-    // Assign widget settings for the 'default' form mode.
-    EntityFormDisplay::create([
-      'targetEntityType' => 'node',
-      'bundle' => 'page',
-      'mode' => 'default',
-      'status' => TRUE,
-    ])->setComponent('body', ['type' => 'text_textarea_with_summary'])
-      ->save();
+    /** @var \Drupal\node\NodeTypeInterface $node_type  */
+    $node_type = NodeType::create(['type' => 'page', 'name' => 'page']);
+    $node_type->save();
+    node_add_body_field($node_type);
 
     $this->account = $this->drupalCreateUser([
       'administer nodes',
@@ -232,6 +224,69 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertCount(1, $old_keys, 'Only one off-canvas style was cached before clearing caches.');
     $this->assertCount(1, $new_keys, 'Only one off-canvas style was cached after clearing caches.');
     $this->assertNotEquals($old_keys, $new_keys, 'Clearing caches changed the off-canvas style cache key.');
+  }
+
+  /**
+   * Tests that a link can be applied to an inline uploaded image.
+   */
+  public function testCreateLinkOnImage() {
+    $session = $this->getSession();
+    $page = $session->getPage();
+    $web_assert = $this->assertSession();
+
+    // Find a test image to upload.
+    $valid_images = [];
+    foreach ($this->getTestFiles('image') as $image) {
+      $regex = '/\.(' . preg_replace('/ /', '|', 'png') . ')$/i';
+      if (preg_match($regex, $image->filename)) {
+        $valid_images[] = $image;
+      }
+    }
+
+    // Ensure we have at least one valid image.
+    $this->assertGreaterThanOrEqual(1, count($valid_images));
+
+    // Go to a node creation page.
+    $this->drupalGet('node/add/page');
+    // Add the Title.
+    $page->fillField('edit-title-0-value', 'Sample Title');
+
+    // Make sure any ckeditor ajax has finished.
+    $web_assert->assertWaitOnAjaxRequest();
+
+    // Press the DrupalImage button.
+    $this->click('.cke_button__drupalimage');
+    $page->waitFor(5, function () use ($page) {
+      return $page->find('css', '.editor-image-dialog');
+    });
+
+    // Attach the file and alt tag.
+    $file_system = $this->container->get('file_system');
+    $image_path = $file_system->realpath($valid_images[0]->uri);
+    $page->attachFileToField('files[fid]', $image_path);
+    $web_assert->assertWaitOnAjaxRequest();
+    $page->fillField('attributes[alt]', 'Alt text');
+    $this->click('.ui-dialog-buttonset .form-submit');
+
+    // Make sure any ajax has finished saving the file.
+    $web_assert->assertWaitOnAjaxRequest();
+
+    // Press the Link button to wrap the image in a link.
+    $this->click('.cke_button__drupallink');
+    $page->waitFor(5, function () use ($page) {
+      return $page->find('css', '.editor-link-dialog');
+    });
+    $link = 'https://drupal.org';
+    $page->fillField('attributes[href]', $link);
+    $this->click('.ui-dialog-buttonset .form-submit');
+
+    // Make sure any ajax is finished.
+    $web_assert->assertWaitOnAjaxRequest();
+
+    $page->pressButton('Save');
+
+    $web_assert->pageTextContains('Sample Title');
+    $web_assert->elementContains('css', 'a[href="' . $link . '"]', $valid_images[0]->filename);
   }
 
 }
