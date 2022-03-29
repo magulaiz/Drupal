@@ -389,4 +389,4 @@
     html += '</p>';
     return html;
   };
-})(jQuery, Drupal, _, document);
+})(jQuery, Drupal, document);

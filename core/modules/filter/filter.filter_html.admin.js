@@ -230,4 +230,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     html += '</p>';
     return html;
   };
-})(jQuery, Drupal, _, document);
+})(jQuery, Drupal, document);
