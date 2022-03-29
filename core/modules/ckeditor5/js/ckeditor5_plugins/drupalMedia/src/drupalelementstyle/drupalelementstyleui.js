@@ -81,12 +81,15 @@ function getUIComponentName(name, group) {
  *   The style to check be checked against the media type's specific styles.
  * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} dropdownItemDefinition
  *   Dropdown item definition.
+ * @param {string} modelAttribute
+ *   The model attribute name of the drupalElementStyle.
  */
 function updateOptionVisibility(
   editor,
   definedStyles,
   style,
   dropdownItemDefinition,
+  modelAttribute,
 ) {
   const { selection } = editor.model.document;
   const modelElement = selection
@@ -95,6 +98,7 @@ function updateOptionVisibility(
         selection,
         editor.model.schema,
         definedStyles,
+        modelAttribute,
       );
 
   const filteredDefinedStyles = definedStyles.filter(function (item) {
@@ -176,70 +180,6 @@ function upcastDrupalMediaType(
 }
 
 /**
- * A helper function that parses the different dropdown options and returns list item definitions ready for use in the dropdown.
- *
- * @private
- * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
- *   A list of defined styles.
- * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
- * @param {string} group The name of the group (ex. 'align', 'viewMode').
- * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
- */
-function getDropdownListItemDefinitions(definedStyles, command, group, editor) {
-  const itemDefinitions = new Collection();
-  definedStyles.forEach((style) => {
-    const definition = {
-      type: 'button',
-      model: new Model({
-        commandName: 'drupalElementStyle',
-        group,
-        commandValue: style.name,
-        label: style.title,
-        withText: true,
-        class: '',
-      }),
-    };
-    itemDefinitions.add(definition);
-
-    // Handles inserted content's list dropdown button's visibility.
-    editor.model.on('insertContent', (eventInfo, [modelElement]) => {
-      if (!isDrupalMedia(modelElement)) {
-        return;
-      }
-      // Need to upcast DrupalMediaType to model so it can be used to show
-      // correct buttons based on bundle. Calls updateOptionVisibility function inside below method.
-      upcastDrupalMediaType(
-        modelElement,
-        editor,
-        definedStyles,
-        style,
-        definition,
-      );
-    });
-
-    // Handles selecting another element's list dropdown button's visibility.
-    // We need to listen to editor UI changes instead of selection because
-    // visibility of the styles can be impacted by either selection or
-    // changes to the model.
-    editor.ui.on('update', () => {
-      const selection = editor.model.document.selection;
-      const modelElement = selection
-        ? selection.getSelectedElement()
-        : getClosestElementWithElementStyleAttribute(
-            selection,
-            editor.model.schema,
-            definedStyles,
-          );
-      if (!isDrupalMedia(modelElement)) {
-        return;
-      }
-      updateOptionVisibility(editor, definedStyles, style, definition);
-    });
-  });
-  return itemDefinitions;
-}
-
-/**
  * The Drupal Element Style UI plugin.
  *
  * @extends module:core/plugin~Plugin
@@ -286,13 +226,13 @@ export default class DrupalElementStyleUi extends Plugin {
      *              - 'drupalElementStyle:viewMode:compact'
      *            defaultItem: 'drupalElementStyle:viewMode:default'
      *
-     * Icon dropdown display configuration.
+     * Split button dropdown display configuration.
      * @example
      *    config:
      *       drupalMedia:
      *        toolbar:
      *          - name: 'drupalMedia:side'
-     *            display: 'iconDropdown'
+     *            display: 'splitButton'
      *            items:
      *              - 'drupalElementStyle:side:right'
      *              - 'drupalElementStyle:side:left'
@@ -310,7 +250,7 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
-     * These properties are needed for a list or icon dropdown configuration. Buttons directly on the toolbar
+     * These properties are needed for a list or split button dropdown configuration. Buttons directly on the toolbar
      * without a dropdown can be configured like in the align example above.
      * @prop {string} name
      *   The name of the dropdown used for identifying the dropdown, either as a list or icons.
@@ -330,7 +270,7 @@ export default class DrupalElementStyleUi extends Plugin {
     const definedDropdowns = toolbarConfig.filter(isObject).filter((obj) => {
       if (!obj.display) {
         console.warn(
-          'dropdown configuration must include a display key specifying either listDropdown or iconDropdown.',
+          'dropdown configuration must include a display key specifying either listDropdown or splitButton.',
         );
         return false;
       }
@@ -498,6 +438,78 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
+   * A helper function that parses the different dropdown options and returns list item definitions ready for use in the dropdown.
+   *
+   * @private
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
+   * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
+   * @param {string} group The name of the group (ex. 'align', 'viewMode').
+   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+   */
+  getDropdownListItemDefinitions(definedStyles, command, group, editor) {
+    const itemDefinitions = new Collection();
+    const modelAttribute = getModelAttributeKeyFromGroup(group);
+    definedStyles.forEach((style) => {
+      const definition = {
+        type: 'button',
+        model: new Model({
+          commandName: 'drupalElementStyle',
+          group,
+          commandValue: style.name,
+          label: style.title,
+          withText: true,
+          class: '',
+        }),
+      };
+      itemDefinitions.add(definition);
+
+      // Handles inserted content's list dropdown button's visibility.
+      editor.model.on('insertContent', (eventInfo, [modelElement]) => {
+        if (!isDrupalMedia(modelElement)) {
+          return;
+        }
+        // Need to upcast DrupalMediaType to model so it can be used to show
+        // correct buttons based on bundle. Calls updateOptionVisibility function inside below method.
+        upcastDrupalMediaType(
+          modelElement,
+          editor,
+          definedStyles,
+          style,
+          definition,
+        );
+      });
+
+      // Handles selecting another element's list dropdown button's visibility.
+      // We need to listen to editor UI changes instead of selection because
+      // visibility of the styles can be impacted by either selection or
+      // changes to the model.
+      this.listenTo(editor.ui, 'update', () => {
+        const selection = editor.model.document.selection;
+        const modelElement = selection
+          ? selection.getSelectedElement()
+          : getClosestElementWithElementStyleAttribute(
+              selection,
+              editor.model.schema,
+              definedStyles,
+              modelAttribute,
+            );
+        if (!isDrupalMedia(modelElement)) {
+          return;
+        }
+        updateOptionVisibility(
+          editor,
+          definedStyles,
+          style,
+          definition,
+          modelAttribute,
+        );
+      });
+    });
+    return itemDefinitions;
+  }
+
+  /**
    * A helper function that creates a list dropdown component for the plugin containing all the style options defined in
    * the editor configuration.
    *
@@ -512,7 +524,7 @@ export default class DrupalElementStyleUi extends Plugin {
     factory.add(dropdownConfig.name, (locale) => {
       let defaultButton;
 
-      const { defaultItem, items, title } = dropdownConfig;
+      const { defaultItem, items, title, defaultText } = dropdownConfig;
       const group = dropdownConfig.name.split(':')[1];
       const buttonViews = items
         .filter((itemName) => {
@@ -538,9 +550,9 @@ export default class DrupalElementStyleUi extends Plugin {
       const dropdownButtonView = dropdownView.buttonView;
 
       dropdownButtonView.set({
-        label: getDropdownButtonTitle(title, 'View mode'),
+        label: getDropdownButtonTitle(title, defaultText),
         class: null,
-        tooltip: Drupal.t('View mode'),
+        tooltip: defaultText,
         withText: true,
       });
 
@@ -549,20 +561,15 @@ export default class DrupalElementStyleUi extends Plugin {
       // If style is selected, use the label of the selected style as the
       // default label of the splitbutton.
       dropdownButtonView.bind('label').to(command, 'value', (commandValue) => {
-        if (
-          commandValue &&
-          commandValue[group] &&
-          commandValue[group] !== 'Default'
-        ) {
+        if (commandValue && commandValue[group]) {
           // eslint-disable-next-line no-restricted-syntax
           for (const style of definedStyles) {
-            // Convert to strings in case of integer values.
-            if (style.name.toString() === commandValue[group].toString()) {
+            if (style.name === commandValue[group]) {
               return style.title;
             }
           }
         }
-        return dropdownConfig.defaultText;
+        return defaultText;
       });
 
       dropdownView.bind('isOn').to(command);
@@ -570,7 +577,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
       addListToDropdown(
         dropdownView,
-        getDropdownListItemDefinitions(
+        this.getDropdownListItemDefinitions(
           definedStyles,
           command,
           group,

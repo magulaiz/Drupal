@@ -6,6 +6,7 @@ import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
 import { getPreviewContainer } from './utils';
+import { upcastDrupalMediaIsImage } from './mediaimagetextalternative/mediaimagetextalternativeediting';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -123,6 +124,9 @@ export default class DrupalMediaEditing extends Plugin {
                 if (!modelElement) {
                   return;
                 }
+                // On upcast, get `drupalMediaIsImage` attribute value from media metadata
+                // repository.
+                upcastDrupalMediaIsImage(modelElement);
                 // Enqueue a model change after getting modelElement.
                 this.editor.model.enqueueChange(
                   { isUndoable: false },

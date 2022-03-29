@@ -41,6 +41,8 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  *   The model schema.
  * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
  *   All available Drupal Element Styles.
+ * @param {string} modelAttribute
+ *   The model attribute name of the drupalElementStyle.
  *
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
@@ -49,6 +51,7 @@ export function getClosestElementWithElementStyleAttribute(
   selection,
   schema,
   styles,
+  modelAttribute,
 ) {
   const selectedElement = selection.getSelectedElement();
   if (
@@ -61,10 +64,7 @@ export function getClosestElementWithElementStyleAttribute(
   let { parent } = selection.getFirstPosition();
 
   while (parent) {
-    if (
-      parent.is('element') &&
-      schema.checkAttribute(parent, 'drupalElementStyle')
-    ) {
+    if (parent.is('element') && schema.checkAttribute(parent, modelAttribute)) {
       return parent;
     }
 
@@ -89,7 +89,7 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @param {module:core/editor/editor~Editor} editor
    *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+   * @param {Drupal.CKEditor5~DrupalElementStyleObject} styles
    *   All available Drupal Element Styles.
    */
   constructor(editor, styles) {
@@ -114,6 +114,7 @@ export default class DrupalElementStyleCommand extends Command {
       editor.model.document.selection,
       editor.model.schema,
       this.styles,
+      '',
     );
 
     this.isEnabled = !!element;
@@ -121,29 +122,6 @@ export default class DrupalElementStyleCommand extends Command {
     if (this.isEnabled) {
       // Assign value to be corresponding command value based on the element's modelAttribute.
       this.value = this.getGroupAndAttribute(element);
-      // If value is falsy, check if there is a default style to apply to the
-      // element.
-      if (!this.value) {
-        const commandValue = {};
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [key, value] of toMap(this._styles)) {
-          // eslint-disable-next-line no-restricted-syntax
-          for (const style of value) {
-            if (style[1].isDefault) {
-              if (element) {
-                const appliesToCurrentElement = style[1].modelElements.find(
-                  (modelElement) => element.is('element', modelElement),
-                );
-                if (appliesToCurrentElement) {
-                  commandValue[key] = style[0];
-                  this.value = commandValue;
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
     } else {
       this.value = false;
     }
@@ -171,7 +149,7 @@ export default class DrupalElementStyleCommand extends Command {
         for (const style of this.styles[group]) {
           // If there is no drupalElementStyle for a group, set to to the default.
           if (style.isDefault) {
-            groupAttr[group] = style.name.toString();
+            groupAttr[group] = style.name;
           }
         }
       }
@@ -197,10 +175,11 @@ export default class DrupalElementStyleCommand extends Command {
    *   The model attribute name of the drupalElementStyle.
    */
   execute(options = {}) {
-    const { editor } = this;
-    const { model } = editor;
+    const {
+      editor: { model },
+    } = this;
     const { group } = options;
-    const { modelAttribute } = options;
+    const modelAttribute = getModelAttributeKeyFromGroup(group);
     model.change((writer) => {
       const modelGroupName = Object.keys(options.value)[0];
       const requestedStyle = options.value;
@@ -208,6 +187,7 @@ export default class DrupalElementStyleCommand extends Command {
         model.document.selection,
         model.schema,
         this.styles,
+        modelAttribute,
       );
       if (
         !requestedStyle ||
