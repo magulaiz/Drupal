@@ -14,10 +14,14 @@ class UpdateRouteSubscriber extends RouteSubscriberBase {
    * {@inheritdoc}
    */
   protected function alterRoutes(RouteCollection $collection) {
-    // The status report page already displays the available updates.
-    if ($status_route = $collection->get('system.status')) {
-      $status_route->setOption('_update_message', 'skip');
+    // If we are on the status report or batch page do not display the update
+    // messages.
+    foreach (['system.status', 'system.batch_page.html', 'system.theme_install'] as $skipped_route) {
+      if ($route = $collection->get($skipped_route)) {
+        $route->setOption('_update_message', 'skip');
+      }
     }
+
     // If we are on the appearance or modules list, display a detailed report
     // of the update status.
     foreach (['system.modules_list', 'system.themes_page'] as $verbose_route) {

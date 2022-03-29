@@ -70,7 +70,7 @@ function update_page_top() {
   $route_object = $route_match->getRouteObject();
   $update_message_route_option = $route_object->getOption('_update_message');
   if ($update_message_route_option !== 'skip' && $admin_context->isAdminRoute($route_object) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    module_load_install('update');
+    \Drupal::moduleHandler()->loadInclude('update', 'install');
     $status = update_requirements('runtime');
     foreach (['core', 'contrib'] as $report_type) {
       $type = 'update_' . $report_type;

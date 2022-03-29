@@ -26,6 +26,8 @@ update.manual_status:
   requirements:
     _permission: 'administer site configuration'
     _csrf_token: 'TRUE'
+  options:
+    _update_message: 'skip'
 
 update.report_install:
   path: '/admin/reports/updates/install'
