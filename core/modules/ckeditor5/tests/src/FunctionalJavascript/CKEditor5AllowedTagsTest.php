@@ -319,7 +319,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // error must be associated with the correct form item.
     $source_edit_tags_field->setValue('<aside><strong>');
     $assert_session->waitForText('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasAttribute('data-vertical-tabs-menu-item-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $this->assertTrue($allowed_html_field->hasAttribute('readonly'));
 
@@ -327,7 +327,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // immediate AJAX validation error above.
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasAttribute('data-vertical-tabs-menu-item-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $assert_session->pageTextNotContains('The text format ckeditor5 has been updated');
 
