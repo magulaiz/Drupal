@@ -5,7 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
-import { getPreviewContainer, isDrupalMedia } from './utils';
+import { getPreviewContainer } from './utils';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -24,7 +24,6 @@ export default class DrupalMediaEditing extends Plugin {
       drupalMediaAlt: 'alt',
       drupalMediaEntityType: 'data-entity-type',
       drupalMediaEntityUuid: 'data-entity-uuid',
-      drupalElementStyleViewMode: 'data-view-mode',
     };
     const options = this.editor.config.get('drupalMedia');
     if (!options) {
@@ -201,7 +200,7 @@ export default class DrupalMediaEditing extends Plugin {
             }
 
             // Preview was ready meaning that a new preview can be loaded.
-            // "Change the attribute to loading to prepare for the loading of f
+            // "Change the attribute to loading to prepare for the loading of
             // the updated preview. Preview is kept intact so that it remains
             // interactable in the UI until the new preview has been rendered.
             viewWriter.setAttribute(

@@ -13,7 +13,11 @@ import {
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
-import { isDrupalMedia, isObject, capitalizeFirstLetter } from '../utils';
+import {
+  isDrupalMedia,
+  isObject,
+  getModelAttributeKeyFromGroup,
+} from '../utils';
 import { METADATA_ERROR } from '../mediaimagetextalternative/utils';
 import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
 
@@ -596,12 +600,12 @@ export default class DrupalElementStyleUi extends Plugin {
   _executeCommand(name, group) {
     const obj = {};
     obj[group] = name;
-    const groupName = capitalizeFirstLetter(group);
+    const modelAttribute = getModelAttributeKeyFromGroup(group);
 
     this.editor.execute('drupalElementStyle', {
       value: obj,
       group,
-      modelAttribute: `drupalElementStyle${groupName}`,
+      modelAttribute,
     });
     this.editor.editing.view.focus();
   }

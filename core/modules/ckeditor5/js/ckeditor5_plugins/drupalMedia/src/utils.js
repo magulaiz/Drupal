@@ -126,15 +126,17 @@ export function getPreviewContainer(children) {
 }
 
 /**
- * Manipulates string to have first letter capitalized to append in camel case.
+ * Gets model attribute key based on group.
  *
  * @example
- *    Example: 'align' -> 'Align'
+ *    Example: 'align' -> 'drupalElementStyleAlign'
  *
  * @param {string} group The name of the group (ex. 'align', 'viewMode').
  * @return {string}
- *  String with the first letter capitalized.
+ *  Model attribute key.
  */
-export function capitalizeFirstLetter(group) {
-  return group[0].toUpperCase() + group.substring(1);
+export function getModelAttributeKeyFromGroup(group) {
+  // Manipulate string to have first letter capitalized to append in camel case.
+  const capitalizedFirst = group[0].toUpperCase() + group.substring(1);
+  return `drupalElementStyle${capitalizedFirst}`;
 }

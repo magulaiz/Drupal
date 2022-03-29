@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cSpell:words insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
-import { capitalizeFirstLetter } from './utils';
+import { getModelAttributeKeyFromGroup } from './utils';
 
 /**
  * @module drupalMedia/insertdrupalmediacommand
@@ -78,8 +78,8 @@ export default class InsertDrupalMediaCommand extends Command {
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
-            const groupName = capitalizeFirstLetter(group);
-            modelAttributes[`drupalElementStyle${groupName}`] = style.name;
+            const modelAttribute = getModelAttributeKeyFromGroup(group);
+            modelAttributes[modelAttribute] = style.name;
           }
         }
       }

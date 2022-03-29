@@ -3,7 +3,7 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
-import { capitalizeFirstLetter } from '../utils';
+import { getModelAttributeKeyFromGroup } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -80,7 +80,7 @@ function modelToViewStyleAttribute(styles) {
  *
  * Note that only one style can be applied to each model element.
  */
-function viewToModelStyleAttribute(styles, groupName) {
+function viewToModelStyleAttribute(styles, modelAttribute) {
   // Convert only non–default styles.
   const nonDefaultStyles = styles.filter((style) => !style.isDefault);
 
@@ -99,12 +99,7 @@ function viewToModelStyleAttribute(styles, groupName) {
 
     // Stop conversion early if the drupalElementStyle attribute isn't allowed
     // for the element.
-    if (
-      !conversionApi.schema.checkAttribute(
-        modelElement,
-        `drupalElementStyle${groupName}`,
-      )
-    ) {
+    if (!conversionApi.schema.checkAttribute(modelElement, modelAttribute)) {
       return;
     }
 
@@ -120,7 +115,7 @@ function viewToModelStyleAttribute(styles, groupName) {
         ) {
           // And convert this style to model attribute.
           conversionApi.writer.setAttribute(
-            `drupalElementStyle${groupName}`,
+            modelAttribute,
             style.name,
             modelElement,
           );
@@ -137,7 +132,7 @@ function viewToModelStyleAttribute(styles, groupName) {
             viewElement.getAttribute(style.attributeName)
           ) {
             conversionApi.writer.setAttribute(
-              `drupalElementStyle${groupName}`,
+              modelAttribute,
               style.name,
               modelElement,
             );
@@ -289,27 +284,26 @@ export default class DrupalElementStyleEditing extends Plugin {
 
     for (let i = 0; i < groupNamesArr.length; i++) {
       const group = groupNamesArr[i];
-      // Capitalize first letter to append in camelCase properly.
-      const groupName = capitalizeFirstLetter(group);
+      const modelAttribute = getModelAttributeKeyFromGroup(group);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
       );
       const viewToModelConverter = viewToModelStyleAttribute(
         this.normalizedStyles[group],
-        groupName,
+        modelAttribute,
       );
 
       editor.editing.downcastDispatcher.on(
-        `attribute:drupalElementStyle${groupName}`,
+        `attribute:${modelAttribute}`,
         modelToViewConverter,
       );
       editor.data.downcastDispatcher.on(
-        `attribute:drupalElementStyle${groupName}`,
+        `attribute:${modelAttribute}`,
         modelToViewConverter,
       );
 
-      // Allow drupalElementStyle${groupName} on all model elements that have associated
+      // Allow drupalElementStyle model attributes on all model elements that have associated
       // styles.
       const modelElements = [
         ...new Set(
@@ -322,7 +316,7 @@ export default class DrupalElementStyleEditing extends Plugin {
       ];
       modelElements.forEach((modelElement) => {
         schema.extend(modelElement, {
-          allowAttributes: `drupalElementStyle${groupName}`,
+          allowAttributes: modelAttribute,
         });
       });
       // View to model converter that runs on all elements.
