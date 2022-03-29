@@ -126,7 +126,3 @@ media_embed_error:
   css:
     component:
       css/components/media-embed-error.css: {  }
-media_embed_ckeditor_theme:
-  version: VERSION
-  js:
-    js/media_embed_ckeditor.theme.js: {  }

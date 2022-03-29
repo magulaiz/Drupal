@@ -7,7 +7,6 @@ install:
   - history
   - block
   - breakpoint
-  - ckeditor
   - color
   - config
   - comment

@@ -1,5 +1,5 @@
 name: Media Embed plugin test
-description: 'Provides functionality to test embedding media items in CKEditor.'
+description: 'Provides functionality to test embedding media items in a text editor.'
 type: module
 package: Testing
 version: VERSION

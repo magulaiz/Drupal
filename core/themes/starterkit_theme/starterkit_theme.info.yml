@@ -18,8 +18,6 @@ libraries-extend:
     - starterkit_theme/file
   core/drupal.progress:
     - starterkit_theme/progress
-  media/media_embed_ckeditor_theme:
-    - starterkit_theme/media_embed_ckeditor_theme
   media_library/view:
     - starterkit_theme/media_library
   media_library/widget:

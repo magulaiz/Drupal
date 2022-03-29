@@ -334,11 +334,6 @@ classy.media_embed_error:
     component:
       css/classy/components/media-embed-error.css: {}
 
-classy.media_embed_ckeditor_theme:
-  version: VERSION
-  js:
-    js/classy/media_embed_ckeditor.theme.js: {}
-
 classy.node:
   version: VERSION
   css:

@@ -159,8 +159,6 @@ libraries-extend:
     - claro/form.password-confirm
   views/views.module:
     - claro/views
-  media/media_embed_ckeditor_theme:
-    - claro/classy.media_embed_ckeditor_theme
   media_library/ui:
     - claro/media_library.ui
   media_library/view:

@@ -8,7 +8,6 @@ install:
   - big_pipe
   - block
   - breakpoint
-  - ckeditor
   - color
   - config
   - contextual
