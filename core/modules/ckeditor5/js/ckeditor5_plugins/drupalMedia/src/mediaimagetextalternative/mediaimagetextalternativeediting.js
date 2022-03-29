@@ -53,11 +53,7 @@ export function upcastDrupalMediaIsImage(modelElement) {
       }
       console.warn(e.toString());
       model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute(
-          'drupalMediaIsImage',
-          METADATA_ERROR,
-          modelElement,
-        );
+        writer.setAttribute('drupalMediaIsImage', METADATA_ERROR, modelElement);
       });
     });
 }

@@ -133,6 +133,8 @@ function updateOptionVisibility(
  *   The style to check be checked against the bundle specific styles.
  * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
  *   Dropdown item definition.
+ * @param {string} modelAttribute
+ *   The model attribute name of the drupalElementStyle.
  *
  * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
  *
@@ -144,6 +146,7 @@ function upcastDrupalMediaType(
   definedStyles,
   style,
   definition,
+  modelAttribute,
 ) {
   const metadataRepository = editor.plugins.get(
     'DrupalMediaMetadataRepository',
@@ -176,7 +179,13 @@ function upcastDrupalMediaType(
         writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
       });
     });
-  updateOptionVisibility(editor, definedStyles, style, definition);
+  updateOptionVisibility(
+    editor,
+    definedStyles,
+    style,
+    definition,
+    modelAttribute,
+  );
 }
 
 /**
@@ -477,6 +486,7 @@ export default class DrupalElementStyleUi extends Plugin {
           definedStyles,
           style,
           definition,
+          modelAttribute,
         );
       });
 
