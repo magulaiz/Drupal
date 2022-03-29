@@ -91,6 +91,7 @@ class MediaLibraryUiBuilder {
     return [
       'dialogClass' => 'media-library-widget-modal',
       'title' => t('Add or select media'),
+      'height' => 'auto',
       'maxHeight' => '75%',
       'minHeight' => '75%',
       'width' => '75%',
