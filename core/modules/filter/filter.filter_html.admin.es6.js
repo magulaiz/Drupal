@@ -102,8 +102,8 @@
           that.userTags = [
             Object.values(that._parseSetting(this.value)),
             Object.values(that.autoTags),
-          ].reduce((rules, auto_tags) =>
-            rules.filter((rule) => !auto_tags.includes(rule)),
+          ].reduce((rules, autoTags) =>
+            rules.filter((rule) => !autoTags.includes(rule)),
           );
         });
       });
