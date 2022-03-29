@@ -72,9 +72,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = [Object.values(that._parseSetting(this.value)), Object.values(that.autoTags)].reduce(function (rules, auto_tags) {
+          that.userTags = [Object.values(that._parseSetting(this.value)), Object.values(that.autoTags)].reduce(function (rules, autoTags) {
             return rules.filter(function (rule) {
-              return !auto_tags.includes(rule);
+              return !autoTags.includes(rule);
             });
           });
         });
