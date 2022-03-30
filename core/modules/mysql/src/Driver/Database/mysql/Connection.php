@@ -216,7 +216,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       $connection_options['init_commands']['sql_mode_options'] += $sql_mode_defaults;
 
       $sql_mode_options = implode(',', array_keys(array_filter($connection_options['init_commands']['sql_mode_options'])));
-      $connection_options['init_commands']['sql_mode'] = "SET sql_mode = '{$sql_mode_options}'";
+      // Don't set the sql_mode command into the init_commands array, as
+      // otherwise the $connection_options variable which is passed by reference
+      // gets polluted with it.
+      $sql_mode_command = "SET sql_mode = '{$sql_mode_options}'";
 
       // Unset the array of options so it's not executed.
       unset($connection_options['init_commands']['sql_mode_options']);
@@ -231,6 +234,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     foreach ($connection_options['init_commands'] as $sql) {
       $pdo->exec($sql);
     }
+    $pdo->exec($sql_mode_command);
 
     return $pdo;
   }
