@@ -188,18 +188,14 @@ export default class DrupalElementStyleUi extends Plugin {
   /**
    * Updates the visibility of options depending on the selection's media type.
    *
-   * @param {module:core/editor/editor~Editor} editor
-   *   The editor instance.
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
    *   A list of defined styles.
    * @param {string} style
    *   The style to check be checked against the media type's specific styles.
    * @param {module:ui/dropdown/utils~ListDropdownItemDefinition|module:ui/button/buttonview} option
    *   Dropdown item definition or ButtonView
-   * @param {string} modelAttribute
-   *   The model attribute name of the drupalElementStyle.
    */
-  updateOptionVisibility(definedStyles, style, option, modelAttribute) {
+  updateOptionVisibility(definedStyles, style, option) {
     const { selection } = this.editor.model.document;
     const modelElement = selection
       ? selection.getSelectedElement()
@@ -207,7 +203,6 @@ export default class DrupalElementStyleUi extends Plugin {
           selection,
           this.editor.model.schema,
           definedStyles,
-          modelAttribute,
         );
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
@@ -379,7 +374,7 @@ export default class DrupalElementStyleUi extends Plugin {
         // For buttons that display as icons (split button and non-dropdown toolbar buttons),
         // update option visibility here.
         if (buttonConfig.icon) {
-          this.updateOptionVisibility(definedStyles, buttonConfig, view, '');
+          this.updateOptionVisibility(definedStyles, buttonConfig, view);
         }
         return view;
       },
@@ -425,17 +420,11 @@ export default class DrupalElementStyleUi extends Plugin {
               selection,
               editor.model.schema,
               definedStyles,
-              modelAttribute,
             );
         if (!isDrupalMedia(modelElement)) {
           return;
         }
-        this.updateOptionVisibility(
-          definedStyles,
-          style,
-          definition,
-          modelAttribute,
-        );
+        this.updateOptionVisibility(definedStyles, style, definition);
       });
     });
     return itemDefinitions;

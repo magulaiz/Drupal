@@ -14,16 +14,15 @@ import { getModelAttributeKeyFromGroup } from '../utils';
  *   The selected element.
  * @param {module:engine/model/schema~Schema} schema
  *   The model schema.
- * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
- *   All available Drupal Element Styles.
+ * @param {string[]} modelAttributes
+ *   Array of model attribute keys.
  *
  * @return {boolean}
  *   Does the schema contain the attribute?
  */
-function schemaContainsAttribute(selectedElement, schema, styles) {
+function schemaContainsAttribute(selectedElement, schema, modelAttributes) {
   // eslint-disable-next-line no-restricted-syntax
-  for (const group of Object.keys(styles)) {
-    const modelAttribute = getModelAttributeKeyFromGroup(group);
+  for (const modelAttribute of modelAttributes) {
     if (schema.checkAttribute(selectedElement, modelAttribute)) {
       return true;
     }
@@ -40,8 +39,6 @@ function schemaContainsAttribute(selectedElement, schema, styles) {
  *   The model schema.
  * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
  *   All available Drupal Element Styles.
- * @param {string} modelAttribute
- *   The model attribute name of the drupalElementStyle.
  *
  * @return {null|module:engine/model/element~Element}
  *   The closest element that supports element styles.
@@ -50,12 +47,17 @@ export function getClosestElementWithElementStyleAttribute(
   selection,
   schema,
   styles,
-  modelAttribute,
 ) {
+  const modelAttributes = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const group of Object.keys(styles)) {
+    const modelAttribute = getModelAttributeKeyFromGroup(group);
+    modelAttributes.push(modelAttribute);
+  }
   const selectedElement = selection.getSelectedElement();
   if (
     selectedElement &&
-    schemaContainsAttribute(selectedElement, schema, styles)
+    schemaContainsAttribute(selectedElement, schema, modelAttributes)
   ) {
     return selectedElement;
   }
@@ -63,11 +65,16 @@ export function getClosestElementWithElementStyleAttribute(
   let { parent } = selection.getFirstPosition();
 
   while (parent) {
-    if (parent.is('element') && schema.checkAttribute(parent, modelAttribute)) {
-      return parent;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const modelAttribute of modelAttributes) {
+      if (
+        parent.is('element') &&
+        schema.checkAttribute(parent, modelAttribute)
+      ) {
+        return parent;
+      }
+      parent = parent.parent;
     }
-
-    parent = parent.parent;
   }
 
   return null;
@@ -113,7 +120,6 @@ export default class DrupalElementStyleCommand extends Command {
       editor.model.document.selection,
       editor.model.schema,
       this.styles,
-      '',
     );
 
     this.isEnabled = !!element;
