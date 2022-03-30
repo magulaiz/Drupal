@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory */
+/* cspell:words drupalelementstyleediting splitbutton imagestyle componentfactory buttonview */
 import { Plugin } from 'ckeditor5/src/core';
 import { Collection, toMap } from 'ckeditor5/src/utils';
 import utils from '@ckeditor/ckeditor5-image/src/imagestyle/utils';
@@ -219,10 +219,10 @@ export default class DrupalElementStyleUi extends Plugin {
     // Classes are set on the model of the dropdown item definition for list dropdowns.
     if (Object.keys(option).includes('model')) {
       if (!filteredDefinedStyles.includes(style)) {
-        // Hide the style option if view mode is not available for the media type that the modelElement is.
+        // Hide the style option if it is not available for the media type that the modelElement is.
         option.model.set({ class: 'ck-hidden' });
       } else {
-        // Un-hide the style option here after changing selection to a media type that should have the view mode button visible.
+        // Un-hide the style option here after changing selection to a media type that should have the button visible.
         option.model.set({ class: '' });
       }
       // Split button case and non-dropdown toolbar button case.

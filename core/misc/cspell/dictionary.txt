@@ -166,7 +166,6 @@ bundleless
 bundlenode
 buttonpane
 buttonset
-buttonview
 buytaert
 cacheability
 cacheable
@@ -394,7 +393,6 @@ drupallink
 drupalmedia
 drupalmediaediting
 drupalmedialibrary
-drupalmediametadatarepository
 drupalmediatoolbar
 drupaltest
 drupalunlink
@@ -631,7 +629,6 @@ ingoa
 inited
 inno
 inputtypes
-insertdrupalmediacommand
 insidekeyword
 inspectable
 instaclick
