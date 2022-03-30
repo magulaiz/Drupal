@@ -297,7 +297,9 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     if (!is_null($arity)) {
       $meta[static::ARITY_KEY] = $arity;
     }
-    $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
+    if (\Drupal::getContainer()->getParameter('jsonapi.include_drupal_ids')) {
+      $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
+    }
     return new static($resource_type, $target->uuid(), $meta);
   }
 
