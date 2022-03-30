@@ -28,7 +28,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     // This is the same priority as AuthenticationSubscriber, however

@@ -594,7 +594,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar:foo=bar:/path/add/one');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar,foo=bar:/path/add/one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals(['foo' => 'bar'], $cache->data['query']);
     $this->assertCount(3, $cache->data['routes']);
@@ -604,7 +604,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar&foo2%5B0%5D=bar2&foo2%5B1%5D=bar3:foo=bar&foo2=["bar2","bar3"]:/path/add/one');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar&foo2%5B0%5D=bar2&foo2%5B1%5D=bar3,foo=bar&foo2=["bar2","bar3"]:/path/add/one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals(
       [

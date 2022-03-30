@@ -480,12 +480,12 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @return string
    */
   protected function getQueryParametersCacheIdPart(Request $request) {
-    $requestQueryParams = [];
+    $request_query_params = [];
     foreach ($request->query->keys() as $key) {
       $val = $request->query->get($key);
-      $requestQueryParams[] = $key . '=' . (is_string($val) ? $val : json_encode($val));
+      $request_query_params[] = $key . '=' . (is_string($val) ? $val : json_encode($val));
     }
-    return implode(':', array_filter([$request->getQueryString(), implode('&', $requestQueryParams)]));
+    return implode(',', array_filter([$request->getQueryString(), implode('&', $requestQueryParams)]));
   }
 
   /**
