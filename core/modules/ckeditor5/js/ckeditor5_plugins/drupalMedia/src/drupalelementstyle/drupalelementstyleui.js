@@ -18,7 +18,6 @@ import {
   isObject,
   getModelAttributeKeyFromGroup,
 } from '../utils';
-import { METADATA_ERROR } from '../mediaimagetextalternative/utils';
 import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
 
 /**
@@ -118,74 +117,6 @@ function updateOptionVisibility(
     // Un-hide the style option here after changing selection to a media type that should have the view mode button visible.
     dropdownItemDefinition.model.set({ class: '' });
   }
-}
-
-/**
- * Upcast `type` from Drupal Media metadata.
- *
- * @param {module:engine/model/node~Node} modelElement
- *   The `drupalMedia` model element.
- * @param {module:core/editor/editor~Editor} editor
- *   The editor instance.
- * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
- *   A list of defined styles.
- * @param {string} style
- *   The style to check be checked against the bundle specific styles.
- * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
- *   Dropdown item definition.
- * @param {string} modelAttribute
- *   The model attribute name of the drupalElementStyle.
- *
- * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
- *
- * @private
- */
-function upcastDrupalMediaType(
-  modelElement,
-  editor,
-  definedStyles,
-  style,
-  definition,
-  modelAttribute,
-) {
-  const metadataRepository = editor.plugins.get(
-    'DrupalMediaMetadataRepository',
-  );
-  // Get all metadata for drupalMedia elements to set value for
-  // drupalMediaType attribute. When other plugins start using the
-  // metadata, this functionality will be handled more generically.
-  metadataRepository
-    .getMetadata(modelElement)
-    .then((metadata) => {
-      if (!modelElement) {
-        // Nothing to do if model element has been removed before
-        // promise was resolved.
-        return;
-      }
-      // Enqueue a model change in `transparent` batch to make it
-      // invisible to the undo/redo functionality.
-      editor.model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute('drupalMediaType', metadata.type, modelElement);
-      });
-    })
-    .catch((e) => {
-      if (!modelElement) {
-        // Nothing to do if model element has been removed before
-        // promise was resolved.
-        return;
-      }
-      console.warn(e.toString());
-      editor.model.enqueueChange({ isUndoable: false }, (writer) => {
-        writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
-      });
-    });
-  updateOptionVisibility(
-    editor,
-    definedStyles,
-    style,
-    definition,
-    modelAttribute,
-  );
 }
 
 /**
@@ -472,23 +403,6 @@ export default class DrupalElementStyleUi extends Plugin {
         }),
       };
       itemDefinitions.add(definition);
-
-      // Handles inserted content's list dropdown button's visibility.
-      editor.model.on('insertContent', (eventInfo, [modelElement]) => {
-        if (!isDrupalMedia(modelElement)) {
-          return;
-        }
-        // Need to upcast DrupalMediaType to model so it can be used to show
-        // correct buttons based on bundle. Calls updateOptionVisibility function inside below method.
-        upcastDrupalMediaType(
-          modelElement,
-          editor,
-          definedStyles,
-          style,
-          definition,
-          modelAttribute,
-        );
-      });
 
       // Handles selecting another element's list dropdown button's visibility.
       // We need to listen to editor UI changes instead of selection because

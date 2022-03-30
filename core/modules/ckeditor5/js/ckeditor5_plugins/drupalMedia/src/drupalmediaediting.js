@@ -5,8 +5,8 @@ import { Plugin } from 'ckeditor5/src/core';
 import { toWidget, Widget } from 'ckeditor5/src/widget';
 
 import InsertDrupalMediaCommand from './insertdrupalmedia';
-import { getPreviewContainer } from './utils';
-import { upcastDrupalMediaIsImage } from './mediaimagetextalternative/mediaimagetextalternativeediting';
+import { getPreviewContainer, isDrupalMedia } from './utils';
+import { METADATA_ERROR } from './mediaimagetextalternative/utils';
 
 /**
  * @module drupalMedia/drupalmediaediting
@@ -43,11 +43,116 @@ export default class DrupalMediaEditing extends Plugin {
 
     this._defineSchema();
     this._defineConverters();
+    this._defineListeners();
 
     this.editor.commands.add(
       'insertDrupalMedia',
       new InsertDrupalMediaCommand(this.editor),
     );
+  }
+
+  /**
+   * Upcast `drupalMediaIsImage` from Drupal Media metadata.
+   *
+   * @param {module:engine/model/node~Node} modelElement
+   *   The `drupalMedia` model element.
+   *
+   * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+   *
+   */
+  upcastDrupalMediaIsImage(modelElement) {
+    const { model, plugins } = this.editor;
+    const metadataRepository = plugins.get('DrupalMediaMetadataRepository');
+
+    // Get all metadata for drupalMedia elements to set value for
+    // drupalMediaIsImage attribute. When other plugins start using the
+    // metadata, this functionality will be handled more generically.
+    metadataRepository
+      .getMetadata(modelElement)
+      .then((metadata) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        // Enqueue a model change that is not visible to the undo/redo feature.
+        model.enqueueChange({ isUndoable: false }, (writer) => {
+          writer.setAttribute(
+            'drupalMediaIsImage',
+            !!metadata.imageSourceMetadata,
+            modelElement,
+          );
+        });
+      })
+      .catch((e) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        console.warn(e.toString());
+        model.enqueueChange({ isUndoable: false }, (writer) => {
+          writer.setAttribute(
+            'drupalMediaIsImage',
+            METADATA_ERROR,
+            modelElement,
+          );
+        });
+      });
+  }
+
+  /**
+   * Upcast `drupalMediaType` from Drupal Media metadata.
+   *
+   * @param {module:engine/model/node~Node} modelElement
+   *   The `drupalMedia` model element.
+   * @param {module:core/editor/editor~Editor} editor
+   *   The editor instance.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
+   * @param {string} style
+   *   The style to check be checked against the bundle specific styles.
+   * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
+   *   Dropdown item definition.
+   * @param {string} modelAttribute
+   *   The model attribute name of the drupalElementStyle.
+   *
+   * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
+   *
+   * @private
+   */
+  upcastDrupalMediaType(modelElement) {
+    const metadataRepository = this.editor.plugins.get(
+      'DrupalMediaMetadataRepository',
+    );
+    // Get all metadata for drupalMedia elements to set value for
+    // drupalMediaType attribute. When other plugins start using the
+    // metadata, this functionality will be handled more generically.
+    metadataRepository
+      .getMetadata(modelElement)
+      .then((metadata) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        // Enqueue a model change in `transparent` batch to make it
+        // invisible to the undo/redo functionality.
+        this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+          writer.setAttribute('drupalMediaType', metadata.type, modelElement);
+        });
+      })
+      .catch((e) => {
+        if (!modelElement) {
+          // Nothing to do if model element has been removed before
+          // promise was resolved.
+          return;
+        }
+        console.warn(e.toString());
+        this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
+          writer.setAttribute('drupalMediaType', METADATA_ERROR, modelElement);
+        });
+      });
   }
 
   /**
@@ -126,7 +231,7 @@ export default class DrupalMediaEditing extends Plugin {
                 }
                 // On upcast, get `drupalMediaIsImage` attribute value from media metadata
                 // repository.
-                upcastDrupalMediaIsImage(modelElement);
+                this.upcastDrupalMediaIsImage(modelElement);
                 // Enqueue a model change after getting modelElement.
                 this.editor.model.enqueueChange(
                   { isUndoable: false },
@@ -315,6 +420,22 @@ export default class DrupalMediaEditing extends Plugin {
       // unfiltered data-attributes on the Drupal Media widget.
       conversion.for('dataDowncast').attributeToAttribute(attributeMapping);
       conversion.for('upcast').attributeToAttribute(attributeMapping);
+    });
+  }
+
+  _defineListeners() {
+    // Listen to `insertContent` event on the model to set `drupalMediaIsImage` and `drupalMediaType`
+    // attribute when `drupalMedia` model element is inserted directly to the
+    // model.
+    // @see module:drupalMedia/insertdrupalmediacommand~InsertDrupalMediaCommand
+    this.editor.model.on('insertContent', (eventInfo, [modelElement]) => {
+      if (!isDrupalMedia(modelElement)) {
+        return;
+      }
+      this.upcastDrupalMediaIsImage(modelElement);
+      // Need to upcast DrupalMediaType to model so it can be used to show
+      // correct buttons based on bundle.
+      this.upcastDrupalMediaType(modelElement);
     });
   }
 
