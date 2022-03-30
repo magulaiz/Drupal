@@ -70,7 +70,7 @@ function getUIComponentName(name, group) {
 }
 
 /**
- * Updates the visibility of the correct view mode options depending on the selection's media type.
+ * Updates the visibility of options depending on the selection's media type.
  *
  * @param {module:core/editor/editor~Editor} editor
  *   The editor instance.
@@ -222,7 +222,7 @@ export default class DrupalElementStyleUi extends Plugin {
       if (dropdownConfig.items.length >= 2) {
         const groupName = dropdownConfig.name.split(':')[1];
         switch (dropdownConfig.display) {
-          case 'iconDropdown':
+          case 'splitButton':
             this._createDropdown(dropdownConfig, definedStyles[groupName]);
             break;
           case 'listDropdown':
@@ -409,7 +409,7 @@ export default class DrupalElementStyleUi extends Plugin {
       // visibility of the styles can be impacted by either selection or
       // changes to the model.
       this.listenTo(editor.ui, 'update', () => {
-        const selection = editor.model.document.selection;
+        const { selection } = editor.model.document;
         const modelElement = selection
           ? selection.getSelectedElement()
           : getClosestElementWithElementStyleAttribute(
