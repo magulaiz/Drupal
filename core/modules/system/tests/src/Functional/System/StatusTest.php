@@ -15,7 +15,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['update_test_postupdate'];
+  protected static $modules = ['update_test_postupdate', 'update'];
 
   /**
    * {@inheritdoc}
@@ -37,14 +37,21 @@ class StatusTest extends BrowserTestBase {
 
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
+      'access site reports',
     ]);
     $this->drupalLogin($admin_user);
   }
 
   /**
    * Tests that the status page returns.
+   *
+   * @group legacy
    */
   public function testStatusPage() {
+    // Verify if the 'Status report' is the first item link.
+    $this->drupalGet('admin/reports');
+    $this->assertEquals('Status report', $this->cssSelect('.list-group :first-child')[0]->getText());
+
     // Go to Administration.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
@@ -122,6 +129,24 @@ class StatusTest extends BrowserTestBase {
     $session->pageTextNotContains('Deprecated modules found: Deprecated module.');
     $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
 
+    // Make sure there are no warnings about obsolete modules.
+    $session->pageTextNotContains('Obsolete extensions enabled');
+    $session->pageTextNotContains('Obsolete extensions found: System obsolete status test.');
+
+    // Install an obsolete module. Normally this isn't possible, so write to
+    // configuration directly.
+    $this->config('core.extension')->set('module.system_status_obsolete_test', 0)->save();
+    $this->rebuildAll();
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextContains('Obsolete extensions enabled');
+    $session->pageTextContains('Obsolete extensions found: System obsolete status test.');
+
+    // Make sure the warning is gone after uninstalling the module.
+    $module_installer->uninstall(['system_status_obsolete_test']);
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextNotContains('Obsolete extensions enabled');
+    $session->pageTextNotContains('Obsolete extensions found: System obsolete status test.');
+
     // Install deprecated theme and confirm warning message is displayed.
     $theme_installer = \Drupal::service('theme_installer');
     $theme_installer->install(['test_deprecated_theme']);
@@ -138,6 +163,16 @@ class StatusTest extends BrowserTestBase {
     $session->pageTextNotContains('Deprecated themes enabled');
     $session->pageTextNotContains('Deprecated themes found: Test deprecated theme.');
     $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
+
+    // Check if pg_trgm extension is enabled on postgres.
+    if ($this->getDatabaseConnection()->databaseType() == 'pgsql') {
+      $this->assertSession()->pageTextContains('PostgreSQL pg_trgm extension');
+      $elements = $this->xpath('//details[@class="system-status-report__entry"]//div[contains(text(), :text)]', [
+        ':text' => 'The pg_trgm PostgreSQL extension is present.',
+      ]);
+      $this->assertCount(1, $elements);
+      $this->assertStringStartsWith('Available', $elements[0]->getParent()->getText());
+    }
   }
 
 }
