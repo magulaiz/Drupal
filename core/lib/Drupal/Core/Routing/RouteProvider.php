@@ -485,7 +485,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $val = $request->query->get($key);
       $request_query_params[] = $key . '=' . (is_string($val) ? $val : json_encode($val));
     }
-    return implode(',', array_filter([$request->getQueryString(), implode('&', $requestQueryParams)]));
+    return implode(',', array_filter([$request->getQueryString(), implode('&', $request_query_params)]));
   }
 
   /**
