@@ -1154,7 +1154,7 @@ class MediaTest extends WebDriverTestBase {
   /**
    * Tests view mode integration.
    *
-   * Tests that view mode is reflected onto the CKEditor Widget wrapper, that
+   * Tests that view mode is reflected onto the CKEditor 5 Widget wrapper, that
    * the media style toolbar allows changing the view mode and that the changes
    * are reflected on the widget and downcast drupal-media tag.
    */
@@ -1350,6 +1350,26 @@ class MediaTest extends WebDriverTestBase {
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
     $assert_session->elementExists('css', 'article.media--view-mode-_2222');
     $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+
+    // Test that a media with no view modes configured will be
+    // set to the default view mode.
+    $filter_format->setFilterConfig('media_embed', [
+      'status' => TRUE,
+      'settings' => [
+        'default_view_mode' => 'view_mode_1',
+        'allowed_media_types' => [],
+        'allowed_view_modes' => [],
+      ],
+    ])->save();
+    $dependencies = $filter_format->getDependencies();
+    $this->assertArrayHasKey('config', $dependencies);
+    $this->assertSame(['core.entity_view_mode.media.view_mode_1'], $dependencies['config']);
+    $this->host->body->value = '<drupal-media data-caption="armadillo" data-entity-type="media" data-entity-uuid="' . $this->mediaFile->uuid() . '"></drupal-media>';
+    $this->host->save();
+    // Reload page to get new configuration.
+    $this->getSession()->reload();
+    $this->waitForEditor();
+    $assert_session->waitForElementVisible('css', 'article.media--view-mode-view-mode-1');
   }
 
   /**
