@@ -297,12 +297,12 @@ class ModerationStateChangeTest extends UnitTestCase {
     $state = $this->createMock(StateInterface::class);
     $toState = $this->createMock(StateInterface::class);
 
-    $workflow_type->expects($this->at(0))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('foobar')
       ->willReturn($state);
 
-    $workflow_type->expects($this->at(1))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('bar')
       ->willReturn($toState);
@@ -358,12 +358,12 @@ class ModerationStateChangeTest extends UnitTestCase {
     $state = $this->createMock(StateInterface::class);
     $toState = $this->createMock(StateInterface::class);
 
-    $workflow_type->expects($this->at(0))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('foobar')
       ->willReturn($state);
 
-    $workflow_type->expects($this->at(1))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('bar')
       ->willReturn($toState);
@@ -419,12 +419,12 @@ class ModerationStateChangeTest extends UnitTestCase {
     $state = $this->createMock(StateInterface::class);
     $toState = $this->createMock(StateInterface::class);
 
-    $workflow_type->expects($this->at(0))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('foobar')
       ->willReturn($state);
 
-    $workflow_type->expects($this->at(1))
+    $workflow_type->expects($this->once())
       ->method('getState')
       ->with('bar')
       ->willReturn($toState);
