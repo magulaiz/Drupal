@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
-import { toMap } from 'ckeditor5/src/utils';
 import { getModelAttributeKeyFromGroup } from '../utils';
 
 /**

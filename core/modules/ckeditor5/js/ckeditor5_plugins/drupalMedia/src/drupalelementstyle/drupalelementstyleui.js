@@ -194,7 +194,7 @@ export default class DrupalElementStyleUi extends Plugin {
    *   A list of defined styles.
    * @param {string} style
    *   The style to check be checked against the media type's specific styles.
-   * @param {module:ui/dropdown/utils~ListDropdownItemDefinition | module:ui/button/buttonview} option
+   * @param {module:ui/dropdown/utils~ListDropdownItemDefinition|module:ui/button/buttonview} option
    *   Dropdown item definition or ButtonView
    * @param {string} modelAttribute
    *   The model attribute name of the drupalElementStyle.

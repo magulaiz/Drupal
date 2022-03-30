@@ -166,6 +166,7 @@ bundleless
 bundlenode
 buttonpane
 buttonset
+buttonview
 buytaert
 cacheability
 cacheable
