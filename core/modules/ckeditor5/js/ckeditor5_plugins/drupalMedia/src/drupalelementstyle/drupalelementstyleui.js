@@ -70,56 +70,6 @@ function getUIComponentName(name, group) {
 }
 
 /**
- * Updates the visibility of options depending on the selection's media type.
- *
- * @param {module:core/editor/editor~Editor} editor
- *   The editor instance.
- * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
- *   A list of defined styles.
- * @param {string} style
- *   The style to check be checked against the media type's specific styles.
- * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} dropdownItemDefinition
- *   Dropdown item definition.
- * @param {string} modelAttribute
- *   The model attribute name of the drupalElementStyle.
- */
-function updateOptionVisibility(
-  editor,
-  definedStyles,
-  style,
-  dropdownItemDefinition,
-  modelAttribute,
-) {
-  const { selection } = editor.model.document;
-  const modelElement = selection
-    ? selection.getSelectedElement()
-    : getClosestElementWithElementStyleAttribute(
-        selection,
-        editor.model.schema,
-        definedStyles,
-        modelAttribute,
-      );
-
-  const filteredDefinedStyles = definedStyles.filter(function (item) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const [key, value] of toMap(item.modelAttributes)) {
-      if (modelElement.hasAttribute(key)) {
-        return value.includes(modelElement.getAttribute(key));
-      }
-    }
-    return true;
-  });
-
-  if (!filteredDefinedStyles.includes(style)) {
-    // Hide the style option if view mode is not available for the media type that the modelElement is.
-    dropdownItemDefinition.model.set({ class: 'ck-hidden' });
-  } else {
-    // Un-hide the style option here after changing selection to a media type that should have the view mode button visible.
-    dropdownItemDefinition.model.set({ class: '' });
-  }
-}
-
-/**
  * The Drupal Element Style UI plugin.
  *
  * @extends module:core/plugin~Plugin
@@ -146,7 +96,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
     Object.keys(definedStyles).forEach((group) => {
       definedStyles[group].forEach((style) => {
-        this._createButton(style, group);
+        this._createButton(style, group, definedStyles[group]);
       });
     });
 
@@ -233,6 +183,60 @@ export default class DrupalElementStyleUi extends Plugin {
         }
       }
     });
+  }
+
+  /**
+   * Updates the visibility of options depending on the selection's media type.
+   *
+   * @param {module:core/editor/editor~Editor} editor
+   *   The editor instance.
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles.
+   * @param {string} style
+   *   The style to check be checked against the media type's specific styles.
+   * @param {module:ui/dropdown/utils~ListDropdownItemDefinition | module:ui/button/buttonview} option
+   *   Dropdown item definition or ButtonView
+   * @param {string} modelAttribute
+   *   The model attribute name of the drupalElementStyle.
+   */
+  updateOptionVisibility(definedStyles, style, option, modelAttribute) {
+    const { selection } = this.editor.model.document;
+    const modelElement = selection
+      ? selection.getSelectedElement()
+      : getClosestElementWithElementStyleAttribute(
+          selection,
+          this.editor.model.schema,
+          definedStyles,
+          modelAttribute,
+        );
+
+    const filteredDefinedStyles = definedStyles.filter(function (item) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const [key, value] of toMap(item.modelAttributes)) {
+        if (modelElement.hasAttribute(key)) {
+          return value.includes(modelElement.getAttribute(key));
+        }
+      }
+      return true;
+    });
+
+    // List dropdown case.
+    // Classes are set on the model of the dropdown item definition for list dropdowns.
+    if (Object.keys(option).includes('model')) {
+      if (!filteredDefinedStyles.includes(style)) {
+        // Hide the style option if view mode is not available for the media type that the modelElement is.
+        option.model.set({ class: 'ck-hidden' });
+      } else {
+        // Un-hide the style option here after changing selection to a media type that should have the view mode button visible.
+        option.model.set({ class: '' });
+      }
+      // Split button case and non-dropdown toolbar button case.
+      // Classes are set on the ButtonView.
+    } else if (!filteredDefinedStyles.includes(style)) {
+      option.set({ class: 'ck-hidden' });
+    } else {
+      option.set({ class: '' });
+    }
   }
 
   /**
@@ -349,7 +353,7 @@ export default class DrupalElementStyleUi extends Plugin {
    *
    * @private
    */
-  _createButton(buttonConfig, group) {
+  _createButton(buttonConfig, group, definedStyles) {
     const buttonName = buttonConfig.name;
 
     this.editor.ui.componentFactory.add(
@@ -372,6 +376,11 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
+        // For buttons that display as icons (split button and non-dropdown toolbar buttons),
+        // update option visibility here.
+        if (buttonConfig.icon) {
+          this.updateOptionVisibility(definedStyles, buttonConfig, view, '');
+        }
         return view;
       },
     );
@@ -421,8 +430,7 @@ export default class DrupalElementStyleUi extends Plugin {
         if (!isDrupalMedia(modelElement)) {
           return;
         }
-        updateOptionVisibility(
-          editor,
+        this.updateOptionVisibility(
           definedStyles,
           style,
           definition,
