@@ -29,9 +29,40 @@
       });
     }
   };
+  var deprecatedMessageSuffix = 'is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932';
   Drupal.tour = Drupal.tour || {
-    models: {},
-    views: {}
+    _models: {},
+
+    get models() {
+      Drupal.deprecationError({
+        message: "Drupal.tour.models ".concat(deprecatedMessageSuffix)
+      });
+      return this._models;
+    },
+
+    set models(value) {
+      Drupal.deprecationError({
+        message: "Drupal.tour.models ".concat(deprecatedMessageSuffix)
+      });
+      this._models = value;
+    },
+
+    _views: {},
+
+    get views() {
+      Drupal.deprecationError({
+        message: "Drupal.tour.views ".concat(deprecatedMessageSuffix)
+      });
+      return this._views;
+    },
+
+    set views(value) {
+      Drupal.deprecationError({
+        message: "Drupal.tour.views ".concat(deprecatedMessageSuffix)
+      });
+      this._views = value;
+    }
+
   };
   Drupal.tour.models.StateModel = Backbone.Model.extend({
     defaults: {

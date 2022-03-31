@@ -81,6 +81,8 @@ class TourLegacyTest extends WebDriverTestBase {
     $this->assertNotNull($additional_paragraph, 'Tip 3 has an additional paragraph that is a sibling to the main paragraph.');
     $additional_list = $tip_content->find('css', '.tour-tip-body + p + ul');
     $this->assertNotNull($additional_list, 'Tip 3 has an additional unordered list that is a sibling to the main paragraph.');
+    $this->expectDeprecation('Javascript Deprecation: Drupal.tour.views is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932');
+    $this->expectDeprecation('Javascript Deprecation: Drupal.tour.models is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. See https://www.drupal.org/node/3251932');
   }
 
   /**
