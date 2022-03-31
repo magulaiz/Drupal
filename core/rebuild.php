@@ -55,5 +55,4 @@ if (Settings::get('rebuild_access', FALSE) ||
   drupal_rebuild($autoloader, $request);
   \Drupal::messenger()->addStatus('Cache rebuild complete.');
 }
-$base_path = dirname($request->getBaseUrl(), 2);
-header('Location: ' . $request->getSchemeAndHttpHost() . $base_path);
+header('Location: ' . $request->getUriForPath('/'));
