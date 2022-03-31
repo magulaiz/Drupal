@@ -204,7 +204,8 @@ export default class DrupalElementStyleEditing extends Plugin {
     /**
      * The Drupal Element Styles.
      *
-     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyle
+     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyles
+     *   Object that contains an array of DrupalElementStyle objects for each group.
      *
      * @prop {string} name
      *   The name of the style used for identifying the button.
@@ -220,7 +221,7 @@ export default class DrupalElementStyleEditing extends Plugin {
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
      *
-     * @type {Drupal.CKEditor5~DrupalElementStyle[]}
+     * @type {Drupal.CKEditor5~DrupalElementStyles}
      */
     Object.keys(stylesConfig).forEach((group) => {
       stylesConfig[group] // array of styles

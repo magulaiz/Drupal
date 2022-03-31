@@ -37,7 +37,7 @@ function schemaContainsAttribute(selectedElement, schema, modelAttributes) {
  *   The current document selection.
  * @param {module:engine/model/schema~Schema} schema
  *   The model schema.
- * @param {Drupal.CKEditor5~DrupalElementStyle[]} styles
+ * @param {Drupal.CKEditor5~DrupalElementStyles} styles
  *   All available Drupal Element Styles.
  *
  * @return {null|module:engine/model/element~Element}
@@ -52,6 +52,7 @@ export function getClosestElementWithElementStyleAttribute(
   // eslint-disable-next-line no-restricted-syntax
   for (const group of Object.keys(styles)) {
     const modelAttribute = getModelAttributeKeyFromGroup(group);
+    // Generate list of model attributes.
     modelAttributes.push(modelAttribute);
   }
   const selectedElement = selection.getSelectedElement();
@@ -95,8 +96,9 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @param {module:core/editor/editor~Editor} editor
    *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyleObject} styles
+   * @param {Drupal.CKEditor5~DrupalElementStyles} styles
    *   All available Drupal Element Styles.
+   *
    */
   constructor(editor, styles) {
     super(editor);
@@ -166,8 +168,7 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: { align: 'left' }, group: 'align',
-   *    modelAttribute: 'drupalElementStyleAlign' });
+   *    editor.execute('drupalElementStyle', { value: { align: 'left' }, group: 'align'});
    *
    * @param {Object} options
    *   The command options.
@@ -176,8 +177,6 @@ export default class DrupalElementStyleCommand extends Command {
    *   configuration.
    * @param {string} options.group
    *   The group name of the drupalElementStyle.
-   * @param {string} options.modelAttribute
-   *   The model attribute name of the drupalElementStyle.
    */
   execute(options = {}) {
     const {
@@ -192,7 +191,6 @@ export default class DrupalElementStyleCommand extends Command {
         model.document.selection,
         model.schema,
         this.styles,
-        modelAttribute,
       );
       if (
         !requestedStyle ||

@@ -13,11 +13,7 @@ import {
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
-import {
-  isDrupalMedia,
-  isObject,
-  getModelAttributeKeyFromGroup,
-} from '../utils';
+import { isDrupalMedia, isObject } from '../utils';
 import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
 
 /**
@@ -189,20 +185,25 @@ export default class DrupalElementStyleUi extends Plugin {
    * Updates the visibility of options depending on the selection's media type.
    *
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
-   * @param {string} style
+   *   A list of defined styles of one group.
+   * @param {Drupal.CKEditor5~DrupalElementStyle} style
    *   The style to check be checked against the media type's specific styles.
    * @param {module:ui/dropdown/utils~ListDropdownItemDefinition|module:ui/button/buttonview} option
    *   Dropdown item definition or ButtonView
+   * @param {string} group
+   *   Name of group of the defined styles.
    */
-  updateOptionVisibility(definedStyles, style, option) {
+  updateOptionVisibility(definedStyles, style, option, group) {
     const { selection } = this.editor.model.document;
+    // Convert DrupalElementStyle[] into an object.
+    const definedStylesObject = {};
+    definedStylesObject[group] = definedStyles;
     const modelElement = selection
       ? selection.getSelectedElement()
       : getClosestElementWithElementStyleAttribute(
           selection,
           this.editor.model.schema,
-          definedStyles,
+          definedStylesObject,
         );
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
@@ -240,7 +241,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @param {Drupal.CKEditor5~drupalElementStyleDropdownDefinition} dropdownConfig
    *   The dropdown configuration.
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
+   *   A list of defined styles of one group.
    *
    * @see module:ui/componentfactory~ComponentFactory
    *
@@ -343,6 +344,8 @@ export default class DrupalElementStyleUi extends Plugin {
    *   The button configuration.
    * @param {string} group
    *   The name of the group (ex. 'align', 'viewMode').
+   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   *   A list of defined styles of one group.
    *
    * @see module:ui/componentfactory~ComponentFactory
    *
@@ -374,7 +377,7 @@ export default class DrupalElementStyleUi extends Plugin {
         // For buttons that display as icons (split button and non-dropdown toolbar buttons),
         // update option visibility here.
         if (buttonConfig.icon) {
-          this.updateOptionVisibility(definedStyles, buttonConfig, view);
+          this.updateOptionVisibility(definedStyles, buttonConfig, view, group);
         }
         return view;
       },
@@ -386,14 +389,13 @@ export default class DrupalElementStyleUi extends Plugin {
    *
    * @private
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
+   *   A list of defined styles of one group.
    * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
    * @param {string} group The name of the group (ex. 'align', 'viewMode').
    * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
    */
-  getDropdownListItemDefinitions(definedStyles, command, group, editor) {
+  getDropdownListItemDefinitions(definedStyles, command, group) {
     const itemDefinitions = new Collection();
-    const modelAttribute = getModelAttributeKeyFromGroup(group);
     definedStyles.forEach((style) => {
       const definition = {
         type: 'button',
@@ -412,19 +414,21 @@ export default class DrupalElementStyleUi extends Plugin {
       // We need to listen to editor UI changes instead of selection because
       // visibility of the styles can be impacted by either selection or
       // changes to the model.
-      this.listenTo(editor.ui, 'update', () => {
-        const { selection } = editor.model.document;
+      this.listenTo(this.editor.ui, 'update', () => {
+        const definedStylesObject = {};
+        definedStylesObject[group] = definedStyles;
+        const { selection } = this.editor.model.document;
         const modelElement = selection
           ? selection.getSelectedElement()
           : getClosestElementWithElementStyleAttribute(
               selection,
-              editor.model.schema,
-              definedStyles,
+              this.editor.model.schema,
+              definedStylesObject,
             );
         if (!isDrupalMedia(modelElement)) {
           return;
         }
-        this.updateOptionVisibility(definedStyles, style, definition);
+        this.updateOptionVisibility(definedStyles, style, definition, group);
       });
     });
     return itemDefinitions;
@@ -438,7 +442,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @param {Drupal.CKEditor5~drupalElementStyleDropdownDefinition} dropdownConfig
    *   The dropdown configuration.
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
+   *   A list of defined styles of one group.
    */
   _createListDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
@@ -471,7 +475,7 @@ export default class DrupalElementStyleUi extends Plugin {
       const dropdownButtonView = dropdownView.buttonView;
 
       dropdownButtonView.set({
-        label: getDropdownButtonTitle(title, defaultText),
+        label: getDropdownButtonTitle(title, defaultButton.label),
         class: null,
         tooltip: defaultText,
         withText: true,
@@ -498,12 +502,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
       addListToDropdown(
         dropdownView,
-        this.getDropdownListItemDefinitions(
-          definedStyles,
-          command,
-          group,
-          this.editor,
-        ),
+        this.getDropdownListItemDefinitions(definedStyles, command, group),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
@@ -528,12 +527,9 @@ export default class DrupalElementStyleUi extends Plugin {
   _executeCommand(name, group) {
     const obj = {};
     obj[group] = name;
-    const modelAttribute = getModelAttributeKeyFromGroup(group);
-
     this.editor.execute('drupalElementStyle', {
       value: obj,
       group,
-      modelAttribute,
     });
     this.editor.editing.view.focus();
   }
