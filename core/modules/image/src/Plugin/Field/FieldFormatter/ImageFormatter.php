@@ -171,7 +171,7 @@ class ImageFormatter extends ImageFormatterBase {
       ]),
     ];
     $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser.');
-    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible when it renders "above the fold".');
+    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible.');
 
     return $element;
   }
