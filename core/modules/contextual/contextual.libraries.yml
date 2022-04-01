@@ -23,7 +23,7 @@ drupal.contextual-links:
     - core/drupal.ajax
     - core/drupalSettings
     # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/backbone.internal
+    - core/internal.backbone
     - core/modernizr
     - core/once
     - core/jquery.once.bc
@@ -44,7 +44,7 @@ drupal.contextual-toolbar:
     - core/jquery
     - core/drupal
     # @todo Remove this in https://www.drupal.org/project/drupal/issues/3203920
-    - core/backbone.internal
+    - core/internal.backbone
     - core/once
     - core/jquery.once.bc
     - core/drupal.tabbingmanager
