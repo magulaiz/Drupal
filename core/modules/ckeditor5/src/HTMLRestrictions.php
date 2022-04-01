@@ -9,7 +9,6 @@ use Drupal\Component\Utility\DiffArray;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\filter\Plugin\Filter\FilterHtml;
 use Drupal\filter\Plugin\FilterInterface;
-use Masterminds\HTML5\Elements;
 
 /**
  * Represents a set of HTML restrictions.
@@ -70,7 +69,7 @@ final class HTMLRestrictions {
    * @var string[]
    */
   private const WILDCARD_ELEMENT_METHODS = [
-    '$block' => 'getBlockElementList',
+    '$text-container' => 'getTextContainerElementList',
   ];
 
   /**
@@ -338,8 +337,8 @@ final class HTMLRestrictions {
    * @see ::toCKEditor5ElementsArray()
    */
   public static function fromString(string $elements_string): HTMLRestrictions {
-    // Preprocess wildcard tags: convert `<$block>` to
-    // `<__preprocessed-wildcard-block__>`.
+    // Preprocess wildcard tags: convert `<$text-container>` to
+    // `<__preprocessed-wildcard-text-container__>`.
     // Note: unknown wildcard tags will trigger a validation error in
     // ::validateAllowedRestrictionsPhase1().
     $replaced_wildcard_tags = [];
@@ -357,9 +356,12 @@ final class HTMLRestrictions {
     // Omit the broad wildcard addition that FilterHtml::getHTMLRestrictions()
     // always sets; it is specific to how FilterHTML works and irrelevant here.
     unset($allowed_elements['*']);
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    // @todo remove this in https://www.drupal.org/project/drupal/issues/3226368
+    unset($allowed_elements['__zqh6vxfbk3cg__']);
 
-    // Postprocess tag wildcards: convert `<__preprocessed-wildcard-block__>` to
-    // `<$block>`.
+    // Postprocess tag wildcards: convert
+    // `<__preprocessed-wildcard-text-container__>` to `<$text-container>`.
     foreach ($replaced_wildcard_tags as $processed => $original) {
       if (isset($allowed_elements[$processed])) {
         $allowed_elements[$original] = $allowed_elements[$processed];
@@ -769,9 +771,9 @@ final class HTMLRestrictions {
    */
   private static function applyOperation(HTMLRestrictions $a, HTMLRestrictions $b, string $operation_method_name): HTMLRestrictions {
     // 1. Operation applied to wildcard tags that exist in both operands.
-    // For example: <$block id> in both operands.
-    $a_wildcard = self::getWildcardSubset($a);
-    $b_wildcard = self::getWildcardSubset($b);
+    // For example: <$text-container id> in both operands.
+    $a_wildcard = $a->getWildcardSubset();
+    $b_wildcard = $b->getWildcardSubset();
     $wildcard_op_result = $a_wildcard->$operation_method_name($b_wildcard);
 
     // Early return if both operands contain only wildcard tags.
@@ -781,7 +783,8 @@ final class HTMLRestrictions {
 
     // 2. Operation applied with wildcard tags resolved into concrete tags.
     // For example: <p class="text-align-center"> in the first operand and
-    // <$block class="text-align-center"> in the second operand.
+    // <$text-container class="text-align-center"> in the second
+    // operand.
     $a_concrete = self::resolveWildcards($a);
     $b_concrete = self::resolveWildcards($b);
     $concrete_op_result = $a_concrete->$operation_method_name($b_concrete);
@@ -828,14 +831,23 @@ final class HTMLRestrictions {
   /**
    * Gets the subset of allowed elements whose tags are wildcards.
    *
-   * @param \Drupal\ckeditor5\HTMLRestrictions $r
-   *   A set of HTML restrictions.
+   * @return \Drupal\ckeditor5\HTMLRestrictions
+   *   The subset of the given set of HTML restrictions.
+   */
+  public function getWildcardSubset(): HTMLRestrictions {
+    return new self(array_filter($this->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+  }
+
+  /**
+   * Gets the subset of allowed elements whose tags are concrete.
    *
    * @return \Drupal\ckeditor5\HTMLRestrictions
    *   The subset of the given set of HTML restrictions.
    */
-  private static function getWildcardSubset(HTMLRestrictions $r): HTMLRestrictions {
-    return new self(array_filter($r->elements, [__CLASS__, 'isWildcardTag'], ARRAY_FILTER_USE_KEY));
+  public function getConcreteSubset(): HTMLRestrictions {
+    return new self(array_filter($this->elements, function (string $tag_name) {
+      return !self::isWildcardTag($tag_name);
+    }, ARRAY_FILTER_USE_KEY));
   }
 
   /**
@@ -889,17 +901,18 @@ final class HTMLRestrictions {
     // let ::merge() pick the most permissive one.
     // This is necessary because resolving wildcards may result in concrete tags
     // becoming either more permissive:
-    // - if $r is `<p> <$block class="foo">`
+    // - if $r is `<p> <$text-container class="foo">`
     // - then $naive will be `<p class="foo">`
-    // - merging them yields `<p class="foo"> <$block class="foo">`
+    // - merging them yields `<p class="foo"> <$text-container class="foo">`
     // - diffing the wildcard subsets yields just `<p class="foo">`
     // Or it could result in concrete tags being unaffected by the resolved
     // wildcards:
-    // - if $r is `<p class> <$block class="foo">`
+    // - if $r is `<p class> <$text-container class="foo">`
     // - then $naive will be `<p class="foo">`
-    // - merging them yields `<p class> <$block class="foo">` again
+    // - merging them yields `<p class> <$text-container class="foo">`
+    //   again
     // - diffing the wildcard subsets yields just `<p class>`
-    return $r->merge($naive_resolution)->doDiff(self::getWildcardSubset($r));
+    return $r->merge($naive_resolution)->doDiff($r->getWildcardSubset());
   }
 
   /**
@@ -964,7 +977,10 @@ final class HTMLRestrictions {
    * @see \Drupal\filter\Plugin\Filter\FilterHtml
    */
   public function toFilterHtmlAllowedTagsString(): string {
-    return implode(' ', $this->toCKEditor5ElementsArray());
+    // Resolve wildcard tags, because Drupal's filter_html filter plugin does
+    // not support those.
+    $concrete = self::resolveWildcards($this);
+    return implode(' ', $concrete->toCKEditor5ElementsArray());
   }
 
   /**
@@ -979,7 +995,11 @@ final class HTMLRestrictions {
    */
   public function toGeneralHtmlSupportConfig(): array {
     $allowed = [];
-    foreach ($this->elements as $tag => $attributes) {
+    // Resolve any remaining wildcards based on Drupal's assumptions on
+    // wildcards to ensure all HTML tags that Drupal thinks are supported are
+    // truly supported by CKEditor 5.
+    $elements = self::resolveWildcards($this)->getAllowedElements();
+    foreach ($elements as $tag => $attributes) {
       $to_allow = ['name' => $tag];
       assert($attributes === FALSE || is_array($attributes));
       if (is_array($attributes)) {
@@ -1024,25 +1044,51 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Gets a list of block-level elements.
+   * Gets a list of CKEditor 5's `$block` text container elements.
+   *
+   * This is a hard coded list of known elements that CKEditor 5 uses as
+   * `$block` text container elements. The elements listed here are registered
+   * with `inheritAllFrom: "$block"` to the CKEditor 5 schema. This list
+   * corresponds to the `$text-container` wildcard in Drupal configuration.
+   *
+   *
+   * This group of elements is special because they allow text as an immediate
+   * child node. These elements are also allowed to be used for text styles that
+   * must be applied to the wrapper instead of inline to the text, such as text
+   * alignment.
+   *
+   * This list is highly opinionated. It is based on decisions made upstream in
+   * CKEditor 5. For example, `<blockquote>` is not considered as a `$block`
+   * text container, meaning that text inside `<blockquote>` needs to always be
+   * wrapped by an element that is `$block` text container such as `<p>`. This
+   * list also excludes some special case text container elements like
+   * `<caption>` that allow containing text directly inside the element, yet do
+   * not fully implement the `$block` text container interface.
+   *
+   * It is acceptable to list the elements here because the list of elements is
+   * not likely to change often. If the list changed, an upgrade path would be
+   * required anyway. In most cases, missing elements would only impact new
+   * functionality shipped in upstream.
+   *
+   * @see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/schema.html#generic-items
    *
    * @return string[]
    *   An array of block-level element tags.
    */
-  private static function getBlockElementList(): array {
-    return array_filter(array_keys(Elements::$html5), function (string $element): bool {
-      return Elements::isA($element, Elements::BLOCK_TAG);
-    });
+  private static function getTextContainerElementList(): array {
+    return [
+      'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'li',
+    ];
   }
 
   /**
    * Computes the tags that match the provided wildcard.
    *
    * A wildcard tag in element config is a way of representing multiple tags
-   * with a single item, such as `<$block>` to represent all block tags. Each
-   * wildcard should have a corresponding callback method listed in
-   * WILDCARD_ELEMENT_METHODS that returns the set of tags represented by the
-   * wildcard.
+   * with a single item, such as `<$text-container>` to represent CKEditor 5's
+   * `$block` text container tags. Each wildcard should have a corresponding
+   * callback method listed in WILDCARD_ELEMENT_METHODS that returns the set of
+   * tags represented by the wildcard.
    *
    * @param string $wildcard
    *   The wildcard that represents multiple tags.

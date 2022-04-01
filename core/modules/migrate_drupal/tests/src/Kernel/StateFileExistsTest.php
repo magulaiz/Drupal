@@ -37,12 +37,11 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
    */
   protected $stateFileRequired = [
     'action',
-    // @todo Remove aggregator in https://www.drupal.org/project/drupal/issues/3264120
-    'aggregator',
     'ban',
     'block',
     'block_content',
     'book',
+    // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
     'color',
     'comment',
     'config_translation',
@@ -66,6 +65,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'node',
     'options',
     'path',
+    // @todo Remove RDF in https://www.drupal.org/node/3267515
     'rdf',
     'responsive_image',
     'search',

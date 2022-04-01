@@ -62,7 +62,7 @@ ckeditor5_heading:
       - <h5>
       - <h6>
 
-ckeditor5_htmlSupport:
+ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
     plugins: [htmlSupport.GeneralHtmlSupport]
     config:
@@ -77,6 +77,17 @@ ckeditor5_htmlSupport:
             styles: true
   drupal:
     label: Arbitrary HTML support
+    elements: false
+    library: core/ckeditor5.htmlSupport
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
+    conditions: []
+
+ckeditor5_wildcardHtmlSupport:
+  ckeditor5:
+    plugins: [htmlSupport.GeneralHtmlSupport]
+  drupal:
+    label: Wildcard HTML support
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig()
     elements: false
     library: core/ckeditor5.htmlSupport
     # @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface::getEnabledDefinitions()
@@ -166,6 +177,29 @@ ckeditor5_code:
         label: Code
     elements:
       - <code>
+
+ckeditor5_codeBlock:
+  ckeditor5:
+    plugins:
+      - codeBlock.CodeBlock
+      - htmlSupport.GeneralHtmlSupport
+    config:
+      # The CodeBlock plugin supports only `<pre><code>…</code></pre>`.
+      # Configure GHS to support `<pre>…</pre>` markup as well.
+      htmlSupport:
+        allow:
+          -
+            name: pre
+  drupal:
+    label: Code Block
+    library: ckeditor5/drupal.ckeditor5.codeBlock
+    admin_library: ckeditor5/admin.codeBlock
+    toolbar_items:
+      codeBlock:
+        label: Code Block
+    elements:
+      - <pre>
+      - <code class="language-*">
 
 ckeditor5_strikethrough:
   ckeditor5:
@@ -321,7 +355,7 @@ ckeditor5_alignment:
       alignment:
         label: Text alignment
     elements:
-      - <$block class="text-align-left text-align-center text-align-right text-align-justify">
+      - <$text-container class="text-align-left text-align-center text-align-right text-align-justify">
 
 ckeditor5_alignment.left:
   ckeditor5: *alignment_ckeditor5_section
@@ -331,7 +365,7 @@ ckeditor5_alignment.left:
       "alignment:left":
         label: Align left
     elements:
-      - <$block class="text-align-left">
+      - <$text-container class="text-align-left">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.center:
@@ -342,7 +376,7 @@ ckeditor5_alignment.center:
       "alignment:center":
         label: Align center
     elements:
-      - <$block class="text-align-center">
+      - <$text-container class="text-align-center">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.right:
@@ -353,7 +387,7 @@ ckeditor5_alignment.right:
       "alignment:right":
         label: Align right
     elements:
-      - <$block class="text-align-right">
+      - <$text-container class="text-align-right">
     <<: *alignment_drupal_section
 
 ckeditor5_alignment.justify:
@@ -364,7 +398,7 @@ ckeditor5_alignment.justify:
       "alignment:justify":
         label: Justify
     elements:
-      - <$block class="text-align-justify">
+      - <$text-container class="text-align-justify">
     <<: *alignment_drupal_section
 
 ckeditor5_removeFormat:
@@ -420,7 +454,7 @@ ckeditor5_image:
       - drupalImage.DrupalImage
     config:
       image:
-        toolbar: [imageTextAlternative]
+        toolbar: [drupalImageAlternativeText]
   drupal:
     label: Image
     library: ckeditor5/drupal.ckeditor5.image
