@@ -6,7 +6,7 @@
  * Escape ampersand characters (`&`) and angle brackets (`<` and `>`) when
  * transforming data to HTML. This is required because
  * \Drupal\Component\Utility\Xss::filter fails to parse element attributes
- * values containing unescapted HTML entities.
+ * values containing unescaped HTML entities.
  *
  * @see https://www.drupal.org/project/drupal/issues/3227831
  * @see DrupalHtmlBuilder._escapeAttribute
