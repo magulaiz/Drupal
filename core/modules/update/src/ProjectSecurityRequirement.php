@@ -229,10 +229,10 @@ final class ProjectSecurityRequirement {
     $comparable_request_date = $date_formatter->format($time->getRequestTime(), 'custom', $date_format);
     if ($this->securityCoverageInfo['security_coverage_end_date'] <= $comparable_request_date) {
       // Security coverage is over.
-        $requirement['value'] = $this->t(
-          'Drupal @version coverage has ended',
-          ['@version' => $this->existingMajorMinorVersion]
-        );
+      $requirement['value'] = $this->t(
+        'Drupal @version coverage has ended',
+        ['@version' => $this->existingMajorMinorVersion]
+      );
       $requirement['severity'] = REQUIREMENT_ERROR;
       $requirement['description']['coverage_message'] = [
         '#markup' => $this->getVersionNoSecurityCoverageMessage(),
