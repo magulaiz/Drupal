@@ -107,8 +107,8 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function securityCoverageMessageProvider() {
     $release_coverage_message = 'Visit the release cycle overview for more information on supported releases.';
     $coverage_ended_message = 'coverage has ended';
-    $update_asap_message = 'Update to a supported minor as soon as possible to continue receiving security updates.';
-    $update_soon_message = 'Update to a supported minor version soon to continue receiving security updates.';
+    $update_asap_message = 'Update to a supported version as soon as possible to continue receiving security updates.';
+    $update_soon_message = 'Update to a supported version soon to continue receiving security updates.';
     $test_cases = [
       '8.0.0, unsupported' => [
         'installed_version' => '8.0.0',
