@@ -13,12 +13,12 @@ backbone:
     - core/underscore
   deprecated: The %library_id% asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0.
 
-# Internal library, do not depend on it.
-# The library will be removed as soon as the following issues are fixed:
-#  - https://www.drupal.org/project/drupal/issues/3203920
-#  - https://www.drupal.org/project/drupal/issues/3204011
-#  - https://www.drupal.org/project/drupal/issues/3204015
 internal.backbone:
+  # Internal library, do not depend on it.
+  # The library will be removed as soon as the following issues are fixed:
+  #  - https://www.drupal.org/project/drupal/issues/3203920
+  #  - https://www.drupal.org/project/drupal/issues/3204011
+  #  - https://www.drupal.org/project/drupal/issues/3204015
   remote: https://github.com/jashkenas/backbone
   version: "1.4.0"
   license:

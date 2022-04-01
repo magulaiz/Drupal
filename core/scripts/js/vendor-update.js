@@ -76,7 +76,13 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   const ASSET_LIST = [
     {
       pack: 'backbone',
+      folder: 'backbone',
+      library: 'internal.backbone',
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
+    },
+    // Only used to update the version number of the deprecated library.
+    {
+      pack: 'backbone',
     },
     {
       pack: 'css.escape',
