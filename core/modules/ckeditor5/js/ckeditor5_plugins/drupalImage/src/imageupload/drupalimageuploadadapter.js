@@ -106,7 +106,6 @@ export default class DrupalImageUploadAdapter {
             : genericErrorText,
         );
       }
-      console.log(response);
       resolve({
         urls: { default: response.url },
         dataEntityUuid: response.uuid ? response.uuid : '',

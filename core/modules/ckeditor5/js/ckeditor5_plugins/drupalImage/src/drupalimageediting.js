@@ -4,7 +4,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversionutils';
 
 /**
- * Provides a empty image element.
+ * Provides an empty image element.
  *
  * @param {writer} writer
  *  The CKEditor 5 writer object.
@@ -36,11 +36,11 @@ function isNumberString(value) {
 }
 
 /**
- * Generate the callback that saves the uuid value to an attribute on data
+ * Generates the callback that saves the entity UUID to an attribute on data
  * downcast.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
@@ -48,7 +48,7 @@ function modelEntityUuidToDataAttribute() {
   /**
    * Callback for the attribute:dataEntityUuid event.
    *
-   * It saves the uuid value to the data-entity-uuid attribute.
+   * It saves the UUID value to the data-entity-uuid attribute.
    *
    * @param {Event} evt
    * @param {object} data
@@ -98,19 +98,19 @@ const alignmentMapping = [
 ];
 
 /**
- * Downcast `caption` model to `data-caption` attribute with its content
+ * Downcasts `caption` model to `data-caption` attribute with its content
  * downcasted to plain HTML.
  *
- * This is needed because CKEditor 5 uses <caption>
- * element internally in various places, which differs from Drupal which uses
- * an attribute. For now to support that we have to manually repeat work done in
- * the DowncastDispatcher's private methods.
+ * This is needed because CKEditor 5 uses the `<caption>` element internally in
+ * various places, which differs from Drupal which uses an attribute. For now
+ * to support that we have to manually repeat work done in the
+ * DowncastDispatcher's private methods.
  *
  * @param {module:core/editor/editor~Editor} editor
  *  The editor instance to use.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
@@ -197,7 +197,7 @@ function viewCaptionToCaptionAttribute(editor) {
 }
 
 /**
- * Generate the callback that saves the entity type value to an attribute on
+ * Generates the callback that saves the entity type value to an attribute on
  * data downcast.
  *
  * @return {function}
@@ -209,7 +209,7 @@ function modelEntityTypeToDataAttribute() {
   /**
    * Callback for the attribute:dataEntityType event.
    *
-   * It saves the uuid value to the data-entity-type attribute.
+   * It saves the UUID value to the data-entity-type attribute.
    *
    * @param {Event} evt
    * @param {object} data
@@ -241,11 +241,11 @@ function modelEntityTypeToDataAttribute() {
 }
 
 /**
- * Generate the callback that saves the align value to an attribute on
+ * Generates the callback that saves the align value to an attribute on
  * data downcast.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
@@ -290,11 +290,11 @@ function modelImageStyleToDataAttribute() {
 }
 
 /**
- * Generate the callback that saves the width value to an attribute on
+ * Generates the callback that saves the width value to an attribute on
  * data downcast.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
@@ -339,19 +339,19 @@ function modelImageWidthToAttribute() {
 }
 
 /**
- * Generate the callback that saves the height value to an attribute on
+ * Generates the callback that saves the height value to an attribute on
  * data downcast.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
 function modelImageHeightToAttribute() {
   /**
-   * Callback for the attribute:width event.
+   * Callback for the attribute:height event.
    *
-   * It saves the height value to the width attribute.
+   * It saves the height value to the height attribute.
    *
    * @param {Event} evt
    * @param {object} data
@@ -388,10 +388,10 @@ function modelImageHeightToAttribute() {
 }
 
 /**
- * Generate the callback that handles the data downcast for the img element.
+ * Generates the callback that handles the data downcast for the img element.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */
@@ -543,7 +543,7 @@ function viewImageToModelImage(editor) {
  * Modified alternative implementation of linkimageediting.js' downcastImageLink.
  *
  * @return {function}
- *  Callback that binds an event to it's parameter.
+ *  Callback that binds an event to its parameter.
  *
  * @private
  */

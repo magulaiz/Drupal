@@ -6,7 +6,7 @@ import DrupalHtmlWriter from './drupalhtmlwriter';
 /**
  * A plugin that overrides the CKEditor HTML writer.
  *
- * Override the CKEditor 5 HTML writer account for Drupal XSS filtering needs.
+ * Override the CKEditor 5 HTML writer to account for Drupal XSS filtering needs.
  *
  * @see https://www.drupal.org/project/drupal/issues/3227831
  * @see DrupalHtmlBuilder._escapeAttribute
