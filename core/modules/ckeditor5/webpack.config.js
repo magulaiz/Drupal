@@ -10,8 +10,8 @@ function getDirectories(srcpath) {
     .filter((item) => fs.statSync(path.join(srcpath, item)).isDirectory());
 }
 
-let prodPluginBuilds = [];
-let devPluginBuilds = [];
+const prodPluginBuilds = [];
+const devPluginBuilds = [];
 
 // Loop through every subdirectory in ckeditor5_plugins, which should be a different
 // plugin, and build them all in ./build.
