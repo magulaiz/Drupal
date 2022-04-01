@@ -18,7 +18,7 @@ backbone:
 #  - https://www.drupal.org/project/drupal/issues/3203920
 #  - https://www.drupal.org/project/drupal/issues/3204011
 #  - https://www.drupal.org/project/drupal/issues/3204015
-backbone.internal:
+internal.backbone:
   remote: https://github.com/jashkenas/backbone
   version: "1.4.0"
   license:
