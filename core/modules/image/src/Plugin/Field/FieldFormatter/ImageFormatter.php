@@ -155,21 +155,23 @@ class ImageFormatter extends ImageFormatterBase {
       '#type' => 'details',
       '#title' => $this->t('Image loading'),
       '#weight' => 10,
-      '#description' => $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing modern browsers to lazily load images without JavaScript. It is sometimes desirable to override this default to force browsers to download an image as soon as possible using the "<em>eager</em>" value instead.'),
+      '#description' => $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing modern browsers to lazily load images without JavaScript.'),
     ];
     $loading_attribute_options = [
       'lazy' => $this->t('Lazy'),
       'eager' => $this->t('Eager'),
     ];
     $element['image_loading']['attribute'] = [
-      '#title' => $this->t('Lazy loading attribute'),
-      '#type' => 'select',
+      '#title' => $this->t('Image loading attribute'),
+      '#type' => 'radios',
       '#default_value' => $image_loading['attribute'],
       '#options' => $loading_attribute_options,
-      '#description' => $this->t('Select the lazy loading attribute for images. <a href=":link">Learn more.</a>', [
+      '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more.</a>', [
         ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
       ]),
     ];
+    $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser.');
+    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible when it renders "above the fold".');
 
     return $element;
   }
