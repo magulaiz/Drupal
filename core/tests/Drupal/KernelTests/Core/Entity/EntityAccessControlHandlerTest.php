@@ -338,6 +338,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     // Entity is not saved initially, but that should not matter.
     $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
     $entity1->set('name', 'Inaccessible');
+    $entity1->_captureEntityTestPostSaveAccessResultDelete = TRUE;
     $entity1->save();
     // Set in _entity_test_post_save()
     $accessResultInPostSaveHook = $state->get('entity_test.post_save.access_result.delete');
