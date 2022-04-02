@@ -3,6 +3,7 @@
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessibleInterface;
@@ -273,6 +274,75 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $entity1->save();
 
     $this->assertFalse($entity1->access('delete', $account), 'Entity 1 revision 2 CANNOT be deleted.');
+  }
+
+  public function testUnsavedEntitiesWithNoUUidDoNotCollide() {
+    $account = $this->createUser();
+
+    $entity1 = EntityTestNoUuid::create([
+      'name' => 'Accessible',
+    ]);
+    $entity2 = EntityTestNoUuid::create([
+      'name' => 'Inaccessible',
+    ]);
+
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $this->assertFalse($entity2->access('delete', $account), 'Entity 2 CANNOT be deleted.');
+
+  }
+
+  public function testEntityChangedAndNotSavedAccessNotCached() {
+    $account = $this->createUser();
+
+    // Use entity with uuid, to not fall into the other flaw of
+    // testUnsavedEntitiesWithNoUUidDoNotCollide().
+    // Entity is not saved initially, but that should not matter.
+    $entity1 = EntityTestRev::create([
+      'name' => 'Accessible',
+    ]);
+
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $entity1->set('name', 'Inaccessible');
+    $this->assertFalse($entity1->access('delete', $account), 'Entity 1 now CANNOT be deleted.');
+  }
+
+  public function testEntityChangedAndSavedAccessNotCached() {
+    $account = $this->createUser();
+
+    // Use entity with uuid, to not fall into the other flaw of
+    // testUnsavedEntitiesWithNoUUidDoNotCollide().
+    $entity1 = EntityTestRev::create([
+      'name' => 'Accessible',
+    ]);
+
+    // Entity is not saved initially, but that should not matter.
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $entity1->set('name', 'Inaccessible');
+    $entity1->save();
+    $this->assertFalse($entity1->access('delete', $account), 'Entity 1 now CANNOT be deleted.');
+  }
+
+  public function testEntityChangedAndSavedAccessNotCachedInPostSaveHook() {
+    $account = $this->createUser();
+    // _entity_test_post_save() needs this.
+    \Drupal::currentUser()->setAccount($account);
+
+    $state = $this->container->get('state');
+
+    // Use entity with uuid, to not fall into the other flaw of
+    // testUnsavedEntitiesWithNoUUidDoNotCollide().
+    $entity1 = EntityTestRev::create([
+      'name' => 'Accessible',
+    ]);
+
+    // Entity is not saved initially, but that should not matter.
+    $this->assertTrue($entity1->access('delete', $account), 'Entity 1 can be deleted.');
+    $entity1->set('name', 'Inaccessible');
+    $entity1->save();
+    // Set in _entity_test_post_save()
+    $accessResultInPostSaveHook = $state->get('entity_test.post_save.access_result.delete');
+    $this->assertTrue($accessResultInPostSaveHook instanceof AccessResultInterface);
+    $this->assertFalse(!$accessResultInPostSaveHook->isAllowed(), 'Entity 1 now CANNOT be deleted.');
   }
 
   /**
