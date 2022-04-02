@@ -198,7 +198,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
         'installed_version' => '8.8.0',
         'fixture' => 'sec.9.0',
         'requirements_section_heading' => 'Warnings found',
-        'message' => "Drupal 8.9 is covered until 2020-Dec-02 $update_soon_message $release_coverage_message",
+        'message' => "Drupal 8.8 is covered until 2020-Dec-02 $update_soon_message $release_coverage_message",
         'mock_date' => '2020-06-02',
       ],
     ];
