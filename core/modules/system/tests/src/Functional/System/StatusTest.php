@@ -68,6 +68,9 @@ class StatusTest extends BrowserTestBase {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
 
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+    $update_registry = \Drupal::service('update.update_hook_registry');
+
     // Set the schema version of update_test_postupdate to a lower version, so
     // update_test_postupdate_update_8001() needs to be executed.
     $update_registry->setInstalledVersion('update_test_postupdate', 8000);
