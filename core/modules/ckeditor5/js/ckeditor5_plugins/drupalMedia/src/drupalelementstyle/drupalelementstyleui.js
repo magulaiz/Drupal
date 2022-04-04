@@ -13,7 +13,7 @@ import {
   SplitButtonView,
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
-import { isDrupalMedia, isObject } from '../utils';
+import { isObject } from '../utils';
 import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
 
 /**
@@ -96,11 +96,9 @@ export default class DrupalElementStyleUi extends Plugin {
       });
     });
 
-    // @todo should we document that one dropdown definition can contain buttons
-    //  only from one group?
-    // we should probably also validate that 🤔
     /**
      * A Drupal Element Style dropdown definition.
+     * One dropdown definition can only contain items from one group.
      *
      * List dropdown display configuration.
      * @example
@@ -159,9 +157,23 @@ export default class DrupalElementStyleUi extends Plugin {
      * @see module:drupalMedia/drupalelementstyle/drupalelementstyleediting:DrupalElementStyleEditing
      */
     const definedDropdowns = toolbarConfig.filter(isObject).filter((obj) => {
+      const items = [];
       if (!obj.display) {
         console.warn(
           'dropdown configuration must include a display key specifying either listDropdown or splitButton.',
+        );
+        return false;
+      }
+      // eslint-disable-next-line no-restricted-syntax
+      for (const item of obj.items) {
+        const groupName = item.split(':')[1];
+        items.push(groupName);
+      }
+      // Add the default item as well.
+      items.push(obj.defaultItem.split(':')[1]);
+      if (!items.every((i) => i === items[0])) {
+        console.warn(
+          'dropdown configuration should only contain buttons from one group.',
         );
         return false;
       }
@@ -213,6 +225,9 @@ export default class DrupalElementStyleUi extends Plugin {
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
       // @todo this filter should also check the model element.
+      // if (!modelElement) {
+      //   return false;
+      // }
       // eslint-disable-next-line no-restricted-syntax
       for (const [key, value] of toMap(item.modelAttributes)) {
         if (modelElement.hasAttribute(key)) {
@@ -353,7 +368,7 @@ export default class DrupalElementStyleUi extends Plugin {
    *   The button configuration.
    * @param {string} group
    *   The name of the group (e.g. 'align', 'viewMode').
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition[]} definedStyles
    *   A list of defined styles of one group.
    *
    * @see module:ui/componentfactory~ComponentFactory
@@ -397,7 +412,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * A helper function that parses the different dropdown options and returns
    * list item definitions ready for use in the dropdown.
    *
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition[]} definedStyles
    *   A list of defined styles of one group.
    * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command
    *   The drupalElementStyle command.
@@ -428,20 +443,6 @@ export default class DrupalElementStyleUi extends Plugin {
       // visibility of the styles can be impacted by either selection or
       // changes to the model.
       this.listenTo(this.editor.ui, 'update', () => {
-        const definedStylesObject = {};
-        definedStylesObject[group] = definedStyles;
-        const { selection } = this.editor.model.document;
-        const modelElement = selection
-          ? selection.getSelectedElement()
-          : getClosestElementWithElementStyleAttribute(
-              selection,
-              this.editor.model.schema,
-              definedStylesObject,
-            );
-        // @todo should not be based on drupal media. Why is this needed?
-        if (!isDrupalMedia(modelElement)) {
-          return;
-        }
         this.updateOptionVisibility(definedStyles, style, definition, group);
       });
     });

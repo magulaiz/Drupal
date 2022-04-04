@@ -103,13 +103,11 @@ export default class DrupalElementStyleCommand extends Command {
    */
   constructor(editor, styles) {
     super(editor);
-    // @todo we are storing styles twice now. I think we should try to merge
-    //  these.
     this.styles = styles;
-    this._styles = {};
-    Object.keys(styles).forEach((group) => {
-      this._styles[group] = new Map(
-        styles[group].map((style) => {
+    this.stylesMap = {};
+    Object.keys(this.styles).forEach((group) => {
+      this.stylesMap[group] = new Map(
+        this.styles[group].map((style) => {
           return [style.name, style];
         }),
       );
@@ -197,7 +195,7 @@ export default class DrupalElementStyleCommand extends Command {
       );
       if (
         !requestedStyle ||
-        this._styles[group].get(requestedStyle[modelGroupName]).isDefault
+        this.stylesMap[group].get(requestedStyle[modelGroupName]).isDefault
       ) {
         // Remove attribute from the element.
         writer.removeAttribute(modelAttribute, element);
