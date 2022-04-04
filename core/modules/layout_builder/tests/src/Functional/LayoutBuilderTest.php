@@ -704,6 +704,36 @@ class LayoutBuilderTest extends BrowserTestBase {
   }
 
   /**
+   * Tests preview-aware templates.
+   */
+  public function testPreviewAwareTemplates() {
+    $assert_session = $this->assertSession();
+    $page = $this->getSession()->getPage();
+
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+      'administer node display',
+    ]));
+
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
+    $page->clickLink('Manage layout');
+    $page->clickLink('Add section');
+    $page->clickLink('1 column layout');
+    $page->pressButton('Add section');
+    $page->clickLink('Add block');
+    $page->clickLink('Preview-aware block');
+    $page->pressButton('Add block');
+
+    $assert_session->pageTextContains('This is a preview, indeed');
+
+    $page->pressButton('Save layout');
+    $this->drupalGet('node/1');
+
+    $assert_session->pageTextNotContains('This is a preview, indeed');
+  }
+
+  /**
    * Tests the interaction between full and default view modes.
    *
    * @see \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::getDefaultSectionStorage()
