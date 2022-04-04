@@ -153,6 +153,7 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             'field_layout/drupal.layout.twocol',
           ],
         ],
+        '#in_preview' => FALSE,
       ],
     ];
     $this->fieldLayoutBuilder->buildView($build, $display->reveal());
@@ -253,6 +254,7 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             'field_layout/drupal.layout.twocol',
           ],
         ],
+        '#in_preview' => FALSE,
       ],
     ];
     $this->fieldLayoutBuilder->buildForm($build, $display->reveal());

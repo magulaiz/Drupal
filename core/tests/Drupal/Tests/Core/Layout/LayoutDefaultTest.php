@@ -40,6 +40,7 @@ class LayoutDefaultTest extends UnitTestCase {
           'core/drupal',
         ],
       ],
+      '#in_preview' => FALSE,
     ];
 
     $layout = new LayoutDefault([], '', $definition);
