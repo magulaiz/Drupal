@@ -181,6 +181,10 @@ class EntityRepository implements EntityRepositoryInterface {
     $entities = $this->entityTypeManager->getStorage($entity_type_id)
       ->loadMultiple($entity_ids);
 
+    if (empty($entities)) {
+      return [];
+    }
+
     if (!$entities || !$this->languageManager->isMultilingual()) {
       return $entities;
     }
