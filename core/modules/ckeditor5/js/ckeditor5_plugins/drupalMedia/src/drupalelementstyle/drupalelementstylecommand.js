@@ -37,7 +37,7 @@ function schemaContainsAttribute(selectedElement, schema, modelAttributes) {
  *   The current document selection.
  * @param {module:engine/model/schema~Schema} schema
  *   The model schema.
- * @param {Drupal.CKEditor5~DrupalElementStyles} styles
+ * @param {Drupal.CKEditor5~DrupalElementStyleDefinition} styles
  *   All available Drupal Element Styles.
  *
  * @return {null|module:engine/model/element~Element}
@@ -66,16 +66,17 @@ export function getClosestElementWithElementStyleAttribute(
   let { parent } = selection.getFirstPosition();
 
   while (parent) {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const modelAttribute of modelAttributes) {
-      if (
-        parent.is('element') &&
-        schema.checkAttribute(parent, modelAttribute)
-      ) {
-        return parent;
+    // @todo this logic is incorrect. We probably should add test coverage for
+    //  the case where the first model attribute doesn't result in a match.
+    if (parent.is('element')) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const modelAttribute of modelAttributes) {
+        if (schema.checkAttribute(parent, modelAttribute)) {
+          return parent;
+        }
       }
-      parent = parent.parent;
     }
+    parent = parent.parent;
   }
 
   return null;
@@ -96,12 +97,14 @@ export default class DrupalElementStyleCommand extends Command {
    *
    * @param {module:core/editor/editor~Editor} editor
    *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyles} styles
+   * @param {Object<string, Drupal.CKEditor5~DrupalElementStyleDefinition>} styles
    *   All available Drupal Element Styles.
    *
    */
   constructor(editor, styles) {
     super(editor);
+    // @todo we are storing styles twice now. I think we should try to merge
+    //  these.
     this.styles = styles;
     this._styles = {};
     Object.keys(styles).forEach((group) => {

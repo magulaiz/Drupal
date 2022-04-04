@@ -96,6 +96,9 @@ export default class DrupalElementStyleUi extends Plugin {
       });
     });
 
+    // @todo should we document that one dropdown definition can contain buttons
+    //  only from one group?
+    // we should probably also validate that 🤔
     /**
      * A Drupal Element Style dropdown definition.
      *
@@ -139,9 +142,11 @@ export default class DrupalElementStyleUi extends Plugin {
      * These properties are needed for a list or split button dropdown configuration. Buttons directly on the toolbar
      * without a dropdown can be configured like in the align example above.
      * @prop {string} name
-     *   The name of the dropdown used for identifying the dropdown, either as a list or icons.
+     *   The name of the dropdown used for identifying the dropdown, either as a
+     *   list or icons.
      * @prop {string} display
-     *   The type of the dropdown used.
+     *   The type of the dropdown used. Available options are `listDropdown` and
+     *   `splitButton`.
      * @prop {string[]} items
      *   The items displayed in the dropdown. These must be styles defined in
      *   `drupalElementStyles`.
@@ -184,9 +189,9 @@ export default class DrupalElementStyleUi extends Plugin {
   /**
    * Updates the visibility of options depending on the selection's media type.
    *
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
+   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition[]} definedStyles
    *   A list of defined styles of one group.
-   * @param {Drupal.CKEditor5~DrupalElementStyle} style
+   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition} style
    *   The style to check be checked against the media type's specific styles.
    * @param {module:ui/dropdown/utils~ListDropdownItemDefinition|module:ui/button/buttonview} option
    *   Dropdown item definition or ButtonView
@@ -208,6 +213,7 @@ export default class DrupalElementStyleUi extends Plugin {
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
       // eslint-disable-next-line no-restricted-syntax
+      // @todo this filter should also check the model element.
       for (const [key, value] of toMap(item.modelAttributes)) {
         if (modelElement.hasAttribute(key)) {
           return value.includes(modelElement.getAttribute(key));
@@ -217,13 +223,16 @@ export default class DrupalElementStyleUi extends Plugin {
     });
 
     // List dropdown case.
-    // Classes are set on the model of the dropdown item definition for list dropdowns.
-    if (Object.keys(option).includes('model')) {
+    // Classes are set on the model of the dropdown item definition for list
+    // dropdowns.
+    if (option.hasOwnProperty('model')) {
       if (!filteredDefinedStyles.includes(style)) {
-        // Hide the style option if it is not available for the media type that the modelElement is.
+        // Hide the style option if it is not available for the media type that
+        // the modelElement is.
         option.model.set({ class: 'ck-hidden' });
       } else {
-        // Un-hide the style option here after changing selection to a media type that should have the button visible.
+        // Un-hide the style option here after changing selection to a media
+        // type that should have the button visible.
         option.model.set({ class: '' });
       }
       // Split button case and non-dropdown toolbar button case.
@@ -343,7 +352,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @param {Drupal.CKEditor5~DrupalElementStyle} buttonConfig
    *   The button configuration.
    * @param {string} group
-   *   The name of the group (ex. 'align', 'viewMode').
+   *   The name of the group (e.g. 'align', 'viewMode').
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
    *   A list of defined styles of one group.
    *
@@ -385,14 +394,19 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
-   * A helper function that parses the different dropdown options and returns list item definitions ready for use in the dropdown.
+   * A helper function that parses the different dropdown options and returns
+   * list item definitions ready for use in the dropdown.
    *
-   * @private
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
    *   A list of defined styles of one group.
-   * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command The drupalElementStyle command.
-   * @param {string} group The name of the group (ex. 'align', 'viewMode').
-   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>} Dropdown item definitions.
+   * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command
+   *   The drupalElementStyle command.
+   * @param {string} group
+   *   The name of the group (e.g. 'align', 'viewMode').
+   * @return {Iterable.<module:ui/dropdown/utils~ListDropdownItemDefinition>}
+   *   Dropdown item definitions.
+   *
+   * @private
    */
   getDropdownListItemDefinitions(definedStyles, command, group) {
     const itemDefinitions = new Collection();
@@ -400,7 +414,6 @@ export default class DrupalElementStyleUi extends Plugin {
       const definition = {
         type: 'button',
         model: new Model({
-          commandName: 'drupalElementStyle',
           group,
           commandValue: style.name,
           label: style.title,
@@ -425,6 +438,7 @@ export default class DrupalElementStyleUi extends Plugin {
               this.editor.model.schema,
               definedStylesObject,
             );
+        // @todo should not be based on drupal media. Why is this needed?
         if (!isDrupalMedia(modelElement)) {
           return;
         }
@@ -435,14 +449,14 @@ export default class DrupalElementStyleUi extends Plugin {
   }
 
   /**
-   * A helper function that creates a list dropdown component for the plugin containing all the style options defined in
-   * the editor configuration.
+   * A helper function that creates a list dropdown component.
    *
-   * @private
    * @param {Drupal.CKEditor5~drupalElementStyleDropdownDefinition} dropdownConfig
    *   The dropdown configuration.
    * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
    *   A list of defined styles of one group.
+   *
+   * @private
    */
   _createListDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
@@ -518,7 +532,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * @param {string} name
    *   The name of the style that should be applied.
    * @param {string} group
-   *   The name of the group (ex. 'align', 'viewMode').
+   *   The name of the group (e.g. 'align', 'viewMode').
    *
    * @see module:drupalMedia/drupalelementstyle/drupalelementstylecommand~DrupalElementStyleCommand
    *

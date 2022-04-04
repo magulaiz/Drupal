@@ -186,7 +186,7 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
  *             attributeValue: 'compact'
  *             modelElements: [ 'drupalMedia' ]
  *
- * @see Drupal.CKEditor5~DrupalElementStyle
+ * @see Drupal.CKEditor5~DrupalElementStyleDefinition
  *
  * @extends module:core/plugin~Plugin
  *
@@ -202,9 +202,9 @@ export default class DrupalElementStyleEditing extends Plugin {
     const stylesConfig = editor.config.get('drupalElementStyles');
 
     /**
-     * The Drupal Element Styles.
+     * The Drupal Element Style definitions.
      *
-     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyles
+     * @typedef {Object} Drupal.CKEditor5~DrupalElementStyleDefinition
      *   Object that contains an array of DrupalElementStyle objects for each group.
      *
      * @prop {string} name
@@ -221,7 +221,7 @@ export default class DrupalElementStyleEditing extends Plugin {
      *   An icon for the style button. This needs to either refer to an icon in
      *   the CKEditor 5 core icons, or this can be the XML content of the icon.
      *
-     * @type {Drupal.CKEditor5~DrupalElementStyles}
+     * @type {Drupal.CKEditor5~DrupalElementStyleDefinition}
      */
     Object.keys(stylesConfig).forEach((group) => {
       stylesConfig[group] // array of styles
@@ -308,8 +308,8 @@ export default class DrupalElementStyleEditing extends Plugin {
         modelToViewConverter,
       );
 
-      // Allow drupalElementStyle model attributes on all model elements that have associated
-      // styles.
+      // Allow drupalElementStyle model attributes on all model elements that
+      // have associated styles.
       const modelElements = [
         ...new Set(
           this.normalizedStyles[group]
