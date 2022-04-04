@@ -334,11 +334,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     }
 
     // The resulting Editor config entity should be valid.
-    $typed_config = $this->typedConfig->createFromNameAndData(
-      $updated_text_editor->getConfigDependencyName(),
-      $updated_text_editor->toArray(),
-    );
-    $this->assertCount(0, $typed_config->validate());
+    $violations = $this->validatePairToViolationsArray($updated_text_editor, $text_format, FALSE);
+    // At this point, the fundamental compatibility errors do not matter, they
+    // have been checked above; whatever remains is expected.
+    if (isset($violations[''])) {
+      unset($violations['']);
+    }
+    $this->assertSame([], $violations);
 
     // If the text format has HTML restrictions, ensure that a strict superset
     // is allowed after switching to CKEditor 5.
@@ -602,7 +604,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         // Note that aligning left and right is being added, on top of what the
         // original format allowed: center and justify.
         // Note that aligning left/center/right/justify is possible on *all*
-        // allowed block-level HTML5 tags.
+        // allowed CKEditor 5 `$block` text container tags.
         // @todo When https://www.drupal.org/project/drupal/issues/3259367
         //   lands, none of the tags below should appear.
         '<h2 class="text-align-center text-align-justify">',
@@ -610,11 +612,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         '<h4 class="text-align-center text-align-justify">',
         '<h5 class="text-align-center text-align-justify">',
         '<h6 class="text-align-center text-align-justify">',
-        '<dl class="text-align-center text-align-justify">',
-        '<dd class="text-align-center text-align-justify">',
-        '<blockquote class="text-align-center text-align-justify">',
-        '<ul class="text-align-center text-align-justify">',
-        '<ol class="text-align-center text-align-justify">',
+        '<li class="text-align-center text-align-justify">',
         $basic_html_test_case['expected_superset'],
       ]),
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
