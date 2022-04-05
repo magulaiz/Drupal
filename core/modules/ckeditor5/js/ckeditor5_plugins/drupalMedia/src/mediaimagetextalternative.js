@@ -4,10 +4,9 @@ import MediaImageTextAlternativeEditing from './mediaimagetextalternative/mediai
 import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimagetextalternativeui';
 
 /**
- * @private
- */
-/**
  * The media image text alternative plugin.
+ *
+ * @private
  */
 export default class MediaImageTextAlternative extends Plugin {
   /**

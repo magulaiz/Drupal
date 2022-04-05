@@ -12,6 +12,11 @@ import { getPreviewContainer } from './utils';
  */
 
 /**
+ * The Drupal Media Editing plugin.
+ *
+ * This class provides the features to handle transformation from the CKEditor 5
+ * UI to Drupal-specific markup.
+ *
  * @private
  */
 export default class DrupalMediaEditing extends Plugin {

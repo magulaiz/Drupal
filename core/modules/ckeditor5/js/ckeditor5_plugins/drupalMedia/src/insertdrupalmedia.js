@@ -12,9 +12,6 @@ function createDrupalMedia(writer, attributes) {
 }
 
 /**
- * @private
- */
-/**
  * The insert media command.
  *
  * The command is registered by the `DrupalMediaEditing` plugin as
@@ -23,6 +20,7 @@ function createDrupalMedia(writer, attributes) {
  * In order to insert media at the current selection position, execute the
  * command and pass the attributes desired in the drupal-media element:
  *
+ * @example
  *    editor.execute('insertDrupalMedia', {
  *      'alt': 'Alt text',
  *      'data-align': 'left',
@@ -31,6 +29,8 @@ function createDrupalMedia(writer, attributes) {
  *      'data-entity-uuid': 'media-entity-uuid',
  *      'data-view-mode': 'default',
  *    });
+ *
+ * @private
  */
 export default class InsertDrupalMediaCommand extends Command {
   execute(attributes) {

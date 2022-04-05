@@ -7,6 +7,8 @@ import { ButtonView } from 'ckeditor5/src/ui';
 import mediaIcon from '../theme/icons/medialibrary.svg';
 
 /**
+ * Provides the toolbar button to insert a Drupal media.
+ *
  * @private
  */
 export default class DrupalMediaUI extends Plugin {
