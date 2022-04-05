@@ -430,7 +430,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     $this->assertEquals("9", $executable->getStyle()->getField(3, 'field_test_multiple_2'));
     $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'Y'), trim(strip_tags($executable->getStyle()->getField(3, 'created'))));
     $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'custom', 'H:i:s'), trim(strip_tags($executable->getStyle()->getField(3, 'created_1'))));
-    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'fallback'),trim(strip_tags( $executable->getStyle()->getField(3, 'created_2'))));
+    $this->assertEquals($date_formatter->format($this->testUsers[3]->getCreatedTime(), 'fallback'), trim(strip_tags($executable->getStyle()->getField(3, 'created_2'))));
 
     $this->assertEquals($this->testUsers[4]->getTimeZone(), $executable->getStyle()->getField(4, 'timezone'));
     $this->assertEquals("9, 0", $executable->getStyle()->getField(4, 'field_test_multiple'));
