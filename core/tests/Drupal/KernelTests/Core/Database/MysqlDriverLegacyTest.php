@@ -42,10 +42,7 @@ class MysqlDriverLegacyTest extends DatabaseTestBase {
    */
   public function testDeprecationConnection() {
     $this->expectDeprecation('\Drupal\Core\Database\Driver\mysql\Connection is deprecated in drupal:9.4.0 and is removed from drupal:11.0.0. The MySQL database driver has been moved to the mysql module. See https://www.drupal.org/node/3129492');
-    // @todo https://www.drupal.org/project/drupal/issues/3251084 Remove setting
-    // the $options parameter.
-    $options['init_commands']['sql_mode'] = '';
-    $connection = new Connection($this->createMock(StubPDO::class), $options);
+    $connection = new Connection($this->createMock(StubPDO::class), []);
     $this->assertInstanceOf(Connection::class, $connection);
   }
 
