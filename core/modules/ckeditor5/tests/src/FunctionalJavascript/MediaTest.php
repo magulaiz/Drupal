@@ -1296,6 +1296,20 @@ class MediaTest extends WebDriverTestBase {
     // Check that view mode 2 persisted.
     $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
 
+    // Check that selecting a caption that is the child of a drupal-media will
+    // inherit the drupalElementStyle of its parent element.
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Toggle caption off')->click();
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    // Select the caption by toggling it on.
+    $this->getBalloonButton('Toggle caption on')->click();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+    // Ensure that the media contextual toolbar is visible after toggling
+    // caption on.
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
+    $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
+    $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
+
     // Remove the current view mode by setting it to Default.
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');

@@ -62,23 +62,19 @@ export function getClosestElementWithElementStyleAttribute(
   ) {
     return selectedElement;
   }
-
   let { parent } = selection.getFirstPosition();
 
   while (parent) {
-    // @todo this logic is incorrect. We probably should add test coverage for
-    //  the case where the first model attribute doesn't result in a match.
     if (parent.is('element')) {
       // eslint-disable-next-line no-restricted-syntax
       for (const modelAttribute of modelAttributes) {
-        if (schema.checkAttribute(parent, modelAttribute)) {
+        if (schemaContainsAttribute(parent, schema, modelAttributes)) {
           return parent;
         }
       }
     }
     parent = parent.parent;
   }
-
   return null;
 }
 
@@ -124,7 +120,6 @@ export default class DrupalElementStyleCommand extends Command {
       editor.model.schema,
       this.styles,
     );
-
     this.isEnabled = !!element;
 
     if (this.isEnabled) {

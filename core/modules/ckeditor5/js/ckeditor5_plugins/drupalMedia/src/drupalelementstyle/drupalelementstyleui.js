@@ -224,7 +224,6 @@ export default class DrupalElementStyleUi extends Plugin {
         );
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
-      // @todo this filter should also check the model element.
       // eslint-disable-next-line no-restricted-syntax
       for (const [key, value] of toMap(item.modelAttributes)) {
         if (modelElement && modelElement.hasAttribute(key)) {
