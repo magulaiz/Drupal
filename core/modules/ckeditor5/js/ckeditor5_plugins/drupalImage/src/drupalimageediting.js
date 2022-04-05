@@ -4,6 +4,19 @@ import { Plugin } from 'ckeditor5/src/core';
 import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversionutils';
 
 /**
+ * @typedef {function} converterHandler
+ *
+ * Callback for a CKEditor 5 event.
+ *
+ * @param {Event} evt
+ *  The CKEditor 5 event object.
+ * @param {object} data
+ *  The data associated with the event.
+ * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+ *  The CKEditor 5 conversion API object.
+ */
+
+/**
  * Provides an empty image element.
  *
  * @param {writer} writer
@@ -118,6 +131,9 @@ function viewCaptionToCaptionAttribute(editor) {
   return (dispatcher) => {
     dispatcher.on(
       'insert:caption',
+      /**
+       * @type {converterHandler}
+       */
       (evt, data, conversionApi) => {
         const { consumable, writer, mapper } = conversionApi;
         const imageUtils = editor.plugins.get('ImageUtils');
@@ -211,9 +227,7 @@ function modelEntityTypeToDataAttribute() {
    *
    * It saves the UUID value to the data-entity-type attribute.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     const { item } = data;
@@ -255,9 +269,7 @@ function modelImageStyleToDataAttribute() {
    *
    * It saves the alignment value to the data-align attribute.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     const { item } = data;
@@ -304,9 +316,7 @@ function modelImageWidthToAttribute() {
    *
    * It saves the width value to the width attribute.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     const { item } = data;
@@ -353,9 +363,7 @@ function modelImageHeightToAttribute() {
    *
    * It saves the height value to the height attribute.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     const { item } = data;
@@ -397,13 +405,11 @@ function modelImageHeightToAttribute() {
  */
 function viewImageToModelImage(editor) {
   /**
-   * Callback for the attribute:width event.
+   * Callback for the element:img event.
    *
-   * It saves the width value to the width attribute.
+   * Handles the Drupal specific attributes.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     const { viewItem } = data;
@@ -551,9 +557,7 @@ function downcastBlockImageLink() {
   /**
    * Callback for the attribute:linkHref event.
    *
-   * @param {Event} evt
-   * @param {object} data
-   * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
+   * @type {converterHandler}
    */
   function converter(evt, data, conversionApi) {
     if (!conversionApi.consumable.consume(data.item, evt.name)) {
@@ -601,8 +605,8 @@ function downcastBlockImageLink() {
 }
 
 /**
- * Add handling of 'dataEntityUuid', 'dataEntityType', 'width', 'height'
- * attributes on image elements.
+ * Add handling of 'dataEntityUuid', 'dataEntityType', 'isDecorative', 'width',
+ * 'height' attributes on image elements.
  *
  * @private
  */
