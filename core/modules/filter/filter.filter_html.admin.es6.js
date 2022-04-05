@@ -99,11 +99,9 @@
 
         // When the allowed tags list is manually changed, update userTags.
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = [
+          that.userTags = that._difference(
             Object.values(that._parseSetting(this.value)),
             Object.values(that.autoTags),
-          ].reduce((rules, autoTags) =>
-            rules.filter((rule) => !autoTags.includes(rule)),
           );
         });
       });
@@ -127,12 +125,14 @@
         this.$allowedHTMLDescription.append(
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
-        const userTagsWithoutOverrides = Object.fromEntries(
-          Object.entries(this.userTags).filter(
-            (key) => !Object.keys(this).includes(key),
-            this.autoTags,
-          ),
-        );
+        const userTagsWithoutOverridesArray = Object.entries(
+          this.userTags,
+        ).filter((key) => !Object.keys(this).includes(key), this.autoTags);
+        const userTagsWithoutOverrides = {};
+        Object.keys(userTagsWithoutOverridesArray).forEach((key) => {
+          const [tag, filter] = userTagsWithoutOverridesArray[key];
+          userTagsWithoutOverrides[tag] = filter;
+        });
 
         this.$allowedHTMLFormItem.val(
           `${this._generateSetting(
@@ -232,25 +232,14 @@
             userAllowedTags[tag].restrictedTags.allowed.attributes;
           const needsAdditionalAttributes =
             requiredAttributes.length &&
-            [requiredAttributes, allowedAttributes].reduce(
-              (requiredAttributes, allowedAttributes) =>
-                requiredAttributes.filter(
-                  (requiredAttribute) =>
-                    !allowedAttributes.includes(requiredAttribute),
-                ),
-            ).length;
+            this._difference(requiredAttributes, allowedAttributes).length;
           const requiredClasses =
             editorRequiredTags[tag].restrictedTags.allowed.classes;
           const allowedClasses =
             userAllowedTags[tag].restrictedTags.allowed.classes;
           const needsAdditionalClasses =
             requiredClasses.length &&
-            [requiredClasses, allowedClasses].reduce(
-              (requiredClasses, allowedClasses) =>
-                requiredClasses.filter(
-                  (requiredClass) => !allowedClasses.includes(requiredClass),
-                ),
-            ).length;
+            this._difference(requiredClasses, allowedClasses).length;
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
@@ -365,6 +354,24 @@
       });
 
       return setting;
+    },
+
+    /**
+     * A helper function to get the values from an array|object that are not present in the other array|object.
+     *
+     * @param {Object.<string>|Array} mainData
+     *   The main data to be compared.
+     *
+     * @param {Object.<string>|Array} otherData
+     *   The second data.
+     *
+     * @return {Array}
+     *   Returns the mainData without the values presented on the otherData.
+     */
+    _difference(mainData, otherData) {
+      return [mainData, otherData].reduce((mainData, otherData) =>
+        mainData.filter((mainData) => !otherData.includes(mainData)),
+      );
     },
   };
 
