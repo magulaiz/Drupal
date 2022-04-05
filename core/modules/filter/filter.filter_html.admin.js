@@ -84,14 +84,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
       if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-        var userTagsWithoutOverridesArray = Object.entries(this.userTags).filter(function (key) {
+        var userTagsFiltered = Object.entries(this.userTags).filter(function (key) {
           return !Object.keys(_this).includes(key);
         }, this.autoTags);
         var userTagsWithoutOverrides = {};
-        Object.keys(userTagsWithoutOverridesArray).forEach(function (key) {
-          var _userTagsWithoutOverr = _slicedToArray(userTagsWithoutOverridesArray[key], 2),
-              tag = _userTagsWithoutOverr[0],
-              filter = _userTagsWithoutOverr[1];
+        Object.keys(userTagsFiltered).forEach(function (key) {
+          var _userTagsFiltered$key = _slicedToArray(userTagsFiltered[key], 2),
+              tag = _userTagsFiltered$key[0],
+              filter = _userTagsFiltered$key[1];
 
           userTagsWithoutOverrides[tag] = filter;
         });

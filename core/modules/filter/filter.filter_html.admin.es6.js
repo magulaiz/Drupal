@@ -125,12 +125,14 @@
         this.$allowedHTMLDescription.append(
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
-        const userTagsWithoutOverridesArray = Object.entries(
-          this.userTags,
-        ).filter((key) => !Object.keys(this).includes(key), this.autoTags);
+        const userTagsFiltered = Object.entries(this.userTags).filter(
+          (key) => !Object.keys(this).includes(key),
+          this.autoTags,
+        );
+
         const userTagsWithoutOverrides = {};
-        Object.keys(userTagsWithoutOverridesArray).forEach((key) => {
-          const [tag, filter] = userTagsWithoutOverridesArray[key];
+        Object.keys(userTagsFiltered).forEach((key) => {
+          const [tag, filter] = userTagsFiltered[key];
           userTagsWithoutOverrides[tag] = filter;
         });
 
