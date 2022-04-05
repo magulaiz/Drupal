@@ -76,7 +76,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
   const ASSET_LIST = [
     {
       pack: 'backbone',
-      folder: 'backbone',
       library: 'internal.backbone',
       files: ['backbone.js', 'backbone-min.js', 'backbone-min.map'],
     },
