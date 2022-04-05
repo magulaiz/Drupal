@@ -30,6 +30,7 @@ class LayoutDefaultTest extends UnitTestCase {
       ],
     ]);
     $expected += [
+      '#in_preview' => FALSE,
       '#settings' => [
         'label' => '',
       ],
@@ -40,7 +41,6 @@ class LayoutDefaultTest extends UnitTestCase {
           'core/drupal',
         ],
       ],
-      '#in_preview' => FALSE,
     ];
 
     $layout = new LayoutDefault([], '', $definition);

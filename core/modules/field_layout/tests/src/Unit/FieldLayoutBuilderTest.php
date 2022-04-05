@@ -143,6 +143,7 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             '#markup' => 'Test1',
           ],
         ],
+        '#in_preview' => FALSE,
         '#settings' => [
           'label' => '',
         ],
@@ -153,7 +154,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             'field_layout/drupal.layout.twocol',
           ],
         ],
-        '#in_preview' => FALSE,
       ],
     ];
     $this->fieldLayoutBuilder->buildView($build, $display->reveal());
@@ -244,6 +244,7 @@ class FieldLayoutBuilderTest extends UnitTestCase {
           '#process' => ['\Drupal\Core\Render\Element\RenderElement::processGroup'],
           '#pre_render' => ['\Drupal\Core\Render\Element\RenderElement::preRenderGroup'],
         ],
+        '#in_preview' => FALSE,
         '#settings' => [
           'label' => '',
         ],
@@ -254,7 +255,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
             'field_layout/drupal.layout.twocol',
           ],
         ],
-        '#in_preview' => FALSE,
       ],
     ];
     $this->fieldLayoutBuilder->buildForm($build, $display->reveal());
