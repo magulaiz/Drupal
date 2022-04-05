@@ -185,7 +185,7 @@ class EntityRepository implements EntityRepositoryInterface {
       return [];
     }
 
-    if (!$entities || !$this->languageManager->isMultilingual()) {
+    if (!$this->languageManager->isMultilingual()) {
       return $entities;
     }
 
