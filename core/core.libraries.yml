@@ -14,7 +14,7 @@ backbone:
   deprecated: The %library_id% asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0.
 
 internal.backbone:
-  # Internal library, do not depend on it.
+  # Internal library. Do not depend on it outside core nor add new core usage.
   # The library will be removed as soon as the following issues are fixed:
   #  - https://www.drupal.org/project/drupal/issues/3203920
   #  - https://www.drupal.org/project/drupal/issues/3204011
