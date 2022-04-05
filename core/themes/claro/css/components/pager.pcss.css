@@ -125,6 +125,7 @@
   .pager__item--next .pager__link::after,
   .pager__item--last .pager__link::after {
     background-color: linktext;
+    background-image: none;
     mask-repeat: no-repeat;
     mask-position: center;
   }
