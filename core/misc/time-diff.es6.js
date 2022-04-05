@@ -128,9 +128,8 @@
         const lastIntervalIndex = Drupal.timeDiff
           .getAllIntervals()
           .indexOf(lastUnit);
-        const nextInterval = Drupal.timeDiff.getAllIntervals()[
-          lastIntervalIndex + 1
-        ];
+        const nextInterval =
+          Drupal.timeDiff.getAllIntervals()[lastIntervalIndex + 1];
         refresh = Drupal.timeDiff.intervals[nextInterval];
       }
       return refresh;
