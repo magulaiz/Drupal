@@ -304,7 +304,14 @@ ckeditor5_linkMedia:
 
 ckeditor5_list:
   ckeditor5:
-    plugins: [list.List]
+    plugins:
+     - list.List
+     - list.ListProperties
+    config:
+      list:
+        properties:
+          startIndex: true
+          reverse: true
   drupal:
     label: List
     library: core/ckeditor5.list
