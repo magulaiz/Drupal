@@ -1395,8 +1395,10 @@ function system_entity_view_display_presave(EntityViewDisplayInterface $entity_v
     if (empty($component['type'])) {
       continue;
     }
+    if (!$plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE)) {
+      continue;
+    }
 
-    $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
     // Check also potential plugins that extends TimestampFormatter.
     if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
       continue;

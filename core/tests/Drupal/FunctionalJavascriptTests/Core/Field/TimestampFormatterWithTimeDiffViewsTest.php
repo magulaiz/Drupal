@@ -57,7 +57,7 @@ class TimestampFormatterWithTimeDiffViewsTest extends WebDriverTestBase {
       // able to check an exact match for rows that have a creation date more
       // distant, but we use regexp to check the entities that are only few
       // seconds away because of the latency introduced by the test run.
-      $this->assertRegExp($regex_pattern, $time_diff);
+      $this->assertMatchesRegularExpression($regex_pattern, $time_diff);
     }
 
     // Wait at least 1 second + 1 millisecond to make sure the 'right now' time
