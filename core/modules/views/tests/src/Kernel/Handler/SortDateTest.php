@@ -64,6 +64,16 @@ class SortDateTest extends ViewsKernelTestBase {
           ];
           break;
 
+        case 'week':
+          $expected = [
+            ['name' => 'John'],
+            ['name' => 'George'],
+            ['name' => 'Ringo'],
+            ['name' => 'Paul'],
+            ['name' => 'Meredith'],
+          ];
+          break;
+
         case 'month':
           $expected = [
             ['name' => 'John'],
@@ -127,6 +137,16 @@ class SortDateTest extends ViewsKernelTestBase {
           ];
           break;
 
+        case 'week':
+          $expected = [
+            ['name' => 'John'],
+            ['name' => 'George'],
+            ['name' => 'Ringo'],
+            ['name' => 'Paul'],
+            ['name' => 'Meredith'],
+          ];
+          break;
+
         case 'month':
           $expected = [
             ['name' => 'John'],
@@ -156,7 +176,7 @@ class SortDateTest extends ViewsKernelTestBase {
    * Tests numeric ordering of the result set.
    */
   public function testDateOrdering() {
-    foreach (['second', 'minute', 'hour', 'day', 'month', 'year'] as $granularity) {
+    foreach (['second', 'minute', 'hour', 'day', 'week', 'month', 'year'] as $granularity) {
       foreach ([FALSE, TRUE] as $reverse) {
         $view = Views::getView('test_view');
         $view->setDisplay();
