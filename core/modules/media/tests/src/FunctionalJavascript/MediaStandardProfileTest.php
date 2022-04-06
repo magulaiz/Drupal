@@ -7,6 +7,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\node\Entity\Node;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 /**

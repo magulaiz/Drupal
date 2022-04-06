@@ -9,6 +9,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
+use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
