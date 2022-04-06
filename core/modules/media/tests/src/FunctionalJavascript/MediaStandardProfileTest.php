@@ -7,7 +7,6 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\media_test_oembed\Controller\ResourceController;
 use Drupal\node\Entity\Node;
-use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 /**
@@ -53,7 +52,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
     // @todo https://www.drupal.org/project/drupal/issues/3273626
-    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+    if (!empty(\SQLite3::version())) {
       $this->markTestSkipped();
     }
 

@@ -12,7 +12,6 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\media\Entity\Media;
-use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 use Drupal\Tests\ckeditor\Traits\CKEditorTestTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
@@ -197,7 +196,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
     // @todo https://www.drupal.org/project/drupal/issues/3273626
-    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+    if (!empty(\SQLite3::version())) {
       $this->markTestSkipped();
     }
 
