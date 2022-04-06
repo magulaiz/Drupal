@@ -36,7 +36,7 @@
   }
 
   /**
-   * A helper function to get the values from an array|object that are not present in the other array|object.
+   * Get first parameter data that are not presented in the other parameter.
    *
    * @param {Object.<string>|Array} mainData
    *   The main data to be compared.
@@ -45,7 +45,8 @@
    *   The second data.
    *
    * @return {Array}
-   *   Returns the mainData without the values presented on the otherData.
+   *   Returns the values from the first object|array that are not present
+   *   in the second object|array.
    */
   const difference = (mainData, otherData) => {
     return [mainData, otherData].reduce((mainData, otherData) =>
