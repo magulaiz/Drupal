@@ -42,6 +42,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
     };
   }
 
+  var difference = function difference(mainData, otherData) {
+    return [mainData, otherData].reduce(function (mainData, otherData) {
+      return mainData.filter(function (mainData) {
+        return !otherData.includes(mainData);
+      });
+    });
+  };
+
   Drupal.behaviors.filterFilterHtmlUpdating = {
     $allowedHTMLFormItem: null,
     $allowedHTMLDescription: null,
@@ -72,7 +80,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = that._difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
+          that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
       });
     },
@@ -101,8 +109,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
       }
     },
     _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
-      var _this2 = this;
-
       var editorRequiredTags = {};
       Object.keys(newFeatures || {}).forEach(function (featureName) {
         var feature = newFeatures[featureName];
@@ -137,13 +143,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          var needsAdditionalAttributes = requiredAttributes.length && _this2._difference(requiredAttributes, allowedAttributes).length;
-
+          var needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
           var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
           var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          var needsAdditionalClasses = requiredClasses.length && _this2._difference(requiredClasses, allowedClasses).length;
+          var needsAdditionalClasses = requiredClasses.length && difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
@@ -216,13 +219,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
         setting += '>';
       });
       return setting;
-    },
-    _difference: function _difference(mainData, otherData) {
-      return [mainData, otherData].reduce(function (mainData, otherData) {
-        return mainData.filter(function (mainData) {
-          return !otherData.includes(mainData);
-        });
-      });
     }
   };
 

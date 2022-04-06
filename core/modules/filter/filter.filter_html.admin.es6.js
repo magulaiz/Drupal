@@ -36,6 +36,24 @@
   }
 
   /**
+   * A helper function to get the values from an array|object that are not present in the other array|object.
+   *
+   * @param {Object.<string>|Array} mainData
+   *   The main data to be compared.
+   *
+   * @param {Object.<string>|Array} otherData
+   *   The second data.
+   *
+   * @return {Array}
+   *   Returns the mainData without the values presented on the otherData.
+   */
+  const difference = (mainData, otherData) => {
+    return [mainData, otherData].reduce((mainData, otherData) =>
+      mainData.filter((mainData) => !otherData.includes(mainData)),
+    );
+  };
+
+  /**
    * Displays and updates what HTML tags are allowed to use in a filter.
    *
    * @type {Drupal~behavior}
@@ -99,7 +117,7 @@
 
         // When the allowed tags list is manually changed, update userTags.
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = that._difference(
+          that.userTags = difference(
             Object.values(that._parseSetting(this.value)),
             Object.values(that.autoTags),
           );
@@ -234,14 +252,14 @@
             userAllowedTags[tag].restrictedTags.allowed.attributes;
           const needsAdditionalAttributes =
             requiredAttributes.length &&
-            this._difference(requiredAttributes, allowedAttributes).length;
+            difference(requiredAttributes, allowedAttributes).length;
           const requiredClasses =
             editorRequiredTags[tag].restrictedTags.allowed.classes;
           const allowedClasses =
             userAllowedTags[tag].restrictedTags.allowed.classes;
           const needsAdditionalClasses =
             requiredClasses.length &&
-            this._difference(requiredClasses, allowedClasses).length;
+            difference(requiredClasses, allowedClasses).length;
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
@@ -356,24 +374,6 @@
       });
 
       return setting;
-    },
-
-    /**
-     * A helper function to get the values from an array|object that are not present in the other array|object.
-     *
-     * @param {Object.<string>|Array} mainData
-     *   The main data to be compared.
-     *
-     * @param {Object.<string>|Array} otherData
-     *   The second data.
-     *
-     * @return {Array}
-     *   Returns the mainData without the values presented on the otherData.
-     */
-    _difference(mainData, otherData) {
-      return [mainData, otherData].reduce((mainData, otherData) =>
-        mainData.filter((mainData) => !otherData.includes(mainData)),
-      );
     },
   };
 
