@@ -118,14 +118,14 @@
   box-shadow: none;
 }
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::before,
-.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::before {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected]::before,
+.vertical-tabs__menu-item:not(.vertical-tabs__menu-item--hidden) ~ .vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected]::before {
   content: normal;
 }
 
 /* Make the white masking line displayed for the selected menu item. */
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected]::after {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected]::after {
   content: "";
 }
 
@@ -211,7 +211,7 @@
   border-radius: 2px;
 }
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
   z-index: 3; /* The selected menu link should be on a higher level than the white masking line that hides the gray separator. */
   color: #003cc5;
   border-color: #dedfe4 transparent;
@@ -219,29 +219,29 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover {
   color: #0036b1;
   background-color: #f0f5fd;
 }
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
   border-left: 4px solid #003cc5; /* LTR */
   border-radius: 2px 0 0 2px; /* LTR */
 }
 
-[dir=rtl] .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
+[dir=rtl] .vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
   border-right: 4px solid #003cc5;
   border-left: 0;
   border-radius: 0 2px 2px 0;
 }
 
-.vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover::before {
+.vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link:hover::before {
   background: none;
 }
 
 @media screen and (-ms-high-contrast: active) {
-  .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
+  .vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link {
     border-color: windowText transparent;
   }
 
@@ -249,7 +249,7 @@
     border-color: transparent;
   }
 
-  .vertical-tabs__menu-item[data-claro-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
+  .vertical-tabs__menu-item[data-vertical-tabs-menu-item-selected] .vertical-tabs__menu-link::before {
     border-color: windowText;
   }
 }
@@ -287,7 +287,7 @@
 
 /* This modifier is added by JavaScript (this is inherited from Drupal core). */
 
-.vertical-tabs__items--processed {
+.vertical-tabs__panes {
   position: relative;
   z-index: 1; /* The wrapper of the details of the vertical tabs should be on a higher level than the vertical tabs menu */
   top: -1px;
@@ -297,19 +297,19 @@
 
 /* This clearfix makes the pane wrapper at least as tall as the menu. */
 
-.vertical-tabs__items--processed::after {
+.vertical-tabs__panes::after {
   display: block;
   clear: both;
   content: "";
 }
 
 @media screen and (min-width: 85em) {
-  .vertical-tabs__items--processed {
+  .vertical-tabs__panes {
     margin-left: 20em; /* LTR */
     border-top-left-radius: 0; /* LTR */
   }
 
-  .js[dir="rtl"] .vertical-tabs__items--processed {
+  .js[dir="rtl"] .vertical-tabs__panes {
     margin-right: 20em;
     margin-left: 0;
     border-top-left-radius: 2px;
