@@ -791,7 +791,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_list' => [
             'reversed' => TRUE,
-            'startIndex' => TRUE
+            'startIndex' => TRUE,
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [],
