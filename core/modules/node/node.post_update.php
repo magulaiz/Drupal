@@ -71,3 +71,15 @@ function node_post_update_modify_base_field_author_override() {
     $base_field_override->setDefaultValueCallback('Drupal\node\Entity\Node::getDefaultEntityOwner')->save();
   }
 }
+
+/**
+ * Remove 'not null' constraint from node title column.
+ */
+function node_post_update_remove_title_not_null_constraint() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+
+  $field_storage_definition = $definition_update_manager->getFieldStorageDefinition('title', 'node');
+  $field_storage_definition->setStorageRequired(FALSE);
+
+  $definition_update_manager->updateFieldStorageDefinition($field_storage_definition);
+}
