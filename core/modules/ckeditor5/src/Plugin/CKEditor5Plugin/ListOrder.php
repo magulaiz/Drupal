@@ -7,6 +7,7 @@ namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\EditorInterface;
 
@@ -16,7 +17,8 @@ use Drupal\editor\EditorInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface {
+class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface
+{
 
   use CKEditor5PluginConfigurableTrait;
 
@@ -72,6 +74,29 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
     $static_plugin_config['list']['properties'] = array_merge($static_plugin_config['list']['properties'],
       $this->getConfiguration());
     return $static_plugin_config;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getElementsSubset(): array {
+    $plugin_definition = $this->getPluginDefinition();
+    $elements = $plugin_definition->getElements();
+    $subset = $elements;
+    foreach ($subset as &$el) {
+      if (!$this->getConfiguration()['reversed']) {
+        if (str_contains($el, ' reversed')) {
+          str_replace(' reversed', '', $el);
+        }
+      }
+      if (!$this->getConfiguration()['startIndex']) {
+        if (str_contains($el, ' start')) {
+          str_replace(' reversed', '', $el);
+
+        }
+      }
+    }
+    return $subset;
   }
 
 }
