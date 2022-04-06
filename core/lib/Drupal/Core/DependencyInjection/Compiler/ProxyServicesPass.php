@@ -24,14 +24,12 @@ class ProxyServicesPass implements CompilerPassInterface {
           $definition->setLazy(FALSE);
           // Ensure that the service is accessible.
           $definition->setPublic(TRUE);
-          $tags = $definition->getTags();
           $definition->setTags([]);
           $new_service_id = 'drupal.proxy_original_service.' . $service_id;
           $container->setDefinition($new_service_id, $definition);
 
           $container->register($service_id, $proxy_class)
-            ->setArguments([new Reference('service_container'), $new_service_id])
-            ->setTags($tags);
+            ->setArguments([new Reference('service_container'), $new_service_id]);
         }
         else {
           $class_name = $definition->getClass();
