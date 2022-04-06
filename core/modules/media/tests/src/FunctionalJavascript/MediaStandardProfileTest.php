@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\media\FunctionalJavascript;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -52,8 +53,8 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
     // @todo https://www.drupal.org/project/drupal/issues/3273626
-    if (!empty(\SQLite3::version())) {
-      $this->markTestSkipped();
+    if (Database::getConnection()->driver() === 'sqlite') {
+      $this->markTestSkipped('Test frequently causes a locked database on SQLite');
     }
 
     $storage = FieldStorageConfig::create([

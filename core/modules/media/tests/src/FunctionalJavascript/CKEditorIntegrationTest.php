@@ -3,6 +3,7 @@
 namespace Drupal\Tests\media\FunctionalJavascript;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\editor\Entity\Editor;
 use Drupal\field\Entity\FieldConfig;
@@ -196,8 +197,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     // This test currently frequently causes the SQLite database to lock, so
     // skip the test on SQLite until the issue can be resolved.
     // @todo https://www.drupal.org/project/drupal/issues/3273626
-    if (!empty(\SQLite3::version())) {
-      $this->markTestSkipped();
+    if (Database::getConnection()->driver() === 'sqlite') {
+      $this->markTestSkipped('Test frequently causes a locked database on SQLite');
     }
 
     // Assert that a request to the `media.filter.preview` route that does not
