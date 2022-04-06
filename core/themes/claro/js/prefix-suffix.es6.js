@@ -12,7 +12,7 @@
    * @param {HTMLElement} elementWrapper
    *   The  wrapper of the form element that has an affix.
    */
-  Drupal.PrefixSuffix = class {
+  Drupal.ClaroPrefixSuffix = class {
     constructor(elementWrapper) {
       const input = elementWrapper.querySelector('input');
 
@@ -239,14 +239,14 @@
    * @prop {Drupal~behaviorAttach} attach
    *   Attaches the presentation behavior to form element with affixes.
    */
-  Drupal.behaviors.prefixSuffix = {
+  Drupal.behaviors.claroPrefixSuffix = {
     attach(context) {
       const $prefixSuffixElements = $(context)
         .find('[data-drupal-form-item-wrapper-with-affix]')
         .once('prefix-suffix');
 
       $prefixSuffixElements.map(
-        (index, element) => new Drupal.PrefixSuffix(element),
+        (index, element) => new Drupal.ClaroPrefixSuffix(element),
       );
     },
   };
