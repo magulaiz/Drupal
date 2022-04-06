@@ -24,10 +24,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       var prefixSuffixInstant = this.calculatePrefixSuffix.bind(this);
       $(window).on('resize.prefixSuffix', prefixSuffix);
       $(input).on('formUpdated.machineName', prefixSuffix);
-      var observer = new MutationObserver(prefixSuffixInstant);
-      observer.observe(elementWrapper.parentElement, {
-        attributeFilter: ['class']
+      var observer = new IntersectionObserver(prefixSuffixInstant, {
+        threshold: 1.0
       });
+      observer.observe(elementWrapper);
 
       if (window.CKEDITOR) {
         CKEDITOR.on('instanceReady', prefixSuffixInstant);

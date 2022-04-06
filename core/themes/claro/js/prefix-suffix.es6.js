@@ -31,15 +31,12 @@
       $(window).on('resize.prefixSuffix', prefixSuffix);
       $(input).on('formUpdated.machineName', prefixSuffix);
 
-      // When CKEditor is ready or the field wrapper visibility toggles, the input widths may change.
+      // When CKEditor is ready or the field visibility toggles, the input widths may change.
       // The prefixes and suffixes need to be recalculated against these changed widths.
 
-      // Observe 'class' changes on the parent wrapper and re calculate.
-      const observer = new MutationObserver(prefixSuffixInstant);
-
-      observer.observe(elementWrapper.parentElement, {
-        attributeFilter: ['class'],
-      });
+      // Observe visibility changes on the wrapper and re calculate.
+      let observer = new IntersectionObserver(prefixSuffixInstant, {threshold: 1.0});
+      observer.observe(elementWrapper);
 
       // When CKEditor is ready, recalculate.
       if (window.CKEDITOR) {
