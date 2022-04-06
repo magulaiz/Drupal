@@ -2,7 +2,7 @@
  * @file
  * Optimizes the presentation of form item affixes.
  */
-(($, Drupal, debounce) => {
+(($, Drupal) => {
   /**
    * Constructs a new instance of the Drupal.PrefixSuffix class.
    *
@@ -34,7 +34,10 @@
       // The prefixes and suffixes need to be recalculated against these changed widths.
 
       // Observe visibility changes on the wrapper and re calculate.
-      const observer = new IntersectionObserver(prefixSuffix, { threshold: 1.0 });
+      const observerOptions = {
+        threshold: 1.0,
+      };
+      const observer = new IntersectionObserver(prefixSuffix, observerOptions);
       observer.observe(elementWrapper);
 
       // When CKEditor is ready, recalculate.
@@ -240,11 +243,11 @@
    */
   Drupal.behaviors.claroPrefixSuffix = {
     attach(context) {
-      const $prefixSuffixElements = $(context)
+      const prefixSuffixElements = $(context)
         .find('[data-drupal-form-item-wrapper-with-affix]')
         .once('prefix-suffix');
 
-      $prefixSuffixElements.map(
+      prefixSuffixElements.map(
         (index, element) => new Drupal.ClaroPrefixSuffix(element),
       );
     },
