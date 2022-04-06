@@ -34,7 +34,7 @@
       // The prefixes and suffixes need to be recalculated against these changed widths.
 
       // Observe visibility changes on the wrapper and re calculate.
-      let observer = new IntersectionObserver(prefixSuffix, {threshold: 1.0});
+      const observer = new IntersectionObserver(prefixSuffix, { threshold: 1.0 });
       observer.observe(elementWrapper);
 
       // When CKEditor is ready, recalculate.
@@ -249,4 +249,4 @@
       );
     },
   };
-})(jQuery, Drupal, Drupal.debounce);
+})(jQuery, Drupal);

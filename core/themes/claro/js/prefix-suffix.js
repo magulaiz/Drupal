@@ -160,4 +160,4 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       });
     }
   };
-})(jQuery, Drupal, Drupal.debounce);
+})(jQuery, Drupal);
