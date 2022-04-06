@@ -193,6 +193,13 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
    * Tests that failed media embed preview requests inform the end user.
    */
   public function testErrorMessages() {
+    // This test currently frequently causes the SQLite database to lock, so
+    // skip the test on SQLite until the issue can be resolved.
+    // @todo https://www.drupal.org/project/drupal/issues/3273626
+    if (version_compare(\SQLite3::version()['versionString'], Tasks::SQLITE_MINIMUM_VERSION) < 0) {
+      $this->markTestSkipped();
+    }
+
     // Assert that a request to the `media.filter.preview` route that does not
     // result in a 200 response (due to server error or network error) is
     // handled in the JavaScript by displaying the expected error message.
