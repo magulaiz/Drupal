@@ -41,6 +41,9 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
+
+    // @todo Remove this in https://www.drupal.org/node/3267515
+    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
@@ -61,6 +64,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Bulk Export',
       'Chaos tools',
       'Chaos Tools (CTools) AJAX Example',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
       'Color',
       'Comment',
       'Contact',
@@ -113,7 +117,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Phone',
       'Poll',
       'Profile',
-      'RDF',
       'Search',
       'Search embedded form',
       'Shortcut',
@@ -167,6 +170,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Options',
       'Path translation',
       'Picture',
+      'RDF',
       'References',
       'References UUID',
       'Translation redirect',
