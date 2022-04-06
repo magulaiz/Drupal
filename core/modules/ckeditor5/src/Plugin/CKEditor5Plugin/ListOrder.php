@@ -8,9 +8,10 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\editor\EditorInterface;
 
 /**
- * CKEditor 5 List Order plugin.
+ * CKEditor 5 List plugin.
  *
  * @internal
  *   Plugin classes are internal.
@@ -23,21 +24,21 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return ['reverse' => TRUE, 'startIndex' => TRUE];
+    return ['reversed' => TRUE, 'startIndex' => TRUE];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['reverse'] = [
+    $form['reversed'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow the user to reverse a numbered list'),
-      '#default_value' => $this->configuration['reverse'],
+      '#title' => $this->t('Allow the user to reverse an ordered list'),
+      '#default_value' => $this->configuration['reversed'],
     ];
     $form['startIndex'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Allow the user to specify the start index of a list'),
+      '#title' => $this->t('Allow the user to specify the start index of an ordered list'),
       '#default_value' => $this->configuration['startIndex'],
     ];
 
@@ -48,8 +49,8 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $form_value = $form_state->getValue('reverse');
-    $form_state->setValue('reverse', (bool) $form_value);
+    $form_value = $form_state->getValue('reversed');
+    $form_state->setValue('reversed', (bool) $form_value);
     $form_value = $form_state->getValue('startIndex');
     $form_state->setValue('startIndex', (bool) $form_value);
   }
@@ -58,8 +59,19 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['reverse'] = $form_state->getValue('reverse');
+    $this->configuration['reversed'] = $form_state->getValue('reversed');
     $this->configuration['startIndex'] = $form_state->getValue('startIndex');
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * Sets the CKEditor 5 list properties to those chosen in editor config.
+   */
+  public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    $static_plugin_config['list']['properties'] = array_merge($static_plugin_config['list']['properties'],
+      $this->getConfiguration());
+    return $static_plugin_config;
   }
 
 }

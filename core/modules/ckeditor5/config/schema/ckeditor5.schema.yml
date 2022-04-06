@@ -89,9 +89,9 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
 # Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListOrder
 ckeditor5.plugin.ckeditor5_list:
   type: mapping
-  label: List order
+  label: List
   mapping:
-    reverse:
+    reversed:
       type: boolean
       label: 'Allow reverse list'
       constraints:

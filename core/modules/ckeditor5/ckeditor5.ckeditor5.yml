@@ -311,7 +311,7 @@ ckeditor5_list:
       list:
         properties:
           startIndex: true
-          reverse: true
+          reversed: true
   drupal:
     label: List
     library: core/ckeditor5.list
