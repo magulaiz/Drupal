@@ -263,8 +263,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       assert($editor->getSettings() === $this->getDefaultSettings());
       if (!$format->isNew()) {
         [$editor, $messages] = $this->smartDefaultSettings->computeSmartDefaultSettings($editor, $format);
-        foreach ($messages as $message) {
-          $this->messenger()->addMessage($message);
+        foreach ($messages as $type => $messages_per_type) {
+          foreach ($messages_per_type as $message) {
+            $this->messenger()->addMessage($message, $type);
+          }
         }
       }
       $eventual_editor_and_format = $this->getEventualEditorWithPrimedFilterFormat($form_state, $editor);

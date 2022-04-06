@@ -12,6 +12,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\editor\EditorInterface;
 use Drupal\editor\Entity\Editor;
@@ -141,27 +142,27 @@ final class SmartDefaultSettings {
       $unsupported = $missing->diff($missing_attributes);
 
       if ($enabling_message_content) {
-        $messages[] = $this->t('The following plugins were enabled to support tags that are allowed by this text format: %enabling_message_content.',
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The following plugins were enabled to support tags that are allowed by this text format: %enabling_message_content.',
           ['%enabling_message_content' => $enabling_message_content],
         );
       }
       // Warn user about unsupported tags.
       if (!$unsupported->isEmpty()) {
         $this->addTagsToSourceEditing($editor, $unsupported);
-        $messages[] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
         ]);
       }
 
       if ($enabled_for_attributes_message_content) {
-        $messages[] = $this->t('The following plugins were enabled to support specific attributes that are allowed by this text format: %enabled_for_attributes_message_content.',
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The following plugins were enabled to support specific attributes that are allowed by this text format: %enabled_for_attributes_message_content.',
           ['%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content],
         );
       }
       // Warn user about supported tags but missing attributes.
       if (!$missing_attributes->isEmpty()) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
-        $messages[] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
         ]);
       }
@@ -220,7 +221,11 @@ final class SmartDefaultSettings {
       ],
       'plugins' => [],
     ];
-    $messages = [];
+    $messages = [
+      MessengerInterface::TYPE_STATUS => [],
+      MessengerInterface::TYPE_WARNING => [],
+      MessengerInterface::TYPE_ERROR => [],
+    ];
 
     // First: toolbar items.
     // @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
@@ -232,7 +237,7 @@ final class SmartDefaultSettings {
             $equivalent = $this->upgradePluginManager->mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem($cke4_button, $text_format_html_restrictions);
           }
           catch (\OutOfBoundsException $e) {
-            $messages[] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
+            $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The CKEditor 4 button %button does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.', [
               '%button' => $cke4_button,
             ]);
             continue;
@@ -270,7 +275,7 @@ final class SmartDefaultSettings {
         $settings['plugins'] += $cke5_plugin_settings;
       }
       catch (\OutOfBoundsException $e) {
-        $messages[] = $this->t('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
+        $messages[MessengerInterface::TYPE_ERROR][] = $this->t('The %cke4_plugin_id plugin settings do not have a known upgrade path.', [
           '%cke4_plugin_id' => $cke4_plugin_id,
         ]);
         continue;
