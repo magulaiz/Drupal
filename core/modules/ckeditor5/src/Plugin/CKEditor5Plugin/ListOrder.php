@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -16,12 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface {
 
-  /**
-   * {@inheritdoc}
-   */
-//  public function setConfiguration(array $configuration) {
-//    // TODO: Implement setConfiguration() method.
-//  }
+  use CKEditor5PluginConfigurableTrait;
 
   /**
    * {@inheritdoc}

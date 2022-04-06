@@ -316,14 +316,15 @@ ckeditor5_list:
     label: List
     library: core/ckeditor5.list
     admin_library: ckeditor5/admin.list
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListOrder
     toolbar_items:
       bulletedList:
         label: Bulleted list
       numberedList:
         label: Numbered list
     elements:
-      - <ul>
-      - <ol>
+      - <ul type>
+      - <ol reversed start type>
       - <li>
 
 ckeditor5_horizontalLine:
