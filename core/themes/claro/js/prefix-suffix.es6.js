@@ -24,8 +24,7 @@
         '[data-drupal-form-item-suffix]',
       );
 
-      const prefixSuffix = debounce(this.calculatePrefixSuffix.bind(this), 300);
-      const prefixSuffixInstant = this.calculatePrefixSuffix.bind(this);
+      const prefixSuffix = this.calculatePrefixSuffix.bind(this);
 
       // Recalculate on resize and formUpdated.
       $(window).on('resize.prefixSuffix', prefixSuffix);
@@ -35,12 +34,12 @@
       // The prefixes and suffixes need to be recalculated against these changed widths.
 
       // Observe visibility changes on the wrapper and re calculate.
-      let observer = new IntersectionObserver(prefixSuffixInstant, {threshold: 1.0});
+      let observer = new IntersectionObserver(prefixSuffix, {threshold: 1.0});
       observer.observe(elementWrapper);
 
       // When CKEditor is ready, recalculate.
       if (window.CKEDITOR) {
-        CKEDITOR.on('instanceReady', prefixSuffixInstant);
+        CKEDITOR.on('instanceReady', prefixSuffix);
       }
 
       // Initialize the prefix+suffix style calculations.

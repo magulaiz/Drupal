@@ -20,17 +20,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       this.elementWrapper = elementWrapper;
       this.prefix = elementWrapper.querySelector('[data-drupal-form-item-prefix]');
       this.suffix = elementWrapper.querySelector('[data-drupal-form-item-suffix]');
-      var prefixSuffix = debounce(this.calculatePrefixSuffix.bind(this), 300);
-      var prefixSuffixInstant = this.calculatePrefixSuffix.bind(this);
+      var prefixSuffix = this.calculatePrefixSuffix.bind(this);
       $(window).on('resize.prefixSuffix', prefixSuffix);
       $(input).on('formUpdated.machineName', prefixSuffix);
-      var observer = new IntersectionObserver(prefixSuffixInstant, {
+      var observer = new IntersectionObserver(prefixSuffix, {
         threshold: 1.0
       });
       observer.observe(elementWrapper);
 
       if (window.CKEDITOR) {
-        CKEDITOR.on('instanceReady', prefixSuffixInstant);
+        CKEDITOR.on('instanceReady', prefixSuffix);
       }
 
       prefixSuffix();
