@@ -21,7 +21,8 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class CKEditor5Test extends CKEditor5TestBase {
+class CKEditor5Test extends CKEditor5TestBase
+{
 
   use TestFileCreationTrait;
   use CKEditor5TestTrait;
@@ -36,7 +37,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Tests configuring CKEditor5 for existing content.
    */
-  public function testExistingContent() {
+  public function testExistingContent()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -68,7 +70,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Ensures that attribute values are encoded.
    */
-  public function testAttributeEncoding() {
+  public function testAttributeEncoding()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -95,7 +98,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
-        return (string) $v->getMessage();
+        return (string)$v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
@@ -139,7 +142,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Test headings configuration.
    */
-  public function testHeadingsPlugin() {
+  public function testHeadingsPlugin()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -214,7 +218,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Test for plugin Language of parts.
    */
-  public function testLanguageOfPartsPlugin() {
+  public function testLanguageOfPartsPlugin()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -237,7 +242,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Validate the available languages on the basis of selected language option.
    */
-  public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option) {
+  public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option)
+  {
     $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
 
     // Set correct value.
@@ -277,7 +283,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Confirms active tab status is intact after AJAX refresh.
    */
-  public function testActiveTabsMaintained() {
+  public function testActiveTabsMaintained()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -360,7 +367,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Ensures that CKEditor 5 integrates with file reference filter.
    */
-  public function testEditorFileReferenceIntegration() {
+  public function testEditorFileReferenceIntegration()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -418,7 +426,8 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Ensures that CKEditor italic model is converted to em.
    */
-  public function testEmphasis() {
+  public function testEmphasis()
+  {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -445,40 +454,96 @@ class CKEditor5Test extends CKEditor5TestBase {
   /**
    * Test List plugin.
    */
-//  public function testListPlugin() {
-//    Editor::load('test_format')->setSettings([
-//      'toolbar' => [
-//        'items' => [
-//          'uploadImage',
-//        ],
-//      ],
-//      'plugins' => [
-//        'ckeditor5_list' => [
-//          'reversed' => FALSE,
-//          'startIndex' => FALSE,
-//        ],
-//      ],
-//    ])->save();
-//    $ordered_list_html = '<ol>
-//    <li>
-//        one
-//    </li>
-//    <li>
-//        two
-//    </li>
-//    <li>
-//        three
-//    </li>
-//</ol>';
-//
-//    $page = $this->getSession()->getPage();
-//    $assert_session = $this->assertSession();
-//    $this->drupalGet('node/add');
-//    $page->fillField('title[0][value]', 'My test content');
-//    $this->pressEditorButton('Source');
-//    $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
-//    $source_text_area->setValue($ordered_list_html);
-//
-//  }
+  public function testListPlugin() {
+    FilterFormat::create([
+      'format' => 'test_format',
+      'name' => 'CKEditor 5 with list',
+      'roles' => [RoleInterface::AUTHENTICATED_ID],
+    ])->save();
+    Editor::create([
+      'format' => 'test_format',
+      'editor' => 'ckeditor5',
+      'settings' => [
+        'toolbar' => [
+          'items' => ['uploadImage', 'sourceEditing', 'numberedList',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [],
+          ],
+        ],
+      ]
+    ])->save();
+    $ordered_list_html = '<ol>
+    <li>
+        apple
+    </li>
+    <li>
+        banana
+    </li>
+    <li>
+        cantaloupe
+    </li>
+</ol>';
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $this->drupalGet('node/add');
+    $page->fillField('title[0][value]', 'My test content');
+    $this->pressEditorButton('Source');
+    $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
+    $source_text_area->setValue($ordered_list_html);
+    // Click source again to make source inactive and have the numbered list
+    // splitbutton active.
+    $this->pressEditorButton('Source');
+    $numbered_list_dropdown = '.ck-splitbutton__arrow';
+    $this->click($numbered_list_dropdown);
+    $list_properties_button = '.ck-collapsible > .ck.ck-button.ck-button_with-text';
+    $assert_session->elementNotExists('css', $list_properties_button);
+    // Save content so source content is kept after changing the editor config.
+    // and refreshing.
+    $page->pressButton('Save');
+    $edit_url = $this->getSession()->getCurrentURL() . '/edit';
+    $this->drupalGet($edit_url);
+    $this->waitForEditor();
+
+    // Enable the reversed functionality.
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $settings['plugins']['ckeditor5_list']['reversed'] = TRUE;
+    $editor->setSettings($settings);
+    $editor->save();
+    $this->getSession()->reload();
+    $this->waitForEditor();
+    $this->click($numbered_list_dropdown);
+    $assert_session->elementExists('css', $list_properties_button);
+    $assert_session->elementTextEquals('css', $list_properties_button, 'List properties');
+    $this->click($list_properties_button);
+    $reversed_order_button = '.ck.ck-button.ck-numbered-list-properties__reversed-order';
+    $assert_session->elementExists('css', $reversed_order_button);
+    $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
+    $start_index_element = '.ck.ck-numbered-list-properties__start-index';
+    $assert_session->elementNotExists('css', $start_index_element);
+
+    // Have both the reversed and the start index enabled.
+    $editor = Editor::load('test_format');
+    $settings = $editor->getSettings();
+    $settings['plugins']['ckeditor5_list']['startIndex'] = TRUE;
+    $editor->setSettings($settings);
+    $editor->save();
+    $this->getSession()->reload();
+    $this->waitForEditor();
+    $this->click($numbered_list_dropdown);
+    $assert_session->elementExists('css', $list_properties_button);
+    $assert_session->elementTextEquals('css', $list_properties_button, 'List properties');
+    $this->click($list_properties_button);
+    $assert_session->elementExists('css', $reversed_order_button);
+    $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
+    $assert_session->elementExists('css', $start_index_element);
+  }
 
 }

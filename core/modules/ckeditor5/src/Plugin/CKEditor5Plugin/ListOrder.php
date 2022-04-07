@@ -17,8 +17,7 @@ use Drupal\editor\EditorInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface
-{
+class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface {
 
   use CKEditor5PluginConfigurableTrait;
 
@@ -80,8 +79,6 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function getElementsSubset(): array {
-    $plugin_definition = $this->getPluginDefinition();
-    $elements = $plugin_definition->getElements();
     $subset = ["<ul type>", "<li>"];
     $startIndexEnabled = $this->getConfiguration()['startIndex'];
     $reversedEnabled = $this->getConfiguration()['reversed'];
