@@ -54,6 +54,11 @@ class TestDatabase {
         $connection = Database::getConnection('default', 'default');
       }
     }
+
+    if ($connection['default']['driver'] === 'sqlite') {
+      $connection['default']['init_commands']['busy_timeout'] = 'PRAGMA busy_timeout=100';
+    }
+
     return $connection;
   }
 
