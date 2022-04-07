@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
@@ -24,20 +24,26 @@ class HeadingPluginTest extends UnitTestCase {
       'All headings' => [
         Heading::DEFAULT_CONFIGURATION,
       ],
-      'Only required headings' => [[
-        'enabled_headings' => [],
-      ]],
-      'Heading 2 only' => [[
-        'enabled_headings' => [
-          'heading2',
+      'Only required headings' => [
+        [
+          'enabled_headings' => [],
         ],
-      ]],
-      'Heading 2 and 3 only' => [[
-        'enabled_headings' => [
-          'heading2',
-          'heading3',
+      ],
+      'Heading 2 only' => [
+        [
+          'enabled_headings' => [
+            'heading2',
+          ],
         ],
-      ]],
+      ],
+      'Heading 2 and 3 only' => [
+        [
+          'enabled_headings' => [
+            'heading2',
+            'heading3',
+          ],
+        ],
+      ],
     ];
   }
 
@@ -55,7 +61,8 @@ class HeadingPluginTest extends UnitTestCase {
 
     // Build the dynamic configuration based on the enabled headings.
     $plugin = new Heading($configuration, 'ckeditor5_heading', NULL);
-    $config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)->reveal());
+    $config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
+      ->reveal());
 
     // Check that the generated configuration contains all enabled headings.
     $enabled_headings = array_merge($plugin::ALWAYS_ENABLED_HEADINGS, $configuration['enabled_headings']);
