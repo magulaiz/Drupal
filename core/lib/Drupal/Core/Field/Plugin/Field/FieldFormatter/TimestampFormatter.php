@@ -217,22 +217,10 @@ class TimestampFormatter extends FormatterBase {
   public function settingsSummary() {
     $summary = parent::settingsSummary();
 
-    $date_format = $this->getSetting('date_format');
-    $summary[] = $this->t('Date format: @date_format', ['@date_format' => $date_format]);
-    if ($date_format === 'custom' && ($custom_date_format = $this->getSetting('custom_date_format'))) {
-      $summary[] = $this->t('Custom date format: @custom_date_format', ['@custom_date_format' => $custom_date_format]);
-    }
-    if ($timezone = $this->getSetting('timezone')) {
-      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $timezone]);
-    }
-
-    $tooltip = $this->getSetting('tooltip');
-    $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip['date_format']]);
-    if ($tooltip['date_format'] === 'custom' && $tooltip['custom_date_format']) {
-      $summary[] = $this->t('Tooltip custom date format: @custom_date_format', ['@custom_date_format' => $tooltip['custom_date_format']]);
-    }
-
     $time_diff = $this->getSetting('time_diff');
+    $date_format = $this->getSetting('date_format');
+    $date_format = $date_format === 'custom' ? $this->getSetting('custom_date_format') : $date_format;
+
     if ($time_diff['enabled']) {
       $summary[] = $this->t('Displayed as a time difference');
 
@@ -252,6 +240,20 @@ class TimestampFormatter extends FormatterBase {
         $refresh_intervals = $this->getRefreshIntervals();
         $summary[] = $this->t('Refresh every @interval', ['@interval' => $refresh_intervals[$time_diff['refresh']]]);
       }
+      $summary[] = $this->t('Disabled Javascript format: @date_format', ['@date_format' => $date_format]);
+    }
+    else {
+      $summary[] = $this->t('Date format: @date_format', ['@date_format' => $date_format]);
+    }
+
+    if ($timezone = $this->getSetting('timezone')) {
+      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $timezone]);
+    }
+
+    $tooltip = $this->getSetting('tooltip');
+    $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip['date_format']]);
+    if ($tooltip['date_format'] === 'custom' && $tooltip['custom_date_format']) {
+      $summary[] = $this->t('Tooltip custom date format: @custom_date_format', ['@custom_date_format' => $tooltip['custom_date_format']]);
     }
 
     return $summary;
