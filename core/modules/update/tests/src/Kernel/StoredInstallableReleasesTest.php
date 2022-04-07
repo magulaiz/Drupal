@@ -94,7 +94,8 @@ class StoredInstallableReleasesTest extends KernelTestBase {
    * Provides expected installable releases with a specific installed version.
    *
    * All installed versions are from the XML except '8.1.4', to test for the
-   * case if the currently installed version of Drupal core is not present in the XML.
+   * case if the currently installed version of Drupal core is not present in
+   * the XML.
    *
    * @return array[]
    *   Test data.
