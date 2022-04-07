@@ -238,6 +238,29 @@ class CKEditor5Test extends CKEditor5TestBase {
   }
 
   /**
+   * Test for multiple align options.
+   */
+  public function testMultipleAlignOptions() {
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+
+    $this->createNewTextFormat($page, $assert_session);
+    // Press arrow down key to add the button to the active toolbar.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-button-alignment'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-button-alignment', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // Add a second option for the left alignment
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-alignment:left'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-alignment:left', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    // We check if an error message will be thrown.
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('The provided toolbar item alignment is CONFLICTING.');
+  }
+
+  /**
    * Validate the available languages on the basis of selected language option.
    */
   public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option) {
