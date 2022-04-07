@@ -21,8 +21,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @group ckeditor5
  * @internal
  */
-class CKEditor5Test extends CKEditor5TestBase
-{
+class CKEditor5Test extends CKEditor5TestBase {
 
   use TestFileCreationTrait;
   use CKEditor5TestTrait;
@@ -37,8 +36,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Tests configuring CKEditor5 for existing content.
    */
-  public function testExistingContent()
-  {
+  public function testExistingContent() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -70,8 +68,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Ensures that attribute values are encoded.
    */
-  public function testAttributeEncoding()
-  {
+  public function testAttributeEncoding() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -98,7 +95,7 @@ class CKEditor5Test extends CKEditor5TestBase
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
-        return (string)$v->getMessage();
+        return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
@@ -142,8 +139,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Test headings configuration.
    */
-  public function testHeadingsPlugin()
-  {
+  public function testHeadingsPlugin() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -218,8 +214,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Test for plugin Language of parts.
    */
-  public function testLanguageOfPartsPlugin()
-  {
+  public function testLanguageOfPartsPlugin() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -242,8 +237,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Validate the available languages on the basis of selected language option.
    */
-  public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option)
-  {
+  public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option) {
     $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
 
     // Set correct value.
@@ -283,8 +277,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Confirms active tab status is intact after AJAX refresh.
    */
-  public function testActiveTabsMaintained()
-  {
+  public function testActiveTabsMaintained() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -367,8 +360,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Ensures that CKEditor 5 integrates with file reference filter.
    */
-  public function testEditorFileReferenceIntegration()
-  {
+  public function testEditorFileReferenceIntegration() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -426,8 +418,7 @@ class CKEditor5Test extends CKEditor5TestBase
   /**
    * Ensures that CKEditor italic model is converted to em.
    */
-  public function testEmphasis()
-  {
+  public function testEmphasis() {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
