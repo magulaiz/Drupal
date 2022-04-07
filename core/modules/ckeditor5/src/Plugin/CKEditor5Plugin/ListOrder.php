@@ -82,20 +82,10 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
   public function getElementsSubset(): array {
     $plugin_definition = $this->getPluginDefinition();
     $elements = $plugin_definition->getElements();
-    $subset = $elements;
-    foreach ($subset as &$el) {
-      if (!$this->getConfiguration()['reversed']) {
-        if (str_contains($el, ' reversed')) {
-          str_replace(' reversed', '', $el);
-        }
-      }
-      if (!$this->getConfiguration()['startIndex']) {
-        if (str_contains($el, ' start')) {
-          str_replace(' reversed', '', $el);
-
-        }
-      }
-    }
+    $subset = ["<ul type>", "<li>"];
+    $startIndexEnabled = $this->getConfiguration()['startIndex'];
+    $reversedEnabled = $this->getConfiguration()['reversed'];
+    $subset[] = "<ol type" . ($startIndexEnabled ? ' start' : '') . ($reversedEnabled ? ' reversed' : '') . '>';
     return $subset;
   }
 

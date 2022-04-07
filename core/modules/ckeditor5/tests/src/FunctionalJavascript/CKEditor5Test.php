@@ -442,4 +442,43 @@ class CKEditor5Test extends CKEditor5TestBase {
     $assert_session->responseContains('<p>This is a <em>test!</em></p>');
   }
 
+  /**
+   * Test List plugin.
+   */
+//  public function testListPlugin() {
+//    Editor::load('test_format')->setSettings([
+//      'toolbar' => [
+//        'items' => [
+//          'uploadImage',
+//        ],
+//      ],
+//      'plugins' => [
+//        'ckeditor5_list' => [
+//          'reversed' => FALSE,
+//          'startIndex' => FALSE,
+//        ],
+//      ],
+//    ])->save();
+//    $ordered_list_html = '<ol>
+//    <li>
+//        one
+//    </li>
+//    <li>
+//        two
+//    </li>
+//    <li>
+//        three
+//    </li>
+//</ol>';
+//
+//    $page = $this->getSession()->getPage();
+//    $assert_session = $this->assertSession();
+//    $this->drupalGet('node/add');
+//    $page->fillField('title[0][value]', 'My test content');
+//    $this->pressEditorButton('Source');
+//    $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
+//    $source_text_area->setValue($ordered_list_html);
+//
+//  }
+
 }

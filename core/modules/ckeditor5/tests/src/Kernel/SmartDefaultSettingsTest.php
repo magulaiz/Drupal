@@ -854,7 +854,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
       ],
-      'expected_superset' => '<br> <p> <ol reversed type>',
+      'expected_superset' => '<br> <p> <ol type reversed>',
       'expected_fundamental_compatibility_violations' => [
         '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are not allowed by the "<em class="placeholder">Limit allowed HTML tags and correct faulty HTML</em>" (<em class="placeholder">filter_html</em>) filter.',
       ],
