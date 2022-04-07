@@ -221,11 +221,7 @@ final class SmartDefaultSettings {
       ],
       'plugins' => [],
     ];
-    $messages = [
-      MessengerInterface::TYPE_STATUS => [],
-      MessengerInterface::TYPE_WARNING => [],
-      MessengerInterface::TYPE_ERROR => [],
-    ];
+    $messages = [];
 
     // First: toolbar items.
     // @see \Drupal\ckeditor\CKEditorPluginButtonsInterface
