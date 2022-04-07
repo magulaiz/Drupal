@@ -64,18 +64,19 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $entity_view_display) use ($field_formatter_manager): bool {
-    foreach ($entity_view_display->getComponents() as $component) {
+    foreach ($entity_view_display->getComponents() as $name => $component) {
       if (empty($component['type'])) {
         continue;
       }
 
       $plugin_definition = $field_formatter_manager->getDefinition($component['type'], FALSE);
-      // Check also potential plugins that extend TimestampFormatter.
+      // Check also potential plugins extending TimestampFormatter.
       if (!is_a($plugin_definition['class'], TimestampFormatter::class, TRUE)) {
         continue;
       }
 
       if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+        $entity_view_display->setComponent($name, $component);
         return TRUE;
       }
     }
