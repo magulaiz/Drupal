@@ -232,7 +232,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Provides test cases for unit testing Drupal.timestampAsTimeDiff.timeout().
    *
    * @return array[]
-   *   A list  of of test cases, each representing parameters to be passed to the
+   *   A list of test cases, each representing parameters to be passed to the
    *   javascript function.
    */
   protected function getTimeoutTestCases(): array {
