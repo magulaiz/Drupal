@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\System;
 
-Use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 
 /**
