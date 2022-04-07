@@ -29,6 +29,9 @@ class AccessDeniedTest extends BrowserTestBase {
 
   protected $adminUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -65,7 +68,7 @@ class AccessDeniedTest extends BrowserTestBase {
 
     $this->drupalLogin($this->adminUser);
 
-    // Set a custom 404 page without a starting slash.
+    // Set a custom 403 page without a starting slash.
     $edit = [
       'site_403' => 'user/' . $this->adminUser->id(),
     ];
