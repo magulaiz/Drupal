@@ -694,12 +694,14 @@ class LayoutBuilderTest extends BrowserTestBase {
     $page->pressButton('Add block');
 
     $assert_session->elementExists('css', '.go-birds-preview');
+    $assert_session->pageTextContains('The block template is being previewed.');
     $assert_session->pageTextContains('This block is being rendered in preview mode.');
 
     $page->pressButton('Save layout');
     $this->drupalGet('node/1');
 
     $assert_session->elementNotExists('css', '.go-birds-preview');
+    $assert_session->pageTextNotContains('The block template is being previewed.');
     $assert_session->pageTextContains('This block is being rendered normally.');
   }
 
