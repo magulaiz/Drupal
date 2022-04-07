@@ -122,47 +122,8 @@ class TimestampFormatter extends FormatterBase {
     }
     $date_formats['custom'] = $this->t('Custom');
 
-    $form['date_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Date format'),
-      '#options' => $date_formats,
-      '#default_value' => $this->getSetting('date_format') ?: 'medium',
-    ];
-
-    $form['custom_date_format'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Custom date format'),
-      '#description' => $this->t('See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the documentation for PHP date formats</a>.'),
-      '#default_value' => $this->getSetting('custom_date_format') ?: '',
-      '#states' => $this->buildStates(['date_format'], ['value' => 'custom']),
-    ];
-
-    $form['timezone'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Time zone'),
-      '#options' => ['' => $this->t('- Default site/user time zone -')] + TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
-      '#default_value' => $this->getSetting('timezone'),
-    ];
-
-    $tooltip = $this->getSetting('tooltip');
-    $form['tooltip']['#tree'] = TRUE;
-    $form['tooltip']['date_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Tooltip date format'),
-      '#description' => $this->t('Select the date format to be used for the title and displayed on mouse hover.'),
-      '#options' => $date_formats,
-      '#default_value' => $tooltip['date_format'],
-    ];
-
-    $form['tooltip']['custom_date_format'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Tooltip custom date format'),
-      '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
-      '#default_value' => $tooltip['custom_date_format'],
-      '#states' => $this->buildStates(['tooltip', 'date_format'], ['value' => 'custom']),
-    ];
-
     $time_diff = $this->getSetting('time_diff');
+
     $form['time_diff']['#tree'] = TRUE;
     $form['time_diff']['enabled'] = [
       '#type' => 'checkbox',
@@ -204,6 +165,47 @@ class TimestampFormatter extends FormatterBase {
       '#default_value' => $time_diff['refresh'],
       '#options' => $this->getRefreshIntervals(),
       '#states' => $states,
+    ];
+
+    $form['date_format'] = [
+      '#type' => 'select',
+      '#title' => $time_diff['enabled'] ? $this->t('Fallback date format') : $this->t('Date format'),
+      '#options' => $date_formats,
+      '#default_value' => $this->getSetting('date_format') ?: 'medium',
+      '#description' => $time_diff['enabled'] ? $this->t('This format is used when JavaScript is disabled.') : NULL,
+    ];
+
+    $form['custom_date_format'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Custom date format'),
+      '#description' => $this->t('See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters" target="_blank">the documentation for PHP date formats</a>.'),
+      '#default_value' => $this->getSetting('custom_date_format') ?: '',
+      '#states' => $this->buildStates(['date_format'], ['value' => 'custom']),
+    ];
+
+    $form['timezone'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Time zone'),
+      '#options' => ['' => $this->t('- Default site/user time zone -')] + TimeZoneFormHelper::getOptionsList(FALSE, TRUE),
+      '#default_value' => $this->getSetting('timezone'),
+    ];
+
+    $tooltip = $this->getSetting('tooltip');
+    $form['tooltip']['#tree'] = TRUE;
+    $form['tooltip']['date_format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Tooltip date format'),
+      '#description' => $this->t('Select the date format to be used for the title and displayed on mouse hover.'),
+      '#options' => $date_formats,
+      '#default_value' => $tooltip['date_format'],
+    ];
+
+    $form['tooltip']['custom_date_format'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Tooltip custom date format'),
+      '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
+      '#default_value' => $tooltip['custom_date_format'],
+      '#states' => $this->buildStates(['tooltip', 'date_format'], ['value' => 'custom']),
     ];
 
     return $form;
