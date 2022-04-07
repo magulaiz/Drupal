@@ -234,14 +234,14 @@ function drupal_js_defaults($data = NULL) {
  * into a table. The table must have an ID attribute set and it
  * may be set as follows:
  * @code
- * $table = array(
+ * $table = [
  *   '#type' => 'table',
  *   '#header' => $header,
  *   '#rows' => $rows,
- *   '#attributes' => array(
+ *   '#attributes' => [
  *     'id' => 'my-module-table',
- *   ),
- * );
+ *   ],
+ * ];
  * return \Drupal::service('renderer')->render($table);
  * @endcode
  *
@@ -251,17 +251,17 @@ function drupal_js_defaults($data = NULL) {
  * In a situation where a single weight column is being sorted in the table, the
  * classes could be added like this (in the theme function):
  * @code
- * $form['my_elements'][$delta]['weight']['#attributes']['class'] = array('my-elements-weight');
+ * $form['my_elements'][$delta]['weight']['#attributes']['class'] = ['my-elements-weight'];
  * @endcode
  *
  * Each row of the table must also have a class of "draggable" in order to
  * enable the drag handles:
  * @code
- * $row = array(...);
- * $rows[] = array(
+ * $row = [...];
+ * $rows[] = [
  *   'data' => $row,
- *   'class' => array('draggable'),
- * );
+ *   'class' => ['draggable'],
+ * ];
  * @endcode
  *
  * When tree relationships are present, the two additional classes
@@ -271,18 +271,18 @@ function drupal_js_defaults($data = NULL) {
  *
  * Calling drupal_attach_tabledrag() would then be written as such:
  * @code
- * drupal_attach_tabledrag('my-module-table', array(
+ * drupal_attach_tabledrag('my-module-table', [
  *   'action' => 'order',
  *   'relationship' => 'sibling',
  *   'group' => 'my-elements-weight',
- * );
+ * ];
  * @endcode
  *
  * In a more complex case where there are several groups in one column (such as
  * the block regions on the admin/structure/block page), a separate subgroup
  * class must also be added to differentiate the groups.
  * @code
- * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = array('my-elements-weight', 'my-elements-weight-' . $region);
+ * $form['my_elements'][$region][$delta]['weight']['#attributes']['class'] = ['my-elements-weight', 'my-elements-weight-' . $region];
  * @endcode
  *
  * The 'group' option is still 'my-element-weight', and the additional
@@ -292,12 +292,12 @@ function drupal_js_defaults($data = NULL) {
  *
  * @code
  * foreach ($regions as $region) {
- *   drupal_attach_tabledrag('my-module-table', array(
+ *   drupal_attach_tabledrag('my-module-table', [
  *     'action' => 'order',
  *     'relationship' => 'sibling',
  *     'group' => 'my-elements-weight',
  *     'subgroup' => 'my-elements-weight-' . $region,
- *   ));
+ *   ]);
  * }
  * @endcode
  *
