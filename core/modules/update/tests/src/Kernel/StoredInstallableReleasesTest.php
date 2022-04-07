@@ -91,14 +91,14 @@ class StoredInstallableReleasesTest extends KernelTestBase {
   }
 
   /**
-   * Provides expected installable releases with a specific installed version.
+   * Data provider for testStoredReleases().
    *
    * All installed versions are from the XML except '8.1.4', to test for the
    * case if the currently installed version of Drupal core is not present in
    * the XML.
    *
    * @return array[]
-   *   Test data.
+   *   Test cases.
    */
   public function providerStoredReleases(): array {
     return [
@@ -156,7 +156,7 @@ class StoredInstallableReleasesTest extends KernelTestBase {
           '8.1.1',
         ],
       ],
-      '8.1.2 installed' => [
+      '8.1.2 installed, revoked' => [
         'installed_version' => '8.1.2',
         'expected_project_status' => UpdateManagerInterface::REVOKED,
         'expected_releases' => [
@@ -175,7 +175,8 @@ class StoredInstallableReleasesTest extends KernelTestBase {
           '8.1.3',
         ],
       ],
-      '8.1.4 installed' => [
+      // Test a case where the installed version is not in the update XML.
+      '8.1.4 installed, not in XML' => [
         'installed_version' => '8.1.4',
         'expected_project_status' => UpdateManagerInterface::NOT_CURRENT,
         'expected_releases' => [
@@ -222,6 +223,14 @@ class StoredInstallableReleasesTest extends KernelTestBase {
 
   /**
    * Tests that all installable releases are revealed by the update system.
+   *
+   * @param string $installed_version
+   *   The installed version of Drupal core.
+   * @param int $expected_project_status
+   *   The expected project status as set by 'update_calculate_project_data()'.
+   * @param array $expected_releases
+   *   The expected project releases as set by
+   *   'update_calculate_project_data()'.
    *
    * @dataProvider providerStoredReleases
    */
