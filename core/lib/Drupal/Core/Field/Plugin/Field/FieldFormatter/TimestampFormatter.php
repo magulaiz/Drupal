@@ -169,10 +169,10 @@ class TimestampFormatter extends FormatterBase {
 
     $form['date_format'] = [
       '#type' => 'select',
-      '#title' => $time_diff['enabled'] ? $this->t('Fallback date format') : $this->t('Date format'),
+      '#title' => $this->t('Date format'),
       '#options' => $date_formats,
       '#default_value' => $this->getSetting('date_format') ?: 'medium',
-      '#description' => $time_diff['enabled'] ? $this->t('This format is used when JavaScript is disabled.') : NULL,
+      '#description' => $this->t("This format is also used when 'Display as a time difference' is checked and JavaScript is disabled."),
     ];
 
     $form['custom_date_format'] = [
