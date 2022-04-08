@@ -129,8 +129,8 @@
      * example if the refresh interval is '10 seconds', the granularity is 2 and
      * the time difference is '1 hour 32 minutes', there's no need to refresh
      * every 10 seconds but every 1 minute. This function optimizes the refresh
-     * interval to higher values, if the structure of the time difference doesn't
-     * require refreshing more often.
+     * interval to higher values, if the structure of the time difference
+     * doesn't require refreshing more often.
      *
      * @param {timeDiffValue} value
      *   The time difference object.
@@ -148,8 +148,8 @@
       const lastUnit = units.pop();
 
       // If the lowest unit of time difference is 'minute' or greater but the
-      // refresh interval is lower, do not refresh often than the duration of the
-      // lowest unit of time difference.
+      // refresh interval is lower, do not refresh often than the duration of
+      // the lowest unit of time difference.
       if (lastUnit !== 'second') {
         // If the time difference value parts count equals the granularity and
         // lowest unit duration is bigger than the refresh interval, use the
