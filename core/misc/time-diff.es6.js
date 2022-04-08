@@ -33,6 +33,15 @@
    *   hour: 2, minute: 32, second: 15 }.
    */
 
+  /**
+   *
+   * @type {WeakMap<HTMLElement, number>}
+   */
+  const timers = new WeakMap();
+
+  /**
+   * @namespace
+   */
   Drupal.timeDiff = {
     /**
      * Fills a HTML5 time element text with a computed time difference string.
@@ -53,9 +62,12 @@
       const options = { granularity: timeDiffSettings.granularity };
       const timeDiff = Drupal.timeDiff.format(diff, options);
       const format = diff > 0 ? 'future' : 'past';
-      timeElement.textContent = Drupal.t(timeDiffSettings.format[format], {
-        '@interval': timeDiff.formatted,
-      });
+      timeElement.textContent = Drupal.formatString(
+        timeDiffSettings.format[format],
+        {
+          '@interval': timeDiff.formatted,
+        },
+      );
 
       if (timeDiffSettings.refresh > 0) {
         const refreshInterval = Drupal.timeDiff.refreshInterval(
@@ -63,10 +75,12 @@
           timeDiffSettings.refresh,
           timeDiffSettings.granularity,
         );
-        timeElement.timer = setTimeout(
-          Drupal.timeDiff.show,
-          refreshInterval * 1000,
+        if (timers.has(timeElement)) {
+          clearTimeout(timers.get(timeElement));
+        }
+        timers.set(
           timeElement,
+          setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement),
         );
       }
     },
@@ -155,13 +169,15 @@
      * @return {timeDiff}
      *   A time difference type object.
      */
-    format(diff, options) {
-      // Provide sane defaults.
-      options = options || {};
+    format(diff, options = {}) {
+      // Provide appropriate defaults.
       options = { granularity: 2, strict: false, ...options };
 
       if (options.strict && diff < 0) {
-        return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
+        return {
+          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
+          value: { second: 0 },
+        };
       }
       diff = Math.abs(diff);
 
@@ -219,7 +235,10 @@
       });
 
       if (output.length === 0) {
-        return { formatted: Drupal.t('0 seconds'), value: { second: 0 } };
+        return {
+          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
+          value: { second: 0 },
+        };
       }
       return { formatted: output.join(' '), value };
     },
@@ -287,7 +306,9 @@
       if (trigger === 'unload') {
         once
           .remove('time-diff', 'time[data-drupal-time-diff]', context)
-          .forEach((timeElement) => clearInterval(timeElement.timer));
+          .filter(timers.has.bind(timers))
+          .map(timers.get.bind(timers))
+          .forEach(clearTimeout);
       }
     },
   };

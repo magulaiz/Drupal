@@ -12,6 +12,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 (function (Drupal, once) {
+  var timers = new WeakMap();
   Drupal.timeDiff = {
     show: function show(timeElement) {
       var timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
@@ -23,13 +24,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       };
       var timeDiff = Drupal.timeDiff.format(diff, options);
       var format = diff > 0 ? 'future' : 'past';
-      timeElement.textContent = Drupal.t(timeDiffSettings.format[format], {
+      timeElement.textContent = Drupal.formatString(timeDiffSettings.format[format], {
         '@interval': timeDiff.formatted
       });
 
       if (timeDiffSettings.refresh > 0) {
         var refreshInterval = Drupal.timeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
-        timeElement.timer = setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement);
+
+        if (timers.has(timeElement)) {
+          clearTimeout(timers.get(timeElement));
+        }
+
+        timers.set(timeElement, setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement));
       }
     },
     refreshInterval: function refreshInterval(value, refresh, granularity) {
@@ -59,8 +65,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return refresh;
     },
-    format: function format(diff, options) {
-      options = options || {};
+    format: function format(diff) {
+      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       options = _objectSpread({
         granularity: 2,
         strict: false
@@ -68,7 +74,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (options.strict && diff < 0) {
         return {
-          formatted: Drupal.t('0 seconds'),
+          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
           value: {
             second: 0
           }
@@ -132,7 +138,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (output.length === 0) {
         return {
-          formatted: Drupal.t('0 seconds'),
+          formatted: Drupal.formatPlural(0, '1 second', '@count seconds'),
           value: {
             second: 0
           }
@@ -167,9 +173,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        once.remove('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
-          return clearInterval(timeElement.timer);
-        });
+        once.remove('time-diff', 'time[data-drupal-time-diff]', context).filter(timers.has.bind(timers)).map(timers.get.bind(timers)).forEach(clearTimeout);
       }
     }
   };
