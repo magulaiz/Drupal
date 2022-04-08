@@ -58,6 +58,11 @@
   .layout-region--node-secondary {
     margin-top: 1.5rem;
   }
+
+  .layout-region-node-footer__content .form-actions .button {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
 }
 
 /**
