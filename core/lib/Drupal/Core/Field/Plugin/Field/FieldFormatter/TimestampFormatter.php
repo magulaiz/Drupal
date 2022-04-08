@@ -205,6 +205,7 @@ class TimestampFormatter extends FormatterBase {
       '#description' => $this->t('Select the date format to be used for the title and displayed on mouse hover.'),
       '#options' => $date_formats,
       '#default_value' => $tooltip['date_format'],
+      '#empty_option' => $this->t('- No tooltip -'),
     ];
 
     $form['tooltip']['custom_date_format'] = [
@@ -254,9 +255,10 @@ class TimestampFormatter extends FormatterBase {
     }
 
     $tooltip = $this->getSetting('tooltip');
-    $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip['date_format']]);
-    if ($tooltip['date_format'] === 'custom' && $tooltip['custom_date_format']) {
-      $summary[] = $this->t('Tooltip custom date format: @custom_date_format', ['@custom_date_format' => $tooltip['custom_date_format']]);
+    if (!empty($tooltip['date_format'])) {
+      $tooltip_date_format = $tooltip['date_format'];
+      $tooltip_date_format = $tooltip_date_format === 'custom' ? $tooltip['custom_date_format'] : $tooltip_date_format;
+      $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip_date_format]);
     }
 
     if ($timezone = $this->getSetting('timezone')) {
@@ -285,9 +287,6 @@ class TimestampFormatter extends FormatterBase {
           // The representation of the date/time as RFC3339 "date-time".
           // @see https://www.ietf.org/rfc/rfc3339.txt
           'datetime' => $this->dateFormatter->format($item->value, 'custom', \DateTimeInterface::RFC3339, $timezone),
-          // Show a tooltip on mouse hover as title. When the time is displayed
-          // as time difference, it helps the user to read the exact date.
-          'title' => $this->dateFormatter->format($item->value, $tooltip['date_format'], $tooltip['custom_date_format'], $timezone, $langcode),
         ],
         '#text' => $this->dateFormatter->format($item->value, $date_format, $custom_date_format, $timezone, $langcode),
         '#cache' => [
@@ -296,6 +295,13 @@ class TimestampFormatter extends FormatterBase {
           ],
         ],
       ];
+
+      if (!empty($tooltip['date_format'])) {
+        // Show a tooltip on mouse hover as title. When the time is displayed as
+        // time difference, it helps the user to read the exact date.
+        $elements[$delta]['#attributes']['title'] = $this->dateFormatter->format($item->value, $tooltip['date_format'], $tooltip['custom_date_format'], $timezone, $langcode);
+      }
+
       if ($time_diff['enabled'] && $time_diff['refresh'] > 0) {
         $elements[$delta]['#attached']['library'][] = 'core/drupal.time-diff';
         $elements[$delta]['#attributes']['class'][] = 'time-diff';
