@@ -167,6 +167,13 @@ class TimestampFormatter extends FormatterBase {
       '#states' => $states,
     ];
 
+    $form['time_diff']['description'] = [
+      '#type' => 'item',
+      '#title' => $this->t('Fallback configuration'),
+      '#description' => $this->t('The configuration below is used as a fallback when JavaScript is not available on the page.'),
+      '#states' => $states,
+    ];
+
     $form['date_format'] = [
       '#type' => 'select',
       '#title' => $this->t('Date format'),
@@ -246,14 +253,14 @@ class TimestampFormatter extends FormatterBase {
       $summary[] = $this->t('Date format: @date_format', ['@date_format' => $date_format]);
     }
 
-    if ($timezone = $this->getSetting('timezone')) {
-      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $timezone]);
-    }
-
     $tooltip = $this->getSetting('tooltip');
     $summary[] = $this->t('Tooltip date format: @date_format', ['@date_format' => $tooltip['date_format']]);
     if ($tooltip['date_format'] === 'custom' && $tooltip['custom_date_format']) {
       $summary[] = $this->t('Tooltip custom date format: @custom_date_format', ['@custom_date_format' => $tooltip['custom_date_format']]);
+    }
+
+    if ($timezone = $this->getSetting('timezone')) {
+      $summary[] = $this->t('Time zone: @timezone', ['@timezone' => $timezone]);
     }
 
     return $summary;
@@ -270,10 +277,6 @@ class TimestampFormatter extends FormatterBase {
     $timezone = $this->getSetting('timezone') ?: NULL;
     $tooltip = $this->getSetting('tooltip');
     $time_diff = $this->getSetting('time_diff');
-
-    if ($time_diff['enabled']) {
-      $elements['#attached']['library'][] = 'core/drupal.time-diff';
-    }
 
     foreach ($items as $delta => $item) {
       $elements[$delta] = [
@@ -293,7 +296,8 @@ class TimestampFormatter extends FormatterBase {
           ],
         ],
       ];
-      if ($time_diff['enabled']) {
+      if ($time_diff['enabled'] && $time_diff['refresh'] > 0) {
+        $elements[$delta]['#attached']['library'][] = 'core/drupal.time-diff';
         $elements[$delta]['#attributes']['class'][] = 'time-diff';
         $settings = [
           'format' => [
