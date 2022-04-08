@@ -1087,18 +1087,6 @@ function claro_preprocess_links__dropbutton(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for views_ui_display_tab_bucket.
- */
-function claro_preprocess_views_ui_display_tab_bucket(&$variables) {
-  // Instead of re-styling Views UI dropbuttons with module-specific CSS styles,
-  // change dropbutton variants to the extra small version.
-  // @todo Revisit after https://www.drupal.org/node/3057581 is added.
-  if (!empty($variables['actions']) && $variables['actions']['#type'] === 'dropbutton') {
-    $variables['actions']['#dropbutton_type'] = 'small';
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for status_messages.
  */
 function claro_preprocess_status_messages(&$variables) {
