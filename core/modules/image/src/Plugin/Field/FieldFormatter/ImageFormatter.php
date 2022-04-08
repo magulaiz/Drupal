@@ -155,23 +155,23 @@ class ImageFormatter extends ImageFormatterBase {
       '#type' => 'details',
       '#title' => $this->t('Image loading'),
       '#weight' => 10,
-      '#description' => $this->t('Image assets are rendered with native browser loading attribute of (<em>loading="lazy"</em>) by default. This improves performance by allowing modern browsers to lazily load images without JavaScript.'),
+      '#description' => $this->t('Lazy render images with native image loading attribute (<em>loading="lazy"</em>). This improves performance by allowing browsers to lazily load images.'),
     ];
     $loading_attribute_options = [
-      'lazy' => $this->t('Lazy'),
-      'eager' => $this->t('Eager'),
+      'lazy' => $this->t('Lazy (<em>loading="lazy"</em>)'),
+      'eager' => $this->t('Eager (<em>loading="eager"</em>)'),
     ];
     $element['image_loading']['attribute'] = [
       '#title' => $this->t('Image loading attribute'),
       '#type' => 'radios',
       '#default_value' => $image_loading['attribute'],
       '#options' => $loading_attribute_options,
-      '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more.</a>', [
+      '#description' => $this->t('Select the loading attribute for images. <a href=":link">Learn more about the loading attribute for images.</a>', [
         ':link' => 'https://html.spec.whatwg.org/multipage/urls-and-fetching.html#lazy-loading-attributes',
       ]),
     ];
-    $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser.');
-    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible.');
+    $element['image_loading']['attribute']['lazy']['#description'] = $this->t('Delays loading the image until that section of the page is visible in the browser. When in doubt, lazy loading is recommended.');
+    $element['image_loading']['attribute']['eager']['#description'] = $this->t('Force browsers to download an image as soon as possible. This is the browser default for legacy reasons. Only use this option when the image is always expected to render.');
 
     return $element;
   }
