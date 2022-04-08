@@ -128,7 +128,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Provides test cases for unit testing Drupal.timeDiff.format().
    *
    * @return array[]
-   *   A list of of test cases, each representing parameters to be passed to the
+   *   A list of test cases, each representing parameters to be passed to the
    *   JavaScript function.
    */
   protected function getFormatDiffTestCases(): array {
