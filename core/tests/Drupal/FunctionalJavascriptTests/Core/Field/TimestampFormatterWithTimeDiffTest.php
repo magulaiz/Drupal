@@ -80,8 +80,8 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
 
     $this->drupalGet($entity->toUrl());
 
-    // Unit testing Drupal.dateFormatter.formatDiff(). Not using @dataProvider
-    // mechanism here in order to avoid installing the site for each case.
+    // Unit testing Drupal.timeDiff.format(). Not using @dataProvider mechanism
+    // here in order to avoid installing the site for each case.
     foreach ($this->getFormatDiffTestCases() as $case) {
       $from = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['from'])->getTimestamp() * 1000;
       $to = \DateTime::createFromFormat(\DateTimeInterface::RFC3339, $case['to'])->getTimestamp() * 1000;
@@ -96,10 +96,9 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
       $this->assertJsCondition("Drupal.timeDiff.format($diff, $options).formatted === '$expected_formatted_value'");
     }
 
-    // Unit testing Drupal.timestampAsTimeDiff.refreshInterval(). Not using
-    // @dataProvider mechanism here in order to avoid reinstalling the site for
-    // each case.
     foreach ($this->getTimeoutTestCases() as $case) {
+    // Unit testing Drupal.timeDiff.refreshInterval(). Not using @dataProvider
+    // mechanism here in order to avoid reinstalling the site for each case.
       $interval = json_encode($case['time_diff']);
       $this->assertJsCondition("Drupal.timeDiff.refreshInterval($interval, {$case['configured_refresh_interval']}, {$case['granularity']}) === {$case['computed_refresh_interval']}");
     }
@@ -126,7 +125,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   }
 
   /**
-   * Provides test cases for unit testing Drupal.dateFormatter.formatDiff().
+   * Provides test cases for unit testing Drupal.timeDiff.format().
    *
    * @return array[]
    *   A list of of test cases, each representing parameters to be passed to the
@@ -229,7 +228,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   }
 
   /**
-   * Provides test cases for unit testing Drupal.timestampAsTimeDiff.timeout().
+   * Provides test cases for unit testing Drupal.timeDiff.refreshInterval().
    *
    * @return array[]
    *   A list of test cases, each representing parameters to be passed to the
