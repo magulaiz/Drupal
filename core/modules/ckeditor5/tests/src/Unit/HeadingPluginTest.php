@@ -107,7 +107,7 @@ class HeadingPluginTest extends UnitTestCase {
    *
    * @dataProvider providerGetDynamicPluginConfig
    */
-  public function testGetDynamicPluginConfig(array $configuration, array $expected_dyanmic_config): void {
+  public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $this->assertArrayHasKey('enabled_headings', $configuration);
 
     // Retrieve the possible heading options from the ckeditor5 config.
@@ -120,7 +120,7 @@ class HeadingPluginTest extends UnitTestCase {
       ->reveal());
 
     // Check that the generated configuration contains all enabled headings.
-    $this->assertSame($expected_dyanmic_config, $dynamic_plugin_config);
+    $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
 
 }
