@@ -179,7 +179,6 @@ class TimestampFormatter extends FormatterBase {
       '#title' => $this->t('Date format'),
       '#options' => $date_formats,
       '#default_value' => $this->getSetting('date_format') ?: 'medium',
-      '#description' => $this->t("This format is also used when 'Display as a time difference' is checked and JavaScript is disabled."),
     ];
 
     $form['custom_date_format'] = [
