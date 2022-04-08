@@ -707,6 +707,14 @@ drupal.tableselect:
     - core/jquery
     - core/once
 
+drupal.time-diff:
+  version: VERSION
+  js:
+    misc/time-diff.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
 drupal.timezone:
   version: VERSION
   js:
@@ -913,12 +921,3 @@ js-cookie:
   js:
     assets/vendor/js-cookie/js.cookie.min.js: {}
   deprecated: The %library_id% asset library is deprecated in Drupal 10.1.0 and will be removed in Drupal 11.0.0. There is no replacement. See https://www.drupal.org/node/3322720
-
-drupal.time-diff:
-  version: VERSION
-  js:
-    misc/time-diff.js:
-      defer: true
-  dependencies:
-    - core/drupal
-    - core/once
