@@ -56,7 +56,7 @@ class HeadingPluginTest extends UnitTestCase {
     $this->assertArrayHasKey('enabled_headings', $configuration);
 
     // Retrieve the possible heading options from the ckeditor5 config.
-    $ckeditor5_config = Yaml::parseFile('core/modules/ckeditor5/ckeditor5.ckeditor5.yml');
+    $ckeditor5_config = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
     $configuration['heading'] = $ckeditor5_config['ckeditor5_heading']['ckeditor5']['config']['heading'];
 
     // Build the dynamic configuration based on the enabled headings.
