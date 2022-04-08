@@ -34,6 +34,43 @@
    */
 
   /**
+   * List of time intervals.
+   *
+   * @type {object}
+   *
+   * @prop {number} year
+   *   Year duration in seconds.
+   * @prop {number} month
+   *   Month duration in seconds.
+   * @prop {number} week
+   *   Week duration in seconds.
+   * @prop {number} day
+   *   Day duration in seconds.
+   * @prop {number} hour
+   *   Hour duration in seconds.
+   * @prop {number} minute
+   *   Minute duration in seconds.
+   * @prop {number} second
+   *   One second.
+   */
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1,
+  };
+
+  /**
+   * List of available time intervals names.
+   *
+   * @type {string[]}
+   */
+  const intervalsNames = Object.keys(intervals);
+
+  /**
    *
    * @type {WeakMap<HTMLElement, number>}
    */
@@ -121,8 +158,8 @@
         // '1 hour 32 minutes', do not refresh every 10 seconds but every one
         // minute (60 seconds).
         if (unitsCount === granularity) {
-          Drupal.timeDiff.getAllIntervals().every((interval) => {
-            const duration = Drupal.timeDiff.intervals[interval];
+          intervalsNames.every((interval) => {
+            const duration = intervals[interval];
             if (interval === lastUnit) {
               refresh = refresh < duration ? duration : refresh;
               return false;
@@ -139,12 +176,9 @@
         // difference will be '1 hour' (because minutes are 0, therefore are not
         // shown) but we want the next refresh to occur, not in one hour, but in
         // one minute.
-        const lastIntervalIndex = Drupal.timeDiff
-          .getAllIntervals()
-          .indexOf(lastUnit);
-        const nextInterval =
-          Drupal.timeDiff.getAllIntervals()[lastIntervalIndex + 1];
-        refresh = Drupal.timeDiff.intervals[nextInterval];
+        const lastIntervalIndex = intervalsNames.indexOf(lastUnit);
+        const nextInterval = intervalsNames[lastIntervalIndex + 1];
+        refresh = intervals[nextInterval];
       }
       return refresh;
     },
@@ -186,8 +220,8 @@
       let units;
       let { granularity } = options;
 
-      Drupal.timeDiff.getAllIntervals().every((interval) => {
-        const duration = Drupal.timeDiff.intervals[interval];
+      intervalsNames.every((interval) => {
+        const duration = intervals[interval];
         units = Math.floor(diff / duration);
         if (units > 0) {
           diff %= units * duration;
@@ -241,46 +275,6 @@
         };
       }
       return { formatted: output.join(' '), value };
-    },
-
-    /**
-     * Returns and statically caches all intervals, without their durations.
-     *
-     * @return {Array}
-     *   Returns an array containing all intervals.
-     */
-    getAllIntervals() {
-      if (typeof Drupal.timeDiff.allIntervals === 'undefined') {
-        Drupal.timeDiff.allIntervals = Object.keys(Drupal.timeDiff.intervals);
-      }
-      return Drupal.timeDiff.allIntervals;
-    },
-
-    /**
-     * @namespace
-     * @prop {number} year
-     *   Year duration in seconds.
-     * @prop {number} month
-     *   Month duration in seconds.
-     * @prop {number} week
-     *   Week duration in seconds.
-     * @prop {number} day
-     *   Day duration in seconds.
-     * @prop {number} hour
-     *   Hour duration in seconds.
-     * @prop {number} minute
-     *   Minute duration in seconds.
-     * @prop {number} second
-     *   One second.
-     */
-    intervals: {
-      year: 31536000,
-      month: 2592000,
-      week: 604800,
-      day: 86400,
-      hour: 3600,
-      minute: 60,
-      second: 1,
     },
   };
 

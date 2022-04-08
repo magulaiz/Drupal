@@ -12,6 +12,16 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 (function (Drupal, once) {
+  var intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1
+  };
+  var intervalsNames = Object.keys(intervals);
   var timers = new WeakMap();
   Drupal.timeDiff = {
     show: function show(timeElement) {
@@ -45,8 +55,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (lastUnit !== 'second') {
         if (unitsCount === granularity) {
-          Drupal.timeDiff.getAllIntervals().every(function (interval) {
-            var duration = Drupal.timeDiff.intervals[interval];
+          intervalsNames.every(function (interval) {
+            var duration = intervals[interval];
 
             if (interval === lastUnit) {
               refresh = refresh < duration ? duration : refresh;
@@ -58,9 +68,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return refresh;
         }
 
-        var lastIntervalIndex = Drupal.timeDiff.getAllIntervals().indexOf(lastUnit);
-        var nextInterval = Drupal.timeDiff.getAllIntervals()[lastIntervalIndex + 1];
-        refresh = Drupal.timeDiff.intervals[nextInterval];
+        var lastIntervalIndex = intervalsNames.indexOf(lastUnit);
+        var nextInterval = intervalsNames[lastIntervalIndex + 1];
+        refresh = intervals[nextInterval];
       }
 
       return refresh;
@@ -87,8 +97,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       var units;
       var _options = options,
           granularity = _options.granularity;
-      Drupal.timeDiff.getAllIntervals().every(function (interval) {
-        var duration = Drupal.timeDiff.intervals[interval];
+      intervalsNames.every(function (interval) {
+        var duration = intervals[interval];
         units = Math.floor(diff / duration);
 
         if (units > 0) {
@@ -149,22 +159,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         formatted: output.join(' '),
         value: value
       };
-    },
-    getAllIntervals: function getAllIntervals() {
-      if (typeof Drupal.timeDiff.allIntervals === 'undefined') {
-        Drupal.timeDiff.allIntervals = Object.keys(Drupal.timeDiff.intervals);
-      }
-
-      return Drupal.timeDiff.allIntervals;
-    },
-    intervals: {
-      year: 31536000,
-      month: 2592000,
-      week: 604800,
-      day: 86400,
-      hour: 3600,
-      minute: 60,
-      second: 1
     }
   };
   Drupal.behaviors.timeDiff = {
