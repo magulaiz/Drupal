@@ -182,7 +182,7 @@ final class SmartDefaultSettings {
     $messages = [];
     $settings = $editor->getSettings();
     if (!isset($settings['toolbar']['items']) || !in_array('sourceEditing', $settings['toolbar']['items'])) {
-      $messages[] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
+      $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The <em>Source Editing</em> plugin was enabled to support tags and/or attributes that are not explicitly supported by any available CKEditor 5 plugins.');
       $settings['toolbar']['items'][] = 'sourceEditing';
     }
     $allowed_tags_array = $settings['plugins']['ckeditor5_sourceEditing']['allowed_tags'] ?? [];
@@ -763,7 +763,7 @@ final class SmartDefaultSettings {
         $subset_configuration = $this->upgradePluginManager->computeCKEditor5PluginSubsetConfiguration($plugin_name, $text_format);
       }
       catch (\OutOfBoundsException $e) {
-        $messages[] = $this->t('The CKEditor 5 plugin %button has a configurable subset of elements, but does not have a known upgrade path to configure that subset to match your text format. Hence it is now using its default configuration.', [
+        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('The CKEditor 5 plugin %button has a configurable subset of elements, but does not have a known upgrade path to configure that subset to match your text format. Hence it is now using its default configuration.', [
           '%plugin' => $plugin_name,
         ]);
         continue;

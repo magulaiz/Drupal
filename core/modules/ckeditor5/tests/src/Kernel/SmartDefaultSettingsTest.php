@@ -668,12 +668,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
-            'ckeditor5_sourceEditing' => [
-              'allowed_tags' => array_merge(
-                $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-                ['<img data-*>'],
-              ),
-            ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_merge(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<img data-*>'],
+            ),
+          ],
           ] + $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
