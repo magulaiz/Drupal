@@ -96,9 +96,9 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
       $this->assertJsCondition("Drupal.timeDiff.format($diff, $options).formatted === '$expected_formatted_value'");
     }
 
-    foreach ($this->getTimeoutTestCases() as $case) {
     // Unit testing Drupal.timeDiff.refreshInterval(). Not using @dataProvider
     // mechanism here in order to avoid reinstalling the site for each case.
+    foreach ($this->getRefreshIntervalTestCases() as $case) {
       $interval = json_encode($case['time_diff']);
       $this->assertJsCondition("Drupal.timeDiff.refreshInterval($interval, {$case['configured_refresh_interval']}, {$case['granularity']}) === {$case['computed_refresh_interval']}");
     }
@@ -234,7 +234,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    *   A list of test cases, each representing parameters to be passed to the
    *   javascript function.
    */
-  protected function getTimeoutTestCases(): array {
+  protected function getRefreshIntervalTestCases(): array {
     return [
       'passed timeout is not altered' => [
         'time_diff' => [
