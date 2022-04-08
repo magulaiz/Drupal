@@ -20,13 +20,51 @@ class HeadingPluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public function providerGetDynamicPluginConfig(): array {
+
+    // Prepare headings matching ckeditor5.ckeditor5.yml to also protect
+    // against unexpected changes to the YAML file given the YAML file is used
+    // to generate the dynamic plugin configuration.
+    $paragraph = [
+      'model' => 'paragraph',
+      'title' => 'Paragraph',
+      'class' => 'ck-heading_paragraph',
+    ];
+    $headings = [];
+    foreach (range(2, 6) as $number) {
+      $headings[$number] = [
+        'model' => 'heading' . $number,
+        'view' => 'h' . $number,
+        'title' => 'Heading ' . $number,
+        'class' => 'ck-heading_heading' . $number,
+      ];
+    }
+
     return [
       'All headings' => [
         Heading::DEFAULT_CONFIGURATION,
+        [
+          'heading' => [
+            'options' => [
+              $paragraph,
+              $headings[2],
+              $headings[3],
+              $headings[4],
+              $headings[5],
+              $headings[6],
+            ],
+          ],
+        ],
       ],
       'Only required headings' => [
         [
           'enabled_headings' => [],
+        ],
+        [
+          'heading' => [
+            'options' => [
+              $paragraph,
+            ],
+          ],
         ],
       ],
       'Heading 2 only' => [
@@ -35,12 +73,29 @@ class HeadingPluginTest extends UnitTestCase {
             'heading2',
           ],
         ],
+        [
+          'heading' => [
+            'options' => [
+              $paragraph,
+              $headings[2],
+            ],
+          ],
+        ],
       ],
       'Heading 2 and 3 only' => [
         [
           'enabled_headings' => [
             'heading2',
             'heading3',
+          ],
+        ],
+        [
+          'heading' => [
+            'options' => [
+              $paragraph,
+              $headings[2],
+              $headings[3],
+            ],
           ],
         ],
       ],
@@ -52,7 +107,7 @@ class HeadingPluginTest extends UnitTestCase {
    *
    * @dataProvider providerGetDynamicPluginConfig
    */
-  public function testGetDynamicPluginConfig(array $configuration): void {
+  public function testGetDynamicPluginConfig(array $configuration, array $expected_dyanmic_config): void {
     $this->assertArrayHasKey('enabled_headings', $configuration);
 
     // Retrieve the possible heading options from the ckeditor5 config.
@@ -61,15 +116,11 @@ class HeadingPluginTest extends UnitTestCase {
 
     // Build the dynamic configuration based on the enabled headings.
     $plugin = new Heading($configuration, 'ckeditor5_heading', NULL);
-    $config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
       ->reveal());
 
     // Check that the generated configuration contains all enabled headings.
-    $enabled_headings = array_merge($plugin::ALWAYS_ENABLED_HEADINGS, $configuration['enabled_headings']);
-    $this->assertSame(count($config['heading']['options']), count($enabled_headings));
-    foreach ($config['heading']['options'] as $heading) {
-      $this->assertContains($heading['model'], $enabled_headings);
-    }
+    $this->assertSame($expected_dyanmic_config, $dynamic_plugin_config);
   }
 
 }
