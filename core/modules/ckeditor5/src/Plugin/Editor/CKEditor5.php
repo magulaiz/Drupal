@@ -271,7 +271,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
         }
         if (isset($messages[MessengerInterface::TYPE_WARNING]) || isset($messages[MessengerInterface::TYPE_ERROR])) {
           $this->messenger()->addMessage($this->t('Check <a href=":handbook">this handbook page</a> for details about compability issues of contrib modules.', [
-            ':handbook' => 'https://www.drupal.org/node/3273985'
+            ':handbook' => 'https://www.drupal.org/node/3273985',
           ]), MessengerInterface::TYPE_WARNING);
         }
       }
