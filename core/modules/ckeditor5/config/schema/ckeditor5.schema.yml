@@ -85,3 +85,24 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
         label: 'Allowed Tag'
         constraints:
           SourceEditingRedundantTags: []
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment
+ckeditor5.plugin.ckeditor5_alignment:
+  type: mapping
+  label: Alignments
+  mapping:
+    enabled_alignments:
+      type: sequence
+      label: 'Enabled Alignments'
+      constraints:
+        NotBlank:
+          message: "Enable at least one alignment, otherwise disable the Alignment button."
+      sequence:
+        type: string
+        label: 'Alignment type'
+        constraints:
+          Choice:
+            - left
+            - center
+            - right
+            - justify
