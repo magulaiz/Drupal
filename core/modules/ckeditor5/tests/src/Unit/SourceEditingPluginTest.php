@@ -23,6 +23,51 @@ class SourceEditingPluginTest extends UnitTestCase {
         [
           'allowed_tags' => ['<cite> <dl> <dt> <dd> <a hreflang> <blockquote cite> <ul type> <ol start type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>'],
         ],
+        [
+          ['name' => 'cite'],
+          ['name' => 'dl'],
+          ['name' => 'dt'],
+          ['name' => 'dd'],
+          [
+            'name' => 'a',
+            'attributes' => [['key' => 'hreflang', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'blockquote',
+            'attributes' => [['key' => 'cite', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'ul',
+            'attributes' => [['key' => 'type', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'ol',
+            'attributes' => [
+              ['key' => 'start', 'value' => TRUE],
+              ['key' => 'type', 'value' => TRUE],
+            ],
+          ],
+          [
+            'name' => 'h2',
+            'attributes' => [['key' => 'id', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'h3',
+            'attributes' => [['key' => 'id', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'h4',
+            'attributes' => [['key' => 'id', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'h5',
+            'attributes' => [['key' => 'id', 'value' => TRUE]],
+          ],
+          [
+            'name' => 'h6',
+            'attributes' => [['key' => 'id', 'value' => TRUE]],
+          ],
+        ],
       ],
     ];
   }
@@ -32,7 +77,7 @@ class SourceEditingPluginTest extends UnitTestCase {
    *
    * @dataProvider providerGetDynamicPluginConfig
    */
-  public function testGetDynamicPluginConfig(array $configuration): void {
+  public function testGetDynamicPluginConfig(array $configuration, array $expected_html_tags): void {
     $plugin = new SourceEditing($configuration, 'ckeditor5_sourceEditing', NULL);
     $config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
       ->reveal());
@@ -81,6 +126,7 @@ class SourceEditingPluginTest extends UnitTestCase {
       'name' => 'h6',
       'attributes' => [['key' => 'id', 'value' => TRUE]],
     ], $config['htmlSupport']['allow']);
+    $this->assertSameSize($expected_html_tags, $config['htmlSupport']['allow']);
   }
 
 }
