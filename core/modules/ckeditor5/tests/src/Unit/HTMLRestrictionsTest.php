@@ -101,6 +101,36 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ['foo' => ['baz' => TRUE], 'bar' => ['qux' => ['a' => TRUE, 'b' => TRUE]]],
       NULL,
     ];
+
+    // Invalid global attribute `*` HTML tag restrictions.
+    yield 'INVALID: global attribute tag allowing no attributes' => [
+      ['*' => FALSE],
+      'The value for the special "*" global attribute HTML tag must be an array of attribute restrictions.',
+    ];
+    yield 'INVALID: global attribute tag allowing any attribute' => [
+      ['*' => TRUE],
+      'The value for the special "*" global attribute HTML tag must be an array of attribute restrictions.',
+    ];
+
+    // Valid global attribute `*` HTML tag restrictions.
+    yield 'VALID: global attribute tag with attribute allowed' => [
+      ['*' => ['foo' => TRUE]],
+      NULL,
+    ];
+    yield 'VALID: global attribute tag with attribute forbidden' => [
+      ['*' => ['foo' => FALSE]],
+      NULL,
+    ];
+    yield 'VALID: global attribute tag with attribute allowed, specific attribute values allowed' => [
+      ['*' => ['foo' => ['a' => TRUE, 'b' => TRUE]]],
+      NULL,
+    ];
+    // @todo Nothing in Drupal core uses this ability, and no custom/contrib
+    //   module is known to use this. Therefore this is left for the future.
+    yield 'VALID BUT NOT YET SUPPORTED: global attribute tag with attribute allowed, specific attribute values forbidden' => [
+      ['*' => ['foo' => ['a' => FALSE, 'b' => FALSE]]],
+      'The "*" HTML tag has attribute restriction "foo", but it is not an array of key-value pairs, with HTML tag attribute values as keys and TRUE as values.',
+    ];
   }
 
   /**
@@ -167,21 +197,22 @@ class HTMLRestrictionsTest extends UnitTestCase {
     $this->assertSame($expected, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements());
     $this->assertSame($expected_raw, HTMLRestrictions::fromTextFormat($text_format->reveal())->getAllowedElements(FALSE));
 
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    $filter_html_additional_expectations = [
+      '*' => [
+        'style' => FALSE,
+        'on*' => FALSE,
+        'lang' => TRUE,
+        'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
+      ],
+    ];
     // ::fromFilterPluginInstance()
     $filter_plugin_instance = $this->prophesize(FilterInterface::class);
     $filter_plugin_instance->getHTMLRestrictions()->willReturn([
-      'allowed' => $expected_raw + [
-        // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
-        '*' => [
-          'style' => FALSE,
-          'on*' => FALSE,
-          'lang' => TRUE,
-          'dir' => ['ltr' => TRUE, 'rtl' => TRUE],
-        ],
-      ],
+      'allowed' => $expected_raw + $filter_html_additional_expectations,
     ]);
-    $this->assertSame($expected, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());
-    $this->assertSame($expected_raw, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
+    $this->assertSame($expected + $filter_html_additional_expectations, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements());
+    $this->assertSame($expected_raw + $filter_html_additional_expectations, HTMLRestrictions::fromFilterPluginInstance($filter_plugin_instance->reveal())->getAllowedElements(FALSE));
   }
 
   public function providerConvenienceConstructors(): \Generator {
@@ -1111,6 +1142,66 @@ class HTMLRestrictionsTest extends UnitTestCase {
         'union' => 'b',
       ];
     }
+
+    // Joker wildcard tag + joker wildcard tag cases.
+    yield 'joker wildcard tag + joker wildcard tag: no overlap in attributes' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'b' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
+    ];
+    yield 'joker wildcard tag + joker wildcard tag: no overlap in attributes — vice versa' => [
+      'a' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
+    ];
+    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, same attribute value restrictions' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'b' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'diff' => new HTMLRestrictions(['*' => ['foo' => TRUE]]),
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, same attribute value restrictions — vice versa' => [
+      'a' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
+    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, different attribute value restrictions' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'b' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
+    ];
+    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, different attribute value restrictions — vice versa' => [
+      'a' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      'diff' => 'a',
+      'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
+    ];
+
+    // Joker wildcard tag + concrete tag.
+    yield 'joker wildcard tag + concrete tag' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'b' => new HTMLRestrictions(['p' => FALSE]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
+    ];
+    yield 'joker wildcard tag + concrete tag — vice versa' => [
+      'a' => new HTMLRestrictions(['p' => FALSE]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
+    ];
   }
 
   /**
@@ -1137,9 +1228,15 @@ class HTMLRestrictionsTest extends UnitTestCase {
     ];
 
     yield 'with wildcards' => [
-      new HTMLRestrictions(['div' => FALSE, '$text-container' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['div' => FALSE, '$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
-      new HTMLRestrictions(['div' => FALSE]),
+      new HTMLRestrictions(['div' => FALSE, '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+    ];
+
+    yield 'wildcards and global attribute tag' => [
+      new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE], '*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
+      new HTMLRestrictions(['$text-container' => ['data-llama' => TRUE]]),
+      new HTMLRestrictions(['*' => ['on*' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
     ];
 
     yield 'only wildcards' => [
