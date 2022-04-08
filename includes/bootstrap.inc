@@ -1813,7 +1813,7 @@ function t($string, array $args = array(), array $options = array()) {
   // *instead of* database lookups. This is a high performance way to provide a
   // handful of string replacements. See settings.php for examples.
   // Cache the $custom_strings variable to improve performance.
-  if (!isset($custom_strings[$options['langcode']])) {
+  if (empty($custom_strings[$options['langcode']])) {
     $custom_strings[$options['langcode']] = variable_get('locale_custom_strings_' . $options['langcode'], array());
   }
   // Custom strings work for English too, even if locale module is disabled.
