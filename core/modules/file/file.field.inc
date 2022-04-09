@@ -21,6 +21,14 @@ use Drupal\Core\Render\Element;
 function template_preprocess_file_widget_multiple(&$variables) {
   $element = $variables['element'];
 
+  // Get unsaved order to apply it later.
+  $unsaved_changes_order = [];
+  foreach (Element::children($element) as $key) {
+    if (isset($element[$key]['#value']['_weight']) ?? $element[$key]['#value']['_weight'] !== NULL) {
+      $unsaved_changes_order[$key] = $element[$key]['#value']['_weight'];
+    }
+  }
+
   // Special ID and classes for draggable tables.
   $weight_class = $element['#id'] . '-weight';
   $table_id = $element['#id'] . '-table';
@@ -42,6 +50,14 @@ function template_preprocess_file_widget_multiple(&$variables) {
   $widgets = [];
   foreach (Element::children($element) as $key) {
     $widgets[] = &$element[$key];
+
+    if (!empty($unsaved_changes_order)) {
+      // +1 is added to shift the order weight by one, because when we remove
+      // item from list, the allowed minimum weight is decreased by one.
+      if (isset($unsaved_changes_order[$key])) {
+        $widgets[$key]['_weight']['#value'] = $unsaved_changes_order[$key] + 1;
+      }
+    }
   }
   usort($widgets, '_field_multiple_value_form_sort_helper');
 
