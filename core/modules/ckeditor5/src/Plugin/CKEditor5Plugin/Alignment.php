@@ -8,7 +8,6 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
-use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\EditorInterface;
 
@@ -61,7 +60,7 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
         '#type' => 'checkbox',
         '#title' => $this->t($name),
         '#return_value' => $name,
-        '#default_value' =>in_array($name, $this->configuration['enabled_alignments'], TRUE) ? $name : NULL,
+        '#default_value' => in_array($name, $this->configuration['enabled_alignments'], TRUE) ? $name : NULL,
       ];
     }
 
