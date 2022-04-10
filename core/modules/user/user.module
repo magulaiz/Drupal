@@ -853,7 +853,7 @@ function user_user_role_insert(RoleInterface $role) {
 
   assert(Inspector::assertStringable($role->label()), 'Role label is expected to be a string.');
 
-  $add_id = 'user_add_role_action.' . $role->id();
+  $add_id = 'user_add_role_' . $role->id() . '_action';
   if (!Action::load($add_id)) {
     $action = Action::create([
       'id' => $add_id,
@@ -866,7 +866,7 @@ function user_user_role_insert(RoleInterface $role) {
     ]);
     $action->trustData()->save();
   }
-  $remove_id = 'user_remove_role_action.' . $role->id();
+  $remove_id = 'user_remove_role_' . $role->id() . '_action';
   if (!Action::load($remove_id)) {
     $action = Action::create([
       'id' => $remove_id,

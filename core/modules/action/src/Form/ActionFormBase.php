@@ -66,6 +66,7 @@ abstract class ActionFormBase extends EntityForm {
       '#description' => $this->t('A unique name for this action. It must only contain lowercase letters, numbers and underscores.'),
       '#machine_name' => [
         'exists' => [$this, 'exists'],
+        'replace_pattern' => '[^a-z0-9_.]+',
       ],
     ];
     $form['plugin'] = [
