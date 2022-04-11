@@ -1,6 +1,6 @@
 /* cspell:words documentselection */
 /**
- * Checks the schema if drupalElementStyle is supported on the element.
+ * Checks the schema to see if drupalElementStyle is supported on the element.
  *
  * @param {module:engine/model/element~Element|null} selectedElement
  *   The selected element.
@@ -29,7 +29,7 @@ export function elementSupportsDrupalElementStyles(
 }
 
 /**
- * Gets closest element that has any drupalElementStyle attribute in schema.
+ * Gets the closest element with any drupalElementStyle attribute in its schema.
  *
  * @param {module:engine/model/documentselection~DocumentSelection} selection
  *   The current document selection.

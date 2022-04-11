@@ -3,7 +3,7 @@
 import { Plugin, icons } from 'ckeditor5/src/core';
 import { first } from 'ckeditor5/src/utils';
 import DrupalElementStyleCommand from './drupalelementstylecommand';
-import { getModelAttributeKeyFromGroup } from '../utils';
+import { groupNameToModelAttributeKey } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleediting
@@ -59,9 +59,10 @@ function modelToViewStyleAttribute(styles) {
     if (newStyle) {
       if (newStyle.attributeName === 'class') {
         viewWriter.addClass(newStyle.attributeValue, viewElement);
-        // No need to set default style attributes on the element because there is
-        // nothing to downcast to since the drupalElementStyle command sets to default when necessary.
       } else if (!newStyle.isDefault) {
+        // We only reach this condition if the style is not the default value.
+        // In those instances, there is no need to downcast as the default value
+        // is set automatically when necessary.
         viewWriter.setAttribute(
           newStyle.attributeName,
           newStyle.attributeValue,
@@ -78,7 +79,7 @@ function modelToViewStyleAttribute(styles) {
  * This view to model converted supports styles that are configured to use
  * either CSS class or an attribute.
  *
- * Note that only one style can be applied to each model element.
+ * Note that more than one style can be applied to each modelElement.
  */
 function viewToModelStyleAttribute(styles, modelAttribute) {
   // Convert only non–default styles.
@@ -97,7 +98,7 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
       return;
     }
 
-    // Stop conversion early if the drupalElementStyle attribute isn't allowed
+    // Stop conversion early if modelAttribute represents an attribute that isn't allowed
     // for the element.
     if (!conversionApi.schema.checkAttribute(modelElement, modelAttribute)) {
       return;
@@ -201,6 +202,7 @@ export default class DrupalElementStyleEditing extends Plugin {
     const { editor } = this;
 
     const stylesConfig = editor.config.get('drupalElementStyles');
+    this.normalizedStyles = {};
 
     /**
      * The Drupal Element Style definitions.
@@ -226,7 +228,7 @@ export default class DrupalElementStyleEditing extends Plugin {
      * @type {Drupal.CKEditor5~DrupalElementStyleDefinition}
      */
     Object.keys(stylesConfig).forEach((group) => {
-      stylesConfig[group] // array of styles
+      this.normalizedStyles[group] = stylesConfig[group] // array of styles
         .map((style) => {
           // Allow defining style icon as a string that is referring to the
           // CKEditor 5 default icons.
@@ -237,14 +239,14 @@ export default class DrupalElementStyleEditing extends Plugin {
           }
           if (style.name) {
             // Make sure names are all strings.
-            style.name = style.name.toString();
+            style.name = `${style.name}`;
           }
           return style;
         })
         .filter((style) => {
           if (
-            (!style.isDefault && !style.attributeName) ||
-            !style.attributeValue
+            !style.isDefault &&
+            (!style.attributeName || !style.attributeValue)
           ) {
             console.warn(
               `${style.attributeValue} drupalElementStyles options must include attributeName and attributeValue.`,
@@ -257,6 +259,7 @@ export default class DrupalElementStyleEditing extends Plugin {
             );
             return false;
           }
+
           if (!style.name) {
             console.warn('drupalElementStyles options must include a name.');
             return false;
@@ -265,7 +268,6 @@ export default class DrupalElementStyleEditing extends Plugin {
           return true;
         });
     });
-    this.normalizedStyles = stylesConfig;
 
     this._setupConversion();
 
@@ -289,9 +291,8 @@ export default class DrupalElementStyleEditing extends Plugin {
 
     const groupNamesArr = Object.keys(this.normalizedStyles);
 
-    for (let i = 0; i < groupNamesArr.length; i++) {
-      const group = groupNamesArr[i];
-      const modelAttribute = getModelAttributeKeyFromGroup(group);
+    groupNamesArr.forEach((group) => {
+      const modelAttribute = groupNameToModelAttributeKey(group);
 
       const modelToViewConverter = modelToViewStyleAttribute(
         this.normalizedStyles[group],
@@ -334,7 +335,7 @@ export default class DrupalElementStyleEditing extends Plugin {
         // the element has been converted to a model element.
         { priority: 'low' },
       );
-    }
+    });
   }
 
   /**

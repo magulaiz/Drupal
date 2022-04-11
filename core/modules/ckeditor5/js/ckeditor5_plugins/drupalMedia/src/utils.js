@@ -138,7 +138,7 @@ export function getPreviewContainer(children) {
  *
  * @internal
  */
-export function getModelAttributeKeyFromGroup(group) {
+export function groupNameToModelAttributeKey(group) {
   // Manipulate string to have first letter capitalized to append in camel case.
   const capitalizedFirst = group[0].toUpperCase() + group.substring(1);
   return `drupalElementStyle${capitalizedFirst}`;

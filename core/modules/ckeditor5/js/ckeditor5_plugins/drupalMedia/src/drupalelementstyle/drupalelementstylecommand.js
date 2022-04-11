@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Command } from 'ckeditor5/src/core';
 import { getClosestElementWithElementStyleAttribute } from './utils';
-import { getModelAttributeKeyFromGroup } from '../utils';
+import { groupNameToModelAttributeKey } from '../utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstylecommand
@@ -10,7 +10,7 @@ import { getModelAttributeKeyFromGroup } from '../utils';
 /**
  * The Drupal Element style command.
  *
- * This is used to apply Drupal Element Style option to supported model
+ * This is used to apply the Drupal Element Style option to supported model
  * elements.
  *
  * @extends module:core/command~Command
@@ -25,7 +25,6 @@ export default class DrupalElementStyleCommand extends Command {
    *   The editor instance.
    * @param {Object<string, Drupal.CKEditor5~DrupalElementStyleDefinition>} styles
    *   All available Drupal Element Styles.
-   *
    */
   constructor(editor, styles) {
     super(editor);
@@ -40,7 +39,7 @@ export default class DrupalElementStyleCommand extends Command {
     this.modelAttributes = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const group of Object.keys(styles)) {
-      const modelAttribute = getModelAttributeKeyFromGroup(group);
+      const modelAttribute = groupNameToModelAttributeKey(group);
       // Generate list of model attributes.
       this.modelAttributes.push(modelAttribute);
     }
@@ -56,6 +55,7 @@ export default class DrupalElementStyleCommand extends Command {
       editor.model.schema,
       this.modelAttributes,
     );
+
     this.isEnabled = !!element;
 
     if (this.isEnabled) {
@@ -81,13 +81,13 @@ export default class DrupalElementStyleCommand extends Command {
     const value = {};
     // Get value for each of the Drupal Element Style groups.
     Object.keys(this.styles).forEach((group) => {
-      const modelAttribute = getModelAttributeKeyFromGroup(group);
+      const modelAttribute = groupNameToModelAttributeKey(group);
       if (element.hasAttribute(modelAttribute)) {
         value[group] = element.getAttribute(modelAttribute);
       } else {
         // eslint-disable-next-line no-restricted-syntax
-        for (const [key, style] of this.styles[group]) {
-          // If there is no drupalElementStyle for a group, set to to the default.
+        for (const [, style] of this.styles[group]) {
+          // Set it to the default value.
           if (style.isDefault) {
             value[group] = style.name;
           }
@@ -101,7 +101,7 @@ export default class DrupalElementStyleCommand extends Command {
    * Executes the command and applies the style to the selected model element.
    *
    * @example
-   *    editor.execute('drupalElementStyle', { value: { align: 'left' }, group: 'align'});
+   *    editor.execute('drupalElementStyle', { value: 'left', group: 'align'});
    *
    * @param {Object} options
    *   The command options.
@@ -116,7 +116,7 @@ export default class DrupalElementStyleCommand extends Command {
       editor: { model },
     } = this;
     const { value, group } = options;
-    const modelAttribute = getModelAttributeKeyFromGroup(group);
+    const modelAttribute = groupNameToModelAttributeKey(group);
     model.change((writer) => {
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
@@ -127,7 +127,7 @@ export default class DrupalElementStyleCommand extends Command {
         // Remove attribute from the element.
         writer.removeAttribute(modelAttribute, element);
       } else {
-        // Set or add the new attribute on the element.
+        // Set the attribute value on the element.
         writer.setAttribute(modelAttribute, value, element);
       }
     });

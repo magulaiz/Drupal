@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cSpell:words insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
-import { getModelAttributeKeyFromGroup } from './utils';
+import { groupNameToModelAttributeKey } from './utils';
 
 /**
  * @module drupalMedia/insertdrupalmediacommand
@@ -78,7 +78,7 @@ export default class InsertDrupalMediaCommand extends Command {
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
           ) {
-            const modelAttribute = getModelAttributeKeyFromGroup(group);
+            const modelAttribute = groupNameToModelAttributeKey(group);
             modelAttributes[modelAttribute] = style.name;
           }
         }
