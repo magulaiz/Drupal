@@ -324,9 +324,8 @@
      *   The string representation of the setting. e.g. "<p> <br> <a>"
      */
     _generateSetting(tags) {
-      let setting = '';
-      Object.entries(tags).forEach((data) => {
-        const [tag, rule] = data;
+      return Object.keys(tags).reduce((setting, tag) => {
+        const rule = tags[tag];
 
         if (setting.length) {
           setting += ' ';
@@ -348,9 +347,8 @@
         }
 
         setting += '>';
-      });
-
-      return setting;
+        return setting;
+      }, '');
     },
   };
 
