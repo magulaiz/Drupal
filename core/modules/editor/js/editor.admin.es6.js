@@ -426,12 +426,13 @@
         // Check if a tag in the universe is forbidden.
         const allRequiredTags = Object.keys(universe);
         let filterRule;
-        const checkFilterRuleTags = (tag) =>
-          filterRule.tags.include(tag).length > 0;
         for (let i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
           if (filterRule.allow === false) {
-            if (allRequiredTags.filter((tag) => checkFilterRuleTags(tag))) {
+            const intersection = filterRule.tags.filter((tag) =>
+              allRequiredTags.includes(tag),
+            );
+            if (intersection.length > 0) {
               return true;
             }
           }

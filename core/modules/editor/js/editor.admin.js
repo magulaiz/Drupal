@@ -146,17 +146,15 @@
         var allRequiredTags = Object.keys(universe);
         var filterRule;
 
-        var checkFilterRuleTags = function checkFilterRuleTags(tag) {
-          return filterRule.tags.include(tag).length > 0;
-        };
-
         for (var i = 0; i < filterStatus.rules.length; i++) {
           filterRule = filterStatus.rules[i];
 
           if (filterRule.allow === false) {
-            if (allRequiredTags.filter(function (tag) {
-              return checkFilterRuleTags(tag);
-            })) {
+            var intersection = filterRule.tags.filter(function (tag) {
+              return allRequiredTags.includes(tag);
+            });
+
+            if (intersection.length > 0) {
               return true;
             }
           }
