@@ -613,11 +613,7 @@
         // values and/or rules for forbidding tag property values. For details:
         // see the comments below.
         // @see generateUniverseFromFeatureRequirements()
-        if (
-          filterStatus.rules
-            .map((rule) => rule.allow)
-            .some((allowed) => allowed)
-        ) {
+        if (filterStatus.rules.some(({ allowed }) => allowed)) {
           // If the universe is empty, then everything was explicitly allowed
           // and our job is done: this filter allows this feature!
           if (Object.keys(universe).length === 0) {
