@@ -108,6 +108,7 @@ export default class DrupalElementStyleUi extends Plugin {
      *          - name: 'drupalMedia:viewMode'
      *            display: 'listDropdown'
      *            items:
+     *              - 'drupalElementStyle:viewMode:default'
      *              - 'drupalElementStyle:viewMode:full'
      *              - 'drupalElementStyle:viewMode:media_library'
      *              - 'drupalElementStyle:viewMode:compact'
