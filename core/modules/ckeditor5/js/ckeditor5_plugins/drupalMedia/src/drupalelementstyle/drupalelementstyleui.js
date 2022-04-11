@@ -398,11 +398,10 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
-        // For buttons that display as icons (split button and non-dropdown
-        // toolbar buttons), update option visibility here.
-        if (buttonConfig.icon) {
+        this.listenTo(this.editor.ui, 'update', () => {
           this.updateOptionVisibility(definedStyles, buttonConfig, view, group);
-        }
+        });
+
         return view;
       },
     );
