@@ -131,9 +131,12 @@ export function getPreviewContainer(children) {
  * @example
  *    Example: 'align' -> 'drupalElementStyleAlign'
  *
- * @param {string} group The name of the group (ex. 'align', 'viewMode').
+ * @param {string} group
+ *   The name of the group (ex. 'align', 'viewMode').
  * @return {string}
- *  Model attribute key.
+ *   Model attribute key.
+ *
+ * @internal
  */
 export function getModelAttributeKeyFromGroup(group) {
   // Manipulate string to have first letter capitalized to append in camel case.

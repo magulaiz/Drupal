@@ -146,11 +146,12 @@ function viewToModelStyleAttribute(styles, modelAttribute) {
 /**
  * The Drupal Element Style editing plugin.
  *
- * Additional Drupal Element styles can be defined with `drupalElementStyles`
+ * Additional Drupal Element Styles can be defined with `drupalElementStyles`
  * configuration key.
  *
- * Additional Drupal Element styles can support multiple axes (ex. media alignment and media view modes)
- * by adding the new group under drupalElementStyles.
+ * Additional Drupal Element Styles can support multiple axes (e.g. media
+ * alignment and media view modes) by adding the new group under
+ * drupalElementStyles.
  *
  * @example
  *    config:
@@ -205,7 +206,8 @@ export default class DrupalElementStyleEditing extends Plugin {
      * The Drupal Element Style definitions.
      *
      * @typedef {Object} Drupal.CKEditor5~DrupalElementStyleDefinition
-     *   Object that contains an array of DrupalElementStyle objects for each group.
+     *   Object that contains an array of DrupalElementStyle objects for each
+     *   group.
      *
      * @prop {string} name
      *   The name of the style used for identifying the button.

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
-/* cspell:words documentselection */
 import { Command } from 'ckeditor5/src/core';
+import { getClosestElementWithElementStyleAttribute } from './utils';
 import { getModelAttributeKeyFromGroup } from '../utils';
 
 /**
@@ -8,80 +8,10 @@ import { getModelAttributeKeyFromGroup } from '../utils';
  */
 
 /**
- * Checks the schema if any of the drupalElementStyles with the given attribute name exists.
- *
- * @param {module:engine/model/element~Element|null} selectedElement
- *   The selected element.
- * @param {module:engine/model/schema~Schema} schema
- *   The model schema.
- * @param {string[]} modelAttributes
- *   Array of model attribute keys.
- *
- * @return {boolean}
- *   Does the schema contain the attribute?
- */
-function schemaContainsAttribute(selectedElement, schema, modelAttributes) {
-  // eslint-disable-next-line no-restricted-syntax
-  for (const modelAttribute of modelAttributes) {
-    if (schema.checkAttribute(selectedElement, modelAttribute)) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/**
- * Gets closest element that has any drupalElementStyle attribute in schema.
- *
- * @param {module:engine/model/documentselection~DocumentSelection} selection
- *   The current document selection.
- * @param {module:engine/model/schema~Schema} schema
- *   The model schema.
- * @param {Drupal.CKEditor5~DrupalElementStyleDefinition} styles
- *   All available Drupal Element Styles.
- *
- * @return {null|module:engine/model/element~Element}
- *   The closest element that supports element styles.
- */
-export function getClosestElementWithElementStyleAttribute(
-  selection,
-  schema,
-  styles,
-) {
-  const modelAttributes = [];
-  // eslint-disable-next-line no-restricted-syntax
-  for (const group of Object.keys(styles)) {
-    const modelAttribute = getModelAttributeKeyFromGroup(group);
-    // Generate list of model attributes.
-    modelAttributes.push(modelAttribute);
-  }
-  const selectedElement = selection.getSelectedElement();
-  if (
-    selectedElement &&
-    schemaContainsAttribute(selectedElement, schema, modelAttributes)
-  ) {
-    return selectedElement;
-  }
-  let { parent } = selection.getFirstPosition();
-
-  while (parent) {
-    if (parent.is('element')) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const modelAttribute of modelAttributes) {
-        if (schemaContainsAttribute(parent, schema, modelAttributes)) {
-          return parent;
-        }
-      }
-    }
-    parent = parent.parent;
-  }
-  return null;
-}
-
-/**
  * The Drupal Element style command.
  *
- * This is used to apply Drupal Element style option to supported model elements.
+ * This is used to apply Drupal Element Style option to supported model
+ * elements.
  *
  * @extends module:core/command~Command
  *
@@ -99,15 +29,21 @@ export default class DrupalElementStyleCommand extends Command {
    */
   constructor(editor, styles) {
     super(editor);
-    this.styles = styles;
-    this.stylesMap = {};
-    Object.keys(this.styles).forEach((group) => {
-      this.stylesMap[group] = new Map(
-        this.styles[group].map((style) => {
+    this.styles = {};
+    Object.keys(styles).forEach((group) => {
+      this.styles[group] = new Map(
+        styles[group].map((style) => {
           return [style.name, style];
         }),
       );
     });
+    this.modelAttributes = [];
+    // eslint-disable-next-line no-restricted-syntax
+    for (const group of Object.keys(styles)) {
+      const modelAttribute = getModelAttributeKeyFromGroup(group);
+      // Generate list of model attributes.
+      this.modelAttributes.push(modelAttribute);
+    }
   }
 
   /**
@@ -118,46 +54,47 @@ export default class DrupalElementStyleCommand extends Command {
     const element = getClosestElementWithElementStyleAttribute(
       editor.model.document.selection,
       editor.model.schema,
-      this.styles,
+      this.modelAttributes,
     );
     this.isEnabled = !!element;
 
     if (this.isEnabled) {
       // Assign value to be corresponding command value based on the element's modelAttribute.
-      this.value = this.getGroupAndAttribute(element);
+      this.value = this.getValue(element);
     } else {
       this.value = false;
     }
   }
 
   /**
-   * Gets the group(s) and attribute(s) of the element in the form of a command.
+   * Gets the command value including groups and values.
    *
    * @example {drupalAlign: 'left', drupalViewMode: 'full'}
    *
-   * @param {module:engine/model/element~Element|null} element
+   * @param {module:engine/model/element~Element} element
    *   The element.
    *
    * @return {Object}
-   * The group(s) and attribute(s) in the form of an object.
+   *   The groups and values in the form of an object.
    */
-  getGroupAndAttribute(element) {
-    const groupAttr = {};
+  getValue(element) {
+    const value = {};
+    // Get value for each of the Drupal Element Style groups.
     Object.keys(this.styles).forEach((group) => {
       const modelAttribute = getModelAttributeKeyFromGroup(group);
       if (element.hasAttribute(modelAttribute)) {
-        groupAttr[group] = element.getAttribute(modelAttribute);
+        value[group] = element.getAttribute(modelAttribute);
       } else {
         // eslint-disable-next-line no-restricted-syntax
-        for (const style of this.styles[group]) {
+        for (const [key, style] of this.styles[group]) {
           // If there is no drupalElementStyle for a group, set to to the default.
           if (style.isDefault) {
-            groupAttr[group] = style.name;
+            value[group] = style.name;
           }
         }
       }
     });
-    return groupAttr;
+    return value;
   }
 
   /**
@@ -178,29 +115,20 @@ export default class DrupalElementStyleCommand extends Command {
     const {
       editor: { model },
     } = this;
-    const { group } = options;
+    const { value, group } = options;
     const modelAttribute = getModelAttributeKeyFromGroup(group);
     model.change((writer) => {
-      const modelGroupName = Object.keys(options.value)[0];
-      const requestedStyle = options.value;
       const element = getClosestElementWithElementStyleAttribute(
         model.document.selection,
         model.schema,
-        this.styles,
+        this.modelAttributes,
       );
-      if (
-        !requestedStyle ||
-        this.stylesMap[group].get(requestedStyle[modelGroupName]).isDefault
-      ) {
+      if (!value || this.styles[group].get(value).isDefault) {
         // Remove attribute from the element.
         writer.removeAttribute(modelAttribute, element);
       } else {
         // Set or add the new attribute on the element.
-        writer.setAttribute(
-          modelAttribute,
-          requestedStyle[modelGroupName],
-          element,
-        );
+        writer.setAttribute(modelAttribute, value, element);
       }
     });
   }

@@ -14,7 +14,7 @@ import {
 } from 'ckeditor5/src/ui';
 import DrupalElementStyleEditing from './drupalelementstyleediting';
 import { isObject } from '../utils';
-import { getClosestElementWithElementStyleAttribute } from './drupalelementstylecommand';
+import { getClosestElementWithElementStyleAttribute } from './utils';
 
 /**
  * @module drupalMedia/drupalelementstyle/drupalelementstyleui
@@ -137,8 +137,9 @@ export default class DrupalElementStyleUi extends Plugin {
      *
      * @typedef {Object} Drupal.CKEditor5~drupalElementStyleDropdownDefinition
      *
-     * These properties are needed for a list or split button dropdown configuration. Buttons directly on the toolbar
-     * without a dropdown can be configured like in the align example above.
+     * These properties are needed for a list or split button dropdown
+     * configuration. Buttons directly on the toolbar without a dropdown can be
+     * configured like in the align example above.
      * @prop {string} name
      *   The name of the dropdown used for identifying the dropdown, either as a
      *   list or icons.
@@ -394,8 +395,8 @@ export default class DrupalElementStyleUi extends Plugin {
 
         view.on('execute', this._executeCommand.bind(this, buttonName, group));
 
-        // For buttons that display as icons (split button and non-dropdown toolbar buttons),
-        // update option visibility here.
+        // For buttons that display as icons (split button and non-dropdown
+        // toolbar buttons), update option visibility here.
         if (buttonConfig.icon) {
           this.updateOptionVisibility(definedStyles, buttonConfig, view, group);
         }
@@ -536,10 +537,8 @@ export default class DrupalElementStyleUi extends Plugin {
    * @private
    */
   _executeCommand(name, group) {
-    const obj = {};
-    obj[group] = name;
     this.editor.execute('drupalElementStyle', {
-      value: obj,
+      value: name,
       group,
     });
     this.editor.editing.view.focus();
