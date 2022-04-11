@@ -165,13 +165,16 @@ export default class DrupalElementStyleUi extends Plugin {
         );
         return false;
       }
+      if (!obj.items.includes(obj.defaultItem)) {
+        console.warn(
+          'defaultItem must be part of items in the dropdown configuration.',
+        );
+      }
       // eslint-disable-next-line no-restricted-syntax
       for (const item of obj.items) {
         const groupName = item.split(':')[1];
         items.push(groupName);
       }
-      // Add the default item as well.
-      items.push(obj.defaultItem.split(':')[1]);
       if (!items.every((i) => i === items[0])) {
         console.warn(
           'dropdown configuration should only contain buttons from one group.',
