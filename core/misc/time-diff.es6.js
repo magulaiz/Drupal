@@ -112,9 +112,7 @@
           timeDiffSettings.refresh,
           timeDiffSettings.granularity,
         );
-        if (timers.has(timeElement)) {
-          clearTimeout(timers.get(timeElement));
-        }
+        clearTimeout(timers.get(timeElement));
         timers.set(
           timeElement,
           setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement),
@@ -300,9 +298,7 @@
       if (trigger === 'unload') {
         once
           .remove('time-diff', 'time[data-drupal-time-diff]', context)
-          .filter(timers.has.bind(timers))
-          .map(timers.get.bind(timers))
-          .forEach(clearTimeout);
+          .forEach((timeElement) => clearTimeout(timers.get(timeElement)));
       }
     },
   };

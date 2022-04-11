@@ -40,11 +40,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       if (timeDiffSettings.refresh > 0) {
         var refreshInterval = Drupal.timeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
-
-        if (timers.has(timeElement)) {
-          clearTimeout(timers.get(timeElement));
-        }
-
+        clearTimeout(timers.get(timeElement));
         timers.set(timeElement, setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement));
       }
     },
@@ -167,7 +163,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     detach: function detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        once.remove('time-diff', 'time[data-drupal-time-diff]', context).filter(timers.has.bind(timers)).map(timers.get.bind(timers)).forEach(clearTimeout);
+        once.remove('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
+          return clearTimeout(timers.get(timeElement));
+        });
       }
     }
   };
