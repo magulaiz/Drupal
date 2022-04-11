@@ -623,7 +623,9 @@
 
           // Every tag must be explicitly allowed if there are filter rules
           // doing tag whitelisting.
-          if (!Object.keys(universe).every((key) => key.tag)) {
+          if (
+            !Object.keys(universe).every((tagName) => universe[tagName].tag)
+          ) {
             return false;
           }
           // Every tag was explicitly allowed, but since the universe is not

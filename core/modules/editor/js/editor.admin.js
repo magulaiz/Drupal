@@ -249,8 +249,8 @@
             return true;
           }
 
-          if (!Object.keys(universe).every(function (key) {
-            return key.tag;
+          if (!Object.keys(universe).every(function (tagName) {
+            return universe[tagName].tag;
           })) {
             return false;
           }
