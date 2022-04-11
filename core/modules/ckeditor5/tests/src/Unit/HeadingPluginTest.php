@@ -20,7 +20,6 @@ class HeadingPluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public function providerGetDynamicPluginConfig(): array {
-
     // Prepare headings matching ckeditor5.ckeditor5.yml to also protect
     // against unexpected changes to the YAML file given the YAML file is used
     // to generate the dynamic plugin configuration.
@@ -103,23 +102,19 @@ class HeadingPluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validChoices
+   * @covers ::getDynamicPluginConfig
    *
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    $this->assertArrayHasKey('enabled_headings', $configuration);
+    // Retrieve the possible heading options from the plugin definition in YAML.
+    $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
+    $configuration['heading'] = $ckeditor5_plugin_definitions['ckeditor5_heading']['ckeditor5']['config']['heading'];
 
-    // Retrieve the possible heading options from the ckeditor5 config.
-    $ckeditor5_config = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
-    $configuration['heading'] = $ckeditor5_config['ckeditor5_heading']['ckeditor5']['config']['heading'];
-
-    // Build the dynamic configuration based on the enabled headings.
     $plugin = new Heading($configuration, 'ckeditor5_heading', NULL);
     $dynamic_plugin_config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
       ->reveal());
 
-    // Check that the generated configuration contains all enabled headings.
     $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
 
