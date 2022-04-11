@@ -227,6 +227,7 @@
  */
 .dropbutton__item:first-of-type > * {
   display: inline-block;
+  height: var(--dropbutton-toggle-size);
   margin: 0;
   padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
   cursor: pointer;
@@ -238,7 +239,6 @@
   background-color: var(--button-bg-color);
   font-size: var(--dropbutton-font-size);
   font-weight: 700;
-  height: var(--dropbutton-toggle-size);
   line-height: var(--dropbutton-line-height);
   appearance: none;
   -webkit-font-smoothing: antialiased;
