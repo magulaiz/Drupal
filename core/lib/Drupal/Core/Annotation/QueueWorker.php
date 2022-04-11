@@ -59,7 +59,7 @@ class QueueWorker extends Plugin {
    * Available keys:
    * - time (optional): How much time Drupal cron should spend on calling this
    *   worker in seconds. Defaults to 15.
-   * - lease_time: (optional) How long the lease is for a queue item when
+   * - lease_time (optional): How long the lease is for a queue item when
    *   called from cron in seconds. Defaults to 30.
    *
    * @var array
