@@ -126,6 +126,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
 
+    $basic_html_format_with_h1 = $basic_html_format;
+    $basic_html_format_with_h1['name'] .= ' (with <h1>)';
+    $basic_html_format_with_h1['format'] = 'basic_html_with_h1';
+    NestedArray::setValue($basic_html_format_with_h1, $allowed_html_parents, $current_value . ' <h1>');
+    FilterFormat::create($basic_html_format_with_h1)->save();
+    Editor::create(
+      ['format' => 'basic_html_with_h1']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    )->save();
+
     $new_value = str_replace('<p>', '<p class="text-align-center text-align-justify">', $current_value);
     $basic_html_format_with_alignable_p = $basic_html_format;
     $basic_html_format_with_alignable_p['name'] .= ' (with alignable paragraph support)';
@@ -534,6 +545,37 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ),
     ];
 
+    yield "basic_html_with_h1 can be switched to CKEditor 5 without problems, heading configuration computed automatically" => [
+      'format_id' => 'basic_html_with_h1',
+      'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+          ],
+          'ckeditor5_heading' => [
+            'enabled_headings' => [
+              'heading1',
+              'heading2',
+              'heading3',
+              'heading4',
+              'heading5',
+              'heading6',
+            ],
+          ],
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
+          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
+        ],
+      ],
+      'expected_superset' => $basic_html_test_case['expected_superset'],
+      'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
+      'expected_messages' => array_merge(
+        $basic_html_test_case['expected_messages'],
+        ['This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.'],
+      ),
+    ];
+
     yield "basic_html_without_headings can be switched to CKEditor 5 without problems, heading configuration computed automatically" => [
       'format_id' => 'basic_html_without_headings',
       'filters_to_drop' => $basic_html_test_case['filters_to_drop'],
@@ -669,10 +711,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
 
     yield "restricted_html can be switched to CKEditor 5 after dropping the two markup-creating filters (3 upgrade messages)" => [
       'format_id' => 'restricted_html',
-      'filters_to_drop' => [
-        'filter_autop' => TRUE,
-        'filter_url' => TRUE,
-      ],
+      'filters_to_drop' => [],
       'expected_ckeditor5_settings' => [
         'toolbar' => [
           'items' => [
@@ -727,18 +766,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
       'expected_superset' => '<br> <p>',
       'expected_fundamental_compatibility_violations' => [
-        '' => [
-          0 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-          1 => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-        ],
+        '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are not allowed by the "<em class="placeholder">Limit allowed HTML tags and correct faulty HTML</em>" (<em class="placeholder">filter_html</em>) filter.',
       ],
       'expected_messages' => [
         'The following plugins were enabled to support tags that are allowed by this text format: <em class="placeholder">Link (for tags: &lt;a&gt;) Block quote (for tags: &lt;blockquote&gt;) Code (for tags: &lt;code&gt;) List (for tags: &lt;ul&gt;&lt;ol&gt;&lt;li&gt;)</em>.',
         'The following tags were permitted by this format\'s filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt;.',
         'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol start type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;.',
-      ],
-      'expected_post_filter_drop_fundamental_compatibility_violations' => [
-        '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are not allowed by the "<em class="placeholder">Limit allowed HTML tags and correct faulty HTML</em>" (<em class="placeholder">filter_html</em>) filter.',
       ],
     ];
 
