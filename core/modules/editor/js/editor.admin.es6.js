@@ -400,7 +400,7 @@
           universe.hasOwnProperty(tag) &&
           Object.keys(universe[tag])
             .filter((key) => key !== 'touchedByAllowedPropertyRule')
-            .every((key) => key)
+            .every((key) => universe[tag][key])
         ) {
           delete universe[tag];
           return true;

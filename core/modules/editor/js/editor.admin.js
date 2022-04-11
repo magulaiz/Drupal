@@ -132,7 +132,7 @@
         if (universe.hasOwnProperty(tag) && Object.keys(universe[tag]).filter(function (key) {
           return key !== 'touchedByAllowedPropertyRule';
         }).every(function (key) {
-          return key;
+          return universe[tag][key];
         })) {
           delete universe[tag];
           return true;
