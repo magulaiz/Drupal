@@ -238,6 +238,7 @@
   background-color: var(--button-bg-color);
   font-size: var(--dropbutton-font-size);
   font-weight: 700;
+  height: var(--dropbutton-toggle-size);
   line-height: var(--dropbutton-line-height);
   appearance: none;
   -webkit-font-smoothing: antialiased;
