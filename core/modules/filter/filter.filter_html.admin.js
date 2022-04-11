@@ -69,14 +69,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     },
     _updateAllowedTags: function _updateAllowedTags() {
+      var _this = this;
+
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
       if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-
-        var userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
-
+        var userTagsWithoutOverrides = {};
+        Object.keys(this.userTags).filter(function (tag) {
+          return !_this.autoTags.hasOwnProperty(tag);
+        }).forEach(function (tag) {
+          userTagsWithoutOverrides[tag] = _this.userTags[tag];
+        });
         this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
       } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));

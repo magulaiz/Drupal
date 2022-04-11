@@ -126,10 +126,12 @@
           Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags),
         );
 
-        const userTagsWithoutOverrides = _.omit(
-          this.userTags,
-          _.keys(this.autoTags),
-        );
+        const userTagsWithoutOverrides = {};
+        Object.keys(this.userTags)
+          .filter((tag) => !this.autoTags.hasOwnProperty(tag))
+          .forEach((tag) => {
+            userTagsWithoutOverrides[tag] = this.userTags[tag];
+          });
 
         this.$allowedHTMLFormItem.val(
           `${this._generateSetting(
