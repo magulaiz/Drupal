@@ -32,6 +32,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +94,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  * @ingroup testing
  */
-abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
+abstract class KernelTestBase extends TestCase implements ServiceProviderInterface, LoggerInterface {
 
   use AssertContentTrait;
   use RandomGeneratorTrait;
@@ -256,6 +257,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+    $this->addAsLogger();
   }
 
   /**
@@ -649,6 +651,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * {@inheritdoc}
    */
   protected function assertPostConditions(): void {
+    $this->assertLogExpectationsMet();
+
     // Execute registered Drupal shutdown functions prior to tearing down.
     // @see _drupal_shutdown_function()
     $callbacks = &drupal_register_shutdown_function();

@@ -6,12 +6,15 @@ namespace Drupal\KernelTests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Tests\StreamCapturer;
 use Drupal\user\Entity\Role;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use Psr\Http\Client\ClientExceptionInterface;
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\SkippedTestError;
 
 /**
  * @coversDefaultClass \Drupal\KernelTests\KernelTestBase
@@ -329,6 +332,24 @@ class KernelTestBaseTest extends KernelTestBase {
 
     // Test that the module that is providing the database driver is enabled.
     $this->assertSame(1, \Drupal::service('extension.list.module')->get($module)->status);
+  }
+
+  /**
+   * @covers ::log
+   */
+  public function testExpectedLogging() {
+    $this->expectNoLog(RfcLogLevel::ERROR);
+    this->expectLog(RfcLogLevel::ERROR, 'test');
+    \Drupal::logger('test')->error('a test error');
+  }
+
+  /**
+   * @covers ::log
+   */
+  public function testUnexpectedLogging() {
+    $this->expectNoLog(RfcLogLevel::ERROR);
+    $this->expectException(ExpectationFailedException::class);
+    \Drupal::logger('test')->error('a test error');
   }
 
 }

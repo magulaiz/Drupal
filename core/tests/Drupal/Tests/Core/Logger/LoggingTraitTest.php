@@ -13,6 +13,8 @@ use PHPUnit\Framework\ExpectationFailedException;
  */
 class LoggingTraitTest extends UnitTestCase {
 
+  use LoggingTrait;
+
   /**
    * @dataProvider expectLogMetProvider
    **/
@@ -124,7 +126,7 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider allowLogProvider
    **/
-  public function testAllowLogSeverity(array $expectation) {
+  public function testAllowLogLevel(array $expectation) {
     $this->allowLog(...$expectation);
     $this->expectNoLog(RfcLogLevel::WARNING);
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
@@ -134,7 +136,7 @@ class LoggingTraitTest extends UnitTestCase {
   /**
    * @dataProvider allowLogProvider
    **/
-  public function testAllowLogSeverityChannel(array $expectation) {
+  public function testAllowLogLevelChannel(array $expectation) {
     $this->allowLog(...$expectation);
     $this->expectNoLog(RfcLogLevel::WARNING, 'channel_a');
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
