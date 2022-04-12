@@ -3,7 +3,6 @@
 namespace Drupal\Tests\Traits\Core;
 
 use Drupal\Core\Logger\RfcLoggerTrait;
-use Drupal\Core\Logger\RfcLogLevel;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
@@ -23,17 +22,17 @@ trait LoggingTrait {
   use RfcLoggerTrait;
 
   /**
-   *  The messages that this test expects to be logged.
+   * The messages that this test expects to be logged.
    */
   protected array $expectedLogs = [];
 
   /**
-   *  The messages that this test expects will not be logged.
+   * The messages that this test expects will not be logged.
    */
   protected array $disallowedLogs = [];
 
   /**
-   *  The messages that this test allows but does not expect.
+   * The messages that this test allows but does not expect.
    */
   protected array $allowedLogs = [];
 
@@ -44,7 +43,7 @@ trait LoggingTrait {
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $level
+   * @param string $channel
    *   The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
@@ -67,7 +66,7 @@ trait LoggingTrait {
    *
    * @param int $level
    *   (optional) The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $level
+   * @param string $channel
    *   (optional) The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
@@ -79,7 +78,7 @@ trait LoggingTrait {
   /**
    * Define a certain kind of log message as allowed.
    *
-   * If a generated log message matches the specified paramaters, then
+   * If a generated log message matches the specified parameters, then
    * it will not cause a test to fail even if would otherwise have been
    * disallowed (by ::expectNoLog()).
    *
@@ -90,7 +89,7 @@ trait LoggingTrait {
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $level
+   * @param string $channel
    *   The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
@@ -136,7 +135,7 @@ trait LoggingTrait {
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $level
+   * @param string $channel
    *   The logger channel.
    * @param string $message
    *   The log message.
@@ -147,7 +146,7 @@ trait LoggingTrait {
         if (strpos($message, $expectedMessage) !== FALSE) {
           $this->expectedLogs[$level][$channel][$expectedMessage] = $this->expectedLogs[$level][$channel][$expectedMessage] - 1;
           if ($this->expectedLogs[$level][$channel][$expectedMessage] === 0) {
-              unset($this->expectedLogs[$level][$channel][$expectedMessage]);
+            unset($this->expectedLogs[$level][$channel][$expectedMessage]);
           }
           return TRUE;
         }
@@ -159,7 +158,7 @@ trait LoggingTrait {
   /**
    * Determine if a log message is allowed.
    *
-   * A received log essage is compared against a set of rules set up
+   * A received log message is compared against a set of rules set up
    * earlier to see if there is a match. A rule matches a log message if:
    * - it has the same channel specified or no channel specified
    * - it's message is contained in the actual log message
@@ -171,7 +170,7 @@ trait LoggingTrait {
    *   Whether to match level greater or lesser than the rule.
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $level
+   * @param string $channel
    *   The logger channel.
    * @param string $message
    *   The log message.
@@ -180,10 +179,10 @@ trait LoggingTrait {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $channelRules = $rules[$channel];
-      foreach($channelRules as $ruleMessage => $rulelevel) {
+      foreach ($channelRules as $ruleMessage => $ruleLevel) {
         if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
-          if (($allowed && $rulelevel >= $level) ||
-          (!$allowed && $rulelevel <= $level)){
+          if (($allowed && $ruleLevel >= $level) ||
+          (!$allowed && $ruleLevel <= $level)){
             return TRUE;
           }
         }
@@ -193,9 +192,8 @@ trait LoggingTrait {
   }
 
   /**
-   * Assert that no logs were expected that have not been received..
-   *
-   **/
+   * Assert that no logs were expected that have not been received.
+   */
   protected function assertLogExpectationsMet() {
     $this->assertEmpty($this->expectedLogs);
   }
@@ -214,6 +212,4 @@ trait LoggingTrait {
     $this->handleLog($level, $context['channel'] ?? '', $message);
   }
 
-
 }
-
