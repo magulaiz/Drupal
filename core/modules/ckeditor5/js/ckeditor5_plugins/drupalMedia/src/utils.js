@@ -126,7 +126,7 @@ export function getPreviewContainer(children) {
 }
 
 /**
- * Gets model attribute key based on group.
+ * Gets model attribute key based on Drupal Element Style group.
  *
  * @example
  *    Example: 'align' -> 'drupalElementStyleAlign'

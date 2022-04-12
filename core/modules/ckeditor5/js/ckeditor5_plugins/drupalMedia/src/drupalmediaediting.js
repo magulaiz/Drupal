@@ -58,7 +58,6 @@ export default class DrupalMediaEditing extends Plugin {
    *   The `drupalMedia` model element.
    *
    * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
-   *
    */
   upcastDrupalMediaIsImage(modelElement) {
     const { model, plugins } = this.editor;
