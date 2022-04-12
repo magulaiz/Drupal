@@ -10,14 +10,11 @@ namespace Drupal\Core;
 interface CronInterface {
 
   /**
-   * The default time cron should execute each queue in seconds.
+   * The default time duration in seconds spent calling a queue worker.
+   *
+   * @var int
    */
   public const DEFAULT_QUEUE_CRON_TIME = 15;
-
-  /**
-   * The default lease time a queue item should get when called from cron.
-   */
-  public const DEFAULT_QUEUE_CRON_LEASE_TIME = 30;
 
   /**
    * Executes a cron run.
