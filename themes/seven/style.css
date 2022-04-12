@@ -559,6 +559,23 @@ fieldset {
   position: relative;
   margin: 1em 0;
 }
+
+@media only screen and (min-device-width : 1280px) and (max-device-width: 1422px) {
+  .form-wrapper {
+    height:72em;
+  }
+}
+@media only screen and (min-device-width : 1422px) and (max-device-width: 1689px) {
+  .form-wrapper {
+    height:61em;
+  }
+}
+@media only screen and (min-device-width : 1690px) {
+  .form-wrapper {
+    height:48em;
+  }
+}
+
 fieldset .fieldset-legend {
   margin-top: 0.5em;
   padding-left: 15px; /* LTR */
@@ -568,6 +585,13 @@ fieldset .fieldset-legend {
 fieldset .fieldset-wrapper {
   padding: 0 13px 13px 15px; /* LTR */
 }
+
+@media only screen and (min-device-width : 1280px) {
+  fieldset .fieldset-wrapper {
+    display: grid;
+  }
+}
+
 fieldset.collapsed {
   background-color: transparent;
 }

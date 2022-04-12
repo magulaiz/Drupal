@@ -1,10 +1,10 @@
 
 /* ---------- Color form ----------- */
 #color_scheme_form #palette .form-item {
-  width: 25em;
+  width: 30%;
 }
 #color_scheme_form #palette .form-item label {
-  width: 15em;
+  width: 40%;
 }
 
 /* ---------- Preview Styles ----------- */
@@ -22,6 +22,16 @@ html.js #preview {
   word-wrap: break-word;
   margin-bottom: 10px;
 }
+
+
+@media only screen and (min-device-width : 1280px) {
+  #preview {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }  
+}
+
 #preview-header {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: relative;
