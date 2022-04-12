@@ -6,7 +6,7 @@ use Drupal\Core\Logger\RfcLogLevel;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
- * Add the ability to set test expectations for the presence or absence of log messages.
+ * Allows setting test expectations for the presence or absence of log messages.
  */
 trait LoggingTrait {
 
