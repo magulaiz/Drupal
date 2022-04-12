@@ -301,7 +301,7 @@ class TimestampFormatter extends FormatterBase {
         $elements[$delta]['#attributes']['title'] = $this->dateFormatter->format($item->value, $tooltip['date_format'], $tooltip['custom_date_format'], $timezone, $langcode);
       }
 
-      if ($time_diff['enabled'] && $time_diff['refresh'] > 0) {
+      if ($time_diff['enabled']) {
         $elements[$delta]['#attached']['library'][] = 'core/drupal.time-diff';
         $elements[$delta]['#attributes']['class'][] = 'time-diff';
         $settings = [
