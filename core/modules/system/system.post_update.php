@@ -57,7 +57,7 @@ function system_post_update_linkset_settings() {
 }
 
 /**
- * Update timestamp formatter settings.
+ * Update timestamp formatter settings for entity view displays.
  */
 function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
   /** @var \Drupal\Core\Field\FormatterPluginManager $field_formatter_manager */

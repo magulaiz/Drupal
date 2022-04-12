@@ -6,7 +6,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Assert;
 
 /**
- * Tests the update of timestamp formatter settings in entity view displays.
+ * Tests the update of timestamp formatter settings.
  *
  * @group system
  * @group legacy
@@ -29,31 +29,41 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests system_post_update_timestamp_formatter().
+   * Tests the update of timestamp formatter settings.
    *
    * @see system_post_update_timestamp_formatter()
+   * @see views_post_update_timestamp_formatter()
    */
   public function testPostUpdateTimestampFormatter(): void {
     $config_factory = \Drupal::configFactory();
-    $name = 'core.entity_view_display.node.page.default';
-    $trail = 'content.field_foo.settings';
 
-    // Check that 'tooltip' and 'time_diff' are missing before update.
-    $settings = $config_factory->get($name)->get($trail);
-    Assert::assertArrayNotHasKey('tooltip', $settings);
-    Assert::assertArrayNotHasKey('time_diff', $settings);
+    $test_cases = [
+      // Timestamp formatter in entity view displays.
+      'core.entity_view_display.node.page.default' => 'content.field_foo.settings',
+      // Timestamp formatter in views.
+      'views.view.content' => 'display.default.display_options.fields.changed.settings',
+    ];
+
+    foreach ($test_cases as $config_name => $config_trail) {
+      // Check that 'tooltip' and 'time_diff' are missing before update.
+      $settings = $config_factory->get($config_name)->get($config_trail);
+      Assert::assertArrayNotHasKey('tooltip', $settings);
+      Assert::assertArrayNotHasKey('time_diff', $settings);
+    }
 
     $this->runUpdates();
 
-    // Check that 'tooltip' and 'time_diff' were created after update.
-    $settings = $config_factory->get($name)->get($trail);
-    Assert::assertArrayHasKey('tooltip', $settings);
-    // Check that 'tooltip' is disabled for existing formatters.
-    Assert::assertSame([
-      'date_format' => '',
-      'custom_date_format' => '',
-    ], $settings['tooltip']);
-    Assert::assertArrayHasKey('time_diff', $settings);
+    foreach ($test_cases as $config_name => $config_trail) {
+      // Check that 'tooltip' and 'time_diff' were created after update.
+      $settings = $config_factory->get($config_name)->get($config_trail);
+      Assert::assertArrayHasKey('tooltip', $settings);
+      // Check that 'tooltip' is disabled for existing formatters.
+      Assert::assertSame([
+        'date_format' => '',
+        'custom_date_format' => '',
+      ], $settings['tooltip']);
+      Assert::assertArrayHasKey('time_diff', $settings);
+    }
   }
 
 }
