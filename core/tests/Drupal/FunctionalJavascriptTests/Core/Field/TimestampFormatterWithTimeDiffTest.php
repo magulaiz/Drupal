@@ -269,7 +269,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
           'minute' => 3,
           'second' => 30,
         ],
-        'configured_refresh_interval'  => 1000,
+        'configured_refresh_interval' => 1000,
         'granularity' => 1,
         'computed_refresh_interval' => 1000,
       ],
