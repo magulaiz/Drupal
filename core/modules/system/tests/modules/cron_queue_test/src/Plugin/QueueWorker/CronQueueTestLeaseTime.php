@@ -10,7 +10,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  *   title = @Translation("Lease time test"),
  *   cron = {
  *     "time" = 5,
- *     "lease_time" = 2
+ *     "lease_time" = 10
  *   }
  * )
  */
