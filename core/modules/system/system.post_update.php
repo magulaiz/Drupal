@@ -64,6 +64,7 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
   $field_formatter_manager = \Drupal::service('plugin.manager.field.formatter');
 
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $entity_view_display) use ($field_formatter_manager): bool {
+    $update = FALSE;
     foreach ($entity_view_display->getComponents() as $name => $component) {
       if (empty($component['type'])) {
         continue;
@@ -82,9 +83,9 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
           'custom_date_format' => '',
         ];
         $entity_view_display->setComponent($name, $component);
-        return TRUE;
+        $update = TRUE;
       }
     }
-    return FALSE;
+    return $update;
   });
 }
