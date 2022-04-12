@@ -238,6 +238,7 @@ function language_get_default_langcode($entity_type, $bundle) {
 
   $default_value = NULL;
   $language_interface = \Drupal::languageManager()->getCurrentLanguage();
+  $language_content = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
   switch ($configuration->getDefaultLangcode()) {
     case LanguageInterface::LANGCODE_SITE_DEFAULT:
       $default_value = \Drupal::languageManager()->getDefaultLanguage()->getId();
@@ -245,6 +246,10 @@ function language_get_default_langcode($entity_type, $bundle) {
 
     case 'current_interface':
       $default_value = $language_interface->getId();
+      break;
+
+    case 'current_content':
+      $default_value = $language_content->getId();
       break;
 
     case 'authors_default':
