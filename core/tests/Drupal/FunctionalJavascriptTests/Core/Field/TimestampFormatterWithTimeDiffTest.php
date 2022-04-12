@@ -26,6 +26,13 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * Testing entity.
+   *
+   * @var \Drupal\Core\Entity\ContentEntityInterface
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -65,20 +72,20 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
       'administer entity_test content',
     ]);
     $this->drupalLogin($account);
+
+    $this->entity = EntityTest::create([
+      'type' => 'entity_test',
+      'name' => $this->randomString(),
+      'time_field' => $this->container->get('datetime.time')->getRequestTime(),
+    ]);
+    $this->entity->save();
   }
 
   /**
    * Tests the 'timestamp' formatter when is used with time difference setting.
    */
   public function testTimestampFormatterWithTimeDiff(): void {
-    $entity = EntityTest::create([
-      'type' => 'entity_test',
-      'name' => $this->randomString(),
-      'time_field' => $this->container->get('datetime.time')->getRequestTime(),
-    ]);
-    $entity->save();
-
-    $this->drupalGet($entity->toUrl());
+    $this->drupalGet($this->entity->toUrl());
 
     // Unit testing Drupal.timeDiff.format(). Not using @dataProvider mechanism
     // here in order to avoid installing the site for each case.
@@ -122,6 +129,30 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $seconds_value = $new_seconds_value;
     [$new_seconds_value] = explode(' ', $time_diff, 2);
     $this->assertGreaterThan($seconds_value, $new_seconds_value);
+  }
+
+  /**
+   * Tests the 'timestamp' formatter without refresh interval.
+   */
+  public function testNoRefreshInterval(): void {
+    $display = EntityViewDisplay::load('entity_test.entity_test.default');
+    $component = $display->getComponent('time_field');
+    $component['settings']['time_diff']['refresh'] = 0;
+    $display->setComponent('time_field', $component)->save();
+    $this->drupalGet($this->entity->toUrl());
+
+    $time_element = $this->getSession()->getPage()->find('css', 'time');
+
+    $time_diff = $time_element->getText();
+    [$seconds_value] = explode(' ', $time_diff, 2);
+
+    // Wait at least 5 seconds.
+    $this->getSession()->wait(5000);
+
+    $time_diff = $time_element->getText();
+    [$new_seconds_value] = explode(' ', $time_diff, 2);
+    // The time diff hasn't been refreshed.
+    $this->assertSame($seconds_value, $new_seconds_value);
   }
 
   /**
