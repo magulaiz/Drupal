@@ -161,6 +161,16 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
 
     $this->drupalGet('language-tests/language_configuration_element_test');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode', 'bb')->isSelected());
+
+    // Current content.
+    ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
+      ->setLanguageAlterable(TRUE)
+      ->setDefaultLangcode('current_content')
+      ->save();
+
+    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $language_content = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_CONTENT);
+    $this->assertEquals($langcode, $language_content->getId());
   }
 
   /**
