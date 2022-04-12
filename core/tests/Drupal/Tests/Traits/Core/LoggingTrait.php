@@ -166,7 +166,7 @@ trait LoggingTrait {
    */
   protected function isLogAllowed(array $rules, $allowed, $severity, $channel, $message) {
     $channels = [$channel, ''];
-    for ($channel in $channels) {
+    foreach ($channels as $channel) {
       $channelRules = $rules[$channel];
       foreach($channelRules as $ruleMessage => $ruleSeverity) {
         if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
