@@ -91,6 +91,45 @@ $config['content']['field_foo'] = [
   ],
   'third_party_settings' => [],
 ];
+$config['third_party_settings']['layout_builder'] = [
+  'enabled' => TRUE,
+  'allow_custom' => FALSE,
+  'sections' => [
+    [
+      'layout_id' => 'layout_onecol',
+      'layout_settings' => [
+        'label' => '',
+      ],
+      'components' => [
+        '93bf4359-06a6-4263-bce9-15c90dc8f357' => [
+          'uuid' => '93bf4359-06a6-4263-bce9-15c90dc8f357',
+          'region' => 'content',
+          'configuration' => [
+            'id' => 'field_block:node:page:field_foo',
+            'label_display' => '0',
+            'context_mapping' => [
+              'entity' => 'layout_builder.entity',
+            ],
+            'formatter' => [
+              'type' => 'timestamp',
+              'label' => 'inline',
+              'settings' => [
+                'date_format' => 'custom',
+                'custom_date_format' => 'Y-m-d',
+                'timezone' => '',
+              ],
+              'third_party_settings' => [],
+            ],
+          ],
+          'weight' => 0,
+          'additional' => [],
+
+        ],
+      ],
+      'third_party_settings' => [],
+    ],
+  ],
+];
 
 $connection->update('config')
   ->fields(['data' => serialize($config)])
