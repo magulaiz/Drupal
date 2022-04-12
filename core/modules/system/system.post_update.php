@@ -76,6 +76,11 @@ function system_post_update_timestamp_formatter(array &$sandbox = NULL): void {
       }
 
       if (!isset($component['settings']['tooltip']) || !isset($component['settings']['time_diff'])) {
+        // Existing timestamp formatters don't have tooltip.
+        $component['settings']['tooltip'] = [
+          'date_format' => '',
+          'custom_date_format' => '',
+        ];
         $entity_view_display->setComponent($name, $component);
         return TRUE;
       }

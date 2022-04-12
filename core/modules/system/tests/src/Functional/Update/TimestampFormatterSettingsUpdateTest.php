@@ -48,6 +48,11 @@ class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
     // Check that 'tooltip' and 'time_diff' were created after update.
     $settings = $config_factory->get($name)->get($trail);
     Assert::assertArrayHasKey('tooltip', $settings);
+    // Check that 'tooltip' is disabled for existing formatters.
+    Assert::assertSame([
+      'date_format' => '',
+      'custom_date_format' => '',
+    ], $settings['tooltip']);
     Assert::assertArrayHasKey('time_diff', $settings);
   }
 
