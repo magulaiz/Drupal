@@ -2,13 +2,25 @@
 
 namespace Drupal\Tests\Traits\Core;
 
+use Drupal\Core\Logger\RfcLoggerTrait;
 use Drupal\Core\Logger\RfcLogLevel;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
- * Allows setting test expectations for the presence or absence of log messages.
+ * Sets test expectations for generated log messages.
+ *
+ * A test class using this trait should declare that it implements
+ * \Psr\Log\LoggerInterface, should call LoggingTrait::addAsLogger in its
+ * setUp() method, and should call LoggingTrait::assertLogExpectationsMet() in
+ *  its assertPostConditions() method.
+ *
+ * In order to assert that a test does or does not generate logs, the test
+ * must call LoggingTrait::expectLog() or LoggingTrait::expectNoLog(); it may
+ * also call LoggingTrait::allowLog().
  */
 trait LoggingTrait {
+
+  use RfcLoggerTrait;
 
   /**
    *  The messages that this test expects to be logged.
@@ -30,38 +42,38 @@ trait LoggingTrait {
    *
    * If a matching log message is not generated, the test will fail.
    *
-   * @param int $severity
-   *   The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $level
    *   The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectLog($severity, $channel, $message = '') {
-    $count = 1 + ($this->expectedLogs[$severity][$channel][$message] ?? 0);
-    $this->expectedLogs[$severity][$channel][$message] = $count;
+  protected function expectLog($level, $channel, $message = '') {
+    $count = 1 + ($this->expectedLogs[$level][$channel][$message] ?? 0);
+    $this->expectedLogs[$level][$channel][$message] = $count;
   }
 
   /**
    * Setup an expectation that a test will not generate a log message.
    *
    * If a matching log message is generated, the test will fail. Log
-   * messages of the specified severity or greater will trigger a test
+   * messages of the specified level or greater will trigger a test
    * to fail as soon as they are received.
    *
    * Log messages that are set up as expected (by ::expectLog()) or
    * are set up as allowed (by ::allowLog()) are exempt and will not
    * trigger failure.
    *
-   * @param int $severity
-   *   (optional) The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   * @param int $level
+   *   (optional) The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $level
    *   (optional) The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectNoLog($severity = '', $channel = '', $message = '') {
-    $this->disallowedLogs[$channel][$message] = $severity;
+  protected function expectNoLog($level = '', $channel = '', $message = '') {
+    $this->disallowedLogs[$channel][$message] = $level;
   }
 
   /**
@@ -76,15 +88,15 @@ trait LoggingTrait {
    * then allowLog() is used to define an narrower exception to that,
    * e.g. 'except allow warnings from the user channel'.
    *
-   * @param int $severity
-   *   The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $level
    *   The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function allowLog($severity, $channel, $message = '') {
-    $this->allowedLogs[$channel][$message] = $severity;
+  protected function allowLog($level, $channel, $message = '') {
+    $this->allowedLogs[$channel][$message] = $level;
   }
 
   /**
@@ -94,24 +106,24 @@ trait LoggingTrait {
    * expectations can be verified at the end of the test. If the
    * log message is not allowed, the test is failed immediately.
    *
-   * @param int $severity
-   *   The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
    *   The logger channel.
    * @param string $message
    *   The log message.
    */
-  protected function handleLog($severity, $channel, $message) {
-    $isExpected = $this->handleLogExpectations($severity, $channel, $message) || $this->handleLogExpectations($severity, $channel, '');
+  protected function handleLog($level, $channel, $message) {
+    $isExpected = $this->handleLogExpectations($level, $channel, $message) || $this->handleLogExpectations($level, $channel, '');
     if ($isExpected) {
       return;
     }
 
-    $isAllowed = $this->isLogAllowed($this->allowedLogs, TRUE, $severity, $channel, $message);
+    $isAllowed = $this->isLogAllowed($this->allowedLogs, TRUE, $level, $channel, $message);
     if (!$isAllowed) {
-      $isDisallowed = $this->isLogAllowed($this->disallowedLogs, FALSE, $severity, $channel, $message);
+      $isDisallowed = $this->isLogAllowed($this->disallowedLogs, FALSE, $level, $channel, $message);
       if ($isDisallowed) {
-        throw new ExpectationFailedException("Disallowed log message received: $severity $channel $message");
+        throw new ExpectationFailedException("Disallowed log message received: $level $channel $message");
       }
     }
   }
@@ -122,20 +134,20 @@ trait LoggingTrait {
    * If the log message matches an expected type of log message,
    * then the count of outstanding expectations of that type is reduced.
    *
-   * @param int $severity
-   *   The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $level
    *   The logger channel.
    * @param string $message
    *   The log message.
    */
-  protected function handleLogExpectations($severity, $channel, $message) {
-    if (isset($this->expectedLogs[$severity][$channel])) {
-      foreach ($this->expectedLogs[$severity][$channel] as $expectedMessage) {
+  protected function handleLogExpectations($level, $channel, $message) {
+    if (isset($this->expectedLogs[$level][$channel])) {
+      foreach ($this->expectedLogs[$level][$channel] as $expectedMessage) {
         if (strpos($message, $expectedMessage) !== FALSE) {
-          $this->expectedLogs[$severity][$channel][$expectedMessage] = $this->expectedLogs[$severity][$channel][$expectedMessage] - 1;
-          if ($this->expectedLogs[$severity][$channel][$expectedMessage] === 0) {
-              unset($this->expectedLogs[$severity][$channel][$expectedMessage]);
+          $this->expectedLogs[$level][$channel][$expectedMessage] = $this->expectedLogs[$level][$channel][$expectedMessage] - 1;
+          if ($this->expectedLogs[$level][$channel][$expectedMessage] === 0) {
+              unset($this->expectedLogs[$level][$channel][$expectedMessage]);
           }
           return TRUE;
         }
@@ -151,27 +163,27 @@ trait LoggingTrait {
    * earlier to see if there is a match. A rule matches a log message if:
    * - it has the same channel specified or no channel specified
    * - it's message is contained in the actual log message
-   * - it's severity is more or less than the log severity, depending on $allowed
+   * - it's level is more or less than the log level, depending on $allowed
    *
    * @param array $rules
    *   A set of log rules set up earlier.
    * @param bool $allowed
-   *   Whether to match severity greater or lesser than the rule.
-   * @param int $severity
-   *   The log severity as defined in Drupal\Core\Logger\RfcLogLevel.
-   * @param string $severity
+   *   Whether to match level greater or lesser than the rule.
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $level
    *   The logger channel.
    * @param string $message
    *   The log message.
    */
-  protected function isLogAllowed(array $rules, $allowed, $severity, $channel, $message) {
+  protected function isLogAllowed(array $rules, $allowed, $level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $channelRules = $rules[$channel];
-      foreach($channelRules as $ruleMessage => $ruleSeverity) {
+      foreach($channelRules as $ruleMessage => $rulelevel) {
         if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
-          if (($allowed && $ruleSeverity >= $severity) ||
-          (!$allowed && $ruleSeverity <= $severity)){
+          if (($allowed && $rulelevel >= $level) ||
+          (!$allowed && $rulelevel <= $level)){
             return TRUE;
           }
         }
@@ -186,6 +198,20 @@ trait LoggingTrait {
    **/
   protected function assertLogExpectationsMet() {
     $this->assertEmpty($this->expectedLogs);
+  }
+
+  /**
+   * Register a test as a logger.
+   */
+  protected function addAsLogger() {
+    $this->container->get('logger.factory')->addLogger($this);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, $message, array $context = []) {
+    $this->handleLog($level, $context['channel'] ?? '', $message);
   }
 
 
