@@ -33,7 +33,7 @@ function getStyleDefinitionByName(name, styles) {
  * This model to view converter supports downcasting model to either a CSS class
  * or attribute.
  *
- * Note that only one style can be applied to a single model element.
+ * Note that only one style per group can be applied to a single model element.
  */
 function modelToViewStyleAttribute(styles) {
   return (evt, data, conversionApi) => {
@@ -79,7 +79,7 @@ function modelToViewStyleAttribute(styles) {
  * This view to model converted supports styles that are configured to use
  * either CSS class or an attribute.
  *
- * Note that more than one style can be applied to each modelElement.
+ * Note that only one style per group can be applied to each modelElement.
  */
 function viewToModelStyleAttribute(styles, modelAttribute) {
   // Convert only non–default styles.
