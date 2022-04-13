@@ -412,7 +412,7 @@ export default class DrupalElementStyleUi extends Plugin {
    * A helper function that parses the different dropdown options and returns
    * list item definitions ready for use in the dropdown.
    *
-   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition[]} definedStyles
+   * @param {Drupal.CKEditor5~DrupalElementStyleDefinition[]} dropdownStyles
    *   A list of defined styles of one group.
    * @param {module:drupalMedia/drupalelementstyle/drupalelementstylecommand} command
    *   The drupalElementStyle command.
@@ -423,9 +423,9 @@ export default class DrupalElementStyleUi extends Plugin {
    *
    * @private
    */
-  getDropdownListItemDefinitions(definedStyles, command, group) {
+  getDropdownListItemDefinitions(dropdownStyles, command, group) {
     const itemDefinitions = new Collection();
-    definedStyles.forEach((style) => {
+    dropdownStyles.forEach((style) => {
       const definition = {
         type: 'button',
         model: new Model({
@@ -443,7 +443,7 @@ export default class DrupalElementStyleUi extends Plugin {
       // visibility of the styles can be impacted by either selection or
       // changes to the model.
       this.listenTo(this.editor.ui, 'update', () => {
-        this.updateOptionVisibility(definedStyles, style, definition, group);
+        this.updateOptionVisibility(dropdownStyles, style, definition, group);
       });
     });
     return itemDefinitions;
@@ -462,36 +462,23 @@ export default class DrupalElementStyleUi extends Plugin {
   _createListDropdown(dropdownConfig, definedStyles) {
     const factory = this.editor.ui.componentFactory;
     factory.add(dropdownConfig.name, (locale) => {
-      let defaultButton;
-
       const { defaultItem, items, title, defaultText } = dropdownConfig;
-      const group = dropdownConfig.name.split(':')[1];
-      const buttonViews = items
-        .filter((itemName) => {
-          return definedStyles.find(
-            ({ name }) => getUIComponentName(name, group) === itemName,
-          );
-        })
-        .map((buttonName) => {
-          const button = factory.create(buttonName);
-
-          if (buttonName === defaultItem) {
-            defaultButton = button;
-          }
-
-          return button;
-        });
-
-      if (items.length !== buttonViews.length) {
-        utils.warnInvalidStyle({ dropdown: dropdownConfig });
-      }
-
+      const group = dropdownConfig.items[0].split(':')[1];
       const dropdownView = createDropdown(locale, DropdownButtonView);
       const dropdownButtonView = dropdownView.buttonView;
 
+      const defaultStyle = definedStyles.reduce((result, button) => {
+        if (result) {
+          return result;
+        }
+
+        if (button.name === defaultItem.split(':')[2]) {
+          return button;
+        }
+      }, null);
+
       dropdownButtonView.set({
-        label: getDropdownButtonTitle(title, defaultButton.label),
-        class: null,
+        label: getDropdownButtonTitle(title, defaultStyle.title),
         tooltip: defaultText,
         withText: true,
       });
@@ -515,9 +502,13 @@ export default class DrupalElementStyleUi extends Plugin {
       dropdownView.bind('isOn').to(command);
       dropdownView.bind('isEnabled').to(this);
 
+      const dropdownStyles = definedStyles.filter(({ name }) => {
+        return items.includes(getUIComponentName(name, group));
+      });
+
       addListToDropdown(
         dropdownView,
-        this.getDropdownListItemDefinitions(definedStyles, command, group),
+        this.getDropdownListItemDefinitions(dropdownStyles, command, group),
       );
       // Execute command when an item from the dropdown is selected.
       this.listenTo(dropdownView, 'execute', (evt) => {
