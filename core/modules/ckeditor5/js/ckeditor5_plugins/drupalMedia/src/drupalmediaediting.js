@@ -105,16 +105,6 @@ export default class DrupalMediaEditing extends Plugin {
    *
    * @param {module:engine/model/node~Node} modelElement
    *   The `drupalMedia` model element.
-   * @param {module:core/editor/editor~Editor} editor
-   *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
-   * @param {string} style
-   *   The style to check be checked against the bundle specific styles.
-   * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
-   *   Dropdown item definition.
-   * @param {string} modelAttribute
-   *   The model attribute name of the drupalElementStyle.
    *
    * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
    *
@@ -131,8 +121,8 @@ export default class DrupalMediaEditing extends Plugin {
       .getMetadata(modelElement)
       .then((metadata) => {
         if (!modelElement) {
-          // Nothing to do if model element has been removed before
-          // promise was resolved.
+          // Nothing to do if model element has been removed before promise was
+          // resolved.
           return;
         }
         // Enqueue a model change in `transparent` batch to make it invisible to
@@ -252,8 +242,8 @@ export default class DrupalMediaEditing extends Plugin {
           },
           // This converter is set to the lowest priority to ensure the model
           // element and its attributes have already been converted. It is used
-          // to gather metadata that results in a UI tailored to a specific media
-          // entity.
+          // to gather metadata that results in a UI tailored to a specific
+          // media entity.
           { priority: 'lowest' },
         );
       });
