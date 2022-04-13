@@ -87,10 +87,7 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
   protected function removeUnusedForEntityOnSave(EntityInterface $entity) {
     // If the entity is new or '$entity->original' is not set then there will
     // not be any unused inline blocks to remove.
-    // If this is a revisionable entity then do not remove inline blocks. They
-    // could be referenced in previous revisions even if this is not a new
-    // revision.
-    if ($entity->isNew() || !isset($entity->original) || $entity instanceof RevisionableInterface) {
+    if ($entity->isNew() || !isset($entity->original)) {
       return;
     }
     // If the original entity used the default storage then we cannot remove
@@ -102,8 +99,62 @@ class InlineBlockEntityOperations implements ContainerInjectionInterface {
 
     // Delete and remove the usage for inline blocks that were removed.
     if ($removed_block_ids = $this->getRemovedBlockIds($entity)) {
+      $removed_block_ids = $this->getRemovableBlocksFromRevisionableEntity($entity, $removed_block_ids);
       $this->deleteBlocksAndUsage($removed_block_ids);
     }
+  }
+
+  /**
+   * Get blocks that can be removed considering revisionable entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity containing blocks to remove.
+   * @param array $removed_block_ids
+   *   The block ids to remove.
+   *
+   * Do not delete blocks from revisionable entities unless :
+   * 1. Entity has no revisions yet
+   * 2. Block is not in previous revision.
+   * 3. Block is in original entity AND no new revision is created.
+   *
+   * @return array
+   */
+  protected function getRemovableBlocksFromRevisionableEntity(EntityInterface $entity, array $removed_block_ids): array {
+    // Entity is not revisionable, wwe can safely delete blocks.
+    if (!$entity instanceof RevisionableInterface) {
+      return $removed_block_ids;
+    }
+
+    // Revision is under creation, every blocks have to be kept for revisions.
+    if ($entity->isNewRevision()) {
+      return [];
+    }
+
+    $entityStorage = $this->entityTypeManager->getStorage($entity->getEntityType()->id());
+    $revisions = $entityStorage->getQuery()
+      ->accessCheck(FALSE)
+      ->allRevisions()
+      ->condition($entity->getEntityType()->getKey('id'), $entity->id())
+      ->execute();
+    // If entity has only one revision, blocks can be deleted. Otherwise, check
+    // blocks to delete exist in previous revisions.
+    if (count($revisions) > 1) {
+      foreach (array_keys($revisions) as $revisionId) {
+        $entityRevision = $entityStorage->loadRevision($revisionId);
+        // The latest revision is the current revision, we do not need to check
+        // it.
+        if ($entityRevision->isLatestRevision()) {
+          continue;
+        }
+        // If there are removed blocks in revisions, do not remove them.
+        $current_sections = $this->getEntitySections($entityRevision);
+        $current_block_content_revision_ids = $this->getInlineBlockRevisionIdsInSections($current_sections);
+        $current_block_content_ids = $this->getBlockIdsForRevisionIds($current_block_content_revision_ids);
+        $removed_block_ids = array_diff($removed_block_ids, $current_block_content_ids);
+      }
+    }
+
+    return $removed_block_ids;
   }
 
   /**
