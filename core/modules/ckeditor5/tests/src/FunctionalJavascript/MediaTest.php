@@ -1225,7 +1225,8 @@ class MediaTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 3',
     ])->save();
-    // Enable view mode 1 & 2 and default for Image.
+
+    // Only enable view mode 1 & 2 for Image.
     EntityViewDisplay::create([
       'id' => 'media.image.view_mode_1',
       'targetEntityType' => 'media',
@@ -1281,7 +1282,18 @@ class MediaTest extends WebDriverTestBase {
     $this->assertFalse($drupal_media_element->hasAttribute('data-view-mode'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
-    $this->getBalloonButton('View Mode 1')->click();
+
+    // Ensure that expected dropbutton options are available in the balloon.
+    $this->assertNotEmpty($dropdown_button = $this->getBalloonButton('View Mode 1'));
+    $dropdown_button->click();
+
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
+
+    // Ensure that View Mode 3 button does not exist.
+    $button = $this->getSession()->getPage()
+      ->find('css', '.ck-balloon-panel_visible .ck-balloon-rotator__content')
+      ->find('xpath', "//button[span[text()='View Mode 3']]");
+    $this->assertEmpty($button);
 
     // Set view mode.
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
@@ -1294,12 +1306,12 @@ class MediaTest extends WebDriverTestBase {
     // Check that toolbar matches current view mode.
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
     $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
-    // Enter source mode.
-    $this->pressEditorButton('Source');
-    // Leave source mode to force CKEditor 5 to upcast again to check data
-    // persistence.
-    $this->pressEditorButton('Source');
+    $page->pressButton('Save');
+
+    $this->drupalGet($this->host->toUrl('edit-form'));
+    $this->waitForEditor();
     $this->click('.ck-widget.drupal-media');
+    $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $dropdown_button = $page->find('css', 'button.ck-dropdown__button > span.ck-button__label');
     // Check that view mode 2 persisted.
     $this->assertEquals('View Mode 2 has Numeric ID', $dropdown_button->getText());
