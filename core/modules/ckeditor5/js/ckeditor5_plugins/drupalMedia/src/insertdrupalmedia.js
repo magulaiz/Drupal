@@ -71,9 +71,8 @@ export default class InsertDrupalMediaCommand extends Command {
 
       const { normalizedStyles } = elementStyleEditing;
       // eslint-disable-next-line no-restricted-syntax
-      for (const group of Object.keys(normalizedStyles)) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const style of elementStyleEditing.normalizedStyles[group]) {
+      Object.entries(normalizedStyles).forEach(([group, styles]) => {
+        styles.forEach((style) => {
           if (
             attributes[style.attributeName] &&
             style.attributeValue === attributes[style.attributeName]
@@ -81,8 +80,8 @@ export default class InsertDrupalMediaCommand extends Command {
             const modelAttribute = groupNameToModelAttributeKey(group);
             modelAttributes[modelAttribute] = style.name;
           }
-        }
-      }
+        });
+      });
     }
 
     this.editor.model.change((writer) => {

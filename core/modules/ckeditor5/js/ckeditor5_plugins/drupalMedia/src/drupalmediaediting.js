@@ -70,8 +70,8 @@ export default class DrupalMediaEditing extends Plugin {
       .getMetadata(modelElement)
       .then((metadata) => {
         if (!modelElement) {
-          // Nothing to do if model element has been removed before
-          // promise was resolved.
+          // Nothing to do if model element has been removed before promise was
+          // resolved.
           return;
         }
         // Enqueue a model change that is not visible to the undo/redo feature.
@@ -85,8 +85,8 @@ export default class DrupalMediaEditing extends Plugin {
       })
       .catch((e) => {
         if (!modelElement) {
-          // Nothing to do if model element has been removed before
-          // promise was resolved.
+          // Nothing to do if model element has been removed before promise was
+          // resolved.
           return;
         }
         console.warn(e.toString());
@@ -124,9 +124,9 @@ export default class DrupalMediaEditing extends Plugin {
     const metadataRepository = this.editor.plugins.get(
       'DrupalMediaMetadataRepository',
     );
-    // Get all metadata for drupalMedia elements to set value for
-    // drupalMediaType attribute. When other plugins start using the
-    // metadata, this functionality will be handled more generically.
+    // Get all metadata for drupalMedia elements to set the value for the
+    // drupalMediaType attribute. When other plugins start using the metadata,
+    // this functionality will be handled more generically.
     metadataRepository
       .getMetadata(modelElement)
       .then((metadata) => {
@@ -135,16 +135,16 @@ export default class DrupalMediaEditing extends Plugin {
           // promise was resolved.
           return;
         }
-        // Enqueue a model change in `transparent` batch to make it
-        // invisible to the undo/redo functionality.
+        // Enqueue a model change in `transparent` batch to make it invisible to
+        // the undo/redo functionality.
         this.editor.model.enqueueChange({ isUndoable: false }, (writer) => {
           writer.setAttribute('drupalMediaType', metadata.type, modelElement);
         });
       })
       .catch((e) => {
         if (!modelElement) {
-          // Nothing to do if model element has been removed before
-          // promise was resolved.
+          // Nothing to do if model element has been removed before promise was
+          // resolved.
           return;
         }
         console.warn(e.toString());
@@ -244,16 +244,16 @@ export default class DrupalMediaEditing extends Plugin {
                 );
               })
               .catch((e) => {
-                // There isn't any UI indication for errors because this should be
-                // always called after the Drupal Media has been upcast, which would
-                // already display an error in the UI.
+                // There isn't any UI indication for errors because this should
+                // always be called after the Drupal Media has been upcast,
+                // which would already display an error in the UI.
                 console.warn(e.toString());
               });
           },
-          // This converter needs to have the lowest priority to ensure that the
-          // model element and its attributes have already been converted. It is only used
-          // to gather metadata to make the UI tailored to the specific media entity that
-          // is being dealt with.
+          // This converter is set to the lowest priority to ensure the model
+          // element and its attributes have already been converted. It is used
+          // to gather metadata that results in a UI tailored to a specific media
+          // entity.
           { priority: 'lowest' },
         );
       });
