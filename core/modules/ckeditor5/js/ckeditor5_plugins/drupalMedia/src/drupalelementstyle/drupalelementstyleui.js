@@ -217,15 +217,12 @@ export default class DrupalElementStyleUi extends Plugin {
    */
   updateOptionVisibility(definedStyles, style, option, group) {
     const { selection } = this.editor.model.document;
-    // Convert DrupalElementStyle[] into an object.
-    const definedStylesObject = {};
-    definedStylesObject[group] = definedStyles;
     const modelElement = selection
       ? selection.getSelectedElement()
       : getClosestElementWithElementStyleAttribute(
           selection,
           this.editor.model.schema,
-          definedStylesObject,
+          { [group]: definedStyles },
         );
 
     const filteredDefinedStyles = definedStyles.filter(function (item) {
