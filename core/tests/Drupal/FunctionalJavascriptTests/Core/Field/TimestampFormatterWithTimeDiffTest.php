@@ -135,6 +135,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
    * Tests the 'timestamp' formatter without refresh interval.
    */
   public function testNoRefreshInterval(): void {
+    // Set the refresh interval to zero, meaning "no refresh".
     $display = EntityViewDisplay::load('entity_test.entity_test.default');
     $component = $display->getComponent('time_field');
     $component['settings']['time_diff']['refresh'] = 0;
@@ -142,8 +143,10 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $this->drupalGet($this->entity->toUrl());
 
     $time_element = $this->getSession()->getPage()->find('css', 'time');
-
     $time_diff = $time_element->getText();
+
+    // Check that the timestamp is represented as a time difference.
+    $this->assertRegExp('/^\d+ seconds? ago$/', $time_diff);
 
     // Wait at least 5 seconds.
     $this->getSession()->wait(5000);
