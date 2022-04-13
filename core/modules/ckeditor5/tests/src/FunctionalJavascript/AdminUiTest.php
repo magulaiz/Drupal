@@ -71,8 +71,8 @@ class AdminUiTest extends CKEditor5TestBase {
     // Enable a filter that is incompatible with CKEditor 5 if not configured
     // correctly, so validation is triggered when attempting to switch.
     $number_ajax_instances_before = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
-    $this->assertTrue($page->hasUncheckedField('filters[filter_html][status]'));
-    $page->checkField('filters[filter_html][status]');
+    $this->assertTrue($page->hasUncheckedField('filters[filter_autop][status]'));
+    $page->checkField('filters[filter_autop][status]');
     $this->assertEmpty($assert_session->waitForElement('css', '.ajax-progress-throbber'));
     $assert_session->assertWaitOnAjaxRequest();
     $number_ajax_instances_after = $this->getSession()->evaluateScript('Drupal.ajax.instances.length');
