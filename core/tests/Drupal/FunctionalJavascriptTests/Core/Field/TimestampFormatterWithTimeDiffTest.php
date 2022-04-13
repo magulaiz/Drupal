@@ -146,7 +146,7 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $time_diff = $time_element->getText();
 
     // Check that the timestamp is represented as a time difference.
-    $this->assertRegExp('/^\d+ seconds? ago$/', $time_diff);
+    $this->assertMatchesRegularExpression('/^\d+ seconds? ago$/', $time_diff);
 
     // Wait at least 5 seconds.
     $this->getSession()->wait(5000);
