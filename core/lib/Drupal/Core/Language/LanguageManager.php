@@ -89,6 +89,8 @@ class LanguageManager implements LanguageManagerInterface {
         'locked' => TRUE,
       ],
       LanguageInterface::TYPE_URL => [
+        'name' => new TranslatableMarkup('URL'),
+        'description' => new TranslatableMarkup('Order of language detection methods for url.'),
         'locked' => TRUE,
       ],
     ];
