@@ -897,6 +897,8 @@ function user_user_role_delete(RoleInterface $role) {
   $actions = Action::loadMultiple([
     'user_add_role_action.' . $role->id(),
     'user_remove_role_action.' . $role->id(),
+    'user_add_role_' . $role->id() . '_action',
+    'user_remove_role_' . $role->id() . '_action',
   ]);
   foreach ($actions as $action) {
     $action->delete();

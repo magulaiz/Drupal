@@ -78,7 +78,7 @@ class ActionTest extends KernelTestBase {
   public function testDependencies() {
     // Create a new action that depends on a user role.
     $action = Action::create([
-      'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
+      'id' => 'user_add_role_' . RoleInterface::ANONYMOUS_ID . '_action',
       'type' => 'user',
       'label' => 'Add the anonymous role to the selected users',
       'configuration' => [

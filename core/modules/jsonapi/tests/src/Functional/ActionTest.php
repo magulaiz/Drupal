@@ -52,7 +52,7 @@ class ActionTest extends ConfigEntityResourceTestBase {
    */
   protected function createEntity() {
     $action = Action::create([
-      'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
+      'id' => 'user_add_role_' . RoleInterface::ANONYMOUS_ID . '_action',
       'type' => 'user',
       'label' => 'Add the anonymous role to the selected users',
       'configuration' => [
@@ -101,7 +101,7 @@ class ActionTest extends ConfigEntityResourceTestBase {
           'plugin' => 'user_add_role_action',
           'status' => TRUE,
           'action_type' => 'user',
-          'drupal_internal__id' => 'user_add_role_action.anonymous',
+          'drupal_internal__id' => 'user_add_role_anonymous_action',
         ],
       ],
     ];
