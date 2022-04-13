@@ -240,10 +240,6 @@ export default class DrupalElementStyleEditing extends Plugin {
               style.icon = icons[style.icon];
             }
           }
-          if (style.name) {
-            // Make sure names are all strings.
-            style.name = `${style.name}`;
-          }
           return style;
         })
         .filter((style) => {

@@ -105,10 +105,10 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
         if ($view_mode == $default_view_mode) {
           $element_style_configuration[] = [
             'isDefault' => TRUE,
-            'name' => $default_view_mode,
+            'name' => (string) $default_view_mode,
             'title' => $all_view_modes[$view_mode],
             'attributeName' => 'data-view-mode',
-            'attributeValue' => $view_mode,
+            'attributeValue' => (string) $view_mode,
             'modelElements' => ['drupalMedia'],
             'modelAttributes' => [
               'drupalMediaType' => array_keys($media_bundles),
@@ -117,10 +117,10 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
         }
         else {
           $element_style_configuration[] = [
-            'name' => $view_mode,
+            'name' => (string) $view_mode,
             'title' => $all_view_modes[$view_mode],
             'attributeName' => 'data-view-mode',
-            'attributeValue' => $view_mode,
+            'attributeValue' => (string) $view_mode,
             'modelElements' => ['drupalMedia'],
             'modelAttributes' => [
               'drupalMediaType' => $specific_bundles,
