@@ -1404,23 +1404,23 @@ class MediaTest extends WebDriverTestBase {
     $this->getSession()->reload();
     $this->waitForEditor();
 
-    // Test that changing the view mode with an empty editable caption
-    // preserves the empty editable caption when the preview reloads.
+    // Test that changing the view mode with an empty editable caption preserves
+    // the empty editable caption when the preview reloads.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
     $original_value = $this->host->body->value;
-    $this->host->body->value = str_replace('data-caption="baz"', '', $original_value);
+    $this->host->body->value = str_replace('data-caption="baz"', 'data-caption=""', $original_value);
     $this->host->save();
     $this->getSession()->reload();
     $this->waitForEditor();
     $assert_session->elementExists('css', 'article.media--view-mode-view-mode-1');
 
-    $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
     $this->click('.ck-widget.drupal-media');
     $this->assertVisibleBalloon('[aria-label="Drupal Media toolbar"]');
     $this->getBalloonButton('View Mode 1')->click();
     $this->getBalloonButton('View Mode 2 has Numeric ID')->click();
     $assert_session->elementExists('css', 'article.media--view-mode-_2222');
-    $this->assertEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.drupal-media figcaption'));
 
     // Test that a media with no view modes configured will be
     // set to the default view mode.
