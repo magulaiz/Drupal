@@ -373,7 +373,7 @@ function image_entity_presave(EntityInterface $entity) {
 /**
  * Implements hook_ENTITY_TYPE_presave() for entity_view_display.
  */
-function image_entity_view_display_presave(EntityViewDisplayInterface $view_display): void {
+function image_entity_view_display_presave(EntityViewDisplayInterface $view_display) {
   $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
   assert($config_updater instanceof ImageConfigUpdater);
   $config_updater->processImageLazyLoad($view_display);
