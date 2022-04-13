@@ -125,8 +125,8 @@ class MediaFilterController implements ContainerInjectionInterface {
     return (new Response($html, 200, $headers))
       // Do not allow any intermediary to cache the response, only the end user.
       ->setPrivate()
-      // Do not cache the response to avoid reusing outdated responses.
-      ->setMaxAge(-1);
+      // Allow the end user to cache it for up to 5 minutes.
+      ->setMaxAge(300);
   }
 
   /**
