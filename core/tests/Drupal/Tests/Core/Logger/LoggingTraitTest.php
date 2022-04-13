@@ -94,7 +94,6 @@ class LoggingTraitTest extends UnitTestCase {
     ];
   }
 
-
   /**
    * @dataProvider expectNoLogUnmetProvider
    */

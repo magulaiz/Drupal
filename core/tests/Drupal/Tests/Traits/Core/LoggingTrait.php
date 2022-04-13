@@ -8,14 +8,16 @@ use PHPUnit\Framework\ExpectationFailedException;
 /**
  * Sets test expectations for generated log messages.
  *
- * A test class using this trait should declare that it implements
- * \Psr\Log\LoggerInterface, should call LoggingTrait::addAsLogger in its
- * setUp() method, and should call LoggingTrait::assertLogExpectationsMet() in
- *  its assertPostConditions() method.
+ * A test class using this trait should:
+ * - declare that it implements \Psr\Log\LoggerInterface,
+ * - call LoggingTrait::addAsLogger in its setUp() method, and
+ * - call LoggingTrait::assertLogExpectationsMet() in its
+ * assertPostConditions() method.
  *
  * In order to assert that a test does or does not generate logs, the test
- * must call LoggingTrait::expectLog() or LoggingTrait::expectNoLog(); it may
- * also call LoggingTrait::allowLog().
+ * must call LoggingTrait::expectLog() or
+ * LoggingTrait::expectNoLogMoreSevereThan(); it may also call
+ * LoggingTrait::allowLog().
  */
 trait LoggingTrait {
 
@@ -57,7 +59,7 @@ trait LoggingTrait {
    * Setup an expectation that a test will not generate a log message.
    *
    * If a matching log message is generated, the test will fail. Log
-   * messages of the specified level or greater will trigger a test
+   * messages of the specified level or more severe will trigger a test
    * to fail as soon as they are received.
    *
    * Log messages that are set up as expected (by ::expectLog()) or
@@ -65,13 +67,13 @@ trait LoggingTrait {
    * trigger failure.
    *
    * @param int $level
-   *   (optional) The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   *   A log level as defined in Drupal\Core\Logger\RfcLogLevel.
    * @param string $channel
-   *   (optional) The logger channel.
+   *   (optional) A logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectNoLog($level = '', $channel = '', $message = '') {
+  protected function expectNoLogMoreSevereThan($level, $channel = '', $message = '') {
     $this->disallowedLogs[$channel][$message] = $level;
   }
 
@@ -80,9 +82,9 @@ trait LoggingTrait {
    *
    * If a generated log message matches the specified parameters, then
    * it will not cause a test to fail even if would otherwise have been
-   * disallowed (by ::expectNoLog()).
+   * disallowed (by ::expectNoLogMoreSevereThan()).
    *
-   * Typically expectNoLog() is used to define a broad class of
+   * Typically ::expectNoLogMoreSevereThan() is used to define a broad class of
    * unacceptable log messages, e.g. 'fail all warnings and above', and
    * then allowLog() is used to define an narrower exception to that,
    * e.g. 'except allow warnings from the user channel'.
@@ -162,12 +164,12 @@ trait LoggingTrait {
    * earlier to see if there is a match. A rule matches a log message if:
    * - it has the same channel specified or no channel specified
    * - it's message is contained in the actual log message
-   * - it's level is more or less than the log level, depending on $allowed
+   * - it's level is more or less severe than the log level, depending on $allowed
    *
    * @param array $rules
    *   A set of log rules set up earlier.
-   * @param bool $allowed
-   *   Whether to match level greater or lesser than the rule.
+   * @param bool $lessSevere
+   *   Whether to match level more or less severe than the rule.
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
    * @param string $channel
@@ -175,14 +177,14 @@ trait LoggingTrait {
    * @param string $message
    *   The log message.
    */
-  protected function isLogAllowed(array $rules, $allowed, $level, $channel, $message) {
+  protected function isLogAllowed(array $rules, $lessSevere, $level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $channelRules = $rules[$channel];
       foreach ($channelRules as $ruleMessage => $ruleLevel) {
         if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
-          if (($allowed && $ruleLevel >= $level) ||
-          (!$allowed && $ruleLevel <= $level)){
+          if (($lessSevere && $ruleLevel >= $level) ||
+          (!$lessSevere && $ruleLevel <= $level)) {
             return TRUE;
           }
         }
