@@ -34,10 +34,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   }
 
-  var difference = function difference(mainData, otherData) {
-    return [mainData, otherData].reduce(function (mainData, otherData) {
-      return mainData.filter(function (mainData) {
-        return !otherData.includes(mainData);
+  var difference = function difference() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return args.reduce(function (mainData, otherData) {
+      return mainData.filter(function (data) {
+        return !otherData.includes(data);
       });
     });
   };

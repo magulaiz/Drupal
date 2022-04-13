@@ -36,20 +36,17 @@
   }
 
   /**
-   * Gets the values that are present in one array or object but not another.
+   * Gets the values that are present in one array but not another.
    *
-   * @param {Object.<string>|Array} mainData
-   *   The main data to be compared.
-   *
-   * @param {Object.<string>|Array} otherData
-   *   The second data.
+   * @param {Array[]} args
+   *   The list of arrays to process.
    *
    * @return {Array}
-   *   Returns the mainData without the values presented on the otherData.
+   *   Returns the first array without the values present in other arrays.
    */
-  const difference = (mainData, otherData) => {
-    return [mainData, otherData].reduce((mainData, otherData) =>
-      mainData.filter((mainData) => !otherData.includes(mainData)),
+  const difference = (...args) => {
+    return args.reduce((mainData, otherData) =>
+      mainData.filter((data) => !otherData.includes(data)),
     );
   };
 
