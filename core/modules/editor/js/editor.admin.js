@@ -242,8 +242,8 @@
         markAllowedTagsAndPropertyValues(universe, filterStatus);
 
         if (filterStatus.rules.some(function (_ref) {
-          var allowed = _ref.allowed;
-          return allowed;
+          var allow = _ref.allow;
+          return allow;
         })) {
           if (Object.keys(universe).length === 0) {
             return true;
