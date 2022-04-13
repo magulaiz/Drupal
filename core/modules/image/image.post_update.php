@@ -22,9 +22,9 @@ function image_removed_post_updates() {
 /**
  * Add the image loading attribute setting to image field formatter instances.
  */
-function image_post_update_image_loading_attribute(array &$sandbox = NULL) {
+function image_post_update_image_loading_attribute(array &$sandbox = NULL): void {
   $image_config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($image_config_updater) {
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($image_config_updater): bool {
     return $image_config_updater->processImageLazyLoad($view_display);
   });
 }
