@@ -736,6 +736,10 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     if ($pair->getFilterFormat()->filters('filter_html')->status) {
       // Compute elements provided by the current CKEditor 5 settings.
       $restrictions = new HTMLRestrictions($this->ckeditor5PluginManager->getProvidedElements(array_keys($enabled_plugins), $pair));
+//      $fundamental = new HTMLRestrictions($this->ckeditor5PluginManager->getProvidedElements([
+//        'ckeditor5_essentials',
+//        'ckeditor5_paragraph',
+//      ]));
 
       // Compute eventual filter_html setting. Eventual as in: this is the list
       // of eventually allowed HTML tags.
