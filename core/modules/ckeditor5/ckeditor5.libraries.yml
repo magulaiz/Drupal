@@ -113,6 +113,7 @@ drupal.ckeditor5.filter.admin:
     js/ckeditor5.filter.admin.js: {}
   dependencies:
     - core/drupal
+    - core/once
     - core/drupal.ajax
     - core/drupalSettings
 

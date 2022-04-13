@@ -5,7 +5,18 @@
 * @preserve
 **/
 
-(function (Drupal) {
+(function (Drupal, once) {
+  Drupal.behaviors.allowedTagsListener = {
+    attach: function attach(context) {
+      once('ajax-conflict-prevention', '[data-drupal-selector="filter-format-edit-form"], [data-drupal-selector="filter-format-add-form"]', context).forEach(function (form) {
+        form.addEventListener('submit', function () {
+          once.filter('drupal-ajax', '[data-drupal-selector="filter-format-edit-form"] [disabled], [data-drupal-selector="filter-format-add-form"] [disabled]').forEach(function (disabledElement) {
+            disabledElement.removeAttribute('disabled');
+          });
+        });
+      });
+    }
+  };
   var originalAjaxEventResponse = Drupal.Ajax.prototype.eventResponse;
 
   Drupal.Ajax.prototype.eventResponse = function ckeditor5AjaxEventResponse() {
@@ -21,4 +32,4 @@
 
     originalAjaxEventResponse.apply(this, args);
   };
-})(Drupal);
+})(Drupal, once);
