@@ -34,6 +34,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
   }
 
+  var difference = function difference(mainData, otherData) {
+    return [mainData, otherData].reduce(function (mainData, otherData) {
+      return mainData.filter(function (mainData) {
+        return !otherData.includes(mainData);
+      });
+    });
+  };
+
   Drupal.behaviors.filterFilterHtmlUpdating = {
     $allowedHTMLFormItem: null,
     $allowedHTMLDescription: null,
@@ -64,7 +72,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
       });
     },
@@ -122,13 +130,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         } else {
           var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
           var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-
+          var needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
           var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
           var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          var needsAdditionalClasses = requiredClasses.length && difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
