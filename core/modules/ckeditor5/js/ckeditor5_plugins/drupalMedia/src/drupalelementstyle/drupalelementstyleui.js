@@ -468,13 +468,12 @@ export default class DrupalElementStyleUi extends Plugin {
       const dropdownButtonView = dropdownView.buttonView;
 
       const defaultStyle = definedStyles.reduce((result, button) => {
-        if (result) {
-          return result;
+        if (!result) {
+          if (button.name === defaultItem.split(':')[2]) {
+            return button;
+          }
         }
-
-        if (button.name === defaultItem.split(':')[2]) {
-          return button;
-        }
+        return result;
       }, null);
 
       dropdownButtonView.set({
