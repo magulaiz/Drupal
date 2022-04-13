@@ -44,11 +44,11 @@
    * @return {Array}
    *   Returns the first array without the values present in other arrays.
    */
-  const difference = (...args) => {
+  function difference(...args) {
     return args.reduce((mainData, otherData) =>
       mainData.filter((data) => !otherData.includes(data)),
     );
-  };
+  }
 
   /**
    * Displays and updates what HTML tags are allowed to use in a filter.
