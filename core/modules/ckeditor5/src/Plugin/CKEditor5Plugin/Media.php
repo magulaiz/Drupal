@@ -86,12 +86,10 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       return [];
     }
 
-    // Configure view modes.
+    // Gather list of all view modes, and which bundles support them.
     foreach (array_keys($media_bundles) as $bundle) {
       $allowed_view_modes_by_bundle = $this->entityDisplayRepository->getViewModeOptionsByBundle('media', $bundle);
-
       foreach (array_keys($allowed_view_modes_by_bundle) as $view_mode) {
-        // Get the bundles that have this view mode enabled.
         $bundles_per_view_mode[$view_mode][] = $bundle;
       }
     }
@@ -102,7 +100,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     foreach (array_keys($all_view_modes) as $view_mode) {
       if (array_key_exists($view_mode, $bundles_per_view_mode)) {
         $specific_bundles = $bundles_per_view_mode[$view_mode];
-        if ($view_mode == $default_view_mode) {
+        if ($view_mode === $default_view_mode) {
           $element_style_configuration[] = [
             'isDefault' => TRUE,
             'name' => (string) $default_view_mode,
@@ -162,7 +160,9 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       ->setRouteParameter('filter_format', $editor->getFilterFormat()->id())
       ->toString(TRUE)
       ->getGeneratedUrl();
-    [$element_style_configuration, $toolbar_configuration,
+    [
+      $element_style_configuration,
+      $toolbar_configuration,
     ] = self::configureViewModes($editor);
 
     $dynamic_plugin_config['drupalElementStyles']['viewMode'] = $element_style_configuration;
