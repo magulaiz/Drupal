@@ -5,7 +5,7 @@ import DrupalMediaCaptionEditing from './drupalmediacaption/drupalmediacaptioned
 import DrupalMediaCaptionUI from './drupalmediacaption/drupalmediacaptionui';
 
 /**
- * Provides the media caption feature on drupal media elements.
+ * Provides the caption feature on Drupal media elements.
  *
  * @private
  */
