@@ -225,7 +225,10 @@ export default class DrupalElementStyleUi extends Plugin {
           { [group]: definedStyles },
         );
 
-    const filteredDefinedStyles = definedStyles.filter(function (item) {
+    // Filter defined styles based on what can Drupal Element Styles are allowed
+    // on the current selection. If no model attributes are specified, the style
+    // can be applied on any instance of the model element.
+    const filteredDefinedStyles = definedStyles.filter((item) => {
       // eslint-disable-next-line no-restricted-syntax
       for (const [key, value] of toMap(item.modelAttributes)) {
         if (modelElement && modelElement.hasAttribute(key)) {
