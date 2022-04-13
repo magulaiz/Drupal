@@ -144,15 +144,12 @@ class TimestampFormatterWithTimeDiffTest extends WebDriverTestBase {
     $time_element = $this->getSession()->getPage()->find('css', 'time');
 
     $time_diff = $time_element->getText();
-    [$seconds_value] = explode(' ', $time_diff, 2);
 
     // Wait at least 5 seconds.
     $this->getSession()->wait(5000);
 
-    $time_diff = $time_element->getText();
-    [$new_seconds_value] = explode(' ', $time_diff, 2);
     // The time diff hasn't been refreshed.
-    $this->assertSame($seconds_value, $new_seconds_value);
+    $this->assertSame($time_diff, $time_element->getText());
   }
 
   /**
