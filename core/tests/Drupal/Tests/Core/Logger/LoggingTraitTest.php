@@ -61,7 +61,7 @@ class LoggingTraitTest extends UnitTestCase {
    * @dataProvider expectNoLogMetProvider
    */
   public function testExpectNoLogMet(array $expectation) {
-    $this->expectNoLog(...$expectation);
+    $this->expectNoLogMoreSevereThan(...$expectation);
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
@@ -98,7 +98,7 @@ class LoggingTraitTest extends UnitTestCase {
    * @dataProvider expectNoLogUnmetProvider
    */
   public function testExpectNoLogUnmet(array $expectation) {
-    $this->expectNoLog(...$expectation);
+    $this->expectNoLogMoreSevereThan(...$expectation);
     // These calls to allowLog() should have no consequences
     // because the actual log will use a different channel.
     $this->allowLog(RfcLogLevel::WARNING, 'channel_b');
@@ -126,7 +126,7 @@ class LoggingTraitTest extends UnitTestCase {
    */
   public function testAllowLogLevel(array $expectation) {
     $this->allowLog(...$expectation);
-    $this->expectNoLog(RfcLogLevel::WARNING);
+    $this->expectNoLogMoreSevereThan(RfcLogLevel::WARNING);
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
@@ -136,7 +136,7 @@ class LoggingTraitTest extends UnitTestCase {
    */
   public function testAllowLogLevelChannel(array $expectation) {
     $this->allowLog(...$expectation);
-    $this->expectNoLog(RfcLogLevel::WARNING, 'channel_a');
+    $this->expectNoLogMoreSevereThan(RfcLogLevel::WARNING, 'channel_a');
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
@@ -159,7 +159,7 @@ class LoggingTraitTest extends UnitTestCase {
    */
   public function testExpectLogBeforeExpectNoLog(array $expectation) {
     $this->expectLog(...$expectation);
-    $this->expectNoLog(RfcLogLevel::WARNING);
+    $this->expectNoLogMoreSevereThan(RfcLogLevel::WARNING);
     $this->handleLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
   }
