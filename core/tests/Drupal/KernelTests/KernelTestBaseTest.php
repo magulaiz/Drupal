@@ -387,7 +387,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::log
    */
   public function testExpectedLogging() {
-    $this->expectNoLog(RfcLogLevel::ERROR);
+    $this->expectNoLogMoreSevereThan(RfcLogLevel::ERROR);
     this->expectLog(RfcLogLevel::ERROR, 'test');
     \Drupal::logger('test')->error('a test error');
   }
@@ -396,7 +396,7 @@ class KernelTestBaseTest extends KernelTestBase {
    * @covers ::log
    */
   public function testUnexpectedLogging() {
-    $this->expectNoLog(RfcLogLevel::ERROR);
+    $this->expectNoLogMoreSevereThan(RfcLogLevel::ERROR);
     $this->expectException(ExpectationFailedException::class);
     \Drupal::logger('test')->error('a test error');
   }
