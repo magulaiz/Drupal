@@ -57,6 +57,7 @@
     "@ckeditor/ckeditor5-remove-format": "~34.0.0",
     "@ckeditor/ckeditor5-source-editing": "~34.0.0",
     "@ckeditor/ckeditor5-special-characters": "~34.0.0",
+    "@ckeditor/ckeditor5-style": "~34.0.0",
     "@ckeditor/ckeditor5-table": "~34.0.0",
     "@drupal/once": "^1.0.1",
     "@popperjs/core": "^2.9.2",
