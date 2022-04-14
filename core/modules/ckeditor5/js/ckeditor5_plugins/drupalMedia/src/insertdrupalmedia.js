@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // cSpell:words insertdrupalmediacommand
 import { Command } from 'ckeditor5/src/core';
+import { groupNameToModelAttributeKey } from './utils';
 
 /**
  * @module drupalMedia/insertdrupalmediacommand
@@ -67,16 +68,20 @@ export default class InsertDrupalMediaCommand extends Command {
       const elementStyleEditing = this.editor.plugins.get(
         'DrupalElementStyleEditing',
       );
+
+      const { normalizedStyles } = elementStyleEditing;
       // eslint-disable-next-line no-restricted-syntax
-      for (const style of elementStyleEditing.normalizedStyles) {
-        if (
-          attributes[style.attributeName] &&
-          style.attributeValue === attributes[style.attributeName]
-        ) {
-          modelAttributes.drupalElementStyle = style.name;
-          break;
-        }
-      }
+      Object.entries(normalizedStyles).forEach(([group, styles]) => {
+        styles.forEach((style) => {
+          if (
+            attributes[style.attributeName] &&
+            style.attributeValue === attributes[style.attributeName]
+          ) {
+            const modelAttribute = groupNameToModelAttributeKey(group);
+            modelAttributes[modelAttribute] = style.name;
+          }
+        });
+      });
     }
 
     this.editor.model.change((writer) => {
