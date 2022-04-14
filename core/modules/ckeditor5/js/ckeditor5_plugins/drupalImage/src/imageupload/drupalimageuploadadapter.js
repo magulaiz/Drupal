@@ -9,7 +9,7 @@
  * `response.entity_type` to `dataEntityType` for the callback after the file
  * upload in the `_initListeners` method.
  *
- * @todo why do we do the conversion instead of using response.entity_type in DrupalImageUploadEditing?
+ * @todo https://www.drupal.org/project/drupal/issues/3275237
  *
  * @private
  * @implements {module:upload/filerepository~UploadAdapter}
