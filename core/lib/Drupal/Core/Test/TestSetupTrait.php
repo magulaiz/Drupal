@@ -169,6 +169,10 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
+      if ($connection_info['default']['driver'] === 'sqlite') {
+        $connection_info['default']['init_commands']['busy_timeout'] = 'PRAGMA busy_timeout=60000';
+      }
+
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
   }
