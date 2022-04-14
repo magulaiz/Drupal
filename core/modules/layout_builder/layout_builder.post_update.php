@@ -51,9 +51,7 @@ function layout_builder_post_update_add_translation_field() {
   $field_map = $field_manager->getFieldMap();
   foreach ($field_map as $entity_type_id => $field_infos) {
     if (isset($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'])) {
-      $non_translatable_bundle_count = 0;
       foreach ($field_infos[OverridesSectionStorage::FIELD_NAME]['bundles'] as $bundle) {
-        $bundles_not_added = [];
         // The field map can contain stale information. If the field does not
         // exist, ignore it. The field map will be rebuilt when the cache is
         // cleared at the end of the update process.
