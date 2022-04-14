@@ -10,6 +10,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\EditorInterface;
+use Drupal\ckeditor5\HTMLRestrictions;
 
 /**
  * CKEditor 5 List plugin.
@@ -17,7 +18,7 @@ use Drupal\editor\EditorInterface;
  * @internal
  *   Plugin classes are internal.
  */
-class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface {
+class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface {
 
   use CKEditor5PluginConfigurableTrait;
 
@@ -66,8 +67,6 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
 
   /**
    * {@inheritdoc}
-   *
-   * Sets the CKEditor 5 list properties to those chosen in editor config.
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     $static_plugin_config['list']['properties'] = array_merge($static_plugin_config['list']['properties'],
@@ -79,10 +78,11 @@ class ListOrder extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function getElementsSubset(): array {
-    $subset = ["<ul type>", "<li>"];
-    $startIndexEnabled = $this->getConfiguration()['startIndex'];
+    $subset = $this->getPluginDefinition()->getElements();
+    $subset = array_diff($subset, ['<ol reversed start>']);
     $reversedEnabled = $this->getConfiguration()['reversed'];
-    $subset[] = "<ol type" . ($startIndexEnabled ? ' start' : '') . ($reversedEnabled ? ' reversed' : '') . '>';
+    $startIndexEnabled = $this->getConfiguration()['startIndex'];
+    $subset[] = "<ol" . ($reversedEnabled ? ' reversed' : '') . ($startIndexEnabled ? ' start' : '') . '>';
     return $subset;
   }
 

@@ -86,7 +86,7 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
         constraints:
           SourceEditingRedundantTags: []
 
-# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListOrder
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
 ckeditor5.plugin.ckeditor5_list:
   type: mapping
   label: List

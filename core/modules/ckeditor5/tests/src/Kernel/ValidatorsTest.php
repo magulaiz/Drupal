@@ -128,10 +128,14 @@ class ValidatorsTest extends KernelTestBase {
             'foobar',
           ],
         ],
-        'plugins' => [],
+        'plugins' => [
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
+          ],
+        ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_list' => 'Configuration for the enabled plugin "<em class="placeholder">List</em>" (<em class="placeholder">ckeditor5_list</em>) is missing.',
         'settings.toolbar.items.5' => 'The provided toolbar item <em class="placeholder">foobar</em> is not valid.',
       ],
     ];

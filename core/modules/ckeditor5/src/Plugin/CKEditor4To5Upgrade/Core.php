@@ -205,9 +205,9 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function computeCKEditor5PluginSubsetConfiguration(string $cke5_plugin_id, FilterFormatInterface $text_format): ?array {
+    $restrictions = $text_format->getHtmlRestrictions();
     switch ($cke5_plugin_id) {
       case 'ckeditor5_heading':
-        $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
           // The default is to allow all headings, which makes sense when there
           // are no restrictions.
@@ -225,7 +225,16 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           }
         }
         return $configuration;
-
+      case 'ckeditor5_list':
+        if ($restrictions === FALSE) {
+          return NULL;
+        }
+        $configuration = [];
+        if (array_key_exists("ol", $restrictions['allowed'])) {
+          $configuration['reversed'] = TRUE;
+          $configuration['startIndex'] = TRUE;
+        }
+        return $configuration;
       default:
         throw new \OutOfBoundsException();
     }
