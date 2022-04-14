@@ -119,6 +119,7 @@ class LoggingTraitTest extends UnitTestCase {
       [RfcLogLevel::ERROR, 'channel_a', 'some'],
       [RfcLogLevel::ERROR, 'channel_a', 'message'],
       [RfcLogLevel::ERROR, 'channel_a', 'some message'],
+    ];
   }
 
   /**
