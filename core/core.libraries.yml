@@ -463,6 +463,7 @@ drupal.array.includes:
   version: VERSION
   js:
     misc/polyfills/array.includes.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.batch:
   version: VERSION
@@ -502,6 +503,7 @@ drupal.customevent:
   version: VERSION
   js:
     misc/polyfills/customevent.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.date:
   version: VERSION
@@ -621,6 +623,7 @@ drupal.element.matches:
   version: VERSION
   js:
     misc/polyfills/element.matches.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.entity-form:
   version: VERSION
@@ -670,6 +673,7 @@ drupal.object.assign:
   version: VERSION
   js:
     misc/polyfills/object.assign.js: { weight: -20 }
+  deprecated: *polyfill_deprecated
 
 drupal.progress:
   version: VERSION
