@@ -13,7 +13,7 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore esque upcasted
+// cspell:ignore esque splitbutton upcasted
 
 /**
  * Tests for CKEditor5.
@@ -468,7 +468,7 @@ class CKEditor5Test extends CKEditor5TestBase {
             'allowed_tags' => [],
           ],
         ],
-      ]
+      ],
     ])->save();
     $ordered_list_html = '<ol>
     <li>

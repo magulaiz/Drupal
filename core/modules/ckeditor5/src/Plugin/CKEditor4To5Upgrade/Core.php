@@ -225,6 +225,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           }
         }
         return $configuration;
+
       case 'ckeditor5_list':
         if ($restrictions === FALSE) {
           return NULL;
@@ -235,6 +236,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           $configuration['startIndex'] = TRUE;
         }
         return $configuration;
+
       default:
         throw new \OutOfBoundsException();
     }

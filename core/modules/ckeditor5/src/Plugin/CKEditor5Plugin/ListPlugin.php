@@ -10,7 +10,6 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\EditorInterface;
-use Drupal\ckeditor5\HTMLRestrictions;
 
 /**
  * CKEditor 5 List plugin.
