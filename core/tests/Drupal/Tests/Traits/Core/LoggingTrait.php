@@ -180,7 +180,7 @@ trait LoggingTrait {
   protected function isLogAllowed(array $rules, $lessSevere, $level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
-      $channelRules = $rules[$channel];
+      $channelRules = $rules[$channel] ?? [];
       foreach ($channelRules as $ruleMessage => $ruleLevel) {
         if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
           if (($lessSevere && $ruleLevel >= $level) ||
