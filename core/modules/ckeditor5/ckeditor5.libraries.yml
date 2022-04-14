@@ -211,6 +211,11 @@ admin.sourceEditing:
     theme:
       css/source-editing.admin.css: { }
 
+admin.style:
+  css:
+    theme:
+      css/style.admin.css: { }
+
 admin.table:
   css:
     theme:
