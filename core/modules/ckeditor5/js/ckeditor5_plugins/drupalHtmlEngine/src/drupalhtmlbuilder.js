@@ -141,7 +141,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Appends string to the value.
+   * Appends a string to the value.
    *
    * @param {string} str
    *  A string to be appended to the value.
