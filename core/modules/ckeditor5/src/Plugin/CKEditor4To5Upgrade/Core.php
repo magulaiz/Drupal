@@ -227,13 +227,13 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return $configuration;
 
       case 'ckeditor5_list':
-        if ($restrictions === FALSE) {
-          return NULL;
-        }
         $configuration = [];
-        if (array_key_exists("ol", $restrictions['allowed'])) {
+        if ($restrictions === FALSE || array_key_exists("ol", $restrictions['allowed'])) {
           $configuration['reversed'] = TRUE;
           $configuration['startIndex'] = TRUE;
+        } else {
+          $configuration['reversed'] = FALSE;
+          $configuration['startIndex'] = FALSE;
         }
         return $configuration;
 

@@ -492,9 +492,9 @@ class CKEditor5Test extends CKEditor5TestBase {
     // splitbutton active.
     $this->pressEditorButton('Source');
     $numbered_list_dropdown = '.ck-splitbutton__arrow';
-    $this->click($numbered_list_dropdown);
-    $list_properties_button = '.ck-collapsible > .ck.ck-button.ck-button_with-text';
-    $assert_session->elementNotExists('css', $list_properties_button);
+
+    // Check that there is no dropdown available for the numbered list because both reversed and startIndex are FALSE.
+    $assert_session->elementNotExists('css', $numbered_list_dropdown);
     // Save content so source content is kept after changing the editor config.
     // and refreshing.
     $page->pressButton('Save');
@@ -511,9 +511,6 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->getSession()->reload();
     $this->waitForEditor();
     $this->click($numbered_list_dropdown);
-    $assert_session->elementExists('css', $list_properties_button);
-    $assert_session->elementTextEquals('css', $list_properties_button, 'List properties');
-    $this->click($list_properties_button);
     $reversed_order_button = '.ck.ck-button.ck-numbered-list-properties__reversed-order';
     $assert_session->elementExists('css', $reversed_order_button);
     $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
@@ -529,9 +526,6 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->getSession()->reload();
     $this->waitForEditor();
     $this->click($numbered_list_dropdown);
-    $assert_session->elementExists('css', $list_properties_button);
-    $assert_session->elementTextEquals('css', $list_properties_button, 'List properties');
-    $this->click($list_properties_button);
     $assert_session->elementExists('css', $reversed_order_button);
     $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
     $assert_session->elementExists('css', $start_index_element);
