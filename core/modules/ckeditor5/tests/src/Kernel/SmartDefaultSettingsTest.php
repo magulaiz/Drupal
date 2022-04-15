@@ -484,7 +484,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'language_list' => 'un',
           ],
           'ckeditor5_list' => [
-            'reversed' => TRUE,
+            'reversed' => FALSE,
             'startIndex' => TRUE,
           ],
         ],
@@ -575,14 +575,14 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
-          'ckeditor5_list' => ['reversed' => TRUE, 'startIndex' => TRUE],
+          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
         'status' => [
-          'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;o type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h5 id&gt;.',
+          'This format\'s HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin\'s <em>Manually editable HTML tags</em>: &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h5 id&gt;.',
         ],
       ]),
     ];
@@ -608,7 +608,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
-          'ckeditor5_list' => ['reversed' => TRUE, 'startIndex' => TRUE],
+          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -639,7 +639,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
-          'ckeditor5_list' => ['reversed' => TRUE, 'startIndex' => TRUE],
+          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -814,7 +814,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_list' => [
-            'reversed' => TRUE,
+            'reversed' => FALSE,
             'startIndex' => TRUE,
           ],
         ],
@@ -939,7 +939,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_list' => [
-            'reversed' => TRUE,
+            'reversed' => FALSE,
             'startIndex' => TRUE,
           ],
         ],

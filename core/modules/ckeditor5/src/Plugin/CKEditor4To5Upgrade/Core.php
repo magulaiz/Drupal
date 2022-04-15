@@ -225,21 +225,16 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
             $configuration['enabled_headings'][] = "heading$index";
           }
         }
-        die('something hi '. print_r($configuration, true));
         return $configuration;
 
       case 'ckeditor5_list':
         $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          return NULL;
+        }
         $configuration = [];
-        if ($restrictions === FALSE || array_key_exists("ol", $restrictions['allowed'])) {
-          $configuration['reversed'] = TRUE;
-          $configuration['startIndex'] = TRUE;
-        }
-        else {
-          $configuration['reversed'] = FALSE;
-          $configuration['startIndex'] = FALSE;
-        }
-        die('something hi '. print_r($configuration, true));
+        $configuration['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
+        $configuration['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
         return $configuration;
 
       default:
