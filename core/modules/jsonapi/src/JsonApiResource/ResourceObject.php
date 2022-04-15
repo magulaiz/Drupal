@@ -124,8 +124,9 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
    */
   public function withArity(int $arity): ResourceObject {
     if ($this->resourceType->isVersionable()) {
-      $versionIdentifier = $this->getVersionIdentifier();
-    } else {
+      $versionIdentifier = str_replace('id:', '', $this->getVersionIdentifier());
+    }
+    else {
       $versionIdentifier = NULL;
     }
 
