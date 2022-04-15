@@ -49,7 +49,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Converts document fragment into HTML string and appends to the value.
+   * Converts a document fragment into an HTML string appended to the value.
    *
    * @param {DocumentFragment} node
    *   A document fragment to be appended to the value.
