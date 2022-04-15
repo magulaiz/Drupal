@@ -573,6 +573,20 @@ function system_requirements($phase) {
     }
   }
 
+  // Test Drush version.
+  // Check if root is in web, and how many levels to change up.
+  strpos(DRUPAL_ROOT, 'web') ? $root_depth = 4 : $root_depth = 3;
+  $composer_file = dirname(__DIR__, $root_depth) . '/composer.lock';
+  if (file_exists($composer_file)) {
+    preg_match('/drush\/tree\/(.*)"/', file_get_contents($composer_file), $matches);
+    if (!empty($matches)){
+      $requirements['drush_version'] = [
+        'title' => t('Drush'),
+        'value' => $matches[1],
+      ];
+    }
+  }
+
   // Test PHP memory_limit
   $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = [
