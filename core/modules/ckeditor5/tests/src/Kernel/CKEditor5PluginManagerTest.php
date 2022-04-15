@@ -989,7 +989,7 @@ PHP,
       'editor' => 'ckeditor5',
       'settings' => [
         'plugins' => [
-          $sneaky_plugin_id => ['configured_subset' => [strtolower($random_tag)]],
+          $sneaky_plugin_id => ['configured_subset' => [$random_tag]],
         ],
       ],
       'image_upload' => [],
