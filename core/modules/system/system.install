@@ -59,10 +59,10 @@ function system_requirements($phase) {
 
       // Create the version placeholder if a version is set.
       $version_placeholder = $info['version'] ? ['%version' => $info['version']] : [];
-      $profile_version = !empty($version_placeholder) ? '(%profile-%version)' : '(%profile)';
+      $profile_value = !empty($version_placeholder) ? '%profile_name (%profile-%version)' : '%profile_name (%profile)';
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
-        'value' => t('%profile_name ' . $profile_version, [
+        'value' => t($profile_value, [
           '%profile_name' => $info['name'],
           '%profile' => $profile,
         ] + $version_placeholder),
