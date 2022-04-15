@@ -59,6 +59,7 @@ use Drupal\filter\FilterFormatInterface;
  *   },
  *   cke5_plugin_elements_subset_configuration = {
  *    "ckeditor5_heading",
+ *    "ckeditor5_list",
  *   }
  * )
  *
@@ -205,9 +206,9 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function computeCKEditor5PluginSubsetConfiguration(string $cke5_plugin_id, FilterFormatInterface $text_format): ?array {
-    $restrictions = $text_format->getHtmlRestrictions();
     switch ($cke5_plugin_id) {
       case 'ckeditor5_heading':
+        $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
           // The default is to allow all headings, which makes sense when there
           // are no restrictions.
@@ -224,9 +225,11 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
             $configuration['enabled_headings'][] = "heading$index";
           }
         }
+        die('something hi '. print_r($configuration, true));
         return $configuration;
 
       case 'ckeditor5_list':
+        $restrictions = $text_format->getHtmlRestrictions();
         $configuration = [];
         if ($restrictions === FALSE || array_key_exists("ol", $restrictions['allowed'])) {
           $configuration['reversed'] = TRUE;
@@ -236,6 +239,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           $configuration['reversed'] = FALSE;
           $configuration['startIndex'] = FALSE;
         }
+        die('something hi '. print_r($configuration, true));
         return $configuration;
 
       default:
