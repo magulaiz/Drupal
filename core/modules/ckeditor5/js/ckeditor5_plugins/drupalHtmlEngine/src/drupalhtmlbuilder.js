@@ -65,7 +65,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Appends element node to the value.
+   * Appends an element node to the value.
    *
    * @param {DocumentFragment} node
    *   A document fragment to be appended to the value.
