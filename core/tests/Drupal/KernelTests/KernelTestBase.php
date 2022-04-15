@@ -259,7 +259,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
-    $this->addAsLogger();
   }
 
   /**
@@ -624,6 +623,9 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    $container->register('kernel_test.logger', get_class($this))
+      ->addTag('logger');
 
     // Remove the stored configuration importer so if used again it will be
     // built with up-to-date services.
