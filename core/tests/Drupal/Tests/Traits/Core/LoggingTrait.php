@@ -201,13 +201,6 @@ trait LoggingTrait {
   }
 
   /**
-   * Register a test as a logger.
-   */
-  protected function addAsLogger() {
-    $this->container->get('logger.factory')->addLogger($this);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function log($level, $message, array $context = []) {
