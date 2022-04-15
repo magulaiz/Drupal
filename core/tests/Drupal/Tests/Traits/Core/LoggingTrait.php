@@ -115,17 +115,14 @@ trait LoggingTrait {
    *   The log message.
    */
   protected function handleLog($level, $channel, $message) {
-    $isExpected = $this->handleLogExpectations($level, $channel, $message) || $this->handleLogExpectations($level, $channel, '');
+    $isExpected = $this->handleLogExpectations($level, $channel, $message);
     if ($isExpected) {
       return;
     }
 
-    $isAllowed = $this->isLogAllowed($this->allowedLogs, TRUE, $level, $channel, $message);
-    if (!$isAllowed) {
-      $isDisallowed = $this->isLogAllowed($this->disallowedLogs, FALSE, $level, $channel, $message);
-      if ($isDisallowed) {
-        throw new ExpectationFailedException("Disallowed log message received: $level $channel $message");
-      }
+    $isDisallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
+    if ($isDisallowed) {
+      throw new ExpectationFailedException("Disallowed log message received: $level $channel $message");
     }
   }
 
@@ -134,6 +131,8 @@ trait LoggingTrait {
    *
    * If the log message matches an expected type of log message,
    * then the count of outstanding expectations of that type is reduced.
+   * Messages can match partially, and against the wildcard empty string expectation.
+   * If messages match against multiple expectations, then the count of all are reduced.
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -144,11 +143,23 @@ trait LoggingTrait {
    */
   protected function handleLogExpectations($level, $channel, $message) {
     if (isset($this->expectedLogs[$level][$channel])) {
-      foreach ($this->expectedLogs[$level][$channel] as $expectedMessage) {
-        if (strpos($message, $expectedMessage) !== FALSE) {
-          $this->expectedLogs[$level][$channel][$expectedMessage] = $this->expectedLogs[$level][$channel][$expectedMessage] - 1;
-          if ($this->expectedLogs[$level][$channel][$expectedMessage] === 0) {
+      foreach ($this->expectedLogs[$level][$channel] as $expectedMessage => $count) {
+        if ($expectedMessage === '' || strpos($message, $expectedMessage) !== FALSE) {
+          // If the count was 1, then the expectation is now fully met.
+          if ($count === 1) {
             unset($this->expectedLogs[$level][$channel][$expectedMessage]);
+            // Clear out empty expectation arrays to facilitate asserting that there are
+            // no unmet expectations at the end of the test.
+            if (empty($this->expectedLogs[$level][$channel])) {
+              unset($this->expectedLogs[$level][$channel]);
+            }
+            if (empty($this->expectedLogs[$level])) {
+              unset($this->expectedLogs[$level]);
+            }
+          }
+          // If the count was more than 1, decrement the expectation.
+          else {
+            $this->expectedLogs[$level][$channel][$expectedMessage] = $count - 1;
           }
           return TRUE;
         }
@@ -163,13 +174,9 @@ trait LoggingTrait {
    * A received log message is compared against a set of rules set up
    * earlier to see if there is a match. A rule matches a log message if:
    * - it has the same channel specified or no channel specified
-   * - it's message is contained in the actual log message
-   * - it's level is more or less severe than the log level, depending on $allowed
+   * - its message is empty or is contained in the actual log message
+   * - its level is less than or equally severe as the log level
    *
-   * @param array $rules
-   *   A set of log rules set up earlier.
-   * @param bool $lessSevere
-   *   Whether to match level more or less severe than the rule.
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
    * @param string $channel
@@ -177,14 +184,44 @@ trait LoggingTrait {
    * @param string $message
    *   The log message.
    */
-  protected function isLogAllowed(array $rules, $lessSevere, $level, $channel, $message) {
+  protected function isLogAllowed($level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
-      $channelRules = $rules[$channel] ?? [];
-      foreach ($channelRules as $ruleMessage => $ruleLevel) {
-        if (strpos($message, $ruleMessage) !== FALSE || $ruleMessage === '') {
-          if (($lessSevere && $ruleLevel >= $level) ||
-          (!$lessSevere && $ruleLevel <= $level)) {
+      $allowed = $this->allowedLogs[$channel] ?? [];
+      foreach ($allowed as $allowedMessage => $allowedLevel) {
+        if ($allowedMessage === '' || strpos($message, $allowedMessage) !== FALSE) {
+          if ($level >= $allowedLevel) {
+            return TRUE;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Determine if a log message is disallowed.
+   *
+   * A received log message is compared against a set of rules set up
+   * earlier to see if there is a match. A rule matches a log message if:
+   * - it has the same channel specified or no channel specified
+   * - its message is empty or is contained in the actual log message
+   * - its level is more than or equally severe as the log level
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   The log message.
+   */
+  protected function isLogDisallowed($level, $channel, $message) {
+    $channels = [$channel, ''];
+    foreach ($channels as $channel) {
+      $disallowed = $this->disallowedLogs[$channel] ?? [];
+      foreach ($disallowed as $disallowedMessage => $disallowedLevel) {
+        if ($disallowedMessage === '' || strpos($message, $disallowedMessage) !== FALSE) {
+          if ($level <= $disallowedLevel) {
             return TRUE;
           }
         }

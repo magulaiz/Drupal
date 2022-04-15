@@ -68,11 +68,6 @@ class LoggingTraitTest extends UnitTestCase {
 
   public function expectNoLogMetProvider() {
     return [
-      [[RfcLogLevel::NOTICE]],
-      [[RfcLogLevel::NOTICE, 'channel_a']],
-      [[RfcLogLevel::NOTICE, 'channel_a', 'some']],
-      [[RfcLogLevel::NOTICE, 'channel_a', 'message']],
-      [[RfcLogLevel::NOTICE, 'channel_a', 'some message']],
       [[RfcLogLevel::NOTICE, 'channel_a', 'some other message']],
       [[RfcLogLevel::NOTICE, 'channel_b']],
       [[RfcLogLevel::NOTICE, 'channel_b', 'some']],
@@ -109,16 +104,16 @@ class LoggingTraitTest extends UnitTestCase {
 
   public function expectNoLogUnmetProvider() {
     return [
+      [[RfcLogLevel::NOTICE]],
+      [[RfcLogLevel::NOTICE, 'channel_a']],
+      [[RfcLogLevel::NOTICE, 'channel_a', 'some']],
+      [[RfcLogLevel::NOTICE, 'channel_a', 'message']],
+      [[RfcLogLevel::NOTICE, 'channel_a', 'some message']],
       [[RfcLogLevel::WARNING]],
       [[RfcLogLevel::WARNING, 'channel_a']],
       [[RfcLogLevel::WARNING, 'channel_a', 'some']],
       [[RfcLogLevel::WARNING, 'channel_a', 'message']],
       [[RfcLogLevel::WARNING, 'channel_a', 'some message']],
-      [[RfcLogLevel::ERROR]],
-      [[RfcLogLevel::ERROR, 'channel_a']],
-      [[RfcLogLevel::ERROR, 'channel_a', 'some']],
-      [[RfcLogLevel::ERROR, 'channel_a', 'message']],
-      [[RfcLogLevel::ERROR, 'channel_a', 'some message']],
     ];
   }
 
