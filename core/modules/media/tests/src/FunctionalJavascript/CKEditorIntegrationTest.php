@@ -885,6 +885,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
 
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
+    // Assert the editor has not tracked changes yet.
+    $this->assertSession()->elementNotExists('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $assert_session = $this->assertSession();
@@ -915,6 +917,12 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->getSession()->switchToIFrame('ckeditor');
     $link = $assert_session->waitForElementVisible('css', 'a[href="https://www.drupal.org"]');
     $this->assertNotEmpty($link);
+
+    // Assert that the editor value has been flagged as changed.
+    $this->getSession()->switchToWindow();
+    $this->assertSession()->waitForElementVisible('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
+    $this->assertSession()->elementExists('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
+    $this->getSession()->switchToIFrame('ckeditor');
 
     // Select the CKEditor Widget again and assert the context menu now does
     // contain link-related context menu items.
