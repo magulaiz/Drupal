@@ -27,7 +27,6 @@ use Drupal\TestTools\Extension\SchemaInspector;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,7 +81,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  *
  * @ingroup testing
  */
-abstract class KernelTestBase extends TestCase implements ServiceProviderInterface, LoggerInterface {
+abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
   use AssertContentTrait;
   use RandomGeneratorTrait;
@@ -252,6 +251,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+    $this->getAssertableLogger();
   }
 
   /**
@@ -594,9 +594,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
-
-    $container->register('kernel_test.logger', get_class($this))
-      ->addTag('logger');
   }
 
   /**
