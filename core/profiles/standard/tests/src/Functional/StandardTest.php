@@ -111,7 +111,7 @@ class StandardTest extends BrowserTestBase {
     // Ensure that configuration from the Standard profile is not reused when
     // enabling a module again since it contains configuration that can not be
     // installed. For example, editor.editor.basic_html is editor configuration
-    // that depends on the ckeditor module. The ckeditor module can not be
+    // that depends on the CKEditor 5 module. The CKEditor 5 module can not be
     // installed before the editor module since it depends on the editor module.
     // The installer does not have this limitation since it ensures that all of
     // the install profiles dependencies are installed before creating the
@@ -124,7 +124,7 @@ class StandardTest extends BrowserTestBase {
       $filter->removeFilter('editor_file_reference');
       $filter->save();
     }
-    \Drupal::service('module_installer')->uninstall(['editor', 'ckeditor']);
+    \Drupal::service('module_installer')->uninstall(['editor', 'ckeditor5']);
     $this->rebuildContainer();
     \Drupal::service('module_installer')->install(['editor']);
     /** @var \Drupal\contact\ContactFormInterface $contact_form */
