@@ -183,6 +183,10 @@
 
           this.element.setAttributes(this.data.attributes);
           this.oldData = CKEDITOR.tools.clone(this.data);
+
+          if (this.oldData.link !== this.data.link) {
+            editor.fire('change');
+          }
         },
         downcast: function downcast() {
           var downcastElement = new CKEDITOR.htmlParser.element('drupal-media', this.data.attributes);
