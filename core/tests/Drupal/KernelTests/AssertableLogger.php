@@ -1,0 +1,253 @@
+<?php
+
+namespace Drupal\KernelTests;
+
+use Drupal\Core\Logger\RfcLoggerTrait;
+use Psr\Log\LoggerInterface;
+
+/**
+ * Logger that allows asserting logs generated during tests.
+ */
+class AssertableLogger implements LoggerInterface {
+
+  use RfcLoggerTrait;
+
+  /**
+   * Logs that are expected to be generated.
+   */
+  protected array $expectedPatterns = [];
+
+  /**
+   * Logs that are allowed but not expected.
+   */
+  protected array $allowedPatterns = [];
+
+  /**
+   * Logs that are expected not to be generated.
+   */
+  protected array $disallowedPatterns = [];
+
+  /**
+   * Logs that are disallowed and have been generated.
+   */
+  protected array $disallowedLogs = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function log($level, $message, array $context = []) {
+    $this->handleLog($level, $context['channel'] ?? '', $message);
+  }
+
+  /**
+   * Setup an expectation that a test will generate a log message.
+   *
+   * If a matching log message is not generated, the test will fail.
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   (optional) Text that the log message must contain.
+   */
+  public function expectLog($level, $channel, $message = '') {
+    $count = 1 + ($this->expectedPatterns[$level][$channel][$message] ?? 0);
+    $this->expectedPatterns[$level][$channel][$message] = $count;
+  }
+
+  /**
+   * Setup an expectation that a test will not generate a log message.
+   *
+   * If a matching log message is generated, the test will fail. Log
+   * messages of the specified level or more severe will trigger a test
+   * to fail as soon as they are received.
+   *
+   * Log messages that are set up as expected (by ::expectLog()) or
+   * are set up as allowed (by ::allowLogs()) are exempt and will not
+   * trigger failure.
+   *
+   * @param int $level
+   *   A log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   (optional) A logger channel.
+   * @param string $message
+   *   (optional) Text that the log message must contain.
+   */
+  public function expectNoLogsAsSevereAs($level, $channel = '', $message = '') {
+    $this->disallowedPatterns[$channel][$message] = $level;
+  }
+
+  /**
+   * Define a certain kind of log message as allowed.
+   *
+   * If a generated log message matches the specified parameters, then
+   * it will not cause a test to fail even if would otherwise have been
+   * disallowed (by ::expectNoLogsAsSevereAs()).
+   *
+   * Typically ::expectNoLogsAsSevereAs() is used to define a broad class of
+   * unacceptable log messages, e.g. 'fail all warnings and above', and
+   * then allowLogs() is used to define an narrower exception to that,
+   * e.g. 'except allow warnings from the user channel'.
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   (optional) Text that the log message must contain.
+   */
+  public function allowLogs($level, $channel, $message = '') {
+    $this->allowedPatterns[$channel][$message] = $level;
+  }
+
+  /**
+   * Get the log expectations that have not yet been met.
+   */
+  public function getUnmetExpectations() {
+    return $this->expectedPatterns;
+  }
+
+  /**
+   * Get the logs that have been received but not should not have been.
+   */
+  public function getDisallowedLogs() {
+    return $this->disallowedLogs;
+  }
+
+  /**
+   * Process a log message received by the test.
+   *
+   * If the log message is expected, it is tracked so that
+   * expectations can be verified at the end of the test. If the
+   * log message is not allowed, the test is failed immediately.
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   The log message.
+   */
+  protected function handleLog($level, $channel, $message) {
+    $isExpected = $this->handleLogExpectations($level, $channel, $message);
+    if ($isExpected) {
+      return;
+    }
+    $isDisallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
+    if ($isDisallowed) {
+      $this->disallowedLogs[] = [$level, $channel, $message];
+    }
+  }
+
+  /**
+   * Process a log message received by the test in the context of expectations.
+   *
+   * If the log message matches an expected type of log message,
+   * then the count of outstanding expectations of that type is reduced.
+   * Messages can match partially, and against the wildcard empty string expectation.
+   * If messages match against multiple expectations, then the count of all are reduced.
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   The log message.
+   */
+  protected function handleLogExpectations($level, $channel, $message) {
+    if (isset($this->expectedPatterns[$level][$channel])) {
+      foreach ($this->expectedPatterns[$level][$channel] as $expectedMessage => $count) {
+        if ($expectedMessage === '' || strpos($message, $expectedMessage) !== FALSE) {
+          // If the count was 1, then the expectation is now fully met.
+          if ($count === 1) {
+            unset($this->expectedPatterns[$level][$channel][$expectedMessage]);
+            // Clear out empty expectation arrays to facilitate asserting that there are
+            // no unmet expectations at the end of the test.
+            if (empty($this->expectedPatterns[$level][$channel])) {
+              unset($this->expectedPatterns[$level][$channel]);
+            }
+            if (empty($this->expectedPatterns[$level])) {
+              unset($this->expectedPatterns[$level]);
+            }
+          }
+          // If the count was more than 1, decrement the expectation.
+          else {
+            $this->expectedPatterns[$level][$channel][$expectedMessage] = $count - 1;
+          }
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Determine if a log message is allowed.
+   *
+   * A received log message is compared against a set of rules set up
+   * earlier to see if there is a match. A rule matches a log message if:
+   * - it has the same channel specified or no channel specified
+   * - its message is empty or is contained in the actual log message
+   * - its level is less than or equally severe as the log level
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   The log message.
+   *
+   * @return bool
+   *   Whether or not the log matches the allowed patterns.
+   */
+  protected function isLogAllowed($level, $channel, $message) {
+    $channels = [$channel, ''];
+    foreach ($channels as $channel) {
+      $allowed = $this->allowedPatterns[$channel] ?? [];
+      foreach ($allowed as $allowedMessage => $allowedLevel) {
+        if ($allowedMessage === '' || strpos($message, $allowedMessage) !== FALSE) {
+          if ($level >= $allowedLevel) {
+            return TRUE;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Determine if a log message is disallowed.
+   *
+   * A received log message is compared against a set of rules set up
+   * earlier to see if there is a match. A rule matches a log message if:
+   * - it has the same channel specified or no channel specified
+   * - its message is empty or is contained in the actual log message
+   * - its level is more than or equally severe as the log level
+   *
+   * @param int $level
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   * @param string $channel
+   *   The logger channel.
+   * @param string $message
+   *   The log message.
+   *
+   * @return bool
+   *   Whether or not the log matches the disallowed patterns.
+   */
+  protected function isLogDisallowed($level, $channel, $message) {
+    $channels = [$channel, ''];
+    foreach ($channels as $channel) {
+      $disallowed = $this->disallowedPatterns[$channel] ?? [];
+      foreach ($disallowed as $disallowedMessage => $disallowedLevel) {
+        if ($disallowedMessage === '' || strpos($message, $disallowedMessage) !== FALSE) {
+          if ($level <= $disallowedLevel) {
+            return TRUE;
+          }
+        }
+      }
+    }
+    return FALSE;
+  }
+
+}

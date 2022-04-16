@@ -335,21 +335,42 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::log
+   * Test that tests pass when an error log is generated, but is explicitly expected.
    */
-  public function testExpectedLogging() {
-    $this->expectNoLogMoreSevereThan(RfcLogLevel::ERROR);
+  public function testExpectedLoggingPresent() {
+    $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     $this->expectLog(RfcLogLevel::ERROR, 'test');
     \Drupal::logger('test')->error('a test error');
   }
 
   /**
-   * @covers ::log
+   * Test that tests pass when an error log is not generated, but is explicitly expected.
    */
-  public function testUnexpectedLogging() {
-    $this->expectNoLogMoreSevereThan(RfcLogLevel::ERROR);
-    $this->expectException(ExpectationFailedException::class);
+  public function testExpectedLoggingAbsent() {
+    $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
+    $this->expectLog(RfcLogLevel::ERROR, 'test');
+    try {
+      $this->assertLogExpectationsMet();
+    }
+    catch (ExpectationFailedException $e) {
+      $this->pass("assertLogExpectations correctly failed. An error log was expected on the 'test' channel but was not generated.");
+      $this->assertableLogger = NULL;
+    }
+  }
+
+  /**
+   * Test that tests fails when an error log is generated, but is explicitly expected to be not generated.
+   */
+  public function testDisallowedLogging() {
+    $this->expectNoLogsAsSevereAs(RfcLogLevel::ERROR);
     \Drupal::logger('test')->error('a test error');
+    try {
+      $this->assertLogExpectationsMet();
+    }
+    catch (ExpectationFailedException $e) {
+      $this->pass('assertLogExpectations correctly failed. An error log was generated, but it was expected that no error logs would be generated.');
+      $this->assertableLogger = NULL;
+    }
   }
 
 }

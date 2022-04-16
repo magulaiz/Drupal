@@ -33,7 +33,6 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,7 +94,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  * @ingroup testing
  */
-abstract class KernelTestBase extends TestCase implements ServiceProviderInterface, LoggerInterface {
+abstract class KernelTestBase extends TestCase implements ServiceProviderInterface {
 
   use AssertContentTrait;
   use RandomGeneratorTrait;
@@ -259,6 +258,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
+    $this->getAssertableLogger();
   }
 
   /**
