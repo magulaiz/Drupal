@@ -103,35 +103,19 @@ class SourceModeChangeEventTest extends WebDriverTestBase {
    * Tests if changes in source mode correctly trigger the change event.
    */
   public function testSourceMode() {
-    $session = $this->getSession();
-    $web_assert = $this->assertSession();
-    $ckeditor_id = '#cke_edit-body-0-value';
-
     $this->drupalGet('node/add/page');
-    $page = $session->getPage();
-    $this->assertSession()->waitForElementVisible('css', '.cke_button__source');
-    $source_button = $page->find('css', '.cke_button__source');
-    $source_button->click();
-    $this->assertSession()->waitForElementVisible('css', '.cke_source');
+    $this->waitForEditor();
 
     // Check that the editor value hasn't changed.
     $this->assertSession()->elementNotExists('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
 
-    // WebDriverTestBase can't interact directly with the CKEditor fields in an
-    // iframe, so we use Javascript to alter the text area and bubble the
-    // appropriate event.
-    $javascript = <<<JS
-(function(){
-  var element = jQuery('.cke_source')[0];
-  element.value = 'new value';
-  var event = new Event('input', {
-    bubbles: true,
-    cancelable: true,
-  });
-  element.dispatchEvent(event);
-})()
-JS;
-    $this->getSession()->executeScript($javascript);
+    $this->assignNameToCkeditorIframe();
+    $this->getSession()->switchToIFrame('ckeditor');
+    $this->pressEditorButton('source');
+    $textarea = $this->assertSession()->waitForElementVisible('css', '.cke_source');
+    $this->assertNotEmpty($textarea);
+    $textarea->setValue('some arbitrary text');
+    $this->getSession()->switchToWindow();
     $this->assertSession()->waitForElementVisible('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
 
     // Check that the editor value has been flagged as changed.
