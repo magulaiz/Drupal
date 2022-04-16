@@ -67,31 +67,9 @@ function update_page_top() {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
   $route_match = \Drupal::routeMatch();
-  if ($admin_context->isAdminRoute($route_match->getRouteObject()) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
-    $route_name = \Drupal::routeMatch()->getRouteName();
-    switch ($route_name) {
-      // These pages don't need additional nagging.
-      case 'update.theme_update':
-      case 'system.theme_install':
-      case 'update.module_update':
-      case 'update.module_install':
-      case 'update.status':
-      case 'update.report_update':
-      case 'update.report_install':
-      case 'update.settings':
-      case 'system.status':
-      case 'update.confirmation_page':
-      case 'system.batch_page.html':
-        return;
-
-      // If we are on the appearance or modules list, display a detailed report
-      // of the update status.
-      case 'system.themes_page':
-      case 'system.modules_list':
-        $verbose = TRUE;
-        break;
-
-    }
+  $route_object = $route_match->getRouteObject();
+  $update_message_route_option = $route_object->getOption('_update_message');
+  if ($update_message_route_option !== 'skip' && $admin_context->isAdminRoute($route_object) && \Drupal::currentUser()->hasPermission('administer site configuration')) {
     \Drupal::moduleHandler()->loadInclude('update', 'install');
     $status = update_requirements('runtime');
     foreach (['core', 'contrib'] as $report_type) {
@@ -102,7 +80,7 @@ function update_page_top() {
       if (isset($status[$type]['description']) && is_array($status[$type]['description'])) {
         $status[$type]['description'] = \Drupal::service('renderer')->renderPlain($status[$type]['description']);
       }
-      if (!empty($verbose)) {
+      if ($update_message_route_option === 'verbose') {
         if (isset($status[$type]['severity'])) {
           if ($status[$type]['severity'] == REQUIREMENT_ERROR) {
             \Drupal::messenger()->addError($status[$type]['description']);
