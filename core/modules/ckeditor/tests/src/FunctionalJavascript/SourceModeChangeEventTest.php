@@ -117,9 +117,9 @@ class SourceModeChangeEventTest extends WebDriverTestBase {
     // Check that the editor value hasn't changed.
     $this->assertSession()->elementNotExists('css', '#edit-body-0-value[data-editor-value-is-changed="true"]');
 
-    // WebDriverTestBase can't interact directly with the iframed
-    // CKEditor fields, so we use Javascrtipt to alter the text area and
-    // bubble the appropriate event.
+    // WebDriverTestBase can't interact directly with the CKEditor fields in an
+    // iframe, so we use Javascript to alter the text area and bubble the
+    // appropriate event.
     $javascript = <<<JS
 (function(){
   var element = jQuery('.cke_source')[0];
