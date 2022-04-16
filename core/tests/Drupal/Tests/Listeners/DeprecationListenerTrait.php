@@ -139,6 +139,19 @@ trait DeprecationListenerTrait {
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated.",
       // Guzzle/PSR-7
       "Method \"Psr\Http\Message\StreamInterface::getMetadata()\" will return \"mixed\" as of its next major version. Doing the same in implementation \"GuzzleHttp\Psr7\Stream\" will be required when upgrading.",
+      // The following deprecations are related to the IE 11 polyfills.
+      'The "core/css.escape" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.array.find" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.array.includes" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.customevent" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.element.closest" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.element.matches" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.nodelist.foreach" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.object.assign" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/drupal.string.includes" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/es6-promise" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/once" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
+      'The "core/picturefill" asset library is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3238501',
     ];
   }
 

@@ -2,6 +2,11 @@ const chalk = require('chalk');
 const log = require('./log');
 const fs = require('fs');
 const postcss = require('postcss');
+/**
+ * @deprecated in Drupal 9.4.0 and is removed from Drupal 10.0.0.
+ *
+ * @see https://www.drupal.org/project/drupal/issues/3238501
+*/
 const postcssCalc = require("postcss-calc");
 const postcssImport = require('postcss-import');
 const postcssHeader = require('postcss-header');
