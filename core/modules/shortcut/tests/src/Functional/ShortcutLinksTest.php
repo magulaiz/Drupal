@@ -171,7 +171,6 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'access toolbar', 'access shortcuts', 'administer site configuration',
     ]));
-
     $this->assertSession()->linkNotExists('Cron', 'Shortcut link removed from page');
 
     $this->drupalGet('admin/structure');
