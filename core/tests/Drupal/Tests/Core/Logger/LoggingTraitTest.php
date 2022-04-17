@@ -22,7 +22,7 @@ class LoggingTraitTest extends UnitTestCase {
   protected $assertableLogger;
 
   /**
-   * Get or create an asssertable logger.
+   * Get or create an assertable logger.
    *
    * @return \Drupal\KernelTests\AssertableLogger
    *   An assertable logger.
