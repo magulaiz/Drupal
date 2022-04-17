@@ -251,10 +251,24 @@ final class SmartDefaultSettings {
     }
     // Remove the trailing CKEditor 5 toolbar group separator.
     array_pop($settings['toolbar']['items']);
-    // Dedupe as multiple CKEditor 4 buttons can have been merged to one in CKEditor 5 equivalent.
-    $settings['toolbar']['items'] = array_unique($settings['toolbar']['items']);
-    // Strip the CKEditor 4 buttons without a CKEditor 5 equivalent.
-    $settings['toolbar']['items'] = array_filter($settings['toolbar']['items']);
+
+    $accumulator = [];
+    foreach ($settings['toolbar']['items'] as $key => $item) {
+      // Strip the CKEditor 4 buttons without a CKEditor 5 equivalent (empty)
+      if (empty($item)) {
+        unset($settings['toolbar']['items'][$key]);
+      }
+      // Keeps the '|' for groups.
+      if ($item === '|') {
+        continue;
+      }
+      // Strip the duplicated buttons as multiple CKEditor 4 buttons can merge to one CKEditor 5 equivalent.
+      if (in_array($item, $accumulator)) {
+        unset($settings['toolbar']['items'][$key]);
+      }
+
+      $accumulator[] = $item;
+    }
 
     // Second: plugin settings.
     // @see \Drupal\ckeditor\CKEditorPluginConfigurableInterface
