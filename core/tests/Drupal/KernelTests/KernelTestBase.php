@@ -1046,7 +1046,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   }
 
   /**
-   * Get an active instance of the AssertableLogger.
+   * Get the AssertableLogger.
    *
    * @return \Drupal\KernelTests\AssertableLogger|null
    */
