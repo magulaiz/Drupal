@@ -674,7 +674,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => array_merge(
             array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, -1),
-            ['alignment',],
+            ['alignment'],
             array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], -1)
           ),
         ],
@@ -682,7 +682,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 0, 1),
           [
             'ckeditor5_alignment' => [
-              'enabled_alignments' => ['center', 'justify']
+              'enabled_alignments' => ['center', 'justify'],
             ],
           ],
           array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 1),

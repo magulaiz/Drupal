@@ -76,9 +76,7 @@ class WildcardHtmlSupportTest extends KernelTestBase {
     ];
     if (in_array('alignment', $additional_toolbar_items, TRUE)) {
       $editor_config['settings']['plugins']['ckeditor5_alignment'] = [
-        'enabled_alignments' => [
-          'left', 'center', 'right', 'justify'
-        ],
+        'enabled_alignments' => ['left', 'center', 'right', 'justify'],
       ];
     }
 

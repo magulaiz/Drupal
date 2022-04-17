@@ -241,7 +241,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
               }
             }
           }
-        };
+        }
         if (!isset($configuration['enabled_alignments'])) {
           $configuration['enabled_alignments'] = array_unique($configuration['enabled_alignments']);
         }
