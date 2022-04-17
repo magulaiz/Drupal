@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\Traits\Core;
 
-use Drupal\KernelTests\AssertableLogger;
-
 /**
  * Sets test expectations for generated log messages.
  *
@@ -86,7 +84,7 @@ trait LoggingTrait {
   protected function assertLogExpectationsMet() {
     if ($this->getAssertableLogger()) {
       $this->assertEmpty($this->getAssertableLogger()->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated. " . print_r($this->getAssertableLogger()->getDisallowedLogs(), TRUE));
-      $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. "  . print_r($this->getAssertableLogger()->getUnmetExpectations(), TRUE));
+      $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. " . print_r($this->getAssertableLogger()->getUnmetExpectations(), TRUE));
     }
   }
 
