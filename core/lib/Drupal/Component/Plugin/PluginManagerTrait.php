@@ -1,9 +1,6 @@
 <?php
 
-namespace Drupal\migrate\Plugin;
-
-use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Plugin\PluginManagerInterface;
+namespace Drupal\Component\Plugin;
 
 /**
  * Provides functionality for plugin managers.

@@ -3,6 +3,7 @@
 namespace Drupal\migrate\Plugin;
 
 use Drupal\Component\Graph\Graph;
+use Drupal\Component\Plugin\PluginManagerTrait;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
