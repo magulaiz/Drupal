@@ -261,7 +261,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->initFileCache();
     $this->bootEnvironment();
     $this->bootKernel();
-    $this->getAssertableLogger();
   }
 
   /**
@@ -605,6 +604,10 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $route_provider_definition = new Definition(RouteProvider::class);
     $route_provider_definition->setPublic(TRUE);
     $container->setDefinition($id, $route_provider_definition);
+
+    $container
+      ->register('kernel_test.assertable_logger', AssertableLogger::class)
+      ->addTag('logger');
   }
 
   /**
@@ -1013,6 +1016,17 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   public function __sleep() {
     return [];
+  }
+
+  /**
+   * Get an active instance of the AssertableLogger.
+   *
+   * @return \Drupal\KernelTests\AssertableLogger|null
+   */
+  protected function getAssertableLogger() {
+    if ($this->container) {
+      return $this->container->get('kernel_test.assertable_logger');
+    }
   }
 
 }

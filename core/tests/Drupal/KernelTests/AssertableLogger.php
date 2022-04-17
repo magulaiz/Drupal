@@ -136,7 +136,14 @@ class AssertableLogger implements LoggerInterface {
     }
     $isDisallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
     if ($isDisallowed) {
-      $this->disallowedLogs[] = [$level, $channel, $message];
+      $e = new \Exception();
+      $trace = explode("\n", $e->getTraceAsString());
+      $this->disallowedLogs[] = [
+        'level' => $level,
+        'channel' => $channel,
+        'message' => $message,
+        'trace' => $trace,
+      ];
     }
   }
 

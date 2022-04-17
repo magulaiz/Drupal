@@ -14,12 +14,18 @@ use PHPUnit\Framework\ExpectationFailedException;
  */
 class LoggingTraitTest extends UnitTestCase {
 
-  use LoggingTrait {
-    getAssertableLogger as traitGetAssertableLogger;
-  }
+  use LoggingTrait;
 
   /**
-   * {@inheritdoc}
+   * @var \Drupal\KernelTests\AssertableLogger
+   */
+  protected $assertableLogger;
+
+  /**
+   * Get or create an asssertable logger.
+   *
+   * @return \Drupal\KernelTests\AssertableLogger
+   *   An assertable logger.
    */
   protected function getAssertableLogger() {
     if (!$this->assertableLogger) {
