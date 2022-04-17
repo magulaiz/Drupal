@@ -100,6 +100,12 @@ class BanAdmin extends FormBase {
       '#empty' => $this->t('No blocked IP addresses available.'),
       '#weight' => 120,
     ];
+
+    $form['ban_ip_banning_pager'] = [
+      '#type' => 'pager',
+      '#weight' => 121,
+    ];
+
     return $form;
   }
 
