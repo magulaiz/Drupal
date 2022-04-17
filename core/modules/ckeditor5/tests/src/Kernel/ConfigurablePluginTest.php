@@ -67,6 +67,14 @@ class ConfigurablePluginTest extends KernelTestBase {
       'ckeditor5_sourceEditing' => [
         'allowed_tags' => [],
       ],
+      'ckeditor5_alignment' => [
+        'enabled_alignments' => [
+          0 => 'left',
+          1 => 'center',
+          2 => 'right',
+          3 => 'justify',
+        ],
+      ],
       'ckeditor5_imageResize' => [
         'allow_resize' => TRUE,
       ],
