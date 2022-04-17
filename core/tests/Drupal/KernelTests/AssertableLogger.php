@@ -101,7 +101,7 @@ class AssertableLogger implements LoggerInterface {
    * Get the log expectations that have not yet been met.
    *
    * @return array
-   *   The unment log expectations.
+   *   The unmet log expectations.
    */
   public function getUnmetExpectations() {
     return $this->expectedPatterns;
