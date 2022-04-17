@@ -59,18 +59,14 @@ class AssertableLogger implements LoggerInterface {
   /**
    * Setup an expectation that a test will not generate a log message.
    *
-   * If a matching log message is generated, the test will fail. Log
-   * messages of the specified level or more severe will trigger a test
-   * to fail as soon as they are received.
-   *
-   * Log messages that are set up as expected (by ::expectLog()) or
-   * are set up as allowed (by ::allowLogs()) are exempt and will not
-   * trigger failure.
+   * If a matching log message is generated, the test will fail. Log 
+   * messages that are set up as expected (by ::expectLog()) or are set up as 
+   * allowed (by ::allowLogs()) are exempt and will not trigger failure.
    *
    * @param int $level
-   *   A log level as defined in Drupal\Core\Logger\RfcLogLevel.
+   *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
    * @param string $channel
-   *   (optional) A logger channel.
+   *   (optional) The logger channel.
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
@@ -103,6 +99,9 @@ class AssertableLogger implements LoggerInterface {
 
   /**
    * Get the log expectations that have not yet been met.
+   *
+   * @return array
+   *   The unment log expectations.
    */
   public function getUnmetExpectations() {
     return $this->expectedPatterns;
@@ -110,17 +109,20 @@ class AssertableLogger implements LoggerInterface {
 
   /**
    * Get the logs that have been received but not should not have been.
+   * 
+   * @return array
+   *   The disallowed logs.
    */
   public function getDisallowedLogs() {
     return $this->disallowedLogs;
   }
 
   /**
-   * Process a log message received by the test.
+   * Process a generated log message.
    *
-   * If the log message is expected, it is tracked so that
-   * expectations can be verified at the end of the test. If the
-   * log message is not allowed, the test is failed immediately.
+   * If the log message is expected, it is removed from the outstanding 
+   * expectations. If the log message is disallowed, it is stored so it 
+   * can be reported later.
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -148,7 +150,7 @@ class AssertableLogger implements LoggerInterface {
   }
 
   /**
-   * Process a log message received by the test in the context of expectations.
+   * Process a generated log message, comparing against expectations.
    *
    * If the log message matches an expected type of log message,
    * then the count of outstanding expectations of that type is reduced.
