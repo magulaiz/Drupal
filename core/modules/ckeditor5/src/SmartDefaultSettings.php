@@ -251,6 +251,8 @@ final class SmartDefaultSettings {
     }
     // Remove the trailing CKEditor 5 toolbar group separator.
     array_pop($settings['toolbar']['items']);
+    // Dedupe as multiple CKEditor 4 buttons can have been merged to one in CKEditor 5 equivalent.
+    $settings['toolbar']['items'] = array_unique($settings['toolbar']['items']);
     // Strip the CKEditor 4 buttons without a CKEditor 5 equivalent.
     $settings['toolbar']['items'] = array_filter($settings['toolbar']['items']);
 

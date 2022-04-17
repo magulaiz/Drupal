@@ -102,16 +102,10 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return ['blockQuote'];
 
       case 'JustifyLeft':
-        return ["alignment:left"];
-
       case 'JustifyCenter':
-        return ["alignment:center"];
-
       case 'JustifyRight':
-        return ["alignment:right"];
-
       case 'JustifyBlock':
-        return ["alignment:justify"];
+        return ['alignment'];
 
       case 'HorizontalRule':
         return ['horizontalLine'];
