@@ -59,8 +59,8 @@ class AssertableLogger implements LoggerInterface {
   /**
    * Setup an expectation that a test will not generate a log message.
    *
-   * If a matching log message is generated, the test will fail. Log 
-   * messages that are set up as expected (by ::expectLog()) or are set up as 
+   * If a matching log message is generated, the test will fail. Log
+   * messages that are set up as expected (by ::expectLog()) or are set up as
    * allowed (by ::allowLogs()) are exempt and will not trigger failure.
    *
    * @param int $level
@@ -109,7 +109,7 @@ class AssertableLogger implements LoggerInterface {
 
   /**
    * Get the logs that have been received but not should not have been.
-   * 
+   *
    * @return array
    *   The disallowed logs.
    */
@@ -120,8 +120,8 @@ class AssertableLogger implements LoggerInterface {
   /**
    * Process a generated log message.
    *
-   * If the log message is expected, it is removed from the outstanding 
-   * expectations. If the log message is disallowed, it is stored so it 
+   * If the log message is expected, it is removed from the outstanding
+   * expectations. If the log message is disallowed, it is stored so it
    * can be reported later.
    *
    * @param int $level
