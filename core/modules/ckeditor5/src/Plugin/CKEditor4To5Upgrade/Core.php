@@ -59,6 +59,7 @@ use Drupal\filter\FilterFormatInterface;
  *   },
  *   cke5_plugin_elements_subset_configuration = {
  *    "ckeditor5_heading",
+ *    "ckeditor5_alignment",
  *   }
  * )
  *
@@ -223,6 +224,32 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           if (array_key_exists("h$index", $restrictions['allowed'])) {
             $configuration['enabled_headings'][] = "heading$index";
           }
+        }
+        return $configuration;
+
+      case 'ckeditor5_alignment':
+        $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          // The default is to allow all alignments, which makes sense when there
+          // are no restrictions.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment::DEFAULT_CONFIGURATION
+          return NULL;
+        }
+        // Otherwise, only enable alignments that allowed by the restrictions.
+        // In other words, activate the alignments for which a tag with class
+        // text-align-*** exists.
+        $configuration = [];
+        foreach ($restrictions['allowed'] as $tag) {
+          if (isset($tag['class']) && is_array($tag['class'])) {
+            foreach ($tag['class'] as $class => $data) {
+              if (substr($class, 0, 11) === 'text-align-') {
+                $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
+              }
+            }
+          }
+        };
+        if (!isset($configuration['enabled_alignments'])) {
+          $configuration['enabled_alignments'] = array_unique($configuration['enabled_alignments']);
         }
         return $configuration;
 
