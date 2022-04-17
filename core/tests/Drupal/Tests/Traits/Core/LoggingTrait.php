@@ -20,26 +20,6 @@ use Drupal\KernelTests\AssertableLogger;
 trait LoggingTrait {
 
   /**
-   * The assertable logger.
-   *
-   * @var \Drupal\KernelTests\AssertableLogger
-   */
-  protected $assertableLogger;
-
-  /**
-   * Get an active instance of the AssertableLogger.
-   *
-   * @return \Drupal\KernelTests\AssertableLogger
-   */
-  protected function getAssertableLogger() {
-    if (!$this->assertableLogger) {
-      $this->assertableLogger = new AssertableLogger();
-      $this->container->get('logger.factory')->addLogger($this->assertableLogger);
-    }
-    return $this->assertableLogger;
-  }
-
-  /**
    * Setup an expectation that a test will generate a log message.
    *
    * If a matching log message is not generated, the test will fail.
@@ -104,8 +84,10 @@ trait LoggingTrait {
    * Assert that no logs were expected that have not been received.
    */
   protected function assertLogExpectationsMet() {
-    $this->assertEmpty($this->getAssertableLogger()->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated.");
-    $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not.");
+    if ($this->getAssertableLogger()) {
+      $this->assertEmpty($this->getAssertableLogger()->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated. " . print_r($this->getAssertableLogger()->getDisallowedLogs(), TRUE));
+      $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. "  . print_r($this->getAssertableLogger()->getUnmetExpectations(), TRUE));
+    }
   }
 
 }

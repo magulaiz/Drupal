@@ -354,7 +354,8 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (ExpectationFailedException $e) {
       $this->pass("assertLogExpectations correctly failed. An error log was expected on the 'test' channel but was not generated.");
-      $this->assertableLogger = NULL;
+      // Unset the disallowed logs so that assertPostConditions does not fail the test.
+      $this->container->set('kernel_test.assertable_logger', new AssertableLogger());
     }
   }
 
@@ -369,7 +370,8 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (ExpectationFailedException $e) {
       $this->pass('assertLogExpectations correctly failed. An error log was generated, but it was expected that no error logs would be generated.');
-      $this->assertableLogger = NULL;
+      // Unset the disallowed logs so that assertPostConditions does not fail the test.
+      $this->container->set('kernel_test.assertable_logger', new AssertableLogger());
     }
   }
 
