@@ -101,9 +101,7 @@ ckeditor5_globalAttributeDir:
       htmlSupport:
         allow:
           -
-            name:
-              regexp:
-                pattern: /.*/
+            name: ~
             attributes:
               - key: dir
                 value:
@@ -111,6 +109,7 @@ ckeditor5_globalAttributeDir:
                     pattern: /^(ltr|rtl)$/
   drupal:
     label: Global `dir` attribute
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
     # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
     elements:
       - <* dir="ltr rtl">
@@ -126,12 +125,11 @@ ckeditor5_globalAttributeLang:
       htmlSupport:
         allow:
           -
-            name:
-              regexp:
-                pattern: /.*/
+            name: ~
             attributes: lang
   drupal:
     label: Global `lang` attribute
+    class: \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute
     # @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
     elements:
       - <* lang>
