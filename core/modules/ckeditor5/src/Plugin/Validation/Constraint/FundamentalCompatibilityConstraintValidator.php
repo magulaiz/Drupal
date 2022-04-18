@@ -128,6 +128,18 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
         ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
         ->addViolation();
     }
+
+    // @todo Remove early return in https://www.drupal.org/project/drupal/issues/3231334
+    if (!isset($html_restrictions['allowed'])) {
+      return;
+    }
+    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->isEmpty()) {
+      $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
+      $this->context->buildViolation($constraint->nonAllowedElementsMessage)
+        ->setParameter('%filter_label', (string) $offending_filter->getLabel())
+        ->setParameter('%filter_plugin_id', $offending_filter->getPluginId())
+        ->addViolation();
+    }
   }
 
   /**
