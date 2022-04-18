@@ -48,6 +48,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
    * @var string
    */
   protected $defaultElementsAfterUpdatingToCkeditor5 = '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <a hreflang href> <blockquote cite> <ul type> <ol start type> <img src alt data-entity-type data-entity-uuid> <strong> <em> <code> <li>';
+
   /**
    * Test enabling CKEditor 5 in a way that triggers validation.
    */
@@ -173,8 +174,6 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Save configuration');
-
-
     $this->assertSession()->pageTextContains('The following attribute(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Image (<img src alt data-entity-uuid data-entity-type>)');
 
     $assert_session->assertWaitOnAjaxRequest();

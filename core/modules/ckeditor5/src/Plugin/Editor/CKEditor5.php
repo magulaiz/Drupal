@@ -525,7 +525,6 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       $submitted_filter_format = CKEditor5::getSubmittedFilterFormat($form_state);
       $fundamental_incompatibilities = CKEditor5::validatePair($minimal_ckeditor5_editor, $submitted_filter_format, FALSE);
 
-
       foreach ($fundamental_incompatibilities as $violation) {
         // If the violation uses the nonAllowedElementsMessage template, it can
         // be skipped because this is a violation that automatically fixed
