@@ -41,7 +41,7 @@
           callback(editor.getData());
         }, 400));
         editor.on('mode', function () {
-          if (editor.mode == 'source') {
+          if (editor.mode === 'source') {
             var editable = editor.editable();
             editable.attachListener(editable, 'input', debounce(function () {
               callback(editor.getData());
