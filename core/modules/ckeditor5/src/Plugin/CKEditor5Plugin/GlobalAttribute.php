@@ -26,6 +26,7 @@ class GlobalAttribute extends CKEditor5PluginDefault {
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
     // This plugin is only loaded when filter_html is enabled.
+    assert($editor->getFilterFormat()->filters()->has('filter_html'));
     $filter_html = $editor->getFilterFormat()->filters('filter_html');
     $restrictions = HTMLRestrictions::fromFilterPluginInstance($filter_html);
 
