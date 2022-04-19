@@ -467,7 +467,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->drupalGet('node/add');
     $page->fillField('title[0][value]', 'Multilingual Hello World');
     // cSpell:disable-next-line
-    $page->fillField('body[0][value]', '<p dir="ltr">Hello World</p><p dir="rtl">مرحبا بالعالم</p>');
+    $page->fillField('body[0][value]', '<p dir="ltr" lang="en">Hello World</p><p dir="rtl" lang="ar">مرحبا بالعالم</p>');
     $page->pressButton('Save');
 
     $this->createNewTextFormat($page, $assert_session);
@@ -481,8 +481,9 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->waitForEditor();
     $page->pressButton('Save');
 
+    // @todo Remove the expected `xml:lang` attributes in https://www.drupal.org/project/drupal/issues/1333730
     // cSpell:disable-next-line
-    $assert_session->responseContains('<p dir="ltr">Hello World</p><p dir="rtl">مرحبا بالعالم</p>');
+    $assert_session->responseContains('<p dir="ltr" lang="en" xml:lang="en">Hello World</p><p dir="rtl" lang="ar" xml:lang="ar">مرحبا بالعالم</p>');
   }
 
 }
