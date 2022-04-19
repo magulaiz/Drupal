@@ -11,7 +11,10 @@ use Drupal\editor\EditorInterface;
 /**
  * CKEditor 5 Global Attribute for filter_html.
  *
- * Can be used for adding support for any "global attribute".
+ * Can be used for adding support for any "global attribute". For example:
+ * `<* lang>` to allow the `lang` attribute on all supported tags.
+ *
+ * @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
  *
  * @internal
  *   Plugin classes are internal.
