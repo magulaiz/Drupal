@@ -68,8 +68,10 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
-    $static_plugin_config['list']['properties'] = array_merge($static_plugin_config['list']['properties'],
-      $this->getConfiguration());
+    $static_plugin_config['list']['properties'] = array_merge(
+      $static_plugin_config['list']['properties'],
+      $this->getConfiguration()
+    );
     return $static_plugin_config;
   }
 
@@ -79,9 +81,9 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
   public function getElementsSubset(): array {
     $subset = $this->getPluginDefinition()->getElements();
     $subset = array_diff($subset, ['<ol reversed start>']);
-    $reversedEnabled = $this->getConfiguration()['reversed'];
-    $startIndexEnabled = $this->getConfiguration()['startIndex'];
-    $subset[] = "<ol" . ($reversedEnabled ? ' reversed' : '') . ($startIndexEnabled ? ' start' : '') . '>';
+    $reversed_enabled = $this->getConfiguration()['reversed'];
+    $start_index_enabled = $this->getConfiguration()['startIndex'];
+    $subset[] = "<ol" . ($reversed_enabled ? ' reversed' : '') . ($start_index_enabled ? ' start' : '') . '>';
     return $subset;
   }
 
