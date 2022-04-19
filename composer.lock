@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5a361da2bf88702fc38bdf2a4966f41",
+    "content-hash": "d2dab2d3e21c0f34a5f463b766c90645",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -535,7 +535,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "cbfd5d4b176c340dd3e6fd57703bec9af8cdc53e"
+                "reference": "5ee7c279ca3cbef8b2ba2c3a7ebe7fb78dee9b7c"
             },
             "require": {
                 "asm89/stack-cors": "^1.1",
@@ -580,7 +580,7 @@
                 "symfony/translation": "^4.4",
                 "symfony/validator": "^4.4",
                 "symfony/yaml": "^4.4.19",
-                "twig/twig": "^2.12.0",
+                "twig/twig": "^2.14.11",
                 "typo3/phar-stream-wrapper": "^3.1.3"
             },
             "conflict": {
@@ -1077,16 +1077,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.3",
+            "version": "1.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85"
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
-                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/337e3ad8e5716c15f9657bd214d16cc5e69df268",
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268",
                 "shasum": ""
             },
             "require": {
@@ -1111,12 +1111,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1167,7 +1167,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.8.3"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.5"
             },
             "funding": [
                 {
@@ -1183,7 +1183,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-05T13:56:00+00:00"
+            "time": "2022-03-20T21:51:18+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -4424,22 +4424,23 @@
         },
         {
             "name": "twig/twig",
-            "version": "v2.14.7",
+            "version": "v2.14.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "8e202327ee1ed863629de9b18a5ec70ac614d88f"
+                "reference": "66baa66f29ee30e487e05f1679903e36eb01d727"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8e202327ee1ed863629de9b18a5ec70ac614d88f",
-                "reference": "8e202327ee1ed863629de9b18a5ec70ac614d88f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/66baa66f29ee30e487e05f1679903e36eb01d727",
+                "reference": "66baa66f29ee30e487e05f1679903e36eb01d727",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5",
+                "php": ">=7.1.3",
                 "symfony/polyfill-ctype": "^1.8",
-                "symfony/polyfill-mbstring": "^1.3"
+                "symfony/polyfill-mbstring": "^1.3",
+                "symfony/polyfill-php72": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
@@ -4487,7 +4488,7 @@
             ],
             "support": {
                 "issues": "https://github.com/twigphp/Twig/issues",
-                "source": "https://github.com/twigphp/Twig/tree/v2.14.7"
+                "source": "https://github.com/twigphp/Twig/tree/v2.14.11"
             },
             "funding": [
                 {
@@ -4499,7 +4500,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-17T08:39:54+00:00"
+            "time": "2022-02-04T06:57:25+00:00"
         },
         {
             "name": "typo3/phar-stream-wrapper",
@@ -4767,31 +4768,32 @@
         },
         {
             "name": "composer/composer",
-            "version": "2.1.12",
+            "version": "2.2.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "6e3c2b122e0ec41a7e885fcaf19fa15e2e0819a0"
+                "reference": "ba61e768b410736efe61df01b61f1ec44f51474f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/6e3c2b122e0ec41a7e885fcaf19fa15e2e0819a0",
-                "reference": "6e3c2b122e0ec41a7e885fcaf19fa15e2e0819a0",
+                "url": "https://api.github.com/repos/composer/composer/zipball/ba61e768b410736efe61df01b61f1ec44f51474f",
+                "reference": "ba61e768b410736efe61df01b61f1ec44f51474f",
                 "shasum": ""
             },
             "require": {
                 "composer/ca-bundle": "^1.0",
                 "composer/metadata-minifier": "^1.0",
+                "composer/pcre": "^1.0",
                 "composer/semver": "^3.0",
                 "composer/spdx-licenses": "^1.2",
-                "composer/xdebug-handler": "^2.0",
+                "composer/xdebug-handler": "^2.0 || ^3.0",
                 "justinrainbow/json-schema": "^5.2.11",
                 "php": "^5.3.2 || ^7.0 || ^8.0",
                 "psr/log": "^1.0 || ^2.0",
                 "react/promise": "^1.2 || ^2.7",
                 "seld/jsonlint": "^1.4",
                 "seld/phar-utils": "^1.0",
-                "symfony/console": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
+                "symfony/console": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0",
                 "symfony/filesystem": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/finder": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/process": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0"
@@ -4811,7 +4813,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.1-dev"
+                    "dev-main": "2.2-dev"
                 }
             },
             "autoload": {
@@ -4845,7 +4847,7 @@
             "support": {
                 "irc": "ircs://irc.libera.chat:6697/composer",
                 "issues": "https://github.com/composer/composer/issues",
-                "source": "https://github.com/composer/composer/tree/2.1.12"
+                "source": "https://github.com/composer/composer/tree/2.2.12"
             },
             "funding": [
                 {
@@ -4861,7 +4863,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-09T15:02:04+00:00"
+            "time": "2022-04-13T14:42:25+00:00"
         },
         {
             "name": "composer/metadata-minifier",
@@ -4931,6 +4933,77 @@
                 }
             ],
             "time": "2021-04-07T13:37:33+00:00"
+        },
+        {
+            "name": "composer/pcre",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/composer/pcre.git",
+                "reference": "67a32d7d6f9f560b726ab25a061b38ff3a80c560"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/composer/pcre/zipball/67a32d7d6f9f560b726ab25a061b38ff3a80c560",
+                "reference": "67a32d7d6f9f560b726ab25a061b38ff3a80c560",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.2 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.3",
+                "phpstan/phpstan-strict-rules": "^1.1",
+                "symfony/phpunit-bridge": "^4.2 || ^5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Composer\\Pcre\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "PCRE wrapping library that offers type-safe preg_* replacements.",
+            "keywords": [
+                "PCRE",
+                "preg",
+                "regex",
+                "regular expression"
+            ],
+            "support": {
+                "issues": "https://github.com/composer/pcre/issues",
+                "source": "https://github.com/composer/pcre/tree/1.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://packagist.com",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/composer",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/composer/composer",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-01-21T20:24:37+00:00"
         },
         {
             "name": "composer/spdx-licenses",
@@ -7919,5 +7992,5 @@
     "platform-overrides": {
         "php": "7.3.0"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

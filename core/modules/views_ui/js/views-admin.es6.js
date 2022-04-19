@@ -386,14 +386,9 @@
         .end()
         .eq(-1)
         .addClass('last');
-      // Remove the 'Add ' prefix from the button labels since they're being
-      // placed in an 'Add' dropdown. @todo This assumes English, but so does
-      // $addDisplayDropdown above. Add support for translation.
       $displayButtons.each(function () {
-        const label = this.value;
-        if (label.substr(0, 4) === 'Add ') {
-          this.value = label.substr(4);
-        }
+        const $this = $(this);
+        this.value = $this.attr('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
 
@@ -537,8 +532,7 @@
           $description = $option.find('.description');
           options[i] = {
             // Search on the lowercase version of the title text + description.
-            searchText: `${$title.text().toLowerCase()} ${$description
-              .text()
+            searchText: `${$title[0].textContent.toLowerCase()} ${$description[0].textContent.toLowerCase()}
               .toLowerCase()}`,
             // Maintain a reference to the jQuery object for each row, so we don't
             // have to create a new object inside the performance-sensitive keyup

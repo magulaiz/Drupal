@@ -125,6 +125,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE) {
         throw new ObsoleteExtensionException("Unable to install modules: module '$module' is obsolete.");
       }
+      if ($module_data[$module]->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
+        @trigger_error("The module '$module' is deprecated. See " . $module_data[$module]->info['lifecycle_link'], E_USER_DEPRECATED);
+      }
     }
     if ($enable_dependencies) {
       $module_list = $module_list ? array_combine($module_list, $module_list) : [];
@@ -307,7 +310,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
                   $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
                 }
                 catch (EntityStorageException $e) {
-                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "!message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
+                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
                 }
               }
             }
@@ -330,14 +333,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
           $version = max($version, $last_removed);
         }
         $this->updateRegistry->setInstalledVersion($module, $version);
-
-        // Ensure that all post_update functions are registered already. This
-        // should include existing post-updates, as well as any specified as
-        // having been previously removed, to ensure that newly installed and
-        // updated sites have the same entries in the registry.
-        /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
-        $post_update_registry = \Drupal::service('update.post_update_registry');
-        $post_update_registry->registerInvokedUpdates(array_merge($post_update_registry->getModuleUpdateFunctions($module), array_keys($post_update_registry->getRemovedPostUpdates($module))));
 
         // Record the fact that it was installed.
         $modules_installed[] = $module;
@@ -543,10 +538,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
       $update_registry = \Drupal::service('update.update_hook_registry');
       $update_registry->deleteInstalledVersion($module);
-
-      /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
-      $post_update_registry = \Drupal::service('update.post_update_registry');
-      $post_update_registry->filterOutInvokedUpdatesByModule($module);
     }
     // Rebuild routes after installing module. This is done here on top of
     // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
