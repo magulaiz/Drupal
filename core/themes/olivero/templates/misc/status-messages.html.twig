@@ -41,7 +41,7 @@
         {% if status_headings[type] %}
           <div class="messages__header">
            <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
-            <div {{ attributes.setAttribute('aria-hidden', 'true') }} class="messages__icon">
+            <div aria-hidden="true" class="messages__icon">
               {% if type == 'error' %}
                 {% include "@olivero/../images/error.svg" %}
               {% elseif type == 'warning' %}
