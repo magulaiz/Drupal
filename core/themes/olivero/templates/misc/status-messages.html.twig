@@ -36,13 +36,12 @@
       .setAttribute('data-drupal-selector', 'messages')
       .setAttribute('role', 'contentinfo')
       .setAttribute('aria-label', status_headings[type])
-      .setAttribute('aria-hidden', 'true')
-      }}>
+     }}>
       <div class="messages__container" data-drupal-selector="messages-container"{% if type == 'error' %} role="alert"{% endif %}>
         {% if status_headings[type] %}
           <div class="messages__header">
            <h2 class="visually-hidden">{{ status_headings[type] }}</h2>
-            <div class="messages__icon">
+            <div {{ attributes.setAttribute('aria-hidden', 'true') }} class="messages__icon">
               {% if type == 'error' %}
                 {% include "@olivero/../images/error.svg" %}
               {% elseif type == 'warning' %}
