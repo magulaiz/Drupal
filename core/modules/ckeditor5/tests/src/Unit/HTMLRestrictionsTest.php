@@ -174,6 +174,20 @@ class HTMLRestrictionsTest extends UnitTestCase {
       1,
       2,
     ];
+
+    yield 'only globally allowed attribute: not considered empty' => [
+      ['*' => ['lang' => TRUE]],
+      FALSE,
+      1,
+      1,
+    ];
+
+    yield 'only globally forbidden attribute: considered empty' => [
+      ['*' => ['style' => FALSE]],
+      TRUE,
+      1,
+      1,
+    ];
   }
 
   /**
