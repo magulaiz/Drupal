@@ -6,6 +6,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Tests\ViewTestData;
+use GuzzleHttp\Psr7\Query;
 
 /**
  * Tests the click sorting AJAX functionality of Views exposed forms.
@@ -98,8 +99,23 @@ class PaginationAJAXTest extends WebDriverTestBase {
     $this->assertCount(5, $rows);
     $this->assertStringContainsString('Node 6 content', $rows[0]->getHtml());
     $link = $page->findLink('Go to page 3');
+
+    // Build the expected list of GET params.
+    $expected = [
+      'status' => 'All',
+      'type' => 'All',
+      'langcode' => 'All',
+      'items_per_page' => '5',
+      'order' => 'changed',
+      'sort' => 'asc',
+      'title' => '',
+      'page' => '2',
+    ];
+    // Parse the actual href attribute (also, remove the "?" from the start).
+    $href = str_replace('?', '', $link->getAttribute('href'));
+    $actual = Query::parse($href);
     // Test that no unwanted parameters are added to the URL.
-    $this->assertEquals('?status=All&type=All&langcode=All&items_per_page=5&order=changed&sort=asc&title=&page=2', $link->getAttribute('href'));
+    $this->assertEquals($expected, $actual);
     $this->assertNoDuplicateAssetsOnPage();
 
     $this->clickLink('Go to page 3');
