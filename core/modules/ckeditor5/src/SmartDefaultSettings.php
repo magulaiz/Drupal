@@ -177,7 +177,7 @@ final class SmartDefaultSettings {
       $missing_tags = $fundamental->diff($filter_html_restrictions);
       if (!$missing_tags->isEmpty()) {
         $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
-        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor5 functionality : @missing_tags.", [
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
           '@missing_tags' => $missing_tags->toFilterHtmlAllowedTagsString(),
         ]);
       }
