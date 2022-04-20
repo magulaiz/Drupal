@@ -456,8 +456,7 @@ class CKEditor5Test extends CKEditor5TestBase {
       'editor' => 'ckeditor5',
       'settings' => [
         'toolbar' => [
-          'items' => ['uploadImage', 'sourceEditing', 'numberedList',
-          ],
+          'items' => ['sourceEditing', 'numberedList'],
         ],
         'plugins' => [
           'ckeditor5_list' => [
@@ -470,6 +469,15 @@ class CKEditor5Test extends CKEditor5TestBase {
         ],
       ],
     ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
     $ordered_list_html = '<ol>
     <li>
         apple
@@ -493,10 +501,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->pressEditorButton('Source');
     $numbered_list_dropdown = '.ck-splitbutton__arrow';
 
-    // Check that there is no dropdown available for the numbered list because both reversed and startIndex are FALSE.
+    // Check that there is no dropdown available for the numbered list because
+    // both reversed and startIndex are FALSE.
     $assert_session->elementNotExists('css', $numbered_list_dropdown);
     // Save content so source content is kept after changing the editor config.
-    // and refreshing.
     $page->pressButton('Save');
     $edit_url = $this->getSession()->getCurrentURL() . '/edit';
     $this->drupalGet($edit_url);
