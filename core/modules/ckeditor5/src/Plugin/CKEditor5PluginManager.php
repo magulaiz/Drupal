@@ -177,7 +177,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
 
     if (!isset($definitions['ckeditor5_arbitraryHtmlSupport'])) {
       $restrictions = new HTMLRestrictions($this->getProvidedElements(array_keys($definitions), $editor, FALSE));
-      if ($restrictions->getWildcardSubset()->isEmpty()) {
+      if ($restrictions->getWildcardSubset()->hasNoAllowedElements()) {
         // This is only reached if arbitrary HTML is not enabled. If wildcard
         // tags (such as $text-container) are present, they need to
         // be resolved via the wildcardHtmlSupport plugin.

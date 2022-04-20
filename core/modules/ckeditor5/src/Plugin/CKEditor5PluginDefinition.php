@@ -142,7 +142,7 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
     elseif (is_array($definition['drupal']['elements'])) {
       foreach ($definition['drupal']['elements'] as $index => $element) {
         $parsed = HTMLRestrictions::fromString($element);
-        if ($parsed->isEmpty()) {
+        if ($parsed->hasNoAllowedElements()) {
           throw new InvalidPluginDefinitionException($id, sprintf('The "%s" CKEditor 5 plugin definition has a value at "drupal.elements.%d" that is not an HTML tag with optional attributes: "%s". Expected structure: "<tag allowedAttribute="allowedValue1 allowedValue2">".', $id, $index, $element));
         }
         if (count($parsed->getAllowedElements()) > 1) {

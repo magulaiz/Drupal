@@ -134,13 +134,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isEmpty()
+   * @covers ::hasNoAllowedElements()
    * @covers ::getAllowedElements()
    * @dataProvider providerCounting
    */
   public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
     $r = new HTMLRestrictions($elements);
-    $this->assertSame($expected_is_empty, $r->isEmpty());
+    $this->assertSame($expected_is_empty, $r->hasNoAllowedElements());
     $this->assertCount($expected_concrete_only_count, $r->getAllowedElements());
     $this->assertCount($expected_concrete_only_count, $r->getAllowedElements(TRUE));
     $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(FALSE));

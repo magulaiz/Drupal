@@ -262,13 +262,13 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Whether this is the empty set of HTML restrictions.
+   * Whether this set of HTML restrictions allows no elements.
    *
    * @return bool
    *
    * @see ::emptySet()
    */
-  public function isEmpty(): bool {
+  public function hasNoAllowedElements(): bool {
     return count($this->elements) === 0
       // If there are only forbidden attributes on the global attribute `*` HTML
       // tag, that is equivalent to the set of restrictions being empty.

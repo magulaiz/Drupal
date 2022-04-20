@@ -133,7 +133,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if (!isset($html_restrictions['allowed'])) {
       return;
     }
-    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->isEmpty()) {
+    if (!$fundamental->diff(HTMLRestrictions::fromTextFormat($text_format))->hasNoAllowedElements()) {
       $offending_filter = static::findHtmlRestrictorFilterNotAllowingTags($text_format, $fundamental);
       $this->context->buildViolation($constraint->nonAllowedElementsMessage)
         ->setParameter('%filter_label', (string) $offending_filter->getLabel())
@@ -165,7 +165,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
       $diff_allowed = $allowed->diff($provided);
       $diff_elements = $provided->diff($allowed);
 
-      if (!$diff_allowed->isEmpty()) {
+      if (!$diff_allowed->hasNoAllowedElements()) {
         $this->context->buildViolation($constraint->notSupportedElementsMessage)
           ->setParameter('@list', implode(' ', $provided->toCKEditor5ElementsArray()))
           ->setParameter('@diff', implode(' ', $diff_allowed->toCKEditor5ElementsArray()))
@@ -173,7 +173,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
           ->addViolation();
       }
 
-      if (!$diff_elements->isEmpty()) {
+      if (!$diff_elements->hasNoAllowedElements()) {
         $this->context->buildViolation($constraint->missingElementsMessage)
           ->setParameter('@list', implode(' ', $provided->toCKEditor5ElementsArray()))
           ->setParameter('@diff', implode(' ', $diff_elements->toCKEditor5ElementsArray()))
@@ -278,7 +278,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
 
     foreach ($filters as $filter) {
       // Return any filter not allowing >=1 of the required tags.
-      if (!$required->diff(HTMLRestrictions::fromFilterPluginInstance($filter))->isEmpty()) {
+      if (!$required->diff(HTMLRestrictions::fromFilterPluginInstance($filter))->hasNoAllowedElements()) {
         return $filter;
       }
     }
