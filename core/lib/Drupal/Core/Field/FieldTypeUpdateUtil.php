@@ -81,7 +81,7 @@ class FieldTypeUpdateUtil {
     // 5. Restore (insert) the existing data
   }
 
- /**
+  /**
    * Updates a property schema definition preserving its data.
    *
    * Use this, if you need to make a change to an existing
