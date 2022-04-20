@@ -39,7 +39,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestPrefixSuffix
    */
-  public function testPrefixSuffix($width, array $fields) {
+  public function testPrefixSuffix(int $width, array $fields) {
     $this->drupalGet('prefix-suffix-test/form');
     $page = $this->getSession()->getPage();
     $this->getSession()->resizeWindow($width, 1800);
@@ -121,7 +121,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
    * @return int
    *   The element Y position.
    */
-  protected function getElementVerticalPosition($css_selector) {
+  protected function getElementVerticalPosition(string $css_selector) {
     return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().top");
   }
 
