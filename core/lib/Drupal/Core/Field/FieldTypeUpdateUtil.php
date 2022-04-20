@@ -61,6 +61,55 @@ class FieldTypeUpdateUtil {
   }
 
   /**
+   * Update a field schema to match the latest definition,
+   * while preserving its data.
+   *
+   * Updates the whole property schema to match the latest definition
+   * from the fields schema().
+   * Note: The property schema change has to be compatible
+   * with the existing data.
+   *
+   * @param string $field_type
+   *   The ID of the field type definition.
+   */
+  public static function updateToCurrentSchema($field_type) {
+    // @todo: Implement:
+    // 1. Get all entity types using this $field_type.
+    // 2. Optionally: Ensure the existing data is generally compatible with the new schema.
+    // 3. Copy the existing data (as the tables have to be recreated).
+    // 4. Update the field storage definition to current for all field instances
+    // 5. Restore (insert) the existing data
+  }
+
+ /**
+   * Updates a property schema definition preserving its data.
+   *
+   * Use this, if you need to make a change to an existing
+   * fields property schema, preserving its values.
+   * Note: The property schema change has to be compatible
+   * with the existing data and supported by database engines,
+   * e.g. change "description", ""not null", "unsigned" or "default".
+   * This can't do magic like changing incompatible types!
+   *
+   * @param string $field_type
+   *   The ID of the field type definition.
+   * @param string $property
+   *   The name of the property whose column to remove.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
+   */
+  public static function updatePropertySchema($field_type, $property, array $new_property_schema) {
+    // @todo: Implement:
+    // 1. Get all entity types using this $field_type.
+    // 2. Optionally: Ensure the existing data is generally compatible with the new schema.
+    // 3. Copy the existing data (as the tables have to be recreated).
+    // 4. Update the field storage definition to current for all field instances
+    // 5. Restore (insert) the existing data
+  }
+
+  /**
    * Remove a property and column from field_type.
    *
    * @param string $field_type
