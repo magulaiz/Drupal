@@ -121,7 +121,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
    * @return int
    *   The element Y position.
    */
-  protected function getElementVerticalPosition(string $css_selector) {
+  protected function getElementVerticalPosition(string $css_selector) : int {
     return (int) $this->getSession()->evaluateScript("document.querySelector('$css_selector').getBoundingClientRect().top");
   }
 
@@ -138,7 +138,7 @@ class ClaroPrefixSuffixTest extends WebDriverTestBase {
    *   - suffix: FALSE if one is not present, "stacked" if expected to appear
    *     below the input, "unstacked" if expected to appear next to the input.
    */
-  public function providerTestPrefixSuffix() {
+  public function providerTestPrefixSuffix() : array {
     return [
       'width1600' => [
         'width' => 1600,
