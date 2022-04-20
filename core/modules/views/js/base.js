@@ -22,7 +22,7 @@
     for (var i = 0; i < pairs.length; i++) {
       pair = pairs[i].split('=');
 
-      if (pair[0] !== 'q' && pair[1]) {
+      if (pair[0] !== 'q' && pair[1] !== undefined) {
         args[decodeURIComponent(pair[0].replace(/\+/g, ' '))] = decodeURIComponent(pair[1].replace(/\+/g, ' '));
       }
     }
