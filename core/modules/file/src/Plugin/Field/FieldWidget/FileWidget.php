@@ -119,6 +119,10 @@ class FileWidget extends WidgetBase {
     $delta = 0;
     // Add an element for every existing item.
     foreach ($items as $item) {
+      if (!$item->getValue()) {
+        // Skip empty items. New empty rows are created.
+        continue;
+      }
       $element = [
         '#title' => $title,
         '#description' => $description,
