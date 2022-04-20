@@ -199,7 +199,7 @@ class FieldTypeUpdateUtil {
    *
    * @param string $field_type
    *   The ID of the field type definition to rename.
-   * @param string $field_type
+   * @param string $new_field_type
    *   The new ID of the field type definition.
    */
   public static function changeFieldTypeName($field_type, $new_field_type) {
