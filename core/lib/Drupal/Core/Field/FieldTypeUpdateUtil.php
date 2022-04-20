@@ -189,4 +189,25 @@ class FieldTypeUpdateUtil {
     }
   }
 
+  /**
+   * Changes the field type (name) to $new_field_type.
+   *
+   * Use this (only in the rare case) if $field_type is obsolete but
+   * the existing field and its data should be kept as $new_field_type.
+   * Note: The property schema of $field_type and $new_field_type have to
+   * be the same!
+   *
+   * @param string $field_type
+   *   The ID of the field type definition to rename.
+   * @param string $field_type
+   *   The new ID of the field type definition.
+   */
+  public static function changeFieldTypeName($field_type, $new_field_type) {
+    // @todo: Implement:
+    // See https://www.drupal.org/docs/drupal-apis/update-api/updating-entities-and-fields-in-drupal-8#s-example-updating-a-field-from-an-obsolete-type-to-a-new-type
+    // And safe us from implementing the boilerplate code more than once :).
+    // Also see https://www.drupal.org/project/drupal/issues/2843108
+    // and https://www.drupal.org/project/drupal/issues/937442#comment-14458722
+  }
+
 }
