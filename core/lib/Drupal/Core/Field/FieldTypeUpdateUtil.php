@@ -94,11 +94,9 @@ class FieldTypeUpdateUtil {
    * @param string $field_type
    *   The ID of the field type definition.
    * @param string $property
-   *   The name of the property whose column to remove.
-   *
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
-   * @throws \Drupal\Core\Entity\Sql\SqlContentEntityStorageException
+   *   The name of the property whose property schema to update.
+   * @param array $new_property_schema
+   *   The new schema definition of the single property.
    */
   public static function updatePropertySchema($field_type, $property, array $new_property_schema) {
     // @todo: Implement:
