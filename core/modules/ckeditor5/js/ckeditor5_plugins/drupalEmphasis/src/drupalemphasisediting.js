@@ -2,7 +2,7 @@
 import { Plugin } from 'ckeditor5/src/core';
 
 /**
- * Extend the italic command to output `<em>` instead of `<i>`.
+ * Alter the italic command to output `<em>` instead of `<i>`.
  *
  * @private
  */

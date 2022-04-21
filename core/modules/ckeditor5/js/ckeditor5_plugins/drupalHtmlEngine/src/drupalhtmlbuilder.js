@@ -165,6 +165,9 @@ export default class DrupalHtmlBuilder {
    * @param {string} text
    *  A string to be escaped.
    *
+   * @return {string}
+   *  Escaped string.
+   *
    * @see https://www.w3.org/TR/2008/REC-xml-20081126/#NT-AttValue
    * @see https://html.spec.whatwg.org/multipage/parsing.html#attribute-value-(single-quoted)-state
    * @see https://www.drupal.org/project/drupal/issues/3227831
