@@ -65,23 +65,11 @@ ckeditor5_heading:
 ckeditor5_style:
   ckeditor5:
     plugins: [style.Style]
-    config:
-      style:
-        # @todo configurability
-        definitions:
-          - name: 'Important'
-            element: 'p'
-            classes: ['important']
-          - name: 'error'
-            element: 'p'
-            classes: ['error']
   drupal:
     label: Style
     library: core/ckeditor5.style
     admin_library: ckeditor5/admin.style
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
-    # @todo configurability
-    # class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
     toolbar_items:
       style:
         label: Style
