@@ -73,6 +73,7 @@ ckeditor5.plugin.ckeditor5_imageResize:
       constraints:
         NotNull: []
 
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
 ckeditor5.plugin.ckeditor5_sourceEditing:
   type: mapping
   label: Source Editing
