@@ -144,8 +144,9 @@ final class HTMLRestrictions {
     foreach ($elements as $html_tag_name => $html_tag_restrictions) {
       // The global attribute `*` HTML tag is a special case: it allows
       // specifying specific attributes that are allowed on all tags (f.e.
-      // `lang` because translations are an orthogonal concern) or disallowed
-      // on all tags (f.e. `style` because security is an orthogonal concern).
+      // `lang`) or disallowed on all tags (f.e. `style`) as translations and
+      // security are concerns orthogonal to the configured HTML restrictions
+      // of a text format.
       // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
       // @see validateAllowedRestrictionsPhase4()
       if ($html_tag_name === '*' && !is_array($html_tag_restrictions)) {
@@ -221,9 +222,9 @@ final class HTMLRestrictions {
         // Special case: the global attribute `*` HTML tag.
         // The global attribute `*` HTML tag is a special case: it allows
         // specifying specific attributes that are allowed on all tags (f.e.
-        // `lang` because translations are an orthogonal concern) or disallowed
-        // on all tags (f.e. `style` because security is an orthogonal concern).
-        // Therefore it is the only tag allowed to express forbidden attributes.
+        // `lang`) or disallowed on all tags (f.e. `style`) as translations and
+        // security are concerns orthogonal to the configured HTML restrictions
+        // of a text format.
         // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
         // @see validateAllowedRestrictionsPhase2()
         if ($html_tag_name === '*' && $html_tag_attribute_restrictions === FALSE) {
