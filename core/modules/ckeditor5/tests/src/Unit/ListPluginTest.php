@@ -43,7 +43,7 @@ class ListPluginTest extends UnitTestCase {
         [
          'reversed' => TRUE,
          'startIndex' => TRUE,
-        ]
+        ],
       ],
     ];
   }
