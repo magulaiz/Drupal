@@ -49,7 +49,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Converts document fragment into HTML string and appends to the value.
+   * Converts a document fragment into an HTML string appended to the value.
    *
    * @param {DocumentFragment} node
    *   A document fragment to be appended to the value.
@@ -65,7 +65,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Appends element node to the value.
+   * Appends an element node to the value.
    *
    * @param {DocumentFragment} node
    *   A document fragment to be appended to the value.
@@ -141,7 +141,7 @@ export default class DrupalHtmlBuilder {
   }
 
   /**
-   * Appends string to the value.
+   * Appends a string to the value.
    *
    * @param {string} str
    *  A string to be appended to the value.

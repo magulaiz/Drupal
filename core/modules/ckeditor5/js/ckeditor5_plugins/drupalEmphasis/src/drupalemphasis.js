@@ -5,7 +5,7 @@ import { Plugin } from 'ckeditor5/src/core';
 import DrupalEmphasisEditing from './drupalemphasisediting';
 
 /**
- * Drupal-specific plugin to alter CKEditor 5 italic command.
+ * Drupal-specific plugin to alter the CKEditor 5 italic command.
  *
  * @private
  */

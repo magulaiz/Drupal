@@ -1,6 +1,6 @@
 /**
  * @file
- * Provides admin UI for the CKEditor 5.
+ * Provides the admin UI for CKEditor 5.
  */
 
 ((Drupal, drupalSettings, $, JSON, once, Sortable, { tabbable }) => {
@@ -49,14 +49,14 @@
     }
 
     /**
-     * Notifies subscribers about new value.
+     * Notifies subscribers about new values.
      */
     notify() {
       this._listeners.forEach((listener) => listener(this._value));
     }
 
     /**
-     * Subscribes to be notified for changes.
+     * Subscribes a listener callback to changes.
      *
      * @param {Function} listener
      *   The function to be called when a new value is set.
