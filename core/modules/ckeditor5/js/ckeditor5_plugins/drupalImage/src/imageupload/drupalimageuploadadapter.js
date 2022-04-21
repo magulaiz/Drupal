@@ -12,7 +12,7 @@
  * @todo https://www.drupal.org/project/drupal/issues/3275237
  *
  * @private
- * @implements {module:upload/filerepository~UploadAdapter}
+ * @implements module:upload/filerepository~UploadAdapter
  */
 export default class DrupalImageUploadAdapter {
   /**
