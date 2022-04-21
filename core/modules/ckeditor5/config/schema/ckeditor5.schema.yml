@@ -85,3 +85,27 @@ ckeditor5.plugin.ckeditor5_sourceEditing:
         label: 'Allowed Tag'
         constraints:
           SourceEditingRedundantTags: []
+
+# Plugin \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
+ckeditor5.plugin.ckeditor5_style:
+  type: mapping
+  label: Style
+  mapping:
+    styles:
+      type: sequence
+      label: 'Styles'
+      constraints:
+        NotBlank:
+          message: "Enable at least one style, otherwise disable the Style plugin."
+      sequence:
+        type: mapping
+        label: 'Style'
+        constraints: [] # todo validate that each style label is unique
+        mapping:
+          label:
+            type: label
+            label: 'Style label'
+          element:
+            type: ckeditor5.element
+            constraints: [] # todo validate that this contains exactly 1 attribute (class) and >=1 class attr value
+            label: 'Style tag + classes'

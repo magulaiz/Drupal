@@ -79,6 +79,7 @@ ckeditor5_style:
     label: Style
     library: core/ckeditor5.style
     admin_library: ckeditor5/admin.style
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
     # @todo configurability
     # class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
     toolbar_items:
