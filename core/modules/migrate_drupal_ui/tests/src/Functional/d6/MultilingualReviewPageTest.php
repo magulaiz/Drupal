@@ -147,6 +147,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Aggregator',
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
+      'Color',
       'Devel',
       'Devel generate',
       'Devel node access',

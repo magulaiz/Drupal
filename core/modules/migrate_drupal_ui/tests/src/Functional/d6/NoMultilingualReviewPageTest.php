@@ -142,6 +142,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Block',
       'Block translation',
       'CCK translation',
+      'Color',
       'Content type translation',
       'Devel',
       'Devel generate',

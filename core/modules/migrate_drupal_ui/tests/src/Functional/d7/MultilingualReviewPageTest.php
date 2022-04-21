@@ -154,6 +154,7 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       // Block is set not_finished in migrate_state_not_finished_test.
       'Block',
       'Breakpoints',
+      'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',

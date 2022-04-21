@@ -157,6 +157,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     return [
       'Aggregator',
       'Breakpoints',
+      'Color',
       'Contact translation',
       'Entity Translation Menu',
       'Entity Translation Upgrade',
