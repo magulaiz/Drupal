@@ -64,8 +64,6 @@ class MultilingualReviewPageTest extends MultilingualReviewPageTestBase {
       'Book',
       'CCK translation',
       'Calendar Signup',
-      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
-      'Color',
       'Comment',
       'Contact',
       'Content',
