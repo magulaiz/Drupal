@@ -165,6 +165,8 @@ class MigrationTest extends UnitTestCase {
    * Tests that getting migration dependencies fails with invalid configuration.
    *
    * @covers ::getExpandedDependencies
+   *
+   * @group legacy
    */
   public function testMigrationDependenciesWithInvalidConfig() {
     $migration = new TestMigration();
@@ -174,9 +176,12 @@ class MigrationTest extends UnitTestCase {
     $migration->setPluginId($plugin_id);
 
     // Migration dependencies expects ['optional' => []] or ['required' => []]].
+    $this->expectDeprecation("Invalid migration dependencies for {$plugin_id} is deprecated in drupal:9.4.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3183069");
+    $migration->set('migration_dependencies', ['test_migration_dependency']);
+
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage("Invalid migration dependencies configuration for migration {$plugin_id}");
-    $migration->set('migration_dependencies', ['test_migration_dependency']);
+    $migration->getExpandedDependencies();
   }
 
   /**
