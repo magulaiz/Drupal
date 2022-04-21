@@ -440,7 +440,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "83153b5e19ab1f2f3f93e955261edd90860a7422"
+                "reference": "30ab6cae65008201f29a02237610cab706cfce20"
             },
             "require": {
                 "asm89/stack-cors": "^2.0.2",
@@ -500,7 +500,6 @@
                 "drupal/ckeditor5": "self.version",
                 "drupal/claro": "self.version",
                 "drupal/classy": "self.version",
-                "drupal/color": "self.version",
                 "drupal/comment": "self.version",
                 "drupal/config": "self.version",
                 "drupal/config_translation": "self.version",
