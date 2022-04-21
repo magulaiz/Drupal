@@ -21,28 +21,28 @@ class LanguagePluginTest extends UnitTestCase {
    */
   public function providerGetDynamicPluginConfig(): array {
     return [
-      [
+      'un' => [
         ['language_list' => 'un'],
         [
           'language' => [
-            'textPartLanguage' => $this->buildExpectedDyanmicConfig(LanguageManager::getUnitedNationsLanguageList()),
+            'textPartLanguage' => $this->buildExpectedDynamicConfig(LanguageManager::getUnitedNationsLanguageList()),
           ],
         ],
       ],
-      [
+      'all' => [
         ['language_list' => 'all'],
         [
           'language' => [
-            'textPartLanguage' => $this->buildExpectedDyanmicConfig(LanguageManager::getStandardLanguageList()),
+            'textPartLanguage' => $this->buildExpectedDynamicConfig(LanguageManager::getStandardLanguageList()),
           ],
         ],
       ],
       // Default configuration.
-      [
+      'default configuration' => [
         [],
         [
           'language' => [
-            'textPartLanguage' => $this->buildExpectedDyanmicConfig(LanguageManager::getUnitedNationsLanguageList()),
+            'textPartLanguage' => $this->buildExpectedDynamicConfig(LanguageManager::getUnitedNationsLanguageList()),
           ],
         ],
       ],
@@ -58,7 +58,7 @@ class LanguagePluginTest extends UnitTestCase {
    * @return array
    *   The expected output of the dynamic plugin configuration.
    */
-  protected static function buildExpectedDyanmicConfig(array $language_list) {
+  protected static function buildExpectedDynamicConfig(array $language_list) {
     $expected_language_config = [];
     foreach ($language_list as $language_code => $language_list_item) {
       $item = [

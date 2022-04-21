@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
  * @group ckeditor5
+ * @internal
  */
 class SourceEditingPluginTest extends UnitTestCase {
 
@@ -74,7 +75,6 @@ class SourceEditingPluginTest extends UnitTestCase {
 
   /**
    * @covers ::getDynamicPluginConfig
-   *
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_html_tags): void {
