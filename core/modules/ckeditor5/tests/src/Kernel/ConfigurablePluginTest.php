@@ -49,6 +49,7 @@ class ConfigurablePluginTest extends KernelTestBase {
     $configurable_definitions = array_filter($all_definitions, function (CKEditor5PluginDefinition $definition): bool {
       return $definition->isConfigurable();
     });
+
     $default_plugin_settings = [];
     foreach (array_keys($configurable_definitions) as $plugin_name) {
       $default_plugin_settings[$plugin_name] = $this->manager->getPlugin($plugin_name, NULL)->defaultConfiguration();
@@ -76,6 +77,50 @@ class ConfigurablePluginTest extends KernelTestBase {
       'ckeditor5_imageUpload' => [],
     ];
     $this->assertSame($expected_default_plugin_settings, $default_plugin_settings);
+  }
+
+  /**
+   * Tests that all CKEditor5PluginConfigurableInterface implementations
+   * that have dynamic plugin configuration have test coverage.
+   */
+  public function testDynamicPluginConfigTestCoverage() {
+    $all_definitions = $this->manager->getDefinitions();
+    $problems = [];
+    $configurable_definitions = array_filter($all_definitions, function (CKEditor5PluginDefinition $definition): bool {
+      return $definition->isConfigurable();
+    });
+    $test_path = 'Drupal\Tests\ckeditor5\Unit\CLASSPluginTest';
+    $missing_tests = [];
+
+    foreach ($configurable_definitions as $entity_type_id => $info) {
+      $class_name_full = $info->getClass();
+      $parts = explode('\\', $class_name_full);
+      $class_name = end($parts);
+      if ($this->hasDynamicPluginConfigWorthTesting($info)) {
+        $class = str_replace('CLASS', $class_name, $test_path);
+        if (class_exists($class)) {
+          break;
+        }
+        $missing_tests[] = $class;
+      }
+    }
+      if (!empty($missing_tests)) {
+        $missing_tests_list = implode(', ', $missing_tests);
+        $problems[] = "$entity_type_id: $class_name ($class_name_full) (expected tests: $missing_tests_list)";
+      }
+    $this->assertSame([], $problems);
+  }
+
+  /**
+   * Checks if the plugin has the getDynamicPluginConfig() method.
+   */
+  function hasDynamicPluginConfigWorthTesting(CKEditor5PluginDefinition $definition): bool {
+    if ($definition->getClass() === CKEditor5PluginDefault::class) {
+      return FALSE;
+    }
+
+    $reflected_class = new \ReflectionClass($definition->getClass());
+    return $reflected_class->getMethod('getDynamicPluginConfig')->getDeclaringClass() !== CKEditor5PluginDefault::class;
   }
 
 }
