@@ -4,6 +4,7 @@ namespace Drupal\Tests\ckeditor5\Kernel;
 
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
 
 /**
  * Tests configurable plugins.
@@ -104,17 +105,17 @@ class ConfigurablePluginTest extends KernelTestBase {
         $missing_tests[] = $class;
       }
     }
-      if (!empty($missing_tests)) {
-        $missing_tests_list = implode(', ', $missing_tests);
-        $problems[] = "$entity_type_id: $class_name ($class_name_full) (expected tests: $missing_tests_list)";
-      }
+    if (!empty($missing_tests)) {
+      $missing_tests_list = implode(', ', $missing_tests);
+      $problems[] = "$entity_type_id: $class_name ($class_name_full) (expected tests: $missing_tests_list)";
+    }
     $this->assertSame([], $problems);
   }
 
   /**
    * Checks if the plugin has the getDynamicPluginConfig() method.
    */
-  function hasDynamicPluginConfigWorthTesting(CKEditor5PluginDefinition $definition): bool {
+  private function hasDynamicPluginConfigWorthTesting(CKEditor5PluginDefinition $definition): bool {
     if ($definition->getClass() === CKEditor5PluginDefault::class) {
       return FALSE;
     }
