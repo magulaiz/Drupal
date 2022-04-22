@@ -4,6 +4,8 @@ namespace Drupal\datetime\Plugin\views\filter;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -96,6 +98,35 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
       $container->get('date.formatter'),
       $container->get('request_stack')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateExposed(&$form, FormStateInterface $form_state) {
+    // Do not validate value if filter is not exposed or grouped.
+    if (empty($this->options['exposed']) || $this->options['is_grouped']) {
+      return;
+    }
+
+    $identifier = $this->options['expose']['identifier'];
+    $value = $form_state->getValue($identifier);
+
+    if (!empty($value['value'])) {
+      try {
+        (new DrupalDateTime($value['value']))->getTimestamp();
+      }
+      catch (\Exception $e) {
+        if (isset($form[$identifier])) {
+          $field = &$form[$identifier];
+        }
+        elseif (isset($form[$identifier . '_wrapper'])) {
+          $field = &$form[$identifier . '_wrapper'];
+        }
+        // Set the form error message.
+        $form_state->setError($field, $this->t('Invalid date format.'));
+      }
+    }
   }
 
   /**
