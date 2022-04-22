@@ -26,8 +26,8 @@ class SourceEditingPluginTest extends UnitTestCase {
         ],
         [
           'htmlSupport' => [
-            'allow' => []
-          ]
+            'allow' => [],
+          ],
         ],
       ],
       'Simple' => [
@@ -36,14 +36,14 @@ class SourceEditingPluginTest extends UnitTestCase {
             '<foo1>',
             '<foo2 bar>',
             '<foo3 bar="baz">',
-            '<foo4 bar="baz qux">'
+            '<foo4 bar="baz qux">',
           ],
         ],
         [
           'htmlSupport' => [
             'allow' => [
               [
-                'name' => 'foo1'
+                'name' => 'foo1',
               ],
               [
                 'name' => 'foo2',
@@ -61,7 +61,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                   'key' => 'bar',
                   'value' => [
                     'regexp' => [
-                      'pattern' => '/^(baz)$/'
+                      'pattern' => '/^(baz)$/',
                     ],
                   ],
                  ],
@@ -74,7 +74,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
-                        'pattern' => '/^(baz|qux)$/'
+                        'pattern' => '/^(baz|qux)$/',
                       ],
                     ],
                   ],
@@ -91,7 +91,7 @@ class SourceEditingPluginTest extends UnitTestCase {
             '<foo2 bar-*="baz">',
             '<foo3 bar-*="baz qux-*">',
             '<foo2 bar="baz-*">',
-            '<foo3 bar="baz qux-*">'
+            '<foo3 bar="baz qux-*">',
           ],
         ],
         [
@@ -103,7 +103,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                   [
                     'key' => [
                       'regexp' => [
-                        'pattern' => '/^bar-.*$/'
+                        'pattern' => '/^bar-.*$/',
                       ],
                     ],
                     'value' => TRUE,
@@ -117,7 +117,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
-                        'pattern' => '/^(baz-.*)$/'
+                        'pattern' => '/^(baz-.*)$/',
                       ],
                     ],
                   ],
@@ -130,7 +130,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                     'key' => 'bar',
                     'value' => [
                       'regexp' => [
-                        'pattern' => '/^(baz|qux-.*)$/'
+                        'pattern' => '/^(baz|qux-.*)$/',
                       ],
                     ],
                   ],
