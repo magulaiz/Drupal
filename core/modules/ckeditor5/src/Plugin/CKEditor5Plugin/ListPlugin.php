@@ -68,6 +68,9 @@ class ListPlugin extends CKEditor5PluginDefault implements CKEditor5PluginConfig
    * {@inheritdoc}
    */
   public function getDynamicPluginConfig(array $static_plugin_config, EditorInterface $editor): array {
+    if (!isset($static_plugin_config['list'])) {
+      $static_plugin_config['list']['properties'] = [];
+    }
     $static_plugin_config['list']['properties'] = array_merge(
       $static_plugin_config['list']['properties'],
       $this->getConfiguration()

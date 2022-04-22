@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
-use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ImageResize;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
 
@@ -21,28 +21,56 @@ class ListPluginTest extends UnitTestCase {
   public function providerGetDynamicPluginConfig(): array {
     return [
       'startIndex is false' => [
-        ['reversed' => TRUE, 'startIndex' => FALSE],
         [
           'reversed' => TRUE,
           'startIndex' => FALSE,
+        ],
+        ['list' => [
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => FALSE,
+            ],
           ],
         ],
+      ],
       'reversed is false' => [
-        ['reversed' => FALSE],
-        ['reversed' => FALSE],
+        [
+          'reversed' => FALSE,
+          'startIndex' => TRUE,
+        ],
+        ['list' => [
+          'properties' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+            ],
+          ],
+        ],
       ],
       'both disabled' => [
-        ['reversed' => FALSE, 'startIndex' => FALSE],
         [
           'reversed' => FALSE,
           'startIndex' => FALSE,
         ],
+        ['list' => [
+          'properties' => [
+            'reversed' => FALSE,
+            'startIndex' => FALSE,
+            ],
+          ],
+        ],
       ],
       'both enabled' => [
-        ['reversed' => TRUE, 'startIndex' => TRUE],
         [
-         'reversed' => TRUE,
-         'startIndex' => TRUE,
+          'reversed' => TRUE,
+          'startIndex' => TRUE
+        ],
+        [
+          'list' => [
+          'properties' => [
+            'reversed' => TRUE,
+            'startIndex' => TRUE,
+            ],
+          ],
         ],
       ],
     ];
@@ -54,8 +82,8 @@ class ListPluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    $plugin = new ImageResize($configuration, 'ckeditor5_list', NULL);
-    $dynamic_config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
+    $plugin = new ListPlugin($configuration, 'ckeditor5_list', NULL);
+    $dynamic_config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
       ->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_config);
   }
