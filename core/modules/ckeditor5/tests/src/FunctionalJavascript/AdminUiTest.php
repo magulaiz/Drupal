@@ -220,6 +220,7 @@ class AdminUiTest extends CKEditor5TestBase {
 
     // The filter-dependent configurable plugin should not be present.
     // @todo Change to `media_media` plugin in https://www.drupal.org/project/drupal/issues/3269657
+    // cSpell:disable-next-line
     $assert_session->elementNotExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-plugin-elements-subset-sneakysuperset"]');
 
     // Enable the filter that the configurable plugin depends on.
@@ -228,6 +229,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // The filter-dependent configurable plugin should be present.
+    // cSpell:disable-next-line
     $assert_session->elementExists('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-plugin-elements-subset-sneakysuperset"]');
   }
 
