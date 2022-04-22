@@ -18,7 +18,7 @@ class SearchTextProcessorTest extends KernelTestBase {
   protected static $modules = ['search'];
 
   /**
-   * Tests that all Unicode characters text processing correctly.
+   * Tests that text processing handles Unicode characters correctly.
    */
   public function testSearchTextProcessorUnicode() {
     // This test uses a file that was constructed so that the even lines are
