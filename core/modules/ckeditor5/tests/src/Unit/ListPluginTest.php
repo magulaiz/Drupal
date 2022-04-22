@@ -25,7 +25,8 @@ class ListPluginTest extends UnitTestCase {
           'reversed' => TRUE,
           'startIndex' => FALSE,
         ],
-        ['list' => [
+        [
+          'list' => [
           'properties' => [
             'reversed' => TRUE,
             'startIndex' => FALSE,
@@ -38,7 +39,8 @@ class ListPluginTest extends UnitTestCase {
           'reversed' => FALSE,
           'startIndex' => TRUE,
         ],
-        ['list' => [
+        [
+          'list' => [
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => TRUE,
@@ -51,7 +53,8 @@ class ListPluginTest extends UnitTestCase {
           'reversed' => FALSE,
           'startIndex' => FALSE,
         ],
-        ['list' => [
+        [
+          'list' => [
           'properties' => [
             'reversed' => FALSE,
             'startIndex' => FALSE,
@@ -62,7 +65,7 @@ class ListPluginTest extends UnitTestCase {
       'both enabled' => [
         [
           'reversed' => TRUE,
-          'startIndex' => TRUE
+          'startIndex' => TRUE,
         ],
         [
           'list' => [
