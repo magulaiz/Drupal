@@ -25,7 +25,33 @@ class LanguagePluginTest extends UnitTestCase {
         ['language_list' => 'un'],
         [
           'language' => [
-            'textPartLanguage' => $this->buildExpectedDynamicConfig(LanguageManager::getUnitedNationsLanguageList()),
+            'textPartLanguage' => [
+              [
+                'title' => 'Arabic',
+                'languageCode' => 'ar',
+                'textDirection' => 'rtl',
+              ],
+              [
+                'title' => 'Chinese, Simplified',
+                'languageCode' => 'zh-hans',
+              ],
+              [
+                'title' => 'English',
+                'languageCode' => 'en',
+              ],
+              [
+                'title' => 'French',
+                'languageCode' => 'fr',
+              ],
+              [
+                'title' => 'Russian',
+                'languageCode' => 'ru',
+              ],
+              [
+                'title' => 'Spanish',
+                'languageCode' => 'es',
+              ],
+            ],
           ],
         ],
       ],
@@ -42,7 +68,33 @@ class LanguagePluginTest extends UnitTestCase {
         [],
         [
           'language' => [
-            'textPartLanguage' => $this->buildExpectedDynamicConfig(LanguageManager::getUnitedNationsLanguageList()),
+            'textPartLanguage' => [
+              [
+                'title' => 'Arabic',
+                'languageCode' => 'ar',
+                'textDirection' => 'rtl',
+              ],
+              [
+                'title' => 'Chinese, Simplified',
+                'languageCode' => 'zh-hans',
+              ],
+              [
+                'title' => 'English',
+                'languageCode' => 'en',
+              ],
+              [
+                'title' => 'French',
+                'languageCode' => 'fr',
+              ],
+              [
+                'title' => 'Russian',
+                'languageCode' => 'ru',
+              ],
+              [
+                'title' => 'Spanish',
+                'languageCode' => 'es',
+              ],
+            ],
           ],
         ],
       ],

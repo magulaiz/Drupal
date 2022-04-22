@@ -20,53 +20,123 @@ class SourceEditingPluginTest extends UnitTestCase {
    */
   public function providerGetDynamicPluginConfig(): array {
     return [
-      'Default data set' => [
+      'Empty array of allowed tags' => [
         [
-          'allowed_tags' => ['<cite> <dl> <dt> <dd> <a hreflang> <blockquote cite> <ul type> <ol start type> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id>'],
+          'allowed_tags' => [],
         ],
         [
-          ['name' => 'cite'],
-          ['name' => 'dl'],
-          ['name' => 'dt'],
-          ['name' => 'dd'],
-          [
-            'name' => 'a',
-            'attributes' => [['key' => 'hreflang', 'value' => TRUE]],
+          'htmlSupport' => [
+            'allow' => []
+          ]
+        ],
+      ],
+      'Simple' => [
+        [
+          'allowed_tags' => [
+            '<foo1>',
+            '<foo2 bar>',
+            '<foo3 bar="baz">',
+            '<foo4 bar="baz qux">'
           ],
-          [
-            'name' => 'blockquote',
-            'attributes' => [['key' => 'cite', 'value' => TRUE]],
-          ],
-          [
-            'name' => 'ul',
-            'attributes' => [['key' => 'type', 'value' => TRUE]],
-          ],
-          [
-            'name' => 'ol',
-            'attributes' => [
-              ['key' => 'start', 'value' => TRUE],
-              ['key' => 'type', 'value' => TRUE],
+        ],
+        [
+          'htmlSupport' => [
+            'allow' => [
+              [
+                'name' => 'foo1'
+              ],
+              [
+                'name' => 'foo2',
+                'attributes' => [
+                  [
+                  'key' => 'bar',
+                  'value' => TRUE,
+                  ],
+                ],
+              ],
+              [
+                'name' => 'foo3',
+                'attributes' => [
+                  [
+                  'key' => 'bar',
+                  'value' => [
+                    'regexp' => [
+                      'pattern' => '/^(baz)$/'
+                    ],
+                  ],
+                 ],
+                ],
+              ],
+              [
+                'name' => 'foo4',
+                'attributes' => [
+                  [
+                    'key' => 'bar',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz|qux)$/'
+                      ],
+                    ],
+                  ],
+                ],
+              ],
             ],
           ],
-          [
-            'name' => 'h2',
-            'attributes' => [['key' => 'id', 'value' => TRUE]],
+        ],
+        ],
+      'Prefix wildcards' => [
+        [
+          'allowed_tags' => [
+            '<foo1 bar-*>',
+            '<foo2 bar-*="baz">',
+            '<foo3 bar-*="baz qux-*">',
+            '<foo2 bar="baz-*">',
+            '<foo3 bar="baz qux-*">'
           ],
-          [
-            'name' => 'h3',
-            'attributes' => [['key' => 'id', 'value' => TRUE]],
-          ],
-          [
-            'name' => 'h4',
-            'attributes' => [['key' => 'id', 'value' => TRUE]],
-          ],
-          [
-            'name' => 'h5',
-            'attributes' => [['key' => 'id', 'value' => TRUE]],
-          ],
-          [
-            'name' => 'h6',
-            'attributes' => [['key' => 'id', 'value' => TRUE]],
+        ],
+        [
+          'htmlSupport' => [
+            'allow' => [
+              [
+                'name' => 'foo1',
+                'attributes' => [
+                  [
+                    'key' => [
+                      'regexp' => [
+                        'pattern' => '/^bar-.*$/'
+                      ],
+                    ],
+                    'value' => TRUE,
+                   ],
+                ],
+              ],
+              [
+                'name' => 'foo2',
+                'attributes' => [
+                  [
+                    'key' => 'bar',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz-.*)$/'
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+              [
+                'name' => 'foo3',
+                'attributes' => [
+                  [
+                    'key' => 'bar',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz|qux-.*)$/'
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            ],
           ],
         ],
       ],
@@ -77,16 +147,11 @@ class SourceEditingPluginTest extends UnitTestCase {
    * @covers ::getDynamicPluginConfig
    * @dataProvider providerGetDynamicPluginConfig
    */
-  public function testGetDynamicPluginConfig(array $configuration, array $expected_html_tags): void {
+  public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $plugin = new SourceEditing($configuration, 'ckeditor5_sourceEditing', NULL);
-    $config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
       ->reveal());
-    $this->assertArrayHasKey('htmlSupport', $config);
-    $this->assertArrayHasKey('allow', $config['htmlSupport']);
-    foreach ($expected_html_tags as $expected_html_tag) {
-      $this->assertContains($expected_html_tag, $config['htmlSupport']['allow']);
-    }
-    $this->assertSameSize($expected_html_tags, $config['htmlSupport']['allow']);
+    $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
 
 }
