@@ -6,7 +6,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests entity bundle label
+ * Tests entity bundle label.
  *
  * @coversDefaultClass \Drupal\Core\Entity\EntityTypeBundleInfo
  * @group Entity
