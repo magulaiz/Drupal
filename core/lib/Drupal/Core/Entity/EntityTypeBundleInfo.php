@@ -161,4 +161,5 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       @trigger_error("Using hook_entity_bundle_info_alter() to alter the label of bundles stored as config entities is deprecated in drupal:9.4.0 and is not permitted in drupal:10.0.0. Label altered bundles: {$altered_label_bundles_string}. Use different methods to alter the label for bundles stored as config entities. See https://www.drupal.org/node/3186694", E_USER_DEPRECATED);
     }
   }
+
 }
