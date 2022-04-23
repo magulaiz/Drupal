@@ -111,7 +111,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
         // Check for altered labels of bundles stored as config entities.
-        $this->checkConfigEnityBundleAlteredLabels($config_entity_bundle_labels);
+        $this->checkConfigEntityBundleAlteredLabels($config_entity_bundle_labels);
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
@@ -135,7 +135,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
    * @param array $config_entity_bundle_labels
    *   A list of labels of config entity bundles grouped by entity type.
    */
-  protected function checkConfigEnityBundleAlteredLabels(array $config_entity_bundle_labels): void {
+  protected function checkConfigEntityBundleAlteredLabels(array $config_entity_bundle_labels): void {
     // Collect the IDs of all bundles stored as config entities whose labels
     // were altered via hook_entity_bundle_info_alter().
     $altered_label_bundles = [];
