@@ -225,7 +225,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             'language_list' => 'all',
           ],
           'stylescombo' => [
-            'styles' => "p.callout|Callout\r\nblockquote.interesting|Interesting quote",
+            'styles' => "p.callout|Callout\r\nblockquote.interesting.highlighted|Interesting & highlighted quote\n\nblockquote.famous |    Famous\n",
           ],
           // Plugin setting without upgrade path.
           'llama_contextual_and_button' => [
@@ -893,11 +893,28 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'toolbar' => [
           'items' => [
             'textPartLanguage',
+            'style',
           ],
         ],
         'plugins' => [
           'ckeditor5_language' => [
             'language_list' => 'all',
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Callout',
+                'element' => '<p class="callout">',
+              ],
+              [
+                'label' => 'Interesting & highlighted quote',
+                'element' => '<blockquote class="interesting highlighted">',
+              ],
+              [
+                'label' => 'Famous',
+                'element' => '<blockquote class="famous">',
+              ],
+            ],
           ],
         ],
       ],

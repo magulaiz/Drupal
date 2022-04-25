@@ -67,7 +67,44 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_style.
     $form_value = $form_state->getValue('styles');
-    assert(is_string($form_value));
+    [$styles, $unparseable_lines] = parseStylesFormValue($form_value);
+    if (!empty($unparseable_lines)) {
+      $line_numbers = array_keys($unparseable_lines);
+      $form_state->setError($form['styles'], $this->formatPlural(
+        count($unparseable_lines),
+        'Line @line-number does not contain a valid value. Enter a valid CSS selector containing, followed by a pipe symbol and a label.',
+        'Lines @line-numbers does not contain a valid value. Enter a valid CSS selector containing, followed by a pipe symbol and a label.',
+        [
+          '@line-number' => reset($line_numbers),
+          '@line-numbers' => implode(', ', $line_numbers),
+        ]
+      ));
+    }
+    $form_state->setValue('styles', $styles);
+  }
+
+  /**
+   * Parses the line-based (for form) style configuration.
+   *
+   * @param string $form_value
+   *   A string containing >=1 lines with on each line a CSS selector targeting
+   *   1 tag with >=1 classes, a pipe symbol and a label. An example of a single
+   *   line: `p.foo.bar|Foo bar paragraph`.
+   *
+   * @return array
+   *   The parsed equivalent: a list of arrays with each containing:
+   *   - label: the label after the pipe symbol, with whitespace trimmed
+   *   - element: the CKEditor 5 element equivalent of the tag + classes
+   *
+   * @internal
+   *   This method is public only to allow the CKEditor 4 to 5 upgrade path to
+   *   reuse this logic. Mark this private in https://www.drupal.org/i/3239012.
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade\Core::mapCKEditor4SettingsToCKEditor5Configuration()
+   */
+  public static function parseStylesFormValue(string $form_value): array {
+    $unparseable_lines = [];
+
     $lines = explode("\n", $form_value);
     $styles = [];
     foreach ($lines as $index => $line) {
@@ -76,12 +113,15 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
       }
 
       // Parse the line.
-      [$selector, $label] = explode('|', trim($line));
+      [$selector, $label] = explode('|', $line);
+      $selector = trim($selector);
+      $label = trim($label);
 
       // Validate the selector.
       $selector_matches = [];
       if (!preg_match('/^([a-z][0-9a-zA-Z\-]*)((\.[a-zA-Z0-9\-_]+)+)$/', $selector, $selector_matches)) {
-        $form_state->setError($form['styles'], $this->t('Line @line-number does not contain a valid value. Enter a valid CSS selector containing, followed by a pipe symbol and a label.', ['@line-number' => $index + 1]));
+        $unparseable_lines[$index + 1] = $line;
+        continue;
       }
 
       // Parse selector into tag + classes and normalize.
@@ -90,11 +130,11 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
       $normalized = HTMLRestrictions::fromString(sprintf('<%s class="%s">', $tag, implode(' ', $classes)));
 
       $styles[] = [
-        'element' => $normalized->toCKEditor5ElementsArray()[0],
         'label' => $label,
+        'element' => $normalized->toCKEditor5ElementsArray()[0],
       ];
     }
-    $form_state->setValue('styles', $styles);
+    return [$styles, $unparseable_lines];
   }
 
   /**

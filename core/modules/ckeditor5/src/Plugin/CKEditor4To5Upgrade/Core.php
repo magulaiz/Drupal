@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\filter\FilterFormatInterface;
 
@@ -161,8 +162,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\StylesCombo
       case 'Styles':
-        // @todo Change in https://www.drupal.org/project/ckeditor5/issues/3222797
-        return NULL;
+        return ['style'];
 
       // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\specialCharacters
       case 'SpecialChar':
@@ -188,8 +188,12 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
     switch ($cke4_plugin_id) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\StylesCombo
       case 'stylescombo':
-        // @todo Change in https://www.drupal.org/project/ckeditor5/issues/3222797
-        return NULL;
+        [$styles] = Style::parseStylesFormValue($cke4_plugin_settings['styles']);
+        return [
+          'ckeditor5_style' => [
+            'styles' => $styles,
+          ],
+        ];
 
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\Language
       case 'language':
