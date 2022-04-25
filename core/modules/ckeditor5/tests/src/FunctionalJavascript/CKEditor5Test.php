@@ -332,32 +332,32 @@ class CKEditor5Test extends CKEditor5TestBase {
     $filter_settings = $page->find('xpath', '//*[contains(@class, "js-form-type-vertical-tabs")]/label[contains(text(), "Filter settings")]/..');
     $filter_settings_vertical_tabs = $filter_settings->findAll('css', '.vertical-tabs__menu-item');
 
-    $this->assertTrue($plugin_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 1 selected on initial build");
-    $this->assertFalse($plugin_settings_vertical_tabs[1]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 2 not selected on initial build");
+    $this->assertTrue($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 selected on initial build");
+    $this->assertFalse($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 not selected on initial build");
 
-    $this->assertFalse($filter_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected filter tab 1 not selected on initial build");
-    $this->assertTrue($filter_settings_vertical_tabs[2]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected (visible) filter tab 2 selected on initial build");
+    $this->assertFalse($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 not selected on initial build");
+    $this->assertTrue($filter_settings_vertical_tabs[2]->hasClass('is-selected'), "Expected (visible) filter tab 2 selected on initial build");
 
     $plugin_settings_vertical_tabs[1]->click();
     $filter_settings_vertical_tabs[0]->click();
     $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 1 deselected after click");
-    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 2 selected after click");
+    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 deselected after click");
+    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 selected after click");
 
-    $this->assertTrue($filter_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected filter tab 1 selected after click");
-    $this->assertFalse($filter_settings_vertical_tabs[2]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected (visible) filter tab 2 deselected after click");
+    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 selected after click");
+    $this->assertFalse($filter_settings_vertical_tabs[2]->hasClass('is-selected'), "Expected (visible) filter tab 2 deselected after click");
 
     // Add a plugin just to trigger AJAX refresh.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-blockQuote'));
     $this->triggerKeyUp('.ckeditor5-toolbar-item-blockQuote', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 1 deselected after AJAX refresh");
-    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected plugin tab 2 selected after AJAX refresh");
+    $this->assertFalse($plugin_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected plugin tab 1 deselected after AJAX refresh");
+    $this->assertTrue($plugin_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected plugin tab 2 selected after AJAX refresh");
 
-    $this->assertTrue($filter_settings_vertical_tabs[0]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected filter tab 1 selected after AJAX refresh");
-    $this->assertFalse($filter_settings_vertical_tabs[1]->hasAttribute('data-vertical-tabs-menu-item-selected'), "Expected filter tab 2 deselected after AJAX refresh");
+    $this->assertTrue($filter_settings_vertical_tabs[0]->hasClass('is-selected'), "Expected filter tab 1 selected after AJAX refresh");
+    $this->assertFalse($filter_settings_vertical_tabs[1]->hasClass('is-selected'), "Expected filter tab 2 deselected after AJAX refresh");
   }
 
   /**

@@ -24,7 +24,7 @@
     tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');
     tab.title[0].textContent = settings.title;
     tab.item = $(
-      '<li class="vertical-tabs__menu-item" data-vertical-tabs-menu-item tabindex="-1"></li>',
+      '<li class="vertical-tabs__menu-item" tabindex="-1"></li>',
     ).append(
       (tab.link = $('<a href="#" class="vertical-tabs__menu-link"></a>').append(
         $('<span class="vertical-tabs__menu-link-content"></span>')

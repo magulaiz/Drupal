@@ -7,7 +7,7 @@
 
 (function ($, Drupal, drupalSettings) {
   var handleFragmentLinkClickOrHashChange = function handleFragmentLinkClickOrHashChange(e, $target) {
-    $target.parents('[data-vertical-tabs-pane]').each(function (index, pane) {
+    $target.parents('.vertical-tabs__pane').each(function (index, pane) {
       $(pane).data('verticalTab').focus();
     });
   };
@@ -32,8 +32,8 @@
           return;
         }
 
-        var tabList = $(Drupal.theme.verticalTabsMenuListWrapper());
-        $this.wrap(Drupal.theme.verticalTabsWrapper()).before(tabList);
+        var tabList = $('<ul class="vertical-tabs__menu"></ul>');
+        $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
         $details.each(function () {
           var $that = $(this);
           var $summary = $that.find('> summary');
@@ -42,7 +42,7 @@
             details: $that
           });
           tabList.append(verticalTab.item);
-          $that.removeClass('collapsed').attr('open', true).addClass('vertical-tabs__pane').attr('data-vertical-tabs-pane', '').data('verticalTab', verticalTab);
+          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
 
           if (this.id === focusID) {
             tabFocus = $that;
@@ -55,9 +55,9 @@
           var $locationHash = $this.find(window.location.hash);
 
           if (window.location.hash && $locationHash.length) {
-            tabFocus = $locationHash.closest('[data-vertical-tabs-pane]');
+            tabFocus = $locationHash.closest('.vertical-tabs__pane');
           } else {
-            tabFocus = $this.find('> [data-vertical-tabs-pane]').eq(0);
+            tabFocus = $this.find('> .vertical-tabs__pane').eq(0);
           }
         }
 
@@ -90,12 +90,14 @@
 
   Drupal.verticalTab.prototype = {
     focus: function focus() {
-      this.details.siblings('[data-vertical-tabs-pane]').each(function () {
+      this.details.siblings('.vertical-tabs__pane').each(function () {
         var tab = $(this).data('verticalTab');
         tab.details.hide();
-        tab.item.removeAttr('data-vertical-tabs-menu-item-selected');
+        tab.details.removeAttr('open');
+        tab.item.removeClass('is-selected');
       }).end().show().siblings(':hidden.vertical-tabs__active-tab')[0].value = this.details.attr('id');
-      this.item.attr('data-vertical-tabs-menu-item-selected', '');
+      this.details.attr('open', true);
+      this.item.addClass('is-selected');
       $('#active-vertical-tab').remove();
       this.link.append("<span id=\"active-vertical-tab\" class=\"visually-hidden\">".concat(Drupal.t('(active tab)'), "</span>"));
     },
@@ -105,16 +107,16 @@
     tabShow: function tabShow() {
       this.item.show();
       this.item.closest('.js-form-type-vertical-tabs').show();
-      this.item.parent().children('[data-vertical-tabs-menu-item]').removeClass('first').filter(':visible').eq(0).addClass('first');
-      this.details.removeAttr('data-vertical-tab-hidden').show();
+      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
+      this.details.removeClass('vertical-tab--hidden').show();
       this.focus();
       return this;
     },
     tabHide: function tabHide() {
       this.item.hide();
-      this.item.parent().children('[data-vertical-tabs-menu-item]').removeClass('first').filter(':visible').eq(0).addClass('first');
-      this.details.attr('data-vertical-tab-hidden', '').hide();
-      var $firstTab = this.details.siblings('.vertical-tabs__pane:not([data-vertical-tab-hidden])').eq(0);
+      this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
+      this.details.addClass('vertical-tab--hidden').hide().removeAttr('open');
+      var $firstTab = this.details.siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)').eq(0);
 
       if ($firstTab.length) {
         $firstTab.data('verticalTab').focus();
@@ -130,15 +132,7 @@
     var tab = {};
     tab.title = $('<strong class="vertical-tabs__menu-item-title"></strong>');
     tab.title[0].textContent = settings.title;
-    tab.item = $('<li class="vertical-tabs__menu-item" data-vertical-tabs-menu-item tabindex="-1"></li>').append(tab.link = $('<a href="#"></a>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')));
+    tab.item = $('<li class="vertical-tabs__menu-item" tabindex="-1"></li>').append(tab.link = $('<a href="#"></a>').append(tab.title).append(tab.summary = $('<span class="vertical-tabs__menu-item-summary"></span>')));
     return tab;
-  };
-
-  Drupal.theme.verticalTabsMenuListWrapper = function () {
-    return '<ul class="vertical-tabs__menu"></ul>';
-  };
-
-  Drupal.theme.verticalTabsWrapper = function () {
-    return '<div class="vertical-tabs clearfix"></div>';
   };
 })(jQuery, Drupal, drupalSettings);
