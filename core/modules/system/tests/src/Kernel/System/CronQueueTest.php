@@ -175,7 +175,7 @@ class CronQueueTest extends KernelTestBase {
     // @see \Drupal\Core\Cron::processQueues()
     $this->connection->update('queue')
       ->condition('name', 'cron_queue_test_exception')
-      ->fields(['expire' => REQUEST_TIME - 1])
+      ->fields(['expire' => \Drupal::time()->getRequestTime() - 1])
       ->execute();
     $this->cron->run();
     $this->assertEquals(2, \Drupal::state()->get('cron_queue_test_exception'));
