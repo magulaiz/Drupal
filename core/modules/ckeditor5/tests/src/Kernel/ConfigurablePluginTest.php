@@ -81,8 +81,8 @@ class ConfigurablePluginTest extends KernelTestBase {
   }
 
   /**
-   * Tests that all CKEditor5PluginConfigurableInterface implementations
-   * that have dynamic plugin configuration have test coverage.
+   * Tests that all CKEditor5PluginConfigurableInterface implementations that
+   * have dynamic plugin configuration have test coverage.
    */
   public function testDynamicPluginConfigTestCoverage() {
     $all_definitions = $this->manager->getDefinitions();
@@ -93,7 +93,7 @@ class ConfigurablePluginTest extends KernelTestBase {
     $test_path = 'Drupal\Tests\ckeditor5\Unit\CLASSPluginTest';
     $missing_tests = [];
 
-    foreach ($configurable_definitions as $entity_type_id => $info) {
+    foreach ($configurable_definitions as $definition => $info) {
       $class_name_full = $info->getClass();
       $parts = explode('\\', $class_name_full);
       $class_name = end($parts);
@@ -102,12 +102,12 @@ class ConfigurablePluginTest extends KernelTestBase {
         if (class_exists($class)) {
           break;
         }
-        $missing_tests[] = $class;
+        $missing_tests[$definition] = $class;
       }
     }
     if (!empty($missing_tests)) {
       $missing_tests_list = implode(', ', $missing_tests);
-      $problems[] = "$entity_type_id: $class_name ($class_name_full) (expected tests: $missing_tests_list)";
+      $problems[] = "Expected the follow test coverage to exist: $missing_tests_list)";
     }
     $this->assertSame([], $problems);
   }

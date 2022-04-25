@@ -20,40 +20,41 @@ class LanguagePluginTest extends UnitTestCase {
    * Provides a list of configs to test.
    */
   public function providerGetDynamicPluginConfig(): array {
+    $un_expected_output = [
+      'language' => [
+        'textPartLanguage' => [
+          [
+            'title' => 'Arabic',
+            'languageCode' => 'ar',
+            'textDirection' => 'rtl',
+          ],
+          [
+            'title' => 'Chinese, Simplified',
+            'languageCode' => 'zh-hans',
+          ],
+          [
+            'title' => 'English',
+            'languageCode' => 'en',
+          ],
+          [
+            'title' => 'French',
+            'languageCode' => 'fr',
+          ],
+          [
+            'title' => 'Russian',
+            'languageCode' => 'ru',
+          ],
+          [
+            'title' => 'Spanish',
+            'languageCode' => 'es',
+          ],
+        ],
+      ],
+    ];
     return [
       'un' => [
         ['language_list' => 'un'],
-        [
-          'language' => [
-            'textPartLanguage' => [
-              [
-                'title' => 'Arabic',
-                'languageCode' => 'ar',
-                'textDirection' => 'rtl',
-              ],
-              [
-                'title' => 'Chinese, Simplified',
-                'languageCode' => 'zh-hans',
-              ],
-              [
-                'title' => 'English',
-                'languageCode' => 'en',
-              ],
-              [
-                'title' => 'French',
-                'languageCode' => 'fr',
-              ],
-              [
-                'title' => 'Russian',
-                'languageCode' => 'ru',
-              ],
-              [
-                'title' => 'Spanish',
-                'languageCode' => 'es',
-              ],
-            ],
-          ],
-        ],
+        $un_expected_output,
       ],
       'all' => [
         ['language_list' => 'all'],
@@ -66,37 +67,7 @@ class LanguagePluginTest extends UnitTestCase {
       // Default configuration.
       'default configuration' => [
         [],
-        [
-          'language' => [
-            'textPartLanguage' => [
-              [
-                'title' => 'Arabic',
-                'languageCode' => 'ar',
-                'textDirection' => 'rtl',
-              ],
-              [
-                'title' => 'Chinese, Simplified',
-                'languageCode' => 'zh-hans',
-              ],
-              [
-                'title' => 'English',
-                'languageCode' => 'en',
-              ],
-              [
-                'title' => 'French',
-                'languageCode' => 'fr',
-              ],
-              [
-                'title' => 'Russian',
-                'languageCode' => 'ru',
-              ],
-              [
-                'title' => 'Spanish',
-                'languageCode' => 'es',
-              ],
-            ],
-          ],
-        ],
+        $un_expected_output,
       ],
     ];
   }
