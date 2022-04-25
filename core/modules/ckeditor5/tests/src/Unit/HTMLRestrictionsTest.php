@@ -134,13 +134,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::hasNoAllowedElements()
+   * @covers ::allowsNothing()
    * @covers ::getAllowedElements()
    * @dataProvider providerCounting
    */
   public function testCounting(array $elements, bool $expected_is_empty, int $expected_concrete_only_count, int $expected_concrete_plus_wildcard_count): void {
     $r = new HTMLRestrictions($elements);
-    $this->assertSame($expected_is_empty, $r->hasNoAllowedElements());
+    $this->assertSame($expected_is_empty, $r->allowsNothing());
     $this->assertCount($expected_concrete_only_count, $r->getAllowedElements());
     $this->assertCount($expected_concrete_only_count, $r->getAllowedElements(TRUE));
     $this->assertCount($expected_concrete_plus_wildcard_count, $r->getAllowedElements(FALSE));
@@ -175,14 +175,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
       2,
     ];
 
-    yield 'only globally allowed attribute: not considered empty' => [
+    yield 'only globally allowed attribute: considered to allow something' => [
       ['*' => ['lang' => TRUE]],
       FALSE,
       1,
       1,
     ];
 
-    yield 'only globally forbidden attribute: considered empty' => [
+    yield 'only globally forbidden attribute: considered to allow nothing' => [
       ['*' => ['style' => FALSE]],
       TRUE,
       1,
