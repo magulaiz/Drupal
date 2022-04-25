@@ -28,6 +28,9 @@ class StyleTest extends CKEditor5TestBase {
     $this->triggerKeyUp('.ckeditor5-toolbar-item-style', 'ArrowDown');
     $assert_session->assertWaitOnAjaxRequest();
 
+    // No validation error upon enabling the Style plugin.
+    $this->assertNoRealtimeValidationErrors();
+
     // The Style plugin settings form should now be present and should have no
     // styles configured.
     $page->clickLink('Style');
@@ -43,6 +46,7 @@ JS;
     // Immediately save the configuration. Intentionally do nothing that would
     // trigger an AJAX rebuild.
     $page->pressButton('Save configuration');
+    $assert_session->pageTextContains('has been updated');
 
     // Verify that the configuration was saved.
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
