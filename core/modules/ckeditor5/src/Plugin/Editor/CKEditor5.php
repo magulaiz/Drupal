@@ -585,6 +585,7 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $submitted_editor->setSettings($settings);
     $eventual_editor_and_format_for_plugin_settings_visibility = $this->getEventualEditorWithPrimedFilterFormat($form_state, $submitted_editor);
     $settings['plugins'] = [];
+    $default_configurations = [];
     foreach ($this->ckeditor5PluginManager->getDefinitions() as $plugin_id => $definition) {
       if (!$definition->isConfigurable()) {
         continue;
@@ -598,6 +599,12 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       // @see editor_image_upload_settings_form()
       $default_configuration = $plugin->defaultConfiguration();
       $configuration_stored_out_of_band = empty($default_configuration);
+      // If this plugin is configurable but has not yet had user interaction,
+      // the default configuration will still be active and may trigger
+      // validation errors. Do not trigger those validation errors until the
+      // form is actually saved, to allow the user to first configure other
+      // CKEditor 5 functionality.
+      $default_configurations[$plugin_id] = $default_configuration;
 
       if ($form_state->hasValue(['plugins', $plugin_id])) {
         $subform = $form['plugins'][$plugin_id];
@@ -647,6 +654,13 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
           // This CKEditor 5 plugin settings form was just added: the user has
           // not yet had a chance to configure it.
           if (!$form_state->hasValue(['plugins', $plugin_id])) {
+            continue;
+          }
+          // This CKEditor 5 plugin settings form was added recently, the user
+          // is triggering AJAX rebuilds of the configuration UI because they're
+          // configuring other functionality first. Only require these to be
+          // valid at form submission time.
+          if ($form_state->getValue(['plugins', $plugin_id]) === $default_configurations[$plugin_id]) {
             continue;
           }
         }
