@@ -296,7 +296,7 @@
   content: "";
 }
 
-.vertical-tabs  .vertical-tabs__panes {
+.vertical-tabs .vertical-tabs__panes {
   margin-left: 20em; /* LTR */
   border-top-left-radius: 0; /* LTR */
 }
