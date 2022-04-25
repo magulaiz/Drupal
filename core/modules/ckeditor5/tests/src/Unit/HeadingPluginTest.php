@@ -107,12 +107,12 @@ class HeadingPluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    // Retrieve the possible heading options from the plugin definition in YAML.
+    // Read the CKEditor 5 plugin's static configuration from YAML.
     $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
-    $configuration['heading'] = $ckeditor5_plugin_definitions['ckeditor5_heading']['ckeditor5']['config']['heading'];
+    $static_plugin_config = $ckeditor5_plugin_definitions['ckeditor5_heading']['ckeditor5']['config'];
 
     $plugin = new Heading($configuration, 'ckeditor5_heading', NULL);
-    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($configuration, $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($static_plugin_config, $this->prophesize(Editor::class)
       ->reveal());
 
     $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
