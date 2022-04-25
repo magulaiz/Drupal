@@ -31,6 +31,11 @@ class StyleTest extends CKEditor5TestBase {
     // No validation error upon enabling the Style plugin.
     $this->assertNoRealtimeValidationErrors();
 
+    // Still no validation error when configuring other functionality first.
+    $this->triggerKeyUp('.ckeditor5-toolbar-item-undo', 'ArrowDown');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNoRealtimeValidationErrors();
+
     // The Style plugin settings form should now be present and should have no
     // styles configured.
     $page->clickLink('Style');
