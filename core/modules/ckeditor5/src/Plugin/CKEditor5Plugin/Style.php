@@ -67,7 +67,7 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Match the config schema structure at ckeditor5.plugin.ckeditor5_style.
     $form_value = $form_state->getValue('styles');
-    [$styles, $unparseable_lines] = parseStylesFormValue($form_value);
+    [$styles, $unparseable_lines] = self::parseStylesFormValue($form_value);
     if (!empty($unparseable_lines)) {
       $line_numbers = array_keys($unparseable_lines);
       $form_state->setError($form['styles'], $this->formatPlural(
