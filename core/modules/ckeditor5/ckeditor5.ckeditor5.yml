@@ -101,6 +101,7 @@ ckeditor5_globalAttributeDir:
       htmlSupport:
         allow:
           -
+            # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute::getDynamicPluginConfig()
             name: ~
             attributes:
               - key: dir
@@ -125,6 +126,7 @@ ckeditor5_globalAttributeLang:
       htmlSupport:
         allow:
           -
+            # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\GlobalAttribute::getDynamicPluginConfig()
             name: ~
             attributes: lang
   drupal:
