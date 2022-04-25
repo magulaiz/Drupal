@@ -1223,6 +1223,36 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
     ];
+    yield 'global attribute tag + concrete tag with allowed attribute' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'b' => new HTMLRestrictions(['p' => ['baz' => TRUE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
+    ];
+    yield 'global attribute tag + concrete tag with allowed attribute — vice versa' => [
+      'a' => new HTMLRestrictions(['p' => ['baz' => TRUE]]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => ['baz' => TRUE]]),
+    ];
+
+    // Global attribute `*` HTML tag + wildcard tag.
+    yield 'global attribute tag + wildcard tag' => [
+      'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'b' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+    ];
+    yield 'global attribute tag + wildcard tag — vice versa' => [
+      'a' => new HTMLRestrictions(['$text-container' => ['class' => TRUE]]),
+      'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
+      'diff' => 'a',
+      'intersection' => HTMLRestrictions::emptySet(),
+      'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
+    ];
   }
 
   /**
