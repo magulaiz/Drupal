@@ -6,7 +6,7 @@ build:
     testing:
       run_tests.kernel:
         types: 'PHPUnit-Kernel'
-        testgroups: '--class \Drupal\KernelTests\Core\Entity\EntityAutocompleteTest'
+        testgroups: '--class "Drupal\KernelTests\Core\Entity\EntityAutocompleteTest"'
         suppress-deprecations: false
         halt-on-fail: false
         repeat: 500
