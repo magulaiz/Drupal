@@ -7,6 +7,7 @@ namespace Drupal\Tests\ckeditor5\Unit;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
@@ -27,9 +28,10 @@ class ListPluginTest extends UnitTestCase {
         ],
         [
           'list' => [
-          'properties' => [
-            'reversed' => TRUE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => FALSE,
+              'styles' => FALSE,
             ],
           ],
         ],
@@ -41,9 +43,10 @@ class ListPluginTest extends UnitTestCase {
         ],
         [
           'list' => [
-          'properties' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => TRUE,
+              'styles' => FALSE,
             ],
           ],
         ],
@@ -55,9 +58,10 @@ class ListPluginTest extends UnitTestCase {
         ],
         [
           'list' => [
-          'properties' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+              'styles' => FALSE,
             ],
           ],
         ],
@@ -69,9 +73,10 @@ class ListPluginTest extends UnitTestCase {
         ],
         [
           'list' => [
-          'properties' => [
-            'reversed' => TRUE,
-            'startIndex' => TRUE,
+            'properties' => [
+              'reversed' => TRUE,
+              'startIndex' => TRUE,
+              'styles' => FALSE,
             ],
           ],
         ],
@@ -85,10 +90,13 @@ class ListPluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
+    // Read the CKEditor 5 plugin's static configuration from YAML.
+    $ckeditor5_plugin_definitions = Yaml::parseFile(__DIR__ . '/../../../ckeditor5.ckeditor5.yml');
+    $static_plugin_config = $ckeditor5_plugin_definitions['ckeditor5_list']['ckeditor5']['config'];
     $plugin = new ListPlugin($configuration, 'ckeditor5_list', NULL);
-    $dynamic_config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($static_plugin_config, $this->prophesize(Editor::class)
       ->reveal());
-    $this->assertSame($expected_dynamic_config, $dynamic_config);
+    $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
 
 }

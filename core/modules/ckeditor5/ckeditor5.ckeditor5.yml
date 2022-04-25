@@ -310,8 +310,8 @@ ckeditor5_list:
     config:
       list:
         properties:
-          startIndex: true
           reversed: true
+          startIndex: true
           # @todo Make this configurable in https://www.drupal.org/project/drupal/issues/3274635
           styles: false
   drupal:
