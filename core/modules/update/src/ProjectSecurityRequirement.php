@@ -138,13 +138,19 @@ final class ProjectSecurityRequirement {
       $requirement['description'] = $security_coverage_message;
       if ($this->securityCoverageInfo['additional_minors_coverage'] > 0) {
         $requirement['value'] = $this->t(
-          'Covered until @end_version',
-          ['@end_version' => $this->securityCoverageInfo['security_coverage_end_version']]
+          'Drupal @version is covered until @end_version',
+          [
+            '@version' => $this->existingMajorMinorVersion,
+            '@end_version' => $this->securityCoverageInfo['security_coverage_end_version'],
+          ]
         );
         $requirement['severity'] = $this->securityCoverageInfo['additional_minors_coverage'] > 1 ? REQUIREMENT_INFO : REQUIREMENT_WARNING;
       }
       else {
-        $requirement['value'] = $this->t('Coverage has ended');
+        $requirement['value'] = $this->t(
+          'Drupal @version coverage has ended',
+          ['@version' => $this->existingMajorMinorVersion]
+        );
         $requirement['severity'] = REQUIREMENT_ERROR;
       }
     }
@@ -223,7 +229,10 @@ final class ProjectSecurityRequirement {
     $comparable_request_date = $date_formatter->format($time->getRequestTime(), 'custom', $date_format);
     if ($this->securityCoverageInfo['security_coverage_end_date'] <= $comparable_request_date) {
       // Security coverage is over.
-      $requirement['value'] = $this->t('Coverage has ended');
+      $requirement['value'] = $this->t(
+        'Drupal @version coverage has ended',
+        ['@version' => $this->existingMajorMinorVersion]
+      );
       $requirement['severity'] = REQUIREMENT_ERROR;
       $requirement['description']['coverage_message'] = [
         '#markup' => $this->getVersionNoSecurityCoverageMessage(),
@@ -235,15 +244,18 @@ final class ProjectSecurityRequirement {
       $output_date_format = $date_format === 'Y-m-d' ? 'Y-M-d' : 'Y-M';
       $formatted_end_date = $date_formatter
         ->format($security_coverage_end_timestamp, 'custom', $output_date_format);
-      $translation_arguments = ['@date' => $formatted_end_date];
-      $requirement['value'] = $this->t('Covered until @date', $translation_arguments);
+      $translation_arguments = [
+        '@version' => $this->existingMajorMinorVersion,
+        '@date' => $formatted_end_date,
+];
+      $requirement['value'] = $this->t('Drupal @version is covered until @date', $translation_arguments);
       $requirement['severity'] = REQUIREMENT_INFO;
       // 'security_coverage_ending_warn_date' will always be in the format
       // 'Y-m-d'.
       $request_date = $date_formatter->format($time->getRequestTime(), 'custom', 'Y-m-d');
       if (!empty($this->securityCoverageInfo['security_coverage_ending_warn_date']) && $this->securityCoverageInfo['security_coverage_ending_warn_date'] <= $request_date) {
         $requirement['description']['coverage_message'] = [
-          '#markup' => $this->t('Update to a supported minor version soon to continue receiving security updates.'),
+          '#markup' => $this->t('Update to a supported version soon to continue receiving security updates.'),
           '#suffix' => ' ',
         ];
         $requirement['severity'] = REQUIREMENT_WARNING;
@@ -261,7 +273,7 @@ final class ProjectSecurityRequirement {
    */
   private function getVersionNoSecurityCoverageMessage() {
     return $this->t(
-      '<a href=":update_status_report">Update to a supported minor</a> as soon as possible to continue receiving security updates.',
+      '<a href=":update_status_report">Update to a supported version</a> as soon as possible to continue receiving security updates.',
       [':update_status_report' => Url::fromRoute('update.status')->toString()]
     );
   }
