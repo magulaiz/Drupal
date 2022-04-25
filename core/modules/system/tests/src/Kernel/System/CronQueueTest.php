@@ -131,7 +131,7 @@ class CronQueueTest extends KernelTestBase {
     static::assertEquals(1, \Drupal::state()->get('cron_queue_test_lease_time'));
     // Ensure the same queue job is not picked up due to the extended lease.
     $this->cron->run();
-    static::assertEquals(2, \Drupal::state()->get('cron_queue_test_lease_time'));
+    static::assertEquals(1, \Drupal::state()->get('cron_queue_test_lease_time'));
 
     // Set the expiration time to 3 seconds ago, so the lease should
     // automatically expire.
