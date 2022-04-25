@@ -318,12 +318,8 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         // that is allowed to return a superset. It's a special case because it
         // is through configuring this particular plugin that additional HTML
         // tags can be allowed.
-        // Even though its plugin definition says an empty list of tags is
-        // supported, this is a little lie to convey that this plugin is capable
-        // of supporting any HTML tag … but which ones are actually supported
-        // depends on the configuration.
-        // This also means that without any configuration, it does not support
-        // any HTML tags.
+        // The list of tags it supports is generated dynamically. In its default
+        // configuration it does support any HTML tags.
         if ($id === 'ckeditor5_sourceEditing') {
           $defined_elements = !isset($editor) ? [] : $this->getPlugin($id, $editor)->getElementsSubset();
         }
