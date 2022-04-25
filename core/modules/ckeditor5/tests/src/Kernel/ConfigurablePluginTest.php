@@ -50,7 +50,6 @@ class ConfigurablePluginTest extends KernelTestBase {
     $configurable_definitions = array_filter($all_definitions, function (CKEditor5PluginDefinition $definition): bool {
       return $definition->isConfigurable();
     });
-
     $default_plugin_settings = [];
     foreach (array_keys($configurable_definitions) as $plugin_name) {
       $default_plugin_settings[$plugin_name] = $this->manager->getPlugin($plugin_name, NULL)->defaultConfiguration();
