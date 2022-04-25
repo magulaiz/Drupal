@@ -1157,43 +1157,43 @@ class HTMLRestrictionsTest extends UnitTestCase {
       ];
     }
 
-    // Joker wildcard tag + joker wildcard tag cases.
-    yield 'joker wildcard tag + joker wildcard tag: no overlap in attributes' => [
+    // Global attribute `*` HTML tag + global attribute `*` HTML tag cases.
+    yield 'global attribute tag + global attribute tag: no overlap in attributes' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
     ];
-    yield 'joker wildcard tag + joker wildcard tag: no overlap in attributes — vice versa' => [
+    yield 'global attribute tag + global attribute tag: no overlap in attributes — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['baz' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'baz' => FALSE]]),
     ];
-    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, same attribute value restrictions' => [
+    yield 'global attribute tag + global attribute tag: overlap in attributes, same attribute value restrictions' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'diff' => new HTMLRestrictions(['*' => ['foo' => TRUE]]),
       'intersection' => 'b',
       'union' => 'a',
     ];
-    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, same attribute value restrictions — vice versa' => [
+    yield 'global attribute tag + global attribute tag: overlap in attributes, same attribute value restrictions — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
     ];
-    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, different attribute value restrictions' => [
+    yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'b' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
       'diff' => 'a',
       'intersection' => new HTMLRestrictions(['*' => ['bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE], 'foo' => FALSE]]),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
-    yield 'joker wildcard tag + joker wildcard tag: overlap in attributes, different attribute value restrictions — vice versa' => [
+    yield 'global attribute tag + global attribute tag: overlap in attributes, different attribute value restrictions — vice versa' => [
       'a' => new HTMLRestrictions(['*' => ['bar' => TRUE, 'dir' => TRUE, 'foo' => FALSE]]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE, 'dir' => ['ltr' => TRUE, 'rtl' => TRUE]]]),
       'diff' => 'a',
@@ -1201,15 +1201,15 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => TRUE, 'dir' => TRUE]]),
     ];
 
-    // Joker wildcard tag + concrete tag.
-    yield 'joker wildcard tag + concrete tag' => [
+    // Global attribute `*` HTML tag + concrete tag.
+    yield 'global attribute tag + concrete tag' => [
       'a' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'b' => new HTMLRestrictions(['p' => FALSE]),
       'diff' => 'a',
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], 'p' => FALSE]),
     ];
-    yield 'joker wildcard tag + concrete tag — vice versa' => [
+    yield 'global attribute tag + concrete tag — vice versa' => [
       'a' => new HTMLRestrictions(['p' => FALSE]),
       'b' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE]]),
       'diff' => 'a',
