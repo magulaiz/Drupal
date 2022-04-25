@@ -154,22 +154,29 @@ class HTMLRestrictionsTest extends UnitTestCase {
       0,
     ];
 
-    yield 'one' => [
+    yield 'one concrete tag' => [
       ['a' => TRUE],
       FALSE,
       1,
       1,
     ];
 
-    yield 'two' => [
+    yield 'one wildcard tag: considered to allow nothing because no concrete tag to resolve onto' => [
+      ['$text-container' => ['class' => ['text-align-left' => TRUE]]],
+      FALSE,
+      0,
+      1,
+    ];
+
+    yield 'two concrete tags' => [
       ['a' => TRUE, 'b' => FALSE],
       FALSE,
       2,
       2,
     ];
 
-    yield 'two of which one is a wildcard' => [
-      ['a' => TRUE, '$text-container' => FALSE],
+    yield 'one concrete tag, one wildcard tag' => [
+      ['a' => TRUE, '$text-container' => ['class' => ['text-align-left' => TRUE]]],
       FALSE,
       1,
       2,
