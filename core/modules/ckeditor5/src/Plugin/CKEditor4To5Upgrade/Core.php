@@ -188,7 +188,12 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
     switch ($cke4_plugin_id) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\StylesCombo
       case 'stylescombo':
-        [$styles] = Style::parseStylesFormValue($cke4_plugin_settings['styles']);
+        if (!isset($cke4_plugin_settings['styles'])) {
+          $styles = [];
+        }
+        else {
+          [$styles] = Style::parseStylesFormValue($cke4_plugin_settings['styles']);
+        }
         return [
           'ckeditor5_style' => [
             'styles' => $styles,
