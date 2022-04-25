@@ -103,7 +103,6 @@ class HeadingPluginTest extends UnitTestCase {
 
   /**
    * @covers ::getDynamicPluginConfig
-   *
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {

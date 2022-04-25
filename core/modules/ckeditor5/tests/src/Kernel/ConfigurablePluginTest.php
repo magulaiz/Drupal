@@ -81,10 +81,9 @@ class ConfigurablePluginTest extends KernelTestBase {
   }
 
   /**
-   * Tests that all CKEditor5PluginConfigurableInterface implementations that
-   * have dynamic plugin configuration have test coverage.
+   * Tests that all ::getDynamicPluginConfig() implementations have a unit test.
    */
-  public function testDynamicPluginConfigTestCoverage() {
+  public function testDynamicPluginConfigTestCoverage(): void {
     $all_definitions = $this->manager->getDefinitions();
     $problems = [];
     $configurable_definitions = array_filter($all_definitions, function (CKEditor5PluginDefinition $definition): bool {
@@ -92,22 +91,26 @@ class ConfigurablePluginTest extends KernelTestBase {
     });
     $test_path = 'Drupal\Tests\ckeditor5\Unit\CLASSPluginTest';
     $missing_tests = [];
+    // List of plugins that have dynamic plugin configuration but don't need
+    // a unit test because it doesn't have settings of its own and instead uses
+    // an out-of-band configuration.
+    $plugin_exceptions = ['ImageUpload'];
 
-    foreach ($configurable_definitions as $definition => $info) {
-      $class_name_full = $info->getClass();
+    foreach ($configurable_definitions as $definition) {
+      $class_name_full = $definition->getClass();
       $parts = explode('\\', $class_name_full);
       $class_name = end($parts);
-      if ($this->hasDynamicPluginConfigWorthTesting($info)) {
+      if ($this->hasDynamicPluginConfigWorthTesting($definition)) {
         $class = str_replace('CLASS', $class_name, $test_path);
-        if (class_exists($class)) {
-          break;
+        if (!class_exists($class) && !in_array($class_name, $plugin_exceptions)) {
+          $missing_tests[$class_name_full] = $class;
         }
-        $missing_tests[$definition] = $class;
       }
     }
     if (!empty($missing_tests)) {
-      $missing_tests_list = implode(', ', $missing_tests);
-      $problems[] = "Expected the follow test coverage to exist: $missing_tests_list)";
+      foreach ($missing_tests as $class_name_full => $test) {
+        $problems[] = "Expected $test test coverage to exist for $class_name_full.)";
+      }
     }
     $this->assertSame([], $problems);
   }
@@ -121,7 +124,7 @@ class ConfigurablePluginTest extends KernelTestBase {
     }
 
     $reflected_class = new \ReflectionClass($definition->getClass());
-    return $reflected_class->getMethod('getDynamicPluginConfig')->getDeclaringClass() !== CKEditor5PluginDefault::class;
+    return $reflected_class->getMethod('getDynamicPluginConfig')->getDeclaringClass()->getName() !== CKEditor5PluginDefault::class;
   }
 
 }

@@ -64,7 +64,6 @@ class LanguagePluginTest extends UnitTestCase {
           ],
         ],
       ],
-      // Default configuration.
       'default configuration' => [
         [],
         $un_expected_output,
@@ -73,7 +72,7 @@ class LanguagePluginTest extends UnitTestCase {
   }
 
   /**
-   * Build the expected dynamic configuration output given a language list.
+   * Builds the expected dynamic configuration output given a language list.
    *
    * @param array $language_list
    *   The languages list from the language manager.
@@ -99,7 +98,6 @@ class LanguagePluginTest extends UnitTestCase {
 
   /**
    * @covers ::getDynamicPluginConfig
-   *
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
