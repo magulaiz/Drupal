@@ -1705,7 +1705,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       ])
       ->addCacheableDependency($entity)
       ->addCacheableDependency($access);
-    $status_code = isset($expected_document['errors'][0]['status']) ? $expected_document['errors'][0]['status'] : 200;
+    $status_code = $expected_document['errors'][0]['status'] ?? 200;
     $resource_response = new CacheableResourceResponse($expected_document, $status_code);
     $resource_response->addCacheableDependency($expected_cacheability);
     return $resource_response;
@@ -1963,8 +1963,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testPostIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('POSTing config entities is not yet supported.');
     }
 
     // Try with all of the following request bodies.
@@ -2179,8 +2178,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testPatchIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'PATCHing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('PATCHing config entities is not yet supported.');
     }
 
     $prior_revision_id = (int) $this->entityLoadUnchanged($this->entity->id())->getRevisionId();
@@ -2284,7 +2282,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceErrorResponse(403, "The current user is not allowed to PATCH the selected field (field_rest_test).", $url, $response, '/data/attributes/field_rest_test');
 
     // DX: 403 when sending PATCH request with updated read-only fields.
-    list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
+    [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.
@@ -2497,8 +2495,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   public function testDeleteIndividual() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'DELETEing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('DELETEing config entities is not yet supported.');
     }
 
     // The URL and Guzzle request options that will be used in this test. The
@@ -2778,28 +2775,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     }
     assert($this->entity instanceof RevisionableInterface);
 
-    // JSON:API will only support node and media revisions until Drupal core has
-    // a generic revision access API.
-    if (!static::$resourceTypeIsVersionable) {
-      $this->setUpRevisionAuthorization('GET');
-      $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()])->setAbsolute();
-      $url->setOption('query', ['resourceVersion' => 'id:' . $this->entity->getRevisionId()]);
-      $request_options = [];
-      $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
-      $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
-      $response = $this->request('GET', $url, $request_options);
-      $detail = 'JSON:API does not yet support resource versioning for this resource type.';
-      $detail .= ' For context, see https://www.drupal.org/project/drupal/issues/2992833#comment-12818258.';
-      $detail .= ' To contribute, see https://www.drupal.org/project/drupal/issues/2350939 and https://www.drupal.org/project/drupal/issues/2809177.';
-      $expected_cache_contexts = [
-        'url.path',
-        'url.query_args:resourceVersion',
-        'url.site',
-      ];
-      $this->assertResourceErrorResponse(501, $detail, $url, $response, FALSE, ['http_response'], $expected_cache_contexts);
-      return;
-    }
-
     // Add a field to modify in order to test revisions.
     FieldStorageConfig::create([
       'entity_type' => static::$entityTypeId,
@@ -2959,6 +2934,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
     // Install content_moderation module.
     $this->assertTrue($this->container->get('module_installer')->install(['content_moderation'], TRUE), 'Installed modules.');
+
+    if (!\Drupal::service('content_moderation.moderation_information')->canModerateEntitiesOfEntityType($this->entity->getEntityType())) {
+      return;
+    }
 
     // Set up an editorial workflow.
     $workflow = $this->createEditorialWorkflow();

@@ -253,6 +253,14 @@ function system_theme() {
       'file' => 'system.theme.inc',
       'variables' => ['error_message' => []],
     ],
+    'entity_page_title' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+        'entity' => NULL,
+        'view_mode' => NULL,
+      ],
+    ],
   ]);
 }
 
@@ -605,7 +613,7 @@ function system_page_attachments(array &$page) {
   }
 
   // Get the major Drupal version.
-  list($version,) = explode('.', \Drupal::VERSION);
+  [$version] = explode('.', \Drupal::VERSION);
 
   // Attach default meta tags.
   $meta_default = [
@@ -944,7 +952,7 @@ function system_system_info_alter(&$info, Extension $file, $type) {
  */
 function system_default_region($theme) {
   $regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
-  return isset($regions[0]) ? $regions[0] : '';
+  return $regions[0] ?? '';
 }
 
 /**

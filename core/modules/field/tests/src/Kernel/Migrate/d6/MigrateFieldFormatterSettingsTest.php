@@ -34,8 +34,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
    *   The display ID.
    * @param string $component_id
    *   The component ID.
+   *
+   * @internal
    */
-  protected function assertComponentNotExists($display_id, $component_id) {
+  protected function assertComponentNotExists(string $display_id, string $component_id): void {
     $component = EntityViewDisplay::load($display_id)->getComponent($component_id);
     $this->assertNull($component);
   }
@@ -145,7 +147,13 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     // Test the image field formatter settings.
     $expected['weight'] = 9;
     $expected['type'] = 'image';
-    $expected['settings'] = ['image_link' => '', 'image_style' => ''];
+    $expected['settings'] = [
+      'image_link' => '',
+      'image_style' => '',
+      'image_loading' => [
+        'attribute' => 'lazy',
+      ],
+    ];
     $component = $display->getComponent('field_test_imagefield');
     $this->assertSame($expected, $component);
     $display = EntityViewDisplay::load('node.story.teaser');

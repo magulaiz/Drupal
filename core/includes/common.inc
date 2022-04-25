@@ -201,9 +201,13 @@ function base_path() {
  * @param $data
  *   (optional) The default data parameter for the JavaScript asset array.
  *
- * @see hook_js_alter()
+ * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No direct
+ *   replacement is provided.
+ *
+ * @see https://www.drupal.org/node/3197679
  */
 function drupal_js_defaults($data = NULL) {
+  @trigger_error('drupal_js_defaults() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. No direct replacement is provided. See https://www.drupal.org/node/3197679', E_USER_DEPRECATED);
   return [
     'type' => 'file',
     'group' => JS_DEFAULT,
@@ -355,8 +359,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
   $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
 
   // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
-  $source = isset($options['source']) ? $options['source'] : $target;
+  $target = $options['subgroup'] ?? $group;
+  $source = $options['source'] ?? $target;
   $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
     'target' => $target,
     'source' => $source,
@@ -539,7 +543,7 @@ function drupal_flush_all_caches($kernel = NULL) {
   $module_handler = \Drupal::moduleHandler();
   // Flush all persistent caches.
   $module_handler->invokeAll('cache_flush');
-  foreach (Cache::getBins() as $service_id => $cache_backend) {
+  foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->deleteAll();
   }
 
