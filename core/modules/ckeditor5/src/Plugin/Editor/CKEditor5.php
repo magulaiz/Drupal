@@ -634,6 +634,24 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
     $eventual_editor_and_format = $this->getEventualEditorWithPrimedFilterFormat($form_state, $submitted_editor);
     $violations = CKEditor5::validatePair($eventual_editor_and_format, $eventual_editor_and_format->getFilterFormat());
     foreach ($violations as $violation) {
+      $property_path_parts = explode('.', $violation->getPropertyPath());
+
+      // Special case: AJAX updates that do not submit the form (that cannot
+      // result in configuration being saved).
+      if ($form_state->getSubmitHandlers() === ['editor_form_filter_admin_format_editor_configure']) {
+        // Ensure that plugins' validation constraints do not immediately do not
+        // immediately trigger a validation error: the user may choose to
+        // configure other CKEditor 5 aspects first.
+        if ($property_path_parts[0] === 'settings' && $property_path_parts[1] === 'plugins') {
+          $plugin_id = $property_path_parts[2];
+          // This CKEditor 5 plugin settings form was just added: the user has
+          // not yet had a chance to configure it.
+          if (!$form_state->hasValue(['plugins', $plugin_id])) {
+            continue;
+          }
+        }
+      }
+
       $form_item_name = static::mapPairViolationPropertyPathsToFormNames($violation->getPropertyPath(), $form);
       // When adding a toolbar item, it is possible that not all conditions for
       // using it have been met yet. FormBuilder refuses to rebuild forms when a
