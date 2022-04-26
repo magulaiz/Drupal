@@ -191,8 +191,10 @@
       ) {
         event.preventDefault();
         self.focus();
-        // Set focus on the first input field of the visible details/tab pane.
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        $(`#${event.target.getAttribute('aria-controls')}`)
+          .find(':input:visible:enabled')
+          .eq(0)
+          .trigger('focus');
       }
     });
 

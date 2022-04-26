@@ -94,7 +94,7 @@
       if (event.type === 'click' || event.keyCode === 13 || event.keyCode === 32) {
         event.preventDefault();
         self.focus();
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        $("#".concat(event.target.getAttribute('aria-controls'))).find(':input:visible:enabled').eq(0).trigger('focus');
       }
     });
     this.details.on('summaryUpdated', function () {
