@@ -27,7 +27,9 @@ export default class DrupalMediaEditing extends Plugin {
   static get requires() {
     return [Widget];
   }
-
+  /**
+   * @inheritdoc
+   */
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
