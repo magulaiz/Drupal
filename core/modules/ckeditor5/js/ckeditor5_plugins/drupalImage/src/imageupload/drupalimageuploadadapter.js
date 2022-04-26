@@ -85,9 +85,13 @@ export default class DrupalImageUploadAdapter {
    * Initializes XMLHttpRequest listeners
    *
    * @private
-   * @param {Function} resolve Callback function to be called when the request is successful.
-   * @param {Function} reject Callback function to be called when the request cannot be completed.
-   * @param {File} file Native File object.
+   *
+   * @param {Function} resolve
+   *  Callback function to be called when the request is successful.
+   * @param {Function} reject
+   *  Callback function to be called when the request cannot be completed.
+   * @param {File} file
+   *  Native File object.
    */
   _initListeners(resolve, reject, file) {
     const xhr = this.xhr;

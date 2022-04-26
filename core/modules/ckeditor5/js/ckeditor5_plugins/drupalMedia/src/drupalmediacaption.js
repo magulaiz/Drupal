@@ -10,10 +10,16 @@ import DrupalMediaCaptionUI from './drupalmediacaption/drupalmediacaptionui';
  * @private
  */
 export default class DrupalMediaCaption extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return [DrupalMediaCaptionEditing, DrupalMediaCaptionUI];
   }
 
+  /**
+   * @inheritdoc
+   */
   static get pluginName() {
     return 'DrupalMediaCaption';
   }

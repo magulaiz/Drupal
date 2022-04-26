@@ -611,6 +611,9 @@ function downcastBlockImageLink() {
  * @private
  */
 export default class DrupalImageEditing extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return ['ImageUtils'];
   }

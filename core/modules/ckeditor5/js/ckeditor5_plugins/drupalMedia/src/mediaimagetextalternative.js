@@ -10,14 +10,14 @@ import MediaImageTextAlternativeUi from './mediaimagetextalternative/mediaimaget
  */
 export default class MediaImageTextAlternative extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [MediaImageTextAlternativeEditing, MediaImageTextAlternativeUi];
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get pluginName() {
     return 'MediaImageTextAlternative';

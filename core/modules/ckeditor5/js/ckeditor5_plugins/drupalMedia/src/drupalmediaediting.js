@@ -21,10 +21,16 @@ import { METADATA_ERROR } from './mediaimagetextalternative/utils';
  * @private
  */
 export default class DrupalMediaEditing extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return [Widget];
   }
 
+  /**
+   * @inheritdoc
+   */
   init() {
     this.attrs = {
       drupalMediaAlt: 'alt',
@@ -110,16 +116,6 @@ export default class DrupalMediaEditing extends Plugin {
    *
    * @param {module:engine/model/node~Node} modelElement
    *   The `drupalMedia` model element.
-   * @param {module:core/editor/editor~Editor} editor
-   *   The editor instance.
-   * @param {Drupal.CKEditor5~DrupalElementStyle[]} definedStyles
-   *   A list of defined styles.
-   * @param {string} style
-   *   The style to check be checked against the bundle specific styles.
-   * @param {<module:ui/dropdown/utils~ListDropdownItemDefinition>} definition
-   *   Dropdown item definition.
-   * @param {string} modelAttribute
-   *   The model attribute name of the drupalElementStyle.
    *
    * @see module:drupalMedia/drupalmediametadatarepository~DrupalMediaMetadataRepository
    *
@@ -193,6 +189,11 @@ export default class DrupalMediaEditing extends Plugin {
     return { label: this.labelError, preview: this.themeError };
   }
 
+  /**
+   * @todo
+   *
+   * @private
+   */
   _defineSchema() {
     const schema = this.editor.model.schema;
     schema.register('drupalMedia', {
@@ -208,6 +209,11 @@ export default class DrupalMediaEditing extends Plugin {
     this.editor.editing.view.domConverter.blockElements.push('drupal-media');
   }
 
+  /**
+   * @todo
+   *
+   * @private
+   */
   _defineConverters() {
     const conversion = this.editor.conversion;
     const metadataRepository = this.editor.plugins.get(
@@ -427,11 +433,18 @@ export default class DrupalMediaEditing extends Plugin {
     });
   }
 
+  /**
+   * @todo
+   *
+   * Listen to `insertContent` event on the model to set `drupalMediaIsImage`
+   * and `drupalMediaType` attribute when `drupalMedia` model element is
+   * inserted directly to the model.
+   *
+   * @see module:drupalMedia/insertdrupalmediacommand~InsertDrupalMediaCommand
+   *
+   * @private
+   */
   _defineListeners() {
-    // Listen to `insertContent` event on the model to set `drupalMediaIsImage` and `drupalMediaType`
-    // attribute when `drupalMedia` model element is inserted directly to the
-    // model.
-    // @see module:drupalMedia/insertdrupalmediacommand~InsertDrupalMediaCommand
     this.editor.model.on('insertContent', (eventInfo, [modelElement]) => {
       if (!isDrupalMedia(modelElement)) {
         return;

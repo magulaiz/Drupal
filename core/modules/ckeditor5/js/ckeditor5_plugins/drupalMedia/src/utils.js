@@ -8,7 +8,7 @@ import { isWidget } from 'ckeditor5/src/widget';
  * @param {module:engine/model/element~Element} modelElement
  *   The model element to be checked.
  * @return {boolean}
- *   A boolean indicating whether element is drupalMedia element.
+ *   A boolean indicating if the element is a drupalMedia element.
  *
  * @private
  */
@@ -22,7 +22,7 @@ export function isDrupalMedia(modelElement) {
  * @param {module:engine/view/element~Element} viewElement
  *   The view element.
  * @return {boolean}
- *   A boolean indicating whether element is <drupal-media> element.
+ *   A boolean indicating if the element is a <drupal-media> element.
  *
  * @private
  */
@@ -98,7 +98,7 @@ export function isObject(value) {
 }
 
 /**
- * Gets preview container element from the media element.
+ * Gets the preview container element from the media element.
  *
  * @param {Iterable.<module:engine/view/element~Element>} children
  *   The child elements.

@@ -10,7 +10,7 @@ import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversi
  *   The General HTML support data filter.
  *
  * @return {function}
- *   function that adds an event listener to upcastDispatcher.
+ *   Function that adds an event listener to upcastDispatcher.
  */
 function viewToModelDrupalMediaAttributeConverter(dataFilter) {
   return (dispatcher) => {

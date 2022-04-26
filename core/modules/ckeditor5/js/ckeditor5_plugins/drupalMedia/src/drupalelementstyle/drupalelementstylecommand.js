@@ -46,7 +46,7 @@ export default class DrupalElementStyleCommand extends Command {
   }
 
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   refresh() {
     const { editor } = this;

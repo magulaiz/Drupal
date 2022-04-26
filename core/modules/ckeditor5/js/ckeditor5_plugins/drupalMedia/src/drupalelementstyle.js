@@ -34,7 +34,7 @@ import DrupalElementStyleEditing from './drupalelementstyle/drupalelementstyleed
  */
 export default class DrupalElementStyle extends Plugin {
   /**
-   * @inheritDoc
+   * @inheritdoc
    */
   static get requires() {
     return [DrupalElementStyleEditing, DrupalElementStyleUi];
