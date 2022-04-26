@@ -264,7 +264,7 @@
           }
         })
         .end()
-        .siblings(':hidden.vertical-tabs__active-tab')
+        .siblings('[type="hidden"].vertical-tabs__active-tab')
         .val(this.details.attr('id'));
 
       this.details

@@ -113,7 +113,7 @@
           });
           tab.item.removeClass('is-selected');
         }
-      }).end().siblings(':hidden.vertical-tabs__active-tab').val(this.details.attr('id'));
+      }).end().siblings('[type="hidden"].vertical-tabs__active-tab').val(this.details.attr('id'));
       this.details.attr('open', true).find('> summary').attr({
         'aria-expanded': 'true',
         'aria-pressed': 'true'

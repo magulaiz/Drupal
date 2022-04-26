@@ -121,7 +121,7 @@
 
   Drupal.viewsUi.AddItemForm = function ($form) {
     this.$form = $form;
-    this.$form.find('.views-filterable-options :checkbox').on('click', $.proxy(this.handleCheck, this));
+    this.$form.find('.views-filterable-options [type=checkbox]').on('click', $.proxy(this.handleCheck, this));
     this.$selected_div = this.$form.find('.views-selected-options').parent();
     this.$selected_div.hide();
     this.checkedItems = [];
@@ -529,7 +529,7 @@
   Drupal.viewsUi.Checkboxifier = function (button) {
     this.$button = $(button);
     this.$parent = this.$button.parent('div.views-expose, div.views-grouped');
-    this.$input = this.$parent.find('input:checkbox, input:radio');
+    this.$input = this.$parent.find('[type=checkbox], [type=radio]');
     this.$button.hide();
     this.$parent.find('.exposed-description, .grouped-description').hide();
     this.$input.on('click', $.proxy(this, 'clickHandler'));
