@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Yaml\Yaml;
 
@@ -111,7 +111,7 @@ class HeadingPluginTest extends UnitTestCase {
     $static_plugin_config = $ckeditor5_plugin_definitions['ckeditor5_heading']['ckeditor5']['config'];
 
     $plugin = new Heading($configuration, 'ckeditor5_heading', NULL);
-    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($static_plugin_config, $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig($static_plugin_config, $this->prophesize(EditorInterface::class)
       ->reveal());
 
     $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing;
-use Drupal\editor\Entity\Editor;
+use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -149,7 +149,7 @@ class SourceEditingPluginTest extends UnitTestCase {
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
     $plugin = new SourceEditing($configuration, 'ckeditor5_sourceEditing', NULL);
-    $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(Editor::class)
+    $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)
       ->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
