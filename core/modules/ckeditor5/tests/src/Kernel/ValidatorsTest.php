@@ -867,8 +867,7 @@ class ValidatorsTest extends KernelTestBase {
       '<code style="foo: bar;">',
 
       // Also works on wildcard tags.
-      // @todo Detect this after https://www.drupal.org/project/drupal/issues/3260869 lands.
-      // '<$block style>',
+      '<$text-container style>',
     ];
     $data['INVALID: SourceEditing plugin configuration: self-XSS detected when using filter_html'] = [
       'settings' => [
@@ -893,7 +892,7 @@ class ValidatorsTest extends KernelTestBase {
           'status' => TRUE,
           'weight' => 0,
           'settings' => [
-            'allowed_html' => '<p onhover> <br> <img on*> <blockquote style> <marquee> <a onclick="javascript:*"> <code style="foo: bar;">',
+            'allowed_html' => '<p onhover style> <br> <img on*> <blockquote style> <marquee> <a onclick="javascript:*"> <code style="foo: bar;">',
             'filter_html_help' => TRUE,
             'filter_html_nofollow' => TRUE,
           ],
@@ -905,6 +904,7 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.2' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;blockquote style&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.4' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;a onclick=&quot;javascript:*&quot;&gt;</em>.',
         'settings.plugins.ckeditor5_sourceEditing.allowed_tags.5' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;code style=&quot;foo: bar;&quot;&gt;</em>.',
+        'settings.plugins.ckeditor5_sourceEditing.allowed_tags.6' => 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: <em class="placeholder">&lt;$text-container style&gt;</em>.',
       ],
     ];
     $data['VALID: SourceEditing plugin configuration: self-XSS not detected when not using filter_html'] = [
