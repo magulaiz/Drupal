@@ -22,6 +22,9 @@ import DrupalMediaGeneralHtmlSupport from './drupalmediageneralhtmlsupport';
  * @private
  */
 export default class DrupalMedia extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return [
       DrupalMediaEditing,

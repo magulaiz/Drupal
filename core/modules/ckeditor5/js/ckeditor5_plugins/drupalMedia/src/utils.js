@@ -37,7 +37,7 @@ export function isDrupalMediaWidget(viewElement) {
  *
  * @param {module:engine/model/selection~Selection|module:engine/model/documentselection~DocumentSelection} selection
  *   The current selection.
- * @returns {module:engine/model/element~Element|null}
+ * @return {module:engine/model/element~Element|null}
  *   The `drupalMedia` element which could be either the current selected an
  *   ancestor of the selection. Returns null if the selection has no Drupal
  *   Media element.
