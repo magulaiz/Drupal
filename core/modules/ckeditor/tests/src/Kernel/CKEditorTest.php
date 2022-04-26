@@ -45,7 +45,7 @@ class CKEditorTest extends KernelTestBase {
   /**
    * The Editor Plugin Manager.
    *
-   * @var \Drupal\editor\Plugin\EditorManager;
+   * @var \Drupal\editor\Plugin\EditorManager
    */
   protected $manager;
 
@@ -422,7 +422,7 @@ class CKEditorTest extends KernelTestBase {
     $this->ckeditor->getJSSettings($editor);
     $localeStorage = $this->container->get('locale.storage');
     $string = $localeStorage->findString(['source' => 'Edit Link', 'context' => '']);
-    $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
+    $this->assertNotEmpty($string, 'String from JavaScript file saved.');
 
     // With locale module, CKEditor should not adhere to the language selected.
     $this->assertCKEditorLanguage();
@@ -473,8 +473,10 @@ class CKEditorTest extends KernelTestBase {
    * @param string $langcode
    *   Language code to assert for. Defaults to French. That is the default
    *   language set in this assertion.
+   *
+   * @internal
    */
-  protected function assertCKEditorLanguage($langcode = 'fr') {
+  protected function assertCKEditorLanguage(string $langcode = 'fr'): void {
     // Set French as the site default language.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();

@@ -107,7 +107,7 @@ class TwigExtension extends AbstractExtension {
       new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('link', [$this, 'getLink']),
-      new TwigFunction('file_url', [$this->fileUrlGenerator, 'generateString']),
+      new TwigFunction('file_url', [$this, 'getFileUrl']),
       new TwigFunction('attach_library', [$this, 'attachLibrary']),
       new TwigFunction('active_theme_path', [$this, 'getActiveThemePath']),
       new TwigFunction('active_theme', [$this, 'getActiveTheme']),
@@ -270,6 +270,22 @@ class TwigExtension extends AbstractExtension {
       '#url' => $url,
     ];
     return $build;
+  }
+
+  /**
+   * Gets the file URL.
+   *
+   * @param string|null $uri
+   *   The file URI.
+   *
+   * @return string
+   *   The file URL.
+   */
+  public function getFileUrl(?string $uri): string {
+    if (is_null($uri)) {
+      return '';
+    }
+    return $this->fileUrlGenerator->generateString($uri);
   }
 
   /**
@@ -525,9 +541,11 @@ class TwigExtension extends AbstractExtension {
       return 0;
     }
 
-    // Return early for NULL and empty arrays.
+    // Return early for NULL, empty arrays, empty strings and FALSE booleans.
+    // @todo https://www.drupal.org/project/drupal/issues/3240093 Determine if
+    //   this behavior is correct or should be deprecated.
     if ($arg == NULL) {
-      return NULL;
+      return '';
     }
 
     // Optimize for scalars as it is likely they come from the escape filter.

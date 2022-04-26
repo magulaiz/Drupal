@@ -55,7 +55,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $node_file = File::load($node->{$field_name}->target_id);
     // Ensure the file can be viewed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertRaw($node_file->getFilename());
+    $this->assertSession()->responseContains($node_file->getFilename());
     // Ensure the file can be downloaded.
     $this->drupalGet($node_file->createFileUrl(FALSE));
     $this->assertSession()->statusCodeEquals(200);
@@ -90,7 +90,7 @@ class FilePrivateTest extends FileFieldTestBase {
     // Can't use submitForm() to set hidden fields.
     $this->drupalGet('node/' . $new_node->id() . '/edit');
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
-    $this->getSession()->getPage()->pressButton(t('Save'));
+    $this->getSession()->getPage()->pressButton('Save');
     $this->assertSession()->addressEquals('node/' . $new_node->id());
     // Make sure the submitted hidden file field is empty.
     $new_node = \Drupal::entityTypeManager()->getStorage('node')->loadUnchanged($new_node->id());
@@ -103,7 +103,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $this->drupalGet('node/add/' . $type_name);
     $this->getSession()->getPage()->find('css', 'input[name="title[0][value]"]')->setValue($edit['title[0][value]']);
     $this->getSession()->getPage()->find('css', 'input[name="' . $field_name . '[0][fids]"]')->setValue($node_file->id());
-    $this->getSession()->getPage()->pressButton(t('Save'));
+    $this->getSession()->getPage()->pressButton('Save');
     $new_node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertSession()->addressEquals('node/' . $new_node->id());
     // Make sure the submitted hidden file field is empty.

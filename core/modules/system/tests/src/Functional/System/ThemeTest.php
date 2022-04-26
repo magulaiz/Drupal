@@ -288,21 +288,30 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
+    // Check the display of non stable themes.
+    $themes = \Drupal::service('theme_handler')->rebuildThemeData();
+    $experimental_version = $themes['experimental_theme_test']->info['version'];
+    $deprecated_version = $themes['deprecated_theme_test']->info['version'];
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextContains('Experimental test ' . $experimental_version . ' (experimental theme)');
+    $this->assertSession()->pageTextContains('Test deprecated theme ' . $deprecated_version . ' (Deprecated)');
+    $this->assertSession()->elementExists('xpath', "//a[contains(@href, 'http://example.com/deprecated_theme')]");
+
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/seven');
 
     // Check that the site default theme used on node page.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertRaw('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/classy');
 
     // Check that the administration theme is used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/seven');
 
     // Check that the administration theme is used on the edit content page.
     $this->drupalGet('node/' . $this->node->id() . '/edit');
-    $this->assertRaw('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/seven');
 
     // Disable the admin theme on the node admin pages.
     $edit = [
@@ -311,9 +320,13 @@ class ThemeTest extends BrowserTestBase {
     $this->drupalGet('admin/appearance');
     $this->submitForm($edit, 'Save configuration');
 
+    // Check that obsolete themes are not displayed.
+    $this->drupalGet('admin/appearance');
+    $this->assertSession()->pageTextNotContains('Obsolete test theme');
+
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
-    $this->assertRaw('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/seven');
 
     // Ensure that the admin theme is also visible on the 403 page.
     $normal_user = $this->drupalCreateUser(['view the administration theme']);
@@ -321,12 +334,12 @@ class ThemeTest extends BrowserTestBase {
     // Check that the administration theme is used on an administration page.
     $this->drupalGet('admin/config');
     $this->assertSession()->statusCodeEquals(403);
-    $this->assertRaw('core/themes/seven');
+    $this->assertSession()->responseContains('core/themes/seven');
     $this->drupalLogin($this->adminUser);
 
     // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/classy');
 
     // Reset to the default theme settings.
     $edit = [
@@ -338,11 +351,11 @@ class ThemeTest extends BrowserTestBase {
 
     // Check that the site default theme used on administration page.
     $this->drupalGet('admin');
-    $this->assertRaw('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/classy');
 
     // Check that the site default theme used on the add content page.
     $this->drupalGet('node/add');
-    $this->assertRaw('core/themes/classy');
+    $this->assertSession()->responseContains('core/themes/classy');
   }
 
   /**
@@ -432,7 +445,7 @@ class ThemeTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save configuration');
 
     // Check that seven can be uninstalled now.
-    $this->assertRaw('Uninstall Seven theme');
+    $this->assertSession()->responseContains('Uninstall Seven theme');
     // Check that the classy theme still cannot be uninstalled as it is a
     // base theme of bartik.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
@@ -441,7 +454,7 @@ class ThemeTest extends BrowserTestBase {
     $this->clickLink('Set as default', 1);
 
     // Check that bartik can be uninstalled now.
-    $this->assertRaw('Uninstall Bartik theme');
+    $this->assertSession()->responseContains('Uninstall Bartik theme');
 
     // Check that the classy theme still can't be uninstalled as neither of its
     // base themes have been.
@@ -449,10 +462,10 @@ class ThemeTest extends BrowserTestBase {
 
     // Uninstall each of the three themes starting with Bartik.
     $this->clickLink('Uninstall');
-    $this->assertRaw('The <em class="placeholder">Bartik</em> theme has been uninstalled');
+    $this->assertSession()->responseContains('The <em class="placeholder">Bartik</em> theme has been uninstalled');
     // Seven is the second in the list.
     $this->clickLink('Uninstall');
-    $this->assertRaw('The <em class="placeholder">Seven</em> theme has been uninstalled');
+    $this->assertSession()->responseContains('The <em class="placeholder">Seven</em> theme has been uninstalled');
 
     // Check that the classy theme still can't be uninstalled as it is hidden.
     $this->assertSession()->responseNotContains('Uninstall Classy theme');
@@ -509,7 +522,7 @@ class ThemeTest extends BrowserTestBase {
    * @param string $expected_text
    *   The expected incompatibility text.
    */
-  private function assertThemeIncompatibleText($theme_name, $expected_text) {
+  private function assertThemeIncompatibleText(string $theme_name, string $expected_text): void {
     $this->assertSession()->elementExists('css', ".theme-info:contains(\"$theme_name\") .incompatible:contains(\"$expected_text\")");
   }
 

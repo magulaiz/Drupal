@@ -3,7 +3,6 @@
 namespace Drupal\Tests\views\Functional\Wizard;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\views\Views;
 
@@ -19,8 +18,8 @@ class BasicTest extends WizardTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -92,9 +91,9 @@ class BasicTest extends WizardTestBase {
     $this->assertEquals('2.0', $this->getSession()->getDriver()->getAttribute('//rss', 'version'));
     // The feed should have the same title and nodes as the page.
     $this->assertSession()->responseContains($view2['page[title]']);
-    $this->assertRaw($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
+    $this->assertSession()->responseContains($node1->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertSession()->responseContains($node1->label());
-    $this->assertRaw($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
+    $this->assertSession()->responseContains($node2->toUrl('canonical', ['absolute' => TRUE])->toString());
     $this->assertSession()->responseContains($node2->label());
 
     // Go back to the views page and check if this view is there.
@@ -221,7 +220,7 @@ class BasicTest extends WizardTestBase {
 
     foreach ($displays as $display) {
       foreach (['query', 'exposed_form', 'pager', 'style', 'row'] as $type) {
-        $this->assertFalse(empty($display['display_options'][$type]['options']), new FormattableMarkup('Default options found for @plugin.', ['@plugin' => $type]));
+        $this->assertNotEmpty($display['display_options'][$type]['options'], "There should be default options available for '$type'.");
       }
     }
   }

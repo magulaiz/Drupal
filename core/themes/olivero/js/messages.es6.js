@@ -11,7 +11,9 @@
    *   The message object.
    */
   const closeMessage = (message) => {
-    const messageContainer = message.querySelector('.messages__container');
+    const messageContainer = message.querySelector(
+      '[data-drupal-selector="messages-container"]',
+    );
 
     const closeBtnWrapper = document.createElement('div');
     closeBtnWrapper.setAttribute('class', 'messages__button');
@@ -58,6 +60,7 @@
       'class',
       `messages-list__item messages messages--${type}`,
     );
+    messageWrapper.setAttribute('data-drupal-selector', 'messages');
     messageWrapper.setAttribute(
       'role',
       type === 'error' || type === 'warning' ? 'alert' : 'status',
@@ -67,7 +70,7 @@
     messageWrapper.setAttribute('data-drupal-message-type', type);
     let svg = '';
 
-    if (['error', 'warning', 'status', 'info'].indexOf(type) > -1) {
+    if (['error', 'warning', 'status', 'info'].includes(type)) {
       svg =
         '<div class="messages__icon"><svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">';
     }
@@ -86,12 +89,12 @@
         '<path d="M32,16c0,8.8-7.2,16-16,16S0,24.8,0,16C0,7.2,7.2,0,16,0S32,7.2,32,16z M16.4,5.3c-3.5,0-5.8,1.5-7.5,4.1c-0.2,0.3-0.2,0.8,0.2,1l2.2,1.7c0.3,0.3,0.8,0.2,1.1-0.1c1.2-1.5,1.9-2.3,3.7-2.3c1.3,0,2.9,0.8,2.9,2.1c0,1-0.8,1.5-2.1,2.2c-1.5,0.9-3.5,1.9-3.5,4.6v0.3c0,0.4,0.3,0.8,0.8,0.8h3.6c0.4,0,0.8-0.3,0.8-0.8v-0.1c0-1.8,5.4-1.9,5.4-6.9C23.9,8.1,20.1,5.3,16.4,5.3z M16,21.3c-1.6,0-3,1.3-3,3c0,1.6,1.3,3,3,3s3-1.3,3-3C19,22.6,17.6,21.3,16,21.3z"/>';
     }
 
-    if (['error', 'warning', 'status', 'info'].indexOf(type) > -1) {
+    if (['error', 'warning', 'status', 'info'].includes(type)) {
       svg += '</svg></div>';
     }
 
     messageWrapper.innerHTML = `
-    <div class="messages__container">
+    <div class="messages__container" data-drupal-selector="messages-container">
       <div class="messages__header${!svg ? ' no-icon' : ''}">
         <h2 class="visually-hidden">${messagesTypes[type]}</h2>
         ${svg}
@@ -117,7 +120,9 @@
    */
   Drupal.behaviors.messages = {
     attach(context) {
-      once('olivero-messages', '.messages', context).forEach(closeMessage);
+      once('messages', '[data-drupal-selector="messages"]', context).forEach(
+        closeMessage,
+      );
     },
   };
 })(Drupal, once);

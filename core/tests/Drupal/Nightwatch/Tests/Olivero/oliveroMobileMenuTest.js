@@ -1,7 +1,7 @@
 const mobileNavButtonSelector = 'button.mobile-nav-button';
 const headerNavSelector = '#header-nav';
-const linkSubMenuId = 'home-submenu-1';
-const buttonSubMenuId = 'button-submenu-2';
+const linkSubMenuId = 'primary-menu-item-1';
+const buttonSubMenuId = 'primary-menu-item-12';
 
 /**
  * Sends arbitrary number of tab keys, and then checks that the last focused
@@ -162,5 +162,14 @@ module.exports = {
           browser.assert.ok(result.value);
         },
       );
+  },
+  'Verify clicks on hashes close mobile menu': (browser) => {
+    browser
+      .drupalRelativeURL('/node')
+      .waitForElementVisible('body')
+      .click(mobileNavButtonSelector)
+      .waitForElementVisible(headerNavSelector)
+      .click('[href="#footer"]')
+      .waitForElementNotVisible(headerNavSelector);
   },
 };

@@ -140,6 +140,8 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $this->drupalGet($style_path);
       $this->submitForm(['new' => $effect], 'Add');
       if (!empty($edit)) {
+        $effect_label = \Drupal::service('plugin.manager.image.effect')->createInstance($effect)->label();
+        $this->assertSession()->pageTextContains("Add {$effect_label} effect to style {$style_label}");
         $this->submitForm($edit_data, 'Add effect');
       }
     }
@@ -391,6 +393,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // There should normally be only one edit link on this page initially.
     $this->clickLink('Edit');
+    $this->assertSession()->pageTextContains("Edit Scale and crop effect on style Test style effect edit");
     $this->submitForm(['data[width]' => '360', 'data[height]' => '240'], 'Update effect');
     $this->assertSession()->pageTextContains('Scale and crop 360×240');
 
@@ -405,6 +408,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Edit the scale effect that was just added.
     $this->clickLink('Edit');
+    $this->assertSession()->pageTextContains("Edit Scale effect on style Test style scale edit scale");
     $this->submitForm(['data[width]' => '24', 'data[height]' => '19'], 'Update effect');
 
     // Add another scale effect and make sure both exist. Click through from
@@ -494,7 +498,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
+    $this->assertSession()->responseContains(\Drupal::service('file_url_generator')->transformRelative($style->buildUrl($original_uri)));
 
     // Copy config to sync, and delete the image style.
     $sync = $this->container->get('config.storage.sync');

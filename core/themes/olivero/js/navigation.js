@@ -73,6 +73,11 @@
 
       Drupal.olivero.closeAllSubNav();
     });
+    props.navWrapper.addEventListener('click', function (e) {
+      if (e.target.matches("[href*=\"".concat(window.location.pathname, "#\"], [href*=\"").concat(window.location.pathname, "#\"] *, [href^=\"#\"], [href^=\"#\"] *"))) {
+        toggleNav(props, false);
+      }
+    });
   }
 
   Drupal.behaviors.oliveroNavigation = {
@@ -86,7 +91,7 @@
         var olivero = Drupal.olivero;
         var navButton = context.querySelector('[data-drupal-selector="mobile-nav-button"]');
         var body = context.querySelector('body');
-        var overlay = context.querySelector('[data-drupal-selector="overlay"]');
+        var overlay = context.querySelector('[data-drupal-selector="header-nav-overlay"]');
         init({
           olivero: olivero,
           header: header,

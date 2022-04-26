@@ -118,24 +118,27 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   public function all() {
     $cached = $this->cache->get('jsonapi.resource_types', FALSE);
-    if ($cached === FALSE) {
-      $resource_types = [];
-      foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
-        $bundles = array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()));
-        $resource_types = array_reduce($bundles, function ($resource_types, $bundle) use ($entity_type) {
-          $resource_type = $this->createResourceType($entity_type, (string) $bundle);
-          return array_merge($resource_types, [
-            $resource_type->getTypeName() => $resource_type,
-          ]);
-        }, $resource_types);
-      }
-      foreach ($resource_types as $resource_type) {
-        $relatable_resource_types = $this->calculateRelatableResourceTypes($resource_type, $resource_types);
-        $resource_type->setRelatableResourceTypes($relatable_resource_types);
-      }
-      $this->cache->set('jsonapi.resource_types', $resource_types, Cache::PERMANENT, $this->cacheTags);
+    if ($cached) {
+      return $cached->data;
     }
-    return $cached ? $cached->data : $resource_types;
+
+    $resource_types = [];
+    foreach ($this->entityTypeManager->getDefinitions() as $entity_type) {
+      $bundles = array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type->id()));
+      $resource_types = array_reduce($bundles, function ($resource_types, $bundle) use ($entity_type) {
+        $resource_type = $this->createResourceType($entity_type, (string) $bundle);
+        return array_merge($resource_types, [
+          $resource_type->getTypeName() => $resource_type,
+        ]);
+      }, $resource_types);
+    }
+    foreach ($resource_types as $resource_type) {
+      $relatable_resource_types = $this->calculateRelatableResourceTypes($resource_type, $resource_types);
+      $resource_type->setRelatableResourceTypes($relatable_resource_types);
+    }
+    $this->cache->set('jsonapi.resource_types', $resource_types, Cache::PERMANENT, $this->cacheTags);
+
+    return $resource_types;
   }
 
   /**
@@ -201,7 +204,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    */
   public function getByTypeName($type_name) {
     $resource_types = $this->all();
-    return isset($resource_types[$type_name]) ? $resource_types[$type_name] : NULL;
+    return $resource_types[$type_name] ?? NULL;
   }
 
   /**
@@ -380,9 +383,7 @@ class ResourceTypeRepository implements ResourceTypeRepositoryInterface {
    *   TRUE if the entity type is versionable, FALSE otherwise.
    */
   protected static function isVersionableResourceType(EntityTypeInterface $entity_type) {
-    // @todo: remove the following line and uncomment the next one when revisions have standardized access control. For now, it is unsafe to support all revisionable entity types.
-    return in_array($entity_type->id(), ['node', 'media']);
-    /* return $entity_type->isRevisionable(); */
+    return $entity_type->isRevisionable();
   }
 
   /**

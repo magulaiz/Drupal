@@ -28,9 +28,10 @@ quickedit:
       css/quickedit.icons.theme.css: {}
   dependencies:
     - core/jquery
-    - core/jquery.once
-    - core/underscore
-    - core/backbone
+    - core/once
+    - core/jquery.once.bc
+    - core/internal.underscore
+    - core/internal.backbone
     - core/jquery.form
     - core/drupal
     - core/drupal.displace

@@ -22,9 +22,8 @@ function olivero_preprocess_html(&$variables) {
     $variables['attributes']['class'][] = 'is-always-mobile-nav';
   }
 
-  // So fonts can be preloaded from base theme in the event Olivero is used as a
-  // subtheme.
-  $variables['olivero_path'] = \Drupal::service('extension.list.theme')->getPath('olivero');
+  // So fonts can be preloaded from base theme in the event Olivero is used as a subtheme.
+  $variables['olivero_path'] = \Drupal::request()->getBasePath() . '/' . \Drupal::service('extension.list.theme')->getPath('olivero');
 
   $query_string = \Drupal::state()->get('system.css_js_query_string') ?: '0';
 
@@ -36,7 +35,7 @@ function olivero_preprocess_html(&$variables) {
     '#tag' => 'link',
     '#attributes' => [
       'rel' => 'stylesheet',
-      'href' => '/' . $variables['olivero_path'] . '/css/components/navigation/nav-primary-no-js.css?' . $query_string,
+      'href' => $variables['olivero_path'] . '/css/components/navigation/nav-primary-no-js.css?' . $query_string,
     ],
   ];
 }
@@ -83,7 +82,7 @@ function olivero_preprocess_maintenance_page(&$variables) {
   }
 
   // Olivero has custom styling for the maintenance page.
-  $variables['#attached']['library'][] = 'olivero/maintenance_page';
+  $variables['#attached']['library'][] = 'olivero/maintenance-page';
 }
 
 /**
@@ -360,7 +359,7 @@ function olivero_preprocess_field(&$variables) {
     $variables['attributes']['class'][] = 'text-content';
   }
 
-  if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"]) {
+  if ($variables['field_type'] == 'image' && $variables['element']['#view_mode'] == 'full' && !$variables["element"]["#is_multiple"] && $variables['field_name'] !== 'user_picture') {
     $variables['attributes']['class'][] = 'wide-image';
   }
 }
@@ -489,39 +488,10 @@ function olivero_preprocess_field__node__created(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK().
- */
-function olivero_preprocess_field__node__field_image__article(&$variables) {
-  if ($variables['element']['#view_mode'] == 'full') {
-    $image_style = \Drupal::entityTypeManager()->getStorage('image_style')->load('wide');
-    if ($image_style) {
-      foreach (Element::children($variables['items']) as $key) {
-        $variables['items'][$key]['content']['#image_style'] = 'wide';
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_preprocess_HOOK() for setting classes.
  */
 function olivero_preprocess_filter_caption(&$variables) {
   $variables['classes'] = isset($variables['classes']) && !empty($variables['classes']) ? $variables['classes'] . ' caption' : 'caption';
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- */
-function olivero_form_comment_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  $comment = $form_state->getFormObject()
-    ->getEntity();
-  /** @var \Drupal\comment\Entity\Comment $comment */
-  if ($comment->hasParentComment()) {
-    $form['actions']['submit']['#value'] = t('Reply to comment');
-  }
-  else {
-    $form['actions']['submit']['#value'] = t('Post comment');
-  }
 }
 
 /**
@@ -629,4 +599,11 @@ function olivero_preprocess_table(&$variables) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_form_views_exposed_form_alter().
+ */
+function olivero_form_views_exposed_form_alter(&$form) {
+  $form['#attributes']['class'][] = 'form--inline';
 }

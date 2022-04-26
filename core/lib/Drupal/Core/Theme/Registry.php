@@ -352,9 +352,9 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      foreach ($this->moduleHandler->getImplementations('theme') as $module) {
+      $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
         $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
-      }
+      });
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
         $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, ['theme_registry']);
@@ -500,7 +500,7 @@ class Registry implements DestructableInterface {
         // system.module to declare theme functions on behalf of core .include
         // files.
         if (isset($info['file'])) {
-          $include_file = isset($info['path']) ? $info['path'] : $path;
+          $include_file = $info['path'] ?? $path;
           $include_file .= '/' . $info['file'];
           include_once $this->root . '/' . $include_file;
           $result[$hook]['includes'][] = $include_file;
@@ -724,7 +724,7 @@ class Registry implements DestructableInterface {
     // have matching hooks in the registry.
     foreach ($prefixes as $prefix) {
       // Grep only the functions which are within the prefix group.
-      list($first_prefix,) = explode('_', $prefix, 2);
+      [$first_prefix] = explode('_', $prefix, 2);
       if (!isset($grouped_functions[$first_prefix])) {
         continue;
       }
@@ -836,7 +836,7 @@ class Registry implements DestructableInterface {
     $grouped_functions = [];
     // Splitting user defined functions into groups by the first prefix.
     foreach ($theme_functions as $function) {
-      list($first_prefix,) = explode('_', $function, 2);
+      [$first_prefix] = explode('_', $function, 2);
       $grouped_functions[$first_prefix][] = $function;
     }
 

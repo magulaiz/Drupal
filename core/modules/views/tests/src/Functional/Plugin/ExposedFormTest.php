@@ -45,8 +45,8 @@ class ExposedFormTest extends ViewTestBase {
    */
   protected $nodes = [];
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->enableViewsTestModule();
 
@@ -233,7 +233,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the custom block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertRaw('<strong>Custom</strong> titlealert("hacked!");');
+    $this->assertSession()->responseContains('<strong>Custom</strong> titlealert("hacked!");');
 
     // Set label to hidden on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('label_display', FALSE);
@@ -395,7 +395,7 @@ class ExposedFormTest extends ViewTestBase {
     $escape_1 = Html::escape($expected_label);
     $escape_2 = Html::escape($escape_1);
     // Make sure we see the single-escaped string in the raw output.
-    $this->assertRaw($escape_1);
+    $this->assertSession()->responseContains($escape_1);
     // But no double-escaped string.
     $this->assertSession()->responseNotContains($escape_2);
     // And not the raw label, either.
@@ -414,8 +414,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param int[] $ids
    *   The ids to check.
+   *
+   * @internal
    */
-  protected function assertIds(array $ids) {
+  protected function assertIds(array $ids): void {
     $elements = $this->cssSelect('div.view-test-exposed-form-sort-items-per-page div.views-row span.field-content');
     $actual_ids = [];
     foreach ($elements as $element) {
@@ -448,7 +450,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered before submitting the normal form.
     $this->assertSession()->responseContains("Apply");
-    $this->assertRaw('<div class="views-row">');
+    $this->assertSession()->responseContains('<div class="views-row">');
 
     $this->submitForm([], 'Submit');
     $this->assertSession()->statusCodeEquals(200);
@@ -456,7 +458,7 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertNotEmpty($form, 'The exposed form element was found.');
     // Ensure the exposed form is rendered after submitting the normal form.
     $this->assertSession()->responseContains("Apply");
-    $this->assertRaw('<div class="views-row">');
+    $this->assertSession()->responseContains('<div class="views-row">');
   }
 
   /**
@@ -492,8 +494,10 @@ class ExposedFormTest extends ViewTestBase {
    *
    * @param array $bundles
    *   Bundles of nodes.
+   *
+   * @internal
    */
-  protected function assertNodesExist(array $bundles) {
+  protected function assertNodesExist(array $bundles): void {
     foreach ($this->nodes as $node) {
       if (in_array($node->bundle(), $bundles)) {
         $this->assertSession()->pageTextContains($node->label());

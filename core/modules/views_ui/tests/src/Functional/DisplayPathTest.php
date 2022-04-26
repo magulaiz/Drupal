@@ -16,8 +16,8 @@ class DisplayPathTest extends UITestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->placeBlock('page_title_block');
   }
@@ -89,8 +89,8 @@ class DisplayPathTest extends UITestBase {
     $this->assertSession()->assertEscaped('/<script>alert("hello");</script>');
     $this->assertSession()->assertEscaped('/<script>alert("hello I have placeholders %");</script>');
     // Links should be url-encoded.
-    $this->assertRaw('/%3Cobject%3Emalformed_path%3C/object%3E');
-    $this->assertRaw('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');
+    $this->assertSession()->responseContains('/%3Cobject%3Emalformed_path%3C/object%3E');
+    $this->assertSession()->responseContains('/%3Cscript%3Ealert%28%22hello%22%29%3B%3C/script%3E');
   }
 
   /**
