@@ -199,7 +199,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $search = 'drupal-media data-entity-type data-entity-uuid data-view-mode data-align data-caption alt title';
     $replace = 'drupal-media data-entity-type data-entity-uuid';
     $allowed_html = str_replace($search, $replace, $allowed_html);
-    $page->clickLink('Limit allowed HTML tags and correct faulty HTML');
+    $page->find('css', 'a:contains("Limit allowed HTML tags and correct faulty HTML")')->press();
     $this->assertTrue($allowed_html_field->waitFor(10, function ($allowed_html_field) {
       return $allowed_html_field->isVisible();
     }));

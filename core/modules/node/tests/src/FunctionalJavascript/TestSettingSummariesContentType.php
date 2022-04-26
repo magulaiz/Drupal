@@ -38,13 +38,13 @@ class TestSettingSummariesContentType extends WebDriverTestBase {
   public function testWorkflowSummary() {
     $this->drupalGet('admin/structure/types/manage/test');
     $page = $this->getSession()->getPage();
-    $page->find('css', 'a[href="#edit-workflow"]')->click();
+    $page->find('css', 'a[aria-controls="edit-workflow"]')->click();
     $this->assertSession()->waitForElementVisible('css', '[name="options[status]"]');
     $page->findField('options[status]')->uncheck();
     $page->findField('options[sticky]')->check();
     $page->findField('options[promote]')->check();
     $page->findField('options[revision]')->check();
-    $locator = '[href="#edit-workflow"] .vertical-tabs__menu-item-summary';
+    $locator = '[aria-controls="edit-workflow"] .vertical-tabs__menu-item-summary';
     $page->waitFor(10, function () use ($page, $locator) {
       $summary = $page->find('css', $locator)->getText();
       return strpos('Not published', $summary) !== FALSE;
