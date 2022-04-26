@@ -190,7 +190,7 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
-   * @todo
+   * Registers drupalMedia as a block element in the DOM converter.
    *
    * @private
    */
@@ -210,7 +210,7 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
-   * @todo
+   * Defines handling of drupal media element in the content lifecycle.
    *
    * @private
    */
@@ -434,7 +434,7 @@ export default class DrupalMediaEditing extends Plugin {
   }
 
   /**
-   * @todo
+   * Defines behavior when an drupalMedia element is inserted.
    *
    * Listen to `insertContent` event on the model to set `drupalMediaIsImage`
    * and `drupalMediaType` attribute when `drupalMedia` model element is
