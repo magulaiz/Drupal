@@ -32,17 +32,23 @@
           return;
         }
 
-        var tabList = $('<ul class="vertical-tabs__menu"></ul>');
+        var labelledby = $this.attr('aria-labelledby');
+        var labelText = $("#".concat(labelledby)).text();
+        $this.removeAttr('aria-labelledby');
+        $this.attr('data-drupal-stash-role', $this.attr('role'));
+        $this.removeAttr('role');
+        var tabList = $("<ul class=\"vertical-tabs__menu\" role=\"tablist\" aria-label=\"".concat(labelText, "\" aria-orientation=\"vertical\" aria-owns=\"\"></ul>"));
         $this.wrap('<div class="vertical-tabs clearfix"></div>').before(tabList);
         $details.each(function () {
           var $that = $(this);
           var $summary = $that.find('> summary');
-          var verticalTab = new Drupal.verticalTab({
+          var newVerticalTab = new Drupal.verticalTab({
             title: $summary.length ? $summary[0].textContent : '',
             details: $that
           });
-          tabList.append(verticalTab.item);
-          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
+          tabList.append(newVerticalTab.item);
+          tabList.attr('aria-owns', "".concat(tabList.attr('aria-owns'), " ").concat($that.attr('id'), "-tab"));
+          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', newVerticalTab);
 
           if (this.id === focusID) {
             tabFocus = $that;
@@ -71,16 +77,24 @@
   Drupal.verticalTab = function (settings) {
     var self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
-    this.link.attr('href', "#".concat(settings.details.attr('id')));
-    this.link.on('click', function (e) {
-      e.preventDefault();
-      self.focus();
+    var panelId = settings.details.attr('id');
+    this.link.attr({
+      id: "".concat(panelId, "-tab"),
+      role: 'tab',
+      'aria-selected': 'false',
+      'aria-controls': panelId,
+      tabindex: 0
     });
-    this.link.on('keydown', function (event) {
-      if (event.keyCode === 13) {
+    this.details.attr({
+      role: 'tabpanel',
+      'aria-labelledby': "".concat(panelId, "-tab"),
+      tabindex: '0'
+    });
+    this.link.on('keydown click', function (event) {
+      if (event.type === 'click' || event.keyCode === 13 || event.keyCode === 32) {
         event.preventDefault();
         self.focus();
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        $("#".concat(event.target.getAttribute('aria-controls'))).find(':input:visible:enabled').eq(0).trigger('focus');
       }
     });
     this.details.on('summaryUpdated', function () {
@@ -95,11 +109,11 @@
         tab.details.hide();
         tab.details.removeAttr('open');
         tab.item.removeClass('is-selected');
+        tab.link.attr('aria-selected', 'false');
       }).end().show().siblings(':hidden.vertical-tabs__active-tab')[0].value = this.details.attr('id');
       this.details.attr('open', true);
       this.item.addClass('is-selected');
-      $('#active-vertical-tab').remove();
-      this.link.append("<span id=\"active-vertical-tab\" class=\"visually-hidden\">".concat(Drupal.t('(active tab)'), "</span>"));
+      this.link.attr('aria-selected', 'true');
     },
     updateSummary: function updateSummary() {
       this.summary.html(this.details.drupalGetSummary());
@@ -109,7 +123,6 @@
       this.item.closest('.js-form-type-vertical-tabs').show();
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
       this.details.removeClass('vertical-tab--hidden').show();
-      this.focus();
       return this;
     },
     tabHide: function tabHide() {

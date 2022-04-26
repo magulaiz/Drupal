@@ -137,6 +137,24 @@ class VerticalTabs extends RenderElement {
     // settings forms.
     $form_state->addCleanValueKey($name . '__active_tab');
 
+    // Despite being in a `form_element` theme wrapper, vertical tabs themselves
+    // are not focusable, they are a container for other form elements. A few
+    // attributes must be changed to communicate this to assistive technology.
+    // The first change is to define the vertical tabs container as a group of
+    // related form elements. This role assignment is specific to nojs behavior.
+    // If JavaScript creates a tab interface this role is discarded in favor of
+    // tablist.
+    $element['#attributes']['role'] = 'group';
+
+    // Since vertical tabs aren't focusable, they don't need an ID. Move this ID
+    // to the label, so it can be referenced by aria-labelledby.
+    $element['#label_attributes']['id'] = $element['#id'];
+    $element['#attributes']['aria-labelledby'] = $element['#label_attributes']['id'];
+
+    // Remove the id from the element itself so the Form API does not add a `for`
+    // attribute to the label.
+    unset($element['#id']);
+
     return $element;
   }
 

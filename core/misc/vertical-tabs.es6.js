@@ -75,8 +75,24 @@
             return;
           }
 
-          // Create the tab column.
-          const tabList = $('<ul class="vertical-tabs__menu"></ul>');
+          // Get the label text for the group so it can be used as the
+          // aria-label for the tablist that will be created.
+          const labelledby = $this.attr('aria-labelledby');
+          const labelText = $(`#${labelledby}`).text();
+
+          // The aria-labelledby attribute should not be used when these
+          // elements are presented as a tablist.
+          $this.removeAttr('aria-labelledby');
+
+          // Remove the `role="group"` from this container as these elements will
+          // now be grouped together in a tablist.
+          $this.attr('data-drupal-stash-role', $this.attr('role'));
+          $this.removeAttr('role');
+
+          // Create the tablist container.
+          const tabList = $(
+            `<ul class="vertical-tabs__menu" role="tablist" aria-label="${labelText}" aria-orientation="vertical" aria-owns=""></ul>`,
+          );
           $this
             .wrap('<div class="vertical-tabs clearfix"></div>')
             .before(tabList);
@@ -85,16 +101,24 @@
           $details.each(function () {
             const $that = $(this);
             const $summary = $that.find('> summary');
-            const verticalTab = new Drupal.verticalTab({
+            const newVerticalTab = new Drupal.verticalTab({
               title: $summary.length ? $summary[0].textContent : '',
               details: $that,
             });
-            tabList.append(verticalTab.item);
+            tabList.append(newVerticalTab.item);
+
+            // Because the tab items are enclosed in <li> elements, they must be
+            // added to aria-owns to ensure they are seen as belonging to the
+            // tablist defined in the <ul>.
+            tabList.attr(
+              'aria-owns',
+              `${tabList.attr('aria-owns')} ${$that.attr('id')}-tab`,
+            );
             $that
               .removeClass('collapsed')
               .removeAttr('open')
               .addClass('vertical-tabs__pane')
-              .data('verticalTab', verticalTab);
+              .data('verticalTab', newVerticalTab);
             if (this.id === focusID) {
               tabFocus = $that;
             }
@@ -141,21 +165,34 @@
     const self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
-    this.link.attr('href', `#${settings.details.attr('id')}`);
-
-    this.link.on('click', (e) => {
-      e.preventDefault();
-      self.focus();
+    const panelId = settings.details.attr('id');
+    this.link.attr({
+      id: `${panelId}-tab`,
+      role: 'tab',
+      'aria-selected': 'false',
+      'aria-controls': panelId,
+      tabindex: 0,
+    });
+    this.details.attr({
+      role: 'tabpanel',
+      'aria-labelledby': `${panelId}-tab`,
+      tabindex: '0',
     });
 
     // Keyboard events added:
-    // Pressing the Enter key will open the tab pane.
-    this.link.on('keydown', (event) => {
-      if (event.keyCode === 13) {
+    // Pressing the Enter or Space key will open the tab pane.
+    this.link.on('keydown click', (event) => {
+      if (
+        event.type === 'click' ||
+        event.keyCode === 13 ||
+        event.keyCode === 32
+      ) {
         event.preventDefault();
         self.focus();
-        // Set focus on the first input field of the visible details/tab pane.
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        $(`#${event.target.getAttribute('aria-controls')}`)
+          .find(':input:visible:enabled')
+          .eq(0)
+          .trigger('focus');
       }
     });
 
@@ -178,6 +215,7 @@
           tab.details.hide();
           tab.details.removeAttr('open');
           tab.item.removeClass('is-selected');
+          tab.link.attr('aria-selected', 'false');
         })
         .end()
         .show()
@@ -185,13 +223,7 @@
         this.details.attr('id');
       this.details.attr('open', true);
       this.item.addClass('is-selected');
-      // Mark the active tab for screen readers.
-      $('#active-vertical-tab').remove();
-      this.link.append(
-        `<span id="active-vertical-tab" class="visually-hidden">${Drupal.t(
-          '(active tab)',
-        )}</span>`,
-      );
+      this.link.attr('aria-selected', 'true');
     },
 
     /**
@@ -224,8 +256,6 @@
         .addClass('first');
       // Display the details element.
       this.details.removeClass('vertical-tab--hidden').show();
-      // Focus this tab.
-      this.focus();
       return this;
     },
 

@@ -84,7 +84,7 @@ class MediaEmbedFilterConfigurationUiTest extends MediaJavascriptTestBase {
       }
     }
     if (!empty($allowed_html)) {
-      $page->clickLink('Limit allowed HTML tags and correct faulty HTML');
+      $page->find('css', 'a:contains("Limit allowed HTML tags and correct faulty HTML")')->press();
       $page->fillField('filters[filter_html][settings][allowed_html]', $allowed_html);
     }
     $page->pressButton('Save configuration');
@@ -129,7 +129,7 @@ class MediaEmbedFilterConfigurationUiTest extends MediaJavascriptTestBase {
       }
     }
     if (!empty($allowed_html)) {
-      $page->clickLink('Limit allowed HTML tags and correct faulty HTML');
+      $page->find('css', 'a:contains("Limit allowed HTML tags and correct faulty HTML")')->press();
       $page->fillField('filters[filter_html][settings][allowed_html]', $allowed_html);
     }
     $page->pressButton('Save configuration');
