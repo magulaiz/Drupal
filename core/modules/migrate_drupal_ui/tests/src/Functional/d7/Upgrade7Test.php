@@ -97,7 +97,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 21,
+      'action' => 27,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
@@ -140,8 +140,6 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Book',
       'Chaos tools',
-      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -206,6 +204,8 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   protected function getMissingPaths() {
     return [
       'Aggregator',
+      // @todo Remove Color in https://www.drupal.org/project/drupal/issues/3270899
+      'Color',
       // @todo Remove RDF in https://www.drupal.org/node/3267515
       'RDF',
       'References',

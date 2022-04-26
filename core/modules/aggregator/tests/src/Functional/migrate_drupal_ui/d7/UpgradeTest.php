@@ -87,7 +87,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 21,
+      'action' => 27,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
@@ -122,7 +122,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Book',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -187,6 +186,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Color',
       'References',
       'Translation sets',
       'Variable realm',

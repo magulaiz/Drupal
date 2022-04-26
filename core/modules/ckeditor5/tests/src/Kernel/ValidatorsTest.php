@@ -367,7 +367,7 @@ class ValidatorsTest extends KernelTestBase {
   public function providerPair(): array {
     // cspell:ignore donk
     $data = [];
-    $data['INVALID: non-HTML format: filter_autop'] = [
+    $data['VALID: legacy format: filter_autop'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -388,11 +388,9 @@ class ValidatorsTest extends KernelTestBase {
           'settings' => [],
         ],
       ],
-      'violations' => [
-        '' => 'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-      ],
+      'violations' => [],
     ];
-    $data['INVALID: non-HTML format: filter_autop + filter_url'] = [
+    $data['VALID: legacy HTML format: filter_autop + filter_url'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -422,14 +420,9 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-        ],
-      ],
+      'violations' => [],
     ];
-    $data['INVALID: non-HTML format: filter_autop + filter_url (different order)'] = [
+    $data['VALID: legacy HTML format: filter_autop + filter_url (different order)'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -459,12 +452,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-        ],
-      ],
+      'violations' => [],
     ];
     $data['INVALID: forbidden tags'] = [
       'settings' => [
@@ -506,10 +494,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'filters' => $restricted_html_format_filters,
       'violations' => [
-        '' => [
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert line breaks into HTML (i.e. &lt;code&gt;&amp;lt;br&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;p&amp;gt;&lt;/code&gt;)</em>" (<em class="placeholder">filter_autop</em>) filter implies this text format is not HTML anymore.',
-          'CKEditor 5 only works with HTML-based text formats. The "<em class="placeholder">Convert URLs into links</em>" (<em class="placeholder">filter_url</em>) filter implies this text format is not HTML anymore.',
-        ],
+        '' => 'CKEditor 5 needs at least the &lt;p&gt; and &lt;br&gt; tags to be allowed to be able to function. They are not allowed by the "<em class="placeholder">Limit allowed HTML tags and correct faulty HTML</em>" (<em class="placeholder">filter_html</em>) filter.',
       ],
     ];
     $data['INVALID: the modified restricted_html text format (with filter_autop and filter_url removed)'] = [
@@ -608,7 +593,7 @@ class ValidatorsTest extends KernelTestBase {
       'violations' => [
         'filters.filter_html' => sprintf(
           'The current CKEditor 5 build requires the following elements and attributes: <br><code>%s</code><br>The following elements are not supported: <br><code>%s</code>',
-          Html::escape('<br> <p>'),
+          Html::escape('<br> <p> <* dir="ltr rtl" lang>'),
           Html::escape('<a href hreflang> <em> <strong> <cite> <blockquote cite> <code> <ul type> <ol start type="1 A I"> <li> <dl> <dt> <dd> <h2 id="jump-*"> <h3 id> <h4 id> <h5 id> <h6 id>'),
         ),
       ],
