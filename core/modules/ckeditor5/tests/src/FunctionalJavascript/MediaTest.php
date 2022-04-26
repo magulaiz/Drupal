@@ -1219,7 +1219,14 @@ class MediaTest extends WebDriverTestBase {
       'enabled' => TRUE,
       'label' => 'View Mode 3',
     ])->save();
-    // Enable view mode 1 & 2 and default for Image.
+    EntityViewMode::create([
+      'id' => 'media.view_mode_4',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'enabled' => TRUE,
+      'label' => 'View Mode 4',
+    ])->save();
+    // Enable view mode 1, 2, 4 for Image.
     EntityViewDisplay::create([
       'id' => 'media.image.view_mode_1',
       'targetEntityType' => 'media',
@@ -1233,6 +1240,13 @@ class MediaTest extends WebDriverTestBase {
       'status' => TRUE,
       'bundle' => 'image',
       'mode' => '22222',
+    ])->save();
+    EntityViewDisplay::create([
+      'id' => 'media.image.view_mode_4',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+      'bundle' => 'image',
+      'mode' => 'view_mode_4',
     ])->save();
 
     $filter_format = FilterFormat::load('test_format');
@@ -1432,8 +1446,8 @@ class MediaTest extends WebDriverTestBase {
         'default_view_mode' => 'view_mode_1',
         'allowed_media_types' => [],
         'allowed_view_modes' => [
-          'view_mode_3' => 'view_mode_3',
           '22222' => '22222',
+          'view_mode_4' => 'view_mode_4',
         ],
       ],
     ])->save();
@@ -1442,11 +1456,13 @@ class MediaTest extends WebDriverTestBase {
     $expected_config_dependencies = [
       'core.entity_view_mode.media.22222',
       'core.entity_view_mode.media.view_mode_1',
-      'core.entity_view_mode.media.view_mode_3',
+      'core.entity_view_mode.media.view_mode_4',
     ];
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
     $this->assertEqualsCanonicalizing($expected_config_dependencies, $dependencies['config']);
+    $this->host->body->value = '<drupal-media data-entity-type="media" data-entity-uuid="' . $this->media->uuid() . '" data-caption="baz"></drupal-media>';
+    $this->host->save();
     // Reload page to get new configuration.
     $this->getSession()->reload();
     $this->waitForEditor();
@@ -1458,8 +1474,8 @@ class MediaTest extends WebDriverTestBase {
     // Check that all three view modes exist including the default view mode
     // that was not originally included in the allowed_view_modes.
     $this->assertNotEmpty($this->getBalloonButton('View Mode 1'));
-    $this->assertNotEmpty($this->getBalloonButton('22222'));
-    $this->assertNotEmpty($this->getBalloonButton('View Mode 3'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 2 has Numeric ID'));
+    $this->assertNotEmpty($this->getBalloonButton('View Mode 4'));
   }
 
   /**
