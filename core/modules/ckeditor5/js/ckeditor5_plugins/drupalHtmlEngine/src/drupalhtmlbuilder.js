@@ -130,7 +130,9 @@ export default class DrupalHtmlBuilder {
    * @private
    */
   _appendText(node) {
-    // Text node doesn't have innerHTML property and textContent doesn't encode
+    // Repack the text into another node and extract using innerHTML. This
+    // works around text nodes not having an innerHTML property and textContent
+    // not encoding entities.
     // entities. That's why the text is repacked into another node and extracted
     // using innerHTML.
     const doc = document.implementation.createHTMLDocument('');
