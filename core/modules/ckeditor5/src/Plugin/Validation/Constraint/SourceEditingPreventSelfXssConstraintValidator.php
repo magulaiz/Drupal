@@ -16,6 +16,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator {
 
+  use TextEditorObjectDependentValidatorTrait;
+
   /**
    * {@inheritdoc}
    *
@@ -50,21 +52,68 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
       return;
     }
 
-    foreach (array_keys($attribute_restrictions) as $attribute_name) {
-      // Self-XSS via `on*` attributes.
-      if (preg_match('/^on.*$/', $attribute_name) === 1) {
-        $this->context->buildViolation($constraint->onAttributeMessage)
-          ->setParameter('%dangerous_tag', $value)
-          ->addViolation();
-      }
+    $text_editor = $this->createTextEditorObjectFromContext();
+    $text_format_restrictions = HTMLRestrictions::fromTextFormat($text_editor->getFilterFormat());
+    // Any XSS-prevention related measures imposed by filter plugins are relayed
+    // through their ::getHtmlRestrictions() return value. The global attribute
+    // `*` HTML tag allows attributes to be forbidden.
+    // @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
+    // @see \Drupal\ckeditor5\HTMLRestrictions::validateAllowedRestrictionsPhase4()
+    // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
+    $forbidden_attributes = [];
+    if (array_key_exists('*', $text_format_restrictions->getAllowedElements())) {
+      $forbidden_attributes = array_keys(array_filter($text_format_restrictions->getAllowedElements()['*'], function ($attribute_value_restriction, string $attribute_name) {
+        return $attribute_value_restriction === FALSE;
+      }, ARRAY_FILTER_USE_BOTH));
+    }
 
-      // Self-XSS via `style` attribute.
-      if ($attribute_name === 'style') {
-        $this->context->buildViolation($constraint->styleAttributeMessage)
-          ->setParameter('%dangerous_tag', $value)
-          ->addViolation();
+    foreach ($forbidden_attributes as $forbidden_attribute_name) {
+      // Forbidden attributes not containing wildcards, such as `style`.
+      if (!self::isWildcardAttributeName($forbidden_attribute_name)) {
+        if (array_key_exists($forbidden_attribute_name, $attribute_restrictions)) {
+          $this->context->buildViolation($constraint->message)
+            ->setParameter('%dangerous_tag', $value)
+            ->addViolation();
+        }
+      }
+      // Forbidden attributes containing wildcards such as `on*`.
+      else {
+        $regex = self::getRegExForWildCardAttributeName($forbidden_attribute_name);
+        if (!empty(preg_grep($regex, array_keys($attribute_restrictions)))) {
+          $this->context->buildViolation($constraint->message)
+            ->setParameter('%dangerous_tag', $value)
+            ->addViolation();
+        }
       }
     }
+  }
+
+  /**
+   * Checks whether the given attribute name contains a wildcard, e.g. `data-*`.
+   *
+   * @param string $attribute_name
+   *   The attribute name to check.
+   *
+   * @return bool
+   *   Whether the given attribute name contains a wildcard.
+   */
+  private static function isWildcardAttributeName(string $attribute_name): bool {
+    assert($attribute_name !== '*');
+    return strpos($attribute_name, '*') !== FALSE;
+  }
+
+  /**
+   * Computes a regular expression for matching a wildcard attribute name.
+   *
+   * @param string $wildcard_attribute_name
+   *   The wildcard attribute name for which to compute a regular expression.
+   *
+   * @return string
+   *   The computed regular expression.
+   */
+  private static function getRegExForWildCardAttributeName(string $wildcard_attribute_name): string {
+    assert(self::isWildcardAttributeName($wildcard_attribute_name));
+    return '/^' . str_replace('*', '.*', $wildcard_attribute_name) . '$/';
   }
 
 }

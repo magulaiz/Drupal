@@ -19,17 +19,10 @@ use Symfony\Component\Validator\Constraint;
 class SourceEditingPreventSelfXssConstraint extends Constraint {
 
   /**
-   * When Source Editing is configured to allow self-XSS through `on*`.
+   * When Source Editing is configured to allow self-XSS.
    *
    * @var string
    */
-  public $onAttributeMessage = 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying JavaScript event handlers: %dangerous_tag.';
-
-  /**
-   * When Source Editing is configured to allow self-XSS through `style`.
-   *
-   * @var string
-   */
-  public $styleAttributeMessage = 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk because it allows specifying styles: %dangerous_tag.';
+  public $message = 'The following tag in the Source Editing "Manually editable HTML tags" field is a security risk: %dangerous_tag.';
 
 }
