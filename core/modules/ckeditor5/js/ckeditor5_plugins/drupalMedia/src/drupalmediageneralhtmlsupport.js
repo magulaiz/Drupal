@@ -134,7 +134,7 @@ function modelToEditingViewAttributeConverter() {
  * Model to data view attribute converter.
  *
  * @return {function}
- *   function that adds an event listener to downcastDispatcher.
+ *   Function that adds an event listener to downcastDispatcher.
  */
 function modelToDataViewAttributeConverter() {
   return (dispatcher) => {
