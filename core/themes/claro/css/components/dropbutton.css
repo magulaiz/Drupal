@@ -62,6 +62,7 @@
 }
 
 .js .dropbutton {
+  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: 3rem;
 }
 
@@ -191,7 +192,7 @@
 
 /* High contrast. */
 
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
     width: 0.5625rem;
@@ -326,7 +327,7 @@
 }
 
 .js .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
-  display: none;
+  visibility: hidden;
 }
 
 /**
@@ -351,6 +352,10 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
+
+.dropbutton__item:first-of-type ~ .dropbutton__item {
+  max-width: 12.5rem;
+}
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {

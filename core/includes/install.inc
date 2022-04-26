@@ -84,7 +84,7 @@ function drupal_load_updates() {
   foreach (\Drupal::service('update.update_hook_registry')->getAllInstalledVersions() as $module => $schema_version) {
     if ($extension_list_module->exists($module) && !$extension_list_module->checkIncompatibility($module)) {
       if ($schema_version > -1) {
-        module_load_install($module);
+        \Drupal::moduleHandler()->loadInclude($module, 'install');
       }
     }
   }
@@ -1033,7 +1033,12 @@ function drupal_requirements_severity(&$requirements) {
  *   TRUE or FALSE, depending on whether the requirements are met.
  */
 function drupal_check_module($module) {
-  module_load_install($module);
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
+  $module_list = \Drupal::service('extension.list.module');
+  $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$module.install";
+  if (is_file($file)) {
+    require_once $file;
+  }
   // Check requirements
   $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
   if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
@@ -1059,7 +1064,7 @@ function drupal_check_module($module) {
  * in a normal Drupal module .info.yml file. For example:
  * - name: The real name of the installation profile for display purposes.
  * - description: A brief description of the profile.
- * - dependencies: An array of shortnames of other modules that this install
+ * - dependencies: An array of short names of other modules that this install
  *   profile requires.
  * - install: An array of shortname of other modules to install that are not
  *   required by this install profile.
@@ -1121,7 +1126,9 @@ function install_profile_info($profile, $langcode = 'en') {
       'config_install_path' => NULL,
     ];
     $profile_path = \Drupal::service('extension.list.profile')->getPath($profile);
-    $info = \Drupal::service('info_parser')->parse("$profile_path/$profile.info.yml");
+    /** @var \Drupal\Core\Extension\InfoParserInterface $parser */
+    $parser = \Drupal::service('info_parser');
+    $info = $parser->parse("$profile_path/$profile.info.yml");
     $info += $defaults;
 
     $dependency_name_function = function ($dependency) {
@@ -1133,9 +1140,16 @@ function install_profile_info($profile, $langcode = 'en') {
     // Convert install key in [project:module] format.
     $info['install'] = array_map($dependency_name_function, $info['install']);
 
-    // drupal_required_modules() includes the current profile as a dependency.
-    // Remove that dependency, since a module cannot depend on itself.
-    $required = array_diff(drupal_required_modules(), [$profile]);
+    // Get a list of core's required modules.
+    $required = [];
+    $listing = new ExtensionDiscovery(\Drupal::root());
+    $files = $listing->scan('module');
+    foreach ($files as $name => $file) {
+      $parsed = $parser->parse($file->getPathname());
+      if (!empty($parsed) && !empty($parsed['required']) && $parsed['required']) {
+        $required[] = $name;
+      }
+    }
 
     $locale = !empty($langcode) && $langcode != 'en' ? ['locale'] : [];
 
