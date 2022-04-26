@@ -620,6 +620,7 @@ media_media:
   ckeditor5:
     plugins:
       - drupalMedia.DrupalMedia
+      - drupalMedia.DrupalElementStyle
     config:
       drupalMedia:
         toolbar: [mediaImageTextAlternative]
