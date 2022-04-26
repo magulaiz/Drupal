@@ -14,6 +14,9 @@ export default class DrupalMediaCaption extends Plugin {
     return [DrupalMediaCaptionEditing, DrupalMediaCaptionUI];
   }
 
+  /**
+   * @inheritdoc
+   */
   static get pluginName() {
     return 'DrupalMediaCaption';
   }
