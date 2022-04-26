@@ -73,9 +73,12 @@ ckeditor5_style:
     toolbar_items:
       style:
         label: Style
+    # This plugin is able to add any configured class on any tag, hence it
+    # indicates it allows all classes on all tags. Its subset then restricts
+    # this to a concrete set of tags, and a concrete set of classes.
+    # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::getElementsSubset()
     elements:
-      - <p class="important">
-      - <p class="error>
+      - <$any-html5-element class>
 
 ckeditor5_arbitraryHtmlSupport:
   ckeditor5:
