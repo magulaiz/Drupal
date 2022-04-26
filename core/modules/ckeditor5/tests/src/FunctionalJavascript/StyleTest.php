@@ -51,7 +51,7 @@ JS;
     // Immediately save the configuration. Intentionally do nothing that would
     // trigger an AJAX rebuild.
     $page->pressButton('Save configuration');
-    $assert_session->pageTextContains('has been updated');
+    $assert_session->pageTextContains('Added text format');
 
     // Verify that the configuration was saved.
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
