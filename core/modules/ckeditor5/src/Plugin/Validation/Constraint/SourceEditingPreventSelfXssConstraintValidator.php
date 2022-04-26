@@ -45,7 +45,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
     // return early. Only proceed when some attributes are allowed (an array).
     $tags = array_keys($restrictions->getAllowedElements(FALSE));
     $tag = reset($tags);
-    $attribute_restrictions = $restrictions->getAllowedElements()[$tag];
+    $attribute_restrictions = $restrictions->getAllowedElements(FALSE)[$tag];
     if (!is_array($attribute_restrictions)) {
       return;
     }
