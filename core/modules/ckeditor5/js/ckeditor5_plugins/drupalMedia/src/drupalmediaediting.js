@@ -21,6 +21,9 @@ import { METADATA_ERROR } from './mediaimagetextalternative/utils';
  * @private
  */
 export default class DrupalMediaEditing extends Plugin {
+  /**
+   * @inheritdoc
+   */
   static get requires() {
     return [Widget];
   }
