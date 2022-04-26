@@ -36,7 +36,7 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
     //   necessary because CKEditor5ElementConstraintValidator does not run
     //   before this, which means that this validator cannot assume it receives
     //   valid values.
-    if ($restrictions->isEmpty() || count($restrictions->getAllowedElements()) > 1) {
+    if ($restrictions->allowsNothing() || count($restrictions->getAllowedElements()) > 1) {
       return;
     }
 
