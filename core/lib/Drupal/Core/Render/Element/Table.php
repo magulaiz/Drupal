@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Render\Element;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Html as HtmlUtility;
@@ -393,13 +394,14 @@ class Table extends FormElement {
     // HTML ID to the options and attach the behavior.
     if (!empty($element['#tabledrag']) && isset($element['#attributes']['id'])) {
       $element['#attributes']['class'][] = 'tabledrag-enabled';
-      $element['#attributes']['data-drupal-tabledrag'] = $element['#attributes']['id'];
+      $element['#attributes']['data-drupal-tabledrag'] = '';
       foreach ($element['#tabledrag'] as $options) {
-        $options['table_id'] = $element['#attributes']['id'];
         static::attachTabledrag($element, $options);
       }
     }
-
+    if (!empty($element['#attributes']['data-drupal-tabledrag-data'])) {
+      $element['#attributes']['data-drupal-tabledrag-data'] = Json::encode($element['#attributes']['data-drupal-tabledrag-data']);
+    }
     return $element;
   }
 
@@ -538,13 +540,10 @@ class Table extends FormElement {
     ];
 
     $group = $options['group'];
-
-    $tabledrag_id = self::$tableDragId++;
-
     // If a subgroup or source isn't set, assume it is the same as the group.
     $target = $options['subgroup'] ?? $group;
     $source = $options['source'] ?? $target;
-    $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
+    $element['#attributes']['data-drupal-tabledrag-data'][$group] = [
       'target' => $target,
       'source' => $source,
       'relationship' => $options['relationship'],
@@ -552,7 +551,6 @@ class Table extends FormElement {
       'hidden' => $options['hidden'],
       'limit' => $options['limit'],
     ];
-
     $element['#attached']['library'][] = 'core/drupal.tabledrag';
   }
 

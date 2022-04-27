@@ -11,26 +11,22 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
   Drupal.behaviors.tableDrag = {
     attach: function attach(context, settings) {
-      function initTableDrag(table, base) {
-        if (table.length) {
-          Drupal.tableDrag[base] = new Drupal.tableDrag(table[0], settings.tableDrag[base]);
-        }
+      function initTableDrag(base) {
+        Drupal.tableDrag[base] = new Drupal.tableDrag(base);
       }
 
-      Object.keys(settings.tableDrag || {}).forEach(function (base) {
-        initTableDrag($(once('tabledrag', "[data-drupal-tabledrag=\"".concat(base, "\"]"), context)), base);
-      });
+      once('tabledrag', '[data-drupal-tabledrag]', context).forEach(initTableDrag);
     }
   };
 
-  Drupal.tableDrag = function (table, tableSettings) {
+  Drupal.tableDrag = function (table) {
     var _this = this;
 
     var self = this;
     var $table = $(table);
     this.$table = $(table);
     this.table = table;
-    this.tableSettings = tableSettings;
+    this.tableSettings = table.dataset.drupalTabledragData.length ? JSON.parse(table.dataset.drupalTabledragData) : {};
     this.dragObject = null;
     this.rowObject = null;
     this.oldRowElement = null;
@@ -49,16 +45,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     this.windowHeight = 0;
     this.$toggleWeightButton = null;
     this.indentEnabled = false;
-    Object.keys(tableSettings || {}).forEach(function (group) {
-      Object.keys(tableSettings[group] || {}).forEach(function (n) {
-        if (tableSettings[group][n].relationship === 'parent') {
-          _this.indentEnabled = true;
-        }
+    Object.keys(this.tableSettings).forEach(function (group) {
+      if (_this.tableSettings[group].relationship === 'parent') {
+        _this.indentEnabled = true;
+      }
 
-        if (tableSettings[group][n].limit > 0) {
-          _this.maxDepth = tableSettings[group][n].limit;
-        }
-      });
+      if (_this.tableSettings[group].limit > 0) {
+        _this.maxDepth = _this.tableSettings[group].limit;
+      }
     });
 
     if (this.indentEnabled) {
@@ -109,7 +103,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     var hidden;
     var cell;
     var columnIndex;
-    Object.keys(this.tableSettings || {}).forEach(function (group) {
+    Object.keys(this.tableSettings).forEach(function (group) {
       Object.keys(_this2.tableSettings[group]).some(function (tableSetting) {
         var field = $table.find(".".concat(_this2.tableSettings[group][tableSetting].target)).eq(0);
 
@@ -197,21 +191,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   Drupal.tableDrag.prototype.rowSettings = function (group, row) {
     var field = $(row).find(".".concat(group));
     var tableSettingsGroup = this.tableSettings[group];
-    return Object.keys(tableSettingsGroup).map(function (delta) {
-      var targetClass = tableSettingsGroup[delta].target;
-      var rowSettings;
+    var targetClass = tableSettingsGroup.target;
+    var rowSettings = {};
 
-      if (field.is(".".concat(targetClass))) {
-        rowSettings = {};
-        Object.keys(tableSettingsGroup[delta]).forEach(function (n) {
-          rowSettings[n] = tableSettingsGroup[delta][n];
-        });
-      }
+    if (field.is(".".concat(targetClass))) {
+      Object.keys(tableSettingsGroup).forEach(function (n) {
+        rowSettings[n] = tableSettingsGroup[n];
+      });
+    }
 
-      return rowSettings;
-    }).filter(function (rowSetting) {
-      return rowSetting;
-    })[0];
+    return rowSettings;
   };
 
   Drupal.tableDrag.prototype.makeDraggable = function (item) {
@@ -463,7 +452,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
       if (self.rowObject.changed === true) {
         self.updateFields(droppedRow);
-        Object.keys(self.tableSettings || {}).forEach(function (group) {
+        Object.keys(self.tableSettings).forEach(function (group) {
           var rowSettings = self.rowSettings(group, droppedRow);
 
           if (rowSettings.relationship === 'group') {
