@@ -39,14 +39,22 @@ final class EventSubscriber extends RouteSubscriberBase {
   /**
    * Alter routes.
    *
-   * This dynamically enables all authentication providers on this module's
-   * routes since they cannot be known in advance.
+   * If the endpoint is configured to be enabled, dynamically enable all
+   * authentication providers on this module's routes since they cannot be known
+   * in advance.
+   *
+   * If the endpoint is configured to be disabled, remove the route.
    *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   A collection of routes.
    */
   public function alterRoutes(RouteCollection $collection) {
-    $collection->get('system.menu.linkset')->setOption('_auth', $this->providerIds);
+    if (\Drupal::config('system.linkset')->get('enable_endpoint')) {
+      $collection->get('system.menu.linkset')->setOption('_auth', $this->providerIds);
+    }
+    else {
+      $collection->remove('system.menu.linkset');
+    }
   }
 
 }
