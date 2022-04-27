@@ -33,7 +33,7 @@
         }
 
         var labelledby = $this.attr('aria-labelledby');
-        var labelText = $("#".concat(labelledby)).text();
+        var labelText = $("#".concat(labelledby))[0].textContent;
         $this.removeAttr('aria-labelledby');
         $this.attr('data-drupal-stash-role', $this.attr('role'));
         $this.removeAttr('role');

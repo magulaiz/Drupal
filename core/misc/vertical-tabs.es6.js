@@ -78,7 +78,7 @@
           // Get the label text for the group so it can be used as the
           // aria-label for the tablist that will be created.
           const labelledby = $this.attr('aria-labelledby');
-          const labelText = $(`#${labelledby}`).text();
+          const labelText = $(`#${labelledby}`)[0].textContent;
 
           // The aria-labelledby attribute should not be used when these
           // elements are presented as a tablist.
