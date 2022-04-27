@@ -37,6 +37,7 @@ class SourceEditingPluginTest extends UnitTestCase {
             '<foo2 bar>',
             '<foo3 bar="baz">',
             '<foo4 bar="baz qux">',
+            '<foo5 bar="baz" qux="foo">',
           ],
         ],
         [
@@ -49,8 +50,8 @@ class SourceEditingPluginTest extends UnitTestCase {
                 'name' => 'foo2',
                 'attributes' => [
                   [
-                  'key' => 'bar',
-                  'value' => TRUE,
+                    'key' => 'bar',
+                    'value' => TRUE,
                   ],
                 ],
               ],
@@ -58,13 +59,13 @@ class SourceEditingPluginTest extends UnitTestCase {
                 'name' => 'foo3',
                 'attributes' => [
                   [
-                  'key' => 'bar',
-                  'value' => [
-                    'regexp' => [
-                      'pattern' => '/^(baz)$/',
+                    'key' => 'bar',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz)$/',
+                      ],
                     ],
                   ],
-                 ],
                 ],
               ],
               [
@@ -80,10 +81,31 @@ class SourceEditingPluginTest extends UnitTestCase {
                   ],
                 ],
               ],
+              [
+                'name' => 'foo5',
+                'attributes' => [
+                  [
+                    'key' => 'bar',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(baz)$/',
+                      ],
+                    ],
+                  ],
+                  [
+                    'key' => 'qux',
+                    'value' => [
+                      'regexp' => [
+                        'pattern' => '/^(foo)$/',
+                      ],
+                    ],
+                  ],
+                ],
+              ],
             ],
           ],
         ],
-        ],
+      ],
       'Prefix wildcards' => [
         [
           'allowed_tags' => [
@@ -107,7 +129,7 @@ class SourceEditingPluginTest extends UnitTestCase {
                       ],
                     ],
                     'value' => TRUE,
-                   ],
+                  ],
                 ],
               ],
               [
