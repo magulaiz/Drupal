@@ -45,15 +45,17 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
     // This validation constraint only validates attributes, not tags; so if all
     // attributes are allowed (TRUE) or no attributes are allowed (FALSE),
     // return early. Only proceed when some attributes are allowed (an array).
-    $tags = array_keys($restrictions->getAllowedElements(FALSE));
-    $tag = reset($tags);
-    $attribute_restrictions = $restrictions->getAllowedElements(FALSE)[$tag];
+    $allowed_elements = $restrictions->getAllowedElements(FALSE);
+    assert(count($allowed_elements) === 1);
+    $tag = array_key_first($allowed_elements);
+    $attribute_restrictions = $allowed_elements[$tag];
     if (!is_array($attribute_restrictions)) {
       return;
     }
 
     $text_editor = $this->createTextEditorObjectFromContext();
-    $text_format_restrictions = HTMLRestrictions::fromTextFormat($text_editor->getFilterFormat());
+    $text_format_allowed_elements = HTMLRestrictions::fromTextFormat($text_editor->getFilterFormat())
+      ->getAllowedElements();
     // Any XSS-prevention related measures imposed by filter plugins are relayed
     // through their ::getHtmlRestrictions() return value. The global attribute
     // `*` HTML tag allows attributes to be forbidden.
@@ -61,8 +63,8 @@ class SourceEditingPreventSelfXssConstraintValidator extends ConstraintValidator
     // @see \Drupal\ckeditor5\HTMLRestrictions::validateAllowedRestrictionsPhase4()
     // @see \Drupal\filter\Plugin\Filter\FilterHtml::getHTMLRestrictions()
     $forbidden_attributes = [];
-    if (array_key_exists('*', $text_format_restrictions->getAllowedElements())) {
-      $forbidden_attributes = array_keys(array_filter($text_format_restrictions->getAllowedElements()['*'], function ($attribute_value_restriction, string $attribute_name) {
+    if (array_key_exists('*', $text_format_allowed_elements)) {
+      $forbidden_attributes = array_keys(array_filter($text_format_allowed_elements['*'], function ($attribute_value_restriction, string $attribute_name) {
         return $attribute_value_restriction === FALSE;
       }, ARRAY_FILTER_USE_BOTH));
     }
