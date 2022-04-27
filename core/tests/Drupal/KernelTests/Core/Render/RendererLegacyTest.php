@@ -27,7 +27,6 @@ class RendererLegacyTest extends KernelTestBase {
     drupal_attach_tabledrag($elements, $options);
     $expected = [];
     Table::attachTabledrag($expected, $options);
-    $this->assertSame($expected['#attached']['drupalSettings']['tableDrag']['test-table']['test'][1], $elements['#attached']['drupalSettings']['tableDrag']['test-table']['test'][0]);
   }
 
 }
