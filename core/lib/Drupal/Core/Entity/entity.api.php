@@ -865,6 +865,14 @@ function hook_entity_bundle_info() {
 /**
  * Alter the bundles for entity types.
  *
+ * Note that it's not possible to use this hook in order to alter the bundle
+ * label of bundles defined as config entities. If you need to alter the label
+ * for such bundles, use a different path:
+ * - The simplest way is to change the bundle entity label as is stored in
+ *   database.
+ * - Implement hook_entity_load() or hook_ENTITY_TYPE_load().
+ * - Swap the bundle entity class and implement a custom ::label() method.
+ *
  * @param array $bundles
  *   An array of bundles, keyed first by entity type, then by bundle name.
  *
