@@ -43,6 +43,7 @@ class MenuLinksetSettingsForm extends ConfigFormBase {
     $this->config('system.linkset')
       ->set('enable_endpoint', $form_state->getValue('enable_endpoint'))
       ->save();
+    \Drupal::service('router.builder')->setRebuildNeeded();
     parent::submitForm($form, $form_state);
   }
 

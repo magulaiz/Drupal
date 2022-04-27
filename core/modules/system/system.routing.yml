@@ -521,17 +521,6 @@ system.csrftoken:
   requirements:
     _access: 'TRUE'
 
-system.menu.linkset:
-  path: '/system/menu/{menu}/linkset'
-  defaults:
-    _controller: 'Drupal\system\Controller\Linkset::process'
-  requirements:
-    _access: 'TRUE'
-  options:
-    parameters:
-      menu:
-        type: 'entity:menu'
-
 system.linkset_settings:
   path: '/admin/config/services/linkset'
   defaults:
@@ -539,3 +528,6 @@ system.linkset_settings:
     _form: 'Drupal\system\Form\MenuLinksetSettingsForm'
   requirements:
     _permission: 'access administration pages'
+
+route_callbacks:
+  - '\Drupal\system\Routing\MenuLinksetRoutes::routes'

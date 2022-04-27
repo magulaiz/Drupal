@@ -52,9 +52,6 @@ final class EventSubscriber extends RouteSubscriberBase {
     if (\Drupal::config('system.linkset')->get('enable_endpoint')) {
       $collection->get('system.menu.linkset')->setOption('_auth', $this->providerIds);
     }
-    else {
-      $collection->remove('system.menu.linkset');
-    }
   }
 
 }
