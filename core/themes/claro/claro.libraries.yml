@@ -133,6 +133,8 @@ claro.jquery.ui:
   css:
     component:
       css/components/jquery.ui/theme.css: { weight: -1 }
+  dependencies:
+    - core/once
 
 claro.drupal.dialog:
   version: VERSION

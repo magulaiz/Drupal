@@ -11,7 +11,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-(function ($, Drupal) {
+(function ($, Drupal, once) {
   Drupal.ClaroPrefixSuffix = function () {
     function _class(elementWrapper) {
       _classCallCheck(this, _class);
@@ -155,10 +155,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
   Drupal.behaviors.claroPrefixSuffix = {
     attach: function attach(context) {
-      var prefixSuffixElements = $(context).find('[data-drupal-form-item-wrapper-with-affix]').once('prefix-suffix');
+      var prefixSuffixElements = once('claro-prefix-suffix', '[data-drupal-form-item-wrapper-with-affix]', context);
       prefixSuffixElements.map(function (index, element) {
         return new Drupal.ClaroPrefixSuffix(element);
       });
     }
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);

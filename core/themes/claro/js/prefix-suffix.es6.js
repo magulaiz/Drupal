@@ -2,7 +2,7 @@
  * @file
  * Optimizes the presentation of form item affixes.
  */
-(($, Drupal) => {
+(($, Drupal, once) => {
   /**
    * Constructs a new instance of the Drupal.PrefixSuffix class.
    *
@@ -243,13 +243,15 @@
    */
   Drupal.behaviors.claroPrefixSuffix = {
     attach(context) {
-      const prefixSuffixElements = $(context)
-        .find('[data-drupal-form-item-wrapper-with-affix]')
-        .once('prefix-suffix');
+      const prefixSuffixElements = once(
+        'claro-prefix-suffix',
+        '[data-drupal-form-item-wrapper-with-affix]',
+        context,
+      );
 
       prefixSuffixElements.map(
         (index, element) => new Drupal.ClaroPrefixSuffix(element),
       );
     },
   };
-})(jQuery, Drupal);
+})(jQuery, Drupal, once);
