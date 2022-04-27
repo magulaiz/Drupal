@@ -38,16 +38,12 @@
       function initTableDrag(base) {
         // Create the new tableDrag instance. Save in the Drupal variable
         // to allow other scripts access to the object.
-        Drupal.tableDrag[base] = new Drupal.tableDrag(
-          base,
-        );
+        Drupal.tableDrag[base] = new Drupal.tableDrag(base);
       }
 
-      once(
-        'tabledrag',
-        '[data-drupal-tabledrag]',
-        context
-      ).forEach(initTableDrag);
+      once('tabledrag', '[data-drupal-tabledrag]', context).forEach(
+        initTableDrag,
+      );
     },
   };
 
@@ -77,7 +73,9 @@
     /**
      * @type {object}
      */
-    this.tableSettings = table.dataset.drupalTabledragData.length ? JSON.parse(table.dataset.drupalTabledragData) : {};
+    this.tableSettings = table.dataset.drupalTabledragData.length
+      ? JSON.parse(table.dataset.drupalTabledragData)
+      : {};
 
     /**
      * Used to hold information about a current drag operation.
@@ -437,7 +435,7 @@
     const field = $(row).find(`.${group}`);
     const tableSettingsGroup = this.tableSettings[group];
     const targetClass = tableSettingsGroup.target;
-    let rowSettings = {};
+    const rowSettings = {};
     if (field.is(`.${targetClass}`)) {
       Object.keys(tableSettingsGroup).forEach((n) => {
         rowSettings[n] = tableSettingsGroup[n];
