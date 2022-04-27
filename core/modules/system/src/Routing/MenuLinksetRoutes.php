@@ -2,41 +2,12 @@
 
 namespace Drupal\system\Routing;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * Defines a route subscriber to register menu linkset endpoints.
+ * Dynamically defines routes for menu linkset endpoints.
  */
-class MenuLinksetRoutes implements ContainerInjectionInterface {
-
-  /**
-   * The stream wrapper manager service.
-   *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface
-   */
-  protected $streamWrapperManager;
-
-  /**
-   * Constructs a new MenuLinksetRoutes object.
-   *
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager
-   *   The stream wrapper manager service.
-   */
-  public function __construct(StreamWrapperManagerInterface $stream_wrapper_manager) {
-    $this->streamWrapperManager = $stream_wrapper_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('stream_wrapper_manager')
-    );
-  }
+class MenuLinksetRoutes {
 
   /**
    * Returns an array of route objects.
@@ -46,10 +17,8 @@ class MenuLinksetRoutes implements ContainerInjectionInterface {
    */
   public function routes() {
     $routes = [];
-    // Generate image derivatives of publicly available files. If clean URLs are
-    // disabled image derivatives will always be served through the menu system.
-    // If clean URLs are enabled and the image derivative already exists, PHP
-    // will be bypassed.
+
+    // Only enable linkset routes if the related config option is enabled.
     if (\Drupal::config('system.linkset')->get('enable_endpoint')) {
       $routes['system.menu.linkset'] = new Route(
         '/system/menu/{menu}/linkset',
