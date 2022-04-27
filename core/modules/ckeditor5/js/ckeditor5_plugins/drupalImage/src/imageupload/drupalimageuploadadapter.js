@@ -9,7 +9,7 @@
  * `response.entity_type` to `dataEntityType` for the callback after the file
  * upload in the `_initListeners` method.
  *
- * @todo https://www.drupal.org/project/drupal/issues/3275237
+ * @todo use response.entity_type directly instead of converting it https://www.drupal.org/project/drupal/issues/3275237
  *
  * @private
  * @implements module:upload/filerepository~UploadAdapter

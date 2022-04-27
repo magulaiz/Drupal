@@ -15,8 +15,7 @@ import { METADATA_ERROR } from './mediaimagetextalternative/utils';
 /**
  * The Drupal Media Editing plugin.
  *
- * This class handles the transformation from the CKEditor 5 UI
- * to Drupal-specific markup.
+ * Handles the transformation from the CKEditor 5 UI to Drupal-specific markup.
  *
  * @private
  */

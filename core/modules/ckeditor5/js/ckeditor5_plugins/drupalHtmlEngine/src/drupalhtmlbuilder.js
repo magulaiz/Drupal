@@ -3,7 +3,7 @@
 /**
  * HTML builder that converts document fragments into strings.
  *
- * Escape ampersand characters (`&`) and angle brackets (`<` and `>`) when
+ * Escapes ampersand characters (`&`) and angle brackets (`<` and `>`) when
  * transforming data to HTML. This is required because
  * \Drupal\Component\Utility\Xss::filter fails to parse element attributes
  * values containing unescaped HTML entities.

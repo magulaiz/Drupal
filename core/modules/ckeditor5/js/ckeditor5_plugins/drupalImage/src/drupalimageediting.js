@@ -8,7 +8,7 @@ import { setViewAttributes } from '@ckeditor/ckeditor5-html-support/src/conversi
  *
  * Callback for a CKEditor 5 event.
  *
- * @param {Event} evt
+ * @param {Event} event
  *  The CKEditor 5 event object.
  * @param {object} data
  *  The data associated with the event.
@@ -49,7 +49,7 @@ function isNumberString(value) {
 }
 
 /**
- * Generates the callback that saves the entity UUID to an attribute on data
+ * Generates a callback that saves the entity UUID to an attribute on data
  * downcast.
  *
  * @return {function}
@@ -61,17 +61,17 @@ function modelEntityUuidToDataAttribute() {
   /**
    * Callback for the attribute:dataEntityUuid event.
    *
-   * It saves the UUID value to the data-entity-uuid attribute.
+   * Saves the UUID value to the data-entity-uuid attribute.
    *
-   * @param {Event} evt
+   * @param {Event} event
    * @param {object} data
    * @param {module:engine/conversion/downcastdispatcher~DowncastConversionApi} conversionApi
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -134,7 +134,7 @@ function viewCaptionToCaptionAttribute(editor) {
       /**
        * @type {converterHandler}
        */
-      (evt, data, conversionApi) => {
+      (event, data, conversionApi) => {
         const { consumable, writer, mapper } = conversionApi;
         const imageUtils = editor.plugins.get('ImageUtils');
 
@@ -213,7 +213,7 @@ function viewCaptionToCaptionAttribute(editor) {
 }
 
 /**
- * Generates the callback that saves the entity type value to an attribute on
+ * Generates a callback that saves the entity type value to an attribute on
  * data downcast.
  *
  * @return {function}
@@ -225,15 +225,15 @@ function modelEntityTypeToDataAttribute() {
   /**
    * Callback for the attribute:dataEntityType event.
    *
-   * It saves the UUID value to the data-entity-type attribute.
+   * Saves the UUID value to the data-entity-type attribute.
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -255,7 +255,7 @@ function modelEntityTypeToDataAttribute() {
 }
 
 /**
- * Generates the callback that saves the align value to an attribute on
+ * Generates a callback that saves the align value to an attribute on
  * data downcast.
  *
  * @return {function}
@@ -267,11 +267,11 @@ function modelImageStyleToDataAttribute() {
   /**
    * Callback for the attribute:imageStyle event.
    *
-   * It saves the alignment value to the data-align attribute.
+   * Saves the alignment value to the data-align attribute.
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
@@ -280,7 +280,7 @@ function modelImageStyleToDataAttribute() {
     );
 
     // Consume only for the values that can be converted into data-align.
-    if (!mappedAlignment || !consumable.consume(item, evt.name)) {
+    if (!mappedAlignment || !consumable.consume(item, event.name)) {
       return;
     }
 
@@ -302,7 +302,7 @@ function modelImageStyleToDataAttribute() {
 }
 
 /**
- * Generates the callback that saves the width value to an attribute on
+ * Generates a callback that saves the width value to an attribute on
  * data downcast.
  *
  * @return {function}
@@ -314,15 +314,15 @@ function modelImageWidthToAttribute() {
   /**
    * Callback for the attribute:width event.
    *
-   * It saves the width value to the width attribute.
+   * Saves the width value to the width attribute.
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -349,7 +349,7 @@ function modelImageWidthToAttribute() {
 }
 
 /**
- * Generates the callback that saves the height value to an attribute on
+ * Generates a callback that saves the height value to an attribute on
  * data downcast.
  *
  * @return {function}
@@ -361,15 +361,15 @@ function modelImageHeightToAttribute() {
   /**
    * Callback for the attribute:height event.
    *
-   * It saves the height value to the height attribute.
+   * Saves the height value to the height attribute.
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { item } = data;
     const { consumable, writer } = conversionApi;
 
-    if (!consumable.consume(item, evt.name)) {
+    if (!consumable.consume(item, event.name)) {
       return;
     }
 
@@ -396,7 +396,7 @@ function modelImageHeightToAttribute() {
 }
 
 /**
- * Generates the callback that handles the data downcast for the img element.
+ * Generates a callback that handles the data downcast for the img element.
  *
  * @return {function}
  *  Callback that binds an event to its parameter.
@@ -411,7 +411,7 @@ function viewImageToModelImage(editor) {
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
+  function converter(event, data, conversionApi) {
     const { viewItem } = data;
     const { writer, consumable, safeInsert, updateConversionResult, schema } =
       conversionApi;
@@ -559,8 +559,8 @@ function downcastBlockImageLink() {
    *
    * @type {converterHandler}
    */
-  function converter(evt, data, conversionApi) {
-    if (!conversionApi.consumable.consume(data.item, evt.name)) {
+  function converter(event, data, conversionApi) {
+    if (!conversionApi.consumable.consume(data.item, event.name)) {
       return;
     }
 
