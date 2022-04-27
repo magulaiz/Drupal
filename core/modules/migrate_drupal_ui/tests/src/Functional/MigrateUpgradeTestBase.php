@@ -46,7 +46,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
     $this->createMigrationConnection();
     $this->sourceDatabase = Database::getConnection('default', 'migrate_drupal_ui');
@@ -121,7 +121,7 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function tearDown() {
+  protected function tearDown(): void {
     Database::removeConnection('migrate_drupal_ui');
     parent::tearDown();
   }
@@ -355,6 +355,16 @@ abstract class MigrateUpgradeTestBase extends BrowserTestBase {
         $this->assertFileExists($filepath);
       }
     }
+  }
+
+  /**
+   * Confirm emails were sent.
+   */
+  protected function assertEmailsSent() {
+    // There should be one user activation email.
+    $captured_emails = \Drupal::state()->get('system.test_mail_collector', []);
+    $this->assertCount(1, $captured_emails);
+    $this->assertEquals('user_status_activated', $captured_emails[0]['id']);
   }
 
 }

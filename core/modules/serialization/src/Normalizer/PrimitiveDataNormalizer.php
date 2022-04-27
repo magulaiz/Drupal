@@ -20,7 +20,7 @@ class PrimitiveDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     // Add cacheability if applicable.
     $this->addCacheableDependency($context, $object);
 
@@ -39,6 +39,13 @@ class PrimitiveDataNormalizer extends NormalizerBase {
     // optional values on the primitive level, we implement our own optional
     // value normalization here.
     return $object->getValue() === NULL ? NULL : $object->getCastedValue();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

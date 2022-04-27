@@ -75,7 +75,7 @@ abstract class InstallerTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUpAppRoot();
 
     $this->isInstalled = FALSE;
@@ -252,7 +252,9 @@ abstract class InstallerTestBase extends BrowserTestBase {
    * @see system_requirements()
    */
   protected function setUpRequirementsProblem() {
-    // Do nothing.
+    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+      $this->continueOnExpectedWarnings(['PHP']);
+    }
   }
 
   /**

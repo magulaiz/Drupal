@@ -6,10 +6,12 @@
 **/
 
 (function (_ref) {
-  var throwError = _ref.throwError,
-      behaviors = _ref.behaviors;
+  let {
+    throwError,
+    behaviors
+  } = _ref;
   behaviors.testErrors = {
-    attach: function attach() {
+    attach: () => {
       throwError(new Error('A manually thrown error.'));
     }
   };

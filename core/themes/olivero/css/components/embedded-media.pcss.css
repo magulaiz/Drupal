@@ -3,18 +3,18 @@
  * Embedded Media.
  */
 
-@import "../base/variables.pcss.css";
+@import "../base/media-queries.pcss.css";
 
 figure {
-  background: var(--color--gray-95);
+  background: var(--color--gray-100);
 }
 
 figcaption {
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp0-5);
   padding-inline-end: var(--sp0-5);
-  color: var(--color--gray-10);
-  background: var(--color--gray-95);
+  color: var(--color--gray-20);
+  background: var(--color--gray-100);
   font-family: var(--font-serif);
   font-size: 14px;
   font-style: italic;
@@ -47,20 +47,21 @@ figcaption {
 /* Pull out of grid if nested in content narrow layout. */
 .layout--content-narrow .align-right,
 .layout--pass--content-narrow > * .align-right {
+  /* @todo this can be simplified. */
   @media (--grid-md) {
-    margin-inline-end: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md))));
+    margin-inline-end: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
   @media (--lg) {
-    margin-inline-end: calc(-2 * ((var(--grid-col-width--lg) + var(--grid-gap--lg))));
+    margin-inline-end: calc(-2 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
   @media (--nav) {
-    margin-inline-end: calc(-3 * ((var(--grid-col-width--nav) + var(--grid-gap--nav))));
+    margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 
   @media (--grid-max) {
-    margin-inline-end: calc(-3 * ((var(--grid-col-width--max) + var(--grid-gap--max))));
+    margin-inline-end: calc(-3 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 }
 
@@ -86,19 +87,7 @@ figcaption {
 .layout--content-narrow .align-left,
 .layout--pass--content-narrow > * .align-left {
   @media (--grid-md) {
-    margin-inline-start: calc(-1 * ((var(--grid-col-width--md) + var(--grid-gap--md))));
-  }
-
-  @media (--lg) {
-    margin-inline-start: calc(-1 * ((var(--grid-col-width--lg) + var(--grid-gap--lg))));
-  }
-
-  @media (--nav) {
-    margin-inline-start: calc(-1 * ((var(--grid-col-width--nav) + var(--grid-gap--nav))));
-  }
-
-  @media (--grid-max) {
-    margin-inline-start: calc(-1 * ((var(--grid-col-width--max) + var(--grid-gap--max))));
+    margin-inline-start: calc(-1 * ((var(--grid-col-width) + var(--grid-gap))));
   }
 }
 

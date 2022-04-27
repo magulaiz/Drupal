@@ -17,12 +17,10 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Security\PharExtensionInterceptor;
 use Drupal\Core\Security\RequestSanitizer;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
@@ -34,9 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
-use TYPO3\PharStreamWrapper\Manager as PharStreamWrapperManager;
-use TYPO3\PharStreamWrapper\Behavior as PharStreamWrapperBehavior;
-use TYPO3\PharStreamWrapper\PharStreamWrapper;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
@@ -480,26 +475,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $this->classLoader->setApcuPrefix($prefix);
     }
 
-    if (in_array('phar', stream_get_wrappers(), TRUE)) {
-      // Set up a stream wrapper to handle insecurities due to PHP's builtin
-      // phar stream wrapper. This is not registered as a regular stream wrapper
-      // to prevent \Drupal\Core\File\FileSystem::validScheme() treating "phar"
-      // as a valid scheme.
-      try {
-        $behavior = new PharStreamWrapperBehavior();
-        PharStreamWrapperManager::initialize(
-          $behavior->withAssertion(new PharExtensionInterceptor())
-        );
-      }
-      catch (\LogicException $e) {
-        // Continue if the PharStreamWrapperManager is already initialized. For
-        // example, this occurs during a module install.
-        // @see \Drupal\Core\Extension\ModuleInstaller::install()
-      }
-      stream_wrapper_unregister('phar');
-      stream_wrapper_register('phar', PharStreamWrapper::class);
-    }
-
     $this->booted = TRUE;
 
     return $this;
@@ -562,11 +537,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     require_once $this->root . '/core/includes/common.inc';
     require_once $this->root . '/core/includes/module.inc';
     require_once $this->root . '/core/includes/theme.inc';
-    require_once $this->root . '/core/includes/menu.inc';
-    require_once $this->root . '/core/includes/file.inc';
     require_once $this->root . '/core/includes/form.inc';
     require_once $this->root . '/core/includes/errors.inc';
-    require_once $this->root . '/core/includes/schema.inc';
   }
 
   /**
@@ -596,9 +568,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set the allowed protocols.
     UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
-
-    // Override of Symfony's MIME type guesser singleton.
-    MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
 
     $this->prepared = TRUE;
   }
@@ -690,7 +659,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * {@inheritdoc}
    */
-  public function handle(Request $request, $type = self::MASTER_REQUEST, $catch = TRUE): Response {
+  public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     // Ensure sane PHP environment variables.
     static::bootEnvironment();
 
@@ -730,7 +699,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   A Request instance
    * @param int $type
-   *   The type of the request (one of HttpKernelInterface::MASTER_REQUEST or
+   *   The type of the request (one of HttpKernelInterface::MAIN_REQUEST or
    *   HttpKernelInterface::SUB_REQUEST)
    *
    * @return \Symfony\Component\HttpFoundation\Response
@@ -1279,7 +1248,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Identify all services whose instances should be persisted when rebuilding
     // the container during the lifetime of the kernel (e.g., during a kernel
     // reboot). Include synthetic services, because by definition, they cannot
-    // be automatically reinstantiated. Also include services tagged to persist.
+    // be automatically re-instantiated. Also include services tagged to
+    // persist.
     $persist_ids = [];
     foreach ($container->getDefinitions() as $id => $definition) {
       // It does not make sense to persist the container itself, exclude it.

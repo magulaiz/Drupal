@@ -108,13 +108,15 @@ RSS;
    * @dataProvider providerTestOnResponse
    *
    * @param string $content
+   *   The content for the request.
    * @param string $expected_content
+   *   The expected content from the response.
    */
   public function testOnResponse($content, $expected_content) {
     $event = new ResponseEvent(
       $this->prophesize(HttpKernelInterface::class)->reveal(),
       Request::create('/'),
-      HttpKernelInterface::MASTER_REQUEST,
+      HttpKernelInterface::MAIN_REQUEST,
       new Response($content, 200, [
         'Content-Type' => 'application/rss+xml',
       ])

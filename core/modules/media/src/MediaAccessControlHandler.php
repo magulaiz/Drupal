@@ -28,15 +28,11 @@ class MediaAccessControlHandler extends EntityAccessControlHandler implements En
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface|null $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($entity_type);
-    if (!isset($entity_type_manager)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without the $entity_type_manager argument is deprecated in drupal:9.3.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/3214171', E_USER_DEPRECATED);
-      $entity_type_manager = \Drupal::entityTypeManager();
-    }
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -135,7 +131,7 @@ class MediaAccessControlHandler extends EntityAccessControlHandler implements En
         $media_storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
         $access = $this->access($media_storage->load($entity->id()), 'view', $account, TRUE);
         if (!$entity->isDefaultRevision()) {
-          $access = $access->orIf($this->access($entity, 'view', $account, TRUE));
+          $access = $access->andIf($this->access($entity, 'view', $account, TRUE));
         }
         return $access->cachePerPermissions()->addCacheableDependency($entity);
 

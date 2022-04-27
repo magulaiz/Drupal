@@ -173,17 +173,11 @@ layout_discovery_section:
     layout:
       css/layout/layout-discovery-section-layout.css: {}
 
-layout-views-grid-horizontal:
+layout-views-grid:
   version: VERSION
   css:
     layout:
-      css/layout/layout-views-grid-horizontal.css: {}
-
-layout-views-grid-vertical:
-  version: VERSION
-  css:
-    layout:
-      css/layout/layout-views-grid-vertical.css: {}
+      css/layout/layout-views-grid.css: {}
 
 local-actions:
   version: VERSION
@@ -207,6 +201,8 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
+  dependencies:
+    - core/drupal.array.includes
 
 navigation-primary:
   version: VERSION

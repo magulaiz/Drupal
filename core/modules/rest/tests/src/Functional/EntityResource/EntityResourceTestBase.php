@@ -41,11 +41,6 @@ use Psr\Http\Message\ResponseInterface;
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonAnonTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonBasicAuthTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonCookieTest
- * But the HAL module also adds a new format ('hal_json'), so that format also
- * needs test coverage (for its own peculiarities in normalization & encoding):
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonAnonTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonBasicAuthTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonCookieTest
  *
  * In other words: for every entity type there should be:
  * 1. an abstract subclass that includes the entity type-specific authorization
@@ -180,7 +175,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     // Calculate REST Resource config entity ID.
@@ -437,7 +432,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
       $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'MISS', FALSE);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "GET ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();
@@ -691,8 +686,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testPost() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('POSTing config entities is not yet supported.');
     }
 
     $this->initAuthentication();
@@ -723,7 +717,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 404 when resource not provisioned.
     $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . str_replace($this->baseUrl, '', $this->getEntityResourcePostUrl()->setAbsolute()->toString()) . '"', $response);
+    $this->assertResourceErrorResponse(404, 'No route found for "POST ' . $this->getEntityResourcePostUrl()->setAbsolute()->toString() . '"', $response);
 
     $this->provisionEntityResource();
     // Simulate the developer again forgetting the ?_format query string.
@@ -866,8 +860,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testPatch() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'PATCHing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('PATCHing config entities is not yet supported.');
     }
 
     // Patch testing requires that another entity of the same type exists.
@@ -913,10 +906,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 404 when resource not provisioned, 405 if canonical route.
     $response = $this->request('PATCH', $url, $request_options);
     if ($has_canonical_url) {
-      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "PATCH ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "PATCH ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();
@@ -1105,8 +1098,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testDelete() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'DELETEing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('DELETEing config entities is not yet supported.');
     }
 
     $this->initAuthentication();
@@ -1140,10 +1132,10 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('DELETE', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(['GET, POST, HEAD'], $response->getHeader('Allow'));
-      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
+      $this->assertResourceErrorResponse(405, 'No route found for "DELETE ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '": Method Not Allowed (Allow: GET, POST, HEAD)', $response);
     }
     else {
-      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . str_replace($this->baseUrl, '', $this->getEntityResourceUrl()->setAbsolute()->toString()) . '"', $response);
+      $this->assertResourceErrorResponse(404, 'No route found for "DELETE ' . $this->getEntityResourceUrl()->setAbsolute()->toString() . '"', $response);
     }
 
     $this->provisionEntityResource();

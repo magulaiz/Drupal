@@ -286,6 +286,7 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectException(BadRequestHttpException::class);
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
+
     $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }

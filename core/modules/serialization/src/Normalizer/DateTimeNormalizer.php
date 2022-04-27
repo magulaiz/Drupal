@@ -54,7 +54,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
   /**
    * {@inheritdoc}
    */
-  public function normalize($datetime, $format = NULL, array $context = []) {
+  public function normalize($datetime, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($datetime instanceof DateTimeInterface);
     $drupal_date_time = $datetime->getDateTime();
     if ($drupal_date_time === NULL) {
@@ -85,7 +85,7 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     // This only knows how to denormalize datetime strings and timestamps. If
     // something else is received, let validation constraints handle this.
     if (!is_string($data) && !is_numeric($data)) {
@@ -113,6 +113,13 @@ class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface
 
     $formats = implode(', ', $format_strings);
     throw new UnexpectedValueException(sprintf('The specified date "%s" is not in an accepted format: %s.', $data, $formats));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasCacheableSupportsMethod(): bool {
+    return TRUE;
   }
 
 }

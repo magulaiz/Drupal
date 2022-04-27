@@ -70,7 +70,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder = $this->prophesize('\Symfony\Component\DependencyInjection\ContainerBuilder');
       $this->containerBuilder->getAliases()->willReturn([]);
       $this->containerBuilder->getParameterBag()->willReturn(new ParameterBag());
-      $this->containerBuilder->getDefinitions()->willReturn(NULL);
+      $this->containerBuilder->getDefinitions()->willReturn([]);
       $this->containerBuilder->isCompiled()->willReturn(TRUE);
 
       $definition = [];
@@ -152,12 +152,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getParameterBag()->willReturn($parameter_bag);
       $this->containerBuilder->isCompiled()->willReturn($is_frozen);
 
-      if (isset($parameters['reference'])) {
-        $definition = new Definition('\stdClass');
-        $definition->setPublic(TRUE);
-        $this->containerBuilder->getDefinition('referenced_service')->willReturn($definition);
-      }
-
       $this->assertEquals($this->containerDefinition, $this->dumper->getArray(), 'Expected definition matches dump.');
     }
 
@@ -192,11 +186,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
           ['foo' => '%llama%', 'llama' => 'yes'],
           ['foo' => '%llama%', 'llama' => 'yes'],
           FALSE,
-        ],
-        [
-          ['reference' => new Reference('referenced_service')],
-          ['reference' => $this->getServiceCall('referenced_service')],
-          TRUE,
         ],
       ];
     }
@@ -559,7 +548,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @covers ::dumpValue
      */
     public function testGetServiceDefinitionForExpression() {
-      $expression = new Expression();
+      $expression = new Expression('');
 
       $bar_definition = new Definition('\stdClass');
       $bar_definition->setPublic(TRUE);
@@ -712,6 +701,9 @@ namespace Symfony\Component\ExpressionLanguage {
      * Dummy class to ensure non-existent Symfony component can be tested.
      */
     class Expression {
+
+      public function __construct($expression) {
+      }
 
       /**
        * Gets the string representation of the expression.

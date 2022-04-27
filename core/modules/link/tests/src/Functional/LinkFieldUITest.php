@@ -28,7 +28,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user that can edit content types.
@@ -218,8 +218,10 @@ class LinkFieldUITest extends BrowserTestBase {
    *   The name of the field to check.
    * @param string $text
    *   The text to check.
+   *
+   * @internal
    */
-  protected function assertFieldContainsRawText($field_name, $text) {
+  protected function assertFieldContainsRawText(string $field_name, string $text): void {
     $this->assertTrue((bool) preg_match('/' . preg_quote($text, '/') . '/ui', $this->getFieldHtml($field_name)));
   }
 
@@ -230,8 +232,10 @@ class LinkFieldUITest extends BrowserTestBase {
    *   The name of the field to check.
    * @param string $text
    *   The text to check.
+   *
+   * @internal
    */
-  protected function assertNoFieldContainsRawText($field_name, $text) {
+  protected function assertNoFieldContainsRawText(string $field_name, string $text): void {
     $this->assertFalse((bool) preg_match('/' . preg_quote($text, '/') . '/ui', $this->getFieldHtml($field_name)));
   }
 

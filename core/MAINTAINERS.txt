@@ -58,9 +58,6 @@ maintainer. Current subsystem maintainers:
 Actions
 - ?
 
-Aggregator
-- ?
-
 Ajax
 - Alex Bronstein 'effulgentsia' https://www.drupal.org/u/effulgentsia
 - Tim Plunkett 'tim.plunkett' https://www.drupal.org/u/tim.plunkett
@@ -117,6 +114,11 @@ CKEditor
 - Henrik Danielsson 'TwoD' https://www.drupal.org/u/TwoD
 - Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
 - Marek 'mlewand' Lewandowski https://www.drupal.org/u/mlewand
+
+CKEditor 5
+- Lauri Eskola 'lauriii' https://www.drupal.org/u/lauriii
+- Wim Leers 'Wim Leers' https://www.drupal.org/u/wim-leers
+- Ben Mullins 'bnjmnm' https://www.drupal.org/u/bnjmnm
 
 Claro
 - Cristina Chumillas 'ckrina' https://www.drupal.org/u/ckrina
@@ -235,9 +237,6 @@ Form API
 
 History
 - Andrey Postnikov 'andypost' https://www.drupal.org/u/andypost
-
-Hypertext Application Language (HAL)
-- ?
 
 Help
 - ?
@@ -541,13 +540,13 @@ tools, documentation, and processes to make it easier for new contributors to
 get involved. They organize communications and logistics, and actively
 participate in mentoring.
 
+- Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
 - Mauricio Dinarte 'dinarcon' https://www.drupal.org/u/dinarcon
+- Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
 - Lucas Hedding 'heddn' https://www.drupal.org/u/heddn
+- AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick
 - Tara King 'sparklingrobots' https://www.drupal.org/u/sparklingrobots
 - Rachel Lawson 'rachel_norfolk' https://www.drupal.org/u/rachel_norfolk
 - Elli Ludwigson 'ekl1773' https://www.drupal.org/u/ekl1773
 - Jess Myrbo 'xjm' https://www.drupal.org/u/xjm
 - Matthew Radcliffe 'mradcliffe' https://www.drupal.org/u/mradcliffe
-- (provisional) Chris Darke 'chrisdarke' https://www.drupal.org/u/chrisdarke
-- (provisional) Brian Gilbert 'realityloop' https://www.drupal.org/u/realityloop
-- (provisional) AmyJune Hineline 'volkswagenchick' https://www.drupal.org/u/volkswagenchick

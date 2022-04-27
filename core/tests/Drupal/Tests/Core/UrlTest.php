@@ -15,7 +15,7 @@ use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Url;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -130,13 +130,13 @@ class UrlTest extends UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls([
           RouteObjectInterface::ROUTE_NAME => 'view.frontpage.page_1',
-          '_raw_variables' => new ParameterBag(),
+          '_raw_variables' => new InputBag(),
         ], [
           RouteObjectInterface::ROUTE_NAME => 'node_view',
-          '_raw_variables' => new ParameterBag(['node' => '1']),
+          '_raw_variables' => new InputBag(['node' => '1']),
         ], [
           RouteObjectInterface::ROUTE_NAME => 'node_edit',
-          '_raw_variables' => new ParameterBag(['node' => '2']),
+          '_raw_variables' => new InputBag(['node' => '2']),
         ]);
 
     $urls = [];
@@ -255,7 +255,7 @@ class UrlTest extends UnitTestCase {
    */
   public function testCreateFromRequest() {
     $attributes = [
-      '_raw_variables' => new ParameterBag([
+      '_raw_variables' => new InputBag([
         'color' => 'chartreuse',
       ]),
       RouteObjectInterface::ROUTE_NAME => 'the_route_name',
@@ -491,6 +491,7 @@ class UrlTest extends UnitTestCase {
    * Tests the access() method for routed URLs.
    *
    * @param bool $access
+   *   The access value.
    *
    * @covers ::access
    * @covers ::accessManager
@@ -522,6 +523,7 @@ class UrlTest extends UnitTestCase {
    * Tests the renderAccess() method.
    *
    * @param bool $access
+   *   The access value.
    *
    * @covers ::renderAccess
    * @dataProvider accessProvider
@@ -832,7 +834,9 @@ class UrlTest extends UnitTestCase {
    * Creates a mock access manager for the access tests.
    *
    * @param bool $access
+   *   The access value.
    * @param \Drupal\Core\Session\AccountInterface|null $account
+   *   The account to test.
    *
    * @return \Drupal\Core\Access\AccessManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -863,6 +867,7 @@ class TestUrl extends Url {
    * Sets the access manager.
    *
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
+   *   The access manager.
    */
   public function setAccessManager(AccessManagerInterface $access_manager) {
     $this->accessManager = $access_manager;

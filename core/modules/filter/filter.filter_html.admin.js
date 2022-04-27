@@ -5,21 +5,30 @@
 * @preserve
 **/
 
-(function ($, Drupal, _, document) {
+(function ($, Drupal, document) {
   if (Drupal.filterConfiguration) {
     Drupal.filterConfiguration.liveSettingParsers.filter_html = {
-      getRules: function getRules() {
-        var currentValue = $('#edit-filters-filter-html-settings-allowed-html').val();
+      getRules() {
+        const currentValue = document.querySelector('#edit-filters-filter-html-settings-allowed-html').value;
 
-        var rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
+        const rules = Drupal.behaviors.filterFilterHtmlUpdating._parseSetting(currentValue);
 
-        var rule = new Drupal.FilterHTMLRule();
+        const rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = ['*'];
         rule.restrictedTags.forbidden.attributes = ['style', 'on*'];
         rules.push(rule);
         return rules;
       }
+
     };
+  }
+
+  function difference() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return args.reduce((mainData, otherData) => mainData.filter(data => !otherData.includes(data)));
   }
 
   Drupal.behaviors.filterFilterHtmlUpdating = {
@@ -28,23 +37,24 @@
     userTags: {},
     autoTags: null,
     newFeatures: {},
-    attach: function attach(context, settings) {
-      var that = this;
-      once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(function (formItem) {
+
+    attach(context, settings) {
+      const that = this;
+      once('filter-filter_html-updating', '[name="filters[filter_html][settings][allowed_html]"]', context).forEach(formItem => {
         that.$allowedHTMLFormItem = $(formItem);
         that.$allowedHTMLDescription = that.$allowedHTMLFormItem.closest('.js-form-item').find('.description');
         that.userTags = that._parseSetting(formItem.value);
-        $(document).on('drupalEditorFeatureAdded', function (e, feature) {
+        $(document).on('drupalEditorFeatureAdded', (e, feature) => {
           that.newFeatures[feature.name] = feature.rules;
 
           that._updateAllowedTags();
-        }).on('drupalEditorFeatureModified', function (e, feature) {
+        }).on('drupalEditorFeatureModified', (e, feature) => {
           if (that.newFeatures.hasOwnProperty(feature.name)) {
             that.newFeatures[feature.name] = feature.rules;
 
             that._updateAllowedTags();
           }
-        }).on('drupalEditorFeatureRemoved', function (e, feature) {
+        }).on('drupalEditorFeatureRemoved', (e, feature) => {
           if (that.newFeatures.hasOwnProperty(feature.name)) {
             delete that.newFeatures[feature.name];
 
@@ -52,39 +62,42 @@
           }
         });
         that.$allowedHTMLFormItem.on('change.updateUserTags', function () {
-          that.userTags = _.difference(that._parseSetting(this.value), that.autoTags);
+          that.userTags = difference(Object.values(that._parseSetting(this.value)), Object.values(that.autoTags));
         });
       });
     },
-    _updateAllowedTags: function _updateAllowedTags() {
+
+    _updateAllowedTags() {
       this.autoTags = this._calculateAutoAllowedTags(this.userTags, this.newFeatures);
       this.$allowedHTMLDescription.find('.editor-update-message').remove();
 
-      if (!_.isEmpty(this.autoTags)) {
+      if (Object.keys(this.autoTags).length > 0) {
         this.$allowedHTMLDescription.append(Drupal.theme('filterFilterHTMLUpdateMessage', this.autoTags));
-
-        var userTagsWithoutOverrides = _.omit(this.userTags, _.keys(this.autoTags));
-
-        this.$allowedHTMLFormItem.val("".concat(this._generateSetting(userTagsWithoutOverrides), " ").concat(this._generateSetting(this.autoTags)));
+        const userTagsWithoutOverrides = {};
+        Object.keys(this.userTags).filter(tag => !this.autoTags.hasOwnProperty(tag)).forEach(tag => {
+          userTagsWithoutOverrides[tag] = this.userTags[tag];
+        });
+        this.$allowedHTMLFormItem.val(`${this._generateSetting(userTagsWithoutOverrides)} ${this._generateSetting(this.autoTags)}`);
       } else {
         this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
       }
     },
-    _calculateAutoAllowedTags: function _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
-      var editorRequiredTags = {};
-      Object.keys(newFeatures || {}).forEach(function (featureName) {
-        var feature = newFeatures[featureName];
-        var featureRule;
-        var filterRule;
-        var tag;
 
-        for (var f = 0; f < feature.length; f++) {
+    _calculateAutoAllowedTags(userAllowedTags, newFeatures) {
+      const editorRequiredTags = {};
+      Object.keys(newFeatures || {}).forEach(featureName => {
+        const feature = newFeatures[featureName];
+        let featureRule;
+        let filterRule;
+        let tag;
+
+        for (let f = 0; f < feature.length; f++) {
           featureRule = feature[f];
 
-          for (var t = 0; t < featureRule.required.tags.length; t++) {
+          for (let t = 0; t < featureRule.required.tags.length; t++) {
             tag = featureRule.required.tags[t];
 
-            if (!_.has(editorRequiredTags, tag)) {
+            if (!editorRequiredTags.hasOwnProperty(tag)) {
               filterRule = new Drupal.FilterHTMLRule();
               filterRule.restrictedTags.tags = [tag];
               filterRule.restrictedTags.allowed.attributes = featureRule.required.attributes.slice(0);
@@ -92,63 +105,61 @@
               editorRequiredTags[tag] = filterRule;
             } else {
               filterRule = editorRequiredTags[tag];
-              filterRule.restrictedTags.allowed.attributes = _.union(filterRule.restrictedTags.allowed.attributes, featureRule.required.attributes);
-              filterRule.restrictedTags.allowed.classes = _.union(filterRule.restrictedTags.allowed.classes, featureRule.required.classes);
+              filterRule.restrictedTags.allowed.attributes = [...filterRule.restrictedTags.allowed.attributes, ...featureRule.required.attributes];
+              filterRule.restrictedTags.allowed.classes = [...filterRule.restrictedTags.allowed.classes, ...featureRule.required.classes];
             }
           }
         }
       });
-      var autoAllowedTags = {};
-      Object.keys(editorRequiredTags).forEach(function (tag) {
-        if (!_.has(userAllowedTags, tag)) {
+      const autoAllowedTags = {};
+      Object.keys(editorRequiredTags).forEach(tag => {
+        if (!userAllowedTags.hasOwnProperty(tag)) {
           autoAllowedTags[tag] = editorRequiredTags[tag];
         } else {
-          var requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
-          var allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
-
-          var needsAdditionalAttributes = requiredAttributes.length && _.difference(requiredAttributes, allowedAttributes).length;
-
-          var requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
-          var allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
-
-          var needsAdditionalClasses = requiredClasses.length && _.difference(requiredClasses, allowedClasses).length;
+          const requiredAttributes = editorRequiredTags[tag].restrictedTags.allowed.attributes;
+          const allowedAttributes = userAllowedTags[tag].restrictedTags.allowed.attributes;
+          const needsAdditionalAttributes = requiredAttributes.length && difference(requiredAttributes, allowedAttributes).length;
+          const requiredClasses = editorRequiredTags[tag].restrictedTags.allowed.classes;
+          const allowedClasses = userAllowedTags[tag].restrictedTags.allowed.classes;
+          const needsAdditionalClasses = requiredClasses.length && difference(requiredClasses, allowedClasses).length;
 
           if (needsAdditionalAttributes || needsAdditionalClasses) {
             autoAllowedTags[tag] = userAllowedTags[tag].clone();
           }
 
           if (needsAdditionalAttributes) {
-            autoAllowedTags[tag].restrictedTags.allowed.attributes = _.union(allowedAttributes, requiredAttributes);
+            autoAllowedTags[tag].restrictedTags.allowed.attributes = [...allowedAttributes, ...requiredAttributes];
           }
 
           if (needsAdditionalClasses) {
-            autoAllowedTags[tag].restrictedTags.allowed.classes = _.union(allowedClasses, requiredClasses);
+            autoAllowedTags[tag].restrictedTags.allowed.classes = [...allowedClasses, ...requiredClasses];
           }
         }
       });
       return autoAllowedTags;
     },
-    _parseSetting: function _parseSetting(setting) {
-      var tag;
-      var rule;
-      var attributes;
-      var attribute;
-      var allowedTags = setting.match(/(<[^>]+>)/g);
-      var rules = {};
 
-      for (var t = 0; t < allowedTags.length; t++) {
-        var $tagObject = $(allowedTags[t]);
+    _parseSetting(setting) {
+      let tag;
+      let rule;
+      let attributes;
+      let attribute;
+      const allowedTags = setting.match(/(<[^>]+>)/g);
+      const rules = {};
+
+      for (let t = 0; t < allowedTags.length; t++) {
+        const $tagObject = $(allowedTags[t]);
         tag = $tagObject.prop('tagName').toLowerCase();
         rule = new Drupal.FilterHTMLRule();
         rule.restrictedTags.tags = [tag];
         attributes = $tagObject.prop('attributes');
 
-        for (var i = 0; i < attributes.length; i++) {
+        for (let i = 0; i < attributes.length; i++) {
           attribute = attributes.item(i);
-          var attributeName = attribute.nodeName;
+          const attributeName = attribute.nodeName;
 
           if (attributeName === 'class') {
-            var attributeValue = attribute.textContent;
+            const attributeValue = attribute.textContent;
             rule.restrictedTags.allowed.classes = attributeValue.split(' ');
           } else {
             rule.restrictedTags.allowed.attributes.push(attributeName);
@@ -160,32 +171,36 @@
 
       return rules;
     },
-    _generateSetting: function _generateSetting(tags) {
-      return _.reduce(tags, function (setting, rule, tag) {
+
+    _generateSetting(tags) {
+      return Object.keys(tags).reduce((setting, tag) => {
+        const rule = tags[tag];
+
         if (setting.length) {
           setting += ' ';
         }
 
-        setting += "<".concat(tag);
+        setting += `<${tag}`;
 
         if (rule.restrictedTags.allowed.attributes.length) {
-          setting += " ".concat(rule.restrictedTags.allowed.attributes.join(' '));
+          setting += ` ${rule.restrictedTags.allowed.attributes.join(' ')}`;
         }
 
         if (rule.restrictedTags.allowed.classes.length) {
-          setting += " class=\"".concat(rule.restrictedTags.allowed.classes.join(' '), "\"");
+          setting += ` class="${rule.restrictedTags.allowed.classes.join(' ')}"`;
         }
 
         setting += '>';
         return setting;
       }, '');
     }
+
   };
 
   Drupal.theme.filterFilterHTMLUpdateMessage = function (tags) {
-    var html = '';
+    let html = '';
 
-    var tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
+    const tagList = Drupal.behaviors.filterFilterHtmlUpdating._generateSetting(tags);
 
     html += '<p class="editor-update-message">';
     html += Drupal.t('Based on the text editor configuration, these tags have automatically been added: <strong>@tag-list</strong>.', {
@@ -194,4 +209,4 @@
     html += '</p>';
     return html;
   };
-})(jQuery, Drupal, _, document);
+})(jQuery, Drupal, document);
