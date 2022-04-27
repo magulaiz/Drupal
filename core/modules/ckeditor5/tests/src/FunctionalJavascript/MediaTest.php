@@ -1199,7 +1199,7 @@ class MediaTest extends WebDriverTestBase {
    *
    * @dataProvider providerTestViewMode
    */
-  public function testViewMode($with_alignment) {
+  public function testViewMode(bool $with_alignment) {
     EntityViewMode::create([
       'id' => 'media.view_mode_1',
       'targetEntityType' => 'media',
@@ -1434,10 +1434,10 @@ class MediaTest extends WebDriverTestBase {
   /**
    * For testing view modes in different scenarios.
    */
-  public function providerTestViewMode() {
+  public function providerTestViewMode(): array {
     return [
-      'with_alignment' => [TRUE],
-      'without_alignment' => [FALSE],
+      'with alignment' => [TRUE],
+      'without alignment' => [FALSE],
     ];
   }
 
