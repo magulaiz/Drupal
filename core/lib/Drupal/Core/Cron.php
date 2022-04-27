@@ -174,10 +174,10 @@ class Cron implements CronInterface {
         $this->queueFactory->get($queue_name)->createQueue();
 
         $queue_worker = $this->queueManager->createInstance($queue_name);
-        $end = time() + ($info['cron']['time'] ?? self::DEFAULT_QUEUE_CRON_TIME);
+        $end = $this->time->getCurrentTime() + $info['cron']['time'];
         $queue = $this->queueFactory->get($queue_name);
-        $lease_time = $info['cron']['time'] ?? self::DEFAULT_QUEUE_CRON_TIME;
-        while (time() < $end && ($item = $queue->claimItem($lease_time))) {
+        $lease_time = $info['cron']['time'];
+        while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
           try {
             $queue_worker->processItem($item->data);
             $queue->deleteItem($item);
