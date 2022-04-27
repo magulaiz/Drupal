@@ -23,7 +23,6 @@ use Symfony\Component\Validator\ConstraintViolation;
  */
 class CKEditor5Test extends CKEditor5TestBase {
 
-  use CKEditor5TestTrait;
   use TestFileCreationTrait;
   use CKEditor5TestTrait;
 
@@ -444,7 +443,7 @@ class CKEditor5Test extends CKEditor5TestBase {
   }
 
   /**
-   * Test List plugin.
+   * Tests list plugin.
    */
   public function testListPlugin() {
     FilterFormat::create([
@@ -472,24 +471,14 @@ class CKEditor5Test extends CKEditor5TestBase {
     ])->save();
     $this->assertSame([], array_map(
       function (ConstraintViolation $v) {
-        return (string)$v->getMessage();
+        return (string) $v->getMessage();
       },
       iterator_to_array(CKEditor5::validatePair(
         Editor::load('test_format'),
         FilterFormat::load('test_format')
       ))
     ));
-    $ordered_list_html = '<ol>
-    <li>
-        apple
-    </li>
-    <li>
-        banana
-    </li>
-    <li>
-        cantaloupe
-    </li>
-</ol>';
+    $ordered_list_html = '<ol><li>apple</li><li>banana</li><li>cantaloupe</li></ol>';
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $this->drupalGet('node/add');
@@ -500,11 +489,11 @@ class CKEditor5Test extends CKEditor5TestBase {
     // Click source again to make source inactive and have the numbered list
     // splitbutton active.
     $this->pressEditorButton('Source');
-    $numbered_list_dropdown = '.ck-splitbutton__arrow';
+    $numbered_list_dropdown_selector = '.ck-splitbutton__arrow';
 
     // Check that there is no dropdown available for the numbered list because
     // both reversed and startIndex are FALSE.
-    $assert_session->elementNotExists('css', $numbered_list_dropdown);
+    $assert_session->elementNotExists('css', $numbered_list_dropdown_selector);
     // Save content so source content is kept after changing the editor config.
     $page->pressButton('Save');
     $edit_url = $this->getSession()->getCurrentURL() . '/edit';
@@ -519,12 +508,12 @@ class CKEditor5Test extends CKEditor5TestBase {
     $editor->save();
     $this->getSession()->reload();
     $this->waitForEditor();
-    $this->click($numbered_list_dropdown);
-    $reversed_order_button = '.ck.ck-button.ck-numbered-list-properties__reversed-order';
-    $assert_session->elementExists('css', $reversed_order_button);
-    $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
-    $start_index_element = '.ck.ck-numbered-list-properties__start-index';
-    $assert_session->elementNotExists('css', $start_index_element);
+    $this->click($numbered_list_dropdown_selector);
+    $reversed_order_button_selector = '.ck.ck-button.ck-numbered-list-properties__reversed-order';
+    $assert_session->elementExists('css', $reversed_order_button_selector);
+    $assert_session->elementTextEquals('css', $reversed_order_button_selector, 'Reversed order');
+    $start_index_element_selector = '.ck.ck-numbered-list-properties__start-index';
+    $assert_session->elementNotExists('css', $start_index_element_selector);
 
     // Have both the reversed and the start index enabled.
     $editor = Editor::load('test_format');
@@ -534,10 +523,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $editor->save();
     $this->getSession()->reload();
     $this->waitForEditor();
-    $this->click($numbered_list_dropdown);
-    $assert_session->elementExists('css', $reversed_order_button);
-    $assert_session->elementTextEquals('css', $reversed_order_button, 'Reversed order');
-    $assert_session->elementExists('css', $start_index_element);
+    $this->click($numbered_list_dropdown_selector);
+    $assert_session->elementExists('css', $reversed_order_button_selector);
+    $assert_session->elementTextEquals('css', $reversed_order_button_selector, 'Reversed order');
+    $assert_session->elementExists('css', $start_index_element_selector);
   }
 
   /**
