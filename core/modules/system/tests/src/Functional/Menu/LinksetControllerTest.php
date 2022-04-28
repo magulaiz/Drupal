@@ -184,6 +184,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * @throws \Exception
    */
   public function testBasicFunctions() {
+    $this->enableEndpoint(TRUE);
     $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/linkset-menu-main.json'));
     $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
@@ -201,6 +202,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * cached response is properly invalidated.
    */
   public function testCacheability() {
+    $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts([
       'user.permissions',
@@ -244,6 +246,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * does not have access (if it can be determined).
    */
   public function testAccess() {
+    $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts(['user.permissions']);
     $expected_cacheability->addCacheTags([
@@ -300,6 +303,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * ("Log in/out")
    */
   public function testUserAccountMenu() {
+    $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
     $expected_cacheability->addCacheContexts([
       'user.permissions',
@@ -338,12 +342,20 @@ final class LinksetControllerTest extends BrowserTestBase {
    * Tests that menu items can use a custom link relation.
    */
   public function testCustomLinkRelation() {
+    $this->enableEndpoint(TRUE);
     $this->assertTrue($this->container->get('module_installer')->install(['decoupled_menus_test'], TRUE), 'Installed modules.');
     $response = $this->doRequest(Request::create('/system/menu/account/linkset'), 200, $this->authorAccount);
     $link_context_object = Json::decode((string) $response->getBody())['linkset'][0];
     $this->assertContains('authenticated-as', array_keys($link_context_object));
     $my_account_link = $link_context_object['authenticated-as'][0];
     $this->assertSame('My account', $my_account_link['title']);
+  }
+
+  /**
+   * Test that api route does not exist if the config option is disabled.
+   */
+  public function testDisabledEndpoint() {
+    $this->doRequest(Request::create('/system/menu/main/linkset'), 404);
   }
 
   /**
@@ -429,6 +441,19 @@ final class LinksetControllerTest extends BrowserTestBase {
     }
     $link_content->save();
     return $link_content;
+  }
+
+  /**
+   * Enables or disables the menu linkset endpoint.
+   *
+   * @param bool $enabled
+   *   Whether the endpoint should be enabled.
+   */
+  protected function enableEndpoint(bool $enabled) {
+    $this->config('system.linkset')
+      ->set('enable_endpoint', $enabled)
+      ->save(TRUE);
+    \Drupal::service('router.builder')->rebuild();
   }
 
 }
