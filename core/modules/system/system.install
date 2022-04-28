@@ -56,10 +56,9 @@ function system_requirements($phase) {
       $info = $module_extension_list->getExtensionInfo($profile);
       $requirements['install_profile'] = [
         'title' => t('Installation profile'),
-        'value' => t('%profile_name (%profile-%version)', [
+        'value' => t('%profile_name (%profile_and_version)', [
           '%profile_name' => $info['name'],
-          '%profile' => $profile,
-          '%version' => $info['version'],
+          '%profile_and_version' => $profile . ($info['version'] ? '-' . $info['version'] : ''),
         ]),
         'severity' => REQUIREMENT_INFO,
         'weight' => -9,
