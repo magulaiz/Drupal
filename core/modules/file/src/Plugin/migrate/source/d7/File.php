@@ -22,7 +22,7 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   scheme: public
  * @endcode
  *
- * In this example the public files are retrieved from the source database.
+ * In this example, public file values are retrieved from the source database.
  * For complete example, refer to the d7_file.yml migration.
  *
  * For additional configuration keys, refer to the parent classes.

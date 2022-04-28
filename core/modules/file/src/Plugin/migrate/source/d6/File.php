@@ -10,7 +10,8 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *
  * Available configuration keys:
  * - site_path: (optional) The path to the site directory relative to Drupal
- *   root. Defaults to 'sites/default'.
+ *   root. Defaults to 'sites/default'. This value is ignored if the
+ *   'file_directory_path' variable is set in the source Drupal database.
  *
  * Example:
  *
@@ -20,8 +21,11 @@ use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
  *   site_path: sites/example
  * @endcode
  *
- * In this example the public files are retrieved from the source database.
+ * In this example, public file values are retrieved from the source database.
  * The site path is specified because it's not the default one (sites/default).
+ * The final path to the public files will be "sites/example/files/", assuming
+ * the 'file_directory_path' variable is not set in the source database.
+ *
  * For complete example, refer to the d6_file.yml migration.
  *
  * For additional configuration keys, refer to the parent classes.
