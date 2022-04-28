@@ -47,13 +47,21 @@ class InstallCommand extends Command {
    */
   protected function configure() {
     $this->setName('install')
-      ->setDescription('Installs a Drupal demo site. This is not meant for production and might be too simple for custom development. It is a quick and easy way to get Drupal running.')
+      ->setDescription('Installs a Drupal demo site. This is not meant for production. It is a quick and easy way to get Drupal running.')
       ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in.', 'en')
       ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name.', 'Drupal')
+      ->addOption('database-driver', NULL, InputOption::VALUE_REQUIRED, 'Sets the database driver to use.', 'sqlite')
+      ->addOption('database-username', NULL, InputOption::VALUE_REQUIRED, 'Sets the database user.', '')
+      ->addOption('database-password', NULL, InputOption::VALUE_REQUIRED, 'Sets the database password.', '')
+      ->addOption('database-host', NULL, InputOption::VALUE_REQUIRED, 'Sets the database host name.', 'localhost')
+      ->addOption('database-port', NULL, InputOption::VALUE_REQUIRED, 'Sets the database port.', '')
+      ->addOption('database-name', NULL, InputOption::VALUE_REQUIRED, 'Sets the database to use either a database name or file path.', 'drupal')
+      ->addOption('database-prefix', NULL, InputOption::VALUE_REQUIRED, 'Sets an optional database prefix.', '')
       ->addUsage('demo_umami --langcode fr')
       ->addUsage('standard --site-name QuickInstall')
-      ->addUsage('core/recipes/standard --site-name RecipeBuiltSite');
+      ->addUsage('core/recipes/standard --site-name RecipeBuiltSite')
+      ->addUsage('standard --database-driver mysql --database-username DB_USER --database-password DB_PASS --database-port 3306 --database-name DB_NAME --site-name "My Awesome Web Site"');
 
     parent::configure();
   }
@@ -63,10 +71,6 @@ class InstallCommand extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $io = new SymfonyStyle($input, $output);
-    if (!extension_loaded('pdo_sqlite')) {
-      $io->getErrorStyle()->error('You must have the pdo_sqlite PHP extension installed. See core/INSTALL.sqlite.txt for instructions.');
-      return 1;
-    }
 
     // Change the directory to the Drupal root.
     chdir(dirname(__DIR__, 5));
@@ -115,7 +119,19 @@ class InstallCommand extends Command {
       return 1;
     }
 
-    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '');
+    $connection_info = [
+      'driver' => $input->getOption('database-driver'),
+      'username' => $input->getOption('database-username'),
+      'password' => $input->getOption('database-password'),
+      'host' => $input->getOption('database-host'),
+      'database' => $input->getOption('database-name'),
+      'prefix' => $input->getOption('database-prefix'),
+    ];
+    if ($input->hasOption('database-port')) {
+      $connection_info['port'] = $input->getOption('database-port');
+    }
+
+    return $this->install($this->classLoader, $io, $install_profile, $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '', $connection_info);
   }
 
   /**
@@ -154,6 +170,8 @@ class InstallCommand extends Command {
    *   The site name.
    * @param string $recipe
    *   The recipe to use for installing.
+   * @param array $connection_options
+   *   The database connection options.
    *
    * @throws \Exception
    *   Thrown when failing to create the $site_path directory or settings.php.
@@ -161,9 +179,12 @@ class InstallCommand extends Command {
    * @return int
    *   The command exit status.
    */
-  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe) {
-    $sqliteDriverNamespace = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
+  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe, array $connection_options = []) {
     $password = Crypt::randomBytesBase64(12);
+    if ($connection_options['driver'] === 'sqlite') {
+      $connection_options['database'] = $site_path . '/files/' . $connection_options['database'];
+    }
+    $driver = $connection_options['driver'];
     $parameters = [
       'interactive' => FALSE,
       'site_path' => $site_path,
@@ -173,9 +194,14 @@ class InstallCommand extends Command {
       ],
       'forms' => [
         'install_settings_form' => [
-          'driver' => $sqliteDriverNamespace,
-          $sqliteDriverNamespace => [
-            'database' => $site_path . '/files/.sqlite',
+          'driver' => $driver,
+          "$driver" => [
+            'username' => $connection_options['username'],
+            'password' => $connection_options['password'],
+            'database' => $connection_options['database'],
+            'host' => $connection_options['host'],
+            'port' => isset($connection_options['port']) ? $connection_options['port'] : '',
+            'prefix' => isset($connection_options['prefix']) ? $connection_options['prefix'] : '',
           ],
         ],
         'install_configure_form' => [

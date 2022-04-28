@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Installs a Drupal site and starts a webserver for local testing/development.
@@ -48,11 +49,18 @@ class QuickStartCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $command = $this->getApplication()->find('install');
 
+    $io = new SymfonyStyle($input, $output);
+    if (!extension_loaded('pdo_sqlite')) {
+      $io->getErrorStyle()->error('You must have the pdo_sqlite PHP extension installed. See core/INSTALL.sqlite.txt for instructions.');
+      return 1;
+    }
+
     $arguments = [
       'command' => 'install',
       'install-profile-or-recipe' => $input->getArgument('install-profile-or-recipe'),
       '--langcode' => $input->getOption('langcode'),
       '--site-name' => $input->getOption('site-name'),
+      '--database-name' => '.sqlite',
     ];
 
     $installInput = new ArrayInput($arguments);
