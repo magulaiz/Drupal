@@ -6,7 +6,6 @@ namespace Drupal\system\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Symfony\Component\Routing\RouteCollection;
-use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
  * Routing event subscriber.
@@ -28,23 +27,13 @@ final class EventSubscriber extends RouteSubscriberBase {
   protected $providerIds;
 
   /**
-   * The system.linkset config object.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $config;
-
-  /**
    * EventSubscriber constructor.
    *
    * @param string[] $authentication_providers
    *   An array of authentication providers, keyed by ID.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    */
-  public function __construct(array $authentication_providers, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $authentication_providers) {
     $this->providerIds = array_keys($authentication_providers);
-    $this->config = $config_factory->get('system.linkset');
   }
 
   /**
@@ -60,7 +49,7 @@ final class EventSubscriber extends RouteSubscriberBase {
    *   A collection of routes.
    */
   public function alterRoutes(RouteCollection $collection) {
-    if ($this->config->get('enable_endpoint')) {
+    if (\Drupal::config('system.linkset')->get('enable_endpoint')) {
       $collection->get('system.menu.linkset')->setOption('_auth', $this->providerIds);
     }
   }
