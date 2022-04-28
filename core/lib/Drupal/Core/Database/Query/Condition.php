@@ -226,7 +226,7 @@ class Condition implements ConditionInterface, \Countable {
           // @see ConditionInterface::condition() method (and thus have the
           // default value as defined over there) it is assumed to be a valid
           // condition on its own: ignore the operator and value parts.
-          $ignore_operator = $condition['operator'] === '=' && $condition['value'] === NULL;
+          $ignore_operator = in_array($condition['operator'], ['=', NULL], TRUE) && empty($condition['value']);
         }
         elseif (!isset($condition['operator'])) {
           // Left hand part is a literal string added with the
