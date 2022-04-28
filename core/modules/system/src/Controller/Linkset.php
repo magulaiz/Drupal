@@ -201,8 +201,8 @@ final class Linkset extends ControllerBase {
    * Process custom link parameters.
    *
    * Since the values for attributes are dynamic and we can't
-   * guarantee that they adhere to the linkset specification, we ...
-   * parameters, we do some custom processing as follows,
+   * guarantee that they adhere to the linkset specification,
+   * we do some custom processing as follows,
    * 1. Transform all of them into an array if
    *    they are not already an array.
    * 2. Transform all non-string values into strings
@@ -248,8 +248,6 @@ final class Linkset extends ControllerBase {
       if (is_array($value)) {
         $link[$key] = [];
         foreach ($value as $val) {
-          // We skip object/array values that can't be converted
-          // to string.
           if (is_object($val) || is_array($val)) {
             continue;
           }
