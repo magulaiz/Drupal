@@ -185,7 +185,7 @@ prefix.suffix:
   dependencies:
     - core/jquery
     - core/drupal.debounce
-    - core/jquery.once
+    - core/once
 
 system.admin:
   version: VERSION
