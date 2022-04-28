@@ -59,7 +59,7 @@ class InstallCommandTest extends QuickStartTestBase {
 
     // Get a lock and a valid site path.
     $random = new Random();
-    $this->testDb = new TestDatabase(strtolower($random->string()));
+    $this->testDb = new TestDatabase(strtolower($random->name(8, TRUE)));
 
     $this->copyCodebase();
     $this->executeCommand('COMPOSER_DISCARD_CHANGES=true composer install --no-dev --no-interaction');
