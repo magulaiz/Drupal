@@ -12,6 +12,7 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\serialization\Normalizer\CacheableNormalizerInterface;
 use Drupal\serialization\Normalizer\SerializedColumnNormalizerTrait;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
@@ -129,6 +130,17 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     $data_internal = [];
     if (!empty($property_definitions)) {
       foreach ($data as $property_name => $property_value) {
+        if (empty($property_definitions[$property_name])) {
+          // Throw the Symfony exception, not json:api's, since the latter is
+          // designed for wrapping entity validation errors.
+          throw new UnprocessableEntityHttpException(
+            sprintf(
+              'Unknown property %s on field %s.',
+              $property_name,
+              $context['field_name'],
+            )
+          );
+        }
         $property_value_class = $property_definitions[$property_name]->getClass();
         $data_internal[$property_name] = $denormalize_property($property_name, $property_value, $property_value_class, $format, $context);
       }
