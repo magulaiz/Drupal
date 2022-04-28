@@ -3,6 +3,7 @@
 namespace Drupal\BuildTests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
+use Drupal\Component\Utility\Random;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -57,7 +58,8 @@ class InstallCommandTest extends QuickStartTestBase {
     $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
 
     // Get a lock and a valid site path.
-    $this->testDb = new TestDatabase();
+    $random = new Random();
+    $this->testDb = new TestDatabase(strtolower($random->string()));
 
     $this->copyCodebase();
     $this->executeCommand('COMPOSER_DISCARD_CHANGES=true composer install --no-dev --no-interaction');
