@@ -4,7 +4,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormStateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
