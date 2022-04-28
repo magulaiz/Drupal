@@ -304,6 +304,8 @@ system.theme_install:
   requirements:
     _permission: 'administer themes'
     _csrf_token: 'TRUE'
+  options:
+    _update_message: 'skip'
 
 system.status:
   path: '/admin/reports/status'

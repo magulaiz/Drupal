@@ -16,3 +16,7 @@ services:
   update.root:
     class: Drupal\update\UpdateRoot
     arguments: ['@kernel', '@request_stack']
+  update.route_subscriber:
+    class: Drupal\update\Routing\UpdateRouteSubscriber
+    tags:
+      - { name: event_subscriber }
