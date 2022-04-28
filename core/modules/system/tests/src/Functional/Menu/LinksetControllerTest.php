@@ -177,7 +177,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    * Test core functions of the linkset endpoint.
    *
    * Not intended to test every feature of the endpoint, only the most basic
-   * functionality. E.g. is it 200 OK and does it use the right content type?
+   * functionality.
    *
    * The expected linkset also ensures that path aliasing is working properly.
    *
@@ -185,7 +185,7 @@ final class LinksetControllerTest extends BrowserTestBase {
    */
   public function testBasicFunctions() {
     $this->enableEndpoint(TRUE);
-    $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/linkset-menu-main.json'));
+    $expected_linkset = Json::decode(file_get_contents(__DIR__ . '/fixtures/linkset-menu-main.json'));
     $response = $this->doRequest(Request::create('/system/menu/main/linkset'));
     $this->assertSame('application/linkset+json', $response->getHeaderLine('content-type'));
     $this->assertSame($expected_linkset, Json::decode((string) $response->getBody()));

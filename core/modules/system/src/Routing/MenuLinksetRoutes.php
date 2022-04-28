@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Route;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
- * Defines a route subscriber to register a url for serving image styles.
+ * Dynamically defines routes for menu linkset endpoints.
  */
 class MenuLinksetRoutes implements ContainerInjectionInterface {
 
