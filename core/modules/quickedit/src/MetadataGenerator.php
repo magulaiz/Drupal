@@ -77,7 +77,8 @@ class MetadataGenerator implements MetadataGeneratorInterface {
     }
 
     // Early-return if no editor is available.
-    $formatter_id = EntityViewDisplay::collectRenderDisplay($entity, $view_mode)->getRenderer($field_name)->getPluginId();
+    $class = \Drupal::entityTypeManager()->getDefinition('entity_view_display');
+    $formatter_id = $class::collectRenderDisplay($entity, $view_mode)->getRenderer($field_name)->getPluginId();
     $editor_id = $this->editorSelector->getEditor($formatter_id, $items);
     if (!isset($editor_id)) {
       return ['access' => FALSE];

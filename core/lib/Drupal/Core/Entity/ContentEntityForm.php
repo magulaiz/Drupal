@@ -281,7 +281,8 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     $langcode = $this->getFormLangcode($form_state);
     $this->entity = $this->entity->hasTranslation($langcode) ? $this->entity->getTranslation($langcode) : $this->entity->addTranslation($langcode);
 
-    $form_display = EntityFormDisplay::collectRenderDisplay($this->entity, $this->getOperation());
+    $class = $this->entityTypeManager->getDefinition('entity_form_display')->getClass();
+    $form_display = $class::collectRenderDisplay($this->entity, $this->getOperation());
     $this->setFormDisplay($form_display, $form_state);
 
     parent::init($form_state);
