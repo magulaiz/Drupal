@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Queue;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -17,13 +18,23 @@ class QueueDatabaseFactory {
   protected $connection;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
    * Constructs this factory object.
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
+   * @param \Drupal\Component\Datetime\TimeInterface
+   *   The time service.
    */
-  public function __construct(Connection $connection) {
+  public function __construct(Connection $connection, TimeInterface $time) {
     $this->connection = $connection;
+    $this->time = $time;
   }
 
   /**
@@ -36,7 +47,7 @@ class QueueDatabaseFactory {
    *   A key/value store implementation for the given $collection.
    */
   public function get($name) {
-    return new DatabaseQueue($name, $this->connection);
+    return new DatabaseQueue($name, $this->connection, $this->time);
   }
 
 }
