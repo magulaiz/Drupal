@@ -29,7 +29,7 @@ class QueueDatabaseFactory {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct(Connection $connection, TimeInterface $time) {
