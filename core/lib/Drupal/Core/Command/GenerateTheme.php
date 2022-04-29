@@ -124,8 +124,8 @@ class GenerateTheme extends Command {
     $info = Yaml::decode(file_get_contents($info_file));
     $info['name'] = $input->getOption('name') ?: $destination_theme;
 
-    // Unhide hidden themes.
-    unset($info['hidden']);
+    // Unhide hidden themes, and remove the starterkit flag.
+    unset($info['hidden'], $info['starterkit']);
 
     $info['core_version_requirement'] = '^' . $this->getVersion();
 
