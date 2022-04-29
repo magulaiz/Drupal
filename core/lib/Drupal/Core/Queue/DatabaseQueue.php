@@ -49,7 +49,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    *   The name of the queue.
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
    */
   public function __construct($name, Connection $connection, TimeInterface $time) {
