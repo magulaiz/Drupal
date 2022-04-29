@@ -295,8 +295,8 @@ for FILE in $FILES; do
       if [ $? -ne 0 ]; then
         STAT="$(stat -c "%a" $FILE 2>/dev/null)"
       fi
-      if [ "$STAT" -ne "644" ]; then
-        printf "${red}check failed:${reset} file $FILE should be 644 not $STAT\n"
+      if [[ "$STAT" -ne "644" && "$STAT" -ne "664" ]]; then
+        printf "${red}check failed:${reset} file $FILE should be 644 or 664 not $STAT\n"
         STATUS=1
       fi
     fi
