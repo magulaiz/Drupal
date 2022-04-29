@@ -5,6 +5,7 @@ namespace Drupal\Tests\system\Kernel\System;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
+use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDatabaseDelayException;
 use Prophecy\Argument;
@@ -229,6 +230,35 @@ class CronQueueTest extends KernelTestBase {
     $queue->deleteItem($item);
     static::assertFalse($queue->delayItem($item, 1));
     static::assertFalse($queue->releaseItem($item));
+  }
+
+  /**
+   * Test safeguard against invalid annotations in QueueWorkerManager.
+   */
+  public function testQueueWorkerManagerSafeguard(): void {
+    $queue_worker_manager = $this->container->get('plugin.manager.queue_worker');
+    $plugin_id = 'test_plugin_id';
+
+    // Ensure if no cron annotation is provided, none is added.
+    $definition = [];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertArrayNotHasKey('cron', $definition);
+
+    // Ensure if an empty cron annotation is provided, the default lease time is
+    // added.
+    $definition = ['cron' => []];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertArrayHasKey('time', $definition['cron']);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_TIME, $definition['cron']['time']);
+
+    // Ensure if an invalid lease time (less-than 1 second) is provided, it is
+    // overridden with the default lease time.
+    $definition = ['cron' => ['time' => 0]];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_TIME, $definition['cron']['time']);
+    $definition = ['cron' => ['time' => -1]];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_TIME, $definition['cron']['time']);
   }
 
 }
