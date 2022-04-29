@@ -43,8 +43,6 @@ final class EventSubscriber extends RouteSubscriberBase {
    * authentication providers on this module's routes since they cannot be known
    * in advance.
    *
-   * If the endpoint is configured to be disabled, remove the route.
-   *
    * @param \Symfony\Component\Routing\RouteCollection $collection
    *   A collection of routes.
    */
