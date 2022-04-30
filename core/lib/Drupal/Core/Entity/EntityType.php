@@ -538,6 +538,13 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasLinkProvider() {
+    return !empty($this->handlers['link_provider']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getListBuilderClass() {
     return $this->getHandlerClass('list_builder');
   }
