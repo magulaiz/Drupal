@@ -31,3 +31,14 @@ entity_test.entity_test_bundle.*:
 entity_test.entity_test_mul_bundle.*:
   type: entity_test.entity_test_bundle.*
   label: 'Entity test mul bundle'
+
+entity_test.entity_ui_test_type:
+  type: config_entity
+  label: 'Entity UI Test Type'
+  mapping:
+    label:
+      type: label
+      label: 'Label'
+    id:
+      type: string
+      label: 'Machine-readable name'

@@ -3,6 +3,7 @@
 namespace Drupal\Tests\system\Unit\Menu;
 
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 
 /**
@@ -18,6 +19,13 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
    * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $themeHandler;
+
+  /**
+   * The mocked entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
 
   /**
    * {@inheritdoc}
@@ -44,6 +52,15 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->with('olivero')
       ->willReturn(TRUE);
     $this->container->set('theme_handler', $this->themeHandler);
+
+    // Mock the entity type manager: the local task deriver
+    // \Drupal\Core\Entity\Plugin\Derivative\EntityTaskLinkDeriver calls it.
+    $this->entityTypeManager = $this->getMock(EntityTypeManagerInterface::class);
+    $this->entityTypeManager->expects($this->any())
+      ->method('getDefinitions')
+      ->willReturn([]);
+
+    $this->container->set('entity_type.manager', $this->entityTypeManager);
   }
 
   /**
