@@ -78,7 +78,7 @@ class ViewsDataHelper {
             continue;
           }
           foreach (['field', 'sort', 'filter', 'argument', 'relationship', 'area'] as $key) {
-            if (!empty($info[$key])) {
+            if (is_array($info) && !empty($info[$key])) {
               if ($grouping && !empty($info[$key]['no group by'])) {
                 continue;
               }

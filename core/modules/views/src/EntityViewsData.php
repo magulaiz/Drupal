@@ -5,6 +5,8 @@ namespace Drupal\views;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -74,6 +76,13 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected $entityFieldManager;
 
   /**
+   * The field type views data.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $fieldTypeViewsData;
+
+  /**
    * Constructs an EntityViewsData object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -88,14 +97,17 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
    *   The translation manager.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
    *   The entity field manager.
+   * @param \Drupal\Component\Plugin\PluginManagerInterface $field_type_views_data
+   *   The field type views data manager.
    */
-  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager) {
+  public function __construct(EntityTypeInterface $entity_type, SqlEntityStorageInterface $storage_controller, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager, EntityFieldManagerInterface $entity_field_manager, PluginManagerInterface $field_type_views_data) {
     $this->entityType = $entity_type;
     $this->entityTypeManager = $entity_type_manager;
     $this->storage = $storage_controller;
     $this->moduleHandler = $module_handler;
     $this->setStringTranslation($translation_manager);
     $this->entityFieldManager = $entity_field_manager;
+    $this->fieldTypeViewsData = $field_type_views_data;
   }
 
   /**
@@ -108,7 +120,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $container->get('entity_type.manager'),
       $container->get('module_handler'),
       $container->get('string_translation'),
-      $container->get('entity_field.manager')
+      $container->get('entity_field.manager'),
+      $container->get('plugin.manager.views.field_type_views_data')
     );
   }
 
@@ -436,7 +449,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
-    $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
+    $field_storage_definition = $this->getFieldStorageDefinitions()[$field_name];
+    $field_schema = $field_storage_definition->getSchema();
 
     $field_definition_type = $field_definition->getType();
     // Add all properties to views table data. We need an entry for each
@@ -445,13 +459,38 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     //   assuming the first one is the main column. See also what the
     //   mapSingleFieldViewsData() method does with $first.
     $first = TRUE;
+
+    $data = [];
     foreach ($field_column_mapping as $field_column_name => $schema_field_name) {
-      // The fields might be defined before the actual table.
-      $table_data = $table_data ?: [];
-      $table_data += [$schema_field_name => []];
-      $table_data[$schema_field_name] = NestedArray::mergeDeep($table_data[$schema_field_name], $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition));
-      $table_data[$schema_field_name]['entity field'] = $field_name;
+      $field_type_definition_exists = $this->fieldTypeViewsData->hasDefinition($field_definition_type);
+      if ($field_type_definition_exists) {
+        /** @var \Drupal\views\Plugin\views\FieldTypeViewsDataInterface $field_type_views_data_plugin */
+        $field_type_views_data_plugin = $this->fieldTypeViewsData->createInstance($field_definition_type);
+
+        // Use the field type views data plugins to get the data for the field
+        // from the data-storage.
+        $data[$schema_field_name] = $field_type_views_data_plugin->getViewsData($field_storage_definition, $field_column_name);
+      }
+      else {
+        // This is only used for fields types that don't have a field type data
+        // views plugin.
+        // The fields might be defined before the actual table.
+        $table_data = $table_data ?: [];
+        $table_data += [$schema_field_name => []];
+        $table_data[$schema_field_name] = NestedArray::mergeDeep($table_data[$schema_field_name], $this->mapSingleFieldViewsData($table, $field_name, $field_definition_type, $field_column_name, $field_schema['columns'][$field_column_name]['type'], $first, $field_definition));
+      }
+
+      $data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
+    }
+
+    $this->moduleHandler->alter('field_type_views_data_alter', $data, $field_definition, $field_storage_definition);
+
+    if ($table_data === NULL) {
+      $table_data = $data;
+    }
+    else {
+      $table_data = NestedArray::mergeDeep($table_data, $data);
     }
   }
 
@@ -508,36 +547,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
         $views_field['sort']['id'] = 'date';
         break;
 
-      case 'language':
-        $views_field['field']['id'] = 'field';
-        $views_field['argument']['id'] = 'language';
-        $views_field['filter']['id'] = 'language';
-        $views_field['sort']['id'] = 'standard';
-        break;
-
-      case 'boolean':
-        $views_field['field']['id'] = 'field';
-        $views_field['argument']['id'] = 'numeric';
-        $views_field['filter']['id'] = 'boolean';
-        $views_field['sort']['id'] = 'standard';
-        break;
-
-      case 'uri':
-        // Let's render URIs as URIs by default, not links.
-        $views_field['field']['id'] = 'field';
-        $views_field['field']['default_formatter'] = 'string';
-
-        $views_field['argument']['id'] = 'string';
-        $views_field['filter']['id'] = 'string';
-        $views_field['sort']['id'] = 'standard';
-        break;
-
-      case 'text':
-      case 'text_with_summary':
-        // Treat these three long text fields the same.
-        $field_type = 'text_long';
-        // Intentional fall-through here to the default processing!
-
       default:
         // For most fields, the field type is generic enough to just use
         // the column type to determine the filters etc.
@@ -587,115 +596,6 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
     }
 
     return $views_field;
-  }
-
-  /**
-   * Processes the views data for a language field.
-   *
-   * @param string $table
-   *   The table the language field is added to.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   * @param array $views_field
-   *   The views field data.
-   * @param string $field_column_name
-   *   The field column being processed.
-   */
-  protected function processViewsDataForLanguage($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
-    // Apply special titles for the langcode field.
-    if ($field_definition->getName() == $this->entityType->getKey('langcode')) {
-      if ($table == $this->entityType->getDataTable() || $table == $this->entityType->getRevisionDataTable()) {
-        $views_field['title'] = $this->t('Translation language');
-      }
-      if ($table == $this->entityType->getBaseTable() || $table == $this->entityType->getRevisionTable()) {
-        $views_field['title'] = $this->t('Original language');
-      }
-    }
-  }
-
-  /**
-   * Processes the views data for an entity reference field.
-   *
-   * @param string $table
-   *   The table the language field is added to.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   * @param array $views_field
-   *   The views field data.
-   * @param string $field_column_name
-   *   The field column being processed.
-   */
-  protected function processViewsDataForEntityReference($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
-
-    // @todo Should the actual field handler respect that this just renders a
-    //   number?
-    // @todo Create an optional entity field handler, that can render the
-    //   entity.
-    // @see https://www.drupal.org/node/2322949
-
-    if ($entity_type_id = $field_definition->getItemDefinition()->getSetting('target_type')) {
-      $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-      if ($entity_type instanceof ContentEntityType) {
-        $views_field['relationship'] = [
-          'base' => $this->getViewsTableForEntityType($entity_type),
-          'base field' => $entity_type->getKey('id'),
-          'label' => $entity_type->getLabel(),
-          'title' => $entity_type->getLabel(),
-          'id' => 'standard',
-        ];
-        $views_field['field']['id'] = 'field';
-        $views_field['argument']['id'] = 'numeric';
-        $views_field['filter']['id'] = 'numeric';
-        $views_field['sort']['id'] = 'standard';
-      }
-      else {
-        $views_field['field']['id'] = 'field';
-        $views_field['argument']['id'] = 'string';
-        $views_field['filter']['id'] = 'string';
-        $views_field['sort']['id'] = 'standard';
-      }
-    }
-
-    if ($field_definition->getName() == $this->entityType->getKey('bundle')) {
-      $views_field['filter']['id'] = 'bundle';
-    }
-  }
-
-  /**
-   * Processes the views data for a text field with formatting.
-   *
-   * @param string $table
-   *   The table the field is added to.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   * @param array $views_field
-   *   The views field data.
-   * @param string $field_column_name
-   *   The field column being processed.
-   */
-  protected function processViewsDataForTextLong($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
-    // Connect the text field to its formatter.
-    if ($field_column_name == 'value') {
-      $views_field['field']['format'] = $field_definition->getName() . '__format';
-      $views_field['field']['id'] = 'field';
-    }
-  }
-
-  /**
-   * Processes the views data for a UUID field.
-   *
-   * @param string $table
-   *   The table the field is added to.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The field definition.
-   * @param array $views_field
-   *   The views field data.
-   * @param string $field_column_name
-   *   The field column being processed.
-   */
-  protected function processViewsDataForUuid($table, FieldDefinitionInterface $field_definition, array &$views_field, $field_column_name) {
-    // It does not make sense for UUID fields to be click sortable.
-    $views_field['field']['click sortable'] = FALSE;
   }
 
   /**
