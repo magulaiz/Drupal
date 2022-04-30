@@ -73,3 +73,9 @@ system.performance_settings:
   title: 'Performance'
   route_name: system.performance_settings
   base_route: system.performance_settings
+
+# Task links for entity types, derived by their link_provider handlers.
+# This is in system module rather than in the Entity component, because YAML
+# plugin discovery doesn't look there.
+system.entity:
+  deriver: \Drupal\Core\Entity\Plugin\Derivative\EntityTaskLinkDeriver
