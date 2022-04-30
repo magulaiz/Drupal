@@ -14,6 +14,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\system\ActionConfigEntityInterface;
+use Drupal\views\Plugin\views\FieldTypeViewsDataInterface;
 
 /**
  * Implements hook_views_data().
@@ -186,13 +187,21 @@ function views_views_data() {
   $module_handler = \Drupal::moduleHandler();
 
   $entity_type_manager = \Drupal::entityTypeManager();
+  /** @var \Drupal\Component\Plugin\PluginManagerInterface $field_type_views_data */
+  $field_type_views_data = \Drupal::service('plugin.manager.views.field_type_views_data');
   if ($entity_type_manager->hasDefinition('field_storage_config')) {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
-        if (empty($result)) {
-          $result = views_field_default_views_data($field_storage);
+        /** @var \Drupal\views\Plugin\views\FieldTypeViewsDataInterface $field_type_views_data_plugin */
+        if ($field_type_views_data->hasDefinition($field_storage->getType()) && ($field_type_views_data_plugin = $field_type_views_data->createInstance($field_storage->getType()))) {
+          $result = views_field_plugin_views_data($field_type_views_data_plugin, $field_storage);
+        }
+        else {
+          $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', array($field_storage));
+          if (empty($result)) {
+            $result = views_field_default_views_data($field_storage);
+          }
         }
         $module_handler->alter('field_views_data', $result, $field_storage);
 
@@ -759,6 +768,55 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         ];
       }
     }
+  }
+
+  return $data;
+}
+
+/**
+ * Get views data implementation for a field from its plugin.
+ *
+ * @param \Drupal\views\Plugin\views\FieldTypeViewsDataInterface $field_type_views_data_plugin
+ *   The field type views data plugin.
+ * @param \Drupal\field\FieldStorageConfigInterface $field_storage
+ *   The field definition.
+ *
+ * @return array
+ *   The plugin views data for the field.
+ */
+function views_field_plugin_views_data(FieldTypeViewsDataInterface $field_type_views_data_plugin, FieldStorageConfigInterface $field_storage) {
+  $data = array();
+
+  // If the field type is not available, ignore it.
+  if (!\Drupal::service('plugin.manager.field.field_type')->hasDefinition($field_storage->getType())) {
+    return $data;
+  }
+  // Fields that have their own fields are ignored.
+  if (!$field_storage->getBundles()) {
+    return $data;
+  }
+  // Fields with custom storage will need to write their own handlers, so ignore
+  // them.
+  if ($field_storage->hasCustomStorage()) {
+    return $data;
+  }
+
+  // Check whether the entity type storage is supported.
+  $storage = _views_field_get_entity_type_storage($field_storage);
+  if (!$storage) {
+    return $data;
+  }
+
+  $table_mapping = $storage->getTableMapping();
+  $table = $storage->getBaseTable();
+  $field_name = $field_storage->getName();
+  $field_column_mapping = $table_mapping->getColumnNames($field_name);
+  $multiple = (count($field_column_mapping) > 1);
+
+  foreach ($field_column_mapping as $field_column_name => $schema_field_name) {
+    $views_field_name = ($multiple) ? $field_name . '__' . $field_column_name : $field_name;
+
+    $data[$table][$views_field_name] = $field_type_views_data_plugin->getViewsData($field_storage, $field_column_name);
   }
 
   return $data;
