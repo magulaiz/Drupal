@@ -198,7 +198,7 @@ function views_views_data() {
           $result = views_field_plugin_views_data($field_type_views_data_plugin, $field_storage);
         }
         else {
-          $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', array($field_storage));
+          $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
           if (empty($result)) {
             $result = views_field_default_views_data($field_storage);
           }
@@ -785,7 +785,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
  *   The plugin views data for the field.
  */
 function views_field_plugin_views_data(FieldTypeViewsDataInterface $field_type_views_data_plugin, FieldStorageConfigInterface $field_storage) {
-  $data = array();
+  $data = [];
 
   // If the field type is not available, ignore it.
   if (!\Drupal::service('plugin.manager.field.field_type')->hasDefinition($field_storage->getType())) {
