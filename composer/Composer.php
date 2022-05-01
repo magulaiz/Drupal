@@ -6,6 +6,7 @@ use Composer\Composer as ComposerApp;
 use Composer\Script\Event;
 use Composer\Semver\Comparator;
 use Composer\Semver\VersionParser;
+use Drupal\Composer\Generator\ComponentGenerator;
 use Drupal\Composer\Generator\PackageGenerator;
 use Symfony\Component\Finder\Finder;
 
@@ -27,6 +28,8 @@ class Composer {
    */
   public static function generateMetapackages(Event $event): void {
     $generator = new PackageGenerator();
+    $generator->generate($event->getIO(), getcwd());
+    $generator = new ComponentGenerator();
     $generator->generate($event->getIO(), getcwd());
   }
 
@@ -103,6 +106,23 @@ class Composer {
    */
   public static function drupalVersionBranch(): string {
     return preg_replace('#\.[0-9]+-dev#', '.x-dev', \Drupal::VERSION);
+  }
+
+  /**
+   * A useful semantic version for the current Drupal version as a dependency.
+   *
+   * @return string
+   *   Semantic version, such as ^9.5 or ^9.5@dev.
+   */
+  public static function drupalDepencencyVersion(): string {
+    $dev = '';
+    $exploded = explode('.', \Drupal::VERSION);
+    if ($patch_dev = $exploded[2] ?? FALSE) {
+      if (strpos($patch_dev, '-') !== FALSE) {
+        $dev = '@dev';
+      }
+    }
+    return '^' . $exploded[0] . '.' . $exploded[1] . $dev;
   }
 
   /**
