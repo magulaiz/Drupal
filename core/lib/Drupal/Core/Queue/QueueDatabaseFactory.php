@@ -7,7 +7,7 @@ use Drupal\Core\Database\Connection;
 /**
  * Defines the key/value store factory for the database backend.
  */
-class QueueDatabaseFactory {
+class QueueDatabaseFactory implements QueueFactoryInterface {
 
   /**
    * The database connection.
@@ -35,7 +35,7 @@ class QueueDatabaseFactory {
    * @return \Drupal\Core\Queue\DatabaseQueue
    *   A key/value store implementation for the given $collection.
    */
-  public function get($name) {
+  public function get(string $name): DatabaseQueue {
     return new DatabaseQueue($name, $this->connection);
   }
 
