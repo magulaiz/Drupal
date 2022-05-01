@@ -17,6 +17,6 @@
   background-color: var(--color--blue-20);
 }
 
-progress__percentage {
-  margin-left: 0.5rem;
+.progress__percentage {
+  margin-inline-start: 1rem;
 }

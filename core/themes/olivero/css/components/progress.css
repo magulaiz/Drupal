@@ -22,6 +22,10 @@
   background-color: #0d77b5;
 }
 
-progress__percentage {
-  margin-left: 0.5rem;
+[dir="ltr"] .progress__percentage {
+  margin-left: 1rem;
+}
+
+[dir="rtl"] .progress__percentage {
+  margin-right: 1rem;
 }
