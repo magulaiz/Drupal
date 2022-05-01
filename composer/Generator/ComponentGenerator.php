@@ -54,7 +54,6 @@ class ComponentGenerator {
    * @return \Symfony\Component\Finder\Finder
    */
   public function getComponentPathsFinder() {
-    $data = [];
     $composer_json_finder = new Finder();
     $composer_json_finder->name('composer.json')
       ->in($this->generatedProjectBaseDir)
