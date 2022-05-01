@@ -109,23 +109,6 @@ class Composer {
   }
 
   /**
-   * A useful semantic version for the current Drupal version as a dependency.
-   *
-   * @return string
-   *   Semantic version, such as ^9.5 or ^9.5@dev.
-   */
-  public static function drupalDepencencyVersion(): string {
-    $dev = '';
-    $exploded = explode('.', \Drupal::VERSION);
-    if ($patch_dev = $exploded[2] ?? FALSE) {
-      if (strpos($patch_dev, '-') !== FALSE) {
-        $dev = '@dev';
-      }
-    }
-    return '^' . $exploded[0] . '.' . $exploded[1] . $dev;
-  }
-
-  /**
    * Return the list of subprojects of a given type.
    *
    * @param string $root

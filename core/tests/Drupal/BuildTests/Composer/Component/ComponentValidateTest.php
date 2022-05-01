@@ -3,10 +3,14 @@
 namespace Drupal\BuildTests\Composer\Component;
 
 use Drupal\BuildTests\Framework\BuildTestBase;
+use Drupal\Composer\Composer;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Try to install dependencies per component, using Composer.
+ *
+ * Note that this test fails for arbitrary branch names, because of the way
+ * Composer determines version numbers per branch.
  *
  * @group Composer
  * @requires externalCommand composer
@@ -45,31 +49,51 @@ class ComponentValidateTest extends BuildTestBase {
    * @dataProvider provideComponentPaths
    */
   public function testComponentComposerJson($component_path) {
-    // Only copy the parts we need to prove that composer.json is broken.
-    $finder = $this->getCodebaseFinder();
-    $finder->in($this->getDrupalRoot() . static::$componentsPath . $component_path);
-    $this->copyCodebase($finder->getIterator());
+    if (!in_array($component_path, ['/Render', '/Utiltity'])) {
+      // Only copy the components. Copy all of them because some of them depend on
+      // each other.
+      $finder = $this->getCodebaseFinder();
+      $finder->in($this->getDrupalRoot() . static::$componentsPath);
+      $this->copyCodebase($finder->getIterator());
 
-    $working_dir = $this->getWorkingPath() . static::$componentsPath . $component_path;
+      $working_dir = $this->getWorkingPath() . static::$componentsPath . $component_path;
 
-    // We add path repositories so we can wire internal dependencies together.
-    $this->addExpectedRepositories($working_dir);
+      // We add path repositories so we can wire internal dependencies together.
+      $this->addExpectedRepositories($working_dir);
 
-    $process = $this->executeCommand("composer install --working-dir=$working_dir --no-interaction --no-progress");
-    $this->assertCommandSuccessful();
+      // Perform the installation.
+      $this->executeCommand("composer install --working-dir=$working_dir --no-interaction --no-progress");
+      $this->assertCommandSuccessful();
+    }
   }
 
   protected function addExpectedRepositories($working_dir) {
     $repo_paths = [
-      'Utility',
-      'Render',
+      'Render' => 'drupal/core-render',
+      'Utility' => 'drupal/core-utility',
     ];
-    foreach($repo_paths as $path) {
+    foreach ($repo_paths as $path => $package_name) {
       $path_repo = $this->getWorkingPath() . static::$componentsPath . '/' . $path;
       $repo_name = strtolower($path);
-      $process = $this->executeCommand("composer config repositories.$repo_name path $path_repo --working-dir=$working_dir");
+      // Add path repositories with the current version number.
+      $drupal_version = Composer::drupalVersionBranch();
+      $this->executeCommand("composer config repositories.$repo_name " .
+        "'{\"type\": \"path\",\"url\": \"$path_repo\",\"options\": {\"versions\": {\"$package_name\": \"$drupal_version\"}}}' --working-dir=$working_dir");
       $this->assertCommandSuccessful();
     }
   }
 
 }
+
+/**
+ *         "'{
+            \"type\": \"path\",
+            \"url\": \"$path_repo\",
+            \"options\": {
+                \"versions\": {
+                    \"$package_name\": \"$drupal_version\"
+                }
+            }
+        }' --working-dir=$working_dir");
+
+ */

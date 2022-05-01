@@ -113,7 +113,7 @@ class ComponentGenerator {
       return FALSE;
     }
 
-    // Warn the user that a metapackage file has been updated..
+    // Warn the user that a metapackage file has been updated.
     $display_path = static::$relativeComponentPath . '/' . $component_path . '/composer.json';
     $io->write("Updated component file <info>$display_path</info>.");
 
@@ -125,6 +125,15 @@ class ComponentGenerator {
     return TRUE;
   }
 
+  /**
+   * Reconcile JSON data.
+   *
+   * @param string $original_json
+   *   Contents of the component's composer.json file.
+   *
+   * @return array
+   *   Structured data to be turned back into JSON.
+   */
   protected function getPackage($original_json) {
     $original_data = json_decode($original_json, TRUE);
     $package_data = array_merge($original_data, $this->initialPackageMetadata());
@@ -132,8 +141,9 @@ class ComponentGenerator {
     $core_info = $this->drupalCoreInfo->rootComposerJson();
 
     // Assume that if Drupal is a dev version, then minimum stability for
-    // components is also dev.
-    if (strpos(Composer::drupalDepencencyVersion(), '@') !== FALSE) {
+    // components is also dev. This allows testing in-situ with path-based
+    // Composer repositories.
+    if (strpos(Composer::drupalVersionBranch(), '-') !== FALSE) {
       $package_data['minimum-stability'] = 'dev';
     }
 
@@ -146,7 +156,7 @@ class ComponentGenerator {
       }
 
       // Reconcile looser constraints from drupal/core, and we're totally OK
-      // with over-writing the locked ones.
+      // with over-writing the locked ones from above.
       if ($constraint = $core_info['require'][$package_name] ?? FALSE) {
         $package_data['require'][$package_name] = $constraint;
       }
@@ -154,7 +164,7 @@ class ComponentGenerator {
       // Reconcile dependencies on other Drupal components, so we can set the
       // constraint to our current version.
       if (strpos($package_name, 'drupal/core-') !== FALSE) {
-        $package_data['require'][$package_name] = Composer::drupalDepencencyVersion();
+        $package_data['require'][$package_name] = Composer::drupalVersionBranch();
       }
     }
 
@@ -176,6 +186,8 @@ class ComponentGenerator {
 
   /**
    * Common default metadata for all components.
+   *
+   * @todo Add change record link.
    *
    * @return array
    */
