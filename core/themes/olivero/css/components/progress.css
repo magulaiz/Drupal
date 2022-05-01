@@ -21,3 +21,7 @@
   height: 1.125rem;
   background-color: #0d77b5;
 }
+
+progress__percentage {
+  margin-left: 0.5rem;
+}
