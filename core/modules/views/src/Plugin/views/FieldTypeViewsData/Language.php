@@ -51,7 +51,7 @@ class Language extends FieldTypeViewsData {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $configuration, $plugin_id, $plugin_definition, $container->get('entity.manager'), $container->get('entity_type.manager')
+      $configuration, $plugin_id, $plugin_definition, $container->get('entity_type.manager')
     );
   }
 
