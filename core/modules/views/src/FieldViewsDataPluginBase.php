@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Field views data.
  */
-abstract class FieldTypeViewsData implements FieldTypeViewsDataInterface, ContainerFactoryPluginInterface {
+abstract class FieldViewsDataPluginBase implements FieldTypeViewsDataInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
 

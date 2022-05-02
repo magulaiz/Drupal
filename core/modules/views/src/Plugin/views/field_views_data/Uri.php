@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field_views_data;
 
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 
 /**
  * Defines views data for fields of type "uri".
@@ -20,6 +20,6 @@ use Drupal\views\FieldTypeViewsData;
  *   }
  * )
  */
-class Uri extends FieldTypeViewsData {
+class Uri extends FieldViewsDataPluginBase {
 
 }
