@@ -42,13 +42,13 @@
         $details.each(function () {
           var $that = $(this);
           var $summary = $that.find('> summary');
-          var newVerticalTab = new Drupal.verticalTab({
+          var verticalTab = new Drupal.verticalTab({
             title: $summary.length ? $summary[0].textContent : '',
             details: $that
           });
-          tabList.append(newVerticalTab.item);
+          tabList.append(verticalTab.item);
           tabList.attr('aria-owns', "".concat(tabList.attr('aria-owns'), " ").concat($that.attr('id'), "-tab"));
-          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', newVerticalTab);
+          $that.removeClass('collapsed').removeAttr('open').addClass('vertical-tabs__pane').data('verticalTab', verticalTab);
 
           if (this.id === focusID) {
             tabFocus = $that;
@@ -123,6 +123,7 @@
       this.item.closest('.js-form-type-vertical-tabs').show();
       this.item.parent().children('.vertical-tabs__menu-item').removeClass('first').filter(':visible').eq(0).addClass('first');
       this.details.removeClass('vertical-tab--hidden').show();
+      this.focus();
       return this;
     },
     tabHide: function tabHide() {

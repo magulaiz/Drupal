@@ -101,11 +101,11 @@
           $details.each(function () {
             const $that = $(this);
             const $summary = $that.find('> summary');
-            const newVerticalTab = new Drupal.verticalTab({
+            const verticalTab = new Drupal.verticalTab({
               title: $summary.length ? $summary[0].textContent : '',
               details: $that,
             });
-            tabList.append(newVerticalTab.item);
+            tabList.append(verticalTab.item);
 
             // Because the tab items are enclosed in <li> elements, they must be
             // added to aria-owns to ensure they are seen as belonging to the
@@ -118,7 +118,7 @@
               .removeClass('collapsed')
               .removeAttr('open')
               .addClass('vertical-tabs__pane')
-              .data('verticalTab', newVerticalTab);
+              .data('verticalTab', verticalTab);
             if (this.id === focusID) {
               tabFocus = $that;
             }
@@ -256,6 +256,8 @@
         .addClass('first');
       // Display the details element.
       this.details.removeClass('vertical-tab--hidden').show();
+      // Focus this tab.
+      this.focus();
       return this;
     },
 
