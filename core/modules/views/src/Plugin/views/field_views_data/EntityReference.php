@@ -6,7 +6,6 @@ use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\views\FieldViewsDataPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
