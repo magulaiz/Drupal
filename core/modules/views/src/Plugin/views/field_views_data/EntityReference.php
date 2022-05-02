@@ -6,7 +6,7 @@ use Drupal\Core\Entity\ContentEntityType;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class EntityReference extends FieldTypeViewsData {
+class EntityReference extends FieldViewsDataPluginBase {
 
   /**
    * The Drupal type entity manager.

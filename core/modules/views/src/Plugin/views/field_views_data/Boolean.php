@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field_views_data;
 
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 
 /**
  * Defines views data for fields of type "boolean".
@@ -17,6 +17,6 @@ use Drupal\views\FieldTypeViewsData;
  *   }
  * )
  */
-class Boolean extends FieldTypeViewsData {
+class Boolean extends FieldViewsDataPluginBase {
 
 }
