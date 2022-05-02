@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\views;
+namespace Drupal\views\Plugin\views\field_views_data;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
