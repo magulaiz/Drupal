@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
- * Plugin type manager for all views field type views data plugins.
+ * Plugin manager for field views data plugins.
  *
  * @ingroup views_plugins
  */
