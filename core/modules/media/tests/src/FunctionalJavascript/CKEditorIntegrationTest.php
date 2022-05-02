@@ -1282,7 +1282,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
         'allowed_view_modes' => [
           'view_mode_1' => 'view_mode_1',
         ],
-        'default_view_mode_9301' => 'view_mode_2',
+        'default_view_mode_9301' => '22222',
       ],
     ])->save();
 
@@ -1291,7 +1291,7 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertArrayHasKey('config', $dependencies);
     $this->assertSame([
       'core.entity_view_mode.media.view_mode_1',
-      'core.entity_view_mode.media.view_mode_2',
+      'core.entity_view_mode.media.22222',
     ], $dependencies['config']);
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
