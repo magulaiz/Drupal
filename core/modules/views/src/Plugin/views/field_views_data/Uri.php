@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\views\Plugin\views\FieldTypeViewsData;
+namespace Drupal\views\Plugin\views\field_views_data;
 
 use Drupal\views\FieldTypeViewsData;
 
 /**
- * Defines views data for fields of type "uuid".
+ * Defines views data for fields of type "uri".
  *
  * @ViewsFieldData(
- *   id = "uuid",
+ *   id = "uri",
  *   field = {
- *     "click sortable" = FALSE,
+ *     "default_formatter" = "string",
  *   },
  *   argument = {
  *     "id" = "string",
@@ -20,6 +20,6 @@ use Drupal\views\FieldTypeViewsData;
  *   }
  * )
  */
-class Uuid extends FieldTypeViewsData {
+class Uri extends FieldTypeViewsData {
 
 }
