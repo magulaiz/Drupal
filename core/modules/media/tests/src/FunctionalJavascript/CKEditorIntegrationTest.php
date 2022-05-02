@@ -1290,8 +1290,8 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $dependencies = $filter_format->getDependencies();
     $this->assertArrayHasKey('config', $dependencies);
     $this->assertSame([
-      'core.entity_view_mode.media.view_mode_1',
       'core.entity_view_mode.media.22222',
+      'core.entity_view_mode.media.view_mode_1',
     ], $dependencies['config']);
 
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media'));
