@@ -5,6 +5,7 @@ namespace Drupal\Core\Queue;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Component\Datetime\TimeInterface;
 
 /**
  * Default queue implementation.
@@ -35,16 +36,26 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
   protected $connection;
 
   /**
+   * The time service.
+   *
+   * @var \Drupal\Component\Datetime\TimeInterface
+   */
+  protected TimeInterface $time;
+
+  /**
    * Constructs a \Drupal\Core\Queue\DatabaseQueue object.
    *
    * @param string $name
    *   The name of the queue.
    * @param \Drupal\Core\Database\Connection $connection
    *   The Connection object containing the key-value tables.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct($name, Connection $connection) {
+  public function __construct($name, Connection $connection, TimeInterface $time) {
     $this->name = $name;
     $this->connection = $connection;
+    $this->time = $time;
   }
 
   /**
@@ -87,9 +98,9 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
       ->fields([
         'name' => $this->name,
         'data' => serialize($data),
-        // We cannot rely on REQUEST_TIME because many items might be created
-        // by a single request which takes longer than 1 second.
-        'created' => \Drupal::time()->getCurrentTime(),
+        // We cannot rely on getRequestTime() because many items might be
+        // created by a single request which takes longer than 1 second.
+        'created' => $this->time->getCurrentTime(),
       ]);
     // Return the new serial ID, or FALSE on failure.
     return $query->execute();
@@ -140,7 +151,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
       // should really expire.
       $update = $this->connection->update(static::TABLE_NAME)
         ->fields([
-          'expire' => \Drupal::time()->getCurrentTime() + $lease_time,
+          'expire' => $this->time->getCurrentTime() + $lease_time,
         ])
         ->condition('item_id', $item->item_id)
         ->condition('expire', 0);
@@ -182,7 +193,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
 
     try {
       // Add the delay relative to the current time.
-      $expire = \Drupal::time()->getCurrentTime() + $delay;
+      $expire = $this->time->getCurrentTime() + $delay;
       // Update the expiry time of this item.
       $update = $this->connection->update(static::TABLE_NAME)
         ->fields([
@@ -241,7 +252,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
     try {
       // Clean up the queue for failed batches.
       $this->connection->delete(static::TABLE_NAME)
-        ->condition('created', REQUEST_TIME - 864000, '<')
+        ->condition('created', $this->time->getRequestTime() - 864000, '<')
         ->condition('name', 'drupal_batch:%', 'LIKE')
         ->execute();
 
@@ -252,7 +263,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
           'expire' => 0,
         ])
         ->condition('expire', 0, '<>')
-        ->condition('expire', REQUEST_TIME, '<')
+        ->condition('expire', $this->time->getRequestTime(), '<')
         ->execute();
     }
     catch (\Exception $e) {

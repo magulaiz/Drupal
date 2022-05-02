@@ -18,10 +18,13 @@ class QueueTest extends KernelTestBase {
    * Tests the System queue.
    */
   public function testSystemQueue() {
+    $connection = Database::getConnection();
+    $time = \Drupal::time();
+
     // Create two queues.
-    $queue1 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+    $queue1 = new DatabaseQueue($this->randomMachineName(), $connection, $time);
     $queue1->createQueue();
-    $queue2 = new DatabaseQueue($this->randomMachineName(), Database::getConnection());
+    $queue2 = new DatabaseQueue($this->randomMachineName(), $connection, $time);
     $queue2->createQueue();
 
     $this->runQueueTest($queue1, $queue2);
