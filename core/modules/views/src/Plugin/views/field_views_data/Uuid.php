@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field_views_data;
 
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 
 /**
  * Defines views data for fields of type "uuid".
@@ -20,6 +20,6 @@ use Drupal\views\FieldTypeViewsData;
  *   }
  * )
  */
-class Uuid extends FieldTypeViewsData {
+class Uuid extends FieldViewsDataPluginBase {
 
 }

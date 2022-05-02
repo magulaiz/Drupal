@@ -2,7 +2,7 @@
 
 namespace Drupal\views\Plugin\views\field_views_data;
 
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 
 /**
  * Defines views data for fields of type "integer".
@@ -17,6 +17,6 @@ use Drupal\views\FieldTypeViewsData;
  *   }
  * )
  */
-class Integer extends FieldTypeViewsData {
+class Integer extends FieldViewsDataPluginBase {
 
 }

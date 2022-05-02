@@ -4,7 +4,7 @@ namespace Drupal\views\Plugin\views\field_views_data;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\views\FieldTypeViewsData;
+use Drupal\views\FieldViewsDataPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class Language extends FieldTypeViewsData {
+class Language extends FieldViewsDataPluginBase {
 
   /**
    * The drupal entity manager.
