@@ -84,7 +84,10 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $bundles_per_view_mode = [];
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
     $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
-    $default_view_mode = $media_embed_filter->settings['default_view_mode'];
+    // We use default_view_mode_9301 here instead of default_view_mode to avoid
+    // broken displays when the default_view_mode has changed and the view mode
+    // attribute is missing.
+    $default_view_mode = $media_embed_filter->settings['default_view_mode_9301'];
     // @todo Remove in https://www.drupal.org/project/drupal/issues/3277049.
     // This is a workaround until the above issue is fixed to prevent the
     // editor from crashing because the frontend expects the default view mode
