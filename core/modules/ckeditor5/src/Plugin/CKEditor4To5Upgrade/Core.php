@@ -60,6 +60,7 @@ use Drupal\filter\FilterFormatInterface;
  *   cke5_plugin_elements_subset_configuration = {
  *    "ckeditor5_heading",
  *    "ckeditor5_alignment",
+ *    "ckeditor5_list",
  *   }
  * )
  *
@@ -245,6 +246,18 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         if (!isset($configuration['enabled_alignments'])) {
           $configuration['enabled_alignments'] = array_unique($configuration['enabled_alignments']);
         }
+
+      case 'ckeditor5_list':
+        $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          // The default is to allow a reversed list and a start index, which makes sense when there
+          // are no restrictions.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin::default_configuration()
+          return NULL;
+        }
+        $configuration = [];
+        $configuration['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
+        $configuration['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
         return $configuration;
 
       default:
