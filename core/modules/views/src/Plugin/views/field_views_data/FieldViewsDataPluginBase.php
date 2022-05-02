@@ -9,7 +9,7 @@ use Drupal\views\Plugin\views\FieldTypeViewsDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Field views data.
+ * Base class for field views data plugins
  */
 abstract class FieldViewsDataPluginBase implements FieldTypeViewsDataInterface, ContainerFactoryPluginInterface {
 
