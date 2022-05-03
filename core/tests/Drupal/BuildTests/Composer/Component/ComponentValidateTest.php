@@ -21,7 +21,7 @@ class ComponentValidateTest extends BuildTestBase {
    *
    * @var string
    */
-  static protected $componentsPath = '/core/lib/Drupal/Component';
+  protected static $componentsPath = '/core/lib/Drupal/Component';
 
   public function provideComponentPaths() {
     $data = [];
