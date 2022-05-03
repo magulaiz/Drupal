@@ -902,7 +902,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
     yield 'attribute restrictions are different: <a hreflang=*> vs <a hreflang="en"> — vice versa' => [
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => TRUE]]),
-      'diff' => 'a',
+      'diff' => HTMLRestrictions::emptySet(),
       'intersection' => 'a',
       'union' => 'b',
     ];
