@@ -228,6 +228,12 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return $configuration;
 
       case 'ckeditor5_alignment':
+        $alignment_classes = [
+          'text-align-left',
+          'text-align-right',
+          'text-align-center',
+          'text-align-justify'
+        ];
         $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
           // The default is to allow all alignments, which makes sense when there
@@ -242,8 +248,8 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         foreach ($restrictions['allowed'] as $tag) {
           if (isset($tag['class']) && is_array($tag['class'])) {
             foreach ($tag['class'] as $class => $data) {
-              if (substr($class, 0, 11) === 'text-align-') {
-                $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
+              if (in_array($class, $alignment_classes)) {
+                  $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
               }
             }
           }

@@ -67,6 +67,10 @@ class ConfigurablePluginTest extends KernelTestBase {
       'ckeditor5_sourceEditing' => [
         'allowed_tags' => [],
       ],
+      'ckeditor5_list' => [
+        'reversed' => TRUE,
+        'startIndex' => TRUE,
+      ],
       'ckeditor5_alignment' => [
         'enabled_alignments' => [
           0 => 'left',
@@ -74,10 +78,6 @@ class ConfigurablePluginTest extends KernelTestBase {
           2 => 'right',
           3 => 'justify',
         ],
-      ],
-      'ckeditor5_list' => [
-        'reversed' => TRUE,
-        'startIndex' => TRUE,
       ],
       'ckeditor5_imageResize' => [
         'allow_resize' => TRUE,
