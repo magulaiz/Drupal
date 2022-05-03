@@ -41,6 +41,13 @@ class AliasPathMatcher extends PathMatcher {
     if (parent::checkFrontPage()) {
       return TRUE;
     }
+
+    // Ensure that the code can also be executed when there is no active
+    // route match, like on exception responses.
+    if (!$this->routeMatch->getRouteName()) {
+      return FALSE;
+    }
+
     if ($this->routeMatch->getRouteName()) {
       $url = Url::fromRouteMatch($this->routeMatch);
       $path = '/' . $url->getInternalPath();
