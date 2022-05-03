@@ -744,11 +744,9 @@
         verticalTabs.querySelectorAll('.vertical-tabs__menu').forEach((tab) => {
           tab.addEventListener('click', (e) => {
             const state = {};
-            const href = e.target
-              .closest('[href]')
-              .getAttribute('href')
-              .split('--')[0];
-            state[`${id}-active-tab`] = `#${id} [href^='${href}']`;
+
+            const tabId = e.target.closest('[href]').id;
+            state[`${id}-active-tab`] = `#${tabId}`;
             updateUiStateStorage(state);
           });
         });
@@ -1056,9 +1054,12 @@
   Drupal.behaviors.tabErrorsVisible = {
     attach(context) {
       context.querySelectorAll('details .form-item .error').forEach((item) => {
+        console.log('item', item);
         const details = item.closest('details');
         if (details.style.display === 'none') {
-          const tabSelect = document.querySelector(`[href='#${details.id}']`);
+          const tabSelect = document.querySelector(
+            `a[id^='${details.getAttribute('data-drupal-selector')}']`,
+          );
           if (tabSelect) {
             tabSelect.click();
           }

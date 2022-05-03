@@ -457,8 +457,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         verticalTabs.querySelectorAll('.vertical-tabs__menu').forEach(function (tab) {
           tab.addEventListener('click', function (e) {
             var state = {};
-            var href = e.target.closest('[href]').getAttribute('href').split('--')[0];
-            state["".concat(id, "-active-tab")] = "#".concat(id, " [href^='").concat(href, "']");
+            var tabId = e.target.closest('[href]').id;
+            state["".concat(id, "-active-tab")] = "#".concat(tabId);
             updateUiStateStorage(state);
           });
         });
@@ -599,10 +599,11 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   Drupal.behaviors.tabErrorsVisible = {
     attach: function attach(context) {
       context.querySelectorAll('details .form-item .error').forEach(function (item) {
+        console.log('item', item);
         var details = item.closest('details');
 
         if (details.style.display === 'none') {
-          var tabSelect = document.querySelector("[href='#".concat(details.id, "']"));
+          var tabSelect = document.querySelector("a[id^='".concat(details.getAttribute('data-drupal-selector'), "']"));
 
           if (tabSelect) {
             tabSelect.click();

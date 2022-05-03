@@ -166,8 +166,9 @@
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
     const panelId = settings.details.attr('id');
+    const stablePanelId = settings.details.attr('data-drupal-selector')
     this.link.attr({
-      id: `${panelId}-tab`,
+      id: `${stablePanelId}-tab`,
       role: 'tab',
       'aria-selected': 'false',
       'aria-controls': panelId,
@@ -175,7 +176,7 @@
     });
     this.details.attr({
       role: 'tabpanel',
-      'aria-labelledby': `${panelId}-tab`,
+      'aria-labelledby': `${stablePanelId}-tab`,
       tabindex: '0',
     });
 

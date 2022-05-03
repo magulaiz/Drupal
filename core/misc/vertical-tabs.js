@@ -78,8 +78,9 @@
     var self = this;
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
     var panelId = settings.details.attr('id');
+    var stablePanelId = settings.details.attr('data-drupal-selector');
     this.link.attr({
-      id: "".concat(panelId, "-tab"),
+      id: "".concat(stablePanelId, "-tab"),
       role: 'tab',
       'aria-selected': 'false',
       'aria-controls': panelId,
@@ -87,7 +88,7 @@
     });
     this.details.attr({
       role: 'tabpanel',
-      'aria-labelledby': "".concat(panelId, "-tab"),
+      'aria-labelledby': "".concat(stablePanelId, "-tab"),
       tabindex: '0'
     });
     this.link.on('keydown click', function (event) {
