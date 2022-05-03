@@ -457,8 +457,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         verticalTabs.querySelectorAll('.vertical-tabs__menu').forEach(function (tab) {
           tab.addEventListener('click', function (e) {
             var state = {};
-            var tabId = e.target.closest('[href]').id;
-            state["".concat(id, "-active-tab")] = "#".concat(tabId);
+            var tabFor = e.target.closest('[href]').getAttribute('data-drupal-tab-for');
+            state["".concat(id, "-active-tab")] = "[data-drupal-tab-for=\"".concat(tabFor, "\"]");
             updateUiStateStorage(state);
           });
         });

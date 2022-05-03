@@ -168,15 +168,16 @@
     const panelId = settings.details.attr('id');
     const stablePanelId = settings.details.attr('data-drupal-selector');
     this.link.attr({
-      id: `${stablePanelId}-tab`,
+      id: `${panelId}-tab`,
       role: 'tab',
       'aria-selected': 'false',
       'aria-controls': panelId,
+      'data-drupal-tab-for': stablePanelId,
       tabindex: 0,
     });
     this.details.attr({
       role: 'tabpanel',
-      'aria-labelledby': `${stablePanelId}-tab`,
+      'aria-labelledby': `${panelId}-tab`,
       tabindex: '0',
     });
 

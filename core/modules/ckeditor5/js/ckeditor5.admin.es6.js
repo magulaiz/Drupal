@@ -745,8 +745,10 @@
           tab.addEventListener('click', (e) => {
             const state = {};
 
-            const tabId = e.target.closest('[href]').id;
-            state[`${id}-active-tab`] = `#${tabId}`;
+            const tabFor = e.target
+              .closest('[href]')
+              .getAttribute('data-drupal-tab-for');
+            state[`${id}-active-tab`] = `[data-drupal-tab-for="${tabFor}"]`;
             updateUiStateStorage(state);
           });
         });

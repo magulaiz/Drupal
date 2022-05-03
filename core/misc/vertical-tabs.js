@@ -80,15 +80,16 @@
     var panelId = settings.details.attr('id');
     var stablePanelId = settings.details.attr('data-drupal-selector');
     this.link.attr({
-      id: "".concat(stablePanelId, "-tab"),
+      id: "".concat(panelId, "-tab"),
       role: 'tab',
       'aria-selected': 'false',
       'aria-controls': panelId,
+      'data-drupal-tab-for': stablePanelId,
       tabindex: 0
     });
     this.details.attr({
       role: 'tabpanel',
-      'aria-labelledby': "".concat(stablePanelId, "-tab"),
+      'aria-labelledby': "".concat(panelId, "-tab"),
       tabindex: '0'
     });
     this.link.on('keydown click', function (event) {

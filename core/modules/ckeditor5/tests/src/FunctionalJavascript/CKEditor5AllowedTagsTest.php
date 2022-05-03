@@ -314,7 +314,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // Updating Source Editing's editable tags should automatically update
     // filter_html to include those additional tags.
     $assert_session->waitForText('Source editing');
-    $page->find('css', '#edit-editor-settings-plugins-ckeditor5-sourceediting-tab')->click();
+    $page->find('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Manually editable HTML tags');
     $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
@@ -330,7 +330,7 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // error must be associated with the correct form item.
     $source_edit_tags_field->setValue('<aside><strong>');
     $assert_session->waitForText('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '#edit-editor-settings-plugins-ckeditor5-sourceediting-tab')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($page->find('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $this->assertTrue($allowed_html_field->hasAttribute('readonly'));
 
@@ -338,14 +338,14 @@ class CKEditor5AllowedTagsTest extends CKEditor5TestBase {
     // immediate AJAX validation error above.
     $page->pressButton('Save configuration');
     $assert_session->pageTextContains('The following tag(s) are already supported by enabled plugins and should not be added to the Source Editing "Manually editable HTML tags" field: Bold (<strong>)');
-    $this->assertTrue($page->find('css', '#edit-editor-settings-plugins-ckeditor5-sourceediting-tab')->getParent()->hasClass('is-selected'));
+    $this->assertTrue($page->find('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-sourceediting"]')->getParent()->hasClass('is-selected'));
     $this->assertSame('true', $page->findField('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]')->getAttribute('aria-invalid'));
     $assert_session->pageTextNotContains('The text format ckeditor5 has been updated');
 
     // Wait for the "Source editing" vertical tab to appear, remove the already
     // supported tags and re-save. Now the text format should save successfully.
     $assert_session->waitForText('Source editing');
-    $page->find('css', '#edit-editor-settings-plugins-ckeditor5-sourceediting-tab')->click();
+    $page->find('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
     $assert_session->pageTextContains('Manually editable HTML tags');
     $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
     $source_edit_tags_field->setValue('<aside>');

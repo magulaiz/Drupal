@@ -241,7 +241,7 @@ class CKEditor5Test extends CKEditor5TestBase {
    * Validate the available languages on the basis of selected language option.
    */
   public function languageOfPartsPluginTestHelper($page, $assert_session, $predefined_languages, $option) {
-    $this->assertNotEmpty($assert_session->waitForElement('css', '#edit-editor-settings-plugins-ckeditor5-language-tab'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-language"]'));
 
     // Set correct value.
     $vertical_tab_link = $page->find('xpath', "//ul[contains(@class, 'vertical-tabs__menu')]/li/a[starts-with(@id, 'edit-editor-settings-plugins-ckeditor5-language')]");
@@ -288,7 +288,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure the HTML filter tab is visible.
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#edit-filters-filter-html-settings-tab'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '[data-drupal-tab-for="edit-filters-filter-html-settings"]'));
 
     // Enable media embed to make a second filter config tab visible.
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
@@ -301,7 +301,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-uploadImage'));
     $this->triggerKeyUp('.ckeditor5-toolbar-item-uploadImage', 'ArrowDown');
     // cSpell:disable-next-line
-    $this->assertNotEmpty($assert_session->waitForElement('css', '#edit-editor-settings-plugins-ckeditor5-imageupload-tab'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-imageupload"]'));
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-uploadImage'));
     $assert_session->assertWaitOnAjaxRequest();
 
@@ -314,7 +314,7 @@ class CKEditor5Test extends CKEditor5TestBase {
     // Enable language to add a second plugin config form.
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
     $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
-    $this->assertNotEmpty($assert_session->waitForElement('css', '#edit-editor-settings-plugins-ckeditor5-language-tab'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-language"]'));
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-textPartLanguage'));
     $assert_session->assertWaitOnAjaxRequest();
 
