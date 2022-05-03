@@ -4,7 +4,6 @@ namespace Drupal\layout_builder;
 
 use Drupal\Core\Config\Entity\ThirdPartySettingsInterface;
 use Drupal\Core\Plugin\PreviewAwarePluginInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 
 /**
@@ -97,18 +96,9 @@ class Section implements ThirdPartySettingsInterface {
     }
 
     $build = $layout->build($regions);
-
-    // Find the first non-global entity context value and add it to the build.
-    if (!Element::isEmpty($build)) {
-      foreach ($contexts as $context_id => $context) {
-        if (strpos($context_id, '@') !== 0 && $context->hasContextValue()) {
-          $value = $context->getContextValue();
-          if ($value instanceof EntityInterface) {
-            $build['#entity'] = $value;
-            break;
-          }
-        }
-      }
+    // If an entity was used to build the layout, store it on the build.
+    if (!Element::isEmpty($build) && isset($contexts['layout_builder.entity'])) {
+      $build['#entity'] = $contexts['layout_builder.entity']->getContextValue();
     }
     return $build;
   }
