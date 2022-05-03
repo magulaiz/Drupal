@@ -73,6 +73,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function mapCKEditor4ToolbarButtonToCKEditor5ToolbarItem(string $cke4_button, HTMLRestrictions $text_format_html_restrictions): ?array {
+    static $alignment_mapped;
     switch ($cke4_button) {
       // @see \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalImage
       case 'DrupalImage':
@@ -106,7 +107,11 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
       case 'JustifyCenter':
       case 'JustifyRight':
       case 'JustifyBlock':
-        return ['alignment'];
+        if (!isset($alignment_mapped)) {
+          $alignment_mapped = TRUE;
+          return ['alignment'];
+        }
+        return NULL;
 
       case 'HorizontalRule':
         return ['horizontalLine'];
@@ -243,9 +248,10 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
             }
           }
         }
-        if (!isset($configuration['enabled_alignments'])) {
+        if (isset($configuration['enabled_alignments'])) {
           $configuration['enabled_alignments'] = array_unique($configuration['enabled_alignments']);
         }
+        return $configuration;
 
       case 'ckeditor5_list':
         $restrictions = $text_format->getHtmlRestrictions();
