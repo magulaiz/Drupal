@@ -294,10 +294,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
       '<a target class>',
       ['a' => ['target' => TRUE, 'class' => TRUE]],
     ];
-    yield 'tag with two attributes, spread across declarations' => [
-      '<a target> <a class>',
-      ['a' => ['target' => TRUE, 'class' => TRUE]],
-    ];
 
     // Multiple tag cases.
     yield 'two tags' => [
@@ -324,21 +320,6 @@ class HTMLRestrictionsTest extends UnitTestCase {
         ],
       ],
     ];
-    yield '$text-container, with attribute values spread across declarations' => [
-      '<$text-container class="text-align-left"> <$text-container class="text-align-center"> <$text-container class="text-align-right"> <$text-container class="text-align-justify">',
-      [],
-      [
-        '$text-container' => [
-          'class' => [
-            'text-align-left' => TRUE,
-            'text-align-center' => TRUE,
-            'text-align-right' => TRUE,
-            'text-align-justify' => TRUE,
-          ],
-        ],
-      ],
-    ];
-
     yield '$text-container + one concrete tag to resolve into' => [
       '<p> <$text-container class="text-align-left text-align-center text-align-right text-align-justify">',
       [

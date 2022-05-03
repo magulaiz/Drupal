@@ -414,10 +414,7 @@ ckeditor5_alignment:
       alignment:
         label: Text alignment
     elements:
-      - <$text-container class="text-align-left">
-      - <$text-container class="text-align-center">
-      - <$text-container class="text-align-right">
-      - <$text-container class="text-align-justify">
+      - <$text-container class="text-align-left text-align-center text-align-right text-align-justify">
 
 ckeditor5_removeFormat:
   ckeditor5:

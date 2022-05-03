@@ -10,6 +10,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\editor\EditorInterface;
+use Drupal\ckeditor5\HTMLRestrictions;
 
 /**
  * CKEditor 5 Alignment plugin.
@@ -122,15 +123,15 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    */
   private function enabledAlignmentsToElements(array $enabled_alignments): array {
     $plugin_definition = $this->getPluginDefinition();
-    $elements = $plugin_definition->getElements();
-    $elements_to_return = [];
-    foreach ($plugin_definition->getCKEditor5Config()['alignment']['options'] as $index => $configured_alignment) {
-      if (in_array($configured_alignment['name'], $enabled_alignments, TRUE)) {
-        $elements_to_return[] = $elements[$index];
+    $all_elements = $plugin_definition->getElements();
+    $subset = HTMLRestrictions::fromString(implode($all_elements));
+    foreach ($plugin_definition->getCKEditor5Config()['alignment']['options'] as $configured_alignment) {
+      if (!in_array($configured_alignment['name'], $enabled_alignments, TRUE)) {
+        $element_string = '<$text-container class='.'"'.$configured_alignment["className"].'"'.'>';
+        $subset = $subset->diff(HTMLRestrictions::fromString($element_string));
       }
     }
-
-    return $elements_to_return;
+    return $subset->toCKEditor5ElementsArray();
   }
 
 }
