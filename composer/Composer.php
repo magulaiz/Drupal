@@ -29,6 +29,15 @@ class Composer {
   public static function generateMetapackages(Event $event): void {
     $generator = new PackageGenerator();
     $generator->generate($event->getIO(), getcwd());
+  }
+
+  /**
+   * Update component packages whenever composer.lock is updated.
+   *
+   * @param \Composer\Script\Event $event
+   *   The Composer event.
+   */
+  public static function generateComponentPackages(Event $event): void {
     $generator = new ComponentGenerator();
     $generator->generate($event->getIO(), getcwd());
   }
