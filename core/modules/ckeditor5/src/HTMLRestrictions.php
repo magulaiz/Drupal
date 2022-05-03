@@ -510,7 +510,7 @@ final class HTMLRestrictions {
 
       // Attribute value restrictions in $this, all values allowed in $other.
       foreach ($tag_config as $html_tag_attribute_name => $html_tag_attribute_restrictions) {
-        if (is_array($html_tag_attribute_restrictions) && $other->elements[$tag][$html_tag_attribute_name] === TRUE) {
+        if (is_array($html_tag_attribute_restrictions) && isset($other->elements[$tag][$html_tag_attribute_name]) && $other->elements[$tag][$html_tag_attribute_name] === TRUE) {
           unset($tag_config[$html_tag_attribute_name]);
         }
       }
