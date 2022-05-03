@@ -232,7 +232,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           'text-align-left',
           'text-align-right',
           'text-align-center',
-          'text-align-justify'
+          'text-align-justify',
         ];
         $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
@@ -249,7 +249,7 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           if (isset($tag['class']) && is_array($tag['class'])) {
             foreach ($tag['class'] as $class => $data) {
               if (in_array($class, $alignment_classes)) {
-                  $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
+                $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
               }
             }
           }
