@@ -166,7 +166,7 @@
     $.extend(this, settings, Drupal.theme('verticalTab', settings));
 
     const panelId = settings.details.attr('id');
-    const stablePanelId = settings.details.attr('data-drupal-selector')
+    const stablePanelId = settings.details.attr('data-drupal-selector');
     this.link.attr({
       id: `${stablePanelId}-tab`,
       role: 'tab',
