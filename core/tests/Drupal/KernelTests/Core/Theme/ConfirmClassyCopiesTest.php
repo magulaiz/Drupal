@@ -386,6 +386,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'icons.css',
             'image-widget.css',
             'indented.css',
+            'inline-form.css',
             'item-list.css',
             'link.css',
             'links.css',
