@@ -124,6 +124,7 @@ final class SmartDefaultSettings {
     // Compute the appropriate settings based on the CKEditor 4 configuration
     // if it exists.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
+    $old_editor_restrictions = HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat());
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
@@ -169,6 +170,7 @@ final class SmartDefaultSettings {
     }
 
     if ($editor->getFilterFormat()->filters('filter_html')->status) {
+      $public_message = [];
       $filter_html_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
       $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements([
         'ckeditor5_essentials',
@@ -181,6 +183,12 @@ final class SmartDefaultSettings {
           '@missing_tags' => $missing_tags->toFilterHtmlAllowedTagsString(),
         ]);
       }
+      $allowed_by_new_plugin_config = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($this->pluginManager->getEnabledDefinitions($editor)), $editor));
+      $additional_allowed_by_new_plugin_config = $allowed_by_new_plugin_config->diff($filter_html_restrictions);
+      $stop = 'here';
+      if ($additional_allowed_by_new_plugin_config) {
+
+      }
     }
 
     // Finally: for all enabled plugins, find the ones that are configurable,
@@ -189,6 +197,8 @@ final class SmartDefaultSettings {
     // original text format restrictions.
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
     $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
+    $restricty = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
+   $endef = $this->pluginManager->getEnabledDefinitions($editor);
 
     return [$editor, $messages];
   }
