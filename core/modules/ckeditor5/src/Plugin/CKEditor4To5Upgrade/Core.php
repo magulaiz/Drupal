@@ -59,7 +59,8 @@ use Drupal\filter\FilterFormatInterface;
  *     "language",
  *   },
  *   cke5_plugin_elements_subset_configuration = {
- *    "ckeditor5_heading",
+ *     "ckeditor5_heading",
+ *     "ckeditor5_style",
  *   }
  * )
  *
@@ -234,6 +235,10 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
           }
         }
         return $configuration;
+
+      case 'ckeditor5_style':
+        // @see mapCKEditor4SettingsToCKEditor5Configuration()
+        return NULL;
 
       default:
         throw new \OutOfBoundsException();
