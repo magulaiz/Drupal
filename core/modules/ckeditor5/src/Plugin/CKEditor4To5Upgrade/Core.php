@@ -247,8 +247,8 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         $configuration = [];
         foreach ($restrictions['allowed'] as $tag) {
           if (isset($tag['class']) && is_array($tag['class'])) {
-            foreach ($tag['class'] as $class => $data) {
-              if (in_array($class, $alignment_classes)) {
+            foreach (array_keys($tag['class']) as $class) {
+              if (in_array($class, $alignment_classes, TRUE)) {
                 $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
               }
             }

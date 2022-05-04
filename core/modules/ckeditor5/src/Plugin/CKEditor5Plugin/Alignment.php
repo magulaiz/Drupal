@@ -109,19 +109,7 @@ class Alignment extends CKEditor5PluginDefault implements CKEditor5PluginConfigu
    * {@inheritdoc}
    */
   public function getElementsSubset(): array {
-    return $this->enabledAlignmentsToElements($this->configuration['enabled_alignments']);
-  }
-
-  /**
-   * Returns an array of enabled elements based on the enabled alignments.
-   *
-   * @param string[] $enabled_alignments
-   *   Array of the enabled alignments.
-   *
-   * @return string[]
-   *   List of elements provided by the enabled alignments.
-   */
-  private function enabledAlignmentsToElements(array $enabled_alignments): array {
+    $enabled_alignments = $this->configuration['enabled_alignments'];
     $plugin_definition = $this->getPluginDefinition();
     $all_elements = $plugin_definition->getElements();
     $subset = HTMLRestrictions::fromString(implode($all_elements));
