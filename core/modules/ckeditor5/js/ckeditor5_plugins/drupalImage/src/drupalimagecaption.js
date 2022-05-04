@@ -1,5 +1,5 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 // cSpell:words downcasted
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Plugin } from 'ckeditor5/src/core';
 
 /**
