@@ -2,11 +2,11 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - claro
-id: claro_local_actions
-theme: claro
-region: content
-weight: -10
+    - olivero
+id: olivero_primary_admin_actions
+theme: olivero
+region: highlighted
+weight: -5
 provider: null
 plugin: local_actions_block
 settings:

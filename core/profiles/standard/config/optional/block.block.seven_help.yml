@@ -4,9 +4,9 @@ dependencies:
   module:
     - help
   theme:
-    - claro
-id: claro_help
-theme: claro
+    - seven
+id: seven_help
+theme: seven
 region: help
 weight: 0
 provider: null

@@ -2,9 +2,9 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - claro
-id: claro_page_title
-theme: claro
+    - seven
+id: seven_page_title
+theme: seven
 region: header
 weight: -30
 provider: null
