@@ -46,4 +46,3 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
 
   $config_entity_updater->update($sandbox, 'editor', $callback);
 }
-
