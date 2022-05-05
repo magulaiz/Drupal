@@ -209,6 +209,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
                 'items' => [
                   'Language',
                   'Styles',
+                  // Blockquote does not have settings. It's present only to
+                  // support an additional tag, to test realistic styles.
+                  'Blockquote',
                 ],
               ],
               [
@@ -965,6 +968,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'items' => [
             'textPartLanguage',
             'style',
+            'blockQuote',
           ],
         ],
         'plugins' => [
