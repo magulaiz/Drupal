@@ -199,6 +199,7 @@ JS;
     // - button states
     $this->selectTextInsideElement('p');
     $this->assertSame('Styles', $style_dropdown->getText());
+    $style_dropdown->click();
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
@@ -208,6 +209,8 @@ JS;
     $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
     // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
     // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+    // Close the dropdown.
+    $style_dropdown->click();
 
     // Select the blockquote and observe changes in:
     // - styles dropdown label
@@ -217,6 +220,7 @@ JS;
     // $this->assertSame('Famous', $style_dropdown->getText());
     // @todo Remove this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
     $this->assertSame('Styles', $style_dropdown->getText());
+    $style_dropdown->click();
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
 
@@ -230,6 +234,8 @@ JS;
     // $this->assertFalse($buttons[2]->hasAttribute('aria-disabled'));
     // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
     // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+    // Close the dropdown.
+    $style_dropdown->click();
 
     // The resulting markup should be identical to the starting markup, with two
     // changes:
