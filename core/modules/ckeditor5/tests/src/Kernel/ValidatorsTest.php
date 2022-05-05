@@ -325,6 +325,129 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [],
     ];
+    $data['INVALID: Style plugin with no styles'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles' => 'Enable at least one style, otherwise disable the Style plugin.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class to unsupported tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Highlighted',
+                'element' => '<blockquote class="highlighted">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <em class="placeholder">&lt;blockquote&gt;</em> is not yet supported.',
+      ],
+    ];
+    $data['INVALID: Style plugin has multiple styles with same label'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              0 => [
+                'label' => 'Highlighted',
+                'element' => '<p class="highlighted">',
+              ],
+              1 => [
+                'label' => 'Highlighted',
+                'element' => '<blockquote class="highlighted">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles' => 'The label <em class="placeholder">Highlighted</em> is not unique.',
+      ],
+    ];
+    $data['INVALID: Style plugin has styles with invalid elements'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              0 => [
+                'label' => 'missing class attribute',
+                'element' => '<p>',
+              ],
+              1 => [
+                'label' => 'class attribute present but no allowed values listed',
+                'element' => '<blockquote class="">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <em class="placeholder">class</em>: <em class="placeholder">&lt;p&gt;</em>.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <em class="placeholder">class</em>: <em class="placeholder">&lt;blockquote class=&quot;&quot;&gt;</em>.',
+      ],
+    ];
+    $data['VALID: Style plugin has multiple styles with different labels'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Callout',
+                'element' => '<p class="callout">',
+              ],
+              [
+                'label' => 'Interesting & highlighted quote',
+                'element' => '<blockquote class="interesting highlighted">',
+              ],
+              [
+                'label' => 'Famous',
+                'element' => '<blockquote class="famous">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
 
     return $data;
   }
