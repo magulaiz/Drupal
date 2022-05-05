@@ -2,12 +2,20 @@
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
+use Drupal\editor\Entity\Editor;
+use Drupal\filter\Entity\FilterFormat;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
+use Symfony\Component\Validator\ConstraintViolation;
+
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
  * @group ckeditor5
  * @internal
  */
 class StyleTest extends CKEditor5TestBase {
+
+  use CKEditor5TestTrait;
 
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::buildConfigurationForm
@@ -61,6 +69,143 @@ JS;
     $this->assertSame("p.foo.bar|Foobar paragraph\n", $styles_textarea->getValue());
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
     $this->assertStringContainsString('<p class="foo bar">', $allowed_html_field->getValue());
+  }
+
+  /**
+   * Tests Style functionality: setting a class, expected style choices.
+   */
+  public function testStyleFunctionality() {
+    FilterFormat::create([
+      'format' => 'test_format',
+      'name' => 'Test format',
+      'filters' => [
+        'filter_html' => [
+          'status' => TRUE,
+          'settings' => [
+            'allowed_html' => '<p class="highlighted interesting"> <br> <a href class="reliable"> <blockquote> <h2 class="red-heading">',
+          ],
+        ],
+      ],
+    ])->save();
+    Editor::create([
+      'editor' => 'ckeditor5',
+      'format' => 'test_format',
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'heading',
+            'link',
+            'blockQuote',
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_heading' => [
+            'enabled_headings' => [
+              'heading2',
+            ],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Highlighted & interesting',
+                'element' => '<p class="highlighted interesting">',
+              ],
+              [
+                'label' => 'Red heading',
+                'element' => '<h2 class="red-heading">',
+              ],
+              [
+                'label' => 'Reliable source',
+                'element' => '<a class="reliable">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+    ])->save();
+    $this->assertSame([], array_map(
+      function (ConstraintViolation $v) {
+        return (string) $v->getMessage();
+      },
+      iterator_to_array(CKEditor5::validatePair(
+        Editor::load('test_format'),
+        FilterFormat::load('test_format')
+      ))
+    ));
+
+    // Create a sample entity to test CKEditor 5.
+    $node = $this->createNode([
+      'type' => 'page',
+      'title' => 'A selection of the history of Drupal',
+      'body' => [
+        'value' => '<h2>Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p> — <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>',
+        'format' => 'test_format',
+      ],
+    ]);
+    $node->save();
+
+    // Observe.
+    $this->drupalLogin($this->drupalCreateUser([
+      'use text format test_format',
+      'bypass node access',
+    ]));
+    $this->drupalGet($node->toUrl('edit-form'));
+    $this->waitForEditor();
+
+    // Select the <h2>, assert that no style is active currently..
+    $this->selectTextInsideElement('h2');
+    $assert_session = $this->assertSession();
+    $style_dropdown = $assert_session->elementExists('css', '.ck-style-dropdown');
+    $this->assertSame('Styles', $style_dropdown->getText());
+
+    // Click the dropdown, check the available styles.
+    $style_dropdown->click();
+    $buttons = $style_dropdown->findAll('css', '.ck-dropdown__panel button');
+    $this->assertCount(3, $buttons);
+    $this->assertSame('Highlighted & interesting', $buttons[0]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('Red heading', $buttons[1]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('Reliable source', $buttons[2]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
+    $this->assertFalse($buttons[1]->hasAttribute('aria-disabled'));
+    // @todo Uncomment this after upstream bug is fixed.
+    // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
+    $this->assertTrue($buttons[0]->hasClass('ck-off'));
+    $this->assertTrue($buttons[1]->hasClass('ck-off'));
+    $this->assertTrue($buttons[2]->hasClass('ck-off'));
+
+    // Apply the "Red heading" style and verify it has the expected effect.
+    $assert_session->elementExists('css', '.ck-editor__main h2:not(.red-heading)');
+    $buttons[1]->click();
+    $assert_session->elementExists('css', '.ck-editor__main h2.red-heading');
+    $this->assertTrue($buttons[0]->hasClass('ck-off'));
+    $this->assertTrue($buttons[1]->hasClass('ck-on'));
+    $this->assertTrue($buttons[2]->hasClass('ck-off'));
+    $this->assertSame('Red heading', $style_dropdown->getText());
+
+    // Select the first paragraph and observe changes in:
+    // - styles dropdown label
+    // - button states
+    $this->selectTextInsideElement('p');
+    $this->assertSame('Styles', $style_dropdown->getText());
+    $this->assertTrue($buttons[0]->hasClass('ck-off'));
+    $this->assertTrue($buttons[1]->hasClass('ck-off'));
+    $this->assertTrue($buttons[2]->hasClass('ck-off'));
+    $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
+    // @todo Uncomment this after upstream bug is fixed.
+    // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
+
+    // The resulting markup should be identical to the starting markup, with two
+    // changes:
+    // 1. the `red-heading` class has been added to the `<h2>`
+    // 2. the `famous` class has been removed from the `<blockquote>`, because
+    //    CKEditor 5 has not been configured for this: if a Style had
+    //    configured for it, it would have been retained.
+    $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>', $this->getEditorDataAsHtmlString());
   }
 
 }

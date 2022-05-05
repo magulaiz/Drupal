@@ -134,4 +134,25 @@ JS;
     return $button;
   }
 
+  /**
+   * Selects text inside an element.
+   *
+   * @param string $selector
+   *   A CSS selector for the element which contents should be selected.
+   */
+  protected function selectTextInsideElement(string $selector): void {
+    $javascript = <<<JS
+(function() {
+  const el = document.querySelector(".ck-editor__main $selector");
+  console.log(el);
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+})();
+JS;
+    $this->getSession()->evaluateScript($javascript);
+  }
+
 }
