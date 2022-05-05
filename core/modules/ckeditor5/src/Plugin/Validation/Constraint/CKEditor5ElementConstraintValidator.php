@@ -36,8 +36,9 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
     // The optional "requiredAttributes" constraint property allows more
     // detailed validation.
     if (isset($constraint->requiredAttributes)) {
-      $tag = array_keys($parsed->getAllowedElements())[0];
-      $attribute_restrictions = $parsed->getAllowedElements()[$tag];
+      $allowed_elements = $parsed->getAllowedElements();
+      $tag = array_keys($allowed_elements)[0];
+      $attribute_restrictions = $allowed_elements[$tag];
       assert(is_array($constraint->requiredAttributes));
       foreach ($constraint->requiredAttributes as $required_attribute) {
         // Validate attributeName.
