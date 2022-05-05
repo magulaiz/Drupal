@@ -171,7 +171,7 @@ JS;
     $this->assertSame('Reliable source', $buttons[2]->find('css', '.ck-button__label')->getText());
     $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[1]->hasAttribute('aria-disabled'));
-    // @todo Uncomment this after upstream bug is fixed.
+    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
     // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
@@ -196,7 +196,7 @@ JS;
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
-    // @todo Uncomment this after upstream bug is fixed.
+    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
     // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
 
     // The resulting markup should be identical to the starting markup, with two
