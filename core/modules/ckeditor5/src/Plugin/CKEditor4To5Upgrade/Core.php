@@ -245,10 +245,12 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         // I.e. if a tag is found with a text-align-{alignment type} class,
         // activate that alignment type.
         $configuration = [];
-        $classes = isset($tag['class']) && is_array($tag['class']) ? $tag['class'] : [];
-        foreach ($classes as $class) {
-          if (isset($alignment_classes_to_types[$class])) {
-            $configuration['enabled_alignments'][] = $alignment_classes_to_types[$class];
+        foreach ($restrictions['allowed'] as $tag) {
+          $classes = isset($tag['class']) && is_array($tag['class']) ? $tag['class'] : [];
+          foreach (array_keys($classes) as $class) {
+            if (isset($alignment_classes_to_types[$class])) {
+              $configuration['enabled_alignments'][] = $alignment_classes_to_types[$class];
+            }
           }
         }
         if (isset($configuration['enabled_alignments'])) {
