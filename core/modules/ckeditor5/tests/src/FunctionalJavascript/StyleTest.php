@@ -82,7 +82,7 @@ JS;
         'filter_html' => [
           'status' => TRUE,
           'settings' => [
-            'allowed_html' => '<p class="highlighted interesting"> <br> <a href class="reliable"> <blockquote> <h2 class="red-heading">',
+            'allowed_html' => '<p class="highlighted interesting"> <br> <a href class="reliable"> <blockquote class="famous"> <h2 class="red-heading">',
           ],
         ],
       ],
@@ -119,6 +119,10 @@ JS;
                 'label' => 'Reliable source',
                 'element' => '<a class="reliable">',
               ],
+              [
+                'label' => 'Famous',
+                'element' => '<blockquote class="famous">',
+              ],
             ],
           ],
         ],
@@ -142,7 +146,7 @@ JS;
       'type' => 'page',
       'title' => 'A selection of the history of Drupal',
       'body' => [
-        'value' => '<h2>Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p> — <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>',
+        'value' => '<h2>Upgrades</h2><p class="history">Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p> — <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>',
         'format' => 'test_format',
       ],
     ]);
@@ -165,17 +169,20 @@ JS;
     // Click the dropdown, check the available styles.
     $style_dropdown->click();
     $buttons = $style_dropdown->findAll('css', '.ck-dropdown__panel button');
-    $this->assertCount(3, $buttons);
+    $this->assertCount(4, $buttons);
     $this->assertSame('Highlighted & interesting', $buttons[0]->find('css', '.ck-button__label')->getText());
     $this->assertSame('Red heading', $buttons[1]->find('css', '.ck-button__label')->getText());
-    $this->assertSame('Reliable source', $buttons[2]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('Famous', $buttons[2]->find('css', '.ck-button__label')->getText());
+    $this->assertSame('Reliable source', $buttons[3]->find('css', '.ck-button__label')->getText());
     $this->assertSame('true', $buttons[0]->getAttribute('aria-disabled'));
     $this->assertFalse($buttons[1]->hasAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
     // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
-    // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
+    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
+    $this->assertTrue($buttons[3]->hasClass('ck-off'));
 
     // Apply the "Red heading" style and verify it has the expected effect.
     $assert_session->elementExists('css', '.ck-editor__main h2:not(.red-heading)');
@@ -184,6 +191,7 @@ JS;
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-on'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
+    $this->assertTrue($buttons[3]->hasClass('ck-off'));
     $this->assertSame('Red heading', $style_dropdown->getText());
 
     // Select the first paragraph and observe changes in:
@@ -194,18 +202,42 @@ JS;
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
     $this->assertTrue($buttons[2]->hasClass('ck-off'));
+    $this->assertTrue($buttons[3]->hasClass('ck-off'));
     $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
     // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
-    // $this->assertSame('true', $buttons[2]->getAttribute('aria-disabled'));
+    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
+
+    // Select the blockquote and observe changes in:
+    // - styles dropdown label
+    // - button states
+    $this->selectTextInsideElement('blockquote');
+    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
+    // $this->assertSame('Famous', $style_dropdown->getText());
+    // @todo Remove this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
+    $this->assertSame('Styles', $style_dropdown->getText());
+    $this->assertTrue($buttons[0]->hasClass('ck-off'));
+    $this->assertTrue($buttons[1]->hasClass('ck-off'));
+
+    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
+    // $this->assertTrue($buttons[2]->hasClass('ck-on'));
+    $this->assertTrue($buttons[3]->hasClass('ck-off'));
+    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
+    // $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
+    $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
+    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
+    // $this->assertFalse($buttons[2]->hasAttribute('aria-disabled'));
+    // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
+    // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
 
     // The resulting markup should be identical to the starting markup, with two
     // changes:
     // 1. the `red-heading` class has been added to the `<h2>`
-    // 2. the `famous` class has been removed from the `<blockquote>`, because
-    //    CKEditor 5 has not been configured for this: if a Style had
-    //    configured for it, it would have been retained.
-    $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>', $this->getEditorDataAsHtmlString());
+    // 2. the `history` class has been removed from the `<p>`, because CKEditor
+    //    5 has not been configured for this: if a Style had configured for it,
+    //    it would have been retained.
+    $this->assertSame('<h2 class="red-heading">Upgrades</h2><p>Drupal has historically been difficult to upgrade from one major version to the next.</p><p class="highlighted interesting">This changed with Drupal 8.</p><blockquote class="famous"><p>Updating from Drupal 8\'s latest version to Drupal 9.0.0 should be as easy as updating between minor versions of Drupal 8.</p></blockquote><p>— <a class="reliable" href="https://dri.es/making-drupal-upgrades-easy-forever">Dries</a></p>', $this->getEditorDataAsHtmlString());
   }
 
 }
