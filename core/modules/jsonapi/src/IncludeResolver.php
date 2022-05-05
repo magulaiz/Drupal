@@ -137,20 +137,24 @@ class IncludeResolver {
           $includes = IncludedData::merge($includes, new IncludedData([$exception]));
           continue;
         }
-        $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
-        if (!empty($target_type)) {
+        if (is_subclass_of($field_list->getItemDefinition()->getClass(), EntityReferenceItemInterface::class)) {
           foreach ($field_list as $field_item) {
-            assert($field_item instanceof EntityReferenceItemInterface);
-            $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
-          }
-        }
-        else {
-          foreach ($field_list as $field_item) {
-            assert($field_item instanceof EntityReferenceItemInterface);
             if ($field_item->entity instanceof EntityInterface) {
               // Support entity reference fields, which don't have the referenced
               // target type stored in settings.
               $references[$field_item->entity->getEntityTypeId()][] = $field_item->get($field_item::mainPropertyName())->getValue();
+            }
+          }
+        }
+        else {
+          @trigger_error(
+            sprintf('Entity reference field items not implementing %s are deprecated in Drupal 9.5.0 and must do so in Drupal 10.0.0.', EntityReferenceItemInterface::class),
+            E_USER_DEPRECATED
+          );
+          $target_type = $field_list->getFieldDefinition()->getFieldStorageDefinition()->getSetting('target_type');
+          if (!empty($target_type)) {
+            foreach ($field_list as $field_item) {
+              $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
             }
           }
         }
