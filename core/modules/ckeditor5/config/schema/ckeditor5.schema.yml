@@ -115,15 +115,23 @@ ckeditor5.plugin.ckeditor5_style:
       constraints:
         NotBlank:
           message: "Enable at least one style, otherwise disable the Style plugin."
+        UniqueLabelInList:
+          labelKey: label
       sequence:
         type: mapping
         label: 'Style'
-        constraints: [] # todo validate that each style label is unique
         mapping:
           label:
             type: label
             label: 'Style label'
           element:
             type: ckeditor5.element
-            constraints: [] # todo validate that this contains exactly 1 attribute (class) and >=1 class attr value
+            constraints:
+              # Validate that this contains exactly 1 attribute (class) and >=1 class attr value.
+              CKEditor5Element:
+                requiredAttributes:
+                  -
+                    attributeName: class
+                    minAttributeValueCount: 1
+              StyleTagAlreadySupported: []
             label: 'Style tag + classes'

@@ -60,6 +60,9 @@ class ValidatorsTest extends KernelTestBase {
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
    * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5ElementConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleTagAlreadySupportedConstraintValidator
+   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\UniqueLabelInListConstraintValidator
    * @dataProvider provider
    *
    * @param array $ckeditor5_settings
