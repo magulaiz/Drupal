@@ -9,8 +9,10 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\editor\Entity\Editor;
 
 /**
- * Updates an already migrated CKEditor 5 configuration for text formats
- * that may have alignment shown as individual buttons instead of a dropdown.
+ * Updates if an already migrated CKEditor 5 configuration for text formats
+ * has alignment shown as individual buttons instead of a dropdown.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
@@ -19,29 +21,26 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
     $needs_update = FALSE;
     // Only update if the editor is using the non-dropdown buttons.
     $settings = $editor->getSettings();
-    $toolbar_items = $settings['toolbar']['items'];
-    $old_alignment_toolbar_items = [
-      'alignment:left',
-      'alignment:right',
-      'alignment:center',
-      'alignment:justify'
+    $old_alignment_buttons_to_types = [
+      'alignment:left' => 'left',
+      'alignment:right' => 'right',
+      'alignment:center' => 'center',
+      'alignment:justify' => 'justify',
     ];
-    foreach ($old_alignment_toolbar_items as $button) {
-      if (in_array($button, $old_alignment_toolbar_items, TRUE)) {
-        $toolbar_items = array_deff($toolbar_items, [$button]);
-        if (!in_array('alignment', $toolbar_items)) {
-          $toolbar_items[] = 'alignment';
+    if (is_array($settings['toolbar']['items'])) {
+      foreach ($old_alignment_buttons_to_types as $button => $type) {
+        if (in_array($button, $settings['toolbar']['items'])) {
+          $settings['toolbar']['items'] = array_diff($settings['toolbar']['items'], [$button]);
+          $settings['config']['alignment']['options'][] = ['name' => $type, 'className' => $button];
+          if (!in_array('alignment', $settings['toolbar']['items'])) {
+            $settings['toolbar']['items'][] = 'alignment';
+          }
         }
+        // Flag this display as needing to be updated.
+        $needs_update = TRUE;
       }
-      // Flag this display as needing to be updated.
-      $needs_update = TRUE;
+      $editor->setSettings($settings);
     }
-    $editor->setSettings($settings);
-
-    // convert to dropdown
-    // if this returns true, the update process knows to save the changes you just made.
-    // so no need to explicity call ->save()... this miiiight be different with editor settings
-    // since editor is a combination of several other entities, but we'll see??
     return $needs_update;
   };
 
