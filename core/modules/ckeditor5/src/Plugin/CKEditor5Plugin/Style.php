@@ -113,9 +113,7 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
       }
 
       // Parse the line.
-      [$selector, $label] = explode('|', $line);
-      $selector = trim($selector);
-      $label = trim($label);
+      [$selector, $label] = array_map('trim', explode('|', $line));
 
       // Validate the selector.
       $selector_matches = [];
