@@ -346,9 +346,10 @@ class FieldResolver {
       $resource_types = $this->getRelatableResourceTypes($resource_types, $candidate_definitions);
 
       $at_least_one_entity_reference_field = FALSE;
-      $candidate_property_names = array_unique(NestedArray::mergeDeepArray(array_map(function (FieldItemDataDefinitionInterface $definition) use (&$at_least_one_entity_reference_field) {
+      $data_reference_target_property_name = FALSE;
+      $candidate_property_names = array_unique(NestedArray::mergeDeepArray(array_map(function (FieldItemDataDefinitionInterface $definition) use (&$at_least_one_entity_reference_field, &$data_reference_target_property_name, $cacheability) {
         $property_definitions = $definition->getPropertyDefinitions();
-        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($property_definitions, &$at_least_one_entity_reference_field) {
+        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($property_definitions, &$at_least_one_entity_reference_field, &$data_reference_target_property_name, $cacheability) {
           $property_definition = $property_definitions[$property_name];
           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
           if (!$property_definition->isInternal()) {
@@ -356,6 +357,18 @@ class FieldResolver {
             // (usually `target_id`) is exposed in the JSON:API representation
             // with a prefix.
             $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
+            if ($is_data_reference_definition) {
+              if ($data_reference_target_property_name && $data_reference_target_property_name !== $property_name) {
+                throw new CacheableBadRequestHttpException($cacheability, sprintf(
+                  'Conflicting data reference definitions. The property `%s` conflicts with `%s` property.',
+                  $property_name,
+                  $data_reference_target_property_name
+                ));
+              }
+              else {
+                $data_reference_target_property_name = $property_name;
+              }
+            }
           }
           if ($is_data_reference_definition) {
             $at_least_one_entity_reference_field = TRUE;
@@ -442,6 +455,9 @@ class FieldResolver {
         }
         // The property is a reference, so add it to the breadcrumbs and
         // continue resolving fields.
+        if (count($candidate_property_names) > 1) {
+          $reference_breadcrumbs[] = $data_reference_target_property_name;
+        }
         $reference_breadcrumbs[] = array_shift($parts);
       }
     }
@@ -621,9 +637,19 @@ class FieldResolver {
       $property_definitions = $definition->getPropertyDefinitions();
       foreach ($property_definitions as $property_name => $property_definition) {
         if ($property_definition instanceof DataReferenceDefinitionInterface) {
-          $target_definition = $property_definition->getTargetDefinition();
-          assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
-          $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
+          $item_class = $definition->getClass();
+          if (method_exists($item_class, 'getReferenceableEntityTypes')) {
+            $field_definition = $definition->getFieldDefinition();
+            $target_type_bundles = $item_class::getReferenceableEntityTypes($field_definition);
+            foreach ($target_type_bundles as $entity_type_id => $bundles) {
+              $reference_property_names[] = $property_name . ':' . $entity_type_id;
+            }
+          }
+          else {
+            $target_definition = $property_definition->getTargetDefinition();
+            assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
+            $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
+          }
         }
       }
       return $reference_property_names;

@@ -196,40 +196,40 @@ class FieldResolverTest extends JsonapiKernelTestBase {
       'entity reference then delta 1 with property specifier `id`' => ['field_test_ref1.1.entity:entity_test_with_bundle.uuid', 'field_test_ref1.1.id'],
 
       'entity reference then no reference property and a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.field_test_text.value'],
-      'entity reference then a reference property and a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_text.value', 'field_test_ref1.entity.field_test_text.value'],
+      'entity reference then a reference property and a complex field with property specifier `value`' => ['field_test_ref1.target_id.entity.field_test_text.value', 'field_test_ref1.entity.field_test_text.value'],
       'entity reference then no reference property and a complex field with property specifier `format`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.format', 'field_test_ref1.field_test_text.format'],
-      'entity reference then a reference property and a complex field with property specifier `format`' => ['field_test_ref1.entity.field_test_text.format', 'field_test_ref1.entity.field_test_text.format'],
+      'entity reference then a reference property and a complex field with property specifier `format`' => ['field_test_ref1.target_id.entity.field_test_text.format', 'field_test_ref1.entity.field_test_text.format'],
 
-      'entity reference then property specifier `entity:entity_test_with_bundle` then a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value'],
+      'entity reference then property specifier `entity:entity_test_with_bundle` then a complex field with property specifier `value`' => ['field_test_ref1.target_id.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity:entity_test_with_bundle.field_test_text.value'],
 
       'entity reference with a delta and no reference property then a complex field and property specifier `value`' => ['field_test_ref1.0.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.0.field_test_text.value'],
-      'entity reference with a delta and a reference property then a complex field and property specifier `value`' => ['field_test_ref1.0.entity.field_test_text.value', 'field_test_ref1.0.entity.field_test_text.value'],
+      'entity reference with a delta and a reference property then a complex field and property specifier `value`' => ['field_test_ref1.0.target_id.entity.field_test_text.value', 'field_test_ref1.0.entity.field_test_text.value'],
 
       'entity reference with no reference property then another entity reference with no reference property a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.field_test_ref3.field_test_text.value'],
-      'entity reference with a reference property then another entity reference with no reference property a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.field_test_text.value'],
-      'entity reference with no reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity.field_test_text.value', 'field_test_ref1.field_test_ref3.entity.field_test_text.value'],
-      'entity reference with a reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.entity.field_test_ref3.entity.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.entity.field_test_text.value'],
+      'entity reference with a reference property then another entity reference with no reference property a complex field with property specifier `value`' => ['field_test_ref1.target_id.entity.field_test_ref3.entity:entity_test_with_bundle.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.field_test_text.value'],
+      'entity reference with no reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.target_id.entity.field_test_text.value', 'field_test_ref1.field_test_ref3.entity.field_test_text.value'],
+      'entity reference with a reference property then another entity reference with a reference property a complex field with property specifier `value`' => ['field_test_ref1.target_id.entity.field_test_ref3.target_id.entity.field_test_text.value', 'field_test_ref1.entity.field_test_ref3.entity.field_test_text.value'],
 
       'entity reference with target bundles then property specifier `entity:entity_test_with_bundle` then a primitive field on multiple bundles' => [
-        'field_test_ref1.entity:entity_test_with_bundle.field_test3',
+        'field_test_ref1.target_id.entity:entity_test_with_bundle.field_test3',
         'field_test_ref1.entity:entity_test_with_bundle.field_test3',
       ],
       'entity reference without target bundles then property specifier `entity:entity_test_with_bundle` then a primitive field on a single bundle' => [
-        'field_test_ref2.entity:entity_test_with_bundle.field_test1',
+        'field_test_ref2.target_id.entity:entity_test_with_bundle.field_test1',
         'field_test_ref2.entity:entity_test_with_bundle.field_test1',
       ],
       'entity reference without target bundles then property specifier `entity:entity_test_with_bundle` then a primitive field on multiple bundles' => [
-        'field_test_ref3.entity:entity_test_with_bundle.field_test3',
+        'field_test_ref3.target_id.entity:entity_test_with_bundle.field_test3',
         'field_test_ref3.entity:entity_test_with_bundle.field_test3',
         'entity_test_with_bundle', 'bundle2',
       ],
       'entity reference without target bundles then property specifier `entity:entity_test_with_bundle` then a primitive field on a single bundle starting from a different resource type' => [
-        'field_test_ref3.entity:entity_test_with_bundle.field_test2',
+        'field_test_ref3.target_id.entity:entity_test_with_bundle.field_test2',
         'field_test_ref3.entity:entity_test_with_bundle.field_test2',
         'entity_test_with_bundle', 'bundle3',
       ],
 
-      'entity reference then property specifier `entity:entity_test_with_bundle` then another entity reference before a primitive field' => ['field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test2', 'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.field_test2'],
+      'entity reference then property specifier `entity:entity_test_with_bundle` then another entity reference before a primitive field' => ['field_test_ref1.target_id.entity:entity_test_with_bundle.field_test_ref3.entity:entity_test_with_bundle.field_test2', 'field_test_ref1.entity:entity_test_with_bundle.field_test_ref3.field_test2'],
     ];
   }
 
