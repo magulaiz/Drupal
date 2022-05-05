@@ -228,30 +228,27 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         return $configuration;
 
       case 'ckeditor5_alignment':
-        $alignment_classes = [
-          'text-align-left',
-          'text-align-right',
-          'text-align-center',
-          'text-align-justify',
+        $alignment_classes_to_types = [
+          'text-align-left' => 'left',
+          'text-align-right' => 'right',
+          'text-align-center' => 'center',
+          'text-align-justify' => 'justify',
         ];
         $restrictions = $text_format->getHtmlRestrictions();
         if ($restrictions === FALSE) {
-          // The default is to allow all alignments, which makes sense when there
+          // The default is to allow all alignments. This makes sense when there
           // are no restrictions.
           // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Alignment::DEFAULT_CONFIGURATION
           return NULL;
         }
-        // Otherwise, only enable alignments that allowed by the restrictions.
-        // In other words, activate the alignments for which a tag with class
-        // text-align-*** exists.
+        // Otherwise, enable alignment types based on the provided restrictions.
+        // I.e. if a tag is found with a text-align-{alignment type} class,
+        // activate that alignment type.
         $configuration = [];
-        foreach ($restrictions['allowed'] as $tag) {
-          if (isset($tag['class']) && is_array($tag['class'])) {
-            foreach (array_keys($tag['class']) as $class) {
-              if (in_array($class, $alignment_classes, TRUE)) {
-                $configuration['enabled_alignments'][] = explode('text-align-', $class)[1];
-              }
-            }
+        $classes = isset($tag['class']) && is_array($tag['class']) ? $tag['class'] : [];
+        foreach ($classes as $class) {
+          if (isset($alignment_classes_to_types[$class])) {
+            $configuration['enabled_alignments'][] = $alignment_classes_to_types[$class];
           }
         }
         if (isset($configuration['enabled_alignments'])) {
