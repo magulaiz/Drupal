@@ -4,6 +4,15 @@
 # 'example.settings.local.php' file, which sits next to this file.
 parameters:
   http.response.debug_cacheability_headers: true
+  # Twig debugging settings for explanation of what each option does, see:
+  # https://www.drupal.org/docs/theming-drupal/twig-in-drupal/debugging-compiled-twig-templates#options
+  twig.config:
+    # Html comments for Twig templates: set to true to enable
+    debug: true
+    # Caching the Twig templates in the Render API: 
+    # set to false to disable caching so a re-render happens
+    # every time a template is updated
+    cache: false
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
