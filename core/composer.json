@@ -61,7 +61,6 @@
         "drupal/ckeditor5": "self.version",
         "drupal/claro": "self.version",
         "drupal/classy": "self.version",
-        "drupal/color": "self.version",
         "drupal/comment": "self.version",
         "drupal/config": "self.version",
         "drupal/config_translation": "self.version",
