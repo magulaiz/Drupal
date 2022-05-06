@@ -11,8 +11,6 @@ use Drupal\editor\Entity\Editor;
 /**
  * Updates if an already migrated CKEditor 5 configuration for text formats
  * has alignment shown as individual buttons instead of a dropdown.
- *
- * @throws \Drupal\Core\Entity\EntityStorageException
  */
 function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
@@ -30,15 +28,17 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
     if (is_array($settings['toolbar']['items'])) {
       foreach ($old_alignment_buttons_to_types as $button => $type) {
         if (in_array($button, $settings['toolbar']['items'])) {
-          $settings['toolbar']['items'] = array_diff($settings['toolbar']['items'], [$button]);
-          $settings['config']['alignment']['options'][] = ['name' => $type, 'className' => $button];
+          $settings['toolbar']['items'] = array_values(array_diff($settings['toolbar']['items'], [$button]));
+          $settings['plugins']['ckeditor5_alignment']['enabled_alignments'][] = $type;
           if (!in_array('alignment', $settings['toolbar']['items'])) {
             $settings['toolbar']['items'][] = 'alignment';
           }
+          // Flag this display as needing to be updated.
+          $needs_update = TRUE;
         }
-        // Flag this display as needing to be updated.
-        $needs_update = TRUE;
       }
+    }
+    if ($needs_update) {
       $editor->setSettings($settings);
     }
     return $needs_update;
