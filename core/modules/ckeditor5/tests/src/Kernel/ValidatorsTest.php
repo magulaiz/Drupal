@@ -367,6 +367,51 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <em class="placeholder">&lt;blockquote&gt;</em> is not yet supported.',
       ],
     ];
+    $data['INVALID: Style plugin configured to add class that is supported by a disabled plugin'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <em class="placeholder">text-align-justify</em> classes on <em class="placeholder">&lt;p&gt;</em> are supported by the <em class="placeholder">Alignment</em> plugin. Remove this style and enable that plugin instead.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'alignment',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <em class="placeholder">text-align-justify</em> classes on <em class="placeholder">&lt;p&gt;</em> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
+      ],
+    ];
     $data['INVALID: Style plugin has multiple styles with same label'] = [
       'settings' => [
         'toolbar' => [
