@@ -882,10 +882,7 @@ class UpdateContribTest extends UpdateTestBase {
       // by default.
       $this->assertFalse($compatibility_details->hasAttribute('open'));
       $this->assertSame('Compatible', $details_summary_element->getText());
-      $this->assertEquals(
-        "http://example.com/{$this->updateProject}-$download_version.tar.gz",
-        $update_element->findLink('Download')->getAttribute('href')
-      );
+      $this->assertEmpty($update_element->findLink('Download'));
     }
     else {
       // If an update is not compatible with the installed version of Drupal

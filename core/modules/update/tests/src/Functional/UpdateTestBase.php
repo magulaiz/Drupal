@@ -134,9 +134,9 @@ abstract class UpdateTestBase extends BrowserTestBase {
         $expected_download_urls[] = $download_url;
         // Ensure the expected links are security links.
         $this->assertContains($release_url, $all_security_release_urls, "Release $release_url is a security release link.");
-        $this->assertContains($download_url, $all_security_download_urls, "Release $download_url is a security download link.");
+        $this->assertNotContains($download_url, $all_security_download_urls, "Release $download_url is not a security download link.");
         $assert_session->linkByHrefExists($release_url);
-        $assert_session->linkByHrefExists($download_url);
+        $assert_session->linkByHrefNotExists($download_url);
       }
       // Ensure no other links are shown as security releases.
       $this->assertEquals([], array_diff($all_security_release_urls, $expected_release_urls));
@@ -179,7 +179,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $url_version = str_replace('.', '-', $version);
 
     $this->assertEquals($update_element->findLink($version)->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
-    $this->assertEquals($update_element->findLink('Download')->getAttribute('href'), "http://example.com/{$this->updateProject}-$download_version.tar.gz");
+    $this->assertEmpty($update_element->findLink('Download'));
     $this->assertEquals($update_element->findLink('Release notes')->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
   }
 
