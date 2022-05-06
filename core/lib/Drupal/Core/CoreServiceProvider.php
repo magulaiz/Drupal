@@ -54,6 +54,28 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
+    // @todo should this actually live in DrupalKernel?
+    if (Settings::get('theme_debug')) {
+      // @todo after #3278887, include `development.services.yml` instead?
+      // We'd need to do that in DrupalKernel itself, I think.
+      $container->register('cache.backend.null', 'Drupal\Core\Cache\NullBackend');
+      $twig_config = $container->getParameter('twig.config');
+      $twig_config['debug'] = TRUE;
+      $container->setParameter('twig.config', $twig_config);
+
+      // @note we cannot use the $settings['cache']['bin'] trick, because the
+      // settings file is a singleton. However, we can set the default backend
+      // which overrides the global default.
+      $cache_bins = ['page', 'dynamic_page_cache', 'render'];
+      foreach ($cache_bins as $cache_bin) {
+        if ($container->has("cache.$cache_bin")) {
+          $container->getDefinition("cache.$cache_bin")
+            ->clearTag('cache.bin')
+            ->addTag('cache.bin', ['default_backend' => 'cache.backend.null']);
+        }
+      }
+    }
+
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come first so that later
     // list-building passes are operating on the post-alter services list.
