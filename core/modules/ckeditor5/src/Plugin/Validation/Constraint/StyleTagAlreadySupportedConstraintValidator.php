@@ -7,6 +7,7 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 // cspell:ignore enableable
 
 use Drupal\ckeditor5\HTMLRestrictions;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -61,8 +62,7 @@ class StyleTagAlreadySupportedConstraintValidator extends ConstraintValidator im
     // Next, validate that the classes specified for this style are not
     // supported by an enabled plugin.
     elseif (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
-      $tag = array_keys($style_element->getAllowedElements())[0];
-      $classes = array_keys($style_element->getAllowedElements()[$tag]['class']);
+      [$tag, $classes] = Style::getTagAndClasses($style_element);
       $this->context->buildViolation($constraint->conflictingEnabledPluginMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->setParameter('%classes', implode(", ", $classes))
@@ -72,8 +72,7 @@ class StyleTagAlreadySupportedConstraintValidator extends ConstraintValidator im
     // Next, validate that the classes specified for this style are not
     // supported by a disabled plugin.
     elseif (self::intersectionWithClasses($style_element, $disabled_plugin_elements)) {
-      $tag = array_keys($style_element->getAllowedElements())[0];
-      $classes = array_keys($style_element->getAllowedElements()[$tag]['class']);
+      [$tag, $classes] = Style::getTagAndClasses($style_element);
       $this->context->buildViolation($constraint->conflictingDisabledPluginMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->setParameter('%classes', implode(", ", $classes))

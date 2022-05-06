@@ -54,8 +54,10 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
    *   An array containing two values:
    *   - a HTML tag name
    *   - a list of classes
+   *
+   * @internal
    */
-  private static function getTagAndClasses(HTMLRestrictions $style_element): array {
+  public static function getTagAndClasses(HTMLRestrictions $style_element): array {
     $tag = array_keys($style_element->getAllowedElements())[0];
     $classes = array_keys($style_element->getAllowedElements()[$tag]['class']);
     return [$tag, $classes];
