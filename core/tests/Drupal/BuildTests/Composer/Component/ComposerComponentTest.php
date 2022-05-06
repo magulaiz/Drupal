@@ -13,6 +13,8 @@ use Symfony\Component\Finder\Finder;
  * @group Composer
  * @group Component
  *
+ * @coversNothing
+ *
  * @requires externalCommand composer
  */
 class ComposerComponentTest extends ComposerBuildTestBase {
@@ -25,17 +27,20 @@ class ComposerComponentTest extends ComposerBuildTestBase {
   protected static $componentsPath = '/core/lib/Drupal/Component';
 
   /**
+   * Highly arbitrary version and constraint expectations.
    *
    * @return array
-   *   First element is the tag that should be applied to \Drupal::version.
-   *   Second element is the resulting constraint which should be present in
-   *   the component core dependencies.
+   *   - First element is the tag that should be applied to \Drupal::version.
+   *   - Second element is the resulting constraint which should be present in
+   *     the component core dependencies.
    */
   public function providerVersionConstraint() {
     return [
       // [Tag, constraint]
-      '9.5.x-dev' => ['9.5.x-dev', '9.5.x-dev'],
-      '9.5.0' => ['9.5.0', '^9.5'],
+      '1.0.x-dev' => ['1.0.x-dev', '1.0.x-dev'],
+      '1.0.0-beta1' => ['1.0.0-beta1', '1.0.0-beta1'],
+      '1.0.0-rc1' => ['1.0.0-rc1', '1.0.0-rc1'],
+      '1.0.0' => ['1.0.0', '^1.0'],
     ];
   }
 

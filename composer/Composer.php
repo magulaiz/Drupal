@@ -39,7 +39,7 @@ class Composer {
    */
   public static function generateComponentPackages(Event $event): void {
     $generator = new ComponentGenerator();
-    $generator->generate($event->getIO(), getcwd());
+    $generator->generate($event, getcwd());
   }
 
   /**
