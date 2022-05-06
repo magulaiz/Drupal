@@ -28,7 +28,6 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['styles'] = [
       '#title' => $this->t('Styles'),
-      '#title_display' => 'invisible',
       '#type' => 'textarea',
       '#description' => $this->t('A list of classes that will be provided in the "Style" dropdown. Enter one or more classes on each line in the format: element.classA.classB|Label. Example: h1.title|Title. Advanced example: h1.fancy.title|Fancy title.<br />These styles should be available in your theme\'s CSS file.'),
     ];
@@ -119,7 +118,8 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
 
       // Validate the selector.
       $selector_matches = [];
-      if (!preg_match('/^([a-z][0-9a-zA-Z\-]*)((\.[a-zA-Z0-9\-_]+)+)$/', $selector, $selector_matches)) {
+      // @see https://www.w3.org/TR/CSS2/syndata.html#:~:text=In%20CSS%2C%20identifiers%20(including%20element,hyphen%20followed%20by%20a%20digit
+      if (!preg_match('/^([a-z][0-9a-zA-Z\-]*)((\.[a-zA-Z0-9\x{00A0}-\x{FFFF}\-_]+)+)$/u', $selector, $selector_matches)) {
         $unparseable_lines[$index + 1] = $line;
         continue;
       }

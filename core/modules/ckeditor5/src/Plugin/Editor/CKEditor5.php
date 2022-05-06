@@ -671,9 +671,9 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
       // Special case: AJAX updates that do not submit the form (that cannot
       // result in configuration being saved).
       if ($form_state->getSubmitHandlers() === ['editor_form_filter_admin_format_editor_configure']) {
-        // Ensure that plugins' validation constraints do not immediately do not
-        // immediately trigger a validation error: the user may choose to
-        // configure other CKEditor 5 aspects first.
+        // Ensure that plugins' validation constraints do not immediately
+        // trigger a validation error: the user may choose to configure other
+        // CKEditor 5 aspects first.
         if ($property_path_parts[0] === 'settings' && $property_path_parts[1] === 'plugins') {
           $plugin_id = $property_path_parts[2];
           // This CKEditor 5 plugin settings form was just added: the user has

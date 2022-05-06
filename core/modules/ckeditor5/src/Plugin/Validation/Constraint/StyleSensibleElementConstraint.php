@@ -25,7 +25,7 @@ class StyleSensibleElementConstraint extends Constraint {
    *
    * @var string
    */
-  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. %tag is not yet supported.';
+  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. %tag is not yet supported. Enable a plugin that supports creating this tag.';
 
   /**
    * When a Style is defined with classes supported by an enabled plugin.

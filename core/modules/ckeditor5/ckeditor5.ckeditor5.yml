@@ -73,10 +73,12 @@ ckeditor5_style:
     toolbar_items:
       style:
         label: Style
-    # This plugin is able to add any configured class on any tag, hence it
-    # indicates it allows all classes on all tags. Its subset then restricts
-    # this to a concrete set of tags, and a concrete set of classes.
+    # This plugin is able to add any configured class on any tag that can be
+    # created by some other CKEditor 5 plugin. Hence it indicates it allows all
+    # classes on all tags. Its subset then restricts this to a concrete set of
+    # tags, and a concrete set of classes.
     # @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::getElementsSubset()
+    # @see \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator()
     elements:
       - <$any-html5-element class>
 

@@ -1192,9 +1192,9 @@ final class HTMLRestrictions {
    * Gets a list of all known HTML5 elements.
    *
    * @return string[]
-   *   An array of block-level element tags.
+   *   An array of HTML5 element tags.
    */
-  private static function getArbitraryElementList(): array {
+  private static function getHtml5ElementList(): array {
     return array_keys(Elements::$html5);
   }
 
