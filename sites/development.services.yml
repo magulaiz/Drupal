@@ -9,10 +9,10 @@ parameters:
   twig.config:
     # Html comments for Twig templates: set to true to enable
     debug: true
-    # Caching the Twig templates in the Render API: 
-    # set to false to disable caching so a re-render happens
-    # every time a template is updated
-    cache: false
+    # Automatically compiles the Twig templates when the source code updates
+    auto_reload: true
+    # Caching Twig templates
+    cache: true
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
