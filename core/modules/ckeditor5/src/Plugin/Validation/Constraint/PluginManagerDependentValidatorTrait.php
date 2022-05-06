@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 
+// cspell:ignore enableable
+
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\editor\EditorInterface;
@@ -51,7 +53,7 @@ trait PluginManagerDependentValidatorTrait {
    *   (optional) A CKEditor 5 plugin ID to exclude.
    *
    * @return \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[]
-   *   A list of CKEditor 5 plugin definitioned keyed by plugin ID.
+   *   A list of CKEditor 5 plugin definitions keyed by plugin ID.
    */
   private function getEnabledPlugins(EditorInterface $text_editor, ?string $except): array {
     $enabled_plugins = $this->pluginManager->getEnabledDefinitions($text_editor);
@@ -68,7 +70,7 @@ trait PluginManagerDependentValidatorTrait {
    *   A Text Editor config entity configured to use CKEditor 5.
    *
    * @return \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[]
-   *   A list of CKEditor 5 plugin definitioned keyed by plugin ID.
+   *   A list of CKEditor 5 plugin definitions keyed by plugin ID.
    */
   private function getEnableableDisabledPlugins(EditorInterface $text_editor) {
     $disabled_plugins = array_diff_key(
