@@ -16,11 +16,11 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Styles can only be specified for already supported tags.
+ * Styles can only be specified for already supported tags and extra classes.
  *
  * @internal
  */
-class StyleTagAlreadySupportedConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
+class StyleSensibleElementConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   use PluginManagerDependentValidatorTrait;
   use TextEditorObjectDependentValidatorTrait;
@@ -32,8 +32,8 @@ class StyleTagAlreadySupportedConstraintValidator extends ConstraintValidator im
    *   Thrown when the given constraint is not supported by this validator.
    */
   public function validate($element, Constraint $constraint) {
-    if (!$constraint instanceof StyleTagAlreadySupportedConstraint) {
-      throw new UnexpectedTypeException($constraint, StyleTagAlreadySupportedConstraint::class);
+    if (!$constraint instanceof StyleSensibleElementConstraint) {
+      throw new UnexpectedTypeException($constraint, StyleSensibleElementConstraint::class);
     }
 
     $text_editor = $this->createTextEditorObjectFromContext();
@@ -55,7 +55,7 @@ class StyleTagAlreadySupportedConstraintValidator extends ConstraintValidator im
     // Hence the Style plugin cannot support setting >1 class on it.
     if ($style_element->intersect($other_enabled_plugin_elements)->allowsNothing()) {
       $tag = array_keys($style_element->getAllowedElements())[0];
-      $this->context->buildViolation($constraint->message)
+      $this->context->buildViolation($constraint->unsupportedTagMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->addViolation();
     }

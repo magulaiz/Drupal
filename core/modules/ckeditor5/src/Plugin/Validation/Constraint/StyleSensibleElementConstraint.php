@@ -9,23 +9,23 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Styles can only be specified for already supported tags.
+ * Styles can only be specified for already supported tags and extra classes.
  *
  * @Constraint(
- *   id = "StyleTagAlreadySupported",
+ *   id = "StyleSensibleElement",
  *   label = @Translation("Styles can only be specified for already supported tags.", context = "Validation"),
  * )
  *
  * @internal
  */
-class StyleTagAlreadySupportedConstraint extends Constraint {
+class StyleSensibleElementConstraint extends Constraint {
 
   /**
-   * The default violation message.
+   * When a style is defined for a tag that is not yet supported.
    *
    * @var string
    */
-  public $message = 'A style can only be specified for already supported tags. %tag is not yet supported.';
+  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. %tag is not yet supported.';
 
   /**
    * When a Style is defined with classes supported by an enabled plugin.
