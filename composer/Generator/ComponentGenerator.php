@@ -7,6 +7,7 @@ use Composer\Util\Filesystem;
 use Drupal\Composer\Composer;
 use Drupal\Composer\Generator\Util\DrupalCoreComposer;
 use Symfony\Component\Finder\Finder;
+use Composer\Semver\VersionParser;
 
 /**
  * Reconciles Drupal component dependencies with core.
@@ -140,9 +141,10 @@ class ComponentGenerator {
     $core_info = $this->drupalCoreInfo->rootComposerJson();
 
     // Assume that if Drupal is a dev version, then minimum stability for
-    // components is also dev. This allows testing in-situ with path-based
-    // Composer repositories.
+    // components is also dev.
+    $dev_branch = FALSE;
     if (strpos(Composer::drupalVersionBranch(), '-') !== FALSE) {
+      $dev_branch = TRUE;
       $package_data['minimum-stability'] = 'dev';
     }
 
@@ -163,7 +165,16 @@ class ComponentGenerator {
       // Reconcile dependencies on other Drupal components, so we can set the
       // constraint to our current version.
       if (strpos($package_name, 'drupal/core-') !== FALSE) {
-        $package_data['require'][$package_name] = Composer::drupalVersionBranch();
+        if ($dev_branch) {
+          // Set the constraint to Maj.min.x-dev.
+          $package_data['require'][$package_name] = Composer::drupalVersionBranch();
+        }
+        else {
+          // Set the constraint to ^Maj.min.
+
+
+
+        }
       }
     }
 
