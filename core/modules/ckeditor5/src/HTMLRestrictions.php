@@ -70,7 +70,7 @@ final class HTMLRestrictions {
    * @var string[]
    */
   private const WILDCARD_ELEMENT_METHODS = [
-    '$any-html5-element' => 'getArbitraryElementList',
+    '$any-html5-element' => 'getHtml5ElementList',
     '$text-container' => 'getTextContainerElementList',
   ];
 
