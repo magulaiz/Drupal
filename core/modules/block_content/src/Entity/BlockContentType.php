@@ -27,7 +27,7 @@ use Drupal\block_content\BlockContentTypeInterface;
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider",
- *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProviderWithCheck",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProviderWithCheck",
  *     },
  *     "list_builder" = "Drupal\block_content\BlockContentTypeListBuilder"
  *   },

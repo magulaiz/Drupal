@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Provides routes for the entity permissions form with a custom access check.
  */
-class UserPermissionsRouteProviderWithCheck extends UserPermissionsRouteProvider {
+class EntityPermissionsRouteProviderWithCheck extends EntityPermissionsRouteProvider {
 
   /**
    * {@inheritdoc}

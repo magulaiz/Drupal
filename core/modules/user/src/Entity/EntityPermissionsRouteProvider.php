@@ -13,7 +13,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides routes for the entity permissions form.
  */
-class UserPermissionsRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
+class EntityPermissionsRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
   /**
    * The entity type manager.
@@ -23,7 +23,7 @@ class UserPermissionsRouteProvider implements EntityRouteProviderInterface, Enti
   protected $entityTypeManager;
 
   /**
-   * Constructs a new UserPermissionsRouteProvider.
+   * Constructs a new EntityPermissionsRouteProvider.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.

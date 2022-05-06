@@ -27,7 +27,7 @@ use Drupal\node\NodeTypeInterface;
  *       "delete" = "Drupal\node\Form\NodeTypeDeleteConfirm"
  *     },
  *     "route_provider" = {
- *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     },
  *     "list_builder" = "Drupal\node\NodeTypeListBuilder",
  *   },

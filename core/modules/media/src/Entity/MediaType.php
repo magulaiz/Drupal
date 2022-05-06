@@ -30,7 +30,7 @@ use Drupal\media\MediaTypeInterface;
  *     "list_builder" = "Drupal\media\MediaTypeListBuilder",
  *     "route_provider" = {
  *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
- *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     }
  *   },
  *   admin_permission = "administer media types",

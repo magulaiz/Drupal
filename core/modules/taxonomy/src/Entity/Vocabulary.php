@@ -31,7 +31,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *     },
  *     "route_provider" = {
  *       "html" = "Drupal\taxonomy\Entity\Routing\VocabularyRouteProvider",
- *       "permissions" = "Drupal\user\Entity\UserPermissionsRouteProvider",
+ *       "permissions" = "Drupal\user\Entity\EntityPermissionsRouteProvider",
  *     }
  *   },
  *   admin_permission = "administer taxonomy",
