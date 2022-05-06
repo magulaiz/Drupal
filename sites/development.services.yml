@@ -11,8 +11,6 @@ parameters:
     debug: true
     # Automatically compiles the Twig templates when the source code updates
     auto_reload: true
-    # Caching Twig templates
-    cache: true
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
