@@ -73,7 +73,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
       ->willReturn($entity_type);
     $entity_type_manager = $prophecy->reveal();
 
-    $bundle_form = new UserPermissionsEntityForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager);
+    $bundle_form = new EntityPermissionsForm($permission_handler, $role_storage, $module_handler, $config_manager, $entity_type_manager);
 
     // Mock the method parameters.
     $route = new Route('some.path');

@@ -2,43 +2,51 @@
 
 namespace Drupal\user\Form;
 
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Route;
 
 /**
- * Provides the user permissions administration form.
+ * Provides the permissions administration form for a bundle.
+ *
+ * This class handles bundles that are defined by configuration objects.
  *
  * @internal
  */
-class UserPermissionsForm extends FormBase {
+class EntityPermissionsForm extends UserPermissionsForm {
 
   /**
-   * The permission handler.
+   * The configuration entity manager.
    *
-   * @var \Drupal\user\PermissionHandlerInterface
+   * @var \Drupal\Core\Config\ConfigManagerInterface
    */
-  protected $permissionHandler;
+  protected $configManager;
 
   /**
-   * The role storage.
+   * The entity type manager service.
    *
-   * @var \Drupal\user\RoleStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $roleStorage;
+  protected $entityTypeManager;
 
   /**
-   * The module handler.
+   * The bundle object.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   * @var \Drupal\Core\Entity\EntityInterface
    */
-  protected $moduleHandler;
+  protected $bundle;
 
   /**
-   * Constructs a new UserPermissionsForm.
+   * Constructs a new EntityPermissionsForm.
    *
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
@@ -46,11 +54,15 @@ class UserPermissionsForm extends FormBase {
    *   The role storage.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param Drupal\Core\Config\ConfigManagerInterface $config_manager
+   *   The configuration entity manager.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler) {
-    $this->permissionHandler = $permission_handler;
-    $this->roleStorage = $role_storage;
-    $this->moduleHandler = $module_handler;
+  public function __construct(PermissionHandlerInterface $permission_handler, RoleStorageInterface $role_storage, ModuleHandlerInterface $module_handler, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($permission_handler, $role_storage, $module_handler);
+    $this->configManager = $config_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -60,175 +72,105 @@ class UserPermissionsForm extends FormBase {
     return new static(
       $container->get('user.permissions'),
       $container->get('entity_type.manager')->getStorage('user_role'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('config.manager'),
+      $container->get('entity_type.manager')
     );
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
-    return 'user_admin_permissions';
-  }
-
-  /**
-   * Gets the roles to display in this form.
-   *
-   * @return \Drupal\user\RoleInterface[]
-   *   An array of role objects.
-   */
-  protected function getRoles() {
-    return $this->roleStorage->loadMultiple();
-  }
-
-  /**
-   * Group permissions by the modules that provide them.
-   *
-   * @return string[][]
-   *   A nested array. The outer keys are modules that provide permissions. The
-   *   inner arrays are permission names keyed by their machine names.
-   */
   protected function permissionsByProvider(): array {
+    // Get the names of all config entities that depend on $this->bundle.
+    $config_name = $this->bundle->getConfigDependencyName();
+    $config_entities = $this->configManager
+      ->getConfigEntitiesToChangeOnDependencyRemoval('config', [$config_name]);
+    $config_names = array_map(
+      function ($dependent_config) {
+        return $dependent_config->getConfigDependencyName();
+      }, $config_entities['delete'] ?? []
+    );
+    $config_names[] = $config_name;
+
+    // Find all the permissions that depend on $this->bundle.
     $permissions = $this->permissionHandler->getPermissions();
     $permissions_by_provider = [];
     foreach ($permissions as $permission_name => $permission) {
-      $permissions_by_provider[$permission['provider']][$permission_name] = $permission;
-    }
-
-    // Move the access content permission to the Node module if it is installed.
-    // @todo Add an alter so that this section can be moved to the Node module.
-    if ($this->moduleHandler->moduleExists('node')) {
-      // Insert 'access content' before the 'view own unpublished content' key
-      // in order to maintain the UI even though the permission is provided by
-      // the system module.
-      $keys = array_keys($permissions_by_provider['node']);
-      $offset = (int) array_search('view own unpublished content', $keys);
-      $permissions_by_provider['node'] = array_merge(
-        array_slice($permissions_by_provider['node'], 0, $offset),
-        ['access content' => $permissions_by_provider['system']['access content']],
-        array_slice($permissions_by_provider['node'], $offset)
-      );
-      unset($permissions_by_provider['system']['access content']);
+      $required_configs = $permission['dependencies']['config'] ?? [];
+      if (array_intersect($required_configs, $config_names)) {
+        $provider = $permission['provider'];
+        $permissions_by_provider[$provider][$permission_name] = $permission;
+      }
     }
 
     return $permissions_by_provider;
   }
 
   /**
-   * {@inheritdoc}
+   * Builds the user permissions administration form for a bundle.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   * @param string $bundle_entity_type
+   *   (optional) The entity type ID.
+   * @param string|Drupal\Core\Entity\EntityInterface $bundle
+   *   (optional) Either the bundle name or the bundle object.
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $role_names = [];
-    $role_permissions = [];
-    $admin_roles = [];
-    foreach ($this->getRoles() as $role_name => $role) {
-      // Retrieve role names for columns.
-      $role_names[$role_name] = $role->label();
-      // Fetch permissions for the roles.
-      $role_permissions[$role_name] = $role->getPermissions();
-      $admin_roles[$role_name] = $role->isAdmin();
+  public function buildForm(array $form, FormStateInterface $form_state, string $bundle_entity_type = NULL, $bundle = NULL): array {
+    // Set $this->bundle for use by ::permissionsByProvider().
+    if ($bundle instanceof EntityInterface) {
+      $this->bundle = $bundle;
+      return parent::buildForm($form, $form_state);
     }
 
-    // Store $role_names for use when saving the data.
-    $form['role_names'] = [
-      '#type' => 'value',
-      '#value' => $role_names,
-    ];
-    // Render role/permission overview:
-    $hide_descriptions = system_admin_compact_mode();
+    $this->bundle = $this->entityTypeManager
+      ->getStorage($bundle_entity_type)
+      ->load($bundle);
 
-    $form['system_compact_link'] = [
-      '#id' => FALSE,
-      '#type' => 'system_compact_link',
-    ];
-
-    $form['permissions'] = [
-      '#type' => 'table',
-      '#header' => [$this->t('Permission')],
-      '#id' => 'permissions',
-      '#attributes' => ['class' => ['permissions', 'js-permissions']],
-      '#sticky' => TRUE,
-    ];
-    foreach ($role_names as $name) {
-      $form['permissions']['#header'][] = [
-        'data' => $name,
-        'class' => ['checkbox'],
-      ];
-    }
-
-    foreach ($this->permissionsByProvider() as $provider => $permissions) {
-      // Module name.
-      $form['permissions'][$provider] = [
-        [
-          '#wrapper_attributes' => [
-            'colspan' => count($role_names) + 1,
-            'class' => ['module'],
-            'id' => 'module-' . $provider,
-          ],
-          '#markup' => $this->moduleHandler->getName($provider),
-        ],
-      ];
-      foreach ($permissions as $perm => $perm_item) {
-        // Fill in default values for the permission.
-        $perm_item += [
-          'description' => '',
-          'restrict access' => FALSE,
-          'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
-        ];
-        $form['permissions'][$perm]['description'] = [
-          '#type' => 'inline_template',
-          '#template' => '<div class="permission"><span class="title">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
-          '#context' => [
-            'title' => $perm_item['title'],
-          ],
-        ];
-        // Show the permission description.
-        if (!$hide_descriptions) {
-          $form['permissions'][$perm]['description']['#context']['description'] = $perm_item['description'];
-          $form['permissions'][$perm]['description']['#context']['warning'] = $perm_item['warning'];
-        }
-        foreach ($role_names as $rid => $name) {
-          $form['permissions'][$perm][$rid] = [
-            '#title' => $name . ': ' . $perm_item['title'],
-            '#title_display' => 'invisible',
-            '#wrapper_attributes' => [
-              'class' => ['checkbox'],
-            ],
-            '#type' => 'checkbox',
-            '#default_value' => in_array($perm, $role_permissions[$rid]) ? 1 : 0,
-            '#attributes' => ['class' => ['rid-' . $rid, 'js-rid-' . $rid]],
-            '#parents' => [$rid, $perm],
-          ];
-          // Show a column of disabled but checked checkboxes.
-          if ($admin_roles[$rid]) {
-            $form['permissions'][$perm][$rid]['#disabled'] = TRUE;
-            $form['permissions'][$perm][$rid]['#default_value'] = TRUE;
-          }
-        }
-      }
-    }
-
-    $form['actions'] = ['#type' => 'actions'];
-    $form['actions']['submit'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Save permissions'),
-      '#button_type' => 'primary',
-    ];
-
-    $form['#attached']['library'][] = 'user/drupal.user.permissions';
-
-    return $form;
+    return parent::buildForm($form, $form_state);
   }
 
   /**
-   * {@inheritdoc}
+   * Checks that there are permissions to be managed.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *   The route to check against.
+   * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
+   *   The parametrized route.
+   * @param string|EntityInterface $bundle
+   *   (optional) The bundle. Different entity types can have different names
+   *   for their bundle key, so if not specified on the route via a {bundle}
+   *   parameter, the access checker determines the appropriate key name, and
+   *   gets the value from the corresponding request attribute. For example,
+   *   for nodes, the bundle key is "node_type", so the value would be
+   *   available via the {node_type} parameter rather than a {bundle}
+   *   parameter.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    foreach ($form_state->getValue('role_names') as $role_name => $name) {
-      user_role_change_permissions($role_name, (array) $form_state->getValue($role_name));
+  public function access(Route $route, RouteMatchInterface $route_match, $bundle = NULL): AccessResultInterface {
+    // Set $this->bundle for use by ::permissionsByProvider().
+    if ($bundle instanceof EntityInterface) {
+      $this->bundle = $bundle;
+    }
+    else {
+      $bundle_entity_type = $route->getDefault('bundle_entity_type');
+      $bundle_name = is_string($bundle) ? $bundle : $route_match->getRawParameter($bundle_entity_type);
+      $this->bundle = $this->entityTypeManager
+        ->getStorage($bundle_entity_type)
+        ->load($bundle_name);
     }
 
-    $this->messenger()->addStatus($this->t('The changes have been saved.'));
+    if (empty($this->bundle)) {
+      // A typo in the request path can lead to this case.
+      return AccessResult::forbidden();
+    }
+
+    return AccessResult::allowedIf((bool) $this->permissionsByProvider());
   }
 
 }
