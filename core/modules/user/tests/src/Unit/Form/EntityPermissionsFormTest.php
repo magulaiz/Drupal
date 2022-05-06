@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\Form\UserPermissionsEntityForm;
+use Drupal\user\Form\EntityPermissionsForm;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\user\RoleStorageInterface;
 use Symfony\Component\Routing\Route;
@@ -19,10 +19,10 @@ use Symfony\Component\Routing\Route;
 /**
  * Tests the permissions administration form for a bundle.
  *
- * @coversDefaultClass \Drupal\user\Form\UserPermissionsEntityForm
+ * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
  * @group user
  */
-class UserPermissionsEntityFormTest extends UnitTestCase {
+class EntityPermissionsFormTest extends UnitTestCase {
 
   /**
    * Tests generating the permissions list.

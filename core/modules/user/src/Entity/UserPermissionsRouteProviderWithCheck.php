@@ -16,7 +16,7 @@ class UserPermissionsRouteProviderWithCheck extends UserPermissionsRouteProvider
   protected function getEntityPermissionsRoute(EntityTypeInterface $entity_type): ?Route {
     $route = parent::getEntityPermissionsRoute($entity_type);
     if ($route) {
-      $route->setRequirement('_custom_access', '\Drupal\user\Form\UserPermissionsEntityForm::access');
+      $route->setRequirement('_custom_access', '\Drupal\user\Form\EntityPermissionsForm::access');
     }
     return $route;
   }
