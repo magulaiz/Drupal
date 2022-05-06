@@ -2151,6 +2151,8 @@ function hook_countries_alter(&$countries) {
  *
  * @see \Drupal\Core\Display\VariantManager
  * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ *
+ * @ingroup plugin_api
  */
 function hook_display_variant_plugin_alter(array &$definitions) {
   $definitions['full_page']['admin_label'] = t('Block layout');

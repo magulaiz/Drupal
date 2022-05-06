@@ -72,6 +72,8 @@ function hook_search_preprocess($text, $langcode = NULL) {
  *
  * @see \Drupal\search\Annotation\SearchPlugin
  * @see \Drupal\search\SearchPluginManager
+ *
+ * @ingroup plugin_api
  */
 function hook_search_plugin_alter(array &$definitions) {
   if (isset($definitions['node_search'])) {
