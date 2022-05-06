@@ -2,6 +2,7 @@
 
 namespace Drupal\BuildTests\Composer\Component;
 
+use Composer\Semver\VersionParser;
 use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
 use Symfony\Component\Finder\Finder;
@@ -77,9 +78,9 @@ class ComposerComponentTest extends ComposerBuildTestBase {
         $composer_json_data['require'] ?? [],
         $composer_json_data['require-dev'] ?? []
       );
-      // Required packages from drupal/core* should have our constraint.
+      // Required packages from drupal/core-* should have our constraint.
       foreach ($requires as $package => $req_constraint) {
-        if (strpos($package, 'drupal/core') !== FALSE) {
+        if (strpos($package, 'drupal/core-') !== FALSE) {
           $this->assertEquals($constraint, $req_constraint);
         }
       }

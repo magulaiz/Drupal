@@ -143,11 +143,7 @@ class ComponentGenerator {
 
     $core_info = $this->drupalCoreInfo->rootComposerJson();
 
-    // Set looseness of constraints based on our branch or release status.
     $stability = VersionParser::parseStability(\Drupal::VERSION);
-    if ($stability !== 'stable') {
-      $package_data['minimum-stability'] = $stability;
-    }
 
     // Traverse required packages.
     foreach (array_keys($original_data['require'] ?? []) as $package_name) {
@@ -173,6 +169,12 @@ class ComponentGenerator {
         else {
           // For non-stable releases, set the constraint to the branch version.
           $package_data['require'][$package_name] = Composer::drupalVersionBranch();
+          // Also for non-stable releases which depend on another component,
+          // set the minimum stability. We do this so we can test build the
+          // components. Minimum-stability is otherwise ignored for packages
+          // which aren't the root package, so for any other purpose, this is
+          // unneeded.
+          $package_data['minimum-stability'] = $stability;
         }
       }
     }
@@ -181,7 +183,7 @@ class ComponentGenerator {
   }
 
   /**
-   * Utility function to encode metapackage json in a consistent way.
+   * Utility function to encode package json in a consistent way.
    *
    * @param array $composer_json_data
    *   Data to encode into a json string.
