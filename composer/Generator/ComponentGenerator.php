@@ -7,7 +7,6 @@ use Composer\Util\Filesystem;
 use Drupal\Composer\Composer;
 use Drupal\Composer\Generator\Util\DrupalCoreComposer;
 use Symfony\Component\Finder\Finder;
-use Composer\Semver\VersionParser;
 
 /**
  * Reconciles Drupal component dependencies with core.
@@ -171,8 +170,6 @@ class ComponentGenerator {
         }
         else {
           // Set the constraint to ^Maj.min.
-
-
 
         }
       }
