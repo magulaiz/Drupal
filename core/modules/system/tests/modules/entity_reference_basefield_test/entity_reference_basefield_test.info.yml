@@ -1,0 +1,8 @@
+name: 'Entity Reference Base Field test module'
+type: module
+description: 'Provides entity and file field definitions to test entity schema.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:file
+  - drupal:entity_test
