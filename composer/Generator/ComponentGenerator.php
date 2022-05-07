@@ -209,6 +209,10 @@ class ComponentGenerator {
           'This file was partially generated automatically. See: [change record]',
         ],
       ],
+      // Always reconcile PHP version.
+      'require' => [
+        'php' => '>=7.3.0',
+      ],
     ];
   }
 

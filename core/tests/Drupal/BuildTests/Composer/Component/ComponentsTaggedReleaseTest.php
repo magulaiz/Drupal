@@ -7,7 +7,7 @@ use Drupal\Composer\Composer;
 use Symfony\Component\Finder\Finder;
 
 /**
- * Demonstrate that Composer components are buildable as patched.
+ * Demonstrate that the Component generator responds to release tagging.
  *
  * @group #slow
  * @group Composer
@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
  *
  * @requires externalCommand composer
  */
-class ComposerComponentTest extends ComposerBuildTestBase {
+class ComponentsTaggedReleaseTest extends ComposerBuildTestBase {
 
   /**
    * Relative path from Drupal root to the Components directory.
@@ -61,6 +61,7 @@ class ComposerComponentTest extends ComposerBuildTestBase {
     // @see https://github.com/xjm/drupal_core_release/blob/main/tag.sh
     $this->executeCommand("COMPOSER_ROOT_VERSION=\"$tag\" composer update drupal/core*");
     $this->assertCommandSuccessful();
+    $this->assertErrorOutputContains('generateComponentPackages');
 
     // Find all the components.
     $component_finder = new Finder();

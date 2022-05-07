@@ -9,12 +9,15 @@ use Symfony\Component\Finder\Finder;
 /**
  * Try to install dependencies per component, using Composer.
  *
+ * @group #slow
  * @group Composer
  * @group Component
+ *
+ * @coversNothing
+ *
  * @requires externalCommand composer
- * @covers nothing
  */
-class ComponentValidateTest extends BuildTestBase {
+class ComponentsIsolatedBuildTest extends BuildTestBase {
 
   /**
    * Relative path from Drupal root to the Components directory.
