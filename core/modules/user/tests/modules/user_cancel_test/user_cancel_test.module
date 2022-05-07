@@ -10,7 +10,7 @@ use Drupal\user\UserInterface;
 /**
  * Implements hook_user_cancel_methods_alter().
  */
-function user_cancel_test_user_cancel_methods_alter(array &$methods) {
+function user_cancel_test_user_cancel_methods_alter(array &$methods): void {
   $methods['user_cancel_test'] = [
     'title' => 'User cancel test',
     'description' => 'User cancel test method',
