@@ -11,10 +11,10 @@ namespace Drupal\views\Plugin\views\field_views_data;
  *     "integer",
  *   },
  *   argument = {
- *     "id" = "integer",
+ *     "id" = "numeric",
  *   },
  *   filter = {
- *     "id" = "integer",
+ *     "id" = "numeric",
  *   }
  * )
  */
