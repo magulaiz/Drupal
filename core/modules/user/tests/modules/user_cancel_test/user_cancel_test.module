@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains user_cancel_test.module
+ * Contains user_cancel_test.module.
  */
 
 use Drupal\user\UserInterface;
