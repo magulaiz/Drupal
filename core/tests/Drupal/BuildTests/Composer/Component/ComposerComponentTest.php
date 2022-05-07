@@ -2,7 +2,6 @@
 
 namespace Drupal\BuildTests\Composer\Component;
 
-use Composer\Semver\VersionParser;
 use Drupal\BuildTests\Composer\ComposerBuildTestBase;
 use Drupal\Composer\Composer;
 use Symfony\Component\Finder\Finder;
