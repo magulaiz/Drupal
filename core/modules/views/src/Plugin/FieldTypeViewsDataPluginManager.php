@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\views\Annotation\ViewsFieldData;
 use Drupal\views\Plugin\views\FieldTypeViewsDataInterface;
 
 /**
@@ -35,7 +36,7 @@ class FieldTypeViewsDataPluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/views/field_views_data', $namespaces, $module_handler, 'Drupal\views\Plugin\views\FieldTypeViewsDataInterface', 'Drupal\views\Annotation\ViewsFieldData');
+    parent::__construct('Plugin/views/field_views_data', $namespaces, $module_handler, FieldTypeViewsDataInterface::class, ViewsFieldData::class);
 
     $this->alterInfo('views_field_type_views_data');
 
