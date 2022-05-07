@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\field_views_data;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\views\Plugin\views\FieldTypeViewsDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -11,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for field views data plugins
  */
-abstract class FieldViewsDataPluginBase implements FieldTypeViewsDataInterface, ContainerFactoryPluginInterface {
+abstract class FieldViewsDataPluginBase extends PluginBase implements FieldTypeViewsDataInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
 
