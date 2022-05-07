@@ -7,6 +7,9 @@ namespace Drupal\views\Plugin\views\field_views_data;
  *
  * @ViewsFieldData(
  *   id = "string",
+ *   field_types = {
+ *     "string",
+ *   },
  *   argument = {
  *     "id" = "string",
  *   },

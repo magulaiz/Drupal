@@ -460,10 +460,10 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
 
     $data = [];
     foreach ($field_column_mapping as $field_column_name => $schema_field_name) {
-      $field_type_definition_exists = $this->fieldTypeViewsData->hasDefinition($field_definition_type);
+      $field_type_definition_exists = $this->fieldTypeViewsData->hasPluginForFieldType($field_definition_type);
       if ($field_type_definition_exists) {
         /** @var \Drupal\views\Plugin\views\FieldTypeViewsDataInterface $field_type_views_data_plugin */
-        $field_type_views_data_plugin = $this->fieldTypeViewsData->createInstance($field_definition_type);
+        $field_type_views_data_plugin = $this->fieldTypeViewsData->createInstanceForFieldType($field_definition_type);
 
         // Use the field type views data plugins to get the data for the field
         // from the data-storage.
