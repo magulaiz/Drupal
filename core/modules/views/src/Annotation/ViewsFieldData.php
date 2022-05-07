@@ -17,6 +17,13 @@ class ViewsFieldData extends ViewsPluginAnnotationBase {
   public $id;
 
   /**
+   * The field types this applies to.
+   *
+   * @var array
+   */
+  public $field_types = [];
+
+  /**
    * The field handler definition.
    *
    * @var array

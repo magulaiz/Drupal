@@ -9,6 +9,9 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *
  * @ViewsFieldData(
  *   id = "text_long",
+ *   field_types = {
+ *     "text_long",
+ *   },
  *   argument = {
  *     "id" = "string",
  *   },
