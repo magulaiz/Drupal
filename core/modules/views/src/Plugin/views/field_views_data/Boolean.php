@@ -7,6 +7,9 @@ namespace Drupal\views\Plugin\views\field_views_data;
  *
  * @ViewsFieldData(
  *   id = "boolean",
+ *   field_types = {
+ *     "boolean",
+ *   },
  *   argument = {
  *     "id" = "numeric",
  *   },

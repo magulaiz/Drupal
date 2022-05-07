@@ -13,6 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsFieldData(
  *   id = "entity_reference",
+ *   field_types = {
+ *     "entity_reference",
+ *   },
  *   argument = {
  *     "id" = "string",
  *   },

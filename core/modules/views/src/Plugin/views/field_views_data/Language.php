@@ -11,6 +11,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsFieldData(
  *   id = "language",
+ *   field_types = {
+ *     "language",
+ *   },
  *   field = {
  *     "id" = "field_language",
  *   }
