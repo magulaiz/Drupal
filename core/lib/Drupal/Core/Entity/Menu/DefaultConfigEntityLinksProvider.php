@@ -12,7 +12,7 @@ class DefaultConfigEntityLinksProvider extends BaseEntityLinksProvider implement
   /**
    * {@inheritdoc}
    */
-  protected function getCollectionMenuLink($base_plugin_definition) {
+  protected function getCollectionMenuLink(array $base_plugin_definition) {
     if ($this->routeExists($this->getRouteName('collection'))) {
       // Config entity types that have a collection route get a menu link that
       // is placed in the 'admin > structure' section.
@@ -32,7 +32,7 @@ class DefaultConfigEntityLinksProvider extends BaseEntityLinksProvider implement
   /**
    * {@inheritdoc}
    */
-  protected function getEditFormTaskLink($base_plugin_definition) {
+  protected function getEditFormTaskLink(array $base_plugin_definition) {
     // Config entities have just one task here, but for entity types which are
     // bundles (such as node_type), Field UI module hangs its own tabs for the
     // associated content entity's fields off the bundle entity's edit form
