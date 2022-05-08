@@ -88,7 +88,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
   /**
    * {@inheritdoc}
    */
-  public function getMenuLinks($base_plugin_definition) {
+  public function getMenuLinks(array $base_plugin_definition): array {
     $link_derivative_plugins = [];
 
     if ($collection_link = $this->getCollectionMenuLink($base_plugin_definition)) {
@@ -113,7 +113,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
   /**
    * {@inheritdoc}
    */
-  public function getTaskLinks($base_plugin_definition) {
+  public function getTaskLinks(array $base_plugin_definition): array {
     $task_derivative_plugins = [];
 
     if ($collection_task_link = $this->getCollectionTaskLink($base_plugin_definition)) {
@@ -186,7 +186,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
   /**
    * {@inheritdoc}
    */
-  public function getActionLinks($base_plugin_definition) {
+  public function getActionLinks(array $base_plugin_definition): array {
     $action_derivative_plugins = [];
 
     if ($add_action_link = $this->getAddActionLink($base_plugin_definition)) {
