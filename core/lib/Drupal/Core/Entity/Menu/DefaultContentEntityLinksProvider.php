@@ -10,14 +10,25 @@ use Drupal\Core\Entity\EntityHandlerInterface;
 class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implements EntityHandlerInterface {
 
   /**
+   * The ID of the menu link under which to place the collection.
+   *
+   * Content entity types that have a collection route typically get both a menu
+   * link that places their collection under 'admin > content', as well as a
+   * task link which puts their collection alongside the collection for nodes.
+   *
+   * This however has several problems: the UI scales badly, and the absence of
+   * node module breaks it. See
+   * https://www.drupal.org/project/drupal/issues/2862859 for a plan to change
+   * this UI.
+   */
+  protected $collectionParentMenuLinkId = 'system.admin_content';
+
+  /**
    * {@inheritdoc}
    */
   protected function getCollectionMenuLink(array $base_plugin_definition) {
     if ($this->routeExists($this->getRouteName('collection'))) {
-      // Content entity types that have a collection route get a menu link that
-      // is placed under 'admin > content', as well as the task link.
-      // See https://www.drupal.org/project/drupal/issues/2862859 for a plan to
-      // change this UI.
+      // Create a menu item for the collection under the parent menu item.
       $link = $base_plugin_definition;
 
       $link['title'] = $this->entityType->getCollectionLabel();
@@ -25,7 +36,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
         '@plural-label' => $this->entityType->getPluralLabel(),
       ]);
       $link['route_name'] = $this->getRouteName('collection');
-      $link['parent'] = 'system.admin_content';
+      $link['parent'] = $this->collectionParentMenuLinkId;
 
       return $link;
     }
@@ -35,17 +46,13 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
    * {@inheritdoc}
    */
   protected function getCollectionTaskLink(array $base_plugin_definition) {
-    // Content entities follow the pattern to get a tab under /admin/content.
-    // This has several problems: the UI scales badly, and the absence of node
-    // module breaks it.
-    // See https://www.drupal.org/project/drupal/issues/2862859 for a plan to
-    // change this UI.
+    // Place a tab under the collection parent menu item.
     if ($this->routeExists($this->getRouteName('collection'))) {
       $link = $base_plugin_definition;
 
       $link['title'] = $this->entityType->getCollectionLabel();
       $link['route_name'] = $this->getRouteName('collection');
-      $link['base_route'] = "system.admin_content";
+      $link['base_route'] = $this->collectionParentMenuLinkId;
 
       return $link;
     }

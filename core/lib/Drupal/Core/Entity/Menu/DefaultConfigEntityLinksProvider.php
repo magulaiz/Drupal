@@ -10,6 +10,14 @@ use Drupal\Core\Entity\EntityHandlerInterface;
 class DefaultConfigEntityLinksProvider extends BaseEntityLinksProvider implements EntityHandlerInterface {
 
   /**
+   * The ID of the menu link under which to place the collection.
+   *
+   * Config entity types that have a collection route typically get a menu link
+   * that is placed in the 'admin > structure' section.
+   */
+  protected $collectionParentMenuLinkId = 'system.admin_content';
+
+  /**
    * {@inheritdoc}
    */
   protected function getCollectionMenuLink(array $base_plugin_definition) {
@@ -23,7 +31,7 @@ class DefaultConfigEntityLinksProvider extends BaseEntityLinksProvider implement
         '@plural-label' => $this->entityType->getPluralLabel(),
       ]);
       $link['route_name'] = $this->getRouteName('collection');
-      $link['parent'] = 'system.admin_structure';
+      $link['parent'] = $this->collectionParentMenuLinkId;
 
       return $link;
     }
