@@ -268,12 +268,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    */
   protected function routeExists(string $route_name): bool {
     $routes = $this->routeProvider->getRoutesByNames([$route_name]);
-    if (empty($routes)) {
-      return FALSE;
-    }
-    else {
-      return TRUE;
-    }
+    return !empty($routes);
   }
 
   /**
