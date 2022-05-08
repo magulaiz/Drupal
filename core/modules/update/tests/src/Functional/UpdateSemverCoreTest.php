@@ -347,7 +347,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
       'administer modules',
-      'see update notifications',
+      'view update notifications',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
@@ -366,7 +366,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
     $this->assertSession()->pageTextContains('There are updates available for your version of Drupal.');
     $this->assertSession()->pageTextNotContains('There is a security update available for your version of Drupal.');
 
-    // A user without the "see update notifications" permission shouldn't be
+    // A user without the "view update notifications" permission shouldn't be
     // notified about available updates.
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
@@ -385,7 +385,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
       'administer site configuration',
       'administer modules',
       'administer themes',
-      'see update notifications',
+      'view update notifications',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
     // Instead of using refreshUpdateStatus(), set these manually.
@@ -504,7 +504,7 @@ class UpdateSemverCoreTest extends UpdateSemverTestBase {
   public function testBrokenThenFixedUpdates() {
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
-      'see update notifications',
+      'view update notifications',
       'access administration pages',
     ]));
     $this->setProjectInstalledVersion('8.0.0');
