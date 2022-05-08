@@ -16,7 +16,7 @@ interface EntityLinksProviderInterface {
    * @return array
    *   An array of full derivative definitions keyed on derivative id.
    */
-  public function getMenuLinks($base_plugin_definition);
+  public function getMenuLinks(array $base_plugin_definition): array;
 
   /**
    * Defines derivative task link plugins for an entity type.
@@ -27,7 +27,7 @@ interface EntityLinksProviderInterface {
    * @return array
    *   An array of full derivative definitions keyed on derivative id.
    */
-  public function getTaskLinks($base_plugin_definition);
+  public function getTaskLinks(array $base_plugin_definition): array;
 
   /**
    * Defines derivative action link plugins for an entity type.
@@ -38,6 +38,6 @@ interface EntityLinksProviderInterface {
    * @return array
    *   An array of full derivative definitions keyed on derivative id.
    */
-  public function getActionLinks($base_plugin_definition);
+  public function getActionLinks(array $base_plugin_definition): array;
 
 }
