@@ -12,7 +12,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getCollectionMenuLink($base_plugin_definition) {
+  protected function getCollectionMenuLink(array $base_plugin_definition) {
     if ($this->routeExists($this->getRouteName('collection'))) {
       // Content entity types that have a collection route get a menu link that
       // is placed under 'admin > content', as well as the task link.
@@ -34,7 +34,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getCollectionTaskLink($base_plugin_definition) {
+  protected function getCollectionTaskLink(array $base_plugin_definition) {
     // Content entities follow the pattern to get a tab under /admin/content.
     // This has several problems: the UI scales badly, and the absence of node
     // module breaks it.
@@ -54,7 +54,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getCanonicalTaskLink($base_plugin_definition) {
+  protected function getCanonicalTaskLink(array $base_plugin_definition) {
     $canonical_route_name = $this->getRouteName('canonical');
     if ($this->routeExists($canonical_route_name)) {
       $link = $base_plugin_definition;
@@ -70,7 +70,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getEditFormTaskLink($base_plugin_definition) {
+  protected function getEditFormTaskLink(array $base_plugin_definition) {
     if ($this->routeExists($this->getRouteName('edit_form')) && $this->routeExists($this->getRouteName('canonical'))) {
       $link = $base_plugin_definition;
 
@@ -85,7 +85,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getDeleteFormTaskLink($base_plugin_definition) {
+  protected function getDeleteFormTaskLink(array $base_plugin_definition) {
     if ($this->routeExists($this->getRouteName('delete_form')) && $this->routeExists($this->getRouteName('canonical'))) {
       $link = $base_plugin_definition;
 
