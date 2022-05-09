@@ -97,10 +97,9 @@ class AccountCancellation {
       ->setTitle($this->t('Cancelling account'));
     batch_set($batch_builder->toArray());
 
-    // When the 'user_cancel_delete' method is used, user_delete() is called,
-    // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete()
-    // for the user entity. Modules should use those hooks to respond to the
-    // account deletion.
+    // When the 'user_cancel_delete' method is used, the user entity is deleted,
+    // which invokes hook_ENTITY_TYPE_predelete() and hook_ENTITY_TYPE_delete().
+    // Modules should use those hooks to respond to the account deletion.
     if ($method !== 'user_cancel_delete') {
       // Allow modules to add further sets to this batch.
       $description = 'The hook is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. In order to act on user account cancellation provide an event subscriber that listens to the \Drupal\user\Event\AccountCancelEvent event. The event subscriber can be defined with a priority higher than the core subscribers in order to cancel them by using AccountCancelEvent::stopPropagation(). See https://www.drupal.org/node/3279455';
