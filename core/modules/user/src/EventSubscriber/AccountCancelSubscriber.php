@@ -64,6 +64,10 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
       case 'user_cancel_block':
       case 'user_cancel_block_unpublish':
       default:
+        if (!in_array($event->getMethod(), ['user_cancel_block', 'user_cancel_block_unpublish'], TRUE)) {
+          @trigger_error('Using ' . __METHOD__ . '() subscriber to handle user account cancellation methods other than user_cancel_block, user_cancel_block_unpublish, user_cancel_reassign and user_cancel_delete is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. Third-party modules should add their own subscriber to handle custom cancellation methods. See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);
+        }
+
         // Send account blocked notification if option was checked.
         if (!empty($context['user_cancel_notify'])) {
           _user_mail_notify('status_blocked', $account);
