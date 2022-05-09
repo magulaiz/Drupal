@@ -61,6 +61,15 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       $output .= '</dd>';
       $output .= '</dl>';
+      $output .= '<h3 id="smart-default-settings">' . t('Switching an Existing Text Format to CKEditor 5') . '</h3>';
+      $output .= '<p>' . t('General information about Smart Default Settings') . '</p>';
+      $output .= '<h4 id="source-editing">' . t('Source Editing config allows use of elements/tags not supported by any available plugins') . '</h4>';
+      $output .= '<p>' . t('General information about how the source editing field is used') . '</p>';
+      $output .= '<h4 id="source-editing">' . t('Smart Default Settings will automatically enable the br and p tags') . '</h4>';
+      $output .= '<p>' . t('General information on br and p tags being mandatory') . '</p>';
+
+
+    // Mandatory tags #tags-required-to-operate
       return $output;
   }
 }
