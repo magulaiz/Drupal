@@ -68,8 +68,6 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<h4 id="source-editing">' . t('Smart Default Settings will automatically enable the br and p tags') . '</h4>';
       $output .= '<p>' . t('General information on br and p tags being mandatory') . '</p>';
 
-
-    // Mandatory tags #tags-required-to-operate
       return $output;
   }
 }

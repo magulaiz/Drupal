@@ -78,7 +78,7 @@ final class SmartDefaultSettings {
    *   The CKEditor 4 plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
@@ -153,7 +153,7 @@ final class SmartDefaultSettings {
     // Compute the appropriate settings based on the CKEditor 4 configuration
     // if it exists.
     $old_editor = $editor->id() ? Editor::load($editor->id()) : NULL;
-    $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) :  HTMLRestrictions::emptySet();
+    $old_editor_restrictions = $old_editor ? HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()) : HTMLRestrictions::emptySet();
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       $enabled_cke4_plugins = $this->getEnabledCkeditor4Plugins($old_editor);
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
@@ -175,9 +175,6 @@ final class SmartDefaultSettings {
         $this->logger->info($this->t('The following plugins were enabled to support tags that are allowed by this text format: %enabling_message_content.',
           ['%enabling_message_content' => $enabling_message_content],
         ));
-//        $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The following plugins were enabled to support tags that are allowed by this text format: %enabling_message_content.',
-//          ['%enabling_message_content' => $enabling_message_content],
-//        );
       }
       // Warn user about unsupported tags.
       if (!$unsupported->allowsNothing()) {
@@ -186,18 +183,12 @@ final class SmartDefaultSettings {
         $this->logger->info($this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
         ]));
-//        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
-//          '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
-//        ]);
       }
 
       if ($enabled_for_attributes_message_content) {
         $this->logger->info($this->t('The following plugins were enabled to support specific attributes that are allowed by this text format: %enabled_for_attributes_message_content.',
           ['%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content],
         ));
-//        $messages[MessengerInterface::TYPE_STATUS][] = $this->t('The following plugins were enabled to support specific attributes that are allowed by this text format: %enabled_for_attributes_message_content.',
-//          ['%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content],
-//        );
       }
       // Warn user about supported tags but missing attributes.
       if (!$missing_attributes->allowsNothing()) {
@@ -206,14 +197,10 @@ final class SmartDefaultSettings {
         $this->logger->info($this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
         ]));
-
-//        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
-//          '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
-//        ]);
       }
     }
+
     $has_html_restrictions = $editor->getFilterFormat()->filters('filter_html')->status;
-    
     $missing_mandatory_tags = HTMLRestrictions::emptySet();
     if ($has_html_restrictions) {
       $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements([
@@ -227,9 +214,6 @@ final class SmartDefaultSettings {
         $this->logger->warning($this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
           '@missing_tags' => $missing_mandatory_tags->toFilterHtmlAllowedTagsString(),
         ]));
-//        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
-//          '@missing_tags' => $missing_mandatory_tags->toFilterHtmlAllowedTagsString(),
-//        ]);
       }
     }
 
@@ -260,7 +244,7 @@ final class SmartDefaultSettings {
         }
       }
 
-      //To maintain the capabilities of this text format, [Smart default settings](HELP:smart default settings)
+      // To maintain the capabilities of this text format, [Smart default settings](HELP:smart default settings)
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
         $beginning = $this->t('To maintain the capabilities of this text format, <a href=":sdf_url">Smart Default Settings</a> did the following:', [':sdf_url' => 'admin/help/ckeditor5#smart-default-settings']);
         $plugin_info = !empty($plugins_enabled) ? $this->t('Enabled these plugins: (<em>@plugins</em>).', ['@plugins' => implode(', ', $plugins_enabled)]) : '';
@@ -270,7 +254,9 @@ final class SmartDefaultSettings {
           $can_access_dblog + 1,
           'Additional details are available in your logs.',
           'Additional details are available <a href=":dblog_url">in your logs</a>.',
-          [':dblog_url' =>  $can_access_dblog ? Url::fromRoute('dblog.overview')->toString() : '']);
+          [
+            ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')->toString() : '',
+            ]);
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t('@beginning @plugin_info @source_editing_info. @end', [
           '@beginning' => $beginning,
           '@plugin_info' => $plugin_info,
@@ -288,22 +274,32 @@ final class SmartDefaultSettings {
         $mandatory_tags = !$missing_mandatory_tags->allowsNothing() ? $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
           'The @tag tag because it is <a href=":mandatory_tag_url">required by CKEditor 5.</a>',
           'The @tag tags because they are <a href=":mandatory_tag_url">required by CKEditor 5.</a>',
-          ['@tag' => $missing_mandatory_tags->toFilterHtmlAllowedTagsString(),
-            ':mandatory_tag_url' => 'admin/help/ckeditor5#tags-required-to-operate']) : '';
+          [
+            '@tag' => $missing_mandatory_tags->toFilterHtmlAllowedTagsString(),
+            ':mandatory_tag_url' => 'admin/help/ckeditor5#tags-required-to-operate',
+            ]) : '';
         $added_elements_begin = !empty($attributes_to_tag) || !empty($added_tags) ? $this->t('A plugin introduced support for the following:') : '';
         $added_elements_tags = !empty($added_tags) ? $this->formatPlural(
           count($added_tags),
           'The tag <em>:tags</em>;',
           'The tags <em>:tags</em>;',
-          [':tags' => implode(', ', array_map(function($tag_name) {return "<$tag_name>";}, array_keys($added_tags)))]) : '';
-        $addded_elements_attributes = !empty($attributes_to_tag) ? $this->formatPlural(
+          [
+            ':tags' => implode(', ', array_map(function ($tag_name) {
+              return "<$tag_name>";
+            }, array_keys($added_tags))),
+          ]) : '';
+        $added_elements_attributes = !empty($attributes_to_tag) ? $this->formatPlural(
           count($attributes_to_tag),
           'This attribute: <em>@attributes</em>;',
           'These attributes: <em>@attributes</em>;',
-          ['@attributes' => rtrim(array_reduce(array_keys($attributes_to_tag), function($carry, $item) use ($attributes_to_tag) {
-            $for_tags = implode(', ', array_map(function($item) { return "<$item>"; }, $attributes_to_tag[$item]));
-            return "$carry $item (for $for_tags),";
-          }, ''), " ,")]
+          [
+            '@attributes' => rtrim(array_reduce(array_keys($attributes_to_tag), function ($carry, $item) use ($attributes_to_tag) {
+              $for_tags = implode(', ', array_map(function ($item) {
+                return "<$item>";
+              }, $attributes_to_tag[$item]));
+              return "$carry $item (for $for_tags),";
+            }, ''), " ,"),
+          ]
         ) : '';
         $end = $this->t('Additional details are available in your logs.');
         $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @mandatory_tags @added_elements_tags @added_elements_attributes @end',
@@ -312,12 +308,11 @@ final class SmartDefaultSettings {
             '@added_elements_begin' => $added_elements_begin,
             '@mandatory_tags' => $mandatory_tags,
             '@added_elements_tags' => $added_elements_tags,
-            '@added_elements_attributes' => $addded_elements_attributes,
+            '@added_elements_attributes' => $added_elements_attributes,
             '@end' => $end,
           ]);
       }
     }
-
 
     return [$editor, $messages];
   }

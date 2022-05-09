@@ -359,7 +359,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
    * @return array
    *   List of merged values for the given plugin definition method.
    */
-  protected function  mergeDefinitionValues(string $get_method, array $definitions): array {
+  protected function mergeDefinitionValues(string $get_method, array $definitions): array {
     assert(method_exists(CKEditor5PluginDefinition::class, $get_method));
     $has_method = 'has' . substr($get_method, 3);
     assert(method_exists(CKEditor5PluginDefinition::class, $has_method));

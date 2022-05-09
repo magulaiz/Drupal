@@ -316,6 +316,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
    *   All expected fundamental compatibility violations for the given text
    *   format.
    * @param string[] $expected_db_logs
+   *   The expected database logs associated with the computed settings.
+   * @param string[] $expected_messages
    *   The expected messages associated with the computed settings.
    * @param array|null $expected_post_filter_drop_fundamental_compatibility_violations
    *   All expected fundamental compatibility violations for the given text
@@ -420,14 +422,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ->select('watchdog', 'w')
       ->fields('w', ['message', 'variables', 'severity'])
       ->condition('type', 'ckeditor5')
-      ->orderBy('wid', 'ASC')
-      //      ->range(0, 1)
+      ->orderBy('wid')
       ->execute()
       ->fetchAll();
 
     $type_to_status = [
       6 => 'status',
-      4 => 'warning'
+      4 => 'warning',
     ];
     $db_logs = [];
     foreach ($db_logged as $log) {
@@ -440,8 +441,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         $messages[$type][$key] = (string) $message;
       }
     }
-
-
 
     $this->assertSame($expected_db_logs, $db_logs);
     $this->assertSame($expected_messages, $messages);
@@ -543,10 +542,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'expected_messages' => [
           'status' => [
-            'To maintain the capabilities of this text format, <a href="admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. Additional details are available in your logs.'
+            'To maintain the capabilities of this text format, <a href="admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. Additional details are available in your logs.',
           ],
           'warning' => [
-            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.'
+            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.',
           ],
         ],
       ]
@@ -725,10 +724,10 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ]),
       'expected_messages' => [
         'status' => [
-          'To maintain the capabilities of this text format, <a href="admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt;. Additional details are available in your logs.'
+          'To maintain the capabilities of this text format, <a href="admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt;. Additional details are available in your logs.',
         ],
         'warning' => [
-            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.'
+          'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.',
         ],
       ],
     ];
