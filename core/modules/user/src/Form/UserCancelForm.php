@@ -56,11 +56,13 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
    *   The time service.
    * @param \Drupal\user\AccountCancellation $account_cancellation
    *   The account cancellation service.
+   *
+   * @see https://www.drupal.org/node/3279455
    */
   public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, AccountCancellation $account_cancellation = NULL) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     if (!$account_cancellation) {
-      @trigger_error('TBD \Drupal\user\Form\UserCancelForm::__construct', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455', E_USER_DEPRECATED);
       $account_cancellation = \Drupal::service('user.account_cancellation');
     }
     $this->accountCancellation = $account_cancellation;
