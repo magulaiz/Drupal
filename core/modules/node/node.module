@@ -31,7 +31,6 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -627,13 +626,6 @@ function node_ranking() {
     ];
   }
   return $ranking;
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function node_user_cancel($edit, UserInterface $account, $method) {
-  @trigger_error('TBD node', E_USER_DEPRECATED);
 }
 
 /**

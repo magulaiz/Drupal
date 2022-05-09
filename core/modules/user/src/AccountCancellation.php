@@ -103,7 +103,8 @@ class AccountCancellation {
     // account deletion.
     if ($method !== 'user_cancel_delete') {
       // Allow modules to add further sets to this batch.
-      $this->moduleHandler->invokeAll('user_cancel', [$context, $account, $method]);
+      $description = 'The hook is deprecated in drupal:9.5.0 and is removed from drupal:10.0.0. In order to act on user account cancellation provide an event subscriber that listens to the \Drupal\user\Event\AccountCancelEvent event. The event subscriber can be defined with a priority higher than the core subscribers in order to cancel them by using AccountCancelEvent::stopPropagation(). See https://www.drupal.org/node/3279455';
+      $this->moduleHandler->invokeAllDeprecated($description, 'user_cancel', [$context, $account, $method]);
     }
 
     // Finish the batch and actually cancel the account.
