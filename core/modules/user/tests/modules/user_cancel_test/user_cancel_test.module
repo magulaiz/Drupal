@@ -5,8 +5,6 @@
  * Contains user_cancel_test.module.
  */
 
-use Drupal\user\UserInterface;
-
 /**
  * Implements hook_user_cancel_methods_alter().
  */
@@ -15,13 +13,4 @@ function user_cancel_test_user_cancel_methods_alter(array &$methods): void {
     'title' => 'User cancel test',
     'description' => 'User cancel test method',
   ];
-}
-
-/**
- * Implements hook_user_cancel().
- */
-function user_cancel_test_user_cancel(array $edit, UserInterface $account, string $method): void {
-  if ($method === 'user_cancel_test') {
-    \Drupal::messenger()->addStatus('Custom user cancel method executed.');
-  }
 }
