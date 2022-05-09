@@ -4,9 +4,6 @@ namespace Drupal\comment\EventSubscriber;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Logger\LoggerChannelFactoryInterface;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\user\Event\AccountCancelEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

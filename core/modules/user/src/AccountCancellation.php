@@ -7,11 +7,9 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Messenger\MessengerInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Event\AccountCancelEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Provides user account cancellation functionality.
@@ -55,7 +53,7 @@ class AccountCancellation {
    *   The entity type manager service.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The channel logger factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.

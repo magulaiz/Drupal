@@ -34,7 +34,7 @@ class AccountCancelSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   The channel logger factory service.
    */
   public function __construct(MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory) {

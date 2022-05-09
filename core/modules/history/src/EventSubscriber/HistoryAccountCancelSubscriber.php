@@ -21,7 +21,7 @@ class HistoryAccountCancelSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new event subscriber instance.
    *
-   * @param Connection $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
   public function __construct(Connection $database) {
