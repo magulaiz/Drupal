@@ -165,13 +165,7 @@ function history_node_delete(EntityInterface $node) {
  * Implements hook_user_cancel().
  */
 function history_user_cancel($edit, UserInterface $account, $method) {
-  switch ($method) {
-    case 'user_cancel_reassign':
-      \Drupal::database()->delete('history')
-        ->condition('uid', $account->id())
-        ->execute();
-      break;
-  }
+  @trigger_error('TBD', E_USER_DEPRECATED);
 }
 
 /**

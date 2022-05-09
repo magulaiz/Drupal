@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\TempStore\PrivateTempStoreFactory;
+use Drupal\user\AccountCancellation;
 use Drupal\user\UserStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -40,6 +41,13 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
   protected $entityTypeManager;
 
   /**
+   * The account cancellation service.
+   *
+   * @var \Drupal\user\AccountCancellation
+   */
+  protected $accountCancellation;
+
+  /**
    * Constructs a new UserMultipleCancelConfirm.
    *
    * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
@@ -48,11 +56,18 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
    *   The user storage.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\user\AccountCancellation $account_cancellation
+   *   The account cancellation service.
    */
-  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, UserStorageInterface $user_storage, EntityTypeManagerInterface $entity_type_manager, AccountCancellation $account_cancellation = NULL) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->userStorage = $user_storage;
     $this->entityTypeManager = $entity_type_manager;
+    if (!$account_cancellation) {
+      @trigger_error('TBD', E_USER_DEPRECATED);
+      $account_cancellation = \Drupal::service('user.account_cancellation');
+    }
+    $this->accountCancellation = $account_cancellation;
   }
 
   /**
@@ -221,7 +236,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
           $admin_form->submitForm($admin_form_mock, $admin_form_state);
         }
         else {
-          user_cancel($form_state->getValues(), $uid, $form_state->getValue('user_cancel_method'));
+          $this->accountCancellation->cancel($uid, $form_state->getValue('user_cancel_method'), $form_state->getValues());
         }
       }
     }
