@@ -2,7 +2,9 @@
 
 namespace Drupal\Tests\migrate_drupal\Unit\Plugin\migrate\field\d6;
 
+use Drupal\migrate\Plugin\MigratePluginManager;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\migrate_drupal\Plugin\migrate\field\NodeReference;
 use Prophecy\Argument;
@@ -34,7 +36,9 @@ class NodeReferenceFieldTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->plugin = new NodeReference([], 'nodereference', []);
+    $migration_plugin_manager = $this->createMock(MigrationPluginManagerInterface::class);
+    $migrate_plugin_manager = $this->createMock(MigratePluginManager::class);
+    $this->plugin = new NodeReference([], 'nodereference', [], $migration_plugin_manager, $migrate_plugin_manager);
 
     $migration = $this->prophesize(MigrationInterface::class);
 

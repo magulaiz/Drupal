@@ -3,6 +3,7 @@
 namespace Drupal\link\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
@@ -45,6 +46,30 @@ class LinkField extends FieldPluginBase {
       'source' => $field_name,
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    $field_settings = $row->getSourceProperty('global_settings');
+    if (isset($field_settings['title'])) {
+      // D6 has optional, required, value and none. D8 only has disabled
+      // (DRUPAL_DISABLED), optional (DRUPAL_OPTIONAL) and required
+      // (DRUPAL_REQUIRED).
+      $map = [
+        'disabled' => 0,
+        'optional' => 1,
+        'required' => 2,
+      ];
+      $settings['title'] = $map[$field_settings['title']];
+    }
+    else {
+      // In case we are missing title in field settings, use disabled value
+      // "DRUPAL_DISABLED" as a default value.
+      $settings['title'] = 0;
+    }
+    return $settings;
   }
 
 }

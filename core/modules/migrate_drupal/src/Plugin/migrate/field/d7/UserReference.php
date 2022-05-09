@@ -3,6 +3,7 @@
 namespace Drupal\migrate_drupal\Plugin\migrate\field\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 
 /**
@@ -71,6 +72,54 @@ class UserReference extends ReferenceBase {
     ];
     $migration->setProcessOfProperty($field_name, $process);
 
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    $settings['target_type'] = 'user';
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterFieldInstanceMigration(MigrationInterface $migration) {
+    parent::alterFieldInstanceMigration($migration);
+
+    $migration_dependencies = $migration->getMigrationDependencies();
+    $migration_dependencies['required'][] = $this->userTypeMigration;
+    $migration->set('migration_dependencies', $migration_dependencies);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    $instance_settings['handler'] = 'default:user';
+
+    $instance_settings['handler_settings'] = [
+      'include_anonymous' => TRUE,
+      'filter' => [
+        'type' => '_none',
+      ],
+      'sort' => [
+        'field' => '_none',
+        'direction' => 'ASC',
+      ],
+      'auto_create' => FALSE,
+    ];
+
+    if ($row->hasSourceProperty('roles')) {
+      $instance_settings['handler_settings']['filter']['type'] = 'role';
+      foreach ($row->get('roles') as $role) {
+        $instance_settings['handler_settings']['filter']['role'] = [
+          $role['name'] => $role['name'],
+        ];
+      }
+    }
+    return $instance_settings;
   }
 
 }

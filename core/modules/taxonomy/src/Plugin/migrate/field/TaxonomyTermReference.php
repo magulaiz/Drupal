@@ -2,8 +2,9 @@
 
 namespace Drupal\taxonomy\Plugin\migrate\field;
 
+use Drupal\migrate_drupal\Plugin\migrate\field\ReferenceBase;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
+use Drupal\migrate\Row;
 
 // cspeLL:ignore entityreference
 
@@ -18,7 +19,36 @@ use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
  *   destination_module = "core",
  * )
  */
-class TaxonomyTermReference extends FieldPluginBase {
+class TaxonomyTermReference extends ReferenceBase {
+
+  /**
+   * The plugin ID for the reference type migration.
+   *
+   * @var string
+   */
+  protected $taxonomyTypeMigration = 'd7_vocabulary';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntityTypeMigrationId() {
+    return $this->taxonomyTypeMigration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function entityId() {
+    return 'tid';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    $settings['target_type'] = 'taxonomy_term';
+    return $settings;
+  }
 
   /**
    * {@inheritdoc}
@@ -45,6 +75,22 @@ class TaxonomyTermReference extends FieldPluginBase {
       ],
     ];
     $migration->setProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    $instance_settings['handler_settings']['sort'] = [
+      'field' => '_none',
+    ];
+    $allowed_values = $row->get('@allowed_values');
+    foreach ($allowed_values as $allowed_value) {
+      foreach ($allowed_value as $vocabulary) {
+        $instance_settings['handler_settings']['target_bundles'][$vocabulary] = $vocabulary;
+      }
+    }
+    return $instance_settings;
   }
 
 }

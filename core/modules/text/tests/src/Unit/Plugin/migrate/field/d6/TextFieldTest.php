@@ -166,4 +166,47 @@ class TextFieldTest extends UnitTestCase {
     $this->assertSame($expected_type, $this->plugin->getFieldType($row));
   }
 
+  /**
+   * @covers ::transformFieldStorageSettings
+   * @dataProvider transformFieldStorageSettingsProvider
+   */
+  public function testTransformFieldStorageSettings($expected_type, $widget_type, array $settings = []) {
+    $row = new Row();
+    $row->setSourceProperty('widget_type', $widget_type);
+    $row->setSourceProperty('global_settings', $settings);
+    $this->assertSame($expected_type, $this->plugin->transformFieldStorageSettings($row));
+  }
+
+  /**
+   * Data provider for testGetFieldType().
+   */
+  public function transformFieldStorageSettingsProvider() {
+    return [
+      [
+        [
+          'max_length' => 255,
+        ],
+        'text_textfield',
+        [
+          'text_processing' => '1',
+          'max_length' => '',
+          'allowed_values' => '',
+          'allowed_values_php' => '',
+        ],
+      ],
+      [
+        [
+          'max_length' => 123,
+        ],
+        'text_textfield',
+        [
+          'text_processing' => '1',
+          'max_length' => '123',
+          'allowed_values' => '',
+          'allowed_values_php' => '',
+        ],
+      ],
+    ];
+  }
+
 }

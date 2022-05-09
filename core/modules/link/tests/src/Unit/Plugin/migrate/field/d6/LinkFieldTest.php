@@ -3,6 +3,7 @@
 namespace Drupal\Tests\link\Unit\Plugin\migrate\field\d6;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\link\Plugin\migrate\field\d6\LinkField;
 use Prophecy\Argument;
@@ -54,6 +55,32 @@ class LinkFieldTest extends UnitTestCase {
       'source' => 'field_name',
     ];
     $this->assertSame($expected, $this->migration->getProcess());
+  }
+
+  /**
+   * @covers ::transformFieldInstanceSettings
+   * @dataProvider providerTestTransformFieldInstanceSettings
+   */
+  public function testTransformFieldInstanceSettings($global_settings, $expected) {
+    $row = new Row();
+    $row->setSourceProperty('global_settings', $global_settings);
+    $this->assertSame($expected, $this->plugin->transformFieldInstanceSettings($row));
+  }
+
+  /**
+   * Data provider for testTransformFieldInstanceSettings().
+   */
+  public function providerTestTransformFieldInstanceSettings() {
+    return [
+      [
+        ['title' => 'optional'],
+        ['title' => 1],
+      ],
+      [
+        [],
+        ['title' => 0],
+      ],
+    ];
   }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\field\Plugin\migrate\process\d7;
+namespace Drupal\field\Plugin\migrate\process\d6;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Plugin\PluginManagerInterface;
@@ -10,12 +10,16 @@ use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore imagefield optionwidgets
+
 /**
+ * Get the field instance widget type.
+ *
  * @MigrateProcessPlugin(
- *   id = "d7_field_settings"
+ *   id = "field_instance_widget_type"
  * )
  */
-class FieldSettings extends ProcessPluginBase implements ContainerFactoryPluginInterface {
+class FieldWidgetType extends ProcessPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The field plugin manager.
@@ -57,36 +61,42 @@ class FieldSettings extends ProcessPluginBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    $original_field_type = $row->getSourceProperty('type');
-    if ($original_field_type == 'text') {
-      $original_field_type = 'd7_' . $original_field_type;
+    $source_widget_type = $row->getSourceProperty('widget_type');
+    $source_field_type = $row->getSourceProperty('type');
+    if ($source_field_type == 'text') {
+      $source_field_type = 'd6_' . $source_field_type;
     }
+
     try {
-      return $this->fieldPluginManager->createInstance($original_field_type, ['core' => 7])
-        ->transformFieldStorageSettings($row);
+      return $this->fieldPluginManager->createInstance($source_field_type, ['core' => 6])
+        ->transformWidgetType($row);
     }
     catch (PluginNotFoundException $e) {
-      // Ignore.
+      return $this->getWidget($source_widget_type);
     }
+  }
 
-    $value = $row->getSourceProperty('settings');
-
-    switch ($row->getSourceProperty('type')) {
-      case 'date':
-      case 'datestamp':
-        $collected_date_attributes = is_numeric(array_keys($value['granularity'])[0])
-          ? $value['granularity']
-          : array_keys(array_filter($value['granularity']));
-        if (empty(array_intersect($collected_date_attributes, ['hour', 'minute', 'second']))) {
-          $value['datetime_type'] = 'date';
-        }
-        break;
-
-      default:
-        break;
-    }
-
-    return $value;
+  /**
+   * Returns widget for a given source widget type.
+   *
+   * @param string $source_widget_type
+   *   The source widget type.
+   *
+   * @return string|null
+   */
+  protected function getWidget(string $source_widget_type) {
+    $map = [
+      'number' => 'number',
+      'email_textfield' => 'email_default',
+      'date_select' => 'datetime_default',
+      'date_text' => 'datetime_default',
+      'imagefield_widget' => 'image_image',
+      'phone_textfield' => 'telephone_default',
+      'optionwidgets_onoff' => 'boolean_checkbox',
+      'optionwidgets_buttons' => 'options_buttons',
+      'optionwidgets_select' => 'options_select',
+    ];
+    return isset($map[$source_widget_type]) ? $map[$source_widget_type] : NULL;
   }
 
 }

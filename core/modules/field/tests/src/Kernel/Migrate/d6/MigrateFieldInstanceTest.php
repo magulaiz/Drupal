@@ -4,8 +4,8 @@ namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\link\LinkItemInterface;
-use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
  * Migrate field instances.
@@ -104,6 +104,55 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('https://www.drupal.org', $entity->field_test_link->uri);
     $this->assertSame([], $entity->field_test_link->options['attributes']);
 
+    // Test node reference to entity reference migration.
+    $field = FieldConfig::load('node.story.field_node_reference');
+    $this->assertSame('Node reference', $field->label());
+    $this->assertSame('default:node', $field->getSetting('handler'));
+    $expected = [
+      'target_bundles' => [],
+    ];
+    $this->assertSame($expected, $field->getSetting('handler_settings'));
+
+    // Test node reference to entity reference migration.
+    $field = FieldConfig::load('node.story.field_node_reference_2');
+    $this->assertSame('Node reference 2', $field->label());
+    $this->assertSame('default:node', $field->getSetting('handler'));
+    $expected = [
+      'target_bundles' => [
+        'article' => 'article',
+      ],
+    ];
+    $this->assertSame($expected, $field->getSetting('handler_settings'));
+
+    // Test user reference to entity reference migration.
+    $field = FieldConfig::load('node.story.field_user_reference');
+    $this->assertSame('User reference', $field->label());
+    $this->assertSame('default:user', $field->getSetting('handler'));
+    $expected = [
+      'target_bundles' => NULL,
+      'filter' => [
+        'type' => '_none',
+      ],
+      'include_anonymous' => FALSE,
+    ];
+    $this->assertSame($expected, $field->getSetting('handler_settings'));
+
+    // Test user reference to entity reference migration.
+    $field = FieldConfig::load('node.story.field_user_reference_2');
+    $this->assertSame('User reference 2', $field->label());
+    $this->assertSame('default:user', $field->getSetting('handler'));
+    $expected = [
+      'target_bundles' => NULL,
+      'filter' => [
+        'type' => 'role',
+        'role' => [
+          'migrate_test_role_1' => 'migrate_test_role_1',
+        ],
+      ],
+      'include_anonymous' => FALSE,
+    ];
+    $this->assertSame($expected, $field->getSetting('handler_settings'));
+
     // Test date field.
     $field = FieldConfig::load('node.story.field_test_date');
     $this->assertInstanceOf(FieldConfig::class, $field);
@@ -148,7 +197,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('entity_reference', $field->getType());
     $this->assertSame('Company', $field->label());
     $this->assertSame('default:node', $field->getSetting('handler'));
-    $this->assertSame([], $field->getSetting('handler_settings'));
+    $this->assertSame(['target_bundles' => ['company' => 'company']], $field->getSetting('handler_settings'));
     $this->assertSame('node', $field->getSetting('target_type'));
     $this->assertSame([], $field->getDefaultValueLiteral());
     $this->assertTrue($field->isTranslatable());
@@ -159,7 +208,15 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $this->assertSame('entity_reference', $field->getType());
     $this->assertSame('Commanding Officer', $field->label());
     $this->assertSame('default:user', $field->getSetting('handler'));
-    $this->assertSame([], $field->getSetting('handler_settings'));
+    $expected = [
+      'target_bundles' => NULL,
+      'filter' => [
+        'type' => 'role',
+        'role' => ['authenticated' => 'authenticated'],
+      ],
+      'include_anonymous' => FALSE,
+    ];
+    $this->assertSame($expected, $field->getSetting('handler_settings'));
     $this->assertSame('user', $field->getSetting('target_type'));
     $this->assertSame([], $field->getDefaultValueLiteral());
     $this->assertTrue($field->isTranslatable());

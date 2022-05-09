@@ -3,6 +3,7 @@
 namespace Drupal\image\Plugin\migrate\field\d7;
 
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\field\FieldPluginBase;
 
 /**
@@ -41,6 +42,17 @@ class ImageField extends FieldPluginBase {
       ],
     ];
     $migration->mergeProcessOfProperty($field_name, $process);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    $value = $row->getSourceProperty('settings');
+    if (!is_array($value['default_image'])) {
+      $value['default_image'] = ['uuid' => ''];
+    }
+    return $value;
   }
 
 }

@@ -2,10 +2,11 @@
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\field\Plugin\migrate\process\d7\FieldInstanceSettings;
-use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
+use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManagerInterface;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
@@ -20,8 +21,9 @@ class FieldInstanceSettingsTest extends MigrateTestCase {
    * @covers ::transform
    */
   public function testTransformImageSettings() {
-    $migration = $this->createMock(MigrationInterface::class);
-    $plugin = new FieldInstanceSettings([], 'd7_field_instance_settings', [], $migration);
+    $migrate_field_plugin_manager = $this->createMock(MigrateFieldPluginManagerInterface::class);
+    $migrate_field_plugin_manager->expects($this->once())->method('createInstance')->willThrowException(new PluginNotFoundException('image_image'));
+    $plugin = new FieldInstanceSettings([], 'd7_field_instance_settings', [], $migrate_field_plugin_manager);
 
     $executable = $this->createMock(MigrateExecutableInterface::class);
     $row = $this->getMockBuilder(Row::class)

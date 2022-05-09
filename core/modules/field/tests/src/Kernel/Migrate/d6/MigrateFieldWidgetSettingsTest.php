@@ -76,38 +76,63 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
 
     // File field.
     $component = $form_display->getComponent('field_test_filefield');
+    $expected = [];
     $expected['type'] = 'file_generic';
     $expected['weight'] = 8;
+    $expected['region'] = 'content';
     $expected['settings'] = ['progress_indicator' => 'bar'];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     // Image field.
     $component = $form_display->getComponent('field_test_imagefield');
+    $expected = [];
     $expected['type'] = 'image_image';
     $expected['weight'] = 9;
-    $expected['settings'] = ['progress_indicator' => 'bar', 'preview_image_style' => 'thumbnail'];
+    $expected['region'] = 'content';
+    $expected['settings'] = [
+      'progress_indicator' => 'bar',
+      'preview_image_style' => 'thumbnail',
+    ];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     // Phone field.
     $component = $form_display->getComponent('field_test_phone');
+    $expected = [];
     $expected['type'] = 'telephone_default';
     $expected['weight'] = 13;
+    $expected['region'] = 'content';
     $expected['settings'] = ['placeholder' => ''];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     // Date fields.
     $component = $form_display->getComponent('field_test_date');
+    $expected = [];
     $expected['type'] = 'datetime_default';
     $expected['weight'] = 10;
+    $expected['region'] = 'content';
     $expected['settings'] = [];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     $component = $form_display->getComponent('field_test_datestamp');
+    $expected = [];
+    $expected['type'] = 'datetime_default';
     $expected['weight'] = 11;
+    $expected['region'] = 'content';
+    $expected['settings'] = [];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     $component = $form_display->getComponent('field_test_datetime');
+    $expected = [];
+    $expected['type'] = 'datetime_default';
     $expected['weight'] = 12;
+    $expected['region'] = 'content';
+    $expected['settings'] = [];
+    $expected['third_party_settings'] = [];
     $this->assertSame($expected, $component);
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */

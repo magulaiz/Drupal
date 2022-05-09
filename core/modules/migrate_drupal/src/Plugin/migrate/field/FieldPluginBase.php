@@ -116,4 +116,27 @@ abstract class FieldPluginBase extends PluginBase implements MigrateFieldInterfa
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldStorageSettings(Row $row) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformFieldInstanceSettings(Row $row) {
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function transformWidgetType(Row $row) {
+    $source_widget_type = $row->getSourceProperty('widget_type');
+    $map = $this->getFieldWidgetMap();
+    return isset($map[$source_widget_type]) ? $map[$source_widget_type] : NULL;
+  }
+
 }
