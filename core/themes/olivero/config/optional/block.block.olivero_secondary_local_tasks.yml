@@ -2,18 +2,18 @@ langcode: en
 status: true
 dependencies:
   theme:
-    - claro
-id: claro_primary_local_tasks
-theme: claro
-region: header
-weight: 0
+    - olivero
+id: olivero_secondary_local_tasks
+theme: olivero
+region: highlighted
+weight: -2
 provider: null
 plugin: local_tasks_block
 settings:
   id: local_tasks_block
-  label: 'Primary tabs'
+  label: 'Secondary tabs'
   label_display: '0'
   provider: core
-  primary: true
-  secondary: false
+  primary: false
+  secondary: true
 visibility: {  }
