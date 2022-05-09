@@ -1253,6 +1253,41 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'intersection' => HTMLRestrictions::emptySet(),
       'union' => new HTMLRestrictions(['*' => ['foo' => TRUE, 'bar' => FALSE], '$text-container' => ['class' => TRUE]]),
     ];
+
+    // Internal array state edge cases.
+    $p_attribute_restrictions = ['id' => TRUE];
+    yield 'Next numerical array index is 0' => [
+      'a' => new HTMLRestrictions(['p' => $p_attribute_restrictions]),
+      'b' => new HTMLRestrictions(['p' => FALSE]),
+      'diff' => 'a',
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'Next numerical array index is 0 — vice versa' => [
+      'a' => new HTMLRestrictions(['p' => FALSE]),
+      'b' => new HTMLRestrictions(['p' => $p_attribute_restrictions]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
+    // Create a value with key zero in the array.
+    $p_attribute_restrictions[] = 'something, anything — this will create index 0';
+    // Remove the array value associated with key zero.
+    unset($p_attribute_restrictions[0]);
+    yield 'WITH once-existent numerical array indices' => [
+      'a' => new HTMLRestrictions(['p' => $p_attribute_restrictions]),
+      'b' => new HTMLRestrictions(['p' => FALSE]),
+      'diff' => 'a',
+      'intersection' => 'b',
+      'union' => 'a',
+    ];
+    yield 'WITH once-existent numerical array indices — vice versa' => [
+      'a' => new HTMLRestrictions(['p' => FALSE]),
+      'b' => new HTMLRestrictions(['p' => $p_attribute_restrictions]),
+      'diff' => HTMLRestrictions::emptySet(),
+      'intersection' => 'a',
+      'union' => 'b',
+    ];
   }
 
   /**
