@@ -212,6 +212,12 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         throw $e;
       }
     }
+    catch (\PDOException $e) {
+      throw new MigrateException("Migration {$this->migration->id()} failed to connect to {$key}:{$target}. {$e->getMessage()}", $e->getCode(), $e);
+    }
+    catch (DatabaseAccessDeniedException $e) {
+      throw new MigrateException("Migration {$this->migration->id()} failed to connect to {$key}:{$target}. {$e->getMessage()}", $e->getCode(), $e);
+    }
     return $connection;
   }
 
