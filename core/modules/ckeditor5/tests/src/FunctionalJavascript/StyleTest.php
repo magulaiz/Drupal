@@ -38,6 +38,7 @@ class StyleTest extends CKEditor5TestBase {
 
     // No validation error upon enabling the Style plugin.
     $this->assertNoRealtimeValidationErrors();
+    $assert_session->pageTextContains('No styles configured');
 
     // Still no validation error when configuring other functionality first.
     $this->triggerKeyUp('.ckeditor5-toolbar-item-undo', 'ArrowDown');
@@ -67,6 +68,7 @@ JS;
     $this->assertNotNull($styles_textarea = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]'));
 
     $this->assertSame("p.foo.bar|Foobar paragraph\n", $styles_textarea->getValue());
+    $assert_session->pageTextContains('1 styles configured');
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
     $this->assertStringContainsString('<p class="foo bar">', $allowed_html_field->getValue());
   }
