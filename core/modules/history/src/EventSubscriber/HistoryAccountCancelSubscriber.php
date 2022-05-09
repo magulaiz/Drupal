@@ -24,7 +24,7 @@ class HistoryAccountCancelSubscriber implements EventSubscriberInterface {
    * @param Connection $database
    *   The database connection.
    */
-  public function __constructor(Connection $database) {
+  public function __construct(Connection $database) {
     $this->database = $database;
   }
 

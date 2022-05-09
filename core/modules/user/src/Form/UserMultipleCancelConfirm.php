@@ -64,7 +64,7 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     $this->userStorage = $user_storage;
     $this->entityTypeManager = $entity_type_manager;
     if (!$account_cancellation) {
-      @trigger_error('TBD', E_USER_DEPRECATED);
+      @trigger_error('TBD \Drupal\user\Form\UserMultipleCancelConfirm::__construct', E_USER_DEPRECATED);
       $account_cancellation = \Drupal::service('user.account_cancellation');
     }
     $this->accountCancellation = $account_cancellation;
@@ -77,7 +77,8 @@ class UserMultipleCancelConfirm extends ConfirmFormBase {
     return new static(
       $container->get('tempstore.private'),
       $container->get('entity_type.manager')->getStorage('user'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('user.account_cancellation')
     );
   }
 

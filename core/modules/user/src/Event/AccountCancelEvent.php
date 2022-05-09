@@ -41,7 +41,7 @@ class AccountCancelEvent extends Event {
    * @param array $context
    *   Context array. Typically, an array of submitted form values.
    */
-  public function __constructor(UserInterface $account, string $method, array $context) {
+  public function __construct(UserInterface $account, string $method, array $context) {
     $this->account = $account;
     $this->method = $method;
     $this->context = $context;

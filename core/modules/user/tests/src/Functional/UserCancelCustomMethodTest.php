@@ -35,11 +35,11 @@ class UserCancelCustomMethodTest extends BrowserTestBase {
     $this->drupalLogin($account);
     $this->drupalGet($account->toUrl('edit-form'));
     $page = $this->getSession()->getPage();
-    $page->pressButton('Cancel account');
+    $page->clickLink('Cancel account');
 
     // Chose the custom cancellation method.
     $page->selectFieldOption('user_cancel_method', 'user_cancel_test');
-    $page->pressButton('Cancel account');
+    $page->pressButton('Confirm');
 
     $this->clickConfirmationLinkFomMail();
 

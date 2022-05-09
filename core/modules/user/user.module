@@ -591,7 +591,7 @@ function user_pass_rehash(UserInterface $account, $timestamp) {
  * @deprecated TODO
  */
 function user_cancel($edit, $uid, $method) {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD user_cancel', E_USER_DEPRECATED);
   \Drupal::service('user.account_cancellation')->cancel($uid, $method, $edit);
 }
 
@@ -612,7 +612,7 @@ function user_cancel($edit, $uid, $method) {
  * @deprecated TODO
  */
 function _user_cancel($edit, $account, $method) {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD _user_cancel', E_USER_DEPRECATED);
   \Drupal::service('user.account_cancellation')->doCancelAccount($account, $method, $edit);
 }
 
@@ -624,7 +624,7 @@ function _user_cancel($edit, $account, $method) {
  * @deprecated TODO
  */
 function _user_cancel_session_regenerate() {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD _user_cancel_session_regenerate', E_USER_DEPRECATED);
   \Drupal::service('user.account_cancellation')->regenerateSession();
 }
 

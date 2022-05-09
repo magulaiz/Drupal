@@ -11,7 +11,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\user\Event\AccountCancelEvent;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -50,27 +49,6 @@ class AccountCancellation {
   protected $moduleHandler;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
-   * The event dispatcher service.
-   *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
-   */
-  protected $eventDispatcher;
-
-  /**
-   * The session.
-   *
-   * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $seesion
-   */
-  protected $session;
-
-  /**
    * Constructs a new service instance.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -81,20 +59,12 @@ class AccountCancellation {
    *   The channel logger factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
-   *   The current user.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher service.
-   * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-   *   The session.
    */
-  public function __constructor(EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory, ModuleHandlerInterface $module_handler, AccountProxyInterface $current_user, EventDispatcherInterface $event_dispatcher, SessionInterface $session) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, MessengerInterface $messenger, LoggerChannelFactoryInterface $logger_factory, ModuleHandlerInterface $module_handler) {
     $this->entityTypeManager = $entity_type_manager;
     $this->messenger = $messenger;
     $this->logger = $logger_factory->get('user');
     $this->moduleHandler = $module_handler;
-    $this->currentUser = $current_user;
-    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -115,7 +85,7 @@ class AccountCancellation {
    */
   public function cancel(int $uid, string $method, array $context = []): void {
     /** @var \Drupal\user\UserInterface $account */
-    $account = $this->entityTypeManager->getStorage('user');
+    $account = $this->entityTypeManager->getStorage('user')->load($uid);
 
     if (!$account) {
       $arguments = ['%id' => $uid];
@@ -141,13 +111,13 @@ class AccountCancellation {
     // Finish the batch and actually cancel the account.
     $batch_builder = (new BatchBuilder())
       ->setTitle($this->t('Cancelling user account'))
-      ->addOperation([$this, 'doCancelAccount'], [$account, $method, $context]);
+      ->addOperation(static::class . '::doCancelAccount', [$account, $method, $context]);
 
     // After cancelling account, ensure that user is logged out.
     if ($account->id() == \Drupal::currentUser()->id()) {
       // Batch API stores data in the session, so use the finished operation to
       // manipulate the current user's session id.
-      $batch_builder->setFinishCallback([$this, 'regenerateSession']);
+      $batch_builder->setFinishCallback(static::class . '::regenerateSession');
     }
 
     batch_set($batch_builder->toArray());
@@ -163,6 +133,9 @@ class AccountCancellation {
    * require a valid user account, the actual cancellation of a user account
    * needs to happen last.
    *
+   * Note that this method is declared static to avoid serialization of a huge
+   * object by the batch API.
+   *
    * @param \Drupal\user\UserInterface $account
    *   The user account to be cancelled.
    * @param string $method
@@ -171,26 +144,29 @@ class AccountCancellation {
    *   Context array. Typically, an array of submitted form values as this
    *   service is consumed via form API.
    */
-  public function doCancelAccount(UserInterface $account, string $method, array $context): void {
+  public static function doCancelAccount(UserInterface $account, string $method, array $context): void {
     $account_cancel_event = new AccountCancelEvent($account, $method, $context);
-    $this->eventDispatcher->dispatch($account_cancel_event);
+    \Drupal::service('event_dispatcher')->dispatch($account_cancel_event);
 
     // After cancelling account, ensure that user is logged out. We can't
     // destroy their session though, as we might have information in it, and we
     // can't regenerate it because batch API uses the session ID, we will
     // regenerate it in ::regenerateSession().
-    if ($account->id() === $this->currentUser->id()) {
-      $this->currentUser->setAccount(new AnonymousUserSession());
+    if ($account->id() === \Drupal::currentUser()->id()) {
+      \Drupal::currentUser()->setAccount(new AnonymousUserSession());
     }
   }
 
   /**
    * Provides a finished batch processing callback for cancelling user account.
+   *
+   * Note that this method is declared static to avoid serialization of a huge
+   * object by the batch API.
    */
-  public function regenerateSession(): void {
+  public static function regenerateSession(): void {
     // Regenerate the user's session instead of calling session_destroy() as we
     // want to preserve any messages that might have been set.
-    $this->session->migrate();
+    \Drupal::service('session')->migrate();
   }
 
 }

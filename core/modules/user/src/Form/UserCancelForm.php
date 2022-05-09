@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\user\AccountCancellation;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling user account.
@@ -59,10 +60,22 @@ class UserCancelForm extends ContentEntityConfirmFormBase {
   public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, AccountCancellation $account_cancellation = NULL) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     if (!$account_cancellation) {
-      @trigger_error('TBD', E_USER_DEPRECATED);
+      @trigger_error('TBD \Drupal\user\Form\UserCancelForm::__construct', E_USER_DEPRECATED);
       $account_cancellation = \Drupal::service('user.account_cancellation');
     }
     $this->accountCancellation = $account_cancellation;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): self {
+    return new static(
+      $container->get('entity.repository'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time'),
+      $container->get('user.account_cancellation')
+    );
   }
 
   /**

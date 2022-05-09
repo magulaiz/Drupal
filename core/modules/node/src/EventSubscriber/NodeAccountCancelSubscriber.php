@@ -8,7 +8,7 @@ use Drupal\user\Event\AccountCancelEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Performs node operations when a user account is cancelled.
+ * Performs node module operations when a user account is cancelled.
  */
 class NodeAccountCancelSubscriber implements EventSubscriberInterface {
 
@@ -34,7 +34,7 @@ class NodeAccountCancelSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __constructor(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler) {
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleHandler = $module_handler;
   }

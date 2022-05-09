@@ -165,7 +165,7 @@ function history_node_delete(EntityInterface $node) {
  * Implements hook_user_cancel().
  */
 function history_user_cancel($edit, UserInterface $account, $method) {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD history', E_USER_DEPRECATED);
 }
 
 /**

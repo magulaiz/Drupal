@@ -633,7 +633,7 @@ function node_ranking() {
  * Implements hook_user_cancel().
  */
 function node_user_cancel($edit, UserInterface $account, $method) {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD node', E_USER_DEPRECATED);
 }
 
 /**

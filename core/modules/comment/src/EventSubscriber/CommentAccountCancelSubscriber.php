@@ -10,6 +10,9 @@ use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\user\Event\AccountCancelEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Performs comment module operations when a user account is cancelled.
+ */
 class CommentAccountCancelSubscriber implements EventSubscriberInterface {
 
   /**
@@ -34,7 +37,7 @@ class CommentAccountCancelSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory service.
    */
-  public function __constructor(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactoryInterface $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->configFactory = $config_factory;
   }

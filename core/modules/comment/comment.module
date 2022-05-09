@@ -447,7 +447,7 @@ function comment_node_search_result(EntityInterface $node) {
  * Implements hook_user_cancel().
  */
 function comment_user_cancel($edit, UserInterface $account, $method) {
-  @trigger_error('TBD', E_USER_DEPRECATED);
+  @trigger_error('TBD comment', E_USER_DEPRECATED);
 }
 
 /**
