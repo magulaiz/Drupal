@@ -704,6 +704,20 @@ final class HTMLRestrictions {
    *   are either allowed in $this or in $other.
    */
   public function merge(HTMLRestrictions $other): HTMLRestrictions {
+    // To ensure that array_merge_recursive() does not create merge results with
+    // numerical keys greater than zero, we need to ensure that PHP's internal
+    // array state no longer indicates that it once contained an array
+    // with index 0.
+    $reset_internal_array_pointer = function (&$value) {
+      if (is_array($value)) {
+        $value = array_slice($value, 0);
+      }
+    };
+    array_walk_recursive($this->elements, $reset_internal_array_pointer);
+    array_walk_recursive($other->elements, $reset_internal_array_pointer);
+    array_walk($this->elements, $reset_internal_array_pointer);
+    array_walk($other->elements, $reset_internal_array_pointer);
+
     $union = array_merge_recursive($this->elements, $other->elements);
     // When recursively merging elements arrays, unkeyed boolean values can
     // appear in attribute config arrays. This removes them.
