@@ -74,7 +74,7 @@ services:
   user.account_cancellation:
     class: Drupal\user\AccountCancellation
     arguments: ['@entity_type.manager', '@messenger', '@logger.factory', '@module_handler']
-  user.account_cancel:
+  user.account_cancel.subscriber:
     class: Drupal\user\EventSubscriber\AccountCancelSubscriber
     arguments: ['@messenger', '@logger.factory']
     tags:

@@ -41,7 +41,7 @@ services:
     arguments: ['@current_route_match']
     tags:
       - { name: 'context_provider' }
-  node.account_cancel:
+  node.account_cancel.subscriber:
     class: Drupal\node\EventSubscriber\NodeAccountCancelSubscriber
     arguments: ['@entity_type.manager', '@module_handler']
     tags:

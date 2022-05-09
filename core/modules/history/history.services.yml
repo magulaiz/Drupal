@@ -1,6 +1,6 @@
 services:
 
-  history.account_cancel:
+  history.account_cancel.subscriber:
     class: Drupal\history\EventSubscriber\HistoryAccountCancelSubscriber
     arguments: ['@database']
     tags:
