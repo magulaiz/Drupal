@@ -30,11 +30,7 @@ class UserCancelTestAccountCancelSubscriber implements EventSubscriberInterface 
   public function onUserAccountCancel(AccountCancelEvent $event): void {
     if ($event->getMethod() === 'user_cancel_test') {
       \Drupal::messenger()->addStatus('Custom user cancel method executed.');
-      // Optionally, bypass Drupal core cancellation.
-      // @see \Drupal\Tests\user\Functional\UserCancelCustomMethodTest::testUserCancelCustomMethod()
-      if (\Drupal::state()->get('user_cancel_test.bypass_core_cancellation')) {
-        $event->stopPropagation();
-      }
+      $event->stopPropagation();
     }
   }
 
