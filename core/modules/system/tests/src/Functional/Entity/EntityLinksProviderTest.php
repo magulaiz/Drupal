@@ -22,13 +22,20 @@ class EntityLinksProviderTest extends BrowserTestBase {
    *
    * @var array
    */
-  protected static $modules = ['entity_test'];
+  protected static $modules = [
+    'block',
+    'entity_test'
+  ];
 
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
+
+    $this->drupalPlaceBlock('local_tasks_block');
+    $this->drupalPlaceBlock('local_actions_block');
+
     $web_user = $this->drupalCreateUser([
       'administer entity ui tests',
       'administer entity ui test types',
@@ -42,8 +49,7 @@ class EntityLinksProviderTest extends BrowserTestBase {
   public function testEntityUI() {
     // Test the config entity UI.
     $this->drupalGet('admin/structure/entity_ui_test_type');
-    // TODO! not working!
-    // $this->assertSession()->linkExists("Add Entity UI Test Type");
+    $this->assertSession()->linkExists("Add entity ui test type");
 
     // Test the content entity UI.
     // TODO: test all the things!
