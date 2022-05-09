@@ -4,4 +4,3 @@ services:
     class: Drupal\user_cancel_test\UserCancelTestAccountCancelSubscriber
     tags:
       - { name: event_subscriber }
-
