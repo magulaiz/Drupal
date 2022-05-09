@@ -72,7 +72,7 @@ class UserDeprecatedCancelCustomMethodTest extends KernelTestBase {
    * @covers \Drupal\user\Form\UserMultipleCancelConfirm::__construct
    */
   public function testConstructorParamAdditionsDeprecationMessages(): void {
-    $this->expectDeprecation('Calling Drupal\user\Controller\UserController::__construct without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
+    $this->expectDeprecation('Calling Drupal\user\Controller\UserController::__construct() without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
     new UserController(
       $this->container->get('date.formatter'),
       $this->container->get('entity_type.manager')->getStorage('user'),
@@ -81,14 +81,14 @@ class UserDeprecatedCancelCustomMethodTest extends KernelTestBase {
       $this->container->get('flood')
     );
 
-    $this->expectDeprecation('Calling Drupal\user\Form\UserCancelForm::__construct without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
+    $this->expectDeprecation('Calling Drupal\user\Form\UserCancelForm::__construct() without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
     new UserCancelForm(
       $this->container->get('entity.repository'),
       $this->container->get('entity_type.bundle.info'),
       $this->container->get('datetime.time')
     );
 
-    $this->expectDeprecation('Calling Drupal\user\Form\UserMultipleCancelConfirm::__construct without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
+    $this->expectDeprecation('Calling Drupal\user\Form\UserMultipleCancelConfirm::__construct() without the $account_cancellation argument is deprecated in drupal:9.5.0 and it will be required in drupal:10.0.0. See https://www.drupal.org/node/3279455');
     new UserMultipleCancelConfirm(
       $this->container->get('tempstore.private'),
       $this->container->get('entity_type.manager')->getStorage('user'),
