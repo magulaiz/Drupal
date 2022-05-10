@@ -95,7 +95,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
    * Asserts the expected security updates are displayed correctly on the page.
    *
    * @param string $project_path_part
-   *   The project path part needed for the download and release links.
+   *   The project path part needed for the release link.
    * @param string[] $expected_security_releases
    *   The security releases, if any, that the status report should recommend.
    * @param string $expected_update_message_type
@@ -161,18 +161,14 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The label for the update.
    * @param string $version
    *   The project version.
-   * @param string|null $download_version
-   *   (optional) The version number as it appears in the download link. If
-   *   $download_version is not provided then $version will be used.
    */
-  protected function assertVersionUpdateLinks($label, $version, $download_version = NULL) {
-    $download_version = $download_version ?? $version;
+  protected function assertVersionUpdateLinks($label, $version) {
     $update_element = $this->findUpdateElementByLabel($label);
     // In the release notes URL the periods are replaced with dashes.
     $url_version = str_replace('.', '-', $version);
 
     $this->assertEquals($update_element->findLink($version)->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
-    $this->assertStringNotContainsString("http://example.com/{$this->updateProject}-$download_version.tar.gz", $update_element->getOuterHtml());
+    $this->assertStringNotContainsString("http://example.com/{$this->updateProject}-$version.tar.gz", $update_element->getOuterHtml());
     $this->assertEquals($update_element->findLink('Release notes')->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
   }
 
