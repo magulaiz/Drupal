@@ -2,9 +2,7 @@
 
 namespace Drupal\Tests\ckeditor5\Update;
 
-use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
-use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
