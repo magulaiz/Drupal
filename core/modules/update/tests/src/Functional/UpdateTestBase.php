@@ -87,6 +87,8 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $this->assertSession()->linkByHrefExists('http://example.com/project/drupal');
     $this->assertSession()->pageTextNotContains('No available releases found');
     $this->assertSession()->pageTextContains('Last checked:');
+    // No download URLs should be present.
+    $this->assertSession()->responseNotContains('.tar.gz');
   }
 
   /**
@@ -109,11 +111,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $all_security_release_urls = array_map(function ($link) {
       return $link->getAttribute('href');
     }, $page->findAll('css', "$update_element_css_locator .version-security a[href$='-release']"));
-    $all_security_download_urls = array_map(function ($link) {
-      return $link->getAttribute('href');
-    }, $page->findAll('css', "$update_element_css_locator .version-security a[href$='.tar.gz']"));
     if ($expected_security_releases) {
-      $expected_download_urls = [];
       $expected_release_urls = [];
       if ($expected_update_message_type === static::SECURITY_UPDATE_REQUIRED) {
         $assert_session->elementTextNotContains('css', $update_element_css_locator, 'Update available');
@@ -129,23 +127,18 @@ abstract class UpdateTestBase extends BrowserTestBase {
       foreach ($expected_security_releases as $expected_security_release) {
         $expected_url_version = str_replace('.', '-', $expected_security_release);
         $release_url = "http://example.com/$project_path_part-$expected_url_version-release";
-        $download_url = "http://example.com/$project_path_part-$expected_url_version.tar.gz";
+        $assert_session->responseNotContains("http://example.com/$project_path_part-$expected_url_version.tar.gz");
         $expected_release_urls[] = $release_url;
-        $expected_download_urls[] = $download_url;
         // Ensure the expected links are security links.
         $this->assertContains($release_url, $all_security_release_urls, "Release $release_url is a security release link.");
-        $this->assertNotContains($download_url, $all_security_download_urls, "Release $download_url is not a security download link.");
         $assert_session->linkByHrefExists($release_url);
-        $assert_session->linkByHrefNotExists($download_url);
       }
       // Ensure no other links are shown as security releases.
       $this->assertEquals([], array_diff($all_security_release_urls, $expected_release_urls));
-      $this->assertEquals([], array_diff($all_security_download_urls, $expected_download_urls));
     }
     else {
       // Ensure there were no security links.
       $this->assertEquals([], $all_security_release_urls);
-      $this->assertEquals([], $all_security_download_urls);
       $assert_session->pageTextNotContains('Security update required!');
       if ($expected_update_message_type === static::UPDATE_AVAILABLE) {
         $assert_session->elementTextContains('css', $update_element_css_locator, 'Update available');
@@ -179,7 +172,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $url_version = str_replace('.', '-', $version);
 
     $this->assertEquals($update_element->findLink($version)->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
-    $this->assertEmpty($update_element->findLink('Download'));
+    $this->assertNotContains("http://example.com/{$this->updateProject}-$download_version.tar.gz", $update_element->getOuterHtml());
     $this->assertEquals($update_element->findLink('Release notes')->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
   }
 
