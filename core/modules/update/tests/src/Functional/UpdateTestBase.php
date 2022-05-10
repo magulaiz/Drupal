@@ -172,7 +172,7 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $url_version = str_replace('.', '-', $version);
 
     $this->assertEquals($update_element->findLink($version)->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
-    $this->assertNotContains("http://example.com/{$this->updateProject}-$download_version.tar.gz", $update_element->getOuterHtml());
+    $this->assertStringNotContainsString("http://example.com/{$this->updateProject}-$download_version.tar.gz", $update_element->getOuterHtml());
     $this->assertEquals($update_element->findLink('Release notes')->getAttribute('href'), "http://example.com/{$this->updateProject}-$url_version-release");
   }
 
