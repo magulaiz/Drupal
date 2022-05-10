@@ -250,7 +250,7 @@
       );
 
       prefixSuffixElements.map(
-        (index, element) => new Drupal.ClaroPrefixSuffix(element),
+        (element, index) => new Drupal.ClaroPrefixSuffix(element),
       );
     },
   };

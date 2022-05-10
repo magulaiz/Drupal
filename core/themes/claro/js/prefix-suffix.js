@@ -156,7 +156,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
   Drupal.behaviors.claroPrefixSuffix = {
     attach: function attach(context) {
       var prefixSuffixElements = once('claro-prefix-suffix', '[data-drupal-form-item-wrapper-with-affix]', context);
-      prefixSuffixElements.map(function (index, element) {
+      prefixSuffixElements.map(function (element, index) {
         return new Drupal.ClaroPrefixSuffix(element);
       });
     }
