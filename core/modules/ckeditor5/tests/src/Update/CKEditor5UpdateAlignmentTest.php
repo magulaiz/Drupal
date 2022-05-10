@@ -7,7 +7,7 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 
 /**
- * Tests the upgrade path for CKEditor 5 alignment.
+ * Tests the update path for CKEditor 5 alignment.
  *
  * @group Update
  */
