@@ -16,6 +16,11 @@ function ckeditor5_post_update_alignment_buttons(&$sandbox = []) {
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
 
   $callback = function (Editor $editor) {
+    // Only try to update editors using CKEditor 5.
+    if ($editor->getEditor() !== 'ckeditor5') {
+      return FALSE;
+    }
+
     $needs_update = FALSE;
     // Only update if the editor is using the non-dropdown buttons.
     $settings = $editor->getSettings();
