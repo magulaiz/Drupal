@@ -412,6 +412,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
     }
 
+    // Release the lock so other modules can be installed.
+    $this->lock->release(self::LOCK_NAME);
     return TRUE;
   }
 
