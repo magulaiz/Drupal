@@ -10,9 +10,9 @@
     callback(context, settings, form, farb, height, width) {
       let accum;
       let delta;
-      form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]').val());
-      form.find('#text').css('color', form.find('.color-palette input[name="palette[text]"]').val());
-      form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]').val());
+      form.find('.color-preview').css('backgroundColor', form.find('.color-palette input[name="palette[base]"]')[0].value);
+      form.find('#text').css('color', form.find('.color-palette input[name="palette[text]"]')[0].value);
+      form.find('#text a, #text h2').css('color', form.find('.color-palette input[name="palette[link]"]')[0].value);
 
       function gradientLineColor(i, element) {
         Object.keys(accum || {}).forEach(k => {
@@ -24,8 +24,8 @@
       let colorStart;
       let colorEnd;
       Object.keys(settings.gradients || {}).forEach(i => {
-        colorStart = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`).val());
-        colorEnd = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`).val());
+        colorStart = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[0]}]"]`)[0].value);
+        colorEnd = farb.unpack(form.find(`.color-palette input[name="palette[${settings.gradients[i].colors[1]}]"]`)[0].value);
 
         if (colorStart && colorEnd) {
           delta = [];

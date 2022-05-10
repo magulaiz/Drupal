@@ -198,12 +198,14 @@
           const $form = $(`#${backstageId}`).find('form');
           // Fill in the value in any <input> that isn't hidden or a submit
           // button.
-          // eslint-disable-next-line jquery/no-val
           $form
             .find(':input[type!="hidden"][type!="submit"]:not(select)')
             // Don't mess with the node summary.
             .not('[name$="\\[summary\\]"]')
-            .val(value);
+            .toArray()
+            .forEach((elem) => {
+              elem.value = value;
+            });
           // Submit the form.
           $form.find('.quickedit-form-submit').trigger('click.quickedit');
         }

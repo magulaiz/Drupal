@@ -64,8 +64,8 @@
        */
       sync() {
         // Push the settings into the textarea.
-        this.get('$textarea').val(
-          JSON.stringify(this.get('activeEditorConfig')),
+        this.get('$textarea').value = JSON.stringify(
+          this.get('activeEditorConfig'),
         );
       },
     },

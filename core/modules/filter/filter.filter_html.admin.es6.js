@@ -148,15 +148,15 @@
             userTagsWithoutOverrides[tag] = this.userTags[tag];
           });
 
-        this.$allowedHTMLFormItem.val(
-          `${this._generateSetting(
-            userTagsWithoutOverrides,
-          )} ${this._generateSetting(this.autoTags)}`,
-        );
+        this.$allowedHTMLFormItem[0].value = `${this._generateSetting(
+          userTagsWithoutOverrides,
+        )} ${this._generateSetting(this.autoTags)}`;
       }
       // Restore to original state.
       else {
-        this.$allowedHTMLFormItem.val(this._generateSetting(this.userTags));
+        this.$allowedHTMLFormItem[0].value = this._generateSetting(
+          this.userTags,
+        );
       }
     },
 
