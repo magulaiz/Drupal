@@ -6,6 +6,7 @@ use Drupal\Core\Config\PreExistingConfigException;
 use Drupal\Core\Config\UnmetDependenciesException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Extension\Exception\ExtensionInstallLockException;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -182,6 +183,10 @@ class ModulesListConfirmForm extends ConfirmFormBase {
         $this->messenger()->addError(
           $e->getTranslatedMessage($this->getStringTranslation(), $this->modules['install'][$e->getExtension()])
         );
+        return;
+      }
+      catch (ExtensionInstallLockException $e) {
+        $this->messenger()->addError($this->t('Unable to install modules because a module installation is already running.'));
         return;
       }
 
