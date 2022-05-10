@@ -59,8 +59,6 @@ function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
       $output .= '</ul>';
       $output .= '</dd>';
       $output .= '</dl>';
-//      $output .= '<dt>' . t('Migration for existing text formats switching to CKEditor 5') . '</dt>';
-//      $output .= '<dd>' . t('Text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) should be able to do so with minimal effort and zero data loss. Existing configuration will be automatically migrated to CKEditor 5 compatible configuration. In instances where functionality can not be migrated, detailed messages are provided explaining what is necessary for feature parity.') . '</dd>';
       $output .= '<h3 id="smart-default-settings">' . t('Migrating an Existing Text Format to CKEditor 5') . '</h3>';
       $output .= '<p>' . t('The CKEditor 5 module uses “Smart Default Settings” functionality. This helps text formats switching to CKEditor 5 from CKEditor 4 (or no text editor) to do so with minimal effort and zero data loss.') . '</p>';
       $output .= '<p>' . t('Smart Default Settings runs automatically when switching a text format to CKEditor 5. Although there is no data loss risk in switching to CKEditor 5, some of your editor’s functionality may not be 100% equivalent to what was provided previously. In most cases, these changes are minimal. After the process completes, status and/or warning messages will summarize any changes that occurred, and more detailed information will be available in the site’s logs.') . '</p>';
