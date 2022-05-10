@@ -156,7 +156,6 @@ abstract class UpdateSemverTestBase extends UpdateTestBase {
           $this->standardTests();
           $this->assertUpdateTableTextNotContains('Security update required!');
           $this->assertUpdateTableElementContains(Link::fromTextAndUrl('9.0.0', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
-          $this->assertUpdateTableElementNotContains("http://example.com/{$this->updateProject}-9-0-0.tar.gz");
           $this->assertUpdateTableElementContains(Link::fromTextAndUrl('Release notes', Url::fromUri("http://example.com/{$this->updateProject}-9-0-0-release"))->toString());
           $this->assertUpdateTableTextNotContains('Up to date');
           $this->assertUpdateTableTextContains('Not supported!');
