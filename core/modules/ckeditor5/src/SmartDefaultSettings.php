@@ -13,6 +13,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -244,11 +245,24 @@ final class SmartDefaultSettings {
         }
       }
 
+      $help_enabled = $this->moduleHandler->moduleExists('help');
+
       // To maintain the capabilities of this text format, [Smart default settings](HELP:smart default settings)
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
-        $beginning = $this->t('To maintain the capabilities of this text format, <a href=":sdf_url">Smart Default Settings</a> did the following:', [':sdf_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'smart-default-settings'])->toString()]);
+        $beginning = $this->formatPlural($help_enabled + 1,
+          'To maintain the capabilities of this text format, Smart Default Settings did the following:',
+          'To maintain the capabilities of this text format, <a href=":sdf_url">Smart Default Settings</a> did the following:', [
+            ':sdf_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'smart-default-settings'])->toString() : '',
+        ]);
         $plugin_info = !empty($plugins_enabled) ? $this->t('Enabled these plugins: (<em>@plugins</em>).', ['@plugins' => implode(', ', $plugins_enabled)]) : '';
-        $source_editing_info = !$source_editing_additions->allowsNothing() ? $this->t('Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list', ['@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(), ':source_edit_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString()]) : '';
+        $source_editing_info = !$source_editing_additions->allowsNothing() ? $this->formatPlural(
+          $help_enabled + 1,
+          'Added these tags/attributes to the Source Editing Plugin\'s Manually editable HTML tags setting: @tag_list',
+          'Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
+          [
+            '@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(),
+             ':source_edit_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString() : '',
+          ]) : '';
         $can_access_dblog = ($this->currentUser->hasPermission('access site reports') && $this->moduleHandler->moduleExists('dblog'));
         $end = $this->formatPlural(
           $can_access_dblog + 1,
@@ -272,11 +286,11 @@ final class SmartDefaultSettings {
       if (!$missing_mandatory_tags->allowsNothing() || !empty($attributes_to_tag) || !empty($added_tags)) {
         $beginning = $this->t('Updating to CKEditor 5 added support for some previously unsupported tags/attributes.');
         $mandatory_tags = !$missing_mandatory_tags->allowsNothing() ? $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
-          'The @tag tag was added because it is <a href=":mandatory_tag_url">required by CKEditor 5.</a>',
-          'The @tag tags were added because they are <a href=":mandatory_tag_url">required by CKEditor 5.</a>',
+          'The @tag tag was added because it is :mandatory_tag_link',
+          'The @tag tags were added because they are :mandatory_tag_link',
           [
             '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
-            ':mandatory_tag_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
+            ':mandatory_tag_link' => $help_enabled ? Link::createFromRoute($this->t('required by CKEditor 5')->__toString(), 'help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString() : $this->t('required by CKEditor 5')->__toString(),
             ]) : '';
         $added_elements_begin = !empty($attributes_to_tag) || !empty($added_tags) ? $this->t('A plugin introduced support for the following:') : '';
         $added_elements_tags = !empty($added_tags) ? $this->formatPlural(
