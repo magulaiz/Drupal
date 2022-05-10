@@ -13,7 +13,6 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -285,13 +284,25 @@ final class SmartDefaultSettings {
       //   format.
       if (!$missing_mandatory_tags->allowsNothing() || !empty($attributes_to_tag) || !empty($added_tags)) {
         $beginning = $this->t('Updating to CKEditor 5 added support for some previously unsupported tags/attributes.');
-        $mandatory_tags = !$missing_mandatory_tags->allowsNothing() ? $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
-          'The @tag tag was added because it is :mandatory_tag_link',
-          'The @tag tags were added because they are :mandatory_tag_link',
-          [
-            '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
-            ':mandatory_tag_link' => $help_enabled ? Link::createFromRoute($this->t('required by CKEditor 5')->__toString(), 'help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString() : $this->t('required by CKEditor 5')->__toString(),
-            ]) : '';
+        $mandatory_tags = '';
+        if ($help_enabled && !$missing_mandatory_tags->allowsNothing()) {
+          $mandatory_tags = $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
+            'The @tag tag was added because it is <a href=":mandatory_tag_link">required by CKEditor 5</a>.',
+            'The @tag tags were added because they are <a href=":mandatory_tag_link">required by CKEditor 5</a>.',
+            [
+              '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
+              ':mandatory_tag_link' => URL::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
+            ]);
+        }
+        elseif (!$missing_mandatory_tags->allowsNothing()) {
+          $mandatory_tags = $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
+            'The @tag tag was added because it is required by CKEditor 5.',
+            'The @tag tags were added because they are required by CKEditor 5.',
+            [
+              '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
+            ]);
+        }
+
         $added_elements_begin = !empty($attributes_to_tag) || !empty($added_tags) ? $this->t('A plugin introduced support for the following:') : '';
         $added_elements_tags = !empty($added_tags) ? $this->formatPlural(
           count($added_tags),
