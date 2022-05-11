@@ -21,7 +21,6 @@ use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -39,10 +38,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;
-
-  use UserCreationTrait {
-    createRole as drupalCreateRole;
-  }
 
   /**
    * {@inheritdoc}
