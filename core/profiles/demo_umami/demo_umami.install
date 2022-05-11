@@ -60,9 +60,4 @@ function demo_umami_install() {
     'link' => ['uri' => 'internal:/admin/content'],
   ]);
   $shortcut->save();
-
-  // Enable the demo content module. This can't be specified as a dependency
-  // in the demo_umami.info.yml file, as it requires configuration provided by
-  // the profile (fields etc.).
-  \Drupal::service('module_installer')->install(['demo_umami_content'], TRUE);
 }
