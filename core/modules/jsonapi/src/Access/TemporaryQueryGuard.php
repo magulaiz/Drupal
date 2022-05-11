@@ -15,6 +15,7 @@ use Drupal\Core\TypedData\DataReferenceDefinitionInterface;
 use Drupal\jsonapi\Query\EntityCondition;
 use Drupal\jsonapi\Query\EntityConditionGroup;
 use Drupal\jsonapi\Query\Filter;
+use Psr\Log\LoggerInterface;
 
 /**
  * Adds sufficient access control to collection queries.
@@ -52,6 +53,13 @@ class TemporaryQueryGuard {
   protected static $moduleHandler;
 
   /**
+   * Logger channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected static $loggerChannel;
+
+  /**
    * Sets the entity field manager.
    *
    * This must be called before calling ::applyAccessControls().
@@ -73,6 +81,15 @@ class TemporaryQueryGuard {
    */
   public static function setModuleHandler(ModuleHandlerInterface $module_handler) {
     static::$moduleHandler = $module_handler;
+  }
+
+  /**
+   * Sets the logger channel.
+   *
+   * @param \Psr\Log\LoggerInterface $logger_channel
+   */
+  public static function setLoggerChannel(LoggerInterface $logger_channel) {
+    static::$loggerChannel = $logger_channel;
   }
 
   /**
@@ -548,6 +565,7 @@ class TemporaryQueryGuard {
    *   An EntityConditionGroup which cannot evaluate to TRUE.
    */
   protected static function alwaysFalse(EntityTypeInterface $entity_type) {
+    assert(static::$loggerChannel->warning(sprintf('A collection query filtering on %s was requested but no modules provided the required access. If this is intended, ignore this warning. If this filtering should be allowed, see \Drupal\jsonapi\Access\TemporaryQueryGuard::getAccessConditionForKnownSubsets() for information on implementing the required hooks.', $entity_type->id())) || TRUE);
     return new EntityConditionGroup('AND', [
       new EntityCondition($entity_type->getKey('id'), 1, '<'),
       new EntityCondition($entity_type->getKey('id'), 1, '>'),

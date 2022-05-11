@@ -894,6 +894,7 @@ class EntityResource {
       $query->condition($filter->queryCondition($query));
       TemporaryQueryGuard::setFieldManager($this->fieldManager);
       TemporaryQueryGuard::setModuleHandler(\Drupal::moduleHandler());
+      TemporaryQueryGuard::setLoggerChannel(\Drupal::service('logger.channel.jsonapi'));
       TemporaryQueryGuard::applyAccessControls($filter, $query, $query_cacheability);
     }
 
