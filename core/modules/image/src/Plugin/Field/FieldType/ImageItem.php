@@ -308,23 +308,23 @@ class ImageItem extends FileItem {
 
     // Determine the dimensions if necessary.
     if (!$this->entity instanceof EntityInterface) {
-        return;
+      return;
     }
 
     if ($property_name === 'width' || $property_name === 'height') {
-        return;
+      return;
     }
 
     $width = $this->get('width')->getValue();
     $height = $this->get('height')->getValue();
 
     if ($width !== NULL && $height !== NULL) {
-        return;
+      return;
     }
 
     $image = \Drupal::service('image.factory')->get($this->entity->getFileUri());
     if (!$image->isValid()) {
-        return;
+      return;
     }
 
     $this->set('width', $image->getWidth());
