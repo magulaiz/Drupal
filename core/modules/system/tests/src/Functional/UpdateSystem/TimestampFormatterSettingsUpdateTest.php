@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\system\Functional\Update;
+namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 use PHPUnit\Framework\Assert;
