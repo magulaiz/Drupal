@@ -70,7 +70,7 @@ class Language extends FieldViewsDataPluginBase {
         if ($table = $entity_type->getDataTable() || $table = $entity_type->getRevisionDataTable()) {
           $views_field['title'] = $this->t('Translation language');
         }
-        if ($table = $entity_type->getBaseTable() || $table = $entity_type->getRevisionTable()) {
+        elseif ($table = $entity_type->getBaseTable() || $table = $entity_type->getRevisionTable()) {
           $views_field['title'] = $this->t('Original language');
         }
       }
