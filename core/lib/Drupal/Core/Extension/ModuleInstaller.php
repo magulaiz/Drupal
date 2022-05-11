@@ -213,6 +213,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+          // Release the lock so other modules can be installed.
+          $this->lock->release(self::LOCK_NAME);
           throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 
@@ -387,6 +389,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
 
+    // Release the lock so other modules can be installed.
+    $this->lock->release(self::LOCK_NAME);
+
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
       if (!InstallerKernel::installationAttempted()) {
@@ -407,8 +412,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invokeAll('modules_installed', [$modules_installed, $sync_status]);
     }
 
-    // Release the lock so other modules can be installed.
-    $this->lock->release(self::LOCK_NAME);
     return TRUE;
   }
 
