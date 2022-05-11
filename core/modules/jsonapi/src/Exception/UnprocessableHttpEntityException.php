@@ -38,12 +38,12 @@ class UnprocessableHttpEntityException extends HttpException {
    * @param \Exception|null $previous
    *   The pervious error, if any, associated with the request.
    * @param array $headers
-   *   The headers associated with the request.
+   *   The headers to be set on the response.
    * @param int $code
-   *   The HTTP status code associated with the request. Defaults to zero.
+   *   The HTTP status code to set on the response; defaults to 422.
    */
   public function __construct(?\Exception $previous = NULL, array $headers = [], $code = 0) {
-    parent::__construct(422, "Unprocessable Entity: validation failed.", $previous, $headers, $code);
+    parent::__construct($code ?: 422, "Unprocessable Entity: validation failed.", $previous, $headers, $code);
   }
 
   /**

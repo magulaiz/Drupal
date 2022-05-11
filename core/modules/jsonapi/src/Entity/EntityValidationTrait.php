@@ -5,6 +5,7 @@ namespace Drupal\jsonapi\Entity;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\jsonapi\Exception\UnprocessableHttpEntityException;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Provides a method to validate an entity.
@@ -55,8 +56,20 @@ trait EntityValidationTrait {
       // 422 Unprocessable Entity code from RFC 4918. That way clients can
       // distinguish between general syntax errors in bad serializations (code
       // 400) and semantic errors in well-formed requests (code 422).
+
+      // Violations may optionally set codes; if all violations have the same
+      // code, use that for the HTTP status code of the exception.
       // @see \Drupal\jsonapi\Normalizer\UnprocessableHttpEntityExceptionNormalizer
-      $exception = new UnprocessableHttpEntityException();
+      $unique_violation_statuses = array_unique(array_reduce(iterator_to_array($violations), function($current, ConstraintViolationInterface $violation) {
+        return array_merge($current, [$violation->getCode()]);
+      }, []));
+      $exception = new UnprocessableHttpEntityException(
+        NULL,
+        [],
+        count($unique_violation_statuses) === 1
+          ? current($unique_violation_statuses)
+          : 0
+      );
       $exception->setViolations($violations);
       throw $exception;
     }
