@@ -5,14 +5,8 @@
 * @preserve
 **/
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-(function (Drupal, once) {
-  var intervals = {
+((Drupal, once) => {
+  const intervals = {
     year: 31536000,
     month: 2592000,
     week: 604800,
@@ -21,38 +15,39 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     minute: 60,
     second: 1
   };
-  var intervalsNames = Object.keys(intervals);
-  var timers = new WeakMap();
+  const intervalsNames = Object.keys(intervals);
+  const timers = new WeakMap();
   Drupal.timeDiff = {
-    show: function show(timeElement) {
-      var timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
-      var timeDiffSettings = JSON.parse(timeElement.getAttribute('data-drupal-time-diff'));
-      var now = Date.now();
-      var diff = Math.round((timestamp - now) / 1000);
-      var options = {
+    show(timeElement) {
+      const timestamp = new Date(timeElement.getAttribute('datetime')).getTime();
+      const timeDiffSettings = JSON.parse(timeElement.getAttribute('data-drupal-time-diff'));
+      const now = Date.now();
+      const diff = Math.round((timestamp - now) / 1000);
+      const options = {
         granularity: timeDiffSettings.granularity
       };
-      var timeDiff = Drupal.timeDiff.format(diff, options);
-      var format = diff > 0 ? 'future' : 'past';
+      const timeDiff = Drupal.timeDiff.format(diff, options);
+      const format = diff > 0 ? 'future' : 'past';
       timeElement.textContent = Drupal.formatString(timeDiffSettings.format[format], {
         '@interval': timeDiff.formatted
       });
 
       if (timeDiffSettings.refresh > 0) {
-        var refreshInterval = Drupal.timeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
+        const refreshInterval = Drupal.timeDiff.refreshInterval(timeDiff.value, timeDiffSettings.refresh, timeDiffSettings.granularity);
         clearTimeout(timers.get(timeElement));
         timers.set(timeElement, setTimeout(Drupal.timeDiff.show, refreshInterval * 1000, timeElement));
       }
     },
-    refreshInterval: function refreshInterval(value, refresh, granularity) {
-      var units = Object.keys(value);
-      var unitsCount = units.length;
-      var lastUnit = units.pop();
+
+    refreshInterval(value, refresh, granularity) {
+      const units = Object.keys(value);
+      const unitsCount = units.length;
+      const lastUnit = units.pop();
 
       if (lastUnit !== 'second') {
         if (unitsCount === granularity) {
-          intervalsNames.every(function (interval) {
-            var duration = intervals[interval];
+          intervalsNames.every(interval => {
+            const duration = intervals[interval];
 
             if (interval === lastUnit) {
               refresh = refresh < duration ? duration : refresh;
@@ -64,19 +59,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           return refresh;
         }
 
-        var lastIntervalIndex = intervalsNames.indexOf(lastUnit);
-        var nextInterval = intervalsNames[lastIntervalIndex + 1];
+        const lastIntervalIndex = intervalsNames.indexOf(lastUnit);
+        const nextInterval = intervalsNames[lastIntervalIndex + 1];
         refresh = intervals[nextInterval];
       }
 
       return refresh;
     },
-    format: function format(diff) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      options = _objectSpread({
+
+    format(diff) {
+      let options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      options = {
         granularity: 2,
-        strict: false
-      }, options);
+        strict: false,
+        ...options
+      };
 
       if (options.strict && diff < 0) {
         return {
@@ -88,13 +85,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       diff = Math.abs(diff);
-      var output = [];
-      var value = {};
-      var units;
-      var _options = options,
-          granularity = _options.granularity;
-      intervalsNames.every(function (interval) {
-        var duration = intervals[interval];
+      const output = [];
+      const value = {};
+      let units;
+      let {
+        granularity
+      } = options;
+      intervalsNames.every(interval => {
+        const duration = intervals[interval];
         units = Math.floor(diff / duration);
 
         if (units > 0) {
@@ -153,20 +151,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       return {
         formatted: output.join(' '),
-        value: value
+        value
       };
     }
+
   };
   Drupal.behaviors.timeDiff = {
-    attach: function attach(context) {
+    attach(context) {
       once('time-diff', 'time[data-drupal-time-diff]', context).forEach(Drupal.timeDiff.show);
     },
-    detach: function detach(context, settings, trigger) {
+
+    detach(context, settings, trigger) {
       if (trigger === 'unload') {
-        once.remove('time-diff', 'time[data-drupal-time-diff]', context).forEach(function (timeElement) {
-          return clearTimeout(timers.get(timeElement));
-        });
+        once.remove('time-diff', 'time[data-drupal-time-diff]', context).forEach(timeElement => clearTimeout(timers.get(timeElement)));
       }
     }
+
   };
 })(Drupal, once);
