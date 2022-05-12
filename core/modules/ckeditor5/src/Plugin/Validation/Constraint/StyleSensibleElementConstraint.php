@@ -21,6 +21,13 @@ use Symfony\Component\Validator\Constraint;
 class StyleSensibleElementConstraint extends Constraint {
 
   /**
+   * When a style is defined for a non-HTML5 tag.
+   *
+   * @var string
+   */
+  public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. %tag is not a HTML5 tag.';
+
+  /**
    * When a style is defined for a tag that is not yet supported.
    *
    * @var string

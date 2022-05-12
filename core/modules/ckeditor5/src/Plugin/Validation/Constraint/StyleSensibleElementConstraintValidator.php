@@ -38,6 +38,20 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
 
     $text_editor = $this->createTextEditorObjectFromContext();
 
+    // The single tag for which a style is specified, which we are checking now.
+    $style_element = HTMLRestrictions::fromString($element);
+    assert(count($style_element->getAllowedElements()) === 1);
+    [$tag, $classes] = Style::getTagAndClasses($style_element);
+
+    // Ensure the tag is in the range supported by the Style plugin.
+    $superset = HTMLRestrictions::fromString('<$any-html5-element class>');
+    if (!$style_element->notInResolvedSuperset($superset)->allowsNothing()) {
+      $this->context->buildViolation($constraint->nonHtml5TagMessage)
+        ->setParameter('%tag', sprintf("<%s>", $tag))
+        ->addViolation();
+      return;
+    }
+
     // Get the list of tags enabled by every plugin other than Style.
     $other_enabled_plugins = $this->getEnabledPlugins($text_editor, 'ckeditor5_style');
     $enableable_disabled_plugins = $this->getEnableableDisabledPlugins($text_editor);
@@ -45,16 +59,11 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     $other_enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));
     $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE));
 
-    // The single tag for which a style is specified, which we are checking now.
-    $style_element = HTMLRestrictions::fromString($element);
-    assert(count($style_element->getAllowedElements()) === 1);
-
     // If the intersection between the validated style element and the elements
     // supported by all other enabled CKEditor 5 plugins is empty, that means
     // that the tag used in the style element is not actually supported yet.
     // Hence the Style plugin cannot support setting >1 class on it.
     if ($style_element->intersect($other_enabled_plugin_elements)->allowsNothing()) {
-      $tag = array_keys($style_element->getAllowedElements())[0];
       $this->context->buildViolation($constraint->unsupportedTagMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->addViolation();
@@ -62,7 +71,6 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     // Next, validate that the classes specified for this style are not
     // supported by an enabled plugin.
     elseif (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
-      [$tag, $classes] = Style::getTagAndClasses($style_element);
       $this->context->buildViolation($constraint->conflictingEnabledPluginMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->setParameter('%classes', implode(", ", $classes))
@@ -72,7 +80,6 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     // Next, validate that the classes specified for this style are not
     // supported by a disabled plugin.
     elseif (self::intersectionWithClasses($style_element, $disabled_plugin_elements)) {
-      [$tag, $classes] = Style::getTagAndClasses($style_element);
       $this->context->buildViolation($constraint->conflictingDisabledPluginMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->setParameter('%classes', implode(", ", $classes))

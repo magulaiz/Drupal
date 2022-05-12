@@ -279,6 +279,39 @@ final class HTMLRestrictions {
   }
 
   /**
+   * Computes the allowed elements not allowed by a superset post-resolving.
+   *
+   * This behaves differently from ::diff() in that the provided operand has its
+   * wildcard tags resolved based on the concrete tags in this set of
+   * restrictions. This is behavior only needed in some circumstances, not in
+   * all diffing situations.
+   *
+   * @param \Drupal\ckeditor5\HTMLRestrictions $superset
+   *   The superset to compare to.
+   *
+   * @return self
+   *   A HTMLRestrictions object containing the allowed elements in $this that
+   *   are not allowed by $superset, not even
+   */
+  public function notInResolvedSuperset(HTMLRestrictions $superset): self {
+    $subset = $this;
+
+    // $superset may contain wildcard tags: if so, resolve them, to have a
+    // concrete list of maximum supported elements.
+    $max_supported_resolved = $superset->getWildcardSubset()->allowsNothing()
+      ? $superset
+      : $superset
+        // Resolve wildcards in $superset into concrete tags.
+        ->merge($subset)->diff($subset)
+        // Ensure that the original superset elements are still present.
+        ->merge($superset);
+
+    // Validate $subset truly is a subset of $superset.
+    $not_in_max_supported = $subset->diff($max_supported_resolved);
+    return $not_in_max_supported;
+  }
+
+  /**
    * Constructs a set of HTML restrictions matching the given text format.
    *
    * @param \Drupal\filter\Plugin\FilterInterface $filter
