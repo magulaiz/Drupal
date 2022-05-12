@@ -9,7 +9,6 @@ use PHPUnit\Framework\Assert;
  * Tests the update of timestamp formatter settings.
  *
  * @group system
- * @group legacy
  */
 class TimestampFormatterSettingsUpdateTest extends UpdatePathTestBase {
 
