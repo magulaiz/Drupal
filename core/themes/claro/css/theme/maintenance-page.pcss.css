@@ -10,6 +10,21 @@
   background-color: var(--color-gray-100);
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 500;
+}
+
+h1,
+h2 {
+  font-size: var(--font-size-h3);
+}
+
+h3 {
+  font-size: var(--font-size-h4);
+}
+
 .site-name {
   margin-top: var(--space-s);
   word-wrap: break-word;
@@ -209,9 +224,25 @@
 }
 
 /**
- * Pending updates list customization for update page.
+ * Updates list customization for update page.
  */
-.item-list h3 {
+.update-results {
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-top: 0;
+  padding: var(--space-s);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--base-border-radius);
+  background: var(--color-gray-050);
+}
+.update-results > h3:first-child {
+  margin-top: 0;
+}
+.update-results .failure strong {
+  color: var(--color-maximumred);
+}
+
+.item-list > h3 {
   font-size: var(--font-size-h5);
 }
 .item-list > ul {

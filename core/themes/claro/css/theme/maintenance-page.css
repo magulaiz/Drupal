@@ -15,6 +15,21 @@
   background-color: #dedfe4;
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 500;
+}
+
+h1,
+h2 {
+  font-size: 1.602rem;
+}
+
+h3 {
+  font-size: 1.424rem;
+}
+
 .site-name {
   margin-top: 0.75rem;
   word-wrap: break-word;
@@ -220,10 +235,28 @@
 }
 
 /**
- * Pending updates list customization for update page.
+ * Updates list customization for update page.
  */
 
-.item-list h3 {
+.update-results {
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-top: 0;
+  padding: 0.75rem;
+  border: 1px solid #dedfe4;
+  border-radius: 2px;
+  background: #f3f4f9;
+}
+
+.update-results > h3:first-child {
+  margin-top: 0;
+}
+
+.update-results .failure strong {
+  color: #d72222;
+}
+
+.item-list > h3 {
   font-size: 1.266rem;
 }
 
