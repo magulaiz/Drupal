@@ -15,10 +15,6 @@
   background-color: #dedfe4;
 }
 
-.title {
-  margin-top: 0;
-}
-
 .site-name {
   margin-top: 0.75rem;
   word-wrap: break-word;
@@ -28,6 +24,7 @@
 }
 
 .title {
+  margin-top: 0;
   font-size: 1.602rem;
   font-weight: 500;
 }

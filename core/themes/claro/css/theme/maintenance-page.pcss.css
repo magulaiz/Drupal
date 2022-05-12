@@ -10,10 +10,6 @@
   background-color: var(--color-gray-100);
 }
 
-.title {
-  margin-top: 0;
-}
-
 .site-name {
   margin-top: var(--space-s);
   word-wrap: break-word;
@@ -23,6 +19,7 @@
 }
 
 .title {
+  margin-top: 0;
   font-size: var(--font-size-h3);
   font-weight: 500;
 }
