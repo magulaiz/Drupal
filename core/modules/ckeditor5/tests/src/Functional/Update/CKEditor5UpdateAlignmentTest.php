@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\ckeditor5\Update;
+namespace Drupal\Tests\ckeditor5\Functional\Update;
 
 use Drupal\editor\Entity\Editor;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
@@ -26,7 +26,7 @@ class CKEditor5UpdateAlignmentTest extends UpdatePathTestBase {
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
-      __DIR__ . '/../../fixtures/update/ckeditor5.php',
+      __DIR__ . '/../../fixtures/update/ckeditor5-3259593.php',
     ];
   }
 
