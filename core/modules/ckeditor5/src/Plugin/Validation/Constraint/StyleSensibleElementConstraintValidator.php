@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class StyleSensibleElementConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
+  use PrecedingConstraintAwareValidatorTrait;
   use PluginManagerDependentValidatorTrait;
   use TextEditorObjectDependentValidatorTrait;
 
@@ -34,6 +35,10 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
   public function validate($element, Constraint $constraint) {
     if (!$constraint instanceof StyleSensibleElementConstraint) {
       throw new UnexpectedTypeException($constraint, StyleSensibleElementConstraint::class);
+    }
+    // The preceding constraints (in this case: CKEditor5Element) must be valid.
+    if ($this->hasViolationsForPrecedingConstraints($constraint)) {
+      return;
     }
 
     $text_editor = $this->createTextEditorObjectFromContext();
