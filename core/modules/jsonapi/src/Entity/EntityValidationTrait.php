@@ -60,13 +60,13 @@ trait EntityValidationTrait {
       // Violations may optionally set codes; if all violations have the same
       // code, use that for the HTTP status code of the exception.
       // @see \Drupal\jsonapi\Normalizer\UnprocessableHttpEntityExceptionNormalizer
-      $unique_violation_statuses = array_unique(array_reduce(iterator_to_array($violations), function($current, ConstraintViolationInterface $violation) {
+      $unique_violation_statuses = array_unique(array_reduce(iterator_to_array($violations), function ($current, ConstraintViolationInterface $violation) {
         return array_merge($current, [$violation->getCode()]);
       }, []));
       $exception = new UnprocessableHttpEntityException(
         NULL,
         [],
-        count($unique_violation_statuses) === 1
+        count($unique_violation_statuses) === 1 && is_numeric(current($unique_violation_statuses))
           ? current($unique_violation_statuses)
           : 0
       );
