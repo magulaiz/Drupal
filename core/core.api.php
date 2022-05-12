@@ -2208,7 +2208,9 @@ function hook_layout_alter(&$definitions) {
  * @see hook_rebuild()
  */
 function hook_cache_flush() {
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+  /** @var \Drupal\Core\Site\MaintenanceMode $maintenance_mode */
+  $maintenance_mode = \Drupal::service('maintenance_mode');
+  if ($maintenance_mode->isEnabled() && $maintenance_mode::getMode() === $maintenance_mode::MODE['update']) {
     _update_cache_clear();
   }
 }

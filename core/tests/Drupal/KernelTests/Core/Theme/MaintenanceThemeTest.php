@@ -17,7 +17,7 @@ class MaintenanceThemeTest extends KernelTestBase {
   public function testMaintenanceTheme() {
     $this->setSetting('maintenance_theme', 'test_subtheme');
     // Get the maintenance theme loaded.
-    drupal_maintenance_theme();
+    \Drupal::service('maintenance_mode')->setTheme();
 
     // Do we have an active theme?
     $this->assertTrue(\Drupal::theme()->hasActiveTheme());

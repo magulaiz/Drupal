@@ -10,6 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\State\StateInterface;
 use Drupal\Core\Update\UpdateRegistry;
@@ -80,6 +81,13 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
+   * The maintenance mode service.
+   *
+   * @var \Drupal\Core\Site\MaintenanceModeInterface
+   */
+  protected $maintenanceMode;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -101,10 +109,11 @@ class DbUpdateController extends ControllerBase {
    * @param \Drupal\Core\Asset\AssetQueryStringInterface $assetQueryString
    *   The asset query string.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, protected ?AssetQueryStringInterface $assetQueryString = NULL, MaintenanceModeInterface $maintenance_mode) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
+    // @ToDo: Remove state service injection before drupal:11.0.0.
     $this->state = $state;
     $this->moduleHandler = $module_handler;
     $this->account = $account;
@@ -114,7 +123,10 @@ class DbUpdateController extends ControllerBase {
       $this->assetQueryString = \Drupal::service('asset.query_string');
       @trigger_error('Calling' . __METHOD__ . '() without the $assetQueryString argument is deprecated in drupal:10.2.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/3358337', E_USER_DEPRECATED);
     }
-
+    if ($maintenance_mode === NULL) {
+      $maintenance_mode = \Drupal::service('maintenance_mode');
+    }
+    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**
@@ -130,7 +142,8 @@ class DbUpdateController extends ControllerBase {
       $container->get('current_user'),
       $container->get('bare_html_page_renderer'),
       $container->get('update.post_update_registry'),
-      $container->get('asset.query_string')
+      $container->get('asset.query_string'),
+      $container->get('maintenance_mode')
     );
   }
 
@@ -589,14 +602,10 @@ class DbUpdateController extends ControllerBase {
    *   The current request object.
    */
   protected function triggerBatch(Request $request) {
-    $maintenance_mode = $this->state->get('system.maintenance_mode', FALSE);
-    // Store the current maintenance mode status in the session so that it can
-    // be restored at the end of the batch.
-    $request->getSession()->set('maintenance_mode', $maintenance_mode);
     // During the update, always put the site into maintenance mode so that
     // in-progress schema changes do not affect visiting users.
-    if (empty($maintenance_mode)) {
-      $this->state->set('system.maintenance_mode', TRUE);
+    if (!$this->maintenanceMode->isEnabled()) {
+      $this->maintenanceMode->enable();
     }
 
     /** @var \Drupal\Core\Batch\BatchBuilder $batch_builder */
@@ -678,7 +687,7 @@ class DbUpdateController extends ControllerBase {
     // Now that the update is done, we can put the site back online if it was
     // previously not in maintenance mode.
     if (!$session->remove('maintenance_mode')) {
-      \Drupal::state()->set('system.maintenance_mode', FALSE);
+      \Drupal::service('maintenance_mode')->disable();
     }
   }
 

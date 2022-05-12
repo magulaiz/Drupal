@@ -212,7 +212,7 @@ class MenuRouterTest extends BrowserTestBase {
    * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance()
    */
   public function testMaintenanceModeLoginPaths() {
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $this->container->get('maintenance_mode')->enable();
 
     $offline_message = $this->config('system.site')->get('name') . ' is currently under maintenance. We should be back shortly. Thank you for your patience.';
     $this->drupalGet('test-page');
@@ -220,7 +220,7 @@ class MenuRouterTest extends BrowserTestBase {
     $this->drupalGet('menu_login_callback');
     $this->assertSession()->pageTextContains('This is TestControllers::testLogin.');
 
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    $this->container->get('maintenance_mode')->disable();
   }
 
   /**
@@ -281,7 +281,7 @@ class MenuRouterTest extends BrowserTestBase {
    * Tests the theme negotiation when the site is in maintenance mode.
    */
   protected function doTestThemeCallbackMaintenanceMode() {
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $this->container->get('maintenance_mode')->enable();
 
     // For a regular user, the fact that the site is in maintenance mode means
     // we expect the theme callback system to be bypassed entirely.
@@ -297,7 +297,7 @@ class MenuRouterTest extends BrowserTestBase {
     // Check that the administrative theme's CSS appears on the page.
     $this->assertSession()->responseContains('claro/css/base/elements.css');
 
-    $this->container->get('state')->set('system.maintenance_mode', FALSE);
+    $this->container->get('maintenance_mode')->disable();
   }
 
   /**

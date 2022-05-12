@@ -262,7 +262,7 @@ class StyleSerializerTest extends ViewTestBase {
     $this->executeView($view);
 
     // Set the site to maintenance mode.
-    $this->container->get('state')->set('system.maintenance_mode', TRUE);
+    $this->container->get('maintenance_mode')->enable();
 
     $this->drupalGet('test/serialize/entity', ['query' => ['_format' => 'json']]);
     // Verify that the endpoint is unavailable for anonymous users.

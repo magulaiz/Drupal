@@ -11,6 +11,7 @@ use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\AttachmentsInterface;
 use Drupal\Core\Render\AttachmentsResponseProcessorInterface;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -72,6 +73,13 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected $moduleHandler;
 
   /**
+   * The maintenance mode service.
+   *
+   * @var \Drupal\Core\Site\MaintenanceModeInterface
+   */
+  protected $maintenanceMode;
+
+  /**
    * Constructs an AjaxResponseAttachmentsProcessor object.
    *
    * @param \Drupal\Core\Asset\AssetResolverInterface $asset_resolver
@@ -90,8 +98,10 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The module handler.
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
    *   The language manager.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   *   The maintenance mode service.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
+  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL, protected ?MaintenanceModeInterface $maintenance_mode = NULL) {
     $this->assetResolver = $asset_resolver;
     $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
@@ -103,6 +113,10 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
       @trigger_error('Calling ' . __METHOD__ . '() without the $language_manager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
     }
+    if ($maintenance_mode === NULL) {
+      $maintenance_mode = \Drupal::service('maintenance_mode');
+    }
+    $this->maintenanceMode = $maintenance_mode;
   }
 
   /**
@@ -133,11 +147,11 @@ class AjaxResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function buildAttachmentsCommands(AjaxResponse $response, Request $request) {
     $ajax_page_state = $request->get('ajax_page_state');
-    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
 
+    $site_online = !$this->maintenanceMode->isEnabled();
     // Aggregate CSS/JS if necessary, but only during normal site operation.
-    $optimize_css = !$maintenance_mode && $this->config->get('css.preprocess');
-    $optimize_js = $maintenance_mode && $this->config->get('js.preprocess');
+    $optimize_css = $site_online && $this->config->get('css.preprocess');
+    $optimize_js = $site_online && $this->config->get('js.preprocess');
 
     $attachments = $response->getAttachments();
 

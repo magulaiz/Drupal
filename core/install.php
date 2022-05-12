@@ -6,20 +6,12 @@
  */
 
 use Drupal\Component\Utility\OpCodeCache;
+use Drupal\Core\Site\MaintenanceMode;
 
 // Change the directory to the Drupal root.
 chdir('..');
 // Store the Drupal root path.
 $root_path = realpath('');
-
-/**
- * Global flag to indicate the site is in installation mode.
- *
- * The constant is defined using define() instead of const so that PHP
- * versions prior to 5.3 can display proper PHP requirements instead of causing
- * a fatal error.
- */
-define('MAINTENANCE_MODE', 'install');
 
 // Exit early if an incompatible PHP version is in use, so that the user sees a
 // helpful error message rather than a white screen from any fatal errors due to
@@ -36,6 +28,11 @@ if (version_compare(PHP_VERSION, '8.1.0') < 0) {
 
 // Initialize the autoloader.
 $class_loader = require_once $root_path . '/autoload.php';
+
+/**
+ * Global flag to indicate the site is in installation mode.
+ */
+MaintenanceMode::setMode(MaintenanceMode::MODE['install']);
 
 // If OPCache is in use, ensure opcache.save_comments is enabled.
 if (OpCodeCache::isEnabled() && !ini_get('opcache.save_comments')) {

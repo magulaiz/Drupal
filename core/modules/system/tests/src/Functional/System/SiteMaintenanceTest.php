@@ -177,7 +177,7 @@ class SiteMaintenanceTest extends BrowserTestBase {
    */
   public function testNonHtmlRequest() {
     $this->drupalLogout();
-    \Drupal::state()->set('system.maintenance_mode', TRUE);
+    \Drupal::service('maintenance_mode')->enable();
     $formats = ['json', 'xml', 'non-existing'];
     foreach ($formats as $format) {
       $this->drupalGet('<front>', ['query' => ['_format' => $format]]);

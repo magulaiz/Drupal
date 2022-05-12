@@ -315,11 +315,15 @@ function drupal_generate_test_ua($prefix) {
  * Loads and initializes the theme system for site installs, updates and when
  * the site is in maintenance mode. This also applies when the database fails.
  *
- * @see _drupal_maintenance_theme()
+ * @deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use
+ *   \Drupal::service('maintenance_mode')->setTheme() instead.
+ *
+ * @see https://www.drupal.org/node/3058979
+ * @see \Drupal\Core\Site\MaintenanceMode::setTheme()
  */
 function drupal_maintenance_theme() {
-  require_once __DIR__ . '/theme.maintenance.inc';
-  _drupal_maintenance_theme();
+  @trigger_error("drupal_maintenance_theme() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use \Drupal::service('maintenance_mode')->setTheme() instead. See https://www.drupal.org/node/3058979", E_USER_DEPRECATED);
+  \Drupal::service('maintenance_mode')->setTheme();
 }
 
 /**

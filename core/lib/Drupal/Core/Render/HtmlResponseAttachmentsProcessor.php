@@ -10,6 +10,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\EnforcedResponseException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Site\MaintenanceModeInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -99,8 +100,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    *   The module handler service.
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
    *   The language manager.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface|null $maintenanceMode
+   *   The maintenance mode service.
    */
-  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
+  public function __construct(AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL, protected ?MaintenanceModeInterface $maintenanceMode = NULL) {
     $this->assetResolver = $asset_resolver;
     $this->config = $config_factory->get('system.performance');
     $this->cssCollectionRenderer = $css_collection_renderer;
@@ -111,6 +114,10 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
     if (!isset($languageManager)) {
       @trigger_error('Calling ' . __METHOD__ . '() without the $languageManager argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
       $this->languageManager = \Drupal::languageManager();
+    }
+    if ($maintenanceMode === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $maintenanceMode argument is deprecated in drupal:10.1.0 and will be required in drupal:11.0.0', E_USER_DEPRECATED);
+      $this->maintenanceMode = \Drupal::service('maintenance_mode');
     }
   }
 
@@ -311,19 +318,17 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
   protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
     $variables = [];
 
-    $maintenance_mode = defined('MAINTENANCE_MODE') || \Drupal::state()->get('system.maintenance_mode');
-
     // Print styles - if present.
     if (isset($placeholders['styles'])) {
       // Optimize CSS if necessary, but only during normal site operation.
-      $optimize_css = !$maintenance_mode && $this->config->get('css.preprocess');
+      $optimize_css = !$this->maintenanceMode->isEnabled() && $this->config->get('css.preprocess');
       $variables['styles'] = $this->cssCollectionRenderer->render($this->assetResolver->getCssAssets($assets, $optimize_css, $this->languageManager->getCurrentLanguage()));
     }
 
     // Print scripts - if any are present.
     if (isset($placeholders['scripts']) || isset($placeholders['scripts_bottom'])) {
       // Optimize JS if necessary, but only during normal site operation.
-      $optimize_js = !$maintenance_mode && $this->config->get('js.preprocess');
+      $optimize_js = !$this->maintenanceMode->isEnabled() && !\Drupal::state()->get('system.maintenance_mode') && $this->config->get('js.preprocess');
       [$js_assets_header, $js_assets_footer] = $this->assetResolver->getJsAssets($assets, $optimize_js, $this->languageManager->getCurrentLanguage());
       $variables['scripts'] = $this->jsCollectionRenderer->render($js_assets_header);
       $variables['scripts_bottom'] = $this->jsCollectionRenderer->render($js_assets_footer);
@@ -373,8 +378,7 @@ class HtmlResponseAttachmentsProcessor implements AttachmentsResponseProcessorIn
    */
   protected function setHeaders(HtmlResponse $response, array $headers) {
     foreach ($headers as $values) {
-      $name = $values[0];
-      $value = $values[1];
+      [$name, $value] = $values;
       $replace = !empty($values[2]);
 
       // Drupal treats the HTTP response status code like a header, even though

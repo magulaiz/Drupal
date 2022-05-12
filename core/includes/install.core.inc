@@ -520,7 +520,7 @@ function install_begin_request($class_loader, &$install_state) {
   // need to run it even in the case of command-line installations, to prevent
   // any code in the installer that happens to initialize the theme system from
   // accessing the database before it is set up yet.)
-  drupal_maintenance_theme();
+  \Drupal::service('maintenance_mode')->setTheme();
 
   if (!$install_state['database_verified']) {
     // Do not install over an existing installation. The call to
@@ -579,7 +579,7 @@ function install_run_tasks(&$install_state, callable $callback = NULL) {
     // Ensure the maintenance theme is initialized. If the install task has
     // rebuilt the container the active theme will not be set. This can occur if
     // the task has installed a module.
-    drupal_maintenance_theme();
+    \Drupal::service('maintenance_mode')->setTheme();
 
     $install_state['parameters_changed'] = ($install_state['parameters'] != $original_parameters);
     // Store this task as having been performed during the current request,
@@ -1038,7 +1038,7 @@ function install_display_output($output, $install_state) {
   // Ensure the maintenance theme is initialized.
   // The regular initialization call in install_begin_request() may not be
   // reached in case of an early installer error.
-  drupal_maintenance_theme();
+  \Drupal::service('maintenance_mode')->setTheme();
 
   // Prevent install.php from being indexed when installed in a sub folder.
   // robots.txt rules are not read if the site is within domain.com/subfolder
