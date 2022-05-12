@@ -345,7 +345,14 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           // Validate $subset truly is a subset of $defined_elements.
           $not_in_max_supported = $subset_restrictions->diff($max_supported_resolved);
           if (!$not_in_max_supported->allowsNothing()) {
-            throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $not_in_max_supported->toCKEditor5ElementsArray())));
+            // If the editor is still being configured, the configuration may
+            // not yet be valid.
+            if ($editor->isNew()) {
+              $subset = [];
+            }
+            else {
+              throw new \LogicException(sprintf('The "%s" CKEditor 5 plugin implements ::getElementsSubset() and did not return a subset, the following tags are absent from the plugin definition: "%s".', $id, implode(' ', $not_in_max_supported->toCKEditor5ElementsArray())));
+            }
           }
 
           $defined_elements = $subset;
