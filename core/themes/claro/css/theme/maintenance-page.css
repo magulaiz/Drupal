@@ -197,6 +197,14 @@
   [dir="rtl"] .layout-sidebar-first {
     float: right;
   }
+
+  .layout-sidebar-first ~ main {
+    float: left;
+  }
+
+  [dir="rtl"] .layout-sidebar-first ~ main {
+    float: right;
+  }
   /* Positioning sidebar & content */
   main {
     float: left; /* LTR */

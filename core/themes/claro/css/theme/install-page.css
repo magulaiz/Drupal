@@ -18,6 +18,10 @@
   background-color: #dedfe4;
 }
 
+[dir="rtl"] .install-page {
+  background-position: right top, 50% 50%;
+}
+
 /**
  * Password widget
  */
