@@ -34,17 +34,6 @@
   font-size: 0.5em;
 }
 
-/*
- * Override of .layout-container, which is conflicts with
- * layout/system-admin--layout.pcss.css
- */
-@media all and (min-width: 48em) { /* 768px */
-  body.install-page .layout-container {
-    margin-right: auto;
-    margin-left: auto;
-  }
-}
-
 @media all and (max-width: 1010px) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent {
