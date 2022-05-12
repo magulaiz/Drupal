@@ -132,7 +132,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function install(array $module_list, $enable_dependencies = TRUE) {
+  public function install(array $module_list, $enable_dependencies = TRUE, $enable_lock = FALSE) {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     // Get all module data so we can find dependencies and sort and find the
     // core requirements. The module list needs to be reset so that it can
@@ -194,7 +194,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     // Ensure no lock already exists before starting to install modules.
-    if (!$this->lock->acquire(self::LOCK_NAME)) {
+    if ($enable_lock && !$this->lock->acquire(self::LOCK_NAME)) {
       throw new ExtensionInstallLockException('Unable to install modules because a module installation is already running.');
     }
 
@@ -213,8 +213,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-          // Release the lock so other modules can be installed.
-          $this->lock->release(self::LOCK_NAME);
+          if ($enable_lock) {
+            // Release the lock so other modules can be installed.
+            $this->lock->release(self::LOCK_NAME);
+          }
           throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 
@@ -389,8 +391,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
 
-    // Release the lock so other modules can be installed.
-    $this->lock->release(self::LOCK_NAME);
+    if ($enable_lock) {
+      // Release the lock so other modules can be installed.
+      $this->lock->release(self::LOCK_NAME);
+    }
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
