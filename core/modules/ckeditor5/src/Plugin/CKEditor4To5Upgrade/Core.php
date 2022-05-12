@@ -62,6 +62,7 @@ use Drupal\filter\FilterFormatInterface;
  *     "ckeditor5_heading",
  *     "ckeditor5_list",
  *     "ckeditor5_style",
+ *     "media_media",
  *   }
  * )
  *
@@ -248,6 +249,18 @@ class Core extends PluginBase implements CKEditor4To5UpgradePluginInterface {
         $configuration = [];
         $configuration['reversed'] = !empty($restrictions['allowed']['ol']['reversed']);
         $configuration['startIndex'] = !empty($restrictions['allowed']['ol']['start']);
+        return $configuration;
+
+      case 'media_media':
+        $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          // The default is to not allow the user to override the default view mode.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media::defaultConfiguration()
+          return NULL;
+        }
+        $configuration = [];
+        // Check if data-view-mode is allowed.
+        $configuration['allow_view_mode_override'] = !empty($restrictions['allowed']['drupal-media']['data-view-mode']);
         return $configuration;
 
       case 'ckeditor5_style':
