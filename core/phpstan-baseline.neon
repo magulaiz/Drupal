@@ -1121,16 +1121,6 @@ parameters:
 			path: modules/datetime_range/tests/src/Kernel/Views/FilterDateTest.php
 
 		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/dblog/tests/src/Functional/DbLogTest.php
