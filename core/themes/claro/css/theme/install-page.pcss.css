@@ -7,18 +7,7 @@
  */
 .install-page {
   min-height: 100%;
-  background-color: #1275b2;
-  background-image:
-    url(../../images/noise-low.png),
-    -webkit-radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
-  background-image:
-    url(../../images/noise-low.png),
-    radial-gradient(hsl(203, 80%, 45%), hsl(203, 80%, 32%));
-  background-repeat: repeat;
-  background-position: left top, 50% 50%; /* LTR */
-}
-[dir="rtl"] .install-page {
-  background-position: right top, 50% 50%;
+  background-color: #dedfe4;
 }
 
 /**
@@ -38,8 +27,19 @@
 
 .install-page .site-version {
   vertical-align: super;
-  color: #595959;
+  color: #909197;
   font-size: 0.5em;
+}
+
+/*
+ * Override of .layout-container, which is conflicts with
+ * layout/system-admin--layout.pcss.css
+ */
+@media all and (min-width: 48em) { /* 768px */
+  body.install-page .layout-container {
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 @media all and (max-width: 1010px) and (min-width: 48em) {
