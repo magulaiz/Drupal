@@ -995,6 +995,10 @@ PHP,
       'image_upload' => [],
     ]);
 
+    // Invalid subsets are allowed on unsaved Text Editor config entities,
+    // because they may have invalid configuration.
+    $text_editor->enforceIsNew(FALSE);
+
     // No exception when getting all provided elements.
     $this->assertGreaterThan(0, count($this->manager->getProvidedElements()));
 
