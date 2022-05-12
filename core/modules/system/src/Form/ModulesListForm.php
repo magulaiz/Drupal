@@ -500,7 +500,7 @@ class ModulesListForm extends FormBase {
     // Install the given modules.
     if (!empty($modules['install'])) {
       try {
-        $this->moduleInstaller->install(array_keys($modules['install']));
+        $this->moduleInstaller->install(array_keys($modules['install']), TRUE, TRUE);
         $this->messenger()
           ->addStatus($this->modulesEnabledConfirmationMessage($modules['install']));
       }
