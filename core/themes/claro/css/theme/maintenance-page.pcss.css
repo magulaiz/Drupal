@@ -182,6 +182,8 @@
   [dir="rtl"] ul {
     margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
   }
+
+  /* Positioning sidebar & content */
   .layout-sidebar-first {
     float: left; /* LTR */
     width: 35%;
@@ -191,33 +193,17 @@
   }
 
   .layout-sidebar-first ~ main {
-    float: left;
-  }
-
-  [dir="rtl"] .layout-sidebar-first ~ main {
-    float: right;
-  }
-  /* Positioning sidebar & content */
-  main {
     float: left; /* LTR */
     clear: none;
     box-sizing: border-box;
     width: 65%;
     padding-left: 3.85em; /* LTR */
   }
-  [dir="rtl"] main {
+
+  [dir="rtl"] .layout-sidebar-first ~ main {
     float: right;
     padding-right: 3.85em;
     padding-left: 0;
-  }
-  .layout-sidebar-first ~ main {
-    float: left;
-    margin-left: 4rem;
-  }
-  [dir="rtl"] .layout-sidebar-first ~ main {
-    float: right;
-    margin-right: 4rem;
-    margin-left: 0;
   }
 }
 
