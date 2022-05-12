@@ -25,8 +25,8 @@ class CKEditor5UpdateAlignmentTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
-      __DIR__ . '/../../fixtures/update/ckeditor5-3259593.php',
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.3.0.filled.standard.php.gz',
+      __DIR__ . '/../../../fixtures/update/ckeditor5-3259593.php',
     ];
   }
 
