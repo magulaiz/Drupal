@@ -536,11 +536,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: lib/Drupal/Core/Queue/DatabaseQueue.php
-
-		-
 			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Render/Element/Pager.php
@@ -1139,6 +1134,16 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\datetime_range\\\\Kernel\\\\Views\\\\FilterDateTest\\:\\:\\$map\\.$#"
 			count: 2
 			path: modules/datetime_range/tests/src/Kernel/Views/FilterDateTest.php
+
+		-
+			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
+			count: 1
+			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
+
+		-
+			message: "#^Call to an undefined method Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
+			count: 1
+			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -2761,11 +2766,6 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
-			path: modules/system/tests/src/Kernel/System/CronQueueTest.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
 			path: modules/system/tests/src/Kernel/Token/TokenReplaceKernelTest.php
 
 		-
@@ -4233,12 +4233,3 @@ parameters:
 			count: 1
 			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
 
-		-
-			message: "#^Access to an undefined static property static\\(Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\)\\:\\:\\$entityTypeId\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\dblog\\\\Functional\\\\DbLogResourceTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
-			count: 1
-			path: modules/dblog/tests/src/Functional/DbLogResourceTest.php
