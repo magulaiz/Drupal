@@ -367,6 +367,34 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <em class="placeholder">&lt;blockquote&gt;</em> is not yet supported. Enable a plugin that supports creating this tag.',
       ],
     ];
+    $data['INVALID: Style plugin configured to add class to supported non-HTML5 tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<foo>',
+            ],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Barry foo',
+                'element' => '<foo class="bar">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <em class="placeholder">&lt;foo&gt;</em> is not a HTML5 tag.',
+      ],
+    ];
     $data['INVALID: Style plugin configured to add class that is supported by a disabled plugin'] = [
       'settings' => [
         'toolbar' => [
