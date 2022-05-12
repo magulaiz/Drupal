@@ -4,6 +4,7 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+
 /**
  * @file
  * Installation styling.
@@ -11,39 +12,48 @@
  * Unfortunately we have to make our styling quite strong, to override the
  * .maintenance-page styling.
  */
+
 .install-page {
   min-height: 100%;
   background-color: #dedfe4;
 }
+
 /**
  * Password widget
  */
+
 .install-page .password-parent,
 .install-page .confirm-parent {
   width: auto;
 }
+
 .install-page .form-item .password-suggestions {
   float: none;
   width: auto;
 }
+
 .install-page table td {
   word-break: break-all;
 }
+
 .install-page .site-version {
   vertical-align: super;
-  color: #909197;
+  color: #919297;
   font-size: 0.5em;
 }
+
 /*
  * Override of .layout-container, which is conflicts with
  * layout/system-admin--layout.pcss.css
  */
+
 @media all and (min-width: 48em) { /* 768px */
   body.install-page .layout-container {
     margin-right: auto;
     margin-left: auto;
   }
 }
+
 @media all and (max-width: 63.125rem) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent {

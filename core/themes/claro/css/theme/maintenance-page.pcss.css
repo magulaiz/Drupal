@@ -15,10 +15,16 @@
 }
 
 .site-name {
-  margin-top: var(--space-m);
+  margin-top: var(--space-s);
   word-wrap: break-word;
-  color: var(--color-gray-800);
-  font-size: var(--font-size-h4);
+  color: var(--color-gray);
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+}
+
+.title {
+  font-size: var(--font-size-h3);
+  font-weight: 500;
 }
 
 .site-name,
@@ -28,13 +34,13 @@
 
 .content {
   margin-bottom: var(--space-m);
-  color: var(--color-gray-800);
+  color: var(--color-gray);
 }
 
 .site-name,
 .title,
 .content {
-  max-width: 512px;
+  max-width: 34rem;
 }
 
 /**
@@ -65,41 +71,42 @@
     display: none;
   }
   .task-list {
-    margin-left: 0; /* LTR */
-    padding-bottom: 1em;
-    padding-left: 0; /* LTR */
+    margin-left: -3rem; /* LTR */
+    padding: 0;
     list-style-type: none;
     counter-reset: steps;
     font-weight: bold;
   }
   [dir="rtl"] .task-list {
-    margin-right: 0;
-    padding-right: 0;
+    margin-right: -3rem;
+    margin-left: 0;
   }
   .task-list li {
-    padding: 14px 0 14px 48px; /* LTR */
+    padding: 1rem 0 1rem 3rem; /* LTR */
+    border-radius: 0 2rem 2rem 0;
     counter-increment: steps;
-    color: #1a1a1a;
+    color: var(--color-gray);
+    font-weight: 500;
   }
   [dir="rtl"] .task-list li {
-    padding-right: 48px;
-    padding-left: 0;
+    padding: 1rem 3rem 1rem 0;
   }
   .task-list li:before {
-    margin-right: 6px;
+    margin-right: 0.375rem;
     content: counter(steps);
   }
   [dir="rtl"] .task-list li:before {
     margin-right: 0;
-    margin-left: 6px;
+    margin-left: 0.375rem;
   }
+
   .task-list .is-active {
     position: relative;
-    color: #003cc5;
-    background-color: #e6ecf8;
+    color: var(--color-absolutezero);
+    background: var(--color-bgblue-active);
+    font-weight: 500;
   }
   .task-list .is-active:after {
-    position: absolute;
     top: 0;
     left: calc(100% - 26px);
     width: 52px;
@@ -107,14 +114,14 @@
     margin-top: 0;
     content: " ";
     border-radius: 50%;
-    background: #e6ecf8;
+    background: var(--color-bgblue-active);
   }
   [dir="rtl"] .task-list .is-active:after {
     right: calc(100% - 26px);
     left: auto;
   }
   .task-list .done {
-    color: #919297;
+    color: var(--color-gray-500);
   }
 }
 
@@ -195,6 +202,15 @@
     padding-right: 3.85em;
     padding-left: 0;
   }
+  .layout-sidebar-first ~ main {
+    float: left;
+    margin-left: 4rem;
+  }
+  [dir="rtl"] .layout-sidebar-first ~ main {
+    float: right;
+    margin-right: 4rem;
+    margin-left: 0;
+  }
 }
 
 /**
@@ -213,4 +229,14 @@
 [dir="rtl"] .system-status-report__entry__value {
   padding-right: 3em;
   padding-left: 1em;
+}
+
+/**
+ * Pending updates list customization for update page.
+ */
+.item-list h3 {
+  font-size: var(--font-size-h5);
+}
+.item-list > ul {
+  margin-left: 0;
 }
