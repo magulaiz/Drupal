@@ -25,6 +25,8 @@
 }
 
 .messages {
+  overflow-x: auto;
+  overflow-y: auto;
   box-sizing: border-box;
   margin-top: 1rem;
   margin-bottom: 1rem;
