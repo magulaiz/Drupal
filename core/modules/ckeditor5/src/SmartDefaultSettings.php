@@ -74,22 +74,22 @@ final class SmartDefaultSettings {
    *   The CKEditor 5 plugin manager.
    * @param \Drupal\Component\Plugin\PluginManagerInterface $upgrade_plugin_manager
    *   The CKEditor 4 to 5 upgrade plugin manager.
-   * @param \Drupal\ckeditor\CKEditorPluginManager $cke4_plugin_manager
-   *   The CKEditor 4 plugin manager.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Drupal\ckeditor\CKEditorPluginManager $cke4_plugin_manager
+   *   The CKEditor 4 plugin manager.
    */
-  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, CKEditorPluginManager $cke4_plugin_manager = NULL, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct(CKEditor5PluginManagerInterface $plugin_manager, PluginManagerInterface $upgrade_plugin_manager, LoggerInterface $logger, ModuleHandlerInterface $module_handler, AccountInterface $current_user, CKEditorPluginManager $cke4_plugin_manager = NULL) {
     $this->pluginManager = $plugin_manager;
     $this->upgradePluginManager = $upgrade_plugin_manager;
-    $this->cke4PluginManager = $cke4_plugin_manager;
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->currentUser = $current_user;
+    $this->cke4PluginManager = $cke4_plugin_manager;
   }
 
   /**
