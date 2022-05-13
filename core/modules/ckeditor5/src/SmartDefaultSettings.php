@@ -249,9 +249,9 @@ final class SmartDefaultSettings {
       // To maintain the capabilities of this text format, [Smart default settings](HELP:smart default settings)
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
         $beginning = $this->formatPlural($help_enabled + 1,
-          'To maintain the capabilities of this text format, Smart Default Settings did the following:',
-          'To maintain the capabilities of this text format, <a href=":sdf_url">Smart Default Settings</a> did the following:', [
-            ':sdf_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'smart-default-settings'])->toString() : '',
+          'To maintain the capabilities of this text format, the CKEditor 5 migration did the following:',
+          'To maintain the capabilities of this text format, <a href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
+            ':sdf_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString() : '',
         ]);
         $plugin_info = !empty($plugins_enabled) ? $this->t('Enabled these plugins: (<em>@plugins</em>).', ['@plugins' => implode(', ', $plugins_enabled)]) : '';
         $source_editing_info = !$source_editing_additions->allowsNothing() ? $this->formatPlural(
