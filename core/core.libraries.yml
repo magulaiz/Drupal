@@ -427,11 +427,6 @@ drupal.autocomplete:
     - core/tabbable.jquery.shim
     - core/drupal.jquery.position
 
-drupal.array.includes:
-  version: VERSION
-  js:
-    misc/polyfills/array.includes.js: { weight: -20 }
-
 drupal.batch:
   version: VERSION
   js:
