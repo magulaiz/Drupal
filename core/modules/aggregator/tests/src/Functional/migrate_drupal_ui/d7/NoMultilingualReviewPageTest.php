@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group aggregator
+ * @group legacy
  */
 class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
 
@@ -47,7 +48,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Bulk Export',
       'Chaos Tools (CTools) AJAX Example',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Custom content panes',
@@ -135,6 +135,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Block languages',
       'Book',
       'Breakpoints',
+      'Color',
       'Contact translation',
       'Entity Translation',
       'Entity Translation Menu',
