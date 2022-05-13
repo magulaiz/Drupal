@@ -989,7 +989,10 @@ function drupal_check_profile($profile) {
       \Drupal::service('class_loader')->addPsr4('Drupal\\' . $module . '\\', \Drupal::root() . "/$module_path/src");
 
       if (function_exists($function)) {
-        $requirements = array_merge($requirements, $function('install'));
+        $module_requirements = $function('install');
+        if (is_array($module_requirements)) {
+          $requirements = array_merge($requirements, $module_requirements);
+        }
       }
     }
   }
@@ -997,7 +1000,10 @@ function drupal_check_profile($profile) {
   // Add the profile requirements.
   $function = $profile . '_requirements';
   if (function_exists($function)) {
-    $requirements = array_merge($requirements, $function('install'));
+    $profile_requirements = $function('install');
+    if (is_array($profile_requirements)) {
+      $requirements = array_merge($requirements, $profile_requirements);
+    }
   }
 
   return $requirements;
