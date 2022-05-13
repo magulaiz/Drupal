@@ -942,11 +942,11 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       ],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
         'status' => [
-          'To maintain the capabilities of this text format, <a href="/admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. Additional details are available in your logs.'
+          'To maintain the capabilities of this text format, <a href="/admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. Additional details are available in your logs.',
         ],
         'warning' => [
-            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.'
-        ]
+            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.',
+        ],
       ]),
       'expected_post_filter_drop_fundamental_compatibility_violations' => [],
       'expected_post_update_text_editor_violations' => [
@@ -981,7 +981,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'To maintain the capabilities of this text format, <a href="/admin/help/ckeditor5#smart-default-settings">Smart Default Settings</a> did the following: Enabled these plugins: (<em>Code, Language</em>). Added these tags/attributes to the Source Editing Plugin\'s <a href="/admin/help/ckeditor5#source-editing">Manually editable HTML tags</a> setting: &lt;cite&gt; &lt;dl&gt; &lt;dt&gt; &lt;dd&gt; &lt;a hreflang&gt; &lt;blockquote cite&gt; &lt;ul type&gt; &lt;ol type&gt; &lt;h2 id&gt; &lt;h3 id&gt; &lt;h4 id&gt; &lt;h5 id&gt; &lt;h6 id&gt;. Additional details are available in your logs.',
         ],
         'warning' => [
-            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.'
+            'Updating to CKEditor 5 added support for some previously unsupported tags/attributes. A plugin introduced support for the following:   These attributes: <em> lang (for &lt;span&gt;), dir (for &lt;span&gt;)</em>; Additional details are available in your logs.',
         ],
       ]),
       'expected_post_filter_drop_fundamental_compatibility_violations' => [],
