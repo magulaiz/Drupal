@@ -54,7 +54,11 @@ drupal.ckeditor5.codeBlock:
 drupal.ckeditor5.image:
   js:
     js/build/drupalImage.js: { minified: true }
+  css:
+    theme:
+      css/image.css: { }
   dependencies:
+    - core/drupal
     - core/ckeditor5
     - core/ckeditor5.image
 
@@ -87,16 +91,11 @@ drupal.ckeditor5.mediaAlign:
 drupal.ckeditor5.filter.admin:
   js:
     js/ckeditor5.filter.admin.js: {}
-  css:
-    theme:
-      css/filter.admin.css: { }
   dependencies:
     - core/drupal
-    - core/drupal.message
     - core/once
     - core/drupal.ajax
     - core/drupalSettings
-    - core/drupal.message
 
 admin:
   js:

@@ -40,7 +40,7 @@ function upcastMediaLink() {
 
         // There's an <drupal-media> inside an <a> element - we consume it so it
         // won't be picked up by the Link plugin.
-        const consumableAttributes = { attributes: ['href'] };
+        const consumableAttributes = { attributes: ['href'], name: true };
 
         // Consume the `href` attribute so the default one will not convert it to
         // $text attribute.
@@ -319,7 +319,7 @@ function upcastMediaLinkManualDecorator(editor, decorator) {
 /**
  * Model to view and view to model conversions for linked media elements.
  *
- * @internal
+ * @private
  *
  * @see https://github.com/ckeditor/ckeditor5/blob/v31.0.0/packages/ckeditor5-link/src/linkimage.js
  */
