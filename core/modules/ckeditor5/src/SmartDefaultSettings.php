@@ -201,18 +201,18 @@ final class SmartDefaultSettings {
     }
 
     $has_html_restrictions = $editor->getFilterFormat()->filters('filter_html')->status;
-    $missing_mandatory_tags = HTMLRestrictions::emptySet();
+    $missing_fundamental_tags = HTMLRestrictions::emptySet();
     if ($has_html_restrictions) {
       $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements([
         'ckeditor5_essentials',
         'ckeditor5_paragraph',
       ]));
       $filter_html_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
-      $missing_mandatory_tags = $fundamental->diff($filter_html_restrictions);
-      if (!$missing_mandatory_tags->allowsNothing()) {
+      $missing_fundamental_tags = $fundamental->diff($filter_html_restrictions);
+      if (!$missing_fundamental_tags->allowsNothing()) {
         $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
         $this->logger->warning($this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
-          '@missing_tags' => $missing_mandatory_tags->toFilterHtmlAllowedTagsString(),
+          '@missing_tags' => $missing_fundamental_tags->toFilterHtmlAllowedTagsString(),
         ]));
       }
     }
@@ -228,7 +228,7 @@ final class SmartDefaultSettings {
       // Determine what tags/attributes are allowed in this text format that were
       // not allowed previous to the switch.
       $allowed_by_new_plugin_config = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($this->pluginManager->getEnabledDefinitions($editor)), $editor));
-      $surplus_tags_attributes = $allowed_by_new_plugin_config->diff($old_editor_restrictions)->diff($missing_mandatory_tags);
+      $surplus_tags_attributes = $allowed_by_new_plugin_config->diff($old_editor_restrictions)->diff($missing_fundamental_tags);
       $attributes_to_tag = [];
       $added_tags = [];
       if (!$surplus_tags_attributes->allowsNothing()) {
@@ -268,8 +268,14 @@ final class SmartDefaultSettings {
           'Additional details are available in your logs.',
           'Additional details are available <a href=":dblog_url">in your logs</a>.',
           [
-            ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')->toString() : '',
-            ]);
+            ':dblog_url' => $can_access_dblog
+              ? Url::fromRoute('dblog.overview')
+                ->setOption('query', ['type[]' => 'ckeditor5'])
+                ->toString()
+              : '',
+          ]
+        );
+
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t('@beginning @plugin_info @source_editing_info. @end', [
           '@beginning' => $beginning,
           '@plugin_info' => $plugin_info,
@@ -282,24 +288,24 @@ final class SmartDefaultSettings {
       // - The addition of <p>/<br> due to them being fundamental tags.
       // - The addition of other tags/attributes previously unsupported by the
       //   format.
-      if (!$missing_mandatory_tags->allowsNothing() || !empty($attributes_to_tag) || !empty($added_tags)) {
+      if (!$missing_fundamental_tags->allowsNothing() || !empty($attributes_to_tag) || !empty($added_tags)) {
         $beginning = $this->t('Updating to CKEditor 5 added support for some previously unsupported tags/attributes.');
-        $mandatory_tags = '';
-        if ($help_enabled && !$missing_mandatory_tags->allowsNothing()) {
-          $mandatory_tags = $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
-            'The @tag tag was added because it is <a href=":mandatory_tag_link">required by CKEditor 5</a>.',
-            'The @tag tags were added because they are <a href=":mandatory_tag_link">required by CKEditor 5</a>.',
+        $fundamental_tags = '';
+        if ($help_enabled && !$missing_fundamental_tags->allowsNothing()) {
+          $fundamental_tags = $this->formatPlural(count($missing_fundamental_tags->toCKEditor5ElementsArray()),
+            'The @tag tag was added because it is <a href=":fundamental_tag_link">required by CKEditor 5</a>.',
+            'The @tag tags were added because they are <a href=":fundamental_tag_link">required by CKEditor 5</a>.',
             [
-              '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
-              ':mandatory_tag_link' => URL::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
+              '@tag' => implode(' + ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
+              ':fundamental_tag_link' => URL::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
             ]);
         }
-        elseif (!$missing_mandatory_tags->allowsNothing()) {
-          $mandatory_tags = $this->formatPlural(count($missing_mandatory_tags->toCKEditor5ElementsArray()),
+        elseif (!$missing_fundamental_tags->allowsNothing()) {
+          $fundamental_tags = $this->formatPlural(count($missing_fundamental_tags->toCKEditor5ElementsArray()),
             'The @tag tag was added because it is required by CKEditor 5.',
             'The @tag tags were added because they are required by CKEditor 5.',
             [
-              '@tag' => implode(' and ', $missing_mandatory_tags->toCKEditor5ElementsArray()),
+              '@tag' => implode(' and ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
             ]);
         }
 
@@ -327,11 +333,11 @@ final class SmartDefaultSettings {
           ]
         ) : '';
         $end = $this->t('Additional details are available in your logs.');
-        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @mandatory_tags @added_elements_tags @added_elements_attributes @end',
+        $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
           [
             '@beginning' => $beginning,
             '@added_elements_begin' => $added_elements_begin,
-            '@mandatory_tags' => $mandatory_tags,
+            '@fundamental_tags' => $fundamental_tags,
             '@added_elements_tags' => $added_elements_tags,
             '@added_elements_attributes' => $added_elements_attributes,
             '@end' => $end,
