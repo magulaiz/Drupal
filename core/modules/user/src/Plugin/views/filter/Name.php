@@ -156,15 +156,14 @@ class Name extends InOperator {
    * {@inheritdoc}
    */
   public function buildExposedFiltersGroupForm(&$form, FormStateInterface $form_state) {
-    // Rewrite the numeric values for textfields to entity labels for
-    // autocomplete.
-    foreach ($this->options['group_info']['group_items'] as $key => $item) {
-      if (!empty($item['value'])) {
-        $users = User::loadMultiple(($item['value']));
-        $this->options['group_info']['group_items'][$key]['value'] = EntityAutocomplete::getEntityLabels($users);
+    parent::buildExposedFiltersGroupForm($form, $form_state);
+    // Transform the numeric values (ids) into entity labels.
+    foreach ($form['group_info']['group_items'] as &$item) {
+      if (!empty($item['value']['#default_value'])) {
+        $users = User::loadMultiple($item['value']['#default_value']);
+        $item['value']['#default_value'] = EntityAutocomplete::getEntityLabels($users);
       }
     }
-    parent::buildExposedFiltersGroupForm($form, $form_state);
   }
 
 }
