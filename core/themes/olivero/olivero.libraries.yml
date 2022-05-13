@@ -198,8 +198,6 @@ messages:
   version: VERSION
   js:
     js/messages.js: {}
-  dependencies:
-    - core/drupal.array.includes
 
 navigation-primary:
   version: VERSION
