@@ -19,3 +19,4 @@ quickedit.inPlaceEditor.image:
     - core/drupal
     - core/internal.underscore
     - quickedit/quickedit
+  deprecated: The image/quickedit.inPlaceEditor.image asset library is deprecated in Drupal 9.4.0 and will be removed in Drupal 10.0.0. Instead use quickedit/quickedit.inPlaceEditor.image. See https://www.drupal.org/node/3280366
