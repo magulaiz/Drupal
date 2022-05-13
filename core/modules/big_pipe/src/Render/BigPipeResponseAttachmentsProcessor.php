@@ -52,6 +52,8 @@ class BigPipeResponseAttachmentsProcessor extends HtmlResponseAttachmentsProcess
    *   The module handler service.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   *   The maintenance mode service.
    */
   public function __construct(AttachmentsResponseProcessorInterface $html_response_attachments_processor, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, LanguageManagerInterface $language_manager, protected ?MaintenanceModeInterface $maintenance_mode = NULL) {
     $this->htmlResponseAttachmentsProcessor = $html_response_attachments_processor;
