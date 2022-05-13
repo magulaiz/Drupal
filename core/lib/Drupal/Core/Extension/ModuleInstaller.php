@@ -194,7 +194,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     // Ensure no lock already exists before starting to install modules.
-    if ($enable_lock && !$this->lock->acquire(self::LOCK_NAME)) {
+    if ($enable_lock && !$this->lock->lockMayBeAvailable(self::LOCK_NAME)) {
       throw new ExtensionInstallLockException('Unable to install modules because a module installation is already running.');
     }
 
@@ -213,10 +213,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-          if ($enable_lock) {
-            // Release the lock so other modules can be installed.
-            $this->lock->release(self::LOCK_NAME);
-          }
+          // Release the lock so other modules can be installed.
+          $this->lock->release(self::LOCK_NAME);
           throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 
@@ -391,10 +389,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
 
-    if ($enable_lock) {
-      // Release the lock so other modules can be installed.
-      $this->lock->release(self::LOCK_NAME);
-    }
+    // Release the lock so other modules can be installed.
+    $this->lock->release(self::LOCK_NAME);
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {

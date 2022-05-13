@@ -171,12 +171,12 @@ class ModuleInstallerTest extends KernelTestBase {
     // module installation attempt.
     $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
     $lock->expects($this->once())
-      ->method('acquire')
+      ->method('lockMayBeAvailable')
       ->with(ModuleInstaller::LOCK_NAME)
       ->will($this->returnValue(FALSE));
 
     $installer = new ModuleInstaller(
-      '',
+      $this->root,
       $this->container->get('module_handler'),
       $this->container->get('kernel'),
       $this->container->get('database'),
@@ -186,7 +186,7 @@ class ModuleInstallerTest extends KernelTestBase {
 
     $this->expectException(ExtensionInstallLockException::class);
     $this->expectExceptionMessage('Unable to install modules because a module installation is already running.');
-    $installer->install(['module_handler_test_multiple']);
+    $installer->install(['module_handler_test_multiple'], TRUE, TRUE);
   }
 
 }
