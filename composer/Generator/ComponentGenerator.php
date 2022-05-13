@@ -2,6 +2,7 @@
 
 namespace Drupal\Composer\Generator;
 
+use Composer\IO\IOInterface;
 use Composer\Semver\VersionParser;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
@@ -108,7 +109,7 @@ class ComponentGenerator {
     $original_composer_json = file_exists($composer_json_path) ? file_get_contents($composer_json_path) : '';
 
     // Modify the original data.
-    $composer_json_data = $this->getPackage($original_composer_json);
+    $composer_json_data = $this->getPackage($io, $original_composer_json);
     $updated_composer_json = static::encode($composer_json_data);
 
     // Exit early if nothing changed.
@@ -131,13 +132,15 @@ class ComponentGenerator {
   /**
    * Reconcile component dependencies with core.
    *
+   * @param \Composer\IO\IOInterface $io
+   *   IO object for messages to the user.
    * @param string $original_json
    *   Contents of the component's composer.json file.
    *
    * @return array
    *   Structured data to be turned back into JSON.
    */
-  protected function getPackage($original_json) {
+  protected function getPackage(IOInterface $io, $original_json) {
     $original_data = json_decode($original_json, TRUE);
     $package_data = array_merge($original_data, $this->initialPackageMetadata());
 
@@ -145,12 +148,22 @@ class ComponentGenerator {
 
     $stability = VersionParser::parseStability(\Drupal::VERSION);
 
+    // List of packages which we didn't find in either core requirement.
+    $not_in_core = [];
+
     // Traverse required packages.
     foreach (array_keys($original_data['require'] ?? []) as $package_name) {
       // Reconcile locked constraints from drupal/drupal. We might have a locked
       // version of a dependency that's not present in drupal/core.
       if ($info = $this->drupalProjectInfo->packageLockInfo($package_name)) {
         $package_data['require'][$package_name] = $info['version'];
+      }
+      else {
+        // The package wasn't in the lock file, which means we need to tell the
+        // user. But there are some packages we want to exclude from this list.
+        if ($package_name !== 'php' && (strpos($package_name, 'drupal/core-') === FALSE)) {
+          $not_in_core[$package_name] = $package_name;
+        }
       }
 
       // Reconcile looser constraints from drupal/core, and we're totally OK
@@ -177,6 +190,9 @@ class ComponentGenerator {
           $package_data['minimum-stability'] = $stability;
         }
       }
+    }
+    if ($not_in_core) {
+      $io->error($package_data['name'] . ' requires packages not present in drupal/drupal: ' . implode(', ', $not_in_core));
     }
 
     return $package_data;
