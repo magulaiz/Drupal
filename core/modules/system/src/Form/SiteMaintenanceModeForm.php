@@ -48,6 +48,8 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
    *   The state keyvalue collection to use.
    * @param \Drupal\user\PermissionHandlerInterface $permission_handler
    *   The permission handler.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   *   Maintenance mode instance.
    */
   public function __construct(ConfigFactoryInterface $config_factory, StateInterface $state, PermissionHandlerInterface $permission_handler, MaintenanceModeInterface $maintenance_mode = NULL) {
     parent::__construct($config_factory);

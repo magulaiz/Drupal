@@ -65,6 +65,8 @@ class UpdateReady extends FormBase {
    *   The state key value store.
    * @param string $site_path
    *   The site path.
+   * @param \Drupal\Core\Site\MaintenanceModeInterface $maintenance_mode
+   *   Maintenance mode instance.
    */
   public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path, MaintenanceModeInterface $maintenance_mode = NULL) {
     $this->root = $root;

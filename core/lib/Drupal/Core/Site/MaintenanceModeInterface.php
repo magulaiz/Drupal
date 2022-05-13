@@ -97,8 +97,10 @@ interface MaintenanceModeInterface {
    * set for 'install' or 'update' mode state.
    *
    * @param null|string $mode
+   *   Mode value.
    *
    * @throws \Exception
+   *
    * @see \Drupal\Core\Site\MaintenanceMode::MODE
    */
   public static function setMode($mode = self::MODE['offline']);
@@ -111,7 +113,9 @@ interface MaintenanceModeInterface {
    *
    * @return string|null
    *   Current stored mode state.
+   *
    * @throws \Exception
+   *
    * @see \Drupal\Core\Site\MaintenanceMode::MODE
    */
   public static function getMode();

@@ -108,6 +108,8 @@ class MaintenanceMode implements MaintenanceModeInterface {
    *   Theme manager.
    * @param \Drupal\Core\Extension\ThemeExtensionList $theme_extension_list
    *   Provides a list of available themes.
+   * @param \Drupal\Core\Http\RequestStack $request
+   *   Request stack instance.
    * @param string $root
    *   Gets the app root from the kernel.
    */
@@ -190,7 +192,8 @@ class MaintenanceMode implements MaintenanceModeInterface {
         if (!$custom_theme) {
           $custom_theme = $this->systemThemeConfig->get('default');
         }
-      } catch (\Exception $e) {
+      }
+      catch (\Exception $e) {
         // Whatever went wrong (often a database connection problem), we are
         // about to fall back to a sensible theme so there is no need for
         // special handling.
@@ -286,7 +289,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
   /**
    * {@inheritdoc}
    */
-  public function isEnabled(){
+  public function isEnabled() {
     $default = FALSE;
     $state = (bool) $this->state->get(self::STATE_KEY, $default);
     if ($this->request->hasSession()) {
