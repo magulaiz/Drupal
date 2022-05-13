@@ -387,9 +387,7 @@ class MediaTest extends WebDriverTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-widget.drupal-media .this-error-message-is-themeable.media-embed-error--missing-source'));
-    // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3194084.
-    // @codingStandardsIgnoreLine
-    //$assert_session->responseContains('classy/css/components/media-embed-error.css');
+    $assert_session->responseContains('classy/css/components/media-embed-error.css');
 
     // Test that restoring a valid UUID results in the media embed preview
     // displaying.
@@ -663,7 +661,7 @@ class MediaTest extends WebDriverTestBase {
     // alt attribute present but without a value.
     // @todo Uncomment this in https://www.drupal.org/project/ckeditor5/issues/3206522.
     // @codingStandardsIgnoreLine
-//    $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt=""]'));
+    // $this->assertNotEmpty($assert_session->waitForElementVisible('css', 'drupal-media img[alt=""]'));
 
     // Test that the downcast drupal-media element's alt attribute now has the
     // empty string indicator.
@@ -984,21 +982,17 @@ class MediaTest extends WebDriverTestBase {
     $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes"));
     $this->assertNotEmpty($xpath->query("//a[@href='http://linking-embedded-media.com']$decorator_attributes/drupal-media"));
 
-    // @todo enable for unrestricted test case after
-    //   https://www.drupal.org/project/drupal/issues/3268318 has been resolved.
-    if (!$unrestricted) {
-      // Finally, ensure that media can be unlinked.
-      $drupalmedia->click();
-      $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
-      $this->getBalloonButton('Link media')->click();
-      $this->assertVisibleBalloon('.ck-link-actions');
-      $this->getBalloonButton('Unlink')->click();
+    // Finally, ensure that media can be unlinked.
+    $drupalmedia->click();
+    $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
+    $this->getBalloonButton('Link media')->click();
+    $this->assertVisibleBalloon('.ck-link-actions');
+    $this->getBalloonButton('Unlink')->click();
 
-      $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));
-      $xpath = new \DOMXPath($this->getEditorDataAsDom());
-      $this->assertEmpty($xpath->query('//a'));
-      $this->assertNotEmpty($xpath->query('//drupal-media'));
-    }
+    $this->assertTrue($assert_session->waitForElementRemoved('css', '.drupal-media a'));
+    $xpath = new \DOMXPath($this->getEditorDataAsDom());
+    $this->assertEmpty($xpath->query('//a'));
+    $this->assertNotEmpty($xpath->query('//drupal-media'));
   }
 
   /**
