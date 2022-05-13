@@ -15,17 +15,17 @@ class AssertableLogger implements LoggerInterface {
   /**
    * Logs that are expected to be generated.
    */
-  protected array $expectedPatterns = [];
+  protected array $expectedLogCriteria = [];
 
   /**
    * Logs that are allowed but not expected.
    */
-  protected array $allowedPatterns = [];
+  protected array $allowedLogCriteria = [];
 
   /**
    * Logs that are expected not to be generated.
    */
-  protected array $disallowedPatterns = [];
+  protected array $disallowedLogCriteria = [];
 
   /**
    * Logs that are disallowed and have been generated.
@@ -52,8 +52,8 @@ class AssertableLogger implements LoggerInterface {
    *   (optional) Text that the log message must contain.
    */
   public function expectLog($level, $channel, $message = '') {
-    $count = 1 + ($this->expectedPatterns[$level][$channel][$message] ?? 0);
-    $this->expectedPatterns[$level][$channel][$message] = $count;
+    $count = 1 + ($this->expectedLogCriteria[$level][$channel][$message] ?? 0);
+    $this->expectedLogCriteria[$level][$channel][$message] = $count;
   }
 
   /**
@@ -61,7 +61,8 @@ class AssertableLogger implements LoggerInterface {
    *
    * If a matching log message is generated, the test will fail. Log
    * messages that are set up as expected (by ::expectLog()) or are set up as
-   * allowed (by ::allowLogs()) are exempt and will not trigger failure.
+   * allowed (by ::allowLogsAsSevereAs()) are exempt and will not trigger
+   * failure.
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -71,7 +72,7 @@ class AssertableLogger implements LoggerInterface {
    *   (optional) Text that the log message must contain.
    */
   public function expectNoLogsAsSevereAs($level, $channel = '', $message = '') {
-    $this->disallowedPatterns[$channel][$message] = $level;
+    $this->disallowedLogCriteria[$channel][$message] = $level;
   }
 
   /**
@@ -83,8 +84,8 @@ class AssertableLogger implements LoggerInterface {
    *
    * Typically ::expectNoLogsAsSevereAs() is used to define a broad class of
    * unacceptable log messages, e.g. 'fail all warnings and above', and
-   * then allowLogs() is used to define an narrower exception to that,
-   * e.g. 'except allow warnings from the user channel'.
+   * then allowLogsAsSevereAs() is used to define an narrower exception to
+   * that, e.g. 'except allow warnings from the user channel'.
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -93,8 +94,8 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function allowLogs($level, $channel, $message = '') {
-    $this->allowedPatterns[$channel][$message] = $level;
+  public function allowLogsAsSevereAs($level, $channel, $message = '') {
+    $this->allowedLogCriteria[$channel][$message] = $level;
   }
 
   /**
@@ -104,7 +105,7 @@ class AssertableLogger implements LoggerInterface {
    *   The unmet log expectations.
    */
   public function getUnmetExpectations() {
-    return $this->expectedPatterns;
+    return $this->expectedLogCriteria;
   }
 
   /**
@@ -132,12 +133,12 @@ class AssertableLogger implements LoggerInterface {
    *   The log message.
    */
   protected function handleLog($level, $channel, $message) {
-    $isExpected = $this->handleLogExpectations($level, $channel, $message);
-    if ($isExpected) {
+    $is_expected = $this->handleLogExpectations($level, $channel, $message);
+    if ($is_expected) {
       return;
     }
-    $isDisallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
-    if ($isDisallowed) {
+    $is_disallowed = !$this->isLogAllowed($level, $channel, $message) && $this->isLogDisallowed($level, $channel, $message);
+    if ($is_disallowed) {
       $e = new \Exception();
       $trace = explode("\n", $e->getTraceAsString());
       $this->disallowedLogs[] = [
@@ -165,24 +166,24 @@ class AssertableLogger implements LoggerInterface {
    *   The log message.
    */
   protected function handleLogExpectations($level, $channel, $message) {
-    if (isset($this->expectedPatterns[$level][$channel])) {
-      foreach ($this->expectedPatterns[$level][$channel] as $expectedMessage => $count) {
-        if ($expectedMessage === '' || strpos($message, $expectedMessage) !== FALSE) {
+    if (isset($this->expectedLogCriteria[$level][$channel])) {
+      foreach ($this->expectedLogCriteria[$level][$channel] as $expected_message => $count) {
+        if ($expected_message === '' || strpos($message, $expected_message) !== FALSE) {
           // If the count was 1, then the expectation is now fully met.
           if ($count === 1) {
-            unset($this->expectedPatterns[$level][$channel][$expectedMessage]);
+            unset($this->expectedLogCriteria[$level][$channel][$expected_message]);
             // Clear out empty expectation arrays to facilitate asserting that there are
             // no unmet expectations at the end of the test.
-            if (empty($this->expectedPatterns[$level][$channel])) {
-              unset($this->expectedPatterns[$level][$channel]);
+            if (empty($this->expectedLogCriteria[$level][$channel])) {
+              unset($this->expectedLogCriteria[$level][$channel]);
             }
-            if (empty($this->expectedPatterns[$level])) {
-              unset($this->expectedPatterns[$level]);
+            if (empty($this->expectedLogCriteria[$level])) {
+              unset($this->expectedLogCriteria[$level]);
             }
           }
           // If the count was more than 1, decrement the expectation.
           else {
-            $this->expectedPatterns[$level][$channel][$expectedMessage] = $count - 1;
+            $this->expectedLogCriteria[$level][$channel][$expected_message] = $count - 1;
           }
           return TRUE;
         }
@@ -208,15 +209,15 @@ class AssertableLogger implements LoggerInterface {
    *   The log message.
    *
    * @return bool
-   *   Whether or not the log matches the allowed patterns.
+   *   Whether or not the log matches the allowed LogCriteria.
    */
   protected function isLogAllowed($level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
-      $allowed = $this->allowedPatterns[$channel] ?? [];
-      foreach ($allowed as $allowedMessage => $allowedLevel) {
-        if ($allowedMessage === '' || strpos($message, $allowedMessage) !== FALSE) {
-          if ($level >= $allowedLevel) {
+      $allowed = $this->allowedLogCriteria[$channel] ?? [];
+      foreach ($allowed as $allowed_message => $allowed_level) {
+        if ($allowed_message === '' || strpos($message, $allowed_message) !== FALSE) {
+          if ($level >= $allowed_level) {
             return TRUE;
           }
         }
@@ -242,15 +243,15 @@ class AssertableLogger implements LoggerInterface {
    *   The log message.
    *
    * @return bool
-   *   Whether or not the log matches the disallowed patterns.
+   *   Whether or not the log matches the disallowed LogCriteria.
    */
   protected function isLogDisallowed($level, $channel, $message) {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
-      $disallowed = $this->disallowedPatterns[$channel] ?? [];
-      foreach ($disallowed as $disallowedMessage => $disallowedLevel) {
-        if ($disallowedMessage === '' || strpos($message, $disallowedMessage) !== FALSE) {
-          if ($level <= $disallowedLevel) {
+      $disallowed = $this->disallowedLogCriteria[$channel] ?? [];
+      foreach ($disallowed as $disallowed_message => $disallowed_level) {
+        if ($disallowed_message === '' || strpos($message, $disallowed_message) !== FALSE) {
+          if ($level <= $disallowed_level) {
             return TRUE;
           }
         }
