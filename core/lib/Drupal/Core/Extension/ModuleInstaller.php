@@ -8,8 +8,10 @@ use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\Exception\ExtensionInstallLockException;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\Core\Installer\InstallerKernel;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Core\Update\UpdateHookRegistry;
 
@@ -69,6 +71,18 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $uninstallValidators;
 
   /**
+   * The used lock backend instance.
+   *
+   * @var \Drupal\Core\Lock\LockBackendInterface
+   */
+  protected $lock;
+
+  /**
+   * The name used to identify the lock.
+   */
+  const LOCK_NAME = 'module_installer';
+
+  /**
    * Constructs a new ModuleInstaller instance.
    *
    * @param string $root
@@ -81,11 +95,13 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The database connection.
    * @param \Drupal\Core\Update\UpdateHookRegistry|null $update_registry
    *   (Optional) The update registry service.
+   * @param \Drupal\Core\Lock\LockBackendInterface $lock
+   *   (Optional) The lock backend to ensure no installs happen in parallel.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL, UpdateHookRegistry $update_registry = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL, UpdateHookRegistry $update_registry = NULL, LockBackendInterface $lock = NULL) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
@@ -99,6 +115,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $update_registry = \Drupal::service('update.update_hook_registry');
     }
     $this->updateRegistry = $update_registry;
+    if (!$lock) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $lock argument is deprecated in drupal:9.4.0 and the $lock argument will be required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/2912731', E_USER_DEPRECATED);
+      $lock = \Drupal::service('lock.persistent');
+    }
+    $this->lock = $lock;
   }
 
   /**
@@ -111,7 +132,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * {@inheritdoc}
    */
-  public function install(array $module_list, $enable_dependencies = TRUE) {
+  public function install(array $module_list, $enable_dependencies = TRUE, $enable_lock = FALSE) {
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
     // Get all module data so we can find dependencies and sort and find the
     // core requirements. The module list needs to be reset so that it can
@@ -172,6 +193,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $module_list = array_keys($module_list);
     }
 
+    // Ensure no lock already exists before starting to install modules.
+    if ($enable_lock && !$this->lock->lockMayBeAvailable(self::LOCK_NAME)) {
+      throw new ExtensionInstallLockException('Unable to install modules because a module installation is already running.');
+    }
+
     // Required for module installation checks.
     include_once $this->root . '/core/includes/install.inc';
 
@@ -187,6 +213,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
       if (!$enabled) {
         // Throw an exception if the module name is too long.
         if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+          // Release the lock so other modules can be installed.
+          $this->lock->release(self::LOCK_NAME);
           throw new ExtensionNameLengthException("Module name '$module' is over the maximum allowed length of " . DRUPAL_EXTENSION_NAME_MAX_LENGTH . ' characters');
         }
 
@@ -360,6 +388,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
       }
     }
+
+    // Release the lock so other modules can be installed.
+    $this->lock->release(self::LOCK_NAME);
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
@@ -612,6 +643,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $this->moduleHandler = $container->get('module_handler');
     $this->connection = $container->get('database');
     $this->updateRegistry = $container->get('update.update_hook_registry');
+    $this->lock = $container->get('lock.persistent');
   }
 
   /**

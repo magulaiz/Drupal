@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use Drupal\Core\Extension\ModuleInstaller;
 use Drupal\Core\Serialization\Yaml;
 use Drupal\Tests\BrowserTestBase;
 
@@ -174,6 +175,27 @@ BROKEN;
     file_put_contents($file_path, Yaml::encode($incompatible_info));
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextNotContains($incompatible_modules_message);
+  }
+
+  /**
+   * Test trying to perform multiple installations in parallel.
+   */
+  public function testParallelInstall() {
+    // Test enabling the action module.
+    $edit = ['modules[action][enable]' => 'action'];
+    $lock = $this->container->get('lock.persistent');
+
+    $this->drupalGet('admin/modules');
+
+    // Trigger a lock to test for a failed installation.
+    $lock->acquire(ModuleInstaller::LOCK_NAME);
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextContains('Unable to install modules because a module installation is already running.');
+
+    // Release the lock to ensure that testing without a lock works.
+    $lock->release(ModuleInstaller::LOCK_NAME);
+    $this->submitForm($edit, 'Install');
+    $this->assertSession()->pageTextNotContains('Unable to install modules because a module installation is already running.');
   }
 
 }
