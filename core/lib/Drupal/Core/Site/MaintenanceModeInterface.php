@@ -32,7 +32,7 @@ interface MaintenanceModeInterface {
   /**
    * Settings key where selected maintenance theme id is stored.
    */
-  public const THEME_KEY = 'maintenance_mode';
+  public const THEME_KEY = 'maintenance_theme';
 
   /**
    * Returns whether the site is in maintenance mode.

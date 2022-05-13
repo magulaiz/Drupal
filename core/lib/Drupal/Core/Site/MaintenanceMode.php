@@ -29,13 +29,6 @@ class MaintenanceMode implements MaintenanceModeInterface {
   protected $root;
 
   /**
-   * System theme configuration object.
-   *
-   * @var \Drupal\Core\Config\ImmutableConfig
-   */
-  protected $systemThemeConfig;
-
-  /**
    * Default theme handler.
    *
    * Default theme handler using the config system to store installation
@@ -118,7 +111,6 @@ class MaintenanceMode implements MaintenanceModeInterface {
     $this->config = $config_factory;
     // $this->root required only for including legacy files.
     $this->root = $root;
-    $this->systemThemeConfig = $this->config->get('system.theme');
     $this->themeHandler = $theme_handler;
     $this->themeManager = $theme_manager;
     $this->themeInit = $theme_initialization;
@@ -190,7 +182,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
       try {
         $custom_theme = Settings::get(self::THEME_KEY, '');
         if (!$custom_theme) {
-          $custom_theme = $this->systemThemeConfig->get('default');
+          $custom_theme = $this->config->get('system.theme')->get('default');
         }
       }
       catch (\Exception $e) {
