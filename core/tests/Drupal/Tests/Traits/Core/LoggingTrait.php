@@ -13,7 +13,7 @@ namespace Drupal\Tests\Traits\Core;
  * In order to assert that a test does or does not generate logs, the test
  * must call LoggingTrait::expectLog() or
  * LoggingTrait::expectNoLogsAsSevereAs(); it may also call
- * LoggingTrait::allowLogs().
+ * LoggingTrait::allowLogsAsSevereAs().
  */
 trait LoggingTrait {
 
@@ -21,6 +21,12 @@ trait LoggingTrait {
    * Setup an expectation that a test will generate a log message.
    *
    * If a matching log message is not generated, the test will fail.
+   * @code
+   * // Fail a test if it does not generate a warning on the
+   * // 'some_module' channel that contains the text 'invalid' in its
+   * // message.
+   * $this->expectLog(RfcLogLevel::WARNING, 'some_module', 'invalid');
+   * @endcode
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -41,8 +47,13 @@ trait LoggingTrait {
    * to fail as soon as they are received.
    *
    * Log messages that are set up as expected (by ::expectLog()) or
-   * are set up as allowed (by ::allowLogs()) are exempt and will not
-   * trigger failure.
+   * are set up as allowed (by ::allowLogsAsSevereAs()) are exempt and
+   * will not trigger failure.
+   *
+   * @code
+   * // Fail a test if it generates any warnings or errors.
+   * $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
+   * @endcode
    *
    * @param int $level
    *   A log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -64,8 +75,16 @@ trait LoggingTrait {
    *
    * Typically ::expectNoLogsAsSevereAs() is used to define a broad class of
    * unacceptable log messages, e.g. 'fail all warnings and above', and
-   * then allowLogs() is used to define an narrower exception to that,
-   * e.g. 'except allow warnings from the user channel'.
+   * then allowLogsAsSevereAs() is used to define an narrower exception to that,
+   * e.g. 'except allow warnings from the user channel'. The order in which
+   * these methods are called does not matter.
+   *
+   * @code
+   * // Fail a test if it generates any warnings or errors, except for
+   * // warnings on the 'some_module' channel.
+   * $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
+   * $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'some_module');
+   * @endcode
    *
    * @param int $level
    *   The log level as defined in Drupal\Core\Logger\RfcLogLevel.
@@ -74,8 +93,8 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function allowLogs($level, $channel, $message = '') {
-    $this->getAssertableLogger()->allowLogs($level, $channel, $message);
+  protected function allowLogsAsSevereAs($level, $channel, $message = '') {
+    $this->getAssertableLogger()->allowLogsAsSevereAs($level, $channel, $message);
   }
 
   /**

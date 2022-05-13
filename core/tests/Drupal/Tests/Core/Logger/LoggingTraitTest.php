@@ -113,10 +113,10 @@ class LoggingTraitTest extends UnitTestCase {
    */
   public function testExpectNoLogUnmet(array $expectation) {
     $this->expectNoLogsAsSevereAs(...$expectation);
-    // These calls to allowLogs() should have no consequences
+    // These calls to allowLogsAsSevereAs() should have no consequences
     // because the actual log will use a different channel.
-    $this->allowLogs(RfcLogLevel::WARNING, 'channel_b');
-    $this->allowLogs(RfcLogLevel::WARNING, 'channel_b', 'some message');
+    $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b');
+    $this->allowLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_b', 'some message');
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     try {
       $this->assertLogExpectationsMet();
@@ -145,7 +145,7 @@ class LoggingTraitTest extends UnitTestCase {
    * @dataProvider allowLogProvider
    */
   public function testAllowLogLevel(array $expectation) {
-    $this->allowLogs(...$expectation);
+    $this->allowLogsAsSevereAs(...$expectation);
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING);
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
@@ -155,7 +155,7 @@ class LoggingTraitTest extends UnitTestCase {
    * @dataProvider allowLogProvider
    */
   public function testAllowLogLevelChannel(array $expectation) {
-    $this->allowLogs(...$expectation);
+    $this->allowLogsAsSevereAs(...$expectation);
     $this->expectNoLogsAsSevereAs(RfcLogLevel::WARNING, 'channel_a');
     $this->emitLog(RfcLogLevel::WARNING, 'channel_a', 'some message');
     $this->expectNotToPerformAssertions();
