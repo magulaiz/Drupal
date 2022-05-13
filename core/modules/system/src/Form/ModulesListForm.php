@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleDependencyMessageTrait;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ModuleInstallerInterface;
+use Drupal\Core\Extension\Exception\ExtensionInstallLockException;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -499,7 +500,7 @@ class ModulesListForm extends FormBase {
     // Install the given modules.
     if (!empty($modules['install'])) {
       try {
-        $this->moduleInstaller->install(array_keys($modules['install']));
+        $this->moduleInstaller->install(array_keys($modules['install']), TRUE, TRUE);
         $this->messenger()
           ->addStatus($this->modulesEnabledConfirmationMessage($modules['install']));
       }
@@ -511,6 +512,10 @@ class ModulesListForm extends FormBase {
         $this->messenger()->addError(
           $e->getTranslatedMessage($this->getStringTranslation(), $modules['install'][$e->getExtension()])
         );
+        return;
+      }
+      catch (ExtensionInstallLockException $e) {
+        $this->messenger()->addError($this->t('Unable to install modules because a module installation is already running.'));
         return;
       }
     }
