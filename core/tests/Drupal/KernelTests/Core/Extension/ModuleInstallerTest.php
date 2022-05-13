@@ -4,6 +4,8 @@ namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\MissingDependencyException;
+use Drupal\Core\Extension\ModuleInstaller;
+use Drupal\Core\Extension\Exception\ExtensionInstallLockException;
 use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -157,6 +159,34 @@ class ModuleInstallerTest extends KernelTestBase {
     $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
     \Drupal::service('module_installer')->install(['deprecated_module']);
     $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
+  }
+
+  /**
+   * Test trying to perform multiple installations in parallel.
+   *
+   * @covers :install
+   */
+  public function testParallelInstall() {
+    // Mock the lock backend and make it return false to mimic a parallel
+    // module installation attempt.
+    $lock = $this->createMock('Drupal\Core\Lock\LockBackendInterface');
+    $lock->expects($this->once())
+      ->method('lockMayBeAvailable')
+      ->with(ModuleInstaller::LOCK_NAME)
+      ->will($this->returnValue(FALSE));
+
+    $installer = new ModuleInstaller(
+      $this->root,
+      $this->container->get('module_handler'),
+      $this->container->get('kernel'),
+      $this->container->get('database'),
+      $this->container->get('update.update_hook_registry'),
+      $lock
+    );
+
+    $this->expectException(ExtensionInstallLockException::class);
+    $this->expectExceptionMessage('Unable to install modules because a module installation is already running.');
+    $installer->install(['module_handler_test_multiple'], TRUE, TRUE);
   }
 
 }
