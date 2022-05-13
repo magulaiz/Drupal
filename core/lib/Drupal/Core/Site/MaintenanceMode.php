@@ -290,7 +290,7 @@ class MaintenanceMode implements MaintenanceModeInterface {
    * {@inheritdoc}
    */
   public function isEnabled() {
-    $default = FALSE;
+    $default = InstallerKernel::installationAttempted();
     $state = (bool) $this->state->get(self::STATE_KEY, $default);
     if ($this->request->hasSession()) {
       return $state && (bool) $this->request->getSession()->get(self::SESSION_KEY, $default);
