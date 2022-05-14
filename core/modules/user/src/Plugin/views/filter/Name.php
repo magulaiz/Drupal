@@ -159,7 +159,8 @@ class Name extends InOperator {
     parent::buildExposedFiltersGroupForm($form, $form_state);
     // Transform the numeric values (ids) into entity labels.
     foreach ($form['group_info']['group_items'] as &$item) {
-      if (!empty($item['value']['#default_value'])) {
+      // @todo Remove 2nd condition in https://www.drupal.org/node/3280477.
+      if (!empty($item['value']['#default_value']) && !is_string($item['value']['#default_value'])) {
         $users = User::loadMultiple($item['value']['#default_value']);
         $item['value']['#default_value'] = EntityAutocomplete::getEntityLabels($users);
       }
