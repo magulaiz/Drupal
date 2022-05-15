@@ -27,7 +27,7 @@
       var header = document.querySelector('header[role="banner"]');
       var stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      stepIndicator.innerHTML = "".concat(findActiveStep(steps), "/").concat(steps.length);
+      stepIndicator.innerHTML = "\n        <span class=\"visually-hidden\">Install Step ".concat(findActiveStep(steps), " of ").concat(steps.length, "</span>\n        <span aria-hidden>").concat(findActiveStep(steps), "/").concat(steps.length, "</span>\n      ");
       header.appendChild(stepIndicator);
     }
   }
