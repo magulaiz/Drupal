@@ -4,6 +4,8 @@ namespace Drupal\system\Controller;
 
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\QueryStringInterface;
+use Drupal\Core\Cache\Rebuilder;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -79,6 +81,13 @@ class DbUpdateController extends ControllerBase {
   protected $postUpdateRegistry;
 
   /**
+   * The cache query string service.
+   *
+   * @var \Drupal\Core\Cache\QueryStringInterface
+   */
+  protected $queryString;
+
+  /**
    * Constructs a new UpdateController.
    *
    * @param string $root
@@ -97,8 +106,10 @@ class DbUpdateController extends ControllerBase {
    *   The bare HTML page renderer.
    * @param \Drupal\Core\Update\UpdateRegistry $post_update_registry
    *   The post update registry.
+   * @param \Drupal\Core\Cache\QueryStringInterface $query_string
+   *   The cache query string service.
    */
-  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry) {
+  public function __construct($root, KeyValueExpirableFactoryInterface $key_value_expirable_factory, CacheBackendInterface $cache, StateInterface $state, ModuleHandlerInterface $module_handler, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, UpdateRegistry $post_update_registry, QueryStringInterface $query_string = NULL) {
     $this->root = $root;
     $this->keyValueExpirableFactory = $key_value_expirable_factory;
     $this->cache = $cache;
@@ -107,6 +118,11 @@ class DbUpdateController extends ControllerBase {
     $this->account = $account;
     $this->bareHtmlPageRenderer = $bare_html_page_renderer;
     $this->postUpdateRegistry = $post_update_registry;
+    if ($query_string === NULL) {
+      @trigger_error('$query_string is added since drupal:9.2.0 and required from drupal:10.0.0');
+      $query_string = \Drupal::service('cache.query_string');
+    }
+    $this->queryString = $query_string;
   }
 
   /**
@@ -207,7 +223,7 @@ class DbUpdateController extends ControllerBase {
    */
   protected function info(Request $request) {
     // Change query-strings on css/js files to enforce reload for all users.
-    _drupal_flush_css_js();
+    $this->queryString->reset();
     // Flush the cache of all data for the update status module.
     $this->keyValueExpirableFactory->get('update')->deleteAll();
     $this->keyValueExpirableFactory->get('update_available_release')->deleteAll();
@@ -350,7 +366,7 @@ class DbUpdateController extends ControllerBase {
       ];
 
       // No updates to run, so caches won't get flushed later.  Clear them now.
-      drupal_flush_all_caches();
+      Rebuilder::rebuildAll();
     }
     else {
       $build['help'] = [
@@ -627,7 +643,7 @@ class DbUpdateController extends ControllerBase {
     if ($post_updates) {
       // Now we rebuild all caches and after that execute the hook_post_update()
       // functions.
-      $batch_builder->addOperation('drupal_flush_all_caches', []);
+      $batch_builder->addOperation([Rebuilder::class, 'rebuildAll'], []);
       foreach ($post_updates as $function) {
         $batch_builder->addOperation('update_invoke_post_update', [$function]);
       }
@@ -656,7 +672,7 @@ class DbUpdateController extends ControllerBase {
    */
   public static function batchFinished($success, $results, $operations) {
     // No updates to run, so caches won't get flushed later.  Clear them now.
-    drupal_flush_all_caches();
+    Rebuilder::rebuildAll();
 
     $session = \Drupal::request()->getSession();
     $session->set('update_results', $results);

@@ -71,6 +71,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *   Property no longer required by the service.
+   *
+   * @see https://www.drupal.org/node/3014783
    */
   protected $state;
 
@@ -468,7 +473,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     }, []);
     $css = array_merge($css, $plugins_css);
     $css = array_merge($css, _ckeditor_theme_css());
-    $query_string = $this->state->get('system.css_js_query_string', '0');
+    $query_string = $this->queryString->get();
     $css = array_map(function ($item) use ($query_string) {
       $query_string_separator = (strpos($item, '?') !== FALSE) ? '&' : '?';
       return $item . $query_string_separator . $query_string;

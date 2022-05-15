@@ -11,8 +11,6 @@
 use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\DrupalKernel;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -535,6 +533,12 @@ function show(&$element) {
  *   the container if this is passed in. Sometimes drupal_flush_all_caches is
  *   used as a batch operation so $kernel will be an array, in this instance it
  *   will be treated as if it it NULL.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ * \Drupal\Core\Cache\Rebuilder::rebuildAll() instead.
+ *
+ * @see https://www.drupal.org/node/3014783
+ * @see \Drupal\Core\Cache\Rebuilder::rebuildAll()
  */
 function drupal_flush_all_caches($kernel = NULL) {
   // This is executed based on old/previously known information if $kernel is
@@ -598,10 +602,17 @@ function drupal_flush_all_caches($kernel = NULL) {
  *
  * Changing the dummy query string appended to CSS and JavaScript files forces
  * all browsers to reload fresh files.
+ *
+ * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
+ * \Drupal\Core\Cache\QueryString::reset() instead.
+ *
+ * @see https://www.drupal.org/node/3014783
+ * @see \Drupal\Core\Cache\QueryString::reset()
+ * @internal
  */
 function _drupal_flush_css_js() {
-  // The timestamp is converted to base 36 in order to make it more compact.
-  Drupal::state()->set('system.css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
+  @trigger_error('_drupal_flush_css_js() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Cache\QueryString::reset() instead. See https://www.drupal.org/node/3014783', E_USER_DEPRECATED);
+  \Drupal::service('cache.query_string')->reset();
 }
 
 /**

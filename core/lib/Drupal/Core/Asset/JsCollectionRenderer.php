@@ -15,6 +15,11 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *   Property no longer required by the service.
+   *
+   * @see https://www.drupal.org/node/3014783
    */
   protected $state;
 
@@ -59,7 +64,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     // flush, forcing browsers to load a new copy of the files, as the
     // URL changed. Files that should not be cached get REQUEST_TIME as
     // query-string instead, to enforce reload on every page request.
-    $default_query_string = $this->state->get('system.css_js_query_string', '0');
+    $default_query_string = $this->queryString->get();
 
     // Defaults for each SCRIPT element.
     $element_defaults = [

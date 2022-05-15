@@ -6,7 +6,7 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @covers ::drupal_flush_all_caches
+ * @covers \Drupal\Core\Cache\Rebuilder::rebuildAll
  * @group Common
  */
 class DrupalFlushAllCachesTest extends KernelTestBase {
@@ -24,7 +24,8 @@ class DrupalFlushAllCachesTest extends KernelTestBase {
   protected static $modules = ['system'];
 
   /**
-   * Tests that drupal_flush_all_caches() uses core.extension properly.
+   * Tests that Drupal\Core\Cache\Rebuilder::rebuildAll() uses core.extension
+   * properly.
    */
   public function testDrupalFlushAllCachesModuleList() {
     $this->assertFalse(function_exists('system_test_help'));

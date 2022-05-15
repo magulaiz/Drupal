@@ -14,6 +14,11 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
    * The state key/value store.
    *
    * @var \Drupal\Core\State\StateInterface
+   *
+   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0.
+   *   Property no longer required by the service.
+   *
+   * @see https://www.drupal.org/node/3014783
    */
   protected $state;
 
@@ -51,7 +56,7 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
     // browser-caching. The string changes on every update or full cache
     // flush, forcing browsers to load a new copy of the files, as the
     // URL changed.
-    $query_string = $this->state->get('system.css_js_query_string', '0');
+    $query_string = $this->queryString->get();
 
     // Defaults for LINK and STYLE elements.
     $link_element_defaults = [

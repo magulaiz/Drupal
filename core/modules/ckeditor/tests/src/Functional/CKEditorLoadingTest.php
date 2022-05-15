@@ -170,7 +170,7 @@ class CKEditorLoadingTest extends BrowserTestBase {
     // comparing the setting sent with the page with the current query string.
     $settings = $this->getDrupalSettings();
     $expected = $settings['ckeditor']['timestamp'];
-    $this->assertSame($expected, \Drupal::state()->get('system.css_js_query_string'), "CKEditor scripts cache-busting string is correct before flushing all caches.");
+    $this->assertSame($expected, \Drupal::service('cache.query_string')->get(), "CKEditor scripts cache-busting string is correct before flushing all caches.");
     // Flush all caches then make sure that $settings['ckeditor']['timestamp']
     // still matches.
     $this->resetAll();

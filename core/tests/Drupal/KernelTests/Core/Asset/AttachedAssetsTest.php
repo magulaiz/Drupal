@@ -264,7 +264,7 @@ class AttachedAssetsTest extends KernelTestBase {
    */
   public function testBrowserConditionalComments() {
     $this->expectDeprecation('Support for IE Conditional Comments is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. See https://www.drupal.org/node/3102997');
-    $default_query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
+    $default_query_string = $this->container->get('cache.query_string')->get();
 
     $build['#attached']['library'][] = 'common_test/browsers';
     $assets = AttachedAssets::createFromRenderArray($build);
