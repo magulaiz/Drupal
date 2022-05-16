@@ -6,7 +6,8 @@ namespace Drupal\Tests\Traits\Core;
  * Sets test expectations for generated log messages.
  *
  * A test class using this trait should:
- * - call LoggingTrait::getAssertableLogger, typically in its setUp() method, and
+ * - ensure that AssertableLogger::log() is called when logs are generated,
+ * - provide a getAssertableLogger() method that returns that logger, and
  * - call LoggingTrait::assertLogExpectationsMet(), typically in its
  * assertPostConditions() method.
  *
