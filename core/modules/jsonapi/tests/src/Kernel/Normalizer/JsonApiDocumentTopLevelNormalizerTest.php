@@ -763,10 +763,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $expected_metadata
    *   The expected cacheable metadata.
-   * @param array|null $fields
-   *   Fields to include in the response, keyed by resource type.
-   * @param array|null $includes
-   *   Resources paths to include in the response.
    *
    * @dataProvider testCacheableMetadataProvider
    */
