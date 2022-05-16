@@ -1,5 +1,6 @@
 {
   "name": "drupal/core-bridge",
+  "abandoned": true,
   "description": "Bridge.",
   "keywords": ["drupal"],
   "homepage": "https://www.drupal.org/project/drupal",
