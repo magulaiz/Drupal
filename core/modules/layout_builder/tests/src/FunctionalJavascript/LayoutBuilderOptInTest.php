@@ -11,6 +11,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  */
 class LayoutBuilderOptInTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -23,7 +25,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -109,7 +111,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     // Ensure the body appears once and only once.
-    $assert_session->elementsCount('css', '.field--name-body', 1);
+    $assert_session->elementsCount('css', '[data-layout-content-preview-placeholder-label=\'"Body" field\']', 1);
 
     // Change the body formatter to Trimmed.
     $this->drupalGet($layout_builder_ui);
@@ -147,7 +149,7 @@ class LayoutBuilderOptInTest extends WebDriverTestBase {
     $assert_session->linkExists('Manage layout');
     $this->clickLink('Manage layout');
     // Ensure the body appears once and only once.
-    $assert_session->elementsCount('css', '.field--name-body', 1);
+    $assert_session->elementsCount('css', '[data-layout-content-preview-placeholder-label=\'"Body" field\']', 1);
 
     // The changed body formatter is reflected in Layout Builder UI.
     $this->drupalGet($this->getPathForFieldBlock('node', 'after', 'default', 'body'));

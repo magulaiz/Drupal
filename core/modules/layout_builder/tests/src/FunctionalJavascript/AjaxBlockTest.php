@@ -11,6 +11,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  */
 class AjaxBlockTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -26,7 +28,7 @@ class AjaxBlockTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -71,14 +73,13 @@ class AjaxBlockTest extends WebDriverTestBase {
     $this->clickLink('Manage layout');
     $assert_session->addressEquals("$field_ui_prefix/display/default/layout");
     // The body field is present.
-    $assert_session->elementExists('css', '.field--name-body');
+    $assert_session->elementExists('css', $this->getBodyLocator());
 
     // Add a new block.
-    $assert_session->linkExists('Add block');
-    $this->clickLink('Add block');
+    $page->clickLink('Add block');
     $assert_session->assertWaitOnAjaxRequest();
-    $assert_session->linkExists('TestAjax');
-    $this->clickLink('TestAjax');
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
+    $page->clickLink('TestAjax');
     $assert_session->assertWaitOnAjaxRequest();
     // Find the radio buttons.
     $name = 'settings[ajax_test]';
@@ -95,7 +96,8 @@ class AjaxBlockTest extends WebDriverTestBase {
     // Then add the block.
     $assert_session->waitForElementVisible('named', ['button', 'Add block'])->press();
     $assert_session->assertWaitOnAjaxRequest();
-    $block_elements = $this->cssSelect('.block-layout-builder-test-testajax');
+    $block_elements = $this->cssSelect($this->getLocatorFromPlaceholderLabel('"TestAjax" block'));
+
     // Should be exactly one of these in there.
     $this->assertCount(1, $block_elements);
     $assert_session->pageTextContains('Every word is like an unnecessary stain on silence and nothingness.');

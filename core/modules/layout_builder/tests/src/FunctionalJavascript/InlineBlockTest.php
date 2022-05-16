@@ -15,7 +15,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests adding and editing of inline blocks.
@@ -78,10 +78,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // Confirm the block can be edited.
     $this->drupalGet('node/1/layout');
-    /** @var \Behat\Mink\Element\NodeElement $inline_block_2 */
-    $inline_block_2 = $page->findAll('css', static::INLINE_BLOCK_LOCATOR)[1];
-    $uuid = $inline_block_2->getAttribute('data-layout-block-uuid');
-    $block_css_locator = static::INLINE_BLOCK_LOCATOR . "[data-layout-block-uuid=\"$uuid\"]";
+    $block_css_locator = $this->getLocatorFromPlaceholderLabel('"2nd Block title" block');
     $this->configureInlineBlock('The 2nd block body', 'The 2nd NEW block body!', $block_css_locator);
     $this->assertSaveLayout();
     $this->drupalGet('node/1');
@@ -95,9 +92,10 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     // The default layout entity block should be changed.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
-    $assert_session->pageTextContains('The DEFAULT block body');
+
     // Confirm default layout still only has 1 entity block.
-    $assert_session->elementsCount('css', static::INLINE_BLOCK_LOCATOR, 1);
+    $assert_session->pageTextContains('The DEFAULT block body');
+    $assert_session->pageTextNotContains('NEW block body!');
   }
 
   /**
@@ -273,9 +271,6 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default');
     $this->submitForm(['layout[enabled]' => TRUE, 'layout[allow_custom]' => TRUE], 'Save');
 
-    $block_1_locator = static::INLINE_BLOCK_LOCATOR;
-    $block_2_locator = sprintf('%s + %s', static::INLINE_BLOCK_LOCATOR, static::INLINE_BLOCK_LOCATOR);
-
     // Add two blocks to the page and assert the content in each.
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block 1', 'Block 1 original');
@@ -288,6 +283,8 @@ class InlineBlockTest extends InlineBlockTestBase {
     // Update the contents of one of the blocks and assert the updated content
     // appears on the next revision.
     $this->drupalGet('node/1/layout');
+    $block_1_locator = $this->getLocatorFromPlaceholderLabel('"Block 1" block');
+    $block_2_locator = $this->getLocatorFromPlaceholderLabel('"Block 2" block');
     $this->configureInlineBlock('Block 2 original', 'Block 2 updated', $block_2_locator);
     $this->assertSaveLayout();
     $this->assertNodeRevisionContent(4, ['Block 1 original', 'Block 2 updated']);
@@ -299,7 +296,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->configureInlineBlock('Block 1 original', 'Block 1 updated', $block_1_locator);
     $this->getSession()->getPage()->uncheckField('revision');
     $this->getSession()->getPage()->pressButton('Save layout');
-    $this->assertNotEmpty($this->assertSession()->waitForElement('css', '.messages--status'));
+    $this->assertNotEmpty($this->assertSession()->waitForElement('css', '[data-drupal-messages] [aria-label="Status message"]'));
     $this->assertNodeRevisionContent(4, ['Block 1 updated', 'Block 2 updated']);
     $this->assertBlockRevisionCountByTitle('Block 1', 2);
     $this->assertBlockRevisionCountByTitle('Block 2', 2);
@@ -642,7 +639,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
       $this->drupalLogin($this->drupalCreateUser($permissions));
       $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
-      $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Configure');
+      $this->clickContextualLink($this->inlineBlockLocator, 'Configure');
       $assert_session->assertWaitOnAjaxRequest();
       if ($expected) {
         $assert_session->fieldExists('settings[block_form][body][0][value]');

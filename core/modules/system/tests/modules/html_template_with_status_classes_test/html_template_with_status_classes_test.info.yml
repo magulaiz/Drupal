@@ -1,0 +1,5 @@
+name: 'HTML template with status classes tests'
+type: module
+description: 'Overrides the default html.html.twig template to provide session related classes in the manner of the Classy theme'
+package: Testing
+version: VERSION

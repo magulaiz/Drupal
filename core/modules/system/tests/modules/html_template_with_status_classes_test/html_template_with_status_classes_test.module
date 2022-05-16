@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Helper that adds classes to <body> that were previously supplied by Classy.
+ */
+
+/**
+ * Implements hook_preprocess().
+ */
+function html_template_with_status_classes_test_preprocess(&$variables, $hook, &$info) {
+  if ($hook == 'html' && $variables['theme_hook_original'] == 'html') {
+    $module_path = \Drupal::service('extension.list.module')->getPath('html_template_with_status_classes_test');
+    $info['theme path'] = $module_path;
+    $info['path'] = $module_path . '/templates';
+  }
+}

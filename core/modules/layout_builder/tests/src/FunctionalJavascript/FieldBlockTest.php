@@ -30,7 +30,7 @@ class FieldBlockTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -81,7 +81,7 @@ class FieldBlockTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('Initial email');
 
     $assert_session->pageTextContains('Date field');
-    $block_url = 'admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_date/classy';
+    $block_url = 'admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_date/stark';
     $assert_session->linkByHrefExists($block_url);
 
     $this->drupalGet($block_url);
@@ -102,6 +102,7 @@ class FieldBlockTest extends WebDriverTestBase {
 
     // Configure the block and change the formatter again.
     $this->clickLink('Configure');
+    $assert_session->waitForElementVisible('css', '[name="settings[formatter][type]"]');
     $page->selectFieldOption('settings[formatter][type]', 'datetime_default');
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->fieldValueEquals('settings[formatter][settings][format_type]', 'medium');
@@ -112,6 +113,7 @@ class FieldBlockTest extends WebDriverTestBase {
 
     // Assert that the field value is updated.
     $this->clickLink('Configure');
+
     $assert_session->fieldValueEquals('settings[formatter][settings][format_type]', 'long');
 
     // Assert that the field block is configured as expected.
@@ -152,7 +154,7 @@ class FieldBlockTest extends WebDriverTestBase {
     ]);
     $timestamp_field->save();
 
-    $this->drupalGet('admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_timestamp/classy');
+    $this->drupalGet('admin/structure/block/add/field_block_test%3Auser%3Auser%3Afield_timestamp/stark');
     $this->assertFalse($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is not visible');
     $page->selectFieldOption('settings[formatter][settings][date_format]', 'custom');
     $this->assertTrue($page->findField('settings[formatter][settings][custom_date_format]')->isVisible(), 'Custom date format is visible');

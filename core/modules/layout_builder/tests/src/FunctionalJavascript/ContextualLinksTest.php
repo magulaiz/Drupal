@@ -13,7 +13,7 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 class ContextualLinksTest extends WebDriverTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
-
+  use BlockLocatorTrait;
   /**
    * {@inheritdoc}
    */
@@ -31,7 +31,7 @@ class ContextualLinksTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -127,10 +127,10 @@ class ContextualLinksTest extends WebDriverTestBase {
    * @internal
    */
   protected function assertCorrectContextualLinksInUi(): void {
-    $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-views-blocktest-block-view-block-2'));
 
+    // Use getLocatorFromPlaceholderLabel() to confirm the block exists.
+    $this->getLocatorFromPlaceholderLabel('"Test Block View: Teaser block" views block');
     $layout_builder_specific_contextual_links = $page->findAll('css', '[data-contextual-id*=\'layout_builder_block:\']');
     $this->assertNotEmpty($layout_builder_specific_contextual_links);
 

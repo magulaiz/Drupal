@@ -12,6 +12,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class MoveBlockFormTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -34,7 +35,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -58,10 +59,9 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->submitForm(['layout[enabled]' => TRUE], 'Save');
     $page->clickLink('Manage layout');
     $assert_session->addressEquals(static::FIELD_UI_PREFIX . '/display/default/layout');
-
     $expected_block_order = [
-      '.block-extra-field-blocknodebundle-with-section-fieldlinks',
-      '.block-field-blocknodebundle-with-section-fieldbody',
+      $this->getLocatorFromPlaceholderLabel('"Links" field'),
+      $this->getBodyLocator(),
     ];
     $this->assertRegionBlocksOrder(0, 'content', $expected_block_order);
 
@@ -98,13 +98,17 @@ class MoveBlockFormTest extends WebDriverTestBase {
   public function testMoveBlock() {
     $page = $this->getSession()->getPage();
 
+    $body_locator = $this->getBodyLocator();
+    $links_locator = $this->getLocatorFromPlaceholderLabel('"Links" field');
+    $powered_by_locator = $this->getLocatorFromPlaceholderLabel('"Powered by Drupal" block');
+
     // Reorder body field in current region.
     $this->openBodyMoveForm(1, 'content', ['Links', 'Body (current)']);
     $this->moveBlockWithKeyboard('up', 'Body (current)', ['Body (current)*', 'Links']);
     $page->pressButton('Move');
     $expected_block_order = [
-      '.block-field-blocknodebundle-with-section-fieldbody',
-      '.block-extra-field-blocknodebundle-with-section-fieldlinks',
+      $body_locator,
+      $links_locator,
     ];
     $this->assertRegionBlocksOrder(1, 'content', $expected_block_order);
     $page->pressButton('Save layout');
@@ -118,13 +122,13 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $this->moveBlockWithKeyboard('up', 'Body', ['Body (current)*', 'Powered by Drupal']);
     $page->pressButton('Move');
     $expected_block_order = [
-      '.block-field-blocknodebundle-with-section-fieldbody',
-      '.block-system-powered-by-block',
+      $body_locator,
+      $powered_by_locator,
     ];
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
 
     // Ensure the body block is no longer in the content region.
-    $this->assertRegionBlocksOrder(1, 'content', ['.block-extra-field-blocknodebundle-with-section-fieldlinks']);
+    $this->assertRegionBlocksOrder(1, 'content', [$links_locator]);
     $page->pressButton('Save layout');
     $page->clickLink('Manage layout');
     $this->assertRegionBlocksOrder(0, 'first', $expected_block_order);
@@ -134,7 +138,7 @@ class MoveBlockFormTest extends WebDriverTestBase {
     $page->selectFieldOption('Region', '0:second');
     $this->assertBlockTable(['Body (current)']);
     $page->pressButton('Move');
-    $this->assertRegionBlocksOrder(0, 'second', ['.block-field-blocknodebundle-with-section-fieldbody']);
+    $this->assertRegionBlocksOrder(0, 'second', [$body_locator]);
   }
 
   /**
@@ -242,9 +246,8 @@ class MoveBlockFormTest extends WebDriverTestBase {
   protected function openBodyMoveForm($delta, $region, array $initial_blocks) {
     $assert_session = $this->assertSession();
 
-    $body_field_locator = "[data-layout-delta=\"$delta\"] [data-region=\"$region\"] .block-field-blocknodebundle-with-section-fieldbody";
-    $this->clickContextualLink($body_field_locator, 'Move');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->clickContextualLink($this->getBodyLocator(), 'Move');
+    $assert_session->waitForElementVisible('css', '#drupal-off-canvas');
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['select', 'Region']));
     $assert_session->fieldValueEquals('Region', "$delta:$region");
     $this->assertBlockTable($initial_blocks);

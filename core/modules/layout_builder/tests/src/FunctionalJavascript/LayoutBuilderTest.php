@@ -16,6 +16,7 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
  */
 class LayoutBuilderTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
   use LayoutBuilderSortTrait;
   use OffCanvasTestTrait;
@@ -35,7 +36,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * The node to customize with Layout Builder.
@@ -172,30 +173,31 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->elementTextNotContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Drag the block to a region in different section.
-    $this->sortableTo('.block-system-powered-by-block', '.layout__region--content', '.layout__region--second');
+    $powered_by_locator = $this->getLocatorFromPlaceholderLabel('"This is the label" block');
+    $this->sortableTo($powered_by_locator, '.layout__region--content', '.layout__region--second');
     $assert_session->assertWaitOnAjaxRequest();
 
     // Ensure the drag succeeded.
-    $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
+    $assert_session->elementExists('css', ".layout__region--second $powered_by_locator");
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     $this->assertPageNotReloaded();
 
     // Ensure the dragged block is still in the correct position after reload.
     $this->drupalGet($layout_url);
-    $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
+    $assert_session->elementExists('css', ".layout__region--second $powered_by_locator");
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Ensure the dragged block is still in the correct position after save.
     $page->pressButton('Save layout');
-    $assert_session->elementExists('css', '.layout__region--second .block-system-powered-by-block');
     $assert_session->elementTextContains('css', '.layout__region--second', 'Powered by Drupal');
 
     // Reconfigure a block and ensure that the layout content is updated.
     $this->drupalGet($layout_url);
     $this->markCurrentPage();
 
-    $this->clickContextualLink('.block-system-powered-by-block', 'Configure');
+    $this->clickContextualLink($powered_by_locator, 'Configure');
+
     $this->assertOffCanvasFormAfterWait('layout_builder_update_block');
 
     $page->fillField('settings[label]', 'This is the new label');
@@ -209,7 +211,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session->pageTextNotContains('This is the label');
 
     // Remove a block.
-    $this->clickContextualLink('.block-system-powered-by-block', 'Remove block');
+    $this->clickContextualLink($powered_by_locator, 'Remove block');
     $this->assertOffCanvasFormAfterWait('layout_builder_remove_block');
     $assert_session->pageTextContains('Are you sure you want to remove the This is the new label block?');
     $assert_session->pageTextContains('This action cannot be undone.');
@@ -473,7 +475,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $assert_session->linkExists('Add block');
     $this->clickLink('Add block');
-    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $this->assertNotEmpty($assert_session->waitForElementVisible('named', ['link', $block_title]));
     $this->clickLink($block_title);
     $this->assertOffCanvasFormAfterWait('layout_builder_add_block');

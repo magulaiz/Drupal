@@ -12,6 +12,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class BlockFormMessagesTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -27,7 +28,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -68,11 +69,14 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     $this->assertMessagesDisplayed();
     $page->findField('Title')->setValue('New title');
     $page->pressButton('Add block');
-    $block_css_locator = '#layout-builder .block-system-powered-by-block';
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $block_css_locator));
 
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
     $assert_session->assertWaitOnAjaxRequest();
+
+    // Get the "Powered By" block based on its label, which was changed to "New
+    // title" a few lines earlier.
+    $block_css_locator = $this->getLocatorFromPlaceholderLabel('"New title" block');
+
     $this->drupalGet($this->getUrl());
     $page->findButton('Save layout')->click();
     $this->assertNotEmpty($assert_session->waitForElement('css', 'div:contains("The layout has been saved")'));
@@ -80,6 +84,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
     // Ensure that message are displayed when configuring an existing block.
     $this->drupalGet($field_ui_prefix . '/display/default/layout');
     $assert_session->assertWaitOnAjaxRequest();
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', $block_css_locator));
     $this->clickContextualLink($block_css_locator, 'Configure', TRUE);
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas [name="settings[label]"]'));
     $page->findField('Title')->setValue('');
@@ -95,7 +100,7 @@ class BlockFormMessagesTest extends WebDriverTestBase {
   protected function assertMessagesDisplayed(): void {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $messages_locator = '#drupal-off-canvas .messages--error';
+    $messages_locator = '#drupal-off-canvas [aria-label="Error message"]';
     $assert_session->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($assert_session->waitForElement('css', $messages_locator));
     $assert_session->elementTextContains('css', $messages_locator, 'Title field is required.');

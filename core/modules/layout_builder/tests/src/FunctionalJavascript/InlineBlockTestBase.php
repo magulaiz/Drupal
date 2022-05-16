@@ -11,6 +11,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 abstract class InlineBlockTestBase extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -22,6 +23,13 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    * Path prefix for the field UI for the test bundle.
    */
   const FIELD_UI_PREFIX = 'admin/structure/types/manage/bundle_with_section_field';
+
+  /**
+   * CSS locator for the block being tested.
+   *
+   * @var string
+   */
+  public $inlineBlockLocator = '';
 
   /**
    * {@inheritdoc}
@@ -83,7 +91,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     // Reload the page to prevent random failures.
     $this->drupalGet($this->getUrl());
     $page->pressButton('Save layout');
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.messages--status'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '[aria-label="Status message"]'));
 
     if (stristr($this->getUrl(), 'admin/structure') === FALSE) {
       $assert_session->pageTextContains('The layout override has been saved.');
@@ -113,15 +121,15 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
   protected function removeInlineBlockFromLayout() {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $block_text = $page->find('css', static::INLINE_BLOCK_LOCATOR)->getText();
+    $block_text = $page->find('css', $this->inlineBlockLocator)->getText();
     $this->assertNotEmpty($block_text);
     $assert_session->pageTextContains($block_text);
-    $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Remove block');
+    $this->clickContextualLink($this->inlineBlockLocator, 'Remove block');
     $assert_session->waitForElement('css', "#drupal-off-canvas input[value='Remove']");
     $assert_session->assertWaitOnAjaxRequest();
     $page->find('css', '#drupal-off-canvas')->pressButton('Remove');
     $assert_session->assertNoElementAfterWait('css', '#drupal-off-canvas');
-    $assert_session->assertNoElementAfterWait('css', static::INLINE_BLOCK_LOCATOR);
+    $assert_session->assertNoElementAfterWait('css', $this->inlineBlockLocator);
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains($block_text);
   }
@@ -148,7 +156,8 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $page->findField('Title')->setValue($title);
     $textarea->setValue($body);
     $page->pressButton('Add block');
-    $this->assertDialogClosedAndTextVisible($body, static::INLINE_BLOCK_LOCATOR);
+    $this->inlineBlockLocator = $this->getLocatorFromPlaceholderLabel("\"$title\" block");
+    $this->assertDialogClosedAndTextVisible($body, $this->inlineBlockLocator);
   }
 
   /**
@@ -162,7 +171,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
    *   The CSS locator to use to select the contextual link.
    */
   protected function configureInlineBlock($old_body, $new_body, $block_css_locator = NULL) {
-    $block_css_locator = $block_css_locator ?: static::INLINE_BLOCK_LOCATOR;
+    $block_css_locator = $block_css_locator ?: $this->inlineBlockLocator;
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->clickContextualLink($block_css_locator, 'Configure');

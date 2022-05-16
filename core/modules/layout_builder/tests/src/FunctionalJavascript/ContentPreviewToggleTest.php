@@ -12,6 +12,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class ContentPreviewToggleTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
   use LayoutBuilderSortTrait;
 
@@ -28,7 +29,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -132,7 +133,7 @@ class ContentPreviewToggleTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->clickContextualLink('.block-field-blocknodebundle-for-this-particular-testbody', 'Configure');
+    $this->clickContextualLink($this->getBodyLocator(), 'Configure');
     $this->assertNotEmpty($assert_session->waitForElement('css', "#drupal-off-canvas"));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertNotEmpty($this->assertSession()->waitForButton('Close'));

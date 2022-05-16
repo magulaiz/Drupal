@@ -16,6 +16,7 @@ use Drupal\Tests\TestFileCreationTrait;
  */
 class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
 
+  use BlockLocatorTrait;
   use FileFieldCreationTrait;
   use TestFileCreationTrait;
 
@@ -29,7 +30,7 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * The file system service.
@@ -180,13 +181,13 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
   protected function replaceFileInBlock(FileInterface $file) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
-    $this->clickContextualLink(static::INLINE_BLOCK_LOCATOR, 'Configure');
+    $this->clickContextualLink($this->inlineBlockLocator, 'Configure');
     $assert_session->assertWaitOnAjaxRequest();
     $page->pressButton('Remove');
     $assert_session->assertWaitOnAjaxRequest();
     $this->attachFileToBlockForm($file);
     $page->pressButton('Update');
-    $this->assertDialogClosedAndTextVisible($file->label(), static::INLINE_BLOCK_LOCATOR);
+    $this->assertDialogClosedAndTextVisible($file->label(), $this->inlineBlockLocator);
   }
 
   /**
@@ -209,7 +210,8 @@ class InlineBlockPrivateFilesTest extends InlineBlockTestBase {
     $page->findField('Title')->setValue($title);
     $this->attachFileToBlockForm($file);
     $page->pressButton('Add block');
-    $this->assertDialogClosedAndTextVisible($file->label(), static::INLINE_BLOCK_LOCATOR);
+    $this->inlineBlockLocator = $this->getLocatorFromPlaceholderLabel("\"$title\" block");
+    $this->assertDialogClosedAndTextVisible($file->label(), $this->inlineBlockLocator);
   }
 
   /**

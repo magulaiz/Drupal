@@ -13,6 +13,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class LayoutBuilderUiTest extends WebDriverTestBase {
 
+  use BlockLocatorTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -34,7 +35,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -146,7 +147,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
     $assert_session->elementNotExists('css', '.is-layout-builder-highlighted');
     $page->clickLink('Add section');
-    $this->assertNotEmpty($assert_session->waitForElement('css', '#drupal-off-canvas .item-list'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '#drupal-off-canvas .layout-selection'));
     $assert_session->assertWaitOnAjaxRequest();
 
     // Highlight is present with AddSectionController.
@@ -209,19 +210,20 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $this->assertHighlightedElement('[data-layout-builder-highlight-id="section-update-0"]');
     $page->pressButton('Close');
     $this->assertHighlightNotExists();
+    $body_field_selector = $this->getBodyLocator();
 
     // A block is highlighted when its "Configure" contextual link is clicked.
-    $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody', 'Configure');
+    $this->clickContextualLink($body_field_selector, 'Configure');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertHighlightedElement('.block-field-blocknodebundle-with-section-fieldbody');
+    $this->assertHighlightedElement($body_field_selector);
 
     // Make sure the highlight remains when contextual links are revealed with
     // the mouse.
-    $this->toggleContextualTriggerVisibility('.block-field-blocknodebundle-with-section-fieldbody');
-    $active_section = $page->find('css', '.block-field-blocknodebundle-with-section-fieldbody');
+    $this->toggleContextualTriggerVisibility($body_field_selector);
+    $active_section = $page->find('css', $body_field_selector);
     $active_section->pressButton('Open configuration options');
-    $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.block-field-blocknodebundle-with-section-fieldbody .contextual.open'));
+    $this->assertNotEmpty($assert_session->waitForElementVisible('css', "$body_field_selector .contextual.open"));
 
     $page->pressButton('Close');
     $this->assertHighlightNotExists();
@@ -231,10 +233,10 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $this->getSession()->reload();
 
     // Block is highlighted when its "Remove block" contextual link is clicked.
-    $this->clickContextualLink('.block-field-blocknodebundle-with-section-fieldbody', 'Remove block');
+    $this->clickContextualLink($body_field_selector, 'Remove block');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $assert_session->assertWaitOnAjaxRequest();
-    $this->assertHighlightedElement('.block-field-blocknodebundle-with-section-fieldbody');
+    $this->assertHighlightedElement($body_field_selector);
     $page->pressButton('Close');
     $this->assertHighlightNotExists();
   }
@@ -254,7 +256,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     // View the layout and try to remove the new extra field.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->pageTextContains('New Extra Field');
-    $this->clickContextualLink('.block-extra-field-blocknodebundle-with-section-fieldlayout-builder-extra-field-test', 'Remove block');
+    $this->clickContextualLink($this->getLocatorFromPlaceholderLabel('"New Extra Field" field'), 'Remove block');
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '#drupal-off-canvas'));
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Are you sure you want to remove');

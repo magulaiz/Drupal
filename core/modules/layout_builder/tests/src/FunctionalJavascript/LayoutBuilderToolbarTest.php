@@ -20,12 +20,13 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
     'layout_builder',
     'node',
     'toolbar',
+    'html_template_with_status_classes_test',
   ];
 
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -84,16 +85,19 @@ class LayoutBuilderToolbarTest extends WebDriverTestBase {
     // behaves as such, redirecting out of the admin section.
     // Clicking "Back to site" navigates to the homepage.
     $this->drupalGet("$field_ui_prefix/display/default/layout");
+
     $this->clickLink('Back to site');
     $assert_session->addressEquals("/user/2");
 
     $this->drupalGet("$field_ui_prefix/display/default/layout/discard-changes");
     $page->pressButton('Confirm');
+
     $this->clickLink('Back to site');
     $assert_session->addressEquals("/user/2");
 
     $this->drupalGet("$field_ui_prefix/display/default/layout/disable");
     $page->pressButton('Confirm');
+
     $this->clickLink('Back to site');
     $assert_session->addressEquals("/user/2");
   }
