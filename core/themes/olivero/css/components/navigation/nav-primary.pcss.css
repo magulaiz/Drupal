@@ -113,6 +113,10 @@
     transform-origin: left;
     /* Intentionally not using CSS logical properties. */
     border-top: solid 5px var(--color--blue-50);
+
+    @media (prefers-reduced-motion) {
+      transition: none;
+    }
   }
 
   &:after {
@@ -165,6 +169,10 @@
   @media (--md) {
     margin-inline-start: calc(-1 * var(--sp3));
     padding-inline-start: var(--sp3);
+  }
+
+  @media (prefers-reduced-motion) {
+    transition: opacity 0.2s, visibility 0.2s;
   }
 }
 

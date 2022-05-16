@@ -248,8 +248,15 @@
         transition: transform 0.2s;
         transform: scaleX(0);
         transform-origin: left;
-        border-top: solid 9px #2494db;
+        border-top: solid 9px #2494db
       }
+
+@media (prefers-reduced-motion) {
+
+.block-search-wide__wrapper .search-form__submit .icon--search:after {
+          transition-duration: 0.01s /* Needed for transitionend event. */
+      }
+        }
 
 .block-search-wide__wrapper .search-form__submit:focus {
       outline: solid 4px transparent;
@@ -294,6 +301,12 @@
         display: none;
       }
     }
+
+@media (prefers-reduced-motion) {
+  .block-search-wide__wrapper {
+    transition-duration: 0.01s; /* Needed for transitionend event. */
+  }
+}
 
 [dir="ltr"] .block-search-wide__container {
   padding-right: 2.25rem;
@@ -424,7 +437,11 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(#2494db, #2494db); /* Two values are needed for IE11 support. */
+  background-image:
+    linear-gradient(
+      #2494db,
+      #2494db); /* Two values are needed for IE11 support. */
+
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 0.625rem
@@ -433,6 +450,12 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 [dir] .block-search-wide__wrapper input[type="search"]:focus {
     background-size: 100% 0.5625rem;
   }
+
+@media (prefers-reduced-motion) {
+  [dir] .block-search-wide__wrapper input[type="search"] {
+    transition-duration: 0.01s;
+  }
+}
 
 [dir="rtl"] .block-search-wide__wrapper input[type="search"] {
     background-position: bottom right;

@@ -58,6 +58,10 @@
     opacity: 0;
     /* Intentionally not using CSS logical properties. */
     border-top: solid 2px currentColor;
+
+    @media (prefers-reduced-motion) {
+      transition: opacity 0.2s;
+    }
   }
 
   &:hover {

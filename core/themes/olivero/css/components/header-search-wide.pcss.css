@@ -129,6 +129,10 @@
         transform: scaleX(0);
         transform-origin: left;
         border-block-start: solid var(--sp0-5) var(--color--blue-50);
+
+        @media (prefers-reduced-motion) {
+          transition-duration: 0.01s; /* Needed for transitionend event. */
+        }
       }
     }
 
@@ -166,6 +170,12 @@
         display: none;
       }
     }
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .block-search-wide__wrapper {
+    transition-duration: 0.01s; /* Needed for transitionend event. */
   }
 }
 
@@ -275,13 +285,24 @@ html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */
 [dir] .block-search-wide__wrapper input[type="search"] {
   background-color: transparent;
-  background-image: linear-gradient(var(--color--blue-50), var(--color--blue-50)); /* Two values are needed for IE11 support. */
+  background-image:
+    linear-gradient(
+      var(--color--blue-50),
+      var(--color--blue-50)
+    ); /* Two values are needed for IE11 support. */
+
   background-repeat: no-repeat;
   background-position: bottom left; /* LTR */
   background-size: 0% 10px;
 
   &:focus {
     background-size: 100% var(--sp0-5);
+  }
+}
+
+@media (prefers-reduced-motion) {
+  [dir] .block-search-wide__wrapper input[type="search"] {
+    transition-duration: 0.01s;
   }
 }
 

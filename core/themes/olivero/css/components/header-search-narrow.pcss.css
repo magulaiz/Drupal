@@ -112,6 +112,10 @@
         transform: scaleX(0);
         transform-origin: left; /* LTR */
         border-block-start: solid 5px var(--color--blue-50);
+
+        @media (prefers-reduced-motion) {
+          transition: none;
+        }
       }
     }
 

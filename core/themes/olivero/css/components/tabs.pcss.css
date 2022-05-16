@@ -172,6 +172,10 @@ html:not(.js) .tabs__trigger {
     &:nth-child(3) {
       inset-block-start: calc(100% + 2px);
     }
+
+    @media (prefers-reduced-motion) {
+      transition: opacity 0.2s;
+    }
   }
 }
 

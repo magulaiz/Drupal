@@ -141,8 +141,15 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    background-color: #2494db
   }
+
+@media (prefers-reduced-motion) {
+
+.mobile-nav-button__icon:before {
+      transition: none
+  }
+    }
 
 [dir="ltr"] .mobile-nav-button__icon:after {
     left: 0
@@ -160,8 +167,15 @@
     height: 0.1875rem;
     content: "";
     transition: all 0.2s;
-    background-color: #2494db;
+    background-color: #2494db
   }
+
+@media (prefers-reduced-motion) {
+
+.mobile-nav-button__icon:after {
+      transition: none
+  }
+    }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
   background-color: transparent

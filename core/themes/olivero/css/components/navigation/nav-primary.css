@@ -194,8 +194,15 @@
     transform: scaleX(0);
     transform-origin: left;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid 5px #2494db;
+    border-top: solid 5px #2494db
   }
+
+@media (prefers-reduced-motion) {
+
+.primary-nav__menu-link-inner:after {
+      transition: none
+  }
+    }
 
 .primary-nav__menu-link:hover .primary-nav__menu-link-inner:after {
       transform: scaleX(1)
@@ -313,6 +320,13 @@
 [dir="rtl"] .primary-nav__menu--level-2 {
     padding-right: 3.375rem;
   }
+  }
+
+@media (prefers-reduced-motion) {
+
+.primary-nav__menu--level-2 {
+    transition: opacity 0.2s, visibility 0.2s
+}
   }
 
 /*

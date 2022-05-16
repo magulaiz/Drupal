@@ -251,6 +251,14 @@ html.js body:not(.is-always-mobile-nav) {
       transition: visibility 0.2s, transform 0.2s, opacity 0.2s;
     }
   }
+
+  @media (--nav) and (prefers-reduced-motion) {
+    & .primary-nav__menu--level-2,
+    & .primary-nav__menu-🥕 {
+      transition: visibility 0.2s, opacity 0.2s;
+      transform: translate(-50%, -20px);
+    }
+  }
 }
 
 [dir="rtl"] {
