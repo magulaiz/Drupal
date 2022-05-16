@@ -35,7 +35,7 @@ class AssertableLogger implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
     $this->handleLog($level, $context['channel'] ?? '', $message);
   }
 
@@ -51,7 +51,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function expectLog($level, $channel, $message = '') {
+  public function expectLog($level, $channel, $message = ''): void {
     $count = 1 + ($this->expectedLogCriteria[$level][$channel][$message] ?? 0);
     $this->expectedLogCriteria[$level][$channel][$message] = $count;
   }
@@ -71,7 +71,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function expectNoLogsAsSevereAs($level, $channel = '', $message = '') {
+  public function expectNoLogsAsSevereAs($level, $channel = '', $message = ''): void {
     $this->disallowedLogCriteria[$channel][$message] = $level;
   }
 
@@ -94,7 +94,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function allowLogsAsSevereAs($level, $channel, $message = '') {
+  public function allowLogsAsSevereAs($level, $channel, $message = ''): void {
     $this->allowedLogCriteria[$channel][$message] = $level;
   }
 
@@ -102,9 +102,9 @@ class AssertableLogger implements LoggerInterface {
    * Get the log expectations that have not yet been met.
    *
    * @return array
-   *   The unmet log expectations.
+   *   Counts of unmet log expectations keyed by level, channel and message.
    */
-  public function getUnmetExpectations() {
+  public function getUnmetExpectations(): array {
     return $this->expectedLogCriteria;
   }
 
@@ -112,9 +112,9 @@ class AssertableLogger implements LoggerInterface {
    * Get the logs that have been received but not should not have been.
    *
    * @return array
-   *   The disallowed logs.
+   *   The disallowed logs, as arrays with level, channel, message and trace.
    */
-  public function getDisallowedLogs() {
+  public function getDisallowedLogs(): array {
     return $this->disallowedLogs;
   }
 
@@ -132,7 +132,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   The log message.
    */
-  protected function handleLog($level, $channel, $message) {
+  protected function handleLog($level, $channel, $message): void {
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
       return;
@@ -164,8 +164,11 @@ class AssertableLogger implements LoggerInterface {
    *   The logger channel.
    * @param string $message
    *   The log message.
+   *
+   * @return bool
+   *   Whether or not the log was expected.
    */
-  protected function handleLogExpectations($level, $channel, $message) {
+  protected function handleLogExpectations($level, $channel, $message): bool {
     if (isset($this->expectedLogCriteria[$level][$channel])) {
       foreach ($this->expectedLogCriteria[$level][$channel] as $expected_message => $count) {
         if ($expected_message === '' || strpos($message, $expected_message) !== FALSE) {
@@ -211,7 +214,7 @@ class AssertableLogger implements LoggerInterface {
    * @return bool
    *   Whether or not the log matches the allowed LogCriteria.
    */
-  protected function isLogAllowed($level, $channel, $message) {
+  protected function isLogAllowed($level, $channel, $message): bool {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $allowed = $this->allowedLogCriteria[$channel] ?? [];
@@ -245,7 +248,7 @@ class AssertableLogger implements LoggerInterface {
    * @return bool
    *   Whether or not the log matches the disallowed LogCriteria.
    */
-  protected function isLogDisallowed($level, $channel, $message) {
+  protected function isLogDisallowed($level, $channel, $message): bool {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $disallowed = $this->disallowedLogCriteria[$channel] ?? [];
