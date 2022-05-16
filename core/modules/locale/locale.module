@@ -515,8 +515,18 @@ function locale_rebuild() {
 
   // Create the translation map files for all languages.
   $languages = Drupal::languageManager()->getLanguages();
+  $parsed = Drupal::state()->get('system.javascript_parsed', []);
   foreach ($languages as $language) {
-    _locale_rebuild_js($language->getId());
+    // If necessary, rebuild the translation file.
+    if (!empty($parsed['refresh:' . $language->getId()])) {
+      // Don't clear the refresh flag on failure, so that another try will
+      // be performed later.
+      if (_locale_rebuild_js($language->getId())) {
+        unset($parsed['refresh:' . $language->getId()]);
+        // Store any changes if refresh was successful.
+        Drupal::state()->set('system.javascript_parsed', $parsed);
+      }
+    }
   }
 }
 
