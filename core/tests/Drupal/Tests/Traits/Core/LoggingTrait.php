@@ -35,7 +35,7 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectLog($level, $channel, $message = '') {
+  protected function expectLog($level, $channel, $message = ''): void {
     $this->getAssertableLogger()->expectLog($level, $channel, $message);
   }
 
@@ -62,7 +62,7 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectNoLogsAsSevereAs($level, $channel = '', $message = '') {
+  protected function expectNoLogsAsSevereAs($level, $channel = '', $message = ''): void {
     $this->getAssertableLogger()->expectNoLogsAsSevereAs($level, $channel, $message);
   }
 
@@ -93,14 +93,14 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function allowLogsAsSevereAs($level, $channel, $message = '') {
+  protected function allowLogsAsSevereAs($level, $channel, $message = ''): void {
     $this->getAssertableLogger()->allowLogsAsSevereAs($level, $channel, $message);
   }
 
   /**
    * Assert that no logs were expected that have not been received.
    */
-  protected function assertLogExpectationsMet() {
+  protected function assertLogExpectationsMet(): void {
     if ($this->getAssertableLogger()) {
       $this->assertEmpty($this->getAssertableLogger()->getDisallowedLogs(), "Logs were generated during the test that were explicitly expected not to be generated. " . print_r($this->getAssertableLogger()->getDisallowedLogs(), TRUE));
       $this->assertEmpty($this->getAssertableLogger()->getUnmetExpectations(), "Logs were expected to be generated during the test, but were not. " . print_r($this->getAssertableLogger()->getUnmetExpectations(), TRUE));
