@@ -289,7 +289,7 @@ final class LinksetControllerTest extends BrowserTestBase {
       'node:3',
     ]);
     $this->assertDrupalResponseCacheability(FALSE, $expected_cacheability, $response);
-    // Ensure the "Our name" menu link is no longer visible.
+    // Ensure the "Our name" menu link is visible.
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
     $titles = array_column($link_items, 'title');
     $this->assertContains('Our name', $titles);
@@ -434,11 +434,11 @@ final class LinksetControllerTest extends BrowserTestBase {
    * @see \Drupal\menu_link_content\MenuLinkContentInterface::create()
    */
   protected function createMenuItem(array $values, array $options = []): MenuLinkContentInterface {
+    if (!empty($options)) {
+      $values['link'] = ['uri' => $values['link'], 'options' => $options];
+    }
     $link_content = MenuLinkContent::create($values);
     assert($link_content instanceof MenuLinkContentInterface);
-    if (!empty($options)) {
-      $link_content->link->options = $options;
-    }
     $link_content->save();
     return $link_content;
   }

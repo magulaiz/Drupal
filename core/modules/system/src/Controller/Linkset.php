@@ -181,6 +181,8 @@ final class Linkset extends ControllerBase {
         $link = [
           'href' => $generated_url->getGeneratedUrl(),
           // @todo should this use the "title*" key if it is internationalized?
+          // Follow up issue:
+          // https://www.drupal.org/project/decoupled_menus/issues/3280735
           'title' => $element->link->getTitle(),
           'hierarchy' => $hierarchy,
         ];
