@@ -7,6 +7,8 @@ use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
 use Psr\Log\LoggerInterface;
 
+// cspell:ignore DGRAM
+
 /**
  * Redirects logging messages to syslog.
  */
@@ -25,7 +27,7 @@ class SysLog implements LoggerInterface {
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected mixed $hostname;
+  protected $hostname;
 
   /**
    * Remote Syslog server port (default 514).
