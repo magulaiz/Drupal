@@ -111,6 +111,10 @@ TOP_LEVEL=$(git rev-parse --show-toplevel)
 # This variable will be set to one when the file core/phpcs.xml.dist is changed.
 PHPCS_XML_DIST_FILE_CHANGED=0
 
+# This variable will be set to one when the files core/phpstan-baseline.neon or
+# core/phpstan.neon.dist are changed.
+PHPSTAN_DIST_FILE_CHANGED=0
+
 # This variable will be set to one when one of the eslint config file is
 # changed:
 #  - core/.eslintrc.passing.json
@@ -137,6 +141,10 @@ for FILE in $FILES; do
 
   if [[ $FILE == "core/phpcs.xml.dist" ]]; then
     PHPCS_XML_DIST_FILE_CHANGED=1;
+  fi;
+
+  if [[ $FILE == "core/phpstan-baseline.neon" || $FILE == "core/phpstan.neon.dist" ]]; then
+    PHPSTAN_DIST_FILE_CHANGED=1;
   fi;
 
   if [[ $FILE == "core/.eslintrc.json" || $FILE == "core/.eslintrc.passing.json" || $FILE == "core/.eslintrc.jquery.json" ]]; then
@@ -208,9 +216,9 @@ printf "\n"
 printf -- '-%.0s' {1..100}
 printf "\n"
 
-# Run PHPStan on all files on DrupalCI. APCu is disabled to
-# ensure that the composer classmap is not corrupted.
-if [[ "$DRUPALCI" == "1" ]]; then
+# Run PHPStan on all files on DrupalCI or when phpstan files are changed.
+# APCu is disabled to ensure that the composer classmap is not corrupted.
+if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
   printf "\nRunning PHPStan on *all* files.\n"
   php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
 else
