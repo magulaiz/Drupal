@@ -87,6 +87,7 @@ class TemporaryQueryGuard {
    * Sets the logger channel.
    *
    * @param \Psr\Log\LoggerInterface $logger_channel
+   *   Logger channel.
    */
   public static function setLoggerChannel(LoggerInterface $logger_channel) {
     static::$loggerChannel = $logger_channel;
