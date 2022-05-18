@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Functional\Form;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests the SystemConfigFormTestBase class.
+ * Tests the the menu_linkset_settings form.
  *
  * @group Form
  */
