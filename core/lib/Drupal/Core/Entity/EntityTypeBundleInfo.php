@@ -8,6 +8,8 @@ use Drupal\Core\Cache\UseCacheBackendTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
+use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
+use Drupal\Core\Entity\Exception\MissingBundleClassException;
 
 /**
  * Provides discovery and retrieval of entity type bundles.
@@ -108,6 +110,24 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
           }
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
+
+        foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
+          $entity_class = $entity_type->getClass();
+          if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
+            foreach ($this->entityTypeManager->getStorage($bundle_entity_type)->loadMultiple() as $entity) {
+              $bundle_class = $this->bundleInfo[$type][$entity->id()]['class'];
+              // Bundle classes should extend the main entity class.
+              if ($bundle_class) {
+                if (!class_exists($bundle_class)) {
+                  throw new MissingBundleClassException($bundle_class);
+                }
+                if (!is_subclass_of($bundle_class, $entity_class)) {
+                  throw new BundleClassInheritanceException($bundle_class, $entity_class);
+                }
+              }
+            }
+          }
+        }
         $this->cacheSet("entity_bundle_info:$langcode", $this->bundleInfo, Cache::PERMANENT, ['entity_types', 'entity_bundles']);
       }
     }
