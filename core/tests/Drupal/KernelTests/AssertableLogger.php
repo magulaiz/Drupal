@@ -35,7 +35,7 @@ class AssertableLogger implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []): void {
+  public function log(int $level, string $message, array $context = []): void {
     $this->handleLog($level, $context['channel'] ?? '', $message);
   }
 
@@ -51,7 +51,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function expectLog($level, $channel, $message = ''): void {
+  public function expectLog(int $level, string $channel, string $message = ''): void {
     $count = 1 + ($this->expectedLogCriteria[$level][$channel][$message] ?? 0);
     $this->expectedLogCriteria[$level][$channel][$message] = $count;
   }
@@ -71,7 +71,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function expectNoLogsAsSevereAs($level, $channel = '', $message = ''): void {
+  public function expectNoLogsAsSevereAs(int $level, string $channel = '', string $message = ''): void {
     $this->disallowedLogCriteria[$channel][$message] = $level;
   }
 
@@ -94,7 +94,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  public function allowLogsAsSevereAs($level, $channel, $message = ''): void {
+  public function allowLogsAsSevereAs(int $level, string $channel, string $message = ''): void {
     $this->allowedLogCriteria[$channel][$message] = $level;
   }
 
@@ -132,7 +132,7 @@ class AssertableLogger implements LoggerInterface {
    * @param string $message
    *   The log message.
    */
-  protected function handleLog($level, $channel, $message): void {
+  protected function handleLog(int $level, string $channel, string $message): void {
     $is_expected = $this->handleLogExpectations($level, $channel, $message);
     if ($is_expected) {
       return;
@@ -168,7 +168,7 @@ class AssertableLogger implements LoggerInterface {
    * @return bool
    *   Whether or not the log was expected.
    */
-  protected function handleLogExpectations($level, $channel, $message): bool {
+  protected function handleLogExpectations(int $level, string $channel, string $message): bool {
     if (isset($this->expectedLogCriteria[$level][$channel])) {
       foreach ($this->expectedLogCriteria[$level][$channel] as $expected_message => $count) {
         if ($expected_message === '' || strpos($message, $expected_message) !== FALSE) {
@@ -214,7 +214,7 @@ class AssertableLogger implements LoggerInterface {
    * @return bool
    *   Whether or not the log matches the allowed LogCriteria.
    */
-  protected function isLogAllowed($level, $channel, $message): bool {
+  protected function isLogAllowed(int $level, string $channel, string $message): bool {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $allowed = $this->allowedLogCriteria[$channel] ?? [];
@@ -248,7 +248,7 @@ class AssertableLogger implements LoggerInterface {
    * @return bool
    *   Whether or not the log matches the disallowed LogCriteria.
    */
-  protected function isLogDisallowed($level, $channel, $message): bool {
+  protected function isLogDisallowed(int $level, string $channel, string $message): bool {
     $channels = [$channel, ''];
     foreach ($channels as $channel) {
       $disallowed = $this->disallowedLogCriteria[$channel] ?? [];
