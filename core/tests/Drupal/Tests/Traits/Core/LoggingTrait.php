@@ -36,7 +36,7 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectLog($level, $channel, $message = ''): void {
+  protected function expectLog(int $level, string $channel, string $message = ''): void {
     $this->getAssertableLogger()->expectLog($level, $channel, $message);
   }
 
@@ -63,7 +63,7 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function expectNoLogsAsSevereAs($level, $channel = '', $message = ''): void {
+  protected function expectNoLogsAsSevereAs(int $level, string $channel = '', string $message = ''): void {
     $this->getAssertableLogger()->expectNoLogsAsSevereAs($level, $channel, $message);
   }
 
@@ -94,7 +94,7 @@ trait LoggingTrait {
    * @param string $message
    *   (optional) Text that the log message must contain.
    */
-  protected function allowLogsAsSevereAs($level, $channel, $message = ''): void {
+  protected function allowLogsAsSevereAs(int $level, string $channel, string $message = ''): void {
     $this->getAssertableLogger()->allowLogsAsSevereAs($level, $channel, $message);
   }
 
