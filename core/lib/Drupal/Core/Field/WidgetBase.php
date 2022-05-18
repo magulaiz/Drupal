@@ -398,8 +398,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
 
       // Assign the values and remove the empty ones.
       $widget = NestedArray::getValue($form, $field_state['array_parents']);
-      $access = $widget['#access'] ?? TRUE;
-      if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {
+      if (Element::isVisibleElement($widget)) {
         $items->setValue($values);
         $items->filterEmptyItems();
       }
