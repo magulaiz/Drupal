@@ -27,7 +27,7 @@ function olivero_page_attachments_alter(array &$page) {
   ];
 
   $should_add_header = TRUE;
-  foreach ($fonts as $path) {
+  foreach ($files as $path) {
     $file_parts = explode('.', basename($path));
     $extension = end($file_parts);
 
