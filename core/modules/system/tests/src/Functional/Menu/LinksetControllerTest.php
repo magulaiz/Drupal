@@ -439,6 +439,7 @@ final class LinksetControllerTest extends BrowserTestBase {
     }
     $link_content = MenuLinkContent::create($values);
     assert($link_content instanceof MenuLinkContentInterface);
+    $link_content->save();
     return $link_content;
   }
 
