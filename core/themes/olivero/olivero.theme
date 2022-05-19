@@ -43,16 +43,55 @@ function olivero_page_attachments_alter(array &$page) {
     ];
   }
 
-  // Declare font-face with inline CSS.
-  if ($css = file_get_contents($theme_path . '/css/base/fonts.css')) {
-    $page['#attached']['html_head'][] = [
-      [
-        '#tag' => 'style',
-        '#value' => $css,
-      ],
-      FALSE,
-    ];
+  // Declare preloaded fonts with inline CSS.
+  $css = <<<CSS
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Regular.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
   }
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-SemiBold.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-SemiBold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: metropolis;
+    src:
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Bold.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/metropolis/Metropolis-Bold.woff") format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: Lora;
+    src:
+      local("Lora Regular"),
+      local("Lora-Regular"),
+      url("/core/themes/olivero/fonts/lora/lora-v14-latin-regular.woff2") format("woff2"),
+      url("/core/themes/olivero/fonts/lora/lora-v14-latin-regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  CSS;
+
+  $page['#attached']['html_head'][] = [
+    [
+      '#tag' => 'style',
+      '#value' => $css,
+    ],
+    FALSE,
+  ];
 }
 
 /**
