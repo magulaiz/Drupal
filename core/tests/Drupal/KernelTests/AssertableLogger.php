@@ -35,7 +35,7 @@ class AssertableLogger implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log(int $level, string $message, array $context = []): void {
+  public function log($level, $message, array $context = []): void {
     $this->handleLog($level, $context['channel'] ?? '', $message);
   }
 
