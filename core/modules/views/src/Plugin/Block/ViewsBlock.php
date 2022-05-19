@@ -24,7 +24,7 @@ class ViewsBlock extends ViewsBlockBase {
   public function build() {
     $this->view->display_handler->preBlockBuild($this);
 
-    $args = [];
+    $args = $this->view->args;
     foreach ($this->view->display_handler->getHandlers('argument') as $argument_name => $argument) {
       // Initialize the argument value. Work around a limitation in
       // \Drupal\views\ViewExecutable::_buildArguments() that skips processing
