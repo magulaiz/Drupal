@@ -33,13 +33,13 @@
 }
 
 .system-status-counter__status-icon--error:before {
-  background-image: url(../../images/core/e32700/error.svg);
+  background-image: url(../../../../misc/icons/e32700/error.svg);
 }
 .system-status-counter__status-icon--warning:before {
-  background-image: url(../../images/core/e29700/warning.svg);
+  background-image: url(../../../../misc/icons/e29700/warning.svg);
 }
 .system-status-counter__status-icon--checked:before {
-  background-image: url(../../images/core/73b355/check.svg);
+  background-image: url(../../../../misc/icons/73b355/check.svg);
 }
 
 @media (forced-colors: active) {

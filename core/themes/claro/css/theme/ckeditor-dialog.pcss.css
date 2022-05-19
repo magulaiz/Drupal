@@ -58,7 +58,7 @@
   width: 16px;
   height: 16px;
   opacity: 1;
-  background: url(../../images/core/ffffff/ex.svg) 0 0 no-repeat;
+  background: url(../../../../misc/icons/ffffff/ex.svg) 0 0 no-repeat;
 }
 [dir="rtl"] .cke_reset_all .cke_dialog .cke_dialog_close_button {
   right: auto;
@@ -116,7 +116,7 @@
 }
 .cke_reset_all select.cke_dialog_ui_input_select {
   padding-right: 1.5em;
-  background: #fcfcfa url(../../images/core/333333/caret-down.svg) no-repeat 99% 63%;
+  background: #fcfcfa url(../../../../misc/icons/333333/caret-down.svg) no-repeat 99% 63%;
 }
 .cke_reset_all .cke_dialog_body textarea:focus,
 .cke_reset_all .cke_dialog_body input[type="text"]:focus,
