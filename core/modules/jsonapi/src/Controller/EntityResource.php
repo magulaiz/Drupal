@@ -596,11 +596,9 @@ class EntityResource {
     // Access will have already been checked by the RelationshipRouteAccessCheck
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
-
     $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $field_list);
     $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
-
-    $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list, NULL, $collect_meta_event->getMeta());
+    $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);
     $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
     // Add the host entity as a cacheable dependency.
     if ($response instanceof CacheableResponseInterface) {
