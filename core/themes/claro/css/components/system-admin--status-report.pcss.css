@@ -50,10 +50,10 @@
   left: auto;
 }
 .system-status-report__status-icon--error:before {
-  background-image: url(../../images/core/e32700/error.svg);
+  background-image: url(../../../../misc/icons/e32700/error.svg);
 }
 .system-status-report__status-icon--warning:before {
-  background-image: url(../../images/core/e29700/warning.svg);
+  background-image: url(../../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report__entry__value {
   padding: 1em 0.5em;
