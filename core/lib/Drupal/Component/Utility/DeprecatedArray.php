@@ -7,7 +7,6 @@ namespace Drupal\Component\Utility;
  *
  * Ignore the trigger_error standard throughout this file because the text is
  * provided by the $message parameter.
- * phpcs:disable Drupal.Semantics.FunctionTriggerError
  */
 class DeprecatedArray extends \ArrayObject {
 
