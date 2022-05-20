@@ -31,6 +31,8 @@ use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Entity\EntityValidationTrait;
 use Drupal\jsonapi\Access\TemporaryQueryGuard;
+use Drupal\jsonapi\Events\CollectRelationshipMetaEvent;
+use Drupal\jsonapi\Events\MetaDataEvents;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
 use Drupal\jsonapi\IncludeResolver;
 use Drupal\jsonapi\JsonApiResource\IncludedData;
@@ -52,6 +54,7 @@ use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeField;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 use Drupal\jsonapi\Revisions\ResourceVersionRouteEnhancer;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -152,6 +155,11 @@ class EntityResource {
   protected $user;
 
   /**
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Instantiates an EntityResource object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -176,8 +184,10 @@ class EntityResource {
    *   The time service.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user account.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   The event dispatcher.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityFieldManagerInterface $field_manager, ResourceTypeRepositoryInterface $resource_type_repository, RendererInterface $renderer, EntityRepositoryInterface $entity_repository, IncludeResolver $include_resolver, EntityAccessChecker $entity_access_checker, FieldResolver $field_resolver, SerializerInterface $serializer, TimeInterface $time, AccountInterface $user, EventDispatcherInterface $event_dispatcher) {
     $this->entityTypeManager = $entity_type_manager;
     $this->fieldManager = $field_manager;
     $this->resourceTypeRepository = $resource_type_repository;
@@ -189,6 +199,7 @@ class EntityResource {
     $this->serializer = $serializer;
     $this->time = $time;
     $this->user = $user;
+    $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
@@ -585,12 +596,16 @@ class EntityResource {
     // Access will have already been checked by the RelationshipRouteAccessCheck
     // service, so we don't need to call ::getAccessCheckedResourceObject().
     $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
+    $collect_meta_event = new CollectRelationshipMetaEvent($resource_object, $field_list);
+    $this->eventDispatcher->dispatch($collect_meta_event, MetaDataEvents::COLLECT_RELATIONSHIP_META);
     $relationship = Relationship::createFromEntityReferenceField($resource_object, $field_list);
     $response = $this->buildWrappedResponse($relationship, $request, $this->getIncludes($request, $resource_object), $response_code);
     // Add the host entity as a cacheable dependency.
     if ($response instanceof CacheableResponseInterface) {
       $response->addCacheableDependency($entity);
     }
+    // Add the meta event as a cacheable dependency.
+    $entity->addCacheableDependency($collect_meta_event);
     return $response;
   }
 

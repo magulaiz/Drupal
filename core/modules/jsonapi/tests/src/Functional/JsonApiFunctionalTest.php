@@ -32,6 +32,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
 
   /**
    * Tests the GET method.
+   * @group jsonapi
    */
   public function testRead() {
     $this->createDefaultContent(61, 5, TRUE, TRUE, static::IS_NOT_MULTILINGUAL, FALSE);
@@ -548,6 +549,99 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertTrue($this->drupalUserIsLoggedIn($admin_user));
     $this->container->get('state')->set('system.maintenance_mode', FALSE);
     $this->drupalLogout();
+  }
+
+  /**
+   * Tests adding metadata to a resource.
+   */
+  public function testMetaEvent() {
+    $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
+
+    // Test resource meta is added
+    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    $node = $this->nodes[0];
+    \Drupal::state()->set('jsonapi_test_meta_events.object_meta', [
+      'enabled_type' => 'node--article',
+      'enabled_id' => $node->uuid(),
+      'fields' => ['title'],
+    ]);
+
+    // Test if relationship has correct metadata when loading a single resource
+    $result = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
+    $this->assertEquals(['resource_meta_title' => $node->getTitle()], $result['data']['meta']);
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+
+    // Test if relationship has correct metadata when loading a resource collection
+    $result = Json::decode($this->drupalGet('jsonapi/node/article'));
+    foreach ($result['data'] as $resource) {
+      if ($resource['id'] === $node->uuid()) {
+        $this->assertEquals(['resource_meta_title' => $node->getTitle()], $resource['meta']);
+      }
+
+      else {
+        $this->assertArrayNotHasKey('meta', $resource);
+      }
+
+    }
+
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.object_meta');
+  }
+
+  /**
+   * Tests adding metadata to relationship.
+   */
+  public function testMetaRelationEvent() {
+    $this->createDefaultContent(3, 5, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
+
+    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    $node = $this->nodes[0];
+    \Drupal::state()->set('jsonapi_test_meta_events.relationship_meta', [
+      'enabled_type' => 'node--article',
+      'enabled_relation' => 'field_tags',
+      'enabled_id' => $node->uuid(),
+      'fields' => ['name'],
+    ]);
+
+    // Test if relationship has correct metadata when loading a resource collection
+    $result = Json::decode($this->drupalGet('jsonapi/node/article'));
+    foreach ($result['data'] as $resource) {
+      if ($resource['id'] === $node->uuid()) {
+        $tagNames = $resource['relationships']['field_tags']['meta']['relationship_meta_name'];
+        $tags = $node->field_tags->referencedEntities();
+
+        $this->assertCount(count($tags), $tagNames);
+        foreach ($tags as $tag) {
+          $this->assertContains($tag->label(), $tagNames);
+        }
+
+      }
+
+      else {
+        $this->assertArrayNotHasKey('meta', $resource['relationships']['field_tags']);
+      }
+
+    }
+
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.relationship_meta');
+
+    // Test if relationship has correct metadata when loading a single resource
+    $resource = Json::decode($this->drupalGet('jsonapi/node/article/' . $node->uuid()));
+    if ($resource['data']['id'] === $node->uuid()) {
+      $tagNames = $resource['data']['relationships']['field_tags']['meta']['relationship_meta_name'];
+      $tags = $node->field_tags->referencedEntities();
+
+      $this->assertCount(count($tags), $tagNames);
+      foreach ($tags as $tag) {
+        $this->assertContains($tag->label(), $tagNames);
+      }
+
+    }
+
+    // Test if the cache tags bubbled up
+    $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'jsonapi_test_meta_events.relationship_meta');
   }
 
   /**
