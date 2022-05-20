@@ -40,7 +40,8 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Fields expect an array of field names, the value of the fields are then added to the metadata.
+    // Fields expect an array of field names, the value of the fields are then
+    // added to the metadata.
     foreach ($config['fields'] as $field_name) {
       $event->setMeta('resource_meta_' . $field_name, $event->getResourceObject()->getField($field_name)->value);
     }
@@ -85,7 +86,8 @@ class MetaEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    // Fields expect an array of field names, the value of the fields are then added to the metadata.
+    // Fields expect an array of field names, the value of the fields are then
+    // added to the metadata.
     foreach ($config['fields'] as $field_name) {
       $fieldValues = [];
       foreach ($referencedEntities as $entity) {

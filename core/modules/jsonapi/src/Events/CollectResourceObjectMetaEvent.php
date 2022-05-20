@@ -9,7 +9,8 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\Component\EventDispatcher\Event;
 
 /**
- * An event used for collecting resource object metadata of a JSON:API resource types.
+ * An event used for collecting resource object metadata of a JSON:API resource
+ * types.
  */
 final class CollectResourceObjectMetaEvent extends Event implements RefinableCacheableDependencyInterface {
 
@@ -73,7 +74,7 @@ final class CollectResourceObjectMetaEvent extends Event implements RefinableCac
    * Gets the meta values.
    *
    * @return array
-   *   The meta
+   *   The meta data.
    */
   public function getMeta(): array {
     return $this->meta;

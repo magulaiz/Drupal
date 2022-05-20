@@ -3,7 +3,8 @@
 namespace Drupal\jsonapi\Events;
 
 /**
- * Contains all events emitted that allow changing metadata for JSON:API resources and relations.
+ * Contains all events emitted that allow changing metadata for JSON:API
+ * resources and relations.
  *
  * @see \Drupal\jsonapi\Events\CollectRelationshipMetaEvent
  * @see \Drupal\jsonapi\Events\CollectResourceObjectMetaEvent
