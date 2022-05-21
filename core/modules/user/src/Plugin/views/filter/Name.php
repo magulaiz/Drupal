@@ -160,7 +160,7 @@ class Name extends InOperator {
     // Transform the numeric values (ids) into entity labels.
     foreach ($form['group_info']['group_items'] as &$item) {
       // @todo Remove 2nd condition in https://www.drupal.org/node/3280477.
-      if (!empty($item['value']['#default_value']) && !is_string($item['value']['#default_value'])) {
+      if (!empty($item['value']['#default_value']) && is_array($item['value']['#default_value'])) {
         $users = User::loadMultiple($item['value']['#default_value']);
         $item['value']['#default_value'] = EntityAutocomplete::getEntityLabels($users);
       }
