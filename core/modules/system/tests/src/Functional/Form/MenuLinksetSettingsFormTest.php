@@ -55,22 +55,16 @@ class MenuLinksetSettingsFormTest extends BrowserTestBase {
       ->elementExists('css', '#edit-actions > input.button--primary');
 
     // Confirm endpoint can be enabled.
-    $this->assertSession()
-      ->elementExists('css', '#edit-enable-endpoint')
-      ->check();
+    $this->assertSession()->fieldExists('edit-enable-endpoint')->check();
     $this->submitForm([], 'Save configuration');
     $this->assertSession()
       ->pageTextContains('The configuration options have been saved.');
-    $this->assertSession()
-      ->elementExists('css', '#edit-enable-endpoint')
-      ->isChecked();
+    $this->assertSession()->fieldExists('edit-enable-endpoint')->isChecked();
     $is_endpoint_enabled = $this->config('system.linkset')->get('enable_endpoint');
     assert($is_endpoint_enabled);
 
     // Confirm endpoint can be disabled.
-    $this->assertSession()
-      ->elementExists('css', '#edit-enable-endpoint')
-      ->uncheck();
+    $this->assertSession()->fieldExists('edit-enable-endpoint')->uncheck();
     $this->submitForm([], 'Save configuration');
     $this->assertSession()
       ->pageTextContains('The configuration options have been saved.');
