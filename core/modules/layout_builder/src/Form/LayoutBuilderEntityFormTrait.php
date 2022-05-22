@@ -53,7 +53,7 @@ trait LayoutBuilderEntityFormTrait {
    *   return a render array that will replace the Layout Builder UI form.
    *   Otherwise, return null.
    */
-  protected function getLockMessage(SectionStorageInterface $section_storage) {
+  protected function getLockMessage(SectionStorageInterface $section_storage): array|NULL {
     if ($lock = $this->layoutTempstoreRepository->getLock($section_storage)) {
       if ($this->currentUser()->id() === $lock->getOwnerId()) {
         $this->messenger()->addWarning($this->t('You have unsaved changes.'));
@@ -76,7 +76,7 @@ trait LayoutBuilderEntityFormTrait {
    * @return array
    *   A render array.
    */
-  protected function lockMessage(SectionStorageInterface $section_storage, Lock $lock) {
+  protected function lockMessage(SectionStorageInterface $section_storage, Lock $lock): array {
     return [
       '#theme' => 'status_messages',
       '#message_list' => [
@@ -101,7 +101,7 @@ trait LayoutBuilderEntityFormTrait {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state of the Layout Builder UI form.
    */
-  protected function layoutEntitySaveTasks(FormStateInterface $form_state) {
+  protected function layoutEntitySaveTasks(FormStateInterface $form_state): void {
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
     $this->messenger()->deleteByType('warning');
     $this->messenger()->addMessage($this->t('The layout has been saved.'));

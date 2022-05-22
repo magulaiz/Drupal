@@ -3,6 +3,7 @@
 namespace Drupal\layout_builder\Access;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Routing\Access\AccessInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -46,7 +47,7 @@ class LayoutBuilderLockAccessCheck implements AccessInterface {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  public function access(SectionStorageInterface $section_storage, AccountInterface $account) {
+  public function access(SectionStorageInterface $section_storage, AccountInterface $account): AccessResultInterface {
     $lock = $this->layoutTempstoreRepository->getLock($section_storage);
     return AccessResult::allowedIf(!$lock || $account->id() === $lock->getOwnerId())->setCacheMaxAge(0);
   }
