@@ -348,8 +348,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // When a module is providing the database driver, then enable that module.
     $connection_info = Database::getConnectionInfo();
     $driver = $connection_info['default']['driver'];
-    $namespace = $connection_info['default']['namespace'] ?? NULL;
-    $autoload = $connection_info['default']['autoload'] ?? NULL;
+    $namespace = $connection_info['default']['namespace'] ?? '';
+    $autoload = $connection_info['default']['autoload'] ?? '';
     if (strpos($autoload, 'src/Driver/Database/') !== FALSE) {
       [$first, $second] = explode('\\', $namespace, 3);
       if ($first === 'Drupal' && strtolower($second) === $second) {
@@ -660,20 +660,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $this->classLoader = NULL;
     $this->vfsRoot = NULL;
     $this->configImporter = NULL;
-
-    // Free up memory: Custom test class properties.
-    // Note: Private properties cannot be cleaned up.
-    $rc = new \ReflectionClass(__CLASS__);
-    $blacklist = [];
-    foreach ($rc->getProperties() as $property) {
-      $blacklist[$property->name] = $property->getDeclaringClass()->name;
-    }
-    $rc = new \ReflectionClass($this);
-    foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED) as $property) {
-      if (!$property->isStatic() && !isset($blacklist[$property->name])) {
-        $this->{$property->name} = NULL;
-      }
-    }
 
     // Clean FileCache cache.
     FileCache::reset();

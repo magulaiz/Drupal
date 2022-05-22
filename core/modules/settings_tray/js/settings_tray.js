@@ -42,11 +42,14 @@
     }
 
     editMode = !!editMode;
-    var $editButton = $(toggleEditSelector);
     var $editables;
+    var editButton = document.querySelector(toggleEditSelector);
 
     if (editMode) {
-      $editButton.text(Drupal.t('Editing'));
+      if (editButton) {
+        editButton.textContent = Drupal.t('Editing');
+      }
+
       closeToolbarTrays();
       $editables = $(once('settingstray', '[data-drupal-settingstray="editable"]'));
 
@@ -73,18 +76,21 @@
         });
       }
     } else {
-        $editables = $(once.remove('settingstray', '[data-drupal-settingstray="editable"]'));
+      $editables = $(once.remove('settingstray', '[data-drupal-settingstray="editable"]'));
 
-        if ($editables.length) {
-          document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
-          $editables.off('.settingstray');
-          $(quickEditItemSelector).off('.settingstray');
-        }
-
-        $editButton.text(Drupal.t('Edit'));
-        closeOffCanvas();
-        disableQuickEdit();
+      if ($editables.length) {
+        document.querySelector('[data-off-canvas-main-canvas]').removeEventListener('click', preventClick, true);
+        $editables.off('.settingstray');
+        $(quickEditItemSelector).off('.settingstray');
       }
+
+      if (editButton) {
+        editButton.textContent = Drupal.t('Edit');
+      }
+
+      closeOffCanvas();
+      disableQuickEdit();
+    }
 
     getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
     $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);

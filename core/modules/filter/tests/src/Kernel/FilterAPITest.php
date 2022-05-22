@@ -430,10 +430,12 @@ class FilterAPITest extends EntityKernelTestBase {
    *
    * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
    *   The violations to assert.
-   * @param mixed $invalid_value
+   * @param string $invalid_value
    *   The expected invalid value.
+   *
+   * @internal
    */
-  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value) {
+  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, string $invalid_value): void {
     $filter_format_violation_found = FALSE;
     foreach ($violations as $violation) {
       if ($violation->getRoot() instanceof FilterFormatDataType && $violation->getInvalidValue() === $invalid_value) {
@@ -505,6 +507,30 @@ class FilterAPITest extends EntityKernelTestBase {
     $vars = $filter_format->__sleep();
     $this->assertContains('filters', $vars);
     $this->assertNotContains('filterCollection', $vars);
+  }
+
+  /**
+   * Tests deprecated "forbidden tags" functionality.
+   *
+   * @group legacy
+   */
+  public function testForbiddenTagsDeprecated(): void {
+    $this->expectDeprecation('forbidden_tags for FilterInterface::getHTMLRestrictions() is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0');
+    FilterFormat::create([
+      'format' => 'forbidden_tags_deprecation_test',
+      'name' => 'Forbidden tags deprecation test',
+      'filters' => [
+        'filter_test_restrict_tags_and_attributes' => [
+          'status' => TRUE,
+          'settings' => [
+            'restrictions' => [
+              'forbidden_tags' => ['p' => FALSE],
+            ],
+          ],
+        ],
+      ],
+    ])->save();
+    FilterFormat::load('forbidden_tags_deprecation_test')->getHtmlRestrictions();
   }
 
 }

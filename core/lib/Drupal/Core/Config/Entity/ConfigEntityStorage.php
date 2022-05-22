@@ -214,7 +214,8 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   protected function doCreate(array $values) {
     // Set default language to current language if not provided.
     $values += [$this->langcodeKey => $this->languageManager->getCurrentLanguage()->getId()];
-    $entity = new $this->entityClass($values, $this->entityTypeId);
+    $entity_class = $this->getEntityClass();
+    $entity = new $entity_class($values, $this->entityTypeId);
 
     return $entity;
   }
@@ -470,7 +471,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    */
   public function loadOverrideFree($id) {
     $entities = $this->loadMultipleOverrideFree([$id]);
-    return isset($entities[$id]) ? $entities[$id] : NULL;
+    return $entities[$id] ?? NULL;
   }
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Core\Url;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\error_test\Controller\ErrorTestController;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
  * Generate events and verify dblog entries; verify user access to log reports
@@ -20,6 +21,7 @@ use Drupal\Tests\BrowserTestBase;
  */
 class DbLogTest extends BrowserTestBase {
   use FakeLogEntries;
+  use AssertBreadcrumbTrait;
 
   /**
    * Modules to enable.
@@ -38,7 +40,7 @@ class DbLogTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * A user with some relevant administrative permissions.
@@ -245,6 +247,23 @@ class DbLogTest extends BrowserTestBase {
   }
 
   /**
+   * Test that twig errors are displayed correctly.
+   */
+  public function testMessageParsing() {
+    $this->drupalLogin($this->adminUser);
+    // Log a common twig error with {{ }} and { } variables.
+    \Drupal::service('logger.factory')->get("php")
+      ->error('Incorrect parameter {{foo}} in path {path}: {value}',
+        ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
+      );
+    // View the log page to verify it's correct.
+    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/dblog/event/' . $wid);
+    $this->assertSession()
+      ->responseContains('Incorrect parameter {bar} in path /baz: horse');
+  }
+
+  /**
    * Verifies setting of the database log row limit.
    *
    * @param int $row_limit
@@ -349,9 +368,13 @@ class DbLogTest extends BrowserTestBase {
     $query = Database::getConnection()->select('watchdog');
     $query->addExpression('MIN([wid])');
     $wid = $query->execute()->fetchField();
-    $this->drupalGet('admin/reports/dblog/event/' . $wid);
-    $xpath = '//nav[@class="breadcrumb"]/ol/li[last()]/a';
-    $this->assertEquals('Recent log messages', current($this->xpath($xpath))->getText(), 'DBLogs link displayed at breadcrumb in event page.');
+    $trail = [
+      '' => 'Home',
+      'admin' => 'Administration',
+      'admin/reports' => 'Reports',
+      'admin/reports/dblog' => 'Recent log messages',
+    ];
+    $this->assertBreadcrumb('admin/reports/dblog/event/' . $wid, $trail);
   }
 
   /**
@@ -360,8 +383,8 @@ class DbLogTest extends BrowserTestBase {
   private function verifyEvents() {
     // Invoke events.
     $this->doUser();
-    $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
-    $this->drupalCreateContentType(['type' => 'page', 'name' => t('Basic page')]);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
+    $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
     $this->doNode('article');
     $this->doNode('page');
     $this->doNode('forum');
@@ -444,7 +467,7 @@ class DbLogTest extends BrowserTestBase {
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
     $this->drupalGet('user/' . $user->id() . '/cancel');
-    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Cancel account');
+    $this->submitForm(['user_cancel_method' => 'user_cancel_reassign'], 'Confirm');
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -802,8 +825,10 @@ class DbLogTest extends BrowserTestBase {
    *   The database log message to check.
    * @param string $message
    *   The message to pass to simpletest.
+   *
+   * @internal
    */
-  protected function assertLogMessage($log_message, $message) {
+  protected function assertLogMessage(string $log_message, string $message): void {
     $message_text = Unicode::truncate($log_message, 56, TRUE, TRUE);
     $this->assertSession()->linkExists($message_text, 0, $message);
   }

@@ -28,6 +28,17 @@
           $fullLabel = $('<label></label>').prependTo($full);
         }
 
+        // To ensure the summary toggle is shown in case the label is hidden
+        // (in multivalue fields in particular), show the label but hide
+        // the original text of the label.
+        if ($fullLabel.hasClass('visually-hidden')) {
+          $fullLabel.html(
+            (index, oldHtml) =>
+              `<span class="visually-hidden">${oldHtml}</span>`,
+          );
+          $fullLabel.removeClass('visually-hidden');
+        }
+
         // Set up the edit/hide summary link.
         const $link = $(
           `<span class="field-edit-link"> (<button type="button" class="link link-edit-summary">${Drupal.t(
@@ -53,7 +64,7 @@
           .appendTo($summaryLabel);
 
         // If no summary is set, hide the summary field.
-        if ($widget.find('.js-text-summary').val() === '') {
+        if (summary.value === '') {
           $link.trigger('click');
         }
       });

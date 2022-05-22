@@ -17,7 +17,6 @@ description: 'A clean, accessible, and flexible Drupal front-end theme.'
 alt text: 'Screenshot of Olivero, Drupal front-end theme.'
 package: Core
 version: VERSION
-experimental: true
 libraries:
   - olivero/global-styling
 regions:
@@ -35,6 +34,10 @@ regions:
   footer_top: 'Footer Top'
   footer_bottom: 'Footer Bottom'
 libraries-override:
+  system/admin:
+    css:
+      theme:
+        css/system.admin.css: false
   system/base:
     css:
       component:
@@ -58,6 +61,8 @@ libraries-extend:
     - olivero/messages
   core/drupal.collapse:
     - olivero/details
+  core/drupal.dialog:
+    - olivero/drupal.dialog
   core/drupal.dialog.off_canvas:
     - olivero/dialog.off_canvas
   core/drupal.progress:
