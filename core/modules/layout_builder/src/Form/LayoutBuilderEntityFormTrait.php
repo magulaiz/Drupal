@@ -57,10 +57,9 @@ trait LayoutBuilderEntityFormTrait {
     if ($lock = $this->layoutTempstoreRepository->getLock($section_storage)) {
       if ($this->currentUser()->id() === $lock->getOwnerId()) {
         $this->messenger()->addWarning($this->t('You have unsaved changes.'));
+        return NULL;
       }
-      else {
-        return $this->lockMessage($section_storage, $lock);
-      }
+      return $this->lockMessage($section_storage, $lock);
     }
     return NULL;
   }
