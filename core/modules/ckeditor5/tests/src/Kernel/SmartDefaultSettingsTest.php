@@ -517,8 +517,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             '|',
             // The 'code' button added because <code> is allowed.
             'code',
-            // The 'textPartLanguage' button added because <span> is allowed.
-            'textPartLanguage',
           ],
         ],
         'plugins' => [
@@ -528,6 +526,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<dl>',
               '<dt>',
               '<dd>',
+              '<span>',
               '<a hreflang>',
               '<blockquote cite>',
               '<ul type>',
@@ -551,16 +550,13 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           'ckeditor5_imageResize' => [
             'allow_resize' => TRUE,
           ],
-          'ckeditor5_language' => [
-            'language_list' => 'un',
-          ],
           'ckeditor5_list' => [
             'reversed' => FALSE,
             'startIndex' => TRUE,
           ],
         ],
       ],
-      'expected_superset' => '<span lang dir>',
+      'expected_superset' => '',
       'expected_fundamental_compatibility_violations' => [],
       'expected_messages' => [
         'status' => [
@@ -645,7 +641,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -678,7 +673,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ],
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -709,7 +703,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             )),
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_language' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_language'],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
@@ -734,7 +727,7 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         ],
         'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
       ],
-      'expected_superset' => '<code class="language-*"> ' . $basic_html_test_case['expected_superset'],
+      'expected_superset' => '<code class="language-*">',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => [
         'status' => [
@@ -779,7 +772,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         '<h5 class="text-align-center text-align-justify">',
         '<h6 class="text-align-center text-align-justify">',
         '<li class="text-align-center text-align-justify">',
-        $basic_html_test_case['expected_superset'],
       ]),
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
