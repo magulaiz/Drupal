@@ -434,6 +434,29 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
   }
 
   /**
+   * Gets the elements this plugin allows to create.
+   *
+   * @return string[]
+   *   A list of plain tags (without attributes) that this plugin can create.
+   *
+   * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
+   *
+   * @throws \LogicException
+   *   When called on a plugin definition that has no elements.
+   */
+  public function getCreatableElements(): array {
+    if (!$this->hasElements()) {
+      throw new \LogicException('::getCreatableElements() should only be called if ::hasElements() returns TRUE.');
+    }
+
+    return array_filter($this->getElements(), function (string $element) {
+      return !HTMLRestrictions::fromString($element)
+        ->getPlainTagsSubset()
+        ->allowsNothing();
+    });
+  }
+
+  /**
    * Whether this plugin allows creating/editing elements and attributes.
    *
    * @return bool

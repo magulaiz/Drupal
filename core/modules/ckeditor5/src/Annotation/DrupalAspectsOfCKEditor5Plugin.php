@@ -87,6 +87,8 @@ class DrupalAspectsOfCKEditor5Plugin extends Plugin {
    * the `href` attribute on it".
    *
    * @var string[]|false
+   *
+   * @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
    */
   public $elements;
 
