@@ -1,11 +1,11 @@
 <?php
 
-use Drupal\Core\Database\Query\AlterableInterface;
-
 /**
  * @file
  * Block content test deriver module file.
  */
+
+use Drupal\Core\Database\Query\AlterableInterface;
 
 /**
  * Implements hook_query_TAG_alter().
