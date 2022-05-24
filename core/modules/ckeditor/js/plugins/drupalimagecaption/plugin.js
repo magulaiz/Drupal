@@ -182,6 +182,8 @@
                 captionElement.removeChild(captionElement.childNodes.item(0));
               }
             }
+
+            return actualWidget;
           };
         };
       }, null, null, 20);
