@@ -298,7 +298,7 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
   /**
    * {@inheritdoc}
    */
-  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE): array {
+  public function getProvidedElements(array $plugin_ids = [], EditorInterface $editor = NULL, bool $resolve_wildcards = TRUE, bool $creatable_elements_only = FALSE): array {
     $plugins = $this->getDefinitions();
     if (!empty($plugin_ids)) {
       $plugins = array_intersect_key($plugins, array_flip($plugin_ids));
@@ -339,6 +339,14 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
         }
       }
       assert(Inspector::assertAllStrings($defined_elements));
+      if ($creatable_elements_only) {
+        // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
+        $defined_elements = array_filter($defined_elements, function (string $element) {
+          return !HTMLRestrictions::fromString($element)
+            ->getPlainTagsSubset()
+            ->allowsNothing();
+        });
+      }
       foreach ($defined_elements as $element) {
         $additional_elements = HTMLRestrictions::fromString($element);
         $elements = $elements->merge($additional_elements);
