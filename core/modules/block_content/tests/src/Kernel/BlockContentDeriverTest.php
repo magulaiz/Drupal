@@ -17,7 +17,13 @@ class BlockContentDeriverTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'block_content', 'system', 'user'];
+  protected static $modules = [
+    'block',
+    'block_content',
+    'block_content_test_deriver',
+    'system',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -59,6 +65,20 @@ class BlockContentDeriverTest extends KernelTestBase {
 
     // Ensure the non-reusable block content is not provided a derivative block
     // plugin.
+    $this->assertFalse($block_manager->hasDefinition($plugin_id));
+
+    $block_content_type = BlockContentType::create([
+      'id' => 'no_derivatives',
+      'label' => 'No derivatives please!',
+    ]);
+    $block_content_type->save();
+    $block_content = BlockContent::create([
+      'info' => 'I am special',
+      'type' => 'no_derivatives',
+    ]);
+    $block_content->save();
+    $plugin_id = 'block_content' . PluginBase::DERIVATIVE_SEPARATOR . $block_content->uuid();
+    // Ensure the query alter fires correctly.
     $this->assertFalse($block_manager->hasDefinition($plugin_id));
   }
 
