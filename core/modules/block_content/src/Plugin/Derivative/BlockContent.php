@@ -5,6 +5,7 @@ namespace Drupal\block_content\Plugin\Derivative;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\Site\Settings;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -45,16 +46,19 @@ class BlockContent extends DeriverBase implements ContainerDeriverInterface {
   public function getDerivativeDefinitions($base_plugin_definition) {
     $query = $this->blockContentStorage->getQuery()
       ->addTag('block_content_derivatives')
+      ->accessCheck(FALSE)
       ->condition('reusable', TRUE);
     // Reset the discovered definitions.
     $this->derivatives = [];
-    /** @var \Drupal\block_content\Entity\BlockContent $block_content */
-    foreach ($this->blockContentStorage->loadMultiple($query->execute()) as $block_content) {
-      $this->derivatives[$block_content->uuid()] = $base_plugin_definition;
-      $this->derivatives[$block_content->uuid()]['admin_label'] = $block_content->label();
-      $this->derivatives[$block_content->uuid()]['config_dependencies']['content'] = [
-        $block_content->getConfigDependencyName(),
-      ];
+    foreach (array_chunk($query->execute(), Settings::get('entity_update_batch_size', 50)) as $chunk) {
+      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
+      foreach ($this->blockContentStorage->loadMultiple($chunk) as $block_content) {
+        $this->derivatives[$block_content->uuid()] = $base_plugin_definition;
+        $this->derivatives[$block_content->uuid()]['admin_label'] = $block_content->label();
+        $this->derivatives[$block_content->uuid()]['config_dependencies']['content'] = [
+          $block_content->getConfigDependencyName(),
+        ];
+      }
     }
     return parent::getDerivativeDefinitions($base_plugin_definition);
   }
