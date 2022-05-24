@@ -483,6 +483,7 @@ final class SmartDefaultSettings {
           [$net_new, $surplus_additions] = self::computeNetNewElementsForPlugin($provided, $still_needed, $definition);
           if (!$net_new->allowsNothing()) {
             $plugin_id = $definition->id();
+            $creatable_elements = HTMLRestrictions::fromString(implode(' ', $definition->getCreatableElements()));
             $surplus_score = static::computeSurplusScore($surplus_additions, $still_needed);
             foreach ($net_new->getAllowedElements() as $tag_name => $attributes_config) {
               // Non-specific attribute restrictions: `FALSE` or `TRUE`.
@@ -490,6 +491,11 @@ final class SmartDefaultSettings {
               // to a string. The string must not be a valid attribute name, so
               // use a leading and trailing dash.
               if (!is_array($attributes_config)) {
+                if ($attributes_config === FALSE && !array_key_exists($tag_name, $creatable_elements->getAllowedElements())) {
+                  // If this plugin is not able to create the plain tag, then
+                  // cannot be a candidate for the tag without attributes.
+                  continue;
+                }
                 $non_specific_attribute = $attributes_config ? '-attributes-any-' : '-attributes-none-';
                 $plugin_candidates[$tag_name][$non_specific_attribute][$plugin_id] = $surplus_score;
                 continue;
