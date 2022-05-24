@@ -66,6 +66,9 @@ function olivero_preprocess_page_title(&$variables) {
   $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
   if ($variables['is_front'] === TRUE) {
     unset($variables['title_suffix']['add_or_remove_shortcut']);
+
+    // Change page title of front page.
+    $variables['title']['#markup'] = t('Welcome!');
   }
 }
 
