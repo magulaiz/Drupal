@@ -58,7 +58,6 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $enabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enabled_plugins), $text_editor, FALSE, TRUE));
     $disabled_plugin_plain_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($disabled_plugins), $text_editor, FALSE, TRUE));
 
-
     // The single element for which source editing is enabled, which we are
     // checking now.
     $source_enabled_element = HTMLRestrictions::fromString($value);
