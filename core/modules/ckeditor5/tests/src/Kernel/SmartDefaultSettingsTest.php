@@ -744,9 +744,8 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => [
           'items' => array_merge(
-            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], 0, -1),
+            $basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'],
             ['alignment'],
-            array_slice($basic_html_test_case['expected_ckeditor5_settings']['toolbar']['items'], -1)
           ),
         ],
         'plugins' => array_merge(
