@@ -99,6 +99,12 @@ class EntityAutocompleteController extends ControllerBase {
         throw new AccessDeniedHttpException();
       }
 
+      $entity_type = $request->query->get('entity_type');
+      $entity_id = $request->query->get('entity_id');
+      if ($entity_type && $entity_id) {
+        $selection_settings['entity'] = $this->entityTypeManager()->getStorage($entity_type)->load($entity_id);
+      }
+
       $matches = $this->matcher->getMatches($target_type, $selection_handler, $selection_settings, $typed_string);
     }
 
