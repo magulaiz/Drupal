@@ -62,9 +62,9 @@
 }
 
 .form-item--error .form-item__affix {
-  color: #d72222;
-  border-color: #d72222;
-  background: #feecec;
+  color: #dc2323;
+  border-color: #dc2323;
+  background: var(--color-minimumred);
 }
 
 .form-item__wrapper--with-affix {
