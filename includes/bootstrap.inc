@@ -4005,6 +4005,9 @@ function _drupal_cookie_params($options) {
         $options['path'] .= '; SameSite=' . $options['samesite'];
       }
     }
+    else {
+      $options['path'] = preg_replace('/;(?:\s*)SameSite=.*?(?=;|$)/i', '', $options['path']);
+    }
   }
   return $options;
 }
