@@ -25,11 +25,6 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 class DateRangeItem extends DateTimeItem {
 
   /**
-   * Value for the 'datetime_type' setting: store a date and time.
-   */
-  const DATETIME_TYPE_ALLDAY = 'allday';
-
-  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {

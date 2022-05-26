@@ -22,4 +22,14 @@ interface DateTimeItemInterface {
    */
   const DATE_STORAGE_FORMAT = 'Y-m-d';
 
+  /**
+   * Value for the 'datetime_type' setting: store only a date.
+   */
+  const DATETIME_TYPE_DATE = 'date';
+
+  /**
+   * Value for the 'datetime_type' setting: store a date and time.
+   */
+  const DATETIME_TYPE_DATETIME = 'datetime';
+
 }

@@ -9,7 +9,6 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -163,7 +162,7 @@ abstract class DateTimeFormatterBase extends FormatterBase {
    *   A DrupalDateTime object.
    */
   protected function setTimeZone(DrupalDateTime $date) {
-    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
+    if ($this->getFieldSetting('datetime_type') === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       // A date without time has no timezone conversion.
       $timezone = DateTimeItemInterface::STORAGE_TIMEZONE;
     }
