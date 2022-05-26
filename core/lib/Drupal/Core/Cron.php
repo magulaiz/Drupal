@@ -25,16 +25,6 @@ use Psr\Log\NullLogger;
 class Cron implements CronInterface {
 
   /**
-   * The default time cron should execute each queue in seconds.
-   */
-  const DEFAULT_QUEUE_CRON_TIME = 15;
-
-  /**
-   * The default lease time an item in the queue should get when called from cron.
-   */
-  const DEFAULT_QUEUE_CRON_LEASE_TIME = 30;
-
-  /**
    * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface

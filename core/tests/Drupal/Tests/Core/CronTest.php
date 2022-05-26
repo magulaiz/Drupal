@@ -111,6 +111,7 @@ class CronTest extends UnitTestCase {
       'id' => $queue_worker,
       'cron' => [
         'time' => &$this->claimTime,
+        'lease_time' => $this->claimTime,
       ],
     ];
 

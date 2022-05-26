@@ -9,7 +9,7 @@ use Drupal\Core\Queue\QueueWorkerBase;
  *   id = "cron_queue_test_lease_time",
  *   title = @Translation("Lease time test"),
  *   cron = {
- *     "time" = 5,
+ *     "time" = 100,
  *     "lease_time" = 2,
  *   }
  * )

@@ -5,6 +5,7 @@ namespace Drupal\KernelTests\Core\Queue;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
+use Drupal\Core\Queue\QueueWorkerManagerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -101,7 +102,7 @@ class QueueTest extends KernelTestBase {
     $this->assertSame(0, $queue1->numberOfItems(), 'Queue 1 is empty');
     $this->assertSame(0, $queue2->numberOfItems(), 'Queue 2 is empty');
 
-    // Test that we can claim an item that is expired and we cannot claim an
+    // Test that we can claim an item that is expired, and we cannot claim an
     // item that has not expired yet.
     $queue1->createItem($data[0]);
     $item = $queue1->claimItem();
@@ -110,7 +111,7 @@ class QueueTest extends KernelTestBase {
     $this->assertFalse($item, 'The item cannot be claimed again.');
     // Set the expiration date to the current time minus the lease time plus 1
     // second. It should be possible to reclaim the item.
-    $this->setExpiration($queue1, time() - 31);
+    $this->setExpiration($queue1, \Drupal::time()->getCurrentTime() - (QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_LEASE_TIME + 1));
     $item = $queue1->claimItem();
     $this->assertNotFalse($item, 'Item can be claimed after expiration.');
   }

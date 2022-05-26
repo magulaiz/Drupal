@@ -16,4 +16,9 @@ interface QueueWorkerManagerInterface extends PluginManagerInterface {
    */
   public const DEFAULT_QUEUE_CRON_TIME = 15;
 
+  /**
+   * The default lease time duration in seconds a queue item should get.
+   */
+  public const DEFAULT_QUEUE_CRON_LEASE_TIME = 30;
+
 }

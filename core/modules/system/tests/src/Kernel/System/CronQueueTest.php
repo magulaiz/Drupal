@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\system\Kernel\System;
 
-use Drupal\Core\CronInterface;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Queue\DatabaseQueue;
 use Drupal\Core\Queue\Memory;
@@ -92,9 +91,7 @@ class CronQueueTest extends KernelTestBase {
     $manager = $this->container->get('plugin.manager.queue_worker');
     $definitions = $manager->getDefinitions();
     static::assertNotEmpty($database_lease_time = $definitions['cron_queue_test_database_delay_exception']['cron']['lease_time']);
-    static::assertArrayNotHasKey('lease_time', $definitions['cron_queue_test_memory_delay_exception']['cron']);
-    // Test queue worker without a default lease time.
-    $memory_lease_time = CronInterface::DEFAULT_QUEUE_CRON_LEASE_TIME;
+    static::assertNotEmpty($memory_lease_time = $definitions['cron_queue_test_memory_delay_exception']['cron']['lease_time']);
     // Create the necessary test data and run cron.
     $database->createItem('test');
     $memory->createItem('test');
@@ -252,6 +249,8 @@ class CronQueueTest extends KernelTestBase {
     $queue_worker_manager->processDefinition($definition, $plugin_id);
     $this->assertArrayHasKey('time', $definition['cron']);
     $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_TIME, $definition['cron']['time']);
+    $this->assertArrayHasKey('lease_time', $definition['cron']);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_LEASE_TIME, $definition['cron']['lease_time']);
 
     // Ensure if an invalid lease time (less-than 1 second) is provided, it is
     // overridden with the default lease time.
@@ -261,6 +260,12 @@ class CronQueueTest extends KernelTestBase {
     $definition = ['cron' => ['time' => -1]];
     $queue_worker_manager->processDefinition($definition, $plugin_id);
     $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_TIME, $definition['cron']['time']);
+    $definition = ['cron' => ['lease_time' => 0]];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_LEASE_TIME, $definition['cron']['lease_time']);
+    $definition = ['cron' => ['lease_time' => -1]];
+    $queue_worker_manager->processDefinition($definition, $plugin_id);
+    $this->assertEquals(QueueWorkerManagerInterface::DEFAULT_QUEUE_CRON_LEASE_TIME, $definition['cron']['lease_time']);
   }
 
 }
