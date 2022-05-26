@@ -4,6 +4,7 @@ namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
 /**
@@ -38,7 +39,7 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
 
     $date_order = $this->getSetting('date_order');
 
-    if ($this->getFieldSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATETIME) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItemInterface::DATETIME_TYPE_DATETIME) {
       $time_type = $this->getSetting('time_type');
       $increment = $this->getSetting('increment');
     }
@@ -103,7 +104,7 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
       '#options' => ['MDY' => $this->t('Month/Day/Year'), 'DMY' => $this->t('Day/Month/Year'), 'YMD' => $this->t('Year/Month/Day')],
     ];
 
-    if ($this->getFieldSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATETIME) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItemInterface::DATETIME_TYPE_DATETIME) {
       $element['time_type'] = [
         '#type' => 'select',
         '#title' => $this->t('Time type'),
@@ -146,7 +147,7 @@ class DateRangeDatelistWidget extends DateRangeWidgetBase {
     $summary = [];
 
     $summary[] = $this->t('Date part order: @order', ['@order' => $this->getSetting('date_order')]);
-    if ($this->getFieldSetting('datetime_type') == DateRangeItem::DATETIME_TYPE_DATETIME) {
+    if ($this->getFieldSetting('datetime_type') == DateTimeItemInterface::DATETIME_TYPE_DATETIME) {
       $summary[] = $this->t('Time type: @time_type', ['@time_type' => $this->getSetting('time_type')]);
       $summary[] = $this->t('Time increments: @increment', ['@increment' => $this->getSetting('increment')]);
     }

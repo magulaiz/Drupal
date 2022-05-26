@@ -62,7 +62,7 @@ class DateRangeFieldTest extends DateTestBase {
       $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
 
       // Ensure field is set to a date-only field.
-      $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
+      $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
       $this->fieldStorage->save();
 
       // Display creation form.
@@ -290,7 +290,7 @@ class DateRangeFieldTest extends DateTestBase {
     $field_label = $this->field->label();
 
     // Ensure the field to a datetime field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
 
     // Display creation form.
@@ -644,7 +644,7 @@ class DateRangeFieldTest extends DateTestBase {
     $field_label = $this->field->label();
 
     // Ensure field is set to a date only field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATE);
     $this->fieldStorage->save();
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
@@ -718,7 +718,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
     // Change the field to a datetime field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
 
     // Change the widget to a datelist widget.
@@ -1006,7 +1006,7 @@ class DateRangeFieldTest extends DateTestBase {
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATE],
     ]);
     $field_storage->save();
 
@@ -1169,7 +1169,7 @@ class DateRangeFieldTest extends DateTestBase {
    */
   public function testInvalidField() {
     // Change the field to a datetime field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATETIME);
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItemInterface::DATETIME_TYPE_DATETIME);
     $this->fieldStorage->save();
     $field_name = $this->fieldStorage->getName();
     $field_label = $this->field->label();
@@ -1391,7 +1391,7 @@ class DateRangeFieldTest extends DateTestBase {
       'entity_type' => 'node',
       'type' => 'daterange',
       'settings' => [
-        'datetime_type' => DateRangeItem::DATETIME_TYPE_DATE,
+        'datetime_type' => DateTimeItemInterface::DATETIME_TYPE_DATE,
       ],
     ]);
     $field_storage->save();

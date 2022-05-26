@@ -55,7 +55,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
     // storage timezone and format.
 
     $datetime_type = $this->getFieldSetting('datetime_type');
-    if ($datetime_type === DateRangeItem::DATETIME_TYPE_DATE) {
+    if ($datetime_type === DateTimeItemInterface::DATETIME_TYPE_DATE) {
       $storage_format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
     }
     else {
