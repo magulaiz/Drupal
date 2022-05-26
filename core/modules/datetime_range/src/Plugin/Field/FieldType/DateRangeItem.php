@@ -76,7 +76,7 @@ class DateRangeItem extends DateTimeItem {
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
     $element = parent::storageSettingsForm($form, $form_state, $has_data);
 
-    $element['datetime_type']['#options'][static::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
+    $element['datetime_type']['#options'][DateRangeItemInterface::DATETIME_TYPE_ALLDAY] = $this->t('All Day');
 
     return $element;
   }

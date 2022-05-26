@@ -6,6 +6,7 @@ use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItemInterface;
 use Drupal\Tests\datetime\Functional\DateTestBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
@@ -467,7 +468,7 @@ class DateRangeFieldTest extends DateTestBase {
     $field_label = $this->field->label();
 
     // Ensure field is set to an all-day field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
+    $this->fieldStorage->setSetting('datetime_type', DateRangeItemInterface::DATETIME_TYPE_ALLDAY);
     $this->fieldStorage->save();
 
     // Display creation form.
@@ -683,7 +684,7 @@ class DateRangeFieldTest extends DateTestBase {
     $this->assertSession()->elementNotExists('xpath', $xpathIncr);
 
     // Change the field is set to an all day field.
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_ALLDAY);
+    $this->fieldStorage->setSetting('datetime_type', DateRangeItemInterface::DATETIME_TYPE_ALLDAY);
     $this->fieldStorage->save();
 
     // Change the widget to a datelist widget.

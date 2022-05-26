@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItemInterface;
 
 /**
  * Base class for the 'daterange_*' widgets.
@@ -69,7 +70,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
         $start_date = $item['value'];
 
-        if ($datetime_type === DateRangeItem::DATETIME_TYPE_ALLDAY) {
+        if ($datetime_type === DateRangeItemInterface::DATETIME_TYPE_ALLDAY) {
           // All day fields start at midnight on the starting date, but are
           // stored like datetime fields, so we need to adjust the time.
           // This function is called twice, so to prevent a double conversion
@@ -85,7 +86,7 @@ class DateRangeWidgetBase extends DateTimeWidgetBase {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
         $end_date = $item['end_value'];
 
-        if ($datetime_type === DateRangeItem::DATETIME_TYPE_ALLDAY) {
+        if ($datetime_type === DateRangeItemInterface::DATETIME_TYPE_ALLDAY) {
           // All day fields start at midnight on the starting date, but are
           // stored like datetime fields, so we need to adjust the time.
           // This function is called twice, so to prevent a double conversion
