@@ -1,8 +1,6 @@
 <?php
 
-namespace Drupal\datetime_range\Plugin\Field\FieldType;
-
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
+namespace Drupal\datetime\Plugin\Field\FieldType;
 
 /**
  * Interface definition for Daterange items.

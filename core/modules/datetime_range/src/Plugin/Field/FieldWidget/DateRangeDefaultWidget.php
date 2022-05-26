@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItemInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateRangeItemInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

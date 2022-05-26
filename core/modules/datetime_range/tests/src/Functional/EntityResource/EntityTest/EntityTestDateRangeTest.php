@@ -3,7 +3,7 @@
 namespace Drupal\Tests\datetime_range\Functional\EntityResource\EntityTest;
 
 use Drupal\Core\Url;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItemInterface;
+use Drupal\datetime\Plugin\Field\FieldType\DateRangeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
