@@ -5,7 +5,6 @@ namespace Drupal\datetime_range\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
 /**
  * Plugin implementation of the 'daterange_datelist' widget.
