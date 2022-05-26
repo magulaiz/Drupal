@@ -3999,13 +3999,16 @@ function _drupal_cookie_params($options) {
   $options['samesite'] = _drupal_samesite_cookie($options);
   if (\PHP_VERSION_ID < 70300) {
     // Emulate SameSite support in older PHP versions.
+    global $is_https;
     if (!empty($options['samesite'])) {
       // Ensure the SameSite attribute is only added once.
       if (!preg_match('/SameSite=/i', $options['path'])) {
         $options['path'] .= '; SameSite=' . $options['samesite'];
       }
     }
-    else {
+    elseif ($is_https && variable_get('https', FALSE)) {
+      // The insecure session cookie path is copied from the secure session cookie,
+      // so the SameSite attribute must be removed. Other attributes are kept.
       $options['path'] = preg_replace('/;(?:\s*)SameSite=.*?(?=;|$)/i', '', $options['path']);
     }
   }
