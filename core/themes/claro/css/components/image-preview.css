@@ -25,7 +25,10 @@
   box-shadow: inset 0 0 0.5rem #d3d4d9;
 }
 
-.image-preview img {
+.image-preview img,
+.media-library-item img,
+.views-field-thumbnail__target-id img {
+  background-color: #f3f4f9;
   background-image:
     linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
     linear-gradient(-45deg, #d3d4d9 25%, transparent 26%),
