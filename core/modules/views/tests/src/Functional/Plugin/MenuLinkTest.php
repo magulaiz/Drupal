@@ -111,7 +111,7 @@ class MenuLinkTest extends ViewTestBase {
     $this->assertSession()->pageTextContains('Primary level node');
     $this->assertSession()->pageTextContains('Secondary level view page');
 
-    //Test that local task menu items with arguments work.
+    // Test that local task menu items with arguments work.
     $this->drupalGet('node/' . $node->id() . '/local');
     $this->assertSession()->statusCodeEquals(200);
   }
