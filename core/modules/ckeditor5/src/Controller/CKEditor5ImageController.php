@@ -145,7 +145,7 @@ class CKEditor5ImageController extends ControllerBase {
     }
 
     $validators = [
-      'file_validate_extensions' => ['gif png jpg jpeg'],
+      'file_validate_extensions' => ['gif png jpg jpeg webp'],
       'file_validate_size' => [$max_filesize],
       'file_validate_image_resolution' => [$max_dimensions],
     ];

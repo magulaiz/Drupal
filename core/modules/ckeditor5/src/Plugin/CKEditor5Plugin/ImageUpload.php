@@ -23,7 +23,7 @@ use Drupal\editor\EditorInterface;
  *     config = {
  *       "image" = {
  *         "upload" = {
- *           "types" = { "jpeg", "png", "gif" }
+ *           "types" = { "jpeg", "png", "gif", "webp" }
  *         }
  *       }
  *     },
