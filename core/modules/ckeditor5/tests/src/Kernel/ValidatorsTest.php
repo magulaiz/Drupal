@@ -732,6 +732,9 @@ class ValidatorsTest extends KernelTestBase {
               // Tag + attributes; tag already supported by enabled plugin,
               // attribute not supported by no plugin.
               '<a hreflang>',
+              // Tag-only; supported by no plugin (only attributes on tag
+              // supported by a plugin).
+              '<span>',
             ],
           ],
         ],
