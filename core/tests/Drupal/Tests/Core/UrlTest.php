@@ -831,6 +831,25 @@ class UrlTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::fromEntityUri
+   *
+   * @dataProvider providerTestFromEntityUriInvalid
+   */
+  public function testFromEntityUriInvalid($uri) {
+    $this->expectException(\InvalidArgumentException::class);
+    Url::fromUri($uri);
+  }
+
+  public function providerTestFromEntityUriInvalid() {
+    $data = [];
+    $data[] = ['entity:'];
+    $data[] = ['entity:foo'];
+    $data[] = ['entity:foo/'];
+    $data[] = ['entity:/bar'];
+    return $data;
+  }
+
+  /**
    * Creates a mock access manager for the access tests.
    *
    * @param bool $access
