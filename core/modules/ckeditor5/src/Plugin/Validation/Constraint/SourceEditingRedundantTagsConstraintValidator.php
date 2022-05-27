@@ -93,7 +93,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // Determine which element type is relevant for the violation message.
         assert(count($overlap->getAllowedElements(FALSE)) === 1);
         $overlap_tag = array_keys($overlap->getAllowedElements(FALSE))[0];
-        $is_attr_overlap = self::tagHasAttributeRestrictions($overlap, $overlap_tag) && array_key_exists($overlap_tag, $enabled_plugin_elements->getAllowedElements());
+        $is_attr_overlap = self::tagHasAttributeRestrictions($overlap, $overlap_tag);
 
         // If the entirety (so not just the tag but also the attributes, and not
         // just some of the attribute values, but all of them) of the HTML
@@ -117,8 +117,19 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // tag (`<span lang>`) and not supporting the creation of this plain tag
         // (`<span>` explicitly listed in their elements) can trigger a
         // violation.
-        if (!$is_attr_overlap && !$source_enabled_element->diff($plain_tags_to_check_against)->allowsNothing()) {
-          continue;
+        if (!$is_attr_overlap) {
+          $value_is_plain_tag_only = !self::tagHasAttributeRestrictions($source_enabled_element, $overlap_tag);
+          // If the value being validated is for a tag with attributes, trigger
+          // a validation error for a non-attribute overlap only if the tag is
+          // not yet supported by one of the enabled plugins. (Because the tag
+          // overlap is meaningless: Source Editing is only being used to allow
+          // additional attributes).
+          if (!$value_is_plain_tag_only) {
+            $new_creatable_tags = $source_enabled_element->extractPlainTagsSubset()->diff($enabled_plugin_plain_tags);
+            if ($new_creatable_tags->diff($plain_tags_to_check_against)->allowsNothing()) {
+              continue;
+            }
+          }
         }
 
         // If we reach this, it means the entirety (so not just the tag but also
