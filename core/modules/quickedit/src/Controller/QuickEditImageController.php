@@ -1,9 +1,8 @@
 <?php
 
-namespace Drupal\image\Controller;
+namespace Drupal\quickedit\Controller;
 
-@trigger_error(__NAMESPACE__ . '\QuickEditImageController is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Instead, use Drupal\quickedit\QuickEditImageController. See https://www.drupal.org/node/3271848', E_USER_DEPRECATED);
-
+use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
@@ -72,7 +71,13 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
    */
-  public function __construct(RendererInterface $renderer, ImageFactory $image_factory, PrivateTempStoreFactory $temp_store_factory, EntityDisplayRepositoryInterface $entity_display_repository, FileSystemInterface $file_system) {
+  public function __construct(
+    RendererInterface $renderer,
+    ImageFactory $image_factory,
+    PrivateTempStoreFactory $temp_store_factory,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+    FileSystemInterface $file_system
+  ) {
     $this->renderer = $renderer;
     $this->imageFactory = $image_factory;
     $this->tempStore = $temp_store_factory->get('quickedit');
@@ -99,7 +104,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    * @param string $view_mode_id
@@ -108,7 +113,7 @@ class QuickEditImageController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON response.
    */
-  public function upload(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+  public function upload(EntityInterface $entity, string $field_name, string $langcode, string $view_mode_id) {
     $field = $this->getField($entity, $field_name, $langcode);
     $field_validators = $field->getUploadValidators();
     $field_settings = $field->getFieldDefinition()->getSettings();
@@ -116,12 +121,18 @@ class QuickEditImageController extends ControllerBase {
 
     // Add upload resolution validation.
     if ($field_settings['max_resolution'] || $field_settings['min_resolution']) {
-      $field_validators['file_validate_image_resolution'] = [$field_settings['max_resolution'], $field_settings['min_resolution']];
+      $field_validators['file_validate_image_resolution'] = [
+        $field_settings['max_resolution'],
+        $field_settings['min_resolution'],
+      ];
     }
 
     // Create the destination directory if it does not already exist.
     if (isset($destination) && !$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
-      return new JsonResponse(['main_error' => $this->t('The destination directory could not be created.'), 'errors' => '']);
+      return new JsonResponse([
+        'main_error' => $this->t('The destination directory could not be created.'),
+        'errors' => '',
+      ]);
     }
 
     // Attempt to save the image given the field's constraints.
@@ -166,7 +177,10 @@ class QuickEditImageController extends ControllerBase {
       // Return a JSON object containing the errors from Drupal and our
       // "main_error", which is displayed inside the dropzone area.
       $messages = StatusMessages::renderMessages('error');
-      return new JsonResponse(['errors' => $this->renderer->render($messages), 'main_error' => $this->t('The image failed validation.')]);
+      return new JsonResponse([
+        'errors' => $this->renderer->render($messages),
+        'main_error' => $this->t('The image failed validation.'),
+      ]);
     }
   }
 
@@ -176,7 +190,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    * @param string $view_mode_id
@@ -185,7 +199,7 @@ class QuickEditImageController extends ControllerBase {
    * @return \Drupal\Core\Cache\CacheableJsonResponse
    *   The JSON response.
    */
-  public function getInfo(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
+  public function getInfo(EntityInterface $entity, string $field_name, string $langcode, string $view_mode_id): CacheableJsonResponse {
     $field = $this->getField($entity, $field_name, $langcode);
     $settings = $field->getFieldDefinition()->getSettings();
     $info = [
@@ -207,7 +221,7 @@ class QuickEditImageController extends ControllerBase {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity of which an image field is being rendered.
    * @param string $field_name
-   *   The name of the (image) field that is being rendered
+   *   The name of the (image) field that is being rendered.
    * @param string $langcode
    *   The language code of the field that is being rendered.
    *
@@ -217,7 +231,7 @@ class QuickEditImageController extends ControllerBase {
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    *   Throws an exception if the request is invalid.
    */
-  protected function getField(EntityInterface $entity, $field_name, $langcode) {
+  protected function getField(EntityInterface $entity, string $field_name, string $langcode): ImageItem {
     // Ensure that this is a valid Entity.
     if (!($entity instanceof ContentEntityInterface)) {
       throw new BadRequestHttpException('Requested Entity is not a Content Entity.');
