@@ -139,7 +139,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $plugin_manager = new TestPluginManager($this->namespaces, $this->expectedDefinitions);
 
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "missing" plugin does not exist. Valid plugin IDs for Drupal\Tests\Core\Plugin\TestPluginManager are: apple, banana');
+    $this->expectExceptionMessage('The "missing" plugin does not exist. Please check plugin definitions for Drupal\Tests\Core\Plugin\TestPluginManager');
     $plugin_manager->getDefinition('missing');
   }
 
