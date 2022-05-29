@@ -75,7 +75,7 @@ class Drupal {
   /**
    * The current system version.
    */
-  const VERSION = '9.4.0-dev';
+  const VERSION = '9.5.0-dev';
 
   /**
    * Core API compatibility.
@@ -96,7 +96,7 @@ class Drupal {
    *   that Drupal no longer supports that PHP version.
    * - An error is shown in the status report that the PHP version is too old.
    */
-  const MINIMUM_SUPPORTED_PHP = '7.3.0';
+  const MINIMUM_SUPPORTED_PHP = '7.4.0';
 
   /**
    * Minimum allowed version of PHP for Drupal to be bootstrapped.

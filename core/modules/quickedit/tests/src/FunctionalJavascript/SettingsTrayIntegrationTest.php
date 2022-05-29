@@ -45,6 +45,16 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getTestThemes() {
+    // Make sure to test with Olivero first to avoid
+    // https://www.drupal.org/project/quickedit/issues/3262273
+    // @todo Remove when that is fixed.
+    return array_merge(['olivero'], array_diff(parent::getTestThemes(), ['olivero']));
+  }
+
+  /**
    * Tests QuickEdit links behavior.
    */
   public function testQuickEditLinks() {
@@ -78,11 +88,7 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
 
       $this->enableTheme($theme);
 
-      $block = $this->placeBlock($block_plugin, [
-        // @todo Remove this when
-        //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
-        'region' => 'sidebar_first',
-      ]);
+      $block = $this->placeBlock($block_plugin);
       $block_selector = $this->getBlockSelector($block);
       // Load the same page twice.
       foreach ([1, 2] as $page_load_times) {
@@ -123,7 +129,7 @@ class SettingsTrayIntegrationTest extends SettingsTrayTestBase {
       $this->clickContextualLink($block_selector, "Quick edit");
       $this->waitForOffCanvasToOpen();
       // QuickEdit toolbar should be closed when opening off-canvas dialog.
-      $web_assert->elementNotExists('css', $quick_edit_selector);
+      $web_assert->waitForElementRemoved('css', $quick_edit_selector);
       // Open QuickEdit toolbar via contextual link while in Edit mode.
       $this->clickContextualLink($node_selector, "Quick edit", FALSE);
       $this->waitForOffCanvasToClose();
