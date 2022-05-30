@@ -53,6 +53,17 @@ interface AccountInterface {
   public function hasPermission($permission);
 
   /**
+   * Whether a user has a certain role.
+   *
+   * @param string $rid
+   *   The role ID to check.
+   *
+   * @return bool
+   *   Returns TRUE if the user has the role, otherwise FALSE.
+   */
+  public function hasRole($rid);
+
+  /**
    * Returns TRUE if the account is authenticated.
    *
    * @return bool
