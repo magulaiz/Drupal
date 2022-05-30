@@ -21,7 +21,8 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Fundamental requirements:
  * 1. No TYPE_MARKUP_LANGUAGE filters allowed.
  * 2. Fundamental CKEditor 5 plugins' HTML tags are allowed.
- * 3. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
+ * 3. All tags are actually creatable.
+ * 4. The HTML restrictions of all TYPE_HTML_RESTRICTOR filters allow the
  *    configured CKEditor 5 plugins to work.
  *
  * @see \Drupal\filter\Plugin\FilterInterface::TYPE_HTML_RESTRICTOR
@@ -67,6 +68,9 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
     if ($this->context->getViolations()->count() > 0) {
       return;
     }
+
+    // Second: ensure that all tags can actually be created.
+    $this->checkAllHtmlTagsAreCreatable($text_editor, $constraint);
 
     // Finally: ensure the CKEditor 5 configuration's ability to generate HTML
     // markup precisely matches that of the text format.
@@ -180,6 +184,29 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
           ->atPath("filters.$filter_plugin_id")
           ->addViolation();
       }
+    }
+  }
+
+  /**
+   * Checks all HTML tags supported by enabled CKEditor 5 plugins are creatable.
+   *
+   * @param \Drupal\editor\EditorInterface $text_editor
+   *   The text editor to validate.
+   * @param \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraint $constraint
+   *   The constraint to validate.
+   */
+  private function checkAllHtmlTagsAreCreatable(EditorInterface $text_editor, FundamentalCompatibilityConstraint $constraint): void {
+    $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
+    $tags_and_attributes = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor));
+    $creatable_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor, FALSE, TRUE));
+
+    $needed_tags = $tags_and_attributes->extractPlainTagsSubset();
+    $non_creatable_tags = $needed_tags->diff($creatable_tags);
+    if (!$non_creatable_tags->allowsNothing()) {
+      $this->context->buildViolation($constraint->nonCreatableTagsMessage)
+        ->setParameter('@list', implode(' ', $tags_and_attributes->toCKEditor5ElementsArray()))
+        ->setParameter('@non_creatable_tags', implode(' ', $non_creatable_tags->toCKEditor5ElementsArray()))
+        ->addViolation();
     }
   }
 
