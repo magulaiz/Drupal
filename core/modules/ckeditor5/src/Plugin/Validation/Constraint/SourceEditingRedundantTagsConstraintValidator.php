@@ -119,16 +119,18 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // violation.
         if (!$is_attr_overlap) {
           $value_is_plain_tag_only = !self::tagHasAttributeRestrictions($source_enabled_element, $overlap_tag);
-          // If the value being validated is for a tag with attributes, trigger
-          // a validation error for a non-attribute overlap only if the tag is
-          // not yet supported by one of the enabled plugins. (Because the tag
-          // overlap is meaningless: Source Editing is only being used to allow
-          // additional attributes).
-          if (!$value_is_plain_tag_only) {
-            $new_creatable_tags = $source_enabled_element->extractPlainTagsSubset()->diff($enabled_plugin_plain_tags);
-            if ($new_creatable_tags->diff($plain_tags_to_check_against)->allowsNothing()) {
-              continue;
-            }
+          // When the configured value is a plain tag (`<tag>`): do not generate
+          // a violation message if this tag cannot be created by any CKEditor 5
+          // plugin.
+          if ($value_is_plain_tag_only && $overlap->intersect($plain_tags_to_check_against)->allowsNothing()) {
+            continue;
+          }
+          // When the configured value is not a plain tag (`<tag attr>`): do not
+          // generate a violation message if the tag can already be created by
+          // another CKEditor 5 plugin: this is just adding the ability to set
+          // more attributes.
+          if (!$value_is_plain_tag_only && $overlap->diff($plain_tags_to_check_against)->allowsNothing()) {
+            continue;
           }
         }
 
