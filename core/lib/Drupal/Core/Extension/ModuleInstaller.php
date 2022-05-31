@@ -508,7 +508,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
       // Remove the module's entry from the config. Don't check schema when
       // uninstalling a module since we are only clearing a key.
-      \Drupal::configFactory()->getEditable('core.extension')->clear("module.$module")->save(TRUE);
+      $core_extension = \Drupal::configFactory()->getEditable('core.extension');
+      $core_extension->clear("module.$module");
+      // If the install profile is being uninstalled then set the site's profile
+      // to FALSE to indicate that the site no longer has an installation
+      // profile.
+      if ($core_extension->get('profile') === $module) {
+        $core_extension->set('profile', FALSE);
+      }
+      $core_extension->save(TRUE);
 
       // Update the module handler to remove the module.
       // The current ModuleHandler instance is obsolete with the kernel rebuild

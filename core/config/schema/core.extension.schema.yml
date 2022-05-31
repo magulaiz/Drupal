@@ -15,5 +15,5 @@ core.extension:
         type: integer
         label: 'Weight'
     profile:
-      type: string
+      type: ignore
       label: 'Install profile'

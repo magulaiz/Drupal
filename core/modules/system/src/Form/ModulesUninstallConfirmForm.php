@@ -64,6 +64,13 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
   protected $moduleExtensionList;
 
   /**
+   * The install profile.
+   *
+   * @var string|false|null
+   */
+  protected $installProfile;
+
+  /**
    * Constructs a ModulesUninstallConfirmForm object.
    *
    * @param \Drupal\Core\Extension\ModuleInstallerInterface $module_installer
@@ -76,13 +83,16 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
    *   The entity type manager.
    * @param \Drupal\Core\Extension\ModuleExtensionList $extension_list_module
    *   The module extension list.
+   * @param string|false|null $install_profile
+   *   The install profile.
    */
-  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager, ModuleExtensionList $extension_list_module) {
+  public function __construct(ModuleInstallerInterface $module_installer, KeyValueStoreExpirableInterface $key_value_expirable, ConfigManagerInterface $config_manager, EntityTypeManagerInterface $entity_type_manager, ModuleExtensionList $extension_list_module, $install_profile) {
     $this->moduleInstaller = $module_installer;
     $this->keyValueExpirable = $key_value_expirable;
     $this->configManager = $config_manager;
     $this->entityTypeManager = $entity_type_manager;
     $this->moduleExtensionList = $extension_list_module;
+    $this->installProfile = $install_profile ?? \Drupal::installProfile();
   }
 
   /**
@@ -94,7 +104,8 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
       $container->get('keyvalue.expirable')->get('modules_uninstall'),
       $container->get('config.manager'),
       $container->get('entity_type.manager'),
-      $container->get('extension.list.module')
+      $container->get('extension.list.module'),
+      $container->getParameter('install_profile')
     );
   }
 
@@ -155,6 +166,10 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase {
         return $data[$module]->info['name'];
       }, $this->modules),
     ];
+
+    if (!empty($this->installProfile) && in_array($this->installProfile, $this->modules, TRUE)) {
+      $form['profile']['#markup'] = '<p>' . $this->t('Uninstalling %install_profile is irreversible.', ['%install_profile' => $data[$this->installProfile]->info['name']]) . '</p>';
+    }
 
     // List the dependent entities.
     $this->addDependencyListsToForm($form, 'module', $this->modules, $this->configManager, $this->entityTypeManager);

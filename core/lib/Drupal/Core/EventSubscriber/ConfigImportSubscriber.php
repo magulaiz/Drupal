@@ -123,12 +123,17 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
         // If this error has occurred the other checks are irrelevant.
         return;
       }
-      else {
+      elseif (!empty($core_extension['profile'])) {
         $config_importer->logError($this->t('Cannot change the install profile from %profile to %new_profile once Drupal is installed.', [
           '%profile' => $install_profile,
           '%new_profile' => $core_extension['profile'],
         ]));
       }
+    }
+    elseif (!empty($core_extension['profile']) && !isset($core_extension['module'][$core_extension['profile']])) {
+      $config_importer->logError($this->t('The install profile %profile is not in the list of installed modules.', [
+        '%profile' => $core_extension['profile'],
+      ]));
     }
 
     // Get a list of modules with dependency weights as values.
@@ -179,12 +184,6 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
             ['%module' => $module_data[$module]->info['name'], '@reason' => $reason]));
         }
       }
-    }
-
-    // Ensure that the install profile is not being uninstalled.
-    if (in_array($install_profile, $uninstalls, TRUE)) {
-      $profile_name = $module_data[$install_profile]->info['name'];
-      $config_importer->logError($this->t('Unable to uninstall the %profile profile since it is the install profile.', ['%profile' => $profile_name]));
     }
   }
 
