@@ -47,7 +47,7 @@ class LanguageTest extends CKEditor5TestBase {
     // that `<span>` can be created so we can test how UI translations work when
     // using `textPartLanguage`.
     if ($toolbar_item_name === 'textPartLanguage') {
-      $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
+      $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-sourceEditing'));
       $this->triggerKeyUp('.ckeditor5-toolbar-item-sourceEditing', 'ArrowDown');
       $assert_session->assertWaitOnAjaxRequest();
 
