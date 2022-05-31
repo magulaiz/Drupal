@@ -68,7 +68,26 @@ class SourceEditing extends CKEditor5PluginDefault implements CKEditor5PluginCon
    * {@inheritdoc}
    */
   public function getElementsSubset(): array {
-    return $this->configuration['allowed_tags'];
+    // Drupal needs to know which plugin can create a particular particular
+    // <tag>,  and not just a particular attribute on a tag: <tag attr>.
+    // SourceEditing enables support for every tag that is listed, even if it's
+    // just adding support for an attribute. So compute a list of only the tags.
+    // F.e.: <foo attr>, <bar>, <baz bar> would result in <foo>, <bar>, <baz>.
+    $r = HTMLRestrictions::fromString(implode(' ', $this->configuration['allowed_tags']));
+    $plain_tags = $r->extractPlainTagsSubset()->toCKEditor5ElementsArray();
+
+    // Return the union of the "tags only" list and the original configuration,
+    // but omit duplicates (those entries which never supported attributes to
+    // begin with).
+    // F.e.: merging the tags only list of <foo>, <bar>, <baz> with the original
+    // list of <foo attr>, <bar>, <baz bar> would result in <bar> having a
+    // duplicate.
+    $subset = array_unique(array_merge(
+      $plain_tags,
+      $this->configuration['allowed_tags']
+    ));
+
+    return $subset;
   }
 
   /**
