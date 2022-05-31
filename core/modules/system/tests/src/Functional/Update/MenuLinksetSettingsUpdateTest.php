@@ -26,12 +26,16 @@ class MenuLinksetSettingsUpdateTest extends UpdatePathTestBase {
    * Tests system_post_update_linkset_settings().
    */
   public function testSystemPostUpdateLinksetSettings() {
+    // Ensure config is not present.
+    $config = $this->config('system.linkset');
+    $this->assertTrue($config->isNew());
+
     $this->runUpdates();
 
     // Confirm that config was created and the endpoint is disabled.
-    $config = $this->config('system.linkset');
-    $this->assertTrue($config->isNew());
-    $this->assertFalse($config->get('enable_endpoint'));
+    $updated_config = $this->config('system.linkset');
+    $this->assertFalse($updated_config->isNew());
+    $this->assertFalse($updated_config->get('enable_endpoint'));
   }
 
 }
