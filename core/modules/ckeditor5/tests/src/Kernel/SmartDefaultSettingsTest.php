@@ -770,7 +770,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         '<h4 class="text-align-center text-align-justify">',
         '<h5 class="text-align-center text-align-justify">',
         '<h6 class="text-align-center text-align-justify">',
-        $basic_html_test_case['expected_superset'],
       ]),
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
       'expected_messages' => array_merge_recursive($basic_html_test_case['expected_messages'], [
