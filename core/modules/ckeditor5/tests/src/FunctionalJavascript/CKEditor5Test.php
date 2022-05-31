@@ -13,7 +13,7 @@ use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore esque splitbutton upcasted
+// cspell:ignore esque splitbutton upcasted sourceediting
 
 /**
  * Tests for CKEditor5.
