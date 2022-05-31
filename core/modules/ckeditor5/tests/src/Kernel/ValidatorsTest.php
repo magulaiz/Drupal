@@ -759,7 +759,6 @@ class ValidatorsTest extends KernelTestBase {
             'bold',
             'italic',
             'sourceEditing',
-            'textPartLanguage',
           ],
         ],
         'plugins' => [
@@ -771,9 +770,6 @@ class ValidatorsTest extends KernelTestBase {
               'heading5',
               'heading6',
             ],
-          ],
-          'ckeditor5_language' => [
-            'language_list' => 'un',
           ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
