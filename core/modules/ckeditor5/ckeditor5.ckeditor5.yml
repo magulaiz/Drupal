@@ -247,6 +247,7 @@ ckeditor5_codeBlock:
         label: Code Block
     elements:
       - <pre>
+      - <code>
       - <code class="language-*">
 
 ckeditor5_strikethrough:
