@@ -129,7 +129,10 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
           // generate a violation message if the tag can already be created by
           // another CKEditor 5 plugin: this is just adding the ability to set
           // more attributes.
-          if (!$value_is_plain_tag_only && $overlap->diff($plain_tags_to_check_against)->allowsNothing()) {
+          // Note: this does not check whether the plain tag can indeed be
+          // created, validating that is out of scope for this validator.
+          // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkAllHtmlTagsAreCreatable()
+          if (!$value_is_plain_tag_only) {
             continue;
           }
         }
