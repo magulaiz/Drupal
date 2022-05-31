@@ -29,7 +29,7 @@ class Comment extends FieldableEntity {
     $query = $this->select('comment', 'c')->fields('c');
     $query->innerJoin('node', 'n', '[c].[nid] = [n].[nid]');
     $query->addField('n', 'type', 'node_type');
-    $query->orderBy('c.created');
+    $query->orderBy('c.cid');
     return $query;
   }
 
