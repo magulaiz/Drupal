@@ -415,6 +415,10 @@ class NumericFilter extends FilterPluginBase {
         ];
       }
     }
+    else {
+      // Invalid identifier configuration. Value can't be resolved.
+      return FALSE;
+    }
 
     $rc = parent::acceptExposedInput($input);
 
