@@ -54,10 +54,10 @@ class FundamentalCompatibilityConstraint extends Constraint {
   public $missingElementsMessage = 'The current CKEditor 5 build requires the following elements and attributes: <br><code>@list</code><br>The following elements are missing: <br><code>@diff</code>';
 
   /**
-   * The violation message when CKE5 cannot create all tags it needs to.
+   * The violation message when CKE5 cannot create a tag it needs to.
    *
    * @var string
    */
-  public $nonCreatableTagsMessage = 'The current CKEditor 5 build requires the following elements and attributes: <br><code>@list</code><br>The following tags cannot be created: <br><code>@non_creatable_tags</code>';
+  public $nonCreatableTagMessage = 'The %plugin plugin needs another plugin to create <code>@non_creatable_tag</code>, for it to be able to create the following attributes: <code>@attributes_on_tag</code>.';
 
 }
