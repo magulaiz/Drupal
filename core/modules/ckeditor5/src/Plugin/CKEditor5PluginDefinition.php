@@ -449,11 +449,24 @@ final class CKEditor5PluginDefinition extends PluginDefinition implements Plugin
       throw new \LogicException('::getCreatableElements() should only be called if ::hasElements() returns TRUE.');
     }
 
-    return array_filter($this->getElements(), function (string $element) {
-      return !HTMLRestrictions::fromString($element)
-        ->getPlainTagsSubset()
-        ->allowsNothing();
-    });
+    return array_filter($this->getElements(), [__CLASS__, 'isCreatableElement']);
+  }
+
+  /**
+   * Checks if the element is a plain tag, meaning the plugin can create it.
+   *
+   * @param string $element
+   *   A single element, for example `<foo>`, `<foo bar>` or `<foo bar="baz'>`.
+   *
+   * @return bool
+   *   If it is a plain tag and hence a creatable element.
+   *
+   * @see \Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin::$elements
+   */
+  public static function isCreatableElement(string $element): bool {
+    return !HTMLRestrictions::fromString($element)
+      ->getPlainTagsSubset()
+      ->allowsNothing();
   }
 
   /**
