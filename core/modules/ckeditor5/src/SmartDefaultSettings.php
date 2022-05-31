@@ -246,35 +246,40 @@ final class SmartDefaultSettings {
 
       $help_enabled = $this->moduleHandler->moduleExists('help');
 
-      // To maintain the capabilities of this text format, [Smart default settings](HELP:smart default settings)
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
-        $beginning = $this->formatPlural($help_enabled + 1,
-          'To maintain the capabilities of this text format, the CKEditor 5 migration did the following:',
-          'To maintain the capabilities of this text format, <a href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
+        $beginning = $help_enabled ?
+          $this->t('To maintain the capabilities of this text format, <a href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
             ':sdf_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString() : '',
-        ]);
-        $plugin_info = !empty($plugins_enabled) ? $this->t('Enabled these plugins: (<em>@plugins</em>).', ['@plugins' => implode(', ', $plugins_enabled)]) : '';
-        $source_editing_info = !$source_editing_additions->allowsNothing() ? $this->formatPlural(
-          $help_enabled + 1,
-          'Added these tags/attributes to the Source Editing Plugin\'s Manually editable HTML tags setting: @tag_list',
-          'Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
-          [
-            '@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(),
-             ':source_edit_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString() : '',
+          ]) :
+          $this->t('To maintain the capabilities of this text format, the CKEditor 5 migration did the following:');
+
+        $plugin_info = !empty($plugins_enabled) ?
+          $this->t('Enabled these plugins: (<em>@plugins</em>).', [
+            '@plugins' => implode(', ', $plugins_enabled),
           ]) : '';
+
+        $source_editing_info = '';
+        if (!$source_editing_additions->allowsNothing()) {
+          $source_editing_info = $help_enabled ?
+            $this->t('Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
+              [
+                '@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(),
+                ':source_edit_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString() : '',
+              ]) :
+            $this->t("Added these tags/attributes to the Source Editing Plugin's Manually editable HTML tags setting: @tag_list", ['@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString()]);
+        }
+
         $can_access_dblog = ($this->currentUser->hasPermission('access site reports') && $this->moduleHandler->moduleExists('dblog'));
-        $end = $this->formatPlural(
-          $can_access_dblog + 1,
-          'Additional details are available in your logs.',
-          'Additional details are available <a href=":dblog_url">in your logs</a>.',
-          [
-            ':dblog_url' => $can_access_dblog
-              ? Url::fromRoute('dblog.overview')
+        $end = $can_access_dblog ?
+          $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
+            [
+              ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
                 ->toString()
-              : '',
-          ]
-        );
+                : '',
+            ]
+          ) :
+          $this->t('Additional details are available in your logs.');
 
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t('@beginning @plugin_info @source_editing_info. @end', [
           '@beginning' => $beginning,
