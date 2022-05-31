@@ -311,11 +311,11 @@ class CKEditor5Test extends CKEditor5TestBase {
     $page->checkField('editor[settings][plugins][ckeditor5_imageUpload][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
-    // Enable language to add a second plugin config form.
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-item-textPartLanguage'));
-    $this->triggerKeyUp('.ckeditor5-toolbar-item-textPartLanguage', 'ArrowDown');
-    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-item-textPartLanguage'));
+    // Enable Heading to add a second plugin config form.
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-button-heading'));
+    $this->triggerKeyUp('.ckeditor5-toolbar-button-heading', 'ArrowDown');
+    $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-heading"]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.ckeditor5-toolbar-active .ckeditor5-toolbar-button-heading'));
     $assert_session->assertWaitOnAjaxRequest();
 
     $page->pressButton('Save configuration');
