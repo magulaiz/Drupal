@@ -36,7 +36,7 @@ class File extends DrupalSqlBase {
     $query = $this->select('file_managed', 'f')
       ->fields('f')
       ->condition('f.uri', 'temporary://%', 'NOT LIKE')
-      ->orderBy('f.timestamp');
+      ->orderBy('f.fid');
 
     // Filter by scheme(s), if configured.
     if (isset($this->configuration['scheme'])) {
