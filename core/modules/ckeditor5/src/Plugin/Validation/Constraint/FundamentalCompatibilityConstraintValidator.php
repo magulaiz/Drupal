@@ -197,6 +197,12 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    */
   private function checkAllHtmlTagsAreCreatable(EditorInterface $text_editor, FundamentalCompatibilityConstraint $constraint): void {
     $enabled_plugins = array_keys($this->pluginManager->getEnabledDefinitions($text_editor));
+
+    // When arbitrary HTML is supported, all tags are creatable.
+    if (in_array('ckeditor5_arbitraryHtmlSupport', $enabled_plugins, TRUE)) {
+      return;
+    }
+
     $tags_and_attributes = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor));
     $creatable_tags = new HTMLRestrictions($this->pluginManager->getProvidedElements($enabled_plugins, $text_editor, FALSE, TRUE));
 
