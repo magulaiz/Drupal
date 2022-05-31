@@ -5,7 +5,7 @@ namespace Drupal\Tests\system\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests creation of system linkset settings
+ * Tests creation of system linkset settings.
  *
  * @see system_post_update_linkset_settings()
  *
