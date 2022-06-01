@@ -218,22 +218,15 @@ JS;
     // - styles dropdown label
     // - button states
     $this->selectTextInsideElement('blockquote');
-    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
-    // $this->assertSame('Famous', $style_dropdown->getText());
-    // @todo Remove this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
-    $this->assertSame('Styles', $style_dropdown->getText());
+    $this->assertSame('Famous', $style_dropdown->getText());
     $style_dropdown->click();
     $this->assertTrue($buttons[0]->hasClass('ck-off'));
     $this->assertTrue($buttons[1]->hasClass('ck-off'));
-
-    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
-    // $this->assertTrue($buttons[2]->hasClass('ck-on'));
+    $this->assertTrue($buttons[2]->hasClass('ck-on'));
     $this->assertTrue($buttons[3]->hasClass('ck-off'));
-    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
-    // $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
+    $this->assertFalse($buttons[0]->hasAttribute('aria-disabled'));
     $this->assertSame('true', $buttons[1]->getAttribute('aria-disabled'));
-    // @todo Uncomment this in https://www.drupal.org/i/3277438 because it will include https://github.com/ckeditor/ckeditor5/issues/11576
-    // $this->assertFalse($buttons[2]->hasAttribute('aria-disabled'));
+    $this->assertFalse($buttons[2]->hasAttribute('aria-disabled'));
     // @todo Uncomment this after https://github.com/ckeditor/ckeditor5/issues/11709 is fixed.
     // $this->assertSame('true', $buttons[3]->getAttribute('aria-disabled'));
     // Close the dropdown.
