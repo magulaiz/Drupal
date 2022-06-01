@@ -5,7 +5,7 @@
 * @preserve
 **/
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 (function ($, Drupal, drupalSettings) {
   var showWeight = JSON.parse(localStorage.getItem('Drupal.tableDrag.showWeight'));
@@ -688,7 +688,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
                 }
               });
             } else {
-              var weight = parseInt($(siblings[0]).find(targetClass).val(), 10) || 0;
+              var weight = 0;
+              var $siblingTarget = $(siblings[0]).find(targetClass);
+
+              if ($siblingTarget.length) {
+                weight = parseInt($siblingTarget[0].value, 10) || 0;
+              }
+
               $(siblings).find(targetClass).each(function () {
                 this.value = weight;
                 weight++;
@@ -1003,7 +1009,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return show ? Drupal.t('Hide row weights') : Drupal.t('Show row weights');
     },
     tableDragHandle: function tableDragHandle() {
-      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\"\n        class=\"tabledrag-handle\"><div class=\"handle\">&nbsp;</div></a>");
+      return "<a href=\"#\" title=\"".concat(Drupal.t('Drag to re-order'), "\"\n        class=\"tabledrag-handle\"><div class=\"handle\"></div></a>");
     }
   });
 })(jQuery, Drupal, drupalSettings);
