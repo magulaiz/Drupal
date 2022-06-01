@@ -59,8 +59,8 @@ use Drupal\filter\FilterFormatInterface;
  *     "language",
  *   },
  *   cke5_plugin_elements_subset_configuration = {
- *     "ckeditor5_alignment",
  *     "ckeditor5_heading",
+ *     "ckeditor5_alignment",
  *     "ckeditor5_list",
  *     "ckeditor5_style",
  *     "media_media",
