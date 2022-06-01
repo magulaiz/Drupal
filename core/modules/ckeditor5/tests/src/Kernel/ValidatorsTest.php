@@ -428,6 +428,9 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['justify'],
+          ],
           'ckeditor5_style' => [
             'styles' => [
               [
