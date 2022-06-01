@@ -68,6 +68,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *     library: MODULE_NAME/ckeditor5.marquee
  *     elements:
  *       - <marquee>
+ *       - <marquee behavior>
  * @endcode
  *
  * Declared as an Annotation:
@@ -82,7 +83,7 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *  *   drupal = @DrupalAspectsOfCKEditor5Plugin(
  *  *     label = @Translation("Marquee"),
  *  *     library = "MODULE_NAME/ckeditor5.marquee"
- *  *     elements = { "<marquee>" },
+ *  *     elements = { "<marquee>", "<marquee behavior>" },
  *  *   )
  *  * )
  *  * /
@@ -125,6 +126,15 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  *   explicitly enabled in any plugin. i.e. if only '<p>', '<h3>' and '<h2>'
  *   tags are allowed, then '<$text-container data-something>' will allow the
  *   'data-something' attribute for '<p>', '<h3>' and '<h2>' tags.
+ *   Note that while the syntax is the same, some extra nuance is needed: a
+ *   CKEditor 5 plugin may only be able to create attributes on an element, and
+ *   may not be able to create only the element (the "plain tag"). To indicate
+ *   that an element can be created, list only that element without attributes
+ *   (['<marquee>']). To indicate that only attributes can be created, list only
+ *   the element with the attributes (['<marquee behavior>']). If both can be
+ *   created, list both (['<marquee>', '<marquee behavior>']). Validation logic
+ *   ensures that a plugin supporting only the creation of attributes cannot be
+ *   enabled if the tag cannot be created through another CKEditor 5 plugin.
  * - drupal.toolbar_items: List of toolbar items the plugin provides. Keyed by a
  *   machine name and the value being a pair defining the label:
  *   @code
