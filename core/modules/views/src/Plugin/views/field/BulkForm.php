@@ -79,7 +79,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface {
    *
    * @var \Drupal\Core\Routing\ResettableStackedRouteMatchInterface
    */
-  protected $routeMatch;
+  protected ResettableStackedRouteMatchInterface $routeMatch;
 
   /**
    * Constructs a new BulkForm object.
