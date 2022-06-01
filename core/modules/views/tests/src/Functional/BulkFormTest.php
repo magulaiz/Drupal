@@ -225,7 +225,7 @@ class BulkFormTest extends BrowserTestBase {
   /**
    * Tests that route parameters are passed to the confirmation form route.
    */
-  public function testConfirmRouteWithParameters() {
+  public function testConfirmRouteWithParameters(): void {
     $session = $this->getSession();
     $page = $session->getPage();
     $assert = $this->assertSession();
