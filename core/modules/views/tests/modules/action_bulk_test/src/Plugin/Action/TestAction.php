@@ -3,10 +3,13 @@
 namespace Drupal\action_bulk_test\Plugin\Action;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Session\AccountInterface;
 
 /**
+ * Test action.
+ *
  * @Action(
  *   id = "test_action",
  *   label = @Translation("Test action"),
@@ -17,15 +20,16 @@ use Drupal\Core\Session\AccountInterface;
 class TestAction extends ActionBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE): bool|AccessResultInterface {
     return $return_as_object ? AccessResult::allowed() : TRUE;
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
-  public function execute() {}
+  public function execute(): void {
+  }
 
 }
