@@ -419,6 +419,30 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <em class="placeholder">text-align-justify</em> classes on <em class="placeholder">&lt;p&gt;</em> are supported by the <em class="placeholder">Alignment</em> plugin. Remove this style and enable that plugin instead.',
       ],
     ];
+    $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin if its configuration were different'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'alignment',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_alignment' => [
+            'enabled_alignments' => ['center'],
+          ],
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Justified paragraph',
+                'element' => '<p class="text-align-justify">',
+              ],
+            ],
+          ],
+        ],
+      ],
+      'violations' => [],
+    ];
     $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin'] = [
       'settings' => [
         'toolbar' => [
