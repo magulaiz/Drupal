@@ -93,7 +93,6 @@ class NodeBulkFormTest extends UnitTestCase {
     $definition['title'] = '';
     $options = [];
 
-    $node_bulk_form = new NodeBulkForm([], 'node_bulk_form', $definition, $entity_type_manager, $language_manager, $messenger, $entity_repository);
     $node_bulk_form = new NodeBulkForm([], 'node_bulk_form', $definition, $entity_type_manager, $language_manager, $messenger, $entity_repository, $route_match);
     $node_bulk_form->init($executable, $display, $options);
 
