@@ -1401,6 +1401,13 @@ class HTMLRestrictionsTest extends UnitTestCase {
       TRUE,
     ];
 
+    yield 'concrete subset of (big) wildcard superset: <img class="foo"> is a subset of <$any-html5-element class="foo">' => [
+      new HTMLRestrictions(['img' => ['class' => ['foo' => TRUE]]]),
+      new HTMLRestrictions(['$any-html5-element' => ['class' => ['foo' => TRUE]]]),
+      new HTMLRestrictions([]),
+      FALSE,
+    ];
+
     yield 'concrete subset of (big) wildcard superset: <img class="foo"> is a subset of <$any-html5-element class>' => [
       new HTMLRestrictions(['img' => ['class' => ['foo' => TRUE]]]),
       new HTMLRestrictions(['$any-html5-element' => ['class' => TRUE]]),
