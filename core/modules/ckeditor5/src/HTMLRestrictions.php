@@ -296,9 +296,8 @@ final class HTMLRestrictions {
   public function notInResolvedSuperset(HTMLRestrictions $superset): self {
     $subset = $this;
 
-    // $superset may contain wildcard tags: if so, resolve them, to have a
-    // concrete list of maximum supported elements.
-    $max_supported_resolved = $superset->getWildcardSubset()->allowsNothing()
+    // $superset may contain wildcard tags: if so, resolve them.
+    $superset_resolved = $superset->getWildcardSubset()->allowsNothing()
       ? $superset
       : $superset
         // Resolve wildcards in $superset into concrete tags.
@@ -306,9 +305,8 @@ final class HTMLRestrictions {
         // Ensure that the original superset elements are still present.
         ->merge($superset);
 
-    // Validate $subset truly is a subset of $superset.
-    $not_in_max_supported = $subset->diff($max_supported_resolved);
-    return $not_in_max_supported;
+    // Compute the diff after having resolved wildcards in $superset.
+    return $subset->diff($superset_resolved);
   }
 
   /**
