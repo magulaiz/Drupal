@@ -291,7 +291,8 @@ final class HTMLRestrictions {
    *
    * @return self
    *   A HTMLRestrictions object containing the allowed elements in $this that
-   *   are not allowed by $superset, not even
+   *   are not allowed by $superset, not even $superset has resolved wildcards
+   *   by taking $this into account.
    */
   public function notInResolvedSuperset(HTMLRestrictions $superset): self {
     $subset = $this;
