@@ -3,7 +3,10 @@
 namespace Drupal\layout_builder\Element;
 
 use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\Context\ContextInterface;
+use Drupal\Core\Plugin\Context\EntityContext;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\RenderElement;
@@ -134,6 +137,23 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
     $output['#type'] = 'container';
     $output['#attributes']['id'] = 'layout-builder';
     $output['#attributes']['class'][] = 'layout-builder';
+
+    // Add standard entity classes to avoid styles from being lost on LB UI.
+    $entity_context = $section_storage->getContext('entity');
+    if ($entity_context instanceof EntityContext) {
+      $entity = $entity_context->getContextData()->getValue();
+      if ($entity instanceof ContentEntityInterface) {
+        $output['#attributes']['class'][] = $entity->getEntityTypeId();
+        $output['#attributes']['class'][] = $entity->getEntityTypeId() . '--type-' . $entity->bundle();
+
+        $view_mode_context = $section_storage->getContext('view_mode');
+        if ($view_mode_context instanceof ContextInterface) {
+          $view_mode = $view_mode_context->getContextData()->getValue();
+          $output['#attributes']['class'][] = $entity->getEntityTypeId() . '--view-mode-' . $view_mode;
+        }
+      }
+    }
+
     // Mark this UI as uncacheable.
     $output['#cache']['max-age'] = 0;
     return $output;
