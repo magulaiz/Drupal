@@ -20,6 +20,7 @@ use Drupal\views\Plugin\views\argument\NumericArgument;
 class NumberListField extends NumericArgument {
 
   use FieldAPIHandlerTrait;
+  use ListFieldTitleQueryTrait;
 
   /**
    * Stores the allowed values of this field.

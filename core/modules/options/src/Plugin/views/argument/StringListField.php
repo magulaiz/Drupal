@@ -19,6 +19,7 @@ use Drupal\views\Plugin\views\argument\StringArgument;
 class StringListField extends StringArgument {
 
   use FieldAPIHandlerTrait;
+  use ListFieldTitleQueryTrait;
 
   /**
    * Stores the allowed values of this field.
