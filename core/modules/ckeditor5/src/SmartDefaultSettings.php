@@ -337,7 +337,16 @@ final class SmartDefaultSettings {
             }, ''), " ,"),
           ]
         ) : '';
-        $end = $this->t('Additional details are available in your logs.');
+        $end = $can_access_dblog ?
+          $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
+            [
+              ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')
+                ->setOption('query', ['type[]' => 'ckeditor5'])
+                ->toString()
+                : '',
+            ]
+          ) :
+          $this->t('Additional details are available in your logs.');
         $messages[MessengerInterface::TYPE_WARNING][] = $this->t('@beginning @added_elements_begin @fundamental_tags @added_elements_tags @added_elements_attributes @end',
           [
             '@beginning' => $beginning,
