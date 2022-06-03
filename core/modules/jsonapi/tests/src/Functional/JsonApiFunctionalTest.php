@@ -644,6 +644,31 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
   }
 
   /**
+   * Tests adding metadata to relationship endpoint.
+   */
+  public function testMetaRelationEventOnRelationshipEndpoint() {
+    $this->createDefaultContent(1, 1, FALSE, FALSE, static::IS_NOT_MULTILINGUAL);
+
+    $this->container->get('module_installer')->install(['jsonapi_test_meta_events']);
+    $node = $this->nodes[0];
+    \Drupal::state()->set('jsonapi_test_meta_events.relationship_meta', [
+      'enabled_type' => 'node--article',
+      'enabled_relation' => 'field_tags',
+      'enabled_id' => $node->uuid(),
+      'fields' => ['name'],
+    ]);
+
+    // Test if relationship has correct metadata when loading a single resource
+    $str = $this->drupalGet('jsonapi/node/article/' . $node->uuid() . '/relationships/field_tags');
+    $resource = Json::decode($str);
+
+    $this->assertArrayHasKey('meta', $resource);
+    $this->assertArrayHasKey('relationship_meta_name', $resource['meta']);
+    // Is the tag added to the meta of the document
+    $this->assertEquals([$node->get('field_tags')->entity->getName()], $resource['meta']['relationship_meta_name']);
+  }
+
+  /**
    * Tests the GET method on articles referencing the same tag twice.
    */
   public function testReferencingTwiceRead() {
