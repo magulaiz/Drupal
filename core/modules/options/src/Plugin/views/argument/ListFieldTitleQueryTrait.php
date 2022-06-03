@@ -1,4 +1,3 @@
-
 <?php
 
 namespace Drupal\options\Plugin\views\argument;
