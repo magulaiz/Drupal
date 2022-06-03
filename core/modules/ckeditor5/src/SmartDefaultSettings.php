@@ -333,7 +333,7 @@ final class SmartDefaultSettings {
               $for_tags = implode(', ', array_map(function ($item) {
                 return "<$item>";
               }, $attributes_to_tag[$item]));
-              return "$carry $item ({$this->t('for')} $for_tags),";
+              return "$carry $item ({$this->t('for', [],  ['context' => 'Ckeditor 5 tag list'])} $for_tags),";
             }, ''), " ,"),
           ]
         ) : '';
