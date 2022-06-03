@@ -4,9 +4,9 @@ namespace Drupal\user\Plugin\views\filter;
 
 use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\user\Entity\User;
 use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\filter\InOperator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Filter handler for usernames.
@@ -16,11 +16,6 @@ use Drupal\views\Plugin\views\filter\InOperator;
 #[ViewsFilter("user_name")]
 class Name extends InOperator {
 
-  /**
-   * Stores the exposed input for this filter.
-   */
-  protected $validated_exposed_input;
-
   protected $alwaysMultiple = TRUE;
 
   /**
@@ -29,8 +24,24 @@ class Name extends InOperator {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName, Drupal.Commenting.VariableComment.Missing
   protected array $validated_exposed_input;
 
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    return $instance;
+  }
+
   protected function valueForm(&$form, FormStateInterface $form_state) {
-    $users = $this->value ? User::loadMultiple($this->value) : [];
+    $users = $this->value ? $this->entityTypeManager->getStorage('user')->loadMultiple($this->value) : [];
     $default_value = EntityAutocomplete::getEntityLabels($users);
     $form['value'] = [
       '#type' => 'entity_autocomplete',
@@ -136,7 +147,7 @@ class Name extends InOperator {
     $this->valueOptions = [];
 
     if ($this->value) {
-      $result = \Drupal::entityTypeManager()->getStorage('user')
+      $result = $this->entityTypeManager->getStorage('user')
         ->loadByProperties(['uid' => $this->value]);
       foreach ($result as $account) {
         if ($account->id()) {
@@ -161,7 +172,7 @@ class Name extends InOperator {
     foreach ($form['group_info']['group_items'] as &$item) {
       // @todo Remove 2nd condition in https://www.drupal.org/node/3280477.
       if (!empty($item['value']['#default_value']) && is_array($item['value']['#default_value'])) {
-        $users = User::loadMultiple($item['value']['#default_value']);
+        $users = $this->entityTypeManager->getStorage('user')->loadMultiple($item['value']['#default_value']);
         $item['value']['#default_value'] = EntityAutocomplete::getEntityLabels($users);
       }
     }
