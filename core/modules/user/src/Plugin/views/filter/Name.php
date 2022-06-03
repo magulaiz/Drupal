@@ -50,8 +50,8 @@ class Name extends InOperator {
   }
 
   protected function valueValidate($form, FormStateInterface $form_state) {
-    // Autocomplete puts the values in target_id. Move the values to the
-    // expected depth.
+    // Autocomplete puts the values in target_id. Move the values as expected by
+    // Drupal\user\Plugin\views\filter\Name::validateExposed() method.
     if ($this->isAGroup()) {
       if ($group_values = $form_state->getValue(['options', 'group_info', 'group_items'])) {
         foreach ($group_values as $group_id => $item) {
