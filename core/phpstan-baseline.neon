@@ -646,21 +646,6 @@ parameters:
 			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipePlaceholderTestCases.php
 
 		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 3
-			path: modules/big_pipe/tests/modules/big_pipe_test/src/BigPipeTestController.php
-
-		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/block/src/BlockViewBuilder.php
-
-		-
-			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/block/src/BlockViewBuilder.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\block\\\\Plugin\\\\migrate\\\\process\\\\BlockTheme\\:\\:\\$themes\\.$#"
 			count: 1
 			path: modules/block/src/Plugin/migrate/process/BlockTheme.php
@@ -2112,11 +2097,6 @@ parameters:
 			message: "#^Method Drupal\\\\node\\\\NodeTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/NodeTypeForm.php
-
-		-
-			message: "#^\\#lazy_builder value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/node/src/NodeViewBuilder.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\node\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:\\$name_alias\\.$#"
