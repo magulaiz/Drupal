@@ -89,7 +89,8 @@ class RegistryTest extends UnitTestCase {
     $this->themeInitialization = $this->createMock('Drupal\Core\Theme\ThemeInitializationInterface');
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
-    $this->setupTheme();
+    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList);
+    $this->registry->setThemeManager($this->themeManager);
   }
 
   /**
@@ -109,7 +110,6 @@ class RegistryTest extends UnitTestCase {
       'path' => 'core/modules/system/tests/themes/test_theme/test_theme.info.yml',
       'engine' => 'twig',
       'owner' => 'twig',
-      'stylesheets_remove' => [],
       'libraries_override' => [],
       'libraries_extend' => [],
       'libraries' => [],
@@ -122,7 +122,6 @@ class RegistryTest extends UnitTestCase {
       'path' => 'core/tests/fixtures/test_stable/test_stable.info.yml',
       'engine' => 'twig',
       'owner' => 'twig',
-      'stylesheets_remove' => [],
       'libraries_override' => [],
       'libraries_extend' => [],
       'libraries' => [],
@@ -137,10 +136,12 @@ class RegistryTest extends UnitTestCase {
     // Include the module and theme files so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
-    $this->moduleHandler->expects($this->exactly(2))
-      ->method('getImplementations')
+    $this->moduleHandler->expects($this->atLeastOnce())
+      ->method('invokeAllWith')
       ->with('theme')
-      ->will($this->returnValue(['theme_test']));
+      ->willReturnCallback(function (string $hook, callable $callback) {
+        $callback(function () {}, 'theme_test');
+      });
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('getModuleList')
       ->willReturn([]);
@@ -480,21 +481,6 @@ class RegistryTest extends UnitTestCase {
     ];
 
     return $data;
-  }
-
-  protected function setupTheme() {
-    $this->registry = $this->getMockBuilder(Registry::class)
-      ->onlyMethods(['getPath'])
-      ->setConstructorArgs([$this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, NULL, NULL, $this->moduleList])
-      ->getMock();
-    $this->registry->expects($this->any())
-      ->method('getPath')
-      ->willReturnCallback(function ($module) {
-        if ($module == 'theme_test') {
-          return 'core/modules/system/tests/modules/theme_test';
-        }
-      });
-    $this->registry->setThemeManager($this->themeManager);
   }
 
 }

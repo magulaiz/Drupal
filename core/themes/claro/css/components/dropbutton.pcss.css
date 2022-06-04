@@ -68,6 +68,7 @@
 }
 
 .js .dropbutton {
+  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
   height: var(--dropbutton-toggle-size);
 }
 
@@ -139,7 +140,7 @@
   height: 0.5625rem;
   content: "";
   transform: translate(50%, -50%) rotate(0);
-  background: url(../../images/icons/222330/chevron-down.svg) no-repeat center;
+  background: url(../../images/icons/000f33/chevron-down.svg) no-repeat center;
   background-size: contain;
 }
 
@@ -183,7 +184,7 @@
 }
 
 /* High contrast. */
-@media screen and (-ms-high-contrast: active) {
+@media (-ms-high-contrast: active), (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
     width: 0.5625rem;

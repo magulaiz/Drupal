@@ -15,10 +15,10 @@
         "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
-        "friends-of-behat/mink": "^1.10",
-        "friends-of-behat/mink-browserkit-driver": "^1.4",
+        "behat/mink": "^1.10",
+        "behat/mink-browserkit-driver": "^2.1",
         "behat/mink-selenium2-driver": "^1.4",
-        "composer/composer": "^2.2.4",
+        "composer/composer": "^2.3.5",
         "drupal/coder": "^8.3.10",
         "instaclick/php-webdriver": "^1.4.1",
         "mglaman/phpstan-drupal": "^1.1.9",
@@ -54,7 +54,8 @@
             "composer/installers": true,
             "drupal/core-project-message": true,
             "drupal/core-vendor-hardening": true,
-            "phpstan/extension-installer": true
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
@@ -109,8 +110,8 @@
         "post-update-cmd": [
             "Drupal\\Composer\\Composer::generateMetapackages"
         ],
-        "phpcs": "phpcs --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --",
-        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --runtime-set installed_paths $($COMPOSER_BINARY config vendor-dir)/drupal/coder/coder_sniffer --"
+        "phpcs": "phpcs --standard=core/phpcs.xml.dist --",
+        "phpcbf": "phpcbf --standard=core/phpcs.xml.dist --"
     },
     "repositories": [
         {

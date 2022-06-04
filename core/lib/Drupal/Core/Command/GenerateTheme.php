@@ -2,17 +2,22 @@
 
 namespace Drupal\Core\Command;
 
+use Composer\Autoload\ClassLoader;
+use Composer\Semver\VersionParser;
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Extension\InfoParser;
 use Drupal\Core\File\FileSystem;
+use Drupal\Core\Theme\StarterKitInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 use Twig\Util\TemplateDirIterator;
 
 /**
@@ -124,10 +129,44 @@ class GenerateTheme extends Command {
     $info = Yaml::decode(file_get_contents($info_file));
     $info['name'] = $input->getOption('name') ?: $destination_theme;
 
-    // Unhide hidden themes.
-    unset($info['hidden']);
-
     $info['core_version_requirement'] = '^' . $this->getVersion();
+
+    if (!array_key_exists('version', $info)) {
+      $confirm_versionless_source_theme = new ConfirmationQuestion(sprintf('The source theme %s does not have a version specified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName()));
+      if (!$io->askQuestion($confirm_versionless_source_theme)) {
+        return 0;
+      }
+    }
+
+    $source_version = $info['version'] ?? 'unknown-version';
+    if ($source_version === 'VERSION') {
+      $source_version = \Drupal::VERSION;
+    }
+    // A version in the generator string like "9.4.0-dev" is not very helpful.
+    // When this occurs, generate a version string that points to a commit.
+    if (VersionParser::parseStability($source_version) === 'dev') {
+      $git_check = Process::fromShellCommandline('git --help');
+      $git_check->run();
+      if ($git_check->getExitCode()) {
+        $io->error(sprintf('The source theme %s has a development version number (%s). Determining a specific commit is not possible because git is not installed. Either install git or use a tagged release to generate a theme.', $source_theme->getName(), $source_version));
+        return 1;
+      }
+
+      // Get the git commit for the source theme.
+      $git_get_commit = Process::fromShellCommandline("git rev-list --max-count=1 --abbrev-commit HEAD -C $source");
+      $git_get_commit->run();
+      if ($git_get_commit->getOutput() === '') {
+        $confirm_packaged_dev_release = new ConfirmationQuestion(sprintf('The source theme %s has a development version number (%s). Because it is not a git checkout, a specific commit could not be identified. This makes tracking changes in the source theme difficult. Are you sure you want to continue?', $source_theme->getName(), $source_version));
+        if (!$io->askQuestion($confirm_packaged_dev_release)) {
+          return 0;
+        }
+        $source_version .= '#unknown-commit';
+      }
+      else {
+        $source_version .= '#' . trim($git_get_commit->getOutput());
+      }
+    }
+    $info['generator'] = "$source_theme_name:$source_version";
 
     if ($description = $input->getOption('description')) {
       $info['description'] = $description;
@@ -194,6 +233,21 @@ class GenerateTheme extends Command {
       $new_template_content = preg_replace("/(attach_library\(['\")])$source_theme_name(\/.*['\"]\))/", "$1$destination_theme$2", $contents);
       if (!file_put_contents($template_file, $new_template_content)) {
         $io->getErrorStyle()->error("The template file $template_file could not be written.");
+        return 1;
+      }
+    }
+
+    $loader = new ClassLoader();
+    $loader->addPsr4("Drupal\\$source_theme_name\\", "$source/src");
+    $loader->register();
+
+    $generator_classname = "Drupal\\$source_theme_name\\StarterKit";
+    if (class_exists($generator_classname)) {
+      if (is_a($generator_classname, StarterKitInterface::class, TRUE)) {
+        $generator_classname::postProcess($tmp_dir, $destination_theme, $info['name']);
+      }
+      else {
+        $io->getErrorStyle()->error("The $generator_classname does not implement \Drupal\Core\Theme\StarterKitInterface and cannot perform post-processing.");
         return 1;
       }
     }

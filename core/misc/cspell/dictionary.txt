@@ -25,6 +25,8 @@ alternatif
 amet
 amphibius
 ampm
+analyse
+analysed
 andif
 annot
 anonyme
@@ -50,7 +52,6 @@ arrr
 asdrsad
 assertable
 asterix
-atomentry
 atsign
 attrval
 attrvals
@@ -64,7 +65,6 @@ autocompleting
 autocreate
 autocreated
 autocreation
-autodetect
 autoescape
 autoescaped
 autoescaping
@@ -87,7 +87,6 @@ autowired
 autowiring
 backlink
 backlinks
-backport
 backreferences
 backtraces
 bakeware
@@ -164,6 +163,7 @@ bundleless
 bundlenode
 buttonpane
 buttonset
+buttontext
 buytaert
 cacheability
 cacheable
@@ -184,9 +184,9 @@ camelize
 camelized
 canonicalized
 canonicalizing
+canvastext
 castable
 catalana
-catbro
 catchable
 ccyy
 ccyymm
@@ -233,6 +233,7 @@ codesniffer
 colgroups
 collegehumor
 colonpos
+colour
 colspans
 columnschange
 comida
@@ -425,7 +426,6 @@ enim
 enoki
 enregistrer
 entit
-entitynodeedit
 entitytype
 entityviewedit
 eridani
@@ -435,7 +435,6 @@ eslintignore
 espagnol
 estraven
 etag
-etags
 eurozone
 evenodd
 eventhandler
@@ -459,8 +458,8 @@ fatals
 favourite
 favstar
 fcgi
+fdiv
 februar
-feededit
 fetchmode
 fffffg
 fichiers
@@ -491,6 +490,7 @@ fixnull
 flickr
 flipfit
 floatingspace
+fmod
 foaf
 foat
 focusring
@@ -573,8 +573,8 @@ herpderp
 herro
 heure
 heures
+hexcode
 hidpi
-hijklmn
 hilfetestmodul
 hilited
 hinode
@@ -619,7 +619,6 @@ indexname
 ingoa
 inited
 inno
-inputtypes
 insidekeyword
 inspectable
 instaclick
@@ -707,6 +706,7 @@ linkback
 linkgenerator
 linkification
 linksby
+linktext
 lisu
 litererally
 llamaids
@@ -776,7 +776,7 @@ metapackage
 metapackages
 metatag
 metatags
-meΦΩ
+meφω
 mglaman
 miaus
 middlewares
@@ -891,7 +891,6 @@ nodo
 noemptytag
 noevent
 nofields
-noindex
 nojs
 nolink
 nomask
@@ -1098,6 +1097,7 @@ readmore
 readonlydir
 readystate
 realelement
+realise
 realpaths
 realword
 rebuilder
@@ -1246,7 +1246,6 @@ starterkit
 starzzzz
 statuscode
 stdclass
-stdlib
 stitle
 streamwrapper
 streamwrappers
@@ -1352,12 +1351,10 @@ testcase
 testcases
 testcontent
 testcontextawareblock
-testcontextual
 testdescription
 testdialog
 testdisplay
 testen
-testfetch
 testfield
 testfilename
 testfilter
@@ -1488,7 +1485,6 @@ unflagged
 ungenerated
 ungroup
 ungroupable
-ungrouped
 unhashed
 unhide
 unidecode
@@ -1499,7 +1495,6 @@ uninstallation
 uninstallations
 uninstantiatable
 uninstantiated
-unioned
 unitalicize
 unixepoch
 unixtimestamp
@@ -1510,7 +1505,6 @@ unminified
 unmoderated
 unoptimized
 unpad
-unparsable
 unparseable
 unpermissioned
 unprefix
@@ -1631,7 +1625,6 @@ xlen
 xlgp
 xmlhttp
 xmlhttprequest
-xmlurl
 xoxo
 xpsdocument
 xsiemax
@@ -1668,9 +1661,8 @@ zwei
 zwjhek
 zxvf
 zzgroup
-Èxample
-Über
-Übersetzung
 åwesome
+èxample
 über
-Ȅchȏ
+übersetzung
+ȅchȏ
