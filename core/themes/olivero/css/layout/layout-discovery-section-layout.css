@@ -24,7 +24,9 @@
 /* Width of the entire grid maxes out. */
 
 .layout {
-  margin-bottom: var(--sp)
+  display: grid;
+  grid-gap: var(--grid-gap);
+  margin-bottom: calc(var(--sp) + var(--grid-gap))
 }
 
 @media (min-width: 43.75rem) {

@@ -24,7 +24,8 @@
 /* Width of the entire grid maxes out. */
 
 :root {
-  --messages-icon-size: 2rem;
+  --messages-status-icon-size: 2rem;
+  --messages-close-icon-size: 1.5625rem;
 }
 
 [dir="ltr"] .messages-list {
@@ -68,7 +69,7 @@
 }
 
 .messages {
-  min-height: calc(var(--messages-icon-size) + var(--sp1)*2);
+  min-height: calc(var(--messages-status-icon-size) + var(--sp1)*2);
   padding-top: var(--sp1);
   padding-bottom: var(--sp1);
   color: var(--color--white);
@@ -138,27 +139,13 @@
 }
 
 .messages__container {
-  display: flex;
+  display: grid;
+  grid-template-columns: var(--messages-status-icon-size) auto var(--messages-close-icon-size);
+  grid-gap: var(--sp1);
 }
 
-[dir="ltr"] .messages__header {
-  margin-right: var(--sp1);
-}
-
-[dir="rtl"] .messages__header {
-  margin-left: var(--sp1);
-}
-
-.messages__header {
-  flex-shrink: 0
-}
-
-[dir="ltr"] .messages__header.no-icon {
-    margin-right: 0;
-}
-
-[dir="rtl"] .messages__header.no-icon {
-    margin-left: 0;
+.messages__container--no-icon {
+  grid-template-columns: auto var(--messages-close-icon-size);
 }
 
 .messages__content {
@@ -167,16 +154,7 @@
   padding-top: 0.1875rem;
 }
 
-[dir="ltr"] .messages__button {
-  margin-left: var(--sp1);
-}
-
-[dir="rtl"] .messages__button {
-  margin-right: var(--sp1);
-}
-
 .messages__button {
-  flex-shrink: 0;
   padding-top: 0.1875rem;
 }
 
@@ -198,8 +176,8 @@
 
 .messages__close {
   position: relative;
-  width: 1.5625rem;
-  height: 1.5625rem;
+  width: var(--messages-close-icon-size);
+  height: var(--messages-close-icon-size);
   padding-top: 0;
   padding-bottom: 0;
   cursor: pointer;
@@ -241,6 +219,8 @@
   }
 
 .messages__icon svg {
+  width: var(--messages-status-icon-size);
+  height: var(--messages-status-icon-size);
   vertical-align: top;
 }
 

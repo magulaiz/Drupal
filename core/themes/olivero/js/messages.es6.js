@@ -94,8 +94,10 @@
     }
 
     messageWrapper.innerHTML = `
-    <div class="messages__container" data-drupal-selector="messages-container">
-      <div class="messages__header${!svg ? ' no-icon' : ''}">
+    <div class="messages__container${
+      !svg ? ' messages__container--no-icon' : ''
+    }" data-drupal-selector="messages-container">
+      <div class="messages__header">
         <h2 class="visually-hidden">${messagesTypes[type]}</h2>
         ${svg}
       </div>
