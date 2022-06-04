@@ -286,11 +286,6 @@ parameters:
 			path: lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php
 
 		-
-<<<<<<< HEAD
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/aggregator/src/Controller/AggregatorController.php
-=======
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Plugin\\\\DataType\\\\Deriver\\\\EntityDeriver\\:\\:getDerivativeDefinition\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Plugin/DataType/Deriver/EntityDeriver.php
@@ -299,7 +294,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryBase\\:\\:\\$conjunction\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Entity/Query/QueryBase.php
->>>>>>> 10.0.x
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Entity\\\\Query\\\\QueryBase\\:\\:getClass\\(\\) should return string but return statement is missing\\.$#"
@@ -507,8 +501,6 @@ parameters:
 			path: lib/Drupal/Core/Menu/MenuLinkManager.php
 
 		-
-<<<<<<< HEAD
-=======
 			message: "#^\\#pre_render value 'non\\-empty\\-string' at key '0' is invalid\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Render/Element/Pager.php
@@ -519,7 +511,6 @@ parameters:
 			path: lib/Drupal/Core/Render/Element/RenderElement.php
 
 		-
->>>>>>> 10.0.x
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Session/SessionHandler.php
@@ -550,15 +541,9 @@ parameters:
 			path: lib/Drupal/Core/Template/TwigPhpStorageCache.php
 
 		-
-<<<<<<< HEAD
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/history/history.module
-=======
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Test\\\\PerformanceTestRecorder\\:\\:\\$state\\.$#"
 			count: 3
 			path: lib/Drupal/Core/Test/PerformanceTestRecorder.php
->>>>>>> 10.0.x
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\:\\:boot\\(\\) should return \\$this\\(Drupal\\\\Core\\\\Test\\\\TestRunnerKernel\\) but return statement is missing\\.$#"
@@ -573,9 +558,6 @@ parameters:
 		-
 			message: "#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
-<<<<<<< HEAD
-			path: modules/locale/src/Form/TranslationStatusForm.php
-=======
 			path: lib/Drupal/Core/Theme/ThemeInitialization.php
 
 		-
@@ -632,7 +614,6 @@ parameters:
 			message: "#^Call to an undefined method Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:getInstallDirectory\\(\\)\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Updater/Updater.php
->>>>>>> 10.0.x
 
 		-
 			message: "#^Cannot unset offset 'href' on array\\{type\\: 'button'\\}\\.$#"
@@ -770,11 +751,6 @@ parameters:
 			path: modules/book/tests/src/Functional/BookBreadcrumbTest.php
 
 		-
-<<<<<<< HEAD
-			message: "#^Class Drupal\\\\advisory_feed_test\\\\AdvisoriesTestHttpClient extends @final class GuzzleHttp\\\\Client\\.$#"
-			count: 1
-			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
-=======
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\ckeditor\\\\Functional\\\\CKEditorToolbarButtonTest\\:\\:\\$admin_user\\.$#"
 			count: 2
 			path: modules/ckeditor/tests/src/Functional/CKEditorToolbarButtonTest.php
@@ -788,7 +764,6 @@ parameters:
 			message: "#^Function _add_attachments_to_editor_update_response not found\\.$#"
 			count: 2
 			path: modules/ckeditor5/ckeditor5.module
->>>>>>> 10.0.x
 
 		-
 			message: "#^Inner named functions are not supported by PHPStan\\. Consider refactoring to an anonymous function, class method, or a top\\-level\\-defined function\\. See issue \\#165 \\(https\\://github\\.com/phpstan/phpstan/issues/165\\) for more details\\.$#"
@@ -841,11 +816,6 @@ parameters:
 			path: modules/comment/src/CommentForm.php
 
 		-
-<<<<<<< HEAD
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 2
-			path: modules/user/src/Controller/UserController.php
-=======
 			message: "#^Method Drupal\\\\comment\\\\CommentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/comment/src/CommentForm.php
@@ -859,7 +829,6 @@ parameters:
 			message: "#^Method Drupal\\\\comment\\\\CommentTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/comment/src/CommentTypeForm.php
->>>>>>> 10.0.x
 
 		-
 			message: "#^Method Drupal\\\\comment\\\\Plugin\\\\views\\\\field\\\\NodeNewComments\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
@@ -902,16 +871,12 @@ parameters:
 			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
 
 		-
-<<<<<<< HEAD
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-=======
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastCommentName\\:\\:\\$user_table\\.$#"
 			count: 1
 			path: modules/comment/src/Plugin/views/sort/StatisticsLastCommentName.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\comment\\\\Plugin\\\\views\\\\sort\\\\StatisticsLastUpdated\\:\\:\\$field_alias\\.$#"
->>>>>>> 10.0.x
 			count: 1
 			path: modules/comment/src/Plugin/views/sort/StatisticsLastUpdated.php
 
@@ -998,9 +963,6 @@ parameters:
 		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
-<<<<<<< HEAD
-			path: rebuild.php
-=======
 			path: modules/contact/src/ContactFormEditForm.php
 
 		-
@@ -1012,7 +974,6 @@ parameters:
 			message: "#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/MessageForm.php
->>>>>>> 10.0.x
 
 		-
 			message: "#^Method Drupal\\\\Tests\\\\contact\\\\Functional\\\\Rest\\\\ContactFormResourceTestBase\\:\\:getNormalizedPostEntity\\(\\) should return array but return statement is missing\\.$#"
