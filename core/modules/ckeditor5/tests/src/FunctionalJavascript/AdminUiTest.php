@@ -126,20 +126,20 @@ class AdminUiTest extends CKEditor5TestBase {
 
     $assert_session->assertWaitOnAjaxRequest();
 
-    $media_tab = $page->find('css', '[href^="#edit-filters-media-embed-settings"]');
+    $media_tab = $page->find('css', '[data-drupal-tab-for="edit-filters-media-embed-settings"]');
     $this->assertFalse($media_tab->isVisible(), 'Media filter settings should not be present because media filter is not enabled');
 
     $this->assertTrue($page->hasUncheckedField('filters[media_embed][status]'));
     $page->checkField('filters[media_embed][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $media_tab = $assert_session->waitForElementVisible('css', '[href^="#edit-filters-media-embed-settings"]');
+    $media_tab = $assert_session->waitForElementVisible('css', '[data-drupal-tab-for="edit-filters-media-embed-settings"]');
     $this->assertTrue($media_tab->isVisible(), 'Media settings should appear when media filter enabled');
 
     $page->uncheckField('filters[media_embed][status]');
     $assert_session->assertWaitOnAjaxRequest();
 
-    $media_tab = $page->find('css', '[href^="#edit-filters-media-embed-settings"]');
+    $media_tab = $page->find('css', '[data-drupal-tab-for="edit-filters-media-embed-settings"]');
     $this->assertFalse($media_tab->isVisible(), 'Media settings should be removed when media filter disabled');
   }
 
@@ -168,7 +168,7 @@ class AdminUiTest extends CKEditor5TestBase {
     // Configure Source Editing to allow editing `<strong>` to trigger
     // validation error.
     $assert_session->waitForText('Source editing');
-    $page->find('css', '[href^="#edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
+    $page->find('css', '[data-drupal-tab-for="edit-editor-settings-plugins-ckeditor5-sourceediting"]')->click();
     $assert_session->assertWaitOnAjaxRequest();
     $assert_session->waitForText('Manually editable HTML tags');
     $source_edit_tags_field = $assert_session->fieldExists('editor[settings][plugins][ckeditor5_sourceEditing][allowed_tags]');
