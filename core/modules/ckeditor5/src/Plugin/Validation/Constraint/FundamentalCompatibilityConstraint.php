@@ -58,6 +58,6 @@ class FundamentalCompatibilityConstraint extends Constraint {
    *
    * @var string
    */
-  public $nonCreatableTagMessage = 'The %plugin plugin needs another plugin to create <code>@non_creatable_tag</code>, for it to be able to create the following attributes: <code>@attributes_on_tag</code>.';
+  public $nonCreatableTagMessage = 'The %plugin plugin needs another plugin to create <code>@non_creatable_tag</code>, for it to be able to create the following attributes: <code>@attributes_on_tag</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.';
 
 }

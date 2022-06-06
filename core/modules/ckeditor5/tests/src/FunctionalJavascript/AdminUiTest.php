@@ -250,7 +250,7 @@ class AdminUiTest extends CKEditor5TestBase {
     $assert_session->assertWaitOnAjaxRequest();
 
     // The CKEditor 5 module should warn that `<span>` cannot be created.
-    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="warning"]:contains("The Language plugin needs another plugin to create <span>, for it to be able to create the following attributes: <span lang dir>.")');
+    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="warning"]:contains("The Language plugin needs another plugin to create <span>, for it to be able to create the following attributes: <span lang dir>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.")');
 
     // Make `<span>` creatable.
     $this->assertNotEmpty($assert_session->elementExists('css', '.ckeditor5-toolbar-item-sourceEditing'));
