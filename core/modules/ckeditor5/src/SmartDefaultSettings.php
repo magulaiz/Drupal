@@ -659,9 +659,9 @@ final class SmartDefaultSettings {
     $needed = HTMLRestrictions::fromTextFormat($format);
     $still_needed = $needed->diff($provided);
 
-    // Plugin supporting <tag attr> cannot create the tag, for that they need to
-    // support plain <tag> too. Break down what is provided and is needed based
-    // on this.
+    // Plugins only supporting <tag attr> cannot create the tag. For that, they
+    // must support plain <tag> too. With this being the case, break down what
+    // is needed based on what is currently provided.
     // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
     // TRICKY: the HTMLRestrictions value object can only convey complete
     // restrictions: merging <foo> and <foo bar> results in just <foo bar>. The
