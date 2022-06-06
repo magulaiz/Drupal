@@ -112,9 +112,9 @@ h3 {
 
   .task-list .is-active {
     color: var(--color-absolutezero);
+    border: 1px solid transparent; /* required for forced-colors mode */
     background: var(--color-bgblue-active);
     font-weight: 500;
-    border: 1px solid transparent; /* required for forced-colors mode */
   }
   .task-list .done {
     color: var(--color-gray-700);

@@ -118,9 +118,9 @@ h3 {
 
   .task-list .is-active {
     color: #003ecc;
+    border: 1px solid transparent; /* required for forced-colors mode */
     background: #e5edff;
     font-weight: 500;
-    border: 1px solid transparent; /* required for forced-colors mode */
   }
   .task-list .done {
     color: #75767b;
