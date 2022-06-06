@@ -50,7 +50,8 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
 
     // Ensure the tag is in the range supported by the Style plugin.
     $superset = HTMLRestrictions::fromString('<$any-html5-element class>');
-    if (!$style_element->notInResolvedSuperset($superset)->allowsNothing()) {
+    $supported_range = $superset->merge($style_element->extractPlainTagsSubset());
+    if (!$style_element->diff($supported_range)->allowsNothing()) {
       $this->context->buildViolation($constraint->nonHtml5TagMessage)
         ->setParameter('%tag', sprintf("<%s>", $tag))
         ->addViolation();
