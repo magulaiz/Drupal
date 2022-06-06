@@ -242,8 +242,7 @@ h3 {
  */
 
 .update-results {
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: auto; /* required to prevent text clipping */
   margin-top: 0;
   padding: 0.75rem;
   border: 1px solid #dedfe4;

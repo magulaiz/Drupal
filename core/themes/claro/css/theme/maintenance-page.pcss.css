@@ -230,8 +230,7 @@ h3 {
  * Updates list customization for update page.
  */
 .update-results {
-  overflow-x: auto;
-  overflow-y: auto;
+  overflow: auto; /* required to prevent text clipping */
   margin-top: 0;
   padding: var(--space-s);
   border: 1px solid var(--color-gray-100);
