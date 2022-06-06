@@ -146,6 +146,7 @@ class LayoutBuilder extends RenderElement implements ContainerFactoryPluginInter
       if (!empty($contexts['view_mode'])) {
         $output['#attributes']['class'][] = $entity->getEntityTypeId() . '--view-mode-' . $contexts['view_mode'];
       }
+    }
 
     // Mark this UI as uncacheable.
     $output['#cache']['max-age'] = 0;
