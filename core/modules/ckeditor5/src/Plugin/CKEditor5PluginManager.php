@@ -331,7 +331,15 @@ class CKEditor5PluginManager extends DefaultPluginManager implements CKEditor5Pl
           $subset = $this->getPlugin($id, $editor)->getElementsSubset();
           $subset_restrictions = HTMLRestrictions::fromString(implode($subset));
           $defined_restrictions = HTMLRestrictions::fromString(implode($defined_elements));
-          $not_in_max_supported = $subset_restrictions->diff($defined_restrictions->merge($subset_restrictions->extractPlainTagsSubset()));
+          // Determine max supported elements by resolving wildcards in the
+          // restrictions defined by the plugin.
+          $max_supported = $defined_restrictions;
+          if (!$defined_restrictions->getWildcardSubset()->allowsNothing()) {
+            $concrete_tags_to_use_to_resolve_wildcards = $subset_restrictions->extractPlainTagsSubset();
+            $max_supported = $max_supported->merge($concrete_tags_to_use_to_resolve_wildcards)
+              ->diff($concrete_tags_to_use_to_resolve_wildcards);
+          }
+          $not_in_max_supported = $subset_restrictions->diff($max_supported);
           if (!$not_in_max_supported->allowsNothing()) {
             // If the editor is still being configured, the configuration may
             // not yet be valid.
