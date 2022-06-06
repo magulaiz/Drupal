@@ -73,9 +73,6 @@ h3 {
     right: auto;
     left: 0.5em;
   }
-  .task-list {
-    display: none;
-  }
 }
 
 @media all and (min-width: 48em) { /* 768px */
@@ -147,6 +144,10 @@ h3 {
   .layout-container {
     margin: 1.25em;
     padding: var(--space-m) var(--space-l);
+  }
+
+  .layout-sidebar-first {
+    display: none;
   }
 }
 
