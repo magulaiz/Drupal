@@ -117,6 +117,7 @@ h3 {
     color: var(--color-absolutezero);
     background: var(--color-bgblue-active);
     font-weight: 500;
+    border: 1px solid transparent; /* required for forced-colors mode */
   }
   .task-list .done {
     color: var(--color-gray-700);
@@ -131,6 +132,7 @@ h3 {
   margin-right: 1.25em;
   margin-left: 1.25em;
   padding: var(--space-xl);
+  border: 1px solid transparent; /* required for forced-colors mode */
   border-radius: 8px;
   background: #fff;
   box-shadow: var(--shadow-z3);
