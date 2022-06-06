@@ -249,7 +249,7 @@ final class SmartDefaultSettings {
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
         $beginning = $help_enabled ?
           $this->t('To maintain the capabilities of this text format, <a href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
-            ':sdf_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString() : '',
+            ':sdf_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString(),
           ]) :
           $this->t('To maintain the capabilities of this text format, the CKEditor 5 migration did the following:');
 
@@ -264,7 +264,7 @@ final class SmartDefaultSettings {
             $this->t('Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
               [
                 '@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(),
-                ':source_edit_url' => $help_enabled ? Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString() : '',
+                ':source_edit_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString(),
               ]) :
             $this->t("Added these tags/attributes to the Source Editing Plugin's Manually editable HTML tags setting: @tag_list", ['@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString()]);
         }
@@ -273,10 +273,9 @@ final class SmartDefaultSettings {
         $end = $can_access_dblog ?
           $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
             [
-              ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')
+              ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
-                ->toString()
-                : '',
+                ->toString(),
             ]
           ) :
           $this->t('Additional details are available in your logs.');
@@ -340,10 +339,9 @@ final class SmartDefaultSettings {
         $end = $can_access_dblog ?
           $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
             [
-              ':dblog_url' => $can_access_dblog ? Url::fromRoute('dblog.overview')
+              ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
-                ->toString()
-                : '',
+                ->toString(),
             ]
           ) :
           $this->t('Additional details are available in your logs.');
