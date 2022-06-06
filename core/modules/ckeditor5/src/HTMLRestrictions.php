@@ -317,7 +317,7 @@ final class HTMLRestrictions {
       ? $superset
       : $superset
         // Resolve wildcards in $superset into concrete tags.
-        ->merge($subset)->diff($subset)
+        ->merge($subset->extractPlainTagsSubset())
         // Ensure that the original superset elements are still present.
         ->merge($superset);
 
