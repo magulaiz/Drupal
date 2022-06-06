@@ -279,53 +279,6 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Computes the allowed elements not allowed by a superset post-resolving.
-   *
-   * This behaves differently from ::diff() in that the provided operand has its
-   * wildcard tags resolved based on the concrete tags in this object's set of
-   * restrictions. This is behavior only needed in some circumstances, not in
-   * all diffing situations.
-   * This is necessary to accurately diff a subset containing concrete tags
-   * against a superset with wildcard tags (which hence have attribute
-   * restrictions) but without concrete tags to resolve those wildcard tags.
-   * For example:
-   * @code
-   * $superset = HtmlRestrictions::fromString('<$any-html5-element class>');
-   *
-   * $sub1 = HtmlRestrictions::fromString('<marquee class>');
-   * $result1 = $sub1->notInResolvedSuperset($superset);
-   * $result1 == new HTMLRestrictions([]);
-   *
-   * $sub2 = HtmlRestrictions::fromString('<marquee class behavior>');
-   * $result2 = $sub2->notInResolvedSuperset($superset);
-   * $result2 == HtmlRestrictions::fromString('<marquee behavior>');
-   * @endcode
-   *
-   * @param \Drupal\ckeditor5\HTMLRestrictions $superset
-   *   The superset to compare to.
-   *
-   * @return self
-   *   A HTMLRestrictions object containing the allowed elements in $this that
-   *   are not allowed by $superset, not even $superset has resolved wildcards
-   *   by taking $this into account.
-   */
-  public function notInResolvedSuperset(HTMLRestrictions $superset): self {
-    $subset = $this;
-
-    // $superset may contain wildcard tags: if so, resolve them.
-    $superset_resolved = $superset->getWildcardSubset()->allowsNothing()
-      ? $superset
-      : $superset
-        // Resolve wildcards in $superset into concrete tags.
-        ->merge($subset->extractPlainTagsSubset())
-        // Ensure that the original superset elements are still present.
-        ->merge($superset);
-
-    // Compute the diff after having resolved wildcards in $superset.
-    return $subset->diff($superset_resolved);
-  }
-
-  /**
    * Constructs a set of HTML restrictions matching the given text format.
    *
    * @param \Drupal\filter\Plugin\FilterInterface $filter
