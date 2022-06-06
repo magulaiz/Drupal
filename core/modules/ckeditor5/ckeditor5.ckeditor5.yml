@@ -270,6 +270,7 @@ ckeditor5_codeBlock:
         label: Code Block
     elements:
       - <pre>
+      - <code>
       - <code class="language-*">
 
 ckeditor5_strikethrough:
@@ -337,6 +338,7 @@ ckeditor5_link:
       link:
         label: Link
     elements:
+      - <a>
       - <a href>
 
 ckeditor5_linkImage:
@@ -397,6 +399,7 @@ ckeditor5_list:
         label: Numbered list
     elements:
       - <ul>
+      - <ol>
       - <ol reversed start>
       - <li>
 
@@ -480,7 +483,9 @@ ckeditor5_table:
     elements:
       - <table>
       - <tr>
+      - <td>
       - <td rowspan colspan>
+      - <th>
       - <th rowspan colspan>
       - <thead>
       - <tbody>
@@ -500,6 +505,7 @@ ckeditor5_image:
     label: Image
     library: ckeditor5/drupal.ckeditor5.image
     elements:
+      - <img>
       - <img src alt data-entity-uuid data-entity-type height width>
     conditions:
       toolbarItem: uploadImage
@@ -624,6 +630,7 @@ media_media:
     library: ckeditor5/drupal.ckeditor5.media
     class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
     elements:
+      - <drupal-media>
       - <drupal-media data-entity-type data-entity-uuid alt data-view-mode>
     conditions:
       filter: media_embed
