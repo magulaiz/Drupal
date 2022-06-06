@@ -53,7 +53,7 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     $supported_range = $superset->merge($style_element->extractPlainTagsSubset());
     if (!$style_element->diff($supported_range)->allowsNothing()) {
       $this->context->buildViolation($constraint->nonHtml5TagMessage)
-        ->setParameter('%tag', sprintf("<%s>", $tag))
+        ->setParameter('@tag', sprintf("<%s>", $tag))
         ->addViolation();
       return;
     }
@@ -71,15 +71,15 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     // Hence the Style plugin cannot support setting >1 class on it.
     if ($style_element->intersect($other_enabled_plugin_elements)->allowsNothing()) {
       $this->context->buildViolation($constraint->unsupportedTagMessage)
-        ->setParameter('%tag', sprintf("<%s>", $tag))
+        ->setParameter('@tag', sprintf("<%s>", $tag))
         ->addViolation();
     }
     // Next, validate that the classes specified for this style are not
     // supported by an enabled plugin.
     elseif (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
       $this->context->buildViolation($constraint->conflictingEnabledPluginMessage)
-        ->setParameter('%tag', sprintf("<%s>", $tag))
-        ->setParameter('%classes', implode(", ", $classes))
+        ->setParameter('@tag', sprintf("<%s>", $tag))
+        ->setParameter('@classes', implode(", ", $classes))
         ->setParameter('%plugin', $this->findStyleConflictingPluginLabel($style_element))
         ->addViolation();
     }
@@ -87,8 +87,8 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     // supported by a disabled plugin.
     elseif (self::intersectionWithClasses($style_element, $disabled_plugin_elements)) {
       $this->context->buildViolation($constraint->conflictingDisabledPluginMessage)
-        ->setParameter('%tag', sprintf("<%s>", $tag))
-        ->setParameter('%classes', implode(", ", $classes))
+        ->setParameter('@tag', sprintf("<%s>", $tag))
+        ->setParameter('@classes', implode(", ", $classes))
         ->setParameter('%plugin', $this->findStyleConflictingPluginLabel($style_element))
         ->addViolation();
     }

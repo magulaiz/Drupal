@@ -25,27 +25,27 @@ class StyleSensibleElementConstraint extends Constraint {
    *
    * @var string
    */
-  public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. %tag is not a HTML5 tag.';
+  public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. <code>@tag</code> is not a HTML5 tag.';
 
   /**
    * When a style is defined for a tag that is not yet supported.
    *
    * @var string
    */
-  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. %tag is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.';
+  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. <code>@tag</code> is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.';
 
   /**
    * When a Style is defined with classes supported by an enabled plugin.
    *
    * @var string
    */
-  public $conflictingEnabledPluginMessage = 'A style must only specify classes not supported by other plugins. The %classes classes on %tag are already supported by the enabled %plugin plugin.';
+  public $conflictingEnabledPluginMessage = 'A style must only specify classes not supported by other plugins. The <code>@classes</code> classes on <code>@tag</code> are already supported by the enabled %plugin plugin.';
 
   /**
    * When a Style is defined with classes supported by a disabled plugin.
    *
    * @var string
    */
-  public $conflictingDisabledPluginMessage = 'A style must only specify classes not supported by other plugins. The %classes classes on %tag are supported by the %plugin plugin. Remove this style and enable that plugin instead.';
+  public $conflictingDisabledPluginMessage = 'A style must only specify classes not supported by other plugins. The <code>@classes</code> classes on <code>@tag</code> are supported by the %plugin plugin. Remove this style and enable that plugin instead.';
 
 }

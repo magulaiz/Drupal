@@ -45,8 +45,8 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
         $required_attribute_name = $required_attribute['attributeName'];
         if (!is_array($attribute_restrictions) || !isset($attribute_restrictions[$required_attribute_name])) {
           $this->context->buildViolation($constraint->missingRequiredAttributeMessage)
-            ->setParameter('%provided_element', $element)
-            ->setParameter('%required_attribute_name', $required_attribute_name)
+            ->setParameter('@provided_element', $element)
+            ->setParameter('@required_attribute_name', $required_attribute_name)
             ->addViolation();
           continue;
         }
@@ -58,8 +58,8 @@ class CKEditor5ElementConstraintValidator extends ConstraintValidator {
           $min_attribute_value_count = $required_attribute['minAttributeValueCount'];
           if (!is_array($attribute_values) || count($attribute_values) < $min_attribute_value_count) {
             $this->context->buildViolation($constraint->requiredAttributeMinValuesMessage)
-              ->setParameter('%provided_element', $element)
-              ->setParameter('%required_attribute_name', $required_attribute_name)
+              ->setParameter('@provided_element', $element)
+              ->setParameter('@required_attribute_name', $required_attribute_name)
               ->setParameter('@min_attribute_value_count', $min_attribute_value_count)
               ->addViolation();
             continue;

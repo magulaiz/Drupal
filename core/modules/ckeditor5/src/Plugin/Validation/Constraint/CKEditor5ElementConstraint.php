@@ -28,14 +28,14 @@ class CKEditor5ElementConstraint extends Constraint {
    *
    * @var string
    */
-  public $missingRequiredAttributeMessage = 'The following tag is missing the required attribute %required_attribute_name: %provided_element.';
+  public $missingRequiredAttributeMessage = 'The following tag is missing the required attribute <code>@required_attribute_name</code>: <code>@provided_element</code>.';
 
   /**
    * Violation message when a required attribute does not allow enough values.
    *
    * @var string
    */
-  public $requiredAttributeMinValuesMessage = 'The following tag does not have the minimum of @min_attribute_value_count allowed values for the required attribute %required_attribute_name: %provided_element.';
+  public $requiredAttributeMinValuesMessage = 'The following tag does not have the minimum of @min_attribute_value_count allowed values for the required attribute <code>@required_attribute_name</code>: <code>@provided_element</code>.';
 
   /**
    * Validation constraint option to impose attributes to be specified.

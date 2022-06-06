@@ -366,7 +366,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <em class="placeholder">&lt;blockquote&gt;</em> is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <code>&lt;blockquote&gt;</code> is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
       ],
     ];
     $data['INVALID: Style plugin configured to add class to supported non-HTML5 tag'] = [
@@ -394,7 +394,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <em class="placeholder">&lt;foo&gt;</em> is not a HTML5 tag.',
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <code>&lt;foo&gt;</code> is not a HTML5 tag.',
       ],
     ];
     $data['INVALID: Style plugin configured to add class that is supported by a disabled plugin'] = [
@@ -416,7 +416,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <em class="placeholder">text-align-justify</em> classes on <em class="placeholder">&lt;p&gt;</em> are supported by the <em class="placeholder">Alignment</em> plugin. Remove this style and enable that plugin instead.',
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are supported by the <em class="placeholder">Alignment</em> plugin. Remove this style and enable that plugin instead.',
       ],
     ];
     $data['INVALID: Style plugin configured to add class that is supported by an enabled plugin if its configuration were different'] = [
@@ -466,7 +466,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <em class="placeholder">text-align-justify</em> classes on <em class="placeholder">&lt;p&gt;</em> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style must only specify classes not supported by other plugins. The <code>text-align-justify</code> classes on <code>&lt;p&gt;</code> are already supported by the enabled <em class="placeholder">Alignment</em> plugin.',
       ],
     ];
     $data['INVALID: Style plugin has multiple styles with same label'] = [
@@ -520,8 +520,8 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <em class="placeholder">class</em>: <em class="placeholder">&lt;p&gt;</em>.',
-        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <em class="placeholder">class</em>: <em class="placeholder">&lt;blockquote class=&quot;&quot;&gt;</em>.',
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'The following tag is missing the required attribute <code>class</code>: <code>&lt;p&gt;</code>.',
+        'settings.plugins.ckeditor5_style.styles.1.element' => 'The following tag does not have the minimum of 1 allowed values for the required attribute <code>class</code>: <code>&lt;blockquote class=&quot;&quot;&gt;</code>.',
       ],
     ];
     $data['VALID: Style plugin has multiple styles with different labels'] = [
