@@ -18,7 +18,12 @@
       const header = document.querySelector('header[role="banner"]');
       const stepIndicator = document.createElement('div');
       stepIndicator.className = 'step-indicator';
-      stepIndicator.innerHTML = `${findActiveStep(steps)}/${steps.length}`;
+      stepIndicator.innerHTML = `
+        <span class="visually-hidden">Install Step ${findActiveStep(
+          steps,
+        )} of ${steps.length}</span>
+        <span aria-hidden="true">${findActiveStep(steps)}/${steps.length}</span>
+      `;
       header.appendChild(stepIndicator);
     }
   }
