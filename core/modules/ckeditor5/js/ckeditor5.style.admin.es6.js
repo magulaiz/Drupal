@@ -19,14 +19,19 @@
           const stylesElement = document.querySelector(
             '[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]',
           );
-          const styles = stylesElement ? stylesElement.value.trim() : '';
+          const styleCount = stylesElement.value
+            .split('\n')
+            // Minimum length is 5: "p.z|Z" is the shortest possible style definition.
+            .filter((line) => line.trim().length >= 5).length;
 
-          if (styles.length === 0) {
+          if (styleCount === 0) {
             return Drupal.t('No styles configured');
           }
-
-          const count = styles.split('\n').length;
-          return Drupal.t('@count styles configured', { '@count': count });
+          return Drupal.formatPlural(
+            styleCount,
+            'One style configured',
+            '@count styles configured',
+          );
         },
       );
     },
