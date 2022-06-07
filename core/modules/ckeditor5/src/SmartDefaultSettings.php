@@ -147,7 +147,7 @@ final class SmartDefaultSettings {
         );
       }
       // Warn user about unsupported tags.
-      if (!$unsupported->isEmpty()) {
+      if (!$unsupported->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $unsupported);
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
@@ -160,10 +160,25 @@ final class SmartDefaultSettings {
         );
       }
       // Warn user about supported tags but missing attributes.
-      if (!$missing_attributes->isEmpty()) {
+      if (!$missing_attributes->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
         $messages[MessengerInterface::TYPE_STATUS][] = $this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
+        ]);
+      }
+    }
+
+    if ($editor->getFilterFormat()->filters('filter_html')->status) {
+      $filter_html_restrictions = HTMLRestrictions::fromTextFormat($editor->getFilterFormat());
+      $fundamental = new HTMLRestrictions($this->pluginManager->getProvidedElements([
+        'ckeditor5_essentials',
+        'ckeditor5_paragraph',
+      ]));
+      $missing_tags = $fundamental->diff($filter_html_restrictions);
+      if (!$missing_tags->allowsNothing()) {
+        $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
+        $messages[MessengerInterface::TYPE_STATUS][] = $this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
+          '@missing_tags' => $missing_tags->toFilterHtmlAllowedTagsString(),
         ]);
       }
     }
@@ -458,7 +473,7 @@ final class SmartDefaultSettings {
    */
   private static function getCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions): array {
     $plugin_candidates = [];
-    if (!$still_needed->isEmpty()) {
+    if (!$still_needed->allowsNothing()) {
       foreach ($disabled_plugin_definitions as $definition) {
         // Only proceed if the plugin has configured elements and the plugin
         // does not have conditions. In the future we could add support for
@@ -466,8 +481,9 @@ final class SmartDefaultSettings {
         // configuration cannot be modified.
         if (!$definition->hasConditions() && $definition->hasElements()) {
           [$net_new, $surplus_additions] = self::computeNetNewElementsForPlugin($provided, $still_needed, $definition);
-          if (!$net_new->isEmpty()) {
+          if (!$net_new->allowsNothing()) {
             $plugin_id = $definition->id();
+            $creatable_elements = HTMLRestrictions::fromString(implode(' ', $definition->getCreatableElements()));
             $surplus_score = static::computeSurplusScore($surplus_additions, $still_needed);
             foreach ($net_new->getAllowedElements() as $tag_name => $attributes_config) {
               // Non-specific attribute restrictions: `FALSE` or `TRUE`.
@@ -475,6 +491,11 @@ final class SmartDefaultSettings {
               // to a string. The string must not be a valid attribute name, so
               // use a leading and trailing dash.
               if (!is_array($attributes_config)) {
+                if ($attributes_config === FALSE && !array_key_exists($tag_name, $creatable_elements->getAllowedElements())) {
+                  // If this plugin is not able to create the plain tag, then
+                  // cannot be a candidate for the tag without attributes.
+                  continue;
+                }
                 $non_specific_attribute = $attributes_config ? '-attributes-any-' : '-attributes-none-';
                 $plugin_candidates[$tag_name][$non_specific_attribute][$plugin_id] = $surplus_score;
                 continue;
@@ -635,11 +656,36 @@ final class SmartDefaultSettings {
     $enabled_plugins = array_keys($enabled_definitions);
     $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins);
     $provided = new HTMLRestrictions($provided_elements);
-    $still_needed = HTMLRestrictions::fromTextFormat($format)->diff($provided);
+    $needed = HTMLRestrictions::fromTextFormat($format);
+    $still_needed = $needed->diff($provided);
 
-    if (!$still_needed->isEmpty()) {
-      $plugin_candidates = self::getCandidates($provided, $still_needed, $disabled_definitions);
-      $selected_plugins = self::selectCandidate($plugin_candidates, $still_needed, array_keys($provided->getAllowedElements()));
+    // Plugins only supporting <tag attr> cannot create the tag. For that, they
+    // must support plain <tag> too. With this being the case, break down what
+    // is needed based on what is currently provided.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::getCreatableElements()
+    // TRICKY: the HTMLRestrictions value object can only convey complete
+    // restrictions: merging <foo> and <foo bar> results in just <foo bar>. The
+    // list of already provided plain tags must hence be constructed separately.
+    $provided_plain_tags = new HTMLRestrictions(
+      $this->pluginManager->getProvidedElements($enabled_plugins, NULL, FALSE, TRUE)
+    );
+    $still_needed_plain_tags = $needed->extractPlainTagsSubset()->diff($provided_plain_tags);
+    $still_needed_attributes = $still_needed->diff($still_needed_plain_tags);
+    // Merging $still_needed_plain_tags with $still_needed_attributes must
+    // always equal $still_needed.
+    assert($still_needed_plain_tags->merge($still_needed_attributes)->diff($still_needed)->allowsNothing());
+
+    if (!$still_needed->allowsNothing()) {
+      // Select plugins for supporting the still needed plain tags.
+      $plugin_candidates_plain_tags = self::getCandidates($provided_plain_tags, $still_needed_plain_tags, $disabled_definitions);
+      $selected_plugins_plain_tags = self::selectCandidate($plugin_candidates_plain_tags, $still_needed_plain_tags, array_keys($provided_plain_tags->getAllowedElements()));
+
+      // Select plugins for supporting the still needed attributes.
+      $plugin_candidates_attributes = self::getCandidates($provided, $still_needed_attributes, $disabled_definitions);
+      $selected_plugins_attributes = self::selectCandidate($plugin_candidates_attributes, $still_needed, array_keys($provided->getAllowedElements()));
+
+      // Combine the selection.
+      $selected_plugins = array_merge_recursive($selected_plugins_plain_tags, $selected_plugins_attributes);
 
       // If additional plugins need to be enable to support attribute config,
       // loop through the list to enable the plugins and build a UI message that

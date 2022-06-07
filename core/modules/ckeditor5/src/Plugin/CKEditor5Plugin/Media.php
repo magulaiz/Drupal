@@ -4,7 +4,11 @@ declare(strict_types = 1);
 
 namespace Drupal\ckeditor5\Plugin\CKEditor5Plugin;
 
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginConfigurableTrait;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefault;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginElementsSubsetInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
 use Drupal\editor\EditorInterface;
@@ -12,6 +16,7 @@ use Drupal\media\Entity\MediaType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\ckeditor5\HTMLRestrictions;
 
 /**
  * CKEditor 5 Media plugin.
@@ -21,9 +26,10 @@ use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
  * @internal
  *   Plugin classes are internal.
  */
-class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInterface {
+class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInterface, CKEditor5PluginConfigurableInterface, CKEditor5PluginElementsSubsetInterface {
 
   use DynamicPluginConfigWithCsrfTokenUrlTrait;
+  use CKEditor5PluginConfigurableTrait;
 
   /**
    * The entity display repository.
@@ -80,6 +86,13 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     $all_view_modes = $this->entityDisplayRepository->getViewModeOptions('media');
     $allowed_view_modes = $media_embed_filter->settings['allowed_view_modes'];
     $default_view_mode = $media_embed_filter->settings['default_view_mode'];
+    // @todo Remove in https://www.drupal.org/project/drupal/issues/3277049.
+    // This is a workaround until the above issue is fixed to prevent the
+    // editor from crashing because the frontend expects the default view mode
+    // to exist in drupalElementStyles.
+    if (!array_key_exists($default_view_mode, $allowed_view_modes)) {
+      $allowed_view_modes[$default_view_mode] = $default_view_mode;
+    }
     // Return early since there is no need to configure if there
     // are less than 2 view modes.
     if ($allowed_view_modes < 2) {
@@ -96,7 +109,7 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
       }
     }
     // Limit to view modes allowed by filter.
-    $bundles_per_view_mode = array_intersect_key($bundles_per_view_mode, $media_embed_filter->settings['allowed_view_modes']);
+    $bundles_per_view_mode = array_intersect_key($bundles_per_view_mode, $allowed_view_modes);
 
     // Configure view mode element styles.
     foreach (array_keys($all_view_modes) as $view_mode) {
@@ -166,13 +179,63 @@ class Media extends CKEditor5PluginDefault implements ContainerFactoryPluginInte
     ] = self::configureViewModes($editor);
 
     $dynamic_plugin_config['drupalElementStyles']['viewMode'] = $element_style_configuration;
-    $dynamic_plugin_config['drupalMedia']['toolbar'][] = $toolbar_configuration;
+    if ($this->getConfiguration()['allow_view_mode_override']) {
+      $dynamic_plugin_config['drupalMedia']['toolbar'][] = $toolbar_configuration;
+    }
     $dynamic_plugin_config['drupalMedia']['metadataUrl'] = self::getUrlWithReplacedCsrfTokenPlaceholder(
       Url::fromRoute('ckeditor5.media_entity_metadata')
         ->setRouteParameter('editor', $editor->id())
     );
     $dynamic_plugin_config['drupalMedia']['previewCsrfToken'] = \Drupal::csrfToken()->get('X-Drupal-MediaPreview-CSRF-Token');
     return $dynamic_plugin_config;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getElementsSubset(): array {
+    $all_elements = $this->getPluginDefinition()->getElements();
+    $subset = HTMLRestrictions::fromString(implode($all_elements));
+    $view_mode_override_enabled = $this->getConfiguration()['allow_view_mode_override'];
+    if (!$view_mode_override_enabled) {
+      $subset = $subset->diff(HTMLRestrictions::fromString('<drupal-media data-view-mode>'));
+    }
+    // @todo Simplify in https://www.drupal.org/project/drupal/issues/3278636, that will allow removing all uses of HTMLRestrictions in this class.
+    return array_merge(['<drupal-media>'], $subset->toCKEditor5ElementsArray());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return ['allow_view_mode_override' => FALSE];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $form['allow_view_mode_override'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Allow the user to override the default view mode'),
+      '#default_value' => $this->configuration['allow_view_mode_override'],
+    ];
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $form_value = $form_state->getValue('allow_view_mode_override');
+    $form_state->setValue('allow_view_mode_override', (bool) $form_value);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+    $this->configuration['allow_view_mode_override'] = $form_state->getValue('allow_view_mode_override');
   }
 
 }
