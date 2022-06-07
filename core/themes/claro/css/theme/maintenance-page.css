@@ -118,7 +118,7 @@ h3 {
 
   .task-list .is-active {
     color: #003ecc;
-    border: 1px solid transparent; /* required for forced-colors mode */
+    border: 1px solid transparent; /* Required for forced-colors mode. */
     background: #e5edff;
     font-weight: 500;
   }
@@ -136,13 +136,13 @@ h3 {
   margin-right: 1.25em;
   margin-left: 1.25em;
   padding: 3rem;
-  border: 1px solid transparent; /* required for forced-colors mode */
+  border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 0.5rem;
   background: #fff;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
 }
 
-.layout-container:after { /* no reason for a clearfix in the markup */
+.layout-container:after { /* No reason for a clearfix in the markup. */
   display: table;
   clear: both;
   content: "";
@@ -189,10 +189,10 @@ h3 {
     padding: 0.9375rem;
   }
   [dir="rtl"] ul {
-    margin-right: 0; /* Overrides default [dir="rtl"] ul margin */
+    margin-right: 0; /* Overrides default [dir="rtl"] ul margin. */
   }
 
-  /* Positioning sidebar & content */
+  /* Positioning sidebar & content. */
   .layout-sidebar-first {
     float: left; /* LTR */
     width: 35%;
@@ -242,7 +242,7 @@ h3 {
  */
 
 .update-results {
-  overflow: auto; /* required to prevent text clipping */
+  overflow: auto; /* Required to prevent text clipping. */
   margin-top: 0;
   padding: 0.75rem;
   border: 1px solid #dedfe4;
