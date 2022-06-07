@@ -25,7 +25,7 @@ class StyleSensibleElementConstraint extends Constraint {
    *
    * @var string
    */
-  public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. <code>@tag</code> is not a HTML5 tag.';
+  public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. <code>@tag</code> is not an HTML5 tag.';
 
   /**
    * When a style is defined for a tag that is not yet supported.
