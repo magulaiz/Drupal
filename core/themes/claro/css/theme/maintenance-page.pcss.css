@@ -99,7 +99,7 @@ h3 {
     padding: 1rem 3rem 1rem 1rem;
     border-radius: 2rem 0 0 2rem;
   }
-  .task-list li:before{
+  .task-list li:before {
     margin-right: 0.375rem;
     content: counter(steps);
   }
@@ -227,23 +227,23 @@ h3 {
  * Updates list customization for update page.
  */
 .update-results {
-    overflow: auto; /* Required to prevent text clipping. */
-    margin-top: 0;
-    padding: var(--space-s);
-    border: 1px solid var(--color-gray-100);
-    border-radius: var(--base-border-radius);
-    background: var(--color-gray-050);
-  }
-  .update-results > h3:first-child {
-    margin-top: 0;
-  }
-  .update-results .failure strong {
-    color: var(--color-maximumred);
-  }
+  overflow: auto; /* Required to prevent text clipping. */
+  margin-top: 0;
+  padding: var(--space-s);
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--base-border-radius);
+  background: var(--color-gray-050);
+}
+.update-results > h3:first-child {
+  margin-top: 0;
+}
+.update-results .failure strong {
+  color: var(--color-maximumred);
+}
 
-  .item-list > h3 {
-    font-size: var(--font-size-h5);
-  }
-  .item-list > ul {
-    margin-left: 0;
-  }
+.item-list > h3 {
+  font-size: var(--font-size-h5);
+}
+.item-list > ul {
+  margin-left: 0;
+}
