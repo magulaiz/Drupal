@@ -116,6 +116,14 @@ services:
 YAML,
         'The tag name in "_defaults" must be a non-empty string in "vfs://drupal/modules/example/example.yml".',
       ],
+      'default tag name must be a string' => [<<<YAML
+services:
+  _defaults:
+    tags:
+      - 123
+YAML,
+        'The tag name in "_defaults" must be a non-empty string in "vfs://drupal/modules/example/example.yml".',
+      ],
       'default tag attribute must be scalar' => [<<<YAML
 services:
   _defaults:
