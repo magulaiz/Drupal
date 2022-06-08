@@ -8,35 +8,6 @@
   background-color: var(--color-gray-100);
 }
 
-h1,
-h2,
-h3 {
-  font-weight: 500;
-}
-
-h1,
-h2 {
-  font-size: var(--font-size-h3);
-}
-
-h3 {
-  font-size: var(--font-size-h4);
-}
-
-.site-name {
-  margin-top: var(--space-s);
-  word-wrap: break-word;
-  color: var(--color-gray);
-  font-size: var(--font-size-xl);
-  font-weight: 500;
-}
-
-.title {
-  margin-top: 0;
-  font-size: var(--font-size-h3);
-  font-weight: 500;
-}
-
 .site-name,
 .title {
   margin-bottom: var(--space-l);
@@ -55,6 +26,8 @@ h3 {
 
 /**
  * Task list & step indicator
+ *
+ * @todo this should be moved to install-page.css.
  */
 @media all and (max-width: 48em) { /* 768px */
   header[role="banner"] {
