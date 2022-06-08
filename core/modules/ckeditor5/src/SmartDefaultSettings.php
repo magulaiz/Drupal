@@ -654,11 +654,9 @@ final class SmartDefaultSettings {
     $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
     $disabled_definitions = array_diff_key($all_definitions, $enabled_definitions);
     $enabled_plugins = array_keys($enabled_definitions);
-    $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins);
+    $provided_elements = $this->pluginManager->getProvidedElements($enabled_plugins, $editor);
     $provided = new HTMLRestrictions($provided_elements);
     $needed = HTMLRestrictions::fromTextFormat($format);
-    $still_needed = $needed->diff($provided);
-
     // Plugins only supporting <tag attr> cannot create the tag. For that, they
     // must support plain <tag> too. With this being the case, break down what
     // is needed based on what is currently provided.
@@ -669,11 +667,12 @@ final class SmartDefaultSettings {
     $provided_plain_tags = new HTMLRestrictions(
       $this->pluginManager->getProvidedElements($enabled_plugins, NULL, FALSE, TRUE)
     );
+
+    // Determine the still needed plain tags, the still needed attributes, and
+    // the union of both.
     $still_needed_plain_tags = $needed->extractPlainTagsSubset()->diff($provided_plain_tags);
-    $still_needed_attributes = $still_needed->diff($still_needed_plain_tags);
-    // Merging $still_needed_plain_tags with $still_needed_attributes must
-    // always equal $still_needed.
-    assert($still_needed_plain_tags->merge($still_needed_attributes)->diff($still_needed)->allowsNothing());
+    $still_needed_attributes = $needed->diff($provided)->diff($still_needed_plain_tags);
+    $still_needed = $still_needed_plain_tags->merge($still_needed_attributes);
 
     if (!$still_needed->allowsNothing()) {
       // Select plugins for supporting the still needed plain tags.
