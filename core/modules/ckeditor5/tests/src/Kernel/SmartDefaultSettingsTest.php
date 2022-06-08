@@ -127,17 +127,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
 
-    $basic_html_format_with_code = $basic_html_format;
-    $basic_html_format_with_code['name'] .= ' (with <code>)';
-    $basic_html_format_with_code['format'] = 'basic_html_with_code';
-    NestedArray::setValue($basic_html_format_with_code, $allowed_html_parents, $current_value . ' <code>');
-    FilterFormat::create($basic_html_format_with_code)->save();
-    Editor::create(
-      ['format' => 'basic_html_with_code']
-      +
-      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
-    )->save();
-
     $basic_html_format_with_h1 = $basic_html_format;
     $basic_html_format_with_h1['name'] .= ' (with <h1>)';
     $basic_html_format_with_h1['format'] = 'basic_html_with_h1';
