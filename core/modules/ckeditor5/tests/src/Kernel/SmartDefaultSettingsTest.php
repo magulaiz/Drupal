@@ -327,6 +327,42 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     ])->save();
 
     FilterFormat::create([
+      'format' => 'cke4_stylescombo_span',
+      'name' => 'A CKEditor 4 configured to have span styles',
+      'filters' => [
+        'filter_html' => [
+          'status' => 1,
+          'settings' => [
+            'allowed_html' => '<p> <br> <span class="llama">',
+          ] + $filter_plugin_manager->getDefinition('filter_html')['settings'],
+        ],
+      ],
+    ])->save();
+    Editor::create([
+      'format' => 'cke4_stylescombo_span',
+      'editor' => 'ckeditor',
+      'settings' => [
+        'toolbar' => [
+          'rows' => [
+            0 => [
+              [
+                'name' => 'Whatever',
+                'items' => [
+                  'Styles',
+                ],
+              ],
+            ],
+          ],
+        ],
+        'plugins' => [
+          'stylescombo' => [
+            'styles' => "span.llama|Llama span",
+          ],
+        ],
+      ],
+    ])->save();
+
+    FilterFormat::create([
       'format' => 'cke4_contrib_plugins_now_in_core',
       'name' => 'All CKEditor 4 contrib plugins now in core',
     ])->save();
@@ -1114,6 +1150,41 @@ class SmartDefaultSettingsTest extends KernelTestBase {
         'warning' => [
           'The CKEditor 4 button <em class="placeholder">Llama</em> does not have a known upgrade path. If it allowed editing markup, then you can do so now through the Source Editing functionality.',
           'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
+        ],
+      ],
+    ];
+
+    yield "cke4_stylescombo_span can be switched to CKEditor 5 without problems, only <span> in Source Editing" => [
+      'format_id' => 'cke4_stylescombo_span',
+      'filters_to_drop' => [],
+      'expected_ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+            'sourceEditing',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Llama span',
+                'element' => '<span class="llama">',
+              ],
+            ],
+          ],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => [
+              '<span>',
+            ],
+          ],
+        ],
+      ],
+      'expected_superset' => '',
+      'expected_fundamental_compatibility_violations' => [],
+      'expected_messages' => [
+        'status' => [
+          "The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: &lt;span&gt;.",
         ],
       ],
     ];
