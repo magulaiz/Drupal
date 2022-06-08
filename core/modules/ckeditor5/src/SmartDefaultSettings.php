@@ -129,6 +129,16 @@ final class SmartDefaultSettings {
       [$upgraded_settings, $messages] = $this->createSettingsFromCKEditor4($old_editor->getSettings(), $enabled_cke4_plugins, HTMLRestrictions::fromTextFormat($old_editor->getFilterFormat()));
       $editor->setSettings($upgraded_settings);
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
+      // *Before* determining which elements are still needed for this text
+      // format, ensure that all already enabled plugins that are configurable
+      // have valid settings
+      // For all already enabled plugins, find the ones that are configurable,
+      // and add their default settings. For enabled plugins with element
+      // subsets, compute the appropriate settings to achieve the subset that
+      // matches the original text format restrictions.
+      // It's necessary to do this *before* determining
+      $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
+      $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
     }
 
     // Add toolbar items based on HTML tags and attributes.
