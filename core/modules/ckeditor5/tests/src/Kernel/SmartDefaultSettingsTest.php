@@ -127,6 +127,17 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
     )->save();
 
+    $basic_html_format_with_code = $basic_html_format;
+    $basic_html_format_with_code['name'] .= ' (with <code>)';
+    $basic_html_format_with_code['format'] = 'basic_html_with_code';
+    NestedArray::setValue($basic_html_format_with_code, $allowed_html_parents, $current_value . ' <code>');
+    FilterFormat::create($basic_html_format_with_code)->save();
+    Editor::create(
+      ['format' => 'basic_html_with_code']
+      +
+      Yaml::parseFile('core/profiles/standard/config/install/editor.editor.basic_html.yml')
+    )->save();
+
     $basic_html_format_with_h1 = $basic_html_format;
     $basic_html_format_with_h1['name'] .= ' (with <h1>)';
     $basic_html_format_with_h1['format'] = 'basic_html_with_h1';
@@ -725,7 +736,29 @@ class SmartDefaultSettingsTest extends KernelTestBase {
             ['codeBlock'],
           ),
         ],
-        'plugins' => $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
+        'plugins' => array_merge(
+          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 0, 1),
+          [
+            'ckeditor5_codeBlock' => [
+              'enabled_languages' => [
+                'c',
+                'cpp',
+                'cs',
+                'css',
+                'diff',
+                'html',
+                'java',
+                'javascript',
+                'php',
+                'python',
+                'ruby',
+                'typescript',
+                'xml',
+              ],
+            ],
+          ],
+          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 1),
+        ),
       ],
       'expected_superset' => '<code class="language-*">',
       'expected_fundamental_compatibility_violations' => $basic_html_test_case['expected_fundamental_compatibility_violations'],
@@ -979,6 +1012,23 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_codeBlock' => [
+            'enabled_languages' => [
+              'c',
+              'cpp',
+              'cs',
+              'css',
+              'diff',
+              'html',
+              'java',
+              'javascript',
+              'php',
+              'python',
+              'ruby',
+              'typescript',
+              'xml',
+            ],
+          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading2',

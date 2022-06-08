@@ -67,6 +67,23 @@ class ConfigurablePluginTest extends KernelTestBase {
       'ckeditor5_sourceEditing' => [
         'allowed_tags' => [],
       ],
+      'ckeditor5_codeBlock' => [
+        'enabled_languages' => [
+          'c',
+          'cpp',
+          'cs',
+          'css',
+          'diff',
+          'html',
+          'java',
+          'javascript',
+          'php',
+          'python',
+          'ruby',
+          'typescript',
+          'xml',
+        ],
+      ],
       'ckeditor5_list' => [
         'reversed' => TRUE,
         'startIndex' => TRUE,

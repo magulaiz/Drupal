@@ -6,6 +6,7 @@ namespace Drupal\ckeditor5\Plugin\CKEditor4To5Upgrade;
 
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface;
+use Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\filter\FilterFormatInterface;
 
@@ -20,6 +21,7 @@ use Drupal\filter\FilterFormatInterface;
  *   cke4_plugin_settings = {
  *   },
  *   cke5_plugin_elements_subset_configuration = {
+ *    "ckeditor5_codeBlock",
  *   }
  * )
  *
@@ -53,7 +55,31 @@ class Contrib extends PluginBase implements CKEditor4To5UpgradePluginInterface {
    * {@inheritdoc}
    */
   public function computeCKEditor5PluginSubsetConfiguration(string $cke5_plugin_id, FilterFormatInterface $text_format): ?array {
-    throw new \OutOfBoundsException();
+    switch ($cke5_plugin_id) {
+      case 'ckeditor5_codeBlock':
+        $restrictions = $text_format->getHtmlRestrictions();
+        if ($restrictions === FALSE) {
+          // The default is to allow all languages if there are no restrictions.
+          // @see \Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock::DEFAULT_CONFIGURATION
+          return NULL;
+        }
+
+        $configuration = CodeBlock::DEFAULT_CONFIGURATION;
+        $classes = $restrictions['allowed']['code']['class'] ?? NULL;
+        if (is_array($classes)) {
+          // Remove languages that don't have a class.
+          $configuration['enabled_languages'] = array_filter(
+            $configuration['enabled_languages'],
+            function ($enabled_language) use ($classes) {
+              return in_array('language-' . $enabled_language, $classes, TRUE);
+            }
+          );
+        }
+        return $configuration;
+
+      default:
+        throw new \OutOfBoundsException();
+    }
   }
 
 }

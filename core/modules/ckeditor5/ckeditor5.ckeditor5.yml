@@ -238,10 +238,32 @@ ckeditor5_codeBlock:
         allow:
           -
             name: pre
+      codeBlock:
+        languages:
+          # These are the available languages to be enabled through the ckeditor5
+          # configuration. They can be altered by implementing a
+          # hook_ckeditor5_plugin_info_alter() function.
+          # @see https://api.drupal.org/api/drupal/core%21modules%21ckeditor5%21ckeditor5.api.php/function/hook_ckeditor5_plugin_info_alter
+          # @see https://ckeditor.com/docs/ckeditor5/latest/features/code-blocks.html#configuring-code-block-languages
+          - { language: 'plaintext', label: 'Plain text' }
+          - { language: 'c', label: 'C' }
+          - { language: 'cpp', label: 'C++' }
+          - { language: 'cs', label: 'C#' }
+          - { language: 'css', label: 'CSS' }
+          - { language: 'diff', label: 'Diff' }
+          - { language: 'html', label: 'HTML' }
+          - { language: 'java', label: 'Java' }
+          - { language: 'javascript', label: 'JavaScript' }
+          - { language: 'php', label: 'PHP' }
+          - { language: 'python', label: 'Python' }
+          - { language: 'ruby', label: 'Ruby' }
+          - { language: 'typescript', label: 'TypeScript' }
+          - { language: 'xml', label: 'XML' }
   drupal:
     label: Code Block
     library: ckeditor5/drupal.ckeditor5.codeBlock
     admin_library: ckeditor5/admin.codeBlock
+    class: Drupal\ckeditor5\Plugin\CKEditor5Plugin\CodeBlock
     toolbar_items:
       codeBlock:
         label: Code Block
