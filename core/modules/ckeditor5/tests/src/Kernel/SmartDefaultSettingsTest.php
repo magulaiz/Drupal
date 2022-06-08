@@ -559,6 +559,22 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
         ],
         'plugins' => [
+          'ckeditor5_heading' => [
+            'enabled_headings' => [
+              'heading2',
+              'heading3',
+              'heading4',
+              'heading5',
+              'heading6',
+            ],
+          ],
+          'ckeditor5_imageResize' => [
+            'allow_resize' => TRUE,
+          ],
+          'ckeditor5_list' => [
+            'reversed' => FALSE,
+            'startIndex' => TRUE,
+          ],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => [
               '<cite>',
@@ -576,22 +592,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
               '<h5 id>',
               '<h6 id>',
             ],
-          ],
-          'ckeditor5_heading' => [
-            'enabled_headings' => [
-              'heading2',
-              'heading3',
-              'heading4',
-              'heading5',
-              'heading6',
-            ],
-          ],
-          'ckeditor5_imageResize' => [
-            'allow_resize' => TRUE,
-          ],
-          'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => TRUE,
           ],
         ],
       ],
@@ -666,12 +666,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => array_values(array_diff(
-              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-              ['<h4 id>', '<h6 id>'],
-            )),
-          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading2',
@@ -681,6 +675,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => array_values(array_diff(
+              $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+              ['<h4 id>', '<h6 id>'],
+            )),
+          ],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -698,9 +698,6 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
-          'ckeditor5_sourceEditing' => [
-            'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
-          ],
           'ckeditor5_heading' => [
             'enabled_headings' => [
               'heading1',
@@ -713,6 +710,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ],
           'ckeditor5_imageResize' => ['allow_resize' => TRUE],
           'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
+          'ckeditor5_sourceEditing' => [
+            'allowed_tags' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
+          ],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -735,14 +735,14 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ),
         ],
         'plugins' => [
+          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
+          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_values(array_diff(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
               ['<h2 id>', '<h3 id>', '<h4 id>', '<h5 id>', '<h6 id>'],
             )),
           ],
-          'ckeditor5_imageResize' => ['allow_resize' => TRUE],
-          'ckeditor5_list' => ['reversed' => FALSE, 'startIndex' => TRUE],
         ],
       ],
       'expected_superset' => $basic_html_test_case['expected_superset'],
@@ -788,13 +788,12 @@ class SmartDefaultSettingsTest extends KernelTestBase {
           ),
         ],
         'plugins' => array_merge(
-          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 0, 1),
+          $basic_html_test_case['expected_ckeditor5_settings']['plugins'],
           [
             'ckeditor5_alignment' => [
               'enabled_alignments' => ['center', 'justify'],
             ],
           ],
-          array_slice($basic_html_test_case['expected_ckeditor5_settings']['plugins'], 1),
         ),
       ],
       'expected_superset' => implode(' ', [
@@ -897,6 +896,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_ckeditor5_settings' => [
         'toolbar' => $basic_html_test_case['expected_ckeditor5_settings']['toolbar'],
         'plugins' => [
+          'ckeditor5_heading' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_heading'],
+          'ckeditor5_imageResize' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_imageResize'],
+          'ckeditor5_list' => $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_list'],
           'ckeditor5_sourceEditing' => [
             'allowed_tags' => array_merge(
               $basic_html_test_case['expected_ckeditor5_settings']['plugins']['ckeditor5_sourceEditing']['allowed_tags'],
