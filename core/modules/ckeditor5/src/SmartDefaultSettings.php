@@ -131,12 +131,11 @@ final class SmartDefaultSettings {
       $editor->setImageUploadSettings($old_editor->getImageUploadSettings());
       // *Before* determining which elements are still needed for this text
       // format, ensure that all already enabled plugins that are configurable
-      // have valid settings
+      // have valid settings.
       // For all already enabled plugins, find the ones that are configurable,
       // and add their default settings. For enabled plugins with element
       // subsets, compute the appropriate settings to achieve the subset that
       // matches the original text format restrictions.
-      // It's necessary to do this *before* determining
       $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
       $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
     }
@@ -197,6 +196,9 @@ final class SmartDefaultSettings {
     // and add their default settings. For enabled plugins with element subsets,
     // compute the appropriate settings to achieve the subset that matches the
     // original text format restrictions.
+    // Note: if switching from CKEditor 4, this will already have happened for
+    // plugins that were already enabled in CKEditor 4. It's harmless to compute
+    // this again.
     $this->addDefaultSettingsForEnabledConfigurablePlugins($editor);
     $this->computeSubsetSettingForEnabledPluginsWithSubsets($editor, $text_format);
 
