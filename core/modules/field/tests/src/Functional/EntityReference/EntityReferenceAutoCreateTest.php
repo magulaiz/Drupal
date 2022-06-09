@@ -185,10 +185,10 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
       ->setComponent($field_name, ['type' => 'entity_reference_autocomplete'])
       ->save();
 
-    $term_name = $this->randomString();
+    $term_name = $this->randomTitle();
     $edit = [
       $field_name . '[0][target_id]' => $term_name,
-      'title[0][value]' => $this->randomString(),
+      'title[0][value]' => $this->randomTitle(),
     ];
 
     $this->drupalGet('node/add/' . $this->referencingType);
@@ -212,10 +212,10 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $field_config->setSetting('handler_settings', $handler_settings);
     $field_config->save();
 
-    $term_name = $this->randomString();
+    $term_name = $this->randomTitle();
     $edit = [
       $field_name . '[0][target_id]' => $term_name,
-      'title[0][value]' => $this->randomString(),
+      'title[0][value]' => $this->randomTitle(),
     ];
 
     $this->drupalGet('node/add/' . $this->referencingType);
@@ -294,6 +294,19 @@ class EntityReferenceAutoCreateTest extends BrowserTestBase {
     $referencing_nid = key($result);
     $referencing_node = Node::load($referencing_nid);
     $this->assertEquals($referenced_id, $referencing_node->$field_name->target_id, 'Newly created node is referenced from the referencing entity.');
+  }
+
+  /**
+   * Generates a random string suitable for use as an auto-created term.
+   *
+   * We use this instead of randomString() to avoid generating titles that may
+   * randomly include commas or quotation marks, which have special significance
+   * to entity-reference fields.
+   *
+   * @return string
+   */
+  protected function randomTitle(): string {
+    return $this->getRandomGenerator()->sentences(3);
   }
 
 }
