@@ -106,6 +106,7 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['single'] = [
+      '#title' => 'single',
       '#type' => 'entity_autocomplete',
       '#target_type' => 'entity_test',
     ];
@@ -327,6 +328,19 @@ class EntityAutocompleteElementFormTest extends EntityKernelTestBase implements 
     // The input is complete (i.e. contains an entity ID at the end), no errors
     // are triggered.
     $this->assertCount(0, $form_state->getErrors());
+
+    // Test 'single' with multiple, comma-delimited entity IDs being provided in
+    // the same delta, which is not allowed.
+    $form_state = (new FormState())
+      ->setValues([
+        'single' => EntityAutocomplete::getEntityLabels([
+          $this->referencedEntities[0],
+          $this->referencedEntities[1],
+        ]),
+      ]);
+    $form_builder->submitForm($this, $form_state);
+    $this->assertCount(1, $form_state->getErrors());
+    $this->assertEquals(t('%name: each element can reference only a single value.', ['%name' => 'single']), $form_state->getErrors()['single']);
   }
 
   /**
