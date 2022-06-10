@@ -21,7 +21,7 @@ html {
 
 body {
   margin: 0;
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   background-color: var(--color--gray-100);
   background-image: url("../../images/background.svg");
   background-position: top left; /* LTR */
