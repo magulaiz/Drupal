@@ -24,10 +24,12 @@
         Object.keys(ajaxViews || {}).forEach(function (i) {
           var selector = ".js-view-dom-id-".concat(ajaxViews[i].view_dom_id);
 
-          if ($(selector, context).length) {
-            delete Drupal.views.instances[i];
-            delete settings.views.ajaxViews[i];
-          }
+          $(selector, context).ajaxComplete(() => {
+            if ($(selector, context).length) {
+              delete Drupal.views.instances[i];
+              delete settings.views.ajaxViews[i];
+            }
+          });
         });
       }
     }
