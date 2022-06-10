@@ -44,7 +44,7 @@
 
     &:hover,
     &:focus {
-      color: var(--color--primary-40);
+      color: var(--color-text-primary-medium);
     }
   }
 }

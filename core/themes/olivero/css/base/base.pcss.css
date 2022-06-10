@@ -38,7 +38,7 @@ body {
 }
 
 a {
-  color: var(--color--primary-40);
+  color: var(--color-text-primary-medium);
 
   &:hover {
     color: var(--color--primary-50);

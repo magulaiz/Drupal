@@ -23,7 +23,7 @@
     margin-block-end: var(--sp);
 
     & a {
-      color: var(--color--primary-40);
+      color: var(--color-text-primary-medium);
       font-weight: bold;
     }
   }

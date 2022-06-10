@@ -36,7 +36,7 @@
     background-size: 0 3px;
 
     &:hover {
-      color: var(--color--primary-40);
+      color: var(--color-text-primary-medium);
     }
   }
 
@@ -68,7 +68,7 @@
   line-height: var(--sp);
 
   & a {
-    color: var(--color--primary-40);
+    color: var(--color-text-primary-medium);
     font-weight: bold;
   }
 }
