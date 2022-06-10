@@ -174,7 +174,7 @@
 
 .comment__time {
   margin: 0;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-family: var(--font-sans);
   font-size: 14px;
   line-height: var(--sp);

@@ -14,7 +14,7 @@
   margin: 0;
   margin-inline-end: calc(var(--sp1-5) - (var(--sp0-5) / 2));
   letter-spacing: 0.02em;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-size: var(--font-size-s);
   font-weight: 600;
   line-height: 1.6;
