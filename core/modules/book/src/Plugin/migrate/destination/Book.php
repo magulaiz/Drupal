@@ -3,6 +3,7 @@
 namespace Drupal\book\Plugin\migrate\destination;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\migrate\Plugin\migrate\destination\EntityContentBase;
 use Drupal\migrate\Row;
 
@@ -33,6 +34,12 @@ class Book extends EntityContentBase {
     }
     else {
       $entity->book = $row->getDestinationProperty('book');
+    }
+    if (($mid = $entity->book['pid']) && ($menuLink = MenuLinkContent::load($mid)) && $url = $menuLink->getUrlObject()) {
+      $parameters = $url->getRouteParameters();
+      if (isset($parameters['node'])) {
+        $entity->book['pid'] = $parameters['node'];
+      }
     }
     return parent::updateEntity($entity, $row);
   }

@@ -23,7 +23,7 @@ class MenuLink extends DrupalSqlBase {
     $query = $this->select('menu_links', 'ml')
       ->fields('ml');
     $and = $query->andConditionGroup()
-      ->condition('ml.module', 'menu')
+      ->condition('ml.module', ['menu', 'book'], 'IN')
       ->condition('ml.router_path', ['admin/build/menu-customize/%', 'admin/structure/menu/manage/%'], 'NOT IN');
     $condition = $query->orConditionGroup()
       ->condition('ml.customized', 1)
