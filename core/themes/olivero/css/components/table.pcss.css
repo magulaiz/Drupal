@@ -51,7 +51,7 @@
     margin-inline-end: 0;
     text-align: start;
     letter-spacing: 0.02em;
-    color: var(--color--gray-5);
+    color: var(--color-text-neutral-loud);
     border-block-end: 2px solid var(--color--primary-50);
     font-family: var(--font-sans);
     font-size: 14px;

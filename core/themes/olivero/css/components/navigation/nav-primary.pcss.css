@@ -33,7 +33,7 @@
 .primary-nav__menu-link {
   flex-grow: 1;
   text-decoration: none;
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   font-size: 28px;
   font-weight: bold;
   line-height: var(--sp2);
