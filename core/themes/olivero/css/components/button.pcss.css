@@ -29,8 +29,8 @@
   &:hover,
   &:focus {
     text-decoration: none;
-    color: var(--color--primary-30);
-    border: solid 2px var(--color--primary-30);
+    color: var(--color-text-primary-loud);
+    border: solid 2px currentColor;
     background: none;
     font-weight: 700;
   }
