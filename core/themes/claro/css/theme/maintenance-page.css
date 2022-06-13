@@ -8,6 +8,8 @@
 /**
  * @file
  * Maintenance theming.
+ *
+ * These styles affect the installation UI, maintenance page, and the database update UI.
  */
 
 .maintenance-page {
@@ -61,7 +63,8 @@ h3 {
 }
 
 /**
- * Task list & step indicator
+ * Task list & step indicator.
+ * Shows on both the install screen and the database update page.
  */
 
 @media all and (max-width: 48em) { /* 768px */
@@ -201,7 +204,7 @@ h3 {
     float: right;
   }
 
-  .layout-sidebar-first ~ main {
+  main {
     float: left; /* LTR */
     clear: none;
     box-sizing: border-box;
@@ -209,7 +212,7 @@ h3 {
     padding-left: 3.85em; /* LTR */
   }
 
-  [dir="rtl"] .layout-sidebar-first ~ main {
+  [dir="rtl"] ~ main {
     float: right;
     padding-right: 3.85em;
     padding-left: 0;
