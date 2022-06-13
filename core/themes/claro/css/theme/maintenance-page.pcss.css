@@ -195,7 +195,6 @@ h3 {
   [dir="rtl"] .layout-sidebar-first {
     float: right;
   }
-
   main {
     float: left; /* LTR */
     clear: none;
