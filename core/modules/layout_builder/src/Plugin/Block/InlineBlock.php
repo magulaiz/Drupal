@@ -117,6 +117,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       'view_mode' => 'full',
       'block_revision_id' => NULL,
       'block_serialized' => NULL,
+      'block_uuid' => NULL,
     ];
   }
 
@@ -231,6 +232,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       }
       elseif (!empty($this->configuration['block_revision_id'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
+        if (!$entity && !empty($this->configuration['block_uuid'])) {
+          $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
+          $entity = !empty($entity) ? current($entity) : NULL;
+        }
         $this->blockContent = $entity;
       }
       else {
@@ -276,6 +281,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     if ($duplicate_block) {
       if (empty($block) && !empty($this->configuration['block_revision_id'])) {
         $block = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
+      }
+      if (empty($block) && !empty($this->configuration['block_uuid'])) {
+        $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
+        $block = !empty($entity) ? current($entity) : NULL;
       }
       if ($block) {
         $block = $block->createDuplicate();
