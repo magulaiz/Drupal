@@ -4,6 +4,7 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Site\Settings;
 
 /**
  * Renders CSS assets.
@@ -71,6 +72,13 @@ class CssCollectionRenderer implements AssetCollectionRendererInterface {
         // For file items, output a LINK tag for file CSS assets.
         case 'file':
           $element['#attributes']['href'] = $this->fileUrlGenerator->generateString($css_asset['data']);
+          // Add the cache-busting query string if this isn't an aggregate if
+          // settings enabled
+          if (Settings::get('css_js_query_string_for_compressed', '1111') && isset($css_asset['preprocessed'])) {
+            $query_string_separator = (strpos($css_asset['data'], '?') !== FALSE) ? '&' : '?';
+            $element['#attributes']['href'] .= $query_string_separator . $query_string;
+          }
+
           // Only add the cache-busting query string if this isn't an aggregate
           // file.
           if (!isset($css_asset['preprocessed'])) {
