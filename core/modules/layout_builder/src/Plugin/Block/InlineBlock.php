@@ -117,7 +117,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       'view_mode' => 'full',
       'block_revision_id' => NULL,
       'block_serialized' => NULL,
-      'block_uuid' => NULL
+      'block_uuid' => NULL,
     ];
   }
 
