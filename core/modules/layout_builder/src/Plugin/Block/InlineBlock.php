@@ -294,6 +294,10 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
     if ($duplicate_block) {
       if (empty($block) && !empty($this->configuration['block_revision_id'])) {
         $block = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
+
+        if (!empty($block) && $block->uuid() !== $this->configuration['block_uuid']) {
+          $block = NULL;
+        }
       }
       if (empty($block) && !empty($this->configuration['block_uuid'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
