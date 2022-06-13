@@ -117,7 +117,6 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       'view_mode' => 'full',
       'block_revision_id' => NULL,
       'block_serialized' => NULL,
-      'block_uuid' => NULL,
     ];
   }
 
@@ -230,13 +229,26 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       if (!empty($this->configuration['block_serialized'])) {
         $this->blockContent = unserialize($this->configuration['block_serialized']);
       }
-      elseif (!empty($this->configuration['block_uuid'])) {
-        $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
-        $entity = !empty($entity) ? current($entity) : NULL;
-        $this->blockContent = $entity;
-      }
       elseif (!empty($this->configuration['block_revision_id'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
+
+        $loadByUuid = FALSE;
+        if (!empty($this->configuration['block_uuid'])) {
+          if (empty($entity)) {
+            $loadByUuid = TRUE;
+          }
+          else {
+            if ($entity->uuid() !== $this->configuration['block_uuid']) {
+              $loadByUuid = TRUE;
+            }
+          }
+        }
+
+        if ($loadByUuid) {
+          $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
+          $entity = !empty($entity) ? current($entity) : NULL;
+        }
+
         $this->blockContent = $entity;
       }
       else {
@@ -280,12 +292,12 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       $block = unserialize($this->configuration['block_serialized']);
     }
     if ($duplicate_block) {
+      if (empty($block) && !empty($this->configuration['block_revision_id'])) {
+        $block = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
+      }
       if (empty($block) && !empty($this->configuration['block_uuid'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
         $block = !empty($entity) ? current($entity) : NULL;
-      }
-      if (empty($block) && !empty($this->configuration['block_revision_id'])) {
-        $block = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
       }
       if ($block) {
         $block = $block->createDuplicate();
