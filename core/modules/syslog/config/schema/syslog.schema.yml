@@ -13,3 +13,9 @@ syslog.settings:
     format:
       type: string
       label: 'Format'
+    hostname:
+      type: string
+      label: 'Hostname'
+    port:
+      type: integer
+      label: 'Port'
