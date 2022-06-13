@@ -364,7 +364,7 @@ class Tables implements TablesInterface {
           if (isset($this->sqlQuery->getTables()[$key])) {
             $this->entityTables[$key] = $key;
           }
-          else if (
+          elseif (
             $type === 'INNER' &&
             $base_table === 'base_table' &&
             $this->sqlQuery->getTables()['base_table']['table'] === $table
