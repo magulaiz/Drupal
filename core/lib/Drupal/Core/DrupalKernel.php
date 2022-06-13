@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\DatabaseBackend;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\Config\NullStorage;
+use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
@@ -695,11 +696,18 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     static::bootEnvironment();
 
     try {
-      if (!$this->booted) {
-        $this->initializeSettings($request);
-        $this->boot();
+      $this->initializeSettings($request);
+
+      // Redirect the user to the installation script if Drupal has not been
+      // installed yet (i.e., if no $databases array has been defined in the
+      // settings.php file) and we are not already installing.
+      if (!Database::getConnectionInfo() && !InstallerKernel::installationAttempted() && PHP_SAPI !== 'cli') {
+        $response = new RedirectResponse($request->getBasePath() . '/core/install.php', 302, ['Cache-Control' => 'no-cache']);
       }
-      $response = $this->getHttpKernel()->handle($request, $type, $catch);
+      else {
+        $this->boot();
+        $response = $this->getHttpKernel()->handle($request, $type, $catch);
+      }
     }
     catch (\Exception $e) {
       if ($catch === FALSE) {
