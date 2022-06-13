@@ -671,7 +671,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     $rc = new \ReflectionClass($this);
     foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED) as $property) {
       if (!$property->isStatic() && !isset($blacklist[$property->name])) {
-        $this->{$property->name} = NULL;
+        //$this->{$property->name} = NULL;
       }
     }
 
