@@ -72,10 +72,6 @@ class Tables implements TablesInterface {
     $this->sqlQuery = $sql_query;
     $this->entityTypeManager = \Drupal::entityTypeManager();
     $this->entityFieldManager = \Drupal::service('entity_field.manager');
-
-    // To avoid an unnecessary join on the base_table, ensure that this is
-    // initialized in $this->entityTables.
-    $this->entityTables[$this->sqlQuery->getTables()['base_table']['table']] = 'base_table';
   }
 
   /**
@@ -301,6 +297,8 @@ class Tables implements TablesInterface {
           }
           $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
           $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
+          // Add the new entity base table using the table and sql column.
+          $base_table = $this->addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
           $propertyDefinitions = [];
           $key++;
           $index_prefix .= "$next_index_prefix.";
