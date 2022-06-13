@@ -8,11 +8,42 @@
 /**
  * @file
  * Maintenance theming.
+ *
+ * These styles affect the installation UI, maintenance page, and the database update UI.
  */
 
 .maintenance-page {
   min-height: 100%;
   background-color: var(--color-gray-100);
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+}
+
+h1,
+h2 {
+  font-size: var(--font-size-h3);
+}
+
+h3 {
+  font-size: var(--font-size-h4);
+}
+
+.site-name {
+  margin-top: var(--space-s);
+  word-wrap: break-word;
+  color: var(--color-gray);
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+}
+
+.title {
+  margin-top: 0;
+  font-size: var(--font-size-h3);
+  font-weight: 500;
 }
 
 .site-name,
@@ -32,9 +63,8 @@
 }
 
 /**
- * Task list & step indicator
- *
- * @todo this should be moved to install-page.css.
+ * Task list & step indicator.
+ * Shows on both the install screen and the database update page.
  */
 
 @media all and (max-width: 48em) { /* 768px */
@@ -109,6 +139,7 @@
   margin-right: 1.25em;
   margin-left: 1.25em;
   padding: var(--space-xl);
+  border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 0.5rem;
   background: #fff;
   box-shadow: var(--shadow-z3);
@@ -173,7 +204,7 @@
     float: right;
   }
 
-  .layout-sidebar-first ~ main {
+  main {
     float: left; /* LTR */
     clear: none;
     box-sizing: border-box;
@@ -181,7 +212,7 @@
     padding-left: 3.85em; /* LTR */
   }
 
-  [dir="rtl"] .layout-sidebar-first ~ main {
+  [dir="rtl"] ~ main {
     float: right;
     padding-right: 3.85em;
     padding-left: 0;
