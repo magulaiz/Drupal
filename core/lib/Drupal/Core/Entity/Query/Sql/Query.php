@@ -105,6 +105,7 @@ class Query extends QueryBase implements QueryInterface {
     }
     $simple_query = TRUE;
     if ($this->entityType->getDataTable()) {
+      $base_table = $this->entityType->getDataTable();
       $simple_query = FALSE;
     }
     $this->sqlQuery = $this->connection->select($base_table, 'base_table', ['conjunction' => $this->conjunction]);
