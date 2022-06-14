@@ -179,8 +179,10 @@ final class SmartDefaultSettings {
 
     // In CKEditor 4, it's possible for settings to exist for plugins that are
     // not actually enabled. During the upgrade path, these would then be mapped
-    // to equivalent CKEditor 5 configuration. But CKEditor 5 does not all
-    // configuration to be stored for
+    // to equivalent CKEditor 5 configuration. But CKEditor 5 does not allow
+    // configuration to be stored for disabled plugins. Therefore determine
+    // which plugins actually are enabled, and omit the (upgraded) plugin
+    // configuration for disabled plugins.
     // @see \Drupal\ckeditor5\Plugin\CKEditor4To5UpgradePluginInterface::mapCKEditor4SettingsToCKEditor5Configuration()
     if ($old_editor && $old_editor->getEditor() === 'ckeditor') {
       $enabled_definitions = $this->pluginManager->getEnabledDefinitions($editor);
