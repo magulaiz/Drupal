@@ -161,3 +161,23 @@ session_test.has_bag_flag:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+session_test.deprecated_session_id_access:
+  path: '/session-test/deprecated-session-id-access'
+  defaults:
+    _title: 'Accesses the session ID without checking for session existence'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::deprecatedSessionIdAccess'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'
+
+session_test.clear_session:
+  path: '/session-test/clear-session'
+  defaults:
+    _title: 'Destroys the current session'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::clearSession'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

@@ -80,6 +80,30 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
+   * Attempts to prove session data loss for #3285696.
+   */
+  public function testSessionDataLossDueToInvalidId() {
+    $i = 0;
+    do {
+      // Clear the session before running a new iteration.
+      $this->drupalGet('session-test/clear-session');
+
+      $this->drupalGet('session-test/deprecated-session-id-access');
+      $response = json_decode($this->getSession()->getPage()->getContent(), TRUE);
+      $prev_session_content = $response['session']['generated_id'];
+      $this->assertNotEmpty($prev_session_content);
+
+      // Retrieve now the contents of the session in a new request.
+      $this->drupalGet('/session-test/get-session-no-auth');
+      $response = json_decode($this->getSession()->getPage()->getContent(), TRUE);
+      $session_content = $response['session']['generated_id'] ?? NULL;
+
+      $this->assertEquals($prev_session_content, $session_content, sprintf('Session content lost at iteration %s.', $i));
+    }
+    while ($i++ < 10);
+  }
+
+  /**
    * Tests data persistence via the session_test module callbacks.
    */
   public function testDataPersistence() {
