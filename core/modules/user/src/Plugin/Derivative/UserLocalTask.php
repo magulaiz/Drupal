@@ -5,6 +5,7 @@ namespace Drupal\user\Plugin\Derivative;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,16 +24,26 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
   protected $entityTypeManager;
 
   /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
    * Creates a UserLocalTask object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation manager.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, TranslationInterface $string_translation, RouteProviderInterface $route_provider) {
     $this->entityTypeManager = $entity_type_manager;
     $this->stringTranslation = $string_translation;
+    $this->routeProvider = $route_provider;
   }
 
   /**
@@ -41,7 +52,8 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $container->get('entity_type.manager'),
-      $container->get('string_translation')
+      $container->get('string_translation'),
+      $container->get('router.route_provider')
     );
   }
 
@@ -66,8 +78,13 @@ class UserLocalTask extends DeriverBase implements ContainerDeriverInterface {
         continue;
       }
 
+      $route_name = "entity.$bundle_type_id.entity_permissions_form";
+      if (empty($this->routeProvider->getRoutesByNames([$route_name]))) {
+        continue;
+      }
+
       $this->derivatives["permissions_$bundle_type_id"] = [
-        'route_name' => "entity.$bundle_type_id.entity_permissions_form",
+        'route_name' => $route_name,
         'weight' => 10,
         'title' => $this->t('Manage permissions'),
         'base_route' => $base_route,
