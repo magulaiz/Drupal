@@ -66,6 +66,9 @@ inline_block:
     block_serialized:
       type: string
       label: 'Serialized block'
+    block_uuid:
+      type: uuid
+      label: 'UUID'
 
 block.settings.inline_block:*:
   type: inline_block
