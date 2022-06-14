@@ -535,8 +535,7 @@ function _filter_url($text, $filter) {
     // removed when the closing tag is found. Until the closing tag is found,
     // no replacements are made.
     $open_tag = '';
-
-    for ($i = 0; $i < count($chunks); $i++) {
+    for ($i = 0; $chunks && $i < count($chunks); $i++) {
       if ($chunk_type == 'text') {
         // Only process this text if there are no unclosed $ignore_tags.
         if ($open_tag == '') {
@@ -566,7 +565,8 @@ function _filter_url($text, $filter) {
       }
     }
 
-    $text = implode($chunks);
+    $text = $chunks ? implode($chunks) : $text;
+
     // Revert to the original comment contents
     _filter_url_escape_comments('', FALSE);
     $text = preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text);
