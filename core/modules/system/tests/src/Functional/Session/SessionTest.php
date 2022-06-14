@@ -99,8 +99,7 @@ class SessionTest extends BrowserTestBase {
       $session_content = $response['session']['generated_id'] ?? NULL;
 
       $this->assertEquals($prev_session_content, $session_content, sprintf('Session content lost at iteration %s.', $i));
-    }
-    while ($i++ < 10);
+    } while ($i++ < 10);
   }
 
   /**
