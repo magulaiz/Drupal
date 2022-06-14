@@ -13,6 +13,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group aggregator
+ * @group legacy
  */
 class UpgradeTest extends MigrateUpgradeExecuteTestBase {
 
@@ -61,7 +62,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
     return [
       'aggregator_item' => 10,
       'aggregator_feed' => 1,
-      'block' => 25,
+      'block' => 27,
       'block_content' => 1,
       'block_content_type' => 1,
       'comment' => 4,
@@ -86,7 +87,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'search_page' => 2,
       'shortcut' => 6,
       'shortcut_set' => 2,
-      'action' => 21,
+      'action' => 27,
       'menu' => 7,
       'taxonomy_term' => 25,
       'taxonomy_vocabulary' => 8,
@@ -96,7 +97,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'user_role' => 4,
       'menu_link_content' => 11,
       'view' => 16,
-      'date_format' => 11,
+      'date_format' => 12,
       'entity_form_display' => 24,
       'entity_form_mode' => 1,
       'entity_view_display' => 37,
@@ -121,7 +122,6 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
       'Block',
       'Book',
       'Chaos tools',
-      'Color',
       'Comment',
       'Contact',
       'Content translation',
@@ -186,6 +186,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getMissingPaths() {
     return [
+      'Color',
       'References',
       'Translation sets',
       'Variable realm',

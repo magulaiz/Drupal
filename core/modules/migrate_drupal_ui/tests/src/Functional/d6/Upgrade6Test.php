@@ -53,6 +53,9 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
     $this->nodeStorage->delete($this->nodeStorage->loadMultiple());
 
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal6.php');
+
+    // @todo Remove this in https://www.drupal.org/node/3267515
+    \Drupal::service('module_installer')->uninstall(['rdf']);
   }
 
   /**
@@ -67,7 +70,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'block' => 34,
+      'block' => 36,
       'block_content' => 2,
       'block_content_type' => 1,
       'comment' => 8,
@@ -88,11 +91,10 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       // The 'book' module provides the 'book' node type, and the migration
       // creates 12 node types.
       'node_type' => 14,
-      'rdf_mapping' => 7,
       'search_page' => 2,
       'shortcut' => 2,
       'shortcut_set' => 1,
-      'action' => 27,
+      'action' => 33,
       'menu' => 8,
       'path_alias' => 8,
       'taxonomy_term' => 15,
@@ -102,7 +104,7 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
       'user_role' => 7,
       'menu_link_content' => 10,
       'view' => 14,
-      'date_format' => 11,
+      'date_format' => 12,
       'entity_form_display' => 31,
       'entity_form_mode' => 1,
       'entity_view_display' => 58,
