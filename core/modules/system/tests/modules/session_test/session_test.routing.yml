@@ -181,3 +181,13 @@ session_test.clear_session:
     no_cache: TRUE
   requirements:
     _access: 'TRUE'
+
+session_test.generate_legacy_session_id:
+  path: '/session-test/generate-legacy-session-id'
+  defaults:
+    _title: 'Generates a session with a legacy ID'
+    _controller: '\Drupal\session_test\Controller\SessionTestController::generateLegacySessionId'
+  options:
+    no_cache: TRUE
+  requirements:
+    _access: 'TRUE'

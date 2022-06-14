@@ -103,6 +103,17 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
+   * Test that legacy session IDs with invalid characters are accepted.
+   */
+  public function testLegacySessionIds() {
+    $this->drupalGet('session-test/generate-legacy-session-id');
+
+    // Retrieve now the contents of the session in a new request.
+    $this->drupalGet('/session-test/get-session-no-auth');
+    $this->assertEquals('{"session":{"legacy_session":true},"user":0}', $this->getSession()->getPage()->getContent());
+  }
+
+  /**
    * Tests data persistence via the session_test module callbacks.
    */
   public function testDataPersistence() {
