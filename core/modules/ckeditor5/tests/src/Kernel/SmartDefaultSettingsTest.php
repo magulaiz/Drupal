@@ -1111,7 +1111,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
       'expected_superset' => '',
       'expected_fundamental_compatibility_violations' => [],
       'expected_messages' => [
-        'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
+        'warning' => [
+          'The <em class="placeholder">llama_contextual_and_button</em> plugin settings do not have a known upgrade path.',
+        ],
       ],
     ];
 
