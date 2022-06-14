@@ -232,19 +232,19 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       elseif (!empty($this->configuration['block_revision_id'])) {
         $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($this->configuration['block_revision_id']);
 
-        $loadByUuid = FALSE;
+        $load_by_uuid = FALSE;
         if (!empty($this->configuration['block_uuid'])) {
           if (empty($entity)) {
-            $loadByUuid = TRUE;
+            $load_by_uuid = TRUE;
           }
           else {
             if ($entity->uuid() !== $this->configuration['block_uuid']) {
-              $loadByUuid = TRUE;
+              $load_by_uuid = TRUE;
             }
           }
         }
 
-        if ($loadByUuid) {
+        if ($load_by_uuid) {
           $entity = $this->entityTypeManager->getStorage('block_content')->loadByProperties(['uuid' => $this->configuration['block_uuid']]);
           $entity = !empty($entity) ? current($entity) : NULL;
         }
