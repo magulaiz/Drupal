@@ -347,28 +347,6 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles' => 'Enable at least one style, otherwise disable the Style plugin.',
       ],
     ];
-    $data['INVALID: Style plugin configured to add class to unsupported tag'] = [
-      'settings' => [
-        'toolbar' => [
-          'items' => [
-            'style',
-          ],
-        ],
-        'plugins' => [
-          'ckeditor5_style' => [
-            'styles' => [
-              [
-                'label' => 'Highlighted',
-                'element' => '<blockquote class="highlighted">',
-              ],
-            ],
-          ],
-        ],
-      ],
-      'violations' => [
-        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for already supported tags. <code>&lt;blockquote&gt;</code> is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
-      ],
-    ];
     $data['INVALID: Style plugin configured to add class to supported non-HTML5 tag'] = [
       'settings' => [
         'toolbar' => [
@@ -1211,11 +1189,24 @@ class ValidatorsTest extends KernelTestBase {
       'filters' => [],
       'violations' => [],
     ];
-    // Reproduce Ben's failing test case.
-    $editor_only_test_cases = $this->provider();
-    $o = $editor_only_test_cases['INVALID: Style plugin configured to add class to unsupported tag'];
     $data['INVALID: Style plugin configured to add class to unsupported tag'] = [
-      'settings' => $o['settings'],
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Highlighted',
+                'element' => '<blockquote class="highlighted">',
+              ],
+            ],
+          ],
+        ],
+      ],
       'image_upload' => [
         'status' => FALSE,
       ],
@@ -1232,7 +1223,9 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'violations' => $o['violations'],
+      'violations' => [
+        'settings.toolbar.items.0' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
+      ],
     ];
     return $data;
   }

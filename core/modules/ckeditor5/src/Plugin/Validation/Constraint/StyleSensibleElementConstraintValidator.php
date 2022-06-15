@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Styles can only be specified for already supported tags and extra classes.
+ * Styles can only be specified for HTML5 tags and extra classes.
  *
  * @internal
  */
@@ -65,18 +65,9 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     $other_enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));
     $disabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($enableable_disabled_plugins), $text_editor, FALSE));
 
-    // If the intersection between the validated style element and the elements
-    // supported by all other enabled CKEditor 5 plugins is empty, that means
-    // that the tag used in the style element is not actually supported yet.
-    // Hence the Style plugin cannot support setting >1 class on it.
-    if ($style_element->intersect($other_enabled_plugin_elements)->allowsNothing()) {
-      $this->context->buildViolation($constraint->unsupportedTagMessage)
-        ->setParameter('@tag', sprintf("<%s>", $tag))
-        ->addViolation();
-    }
     // Next, validate that the classes specified for this style are not
     // supported by an enabled plugin.
-    elseif (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
+    if (self::intersectionWithClasses($style_element, $other_enabled_plugin_elements)) {
       $this->context->buildViolation($constraint->conflictingEnabledPluginMessage)
         ->setParameter('@tag', sprintf("<%s>", $tag))
         ->setParameter('@classes', implode(", ", $classes))

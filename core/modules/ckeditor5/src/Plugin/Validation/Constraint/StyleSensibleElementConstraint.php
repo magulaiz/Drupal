@@ -9,7 +9,7 @@ namespace Drupal\ckeditor5\Plugin\Validation\Constraint;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Styles can only be specified for already supported tags and extra classes.
+ * Styles can only be specified for HTML5 tags and extra classes.
  *
  * @Constraint(
  *   id = "StyleSensibleElement",
@@ -26,13 +26,6 @@ class StyleSensibleElementConstraint extends Constraint {
    * @var string
    */
   public $nonHtml5TagMessage = 'A style can only be specified for an HTML 5 tag. <code>@tag</code> is not an HTML5 tag.';
-
-  /**
-   * When a style is defined for a tag that is not yet supported.
-   *
-   * @var string
-   */
-  public $unsupportedTagMessage = 'A style can only be specified for already supported tags. <code>@tag</code> is not yet supported. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.';
 
   /**
    * When a Style is defined with classes supported by an enabled plugin.
