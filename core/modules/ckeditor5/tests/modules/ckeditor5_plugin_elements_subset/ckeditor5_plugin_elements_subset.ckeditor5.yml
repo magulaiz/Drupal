@@ -8,3 +8,4 @@ ckeditor5_plugin_elements_subset_sneakySuperset:
       - <foo>
       - <bar>
       - <bar baz>
+      - <$any-html5-element class>
