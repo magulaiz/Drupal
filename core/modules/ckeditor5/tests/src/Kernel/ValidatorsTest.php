@@ -347,7 +347,7 @@ class ValidatorsTest extends KernelTestBase {
         'settings.plugins.ckeditor5_style.styles' => 'Enable at least one style, otherwise disable the Style plugin.',
       ],
     ];
-    $data['INVALID: Style plugin configured to add class to supported non-HTML5 tag'] = [
+    $data['INVALID: Style plugin configured to add class to GHS-supported non-HTML5 tag'] = [
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -373,6 +373,31 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'violations' => [
         'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <code>&lt;foo&gt;</code> is not an HTML5 tag.',
+      ],
+    ];
+    $data['INVALID: Style plugin configured to add class to plugin-supported non-HTML5 tag'] = [
+      'settings' => [
+        'toolbar' => [
+          'items' => [
+            'style',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_style' => [
+            'styles' => [
+              [
+                'label' => 'Sensational media',
+                'element' => '<drupal-media class="sensational">',
+              ],
+            ],
+          ],
+          'media_media' => [
+            'allow_view_mode_override' => FALSE,
+          ],
+        ],
+      ],
+      'violations' => [
+        'settings.plugins.ckeditor5_style.styles.0.element' => 'A style can only be specified for an HTML 5 tag. <code>&lt;drupal-media&gt;</code> is not an HTML5 tag.',
       ],
     ];
     $data['INVALID: Style plugin configured to add class that is supported by a disabled plugin'] = [
