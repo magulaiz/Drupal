@@ -1211,7 +1211,29 @@ class ValidatorsTest extends KernelTestBase {
       'filters' => [],
       'violations' => [],
     ];
-
+    // Reproduce Ben's failing test case.
+    $editor_only_test_cases = $this->provider();
+    $o = $editor_only_test_cases['INVALID: Style plugin configured to add class to unsupported tag'];
+    $data['INVALID: Style plugin configured to add class to unsupported tag'] = [
+      'settings' => $o['settings'],
+      'image_upload' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'filter_html' => [
+          'id' => 'filter_html',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [
+            'allowed_html' => '<p> <br> <blockquote class="highlighted">',
+            'filter_html_help' => TRUE,
+            'filter_html_nofollow' => TRUE,
+          ],
+        ],
+      ],
+      'violations' => $o['violations'],
+    ];
     return $data;
   }
 
