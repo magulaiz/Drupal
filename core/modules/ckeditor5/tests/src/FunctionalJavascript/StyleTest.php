@@ -88,6 +88,18 @@ JS;
     $page->pressButton('Save configuration');
     $assert_session->pageTextNotContains('Added text format');
     $assert_session->elementExists('css', '[aria-label="Error message"]:contains("The Style plugin needs another plugin to create <s>, for it to be able to create the following attributes: <s class="redacted">. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.")');
+
+    // Now, attempt to use a supported non-HTML5 tag.
+    // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]');
+      allowedTags.value = 'drupal-media.sensational|Sensational media';
+      allowedTags.dispatchEvent(new Event('change'));
+JS;
+    $this->getSession()->executeScript($javascript);
+
+    // The CKEditor 5 module should refuse to allow styles on non-HTML5 tags.
+    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="error"]:contains("A style can only be specified for an HTML 5 tag. <drupal-media> is not an HTML5 tag.")');
   }
 
   /**
