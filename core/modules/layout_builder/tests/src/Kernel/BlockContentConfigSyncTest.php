@@ -115,7 +115,6 @@ class BlockContentConfigSyncTest extends EntityKernelTestBase {
         // having different revision IDs for block_content entities.
         'block_revision_id' => $block_revision_id + 42,
         'block_serialized' => NULL,
-        'block_uuid' => $block_uuid,
       ],
       'additional' => [],
       'weight' => 0,
