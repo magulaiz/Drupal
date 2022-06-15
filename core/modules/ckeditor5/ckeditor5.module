@@ -189,10 +189,6 @@ function ckeditor5_form_filter_format_form_alter(array &$form, FormStateInterfac
         'checkbox',
         'select',
         'radios',
-        // @todo if this triggers the callback via keyboard navigation such as
-        //   tab, focus should move to the next element, not to the rebuilt
-        //   "allowed tags" field
-        //   https://www.drupal.org/project/ckeditor5/issues/3231321.
         'textarea',
       ];
       if (isset($plugins_config_form['#type']) && in_array($plugins_config_form['#type'], $field_types) && !isset($plugins_config_form['#ajax'])) {
