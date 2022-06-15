@@ -28,6 +28,10 @@ libraries-override:
     css:
       theme:
         css/ckeditor.admin.css: css/ckeditor/ckeditor.admin.css
+  ckeditor/media_embed_ckeditor_theme:
+    css:
+      component:
+        css/media-embed-error.css: css/ckeditor/media-embed-error.css
 
   color/admin:
     css:
