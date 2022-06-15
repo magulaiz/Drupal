@@ -67,6 +67,7 @@ class Table extends FormElement {
     return [
       '#header' => [],
       '#rows' => [],
+      '#rowgroups' => [],
       '#empty' => '',
       // Properties for tableselect support.
       '#input' => TRUE,
