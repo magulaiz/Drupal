@@ -16,7 +16,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\quickedit\Entity\QuickEditLayoutBuilderEntityViewDisplay;
 use Drupal\quickedit\LayoutBuilderIntegration;
 
@@ -183,7 +182,7 @@ function quickedit_preprocess_field(&$variables) {
 function quickedit_entity_type_alter(array &$entity_types) {
   if (\Drupal::moduleHandler()->moduleExists('layout_builder')) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-    if ($entity_types['entity_view_display']->getClass() === LayoutBuilderEntityViewDisplay::class) {
+    if ($entity_types['entity_view_display']->getClass() === 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay\LayoutBuilderEntityViewDisplay') {
       $entity_types['entity_view_display']->setClass(QuickEditLayoutBuilderEntityViewDisplay::class);
     }
   }
