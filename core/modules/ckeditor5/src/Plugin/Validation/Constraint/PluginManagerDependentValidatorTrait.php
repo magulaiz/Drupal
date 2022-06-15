@@ -45,21 +45,20 @@ trait PluginManagerDependentValidatorTrait {
   }
 
   /**
-   * Gets all enabled CKEditor 5 plugin definitions.
+   * Gets all other enabled CKEditor 5 plugin definitions.
    *
    * @param \Drupal\editor\EditorInterface $text_editor
    *   A Text Editor config entity configured to use CKEditor 5.
-   * @param string|null $except
-   *   (optional) A CKEditor 5 plugin ID to exclude.
+   * @param string $except
+   *   A CKEditor 5 plugin ID to exclude: all enabled plugins other than this
+   *   one are returned.
    *
    * @return \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[]
    *   A list of CKEditor 5 plugin definitions keyed by plugin ID.
    */
-  private function getEnabledPlugins(EditorInterface $text_editor, ?string $except): array {
+  private function getOtherEnabledPlugins(EditorInterface $text_editor, string $except): array {
     $enabled_plugins = $this->pluginManager->getEnabledDefinitions($text_editor);
-    if ($except) {
-      unset($enabled_plugins[$except]);
-    }
+    unset($enabled_plugins[$except]);
     return $enabled_plugins;
   }
 

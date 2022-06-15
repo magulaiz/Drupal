@@ -59,7 +59,7 @@ class StyleSensibleElementConstraintValidator extends ConstraintValidator implem
     }
 
     // Get the list of tags enabled by every plugin other than Style.
-    $other_enabled_plugins = $this->getEnabledPlugins($text_editor, 'ckeditor5_style');
+    $other_enabled_plugins = $this->getOtherEnabledPlugins($text_editor, 'ckeditor5_style');
     $enableable_disabled_plugins = $this->getEnableableDisabledPlugins($text_editor);
 
     $other_enabled_plugin_elements = new HTMLRestrictions($this->pluginManager->getProvidedElements(array_keys($other_enabled_plugins), $text_editor, FALSE));

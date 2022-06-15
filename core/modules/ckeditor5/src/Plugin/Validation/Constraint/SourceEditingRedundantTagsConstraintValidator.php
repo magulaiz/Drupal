@@ -40,7 +40,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
 
     $text_editor = $this->createTextEditorObjectFromContext();
 
-    $other_enabled_plugins = $this->getEnabledPlugins($text_editor, 'ckeditor5_sourceEditing');
+    $other_enabled_plugins = $this->getOtherEnabledPlugins($text_editor, 'ckeditor5_sourceEditing');
     $enableable_disabled_plugins = $this->getEnableableDisabledPlugins($text_editor);
 
     // An array of tags enabled by every plugin other than Source Editing.
