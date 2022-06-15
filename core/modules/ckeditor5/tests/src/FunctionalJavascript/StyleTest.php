@@ -71,6 +71,23 @@ JS;
     $assert_session->pageTextContains('One style configured');
     $allowed_html_field = $assert_session->fieldExists('filters[filter_html][settings][allowed_html]');
     $this->assertStringContainsString('<p class="foo bar">', $allowed_html_field->getValue());
+
+    // Attempt to use an unsupported HTML5 tag.
+    $javascript = <<<JS
+      const allowedTags = document.querySelector('[data-drupal-selector="edit-editor-settings-plugins-ckeditor5-style-styles"]');
+      allowedTags.value = 's.redacted|Redacted';
+      allowedTags.dispatchEvent(new Event('change'));
+JS;
+    $this->getSession()->executeScript($javascript);
+
+    // The CKEditor 5 module should warn that `<s>` cannot (yet) be created.
+    // @see \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkAllHtmlTagsAreCreatable()
+    $assert_session->waitForElement('css', '[role=alert][data-drupal-message-type="warning"]:contains("The Style plugin needs another plugin to create <s>, for it to be able to create the following attributes: <s class="redacted">. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.")');
+
+    // Attempt to save anyway: the warning should become an error.
+    $page->pressButton('Save configuration');
+    $assert_session->pageTextNotContains('Added text format');
+    $assert_session->elementExists('css', '[aria-label="Error message"]:contains("The Style plugin needs another plugin to create <s>, for it to be able to create the following attributes: <s class="redacted">. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.")');
   }
 
   /**
