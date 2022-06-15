@@ -835,6 +835,11 @@ class CKEditor5 extends EditorBase implements ContainerFactoryPluginInterface {
    */
   protected static function createEphemeralPairedEditor(EditorInterface $editor, FilterFormatInterface $filter_format): EditorInterface {
     $paired_editor = clone $editor;
+    // If the editor is still being configured, the configuration may not yet be
+    // valid. Explicitly mark the ephemeral paired editor as new to allow other
+    // code to treat this accordingly.
+    // @see \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements()
+    $paired_editor->enforceIsNew(TRUE);
     $reflector = new \ReflectionObject($paired_editor);
     $property = $reflector->getProperty('filterFormat');
     $property->setAccessible(TRUE);
