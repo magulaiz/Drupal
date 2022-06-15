@@ -289,15 +289,20 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
     /** @var \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository */
     $resource_type_repository = \Drupal::service('jsonapi.resource_type.repository');
     $resource_type = $resource_type_repository->get($target->getEntityTypeId(), $target->bundle());
-    // Remove unwanted properties from the meta value, usually 'entity'
-    // and 'target_id'.
     $properties = TypedDataInternalPropertiesHelper::getNonInternalProperties($item);
     $main_property_name = $item->getDataDefinition()->getMainPropertyName();
+    // The main property is represented as the 'id' member, e.g. the UUID.
+    // Set other non-internal properties in 'meta', e.g. for field types which
+    // extend the core entity reference field type and require additional data.
+    // @see \Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer::denormalize
     $meta = array_diff_key($properties, array_flip([$property_name, $main_property_name]));
     if (!is_null($arity)) {
       $meta[static::ARITY_KEY] = $arity;
     }
-    $meta["drupal_internal__$main_property_name"] = $properties[$main_property_name];
+    // Set meta value indicating the main property, if it is not internal.
+    if (array_key_exists($main_property_name, $properties)) {
+      $meta["drupal_internal__$main_property_name"] = $item->get($main_property_name);
+    }
     return new static($resource_type, $target->uuid(), $meta);
   }
 

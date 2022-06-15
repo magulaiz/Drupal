@@ -642,6 +642,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'auth' => [$this->user->getAccountName(), $this->user->pass_raw],
       'headers' => ['Accept' => 'application/vnd.api+json'],
     ]);
+    $created_response = Json::decode($response->getBody()->__toString());
     $this->assertEquals(415, $response->getStatusCode());
 
     // 4. Article with a duplicate ID.
@@ -668,6 +669,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'auth' => [$this->user->getAccountName(), $this->user->pass_raw],
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);
+    $created_response = Json::decode($response->getBody()->__toString());
     $this->assertEquals(404, $response->getStatusCode());
     // 6. Decoding error.
     $response = $this->request('POST', $collection_url, [
@@ -765,6 +767,33 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'headers' => ['Content-Type' => 'application/vnd.api+json'],
     ]);
     $this->assertEquals(403, $response->getStatusCode());
+
+    // 7.2 Unsuccessful PATCH due to relationship entity type mismatch.
+    $body = [
+      'data' => [
+        'id' => $uuid,
+        'type' => 'node--article',
+        'relationships' => [
+          'field_tags' => [
+            'data' => [
+              [
+                'type' => 'user--user',
+                'id' => $this->user->uuid(),
+              ],
+            ],
+          ],
+        ],
+      ],
+    ];
+    $individual_url = Url::fromRoute('jsonapi.node--article.individual', [
+      'entity' => $uuid,
+    ]);
+    $response = $this->request('PATCH', $individual_url, [
+      'body' => Json::encode($body),
+      'auth' => [$this->user->getAccountName(), $this->user->pass_raw],
+      'headers' => ['Content-Type' => 'application/vnd.api+json'],
+    ]);
+    $this->assertEquals(422, $response->getStatusCode());
 
     // 8. Field access forbidden check.
     $body = [

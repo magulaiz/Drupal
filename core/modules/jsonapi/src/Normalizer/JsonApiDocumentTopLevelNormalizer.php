@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\jsonapi\JsonApiResource\ErrorCollection;
 use Drupal\jsonapi\JsonApiResource\OmittedData;
@@ -50,16 +51,26 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   protected $resourceTypeRepository;
 
   /**
+   * Entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected $entityFieldManager;
+
+  /**
    * Constructs a JsonApiDocumentTopLevelNormalizer object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    * @param \Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface $resource_type_repository
    *   The JSON:API resource type repository.
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager
+   *   The entity field manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ResourceTypeRepositoryInterface $resource_type_repository) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ResourceTypeRepositoryInterface $resource_type_repository, EntityFieldManagerInterface $entity_field_manager) {
     $this->entityTypeManager = $entity_type_manager;
     $this->resourceTypeRepository = $resource_type_repository;
+    $this->entityFieldManager = $entity_field_manager;
   }
 
   /**
@@ -67,6 +78,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    */
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $resource_type = $context['resource_type'];
+    assert($resource_type instanceof ResourceType);
 
     // Validate a few common errors in document formatting.
     static::validateRequestBody($data, $resource_type);
@@ -95,9 +107,10 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
       }, $data['data']['relationships']);
 
       // Get an array of ids for every relationship.
-      $relationships = array_map(function ($relationship) {
+      array_walk($relationships, function (&$relationship, $field_name) use ($resource_type) {
         if (empty($relationship['data'])) {
-          return [];
+          $relationship = [];
+          return;
         }
         if (empty($relationship['data'][0]['id'])) {
           throw new BadRequestHttpException("No ID specified for related resource");
@@ -106,11 +119,11 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         if (empty($relationship['data'][0]['type'])) {
           throw new BadRequestHttpException("No type specified for related resource");
         }
-        if (!$resource_type = $this->resourceTypeRepository->getByTypeName($relationship['data'][0]['type'])) {
+        if (!$related_resource_type = $this->resourceTypeRepository->getByTypeName($relationship['data'][0]['type'])) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
 
-        $entity_type_id = $resource_type->getEntityTypeId();
+        $entity_type_id = $related_resource_type->getEntityTypeId();
         try {
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
         }
@@ -124,7 +137,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         $related_entities = array_values($entity_storage->loadByProperties([$uuid_key => $id_list]));
         $map = [];
         foreach ($related_entities as $related_entity) {
-          $map[$related_entity->uuid()] = $related_entity->id();
+          $map[$related_entity->uuid()] = $related_entity;
         }
 
         // $id_list has the correct order of uuids. We stitch this together with
@@ -140,18 +153,34 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
             throw new NotFoundHttpException(sprintf('The resource identified by `%s:%s` (given as a relationship item) could not be found.', $relationship['data'][$delta]['type'], $uuid));
           }
           $reference_item = [
-            'target_id' => $map[$uuid],
+            'entity' => $map[$uuid],
           ];
           if (isset($relationship['data'][$delta]['meta'])) {
-            $reference_item += $relationship['data'][$delta]['meta'];
+            // Additional field properties may be set from the 'meta' object.
+            $field_definitions = $this->entityFieldManager
+              ->getFieldStorageDefinitions($resource_type->getEntityTypeId());
+            $resource_field = $resource_type->getFieldByPublicName($field_name);
+            // JSON:API fields are not necessarily validated at this point; if
+            // the field is not recognized, pass the properties through.
+            if (!$resource_field || empty($field_definitions[$resource_field->getInternalName()])) {
+              $reference_item += $relationship['data'][$delta]['meta'];
+            }
+            else {
+              // Copy to the item value if not internal/read-only.
+              $field_definition = $field_definitions[$resource_field->getInternalName()];
+              foreach ($relationship['data'][$delta]['meta'] as $k => $v) {
+                $property_definition = $field_definition->getPropertyDefinition($k);
+                if ($property_definition && !$property_definition->isInternal() && !$property_definition->isReadOnly()) {
+                  $reference_item[$k] = $v;
+                }
+              }
+            }
           }
-          $canonical_ids[] = array_filter($reference_item, function ($key) {
-            return !str_starts_with($key, 'drupal_internal__');
-          }, ARRAY_FILTER_USE_KEY);
+          $canonical_ids[] = $reference_item;
         }
 
-        return array_filter($canonical_ids);
-      }, $relationships);
+        $relationship = array_filter($canonical_ids);
+      });
 
       // Add the relationship ids.
       $normalized = array_merge($normalized, $relationships);

@@ -343,18 +343,30 @@ class FieldResolver {
       $at_least_one_entity_reference_field = FALSE;
       $candidate_property_names = array_unique(NestedArray::mergeDeepArray(array_map(function (FieldItemDataDefinitionInterface $definition) use (&$at_least_one_entity_reference_field) {
         $property_definitions = $definition->getPropertyDefinitions();
-        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($property_definitions, &$at_least_one_entity_reference_field) {
+        return array_reduce(array_keys($property_definitions), function ($property_names, $property_name) use ($definition, $property_definitions, &$at_least_one_entity_reference_field) {
           $property_definition = $property_definitions[$property_name];
           $is_data_reference_definition = $property_definition instanceof DataReferenceTargetDefinition;
-          if (!$property_definition->isInternal()) {
-            // Entity reference fields are special: their reference property
-            // (usually `target_id`) is exposed in the JSON:API representation
-            // with a prefix.
-            $property_names[] = $is_data_reference_definition ? 'id' : $property_name;
+          $is_main_property = $definition->getMainPropertyName() === $property_name;
+          // If the main property is a data reference definition, its property
+          // name will be set to 'id'. Its internal flag will still be consulted
+          // in determining if it may be accessed with the "drupal_internal__"
+          // prefix. This allows the property to marked internal, prohibiting
+          // enumeration via serial entity IDs while keeping the field target
+          // accessible by UUID. If the field should not be accessible at all,
+          // the field definition should be marked internal.
+          if (!$property_definition->isInternal() || ($is_data_reference_definition && $is_main_property)) {
+            // Entity reference fields are special: their main property
+            // (e.g., `target_id`) is exposed in the JSON:API representation as
+            // 'id'. This is generally mapped to the UUID.
+            // @see \Drupal\jsonapi\Context\FieldResolver::getInternalName
+            $property_names[] = $is_data_reference_definition && $is_main_property ? 'id' : $property_name;
+            if ($is_data_reference_definition && !$property_definition->isInternal()) {
+              $property_names[] = "drupal_internal__$property_name";
+            }
           }
           if ($is_data_reference_definition) {
+            assert(in_array('id', $property_names), 'Entity reference fields must have a main property which is a data reference definition.');
             $at_least_one_entity_reference_field = TRUE;
-            $property_names[] = "drupal_internal__$property_name";
           }
           return $property_names;
         }, []);
@@ -446,7 +458,7 @@ class FieldResolver {
   }
 
   /**
-   * Expands the internal path with the "entity" keyword.
+   * Expands the internal path.
    *
    * @param string[] $references
    *   The resolved internal field names of all entity references.
@@ -463,8 +475,7 @@ class FieldResolver {
     }, $property_path));
 
     // This rebuilds the path from the real, internal field names that have
-    // been traversed so far. It joins them with the "entity" keyword as
-    // required by the entity query system.
+    // been traversed so far.
     $entity_path = implode('.', $references);
 
     // Reconstruct the full path to the final reference field.
@@ -618,6 +629,10 @@ class FieldResolver {
         if ($property_definition instanceof DataReferenceDefinitionInterface) {
           $target_definition = $property_definition->getTargetDefinition();
           assert($target_definition instanceof EntityDataDefinitionInterface, 'Entity reference fields should only be able to reference entities.');
+          // The property name, e.g. "entity", is expected by the entity query
+          // system to traverse the related entity's fields. The entity type ID
+          // is usually optional but included here for compatibility with field
+          // types which may require it.
           $reference_property_names[] = $property_name . ':' . $target_definition->getEntityTypeId();
         }
       }

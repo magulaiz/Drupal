@@ -101,6 +101,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       // The entity object is computed out of the entity ID.
       ->setComputed(TRUE)
       ->setReadOnly(FALSE)
+      ->setInternal(TRUE)
       ->setTargetDefinition(EntityDataDefinition::create($settings['target_type']))
       // We can add a constraint for the target entity type. The list of
       // referenceable bundles is a field setting, so the corresponding
@@ -240,6 +241,16 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
         $this->onChange('target_id', FALSE);
       }
       elseif (is_array($values) && !array_key_exists('target_id', $values) && isset($values['entity'])) {
+        // Ensure the entity is a valid reference target.
+        assert($values['entity'] instanceof EntityInterface);
+        $allowed_type = $this->getFieldDefinition()->getSetting('target_type');
+        if ($values['entity']->getEntityTypeId() !== $allowed_type) {
+          throw new \InvalidArgumentException(
+            sprintf(
+              'The entity passed to the entity reference item is not of allowed type %s',
+              $allowed_type
+            ));
+        }
         $this->onChange('entity', FALSE);
       }
       elseif (is_array($values) && array_key_exists('target_id', $values) && isset($values['entity'])) {

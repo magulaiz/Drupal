@@ -57,7 +57,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -857,12 +856,12 @@ class EntityResource {
       }
       return $this->serializer->denormalize($decoded, $class, 'api_json', $context);
     }
-    // These two serialization exception types mean there was a problem with
-    // the structure of the decoded data and it's not valid.
-    catch (UnexpectedValueException $e) {
+    // Catch both exceptions that are thrown during denormalization, as well as
+    // any other non-serialization related errors in processing input.
+    catch (\UnexpectedValueException $e) {
       throw new UnprocessableEntityHttpException($e->getMessage());
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       throw new UnprocessableEntityHttpException($e->getMessage());
     }
   }
