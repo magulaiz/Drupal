@@ -144,7 +144,6 @@ JS;
     $javascript = <<<JS
 (function() {
   const el = document.querySelector(".ck-editor__main $selector");
-  console.log(el);
   const range = document.createRange();
   range.selectNodeContents(el);
   const sel = window.getSelection();

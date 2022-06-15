@@ -73,8 +73,8 @@ class Style extends CKEditor5PluginDefault implements CKEditor5PluginConfigurabl
       $line_numbers = array_keys($unparseable_lines);
       $form_state->setError($form['styles'], $this->formatPlural(
         count($unparseable_lines),
-        'Line @line-number does not contain a valid value. Enter a valid CSS selector containing, followed by a pipe symbol and a label.',
-        'Lines @line-numbers do not contain a valid value. Enter a valid CSS selector containing, followed by a pipe symbol and a label.',
+        'Line @line-number does not contain a valid value. Enter a valid CSS selector containing one or more classes, followed by a pipe symbol and a label.',
+        'Lines @line-numbers do not contain a valid value. Enter a valid CSS selector containing one or more classes, followed by a pipe symbol and a label.',
         [
           '@line-number' => reset($line_numbers),
           '@line-numbers' => implode(', ', $line_numbers),

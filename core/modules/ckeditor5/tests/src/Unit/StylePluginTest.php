@@ -80,7 +80,7 @@ class StylePluginTest extends UnitTestCase {
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {
-    $plugin = new Style($configuration, 'ckeditor5_sourceEditing', NULL);
+    $plugin = new Style($configuration, 'ckeditor5_style', NULL);
     $dynamic_plugin_config = $plugin->getDynamicPluginConfig([], $this->prophesize(EditorInterface::class)->reveal());
     $this->assertSame($expected_dynamic_config, $dynamic_plugin_config);
   }
