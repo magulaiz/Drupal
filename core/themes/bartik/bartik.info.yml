@@ -36,8 +36,6 @@ libraries-extend:
     - bartik/filter
   filter/drupal.filter:
     - bartik/filter
-  media/media_embed_ckeditor_theme:
-    - bartik/classy.media_embed_ckeditor_theme
   media_library/view:
     - bartik/classy.media_library
   media_library/widget:

@@ -40,8 +40,6 @@ libraries-extend:
     - umami/filter
   filter/drupal.filter:
     - umami/filter
-  media/media_embed_ckeditor_theme:
-    - umami/classy.media_embed_ckeditor_theme
   media_library/view:
     - umami/classy.media_library
   media_library/widget:
