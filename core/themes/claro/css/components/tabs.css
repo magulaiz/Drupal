@@ -22,7 +22,7 @@
   --tabs-base-border: 1px solid var(--color-gray-200);
   --tabs-base-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
   --tabs-trigger-border: 1px solid rgba(216, 217, 224, 0.8);
-  --tabs--hover-bg-color: #e6ecf8;
+  --tabs--hover-bg-color: var(--color-bgblue-active);
 }
 
 .tabs-wrapper > nav {
@@ -204,6 +204,11 @@
   .tabs-wrapper {
     display: flex;
   }
+
+  .tabs-wrapper--secondary {
+    position: relative;
+  }
+
   .is-horizontal .tabs {
     flex-direction: row;
     width: auto;
@@ -249,6 +254,7 @@
     background: none;
     font-size: var(--font-size-base);
   }
+
   .is-horizontal .tabs__tab.is-active {
     order: 0;
     background: none;

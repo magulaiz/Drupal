@@ -160,7 +160,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The entity last installed schema repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityDisplayRepositoryInterface $entity_display_repository, TypedDataManagerInterface $typed_data_manager, LanguageManagerInterface $language_manager, KeyValueFactoryInterface $key_value_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository = NULL) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityDisplayRepositoryInterface $entity_display_repository, TypedDataManagerInterface $typed_data_manager, LanguageManagerInterface $language_manager, KeyValueFactoryInterface $key_value_factory, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository) {
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->entityDisplayRepository = $entity_display_repository;
@@ -170,10 +170,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $this->keyValueFactory = $key_value_factory;
     $this->moduleHandler = $module_handler;
     $this->cacheBackend = $cache_backend;
-    if (!$entity_last_installed_schema_repository) {
-      @trigger_error('The entity.last_installed_schema.repository service must be passed to EntityFieldManager::__construct(), it is required before drupal:10.0.0.', E_USER_DEPRECATED);
-      $entity_last_installed_schema_repository = \Drupal::service('entity.last_installed_schema.repository');
-    }
     $this->entityLastInstalledSchemaRepository = $entity_last_installed_schema_repository;
   }
 
@@ -282,9 +278,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_base_field_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_base_field_info', [$entity_type]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_base_field_info',
+      function (callable $hook, string $module) use (&$base_field_definitions, $entity_type) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -296,7 +293,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $base_field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
@@ -404,9 +401,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_bundle_field_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_bundle_field_info', [$entity_type, $bundle, $base_field_definitions]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_bundle_field_info',
+      function (callable $hook, string $module) use (&$bundle_field_definitions, $entity_type, $bundle, $base_field_definitions) {
+        $module_definitions = $hook($entity_type, $bundle, $base_field_definitions) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -418,7 +416,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $bundle_field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Automatically set the field name, target entity type and bundle
     // for non-configurable fields.
@@ -580,9 +578,10 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $field_definitions = [];
 
     // Retrieve base field definitions from modules.
-    foreach ($this->moduleHandler->getImplementations('entity_field_storage_info') as $module) {
-      $module_definitions = $this->moduleHandler->invoke($module, 'entity_field_storage_info', [$entity_type]);
-      if (!empty($module_definitions)) {
+    $this->moduleHandler->invokeAllWith(
+      'entity_field_storage_info',
+      function (callable $hook, string $module) use (&$field_definitions, $entity_type, $entity_type_id) {
+        $module_definitions = $hook($entity_type) ?? [];
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
@@ -596,7 +595,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
           $field_definitions[$field_name] = $definition;
         }
       }
-    }
+    );
 
     // Invoke alter hook.
     $this->moduleHandler->alter('entity_field_storage_info', $field_definitions, $entity_type);

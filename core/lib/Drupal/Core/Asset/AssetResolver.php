@@ -126,7 +126,6 @@ class AssetResolver implements AssetResolverInterface {
       'weight' => 0,
       'media' => 'all',
       'preprocess' => TRUE,
-      'browsers' => [],
     ];
 
     foreach ($libraries_to_load as $library) {
@@ -135,10 +134,6 @@ class AssetResolver implements AssetResolverInterface {
       if (isset($definition['css'])) {
         foreach ($definition['css'] as $options) {
           $options += $default_options;
-          $options['browsers'] += [
-            'IE' => TRUE,
-            '!IE' => TRUE,
-          ];
 
           // Files with a query string cannot be preprocessed.
           if ($options['type'] === 'file' && $options['preprocess'] && strpos($options['data'], '?') !== FALSE) {
@@ -161,16 +156,6 @@ class AssetResolver implements AssetResolverInterface {
 
     // Sort CSS items, so that they appear in the correct order.
     uasort($css, 'static::sort');
-
-    // Allow themes to remove CSS files by CSS files full path and file name.
-    // @todo Remove in Drupal 9.0.x.
-    if ($stylesheet_remove = $theme_info->getStyleSheetsRemove()) {
-      foreach ($css as $key => $options) {
-        if (isset($stylesheet_remove[$key])) {
-          unset($css[$key]);
-        }
-      }
-    }
 
     if ($optimize) {
       $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css);
@@ -230,7 +215,6 @@ class AssetResolver implements AssetResolverInterface {
         'preprocess' => TRUE,
         'attributes' => [],
         'version' => NULL,
-        'browsers' => [],
       ];
 
       // Collect all libraries that contain JS assets and are in the header.
@@ -312,10 +296,9 @@ class AssetResolver implements AssetResolverInterface {
       if ($settings_required && $settings_have_changed) {
         $settings = $this->getJsSettingsAssets($assets);
         // Allow modules to add cached JavaScript settings.
-        foreach ($this->moduleHandler->getImplementations('js_settings_build') as $module) {
-          $function = $module . '_js_settings_build';
-          $function($settings, $assets);
-        }
+        $this->moduleHandler->invokeAllWith('js_settings_build', function (callable $hook, string $module) use (&$settings, $assets) {
+          $hook($settings, $assets);
+        });
       }
       $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
@@ -335,7 +318,6 @@ class AssetResolver implements AssetResolverInterface {
         'type' => 'setting',
         'group' => JS_SETTING,
         'weight' => 0,
-        'browsers' => [],
         'data' => $settings,
       ];
       $settings_js_asset = ['drupalSettings' => $settings_as_inline_javascript];

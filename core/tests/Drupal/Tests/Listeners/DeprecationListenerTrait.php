@@ -71,10 +71,6 @@ trait DeprecationListenerTrait {
     $dynamic_skipped_deprecations = [
       '%The "Symfony\\\\Component\\\\Validator\\\\Context\\\\ExecutionContextInterface::.*\(\)" method is considered internal Used by the validator engine\. (Should not be called by user\W+code\. )?It may change without further notice\. You should not extend it from "[^"]+".%',
       '%The "PHPUnit\\\\Framework\\\\TestCase::addWarning\(\)" method is considered internal%',
-      // The following deprecations were not added as part of the original
-      // issues and thus were not addressed in time for the 9.0.0 release.
-      '%The entity link url update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2857891.%',
-      '%The operator defaults update for the "\w+" view is deprecated in drupal:9.0.0 and is removed from drupal:10.0.0. Module-provided Views configuration should be updated to accommodate the changes described at https://www.drupal.org/node/2869168.%',
       // Skip EasyRdf deprecations for PHP 8.1 - fixed by
       // https://github.com/easyrdf/easyrdf/pull/384.
       '%Return type of EasyRdf\\\\.* should either be compatible with .*, or the #\[\\\\ReturnTypeWillChange\] attribute should be used to temporarily suppress the notice%',
@@ -118,6 +114,9 @@ trait DeprecationListenerTrait {
       "The \"PHPUnit\Framework\TestSuite\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\TestSuites\TestSuiteBase\".",
       "The \"PHPUnit\TextUI\DefaultResultPrinter\" class is considered internal This class is not covered by the backward compatibility promise for PHPUnit. It may change without further notice. You should not use it from \"Drupal\Tests\Listeners\HtmlOutputPrinter\".",
       "The \"Drupal\Tests\Listeners\DrupalListener\" class implements \"PHPUnit\Framework\TestListener\" that is deprecated.",
+      // Symfony 6.1.
+      "Since symfony/routing 6.1: Construction of \"Symfony\Component\Routing\Exception\MissingMandatoryParametersException\" with an exception message is deprecated, provide the route name and an array of missing parameters instead.",
+      "Since symfony/routing 6.1: The \"Symfony\Component\Routing\Matcher\UrlMatcher::handleRouteRequirements()\" method will have a new \"array \$routeParameters\" argument in version 7.0, not defining it is deprecated.",
     ];
   }
 

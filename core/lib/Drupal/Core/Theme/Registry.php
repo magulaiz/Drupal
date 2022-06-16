@@ -348,9 +348,9 @@ class Registry implements DestructableInterface {
       $cache = $cached->data;
     }
     else {
-      foreach ($this->moduleHandler->getImplementations('theme') as $module) {
+      $this->moduleHandler->invokeAllWith('theme', function (callable $callback, string $module) use (&$cache) {
         $this->processExtension($cache, $module, 'module', $module, $this->moduleList->getPath($module));
-      }
+      });
       // Only cache this registry if all modules are loaded.
       if ($this->moduleHandler->isLoaded()) {
         $this->cache->set("theme_registry:build:modules", $cache, Cache::PERMANENT, ['theme_registry']);
@@ -810,24 +810,6 @@ class Registry implements DestructableInterface {
     }
 
     return $grouped_functions;
-  }
-
-  /**
-   * Wraps drupal_get_path().
-   *
-   * @param string $module
-   *   The name of the item for which the path is requested.
-   *
-   * @return string
-   *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use
-   *   \Drupal\Core\Extension\ExtensionList::getPath() instead.
-   *
-   * @see https://www.drupal.org/node/2940438
-   */
-  protected function getPath($module) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. Use \Drupal\Core\Extension\ExtensionList::getPath() instead. See https://www.drupal.org/node/2940438', E_USER_DEPRECATED);
-    return $this->moduleList->getPath($module);
   }
 
 }
