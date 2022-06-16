@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 /**
  * Defines a base entity class.
  */
-abstract class EntityBase implements EntityInterface {
+abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
 
   use RefinableCacheableDependencyTrait;
 
@@ -46,6 +46,13 @@ abstract class EntityBase implements EntityInterface {
    * @var \Drupal\Core\TypedData\ComplexDataInterface
    */
   protected $typedData;
+
+  /**
+   * The source entity used to create this duplicate.
+   *
+   * @var \Drupal\Core\Entity\EntityInterface
+   */
+  protected $duplicateSource;
 
   /**
    * Constructs an Entity object.
@@ -405,6 +412,27 @@ abstract class EntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public function postDuplicate(EntityStorageInterface $storage) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isDuplicate() {
+    return !is_null($this->getDuplicateSource());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDuplicateSource() {
+    return $this->duplicateSource ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDuplicateSource(EntityInterface $duplicate_source) {
+    $this->duplicateSource = $duplicate_source;
   }
 
   /**
