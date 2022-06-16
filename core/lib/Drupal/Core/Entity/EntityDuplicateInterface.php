@@ -12,6 +12,7 @@ namespace Drupal\Core\Entity;
  * @ingroup entity_api
  */
 interface EntityDuplicateInterface {
+
   /**
    * Changes the values of an entity before it is duplicated.
    *
