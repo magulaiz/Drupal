@@ -32,6 +32,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     parent::setUp();
 
     $this->container->get('theme_installer')->install(['test_theme', 'classy']);
+    $this->container->get('module_installer')->install(['user']);
     $this->libraryDiscovery = $this->container->get('library.discovery');
   }
 
@@ -61,6 +62,9 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('core/themes/classy/css/components/details.css', 'classy', 'base', 'css');
     $this->assertAssetInLibrary('core/themes/classy/css/components/dialog.css', 'classy', 'dialog', 'css');
 
+    // Assert the classy extends we will test an override removal of is present
+    $this->assertAssetInLibrary('core/themes/classy/css/components/user.css', 'user', 'drupal.user', 'css');
+
     // Confirmatory assert on core library to be removed.
     $this->assertNotEmpty($this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Confirmatory test on "core/drupal.progress"');
 
@@ -82,8 +86,8 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
     $this->assertAssetInLibrary('themes/my_theme/css/my-container-inline.css', 'classy', 'base', 'css');
     $this->assertAssetInLibrary('themes/my_theme/css/my-details.css', 'classy', 'base', 'css');
 
-    // Assert that entire library was correctly removed.
-    $this->assertFalse($this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Entire library correctly removed.');
+    // Assert that entire library was correctly removed, but left defined so libraries-extend does not fail
+    $this->assertSame([], $this->libraryDiscovery->getLibraryByName('core', 'drupal.progress'), 'Entire library correctly removed.');
 
     // Assert that overridden library asset still retains attributes.
     $library = $this->libraryDiscovery->getLibraryByName('core', 'jquery');
@@ -94,6 +98,9 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
         break;
       }
     }
+
+    // Assert that the override removal of the extend executed.
+    $this->assertNoAssetInLibrary('core/themes/classy/css/components/user.css', 'user', 'drupal.user', 'css');
   }
 
   /**

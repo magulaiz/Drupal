@@ -90,8 +90,9 @@ class LibraryDiscoveryCollector extends CacheCollector {
       // @see \Drupal\Core\Asset\LibraryDiscoveryParser::applyLibrariesOverride()
       if (isset($definition['override'])) {
         if ($definition['override'] === FALSE) {
-          // Remove the library definition if FALSE is given.
-          unset($libraries[$name]);
+          // Remove all assets in the library definition if FALSE is given.
+          // Do not remove the library, in case it is referenced by a libraries-extend statement.
+          $libraries[$name] = [];
         }
         else {
           // Otherwise replace with existing library definition if it exists.
