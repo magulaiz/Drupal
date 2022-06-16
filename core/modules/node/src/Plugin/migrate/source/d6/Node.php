@@ -295,7 +295,7 @@ class Node extends DrupalSqlBase {
       $query->addExpression(0, 'delta');
     }
 
-    if (isset($query)) {
+    if (isset($query) && !empty($field['db_columns'])) {
       $columns = array_keys($field['db_columns']);
       // If there are no columns then there are no values to return.
       if (empty($columns)) {
