@@ -302,6 +302,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetExists($offset) {
+    @trigger_error('Magic array functions are deprecated as of https://www.drupal.org/node/2218833. Use the individual getters instead.', E_USER_DEPRECATED);
     // PHP's array access does not work correctly with isset(), so we have to
     // bake isset() in here. See https://bugs.php.net/bug.php?id=41727.
     return array_key_exists($offset, $this->definition) && isset($this->definition[$offset]);
@@ -314,6 +315,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function &offsetGet($offset) {
+    @trigger_error('Magic array functions are deprecated as of https://www.drupal.org/node/2218833. Use the individual getters instead.', E_USER_DEPRECATED);
     if (!isset($this->definition[$offset])) {
       $this->definition[$offset] = NULL;
     }
@@ -327,6 +329,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetSet($offset, $value) {
+    @trigger_error('Magic array functions are deprecated as of https://www.drupal.org/node/2218833. Use the individual getters instead.', E_USER_DEPRECATED);
     $this->definition[$offset] = $value;
   }
 
@@ -337,6 +340,7 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
    * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetUnset($offset) {
+    @trigger_error('Magic array functions are deprecated as of https://www.drupal.org/node/2218833. Use the individual getters instead.', E_USER_DEPRECATED);
     unset($this->definition[$offset]);
   }
 
