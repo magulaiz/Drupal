@@ -11,6 +11,35 @@
  */
 
 /**
+ * Process a form element after user input has been applied.
+ *
+ * Callback for \Drupal::formBuilder()->buildForm().
+ *
+ * Process callbacks are set in a form element's #process property. They are
+ * called after user input has been mapped to the element's #value property.
+ *
+ * @param array &$element
+ *   The form element on which the #process property was set.
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
+ *   The form state array.
+ * @param array &$complete_form
+ *   The complete form the element is a part of. This is passed by reference, and
+ *   thus allows the element to set validation or submit handlers on the entire
+ *   form. This is of particular use when the form alteration function which adds
+ *   the #process does not have access to the entire form.
+ *
+ * @return
+ *   The processed form element array.
+ */
+function callback_form_element_process(array &$element, \Drupal\Core\Form\FormStateInterface $form_state, array &$complete_form) {
+  // Add a new wrapper around the element.
+  $element['#prefix'] = '<div id="my-element-id">';
+  $element['#suffix'] = '</div>';
+
+  return $element;
+}
+
+/**
  * Perform a single batch operation.
  *
  * Callback for batch_set().

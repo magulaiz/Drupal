@@ -253,8 +253,9 @@ interface FormBuilderInterface {
    * - $element['#value_callback']: A callable that implements how user input is
    *   mapped to an element's #value property. This defaults to a function named
    *   'form_type_TYPE_value' where TYPE is $element['#type'].
-   * - $element['#process']: An array of functions called after user input has
-   *   been mapped to the element's #value property. These functions can be used
+   * - $element['#process']: An array of callables that are implementations of
+   *   callback_form_element_process(). These are called after user input has
+   *   been mapped to the element's #value property. These callbacks can be used
    *   to dynamically add child elements: for example, for the 'date' element
    *   type, one of the functions in this array is form_process_datetime(),
    *   which adds the individual 'date', and 'time'. child elements. These
