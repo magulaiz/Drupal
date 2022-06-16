@@ -169,7 +169,6 @@ ckeditor_stylesheets:
   - css/base/elements.css
   - css/base/typography.css
   - css/theme/ckeditor-frame.css
-  - css/classy/components/media-embed-error.css
 
 regions:
   header: 'Header'
