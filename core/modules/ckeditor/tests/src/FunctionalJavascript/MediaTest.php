@@ -253,7 +253,7 @@ class MediaTest extends WebDriverTestBase {
     $this->assignNameToCkeditorIframe();
     $this->getSession()->switchToIFrame('ckeditor');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'drupal-media figure.caption-drupal-media .this-error-message-is-themeable.media-embed-error--missing-source'));
-    $assert_session->responseContains('classy/css/components/media-embed-error.css');
+    $assert_session->responseContains('css/plugins/drupalmedia/media-embed-error.css');
 
     // Test that restoring a valid UUID results in the media embed preview
     // displaying.
