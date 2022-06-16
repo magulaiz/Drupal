@@ -23,6 +23,9 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
     $theme_path = $this->container->get('extension.list.theme')->getPath('classy');
     foreach (['images', 'css', 'js', 'templates'] as $type => $sub_folder) {
       $asset_path = "$theme_path/$sub_folder";
+      if (!file_exists($asset_path)) {
+        continue;
+      }
       $directory = new \RecursiveDirectoryIterator($asset_path, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
       $iterator = new \RecursiveIteratorIterator($directory);
       $this->assertGreaterThan(0, iterator_count($iterator));
@@ -149,10 +152,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
+          'js' => [],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -280,10 +280,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
+          'js' => [],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -407,10 +404,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
+          'js' => [],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -553,10 +547,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'container-inline.css',
             'more-link.css',
           ],
-          'js' => [
-            'media_embed_ckeditor.theme.es6.js',
-            'media_embed_ckeditor.theme.js',
-          ],
+          'js' => [],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -712,10 +703,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
         'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
       ],
-      'js' => [
-        'media_embed_ckeditor.theme.es6.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
-        'media_embed_ckeditor.theme.js' => 'f8e192b79f25d2b61a6ff43b9733ec72',
-      ],
+      'js' => [],
       'images' => [
         'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
         'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
