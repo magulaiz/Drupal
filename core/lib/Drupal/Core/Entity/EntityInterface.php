@@ -337,31 +337,6 @@ interface EntityInterface extends AccessibleInterface, CacheableDependencyInterf
   public function createDuplicate();
 
   /**
-   * Changes the values of an entity before it is duplicated.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage object.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to be duplicated.
-   */
-  public static function preDuplicate(EntityStorageInterface $storage, EntityInterface $entity);
-
-  /**
-   * Acts on a duplicated entity before hooks are invoked.
-   *
-   * Used after the entity is duplicated, but before saving the entity and before
-   * any of the presave hooks are invoked.
-   *
-   * See the @link entity_crud Entity CRUD topic @endlink for more information.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage object.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::createDuplicate()
-   */
-  public function postDuplicate(EntityStorageInterface $storage);
-
-  /**
    * Gets the entity type definition.
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface
