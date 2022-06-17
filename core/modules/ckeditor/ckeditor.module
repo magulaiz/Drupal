@@ -140,7 +140,7 @@ function ckeditor_library_info_alter(&$libraries, $extension) {
 function ckeditor_form_filter_format_edit_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Add an additional validate callback so we can ensure the media_embed filter
   // is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'ckeditor_library_filter_format_edit_form_validate';
+  $form['#validate'][] = 'ckeditor_filter_format_edit_form_validate';
 }
 
 /**
@@ -149,7 +149,7 @@ function ckeditor_form_filter_format_edit_form_alter(array &$form, FormStateInte
 function ckeditor_form_filter_format_add_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
   // Add an additional validate callback so we can ensure the media_embed filter
   // is enabled when the DrupalMediaLibrary button is enabled.
-  $form['#validate'][] = 'ckeditor_library_filter_format_edit_form_validate';
+  $form['#validate'][] = 'ckeditor_filter_format_edit_form_validate';
 }
 
 /**
