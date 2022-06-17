@@ -225,6 +225,23 @@ class Connection extends DatabaseConnection {
       'sql_mode' => "SET sql_mode = 'ANSI,TRADITIONAL'",
     ];
 
+    if (isset($connection_options['isolation_level'])) {
+      $isolation_levels = [
+        'READ COMMITTED',
+        'REPEATABLE READ',
+        'READ UNCOMMITTED',
+        'SERIALIZABLE',
+      ];
+
+      if (!in_array($connection_options['isolation_level'], $isolation_levels)) {
+        throw new DatabaseTransactionIsolationLevelException($connection_options['isolation_level']);
+      }
+
+      $connection_options['init_commands'] += [
+        'isolation' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . $connection_options['isolation_level'],
+      ];
+    }
+
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
       $pdo->exec($sql);
