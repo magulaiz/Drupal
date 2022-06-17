@@ -38,16 +38,6 @@ class StableLibraryOverrideTest extends StableLibraryOverrideTestBase {
   protected $allModules;
 
   /**
-   * A list of libraries to skip checking, in the format extension/library_name.
-   *
-   * @var string[]
-   */
-  protected $librariesToSkip = [
-    // This is a deprecated library that will trigger warnings.
-    'image/quickedit.inPlaceEditor.image',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   protected static $modules = ['system', 'user', 'path_alias'];
