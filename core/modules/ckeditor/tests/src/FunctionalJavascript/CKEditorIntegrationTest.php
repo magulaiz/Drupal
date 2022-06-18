@@ -234,4 +234,31 @@ class CKEditorIntegrationTest extends WebDriverTestBase {
     $this->assertNotEquals($old_keys, $new_keys, 'Clearing caches changed the off-canvas style cache key.');
   }
 
+  /**
+   * Tests if the CKEditor Inserts empty tags into DOM.
+   */
+  public function testDrupalEmptyInsert() {
+    $assert_session = $this->assertSession();
+
+    // Navigate to the page
+    $this->drupalGet('node/add/page');
+    $this->waitForEditor();
+
+    // Issue occurs on several clicks of the source button, when this happens
+    // the ckeditor text area increases.
+    // So to check if the error has been fixed we toggle the source button and
+    // compare the first height to the last height.
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.cke_contents > textarea'));
+    $first_height = $this->getSession()->evaluateScript("document.getElementById('cke_edit-body-0-value').clientHeight");
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.cke_contents > span'));
+    $this->pressEditorButton('source');
+    $this->assertNotEmpty($assert_session->waitForElement('css', '.cke_contents > textarea'));
+    $last_height = $this->getSession()->evaluateScript("document.getElementById('cke_edit-body-0-value').clientHeight");
+
+    // If the height is different then empty tag has been entered into the DOM.
+    $this->assertEquals($first_height, $last_height);
+  }
+
 }
