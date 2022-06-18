@@ -869,14 +869,14 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         '#options' => $groups,
       ];
       if (!empty($this->options['group_info']['multiple'])) {
-        if (count($groups) < 5) {
+        // Convert Radios to Checkboxes if multiple.
+        if ($this->options['group_info']['widget'] === 'radios') {
           $form[$value]['#type'] = 'checkboxes';
         }
         else {
           $form[$value]['#type'] = 'select';
-          $form[$value]['#size'] = 5;
-          $form[$value]['#multiple'] = TRUE;
         }
+        $form[$value]['#multiple'] = $this->options['expose']['multiple'];
         unset($form[$value]['#default_value']);
         $user_input = $form_state->getUserInput();
         if (empty($user_input)) {
