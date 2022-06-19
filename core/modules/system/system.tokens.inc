@@ -54,17 +54,18 @@ function system_token_info() {
   $date_formatter = \Drupal::service('date.formatter');
 
   // Date related tokens.
+  $request_time = \Drupal::time()->getRequestTime();
   $date['short'] = [
     'name' => t("Short format"),
-    'description' => t("A date in 'short' format. (%date)", ['%date' => $date_formatter->format(\Drupal::time()->getRequestTime(), 'short')]),
+    'description' => t("A date in 'short' format. (%date)", ['%date' => $date_formatter->format($request_time, 'short')]),
   ];
   $date['medium'] = [
     'name' => t("Medium format"),
-    'description' => t("A date in 'medium' format. (%date)", ['%date' => $date_formatter->format(\Drupal::time()->getRequestTime(), 'medium')]),
+    'description' => t("A date in 'medium' format. (%date)", ['%date' => $date_formatter->format($request_time, 'medium')]),
   ];
   $date['long'] = [
     'name' => t("Long format"),
-    'description' => t("A date in 'long' format. (%date)", ['%date' => $date_formatter->format(\Drupal::time()->getRequestTime(), 'long')]),
+    'description' => t("A date in 'long' format. (%date)", ['%date' => $date_formatter->format($request_time, 'long')]),
   ];
   $date['custom'] = [
     'name' => t("Custom format"),
@@ -72,11 +73,11 @@ function system_token_info() {
   ];
   $date['since'] = [
     'name' => t("Time-since"),
-    'description' => t("A date in 'time-since' format. (%date)", ['%date' => $date_formatter->formatTimeDiffSince(\Drupal::time()->getRequestTime() - 360)]),
+    'description' => t("A date in 'time-since' format. (%date)", ['%date' => $date_formatter->formatTimeDiffSince($request_time - 360)]),
   ];
   $date['raw'] = [
     'name' => t("Raw timestamp"),
-    'description' => t("A date in UNIX timestamp format (%date)", ['%date' => \Drupal::time()->getRequestTime()]),
+    'description' => t("A date in UNIX timestamp format (%date)", ['%date' => $request_time]),
   ];
 
   return [
