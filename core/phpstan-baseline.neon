@@ -748,11 +748,6 @@ parameters:
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
-			path: modules/comment/comment.module
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
 			path: modules/comment/src/CommentForm.php
 
 		-
@@ -1054,11 +1049,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\help_topics\\\\Plugin\\\\HelpSection\\\\HelpTopicSection\\:\\:\\$translationManager\\.$#"
 			count: 3
 			path: modules/help_topics/src/Plugin/HelpSection/HelpTopicSection.php
-
-		-
-			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
-			count: 1
-			path: modules/history/history.module
 
 		-
 			message: "#^Method Drupal\\\\history\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#"
