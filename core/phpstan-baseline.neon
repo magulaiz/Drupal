@@ -1589,6 +1589,11 @@ parameters:
 			path: modules/system/tests/modules/advisory_feed_test/src/AdvisoriesTestHttpClient.php
 
 		-
+			message: "#^File core/modules/system/tests/modules/entity_test/entity_test\\.inc could not be loaded from Drupal\\\\Core\\\\Extension\\\\ModuleHandlerInterface\\:\\:loadInclude$#"
+			count: 2
+			path: modules/system/tests/modules/entity_test/entity_test.install
+
+		-
 			message: "#^Method Drupal\\\\entity_test\\\\Entity\\\\EntityTestMulChanged\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/system/tests/modules/entity_test/src/Entity/EntityTestMulChanged.php
