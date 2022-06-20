@@ -1249,7 +1249,7 @@ class ValidatorsTest extends KernelTestBase {
         ],
       ],
       'violations' => [
-        'settings.toolbar.items.0' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
+        'settings.plugins.ckeditor5_style' => 'The <em class="placeholder">Style</em> plugin needs another plugin to create <code>&lt;blockquote&gt;</code>, for it to be able to create the following attributes: <code>&lt;blockquote class=&quot;highlighted&quot;&gt;</code>. Enable a plugin that supports creating this tag. If none exists, you can configure the Source Editing plugin to support it.',
       ],
     ];
     return $data;
