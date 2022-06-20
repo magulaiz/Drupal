@@ -210,6 +210,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Assign the weights configured in the form display.
     foreach ($this->getComponents() as $name => $options) {
       if (isset($element[$name])) {
+        $element[$name] = ($element[$name] === FALSE) ? [] : $element[$name];
         $element[$name]['#weight'] = $options['weight'];
       }
     }
