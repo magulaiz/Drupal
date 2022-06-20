@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
+use Drupal\entity_reference_revisions\Plugin\Field\FieldType\EntityReferenceRevisionsItem;
 use Drupal\jsonapi\Access\EntityAccessChecker;
 use Drupal\jsonapi\Context\FieldResolver;
 use Drupal\jsonapi\Exception\EntityAccessDeniedHttpException;
@@ -141,12 +142,26 @@ class IncludeResolver {
         assert(!empty($target_type));
         foreach ($field_list as $field_item) {
           assert($field_item instanceof EntityReferenceItem);
-          $references[$target_type][] = $field_item->get($field_item::mainPropertyName())->getValue();
+
+          // If entity is revisionable, needs to load entity by revision id.
+          // Else load by id.
+          if ($field_item instanceof EntityReferenceRevisionsItem) {
+            $references[$target_type]['revision_id'][] = $field_item->get('target_revision_id')->getValue();
+          }
+          else {
+            $references[$target_type]['id'][] = $field_item->get($field_item::mainPropertyName())->getValue();
+          }
         }
       }
       foreach ($references as $target_type => $ids) {
         $entity_storage = $this->entityTypeManager->getStorage($target_type);
-        $targeted_entities = $entity_storage->loadMultiple(array_unique($ids));
+        $targeted_entities = [];
+        if (isset($ids['revision_id'])) {
+          $targeted_entities = $entity_storage->loadMultipleRevisions(array_unique($ids['revision_id']));
+        }
+        if (isset($ids['id'])) {
+          $targeted_entities = array_merge($targeted_entities, $entity_storage->loadMultiple(array_unique($ids['id'])));
+        }
         $access_checked_entities = array_map(function (EntityInterface $entity) {
           return $this->entityAccessChecker->getAccessCheckedResourceObject($entity);
         }, $targeted_entities);
