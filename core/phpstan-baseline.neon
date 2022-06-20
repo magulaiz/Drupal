@@ -76,11 +76,6 @@ parameters:
 			path: lib/Drupal/Component/Gettext/PoMemoryWriter.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Component\\\\Plugin\\\\PluginManagerBase\\:\\:getFallbackPluginId\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Component/Plugin/PluginManagerBase.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Access\\\\CsrfRequestHeaderAccessCheck\\:\\:applies\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Access/CsrfRequestHeaderAccessCheck.php
@@ -211,11 +206,6 @@ parameters:
 			path: lib/Drupal/Core/Database/Query/Truncate.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\Database\\\\Schema\\:\\:createTableSql\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Database/Schema.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: lib/Drupal/Core/Datetime/DateHelper.php
@@ -329,11 +319,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriber\\:\\:\\$requestContext\\.$#"
 			count: 2
 			path: lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:\\:isDir\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Extension/Discovery/RecursiveExtensionFilterIterator.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Entity\\\\BaseFieldOverride\\:\\:\\$original\\.$#"
@@ -521,11 +506,6 @@ parameters:
 			path: lib/Drupal/Core/Session/SessionManager.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\StreamWrapper\\\\ReadOnlyStream\\:\\:getLocalPath\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/StreamWrapper/ReadOnlyStream.php
-
-		-
 			message: "#^Method Drupal\\\\Core\\\\Template\\\\AttributeValueBase\\:\\:render\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Template/AttributeValueBase.php
@@ -559,11 +539,6 @@ parameters:
 			message: "#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Theme/ThemeInitialization.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\TypedData\\\\DataReferenceBase\\:\\:getType\\(\\)\\.$#"
-			count: 1
-			path: lib/Drupal/Core/TypedData/DataReferenceBase.php
 
 		-
 			message: "#^Method Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\:\\:setDataType\\(\\) should return static\\(Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\) but return statement is missing\\.$#"
@@ -607,11 +582,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:\\$title\\.$#"
-			count: 1
-			path: lib/Drupal/Core/Updater/Updater.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Core\\\\Updater\\\\Updater\\:\\:getInstallDirectory\\(\\)\\.$#"
 			count: 1
 			path: lib/Drupal/Core/Updater/Updater.php
 
@@ -856,11 +826,6 @@ parameters:
 			path: modules/config_translation/src/FormElement/DateFormat.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\config_translation\\\\Functional\\\\ConfigTranslationUiTest\\:\\:drupalPostWithFormat\\(\\)\\.$#"
-			count: 1
-			path: modules/config_translation/tests/src/Functional/ConfigTranslationUiTest.php
-
-		-
 			message: "#^Method Drupal\\\\contact\\\\ContactFormEditForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/contact/src/ContactFormEditForm.php
@@ -1021,16 +986,6 @@ parameters:
 			path: modules/file/tests/src/Functional/FileFieldRevisionTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonBasicAuthTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
-			count: 1
-			path: modules/file/tests/src/Functional/FileUploadJsonCookieTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/file/tests/src/Kernel/DeleteTest.php
@@ -1124,11 +1079,6 @@ parameters:
 			message: "#^Access to an undefined property Drupal\\\\language\\\\LanguageNegotiationMethodManager\\:\\:\\$cacheKeyPrefix\\.$#"
 			count: 1
 			path: modules/language/src/LanguageNegotiationMethodManager.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\layout_builder\\\\Unit\\\\DefaultsSectionStorageTest\\:\\:getThirdPartySetting\\(\\)\\.$#"
-			count: 1
-			path: modules/layout_builder/tests/src/Unit/DefaultsSectionStorageTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1256,16 +1206,6 @@ parameters:
 			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:processStubRow\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:updateEntity\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
-
-		-
 			message: "#^Method Drupal\\\\migrate\\\\Plugin\\\\migrate\\\\destination\\\\Entity\\:\\:fields\\(\\) should return array but return statement is missing\\.$#"
 			count: 1
 			path: modules/migrate/src/Plugin/migrate/destination/Entity.php
@@ -1324,31 +1264,6 @@ parameters:
 			path: modules/migrate_drupal_ui/tests/modules/migration_provider_test/src/Plugin/migrate/source/NoSourceModule.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\CredentialFormTest\\:\\:installEntitySchema\\(\\)\\.$#"
-			count: 8
-			path: modules/migrate_drupal_ui/tests/src/Functional/CredentialFormTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MigrateUpgradeExecuteTestBase\\:\\:installEntitySchema\\(\\)\\.$#"
-			count: 8
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeExecuteTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MigrateUpgradeFormStepsTest\\:\\:installEntitySchema\\(\\)\\.$#"
-			count: 8
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeFormStepsTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MigrateUpgradeTestBase\\:\\:getManagedFiles\\(\\)\\.$#"
-			count: 1
-			path: modules/migrate_drupal_ui/tests/src/Functional/MigrateUpgradeTestBase.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MultilingualReviewPageTestBase\\:\\:installEntitySchema\\(\\)\\.$#"
-			count: 8
-			path: modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php
-
-		-
 			message: "#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: modules/node/src/ConfigTranslation/NodeTypeMapper.php
@@ -1392,11 +1307,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/node/tests/src/Functional/NodeRevisionsAllTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\node\\\\Functional\\\\NodeRevisionsTest\\:\\:drupalPost\\(\\)\\.$#"
-			count: 1
-			path: modules/node/tests/src/Functional/NodeRevisionsTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1484,11 +1394,6 @@ parameters:
 			path: modules/pgsql/src/Driver/Database/pgsql/Upsert.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\rdf\\\\Kernel\\\\Field\\\\FieldRdfaTestBase\\:\\:drupalGet\\(\\)\\.$#"
-			count: 2
-			path: modules/rdf/tests/src/Kernel/Field/FieldRdfaTestBase.php
-
-		-
 			message: "#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#"
 			count: 1
 			path: modules/responsive_image/src/ResponsiveImageStyleForm.php
@@ -1557,11 +1462,6 @@ parameters:
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 3
 			path: modules/search/tests/src/Functional/SearchRankingTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\serialization\\\\Normalizer\\\\EntityNormalizer\\:\\:getCustomSerializedPropertyNames\\(\\)\\.$#"
-			count: 1
-			path: modules/serialization/src/Normalizer/EntityNormalizer.php
 
 		-
 			message: "#^Class Drupal\\\\block\\\\Entity\\\\Block referenced with incorrect case\\: Drupal\\\\block\\\\entity\\\\Block\\.$#"
@@ -1702,11 +1602,6 @@ parameters:
 			message: "#^Instantiated class Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\Exception not found\\.$#"
 			count: 1
 			path: modules/system/tests/src/Functional/FileTransfer/FileTransferTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Common\\\\PageRenderTest\\:\\:error\\(\\)\\.$#"
-			count: 2
-			path: modules/system/tests/src/Kernel/Common/PageRenderTest.php
 
 		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
@@ -1869,11 +1764,6 @@ parameters:
 			path: modules/user/tests/src/Functional/UserPictureTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#"
-			count: 1
-			path: modules/user/tests/src/Functional/UserRegistrationRestTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: modules/user/tests/src/Functional/UserRegistrationTest.php
@@ -1910,11 +1800,6 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\:\\:\\$is_handler\\.$#"
-			count: 1
-			path: modules/views/src/Plugin/views/HandlerBase.php
-
-		-
-			message: "#^Call to an undefined method \\$this\\(Drupal\\\\views\\\\Plugin\\\\views\\\\HandlerBase\\)\\:\\:getFormula\\(\\)\\.$#"
 			count: 1
 			path: modules/views/src/Plugin/views/HandlerBase.php
 
@@ -2189,11 +2074,6 @@ parameters:
 			path: modules/views/src/Plugin/views/filter/Bundle.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\views\\\\Plugin\\\\views\\\\filter\\\\FilterPluginBase\\:\\:operators\\(\\)\\.$#"
-			count: 2
-			path: modules/views/src/Plugin/views/filter/FilterPluginBase.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\Subquery\\:\\:\\$left_query\\.$#"
 			count: 2
 			path: modules/views/src/Plugin/views/join/Subquery.php
@@ -2334,21 +2214,6 @@ parameters:
 			path: modules/views/tests/src/Kernel/Handler/FieldFieldTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:assertSession\\(\\)\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:drupalGet\\(\\)\\.$#"
-			count: 2
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\views\\\\Kernel\\\\RenderCacheIntegrationTest\\:\\:getSession\\(\\)\\.$#"
-			count: 3
-			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 2
 			path: modules/views/tests/src/Kernel/RenderCacheIntegrationTest.php
@@ -2459,16 +2324,6 @@ parameters:
 			path: tests/Drupal/KernelTests/Core/Entity/EntityCrudHookTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:getComponent\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityDisplayFormBaseTest\\:\\:setComponent\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/KernelTests/Core/Entity/EntityDisplayFormBaseTest.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/KernelTests/Core/Entity/EntityTypeConstraintsTest.php
@@ -2549,16 +2404,6 @@ parameters:
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:assertTrue\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\TestSite\\\\Commands\\\\TestSiteInstallCommand\\:\\:fail\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
-
-		-
 			message: "#^Call to deprecated constant REQUEST_TIME\\: Deprecated in drupal\\:8\\.3\\.0 and is removed from drupal\\:10\\.0\\.0\\. Use \\\\Drupal\\:\\:time\\(\\)\\-\\>getRequestTime\\(\\); $#"
 			count: 1
 			path: tests/Drupal/TestSite/Commands/TestSiteInstallCommand.php
@@ -2619,16 +2464,6 @@ parameters:
 			path: tests/Drupal/Tests/Core/Database/InstallerObjectTest.php
 
 		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityFieldManagerTest\\:\\:get\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Entity/EntityFieldManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Entity\\\\EntityTypeBundleInfoTest\\:\\:get\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Entity/EntityTypeBundleInfoTest.php
-
-		-
 			message: "#^Cannot unset offset 'data\\-drupal\\-link…' on array\\{data\\-drupal\\-link\\-system\\-path\\: '\\<front\\>'\\}\\.$#"
 			count: 2
 			path: tests/Drupal/Tests/Core/EventSubscriber/ActiveLinkResponseFilterTest.php
@@ -2672,68 +2507,3 @@ parameters:
 			message: "#^\\#access_callback value ''Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'' at key '0' is invalid\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertArrayHasKey\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertDoesNotMatchRegularExpression\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertEmpty\\(\\)\\.$#"
-			count: 6
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertEquals\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertMatchesRegularExpression\\(\\)\\.$#"
-			count: 2
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertNotEmpty\\(\\)\\.$#"
-			count: 10
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertNotEquals\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertNotFalse\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertSame\\(\\)\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertStringContainsString\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertStringNotContainsString\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:assertTrue\\(\\)\\.$#"
-			count: 6
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
-
-		-
-			message: "#^Call to an undefined method Drupal\\\\Tests\\\\Core\\\\Test\\\\TestClass\\:\\:fail\\(\\)\\.$#"
-			count: 3
-			path: tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php
