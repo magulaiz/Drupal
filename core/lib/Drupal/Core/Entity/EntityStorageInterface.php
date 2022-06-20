@@ -134,7 +134,7 @@ interface EntityStorageInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity instance that will be cloned.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
+   * @return \Drupal\Core\Entity\EntityDuplicateInterface
    *   A new entity object.
    */
   public function createDuplicate(EntityInterface $entity);

@@ -360,7 +360,12 @@ abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
    */
   public function createDuplicate() {
     $storage = $this->entityTypeManager()->getStorage($this->getEntityTypeId());
-    return $storage->createDuplicate($this);
+
+    /** @var \Drupal\Core\Entity\EntityDuplicateInterface $duplicate */
+    $duplicate = $storage->createDuplicate($this);
+    $duplicate->setDuplicateSource($this);
+
+    return $duplicate;
   }
 
   /**
