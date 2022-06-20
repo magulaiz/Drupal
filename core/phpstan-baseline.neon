@@ -1261,11 +1261,6 @@ parameters:
 			path: modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php
 
 		-
-			message: "#^\\#lazy_builder value 'string' at key '0' is invalid\\.$#"
-			count: 1
-			path: modules/filter/src/FilterProcessResult.php
-
-		-
 			message: "#^Access to an undefined property Drupal\\\\filter\\\\Plugin\\\\migrate\\\\process\\\\d6\\\\FilterFormatPermission\\:\\:\\$migration\\.$#"
 			count: 1
 			path: modules/filter/src/Plugin/migrate/process/d6/FilterFormatPermission.php
@@ -3897,11 +3892,6 @@ parameters:
 			message: "#^Cannot unset offset '\\#cache' on array\\{\\#lazy_builder\\: array\\{'Drupal\\\\\\\\Tests\\\\\\\\Core…', array\\{mixed\\}\\}\\}\\.$#"
 			count: 1
 			path: tests/Drupal/Tests/Core/Render/RendererPlaceholdersTest.php
-
-		-
-			message: "#^\\#access_callback value ''Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'\\|'Drupal\\\\\\\\Tests\\\\\\\\Core…'' at key '0' is invalid\\.$#"
-			count: 1
-			path: tests/Drupal/Tests/Core/Render/RendererTest.php
 
 		-
 			message: "#^Access to an undefined property Drupal\\\\Tests\\\\Core\\\\Render\\\\RendererTestBase\\:\\:\\$cacheContextsManager\\.$#"
