@@ -121,7 +121,8 @@ interface MenuTreeStorageInterface {
    *
    * This function may be used build the data for a menu tree only, for example
    * to further massage the data manually before further processing happens.
-   * MenuLinkTree::checkAccess() needs to be invoked afterwards.
+   * DefaultMenuLinkTreeManipulators::checkAccess() needs to be invoked
+   * afterwards.
    *
    * The tree order is maintained using an optimized algorithm, for example by
    * storing each parent in an individual field, see
