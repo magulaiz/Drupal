@@ -912,7 +912,7 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
 
   // Merge the new status data with the existing status.
   if (isset($status[$project][$langcode])) {
-    $request_time = \Drupal::time()->getRequestTime()
+    $request_time = \Drupal::time()->getRequestTime();
     switch ($type) {
       case LOCALE_TRANSLATION_REMOTE:
       case LOCALE_TRANSLATION_LOCAL:
