@@ -617,6 +617,15 @@ abstract class Schema implements PlaceholderInterface {
   }
 
   /**
+   * Generate SQL to create a new table from a Drupal schema definition.
+   *
+   * This method should be implemented in extending classes.
+   */
+  private function createTableSql(string $name, string $table): array {
+    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  }
+
+  /**
    * Return an array of field names from an array of key/index column specifiers.
    *
    * This is usually an identity function but if a key/index uses a column prefix

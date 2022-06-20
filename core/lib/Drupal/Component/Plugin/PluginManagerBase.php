@@ -101,6 +101,16 @@ abstract class PluginManagerBase implements PluginManagerInterface {
   }
 
   /**
+   * Gets a fallback id for a missing plugin.
+   *
+   * This method should be implemented in extending classes that also implement
+   * FallbackPluginManagerInterface.
+   */
+  private function getFallbackPluginId(string $plugin_id, array $configuration = []): string {
+    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getInstance(array $options) {
