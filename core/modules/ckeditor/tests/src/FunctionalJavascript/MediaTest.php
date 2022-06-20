@@ -22,7 +22,7 @@ use Drupal\Core\Entity\Entity\EntityViewMode;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalMedia
- * @group media
+ * @group ckeditor
  */
 class MediaTest extends WebDriverTestBase {
 
