@@ -68,7 +68,7 @@ class DrupalMediaLibrary extends CKEditorPluginBase implements ContainerFactoryP
     $this->mediaTypeStorage = $entity_type_manager->getStorage('media_type');
 
     if (empty($ui_builder)) {
-      @trigger_error('Not passing the media_library.ui_builder service to ' . __METHOD__ . '() is deprecated in drupal:9.3.0 and is required in drupal:10.0.0. See https://www.drupal.org/project/drupal/issues/3127867', E_USER_DEPRECATED);
+      @trigger_error('Not passing the media_library.ui_builder service to ' . __METHOD__ . '() is deprecated in drupal:9.5.0 and is required in drupal:10.0.0. See https://www.drupal.org/node/3229234', E_USER_DEPRECATED);
       $ui_builder = \Drupal::service('media_library.ui_builder');
     }
     $this->uiBuilder = $ui_builder;
