@@ -15,7 +15,7 @@ use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor\Plugin\CKEditorPlugin\DrupalMediaLibrary
- * @group media_library
+ * @group ckeditor
  */
 class MediaLibraryTest extends WebDriverTestBase {
 
