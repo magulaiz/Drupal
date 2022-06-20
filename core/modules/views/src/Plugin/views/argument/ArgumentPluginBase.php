@@ -955,7 +955,7 @@ abstract class ArgumentPluginBase extends HandlerBase implements CacheableDepend
    */
   public function summaryName($data) {
     $value = $data->{$this->name_alias};
-    if (empty($value) && !empty($this->definition['empty field name'])) {
+    if (empty($value) && !is_numeric($value) && !empty($this->definition['empty field name'])) {
       $value = $this->definition['empty field name'];
     }
     return $value;
