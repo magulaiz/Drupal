@@ -126,7 +126,6 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
   public function getCssFiles(Editor $editor) {
     return [
       $this->moduleExtensionList->getPath('ckeditor') . '/css/plugins/drupalmedia/ckeditor.drupalmedia.css',
-      $this->moduleExtensionList->getPath('ckeditor') . '/css/plugins/drupalmedia/media-embed-error.css',
       $this->moduleExtensionList->getPath('system') . '/css/components/hidden.module.css',
     ];
   }

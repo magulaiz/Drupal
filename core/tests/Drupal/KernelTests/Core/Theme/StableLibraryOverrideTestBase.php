@@ -46,7 +46,6 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
    * @var string[]
    */
   protected $librariesToSkip = [
-    'ckeditor/media_embed_ckeditor_theme',
     // This is a deprecated library that will trigger warnings.
     'image/quickedit.inPlaceEditor.image',
   ];

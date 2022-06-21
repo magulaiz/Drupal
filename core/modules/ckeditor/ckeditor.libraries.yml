@@ -95,9 +95,6 @@ drupal.ckeditor.language.admin:
 
 media_embed_ckeditor_theme:
   version: VERSION
-  css:
-    component:
-      css/plugins/drupalmedia/media-embed-error.css: {}
   js:
     js/media_embed_ckeditor.theme.js: {}
   dependencies:
