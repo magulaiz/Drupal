@@ -90,6 +90,15 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
   }
 
   /**
+   * Returns the canonical absolute path of the URI, if possible.
+   *
+   * This method should be implemented in extending classes.
+   */
+  private function getLocalPath(string $uri = NULL): string|null {
+    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  }
+
+  /**
    * Support for flock().
    *
    * An exclusive lock attempt will be rejected, as this is a read-only stream
