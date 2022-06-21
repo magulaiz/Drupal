@@ -23,9 +23,6 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
     $theme_path = $this->container->get('extension.list.theme')->getPath('classy');
     foreach (['images', 'css', 'js', 'templates'] as $type => $sub_folder) {
       $asset_path = "$theme_path/$sub_folder";
-      if (!file_exists($asset_path)) {
-        continue;
-      }
       $directory = new \RecursiveDirectoryIterator($asset_path, \FilesystemIterator::CURRENT_AS_FILEINFO | \FilesystemIterator::SKIP_DOTS);
       $iterator = new \RecursiveIteratorIterator($directory);
       $this->assertGreaterThan(0, iterator_count($iterator));
@@ -137,6 +134,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'item-list.css',
             'link.css',
             'links.css',
+            'media-embed-error.css',
             'media-library.css',
             'menu.css',
             'more-link.css',
@@ -151,7 +149,10 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [],
+          'js' => [
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
+          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -270,6 +271,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'item-list.css',
             'link.css',
             'links.css',
+            'media-embed-error.css',
             'menu.css',
             'more-link.css',
             'node.css',
@@ -278,7 +280,10 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [],
+          'js' => [
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
+          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -386,6 +391,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'item-list.css',
             'link.css',
             'links.css',
+            'media-embed-error.css',
             'media-library.css',
             'menu.css',
             'messages.css',
@@ -401,7 +407,10 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'textarea.css',
             'ui-dialog.css',
           ],
-          'js' => [],
+          'js' => [
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
+          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -540,10 +549,14 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
             'menu.css',
             'icons.css',
             'breadcrumb.css',
+            'media-embed-error.css',
             'container-inline.css',
             'more-link.css',
           ],
-          'js' => [],
+          'js' => [
+            'media_embed_ckeditor.theme.es6.js',
+            'media_embed_ckeditor.theme.js',
+          ],
           'images' => [
             'application-octet-stream.png',
             'application-pdf.png',
@@ -682,6 +695,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'item-list.css' => '1d519afe6007f4b01e00f22b0ba8bf33',
         'link.css' => '22f42d430fe458080a7739c70a2d2ea5',
         'links.css' => '21fe64349f5702cd5b89104a1d3b9cd3',
+        'media-embed-error.css' => 'ab7f4c91f7b312122d30d7e09bb1bcc4',
         'media-library.css' => 'bb405519d30970c721405452dfb7b38e',
         'menu.css' => 'c4608b4ac9aafce1f6e0d21c6e6e6ee8',
         'messages.css' => '2930ea9bebf4d1658e9bdc3b1f83bd43',
@@ -698,7 +712,10 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'ui-dialog.css' => '4a3d036007ba8c8c80f4a21a369c72cc',
         'user.css' => '0ec6acc22567a7c9c228f04b5a97c711',
       ],
-      'js' => [],
+      'js' => [
+        'media_embed_ckeditor.theme.es6.js' => 'd9fa9e008aff8d4fb0401083bab0a1ad',
+        'media_embed_ckeditor.theme.js' => 'f8e192b79f25d2b61a6ff43b9733ec72',
+      ],
       'images' => [
         'application-octet-stream.png' => 'fef73511632890590b5ae0a13c99e4bf',
         'application-pdf.png' => 'bb41f8b679b9d93323b30c87fde14de9',
@@ -774,7 +791,7 @@ class ConfirmClassyCopiesTest extends KernelTestBase {
         'comment.html.twig' => '271cebfb1c64860e0e392df3a6787ca2',
         'node.html.twig' => '68ce2322607c5a258bd64cb78f49b0e0',
         'taxonomy-term.html.twig' => '63e39620cd877c85297914fef61930de',
-        'media-embed-error.html.twig' => '178feade3d5e51bdc76e4b68476b1c91',
+        'media-embed-error.html.twig' => '83621141a91e525cd4df15c1d93b58b2',
         'book-node-export-html.html.twig' => 'e3f896d5f4f69c28256807fb57382eb5',
         'links--node.html.twig' => '746362f23d45654540368b963e6b9feb',
         'page-title.html.twig' => '73e9f3f4933b1a1b789db6e4a6556355',
