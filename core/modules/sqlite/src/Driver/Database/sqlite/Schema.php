@@ -54,7 +54,7 @@ class Schema extends DatabaseSchema {
    * @return
    *   An array of SQL statements to create the table.
    */
-  public function createTableSql($name, $table) {
+  protected function createTableSql($name, $table) {
     if (!empty($table['primary key']) && is_array($table['primary key'])) {
       $this->ensureNotNullPrimaryKey($table['primary key'], $table['fields']);
     }

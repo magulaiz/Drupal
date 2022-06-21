@@ -621,7 +621,7 @@ abstract class Schema implements PlaceholderInterface {
    *
    * This method should be implemented in extending classes.
    */
-  private function createTableSql(string $name, array $table): array {
+  protected function createTableSql($name, $table) {
     throw new \RuntimeException(__METHOD__ . '() not implemented.');
   }
 
