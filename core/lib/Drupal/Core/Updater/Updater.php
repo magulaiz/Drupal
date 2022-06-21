@@ -196,7 +196,7 @@ class Updater {
   protected function getInstallArgs($overrides = []) {
     $args = [
       'make_backup' => FALSE,
-      'install_dir' => $this->getInstallDirectory(),
+      'install_dir' => $this->source,
       'backup_dir'  => $this->getBackupDir(),
     ];
     return array_merge($args, $overrides);
