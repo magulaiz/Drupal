@@ -9,6 +9,7 @@ namespace Drupal\Tests\system\Unit\Breadcrumbs;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Controller\CacheableTitle;
 use Drupal\Core\Link;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Path\PathMatcherInterface;
@@ -39,7 +40,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * The mocked title resolver.
    *
-   * @var \Drupal\Core\Controller\TitleResolverInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Controller\CacheableTitleResolverInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $titleResolver;
 
@@ -108,7 +109,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->context = $this->createMock('\Drupal\Core\Routing\RequestContext');
 
     $this->accessManager = $this->createMock('\Drupal\Core\Access\AccessManagerInterface');
-    $this->titleResolver = $this->createMock('\Drupal\Core\Controller\TitleResolverInterface');
+    $this->titleResolver = $this->createMock('\Drupal\Core\Controller\CacheableTitleResolverInterface');
     $this->currentUser = $this->createMock('Drupal\Core\Session\AccountInterface');
     $this->currentPath = $this->getMockBuilder('Drupal\Core\Path\CurrentPathStack')
       ->disableOriginalConstructor()
@@ -200,6 +201,11 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       });
 
     $this->setupAccessManagerToAllow();
+    $cacheable_title = new CacheableTitle();
+    $this->titleResolver->expects($this->once())
+      ->method('getCacheableTitle')
+      ->with($this->anything(), $route_1)
+      ->will($this->returnValue($cacheable_title));
 
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([0 => new Link('Home', new Url('<front>')), 1 => new Link('Example', new Url('example'))], $breadcrumb->getLinks());
@@ -252,6 +258,10 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
         AccessResult::allowed()->cachePerPermissions(),
         AccessResult::allowed()->addCacheContexts(['bar'])->addCacheTags(['example'])
       );
+    $cacheable_title = new CacheableTitle(NULL);
+    $this->titleResolver
+      ->method('getCacheableTitle')
+      ->will($this->returnValue($cacheable_title));
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([
       new Link('Home', new Url('<front>')),
@@ -375,10 +385,12 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
       });
 
     $this->setupAccessManagerToAllow();
+    $cacheable_title = new CacheableTitle();
+    $cacheable_title->setTitle('Admin');
     $this->titleResolver->expects($this->once())
-      ->method('getTitle')
+      ->method('getCacheableTitle')
       ->with($this->anything(), $route_1)
-      ->will($this->returnValue('Admin'));
+      ->will($this->returnValue($cacheable_title));
 
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([0 => new Link('Home', new Url('<front>')), 1 => new Link('Admin', new Url('user_page'))], $breadcrumb->getLinks());
