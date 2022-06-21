@@ -156,6 +156,8 @@ libraries-extend:
     - claro/form.password-confirm
   views/views.module:
     - claro/views
+  media/media_embed_ckeditor_theme:
+    - claro/classy.media_embed_ckeditor_theme
   media_library/ui:
     - claro/media_library.ui
   media_library/view:
@@ -169,6 +171,7 @@ ckeditor_stylesheets:
   - css/base/elements.css
   - css/base/typography.css
   - css/theme/ckeditor-frame.css
+  - css/classy/components/media-embed-error.css
 
 regions:
   header: 'Header'

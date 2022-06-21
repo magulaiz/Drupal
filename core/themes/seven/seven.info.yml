@@ -72,6 +72,8 @@ libraries-extend:
     - seven/filter
   filter/drupal.filter:
     - seven/filter
+  media/media_embed_ckeditor_theme:
+    - seven/classy.media_embed_ckeditor_theme
   media_library/view:
     - seven/media_library
   media_library/widget:
@@ -95,3 +97,6 @@ regions:
   sidebar_first: 'First sidebar'
 regions_hidden:
   - sidebar_first
+
+ckeditor_stylesheets:
+  - css/classy/components/media-embed-error.css

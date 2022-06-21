@@ -106,12 +106,11 @@ user:
 
 media_embed_error:
   version: VERSION
-  dependencies:
-    - ckeditor/media_embed_ckeditor_theme
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0.
+  css:
+    component:
+      css/components/media-embed-error.css: {}
 
 media_embed_ckeditor_theme:
   version: VERSION
-  dependencies:
-    - ckeditor/media_embed_ckeditor_theme
-  deprecated: The %library_id% asset library is deprecated in Drupal 9.5.0 and will be removed in Drupal 10.0.0.
+  js:
+    js/media_embed_ckeditor.theme.js: {}
