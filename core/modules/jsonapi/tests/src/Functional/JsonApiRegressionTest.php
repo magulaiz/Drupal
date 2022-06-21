@@ -15,6 +15,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMapField;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\jsonapi\JsonApiSpec;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\shortcut\Entity\Shortcut;
@@ -1245,7 +1246,11 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $omitted = $response['meta']['omitted']['links'];
     unset($omitted['help']);
     $omitted = reset($omitted);
-    $expected_url = Url::fromUri('internal:/jsonapi/' . $term->getEntityTypeId() . '/' . $term->bundle() . '/' . $term->uuid());
+    $expected_url = Url::fromUri('internal:/jsonapi/' . $term->getEntityTypeId() . '/' . $term->bundle() . '/' . $term->uuid(), [
+      'query' => [
+        JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $term->getRevisionId(),
+      ],
+    ]);
     $expected_url->setAbsolute();
     $this->assertSame($expected_url->toString(), $omitted['href'], 'Entity that is excluded due to access constraints is correctly reported in the "Omitted" section of the JSON API response.');
 
