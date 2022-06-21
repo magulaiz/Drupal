@@ -15,7 +15,8 @@
 #drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) {
   all: revert;
   box-sizing: border-box;
-  -webkit-font-smoothing: antialiased
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.4
 }
 
 #drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)):after,
@@ -24,3 +25,34 @@
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
   }
+
+#drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) {
+
+    /* Classes for hidden and visually hidden elements. See hidden.module.css. */
+}
+
+#drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) .hidden {
+      display: none;
+    }
+
+#drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) .visually-hidden {
+      position: absolute !important;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      width: 1px;
+      height: 1px;
+      word-wrap: normal;
+    }
+
+#drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) .visually-hidden.focusable:active,
+    #drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) .visually-hidden.focusable:focus {
+      position: static !important;
+      overflow: visible;
+      clip: auto;
+      width: auto;
+      height: auto;
+    }
+
+#drupal-off-canvas *:where(:not(svg, svg *, .ck-reset *, [data-drupal-ck-style-fence] *)) .invisible {
+      visibility: hidden;
+    }

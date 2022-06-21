@@ -3,19 +3,44 @@
  * Visual styling for forms in the off-canvas dialog.
  */
 
- #drupal-off-canvas .ck-content {
-   color: black;
- }
+#drupal-off-canvas .ck-content {
+  color: black;
+}
 
 #drupal-off-canvas .form-item {
   padding: 8px 0;
 }
 
-#drupal-off-canvas .form-item .description {
-  font-size: 12px;
+#drupal-off-canvas .form-item.form-type-boolean {
+  padding: 4px 0;
 }
 
-#drupal-off-canvas input:where(:not([type="submit"])),
+#drupal-off-canvas .description,
+#drupal-off-canvas .form-item__description {
+  margin: 4px 0;
+  font-size: 12px;;
+}
+
+#drupal-off-canvas .fieldset {
+  margin: 16px 0;
+  padding: 8px;
+}
+
+#drupal-off-canvas .fieldset__legend {
+  display: contents;
+  font-weight: bold;
+}
+
+#drupal-off-canvas .fieldset input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+  width: 100%;
+}
+
+#drupal-off-canvas input,
+#drupal-off-canvas textarea {
+  font-family: inherit;
+}
+
+#drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])),
 #drupal-off-canvas select {
   max-width: 100%;
   padding: 8px

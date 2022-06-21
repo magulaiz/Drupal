@@ -3,83 +3,75 @@
  * Set base styles for the off-canvas dialog.
  */
 
-/* Set some global attributes. */
 #drupal-off-canvas {
-  color: #ddd;
-  background: #444;
+  --off-canvas-background-color: #444;
+  --off-canvas-text-color: #ddd;
+  --off-canvas-link-color: #85bef4;
+  --off-canvas-border-color: #666;
+  --off-canvas-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+  --off-canvas-vertical-spacing-unit: 8px;
 
-  /* Generic elements. */
+  color: var(--off-canvas-text-color);
+  background: var(--off-canvas-background-color);
+
   & a,
   & .link {
     transition: color 0.5s ease;
     text-decoration: none;
-    color: #85bef4;
-    border-bottom: none;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-    font-size: inherit;
-    font-weight: normal;
-  }
-
-  & .links,
-  & .inline-block-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    color: var(--off-canvas-link-color);
+    font-family: var(--off-canvas-font-family);
   }
 
   & hr {
     height: 1px;
-    background: #ccc;
-  }
-
-  & summary,
-  & .fieldgroup:not(.form-composite) > legend {
+    background: var(--off-canvas-border-color);
   }
 
   & h1,
   & .heading-a {
-    font-size: 1.625em;
-    line-height: 1.875em;
+    font-size: 23px;
+    line-height: 1.2;
   }
 
   & h2,
   & .heading-b {
     margin: 10px 0;
-    font-size: 1.385em;
+    font-size: 19px;
   }
 
   & h3,
   & .heading-c {
     margin: 10px 0;
-    font-size: 1.231em;
+    font-size: 17px;
   }
 
   & h4,
   & .heading-d {
     margin: 10px 0;
-    font-size: 1.154em;
+    font-size: 16px;
   }
 
   & h5,
-  & .heading-e {
-    margin: 10px 0;
-    font-size: 1.077em;
-  }
-
+  & .heading-e,
   & h6,
   & .heading-f {
     margin: 10px 0;
-    font-size: 1.077em;
+    font-size: 15px;
   }
 
   & p {
-    margin: 1em 0;
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-  & ul li,
-  & ol li {
-    padding: 5px 0;
-    border-bottom: 1px solid #ffffff33;
+  & ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  & li {
+    padding: calc(0.25 * var(--off-canvas-vertical-spacing-unit)) 0;
+    border-bottom: 1px solid var(--off-canvas-border-color);
 
     &:last-child {
       padding-bottom: 0;
@@ -87,31 +79,24 @@
     }
   }
 
-  /* Classes for hidden and visually hidden elements. See hidden.module.css. */
-  & .hidden {
-    display: none;
+  /**
+   * Throbber for ajax actions.
+   */
+
+   .throbber {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--off-canvas-border-color);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
   }
 
-  & .visually-hidden {
-    position: absolute !important;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
-    word-wrap: normal;
-  }
-
-  & .visually-hidden.focusable:active,
-  & .visually-hidden.focusable:focus {
-    position: static !important;
-    overflow: visible;
-    clip: auto;
-    width: auto;
-    height: auto;
-  }
-
-  & .invisible {
-    visibility: hidden;
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* Some system classes. See system.admin.css. */
@@ -138,7 +123,7 @@
 
   /* Override jQuery UI */
   & .ui-widget-content a {
-    color: #85bef4 !important;
+    color: var(--off-canvas-link-color) !important;
   }
 
   /* Message styles */
@@ -153,11 +138,13 @@
   & .messages abbr {
     color: #444;
   }
+
   & .messages--status {
     color: #325e1c;
     background-color: #f3faef;
     background-image: url(../icons/73b355/check.svg);
   }
+
   & .messages--warning {
     color: #734c00;
     background-color: #fdf8ed;

@@ -10,125 +10,104 @@
  * Set base styles for the off-canvas dialog.
  */
 
-/* Set some global attributes. */
-
 #drupal-off-canvas {
-  color: #ddd;
-  background: #444
+  --off-canvas-background-color: #444;
+  --off-canvas-text-color: #ddd;
+  --off-canvas-link-color: #85bef4;
+  --off-canvas-border-color: #666;
+  --off-canvas-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+  --off-canvas-vertical-spacing-unit: 0.5rem;
 
-  /* Generic elements. */
+  color: var(--off-canvas-text-color);
+  background: var(--off-canvas-background-color)
 }
 
 #drupal-off-canvas a,
   #drupal-off-canvas .link {
     transition: color 0.5s ease;
     text-decoration: none;
-    color: #85bef4;
-    border-bottom: none;
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-    font-size: inherit;
-    font-weight: normal;
-  }
-
-#drupal-off-canvas .links,
-  #drupal-off-canvas .inline-block-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    color: var(--off-canvas-link-color);
+    font-family: var(--off-canvas-font-family);
   }
 
 #drupal-off-canvas hr {
     height: 1px;
-    background: #ccc;
-  }
-
-#drupal-off-canvas summary,
-  #drupal-off-canvas .fieldgroup:not(.form-composite) > legend {
+    background: var(--off-canvas-border-color);
   }
 
 #drupal-off-canvas h1,
   #drupal-off-canvas .heading-a {
-    font-size: 1.625em;
-    line-height: 1.875em;
+    font-size: 1.4375rem;
+    line-height: 1.2;
   }
 
 #drupal-off-canvas h2,
   #drupal-off-canvas .heading-b {
     margin: 0.625rem 0;
-    font-size: 1.385em;
+    font-size: 1.1875rem;
   }
 
 #drupal-off-canvas h3,
   #drupal-off-canvas .heading-c {
     margin: 0.625rem 0;
-    font-size: 1.231em;
+    font-size: 1.0625rem;
   }
 
 #drupal-off-canvas h4,
   #drupal-off-canvas .heading-d {
     margin: 0.625rem 0;
-    font-size: 1.154em;
+    font-size: 1rem;
   }
 
 #drupal-off-canvas h5,
-  #drupal-off-canvas .heading-e {
-    margin: 0.625rem 0;
-    font-size: 1.077em;
-  }
-
-#drupal-off-canvas h6,
+  #drupal-off-canvas .heading-e,
+  #drupal-off-canvas h6,
   #drupal-off-canvas .heading-f {
     margin: 0.625rem 0;
-    font-size: 1.077em;
+    font-size: 0.9375rem;
   }
 
 #drupal-off-canvas p {
-    margin: 1em 0;
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-#drupal-off-canvas ul li,
-  #drupal-off-canvas ol li {
-    padding: 0.3125rem 0;
-    border-bottom: 1px solid #ffffff33
+#drupal-off-canvas ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-#drupal-off-canvas ul li:last-child, #drupal-off-canvas ol li:last-child {
+#drupal-off-canvas li {
+    padding: calc(var(--off-canvas-vertical-spacing-unit)*0.25) 0;
+    border-bottom: 1px solid var(--off-canvas-border-color)
+  }
+
+#drupal-off-canvas li:last-child {
       padding-bottom: 0;
       border-bottom: none;
     }
 
 #drupal-off-canvas {
 
-  /* Classes for hidden and visually hidden elements. See hidden.module.css. */
-}
+  /**
+   * Throbber for ajax actions.
+   */
 
-#drupal-off-canvas .hidden {
-    display: none;
+   .throbber {
+    display: inline-block;
+    width: 3.125rem;
+    height: 3.125rem;
+    border: 3px solid var(--off-canvas-border-color);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
   }
 
-#drupal-off-canvas .visually-hidden {
-    position: absolute !important;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
-    word-wrap: normal;
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
-
-#drupal-off-canvas .visually-hidden.focusable:active,
-  #drupal-off-canvas .visually-hidden.focusable:focus {
-    position: static !important;
-    overflow: visible;
-    clip: auto;
-    width: auto;
-    height: auto;
-  }
-
-#drupal-off-canvas .invisible {
-    visibility: hidden;
-  }
-
-#drupal-off-canvas {
 
   /* Some system classes. See system.admin.css. */
 }
@@ -160,7 +139,7 @@
 }
 
 #drupal-off-canvas .ui-widget-content a {
-    color: #85bef4 !important;
+    color: var(--off-canvas-link-color) !important;
   }
 
 #drupal-off-canvas {
