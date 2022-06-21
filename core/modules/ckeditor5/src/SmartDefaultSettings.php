@@ -68,6 +68,13 @@ final class SmartDefaultSettings {
   protected $currentUser;
 
   /**
+   * A logger instance.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * Constructs a SmartDefaultSettings object.
    *
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface $plugin_manager
@@ -172,29 +179,37 @@ final class SmartDefaultSettings {
       $unsupported = $missing->diff($missing_attributes);
 
       if ($enabling_message_content) {
-        $this->logger->info($this->t('The following plugins were enabled to support tags that are allowed by this text format: %enabling_message_content.',
-          ['%enabling_message_content' => $enabling_message_content],
+        $this->logger->info($this->t('The CKEditor 5 migration enabled the following plugins to support tags that are allowed by the %text_format text format: %enabling_message_content. The text format must be saved to make these changes active.',
+          [
+            '%text_format' => $editor->getFilterFormat()->get('name'),
+            '%enabling_message_content' => $enabling_message_content,
+          ],
         ));
       }
       // Warn user about unsupported tags.
       if (!$unsupported->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $unsupported);
         $source_editing_additions = $source_editing_additions->merge($unsupported);
-        $this->logger->info($this->t("The following tags were permitted by this format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string.", [
+        $this->logger->info($this->t("The following tags were permitted by the %text_format text format's filter configuration, but no plugin was available that supports them. To ensure the tags remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @unsupported_string. The text format must be saved to make these changes active.", [
+          '%text_format' => $editor->getFilterFormat()->get('name'),
           '@unsupported_string' => $unsupported->toFilterHtmlAllowedTagsString(),
         ]));
       }
 
       if ($enabled_for_attributes_message_content) {
-        $this->logger->info($this->t('The following plugins were enabled to support specific attributes that are allowed by this text format: %enabled_for_attributes_message_content.',
-          ['%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content],
+        $this->logger->info($this->t('The CKEditor 5 migration process enabled the following plugins to support specific attributes that are allowed by the %text_format text format: %enabled_for_attributes_message_content.',
+          [
+            '%text_format' => $editor->getFilterFormat()->get('name'),
+            '%enabled_for_attributes_message_content' => $enabled_for_attributes_message_content,
+          ],
         ));
       }
       // Warn user about supported tags but missing attributes.
       if (!$missing_attributes->allowsNothing()) {
         $this->addTagsToSourceEditing($editor, $missing_attributes);
         $source_editing_additions = $source_editing_additions->merge($missing_attributes);
-        $this->logger->info($this->t("This format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported by this text format, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes.", [
+        $this->logger->info($this->t("As part of migrating to CKEditor 5, it was found that the %text_format text format's HTML filters includes plugins that support the following tags, but not some of their attributes. To ensure these attributes remain supported, the following were added to the Source Editing plugin's <em>Manually editable HTML tags</em>: @missing_attributes. The text format must be saved to make these changes active.", [
+          '%text_format' => $editor->getFilterFormat()->get('name'),
           '@missing_attributes' => $missing_attributes->toFilterHtmlAllowedTagsString(),
         ]));
       }
@@ -211,7 +226,8 @@ final class SmartDefaultSettings {
       $missing_fundamental_tags = $fundamental->diff($filter_html_restrictions);
       if (!$missing_fundamental_tags->allowsNothing()) {
         $editor->getFilterFormat()->setFilterConfig('filter_html', $filter_html_restrictions->merge($fundamental)->getAllowedElements());
-        $this->logger->warning($this->t("The following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags.", [
+        $this->logger->warning($this->t("As part of migrating the %text_format text format to CKEditor 5, the following tag(s) were added to <em>Limit allowed HTML tags and correct faulty HTML</em>, because they are needed to provide fundamental CKEditor 5 functionality : @missing_tags. The text format must be saved to make these changes active.", [
+          '%text_format' => $editor->getFilterFormat()->get('name'),
           '@missing_tags' => $missing_fundamental_tags->toFilterHtmlAllowedTagsString(),
         ]));
       }
@@ -248,7 +264,7 @@ final class SmartDefaultSettings {
 
       if (!empty($plugins_enabled) || !$source_editing_additions->allowsNothing()) {
         $beginning = $help_enabled ?
-          $this->t('To maintain the capabilities of this text format, <a href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
+          $this->t('To maintain the capabilities of this text format, <a target="_blank" href=":sdf_url">the CKEditor 5 migration</a> did the following:', [
             ':sdf_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'migration-settings'])->toString(),
           ]) :
           $this->t('To maintain the capabilities of this text format, the CKEditor 5 migration did the following:');
@@ -261,7 +277,7 @@ final class SmartDefaultSettings {
         $source_editing_info = '';
         if (!$source_editing_additions->allowsNothing()) {
           $source_editing_info = $help_enabled ?
-            $this->t('Added these tags/attributes to the Source Editing Plugin\'s <a href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
+            $this->t('Added these tags/attributes to the Source Editing Plugin\'s <a target="_blank" href=":source_edit_url">Manually editable HTML tags</a> setting: @tag_list',
               [
                 '@tag_list' => $source_editing_additions->toFilterHtmlAllowedTagsString(),
                 ':source_edit_url' => Url::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'source-editing'])->toString(),
@@ -271,7 +287,7 @@ final class SmartDefaultSettings {
 
         $can_access_dblog = ($this->currentUser->hasPermission('access site reports') && $this->moduleHandler->moduleExists('dblog'));
         $end = $can_access_dblog ?
-          $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
+          $this->t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
             [
               ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
@@ -297,8 +313,8 @@ final class SmartDefaultSettings {
         $fundamental_tags = '';
         if ($help_enabled && !$missing_fundamental_tags->allowsNothing()) {
           $fundamental_tags = $this->formatPlural(count($missing_fundamental_tags->toCKEditor5ElementsArray()),
-            'The @tag tag was added because it is <a href=":fundamental_tag_link">required by CKEditor 5</a>.',
-            'The @tag tags were added because they are <a href=":fundamental_tag_link">required by CKEditor 5</a>.',
+            'The @tag tag was added because it is <a target="_blank" href=":fundamental_tag_link">required by CKEditor 5</a>.',
+            'The @tag tags were added because they are <a target="_blank" href=":fundamental_tag_link">required by CKEditor 5</a>.',
             [
               '@tag' => implode(' + ', $missing_fundamental_tags->toCKEditor5ElementsArray()),
               ':fundamental_tag_link' => URL::fromRoute('help.page', ['name' => 'ckeditor5'], ['fragment' => 'required-tags'])->toString(),
@@ -337,7 +353,7 @@ final class SmartDefaultSettings {
           ]
         ) : '';
         $end = $can_access_dblog ?
-          $this->t('Additional details are available <a href=":dblog_url">in your logs</a>.',
+          $this->t('Additional details are available <a target="_blank" href=":dblog_url">in your logs</a>.',
             [
               ':dblog_url' => Url::fromRoute('dblog.overview')
                 ->setOption('query', ['type[]' => 'ckeditor5'])
