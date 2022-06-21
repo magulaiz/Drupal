@@ -2,7 +2,7 @@
 
 namespace Drupal\user\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Provides a user flood event for event listeners.
@@ -74,7 +74,7 @@ class UserFloodEvent extends Event {
       return;
     }
     if (strpos($identifier, '-') !== FALSE) {
-      list($uid, $ip) = explode('-', $identifier);
+      [$uid, $ip] = explode('-', $identifier);
       $this->uid = $uid;
       $this->ip = $ip;
       return;

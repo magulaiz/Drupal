@@ -70,7 +70,7 @@ class DatabaseTest extends UnitTestCase {
    */
   public function providerFindDriverAutoloadDirectory() {
     return [
-      'core mysql' => [FALSE, 'Drupal\Core\Database\Driver\mysql'],
+      'core mysql' => ['core/modules/mysql/src/Driver/Database/mysql/', 'Drupal\mysql\Driver\Database\mysql'],
       'D8 custom fake' => [FALSE, 'Drupal\Driver\Database\corefake'],
       'module mysql' => ['core/modules/system/tests/modules/driver_test/src/Driver/Database/DrivertestMysql/', 'Drupal\driver_test\Driver\Database\DrivertestMysql'],
     ];
@@ -82,11 +82,6 @@ class DatabaseTest extends UnitTestCase {
    */
   public function testFindDriverAutoloadDirectoryException($expected_message, $namespace, $include_tests) {
     new Settings(['extension_discovery_scan_tests' => $include_tests]);
-    if ($include_tests === FALSE) {
-      // \Drupal\Core\Extension\ExtensionDiscovery::scan() needs
-      // drupal_valid_test_ua().
-      include $this->root . '/core/includes/bootstrap.inc';
-    }
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage($expected_message);
     Database::findDriverAutoloadDirectory($namespace, $this->root);

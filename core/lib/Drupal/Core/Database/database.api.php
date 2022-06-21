@@ -14,12 +14,19 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * @section sec_intro Overview
  * Drupal's database abstraction layer provides a unified database query API
- * that can query different underlying databases. It is built upon PHP's
- * PDO (PHP Data Objects) database API, and inherits much of its syntax and
- * semantics. Besides providing a unified API for database queries, the
+ * that can query different underlying databases. It is generally built upon
+ * PHP's PDO (PHP Data Objects) database API, and inherits much of its syntax
+ * and semantics. Besides providing a unified API for database queries, the
  * database abstraction layer also provides a structured way to construct
  * complex queries, and it protects the database by using good security
  * practices.
+ *
+ * Drupal provides 'database drivers', in the form of Drupal modules, for the
+ * concrete implementation of its API towards a specific database engine.
+ * MySql, PostgreSQL and SQLite are core implementations, built on PDO. Other
+ * modules can provide implementations for additional database engines, like
+ * MSSql or Oracle; or alternative low-level database connection clients like
+ * mysqli or oci8.
  *
  * For more detailed information on the database abstraction layer, see
  * https://www.drupal.org/docs/8/api/database-api/database-api-overview.
@@ -162,7 +169,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * remains in scope; when $transaction is destroyed, the transaction will be
  * committed. If your transaction is nested inside of another then Drupal will
  * track each transaction and only commit the outer-most transaction when the
- * last transaction object goes out out of scope (when all relevant queries have
+ * last transaction object goes out of scope (when all relevant queries have
  * completed successfully).
  *
  * Example:
@@ -175,7 +182,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *   try {
  *     $id = $connection->insert('example')
  *       ->fields(array(
- *         'field1' => 'mystring',
+ *         'field1' => 'string',
  *         'field2' => 5,
  *       ))
  *       ->execute();
@@ -390,7 +397,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  * ];
  * @endcode
  *
- * @see drupal_install_schema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::installSchema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::uninstallSchema()
+ * @see \Drupal\TestTools\Extension\SchemaInspector::getTablesSpecification()
  *
  * @}
  */
@@ -432,7 +441,7 @@ function hook_query_alter(Drupal\Core\Database\Query\AlterableInterface $query) 
  *   a listing (e.g., from Views) and therefore require access control.
  *
  * @param $query
- *   An Query object describing the composite parts of a SQL query.
+ *   A Query object describing the composite parts of a SQL query.
  *
  * @see hook_query_alter()
  * @see node_query_node_access_alter()

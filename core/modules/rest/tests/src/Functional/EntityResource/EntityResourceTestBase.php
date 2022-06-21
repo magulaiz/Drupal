@@ -41,11 +41,6 @@ use Psr\Http\Message\ResponseInterface;
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonAnonTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonBasicAuthTest
  * - \Drupal\Tests\rest\Functional\EntityResource\Node\NodeJsonCookieTest
- * But the HAL module also adds a new format ('hal_json'), so that format also
- * needs test coverage (for its own peculiarities in normalization & encoding):
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonAnonTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonBasicAuthTest
- * - \Drupal\Tests\hal\Functional\EntityResource\Node\NodeHalJsonCookieTest
  *
  * In other words: for every entity type there should be:
  * 1. an abstract subclass that includes the entity type-specific authorization
@@ -299,23 +294,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Gets the second normalized POST entity.
-   *
-   * Entity types can have non-sequential IDs, and in that case the second
-   * entity created for POST testing needs to be able to specify a different ID.
-   *
-   * @see ::testPost
-   * @see ::getNormalizedPostEntity
-   *
-   * @return array
-   *   An array structure as returned by ::getNormalizedPostEntity().
-   */
-  protected function getSecondNormalizedPostEntity() {
-    // Return the values of the "parent" method by default.
-    return $this->getNormalizedPostEntity();
-  }
-
-  /**
    * Gets the normalized POST entity with random values for its unique fields.
    *
    * @see ::testPost
@@ -421,7 +399,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * Test a GET request for an entity, plus edge cases to ensure good DX.
+   * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
   public function testGet() {
     $this->initAuthentication();
@@ -582,7 +560,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     static::recursiveKSort($expected);
     $actual = $this->serializer->decode((string) $response->getBody(), static::$format);
     static::recursiveKSort($actual);
-    $this->assertSame($expected, $actual);
+    $this->assertEqualsCanonicalizing($expected, $actual);
 
     // Not only assert the normalization, also assert deserialization of the
     // response results in the expected object.
@@ -708,8 +686,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testPost() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('POSTing config entities is not yet supported.');
     }
 
     $this->initAuthentication();
@@ -718,7 +695,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body = '!{>}<';
     $parseable_valid_request_body = $this->serializer->encode($this->getNormalizedPostEntity(), static::$format);
-    $parseable_valid_request_body_2 = $this->serializer->encode($this->getSecondNormalizedPostEntity(), static::$format);
     $parseable_invalid_request_body = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPostEntity(), 'label'), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPostEntity() + ['uuid' => [$this->randomMachineName(129)]], static::$format);
     $parseable_invalid_request_body_3 = $this->serializer->encode($this->getNormalizedPostEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
@@ -884,8 +860,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testPatch() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'PATCHing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('PATCHing config entities is not yet supported.');
     }
 
     // Patch testing requires that another entity of the same type exists.
@@ -897,7 +872,6 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // Try with all of the following request bodies.
     $unparseable_request_body         = '!{>}<';
     $parseable_valid_request_body     = $this->serializer->encode($this->getNormalizedPatchEntity(), static::$format);
-    $parseable_valid_request_body_2   = $this->serializer->encode($this->getNormalizedPatchEntity(), static::$format);
     $parseable_invalid_request_body   = $this->serializer->encode($this->makeNormalizationInvalid($this->getNormalizedPatchEntity(), 'label'), static::$format);
     $parseable_invalid_request_body_2 = $this->serializer->encode($this->getNormalizedPatchEntity() + ['field_rest_test' => [['value' => $this->randomString()]]], static::$format);
     // The 'field_rest_test' field does not allow 'view' access, so does not end
@@ -1018,7 +992,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
     // DX: 403 when sending PATCH request with updated read-only fields.
     $this->assertPatchProtectedFieldNamesStructure();
-    list($modified_entity, $original_values) = static::getModifiedEntityForPatchTesting($this->entity);
+    [$modified_entity, $original_values] = static::getModifiedEntityForPatchTesting($this->entity);
     // Send PATCH request by serializing the modified entity, assert the error
     // response, change the modified entity field that caused the error response
     // back to its original value, repeat.
@@ -1124,8 +1098,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   public function testDelete() {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
-      $this->assertTrue(TRUE, 'DELETEing config entities is not yet supported.');
-      return;
+      $this->markTestSkipped('DELETEing config entities is not yet supported.');
     }
 
     $this->initAuthentication();
@@ -1229,9 +1202,14 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $is_null_or_string = function ($value) {
       return is_null($value) || is_string($value);
     };
-    $keys_are_field_names = Inspector::assertAllStrings(array_keys(static::$patchProtectedFieldNames));
-    $values_are_expected_access_denied_reasons = Inspector::assertAll($is_null_or_string, static::$patchProtectedFieldNames);
-    $this->assertTrue($keys_are_field_names && $values_are_expected_access_denied_reasons, 'In Drupal 8.6, the structure of $patchProtectedFieldNames changed. It used to be an array with field names as values. Now those values are the keys, and their values should be either NULL or a string: a string containing the reason for why the field cannot be PATCHed, or NULL otherwise.');
+    $this->assertTrue(
+      Inspector::assertAllStrings(array_keys(static::$patchProtectedFieldNames)),
+      'In Drupal 8.6, the structure of $patchProtectedFieldNames changed. It used to be an array with field names as values. Now those values are the keys, and their values should be either NULL or a string: a string containing the reason for why the field cannot be PATCHed, or NULL otherwise.'
+    );
+    $this->assertTrue(
+      Inspector::assertAll($is_null_or_string, static::$patchProtectedFieldNames),
+      'In Drupal 8.6, the structure of $patchProtectedFieldNames changed. It used to be an array with field names as values. Now those values are the keys, and their values should be either NULL or a string: a string containing the reason for why the field cannot be PATCHed, or NULL otherwise.'
+    );
   }
 
   /**

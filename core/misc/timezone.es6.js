@@ -3,7 +3,7 @@
  * Timezone detection.
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   /**
    * Set the client's system time zone as default values of form fields.
    *
@@ -11,15 +11,15 @@
    */
   Drupal.behaviors.setTimezone = {
     attach(context, settings) {
-      const $timezone = $(context)
-        .find('.timezone-detect')
-        .once('timezone');
-      if ($timezone.length) {
+      const timezone = once('timezone', '.timezone-detect', context);
+      if (timezone.length) {
         const tz = new Intl.DateTimeFormat().resolvedOptions().timeZone;
         // Ensure that the timezone value returned by the browser is supported
         // by the server.
-        if (tz && $timezone.find(`option[value="${tz}"]`).length) {
-          $timezone.val(tz);
+        if (tz && $(timezone).find(`option[value="${tz}"]`).length) {
+          timezone.forEach((item) => {
+            item.value = tz;
+          });
           return;
         }
 
@@ -72,7 +72,9 @@
           dataType: 'json',
           success(data) {
             if (data) {
-              $timezone.val(data);
+              document.querySelectorAll('.timezone-detect').forEach((item) => {
+                item.value = data;
+              });
             }
           },
         });

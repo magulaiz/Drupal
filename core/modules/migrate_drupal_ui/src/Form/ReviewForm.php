@@ -2,6 +2,7 @@
 
 namespace Drupal\migrate_drupal_ui\Form;
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -154,26 +155,15 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $output = $this->prepareOutput($display[MigrationState::NOT_FINISHED]);
       foreach ($output as $data) {
         $missing_count++;
-        // Get the migration status for this $source_module, if a module of the
+        // Get the migration status for each source module, if a module of the
         // same name exists on the destination site.
-        $missing_module_list['module_list'][] = [
-          'source_module' => [
-            '#type' => 'html_tag',
-            '#tag' => 'span',
-            '#value' => $data['source_module_name'],
-            '#attributes' => [
-              'class' => [
-                'upgrade-analysis-report__status-icon',
-                'upgrade-analysis-report__status-icon--error',
-              ],
-            ],
+        $missing_module_list['module_list']['#rows'][] = [
+          [
+            'data' => $data['source_module_name'],
+            'class' => ['upgrade-analysis-report__status-icon', 'upgrade-analysis-report__status-icon--error'],
           ],
-          'source_machine_name' => [
-            '#plain_text' => $data['source_machine_name'],
-          ],
-          'destination_module' => [
-            '#plain_text' => $data['destination'],
-          ],
+          $data['source_machine_name'],
+          $data['destination'],
         ];
       }
     }
@@ -200,24 +190,13 @@ class ReviewForm extends MigrateUpgradeFormBase {
       $output = $this->prepareOutput($display[MigrationState::FINISHED]);
       foreach ($output as $data) {
         $available_count++;
-        $available_module_list['module_list'][] = [
-          'source_module' => [
-            '#type' => 'html_tag',
-            '#tag' => 'span',
-            '#value' => $data['source_module_name'],
-            '#attributes' => [
-              'class' => [
-                'upgrade-analysis-report__status-icon',
-                'upgrade-analysis-report__status-icon--checked',
-              ],
-            ],
+        $available_module_list['module_list']['#rows'][] = [
+          [
+            'data' => $data['source_module_name'],
+            'class' => ['upgrade-analysis-report__status-icon', 'upgrade-analysis-report__status-icon--checked'],
           ],
-          'source_machine_name' => [
-            '#plain_text' => $data['source_machine_name'],
-          ],
-          'destination_module' => [
-            '#plain_text' => $data['destination'],
-          ],
+          $data['source_machine_name'],
+          $data['destination'],
         ];
       }
     }
@@ -262,20 +241,16 @@ class ReviewForm extends MigrateUpgradeFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config['source_base_path'] = $this->store->get('source_base_path');
-    $batch = [
-      'title' => $this->t('Running upgrade'),
-      'progress_message' => '',
-      'operations' => [
-        [
-          [MigrateUpgradeImportBatch::class, 'run'],
-          [array_keys($this->migrations), $config],
-        ],
-      ],
-      'finished' => [
-        MigrateUpgradeImportBatch::class, 'finished',
-      ],
-    ];
-    batch_set($batch);
+    $config['source_private_file_path'] = $this->store->get('source_private_file_path');
+    $batch_builder = (new BatchBuilder())
+      ->setTitle($this->t('Running upgrade'))
+      ->setProgressMessage('')
+      ->addOperation([
+        MigrateUpgradeImportBatch::class,
+        'run',
+      ], [array_keys($this->migrations), $config])
+      ->setFinishCallback([MigrateUpgradeImportBatch::class, 'finished']);
+    batch_set($batch_builder->toArray());
     $form_state->setRedirect('<front>');
     $this->store->set('step', 'overview');
     $this->state->set('migrate_drupal_ui.performed', REQUEST_TIME);
@@ -303,13 +278,16 @@ class ReviewForm extends MigrateUpgradeFormBase {
    * @return string[][]
    *   An indexed array of arrays that contain module data, sorted by the source
    *   module name. Each sub-array contains the source module name, the source
-   *   module machine name, and the the destination module names in a sorted CSV
+   *   module machine name, and the destination module names in a sorted CSV
    *   format.
    */
   protected function prepareOutput(array $migration_state) {
     $output = [];
     foreach ($migration_state as $source_machine_name => $destination_modules) {
-      $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+      $data = NULL;
+      if (isset($this->systemData['module'][$source_machine_name]['info'])) {
+        $data = unserialize($this->systemData['module'][$source_machine_name]['info']);
+      }
       $source_module_name = $data['name'] ?? $source_machine_name;
       // Get the names of all the destination modules.
       $destination_module_names = [];

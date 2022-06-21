@@ -66,16 +66,16 @@ class ThemeInstallerTest extends KernelTestBase {
 
     $this->themeInstaller()->install([$name]);
 
-    $this->assertIdentical($this->extensionConfig()->get("theme.$name"), 0);
+    $this->assertSame(0, $this->extensionConfig()->get("theme.{$name}"));
 
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
-    $this->assertEqual($themes[$name]->getName(), $name);
+    $this->assertEquals($name, $themes[$name]->getName());
 
     // Verify that test_basetheme.settings is active.
     $this->assertFalse(theme_get_setting('features.favicon', $name));
-    $this->assertEqual(theme_get_setting('base', $name), 'only');
-    $this->assertEqual(theme_get_setting('override', $name), 'base');
+    $this->assertEquals('only', theme_get_setting('base', $name));
+    $this->assertEquals('base', theme_get_setting('override', $name));
   }
 
   /**
@@ -115,8 +115,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -134,8 +134,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->install([$name]);
       $this->fail($message);
     }
-    catch (ExtensionNameLengthException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(ExtensionNameLengthException::class, $e);
     }
   }
 
@@ -151,6 +151,19 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->expectException(MissingDependencyException::class);
     $this->expectExceptionMessage($message);
     $this->themeInstaller()->install([$theme_name]);
+  }
+
+  /**
+   * Tests trying to install a deprecated theme.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testInstallDeprecated() {
+    $this->expectDeprecation("The theme 'deprecated_theme_test' is deprecated. See https://example.com/deprecated");
+    $this->themeInstaller()->install(['deprecated_theme_test']);
+    $this->assertTrue(\Drupal::service('theme_handler')->themeExists('deprecated_theme_test'));
   }
 
   /**
@@ -230,8 +243,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -257,8 +270,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -295,8 +308,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (\InvalidArgumentException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(\InvalidArgumentException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -325,8 +338,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
 
     $themes = $this->themeHandler()->listInfo();
@@ -352,7 +365,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->themeInstaller()->install([$name]);
     $themes = $this->themeHandler()->listInfo();
     $this->assertTrue(isset($themes[$name]));
-    $this->assertEqual($themes[$name]->getName(), $name);
+    $this->assertEquals($name, $themes[$name]->getName());
     $this->assertNotEmpty($this->config("$name.settings")->get());
   }
 
@@ -367,8 +380,8 @@ class ThemeInstallerTest extends KernelTestBase {
       $this->themeInstaller()->uninstall([$name]);
       $this->fail($message);
     }
-    catch (UnknownExtensionException $e) {
-      $this->pass(get_class($e) . ': ' . $e->getMessage());
+    catch (\Exception $e) {
+      $this->assertInstanceOf(UnknownExtensionException::class, $e);
     }
   }
 
