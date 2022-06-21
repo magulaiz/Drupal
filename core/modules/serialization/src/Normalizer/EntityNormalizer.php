@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
@@ -73,6 +74,15 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
     $entity->_restSubmittedFields = array_keys($data);
 
     return $entity;
+  }
+
+  /**
+   * Gets the names of all properties the plugin treats as serialized data.
+   *
+   * This method should be implemented in extending classes.
+   */
+  private function getCustomSerializedPropertyNames(FieldItemInterface $field_item) {
+    throw new \RuntimeException(__METHOD__ . '() not implemented.');
   }
 
 }
