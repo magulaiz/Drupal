@@ -84,7 +84,10 @@ class DrupalMedia extends PluginBase implements ContainerFactoryPluginInterface,
       'core/jquery',
       'core/drupal',
       'core/drupal.ajax',
-      'ckeditor/media_embed_ckeditor_theme',
+      // @see Drupal.theme.mediaEmbedPreviewError()
+      'media/media_embed_ckeditor_theme',
+      // @see Drupal.theme.mediaEmbedEditButton()
+      'ckeditor/drupal.ckeditor.plugins.drupalmedia',
     ];
   }
 
