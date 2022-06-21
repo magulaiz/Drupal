@@ -94,7 +94,7 @@ abstract class ReadOnlyStream implements StreamWrapperInterface {
    *
    * This method should be implemented in extending classes.
    */
-  private function getLocalPath(string $uri = NULL): string|null {
+  private function getLocalPath(string $uri = NULL): ?string {
     throw new \RuntimeException(__METHOD__ . '() not implemented.');
   }
 
