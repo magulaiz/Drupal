@@ -244,10 +244,13 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     }
 
     // Load by name if provided.
+    $identifier = '';
     if (isset($credentials['name'])) {
+      $identifier = $credentials['name'];
       $users = $this->userStorage->loadByProperties(['name' => trim($credentials['name'])]);
     }
     elseif (isset($credentials['mail'])) {
+      $identifier = $credentials['mail'];
       $users = $this->userStorage->loadByProperties(['mail' => trim($credentials['mail'])]);
     }
 
@@ -270,7 +273,10 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     }
 
     // Error if no users found with provided name or mail.
-    throw new BadRequestHttpException('Unrecognized username or email address.');
+    $this->logger->error('Unable to send password reset email for unrecognized username or email address %identifier.', [
+      '%identifier' => $identifier,
+    ]);
+    return new Response();
   }
 
   /**

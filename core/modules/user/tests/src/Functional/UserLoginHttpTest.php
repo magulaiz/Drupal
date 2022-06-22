@@ -534,10 +534,10 @@ class UserLoginHttpTest extends BrowserTestBase {
     $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name or credentials.mail', $format);
 
     $response = $this->passwordRequest(['name' => 'dramallama'], $format);
-    $this->assertHttpResponseWithMessage($response, 400, 'Unrecognized username or email address.', $format);
+    $this->assertEquals(200, $response->getStatusCode());
 
     $response = $this->passwordRequest(['mail' => 'llama@drupal.org'], $format);
-    $this->assertHttpResponseWithMessage($response, 400, 'Unrecognized username or email address.', $format);
+    $this->assertEquals(200, $response->getStatusCode());
 
     $account
       ->block()
