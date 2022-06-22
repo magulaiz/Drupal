@@ -6,7 +6,7 @@
  */
 
 /* Style the dialog-off-canvas container. This is the parent container of  #drupal-off-canvas. */
-.ui-dialogX.ui-dialog-off-canvas {
+.ui-dialog.ui-dialog-off-canvas {
   z-index: 501; /* Layer the dialog just under the toolbar. */
   padding: 0;
   color: #ddd;
