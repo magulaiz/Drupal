@@ -385,13 +385,14 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $expected = ['id' => $field_definition];
 
+    $cacheBackend = $this->cacheBackend;
     $this->cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
       ->willReturn(FALSE)
       ->shouldBeCalled();
     $this->cacheBackend->set('entity_base_field_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function ($args) {
+      ->will(function (array $args) use($cacheBackend) {
         $data = (object) ['data' => $args[1]];
-        $this->cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
+        $cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
           ->willReturn($data)
           ->shouldBeCalled();
       })
@@ -412,6 +413,7 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $expected = ['id' => $field_definition];
 
+    $cacheBackend = $this->cacheBackend;
     $this->cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
       ->willReturn((object) ['data' => $expected])
       ->shouldBeCalledTimes(2);
@@ -419,9 +421,9 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willReturn(FALSE)
       ->shouldBeCalledTimes(1);
     $this->cacheBackend->set('entity_bundle_field_definitions:test_entity_type:test_bundle:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function ($args) {
+      ->will(function (array $args) use($cacheBackend) {
         $data = (object) ['data' => $args[1]];
-        $this->cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
+        $cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
           ->willReturn($data)
           ->shouldBeCalled();
       })
@@ -461,14 +463,15 @@ class EntityFieldManagerTest extends UnitTestCase {
       'field_storage' => $field_storage_definition->reveal(),
     ];
 
+    $cacheBackend = $this->cacheBackend;
     $this->cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
       ->willReturn((object) ['data' => ['id' => $expected['id']]])
       ->shouldBeCalledTimes(2);
     $this->cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')->willReturn(FALSE);
 
     $this->cacheBackend->set('entity_field_storage_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function () use ($expected) {
-        $this->cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')
+      ->will(function () use ($expected, $cacheBackend) {
+        $cacheBackend->get('entity_field_storage_definitions:test_entity_type:en')
           ->willReturn((object) ['data' => $expected])
           ->shouldBeCalled();
       })
