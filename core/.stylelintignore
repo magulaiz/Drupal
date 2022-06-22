@@ -2,8 +2,8 @@ themes/claro/**/*.css
 !themes/claro/**/*.pcss.css
 themes/olivero/**/*.css
 !themes/olivero/**/*.pcss.css
-misc/dialog/**/*.css
-!misc/dialog/**/*.pcss.css
+misc/dialog/off-canvas/css/**/*.css
+!misc/dialog/off-canvas/css/**/*.pcss.css
 themes/stable/css/core/dialog/off-canvas.reset.css
 themes/stable/css/core/dialog/off-canvas.base.css
 themes/stable9/css/core/dialog/off-canvas.reset.css
