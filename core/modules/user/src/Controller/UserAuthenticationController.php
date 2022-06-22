@@ -247,18 +247,21 @@ class UserAuthenticationController extends ControllerBase implements ContainerIn
     $identifier = '';
     if (isset($credentials['name'])) {
       $identifier = $credentials['name'];
-      $users = $this->userStorage->loadByProperties(['name' => trim($credentials['name'])]);
+      $users = $this->userStorage->loadByProperties(['name' => trim($identifier)]);
     }
     elseif (isset($credentials['mail'])) {
       $identifier = $credentials['mail'];
-      $users = $this->userStorage->loadByProperties(['mail' => trim($credentials['mail'])]);
+      $users = $this->userStorage->loadByProperties(['mail' => trim($identifier)]);
     }
 
     /** @var \Drupal\Core\Session\AccountInterface $account */
     $account = reset($users);
     if ($account && $account->id()) {
       if ($this->userIsBlocked($account->getAccountName())) {
-        throw new BadRequestHttpException('The user has not been activated or is blocked.');
+        $this->logger->error('Unable to send password reset email for blocked or not yet activated user %identifier.', [
+          '%identifier' => $identifier,
+        ]);
+        return new Response();
       }
 
       // Send the password reset email.

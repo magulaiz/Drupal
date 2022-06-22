@@ -544,10 +544,10 @@ class UserLoginHttpTest extends BrowserTestBase {
       ->save();
 
     $response = $this->passwordRequest(['name' => $account->getAccountName()], $format);
-    $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
+    $this->assertEquals(200, $response->getStatusCode());
 
     $response = $this->passwordRequest(['mail' => $account->getEmail()], $format);
-    $this->assertHttpResponseWithMessage($response, 400, 'The user has not been activated or is blocked.', $format);
+    $this->assertEquals(200, $response->getStatusCode());
 
     $account
       ->activate()
