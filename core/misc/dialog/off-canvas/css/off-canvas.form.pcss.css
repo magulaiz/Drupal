@@ -19,6 +19,10 @@
     padding: 8px 0;
   }
 
+  & label {
+    display: block;
+  }
+
   & .form-item.form-type-boolean {
     padding: 4px 0;
   }
@@ -33,17 +37,20 @@
     content: "*";
   }
 
+  & fieldset.form-item, /* Bartik doesn't apply BEM classes, so we use the element with a class for specificity. */
   & .fieldset {
     margin: 16px 0;
     padding: 8px;
   }
 
+  & legend, /* Bartik doesn't apply BEM classes, so we use the element. */
   & .fieldset__legend {
     display: contents;
     font-weight: bold;
   }
 
-  & :is(.fieldset, .draggable-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+  /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
+  & :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
     width: 100%;
   }
 
@@ -57,5 +64,12 @@
   & textarea {
     max-width: 100%;
     padding: 8px
+  }
+
+  & input[type="checkbox"],
+  & input[type="radio"] {
+    & + label {
+      display: inline;
+    }
   }
 }
