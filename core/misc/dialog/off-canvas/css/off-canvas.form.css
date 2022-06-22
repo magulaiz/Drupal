@@ -5,89 +5,113 @@
  * @preserve
  */
 
-
- /**
+/**
  * @file
  * Visual styling for forms in the off-canvas dialog.
  */
 
-
- /*
-  @todo
-  autocomplete
-
- */
-
-
- #drupal-off-canvas .ck-content {
+#drupal-off-canvas .ck-content {
     color: black;
   }
 
-
- #drupal-off-canvas .form-item {
+#drupal-off-canvas .form-item {
     padding: 0.5rem 0;
   }
 
-
- #drupal-off-canvas label {
+#drupal-off-canvas label {
     display: block;
   }
 
-
- #drupal-off-canvas .form-item.form-type-boolean {
+#drupal-off-canvas .form-item.form-type-boolean {
     padding: 0.25rem 0;
   }
 
-
- #drupal-off-canvas .description,
+#drupal-off-canvas .description,
   #drupal-off-canvas .form-item__description {
     margin: 0.25rem 0;
-    font-size: 0.75rem;;
+    font-size: 0.75rem;
   }
 
-
- #drupal-off-canvas .form-required:after {
+#drupal-off-canvas .form-required:after {
     content: "*";
   }
 
-
- #drupal-off-canvas fieldset.form-item, 
+#drupal-off-canvas fieldset.form-item, 
   #drupal-off-canvas .fieldset {
     margin: 1rem 0;
     padding: 0.5rem;
   }
 
-
- #drupal-off-canvas legend, 
+#drupal-off-canvas legend, 
   #drupal-off-canvas .fieldset__legend {
     display: contents;
     font-weight: bold;
   }
 
-
- #drupal-off-canvas {
+#drupal-off-canvas {
 
   /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
 }
 
-
- #drupal-off-canvas :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+#drupal-off-canvas :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
     width: 100%;
   }
 
-
- #drupal-off-canvas input,
+#drupal-off-canvas input,
   #drupal-off-canvas textarea {
     font-family: inherit;
   }
 
-
- #drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])), #drupal-off-canvas select, #drupal-off-canvas textarea {
+#drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])), #drupal-off-canvas select, #drupal-off-canvas textarea {
     max-width: 100%;
-    padding: 0.5rem
+    padding: 0.5rem;
   }
 
-
- #drupal-off-canvas input[type="checkbox"] + label, #drupal-off-canvas input[type="radio"] + label {
+#drupal-off-canvas input[type="checkbox"] + label, #drupal-off-canvas input[type="radio"] + label {
       display: inline;
     }
+
+#drupal-off-canvas {
+
+  /*
+   * Autocomplete.
+   */
+}
+
+#drupal-off-canvas .form-autocomplete {
+    background-image: url("data:image/svg+xml,%3csvg width='40' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M8 1C3.46.827-.188 5.787 1.313 10.068c1.176 4.384 6.993 6.417 10.637 3.7.326-.39.565.276.846.442l3.74 3.739 1.413-1.414-4.35-4.35c2.811-3.468 1.15-9.247-3.062-10.71A7.003 7.003 0 008 1zm0 2c3.242-.123 5.849 3.42 4.777 6.477-.842 3.132-4.994 4.58-7.6 2.65-2.745-1.73-2.9-6.125-.285-8.044A5.006 5.006 0 018 3z' fill='%23868686'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center right 1px
+  }
+
+#drupal-off-canvas .form-autocomplete.ui-autocomplete-loading {
+      background-image: url(../../../icons/spinner.gif);
+    }
+
+#drupal-off-canvas {
+
+  /* This is the background <ul> for the autocomplete dropdown. */
+}
+
+#drupal-off-canvas .ui-autocomplete {
+    border: solid 1px transparent;
+    background: white
+  }
+
+#drupal-off-canvas .ui-autocomplete a {
+      display: block;
+      padding: 0.5rem;
+      color: #333;
+      cursor: pointer;
+      font-size: 0.875rem /* @todo abstract to variable to keep in sync w form elements. */
+    }
+
+#drupal-off-canvas .ui-autocomplete a:hover {
+        background: #eee;
+        color: #000;
+      }
+
+#drupal-off-canvas .ui-autocomplete a:focus {
+        outline: solid 1px #000;
+        outline-offset: -2px;
+      }

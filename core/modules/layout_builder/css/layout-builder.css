@@ -175,6 +175,12 @@
   background-color: #333;
 }
 
+#drupal-off-canvas .inline-block-create-button:focus,
+#drupal-off-canvas .inline-block-list__item:focus {
+  outline: solid 2px;
+  outline-offset: -4px; /* Prevent outline from being cut off. */
+}
+
 #drupal-off-canvas .inline-block-list {
   margin-bottom: 15px;
 }

@@ -6,13 +6,20 @@
 #drupal-off-canvas {
   --off-canvas-background-color: #444;
   --off-canvas-text-color: #ddd;
-  --off-canvas-link-color: #85bef4;
+  --off-canvas-link-color: #85bef4; /* @todo this is inaccessible. */
   --off-canvas-border-color: #666;
   --off-canvas-font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
   --off-canvas-vertical-spacing-unit: 8px;
+  --off-canvas-focus-outline-width: 2px;
+  --off-canvas-focus-outline-color: #fff;
 
   color: var(--off-canvas-text-color);
   background: var(--off-canvas-background-color);
+
+  & *:focus {
+    outline: solid var(--off-canvas-focus-outline-width) var(--off-canvas-focus-outline-color);
+    outline-offset: 2px;
+  }
 
   & a,
   & .link {
@@ -63,6 +70,7 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
+  /* @todo - is this too broad? Will this affect <ul>s in CKEditor? */
   & ul:where(:not(.messages__list)) {
     margin: 0;
     padding: 0;
@@ -113,10 +121,6 @@
 
   & small .admin-link:after {
     content: "]";
-  }
-
-  & .ui-widget-content a {
-    color: var(--off-canvas-link-color) !important;
   }
 
   & .messages {

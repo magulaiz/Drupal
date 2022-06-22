@@ -3,13 +3,6 @@
  * Visual styling for forms in the off-canvas dialog.
  */
 
-
- /*
-  @todo
-  autocomplete
-
- */
-
 #drupal-off-canvas {
   & .ck-content {
     color: black;
@@ -30,7 +23,7 @@
   & .description,
   & .form-item__description {
     margin: 4px 0;
-    font-size: 12px;;
+    font-size: 12px;
   }
 
   & .form-required:after {
@@ -63,13 +56,50 @@
   & select,
   & textarea {
     max-width: 100%;
-    padding: 8px
+    padding: 8px;
   }
 
   & input[type="checkbox"],
   & input[type="radio"] {
     & + label {
       display: inline;
+    }
+  }
+
+  /*
+   * Autocomplete.
+   */
+  & .form-autocomplete {
+    background-image: url(../../../icons/magnifier.svg);
+    background-repeat: no-repeat;
+    background-position: center right 1px;
+
+    &.ui-autocomplete-loading {
+      background-image: url(../../../icons/spinner.gif);
+    }
+  }
+
+  /* This is the background <ul> for the autocomplete dropdown. */
+  & .ui-autocomplete {
+    border: solid 1px transparent;
+    background: white;
+
+    & a {
+      display: block;
+      padding: 8px;
+      color: #333;
+      cursor: pointer;
+      font-size: 14px; /* @todo abstract to variable to keep in sync w form elements. */
+
+      &:hover {
+        background: #eee;
+        color: #000;
+      }
+
+      &:focus {
+        outline: solid 1px #000;
+        outline-offset: -2px;
+      }
     }
   }
 }

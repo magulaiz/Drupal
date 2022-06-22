@@ -48,22 +48,22 @@
     background-repeat: no-repeat;
     background-position: center center;
 
-    &:hover{
+    &:hover {
       border: 3px solid #fff;
       background-image: url(../../../icons/ffffff/ex.svg);
     }
 
     &:focus {
-      outline: solid 2px currentColor;
+      outline: solid 2px #fff;
       outline-offset: 2px;
     }
 
     @media (forced-colors: active) {
+      background-color: buttonText;
       background-image: none;
       mask-image: url(../../../icons/bebebe/ex.svg);
       mask-repeat: no-repeat;
       mask-position: center center;
-      background-color: buttonText;
     }
   }
 

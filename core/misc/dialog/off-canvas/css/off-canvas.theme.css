@@ -80,7 +80,7 @@
     }
 
 .ui-dialog.ui-dialog-off-canvas .ui-dialog-titlebar-close:focus {
-      outline: solid 2px currentColor;
+      outline: solid 2px #fff;
       outline-offset: 2px;
     }
 

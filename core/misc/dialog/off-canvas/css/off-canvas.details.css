@@ -44,6 +44,9 @@
     #drupal-off-canvas summary:focus {
       background-color: #222;
     }
+#drupal-off-canvas summary:focus {
+      outline-offset: -4px; /* Ensure focus doesn't get cut off. */
+    }
 #drupal-off-canvas details[open] {
     padding-bottom: 0.625rem
   }

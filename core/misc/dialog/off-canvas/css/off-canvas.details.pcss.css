@@ -44,6 +44,10 @@
     &:focus {
       background-color: #222;
     }
+
+    &:focus {
+      outline-offset: -4px; /* Ensure focus doesn't get cut off. */
+    }
   }
 
   & details[open] {
