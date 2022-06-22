@@ -11,10 +11,10 @@
   & td,
   & th {
     padding: 2px 8px;
+    text-align: start;
     vertical-align: middle;
     border-bottom: 1px solid #777;
     background-color: transparent;
-    text-align: start;
   }
 
   & th {

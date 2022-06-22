@@ -27,17 +27,17 @@
 
   & a.tabledrag-handle:after {
     display: block;
-    content: "";
     width: 20px;
     height: 20px;
     margin: 0;
     padding: 0;
+    content: "";
+    cursor: move;
     background-color: transparent;
     /* Use lighter drag icon against dark background. */
     background-image: url(../icons/bebebe/move.svg);
     background-repeat: no-repeat;
     background-position: center;
-    cursor: move;
   }
 
   & .draggable a.tabledrag-handle:hover:after,
@@ -75,20 +75,6 @@
     font-size: 14px;
   }
 
-  @nest .touchevents & .draggable td {
-    padding: 0 10px;
-  }
-
-  @nest .touchevents & .draggable .menu-item__link {
-    display: inline-block;
-    padding: 10px 0;
-  }
-
-  @nest .touchevents & a.tabledrag-handle {
-    width: 40px;
-    height: 44px;
-  }
-
   & .tabledrag-toggle-weight-wrapper {
     padding-top: 10px;
     text-align: end;
@@ -102,5 +88,19 @@
     margin-inline: -10px 3px;
     padding: 0;
     padding-inline-start: 10px;
+  }
+
+  @nest .touchevents & .draggable td {
+    padding: 0 10px;
+  }
+
+  @nest .touchevents & .draggable .menu-item__link {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  @nest .touchevents & a.tabledrag-handle {
+    width: 40px;
+    height: 44px;
   }
 }

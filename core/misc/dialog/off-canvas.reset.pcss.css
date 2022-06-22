@@ -18,30 +18,30 @@
     -webkit-font-smoothing: antialiased;
   }
 
-    /* Classes for hidden and visually hidden elements. See hidden.module.css. */
-    & .hidden {
-      display: none;
-    }
+  /* Classes for hidden and visually hidden elements. See hidden.module.css. */
+  & .hidden {
+    display: none;
+  }
 
-    & .visually-hidden {
-      position: absolute !important;
-      overflow: hidden;
-      clip: rect(1px, 1px, 1px, 1px);
-      width: 1px;
-      height: 1px;
-      word-wrap: normal;
-    }
+  & .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    word-wrap: normal;
+  }
 
-    & .visually-hidden.focusable:active,
-    & .visually-hidden.focusable:focus {
-      position: static !important;
-      overflow: visible;
-      clip: auto;
-      width: auto;
-      height: auto;
-    }
+  & .visually-hidden.focusable:active,
+  & .visually-hidden.focusable:focus {
+    position: static !important;
+    overflow: visible;
+    clip: auto;
+    width: auto;
+    height: auto;
+  }
 
-    & .invisible {
-      visibility: hidden;
-    }
+  & .invisible {
+    visibility: hidden;
+  }
 }

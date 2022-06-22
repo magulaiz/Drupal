@@ -5,7 +5,7 @@
  * Note that some of these elements are not nested within #drupal-off-canvas.
  */
 
-/* Style the dialog-off-canvas container. This is the parent container of  #drupal-off-canvas.*/
+/* Style the dialog-off-canvas container. This is the parent container of  #drupal-off-canvas. */
 .ui-dialogX.ui-dialog-off-canvas {
   z-index: 501; /* Layer the dialog just under the toolbar. */
   padding: 0;
@@ -56,15 +56,15 @@
   }
 
   & .ui-dialog-title {
-    inset: inline-end;
     max-width: 210px; /* Ensure that long titles do not overlap the close button. */
     margin: 0;
-    padding-inline-end: 0; /* LTR */
     padding-inline-start: 30px; /* Push the text away from the icon. */
+    padding-inline-end: 0; /* LTR */
     text-align: start;
     white-space: normal; /* Ensure that long titles are not truncated. */
     font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
     font-size: 16px;
+    inset: inline-end;
 
     &:before {
       position: absolute;

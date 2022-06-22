@@ -35,7 +35,7 @@
   * Style dropbutton single.
   */
   & .dropbutton-single .dropbutton-action {
-   & a {
+    & a {
       height: 2.2em;
       /* Overlap icon for trigger. */
       margin-top: -2em;
@@ -164,7 +164,7 @@
     text-shadow: none;
   }
 
- /*
+  /*
   * Dropbuttons when in a table cell.
   */
   & td {
@@ -199,7 +199,6 @@
       padding: 0;
       background: #277abd none;
     }
-
 
     /* Push the wrapper to the right edge of the td. */
     & .dropbutton-single,
