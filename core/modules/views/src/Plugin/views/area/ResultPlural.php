@@ -40,7 +40,7 @@ class ResultPlural extends Result {
       '@start',
       '@end',
       '@total',
-      '@name',
+      '@label',
       '@per_page',
       '@current_page',
       '@current_record_count',
@@ -57,7 +57,7 @@ class ResultPlural extends Result {
       '#type' => 'select',
       '#title' => $this->t('Count token'),
       '#description' => $this->t('Token used to detect plurality. If the token value is more than one, the "Plural form" textarea will be used.'),
-      '#default_value' => (isset($this->options['plural_count_token']) ? $this->options['plural_count_token'] : ''),
+      '#default_value' => ($this->options['plural_count_token'] ?? ''),
       '#options' => array_combine($format_plural_count_options, $format_plural_count_options),
     ];
     $form['content_plural'] = [
