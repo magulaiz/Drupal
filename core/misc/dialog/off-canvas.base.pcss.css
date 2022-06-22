@@ -93,12 +93,6 @@
     animation: spin 1s ease-in-out infinite;
   }
 
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   /* Some system classes. See system.admin.css. */
   & .panel {
     padding: 5px 5px 15px;

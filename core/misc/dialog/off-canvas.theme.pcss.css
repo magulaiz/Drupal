@@ -1,0 +1,97 @@
+/**
+ * @file
+ * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
+ *
+ * Note that some of these elements are not nested within #drupal-off-canvas.
+ */
+
+/* Style the dialog-off-canvas container. This is the parent container of  #drupal-off-canvas.*/
+.ui-dialogX.ui-dialog-off-canvas {
+  z-index: 501; /* Layer the dialog just under the toolbar. */
+  padding: 0;
+  color: #ddd;
+  border-radius: 0;
+  background: #444;
+  box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.3333);
+
+  /* Additional specificity needed. */
+  &.ui-widget {
+    border: 1px solid transparent;
+  }
+
+  /* Style the off-canvas dialog header. This is not nested within #drupal-off-canvas. */
+  & .ui-dialog-titlebar {
+    padding: 1em;
+    color: #fff;
+    border: 0;
+    border-bottom: 1px solid #000;
+    border-radius: 0;
+    background: #2d2d2d;
+    font-weight: normal;
+  }
+
+  /* Hide the default jQuery UI dialog close button. */
+  & .ui-dialog-titlebar-close .ui-icon {
+    visibility: hidden;
+  }
+
+  & .ui-dialog-titlebar-close {
+    position: absolute;
+    top: calc(50% - 6px);
+    inset-inline-end: 1em;
+    width: 30px;
+    height: 30px;
+    transition: all 0.5s ease;
+    border: 3px solid transparent;
+    background-color: transparent;
+    background-image: url(../icons/bebebe/ex.svg);
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  & .ui-dialog-titlebar-close:hover,
+  & .ui-dialog-titlebar-close:focus {
+    border: 3px solid #fff;
+    background-image: url(../icons/ffffff/ex.svg);
+  }
+
+  & .ui-dialog-title {
+    inset: inline-end;
+    max-width: 210px; /* Ensure that long titles do not overlap the close button. */
+    margin: 0;
+    padding-inline-end: 0; /* LTR */
+    padding-inline-start: 30px; /* Push the text away from the icon. */
+    text-align: start;
+    white-space: normal; /* Ensure that long titles are not truncated. */
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
+    font-size: 16px;
+
+    &:before {
+      position: absolute;
+      top: 0;
+      inset-inline-start: 1em;
+      display: block;
+      width: 20px;
+      height: 100%;
+      content: "";
+      background: transparent url(../icons/ffffff/pencil.svg) no-repeat scroll center center;
+      background-size: 100% auto;
+    }
+  }
+}
+
+/* Override default styling from jQuery UI. */
+#drupal-off-canvas {
+  & .ui-state-default,
+  & .ui-widget-content .ui-state-default,
+  & .ui-widget-header .ui-state-default {
+    color: #333;
+    border: 0;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  & .ui-widget-content a {
+    color: #85bef4;
+  }
+}

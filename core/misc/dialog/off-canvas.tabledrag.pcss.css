@@ -1,0 +1,106 @@
+/**
+ * @file
+ * Table drag behavior for off-canvas dialog.
+ *
+ * @see tabledrag.js
+ */
+#drupal-off-canvas {
+  & .drag {
+    cursor: move;
+  }
+
+  & tr.region-title {
+    font-weight: normal;
+  }
+
+  & table .region-message {
+    color: #fff;
+  }
+
+  & table .region-populated {
+    display: none;
+  }
+
+  & .add-new .tabledrag-changed {
+    display: none;
+  }
+
+  & a.tabledrag-handle:after {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    /* Use lighter drag icon against dark background. */
+    background-image: url(../icons/bebebe/move.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: move;
+  }
+
+  & .draggable a.tabledrag-handle:hover:after,
+  & .draggable a.tabledrag-handle:focus:after {
+    text-decoration: none;
+    background-image: url(../icons/787878/move.svg);
+  }
+
+  & tr td {
+    transition: background 0.3s ease;
+
+    & abbr {
+      margin-inline: 0 5px;
+    }
+  }
+
+  & tr:hover td {
+    background: #222;
+  }
+
+  & tr.drag td {
+    background: #111;
+  }
+
+  & tr.drag-previous td {
+    background: #000;
+  }
+
+  & tr.drag-previous:hover td {
+    background: #222;
+  }
+
+  & .tabledrag-changed-warning {
+    margin-bottom: 0.5em;
+    font-size: 14px;
+  }
+
+  @nest .touchevents & .draggable td {
+    padding: 0 10px;
+  }
+
+  @nest .touchevents & .draggable .menu-item__link {
+    display: inline-block;
+    padding: 10px 0;
+  }
+
+  @nest .touchevents & a.tabledrag-handle {
+    width: 40px;
+    height: 44px;
+  }
+
+  & .tabledrag-toggle-weight-wrapper {
+    padding-top: 10px;
+    text-align: end;
+  }
+
+  & .indentation {
+    inset: start;
+    width: auto;
+    height: auto;
+    margin-block: 0;
+    margin-inline: -10px 3px;
+    padding: 0;
+    padding-inline-start: 10px;
+  }
+}

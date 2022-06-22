@@ -1,0 +1,69 @@
+/**
+ * @file
+ * Visual styling for summary and details in the off-canvas dialog.
+ */
+#drupal-off-canvas {
+  & details {
+    display: block;
+  }
+
+  & details,
+  & summary,
+  & .ui-dialog-content {
+    color: #ddd;
+    background: #474747;
+  }
+
+  & summary a {
+    padding-top: 0;
+    padding-bottom: 0;
+    color: #ddd;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+    }
+  }
+
+  & details,
+  & summary,
+  & .details-wrapper {
+    /* Cancel out the padding of the parent. */
+    margin: 0 -20px;
+    padding: 0 20px;
+    border-width: 0;
+  }
+
+  & summary {
+    padding: 10px 20px;
+    transition: all 0.5s ease;
+    text-shadow: none;
+    font-size: 14px;
+
+    &:hover,
+    &:focus {
+      background-color: #222;
+    }
+  }
+
+  & details[open] {
+    padding-bottom: 10px;
+
+    & > summary {
+      color: #eee;
+      background-color: #333;
+    }
+
+    & > summary:hover {
+      color: #fff;
+      background-color: #222;
+    }
+  }
+
+  & details .placeholder {
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    font-style: italic;
+  }
+}
