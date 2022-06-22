@@ -1,0 +1,61 @@
+/**
+ * @file
+ * Visual styling for forms in the off-canvas dialog.
+ */
+
+
+ /*
+  @todo
+  autocomplete
+
+ */
+
+#drupal-off-canvas {
+  & .ck-content {
+    color: black;
+  }
+
+  & .form-item {
+    padding: 8px 0;
+  }
+
+  & .form-item.form-type-boolean {
+    padding: 4px 0;
+  }
+
+  & .description,
+  & .form-item__description {
+    margin: 4px 0;
+    font-size: 12px;;
+  }
+
+  & .form-required:after {
+    content: "*";
+  }
+
+  & .fieldset {
+    margin: 16px 0;
+    padding: 8px;
+  }
+
+  & .fieldset__legend {
+    display: contents;
+    font-weight: bold;
+  }
+
+  & :is(.fieldset, .draggable-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+    width: 100%;
+  }
+
+  & input,
+  & textarea {
+    font-family: inherit;
+  }
+
+  & input:where(:not([type="submit"], [type="checkbox"], [type="radio"])),
+  & select,
+  & textarea {
+    max-width: 100%;
+    padding: 8px
+  }
+}
