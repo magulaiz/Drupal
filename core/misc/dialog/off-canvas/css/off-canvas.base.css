@@ -93,14 +93,14 @@
    * Throbber for ajax actions.
    */
 
-   .throbber {
+  .throbber {
     display: inline-block;
     width: 3.125rem;
     height: 3.125rem;
-    border: 3px solid var(--off-canvas-border-color);
-    border-radius: 50%;
-    border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
+    border: 3px solid var(--off-canvas-border-color);
+    border-top-color: #fff;
+    border-radius: 50%;
   }
 
   /* Some system classes. See system.admin.css. */
@@ -141,8 +141,8 @@
 
 #drupal-off-canvas .messages {
     padding: 0.5rem; /* Room for icon. */
-    background: no-repeat 0.625rem 1.0625rem;
-    border: solid 1px transparent
+    border: solid 1px transparent;
+    background: no-repeat 0.625rem 1.0625rem
   }
 
 [dir="rtl"] #drupal-off-canvas .messages {
@@ -184,8 +184,8 @@
     }
 
 #drupal-off-canvas .messages abbr {
-    color: #444;
     text-decoration: none;
+    color: #444;
   }
 
 #drupal-off-canvas .messages--status {

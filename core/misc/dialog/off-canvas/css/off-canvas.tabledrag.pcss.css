@@ -35,7 +35,7 @@
     cursor: move;
     background-color: transparent;
     /* Use lighter drag icon against dark background. */
-    background-image: url(../icons/bebebe/move.svg);
+    background-image: url(../../../icons/bebebe/move.svg);
     background-repeat: no-repeat;
     background-position: center;
   }
@@ -43,7 +43,7 @@
   & .draggable a.tabledrag-handle:hover:after,
   & .draggable a.tabledrag-handle:focus:after {
     text-decoration: none;
-    background-image: url(../icons/787878/move.svg);
+    background-image: url(../../../icons/787878/move.svg);
   }
 
   & tr td {

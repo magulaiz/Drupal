@@ -161,19 +161,19 @@
   & .messages--status {
     color: #325e1c;
     background-color: #f3faef;
-    background-image: url(../icons/73b355/check.svg);
+    background-image: url(../../../icons/73b355/check.svg);
   }
 
   & .messages--warning {
     color: #734c00;
     background-color: #fdf8ed;
-    background-image: url(../icons/e29700/warning.svg);
+    background-image: url(../../../icons/e29700/warning.svg);
   }
 
   & .messages--error {
     color: #a51b00;
     background-color: #fcf4f2;
-    background-image: url(../icons/e32700/error.svg);
+    background-image: url(../../../icons/e32700/error.svg);
   }
 
   & .messages--error div[role="alert"] {
