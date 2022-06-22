@@ -71,7 +71,7 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-#drupal-off-canvas ul {
+#drupal-off-canvas ul:where(:not(.messages__list)) {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -148,15 +148,40 @@
 }
 
 #drupal-off-canvas .messages {
-    background: no-repeat 0.625rem 1.0625rem
+    padding: 1rem 0.5rem;
+    background: no-repeat 0.625rem 1.0625rem;
+    border: solid 1px transparent
   }
 
 [dir="rtl"] #drupal-off-canvas .messages {
       background-position: right 10px top 17px;
     }
 
+#drupal-off-canvas .messages__container {
+    display: flex;
+    flex-wrap: wrap;
+    grid-gap: 0.625rem;
+  }
+
+[dir="ltr"] #drupal-off-canvas .messages__list {
+    padding-left: 1.25rem
+}
+
+[dir="rtl"] #drupal-off-canvas .messages__list {
+    padding-right: 1.25rem
+}
+
+#drupal-off-canvas .messages__list {
+    margin: 0
+  }
+
+#drupal-off-canvas .messages__list li {
+      border: 0;
+    }
+
 #drupal-off-canvas .messages abbr {
     color: #444;
+    text-decoration: none;
   }
 
 #drupal-off-canvas .messages--status {
@@ -174,10 +199,20 @@
 #drupal-off-canvas .messages--error {
     color: #a51b00;
     background-color: #fcf4f2;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e32700'%3e%3cpath d='M8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm4.025 9.284c.062.063.1.149.1.239 0 .091-.037.177-.1.24l-1.262 1.262c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-2.283-2.283-2.286 2.283c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-1.261-1.262c-.063-.062-.1-.148-.1-.24 0-.088.036-.176.1-.238l2.283-2.285-2.283-2.284c-.063-.064-.1-.15-.1-.24s.036-.176.1-.24l1.262-1.262c.063-.063.149-.1.24-.1.089 0 .176.036.24.1l2.285 2.284 2.283-2.284c.064-.063.15-.1.24-.1s.176.036.24.1l1.262 1.262c.062.063.1.149.1.24 0 .089-.037.176-.1.24l-2.283 2.284 2.283 2.284z'/%3e%3c/svg%3e");
   }
 
 #drupal-off-canvas .messages--error div[role="alert"] {
     color: inherit;
     background: transparent;
+  }
+
+[dir="ltr"] #drupal-off-canvas .tabledrag-changed-warning {
+    padding-left: 2.5rem
+}
+
+[dir="rtl"] #drupal-off-canvas .tabledrag-changed-warning {
+    padding-right: 2.5rem
+}
+
+#drupal-off-canvas .tabledrag-changed-warning { /* Room for icon. */
   }

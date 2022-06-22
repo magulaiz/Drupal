@@ -20,25 +20,12 @@
 #drupal-off-canvas .add-new .tabledrag-changed {
   display: none;
 }
-#drupal-off-canvas .draggable a.tabledrag-handle {
-  float: left; /* LTR */
-  overflow: hidden;
-  min-width: 20px;
-  height: auto;
-  margin: 0 5px 0 0;
-  padding: 0;
-  cursor: move;
-  text-decoration: none;
-  background-image: none;
-}
-[dir="rtl"] #drupal-off-canvas .draggable a.tabledrag-handle {
-  float: right;
-  margin-right: 0;
-  margin-left: 5px;
-}
-#drupal-off-canvas a.tabledrag-handle .handle {
-  width: auto;
-  height: auto;
+
+#drupal-off-canvas a.tabledrag-handle:after {
+  display: block;
+  content: "";
+  width: 20px;
+  height: 20px;
   margin: 0;
   padding: 0;
   background-color: transparent;
@@ -46,18 +33,15 @@
   background-image: url(../icons/bebebe/move.svg);
   background-repeat: no-repeat;
   background-position: center;
+  cursor: move;
 }
-#drupal-off-canvas .draggable a.tabledrag-handle:hover .handle,
-#drupal-off-canvas .draggable a.tabledrag-handle:focus .handle {
+#drupal-off-canvas .draggable a.tabledrag-handle:hover:after,
+#drupal-off-canvas .draggable a.tabledrag-handle:focus:after {
   text-decoration: none;
   background-image: url(../icons/787878/move.svg);
 }
 #drupal-off-canvas tr td {
   transition: background 0.3s ease;
-}
-
-#drupal-off-canvas tr td abbr {
-  margin-left: 5px; /* LTR */
 }
 
 [dir="rtl"] #drupal-off-canvas tr td abbr {

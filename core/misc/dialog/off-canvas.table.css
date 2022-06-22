@@ -3,38 +3,13 @@
  * Visual styling for tables in the off-canvas dialog.
  */
 
-#drupal-off-canvas table * {
-  font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
-}
-#drupal-off-canvas table {
-  display: table;
+
+#drupal-off-canvas .draggable-table {
   width: 100%;
-  min-width: calc(100% + 40px);
-  /* Cancel out the padding of the parent to make the table full width. */
-  margin: 0 -20px -10px -20px;
-  color: #ddd;
-  border: 0;
-  border-collapse: collapse;
-  font-size: 12px;
-}
-#drupal-off-canvas table thead {
-  display: table-header-group;
-}
-#drupal-off-canvas table tbody {
-  display: table-row-group;
-}
-#drupal-off-canvas tr {
-  display: table-row;
-}
-#drupal-off-canvas tr:hover td {
-  background-color: transparent;
 }
 
 #drupal-off-canvas td,
 #drupal-off-canvas th {
-  display: table-cell;
-  width: auto;
-  height: auto;
   padding: 2px 8px;
   vertical-align: middle;
   border-bottom: 1px solid #777;
@@ -58,10 +33,6 @@
   display: inline;
   width: auto;
 }
-#drupal-off-canvas th:first-child,
-#drupal-off-canvas td:first-child {
-  width: 150px;
-}
 /* For lack of a better class, using this to grab the operations th. */
 #drupal-off-canvas .tabledrag-has-colspan {
   padding-right: 20px;
@@ -78,12 +49,4 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   background: transparent;
-}
-#drupal-off-canvas tr td:first-child,
-#drupal-off-canvas tr th:first-child {
-  padding-left: 20px; /* LTR */
-}
-[dir="rtl"] #drupal-off-canvas tr td:first-child,
-[dir="rtl"] #drupal-off-canvas tr th:first-child {
-  padding-right: 20px;
 }

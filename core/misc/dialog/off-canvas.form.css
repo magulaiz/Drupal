@@ -3,6 +3,13 @@
  * Visual styling for forms in the off-canvas dialog.
  */
 
+
+ /*
+  @todo
+  autocomplete
+
+ */
+
 #drupal-off-canvas .ck-content {
   color: black;
 }
@@ -21,6 +28,10 @@
   font-size: 12px;;
 }
 
+#drupal-off-canvas .form-required:after {
+  content: "*";
+}
+
 #drupal-off-canvas .fieldset {
   margin: 16px 0;
   padding: 8px;
@@ -31,7 +42,7 @@
   font-weight: bold;
 }
 
-#drupal-off-canvas .fieldset input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
+#drupal-off-canvas :is(.fieldset, .draggable-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
   width: 100%;
 }
 
@@ -41,7 +52,8 @@
 }
 
 #drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])),
-#drupal-off-canvas select {
+#drupal-off-canvas select,
+#drupal-off-canvas textarea {
   max-width: 100%;
   padding: 8px
 }

@@ -63,7 +63,7 @@
     margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
-  & ul {
+  & ul:where(:not(.messages__list)) {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -128,15 +128,33 @@
 
   /* Message styles */
   & .messages {
+    padding: 16px 8px;
     background: no-repeat 10px 17px;
+    border: solid 1px transparent;
 
     &:dir(rtl) {
       background-position: right 10px top 17px;
     }
   }
 
+  & .messages__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  & .messages__list {
+    margin: 0;
+    padding-inline-start: 20px;
+
+    & li {
+      border: 0;
+    }
+  }
+
   & .messages abbr {
     color: #444;
+    text-decoration: none;
   }
 
   & .messages--status {
@@ -154,11 +172,14 @@
   & .messages--error {
     color: #a51b00;
     background-color: #fcf4f2;
-    background-image: url(../icons/e32700/error.svg);
   }
 
   & .messages--error div[role="alert"] {
     color: inherit;
     background: transparent;
+  }
+
+  & .tabledrag-changed-warning {
+    padding-inline-start: 40px; /* Room for icon. */
   }
 }
