@@ -724,20 +724,56 @@ class ConfigImporterTest extends KernelTestBase {
     $extensions['profile'] = 'this_will_not_work';
     $sync->write('core.extension', $extensions);
 
+    // Set the install profile of the TargetSource.
+    $target_source = $this->container->get('config.storage');
+    $extensions_target = $target_source->read('core.extension');
+    $extensions_target['profile'] = 'this_will_not_work2';
+    $target_source->write('core.extension', $extensions_target);
+
     $config_importer = $this->configImporter();
     try {
       $config_importer->import();
       $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
     }
     catch (ConfigImporterException $e) {
-      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.';
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Cannot change the install profile from <em class="placeholder">this_will_not_work2</em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.';
       $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
       $error_log = $config_importer->getErrors();
       // Install profiles can not be changed. Note that KernelTestBase currently
-      // does not use an install profile. This situation should be impossible
-      // to get in but site's can removed the install profile setting from
-      // settings.php so the test is valid.
-      $this->assertEquals(['Cannot change the install profile from <em class="placeholder"></em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
+      // does not use an install profile. This situation should not be possible,
+      // but a site can remove its install profile setting from settings.php,
+      // so the test is valid.
+      $this->assertEquals(['Cannot change the install profile from <em class="placeholder">this_will_not_work2</em> to <em class="placeholder">this_will_not_work</em> once Drupal is installed.'], $error_log);
+    }
+  }
+
+  /**
+   * Tests install profile validation during configuration import.
+   *
+   * @see \Drupal\Core\EventSubscriber\ConfigImportSubscriber
+   */
+  public function testInstallProfileEmpty() {
+    $sync = $this->container->get('config.storage.sync');
+
+    $extensions = $sync->read('core.extension');
+    // Change the install profile.
+    $extensions['profile'] = NULL;
+    $sync->write('core.extension', $extensions);
+
+    $config_importer = $this->configImporter();
+    try {
+      $config_importer->import();
+      $this->fail('ConfigImporterException not thrown; an invalid import was not stopped due to missing dependencies.');
+    }
+    catch (ConfigImporterException $e) {
+      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Cannot change the install profile to <em class="placeholder"></em> once Drupal is installed.';
+      $this->assertEquals($expected, $e->getMessage(), 'There were errors validating the config synchronization.');
+      $error_log = $config_importer->getErrors();
+      // Install profiles can not be changed. Note that KernelTestBase currently
+      // does not use an install profile. This situation should not be possible,
+      // but a site can remove its install profile setting from settings.php,
+      // so the test is valid.
+      $this->assertEquals(['Cannot change the install profile to <em class="placeholder"></em> once Drupal is installed.'], $error_log);
     }
   }
 
