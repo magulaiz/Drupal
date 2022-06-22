@@ -133,22 +133,20 @@
     content: "]";
   }
 
-#drupal-off-canvas {
-
-  /* Override jQuery UI */
-}
-
 #drupal-off-canvas .ui-widget-content a {
     color: var(--off-canvas-link-color) !important;
   }
 
-#drupal-off-canvas {
+[dir="ltr"] #drupal-off-canvas .messages {
+    padding-left: 2.5rem
+}
 
-  /* Message styles */
+[dir="rtl"] #drupal-off-canvas .messages {
+    padding-right: 2.5rem
 }
 
 #drupal-off-canvas .messages {
-    padding: 1rem 0.5rem;
+    padding: 0.5rem; /* Room for icon. */
     background: no-repeat 0.625rem 1.0625rem;
     border: solid 1px transparent
   }
@@ -156,6 +154,18 @@
 [dir="rtl"] #drupal-off-canvas .messages {
       background-position: right 10px top 17px;
     }
+
+#drupal-off-canvas {
+
+  /*
+   * Some themes (Olivero) insert a SVG icon. We use a background icon, so we
+   * need to remove this.
+   */
+}
+
+#drupal-off-canvas .messages__icon {
+    display: none;
+  }
 
 #drupal-off-canvas .messages__container {
     display: flex;
@@ -199,20 +209,10 @@
 #drupal-off-canvas .messages--error {
     color: #a51b00;
     background-color: #fcf4f2;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e32700'%3e%3cpath d='M8.002 1c-3.868 0-7.002 3.134-7.002 7s3.134 7 7.002 7c3.865 0 7-3.134 7-7s-3.135-7-7-7zm4.025 9.284c.062.063.1.149.1.239 0 .091-.037.177-.1.24l-1.262 1.262c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-2.283-2.283-2.286 2.283c-.064.062-.15.1-.24.1s-.176-.036-.24-.1l-1.261-1.262c-.063-.062-.1-.148-.1-.24 0-.088.036-.176.1-.238l2.283-2.285-2.283-2.284c-.063-.064-.1-.15-.1-.24s.036-.176.1-.24l1.262-1.262c.063-.063.149-.1.24-.1.089 0 .176.036.24.1l2.285 2.284 2.283-2.284c.064-.063.15-.1.24-.1s.176.036.24.1l1.262 1.262c.062.063.1.149.1.24 0 .089-.037.176-.1.24l-2.283 2.284 2.283 2.284z'/%3e%3c/svg%3e");
   }
 
 #drupal-off-canvas .messages--error div[role="alert"] {
     color: inherit;
     background: transparent;
-  }
-
-[dir="ltr"] #drupal-off-canvas .tabledrag-changed-warning {
-    padding-left: 2.5rem
-}
-
-[dir="rtl"] #drupal-off-canvas .tabledrag-changed-warning {
-    padding-right: 2.5rem
-}
-
-#drupal-off-canvas .tabledrag-changed-warning { /* Room for icon. */
   }

@@ -121,20 +121,27 @@
     content: "]";
   }
 
-  /* Override jQuery UI */
   & .ui-widget-content a {
     color: var(--off-canvas-link-color) !important;
   }
 
-  /* Message styles */
   & .messages {
-    padding: 16px 8px;
+    padding: 8px;
+    padding-inline-start: 40px; /* Room for icon. */
     background: no-repeat 10px 17px;
     border: solid 1px transparent;
 
     &:dir(rtl) {
       background-position: right 10px top 17px;
     }
+  }
+
+  /*
+   * Some themes (Olivero) insert a SVG icon. We use a background icon, so we
+   * need to remove this.
+   */
+  & .messages__icon {
+    display: none;
   }
 
   & .messages__container {
@@ -172,14 +179,11 @@
   & .messages--error {
     color: #a51b00;
     background-color: #fcf4f2;
+    background-image: url(../icons/e32700/error.svg);
   }
 
   & .messages--error div[role="alert"] {
     color: inherit;
     background: transparent;
-  }
-
-  & .tabledrag-changed-warning {
-    padding-inline-start: 40px; /* Room for icon. */
   }
 }
