@@ -4,6 +4,7 @@
  */
 
 #drupal-off-canvas {
+  --off-canvas-padding: 20px;
   --off-canvas-background-color: #444;
   --off-canvas-text-color: #ddd;
   --off-canvas-link-color: #85bef4; /* @todo this is inaccessible. */
@@ -13,6 +14,7 @@
   --off-canvas-focus-outline-width: 2px;
   --off-canvas-focus-outline-color: #fff;
 
+  padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
   background: var(--off-canvas-background-color);
 
@@ -90,7 +92,6 @@
   /**
    * Throbber for ajax actions.
    */
-
   .throbber {
     display: inline-block;
     width: 50px;
@@ -135,10 +136,11 @@
   }
 
   /*
-   * Some themes (Olivero) insert a SVG icon. We use a background icon, so we
+   * Some themes (Olivero) insert SVG icon. We use a background icon, so we
    * need to remove this.
    */
-  & .messages__icon {
+  & .messages__icon,
+  & .messages__close {
     display: none;
   }
 
