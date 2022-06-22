@@ -180,8 +180,8 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    *
    * This method should be implemented in extending classes.
    */
-  private function updateEntity(EntityInterface $entity, Row $row) {
-    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  protected function updateEntity(EntityInterface $entity, Row $row) {
+    throw new \RuntimeException(get_class() . '::updateEntity() not implemented.');
   }
 
   /**
@@ -189,8 +189,8 @@ abstract class Entity extends DestinationBase implements ContainerFactoryPluginI
    *
    * This method should be implemented in extending classes.
    */
-  private function processStubRow(Row $row) {
-    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  protected function processStubRow(Row $row) {
+    throw new \RuntimeException(get_class() . '::processStubRow() not implemented.');
   }
 
   /**

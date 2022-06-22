@@ -106,8 +106,8 @@ abstract class PluginManagerBase implements PluginManagerInterface {
    * This method should be implemented in extending classes that also implement
    * FallbackPluginManagerInterface.
    */
-  private function getFallbackPluginId(string $plugin_id, array $configuration = []): string {
-    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  protected function getFallbackPluginId($plugin_id, array $configuration = []) {
+    throw new \RuntimeException(get_class() . '::getFallbackPluginId() not implemented.');
   }
 
   /**
