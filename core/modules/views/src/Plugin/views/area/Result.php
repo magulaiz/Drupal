@@ -54,6 +54,7 @@ class Result extends AreaPluginBase {
         '@start -- the initial record number in the set',
         '@end -- the last record number in the set',
         '@total -- the total records in the set',
+        '@total_format -- the total records in the set (number formatted)',
         '@label -- the human-readable name of the view',
         '@per_page -- the number of items per page',
         '@current_page -- the current page number',
@@ -138,6 +139,7 @@ class Result extends AreaPluginBase {
     $this->replacements['@start'] = $start;
     $this->replacements['@end'] = $end;
     $this->replacements['@total'] = $this->total;
+    $this->replacements['@total_format'] = number_format($this->total, '.', ',');
     $this->replacements['@label'] = $label;
     $this->replacements['@per_page'] = $per_page;
     $this->replacements['@current_page'] = $current_page;
