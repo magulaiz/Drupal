@@ -390,7 +390,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willReturn(FALSE)
       ->shouldBeCalled();
     $this->cacheBackend->set('entity_base_field_definitions:test_entity_type:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function (array $args) use($cacheBackend) {
+      ->will(function (array $args) use ($cacheBackend) {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_base_field_definitions:test_entity_type:en')
           ->willReturn($data)
@@ -421,7 +421,7 @@ class EntityFieldManagerTest extends UnitTestCase {
       ->willReturn(FALSE)
       ->shouldBeCalledTimes(1);
     $this->cacheBackend->set('entity_bundle_field_definitions:test_entity_type:test_bundle:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_field_info'])
-      ->will(function (array $args) use($cacheBackend) {
+      ->will(function (array $args) use ($cacheBackend) {
         $data = (object) ['data' => $args[1]];
         $cacheBackend->get('entity_bundle_field_definitions:test_entity_type:test_bundle:en')
           ->willReturn($data)

@@ -231,7 +231,7 @@ class EntityTypeBundleInfoTest extends UnitTestCase {
     $cacheBackend = $this->cacheBackend;
     $this->cacheBackend->get('entity_bundle_info:en')->willReturn(FALSE);
     $this->cacheBackend->set('entity_bundle_info:en', Argument::any(), Cache::PERMANENT, ['entity_types', 'entity_bundles'])
-      ->will(function () use($cacheBackend) {
+      ->will(function () use ($cacheBackend) {
         $cacheBackend->get('entity_bundle_info:en')
           ->willReturn((object) ['data' => 'cached data'])
           ->shouldBeCalled();
