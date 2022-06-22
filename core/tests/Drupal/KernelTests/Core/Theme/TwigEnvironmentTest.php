@@ -281,11 +281,11 @@ TWIG;
 
     // The cache prefix should not have been changed, as this is stored in
     // state and thus shared between all (web)servers.
-    $this->assertEqual(count(array_unique($cache_prefixes)), 1);
+    $this->assertEquals(count(array_unique($cache_prefixes)), 1);
 
     // This also applies to twig's file cache resulting in an unlimited growth
     // of the cache storage directory.
-    $this->assertEqual(count(array_unique($cache_filenames)), 1);
+    $this->assertEquals(count(array_unique($cache_filenames)), 1);
   }
 
 }
