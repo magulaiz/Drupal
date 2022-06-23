@@ -31,8 +31,6 @@ andif
 annot
 anonyme
 anothermodule
-anotherwordenglish
-anotherwordgerman
 antilop
 anyall
 applix
@@ -49,7 +47,6 @@ arrowstop
 arrowthick
 arrowthickstop
 arrr
-asdrsad
 assertable
 asterix
 atsign
@@ -94,7 +91,6 @@ bangpow
 barbar
 barchart
 barfoo
-barmm
 barqux
 bartik
 bartik's
@@ -457,6 +453,7 @@ fatals
 favourite
 favstar
 fcgi
+fdiv
 februar
 fetchmode
 fffffg
@@ -488,6 +485,7 @@ fixnull
 flickr
 flipfit
 floatingspace
+fmod
 foaf
 foat
 focusring
@@ -501,7 +499,6 @@ foobarbaz
 foobargorilla
 foobars
 foofoo
-foomm
 foos
 formatless
 formattable
@@ -570,8 +567,8 @@ herpderp
 herro
 heure
 heures
+hexcode
 hidpi
-hilfetestmodul
 hilited
 hinode
 hippopotamidae
@@ -895,15 +892,11 @@ nonconfigurable
 nonexistingfilename
 nonoptional
 nonspacing
-nonwordgerman
-nonworditem
 noquotes
 noschema
 nosniff
 nostart
 notag
-notawordenglish
-notawordgerman
 notexisting
 nothere
 notnull
@@ -1172,7 +1165,6 @@ scorewords
 screenreaders
 scriptable
 scrollbars
-sdeeeee
 searchdirs
 searchfield
 sebe
@@ -1229,7 +1221,6 @@ splitbuttons
 spreadsheetml
 sqlpassword
 sqlusername
-sqruct
 squaresmall
 squiz
 squizlabs
@@ -1578,7 +1569,6 @@ vxezb
 vxfbk
 waitfor
 wcprops
-wcsrefsdf
 webassert
 webcal
 webdriver
@@ -1660,5 +1650,4 @@ zzgroup
 åwesome
 èxample
 über
-übersetzung
 ȅchȏ
