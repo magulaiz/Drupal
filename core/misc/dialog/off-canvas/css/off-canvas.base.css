@@ -112,6 +112,7 @@
     display: inline-block;
     width: 1.25rem;
     height: 1.25rem;
+    /* stylelint-disable-next-line no-unknown-animations */
     animation: spin 1s ease-in-out infinite;
     border: 2px solid var(--off-canvas-border-color);
     border-top-color: #fff;
@@ -170,11 +171,11 @@
 #drupal-off-canvas .messages:before {
       position: absolute;
       top: 50%;
-      transform: translatey(-50%);
       display: block;
       width: 1.25rem;
       height: 1.25rem;
       content: "";
+      transform: translateY(-50%);
       background-repeat: no-repeat;
       background-size: contain
     }

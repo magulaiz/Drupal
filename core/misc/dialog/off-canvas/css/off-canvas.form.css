@@ -101,14 +101,14 @@
 #drupal-off-canvas .ui-autocomplete a {
       display: block;
       padding: 0.5rem;
-      color: #333;
       cursor: pointer;
+      color: #333;
       font-size: 0.875rem /* @todo abstract to variable to keep in sync w form elements. */
     }
 
 #drupal-off-canvas .ui-autocomplete a:hover {
-        background: #eee;
         color: #000;
+        background: #eee;
       }
 
 #drupal-off-canvas .ui-autocomplete a:focus {

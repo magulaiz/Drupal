@@ -83,15 +83,11 @@
 [dir="rtl"] #drupal-off-canvas .button-action:before {
     padding-left: 0.2em
 }
-.no-touchevents #drupal-off-canvas .button--small {
-    padding: 2px 1em;
-    font-size: 0.8125rem
-}
 #drupal-off-canvas button.link {
     display: inline;
-    border: 0;
     transition: color 0.5s ease;
     color: var(--off-canvas-link-color);
+    border: 0;
     background: transparent;
     font-size: var(--off-canvas-button-font-size)
   }
@@ -118,3 +114,7 @@
       cursor: default;
       color: #737373;
     }
+.no-touchevents #drupal-off-canvas .button--small {
+    padding: 2px 1em;
+    font-size: 0.8125rem
+}
