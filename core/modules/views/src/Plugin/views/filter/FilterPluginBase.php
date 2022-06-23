@@ -746,8 +746,8 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
    *
    * This method should be implemented in extending classes.
    */
-  private function operators() {
-    throw new \RuntimeException(__METHOD__ . '() not implemented.');
+  protected function operators() {
+    throw new \RuntimeException(get_class() . '::operators() not implemented.');
   }
 
   /**
