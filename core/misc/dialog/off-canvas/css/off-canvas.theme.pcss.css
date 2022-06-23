@@ -2,10 +2,10 @@
  * @file
  * Styling for the off-canvas ui dialog. Including overrides for jQuery UI.
  *
- * Note that some of these elements are not nested within #drupal-off-canvas.
+ * Note that these elements are not nested within #drupal-off-canvas.
  */
 
-/* Style the dialog-off-canvas container. This is the parent container of  #drupal-off-canvas. */
+/* Style the dialog-off-canvas container. This is the parent container of #drupal-off-canvas. */
 .ui-dialog.ui-dialog-off-canvas {
   z-index: 501; /* Layer the dialog just under the toolbar. */
   padding: 0;
@@ -19,7 +19,7 @@
     border: 1px solid transparent;
   }
 
-  /* Style the off-canvas dialog header. This is not nested within #drupal-off-canvas. */
+  /* Style the off-canvas dialog header. */
   & .ui-dialog-titlebar {
     padding: 1em;
     color: #fff;
@@ -71,7 +71,7 @@
     max-width: 210px; /* Ensure that long titles do not overlap the close button. */
     margin: 0;
     padding-inline-start: 30px; /* Push the text away from the icon. */
-    padding-inline-end: 0; /* LTR */
+    padding-inline-end: 0;
     text-align: start;
     white-space: normal; /* Ensure that long titles are not truncated. */
     font-family: "Lucida Grande", "Lucida Sans Unicode", "liberation sans", sans-serif;
@@ -89,21 +89,5 @@
       background: transparent url(../../../icons/ffffff/pencil.svg) no-repeat scroll center center;
       background-size: 100% auto;
     }
-  }
-}
-
-/* Override default styling from jQuery UI. */
-#drupal-off-canvas {
-  & .ui-state-default,
-  & .ui-widget-content .ui-state-default,
-  & .ui-widget-header .ui-state-default {
-    color: #333;
-    border: 0;
-    font-size: 14px;
-    font-weight: normal;
-  }
-
-  & .ui-widget-content a {
-    color: #85bef4;
   }
 }

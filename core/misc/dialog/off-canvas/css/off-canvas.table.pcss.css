@@ -6,6 +6,7 @@
 #drupal-off-canvas {
   & .draggable-table {
     width: 100%;
+    margin: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
   & td,
@@ -13,8 +14,7 @@
     padding: 2px 8px;
     text-align: start;
     vertical-align: middle;
-    border-bottom: 1px solid #777;
-    background-color: transparent;
+    border-bottom: 1px solid var(--off-canvas-border-color);
   }
 
   & th {
@@ -42,7 +42,7 @@
 
   & td {
     padding: 6px 8px;
-    color: #ddd;
+    color: var(--off-canvas-text-color);
   }
 
   /* Hide overflow with ellipsis for links. */

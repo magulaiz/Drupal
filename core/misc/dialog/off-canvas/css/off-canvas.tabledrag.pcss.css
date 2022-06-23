@@ -38,6 +38,13 @@
     background-image: url(../../../icons/bebebe/move.svg);
     background-repeat: no-repeat;
     background-position: center;
+
+    @media (forced-colors: active) {
+      background: linktext;
+      mask-image: url(../../../icons/bebebe/move.svg);
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
   }
 
   & .draggable a.tabledrag-handle:hover:after,
