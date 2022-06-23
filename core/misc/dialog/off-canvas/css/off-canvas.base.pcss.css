@@ -96,6 +96,7 @@
     display: inline-block;
     width: 20px;
     height: 20px;
+    /* stylelint-disable-next-line no-unknown-animations */
     animation: spin 1s ease-in-out infinite;
     border: 2px solid var(--off-canvas-border-color);
     border-top-color: #fff;
