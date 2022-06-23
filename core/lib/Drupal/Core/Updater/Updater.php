@@ -185,6 +185,16 @@ class Updater {
   }
 
   /**
+   * Returns the path to the default install location for the current project.
+   *
+   * This method should be implemented in extending classes that also implement
+   * UpdaterInterface.
+   */
+  public function getInstallDirectory() {
+    throw new \RuntimeException(get_class() . '::getInstallDirectory() not implemented.');
+  }
+
+  /**
    * Stores the default parameters for the Updater.
    *
    * @param array $overrides
@@ -196,7 +206,7 @@ class Updater {
   protected function getInstallArgs($overrides = []) {
     $args = [
       'make_backup' => FALSE,
-      'install_dir' => $this->source,
+      'install_dir' => $this->getInstallDirectory(),
       'backup_dir'  => $this->getBackupDir(),
     ];
     return array_merge($args, $overrides);
