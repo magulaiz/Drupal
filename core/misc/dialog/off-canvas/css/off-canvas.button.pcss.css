@@ -75,16 +75,11 @@
     padding-inline-end: 0.2em;
   }
 
-  @nest .no-touchevents & .button--small {
-    padding: 2px 1em;
-    font-size: 13px;
-  }
-
   & button.link {
     display: inline;
-    border: 0;
     transition: color 0.5s ease;
     color: var(--off-canvas-link-color);
+    border: 0;
     background: transparent;
     font-size: var(--off-canvas-button-font-size);
 
@@ -114,5 +109,10 @@
       cursor: default;
       color: #737373;
     }
+  }
+
+  @nest .no-touchevents & .button--small {
+    padding: 2px 1em;
+    font-size: 13px;
   }
 }

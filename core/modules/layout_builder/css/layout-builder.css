@@ -146,15 +146,6 @@
 }
 
 #drupal-off-canvas .inline-block-create-button {
-  margin: 0 -20px;
-  background-color: #444;
-}
-
-#drupal-off-canvas .inline-block-create-button:hover {
-  background-color: #333;
-}
-
-#drupal-off-canvas .inline-block-create-button {
   display: block;
   padding: 24px;
   padding-left: 44px;
@@ -167,12 +158,12 @@
 #drupal-off-canvas .inline-block-create-button,
 #drupal-off-canvas .inline-block-list__item {
   margin: 0 -20px;
-  background-color: #444;
+  color: var(--off-canvas-text-color);
 }
 
 #drupal-off-canvas .inline-block-create-button:hover,
 #drupal-off-canvas .inline-block-list__item:hover {
-  background-color: #333;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 #drupal-off-canvas .inline-block-create-button:focus,
@@ -185,8 +176,14 @@
   margin-bottom: 15px;
 }
 
+#drupal-off-canvas .inline-block-list li {
+  position: relative; /* Anchor throbber which gets AJAXed in. */
+}
+
+/* This is the <a> tag. */
 #drupal-off-canvas .inline-block-list__item {
   display: block;
+  flex-grow: 1;
   padding: 15px 0 15px 25px;
 }
 

@@ -133,14 +133,15 @@
 
     &:before {
       position: absolute;
-      top: 20px;
-      inset-inline-start: 10px;
+      top: 50%;
       display: block;
       width: 20px;
       height: 20px;
       content: "";
+      transform: translateY(-50%);
       background-repeat: no-repeat;
       background-size: contain;
+      inset-inline-start: 10px;
 
       @media (forced-colors: active) {
         background: canvastext;

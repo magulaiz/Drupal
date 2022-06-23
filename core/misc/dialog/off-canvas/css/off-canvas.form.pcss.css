@@ -87,13 +87,13 @@
     & a {
       display: block;
       padding: 8px;
-      color: #333;
       cursor: pointer;
+      color: #333;
       font-size: 14px; /* @todo abstract to variable to keep in sync w form elements. */
 
       &:hover {
-        background: #eee;
         color: #000;
+        background: #eee;
       }
 
       &:focus {
