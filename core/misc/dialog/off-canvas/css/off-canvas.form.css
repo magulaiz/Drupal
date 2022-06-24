@@ -10,12 +10,20 @@
  * Visual styling for forms in the off-canvas dialog.
  */
 
+#drupal-off-canvas {
+  --drupal-off-canvas-input-padding: 0.5rem;
+  --drupal-off-canvas-background-color: #fff;
+  --drupal-off-canvas-form-border: solid 1px transparent;
+  --drupal-off-canvas-form-font-size: 0.875rem;
+  --drupal-off-canvas-form-text-color: #333
+}
+
 #drupal-off-canvas .ck-content {
-    color: black;
+    color: var(--drupal-off-canvas-form-text-color);
   }
 
 #drupal-off-canvas .form-item {
-    padding: 0.5rem 0;
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
 #drupal-off-canvas label {
@@ -23,12 +31,12 @@
   }
 
 #drupal-off-canvas .form-item.form-type-boolean {
-    padding: 0.25rem 0;
+    padding: calc(var(--off-canvas-vertical-spacing-unit)*0.5) 0;
   }
 
 #drupal-off-canvas .description,
   #drupal-off-canvas .form-item__description {
-    margin: 0.25rem 0;
+    margin: calc(var(--off-canvas-vertical-spacing-unit)*0.5) 0;
     font-size: 0.75rem;
   }
 
@@ -38,8 +46,8 @@
 
 #drupal-off-canvas fieldset.form-item, 
   #drupal-off-canvas .fieldset {
-    margin: 1rem 0;
-    padding: 0.5rem;
+    margin: calc(var(--off-canvas-vertical-spacing-unit)*2) 0;
+    padding: var(--off-canvas-vertical-spacing-unit);
   }
 
 #drupal-off-canvas legend, 
@@ -54,7 +62,7 @@
 }
 
 #drupal-off-canvas :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
-    width: 100%;
+    width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
   }
 
 #drupal-off-canvas input,
@@ -64,7 +72,11 @@
 
 #drupal-off-canvas input:where(:not([type="submit"], [type="checkbox"], [type="radio"])), #drupal-off-canvas select, #drupal-off-canvas textarea {
     max-width: 100%;
-    padding: 0.5rem;
+    padding: var(--drupal-off-canvas-input-padding);
+    color: var(--drupal-off-canvas-form-text-color);
+    border: var(--drupal-off-canvas-form-border);
+    background-color: var(--drupal-off-canvas-background-color);
+    font-size: var(--drupal-off-canvas-form-font-size);
   }
 
 #drupal-off-canvas input[type="checkbox"] + label, #drupal-off-canvas input[type="radio"] + label {
@@ -94,21 +106,20 @@
 }
 
 #drupal-off-canvas .ui-autocomplete {
-    border: solid 1px transparent;
-    background: white
+    border: var(--drupal-off-canvas-form-border);
+    background-color: var(--drupal-off-canvas-background-color)
   }
 
 #drupal-off-canvas .ui-autocomplete a {
       display: block;
-      padding: 0.5rem;
+      padding: var(--drupal-off-canvas-input-padding);
       cursor: pointer;
-      color: #333;
-      font-size: 0.875rem /* @todo abstract to variable to keep in sync w form elements. */
+      color: var(--drupal-off-canvas-form-text-color);
+      font-size: var(--drupal-off-canvas-form-font-size)
     }
 
 #drupal-off-canvas .ui-autocomplete a:hover {
-        color: #000;
-        background: #eee;
+        background-color: #eee;
       }
 
 #drupal-off-canvas .ui-autocomplete a:focus {

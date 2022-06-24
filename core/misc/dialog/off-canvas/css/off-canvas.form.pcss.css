@@ -4,12 +4,18 @@
  */
 
 #drupal-off-canvas {
+  --drupal-off-canvas-input-padding: 8px;
+  --drupal-off-canvas-background-color: #fff;
+  --drupal-off-canvas-form-border: solid 1px transparent;
+  --drupal-off-canvas-form-font-size: 14px;
+  --drupal-off-canvas-form-text-color: #333;
+
   & .ck-content {
-    color: black;
+    color: var(--drupal-off-canvas-form-text-color);
   }
 
   & .form-item {
-    padding: 8px 0;
+    padding: var(--off-canvas-vertical-spacing-unit) 0;
   }
 
   & label {
@@ -17,12 +23,12 @@
   }
 
   & .form-item.form-type-boolean {
-    padding: 4px 0;
+    padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
   }
 
   & .description,
   & .form-item__description {
-    margin: 4px 0;
+    margin: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
     font-size: 12px;
   }
 
@@ -32,8 +38,8 @@
 
   & fieldset.form-item, /* Bartik doesn't apply BEM classes, so we use the element with a class for specificity. */
   & .fieldset {
-    margin: 16px 0;
-    padding: 8px;
+    margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
+    padding: var(--off-canvas-vertical-spacing-unit);
   }
 
   & legend, /* Bartik doesn't apply BEM classes, so we use the element. */
@@ -44,7 +50,7 @@
 
   /* Bartik uses the .field-multiple-table CSS class on its tabledrag tables. */
   & :is(.fieldset, fieldset.form-item, .draggable-table, .field-multiple-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
-    width: 100%;
+    width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
   }
 
   & input,
@@ -56,7 +62,11 @@
   & select,
   & textarea {
     max-width: 100%;
-    padding: 8px;
+    padding: var(--drupal-off-canvas-input-padding);
+    color: var(--drupal-off-canvas-form-text-color);
+    border: var(--drupal-off-canvas-form-border);
+    background-color: var(--drupal-off-canvas-background-color);
+    font-size: var(--drupal-off-canvas-form-font-size);
   }
 
   & input[type="checkbox"],
@@ -81,19 +91,18 @@
 
   /* This is the background <ul> for the autocomplete dropdown. */
   & .ui-autocomplete {
-    border: solid 1px transparent;
-    background: white;
+    border: var(--drupal-off-canvas-form-border);
+    background-color: var(--drupal-off-canvas-background-color);
 
     & a {
       display: block;
-      padding: 8px;
+      padding: var(--drupal-off-canvas-input-padding);
       cursor: pointer;
-      color: #333;
-      font-size: 14px; /* @todo abstract to variable to keep in sync w form elements. */
+      color: var(--drupal-off-canvas-form-text-color);
+      font-size: var(--drupal-off-canvas-form-font-size);
 
       &:hover {
-        color: #000;
-        background: #eee;
+        background-color: #eee;
       }
 
       &:focus {
