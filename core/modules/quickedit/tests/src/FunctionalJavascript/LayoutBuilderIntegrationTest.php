@@ -14,7 +14,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
 /**
  * @group quickedit
  */
-class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
+class LayoutBuilderIntegrationTest extends QuickEditJavascriptTestBase {
 
   use EntityReferenceTestTrait;
 
@@ -119,7 +119,6 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if an article node can be in-place edited with Quick Edit.
    */
   public function testArticleNode() {
-    $this->markTestSkipped();
     $term = Term::create([
       'name' => 'foo',
       'vid' => 'tags',
@@ -137,6 +136,17 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
         ['target_id' => $term->id()],
       ],
     ]);
+
+    // Move "tags" field to the top of all fields, so its Quick Edit Toolbar
+    // won't overlap any Quick Edit-able fields, which causes (semi-)random test
+    // failures.
+    \Drupal::entityTypeManager()
+      ->getStorage('entity_view_display')
+      ->load('node.article.default')
+      ->setComponent('field_tags', [
+        'type' => 'entity_reference_label',
+        'weight' => 0,
+      ])->save();
 
     $this->drupalGet('node/' . $node->id());
 
@@ -276,7 +286,6 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
    * Tests if a custom can be in-place edited with Quick Edit.
    */
   public function testCustomBlock() {
-    $this->markTestSkipped('This test fails pretty consistently on the latest Chromedriver');
     $block_content_type = BlockContentType::create([
       'id' => 'basic',
       'label' => 'basic',
@@ -311,6 +320,13 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
     $this->assertEntityInstanceStates([
       'block_content/1[0]' => 'opened',
     ]);
+
+    // The label 'body' will only be shown when the pointer hovers over the
+    // body. This can't be guaranteed by "just" opening the block in QuickEdit.
+    // We explicitly move the pointer first over the page title and afterwards
+    // over the block body to be sure.
+    $this->movePointerTo('.page-title');
+    $this->movePointerTo('[data-quickedit-field-id="block_content/1/body/en/full"]');
     $this->assertQuickEditEntityToolbar((string) $block_content->label(), 'Body');
     $this->assertEntityInstanceFieldStates('block_content', 1, 0, [
       'block_content/1/body/en/full' => 'highlighted',
@@ -328,6 +344,18 @@ class QuickEditIntegrationTest extends QuickEditJavascriptTestBase {
       'block_content/1/body/en/full' => '.cke_editable_inline',
     ]);
     $this->assertSession()->elementExists('css', '#quickedit-entity-toolbar .quickedit-toolgroup.wysiwyg-main > .cke_chrome .cke_top[role="presentation"] .cke_toolbar[role="toolbar"] .cke_toolgroup[role="presentation"] > .cke_button[title~="Bold"][role="button"]');
+  }
+
+  /**
+   * Moves mouse pointer to location of $selector.
+   *
+   * @param string $selector
+   *   CSS selector.
+   */
+  protected function movePointerTo($selector) {
+    $driver_session = $this->getSession()->getDriver()->getWebDriverSession();
+    $element = $driver_session->element('css selector', $selector);
+    $driver_session->moveto(['element' => $element->getID()]);
   }
 
 }
