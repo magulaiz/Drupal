@@ -15,6 +15,15 @@ class Stable9LibraryOverrideTest extends StableLibraryOverrideTestBase {
   protected static $modules = ['system', 'user', 'path_alias'];
 
   /**
+   * A list of libraries to skip checking, in the format extension/library_name.
+   *
+   * @var string[]
+   */
+  protected $librariesToSkip = [
+    'core/drupal.dialog.off_canvas',
+  ];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
