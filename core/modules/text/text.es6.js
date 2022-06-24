@@ -2,7 +2,6 @@
  * @file
  * Text behaviors.
  */
-
 (function ($, Drupal) {
   /**
    * Auto-hide summary textarea if empty and show hide and unhide links.
@@ -44,7 +43,12 @@
               if (toggleClick) {
                 $summary.hide();
                 $button.html(Drupal.t('Edit summary'));
-                $link.appendTo($fullLabel);
+                // If field cardinality is unlimited.
+                if ($(this).parents().hasClass('field-multiple-table')) {
+                  $fullLabel.before($link);
+                } else {
+                  $link.appendTo($fullLabel);
+                }
               } else {
                 $summary.show();
                 $button.html(Drupal.t('Hide summary'));
@@ -55,7 +59,7 @@
             })
             .appendTo($summaryLabel);
 
-          // If no summary is set, hide the summary field.
+          // If no summary value is set, hide the summary field.
           if ($widget.find('.js-text-summary').val() === '') {
             $link.trigger('click');
           }
